@@ -1,3 +1,13 @@
+<!--
+  Copyright (c) 2008- Samuli Järvelä
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+  this entire header must remain intact.
+ -->
+ 
 <?php	
 	if (!isset($_GET["action"])) {
 		return;
@@ -24,7 +34,9 @@
 			switch ($_GET["type"]) {
 				case "roots":
 					foreach($account["roots"] as $dir) {
-						$result[] = array("id" => base64_encode($dir["path"]), "name" => $dir["name"]);
+						$result[] = array(
+							"id" => base64_encode($dir["path"]),
+							"name" => $dir["name"]);
 					}
 					break;
 				case "files":
