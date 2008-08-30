@@ -1,0 +1,14 @@
+<module>
+	<inherits name='com.google.gwt.user.User'/>
+	<inherits name="com.google.gwt.json.JSON"/>
+	<inherits name="com.google.gwt.http.HTTP"/>
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+	<entry-point class='org.sjarvela.mollify.client.App'/>
+	
+	<extend-property name="locale" values="en"/>
+	<extend-property name="locale" values="fi"/>
+	
+	<stylesheet src='App.css' />
+</module>
