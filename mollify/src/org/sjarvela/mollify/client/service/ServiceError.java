@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.Localizator;
+import org.sjarvela.mollify.client.localization.Localizator;
 
 public enum ServiceError {
 	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH;

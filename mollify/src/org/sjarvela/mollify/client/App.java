@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client;
 
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.FileService;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerController;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;

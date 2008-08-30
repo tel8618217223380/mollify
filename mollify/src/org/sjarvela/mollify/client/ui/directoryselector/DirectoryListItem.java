@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryListener;
 import org.sjarvela.mollify.client.DirectoryProvider;
-import org.sjarvela.mollify.client.Localizator;
 import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;

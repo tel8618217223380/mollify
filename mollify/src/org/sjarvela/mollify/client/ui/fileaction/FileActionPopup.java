@@ -11,8 +11,8 @@
 package org.sjarvela.mollify.client.ui.fileaction;
 
 import org.sjarvela.mollify.client.FileAction;
-import org.sjarvela.mollify.client.Localizator;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.UrlHandler;
