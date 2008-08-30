@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.service.json.JsonRpcHandler;
 
+import com.google.gwt.core.client.GWT;
+
 public class FileService {
 	private String baseUrl;
 
@@ -25,7 +27,15 @@ public class FileService {
 	};
 
 	public FileService() {
-		this.baseUrl = "http://localhost:7777/filemanager/service.php";
+		// FileService assumes that development environment web server is
+		// localhost:7777
+
+		// For a standalone version, it is assumed that backend facade
+		// (service.php) is in the same directory than the host html page.
+
+		this.baseUrl = GWT.isScript() ? GWT.getHostPageBaseURL()
+				: "http://localhost:7777/mollify/";
+		this.baseUrl += "service.php";
 	}
 
 	public void getFiles(ResultListener resultListener, String dir) {
