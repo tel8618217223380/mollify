@@ -1,0 +1,102 @@
+/* @override http://localhost:7777/org.sjarvela.mollify/themes/basic/style.css */
+
+/* *, body, table td, select {
+	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.filemanager-main {
+	padding: 6px;
+	width: 100%;
+}
+
+.filemanager-main th.column-TYPE {
+	width: 150px;
+}
+
+table.file-simple-list {
+	margin: 1em 0;
+	width: 100%;
+	background-color: #efefef;
+}
+
+table.file-simple-list thead th {
+	padding: 0;
+	margin: 0;
+	color: #494949;
+	border-bottom: 2px solid #AAAAAA;
+	font-weight: bold;
+}
+
+table.file-simple-list tr {
+	height: 20px;
+}
+
+#filemanager table.filemanager-main tbody tr td table.file-simple-list tbody tr.row-file.odd {
+}
+
+.odd {
+	background-color: #dedede;
+}
+ß
+.even {
+	background-color: #686868;
+}
+
+.directory-list {
+	border-style: solid;
+	border-width: 1px;
+}
+
+table.directory-list.root-level {
+	padding-left: 0;
+}
+
+.directory-selector {
+	margin: 8px 8px 8px 0;
+}
+
+.directory-list-label {
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 6px;
+}
+
+.directory-list-label:hover {
+	background-color: #f7f7f7;
+	text-decoration: underline;
+	color: #596072;
+}
+
+.directory-list-dropdown {
+	height: 25px;
+	background-color: #dfdfdf;
+	width: 15px;
+}
+
+.directory-list-dropdown:hover {
+	background-color: #d5d5d5;
+}
+
+.directory-separator {
+	margin: 3px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.gwt-PopupPanel {
+	border: 2px solid gray;
+	background: #ffffff;
+	padding: 1px;
+}
+
+.menu-item {
+	padding: 3px;
+}
+
+.menu-item:hover {
+	background-color: #f7f7f7;
+	text-decoration: underline;
+	color: #596072;
+}*/
