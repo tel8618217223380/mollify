@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.ui.filelist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.Localizator;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
 import org.sjarvela.mollify.client.ui.StyleConstants;

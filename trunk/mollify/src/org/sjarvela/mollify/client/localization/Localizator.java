@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.localization;
 
 import com.google.gwt.core.client.GWT;
 

@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.filemanager;
 
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
-import org.sjarvela.mollify.client.Localizator;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.UrlHandler;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
