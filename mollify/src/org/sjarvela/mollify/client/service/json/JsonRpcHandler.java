@@ -44,12 +44,12 @@ public class JsonRpcHandler {
 	
 	    window[callback] = function(jsonObj) {
 	      window[callback + "done"] = true;
-	      handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
+	      handler.@org.sjarvela.mollify.client.service.json.JsonRpcHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
 	    }
 	    
 	    setTimeout(function() {
 	      if (!window[callback + "done"]) {
-	        handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleError(I)(0);
+	        handler.@org.sjarvela.mollify.client.service.json.JsonRpcHandler::handleError(I)(0);
 	      } 
 	
 	      // cleanup
