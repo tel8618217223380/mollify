@@ -1,19 +1,17 @@
+<!--
+  Copyright (c) 2008- Samuli Järvelä
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+  this entire header must remain intact.
+ -->
+ 
 <?php
 	function get_dir_from_url() {
 		if (!isset($_GET["dir"])) return FALSE;
-		
-		//$root = base64_decode($_GET["root"]);
-		//if (isset($_GET["dir"])) {
-			$dir = base64_decode($_GET["dir"]);
-
-			//if (strlen($dir) == 0) {
-			//	$dir = $root;
-			//} //else if (strpos($dir, $root) === FALSE) {
-			//	return FALSE;
-			//}
-		//}// else {
-		//	$dir = $root;
-		//}
+		$dir = base64_decode($_GET["dir"]);
 		return $dir;
 	}
 	
