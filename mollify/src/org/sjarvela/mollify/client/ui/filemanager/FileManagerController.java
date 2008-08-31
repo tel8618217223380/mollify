@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.service.FileService;
+import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.fileaction.FileActionProvider;
@@ -26,11 +26,11 @@ import com.google.gwt.core.client.JsArray;
 
 public class FileManagerController implements SimpleFileListListener,
 		DirectoryController, DirectoryProvider, FileActionProvider {
-	private FileService service;
+	private MollifyService service;
 	private FileManagerModel model;
 	private FileManagerView view;
 
-	public FileManagerController(FileService service, FileManagerModel model,
+	public FileManagerController(MollifyService service, FileManagerModel model,
 			FileManagerView view) {
 		this.model = model;
 		this.view = view;

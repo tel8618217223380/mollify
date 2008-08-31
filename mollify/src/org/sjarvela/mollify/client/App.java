@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.FileService;
+import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerController;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerView;
@@ -26,7 +26,7 @@ public class App implements EntryPoint {
 		Window.setTitle(Localizator.getInstance().getStrings()
 				.applicationTitle());
 
-		FileService service = new FileService();
+		MollifyService service = new MollifyService();
 		FileManagerModel model = new FileManagerModel();
 		FileManagerView view = new FileManagerView(model, Localizator
 				.getInstance());

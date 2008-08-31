@@ -1,13 +1,3 @@
-<!--
-  Copyright (c) 2008- Samuli Järvelä
- 
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the Eclipse Public License v1.0
-  which accompanies this distribution, and is available at
-  http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
-  this entire header must remain intact.
- -->
- 
 <?php	
 	if (!isset($_GET["action"])) {
 		return;
@@ -20,7 +10,7 @@
 		echo json_encode(array("error"=>"Unauthorized"));
 		return;
 	}
-
+	
 	require "files.php";
 	
 	switch ($_GET["action"]) {
@@ -33,10 +23,11 @@
 			
 			switch ($_GET["type"]) {
 				case "roots":
-					foreach($account["roots"] as $dir) {
+					foreach($account["roots"] as $root) {
 						$result[] = array(
-							"id" => base64_encode($dir["path"]),
-							"name" => $dir["name"]);
+							"id" => base64_encode($root["path"]),
+							"name" => $root["name"]
+						);
 					}
 					break;
 				case "files":
@@ -51,7 +42,7 @@
 			if ($ext) echo $_GET["callback"]."(";
 			echo json_encode($result);
 			if ($ext) echo ');';
-
+	
 			break;
 		case "download":
 			if (!isset($_GET["id"])) {
