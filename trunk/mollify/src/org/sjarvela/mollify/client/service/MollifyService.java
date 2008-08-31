@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.service.json.JsonRpcHandler;
 
 import com.google.gwt.core.client.GWT;
 
-public class FileService {
+public class MollifyService {
 	private String baseUrl;
 
 	enum Action {
@@ -26,8 +26,8 @@ public class FileService {
 		files, dirs, roots
 	};
 
-	public FileService() {
-		// FileService assumes that development environment web server is
+	public MollifyService() {
+		// MollifyService assumes that development environment web server is
 		// localhost:7777
 
 		// For a standalone version, it is assumed that backend facade
