@@ -90,7 +90,7 @@ public class SimpleFileList extends DataGrid {
 		if (row >= (model.getDirectories().length() + offset)) {
 			for (SimpleFileListListener listener : listeners) {
 				listener.onFileRowClicked(model.getFiles().get(
-						row - model.getDirectories().length()), column);
+						row - model.getDirectories().length() - offset), column);
 			}
 			return;
 		}
