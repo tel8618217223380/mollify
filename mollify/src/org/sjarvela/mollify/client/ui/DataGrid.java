@@ -57,14 +57,4 @@ public class DataGrid extends FlexTable {
 			row.appendChild(cell);   
 		} 
 	}-*/;
-
-//	public void setHeaderWidget(int column, Widget widget) {
-//		assureColumnCount(column);
-//		if (widget == null)
-//			return;
-//
-//		widget.removeFromParent();
-//		DOM.appendChild(DOM.getChild(headerRow, column), widget.getElement());
-//		adopt(widget);
-//	}
 }

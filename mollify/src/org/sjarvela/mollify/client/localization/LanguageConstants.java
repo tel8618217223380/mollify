@@ -11,8 +11,6 @@
 package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
-	public String applicationTitle();
-
 	public String mainViewParentDirButtonTitle();
 
 	public String mainViewRefreshButtonTitle();

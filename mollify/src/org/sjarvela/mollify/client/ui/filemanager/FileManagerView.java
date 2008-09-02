@@ -137,7 +137,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	void setFileActionProvider(FileActionProvider fileActionProvider) {
-		fileAction = new FileActionPopup(localizator, this, fileActionProvider);
+		fileAction = new FileActionPopup(localizator, fileActionProvider);
 	}
 
 	void setDirectoryProvider(DirectoryProvider directoryProvider) {

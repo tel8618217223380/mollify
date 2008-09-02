@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.ui.fileaction;
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.UrlHandler;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
@@ -26,34 +26,44 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileActionPopup extends DropdownPopup {
-	private UrlHandler urlHandler;
 	private FileActionProvider actionProvider;
 
 	private Label label;
 	private File file = File.Empty();
 
-	public FileActionPopup(Localizator localizator, UrlHandler urlHandler,
+	public FileActionPopup(Localizator localizator,
 			FileActionProvider actionProvider) {
 		super(null, null);
 
-		this.urlHandler = urlHandler;
 		this.actionProvider = actionProvider;
-		this.setStyleName("file-actions");
+		this.setStyleName(StyleConstants.FILE_ACTIONS);
 
-		VerticalPanel container = new VerticalPanel();
-		container.setStyleName("file-actions-title");
+		BorderedControl content = new BorderedControl(
+				StyleConstants.FILE_ACTIONS_BORDER);
+		content.setContent(createContent(localizator));
+
+		Label pointer = new Label();
+		pointer.setStyleName(StyleConstants.FILE_ACTIONS_POINTER);
+		content.setWidget(0, 1, pointer);
+
+		this.add(content);
+	}
+
+	private VerticalPanel createContent(Localizator localizator) {
+		VerticalPanel content = new VerticalPanel();
+		content.setStyleName(StyleConstants.FILE_ACTIONS_CONTENT);
+
 		label = new Label();
-		container.add(label);
+		content.add(label);
 
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.setStyleName("file-actions-buttons");
+		buttons.setStyleName(StyleConstants.FILE_ACTIONS_BUTTONS);
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionDownloadTitle(), FileAction.DOWNLOAD));
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionRenameTitle(), FileAction.RENAME));
-		container.add(buttons);
-
-		this.add(container);
+		content.add(buttons);
+		return content;
 	}
 
 	public File getFile() {
@@ -63,7 +73,8 @@ public class FileActionPopup extends DropdownPopup {
 	private Widget createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
 		button.setStyleName(StyleConstants.FILE_ACTION);
-		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX + action.name().toLowerCase());
+		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX
+				+ action.name().toLowerCase());
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				onAction(action);
