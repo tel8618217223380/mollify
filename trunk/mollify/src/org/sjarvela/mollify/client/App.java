@@ -17,15 +17,11 @@ import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerView;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint {
 
 	public void onModuleLoad() {
-		Window.setTitle(Localizator.getInstance().getStrings()
-				.applicationTitle());
-
 		MollifyService service = new MollifyService();
 		FileManagerModel model = new FileManagerModel();
 		FileManagerView view = new FileManagerView(model, Localizator

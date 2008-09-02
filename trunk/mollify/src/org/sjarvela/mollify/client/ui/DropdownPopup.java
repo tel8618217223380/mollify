@@ -36,8 +36,7 @@ public class DropdownPopup extends PopupPanel {
 		}
 
 		if (parent != null)
-			setPopupPosition(parent.getAbsoluteLeft(), parent.getAbsoluteTop()
-					+ parent.getOffsetHeight());
+			setPopupPosition(parent.getAbsoluteLeft(), parent.getAbsoluteTop());
 
 		super.show();
 		onShow();

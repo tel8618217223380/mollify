@@ -15,6 +15,20 @@ public class StyleConstants {
 	public static final String LEFT = "left";
 	public static final String RIGHT = "right";
 
+	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
+	public static final String BORDERED_CONTROL_PADDING_N = "n";
+	public static final String BORDERED_CONTROL_PADDING_NE = "ne";
+	public static final String BORDERED_CONTROL_PADDING_E = "e";
+	public static final String BORDERED_CONTROL_PADDING_W = "w";
+	public static final String BORDERED_CONTROL_PADDING_SE = "se";
+	public static final String BORDERED_CONTROL_PADDING_S = "s";
+	public static final String BORDERED_CONTROL_PADDING_SW = "sw";
+
+	public static final String FILE_ACTIONS = "file-actions";
+	public static final String FILE_ACTIONS_BORDER = "file-actions-border";
+	public static final String FILE_ACTIONS_POINTER = "file-actions-pointer";
+	public static final String FILE_ACTIONS_CONTENT = "file-actions-content";
+	public static final String FILE_ACTIONS_BUTTONS = "file-actions-buttons";
 	public static final String FILE_ACTION = "file-action";
 	public static final String FILE_ACTION_PREFIX = "action_";
 
@@ -34,7 +48,7 @@ public class StyleConstants {
 
 	public static final String DIRECTORY_SELECTOR = "directory-selector";
 	public static final String DIRECTORY_SELECTOR_SEPARATOR = "directory-selector-separator";
-	
+
 	public static final String DIRECTORY_LIST_PADDING = "directory-list-padding";
 	public static final String DIRECTORY_LIST = "directory-list";
 	public static final String DIRECTORY_LIST_LABEL = "directory-list-label";
@@ -46,4 +60,6 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_MENU_ERROR = "menu-error";
 	public static final String DIRECTORY_LIST_MENU_ITEM = "menu-item";
 	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "menu-item-none";
+
+
 }

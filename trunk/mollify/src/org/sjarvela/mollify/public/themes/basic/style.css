@@ -23,7 +23,7 @@
 }
 
 .header {
-	background-color: #e1e1e1;
+	background: url(header-bg.png) repeat-x 0 -32px;
 	padding-left: 8px;
 	padding-right: 8px;
 	display: block;
@@ -236,7 +236,7 @@ table.file-simple-list td {
 }
 
 .row-directory td {
-	background-color: #fbdfde;
+	background: #fbdfde;
 }
 
 .row-directory.odd td {
@@ -254,25 +254,79 @@ table.file-simple-list td {
 .row-directory .item-name {
 	font-weight: bold;
 	font-size: 11px;
+	background: url(folder.png) no-repeat 4px 6px;
+	padding-left: 24px;
 }
 
-div.file-actions {
-	background-color: white;
-	height: 52px;
-	width: 300px;
-	border-style: solid;
-	border-width: 1px;
-	padding: 6px;
-	overflow: hidden;
+.file-actions {
+	padding-top: 15px;
 }
 
-.popupContent {
-	overflow: hidden;
-}
-
-button.file-action {
+.file-action {
 	height: 32px;
 	margin-right: 6px;
 	margin-top: 6px;
 	padding: 3px;
+}
+
+.file-actions-border {
+	border-width: 0;
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.file-actions-pointer {
+	width: 30px;
+	height: 15px;
+	background: url(b-tip.png) no-repeat 0 0;
+}
+
+.file-actions-border td.nw {
+	background: url(b-nw.png) no-repeat 0 4px;
+	width: 19px;
+	height: 15px;
+}
+
+.file-actions-border td.n {
+	background: url(b-n.png) repeat-x 0 4px;
+	height: 15px;
+}
+
+.file-actions-border td.ne {
+	background: url(b-ne.png) no-repeat 0 4px;
+	width: 19px;
+	height: 15px;
+}
+
+.file-actions-border td.w {
+	background: url(b-w.png) repeat-y;
+	width: 19px;
+}
+
+.file-actions-border td.e {
+	background: url(b-e.png) repeat-y;
+	width: 19px;
+}
+
+.file-actions-border td.sw {
+	background: url(b-sw.png) no-repeat;
+	width: 19px;
+	height: 20px;
+}
+
+.file-actions-border td.s {
+	background: url(b-s.png) repeat-x;
+	height: 20px;
+}
+
+.file-actions-border td.se {
+	background: url(b-se.png) no-repeat;
+	width: 19px;
+	height: 20px;
+}
+
+.file-actions-content {
+	background-color: white;
+	padding-top: 3px;
 }
