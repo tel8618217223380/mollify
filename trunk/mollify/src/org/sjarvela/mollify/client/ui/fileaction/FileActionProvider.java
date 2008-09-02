@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,4 +16,5 @@ import org.sjarvela.mollify.client.data.File;
 public interface FileActionProvider {
 	public boolean isActionAllowed(File file, FileAction action);
 	public String getActionURL(File file, FileAction action);
+	public void onFileAction(File file, FileAction action);
 }

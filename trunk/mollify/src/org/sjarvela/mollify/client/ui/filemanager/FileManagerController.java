@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.Window;
 
 public class FileManagerController implements SimpleFileListListener,
 		DirectoryController, DirectoryProvider, FileActionProvider {
@@ -30,18 +31,18 @@ public class FileManagerController implements SimpleFileListListener,
 	private FileManagerModel model;
 	private FileManagerView view;
 
-	public FileManagerController(MollifyService service, FileManagerModel model,
-			FileManagerView view) {
+	public FileManagerController(MollifyService service,
+			FileManagerModel model, FileManagerView view) {
 		this.model = model;
 		this.view = view;
 		this.service = service;
-		
+
 		view.setDirectoryController(this);
 		view.addFileListListener(this);
 		view.setDirectoryProvider(this);
 		view.setFileActionProvider(this);
 	}
-	
+
 	public void initialize() {
 		getRootDirectories();
 	}
@@ -136,8 +137,7 @@ public class FileManagerController implements SimpleFileListListener,
 		refresh();
 	}
 
-	public void getDirectories(Directory parent,
-			final ResultListener listener) {
+	public void getDirectories(Directory parent, final ResultListener listener) {
 		// if there is no parent, show root list
 		if (parent.isEmpty()) {
 			listener.onSuccess(model.getRootDirectories());
@@ -156,14 +156,22 @@ public class FileManagerController implements SimpleFileListListener,
 	}
 
 	public String getActionURL(File file, FileAction action) {
-		if (action.equals(FileAction.DOWNLOAD))
-			return service.getDownloadLink(file);
-		return "";
+		return service.getFileActionUrl(file, action);
 	}
 
 	public boolean isActionAllowed(File file, FileAction action) {
 		// TODO users rights
 		return true;
+	}
+
+	public void onFileAction(File file, FileAction action) {
+		if (action.equals(FileAction.DOWNLOAD)) {
+			view.openDownloadUrl(this.getActionURL(file, action));
+		} else if (action.equals(FileAction.RENAME)) {
+			Window.prompt("Uusi nimi?", file.getName());
+		} else {
+			Window.alert(action.name());
+		}
 	}
 
 }

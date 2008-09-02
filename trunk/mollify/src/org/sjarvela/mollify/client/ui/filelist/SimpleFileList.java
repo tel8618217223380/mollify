@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli JŠrvelŠ
+ * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,7 +24,6 @@ import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
@@ -42,8 +41,8 @@ public class SimpleFileList extends DataGrid {
 		this.localizator = localizator;
 
 		// setup header
-		this.setHeaderText(Column.SELECT, localizator.getStrings()
-				.fileListColumnTitleSelect());
+//		this.setHeaderText(Column.SELECT, localizator.getStrings()
+//				.fileListColumnTitleSelect());
 		this.setHeaderText(Column.NAME, localizator.getStrings()
 				.fileListColumnTitleName());
 		this.setHeaderText(Column.TYPE, localizator.getStrings()
@@ -88,15 +87,25 @@ public class SimpleFileList extends DataGrid {
 		}
 
 		if (row >= (model.getDirectories().length() + offset)) {
-			for (SimpleFileListListener listener : listeners) {
-				listener.onFileRowClicked(model.getFiles().get(
-						row - model.getDirectories().length() - offset), column);
-			}
-			return;
+			File file = model.getFiles().get(
+					row - model.getDirectories().length() - offset);
+			notifyFileClickListeners(file, column);
+		} else {
+			Directory directory = model.getDirectories().get(row - offset);
+			notifyDirectoryClickListeners(directory, column);
 		}
+	}
+
+	private void notifyDirectoryClickListeners(Directory directory,
+			Column column) {
 		for (SimpleFileListListener listener : listeners) {
-			listener.onDirectoryRowClicked(model.getDirectories().get(
-					row - offset), column);
+			listener.onDirectoryRowClicked(directory, column);
+		}
+	}
+
+	private void notifyFileClickListeners(File file, Column column) {
+		for (SimpleFileListListener listener : listeners) {
+			listener.onFileRowClicked(file, column);
 		}
 	}
 
@@ -154,7 +163,7 @@ public class SimpleFileList extends DataGrid {
 	}
 
 	private void addFileRow(int index, File file) {
-		setWidget(index, Column.SELECT, createSelectWidget(file));
+		//setWidget(index, Column.SELECT, createSelectWidget(file));
 		setWidget(index, Column.NAME, createNameWidget(file));
 		setWidget(index, Column.TYPE, createExtensionWidget(file));
 		setWidget(index, Column.SIZE, createSizeWidget(file));
@@ -181,11 +190,11 @@ public class SimpleFileList extends DataGrid {
 		return styles;
 	}
 
-	private Widget createSelectWidget(File file) {
-		CheckBox select = new CheckBox();
-		select.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SELECT);
-		return select;
-	}
+//	private Widget createSelectWidget(File file) {
+//		CheckBox select = new CheckBox();
+//		select.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SELECT);
+//		return select;
+//	}
 
 	private Widget createNameWidget(File file) {
 		Label name = new Label(file.getName());
@@ -209,10 +218,10 @@ public class SimpleFileList extends DataGrid {
 		Label name = new Label(title);
 		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_NAME);
 
-		setText(index, 0, "");
+		//setText(index, Column.SELECT.ordinal(), "");
 		setWidget(index, Column.NAME, name);
-		setText(index, 2, "");
-		setHTML(index, 3, "");
+		setText(index, Column.TYPE.ordinal(), "");
+		setHTML(index, Column.SIZE.ordinal(), "");
 
 		List<String> styles = getDirectoryStyles(index);
 		for (String style : styles) {
@@ -234,6 +243,7 @@ public class SimpleFileList extends DataGrid {
 		setWidget(row, column.ordinal(), widget);
 	}
 
+	//TODO externalize to a text provider etc
 	private String getSizeText(File file) {
 		int bytes = file.getSize();
 

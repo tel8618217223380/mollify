@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,6 +16,7 @@ public class StyleConstants {
 	public static final String RIGHT = "right";
 
 	public static final String FILE_ACTION = "file-action";
+	public static final String FILE_ACTION_PREFIX = "action_";
 
 	public static final String SIMPLE_FILE_LIST = "file-simple-list";
 	public static final String SIMPLE_FILE_LIST_COLUMN_PREFIX = "column-";
