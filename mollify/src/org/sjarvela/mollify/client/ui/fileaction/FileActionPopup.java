@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,6 +49,8 @@ public class FileActionPopup extends DropdownPopup {
 		buttons.setStyleName("file-actions-buttons");
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionDownloadTitle(), FileAction.DOWNLOAD));
+		buttons.add(createActionButton(localizator.getStrings()
+				.fileActionRenameTitle(), FileAction.RENAME));
 		container.add(buttons);
 
 		this.add(container);
@@ -61,6 +63,7 @@ public class FileActionPopup extends DropdownPopup {
 	private Widget createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
 		button.setStyleName(StyleConstants.FILE_ACTION);
+		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX + action.name().toLowerCase());
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				onAction(action);
@@ -78,10 +81,7 @@ public class FileActionPopup extends DropdownPopup {
 	}
 
 	private void onAction(FileAction action) {
-		if (action.equals(FileAction.DOWNLOAD)) {
-			urlHandler.openDownloadUrl(actionProvider
-					.getActionURL(file, action));
-			this.hide();
-		}
+		actionProvider.onFileAction(file, action);
+		this.hide();
 	}
 }

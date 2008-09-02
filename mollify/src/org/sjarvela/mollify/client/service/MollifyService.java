@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
+import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.service.json.JsonRpcHandler;
 
@@ -19,7 +20,7 @@ public class MollifyService {
 	private String baseUrl;
 
 	enum Action {
-		get, download
+		get, operate
 	};
 
 	enum GetType {
@@ -50,8 +51,9 @@ public class MollifyService {
 		getTypes(resultListener, GetType.roots);
 	}
 
-	public String getDownloadLink(File file) {
-		return getUrl(Action.download, "id=" + file.getId());
+	public String getFileActionUrl(File file, FileAction action) {
+		return getUrl(Action.operate, "type=" + action.name(), "id="
+				+ file.getId());
 	}
 
 	/* Utility functions */

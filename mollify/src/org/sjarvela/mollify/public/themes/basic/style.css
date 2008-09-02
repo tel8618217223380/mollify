@@ -1,7 +1,9 @@
-/* @override http://localhost:7777/org.sjarvela.mollify/themes/basic/style.css */
+/* @override 
+	http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css
+*/
 
 /**
- * Copyright (c) 2008- Samuli JŠrvelŠ
+ * Copyright (c) 2008- Samuli JÂŠrvelÂŠ
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -140,17 +142,28 @@ table.directory-list.root-level {
 	font-style: italic;
 }
 
+.file-simple-list {
+	width: 100%;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
 th#column-select {
 	width: 22px;
 }
 
+th#column-name {
+	padding-left: 4px;
+}
+
 th#column-type {
 	width: 150px;
-	padding-left: 6px;
+	padding-left: 4px;
 }
 
 th#column-size {
 	width: 75px;
+	padding-left: 4px;
 }
 
 td#column-size {
@@ -203,6 +216,7 @@ table.file-simple-list td {
 	height: 20px;
 	padding-top: 5px;
 	cursor: pointer;
+	padding-left: 5px;
 }
 
 .file-simple-list .odd {
@@ -252,12 +266,13 @@ div.file-actions {
 	overflow: hidden;
 }
 
-div.popupContent {
+.popupContent {
 	overflow: hidden;
 }
 
 button.file-action {
 	height: 32px;
+	margin-right: 6px;
 	margin-top: 6px;
 	padding: 3px;
 }
