@@ -22,4 +22,6 @@ public interface MessageConstants extends Messages {
 	String sizeInKilobytes(double kilobytes);
 
 	String sizeInMegabytes(double megabytes);
+
+	String renameFileDialogTitle(String fileName);
 }
