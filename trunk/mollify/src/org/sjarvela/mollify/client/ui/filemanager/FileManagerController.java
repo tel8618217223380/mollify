@@ -40,6 +40,7 @@ public class FileManagerController implements SimpleFileListListener,
 		this.view = view;
 		this.service = service;
 
+		// TODO make this somehow better...
 		view.setDirectoryController(this);
 		view.addFileListListener(this);
 		view.setDirectoryProvider(this);
@@ -133,7 +134,7 @@ public class FileManagerController implements SimpleFileListListener,
 
 	public void onFileRowClicked(File file, Column column) {
 		if (column.equals(Column.NAME)) {
-			view.showFileAction(file);
+			view.showFileActions(file);
 		}
 	}
 
@@ -156,7 +157,6 @@ public class FileManagerController implements SimpleFileListListener,
 			return;
 		}
 
-		// proceed with ajax request
 		this.service.getDirectories(listener, parent.getId());
 	}
 
@@ -187,10 +187,10 @@ public class FileManagerController implements SimpleFileListListener,
 				refresh();
 			}
 
-			public void onSuccess(JavaScriptObject result) {
-				SuccessResult success = result.cast();
-				if (!success.isSuccess()) {
-					Window.alert(success.getMessage()); // TODO proper message
+			public void onSuccess(JavaScriptObject jso) {
+				SuccessResult result = jso.cast();
+				if (!result.isSuccess()) {
+					Window.alert(result.getMessage()); // TODO proper message
 					// dialog
 				}
 				refresh();

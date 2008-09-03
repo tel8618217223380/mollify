@@ -89,9 +89,6 @@ public class FileManagerView extends Composite implements UrlHandler {
 		directorySelector = new DirectorySelector(model, localizator);
 		panel.add(directorySelector);
 
-		// HorizontalPanel buttons = new HorizontalPanel();
-		// buttons.setStyleName("tools");
-
 		panel.add(createToolButton(localizator.getStrings()
 				.mainViewParentDirButtonTitle(), "parent-dir-button",
 				new ClickListener() {
@@ -102,7 +99,6 @@ public class FileManagerView extends Composite implements UrlHandler {
 					}
 				}));
 
-		// panel.add(buttons);
 		Label rightPadding = new Label();
 		rightPadding.setStyleName("header-padding");
 		rightPadding.addStyleName("right");
@@ -171,7 +167,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 		list.removeAllRows();
 	}
 
-	public void showFileAction(File file) {
+	public void showFileActions(File file) {
 		fileAction.initialize(file, list.getWidget(file, Column.NAME)
 				.getElement());
 		fileAction.show();
@@ -186,7 +182,8 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	public void showError(ServiceError error) {
-		Window.alert(error.getMessage(localizator));
+		Window.alert(error.getMessage(localizator)); // TODO create proper error
+														// dialog
 	}
 
 	public void showRenameDialog(File file) {
@@ -194,7 +191,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	/* UTILITIES */
-	
+
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
