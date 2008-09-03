@@ -13,8 +13,10 @@ package org.sjarvela.mollify.client.ui.filemanager;
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileAction;
+import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.SuccessResult;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -22,11 +24,12 @@ import org.sjarvela.mollify.client.ui.fileaction.FileActionProvider;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
 
 public class FileManagerController implements SimpleFileListListener,
-		DirectoryController, DirectoryProvider, FileActionProvider {
+		DirectoryController, DirectoryProvider, FileActionProvider, FileHandler {
 	private MollifyService service;
 	private FileManagerModel model;
 	private FileManagerView view;
@@ -41,6 +44,7 @@ public class FileManagerController implements SimpleFileListListener,
 		view.addFileListListener(this);
 		view.setDirectoryProvider(this);
 		view.setFileActionProvider(this);
+		view.setFileHandler(this);
 	}
 
 	public void initialize() {
@@ -55,8 +59,7 @@ public class FileManagerController implements SimpleFileListListener,
 				reset();
 			}
 
-			@SuppressWarnings("unchecked")
-			public void onSuccess(JsArray result) {
+			public void onSuccess(JavaScriptObject result) {
 				JsArray<Directory> dirs = result.cast();
 				model.setRootDirectories(dirs);
 
@@ -87,20 +90,22 @@ public class FileManagerController implements SimpleFileListListener,
 
 		this.service.getDirectories(new ResultListener() {
 			public void onError(ServiceError error) {
+				view.showError(error);
 				reset();
 			}
 
-			@SuppressWarnings("unchecked")
-			public void onSuccess(JsArray result) {
-				final JsArray<Directory> directories = (JsArray<Directory>) result;
+			public void onSuccess(JavaScriptObject result) {
+				final JsArray<Directory> directories = result.cast();
 
 				service.getFiles(new ResultListener() {
 					public void onError(ServiceError error) {
+						view.showError(error);
 						reset();
 					}
 
-					public void onSuccess(JsArray result) {
-						model.setData(directories, (JsArray<File>) result);
+					public void onSuccess(JavaScriptObject result) {
+						JsArray<File> files = result.cast();
+						model.setData(directories, files);
 						view.refresh();
 					}
 				}, folder);
@@ -169,10 +174,28 @@ public class FileManagerController implements SimpleFileListListener,
 			view.openDownloadUrl(this.getActionURL(file, action));
 		} else if (action.equals(FileAction.RENAME)) {
 			view.showRenameDialog(file);
-			//Window.prompt("Uusi nimi?", file.getName());
 		} else {
 			Window.alert(action.name());
 		}
+	}
+
+	public void onRename(File file, String newName) {
+		service.renameFile(file, newName, new ResultListener() {
+
+			public void onError(ServiceError error) {
+				view.showError(error);
+				refresh();
+			}
+
+			public void onSuccess(JavaScriptObject result) {
+				SuccessResult success = result.cast();
+				if (!success.isSuccess()) {
+					Window.alert(success.getMessage()); // TODO proper message
+					// dialog
+				}
+				refresh();
+			}
+		});
 	}
 
 }

@@ -10,11 +10,14 @@
 
 package org.sjarvela.mollify.client.service;
 
+import javax.media.jai.operator.EncodeDescriptor;
+
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.service.json.JsonRpcHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 
 public class MollifyService {
 	private String baseUrl;
@@ -75,5 +78,14 @@ public class MollifyService {
 			url += "&" + param;
 		}
 		return url;
+	}
+
+	public void renameFile(File file, String newName,
+			ResultListener resultListener) {
+		SuccessResponseListener listener = new SuccessResponseListener(
+				resultListener);
+		String url = getFileActionUrl(file, FileAction.RENAME) + "&to="
+				+ URL.encode(newName);
+		new JsonRpcHandler(url, listener).doRequest();
 	}
 }

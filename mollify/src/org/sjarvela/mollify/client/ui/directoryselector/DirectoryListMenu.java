@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -85,8 +86,7 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		container.add(failedLabel);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void onSuccess(JsArray result) {
+	public void onSuccess(JavaScriptObject result) {
 		JsArray<Directory> directories = result.cast();
 		initialized = true;
 		container.clear();
