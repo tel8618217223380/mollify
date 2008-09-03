@@ -168,7 +168,8 @@ public class FileManagerController implements SimpleFileListListener,
 		if (action.equals(FileAction.DOWNLOAD)) {
 			view.openDownloadUrl(this.getActionURL(file, action));
 		} else if (action.equals(FileAction.RENAME)) {
-			Window.prompt("Uusi nimi?", file.getName());
+			view.showRenameDialog(file);
+			//Window.prompt("Uusi nimi?", file.getName());
 		} else {
 			Window.alert(action.name());
 		}
