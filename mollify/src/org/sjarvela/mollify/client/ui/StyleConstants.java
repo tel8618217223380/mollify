@@ -62,10 +62,12 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "menu-item-none";
 
 	public static final String RENAME_FILE_DIALOG = "rename-file-dialog";
+	public static final String RENAME_FILE_DIALOG_CONTENT = "rename-file-dialog-content";
 	public static final String RENAME_FILE_ORIGINAL_NAME_TITLE = "rename-file-original-name-title";
 	public static final String RENAME_FILE_ORIGINAL_NAME_VALUE = "rename-file-original-name-value";
 	public static final String RENAME_FILE_NEW_NAME_TITLE = "rename-file-new-name-title";
 	public static final String RENAME_FILE_NEW_NAME_VALUE = "rename-file-new-name-value";
+	public static final String RENAME_FILE_DIALOG_BUTTONS = "rename-file-dialog-buttons";
 	public static final String RENAME_FILE_DIALOG_BUTTON = "rename-file-dialog-button";
 	public static final String RENAME_FILE_DIALOG_BUTTON_RENAME = "rename";
 	public static final String RENAME_FILE_DIALOG_BUTTON_CANCEL = "cancel";

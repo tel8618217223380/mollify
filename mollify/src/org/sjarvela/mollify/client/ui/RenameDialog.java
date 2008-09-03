@@ -39,8 +39,7 @@ public class RenameDialog extends DialogBox {
 		this.listener = listener;
 
 		this.addStyleName(StyleConstants.RENAME_FILE_DIALOG);
-		this.setText(localizator.getMessages().renameFileDialogTitle(
-				file.getName()));
+		this.setText(localizator.getStrings().renameFileDialogTitle());
 
 		VerticalPanel content = new VerticalPanel();
 		content.add(createContent());
@@ -59,6 +58,7 @@ public class RenameDialog extends DialogBox {
 
 	private Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
+		panel.addStyleName(StyleConstants.RENAME_FILE_DIALOG_CONTENT);
 
 		Label originalNameTitle = new Label(localizator.getStrings()
 				.renameFileDialogOriginalName());
@@ -87,6 +87,8 @@ public class RenameDialog extends DialogBox {
 
 	private Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
+		buttons.addStyleName(StyleConstants.RENAME_FILE_DIALOG_BUTTONS);
+		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(localizator.getStrings()
 				.renameFileDialogRenameButton(),
@@ -137,15 +139,17 @@ public class RenameDialog extends DialogBox {
 	private void onRename() {
 		String newName = name.getText();
 
-		// TODO create messages
 		if (newName.length() < 1) {
+			name.setFocus(true);
 			return;
 		}
 
 		if (newName.equals(file.getName())) {
+			hilightFilename();
 			return;
 		}
 
+		this.hide();
 		listener.onRename(file, newName);
 	}
 }
