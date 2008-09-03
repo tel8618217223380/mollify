@@ -44,4 +44,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String renameFileDialogOriginalName();
 
 	public String renameFileDialogNewName();
+
+	public String renameFileDialogRenameButton();
+
+	public String renameFileDialogCancelButton();
 }
