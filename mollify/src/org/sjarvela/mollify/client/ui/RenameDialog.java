@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.data.File;
@@ -16,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class RenameDialog extends DialogBox {
 	private File file;
 	private Localizator localizator;
+	private TextBox name;
 
 	public RenameDialog(File file, Localizator localizator) {
 		super(false, true);
@@ -43,7 +54,7 @@ public class RenameDialog extends DialogBox {
 	}
 
 	private Widget createContent() {
-		HorizontalPanel panel = new HorizontalPanel();
+		VerticalPanel panel = new VerticalPanel();
 
 		Label originalNameTitle = new Label(localizator.getStrings()
 				.renameFileDialogOriginalName());
@@ -61,12 +72,10 @@ public class RenameDialog extends DialogBox {
 		newNameTitle.setStyleName(StyleConstants.RENAME_FILE_NEW_NAME_TITLE);
 		panel.add(newNameTitle);
 
-		TextBox name = new TextBox();
+		name = new TextBox();
 		name.addStyleName(StyleConstants.RENAME_FILE_NEW_NAME_VALUE);
 		name.setText(file.getName());
-		if (file.getExtension().length() > 0)
-			name.setSelectionRange(0, file.getName().length()
-					- (file.getExtension().length() + 1));
+
 		panel.add(name);
 
 		return panel;
@@ -75,18 +84,62 @@ public class RenameDialog extends DialogBox {
 	private Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 
-		Button button = new Button("A");
-		button.addClickListener(new ClickListener() {
+		buttons.add(createButton(localizator.getStrings()
+				.renameFileDialogRenameButton(),
+				StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME,
+				new ClickListener() {
 
-			public void onClick(Widget sender) {
-				RenameDialog.this.hide();
-			}
-		});
-		buttons.add(button);
+					public void onClick(Widget sender) {
+						onRename();
+					}
+				}));
 
-		button = new Button("B");
-		buttons.add(button);
+		buttons.add(createButton(localizator.getStrings()
+				.renameFileDialogCancelButton(),
+				StyleConstants.RENAME_FILE_DIALOG_BUTTON_CANCEL,
+				new ClickListener() {
+
+					public void onClick(Widget sender) {
+						RenameDialog.this.hide();
+					}
+				}));
 
 		return buttons;
+	}
+
+	private Widget createButton(String title, String style,
+			ClickListener listener) {
+		Button button = new Button(title);
+		button.addStyleName(StyleConstants.RENAME_FILE_DIALOG_BUTTON);
+		button.addStyleName(style);
+		button.addClickListener(listener);
+		return button;
+	}
+
+	@Override
+	public void show() {
+		super.show();
+
+		hilightFilename();
+	}
+
+	private void hilightFilename() {
+		if (file.getExtension().length() > 0)
+			name.setSelectionRange(0, file.getName().length()
+					- (file.getExtension().length() + 1));
+		name.setFocus(true);
+	}
+
+	private void onRename() {
+		String newName = name.getText();
+
+		// TODO create messages
+		if (newName.length() < 1) {
+			return;
+		}
+
+		if (newName.equals(file.getName())) {
+			return;
+		}
 	}
 }
