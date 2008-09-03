@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.filemanager;
 
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
+import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -40,6 +41,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private FileManagerModel model;
 	private Localizator localizator;
 	private DirectoryController directoryController;
+	private FileHandler fileHandler;
 
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
@@ -150,6 +152,10 @@ public class FileManagerView extends Composite implements UrlHandler {
 		directorySelector.setDirectoryController(directoryController);
 	}
 
+	void setFileHandler(FileHandler fileHandler) {
+		this.fileHandler = fileHandler;
+	}
+
 	@Override
 	protected void onLoad() {
 		super.onLoad();
@@ -175,10 +181,6 @@ public class FileManagerView extends Composite implements UrlHandler {
 		setFrameUrl(downloadFrame.getId(), url);
 	}
 
-	private native void setFrameUrl(String id, String url) /*-{
-		$doc.getElementById(id).src=url;
-	}-*/;
-
 	public void openUrlInNewWindow(String url) {
 		Window.open(url, "_blank", "");
 	}
@@ -188,6 +190,12 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	public void showRenameDialog(File file) {
-		new RenameDialog(file, localizator).show();
+		new RenameDialog(file, localizator, fileHandler).show();
 	}
+
+	/* UTILITIES */
+	
+	private native void setFrameUrl(String id, String url) /*-{
+		$doc.getElementById(id).src=url;
+	}-*/;
 }

@@ -8,12 +8,19 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.data;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public interface ResultListener {
-	public void onSuccess(JavaScriptObject result);
+public class SuccessResult extends JavaScriptObject {
+	protected SuccessResult() {
+	}
 
-	public void onError(ServiceError error);
+	public final native boolean isSuccess() /*-{
+		return this.success;
+	}-*/;
+
+	public final native String getMessage() /*-{
+		return this.message;
+	}-*/;
 }

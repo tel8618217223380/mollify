@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import org.sjarvela.mollify.client.RenameHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 
@@ -27,12 +28,15 @@ public class RenameDialog extends DialogBox {
 	private File file;
 	private Localizator localizator;
 	private TextBox name;
+	private RenameHandler listener;
 
-	public RenameDialog(File file, Localizator localizator) {
+	public RenameDialog(File file, Localizator localizator,
+			RenameHandler listener) {
 		super(false, true);
 
 		this.file = file;
 		this.localizator = localizator;
+		this.listener = listener;
 
 		this.addStyleName(StyleConstants.RENAME_FILE_DIALOG);
 		this.setText(localizator.getMessages().renameFileDialogTitle(
@@ -141,5 +145,7 @@ public class RenameDialog extends DialogBox {
 		if (newName.equals(file.getName())) {
 			return;
 		}
+
+		listener.onRename(file, newName);
 	}
 }

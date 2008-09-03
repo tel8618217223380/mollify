@@ -8,12 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client;
 
-import com.google.gwt.core.client.JavaScriptObject;
+public interface FileHandler extends RenameHandler {
 
-public interface ResultListener {
-	public void onSuccess(JavaScriptObject result);
-
-	public void onError(ServiceError error);
 }
