@@ -122,12 +122,12 @@ table.directory-list.root-level {
 
 .directory-list-menu {
 	background: #f9f9f9;
-	padding: 8px;
-	margin-left: 8px;
-	margin-top: 0;
+	margin-left: 11px;
+	margin-top: 21px;
 	border-right: 1px outset #c0c0c0;
 	border-left: 1px outset #c0c0c0;
 	border-bottom: 1px outset #c0c0c0;
+	padding: 8px;
 }
 
 .menu-item {
