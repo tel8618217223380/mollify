@@ -24,6 +24,7 @@ public class StyleConstants {
 	public static final String BORDERED_CONTROL_PADDING_S = "s";
 	public static final String BORDERED_CONTROL_PADDING_SW = "sw";
 
+	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "header";
 	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
 	public static final String MAIN_VIEW_TOOL = "tool";
