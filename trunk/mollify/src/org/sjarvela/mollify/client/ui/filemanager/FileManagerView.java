@@ -10,13 +10,17 @@
 
 package org.sjarvela.mollify.client.ui.filemanager;
 
+import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.ConfirmationDialog;
+import org.sjarvela.mollify.client.ui.InfoDialog;
 import org.sjarvela.mollify.client.ui.RenameDialog;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.UrlHandler;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.fileaction.FileActionPopup;
@@ -38,6 +42,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileManagerView extends Composite implements UrlHandler {
+	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
+	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
+
 	private FileManagerModel model;
 	private Localizator localizator;
 	private DirectoryController directoryController;
@@ -46,7 +53,6 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
 	private FileActionPopup fileAction;
-	private Element downloadFrame;
 
 	public FileManagerView(FileManagerModel model, Localizator localizator) {
 		this.model = model;
@@ -71,16 +77,16 @@ public class FileManagerView extends Composite implements UrlHandler {
 
 	private Widget createHeader() {
 		HorizontalPanel panel = new HorizontalPanel();
-		panel.setStyleName("header");
+		panel.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 
 		Label leftPadding = new Label();
-		leftPadding.setStyleName("header-padding");
-		leftPadding.addStyleName("left");
+		leftPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
+		leftPadding.addStyleName(StyleConstants.LEFT);
 		panel.add(leftPadding);
 
 		panel.add(createToolButton(localizator.getStrings()
-				.mainViewRefreshButtonTitle(), "refresh-button",
-				new ClickListener() {
+				.mainViewRefreshButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_REFRESH, new ClickListener() {
 					public void onClick(Widget sender) {
 						directoryController.refresh();
 					}
@@ -90,8 +96,8 @@ public class FileManagerView extends Composite implements UrlHandler {
 		panel.add(directorySelector);
 
 		panel.add(createToolButton(localizator.getStrings()
-				.mainViewParentDirButtonTitle(), "parent-dir-button",
-				new ClickListener() {
+				.mainViewParentDirButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR, new ClickListener() {
 					public void onClick(Widget sender) {
 						if (!model.getDirectoryModel().canAscend())
 							return;
@@ -100,8 +106,8 @@ public class FileManagerView extends Composite implements UrlHandler {
 				}));
 
 		Label rightPadding = new Label();
-		rightPadding.setStyleName("header-padding");
-		rightPadding.addStyleName("right");
+		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
+		rightPadding.addStyleName(StyleConstants.RIGHT);
 		panel.add(rightPadding);
 
 		return panel;
@@ -110,7 +116,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private Widget createToolButton(String title, String id,
 			ClickListener listener) {
 		Button button = new Button(title);
-		button.addStyleName("tool");
+		button.addStyleName(StyleConstants.MAIN_VIEW_TOOL);
 		button.getElement().setId(id);
 		button.addClickListener(listener);
 		return button;
@@ -118,14 +124,14 @@ public class FileManagerView extends Composite implements UrlHandler {
 
 	private Widget createDownloadFrame() {
 		SimplePanel downloadPanel = new SimplePanel();
-		downloadPanel.getElement().setId("filemanager-download-panel");
+		downloadPanel.getElement().setId(FILEMANAGER_DOWNLOAD_PANEL_ID);
 		downloadPanel.getElement().setAttribute("style",
 				"visibility:collapse; height: 0px;");
 
-		downloadFrame = DOM.createIFrame();
+		Element downloadFrame = DOM.createIFrame();
 		downloadFrame
 				.setAttribute("style", "visibility:collapse; height: 0px;");
-		downloadFrame.setId("filemanager-download-frame");
+		downloadFrame.setId(FILEMANAGER_DOWNLOAD_FRAME_ID);
 
 		downloadPanel.getElement().appendChild(downloadFrame);
 		return downloadPanel;
@@ -167,6 +173,25 @@ public class FileManagerView extends Composite implements UrlHandler {
 		list.removeAllRows();
 	}
 
+	public void showError(ServiceError error) {
+		new InfoDialog(localizator, localizator.getStrings()
+				.infoDialogErrorTitle(), error.getMessage(localizator),
+				StyleConstants.INFO_DIALOG_TYPE_ERROR);
+	}
+
+	public void showInfo(String title, String text) {
+		new InfoDialog(localizator, title, text,
+				StyleConstants.INFO_DIALOG_TYPE_INFO);
+	}
+
+	public void showFileDeleteConfirmationDialog(File file,
+			ConfirmationListener listener) {
+		new ConfirmationDialog(localizator, localizator.getStrings()
+				.deleteFileConfirmationDialogTitle(), localizator.getMessages()
+				.confirmFileDeleteMessage(file.getName()),
+				StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE_FILE, listener);
+	}
+
 	public void showFileActions(File file) {
 		fileAction.initialize(file, list.getWidget(file, Column.NAME)
 				.getElement());
@@ -174,20 +199,19 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	public void openDownloadUrl(String url) {
-		setFrameUrl(downloadFrame.getId(), url);
+		setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
 	}
 
 	public void openUrlInNewWindow(String url) {
 		Window.open(url, "_blank", "");
 	}
 
-	public void showError(ServiceError error) {
-		Window.alert(error.getMessage(localizator)); // TODO create proper error
-														// dialog
+	public void showRenameDialog(File file) {
+		new RenameDialog(file, localizator, fileHandler);
 	}
 
-	public void showRenameDialog(File file) {
-		new RenameDialog(file, localizator, fileHandler).show();
+	public Localizator getLocalizator() {
+		return localizator;
 	}
 
 	/* UTILITIES */
@@ -195,4 +219,5 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
+
 }
