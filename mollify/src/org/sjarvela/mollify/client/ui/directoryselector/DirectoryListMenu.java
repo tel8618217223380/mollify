@@ -94,7 +94,7 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		int count = 0;
 		for (int i = 0, n = directories.length(); i < n; ++i) {
 			Directory current = directories.get(i);
-			if (current.equals(this.currentDirectory))
+			if (current.getId().equals(this.currentDirectory.getId()))
 				continue;
 			container.add(createDirectoryLabel(current));
 			count++;
