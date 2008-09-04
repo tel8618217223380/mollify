@@ -8,20 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.localization;
+package org.sjarvela.mollify.client;
 
-import com.google.gwt.i18n.client.Messages;
-
-public interface MessageConstants extends Messages {
-	String sizeOneByte();
-
-	String sizeInBytes(int bytes);
-
-	String sizeOneKilobyte();
-
-	String sizeInKilobytes(double kilobytes);
-
-	String sizeInMegabytes(double megabytes);
-
-	String confirmFileDeleteMessage(String filename);
+public interface ConfirmationListener {
+	public void onConfirm();
 }

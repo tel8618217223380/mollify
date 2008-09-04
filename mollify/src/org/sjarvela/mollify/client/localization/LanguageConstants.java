@@ -35,6 +35,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String errorMessageDataTypeMismatch();
 
+	public String errorMessageOperationFailed();
+
 	public String errorMessageUnknown();
 
 	public String directorySelectorSeparatorLabel();
@@ -42,6 +44,16 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String directorySelectorMenuPleaseWait();
 
 	public String directorySelectorMenuNoItemsText();
+
+	public String infoDialogOKButton();
+
+	public String infoDialogInfoTitle();
+
+	public String infoDialogErrorTitle();
+
+	public String confirmationDialogYesButton();
+
+	public String confirmationDialogNoButton();
 
 	public String renameFileDialogTitle();
 
@@ -52,4 +64,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String renameFileDialogRenameButton();
 
 	public String renameFileDialogCancelButton();
+
+	public String deleteFileConfirmationDialogTitle();
+
 }

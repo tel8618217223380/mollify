@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.filemanager;
 
+import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileAction;
@@ -24,6 +25,7 @@ import org.sjarvela.mollify.client.ui.fileaction.FileActionProvider;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Window;
@@ -169,17 +171,26 @@ public class FileManagerController implements SimpleFileListListener,
 		return true;
 	}
 
-	public void onFileAction(File file, FileAction action) {
+	public void onFileAction(final File file, FileAction action) {
 		if (action.equals(FileAction.DOWNLOAD)) {
 			view.openDownloadUrl(this.getActionURL(file, action));
 		} else if (action.equals(FileAction.RENAME)) {
 			view.showRenameDialog(file);
 		} else if (action.equals(FileAction.DELETE)) {
-			// TODO ask confirmation
-			onDelete(file);
+			view.showFileDeleteConfirmationDialog(file,
+					new ConfirmationListener() {
+						public void onConfirm() {
+							onDelete(file);
+						}
+					});
 		} else {
 			Window.alert("Unsupported action:" + action.name());
 		}
+	}
+
+	private void onOperationFailed(SuccessResult result) {
+		GWT.log(result.getMessage(), null);
+		view.showError(ServiceError.OPERATION_FAILED);
 	}
 
 	public void onRename(File file, String newName) {
@@ -191,12 +202,11 @@ public class FileManagerController implements SimpleFileListListener,
 
 			public void onSuccess(JavaScriptObject jso) {
 				SuccessResult result = jso.cast();
-				if (!result.isSuccess()) {
-					Window.alert(result.getMessage()); // TODO proper message
-					// dialog
-				}
+				if (!result.isSuccess())
+					onOperationFailed(result);
 				refresh();
 			}
+
 		});
 	}
 
@@ -209,10 +219,8 @@ public class FileManagerController implements SimpleFileListListener,
 
 			public void onSuccess(JavaScriptObject jso) {
 				SuccessResult result = jso.cast();
-				if (!result.isSuccess()) {
-					Window.alert(result.getMessage()); // TODO proper message
-					// dialog
-				}
+				if (!result.isSuccess())
+					onOperationFailed(result);
 				refresh();
 			}
 		});

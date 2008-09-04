@@ -24,6 +24,12 @@ public class StyleConstants {
 	public static final String BORDERED_CONTROL_PADDING_S = "s";
 	public static final String BORDERED_CONTROL_PADDING_SW = "sw";
 
+	public static final String MAIN_VIEW_HEADER = "header";
+	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
+	public static final String MAIN_VIEW_TOOL = "tool";
+	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
+	public static final String MAIN_VIEW_TOOL_PARENT_DIR = "parent-dir-button";
+
 	public static final String FILE_ACTIONS = "file-actions";
 	public static final String FILE_ACTIONS_BORDER = "file-actions-border";
 	public static final String FILE_ACTIONS_POINTER = "file-actions-pointer";
@@ -61,6 +67,25 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_MENU_ITEM = "menu-item";
 	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "menu-item-none";
 
+	public static final String DIALOG_BUTTON = "dialog-button";
+
+	public static final String INFO_DIALOG = "info-dialog";
+	public static final String INFO_DIALOG_CONTENT = "info-dialog-content";
+	public static final String INFO_DIALOG_ICON = "info-dialog-icon";
+	public static final String INFO_DIALOG_MESSAGE = "info-dialog-message";
+	public static final String INFO_DIALOG_BUTTONS = "info-dialog-buttons";
+
+	public static final String INFO_DIALOG_TYPE_INFO = "dialog-info";
+	public static final String INFO_DIALOG_TYPE_ERROR = "dialog-error";
+
+	public static final String CONFIRMATION_DIALOG = "confirm-dialog";
+	public static final String CONFIRMATION_DIALOG_CONTENT = "confirm-dialog-content";
+	public static final String CONFIRMATION_DIALOG_ICON = "confirm-dialog-icon";
+	public static final String CONFIRMATION_DIALOG_MESSAGE = "confirm-dialog-message";
+	public static final String CONFIRMATION_DIALOG_BUTTONS = "confirm-dialog-buttons";
+
+	public static final String CONFIRMATION_DIALOG_TYPE_DELETE_FILE = "confirm-delete-file";
+
 	public static final String RENAME_FILE_DIALOG = "rename-file-dialog";
 	public static final String RENAME_FILE_DIALOG_CONTENT = "rename-file-dialog-content";
 	public static final String RENAME_FILE_ORIGINAL_NAME_TITLE = "rename-file-original-name-title";
@@ -68,7 +93,8 @@ public class StyleConstants {
 	public static final String RENAME_FILE_NEW_NAME_TITLE = "rename-file-new-name-title";
 	public static final String RENAME_FILE_NEW_NAME_VALUE = "rename-file-new-name-value";
 	public static final String RENAME_FILE_DIALOG_BUTTONS = "rename-file-dialog-buttons";
-	public static final String RENAME_FILE_DIALOG_BUTTON = "rename-file-dialog-button";
+
 	public static final String RENAME_FILE_DIALOG_BUTTON_RENAME = "rename";
 	public static final String RENAME_FILE_DIALOG_BUTTON_CANCEL = "cancel";
+
 }

@@ -336,8 +336,24 @@ table.file-simple-list td {
 	padding-top: 3px;
 }
 
-.rename-file-dialog-content {
+.info-dialog-content {
 	margin: 10px 4px 4px;
+}
+
+.info-dialog-buttons {
+	width: 100%;
+	margin-top: 11px;
+	margin-bottom: 3px;
+}
+
+.confirm-dialog-content {
+	margin: 10px 4px 4px;
+}
+
+.confirm-dialog-buttons {
+	width: 100%;
+	margin-top: 11px;
+	margin-bottom: 3px;
 }
 
 .rename-file-original-name-title {
@@ -365,7 +381,6 @@ table.file-simple-list td {
 	border-width: 1px;
 }
 
-
 input.rename-file-new-name-value {
 	margin-bottom: 12px;
 	width: 250px;
@@ -376,7 +391,7 @@ input.rename-file-new-name-value {
 	padding-bottom: 4px;
 }
 
-.rename-file-dialog-button {
+.dialog-button {
 	height: 25px;
 }
 

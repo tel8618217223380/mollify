@@ -14,17 +14,14 @@ import org.sjarvela.mollify.client.RenameHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RenameDialog extends DialogBox {
+public class RenameDialog extends CenteredDialog {
 	private File file;
 	private Localizator localizator;
 	private TextBox name;
@@ -32,31 +29,18 @@ public class RenameDialog extends DialogBox {
 
 	public RenameDialog(File file, Localizator localizator,
 			RenameHandler listener) {
-		super(false, true);
+		super(localizator.getStrings().renameFileDialogTitle(),
+				StyleConstants.RENAME_FILE_DIALOG);
 
 		this.file = file;
 		this.localizator = localizator;
 		this.listener = listener;
 
-		this.addStyleName(StyleConstants.RENAME_FILE_DIALOG);
-		this.setText(localizator.getStrings().renameFileDialogTitle());
-
-		VerticalPanel content = new VerticalPanel();
-		content.add(createContent());
-		content.add(createButtons());
-
-		this.add(content);
-
-		this.setPopupPositionAndShow(new PositionCallback() {
-			public void setPosition(int offsetWidth, int offsetHeight) {
-				int left = ((Window.getClientWidth() - offsetWidth) / 2) >> 0;
-				int top = ((Window.getClientHeight() - offsetHeight) / 2) >> 0;
-				setPopupPosition(left, top);
-			}
-		});
+		initialize();
 	}
 
-	private Widget createContent() {
+	@Override
+	Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.RENAME_FILE_DIALOG_CONTENT);
 
@@ -85,47 +69,33 @@ public class RenameDialog extends DialogBox {
 		return panel;
 	}
 
-	private Widget createButtons() {
+	@Override
+	Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.RENAME_FILE_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(localizator.getStrings()
-				.renameFileDialogRenameButton(),
-				StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME,
-				new ClickListener() {
+				.renameFileDialogRenameButton(), new ClickListener() {
 
-					public void onClick(Widget sender) {
-						onRename();
-					}
-				}));
+			public void onClick(Widget sender) {
+				onRename();
+			}
+		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME));
 
 		buttons.add(createButton(localizator.getStrings()
-				.renameFileDialogCancelButton(),
-				StyleConstants.RENAME_FILE_DIALOG_BUTTON_CANCEL,
-				new ClickListener() {
+				.renameFileDialogCancelButton(), new ClickListener() {
 
-					public void onClick(Widget sender) {
-						RenameDialog.this.hide();
-					}
-				}));
+			public void onClick(Widget sender) {
+				RenameDialog.this.hide();
+			}
+		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_CANCEL));
 
 		return buttons;
 	}
 
-	private Widget createButton(String title, String style,
-			ClickListener listener) {
-		Button button = new Button(title);
-		button.addStyleName(StyleConstants.RENAME_FILE_DIALOG_BUTTON);
-		button.addStyleName(style);
-		button.addClickListener(listener);
-		return button;
-	}
-
 	@Override
-	public void show() {
-		super.show();
-
+	void onShow() {
 		hilightFilename();
 	}
 
