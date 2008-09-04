@@ -1,13 +1,24 @@
 <?php
+	function get_file_id($file) {
+		return base64_encode($file);
+	}
+
+	function get_filename($id) {
+		return base64_decode($id);
+	}
+
 	function get_dir_from_url() {
 		if (!isset($_GET["dir"])) return FALSE;
-		$dir = base64_decode($_GET["dir"]);
-		return $dir;
+		return get_filename($_GET["dir"]);
 	}
 	
 	function get_directories($account) {
+		global $error;
 		$path = get_dir_from_url();
-		if (!$path) return array();
+		if (!$path) {
+			$error = "Invalid path";
+			return FALSE;
+		}
 		
 		$files = scandir($path);
 		$result = array();
@@ -20,15 +31,19 @@
 			if (!is_dir($fullPath)) {
 				continue;
 			}
-			$result[] = array("id" => base64_encode($fullPath), "name" => $name, "path" => $fullPath);
+			$result[] = array("id" => get_file_id($fullPath), "name" => $name, "path" => $fullPath);
 		}
 		
 		return $result;
 	}
 	
 	function get_files($account) {
+		global $error;
 		$path = get_dir_from_url();
-		if (!$path) return array();
+		if (!$path) {
+			$error = "Invalid path";
+			return FALSE;
+		}
 
 		$files = scandir($path);
 		$result = array();
@@ -49,14 +64,60 @@
 				$extension = "";
 			}
 			
-			$result[] = array("id" => base64_encode($fullPath), "name" => $name, "extension" => $extension, "size" => filesize($fullPath));
+			$result[] = array("id" => get_file_id($fullPath), "name" => $name, "extension" => $extension, "size" => filesize($fullPath));
 		}
 		
 		return $result;
 	}
 	
-	function download($id) {
-		$filename = base64_decode($id);
+	function rename_file($filename, $new_name) {
+		global $error;
+		
+		if (!file_exists($filename)) {
+			$error = "Source file does not exist: ".basename($filename);
+			return FALSE;
+		}
+		if(!is_file($filename)) {
+			$error = "Source is not a file: ".basename($filename);
+			return FALSE;
+		}
+		
+		$new = dirname($filename).DIRECTORY_SEPARATOR.$new_name;
+		if (file_exists($new)) {
+			$error = "Target file already exists: ".basename($new);
+			return FALSE;
+		}
+		
+		return rename($filename, $new);
+	}
+
+	function delete_file($filename) {
+		global $error;
+		if (!file_exists($filename)) {
+			$error = "Target file does not exist: ".basename($filename);
+			return FALSE;
+		}
+		if(!is_file($filename)) {
+			$error = "Target is not a file: ".basename($filename);
+			return FALSE;
+		}
+		if (!unlink($filename)) {
+			$error = "Failed to delete file: ".basename($filename);
+			return FALSE;
+		}
+		return TRUE;
+	}
+	
+	function download($filename) {
+		global $error;
+		if (!file_exists($filename)) {
+			$error = "Source file does not exist: ".basename($filename);
+			return FALSE;
+		}
+		if(!is_file($filename)) {
+			$error = "Source is not a file: ".basename($filename);
+			return FALSE;
+		}
 		
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
@@ -65,6 +126,7 @@
 		header("Content-Transfer-Encoding: binary");
 		header("Content-Length: ".filesize($filename));
 		
-		readfile($filename); 
+		readfile($filename);
+		return TRUE;
 	}
 ?>

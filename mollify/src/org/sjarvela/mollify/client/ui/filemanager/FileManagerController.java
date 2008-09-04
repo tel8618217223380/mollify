@@ -174,14 +174,16 @@ public class FileManagerController implements SimpleFileListListener,
 			view.openDownloadUrl(this.getActionURL(file, action));
 		} else if (action.equals(FileAction.RENAME)) {
 			view.showRenameDialog(file);
+		} else if (action.equals(FileAction.DELETE)) {
+			// TODO ask confirmation
+			onDelete(file);
 		} else {
-			Window.alert(action.name());
+			Window.alert("Unsupported action:" + action.name());
 		}
 	}
 
 	public void onRename(File file, String newName) {
 		service.renameFile(file, newName, new ResultListener() {
-
 			public void onError(ServiceError error) {
 				view.showError(error);
 				refresh();
@@ -198,4 +200,21 @@ public class FileManagerController implements SimpleFileListListener,
 		});
 	}
 
+	public void onDelete(File file) {
+		service.deleteFile(file, new ResultListener() {
+			public void onError(ServiceError error) {
+				view.showError(error);
+				refresh();
+			}
+
+			public void onSuccess(JavaScriptObject jso) {
+				SuccessResult result = jso.cast();
+				if (!result.isSuccess()) {
+					Window.alert(result.getMessage()); // TODO proper message
+					// dialog
+				}
+				refresh();
+			}
+		});
+	}
 }

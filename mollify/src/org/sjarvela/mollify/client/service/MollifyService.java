@@ -88,4 +88,11 @@ public class MollifyService {
 				+ URL.encode(newName);
 		new JsonRpcHandler(url, listener).doRequest();
 	}
+
+	public void deleteFile(File file, ResultListener resultListener) {
+		SuccessResponseListener listener = new SuccessResponseListener(
+				resultListener);
+		String url = getFileActionUrl(file, FileAction.DELETE);
+		new JsonRpcHandler(url, listener).doRequest();
+	}
 }

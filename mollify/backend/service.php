@@ -1,9 +1,17 @@
 <?php
-	function format_json($result_array) {
+	function return_json($result_array) {
 		$ext = isset($_GET["callback"]);
 		if ($ext) echo $_GET["callback"]."(";
 		echo json_encode($result_array);
 		if ($ext) echo ');';
+	}
+	
+	function get_success_message() {
+		return array("success" => TRUE);
+	}
+	
+	function get_error_message($error) {
+		return array("success" => FALSE, "error"=>$error);
 	}
 
 	if (!isset($_GET["action"])) {
@@ -13,12 +21,13 @@
 	require "user.php";
 	$account = get_account();
 	if (!$account) {
-		format_json(array("error"=>"Unauthorized"));
+		return_json(get_error_message("Unauthorized"));
 		return;
 	}
 	
 	require "files.php";
-	$result = array();
+	$result = FALSE;
+	$error = "";
 	
 	switch ($_GET["action"]) {
 		case "get":
@@ -30,7 +39,7 @@
 				case "roots":
 					foreach($account["roots"] as $root) {
 						$result[] = array(
-							"id" => base64_encode($root["path"]),
+							"id" => get_file_id($root["path"]),
 							"name" => $root["name"]
 						);
 					}
@@ -49,22 +58,36 @@
 				return;
 			}
 			$id = $_GET["id"];
+			$filename = get_filename($id);
+			
 			switch (strtolower($_GET["type"])) {
 				case "download":
-					download($id);
-					return;	// download does not return JSON, it rewrites headers etc
+					// download does not return JSON, it rewrites headers etc
+					if (download($filename)) return;
+					break;
 				case "rename":
 					if (!isset($_GET["to"]))
 						return;
-					$result = rename($id, $_GET["to"]);
+					if (rename_file($filename, urldecode($_GET["to"])))
+						$result = get_success_message();
+					break;
+					
+				case "delete":
+					if (delete_file($filename))
+						$result = get_success_message();
+					break;
+
 				default:
-					$result = array("error"=>"Unsupported operation");
-					return;
+					$result = get_error_message("Unsupported operation");
+					break;
 			}
 			
 			break;
 	}
-	
+
 	// return JSON
-	format_json($result);
+	if (!$result) {
+		$result = get_error_message($error);
+	}
+	return_json($result);
 ?>
