@@ -59,7 +59,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 		this.localizator = localizator;
 
 		initWidget(createControls());
-		setStyleName("filemanager-main");
+		setStyleName(StyleConstants.MAIN_VIEW);
 	}
 
 	private Widget createControls() {
