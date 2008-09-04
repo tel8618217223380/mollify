@@ -58,10 +58,14 @@ public class FileActionPopup extends DropdownPopup {
 
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.FILE_ACTIONS_BUTTONS);
+
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionDownloadTitle(), FileAction.DOWNLOAD));
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionRenameTitle(), FileAction.RENAME));
+		buttons.add(createActionButton(localizator.getStrings()
+				.fileActionDeleteTitle(), FileAction.DELETE));
+
 		content.add(buttons);
 		return content;
 	}
@@ -72,7 +76,7 @@ public class FileActionPopup extends DropdownPopup {
 
 	private Widget createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
-		button.setStyleName(StyleConstants.FILE_ACTION);
+		button.addStyleName(StyleConstants.FILE_ACTION);
 		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX
 				+ action.name().toLowerCase());
 		button.addClickListener(new ClickListener() {
