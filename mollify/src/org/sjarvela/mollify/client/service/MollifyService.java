@@ -14,7 +14,6 @@ import javax.media.jai.operator.EncodeDescriptor;
 
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.service.json.JsonRpcHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
