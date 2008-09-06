@@ -10,13 +10,11 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.service.json.JsonRpcListener;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class ObjectListListener implements JsonRpcListener {
+public class ObjectListListener implements ResultListener {
 	ResultListener resultListener;
 
 	public ObjectListListener(ResultListener resultListener) {
@@ -24,7 +22,7 @@ public class ObjectListListener implements JsonRpcListener {
 		this.resultListener = resultListener;
 	}
 
-	public void onFailure(ServiceError error) {
+	public void onError(ServiceError error) {
 		GWT.log("Service request failed: " + error.name(), null);
 		resultListener.onError(error);
 	}
@@ -33,7 +31,7 @@ public class ObjectListListener implements JsonRpcListener {
 	public void onSuccess(JavaScriptObject object) {
 		JsArray result = object.cast();
 		if (result == null) {
-			onFailure(ServiceError.DATA_TYPE_MISMATCH);
+			onError(ServiceError.DATA_TYPE_MISMATCH);
 			return;
 		}
 

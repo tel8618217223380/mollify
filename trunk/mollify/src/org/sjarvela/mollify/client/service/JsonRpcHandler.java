@@ -8,20 +8,18 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.json;
-
-import org.sjarvela.mollify.client.service.ServiceError;
+package org.sjarvela.mollify.client.service;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsonRpcHandler {
 	private static int requestId = 0;
-	private JsonRpcListener listener;
+	private ResultListener listener;
 	private String url;
 	private int id;
 
-	public JsonRpcHandler(String url, JsonRpcListener listener) {
+	public JsonRpcHandler(String url, ResultListener listener) {
 		this.listener = listener;
 		this.url = url;
 		this.id = requestId++;
@@ -38,10 +36,11 @@ public class JsonRpcHandler {
 		}
 		listener.onSuccess(jso);
 	}
-	
+
 	public void handleError(int error) {
-		GWT.log("Json request failed: id=" + id + " url=" + url + " msg=" + error, null);
-		listener.onFailure(ServiceError.values()[error]);
+		GWT.log("Json request failed: id=" + id + " url=" + url + " msg="
+				+ error, null);
+		listener.onError(ServiceError.values()[error]);
 	}
 
 	private native static void getExternalJson(int requestId, String url,
@@ -54,12 +53,12 @@ public class JsonRpcHandler {
 	
 	    window[callback] = function(jsonObj) {
 	      window[callback + "done"] = true;
-	      handler.@org.sjarvela.mollify.client.service.json.JsonRpcHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
+	      handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
 	    }
 	    
 	    setTimeout(function() {
 	      if (!window[callback + "done"]) {
-	        handler.@org.sjarvela.mollify.client.service.json.JsonRpcHandler::handleError(I)(0);
+	        handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleError(I)(0);
 	      } 
 	
 	      // cleanup
