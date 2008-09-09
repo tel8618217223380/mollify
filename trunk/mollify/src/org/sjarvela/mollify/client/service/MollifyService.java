@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.service;
 
-import javax.media.jai.operator.EncodeDescriptor;
-
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.File;
 

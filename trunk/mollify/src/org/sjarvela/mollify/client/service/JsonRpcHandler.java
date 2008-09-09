@@ -38,7 +38,7 @@ public class JsonRpcHandler {
 	}
 
 	public void handleError(int error) {
-		GWT.log("Json request failed: id=" + id + " url=" + url + " msg="
+		GWT.log("Json request failed: id=[" + id + "] url=[" + url + "] msg="
 				+ error, null);
 		listener.onError(ServiceError.values()[error]);
 	}

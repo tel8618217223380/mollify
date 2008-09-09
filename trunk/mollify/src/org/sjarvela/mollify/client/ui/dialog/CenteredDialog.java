@@ -1,4 +1,6 @@
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.dialog;
+
+import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
