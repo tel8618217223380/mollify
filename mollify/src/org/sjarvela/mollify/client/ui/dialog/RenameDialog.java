@@ -8,11 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.RenameHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
