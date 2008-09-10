@@ -13,10 +13,11 @@
 	}
 	
 	function get_directories($account) {
-		global $error;
+		global $error, $error_details;
+		
 		$path = get_dir_from_url();
 		if (!$path) {
-			$error = "Invalid path";
+			$error = "INVALID_PATH";
 			return FALSE;
 		}
 		
@@ -38,10 +39,11 @@
 	}
 	
 	function get_files($account) {
-		global $error;
+		global $error, $error_details;
+		
 		$path = get_dir_from_url();
 		if (!$path) {
-			$error = "Invalid path";
+			$error = "INVALID_PATH";
 			return FALSE;
 		}
 
@@ -71,20 +73,23 @@
 	}
 	
 	function rename_file($filename, $new_name) {
-		global $error;
+		global $error, $error_details;
 		
 		if (!file_exists($filename)) {
-			$error = "Source file does not exist: ".basename($filename);
+			$error = "FILE_DOES_NOT_EXIST";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		if(!is_file($filename)) {
-			$error = "Source is not a file: ".basename($filename);
+			$error = "NOT_A_FILE";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		
 		$new = dirname($filename).DIRECTORY_SEPARATOR.$new_name;
 		if (file_exists($new)) {
-			$error = "Target file already exists: ".basename($new);
+			$error = "FILE_ALREADY_EXISTS";
+			$error_details = basename($new);
 			return FALSE;
 		}
 		
@@ -92,30 +97,70 @@
 	}
 
 	function delete_file($filename) {
-		global $error;
+		global $error, $error_details;
+		
 		if (!file_exists($filename)) {
-			$error = "Target file does not exist: ".basename($filename);
+			$error = "FILE_DOES_NOT_EXIST";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		if(!is_file($filename)) {
-			$error = "Target is not a file: ".basename($filename);
+			$error = "NOT_A_FILE";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		if (!unlink($filename)) {
-			$error = "Failed to delete file: ".basename($filename);
+			$error = "CANNOT_DELETE";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		return TRUE;
 	}
+
+	function upload_file($dir) {
+		global $error, $error_details;
+		
+		if (!isset($_FILES['upload'])) {
+			$error = "NO_UPLOAD_DATA";
+			return FALSE;
+		}
+		
+		$name = $_FILES['upload']['name'];
+		$origin = $_FILES['upload']['tmp_name'];
+		$target = $dir.DIRECTORY_SEPARATOR.$name;
+		
+		if ($_FILES["file"]["error"] != UPLOAD_ERR_OK) {
+			$error = "UPLOAD_FAILED";
+			$error_details = $_FILES["file"]["error"];
+			return FALSE;
+		}
+		
+		if (file_exists($target)) {
+			$error = "FILE_ALREADY_EXISTS";
+			$error_details = basename($target);
+			return FALSE;
+		}
+
+		if (move_uploaded_file($origin, $target)) {
+			return TRUE;
+		}
+		
+		$error = "SAVING_FAILED";
+		$error_details = $name;
+		return FALSE;
+	}
 	
 	function download($filename) {
-		global $error;
+		global $error, $error_details;
+		
 		if (!file_exists($filename)) {
-			$error = "Source file does not exist: ".basename($filename);
+			$error = "FILE_DOES_NOT_EXIST";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		if(!is_file($filename)) {
-			$error = "Source is not a file: ".basename($filename);
+			$error = "NOT_A_FILE";
+			$error_details = basename($filename);
 			return FALSE;
 		}
 		
