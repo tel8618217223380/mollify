@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.UrlHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
+import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
@@ -49,6 +50,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private Localizator localizator;
 	private DirectoryController directoryController;
 	private FileHandler fileHandler;
+	private FileActionProvider fileActionProvider;
 
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
@@ -105,6 +107,16 @@ public class FileManagerView extends Composite implements UrlHandler {
 					}
 				}));
 
+		panel.add(createToolButton(localizator.getStrings()
+				.mainViewUploadFileButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE, new ClickListener() {
+					public void onClick(Widget sender) {
+						new FileUploadDialog(model.getDirectoryModel()
+								.getCurrentFolder(), localizator,
+								fileActionProvider, fileHandler);
+					}
+				}));
+
 		Label rightPadding = new Label();
 		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
 		rightPadding.addStyleName(StyleConstants.RIGHT);
@@ -142,6 +154,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	}
 
 	void setFileActionProvider(FileActionProvider fileActionProvider) {
+		this.fileActionProvider = fileActionProvider;
 		fileAction = new FileActionPopup(localizator, fileActionProvider);
 	}
 

@@ -10,6 +10,6 @@
 
 package org.sjarvela.mollify.client;
 
-public interface FileHandler extends RenameHandler {
+public interface FileHandler extends RenameHandler, FileUploadHandler {
 
 }

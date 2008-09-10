@@ -11,5 +11,5 @@
 package org.sjarvela.mollify.client;
 
 public enum FileAction {
-	DOWNLOAD, RENAME, DELETE
+	DOWNLOAD, RENAME, DELETE, UPLOAD
 }

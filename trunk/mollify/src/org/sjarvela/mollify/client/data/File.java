@@ -52,4 +52,8 @@ public class File extends JavaScriptObject {
 	public final int getSizeInKB() {
 		return getSize() / 1024;
 	}
+	
+	public final boolean isEmpty() {
+		return this.equals(Empty());
+	}
 }
