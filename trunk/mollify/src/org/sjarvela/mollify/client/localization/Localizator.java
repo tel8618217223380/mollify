@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.localization;
 
+import org.sjarvela.mollify.client.data.SuccessResult;
+
 import com.google.gwt.core.client.GWT;
 
 public class Localizator {
@@ -36,5 +38,11 @@ public class Localizator {
 
 	public MessageConstants getMessages() {
 		return messageConstants;
+	}
+
+	public String getErrorMessage(SuccessResult errorResult) {
+		// TODO get localized
+		return errorResult.getCode() + ": " + errorResult.getError() + "("
+				+ errorResult.getDetails() + ")";
 	}
 }
