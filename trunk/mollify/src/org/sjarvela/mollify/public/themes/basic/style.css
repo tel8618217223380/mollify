@@ -73,6 +73,17 @@
 	background: url(b-up-d.png) no-repeat 0 0;
 }
 
+#file-upload.tool {
+	background: url(b-add.png) no-repeat 0 0;
+	font-size: 0;
+	width: 36px;
+	margin-left: 4px;
+}
+
+#file-upload.tool:active {
+	background: url(b-add-d.png) no-repeat 0 0;
+}
+
 table.directory-list.root-level {
 	padding-left: 0;
 }
@@ -396,7 +407,7 @@ input.rename-file-new-name-value {
 }
 
 .file-upload-dialog-content {
-	margin: 10px 4px 4px;
+	margin: 10px 4px 15px;
 }
 
 .file-selector {
