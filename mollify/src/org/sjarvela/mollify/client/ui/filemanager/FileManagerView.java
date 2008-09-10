@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.SuccessResult;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -192,6 +193,13 @@ public class FileManagerView extends Composite implements UrlHandler {
 				StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
+	public void showError(SuccessResult errorResult) {
+		new InfoDialog(localizator, localizator.getStrings()
+				.infoDialogErrorTitle(), localizator
+				.getErrorMessage(errorResult),
+				StyleConstants.INFO_DIALOG_TYPE_ERROR);
+	}
+
 	public void showInfo(String title, String text) {
 		new InfoDialog(localizator, title, text,
 				StyleConstants.INFO_DIALOG_TYPE_INFO);
@@ -232,5 +240,4 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
-
 }

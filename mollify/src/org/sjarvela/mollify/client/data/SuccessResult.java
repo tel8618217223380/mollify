@@ -20,7 +20,15 @@ public class SuccessResult extends JavaScriptObject {
 		return this.success;
 	}-*/;
 
-	public final native String getMessage() /*-{
-		return this.message;
+	public final native int getCode() /*-{
+		return this.code;
+	}-*/;
+
+	public final native String getError() /*-{
+		return this.error;
+	}-*/;
+	
+	public final native String getDetails() /*-{
+		return this.details;
 	}-*/;
 }

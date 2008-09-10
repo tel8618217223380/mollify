@@ -194,8 +194,8 @@ public class FileManagerController implements SimpleFileListListener,
 	}
 
 	private void onOperationFailed(SuccessResult result) {
-		GWT.log(result.getMessage(), null);
-		view.showError(ServiceError.OPERATION_FAILED);
+		GWT.log(result.getError(), null);
+		view.showError(result);
 	}
 
 	public void onRename(File file, String newName) {
