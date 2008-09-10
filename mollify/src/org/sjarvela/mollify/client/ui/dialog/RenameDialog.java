@@ -84,13 +84,13 @@ public class RenameDialog extends CenteredDialog {
 			}
 		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME));
 
-		buttons.add(createButton(localizator.getStrings()
-				.renameFileDialogCancelButton(), new ClickListener() {
+		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
+				new ClickListener() {
 
-			public void onClick(Widget sender) {
-				RenameDialog.this.hide();
-			}
-		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_CANCEL));
+					public void onClick(Widget sender) {
+						RenameDialog.this.hide();
+					}
+				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
 		return buttons;
 	}

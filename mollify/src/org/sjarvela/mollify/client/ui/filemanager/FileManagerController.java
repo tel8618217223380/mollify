@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.SuccessResult;
+import org.sjarvela.mollify.client.service.FileUploadResultHandler;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -166,6 +167,10 @@ public class FileManagerController implements SimpleFileListListener,
 		return service.getFileActionUrl(file, action);
 	}
 
+	public String getActionURL(Directory dir, FileAction action) {
+		return service.getDirectoryActionUrl(dir, action);
+	}
+
 	public boolean isActionAllowed(File file, FileAction action) {
 		// TODO users rights
 		return true;
@@ -225,4 +230,21 @@ public class FileManagerController implements SimpleFileListListener,
 			}
 		});
 	}
+
+	public FileUploadResultHandler getFileUploadResultHandler() {
+		return new FileUploadResultHandler(new ResultListener() {
+			public void onError(ServiceError error) {
+				view.showError(error);
+				refresh();
+			}
+
+			public void onSuccess(JavaScriptObject jso) {
+				SuccessResult result = jso.cast();
+				if (!result.isSuccess())
+					onOperationFailed(result);
+				refresh();
+			}
+		}); 
+	}
+
 }

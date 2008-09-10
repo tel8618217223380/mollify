@@ -22,7 +22,7 @@
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
 
-.filemanager-main {
+.mollify-main {
 	width: 100%;
 }
 
@@ -395,3 +395,17 @@ input.rename-file-new-name-value {
 	height: 25px;
 }
 
+.file-upload-dialog-content {
+	margin: 10px 4px 4px;
+}
+
+.file-selector {
+	font-style: italic;
+	text-align: center;
+	width: 100%;
+}
+
+.file-upload-dialog-buttons {
+	width: 250px;
+	padding-bottom: 4px;
+}

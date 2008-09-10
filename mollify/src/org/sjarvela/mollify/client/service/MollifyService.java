@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.FileAction;
+import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 
 import com.google.gwt.core.client.GWT;
@@ -52,9 +53,29 @@ public class MollifyService {
 	}
 
 	public String getFileActionUrl(File file, FileAction action) {
+		if (action.equals(FileAction.UPLOAD)) {
+			throw new RuntimeException("Invalid file action request "
+					+ action.name());
+		}
+
+		if (file.isEmpty()) {
+			throw new RuntimeException("No file given, action " + action.name());
+		}
+
 		return getUrl(Action.operate, "type=" + action.name(), "id="
 				+ file.getId());
 	}
+
+	public String getDirectoryActionUrl(Directory dir, FileAction action) {
+		if (!action.equals(FileAction.UPLOAD)) {
+			throw new RuntimeException("Invalid directory action request "
+					+ action.name());
+		}
+
+		return getUrl(Action.operate, "type=" + action.name(), "id="
+				+ dir.getId());
+	}
+
 
 	/* Utility functions */
 
@@ -92,4 +113,5 @@ public class MollifyService {
 		String url = getFileActionUrl(file, FileAction.DELETE);
 		new JsonRpcHandler(url, listener).doRequest();
 	}
+
 }

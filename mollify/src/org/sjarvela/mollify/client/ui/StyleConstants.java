@@ -30,6 +30,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_TOOL = "tool";
 	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
 	public static final String MAIN_VIEW_TOOL_PARENT_DIR = "parent-dir-button";
+	public static final String MAIN_VIEW_TOOL_UPLOAD_FILE = "file-upload";
 
 	public static final String FILE_ACTIONS = "file-actions";
 	public static final String FILE_ACTIONS_BORDER = "file-actions-border";
@@ -84,6 +85,7 @@ public class StyleConstants {
 	public static final String CONFIRMATION_DIALOG_ICON = "confirm-dialog-icon";
 	public static final String CONFIRMATION_DIALOG_MESSAGE = "confirm-dialog-message";
 	public static final String CONFIRMATION_DIALOG_BUTTONS = "confirm-dialog-buttons";
+	public static final String DIALOG_BUTTON_CANCEL = "cancel";
 
 	public static final String CONFIRMATION_DIALOG_TYPE_DELETE_FILE = "confirm-delete-file";
 
@@ -94,8 +96,12 @@ public class StyleConstants {
 	public static final String RENAME_FILE_NEW_NAME_TITLE = "rename-file-new-name-title";
 	public static final String RENAME_FILE_NEW_NAME_VALUE = "rename-file-new-name-value";
 	public static final String RENAME_FILE_DIALOG_BUTTONS = "rename-file-dialog-buttons";
-
 	public static final String RENAME_FILE_DIALOG_BUTTON_RENAME = "rename";
-	public static final String RENAME_FILE_DIALOG_BUTTON_CANCEL = "cancel";
 
+	public static final String FILE_UPLOAD_DIALOG = "file-upload-dialog";
+	public static final String FILE_UPLOAD_DIALOG_CONTENT = "file-upload-dialog-content";
+	public static final String FILE_UPLOAD_DIALOG_FORM = "file-upload-form";
+	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "file-selector";
+	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "file-upload-dialog-buttons";
+	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
 }

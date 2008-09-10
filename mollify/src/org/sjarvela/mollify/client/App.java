@@ -17,11 +17,15 @@ import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;
 import org.sjarvela.mollify.client.ui.filemanager.FileManagerView;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class App implements EntryPoint {
+public class App implements EntryPoint, UncaughtExceptionHandler {
 
 	public void onModuleLoad() {
+		GWT.setUncaughtExceptionHandler(this);
+		
 		MollifyService service = new MollifyService();
 		FileManagerModel model = new FileManagerModel();
 		FileManagerView view = new FileManagerView(model, Localizator
@@ -29,5 +33,9 @@ public class App implements EntryPoint {
 		new FileManagerController(service, model, view);
 
 		RootPanel.get("mollify").add(view);
+	}
+
+	public void onUncaughtException(Throwable e) {
+		GWT.log("UNCAUGHT", e);
 	}
 }
