@@ -17,6 +17,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String mainViewUploadFileButtonTitle();
 
+	public String fileDetailsLabelLastAccessed();
+
+	public String fileDetailsLabelLastModified();
+
+	public String fileDetailsLabelLastChanged();
+
 	public String fileActionDownloadTitle();
 
 	public String fileActionRenameTitle();
@@ -74,4 +80,5 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadDialogMessage();
 
 	public String fileUploadDialogUploadButton();
+
 }
