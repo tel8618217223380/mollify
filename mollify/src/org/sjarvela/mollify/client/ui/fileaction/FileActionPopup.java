@@ -116,7 +116,14 @@ public class FileActionPopup extends DropdownPopup {
 		content.addStyleName(StyleConstants.FILE_ACTIONS_DETAILS_CONTENT);
 
 		for (Details detail : Details.values()) {
-			String title = detail.name(); // TODO localize
+			String title = "?";
+			if (detail.equals(Details.Accessed))
+				title = localizator.getStrings().fileDetailsLabelLastAccessed();
+			else if (detail.equals(Details.Modified))
+				title = localizator.getStrings().fileDetailsLabelLastModified();
+			else if (detail.equals(Details.Changed))
+				title = localizator.getStrings().fileDetailsLabelLastChanged();
+
 			String style = StyleConstants.FILE_ACTIONS_DETAILS_ROW_PREFIX + detail.name().toLowerCase();
 			content.add(createDetailsRow(title, style));
 		}
