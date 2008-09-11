@@ -198,8 +198,7 @@ public class FileActionPopup extends DropdownPopup {
 
 	private void updateDetails(FileDetails details) {
 		this.description.setText(details.getDescription());
-		if (details.getDescription().trim().length() < 1)
-			this.description.setVisible(false);
+		this.description.setVisible(details.getDescription().trim().length() > 0);
 
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
@@ -207,7 +206,7 @@ public class FileActionPopup extends DropdownPopup {
 			if (detail.equals(Details.Accessed))
 				value.setText(String.valueOf(details.getLastAccessed()));
 			else if (detail.equals(Details.Modified))
-				value.setText(String.valueOf(details.getLastAccessed()));
+				value.setText(String.valueOf(details.getLastModified()));
 			else if (detail.equals(Details.Changed))
 				value.setText(String.valueOf(details.getLastChanged()));
 		}
