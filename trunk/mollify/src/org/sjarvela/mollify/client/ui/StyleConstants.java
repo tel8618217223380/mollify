@@ -25,7 +25,7 @@ public class StyleConstants {
 	public static final String BORDERED_CONTROL_PADDING_SW = "sw";
 
 	public static final String MAIN_VIEW = "mollify-main";
-	public static final String MAIN_VIEW_HEADER = "header";
+	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
 	public static final String MAIN_VIEW_TOOL = "tool";
 	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
@@ -36,6 +36,13 @@ public class StyleConstants {
 	public static final String FILE_ACTIONS_BORDER = "file-actions-border";
 	public static final String FILE_ACTIONS_POINTER = "file-actions-pointer";
 	public static final String FILE_ACTIONS_CONTENT = "file-actions-content";
+	public static final String FILE_ACTIONS_FILENAME = "file-actions-filename";
+	public static final String FILE_ACTIONS_DESCRIPTION = "file-actions-description";
+	public static final String FILE_ACTIONS_DETAILS = "file-actions-details";
+	public static final String FILE_ACTIONS_DETAILS_CONTENT = "file-actions-details-content";
+	public static final String FILE_ACTIONS_DETAILS_ROW_PREFIX = "file-actions-details-row-";
+	public static final String FILE_ACTIONS_DETAILS_ROW_LABEL = "file-actions-details-row-label";
+	public static final String FILE_ACTIONS_DETAILS_ROW_VALUE = "file-actions-details-row-value";
 	public static final String FILE_ACTIONS_BUTTONS = "file-actions-buttons";
 	public static final String FILE_ACTION = "file-action";
 	public static final String FILE_ACTION_PREFIX = "action_";
@@ -100,6 +107,7 @@ public class StyleConstants {
 
 	public static final String FILE_UPLOAD_DIALOG = "file-upload-dialog";
 	public static final String FILE_UPLOAD_DIALOG_CONTENT = "file-upload-dialog-content";
+	public static final String FILE_UPLOAD_DIALOG_MESSAGE = "file-upload-dialog-message";
 	public static final String FILE_UPLOAD_DIALOG_FORM = "file-upload-form";
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "file-upload-dialog-buttons";

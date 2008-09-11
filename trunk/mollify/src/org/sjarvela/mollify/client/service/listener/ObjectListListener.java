@@ -8,33 +8,22 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.service.listener;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class ObjectListListener implements ResultListener {
+public class ObjectListListener extends ObjectListener {
 	ResultListener resultListener;
 
 	public ObjectListListener(ResultListener resultListener) {
-		super();
-		this.resultListener = resultListener;
-	}
-
-	public void onError(ServiceError error) {
-		GWT.log("Service request failed: " + error.name(), null);
-		resultListener.onError(error);
+		super(resultListener);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void onSuccess(JavaScriptObject object) {
-		JsArray result = object.cast();
-		if (result == null) {
-			onError(ServiceError.DATA_TYPE_MISMATCH);
-			return;
-		}
-
-		resultListener.onSuccess(result);
+	@Override
+	protected boolean validate(JavaScriptObject result) {
+		JsArray array = result.cast();
+		return (array != null);
 	}
 }

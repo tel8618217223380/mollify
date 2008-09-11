@@ -26,7 +26,7 @@
 	width: 100%;
 }
 
-.header {
+.mollify-header {
 	background: url(header-bg.png) repeat-x 0 -32px;
 	padding-left: 8px;
 	padding-right: 8px;
@@ -42,10 +42,10 @@
 	background-image: none;
 	margin-top: 8px;
 	margin-bottom: 8px;
-	margin-right: 4px;
 	padding: 0;
 	height: 23px;
 	border-style: none;
+	margin-right: 4px;
 }
 
 .tool:hover {
@@ -77,7 +77,6 @@
 	background: url(b-add.png) no-repeat 0 0;
 	font-size: 0;
 	width: 36px;
-	margin-left: 4px;
 }
 
 #file-upload.tool:active {
@@ -347,6 +346,41 @@ table.file-simple-list td {
 	padding-top: 3px;
 }
 
+.file-actions-filename {
+	font-weight: bold;
+	margin-bottom: 6px;
+}
+.file-actions-description {
+	margin-bottom: 8px;
+	margin-top: 4px;
+}
+
+.file-actions-details {
+	width: 300px;
+	margin-top: 4px;
+}
+
+.file-actions-details .header {
+	background-color: #ebebeb;
+}
+
+.file-actions-details-content.content {
+	width: 300px;
+	border-left: 1px;
+	padding: 8px;
+	margin: 0;
+	background-color: #f5f5f5;
+}
+
+.file-actions-details-row-value {
+	font-weight: bold;
+	width: 150px;
+}
+
+.file-actions-buttons {
+	margin-top: 7px;
+}
+
 .info-dialog-content {
 	margin: 10px 4px 4px;
 }
@@ -363,8 +397,8 @@ table.file-simple-list td {
 
 .confirm-dialog-buttons {
 	width: 100%;
-	margin-top: 11px;
-	margin-bottom: 3px;
+	margin-top: 14px;
+	margin-bottom: -1px;
 }
 
 .rename-file-original-name-title {
@@ -408,6 +442,11 @@ input.rename-file-new-name-value {
 
 .file-upload-dialog-content {
 	margin: 10px 4px 15px;
+}
+
+.file-upload-dialog-message {
+	font-weight: bold;
+	margin-bottom: 7px;
 }
 
 .file-selector {

@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.data.SuccessResult;
+import org.sjarvela.mollify.client.service.listener.ResultListener;
 
 import com.google.gwt.json.client.JSONParser;
 

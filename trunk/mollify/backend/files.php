@@ -7,9 +7,32 @@
 		return base64_decode($id);
 	}
 
+	function get_filename_from_url() {
+		if (!isset($_GET["id"])) {
+			return FALSE;
+		}
+		return get_filename($_GET["id"]);
+	}
+	
 	function get_dir_from_url() {
 		if (!isset($_GET["dir"])) return FALSE;
 		return get_filename($_GET["dir"]);
+	}
+	
+	function assert_file($filename) {
+		global $error, $error_details;
+		
+		if (!file_exists($filename)) {
+			$error = "FILE_DOES_NOT_EXIST";
+			$error_details = basename($filename);
+			return FALSE;
+		}
+		if(!is_file($filename)) {
+			$error = "NOT_A_FILE";
+			$error_details = basename($filename);
+			return FALSE;
+		}
+		return TRUE;
 	}
 	
 	function get_directories($account) {
@@ -72,17 +95,25 @@
 		return $result;
 	}
 	
-	function rename_file($filename, $new_name) {
-		global $error, $error_details;
-		
-		if (!file_exists($filename)) {
-			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($filename);
+	function get_file_details($filename) {
+		if (!assert_file($filename)) {
 			return FALSE;
 		}
-		if(!is_file($filename)) {
-			$error = "NOT_A_FILE";
-			$error_details = basename($filename);
+		$result = array(
+			"id" => get_file_id($filename),
+			"last_changed" => filectime($filename),
+			"last_modified" => filemtime($filename),
+			"last_accessed" => fileatime($filename),
+			"description" => get_description($filename));
+		return $result;
+	}
+	
+	function get_description($filename) {
+		return "TODO";
+	}
+	
+	function rename_file($filename, $new_name) {
+		if (!assert_file($filename)) {
 			return FALSE;
 		}
 		
@@ -99,14 +130,7 @@
 	function delete_file($filename) {
 		global $error, $error_details;
 		
-		if (!file_exists($filename)) {
-			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($filename);
-			return FALSE;
-		}
-		if(!is_file($filename)) {
-			$error = "NOT_A_FILE";
-			$error_details = basename($filename);
+		if (!assert_file($filename)) {
 			return FALSE;
 		}
 		if (!unlink($filename)) {
@@ -153,14 +177,7 @@
 	function download($filename) {
 		global $error, $error_details;
 		
-		if (!file_exists($filename)) {
-			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($filename);
-			return FALSE;
-		}
-		if(!is_file($filename)) {
-			$error = "NOT_A_FILE";
-			$error_details = basename($filename);
+		if (!assert_file($filename)) {
 			return FALSE;
 		}
 		

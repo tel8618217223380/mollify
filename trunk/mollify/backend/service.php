@@ -1,7 +1,8 @@
 <?php
 	$ERRORS = array(
 		"UNAUTHORIZED" => array(100, "Unauthorized request"), 
-		"UNSUPPORTED_OPERATION" => array(101, "Unsupported operation"),
+		"INVALID_REQUEST" => array(101, "Invalid request"),
+		"UNSUPPORTED_OPERATION" => array(102, "Unsupported operation"),
 		
 		"INVALID_PATH" => array(201, "Invalid path"), 
 		"FILE_DOES_NOT_EXIST" => array(202, "File does not exist"), 
@@ -25,10 +26,12 @@
 	}
 	
 	function get_error_message($error, $details = "") {
-		$err = $ERRORS[$error];
-		if (!$err) {
+		global $ERRORS;
+		
+		if (!isset($ERRORS[$error])) {
 			return array("success" => FALSE, "code" => 0, "error" => "Unknown error: " + $error, "details" => $details);
 		}
+		$err = $ERRORS[$error];
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 
@@ -51,6 +54,7 @@
 	switch ($_GET["action"]) {
 		case "get":
 			if (!isset($_GET["type"])) {
+				return_json(get_error_message("INVALID_REQUEST"));
 				return;
 			}
 			
@@ -63,22 +67,37 @@
 						);
 					}
 					break;
+					
 				case "files":
 					$result = get_files($account);
 					break;
+					
 				case "dirs":
 					$result = get_directories($account);
+					break;
+
+				case "details":
+					$filename = get_filename_from_url();
+					if (!$filename) {
+						return;
+					}
+					$result = get_file_details($filename);
 					break;
 			}
 			
 			break;
 		case "operate":
-			if (!isset($_GET["type"]) || !isset($_GET["id"])) {
+			if (!isset($_GET["type"])) {
+				return_json(get_error_message("INVALID_REQUEST"));
 				return;
 			}
 			$operation = $_GET["type"];
-			$id = $_GET["id"];
-			$filename = get_filename($id);
+			
+			$filename = get_filename_from_url();
+			if (!$filename) {
+				return_json(get_error_message("INVALID_REQUEST"));
+				return;
+			}
 			
 			switch (strtolower($operation)) {
 				case "download":
