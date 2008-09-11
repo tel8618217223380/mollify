@@ -8,34 +8,20 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.service.listener;
 
 import org.sjarvela.mollify.client.data.SuccessResult;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class SuccessResponseListener implements ResultListener {
-	private ResultListener resultListener;
-
+public class SuccessResponseListener extends ObjectListener {
 	public SuccessResponseListener(ResultListener resultListener) {
-		super();
-		this.resultListener = resultListener;
+		super(resultListener);
 	}
 
-	public void onError(ServiceError error) {
-		resultListener.onError(error);
+	@Override
+	protected boolean validate(JavaScriptObject result) {
+		SuccessResult sr = result.cast();
+		return (sr != null);
 	}
-
-	public void onSuccess(JavaScriptObject jso) {
-		SuccessResult result = jso.cast();
-		if (result == null) {
-			// TODO check for failure response
-
-			onError(ServiceError.DATA_TYPE_MISMATCH);
-			return;
-		}
-
-		resultListener.onSuccess(result);
-	}
-
 }

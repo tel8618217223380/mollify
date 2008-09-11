@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.ui.filemanager;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.DirectoryController;
 import org.sjarvela.mollify.client.DirectoryProvider;
+import org.sjarvela.mollify.client.FileActionProvider;
+import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.FileHandler;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.SuccessResult;
@@ -26,7 +28,6 @@ import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.fileaction.FileActionPopup;
-import org.sjarvela.mollify.client.ui.fileaction.FileActionProvider;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileList;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
@@ -52,6 +53,7 @@ public class FileManagerView extends Composite implements UrlHandler {
 	private DirectoryController directoryController;
 	private FileHandler fileHandler;
 	private FileActionProvider fileActionProvider;
+	private FileDetailsProvider fileDetailsProvider;
 
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
@@ -154,9 +156,10 @@ public class FileManagerView extends Composite implements UrlHandler {
 		list.addListener(listener);
 	}
 
-	void setFileActionProvider(FileActionProvider fileActionProvider) {
+	void setFileProviders(FileActionProvider fileActionProvider, FileDetailsProvider fileDetailsProvider) {
 		this.fileActionProvider = fileActionProvider;
-		fileAction = new FileActionPopup(localizator, fileActionProvider);
+		this.fileDetailsProvider = fileDetailsProvider;
+		fileAction = new FileActionPopup(localizator, fileActionProvider, fileDetailsProvider);
 	}
 
 	void setDirectoryProvider(DirectoryProvider directoryProvider) {

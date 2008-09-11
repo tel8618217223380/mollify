@@ -13,6 +13,10 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.service.listener.FileDetailsListener;
+import org.sjarvela.mollify.client.service.listener.ObjectListListener;
+import org.sjarvela.mollify.client.service.listener.ResultListener;
+import org.sjarvela.mollify.client.service.listener.SuccessResponseListener;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -25,7 +29,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		files, dirs, roots
+		details, files, dirs, roots
 	};
 
 	public MollifyService() {
@@ -52,6 +56,29 @@ public class MollifyService {
 		getTypes(resultListener, GetType.roots);
 	}
 
+	public void getFileDetails(File file, ResultListener resultListener) {
+		FileDetailsListener listener = new FileDetailsListener(resultListener);
+		String url = getUrl(Action.get, "type=" + GetType.details, "id="
+				+ file.getId());
+		new JsonRpcHandler(url, listener).doRequest();
+	}
+
+	public void renameFile(File file, String newName,
+			ResultListener resultListener) {
+		SuccessResponseListener listener = new SuccessResponseListener(
+				resultListener);
+		String url = getFileActionUrl(file, FileAction.RENAME) + "&to="
+				+ URL.encode(newName);
+		new JsonRpcHandler(url, listener).doRequest();
+	}
+
+	public void deleteFile(File file, ResultListener resultListener) {
+		SuccessResponseListener listener = new SuccessResponseListener(
+				resultListener);
+		String url = getFileActionUrl(file, FileAction.DELETE);
+		new JsonRpcHandler(url, listener).doRequest();
+	}
+
 	public String getFileActionUrl(File file, FileAction action) {
 		if (action.equals(FileAction.UPLOAD)) {
 			throw new RuntimeException("Invalid file action request "
@@ -76,7 +103,6 @@ public class MollifyService {
 				+ dir.getId());
 	}
 
-
 	/* Utility functions */
 
 	private void getTypes(ResultListener resultListener, GetType type) {
@@ -97,21 +123,4 @@ public class MollifyService {
 		}
 		return url;
 	}
-
-	public void renameFile(File file, String newName,
-			ResultListener resultListener) {
-		SuccessResponseListener listener = new SuccessResponseListener(
-				resultListener);
-		String url = getFileActionUrl(file, FileAction.RENAME) + "&to="
-				+ URL.encode(newName);
-		new JsonRpcHandler(url, listener).doRequest();
-	}
-
-	public void deleteFile(File file, ResultListener resultListener) {
-		SuccessResponseListener listener = new SuccessResponseListener(
-				resultListener);
-		String url = getFileActionUrl(file, FileAction.DELETE);
-		new JsonRpcHandler(url, listener).doRequest();
-	}
-
 }

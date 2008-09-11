@@ -14,8 +14,8 @@ import org.sjarvela.mollify.client.DirectoryListener;
 import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 

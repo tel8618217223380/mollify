@@ -11,11 +11,11 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.FileAction;
+import org.sjarvela.mollify.client.FileActionProvider;
 import org.sjarvela.mollify.client.FileUploadHandler;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.fileaction.FileActionProvider;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -80,8 +81,15 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
+		panel.add(createMessage());
 		panel.add(createForm());
 		return panel;
+	}
+
+	private Widget createMessage() {
+		Label message = new Label(localizator.getStrings().fileUploadDialogMessage());
+		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
+		return message;
 	}
 
 	private Widget createForm() {

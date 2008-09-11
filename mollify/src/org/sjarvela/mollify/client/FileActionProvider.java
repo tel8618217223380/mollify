@@ -8,9 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileaction;
+package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 

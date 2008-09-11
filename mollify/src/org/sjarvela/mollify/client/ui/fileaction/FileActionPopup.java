@@ -10,52 +10,91 @@
 
 package org.sjarvela.mollify.client.ui.fileaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.FileAction;
+import org.sjarvela.mollify.client.FileActionProvider;
+import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileDetails;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileActionPopup extends DropdownPopup {
+	private Localizator localizator;
 	private FileActionProvider actionProvider;
+	private FileDetailsProvider detailsProvider;
 
-	private Label label;
+	private Label filename;
 	private File file = File.Empty();
+	private Label description;
+	private List<Label> detailRowValues = new ArrayList<Label>();
+	private DisclosurePanel details;
+
+	private enum Details {
+		Accessed, Modified, Changed
+	}
 
 	public FileActionPopup(Localizator localizator,
-			FileActionProvider actionProvider) {
+			FileActionProvider actionProvider,
+			FileDetailsProvider detailsProvider) {
 		super(null, null);
 
+		this.localizator = localizator;
 		this.actionProvider = actionProvider;
+		this.detailsProvider = detailsProvider;
 		this.setStyleName(StyleConstants.FILE_ACTIONS);
 
 		BorderedControl content = new BorderedControl(
 				StyleConstants.FILE_ACTIONS_BORDER);
-		content.setContent(createContent(localizator));
 
-		Label pointer = new Label();
-		pointer.setStyleName(StyleConstants.FILE_ACTIONS_POINTER);
-		content.setWidget(0, 1, pointer);
+		content.setContent(createContent());
+		// extra content, pointer pointing the file (just a div with a certain
+		// style)
+		content.setWidget(0, 1, createPointer());
 
 		this.add(content);
 	}
 
-	private VerticalPanel createContent(Localizator localizator) {
+	private Widget createPointer() {
+		Label pointer = new Label();
+		pointer.setStyleName(StyleConstants.FILE_ACTIONS_POINTER);
+		return pointer;
+	}
+
+	private VerticalPanel createContent() {
 		VerticalPanel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_ACTIONS_CONTENT);
 
-		label = new Label();
-		content.add(label);
+		filename = new Label();
+		filename.setStyleName(StyleConstants.FILE_ACTIONS_FILENAME);
+		content.add(filename);
 
+		description = new Label();
+		description.setStyleName(StyleConstants.FILE_ACTIONS_DESCRIPTION);
+		content.add(description);
+
+		content.add(createDetails());
+		content.add(createButtons());
+		return content;
+	}
+
+	private Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.FILE_ACTIONS_BUTTONS);
 
@@ -66,8 +105,42 @@ public class FileActionPopup extends DropdownPopup {
 		buttons.add(createActionButton(localizator.getStrings()
 				.fileActionDeleteTitle(), FileAction.DELETE));
 
-		content.add(buttons);
-		return content;
+		return buttons;
+	}
+
+	private Widget createDetails() {
+		details = new DisclosurePanel("Details", false);
+		details.addStyleName(StyleConstants.FILE_ACTIONS_DETAILS);
+
+		VerticalPanel content = new VerticalPanel();
+		content.addStyleName(StyleConstants.FILE_ACTIONS_DETAILS_CONTENT);
+
+		for (Details detail : Details.values()) {
+			String title = detail.name(); // TODO localize
+			String style = StyleConstants.FILE_ACTIONS_DETAILS_ROW_PREFIX + detail.name().toLowerCase();
+			content.add(createDetailsRow(title, style));
+		}
+
+		details.setContent(content);
+		return details;
+	}
+
+	private Widget createDetailsRow(String labelText, String style) {
+		HorizontalPanel detailsRow = new HorizontalPanel();
+
+		Label label = new Label(labelText);
+		label.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW_LABEL);
+		label.addStyleName(style);
+		detailsRow.add(label);
+
+		Label value = new Label();
+		label.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW_VALUE);
+		label.addStyleName(style);
+		detailsRow.add(value);
+
+		detailRowValues.add(value);
+
+		return detailsRow;
 	}
 
 	public File getFile() {
@@ -91,8 +164,46 @@ public class FileActionPopup extends DropdownPopup {
 		this.file = file;
 		super.setParentElement(parent);
 		super.setOpenerElement(parent);
+		details.setOpen(false);
+		
+		filename.setText(file.getName());
+		emptyDetails();
 
-		label.setText(file.getName());
+		detailsProvider.getFileDetails(file, new ResultListener() {
+			public void onError(ServiceError error) {
+				// TODO show error
+			}
+
+			public void onSuccess(JavaScriptObject result) {
+				FileDetails details = result.cast();
+				updateDetails(details);
+			}
+		});
+	}
+
+	private void emptyDetails() {
+		description.setText("");
+
+		for (Details detail : Details.values()) {
+			detailRowValues.get(detail.ordinal()).setText("");
+		}
+	}
+
+	private void updateDetails(FileDetails details) {
+		this.description.setText(details.getDescription());
+		if (details.getDescription().trim().length() < 1)
+			this.description.setVisible(false);
+
+		for (Details detail : Details.values()) {
+			Label value = detailRowValues.get(detail.ordinal());
+
+			if (detail.equals(Details.Accessed))
+				value.setText(String.valueOf(details.getLastAccessed()));
+			else if (detail.equals(Details.Modified))
+				value.setText(String.valueOf(details.getLastAccessed()));
+			else if (detail.equals(Details.Changed))
+				value.setText(String.valueOf(details.getLastChanged()));
+		}
 	}
 
 	private void onAction(FileAction action) {
