@@ -63,6 +63,7 @@
 	
 	function get_files($account) {
 		global $error, $error_details;
+		$ignored = array('descript.ion');
 		
 		$path = get_dir_from_url();
 		if (!$path) {
@@ -74,7 +75,7 @@
 		$result = array();
 		
 		foreach($files as $i => $name) {
-			if (substr($name, 0, 1) == '.') {
+			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored)) {
 				continue;
 			}
 			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
@@ -109,7 +110,27 @@
 	}
 	
 	function get_description($filename) {
-		return "TODO";
+		$path = dirname($filename);
+		$descriptions = get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
+		return $descriptions[basename($filename)];
+	}
+		
+	function get_descriptions_from_file($descript_ion) {
+		$result = array();
+		if (!file_exists($descript_ion)) return $result;
+	
+		$handle = @fopen($descript_ion, "r");
+		if (!$handle) return $result;
+		
+	    while (!feof($handle)) {
+	        $line = fgets($handle, 4096);
+	        $split = strpos($line, ' ');
+			if ($split <= 0) continue;
+			$result[substr($line, 0, $split)] = substr($line, $split + 1, strlen($line));
+	    }
+	    fclose($handle);
+		
+		return $result;
 	}
 	
 	function rename_file($filename, $new_name) {
