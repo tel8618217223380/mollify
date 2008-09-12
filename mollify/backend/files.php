@@ -100,11 +100,13 @@
 		if (!assert_file($filename)) {
 			return FALSE;
 		}
+		$datetime_format = "YmdHis";
+		
 		$result = array(
 			"id" => get_file_id($filename),
-			"last_changed" => filectime($filename),
-			"last_modified" => filemtime($filename),
-			"last_accessed" => fileatime($filename),
+			"last_changed" => date($datetime_format, filectime($filename)),
+			"last_modified" => date($datetime_format, filemtime($filename)),
+			"last_accessed" => date($datetime_format, fileatime($filename)),
 			"description" => get_description($filename));
 		return $result;
 	}

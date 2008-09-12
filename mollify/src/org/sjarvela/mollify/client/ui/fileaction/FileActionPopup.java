@@ -124,7 +124,8 @@ public class FileActionPopup extends DropdownPopup {
 			else if (detail.equals(Details.Changed))
 				title = localizator.getStrings().fileDetailsLabelLastChanged();
 
-			String style = StyleConstants.FILE_ACTIONS_DETAILS_ROW_PREFIX + detail.name().toLowerCase();
+			String style = StyleConstants.FILE_ACTIONS_DETAILS_ROW_PREFIX
+					+ detail.name().toLowerCase();
 			content.add(createDetailsRow(title, style));
 		}
 
@@ -172,13 +173,13 @@ public class FileActionPopup extends DropdownPopup {
 		super.setParentElement(parent);
 		super.setOpenerElement(parent);
 		details.setOpen(false);
-		
+
 		filename.setText(file.getName());
 		emptyDetails();
 
 		detailsProvider.getFileDetails(file, new ResultListener() {
 			public void onError(ServiceError error) {
-				// TODO show error
+				description.setText(error.getMessage(localizator));
 			}
 
 			public void onSuccess(JavaScriptObject result) {
@@ -198,7 +199,8 @@ public class FileActionPopup extends DropdownPopup {
 
 	private void updateDetails(FileDetails details) {
 		this.description.setText(details.getDescription());
-		this.description.setVisible(details.getDescription().trim().length() > 0);
+		this.description
+				.setVisible(details.getDescription().trim().length() > 0);
 
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
