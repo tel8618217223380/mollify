@@ -1,26 +1,45 @@
 package org.sjarvela.mollify.client.data;
 
+import java.util.Date;
+
+import org.sjarvela.mollify.client.DateTime;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class FileDetails extends JavaScriptObject {
-	protected FileDetails() {}
-	
+	protected FileDetails() {
+	}
+
 	public final native String getId() /*-{
 		return this.id;
 	}-*/;
 
-	public final native int getLastAccessed() /*-{
+	public final Date getLastAccessed() {
+		return DateTime.getInstance().getInternalFormat()
+				.parse(getLastAccessedString());
+	}
+
+	public final Date getLastChanged() {
+		return DateTime.getInstance().getInternalFormat().parse(getLastChangedString());
+	}
+
+	public final Date getLastModified() {
+		return DateTime.getInstance().getInternalFormat()
+				.parse(getLastModifiedString());
+	}
+
+	private final native String getLastAccessedString() /*-{
 		return this.last_accessed;
 	}-*/;
-	
-	public final native int getLastChanged() /*-{
+
+	private final native String getLastChangedString() /*-{
 		return this.last_changed;
 	}-*/;
 
-	public final native int getLastModified() /*-{
+	private final native String getLastModifiedString() /*-{
 		return this.last_modified;
 	}-*/;
-	
+
 	public final native String getDescription() /*-{
 		return this.description;
 	}-*/;
