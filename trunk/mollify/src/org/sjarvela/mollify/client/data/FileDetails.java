@@ -25,17 +25,18 @@ public class FileDetails extends JavaScriptObject {
 	}-*/;
 
 	public final Date getLastAccessed() {
-		return DateTime.getInstance().getInternalFormat()
-				.parse(getLastAccessedString());
+		return DateTime.getInstance().getInternalFormat().parse(
+				getLastAccessedString());
 	}
 
 	public final Date getLastChanged() {
-		return DateTime.getInstance().getInternalFormat().parse(getLastChangedString());
+		return DateTime.getInstance().getInternalFormat().parse(
+				getLastChangedString());
 	}
 
 	public final Date getLastModified() {
-		return DateTime.getInstance().getInternalFormat()
-				.parse(getLastModifiedString());
+		return DateTime.getInstance().getInternalFormat().parse(
+				getLastModifiedString());
 	}
 
 	private final native String getLastAccessedString() /*-{

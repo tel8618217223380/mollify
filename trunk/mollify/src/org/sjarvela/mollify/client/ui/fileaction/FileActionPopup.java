@@ -206,13 +206,13 @@ public class FileActionPopup extends DropdownPopup {
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
 
+			// TODO datetime format to locale specific
 			if (detail.equals(Details.Accessed)) {
-				Date a = details.getLastAccessed();
-				value.setText(a.toString());
+				value.setText(details.getLastAccessed().toString());
 			} else if (detail.equals(Details.Modified))
-				value.setText(String.valueOf(details.getLastModified().toString()));
+				value.setText(details.getLastModified().toString());
 			else if (detail.equals(Details.Changed))
-				value.setText(String.valueOf(details.getLastChanged().toString()));
+				value.setText(details.getLastChanged().toString());
 		}
 	}
 
