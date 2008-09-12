@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.fileaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileAction;
@@ -205,12 +206,13 @@ public class FileActionPopup extends DropdownPopup {
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
 
-			if (detail.equals(Details.Accessed))
-				value.setText(String.valueOf(details.getLastAccessed()));
-			else if (detail.equals(Details.Modified))
-				value.setText(String.valueOf(details.getLastModified()));
+			if (detail.equals(Details.Accessed)) {
+				Date a = details.getLastAccessed();
+				value.setText(a.toString());
+			} else if (detail.equals(Details.Modified))
+				value.setText(String.valueOf(details.getLastModified().toString()));
 			else if (detail.equals(Details.Changed))
-				value.setText(String.valueOf(details.getLastChanged()));
+				value.setText(String.valueOf(details.getLastChanged().toString()));
 		}
 	}
 
