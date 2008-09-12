@@ -113,8 +113,11 @@
 	
 	function get_description($filename) {
 		$path = dirname($filename);
+		$file = basename($filename);
 		$descriptions = get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
-		return $descriptions[basename($filename)];
+
+		if (!isset($descriptions[$file])) return "";
+		return $descriptions[$file];
 	}
 		
 	function get_descriptions_from_file($descript_ion) {
