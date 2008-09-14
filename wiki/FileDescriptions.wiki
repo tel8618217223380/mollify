@@ -1,14 +1,24 @@
-#summary One-sentence summary of this page.
+#summary Instructions for editing file descriptions
 #labels Phase-Deploy
 
 = Introduction =
-
-Add your content here.
+Mollify supports file descriptions in the backend file system. Each file can have a custom description that is shown in the file context popup panel.
 
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+File descriptions are defined in a file named "descript.ion". This file is hidden from the frontend listings, but is read by the backend.
+
+Rules are:
+  * Each folder has its own "descript.ion"
+  * Plain text document
+  * Each file in its own document line
+  * Line format is "<FILENAME> <DESCRIPTION>", where file name and description separated by a white space
+  * If the file name itself contains spaces, surround the name with quote marks
+
+Example:
+
+----
+Document.pdf Description for a Portable Document Format file.
+"Example Datasheet.xls" Description for the Microsoft Excel document.
+----
