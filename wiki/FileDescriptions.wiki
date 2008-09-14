@@ -12,13 +12,15 @@ File descriptions are defined in a file named "descript.ion". This file is hidde
 Rules are:
   * Each folder has its own "descript.ion"
   * Plain text document
-  * Each file in its own document line
   * Line format is "<FILENAME> <DESCRIPTION>", where file name and description separated by a white space
   * If the file name itself contains spaces, surround the name with quote marks
+  * One file description per a document line
 
-Example:
+Example (ignore the syntax coloring):
 
 ----
+{{{
 Document.pdf Description for a Portable Document Format file.
 "Example Datasheet.xls" Description for the Microsoft Excel document.
+}}}
 ----
