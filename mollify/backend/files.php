@@ -1,4 +1,14 @@
 <?php
+	/**
+	 * Copyright (c) 2008- Samuli Järvelä
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	function get_file_id($file) {
 		return base64_encode($file);
 	}
@@ -129,9 +139,19 @@
 		
 	    while (!feof($handle)) {
 	        $line = fgets($handle, 4096);
-	        $split = strpos($line, ' ');
+
+			// check for quote marks (")
+			if (ord(substr($line, 0, 1)) === 34) {
+				$line = substr($line, 1);
+				$split = strpos($line, chr(34));
+			} else {
+	        	$split = strpos($line, ' ');
+			}
 			if ($split <= 0) continue;
-			$result[substr($line, 0, $split)] = substr($line, $split + 1, strlen($line));
+
+			$name = trim(substr($line, 0, $split));
+			$desc = trim(substr($line, $split + 1));
+			$result[$name] = $desc;
 	    }
 	    fclose($handle);
 		

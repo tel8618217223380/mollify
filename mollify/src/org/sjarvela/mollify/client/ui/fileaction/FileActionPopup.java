@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.ui.fileaction;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileAction;
@@ -27,6 +26,7 @@ import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileActionPopup extends DropdownPopup {
+	private DateTimeFormat dateTimeFormat;
+
 	private Localizator localizator;
 	private FileActionProvider actionProvider;
 	private FileDetailsProvider detailsProvider;
@@ -60,6 +62,9 @@ public class FileActionPopup extends DropdownPopup {
 		this.actionProvider = actionProvider;
 		this.detailsProvider = detailsProvider;
 		this.setStyleName(StyleConstants.FILE_ACTIONS);
+
+		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
+				.getFormat(localizator.getStrings().shortDateTimeFormat());
 
 		BorderedControl content = new BorderedControl(
 				StyleConstants.FILE_ACTIONS_BORDER);
@@ -125,9 +130,7 @@ public class FileActionPopup extends DropdownPopup {
 			else if (detail.equals(Details.Changed))
 				title = localizator.getStrings().fileDetailsLabelLastChanged();
 
-			String style = StyleConstants.FILE_ACTIONS_DETAILS_ROW_PREFIX
-					+ detail.name().toLowerCase();
-			content.add(createDetailsRow(title, style));
+			content.add(createDetailsRow(title, detail.name().toLowerCase()));
 		}
 
 		details.setContent(content);
@@ -136,6 +139,7 @@ public class FileActionPopup extends DropdownPopup {
 
 	private Widget createDetailsRow(String labelText, String style) {
 		HorizontalPanel detailsRow = new HorizontalPanel();
+		detailsRow.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW);
 
 		Label label = new Label(labelText);
 		label.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW_LABEL);
@@ -206,13 +210,12 @@ public class FileActionPopup extends DropdownPopup {
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
 
-			// TODO datetime format to locale specific
 			if (detail.equals(Details.Accessed)) {
-				value.setText(details.getLastAccessed().toString());
+				value.setText(dateTimeFormat.format(details.getLastAccessed()));
 			} else if (detail.equals(Details.Modified))
-				value.setText(details.getLastModified().toString());
+				value.setText(dateTimeFormat.format(details.getLastModified()));
 			else if (detail.equals(Details.Changed))
-				value.setText(details.getLastChanged().toString());
+				value.setText(dateTimeFormat.format(details.getLastChanged()));
 		}
 	}
 
