@@ -1,4 +1,14 @@
 <?php
+	/**
+	 * Copyright (c) 2008- Samuli Järvelä
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	$ERRORS = array(
 		"UNAUTHORIZED" => array(100, "Unauthorized request"), 
 		"INVALID_REQUEST" => array(101, "Invalid request"),
@@ -78,7 +88,7 @@
 
 				case "details":
 					$filename = get_filename_from_url();
-					if (!$filename) {
+					if (!$filename) {
 						return;
 					}
 					$result = get_file_details($filename);
@@ -94,7 +104,7 @@
 			$operation = $_GET["type"];
 			
 			$filename = get_filename_from_url();
-			if (!$filename) {
+			if (!$filename) {
 				return_json(get_error_message("INVALID_REQUEST"));
 				return;
 			}

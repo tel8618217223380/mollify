@@ -40,7 +40,7 @@ public class StyleConstants {
 	public static final String FILE_ACTIONS_DESCRIPTION = "file-actions-description";
 	public static final String FILE_ACTIONS_DETAILS = "file-actions-details";
 	public static final String FILE_ACTIONS_DETAILS_CONTENT = "file-actions-details-content";
-	public static final String FILE_ACTIONS_DETAILS_ROW_PREFIX = "file-actions-details-row-";
+	public static final String FILE_ACTIONS_DETAILS_ROW = "file-actions-details-row";
 	public static final String FILE_ACTIONS_DETAILS_ROW_LABEL = "file-actions-details-row-label";
 	public static final String FILE_ACTIONS_DETAILS_ROW_VALUE = "file-actions-details-row-value";
 	public static final String FILE_ACTIONS_BUTTONS = "file-actions-buttons";
@@ -112,4 +112,5 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "file-upload-dialog-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
+
 }
