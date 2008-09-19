@@ -16,8 +16,8 @@ import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.FileActionProvider;
 import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.FileHandler;
+import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.SuccessResult;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -44,22 +44,24 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileManagerView extends Composite implements UrlHandler {
+public class MainView extends Composite implements UrlHandler {
 	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private FileManagerModel model;
+	private MainViewModel model;
 	private Localizator localizator;
 	private DirectoryController directoryController;
 	private FileHandler fileHandler;
 	private FileActionProvider fileActionProvider;
-	private FileDetailsProvider fileDetailsProvider;
 
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
 	private FileActionPopup fileAction;
+	private Button refreshButton;
+	private Button parentDirButton;
+	private Button uploadFileButton;
 
-	public FileManagerView(FileManagerModel model, Localizator localizator) {
+	public MainView(MainViewModel model, Localizator localizator) {
 		this.model = model;
 		this.localizator = localizator;
 
@@ -89,36 +91,12 @@ public class FileManagerView extends Composite implements UrlHandler {
 		leftPadding.addStyleName(StyleConstants.LEFT);
 		panel.add(leftPadding);
 
-		panel.add(createToolButton(localizator.getStrings()
-				.mainViewRefreshButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_REFRESH, new ClickListener() {
-					public void onClick(Widget sender) {
-						directoryController.refresh();
-					}
-				}));
-
+		createButtons();
+		panel.add(refreshButton);
 		directorySelector = new DirectorySelector(model, localizator);
 		panel.add(directorySelector);
-
-		panel.add(createToolButton(localizator.getStrings()
-				.mainViewParentDirButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR, new ClickListener() {
-					public void onClick(Widget sender) {
-						if (!model.getDirectoryModel().canAscend())
-							return;
-						directoryController.moveToParentDirectory();
-					}
-				}));
-
-		panel.add(createToolButton(localizator.getStrings()
-				.mainViewUploadFileButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE, new ClickListener() {
-					public void onClick(Widget sender) {
-						new FileUploadDialog(model.getDirectoryModel()
-								.getCurrentFolder(), localizator,
-								fileActionProvider, fileHandler);
-					}
-				}));
+		panel.add(parentDirButton);
+		panel.add(uploadFileButton);
 
 		Label rightPadding = new Label();
 		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
@@ -128,12 +106,25 @@ public class FileManagerView extends Composite implements UrlHandler {
 		return panel;
 	}
 
-	private Widget createToolButton(String title, String id,
-			ClickListener listener) {
+	private void createButtons() {
+		refreshButton = createToolButton(localizator.getStrings()
+				.mainViewRefreshButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_REFRESH);
+
+		parentDirButton = createToolButton(localizator.getStrings()
+				.mainViewParentDirButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR);
+
+		uploadFileButton = createToolButton(localizator.getStrings()
+				.mainViewUploadFileButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE);
+	}
+
+	private Button createToolButton(String title, String id) {
 		Button button = new Button(title);
 		button.addStyleName(StyleConstants.MAIN_VIEW_TOOL);
 		button.getElement().setId(id);
-		button.addClickListener(listener);
+
 		return button;
 	}
 
@@ -156,10 +147,11 @@ public class FileManagerView extends Composite implements UrlHandler {
 		list.addListener(listener);
 	}
 
-	void setFileProviders(FileActionProvider fileActionProvider, FileDetailsProvider fileDetailsProvider) {
-		this.fileActionProvider = fileActionProvider;
-		this.fileDetailsProvider = fileDetailsProvider;
-		fileAction = new FileActionPopup(localizator, fileActionProvider, fileDetailsProvider);
+	void setFileProviders(FileActionProvider fileActionProvider,
+			FileDetailsProvider fileDetailsProvider) {
+
+		fileAction = new FileActionPopup(localizator, fileActionProvider,
+				fileDetailsProvider);
 	}
 
 	void setDirectoryProvider(DirectoryProvider directoryProvider) {
@@ -190,13 +182,18 @@ public class FileManagerView extends Composite implements UrlHandler {
 		list.removeAllRows();
 	}
 
+	public void openUploadDialog() {
+		new FileUploadDialog(model.getDirectoryModel().getCurrentFolder(),
+				localizator, fileActionProvider, fileHandler);
+	}
+
 	public void showError(ServiceError error) {
 		new InfoDialog(localizator, localizator.getStrings()
 				.infoDialogErrorTitle(), error.getMessage(localizator),
 				StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
-	public void showError(SuccessResult errorResult) {
+	public void showError(ErrorValue errorResult) {
 		new InfoDialog(localizator, localizator.getStrings()
 				.infoDialogErrorTitle(), localizator
 				.getErrorMessage(errorResult),
@@ -238,9 +235,22 @@ public class FileManagerView extends Composite implements UrlHandler {
 		return localizator;
 	}
 
+	public Button RefreshButton() {
+		return refreshButton;
+	}
+
+	public Button ParentDirButton() {
+		return parentDirButton;
+	}
+
+	public Button UploadFileButton() {
+		return uploadFileButton;
+	}
+
 	/* UTILITIES */
 
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
+
 }

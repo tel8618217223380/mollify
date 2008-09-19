@@ -1,0 +1,3 @@
+<?php
+	$requireAuthentication = FALSE;
+?>

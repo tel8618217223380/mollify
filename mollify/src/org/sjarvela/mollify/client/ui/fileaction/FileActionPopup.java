@@ -19,8 +19,8 @@ import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileDetails;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -183,7 +183,7 @@ public class FileActionPopup extends DropdownPopup {
 		emptyDetails();
 
 		detailsProvider.getFileDetails(file, new ResultListener() {
-			public void onError(ServiceError error) {
+			public void onFail(ServiceError error) {
 				description.setText(error.getMessage(localizator));
 			}
 

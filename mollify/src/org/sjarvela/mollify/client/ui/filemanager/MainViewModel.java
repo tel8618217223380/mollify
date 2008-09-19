@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.data.File;
 
 import com.google.gwt.core.client.JsArray;
 
-public class FileManagerModel {
+public class MainViewModel {
 	private JsArray<Directory> rootDirectories;
 
 	private JsArray<Directory> directories;
@@ -23,7 +23,7 @@ public class FileManagerModel {
 
 	private DirectoryModel directoryModel;
 
-	public FileManagerModel() {
+	public MainViewModel() {
 		super();
 		clear();
 	}

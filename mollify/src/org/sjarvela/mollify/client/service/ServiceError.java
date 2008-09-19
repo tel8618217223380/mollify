@@ -10,10 +10,13 @@
 
 package org.sjarvela.mollify.client.service;
 
+import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.localization.Localizator;
 
+import com.google.gwt.core.client.GWT;
+
 public enum ServiceError {
-	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED;
+	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, AUTHENTICATION_FAILED, UNKNOWN_ERROR;
 
 	public String getMessage(Localizator localizator) {
 		switch (this) {
@@ -27,6 +30,16 @@ public enum ServiceError {
 			return localizator.getStrings().errorMessageOperationFailed();
 		default:
 			return localizator.getStrings().errorMessageUnknown();
+		}
+	}
+
+	public static ServiceError getFrom(ErrorValue error) {
+		switch (error.getCode()) {
+		case 100:
+			return AUTHENTICATION_FAILED;
+		default:
+			GWT.log("ServiceError.getFrom " + error.getCode(), null);
+			return UNKNOWN_ERROR;
 		}
 	}
 }
