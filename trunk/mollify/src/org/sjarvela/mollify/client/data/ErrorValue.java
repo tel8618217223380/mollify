@@ -10,15 +10,9 @@
 
 package org.sjarvela.mollify.client.data;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
-public class SuccessResult extends JavaScriptObject {
-	protected SuccessResult() {
+public class ErrorValue extends ReturnValue {
+	protected ErrorValue() {
 	}
-
-	public final native boolean isSuccess() /*-{
-		return this.success;
-	}-*/;
 
 	public final native int getCode() /*-{
 		return this.code;
@@ -27,7 +21,7 @@ public class SuccessResult extends JavaScriptObject {
 	public final native String getError() /*-{
 		return this.error;
 	}-*/;
-	
+
 	public final native String getDetails() /*-{
 		return this.details;
 	}-*/;

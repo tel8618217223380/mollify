@@ -13,10 +13,6 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.FileAction;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.service.listener.FileDetailsListener;
-import org.sjarvela.mollify.client.service.listener.ObjectListListener;
-import org.sjarvela.mollify.client.service.listener.ResultListener;
-import org.sjarvela.mollify.client.service.listener.SuccessResponseListener;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -29,7 +25,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		details, files, dirs, roots
+		details, files, dirs, roots, auth
 	};
 
 	public MollifyService() {
@@ -42,6 +38,10 @@ public class MollifyService {
 		this.baseUrl = GWT.isScript() ? GWT.getHostPageBaseURL()
 				: "http://localhost:7777/mollify/";
 		this.baseUrl += "service.php";
+	}
+
+	public void checkAuthentication(ResultListener resultListener) {
+		getTypes(resultListener, GetType.auth);
 	}
 
 	public void getFiles(ResultListener resultListener, String dir) {
@@ -57,26 +57,20 @@ public class MollifyService {
 	}
 
 	public void getFileDetails(File file, ResultListener resultListener) {
-		FileDetailsListener listener = new FileDetailsListener(resultListener);
 		String url = getUrl(Action.get, "type=" + GetType.details, "id="
 				+ file.getId());
-		new JsonRpcHandler(url, listener).doRequest();
+		doRequest(url, resultListener);
 	}
 
 	public void renameFile(File file, String newName,
 			ResultListener resultListener) {
-		SuccessResponseListener listener = new SuccessResponseListener(
-				resultListener);
 		String url = getFileActionUrl(file, FileAction.RENAME) + "&to="
 				+ URL.encode(newName);
-		new JsonRpcHandler(url, listener).doRequest();
+		doRequest(url, resultListener);
 	}
 
 	public void deleteFile(File file, ResultListener resultListener) {
-		SuccessResponseListener listener = new SuccessResponseListener(
-				resultListener);
-		String url = getFileActionUrl(file, FileAction.DELETE);
-		new JsonRpcHandler(url, listener).doRequest();
+		doRequest(getFileActionUrl(file, FileAction.DELETE), resultListener);
 	}
 
 	public String getFileActionUrl(File file, FileAction action) {
@@ -111,9 +105,7 @@ public class MollifyService {
 
 	private void getTypes(ResultListener resultListener, GetType type,
 			String param) {
-		ObjectListListener listener = new ObjectListListener(resultListener);
-		new JsonRpcHandler(getUrl(Action.get, "type=" + type, param), listener)
-				.doRequest();
+		doRequest(getUrl(Action.get, "type=" + type, param), resultListener);
 	}
 
 	private String getUrl(Action action, String... params) {
@@ -122,5 +114,11 @@ public class MollifyService {
 			url += "&" + param;
 		}
 		return url;
+	}
+
+	private void doRequest(String url, ResultListener resultListener) {
+		ResultValidator listener = new ResultValidator(resultListener);
+		new JsonRpcHandler(url, listener).doRequest();
+
 	}
 }

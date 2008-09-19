@@ -17,7 +17,5 @@ public interface DirectoryController {
 
 	public void changeDirectory(int level, Directory directory);
 
-	public void refresh();
-
 	public void moveToParentDirectory();
 }

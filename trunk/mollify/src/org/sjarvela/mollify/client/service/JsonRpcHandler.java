@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.service.listener.ResultListener;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -42,7 +41,7 @@ public class JsonRpcHandler {
 	public void handleError(int error) {
 		GWT.log("Json request failed: id=[" + id + "] url=[" + url + "] msg="
 				+ error, null);
-		listener.onError(ServiceError.values()[error]);
+		listener.onFail(ServiceError.values()[error]);
 	}
 
 	private native static void getExternalJson(int requestId, String url,

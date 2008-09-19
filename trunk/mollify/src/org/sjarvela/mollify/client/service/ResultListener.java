@@ -8,14 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.listener;
-
-import org.sjarvela.mollify.client.service.ServiceError;
+package org.sjarvela.mollify.client.service;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public interface ResultListener {
 	public void onSuccess(JavaScriptObject result);
 
-	public void onError(ServiceError error);
+	public void onFail(ServiceError error);
 }

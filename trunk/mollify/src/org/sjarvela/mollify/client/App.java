@@ -10,11 +10,8 @@
 
 package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
-import org.sjarvela.mollify.client.ui.filemanager.FileManagerController;
-import org.sjarvela.mollify.client.ui.filemanager.FileManagerModel;
-import org.sjarvela.mollify.client.ui.filemanager.FileManagerView;
+import org.sjarvela.mollify.client.ui.WindowManager;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -25,14 +22,9 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(this);
-		
-		MollifyService service = new MollifyService();
-		FileManagerModel model = new FileManagerModel();
-		FileManagerView view = new FileManagerView(model, Localizator
-				.getInstance());
-		new FileManagerController(service, model, view);
 
-		RootPanel.get("mollify").add(view);
+		WindowManager windowManager = new WindowManager(new MollifyService());
+		RootPanel.get("mollify").add(windowManager.createMainView());
 	}
 
 	public void onUncaughtException(Throwable e) {
