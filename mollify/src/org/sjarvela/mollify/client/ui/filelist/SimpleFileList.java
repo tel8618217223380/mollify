@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.filemanager.MainViewModel;
+import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

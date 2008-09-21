@@ -1,0 +1,157 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
+package org.sjarvela.mollify.client.ui.mainview;
+
+import org.sjarvela.mollify.client.DirectoryController;
+import org.sjarvela.mollify.client.DirectoryProvider;
+import org.sjarvela.mollify.client.FileActionHandler;
+import org.sjarvela.mollify.client.FileDetailsProvider;
+import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
+import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopup;
+import org.sjarvela.mollify.client.ui.filelist.Column;
+import org.sjarvela.mollify.client.ui.filelist.SimpleFileList;
+import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
+
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+public class MainView extends Composite {
+	private final MainViewModel model;
+	private final Localizator localizator;
+	private DirectoryController directoryController;
+
+	private DirectorySelector directorySelector;
+	private SimpleFileList list;
+	private FileDetailsPopup fileDetails = null;
+	private Button refreshButton;
+	private Button parentDirButton;
+	private Button uploadFileButton;
+
+	public MainView(MainViewModel model, Localizator localizator) {
+		this.model = model;
+		this.localizator = localizator;
+
+		initWidget(createControls());
+		setStyleName(StyleConstants.MAIN_VIEW);
+	}
+
+	public void initialize(FileActionHandler fileActionHandler,
+			FileDetailsProvider fileDetailsProvider,
+			DirectoryProvider directoryProvider,
+			DirectoryController directoryController) {
+		this.directoryController = directoryController;
+		fileDetails = new FileDetailsPopup(localizator, fileDetailsProvider,
+				fileActionHandler);
+		directorySelector.initialize(directoryProvider, directoryController);
+	}
+
+	private Widget createControls() {
+		VerticalPanel content = new VerticalPanel();
+		content.add(createHeader());
+		content.add(createFileList());
+		return content;
+	}
+
+	private Widget createFileList() {
+		list = new SimpleFileList(model, localizator);
+		return list;
+	}
+
+	private Widget createHeader() {
+		HorizontalPanel panel = new HorizontalPanel();
+		panel.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
+
+		Label leftPadding = new Label();
+		leftPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
+		leftPadding.addStyleName(StyleConstants.LEFT);
+		panel.add(leftPadding);
+
+		createButtons();
+		panel.add(refreshButton);
+		directorySelector = new DirectorySelector(model, localizator);
+		panel.add(directorySelector);
+		panel.add(parentDirButton);
+		panel.add(uploadFileButton);
+
+		Label rightPadding = new Label();
+		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
+		rightPadding.addStyleName(StyleConstants.RIGHT);
+		panel.add(rightPadding);
+
+		return panel;
+	}
+
+	private void createButtons() {
+		refreshButton = createToolButton(localizator.getStrings()
+				.mainViewRefreshButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_REFRESH);
+
+		parentDirButton = createToolButton(localizator.getStrings()
+				.mainViewParentDirButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR);
+
+		uploadFileButton = createToolButton(localizator.getStrings()
+				.mainViewUploadFileButtonTitle(),
+				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE);
+	}
+
+	private Button createToolButton(String title, String id) {
+		Button button = new Button(title);
+		button.addStyleName(StyleConstants.MAIN_VIEW_TOOL);
+		button.getElement().setId(id);
+
+		return button;
+	}
+
+	void addFileListListener(SimpleFileListListener listener) {
+		list.addListener(listener);
+	}
+
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		directoryController.initialize();
+	}
+
+	public void refresh() {
+		directorySelector.refresh();
+		list.refresh();
+	}
+
+	public void clear() {
+		list.removeAllRows();
+	}
+
+	public void showFileDetails(File file) {
+		fileDetails.initialize(file, list.getWidget(file, Column.NAME)
+				.getElement());
+		fileDetails.show();
+	}
+
+	public Button getRefreshButton() {
+		return refreshButton;
+	}
+
+	public Button getParentDirButton() {
+		return parentDirButton;
+	}
+
+	public Button getUploadFileButton() {
+		return uploadFileButton;
+	}
+}

@@ -19,6 +19,4 @@ public interface FileActionProvider {
 	public String getActionURL(File file, FileAction action);
 
 	public String getActionURL(Directory directory, FileAction action);
-
-	public void onFileAction(File file, FileAction action);
 }

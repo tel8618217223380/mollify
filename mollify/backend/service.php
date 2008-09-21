@@ -31,8 +31,8 @@
 		if ($ext) echo ');';
 	}
 	
-	function get_success_message() {
-		return array("success" => TRUE);
+	function get_success_message($result) {
+		return array("success" => TRUE, "result" => $result);
 	}
 	
 	function get_error_message($error, $details = "") {
@@ -49,7 +49,9 @@
 		return;
 	}
 	
+	include "configuration.php";
 	require "user.php";
+	
 	$account = get_account();
 	if (!$account) {
 		return_json(get_error_message("UNAUTHORIZED"));
@@ -69,7 +71,12 @@
 			}
 			
 			switch ($_GET["type"]) {
+				case "auth":
+					$result = array("pass");	// passed authentication
+					break;
+					
 				case "roots":
+					$result = array();
 					foreach($account["roots"] as $root) {
 						$result[] = array(
 							"id" => get_file_id($root["path"]),
@@ -144,8 +151,10 @@
 	}
 
 	// return JSON
-	if (!$result) {
+	if ($result === FALSE) {
 		$result = get_error_message($error);
+	} else {
+		$result = get_success_message($result);
 	}
 	return_json($result);
 ?>
