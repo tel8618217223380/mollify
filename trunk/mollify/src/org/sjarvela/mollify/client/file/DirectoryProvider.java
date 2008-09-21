@@ -8,10 +8,11 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.service.ResultListener;
 
-public interface RenameHandler {
-	public void onRename(File file, String newName);
+public interface DirectoryProvider {
+	public void getDirectories(Directory parent, ResultListener listener);
 }

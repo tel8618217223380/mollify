@@ -13,11 +13,11 @@ package org.sjarvela.mollify.client.ui.fileaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.FileAction;
-import org.sjarvela.mollify.client.FileActionHandler;
-import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileDetails;
+import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileActionHandler;
+import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;

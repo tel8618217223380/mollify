@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.FileAction;
-import org.sjarvela.mollify.client.FileActionProvider;
-import org.sjarvela.mollify.client.FileUploadHandler;
 import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 

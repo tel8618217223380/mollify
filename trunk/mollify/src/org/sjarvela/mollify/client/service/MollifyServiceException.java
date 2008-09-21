@@ -1,6 +1,5 @@
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.service.ServiceError;
 
 public class MollifyServiceException extends Exception {
 	private static final long serialVersionUID = 1L;

@@ -1,13 +1,13 @@
 package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.FileActionProvider;
-import org.sjarvela.mollify.client.FileActionProviderImpl;
-import org.sjarvela.mollify.client.FileUploadHandler;
-import org.sjarvela.mollify.client.RenameHandler;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileActionProviderImpl;
+import org.sjarvela.mollify.client.file.FileUploadHandler;
+import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ServiceError;
