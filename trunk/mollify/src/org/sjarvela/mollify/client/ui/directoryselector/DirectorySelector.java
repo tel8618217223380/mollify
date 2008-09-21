@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.filemanager.MainViewModel;
+import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -35,11 +35,9 @@ public class DirectorySelector extends HorizontalPanel {
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
 	}
 
-	public void setDirectoryController(DirectoryController directoryController) {
+	public void initialize(DirectoryProvider directoryProvider,
+			DirectoryController directoryController) {
 		this.directoryController = directoryController;
-	}
-
-	public void setDirectoryProvider(DirectoryProvider directoryProvider) {
 		this.directoryProvider = directoryProvider;
 	}
 
@@ -64,8 +62,10 @@ public class DirectorySelector extends HorizontalPanel {
 	}
 
 	private void addSeparator() {
-		Label separator = new Label(localizator.getStrings().directorySelectorSeparatorLabel());
+		Label separator = new Label(localizator.getStrings()
+				.directorySelectorSeparatorLabel());
 		separator.setStyleName(StyleConstants.DIRECTORY_SELECTOR_SEPARATOR);
 		this.add(separator);
 	}
+
 }

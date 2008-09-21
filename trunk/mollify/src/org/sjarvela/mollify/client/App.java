@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client;
 
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.ui.WindowManager;
 
@@ -23,8 +24,14 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(this);
 
-		WindowManager windowManager = new WindowManager(new MollifyService());
-		RootPanel.get("mollify").add(windowManager.createMainView());
+		RootPanel panel = RootPanel.get("mollify");
+		if (panel == null)
+			return;
+
+		WindowManager windowManager = new WindowManager(new MollifyService(),
+				Localizator.getInstance());
+		windowManager.addMainView(panel);
+		windowManager.addDownloadFrame(panel);
 	}
 
 	public void onUncaughtException(Throwable e) {
