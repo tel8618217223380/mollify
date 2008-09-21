@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.service.FileUploadResultHandler;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 
 import com.google.gwt.core.client.GWT;
@@ -161,16 +162,14 @@ public class MainViewPresenter implements DirectoryController,
 		this.service.getDirectories(listener, parent.getId());
 	}
 
-	// private void onOperationFailed(ErrorValue result) {
-	// GWT.log(result.getError(), null);
-	// view.showError(result);
-	// }
-
 	public void getFileDetails(File file, ResultListener resultListener) {
 		service.getFileDetails(file, resultListener);
 	}
 
 	public void openUploadDialog() {
+		if (model.getDirectoryModel().getCurrentFolder().isEmpty())
+			return;
+
 		windowManager.openUploadDialog(model.getDirectoryModel()
 				.getCurrentFolder(), fileActionProvider, this);
 	}
@@ -182,7 +181,12 @@ public class MainViewPresenter implements DirectoryController,
 		} else if (action.equals(FileAction.RENAME)) {
 			windowManager.showRenameDialog(file, this);
 		} else if (action.equals(FileAction.DELETE)) {
-			windowManager.showFileDeleteConfirmationDialog(file,
+			String title = windowManager.getLocalizator().getStrings()
+					.deleteFileConfirmationDialogTitle();
+			String message = windowManager.getLocalizator().getMessages()
+					.confirmFileDeleteMessage(file.getName());
+			windowManager.showConfirmationDialog(title, message,
+					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE_FILE,
 					new ConfirmationListener() {
 						public void onConfirm() {
 							onDelete(file);

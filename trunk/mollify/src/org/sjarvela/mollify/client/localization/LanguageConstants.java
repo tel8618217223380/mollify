@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 	public String shortDateTimeFormat();
-	
+
 	public String mainViewParentDirButtonTitle();
 
 	public String mainViewRefreshButtonTitle();
@@ -46,6 +46,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String errorMessageDataTypeMismatch();
 
 	public String errorMessageOperationFailed();
+
+	public String errorMessageAuthenticationFailed();
 
 	public String errorMessageUnknown();
 
@@ -82,4 +84,5 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadDialogMessage();
 
 	public String fileUploadDialogUploadButton();
+
 }
