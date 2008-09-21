@@ -44,13 +44,29 @@
 		$err = $ERRORS[$error];
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
+	
+	function do_authentication() {
+		$result = authenticate();
+		if (!$result) {
+			return_json(get_error_message("UNAUTHORIZED"));
+		} else {
+			return_json(get_success_message(array("user" => $result["name"])));
+		}
+	}
 
 	if (!isset($_GET["action"])) {
 		return;
 	}
 	
+	session_start();
+	
 	include "configuration.php";
 	require "user.php";
+	
+	if ($_GET["action"] === "auth") {
+		do_authentication();
+		return;
+	}
 	
 	$account = get_account();
 	if (!$account) {
@@ -72,7 +88,7 @@
 			
 			switch ($_GET["type"]) {
 				case "auth":
-					$result = array("pass");	// passed authentication
+					$result = array("pass"); // passed authentication
 					break;
 					
 				case "roots":
@@ -118,7 +134,7 @@
 			
 			switch (strtolower($operation)) {
 				case "download":
-					// download does not return JSON, it rewrites headers etc
+					// download writes the header and the content, just exit here
 					if (download($filename)) return;
 					break;
 				

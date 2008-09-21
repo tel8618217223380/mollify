@@ -9,24 +9,45 @@
 	 * this entire header must remain intact.
 	 */
 	
-	//TODO implement user authentication
-	
-	function get_account() {
-		global $requireAuthentication;
+	function authenticate() {
+		global $USERS;
 		
-		if ($requireAuthentication) {
+		if (!$USERS) {
+			return TRUE;
+		}
+		
+		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
 			return FALSE;
 		}
 		
-		$result = array();
-		$result["roots"] = array(
-			array("name" => "Folder A", "path" => "/foo/bar"),
-			array("name" => "Folder B", "path" => "/foo/bay")
-		);
-		return $result;
+		foreach($USERS as $user) {
+			if ($user["name"] === $_GET["username"]) {
+				if ($user["password"] === $_GET["password"]) {
+					$_SESSION['user_id'] = $user["id"];
+					return $user;
+				} else {
+					return FALSE;
+				}
+			}
+		}
+		return FALSE;
 	}
 	
-	function get_user() {
+	function get_account() {
+		global $USERS, $PUBLISHED_DIRECTORIES;
+
+
+		if (count($USERS) === 0) {
+			// if no users are defined, return first directory set
+			reset($PUBLISHED_DIRECTORIES);
+			$roots = current($PUBLISHED_DIRECTORIES);
+		} else {
+			// when users are defined, user must have been authenticated
+			if (!isset($_SESSION['user_id'])) return FALSE;
+			$roots = $PUBLISHED_DIRECTORIES[$_SESSION['user_id']];
+		}
 		
+		//TODO get user rights etc and add to result array
+		return array("roots" => $roots);
 	}
 ?>

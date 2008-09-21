@@ -113,4 +113,12 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "file-upload-dialog-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
 
+	public static final String LOGIN_DIALOG = "login-dialog";
+	public static final String LOGIN_DIALOG_BUTTONS = "login-dialog-buttons";
+	public static final String LOGIN_DIALOG_CONTENT = "login-dialog-content";
+	public static final String LOGIN_DIALOG_USERNAME_TITLE = "login-dialog-username-title";
+	public static final String LOGIN_DIALOG_USERNAME_VALUE = "login-dialog-username-value";
+	public static final String LOGIN_DIALOG_PASSWORD_TITLE = "login-dialog-password-title";
+	public static final String LOGIN_DIALOG_PASSWORD_VALUE = "login-dialog-password-value";
+
 }
