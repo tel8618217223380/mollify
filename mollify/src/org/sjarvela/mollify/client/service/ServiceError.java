@@ -28,6 +28,8 @@ public enum ServiceError {
 			return localizator.getStrings().errorMessageDataTypeMismatch();
 		case OPERATION_FAILED:
 			return localizator.getStrings().errorMessageOperationFailed();
+		case AUTHENTICATION_FAILED:
+			return localizator.getStrings().errorMessageAuthenticationFailed();
 		default:
 			return localizator.getStrings().errorMessageUnknown();
 		}
@@ -38,7 +40,7 @@ public enum ServiceError {
 		case 100:
 			return AUTHENTICATION_FAILED;
 		default:
-			GWT.log("ServiceError.getFrom " + error.getCode(), null);
+			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;
 		}
 	}

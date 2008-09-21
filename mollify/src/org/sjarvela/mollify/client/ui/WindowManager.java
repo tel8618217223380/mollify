@@ -39,6 +39,10 @@ public class WindowManager {
 		this.localizator = localizator;
 	}
 
+	public Localizator getLocalizator() {
+		return localizator;
+	}
+
 	public void addDownloadFrame(Panel panel) {
 		panel.add(createDownloadFrame());
 	}
@@ -108,12 +112,9 @@ public class WindowManager {
 				StyleConstants.INFO_DIALOG_TYPE_INFO);
 	}
 
-	public void showFileDeleteConfirmationDialog(File file,
-			ConfirmationListener listener) {
-		new ConfirmationDialog(localizator, localizator.getStrings()
-				.deleteFileConfirmationDialogTitle(), localizator.getMessages()
-				.confirmFileDeleteMessage(file.getName()),
-				StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE_FILE, listener);
+	public void showConfirmationDialog(String title, String message,
+			String style, ConfirmationListener listener) {
+		new ConfirmationDialog(localizator, title, message, style, listener);
 	}
 
 	/* UTILITIES */

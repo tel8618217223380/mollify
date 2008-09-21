@@ -24,6 +24,7 @@ public class ResultValidator implements ResultListener {
 		if (!result.isSuccess()) {
 			ErrorValue error = resultValue.cast();
 			onFail(ServiceError.getFrom(error));
+			return;
 		}
 		if (!validate(result)) {
 			onFail(ServiceError.DATA_TYPE_MISMATCH);
