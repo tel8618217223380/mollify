@@ -20,10 +20,10 @@
 			return FALSE;
 		}
 		
-		foreach($USERS as $user) {
+		foreach($USERS as $id => $user) {
 			if ($user["name"] === $_GET["username"]) {
 				if ($user["password"] === $_GET["password"]) {
-					$_SESSION['user_id'] = $user["id"];
+					$_SESSION['user_id'] = $id;
 					return $user;
 				} else {
 					return FALSE;
@@ -36,7 +36,6 @@
 	function get_account() {
 		global $USERS, $PUBLISHED_DIRECTORIES;
 
-
 		if (count($USERS) === 0) {
 			// if no users are defined, return first directory set
 			reset($PUBLISHED_DIRECTORIES);
@@ -44,7 +43,9 @@
 		} else {
 			// when users are defined, user must have been authenticated
 			if (!isset($_SESSION['user_id'])) return FALSE;
-			$roots = $PUBLISHED_DIRECTORIES[$_SESSION['user_id']];
+			$id = $_SESSION['user_id'];
+			$user = $USERS[$id];
+			$roots = $PUBLISHED_DIRECTORIES[$id];
 		}
 		
 		//TODO get user rights etc and add to result array
