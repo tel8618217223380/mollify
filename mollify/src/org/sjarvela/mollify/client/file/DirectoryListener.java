@@ -8,10 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.service.FileUploadResultHandler;
+import org.sjarvela.mollify.client.data.Directory;
 
-public interface FileUploadHandler {
-	FileUploadResultHandler getFileUploadResultHandler();
+public interface DirectoryListener {
+	void onDirectorySelected(Directory directory);
 }

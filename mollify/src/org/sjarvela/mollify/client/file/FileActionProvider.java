@@ -8,11 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.data.File;
 
-public interface DirectoryProvider {
-	public void getDirectories(Directory parent, ResultListener listener);
+public interface FileActionProvider {
+	public boolean isActionAllowed(File file, FileAction action);
+
+	public String getActionURL(File file, FileAction action);
+
+	public String getActionURL(Directory directory, FileAction action);
 }

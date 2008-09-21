@@ -11,16 +11,16 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.DirectoryController;
-import org.sjarvela.mollify.client.DirectoryProvider;
-import org.sjarvela.mollify.client.FileAction;
-import org.sjarvela.mollify.client.FileActionHandler;
-import org.sjarvela.mollify.client.FileActionProvider;
-import org.sjarvela.mollify.client.FileDetailsProvider;
-import org.sjarvela.mollify.client.FileOperationHandler;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.file.DirectoryController;
+import org.sjarvela.mollify.client.file.DirectoryProvider;
+import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileActionHandler;
+import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileDetailsProvider;
+import org.sjarvela.mollify.client.file.FileOperationHandler;
 import org.sjarvela.mollify.client.service.FileUploadResultHandler;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;

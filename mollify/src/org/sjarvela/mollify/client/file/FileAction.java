@@ -8,9 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.file;
 
-public interface FileOperationHandler extends RenameHandler,
-		DeleteHandler, FileUploadHandler {
-
+public enum FileAction {
+	DOWNLOAD, RENAME, DELETE, UPLOAD, DETAILS
 }

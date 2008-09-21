@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.RenameHandler;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 

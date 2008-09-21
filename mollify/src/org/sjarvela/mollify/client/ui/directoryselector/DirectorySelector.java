@@ -12,9 +12,9 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 
 import java.util.ListIterator;
 
-import org.sjarvela.mollify.client.DirectoryController;
-import org.sjarvela.mollify.client.DirectoryProvider;
 import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.file.DirectoryController;
+import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
