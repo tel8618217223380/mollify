@@ -1,7 +1,7 @@
 <?php
 	$USERS = array(
-		array("id" => "1", "name" => "User1", "password" => "foo"),
-		array("id" => "2", "name" => "User2", "password" => "bar")
+		"1" => array("name" => "User1", "password" => "foo"),
+		"2" => array("name" => "User2", "password" => "bar")
 	);
 	
 	$PUBLISHED_DIRECTORIES = array(
