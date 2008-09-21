@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileAction;
-import org.sjarvela.mollify.client.FileActionProvider;
+import org.sjarvela.mollify.client.FileActionHandler;
 import org.sjarvela.mollify.client.FileDetailsProvider;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileDetails;
@@ -36,12 +36,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileActionPopup extends DropdownPopup {
+public class FileDetailsPopup extends DropdownPopup {
 	private DateTimeFormat dateTimeFormat;
 
-	private Localizator localizator;
-	private FileActionProvider actionProvider;
-	private FileDetailsProvider detailsProvider;
+	private final Localizator localizator;
+	private final FileActionHandler fileActionHandler;
+	private final FileDetailsProvider detailsProvider;
 
 	private Label filename;
 	private File file = File.Empty();
@@ -53,14 +53,14 @@ public class FileActionPopup extends DropdownPopup {
 		Accessed, Modified, Changed
 	}
 
-	public FileActionPopup(Localizator localizator,
-			FileActionProvider actionProvider,
-			FileDetailsProvider detailsProvider) {
+	public FileDetailsPopup(Localizator localizator,
+			FileDetailsProvider detailsProvider,
+			FileActionHandler fileActionHandler) {
 		super(null, null);
 
 		this.localizator = localizator;
-		this.actionProvider = actionProvider;
 		this.detailsProvider = detailsProvider;
+		this.fileActionHandler = fileActionHandler;
 		this.setStyleName(StyleConstants.FILE_ACTIONS);
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
@@ -70,7 +70,7 @@ public class FileActionPopup extends DropdownPopup {
 				StyleConstants.FILE_ACTIONS_BORDER);
 
 		content.setContent(createContent());
-		// extra content, pointer pointing the file (just a div with a certain
+		// extra content, tip pointing the file (just a div with a certain
 		// style)
 		content.setWidget(0, 1, createPointer());
 
@@ -220,7 +220,7 @@ public class FileActionPopup extends DropdownPopup {
 	}
 
 	private void onAction(FileAction action) {
-		actionProvider.onFileAction(file, action);
+		fileActionHandler.onFileAction(file, action);
 		this.hide();
 	}
 }
