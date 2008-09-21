@@ -14,6 +14,8 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
+import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
+import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewGlue;
@@ -84,6 +86,10 @@ public class WindowManager {
 		Window.open(url, "_blank", "");
 	}
 
+	public void showLoginDialog(LoginHandler loginHandler) {
+		new LoginDialog(localizator, loginHandler);
+	}
+	
 	public void showRenameDialog(File file, RenameHandler fileHandler) {
 		new RenameDialog(file, localizator, fileHandler);
 	}
@@ -122,4 +128,6 @@ public class WindowManager {
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
+
+
 }

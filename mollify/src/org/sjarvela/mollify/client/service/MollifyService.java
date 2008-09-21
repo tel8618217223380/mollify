@@ -21,7 +21,7 @@ public class MollifyService {
 	private String baseUrl;
 
 	enum Action {
-		get, operate
+		get, operate, auth
 	};
 
 	enum GetType {
@@ -42,6 +42,12 @@ public class MollifyService {
 
 	public void checkAuthentication(ResultListener resultListener) {
 		getTypes(resultListener, GetType.auth);
+	}
+
+	public void authenticate(String userName, String password,
+			ResultListener resultListener) {
+		doRequest(getUrl(Action.auth, "username=" + userName, "password="
+				+ password), resultListener);
 	}
 
 	public void getFiles(ResultListener resultListener, String dir) {
@@ -118,7 +124,6 @@ public class MollifyService {
 
 	private void doRequest(String url, ResultListener resultListener) {
 		ResultValidator listener = new ResultValidator(resultListener);
-		new JsonRpcHandler(url, listener).doRequest();
-
+		new JsonRpcHandler(URL.encode(url), listener).doRequest();
 	}
 }
