@@ -5,11 +5,9 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.FileActionProvider;
-import org.sjarvela.mollify.client.file.FileActionProviderImpl;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -17,15 +15,12 @@ import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
-import org.sjarvela.mollify.client.ui.mainview.MainView;
-import org.sjarvela.mollify.client.ui.mainview.MainViewGlue;
-import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
-import org.sjarvela.mollify.client.ui.mainview.MainViewPresenter;
+import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,33 +28,24 @@ public class WindowManager {
 	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private final MollifyService service;
+	private final RootPanel rootPanel;
 	private final Localizator localizator;
+	private final MainViewFactory mainViewFactory;
 
-	public WindowManager(MollifyService mollifyService, Localizator localizator) {
-		this.service = mollifyService;
+	public WindowManager(RootPanel rootPanel, Localizator localizator,
+			MainViewFactory mainViewFactory) {
+		this.rootPanel = rootPanel;
 		this.localizator = localizator;
+		this.mainViewFactory = mainViewFactory;
 	}
 
 	public Localizator getLocalizator() {
 		return localizator;
 	}
 
-	public void addDownloadFrame(Panel panel) {
-		panel.add(createDownloadFrame());
-	}
-
-	public void addMainView(Panel panel) {
-		FileActionProvider fileActionProvider = new FileActionProviderImpl(
-				service);
-
-		MainViewModel model = new MainViewModel();
-		MainView mainView = new MainView(model, localizator);
-		MainViewPresenter presenter = new MainViewPresenter(service, this,
-				model, mainView, fileActionProvider);
-
-		new MainViewGlue(mainView, presenter);
-		panel.add(mainView);
+	public void showMainView() {
+		rootPanel.add(mainViewFactory.createMainView(this));
+		rootPanel.add(createDownloadFrame());
 	}
 
 	private Widget createDownloadFrame() {
@@ -89,7 +75,7 @@ public class WindowManager {
 	public void showLoginDialog(LoginHandler loginHandler) {
 		new LoginDialog(localizator, loginHandler);
 	}
-	
+
 	public void showRenameDialog(File file, RenameHandler fileHandler) {
 		new RenameDialog(file, localizator, fileHandler);
 	}
@@ -128,6 +114,5 @@ public class WindowManager {
 	private native void setFrameUrl(String id, String url) /*-{
 		$doc.getElementById(id).src=url;
 	}-*/;
-
 
 }

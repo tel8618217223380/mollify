@@ -12,26 +12,79 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
+import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
+import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
+import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, UncaughtExceptionHandler {
+	private static final String MOLLIFY_PANEL_ID = "mollify";
+
+	MollifyService service;
+	WindowManager windowManager;
+	RootPanel panel;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(this);
 
-		RootPanel panel = RootPanel.get("mollify");
+		panel = RootPanel.get(MOLLIFY_PANEL_ID);
 		if (panel == null)
 			return;
 
-		WindowManager windowManager = new WindowManager(new MollifyService(),
-				Localizator.getInstance());
-		windowManager.addMainView(panel);
-		windowManager.addDownloadFrame(panel);
+		Localizator localizator = Localizator.getInstance();
+		service = new MollifyService();
+		
+		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
+				service);
+		windowManager = new WindowManager(panel, localizator, mainViewFactory);
+
+		service.checkAuthentication(new ResultListener() {
+			public void onFail(ServiceError error) {
+				if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
+					showLogin();
+					return;
+				}
+				windowManager.showError(error);
+			}
+
+			public void onSuccess(JavaScriptObject result) {
+				showMain();
+			}
+		});
+	};
+
+	private void showLogin() {
+		windowManager.showLoginDialog(new LoginHandler() {
+			public void onLogin(String userName, String password,
+					final ConfirmationListener listener) {
+				service.authenticate(userName, password, new ResultListener() {
+					public void onFail(ServiceError error) {
+						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
+							// windowManager.showInfo("Login", "Login failed");
+							// //TODO localize
+							return;
+						}
+						windowManager.showError(error);
+					}
+
+					public void onSuccess(JavaScriptObject result) {
+						listener.onConfirm();
+						showMain();
+					}
+				});
+			}
+		});
+	}
+
+	private void showMain() {
+		windowManager.showMainView();
 	}
 
 	public void onUncaughtException(Throwable e) {
