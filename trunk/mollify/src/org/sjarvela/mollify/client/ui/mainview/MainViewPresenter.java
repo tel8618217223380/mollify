@@ -27,7 +27,6 @@ import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -55,43 +54,7 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void initialize() {
-		this.service.checkAuthentication(new ResultListener() {
-			public void onFail(ServiceError error) {
-				if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-					showLogin();
-					return;
-				}
-				windowManager.showError(error);
-				reset();
-			}
-
-			public void onSuccess(JavaScriptObject result) {
-				getRootDirectories();
-			}
-		});
-	}
-
-	private void showLogin() {
-		windowManager.showLoginDialog(new LoginHandler() {
-			public void onLogin(String userName, String password,
-					final ConfirmationListener listener) {
-				service.authenticate(userName, password, new ResultListener() {
-					public void onFail(ServiceError error) {
-						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-							windowManager.showInfo("Login", "Login failed");	//TODO localize
-							return;
-						}
-						windowManager.showError(error);
-						reset();
-					}
-
-					public void onSuccess(JavaScriptObject result) {
-						listener.onConfirm();
-						getRootDirectories();
-					}
-				});
-			}
-		});
+		getRootDirectories();
 	}
 
 	public void getRootDirectories() {
