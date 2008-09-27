@@ -12,7 +12,7 @@
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
 			$root_path = get_root_path($root_id);
-			$path = substr($path, strlen($root_path) + 2);
+			$path = substr($path, strlen($root_path) + 1);
 		}
 		return base64_encode($root_id.'|'.$path);
 	}
@@ -33,7 +33,9 @@
 			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
-		$path = $root_path.DIRECTORY_SEPARATOR.$file["path"];
+		$path = $root_path;
+		if (strlen($file["path"]) > 0) $path .= DIRECTORY_SEPARATOR.$file["path"];
+		
 		if (strpos("..", $path) != FALSE) {
 			$error = "INVALID_PATH";
 			return FALSE;
@@ -69,17 +71,15 @@
 		$result = array();
 		
 		foreach($files as $i => $name) {
-			if (substr($name, 0, 1) == '.') {
-				continue;
-			}
+			if (substr($name, 0, 1) == '.') continue;
+
 			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
 			if (!is_dir($fullPath)) continue;
 	
 			$result[] = array(
 				"id" => get_filesystem_id($root, $fullPath),
 				"root" => $root,
-				"name" => $name,
-				"path" => $fullPath
+				"name" => $name
 			);
 		}
 		
