@@ -19,13 +19,14 @@ import com.google.gwt.http.client.URL;
 
 public class MollifyService {
 	private String baseUrl;
+	private String sessionId = "";
 
 	enum Action {
-		get, operate, auth
+		get, operate, auth, check_auth
 	};
 
 	enum GetType {
-		details, files, dirs, roots, auth
+		details, files, dirs, roots
 	};
 
 	public MollifyService() {
@@ -41,11 +42,11 @@ public class MollifyService {
 	}
 
 	public void checkAuthentication(ResultListener resultListener) {
-		getTypes(resultListener, GetType.auth);
+		doRequest(getUrl(Action.check_auth), resultListener);
 	}
 
 	public void authenticate(String userName, String password,
-			ResultListener resultListener) {
+			final ResultListener resultListener) {
 		doRequest(getUrl(Action.auth, "username=" + userName, "password="
 				+ password), resultListener);
 	}
@@ -111,14 +112,18 @@ public class MollifyService {
 
 	private void getTypes(ResultListener resultListener, GetType type,
 			String param) {
-		doRequest(getUrl(Action.get, "type=" + type, param), resultListener);
+		String params = "type=" + type;
+		if (param.length() > 0)
+			params += "&" + param;
+		doRequest(getUrl(Action.get, params), resultListener);
 	}
 
 	private String getUrl(Action action, String... params) {
 		String url = baseUrl + "?action=" + action.name();
-		for (String param : params) {
+		if (sessionId.length() > 0)
+			url += "&session=" + sessionId;
+		for (String param : params)
 			url += "&" + param;
-		}
 		return url;
 	}
 

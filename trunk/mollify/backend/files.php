@@ -8,38 +8,50 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-
-	function get_file_id($file) {
-		return base64_encode($file);
+	
+	function get_filesystem_id($root_id, $path = "") {
+		if (strlen($path) > 0) {
+			$root_path = get_root_path($root_id);
+			$path = substr($path, strlen($root_path) + 2);
+		}
+		return base64_encode($root_id.'|'.$path);
 	}
 
-	function get_filename($id) {
-		return base64_decode($id);
+	function get_path_info_from_id($id) {
+		$parts = explode("|", base64_decode($id));
+		return array("root" => $parts[0], "path" => $parts[1]);
 	}
 
-	function get_filename_from_url() {
-		if (!isset($_GET["id"])) {
+	function get_fileitem_from_url($id_param) {
+		if (!isset($_GET[$id_param])) return FALSE;
+		
+		$id = $_GET[$id_param];
+		$file = get_path_info_from_id($id);
+		$root_id = $file["root"];
+		$root_path = get_root_path($root_id);
+		if (!$root_path) {
+			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
-		return get_filename($_GET["id"]);
-	}
-	
-	function get_dir_from_url() {
-		if (!isset($_GET["dir"])) return FALSE;
-		return get_filename($_GET["dir"]);
+		$path = $root_path.DIRECTORY_SEPARATOR.$file["path"];
+		if (strpos("..", $path) != FALSE) {
+			$error = "INVALID_PATH";
+			return FALSE;
+		}
+		return array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $dir["path"]);
 	}
 	
 	function assert_file($filename) {
 		global $error, $error_details;
 		
-		if (!file_exists($filename)) {
+		if (!file_exists($filename["path"])) {
 			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($filename);
+			$error_details = basename($filename["path"]);
 			return FALSE;
 		}
-		if(!is_file($filename)) {
+		if(!is_file($filename["path"])) {
 			$error = "NOT_A_FILE";
-			$error_details = basename($filename);
+			$error_details = basename($filename["path"]);
 			return FALSE;
 		}
 		return TRUE;
@@ -47,13 +59,12 @@
 	
 	function get_directories($account) {
 		global $error, $error_details;
+
+		$dir = get_fileitem_from_url("dir");
+		if (!$dir) return FALSE;
 		
-		$path = get_dir_from_url();
-		if (!$path) {
-			$error = "INVALID_PATH";
-			return FALSE;
-		}
-		
+		$root = $dir["root"];
+		$path = $dir["path"];
 		$files = scandir($path);
 		$result = array();
 		
@@ -62,10 +73,14 @@
 				continue;
 			}
 			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
-			if (!is_dir($fullPath)) {
-				continue;
-			}
-			$result[] = array("id" => get_file_id($fullPath), "name" => $name, "path" => $fullPath);
+			if (!is_dir($fullPath)) continue;
+	
+			$result[] = array(
+				"id" => get_filesystem_id($root, $fullPath),
+				"root" => $root,
+				"name" => $name,
+				"path" => $fullPath
+			);
 		}
 		
 		return $result;
@@ -75,12 +90,11 @@
 		global $error, $error_details;
 		$ignored = array('descript.ion');
 		
-		$path = get_dir_from_url();
-		if (!$path) {
-			$error = "INVALID_PATH";
-			return FALSE;
-		}
-
+		$dir = get_fileitem_from_url("dir");
+		if (!$dir) return FALSE;
+		
+		$root = $dir["root"];
+		$path = $dir["path"];
 		$files = scandir($path);
 		$result = array();
 		
@@ -89,9 +103,7 @@
 				continue;
 			}
 			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
-			if (is_dir($fullPath)) {
-				continue;
-			}
+			if (is_dir($fullPath)) continue;
 			
 			$ext_pos = strrpos($name, '.');
 			if ($ext_pos > 0) {
@@ -100,24 +112,28 @@
 				$extension = "";
 			}
 			
-			$result[] = array("id" => get_file_id($fullPath), "name" => $name, "extension" => $extension, "size" => filesize($fullPath));
+			$result[] = array(
+				"id" => get_filesystem_id($root, $fullPath),
+				"root" => $root,
+				"name" => $name,
+				"extension" => $extension,
+				"size" => filesize($fullPath)
+			);
 		}
 		
 		return $result;
 	}
 	
-	function get_file_details($filename) {
-		if (!assert_file($filename)) {
-			return FALSE;
-		}
+	function get_file_details($file) {
+		if (!assert_file($file)) return FALSE;
+
 		$datetime_format = "YmdHis";
-		
 		$result = array(
-			"id" => get_file_id($filename),
-			"last_changed" => date($datetime_format, filectime($filename)),
-			"last_modified" => date($datetime_format, filemtime($filename)),
-			"last_accessed" => date($datetime_format, fileatime($filename)),
-			"description" => get_description($filename));
+			"id" => $file["id"],
+			"last_changed" => date($datetime_format, filectime($file["path"])),
+			"last_modified" => date($datetime_format, filemtime($file["path"])),
+			"last_accessed" => date($datetime_format, fileatime($file["path"])),
+			"description" => get_description($file["path"]));
 		return $result;
 	}
 	
@@ -158,30 +174,28 @@
 		return $result;
 	}
 	
-	function rename_file($filename, $new_name) {
-		if (!assert_file($filename)) {
-			return FALSE;
-		}
+	function rename_file($file, $new_name) {
+		if (!assert_file($file)) return FALSE;
 		
-		$new = dirname($filename).DIRECTORY_SEPARATOR.$new_name;
+		$old = $file["path"];
+		$new = dirname($old).DIRECTORY_SEPARATOR.$new_name;
 		if (file_exists($new)) {
 			$error = "FILE_ALREADY_EXISTS";
 			$error_details = basename($new);
 			return FALSE;
 		}
 		
-		return rename($filename, $new);
+		return rename($old, $new);
 	}
 
-	function delete_file($filename) {
+	function delete_file($file) {
 		global $error, $error_details;
 		
-		if (!assert_file($filename)) {
-			return FALSE;
-		}
-		if (!unlink($filename)) {
+		if (!assert_file($file)) return FALSE;
+
+		if (!unlink($file["path"])) {
 			$error = "CANNOT_DELETE";
-			$error_details = basename($filename);
+			$error_details = basename($file["path"]);
 			return FALSE;
 		}
 		return TRUE;
@@ -197,7 +211,7 @@
 		
 		$name = $_FILES['upload']['name'];
 		$origin = $_FILES['upload']['tmp_name'];
-		$target = $dir.DIRECTORY_SEPARATOR.$name;
+		$target = $dir["path"].DIRECTORY_SEPARATOR.$name;
 		
 		if ($_FILES["file"]["error"] != UPLOAD_ERR_OK) {
 			$error = "UPLOAD_FAILED";
@@ -220,13 +234,12 @@
 		return FALSE;
 	}
 	
-	function download($filename) {
+	function download($file) {
 		global $error, $error_details;
 		
-		if (!assert_file($filename)) {
-			return FALSE;
-		}
+		if (!assert_file($file)) return FALSE;
 		
+		$filename = $file["path"];
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");

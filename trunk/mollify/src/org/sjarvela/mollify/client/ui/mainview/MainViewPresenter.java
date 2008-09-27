@@ -61,19 +61,21 @@ public class MainViewPresenter implements DirectoryController,
 		this.service
 				.getRootDirectories(createDefaultListener(new ResultCallback() {
 					public void onCallback(JavaScriptObject result) {
-						JsArray<Directory> dirs = result.cast();
-						model.setRootDirectories(dirs);
-
-						// select first one if none was selected
-						if (dirs.length() > 0
-								&& model.getDirectoryModel().getRootDirectory()
-										.isEmpty()) {
-							model.getDirectoryModel().setRootDirectory(
-									dirs.get(0));
-							refresh();
-						}
+						JsArray<Directory> roots = result.cast();
+						updateRootDirs(roots);
 					}
 				}));
+	}
+
+	private void updateRootDirs(JsArray<Directory> roots) {
+		model.setRootDirectories(roots);
+
+		// select first one if none was selected
+		if (roots.length() > 0
+				&& model.getDirectoryModel().getRootDirectory().isEmpty()) {
+			model.getDirectoryModel().setRootDirectory(roots.get(0));
+			refresh();
+		}
 	}
 
 	public void changeRootDirectory(Directory root) {
@@ -153,8 +155,9 @@ public class MainViewPresenter implements DirectoryController,
 		if (model.getDirectoryModel().getCurrentFolder().isEmpty())
 			return;
 
-		windowManager.openUploadDialog(model.getDirectoryModel()
-				.getCurrentFolder(), fileActionProvider, this);
+		windowManager.getDialogManager().openUploadDialog(
+				model.getDirectoryModel().getCurrentFolder(),
+				fileActionProvider, this);
 	}
 
 	public void onFileAction(final File file, FileAction action) {
@@ -162,13 +165,14 @@ public class MainViewPresenter implements DirectoryController,
 			windowManager.openDownloadUrl(fileActionProvider.getActionURL(file,
 					action));
 		} else if (action.equals(FileAction.RENAME)) {
-			windowManager.showRenameDialog(file, this);
+			windowManager.getDialogManager().showRenameDialog(file, this);
 		} else if (action.equals(FileAction.DELETE)) {
 			String title = windowManager.getLocalizator().getStrings()
 					.deleteFileConfirmationDialogTitle();
 			String message = windowManager.getLocalizator().getMessages()
 					.confirmFileDeleteMessage(file.getName());
-			windowManager.showConfirmationDialog(title, message,
+			windowManager.getDialogManager().showConfirmationDialog(title,
+					message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE_FILE,
 					new ConfirmationListener() {
 						public void onConfirm() {
@@ -176,8 +180,8 @@ public class MainViewPresenter implements DirectoryController,
 						}
 					});
 		} else {
-			windowManager.showInfo("ERROR", "Unsupported action:"
-					+ action.name());
+			windowManager.getDialogManager().showInfo("ERROR",
+					"Unsupported action:" + action.name());
 		}
 
 	}
@@ -211,7 +215,7 @@ public class MainViewPresenter implements DirectoryController,
 	private ResultListener createDefaultListener(final ResultCallback callback) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
-				windowManager.showError(error);
+				windowManager.getDialogManager().showError(error);
 				reset();
 			}
 
