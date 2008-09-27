@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -40,10 +41,11 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 
 		Localizator localizator = Localizator.getInstance();
 		service = new MollifyService();
-		
+
 		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
 				service);
-		windowManager = new WindowManager(panel, localizator, mainViewFactory);
+		windowManager = new WindowManager(panel, localizator, mainViewFactory,
+				new DialogManager(localizator));
 
 		service.checkAuthentication(new ResultListener() {
 			public void onFail(ServiceError error) {
@@ -51,7 +53,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 					showLogin();
 					return;
 				}
-				windowManager.showError(error);
+				windowManager.getDialogManager().showError(error);
 			}
 
 			public void onSuccess(JavaScriptObject result) {
@@ -61,7 +63,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 	};
 
 	private void showLogin() {
-		windowManager.showLoginDialog(new LoginHandler() {
+		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {
 			public void onLogin(String userName, String password,
 					final ConfirmationListener listener) {
 				service.authenticate(userName, password, new ResultListener() {
@@ -71,7 +73,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 							// //TODO localize
 							return;
 						}
-						windowManager.showError(error);
+						windowManager.getDialogManager().showError(error);
 					}
 
 					public void onSuccess(JavaScriptObject result) {

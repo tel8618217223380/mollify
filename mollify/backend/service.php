@@ -12,7 +12,8 @@
 	$ERRORS = array(
 		"UNAUTHORIZED" => array(100, "Unauthorized request"), 
 		"INVALID_REQUEST" => array(101, "Invalid request"),
-		"UNSUPPORTED_OPERATION" => array(102, "Unsupported operation"),
+		"UNSUPPORTED_ACTION" => array(102, "Unsupported action"),
+		"UNSUPPORTED_OPERATION" => array(103, "Unsupported operation"),
 		
 		"INVALID_PATH" => array(201, "Invalid path"), 
 		"FILE_DOES_NOT_EXIST" => array(202, "File does not exist"), 
@@ -45,28 +46,32 @@
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
-	function do_authentication() {
-		$result = authenticate();
+	function handle_authentication() {
+		$action = $_GET["action"];
+		$result = FALSE;
+		if ($action === "auth") {
+			$result = authenticate();
+		} else {
+			$result = check_authentication();
+			if ($result && ($action != "check_auth")) return TRUE;
+		}
 		if (!$result) {
 			return_json(get_error_message("UNAUTHORIZED"));
 		} else {
-			return_json(get_success_message(array("user" => $result["name"])));
+			return_json(get_success_message($result));
 		}
+		return FALSE;
 	}
 
 	if (!isset($_GET["action"])) {
 		return;
 	}
 	
-	session_start();
-	
 	include "configuration.php";
 	require "user.php";
 	
-	if ($_GET["action"] === "auth") {
-		do_authentication();
-		return;
-	}
+	session_start();
+	if (!handle_authentication()) return;
 	
 	$account = get_account();
 	if (!$account) {
@@ -82,20 +87,16 @@
 	switch ($_GET["action"]) {
 		case "get":
 			if (!isset($_GET["type"])) {
-				return_json(get_error_message("INVALID_REQUEST"));
-				return;
+				$error = "INVALID_REQUEST";
+				break;
 			}
 			
 			switch ($_GET["type"]) {
-				case "auth":
-					$result = array("pass"); // passed authentication
-					break;
-					
 				case "roots":
 					$result = array();
-					foreach($account["roots"] as $root) {
+					foreach($account["roots"] as $id => $root) {
 						$result[] = array(
-							"id" => get_file_id($root["path"]),
+							"id" => get_filesystem_id($id),
 							"name" => $root["name"]
 						);
 					}
@@ -110,65 +111,62 @@
 					break;
 
 				case "details":
-					$filename = get_filename_from_url();
-					if (!$filename) {
-						return;
-					}
-					$result = get_file_details($filename);
+					$file = get_fileitem_from_url("id");
+					if (!$file) return;
+					$result = get_file_details($file);
 					break;
 			}
 			
 			break;
 		case "operate":
 			if (!isset($_GET["type"])) {
-				return_json(get_error_message("INVALID_REQUEST"));
-				return;
+				$error = "INVALID_REQUEST";
+				break;
 			}
 			$operation = $_GET["type"];
 			
-			$filename = get_filename_from_url();
-			if (!$filename) {
-				return_json(get_error_message("INVALID_REQUEST"));
-				return;
-			}
+			$file = get_fileitem_from_url("id");
+			if (!$file) return;
 			
 			switch (strtolower($operation)) {
 				case "download":
 					// download writes the header and the content, just exit here
-					if (download($filename)) return;
+					if (download($file)) return;
 					break;
 				
 				case "rename":
-					if (!isset($_GET["to"]))
-						return;
-					if (rename_file($filename, urldecode($_GET["to"])))
+					if (!isset($_GET["to"])) return;
+					if (rename_file($file, urldecode($_GET["to"])))
 						$result = get_success_message();
 					break;
 					
 				case "delete":
-					if (delete_file($filename))
+					if (delete_file($file))
 						$result = get_success_message();
 					break;
 				
 				case "upload":
-					$dir = $filename;
-					if (upload_file($dir))
-						$result = get_success_message();
+					$dir = $file;
+					if (upload_file($dir)) $result = get_success_message();
 					header("Content-Type: text/html");
 					header("HTTP/1.1 200 OK", true);
 					break;
 
 				default:
-					$result = get_error_message("UNSUPPORTED_OPERATION", $operation);
+					$error = "UNSUPPORTED_OPERATION";
+					$error_details = $operation;
 					break;
 			}
-			
 			break;
+		default:
+			$error = "UNSUPPORTED_ACTION";
+			$error_details = $_GET["action"];
+			break;	
 	}
 
 	// return JSON
 	if ($result === FALSE) {
-		$result = get_error_message($error);
+		$result = get_error_message($error, $error_details);
 	} else {
 		$result = get_success_message($result);
 	}

@@ -21,34 +21,47 @@
 		}
 		
 		foreach($USERS as $id => $user) {
-			if ($user["name"] === $_GET["username"]) {
-				if ($user["password"] === $_GET["password"]) {
-					$_SESSION['user_id'] = $id;
-					return $user;
-				} else {
-					return FALSE;
-				}
-			}
+			if ($user["name"] != $_GET["username"])
+				continue;
+			if ($user["password"] != $_GET["password"])
+			 	return FALSE;
+			
+			$_SESSION['user_id'] = $id;
+			return array("name" => $user["name"]);
 		}
 		return FALSE;
 	}
 	
-	function get_account() {
+	function check_authentication() {
+		global $USERS;
+
+		// if no users are defined, always pass authentication
+		if (count($USERS) === 0) return TRUE;
+		// otherwise user must authenticate
+		if (!isset($_SESSION['user_id'])) return FALSE;
+		return array("name" => $USERS[$_SESSION['user_id']]["name"]);
+	}
+	
+	function get_root_path($id) {
+		$roots = get_roots();
+		if (!array_key_exists($id, $roots)) return FALSE;
+		return $roots[$id]["path"];
+	}
+	
+	function get_roots() {
 		global $USERS, $PUBLISHED_DIRECTORIES;
 
 		if (count($USERS) === 0) {
 			// if no users are defined, return first directory set
 			reset($PUBLISHED_DIRECTORIES);
-			$roots = current($PUBLISHED_DIRECTORIES);
+			return current($PUBLISHED_DIRECTORIES);
 		} else {
-			// when users are defined, user must have been authenticated
-			if (!isset($_SESSION['user_id'])) return FALSE;
-			$id = $_SESSION['user_id'];
-			$user = $USERS[$id];
-			$roots = $PUBLISHED_DIRECTORIES[$id];
+			return $PUBLISHED_DIRECTORIES[$_SESSION['user_id']];
 		}
-		
+	}
+	
+	function get_account() {
 		//TODO get user rights etc and add to result array
-		return array("roots" => $roots);
+		return array("roots" => get_roots());
 	}
 ?>
