@@ -68,7 +68,7 @@ public class LoginDialog extends CenteredDialog {
 
 		Label passwordTitle = new Label(localizator.getStrings()
 				.loginDialogPassword());
-		usernameTitle.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_TITLE);
+		passwordTitle.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_TITLE);
 		panel.add(passwordTitle);
 
 		password = new PasswordTextBox();

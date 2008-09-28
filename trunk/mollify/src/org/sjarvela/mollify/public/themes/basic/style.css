@@ -459,3 +459,29 @@ input.rename-file-new-name-value {
 	width: 250px;
 	padding-bottom: 4px;
 }
+
+.login-dialog-username-title, .login-dialog-password-title {
+	margin-bottom: 6px;
+	margin-top: 4px;
+}
+
+.login-dialog-buttons {
+	width: 170px;
+	padding-bottom: 4px;
+	margin-top: 10px;
+	padding-right: 47px;
+}
+
+.login-dialog .dialogContent {
+	background: url(home.png) no-repeat 3px 10px;
+	padding-left: 47px;
+}
+
+.login-dialog-username-value {
+	width: 160px;
+}
+
+.login-dialog-password-value {
+	width: 160px;
+}
+

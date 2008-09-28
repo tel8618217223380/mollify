@@ -1,4 +1,6 @@
 <?php
+	/* See ReadMe.txt for configuration instructions. */
+	
 	$USERS = array(
 		"1" => array("name" => "User 1", "password" => "foo"),
 		"2" => array("name" => "User 2", "password" => "bar")
