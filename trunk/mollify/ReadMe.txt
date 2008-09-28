@@ -25,7 +25,7 @@ this entire header must remain intact.
 
 2) Modify "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
-3) You are ready to go. Open address http://your.host.name/mollify to see your files.
+3) You are ready to go. Open address http://your.host.name/mollify to access your files.
 
 
 2. CONFIGURATION
@@ -35,8 +35,8 @@ Backend file "configuration.php" contains all configuration properties needed by
 aspects are users and published directories.
 
 
-2.1 USER CONFIGURATION
-----------------------
+2.1 USERS
+---------
 
 Mollify supports different user accounts, which can have different published directories. User configuration is
 optional, and when users are not defined, no authentication is requested.
@@ -62,17 +62,17 @@ $USERS = array(
 This configuration has two users, "User 1" and "User 2".
 
 Rules for user configuration:
-- User id's must be unique
-- User names must be unique
+- User id's [USER_ID] can be freely chosen, but they must be unique
+- User names [USER NAME] must be unique
 
 
 2.2 PUBLISHED DIRECTORIES
 -------------------------
 
-Mollify supports freely selectable published directories. Directories need not to have any relation to each other.
+Mollify supports freely selectable published directories. Directories need not to have any relation with each other.
 Also, if user accounts are configured, each user can have different set of directories available.
 
-A) When no user accounts are defined (see 2.1), use following format:
+A) When no user accounts are defined (see chapter 2.1, Users), use following format:
 
 $PUBLISHED_DIRECTORIES = array(
 	array(
@@ -83,7 +83,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 See rules below.
 
-B) When user accounts are defined (see 2.1), use following format:
+B) When user accounts are defined (see chapter 2.1, Users), use following format:
 
 $PUBLISHED_DIRECTORIES = array(
 	[USER_ID] => array(
@@ -101,7 +101,7 @@ $PUBLISHED_DIRECTORIES = array(
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
 	),
 	"2" => array(
-		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
+		"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
 		"r2" => array("name" => "Folder C", "path" => "/foo/baz")
 	)
 );
@@ -109,11 +109,13 @@ $PUBLISHED_DIRECTORIES = array(
 With this configuration
 - User with id "1" (defined in user configuration) has two visible directories: "Folder A" and "Folder B"
 - User with id "2" (defined in user configuration) has two visible directories: "Folder A" and "Folder C"
+- Although "Folder A" exists in both users, they may point to different physical folder
 
 Rules are:
-- User id must exist in user configuration
-- Directory id's must be unique within user (two users can have same id's)
-- Path must be absolute path in local file system
+- User id [USER_ID] must exist in user configuration (see chapter 2.1)
+- Directory id's [DIR_ID] can be freely chosen, but they must be unique within user (two users can have same id's)
+- Path [DIR_PATH] must be absolute path in local file system
+- Actual file system folder name is not shown to user, but instead the name [DIR_NAME] defined in the configuration
 
 NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
