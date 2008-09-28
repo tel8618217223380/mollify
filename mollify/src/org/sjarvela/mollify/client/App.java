@@ -29,6 +29,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
 	MollifyService service;
+	Localizator localizator;
 	WindowManager windowManager;
 	RootPanel panel;
 
@@ -39,7 +40,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 		if (panel == null)
 			return;
 
-		Localizator localizator = Localizator.getInstance();
+		localizator = Localizator.getInstance();
 		service = new MollifyService();
 
 		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
@@ -69,8 +70,12 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 				service.authenticate(userName, password, new ResultListener() {
 					public void onFail(ServiceError error) {
 						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-							// windowManager.showInfo("Login", "Login failed");
-							// //TODO localize
+							String title = localizator.getStrings()
+									.loginDialogTitle();
+							String msg = localizator.getStrings()
+									.loginDialogLoginFailedMessage();
+							windowManager.getDialogManager().showInfo(title,
+									msg);
 							return;
 						}
 						windowManager.getDialogManager().showError(error);
