@@ -32,7 +32,7 @@
 		if ($ext) echo ');';
 	}
 	
-	function get_success_message($result) {
+	function get_success_message($result = array()) {
 		return array("success" => TRUE, "result" => $result);
 	}
 	

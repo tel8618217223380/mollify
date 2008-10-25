@@ -40,7 +40,7 @@
 			$error = "INVALID_PATH";
 			return FALSE;
 		}
-		return array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $dir["path"]);
+		return array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $file["path"]);
 	}
 	
 	function assert_file($filename) {
@@ -68,6 +68,11 @@
 		$root = $dir["root"];
 		$path = $dir["path"];
 		$files = scandir($path);
+		if (!$files) {
+			$error = "INVALID_PATH";
+			$error_details = $path;
+			return FALSE;
+		}
 		$result = array();
 		
 		foreach($files as $i => $name) {
@@ -96,6 +101,11 @@
 		$root = $dir["root"];
 		$path = $dir["path"];
 		$files = scandir($path);
+		if (!$files) {
+			$error = "INVALID_PATH";
+			$error_details = $path;
+			return FALSE;
+		}
 		$result = array();
 		
 		foreach($files as $i => $name) {
