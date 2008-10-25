@@ -223,7 +223,7 @@
 		$origin = $_FILES['upload']['tmp_name'];
 		$target = $dir["path"].DIRECTORY_SEPARATOR.$name;
 		
-		if ($_FILES["file"]["error"] != UPLOAD_ERR_OK) {
+		if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK) {
 			$error = "UPLOAD_FAILED";
 			$error_details = $_FILES["file"]["error"];
 			return FALSE;
