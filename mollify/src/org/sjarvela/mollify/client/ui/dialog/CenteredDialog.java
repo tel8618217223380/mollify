@@ -47,7 +47,7 @@ public abstract class CenteredDialog extends DialogBox {
 	void onShow() {
 	}
 
-	protected Widget createButton(String title, ClickListener listener,
+	protected Button createButton(String title, ClickListener listener,
 			String... styles) {
 		Button button = new Button(title);
 		button.addStyleName(StyleConstants.DIALOG_BUTTON);
