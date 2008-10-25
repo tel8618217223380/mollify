@@ -10,10 +10,13 @@
 
 package org.sjarvela.mollify.client;
 
+import java.util.Date;
+
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class DateTime {
 	private static final String INTERNAL_DATETIME_FORMAT = "yyyyMMddHHmmss";
+	private static final String INTERNAL_EXACT_DATETIME_FORMAT = "yyyyMMddHHmmssSSS";
 
 	private static DateTime instance = null;
 
@@ -25,13 +28,24 @@ public class DateTime {
 	}
 
 	private DateTimeFormat internalDateTimeFormat;
+	private DateTimeFormat internalExactDateTimeFormat;
 
 	private DateTime() {
 		this.internalDateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(INTERNAL_DATETIME_FORMAT);
+		this.internalExactDateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
+				.getFormat(INTERNAL_EXACT_DATETIME_FORMAT);
 	}
 
 	public DateTimeFormat getInternalFormat() {
 		return internalDateTimeFormat;
+	}
+
+	public DateTimeFormat getInternalExactFormat() {
+		return internalExactDateTimeFormat;
+	}
+
+	public Date currentTime() {
+		return new Date();
 	}
 }

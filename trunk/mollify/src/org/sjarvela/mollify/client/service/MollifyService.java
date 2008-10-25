@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
+import org.sjarvela.mollify.client.DateTime;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.FileAction;
@@ -26,7 +27,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		details, files, dirs, roots
+		details, files, dirs, roots, upload_status
 	};
 
 	public MollifyService() {
@@ -52,15 +53,15 @@ public class MollifyService {
 	}
 
 	public void getFiles(ResultListener resultListener, String dir) {
-		getTypes(resultListener, GetType.files, "dir=" + dir);
+		getType(resultListener, GetType.files, "dir=" + dir);
 	}
 
 	public void getDirectories(ResultListener resultListener, String dir) {
-		getTypes(resultListener, GetType.dirs, "dir=" + dir);
+		getType(resultListener, GetType.dirs, "dir=" + dir);
 	}
 
 	public void getRootDirectories(ResultListener resultListener) {
-		getTypes(resultListener, GetType.roots);
+		getType(resultListener, GetType.roots);
 	}
 
 	public void getFileDetails(File file, ResultListener resultListener) {
@@ -78,6 +79,10 @@ public class MollifyService {
 
 	public void deleteFile(File file, ResultListener resultListener) {
 		doRequest(getFileActionUrl(file, FileAction.DELETE), resultListener);
+	}
+
+	public void getUploadProgress(String id, ResultListener resultListener) {
+		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 
 	public String getFileActionUrl(File file, FileAction action) {
@@ -106,11 +111,11 @@ public class MollifyService {
 
 	/* Utility functions */
 
-	private void getTypes(ResultListener resultListener, GetType type) {
-		getTypes(resultListener, type, "");
+	private void getType(ResultListener resultListener, GetType type) {
+		getType(resultListener, type, "");
 	}
 
-	private void getTypes(ResultListener resultListener, GetType type,
+	private void getType(ResultListener resultListener, GetType type,
 			String param) {
 		String params = "type=" + type;
 		if (param.length() > 0)
@@ -131,4 +136,11 @@ public class MollifyService {
 		ResultValidator listener = new ResultValidator(resultListener);
 		new JsonRpcHandler(URL.encode(url), listener).doRequest();
 	}
+
+	// Just any unique id, time in millisecond level is unique enough
+	public String getNewUploadId() {
+		return DateTime.getInstance().getInternalExactFormat().format(
+				DateTime.getInstance().currentTime());
+	}
+
 }

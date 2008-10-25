@@ -10,8 +10,11 @@
 
 package org.sjarvela.mollify.client.file;
 
+import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.service.FileUploadResultHandler;
 
 public interface FileUploadHandler {
 	FileUploadResultHandler getFileUploadResultHandler();
+	void getUploadProgress(String id, ResultCallback resultCallback);
+	String getNewUploadId();
 }

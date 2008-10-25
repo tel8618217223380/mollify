@@ -6,6 +6,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -64,6 +65,14 @@ public class LoginDialog extends CenteredDialog {
 
 		userName = new TextBox();
 		userName.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_VALUE);
+		userName.addKeyboardListener(new KeyboardListenerAdapter() {
+			@Override
+			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+				super.onKeyPress(sender, keyCode, modifiers);
+				if (keyCode == 13)
+					onLogin();
+			}
+		});
 		panel.add(userName);
 
 		Label passwordTitle = new Label(localizator.getStrings()
@@ -73,6 +82,14 @@ public class LoginDialog extends CenteredDialog {
 
 		password = new PasswordTextBox();
 		password.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_VALUE);
+		password.addKeyboardListener(new KeyboardListenerAdapter() {
+			@Override
+			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+				super.onKeyPress(sender, keyCode, modifiers);
+				if (keyCode == 13)
+					onLogin();
+			}
+		});
 		panel.add(password);
 
 		return panel;
@@ -85,9 +102,11 @@ public class LoginDialog extends CenteredDialog {
 		if (password.getText().length() < 1)
 			return;
 
-		loginHandler.onLogin(userName.getText(), password.getText(), new ConfirmationListener() {
-			public void onConfirm() {
-				LoginDialog.this.hide();
-			}});
+		loginHandler.onLogin(userName.getText(), password.getText(),
+				new ConfirmationListener() {
+					public void onConfirm() {
+						LoginDialog.this.hide();
+					}
+				});
 	}
 }

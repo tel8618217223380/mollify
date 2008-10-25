@@ -212,6 +212,14 @@ public class MainViewPresenter implements DirectoryController,
 				}));
 	}
 
+	public String getNewUploadId() {
+		return service.getNewUploadId();
+	}
+
+	public void getUploadProgress(String id, ResultCallback callback) {
+		service.getUploadProgress(id, createDefaultListener(callback));
+	}
+
 	private ResultListener createDefaultListener(final ResultCallback callback) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
