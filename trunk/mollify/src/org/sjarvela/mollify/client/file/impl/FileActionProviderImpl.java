@@ -8,10 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.file;
+package org.sjarvela.mollify.client.file.impl;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.service.MollifyService;
 
 public class FileActionProviderImpl implements FileActionProvider {

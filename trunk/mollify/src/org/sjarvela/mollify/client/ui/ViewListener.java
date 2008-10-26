@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui;
 
 public interface ViewListener {
 

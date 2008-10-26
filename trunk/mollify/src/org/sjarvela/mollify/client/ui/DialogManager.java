@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
+import org.sjarvela.mollify.client.LoginHandler;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
@@ -24,7 +25,6 @@ import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
-import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 
