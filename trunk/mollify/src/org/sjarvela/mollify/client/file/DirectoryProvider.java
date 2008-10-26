@@ -14,5 +14,9 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.service.ResultListener;
 
 public interface DirectoryProvider {
-	public void getDirectories(Directory parent, ResultListener listener);
+	void getRootDirectories(ResultListener listener);
+
+	void getDirectories(Directory parent, ResultListener listener);
+
+	void getDirectoriesAndFiles(String folder, ResultListener listener);
 }

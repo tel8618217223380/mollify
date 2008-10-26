@@ -86,8 +86,8 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		container.add(failedLabel);
 	}
 
-	public void onSuccess(JavaScriptObject result) {
-		JsArray<Directory> directories = result.cast();
+	public void onSuccess(JavaScriptObject... result) {
+		JsArray<Directory> directories = result[0].cast();
 		initialized = true;
 		container.clear();
 

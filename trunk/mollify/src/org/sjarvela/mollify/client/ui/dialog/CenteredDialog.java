@@ -22,7 +22,8 @@ public abstract class CenteredDialog extends DialogBox {
 	void initialize() {
 		VerticalPanel content = new VerticalPanel();
 		content.add(createContent());
-		content.add(createButtons());
+		Widget buttons = createButtons();
+		if (buttons != null) content.add(buttons);
 		this.add(content);
 
 		this.setPopupPositionAndShow(new PositionCallback() {
@@ -34,7 +35,9 @@ public abstract class CenteredDialog extends DialogBox {
 		});
 	}
 
-	abstract Widget createButtons();
+	Widget createButtons() {
+		return null;
+	}
 
 	abstract Widget createContent();
 

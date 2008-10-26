@@ -19,10 +19,10 @@ public class ResultValidator implements ResultListener {
 		resultListener.onFail(error);
 	}
 
-	public void onSuccess(JavaScriptObject resultValue) {
-		ReturnValue result = resultValue.cast();
+	public void onSuccess(JavaScriptObject... resultValue) {
+		ReturnValue result = resultValue[0].cast();
 		if (!result.isSuccess()) {
-			ErrorValue error = resultValue.cast();
+			ErrorValue error = resultValue[0].cast();
 			onFail(ServiceError.getFrom(error));
 			return;
 		}

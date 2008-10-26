@@ -11,7 +11,8 @@
 package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.service.ResultListener;
 
 public interface RenameHandler {
-	public void onRename(File file, String newName);
+	public void onRename(File file, String newName, ResultListener listener);
 }

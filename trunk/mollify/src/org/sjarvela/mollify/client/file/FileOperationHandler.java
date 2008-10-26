@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.file;
 
-public interface FileOperationHandler extends RenameHandler,
-		DeleteHandler, FileUploadHandler {
+public interface FileOperationHandler extends RenameHandler, DeleteHandler {
 
 }

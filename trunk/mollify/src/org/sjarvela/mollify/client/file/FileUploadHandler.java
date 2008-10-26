@@ -10,11 +10,19 @@
 
 package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.service.FileUploadResultHandler;
+import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.ui.mainview.FileUploadController;
+import org.sjarvela.mollify.client.ui.mainview.FileUploadListener;
+
+import com.google.gwt.user.client.ui.FormHandler;
 
 public interface FileUploadHandler {
-	FileUploadResultHandler getFileUploadResultHandler();
-	void getUploadProgress(String id, ResultCallback resultCallback);
-	String getNewUploadId();
+	FormHandler getUploadFormHandler(FileUploadController controller);
+
+	void getUploadProgress(String id, ResultListener listener);
+
+	String getFileUploadId();
+
+	void addListener(FileUploadListener listener);
+
 }
