@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.file;
 import org.sjarvela.mollify.client.data.Directory;
 
 public interface DirectoryController {
-	public void changeDirectory(int level, Directory directory);
+	public void changeToDirectory(int level, Directory directory);
 
 	public void moveToParentDirectory();
 }

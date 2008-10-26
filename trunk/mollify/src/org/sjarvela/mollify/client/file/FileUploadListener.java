@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 

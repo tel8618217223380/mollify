@@ -86,12 +86,12 @@ public class SimpleFileList extends DataGrid {
 			}
 		}
 
-		if (row >= (model.getDirectories().length() + offset)) {
+		if (row >= (model.getSubDirectories().length() + offset)) {
 			File file = model.getFiles().get(
-					row - model.getDirectories().length() - offset);
+					row - model.getSubDirectories().length() - offset);
 			notifyFileClickListeners(file, column);
 		} else {
-			Directory directory = model.getDirectories().get(row - offset);
+			Directory directory = model.getSubDirectories().get(row - offset);
 			notifyDirectoryClickListeners(directory, column);
 		}
 	}
@@ -130,8 +130,8 @@ public class SimpleFileList extends DataGrid {
 		}
 
 		// Directories first
-		for (int i = 0, n = model.getDirectories().length(); i < n; ++i) {
-			Directory dir = model.getDirectories().get(i);
+		for (int i = 0, n = model.getSubDirectories().length(); i < n; ++i) {
+			Directory dir = model.getSubDirectories().get(i);
 			addDirectoryRow(current, dir.getName());
 			current++;
 		}
@@ -282,7 +282,7 @@ public class SimpleFileList extends DataGrid {
 
 		for (int i = 0, n = model.getFiles().length(); i < n; ++i) {
 			if (file.equals(model.getFiles().get(i)))
-				return offset + model.getDirectories().length() + i;
+				return offset + model.getSubDirectories().length() + i;
 		}
 		return -1;
 	}

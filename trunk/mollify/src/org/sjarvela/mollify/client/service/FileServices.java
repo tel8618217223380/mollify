@@ -1,41 +1,22 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileOperationHandler;
-import org.sjarvela.mollify.client.service.MollifyService;
-import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileServices implements DirectoryProvider, FileDetailsProvider,
+public class FileServices implements FileDetailsProvider,
 		FileOperationHandler {
 	private final MollifyService service;
-	private final FileViewModel model;
 
-	public FileServices(MollifyService service, FileViewModel model) {
+	public FileServices(MollifyService service) {
 		this.service = service;
-		this.model = model;
 	}
 
 	public void getDirectories(Directory parent, ResultListener listener) {
-		// if there is no parent, show root list
-		if (parent.isEmpty()) {
-			listener.onSuccess(model.getRootDirectories());
-			return;
-		}
-
-		// no need to retrieve current view directories, they are already
-		// retrieved
-		if (parent.equals(model.getDirectoryModel().getCurrentFolder())) {
-			listener.onSuccess(model.getDirectories());
-			return;
-		}
-
 		this.service.getDirectories(listener, parent.getId());
 	}
 

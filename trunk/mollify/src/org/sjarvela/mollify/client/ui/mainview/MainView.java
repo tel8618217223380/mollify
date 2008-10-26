@@ -45,14 +45,15 @@ public class MainView extends Composite {
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public MainView(FileViewModel model, Localizator localizator,
+			DirectorySelectorFactory directorySelectorFactory,
 			FileDetailsPopupFactory fileDetailsPopupFactory) {
 		this.model = model;
 		this.localizator = localizator;
+		this.directorySelector = directorySelectorFactory.createSelector();
+		this.fileDetails = fileDetailsPopupFactory.createPopup();
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
-
-		fileDetails = fileDetailsPopupFactory.createPopup();
 	}
 
 	public void addViewListener(ViewListener listener) {
@@ -86,8 +87,6 @@ public class MainView extends Composite {
 
 		createButtons();
 		panel.add(refreshButton);
-
-		directorySelector = new DirectorySelector(model, localizator);
 		panel.add(directorySelector);
 		panel.add(parentDirButton);
 		panel.add(uploadFileButton);

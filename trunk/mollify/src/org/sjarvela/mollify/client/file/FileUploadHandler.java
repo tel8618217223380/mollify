@@ -11,8 +11,6 @@
 package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.ui.mainview.FileUploadController;
-import org.sjarvela.mollify.client.ui.mainview.FileUploadListener;
 
 import com.google.gwt.user.client.ui.FormHandler;
 

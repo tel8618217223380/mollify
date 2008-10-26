@@ -7,6 +7,7 @@ import org.sjarvela.mollify.client.file.impl.FileActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileActionProviderImpl;
 import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopupFactory;
@@ -24,19 +25,22 @@ public class MainViewFactory {
 	public MainView createMainView(WindowManager windowManager) {
 		FileActionProvider fileActionProvider = new FileActionProviderImpl(
 				service);
-		FileViewModel model = new FileViewModel();
-		FileServices fileOperator = new FileServices(service, model);
+
+		FileServices fileServices = new FileServices(service);
+		FileViewModel model = new FileViewModel(fileServices);
 		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
 		FileActionHandler fileActionHandler = new FileActionHandlerImpl(
-				fileActionProvider, fileOperator, windowManager);
+				fileActionProvider, fileServices, windowManager);
+		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory();
 		FileDetailsPopupFactory fileDetailsPopupFactory = new FileDetailsPopupFactory(
-				fileActionHandler, fileOperator, localizator);
-		MainView mainView = new MainView(model, localizator,
-				fileDetailsPopupFactory);
-		MainViewPresenter presenter = new MainViewPresenter(service,
-				windowManager, model, mainView, fileOperator);
-		new MainViewGlue(windowManager, model, mainView, presenter,
-				fileActionProvider, fileActionHandler, fileUploadHandler);
-		return mainView;
+				fileActionHandler, fileServices, localizator);
+
+		MainView view = new MainView(model, localizator,
+				directorySelectorFactory, fileDetailsPopupFactory);
+		MainViewPresenter presenter = new MainViewPresenter(windowManager,
+				model, view, fileActionProvider, fileActionHandler,
+				fileUploadHandler);
+		new MainViewGlue(view, presenter);
+		return view;
 	}
 }
