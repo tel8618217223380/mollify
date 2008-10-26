@@ -10,11 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
-import org.sjarvela.mollify.client.file.FileActionHandler;
-import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
@@ -31,9 +30,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainView extends Composite {
-	private final MainViewModel model;
+	private final FileViewModel model;
 	private final Localizator localizator;
-	private DirectoryController directoryController;
 
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
@@ -42,22 +40,25 @@ public class MainView extends Composite {
 	private Button parentDirButton;
 	private Button uploadFileButton;
 
-	public MainView(MainViewModel model, Localizator localizator) {
+	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
+
+	public MainView(FileViewModel model, Localizator localizator,
+			FileDetailsPopupFactory fileDetailsPopupFactory) {
 		this.model = model;
 		this.localizator = localizator;
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
+
+		fileDetails = fileDetailsPopupFactory.createPopup();
 	}
 
-	public void initialize(FileActionHandler fileActionHandler,
-			FileDetailsProvider fileDetailsProvider,
-			DirectoryProvider directoryProvider,
-			DirectoryController directoryController) {
-		this.directoryController = directoryController;
-		fileDetails = new FileDetailsPopup(localizator, fileDetailsProvider,
-				fileActionHandler);
-		directorySelector.initialize(directoryProvider, directoryController);
+	public void addViewListener(ViewListener listener) {
+		viewListeners.add(listener);
+	}
+
+	public DirectorySelector getDirectorySelector() {
+		return directorySelector;
 	}
 
 	private Widget createControls() {
@@ -83,6 +84,7 @@ public class MainView extends Composite {
 
 		createButtons();
 		panel.add(refreshButton);
+
 		directorySelector = new DirectorySelector(model, localizator);
 		panel.add(directorySelector);
 		panel.add(parentDirButton);
@@ -125,7 +127,8 @@ public class MainView extends Composite {
 	@Override
 	protected void onLoad() {
 		super.onLoad();
-		directoryController.initialize();
+		for (ViewListener listener : viewListeners)
+			listener.onViewLoad();
 	}
 
 	public void refresh() {

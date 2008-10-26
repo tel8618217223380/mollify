@@ -187,8 +187,8 @@ public class FileDetailsPopup extends DropdownPopup {
 				description.setText(error.getMessage(localizator));
 			}
 
-			public void onSuccess(JavaScriptObject result) {
-				FileDetails details = result.cast();
+			public void onSuccess(JavaScriptObject... result) {
+				FileDetails details = result[0].cast();
 				updateDetails(details);
 			}
 		});

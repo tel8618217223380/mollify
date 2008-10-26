@@ -18,12 +18,14 @@ import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginHandler;
+import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 
 public class DialogManager {
@@ -38,14 +40,19 @@ public class DialogManager {
 		new LoginDialog(localizator, loginHandler);
 	}
 
-	public void showRenameDialog(File file, RenameHandler fileHandler) {
-		new RenameDialog(file, localizator, fileHandler);
+	public void showRenameDialog(File file, RenameHandler fileHandler,
+			ResultListener listener) {
+		new RenameDialog(file, localizator, fileHandler, listener);
 	}
 
 	public void openUploadDialog(Directory directory,
 			FileActionProvider fileActionProvider, FileUploadHandler fileHandler) {
 		new FileUploadDialog(directory, localizator, fileActionProvider,
 				fileHandler);
+	}
+
+	public void openProgressDialog() {
+		new ProgressDialog("Testi");
 	}
 
 	public void showError(ServiceError error) {
@@ -70,4 +77,5 @@ public class DialogManager {
 			String style, ConfirmationListener listener) {
 		new ConfirmationDialog(localizator, title, message, style, listener);
 	}
+
 }

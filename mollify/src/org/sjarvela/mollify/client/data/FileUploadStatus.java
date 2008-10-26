@@ -2,8 +2,8 @@ package org.sjarvela.mollify.client.data;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class UploadStatus extends JavaScriptObject {
-	protected UploadStatus() {
+public class FileUploadStatus extends JavaScriptObject {
+	protected FileUploadStatus() {
 	}
 
 	public final native int getTotal() /*-{

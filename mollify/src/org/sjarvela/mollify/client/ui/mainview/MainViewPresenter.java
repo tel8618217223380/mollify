@@ -15,13 +15,10 @@ import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.file.FileAction;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
-import org.sjarvela.mollify.client.file.FileDetailsProvider;
-import org.sjarvela.mollify.client.file.FileOperationHandler;
-import org.sjarvela.mollify.client.service.FileUploadResultHandler;
+import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -33,47 +30,48 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class MainViewPresenter implements DirectoryController,
-		DirectoryProvider, FileDetailsProvider, FileActionHandler,
-		FileOperationHandler {
-	private final MollifyService service;
-	private final MainViewModel model;
+		FileActionHandler, ViewListener, FileUploadListener {
+	private final FileViewModel model;
 	private final MainView view;
+
 	private final WindowManager windowManager;
 	private final FileActionProvider fileActionProvider;
+	private final FileOperator fileOperator;
+	private final FileUploadHandler uploadHandler;
 
 	public MainViewPresenter(MollifyService service,
-			WindowManager windowManager, MainViewModel model, MainView view,
-			FileActionProvider fileActionProvider) {
+			WindowManager windowManager, FileViewModel model, MainView view,
+			FileActionProvider fileActionProvider, FileOperator fileOperator,
+			FileUploadHandler uploadHandler) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
-		this.service = service;
 		this.fileActionProvider = fileActionProvider;
+		this.fileOperator = fileOperator;
+		this.uploadHandler = uploadHandler;
+		this.uploadHandler.addListener(this);
 
-		view.initialize(this, this, this, this);
+		view.addViewListener(this);
+		view.getDirectorySelector().initialize(fileOperator, this);
 	}
 
-	public void initialize() {
-		getRootDirectories();
-	}
-
-	public void getRootDirectories() {
-		this.service
+	public void onViewLoad() {
+		fileOperator
 				.getRootDirectories(createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject result) {
-						JsArray<Directory> roots = result.cast();
-						updateRootDirs(roots);
+					public void onCallback(JavaScriptObject... result) {
+						JsArray<Directory> roots = result[0].cast();
+						onUpdateRootDirs(roots);
 					}
 				}));
 	}
 
-	private void updateRootDirs(JsArray<Directory> roots) {
-		model.setRootDirectories(roots);
+	private void onUpdateRootDirs(JsArray<Directory> rootDirs) {
+		model.setRootDirectories(rootDirs);
 
 		// select first one if none was selected
-		if (roots.length() > 0
+		if (rootDirs.length() > 0
 				&& model.getDirectoryModel().getRootDirectory().isEmpty()) {
-			model.getDirectoryModel().setRootDirectory(roots.get(0));
+			model.getDirectoryModel().setRootDirectory(rootDirs.get(0));
 			refresh();
 		}
 	}
@@ -99,21 +97,18 @@ public class MainViewPresenter implements DirectoryController,
 		final String folder = model.getDirectoryModel().getCurrentFolder()
 				.getId();
 
-		this.service.getDirectories(createDefaultListener(new ResultCallback() {
-			public void onCallback(JavaScriptObject result) {
-				final JsArray<Directory> directories = result.cast();
-
-				service.getFiles(createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject result) {
-						JsArray<File> files = result.cast();
-						refreshList(directories, files);
+		fileOperator.getDirectoriesAndFiles(folder,
+				createDefaultListener(new ResultCallback() {
+					public void onCallback(JavaScriptObject... result) {
+						JsArray<Directory> directories = result[0].cast();
+						JsArray<File> files = result[1].cast();
+						onRefreshList(directories, files);
 					}
-				}), folder);
-			}
-		}), folder);
+				}));
 	}
 
-	private void refreshList(JsArray<Directory> directories, JsArray<File> files) {
+	private void onRefreshList(JsArray<Directory> directories,
+			JsArray<File> files) {
 		model.setData(directories, files);
 		view.refresh();
 	}
@@ -130,34 +125,13 @@ public class MainViewPresenter implements DirectoryController,
 		refresh();
 	}
 
-	public void getDirectories(Directory parent, final ResultListener listener) {
-		// if there is no parent, show root list
-		if (parent.isEmpty()) {
-			listener.onSuccess(model.getRootDirectories());
-			return;
-		}
-
-		// no need to retrieve current view directories, they are already
-		// retrieved
-		if (parent.equals(model.getDirectoryModel().getCurrentFolder())) {
-			listener.onSuccess(model.getDirectories());
-			return;
-		}
-
-		this.service.getDirectories(listener, parent.getId());
-	}
-
-	public void getFileDetails(File file, ResultListener resultListener) {
-		service.getFileDetails(file, resultListener);
-	}
-
 	public void openUploadDialog() {
 		if (model.getDirectoryModel().getCurrentFolder().isEmpty())
 			return;
 
 		windowManager.getDialogManager().openUploadDialog(
 				model.getDirectoryModel().getCurrentFolder(),
-				fileActionProvider, this);
+				fileActionProvider, uploadHandler);
 	}
 
 	public void onFileAction(final File file, FileAction action) {
@@ -165,7 +139,8 @@ public class MainViewPresenter implements DirectoryController,
 			windowManager.openDownloadUrl(fileActionProvider.getActionURL(file,
 					action));
 		} else if (action.equals(FileAction.RENAME)) {
-			windowManager.getDialogManager().showRenameDialog(file, this);
+			windowManager.getDialogManager().showRenameDialog(file,
+					fileOperator, createRefreshListener());
 		} else if (action.equals(FileAction.DELETE)) {
 			String title = windowManager.getLocalizator().getStrings()
 					.deleteFileConfirmationDialogTitle();
@@ -176,7 +151,8 @@ public class MainViewPresenter implements DirectoryController,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE_FILE,
 					new ConfirmationListener() {
 						public void onConfirm() {
-							onDelete(file);
+							fileOperator
+									.onDelete(file, createRefreshListener());
 						}
 					});
 		} else {
@@ -186,38 +162,25 @@ public class MainViewPresenter implements DirectoryController,
 
 	}
 
-	public void onRename(File file, String newName) {
-		service.renameFile(file, newName,
-				createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject result) {
-						refresh();
-					}
-				}));
+	public void onUploadStarted() {
+		//windowManager.getDialogManager().openProgressDialog();
+	}
+	
+	public void onUploadFinished() {
+		refresh();
 	}
 
-	public void onDelete(File file) {
-		service.deleteFile(file, createDefaultListener(new ResultCallback() {
-			public void onCallback(JavaScriptObject result) {
+	public void onUploadFailed(ServiceError error) {
+		windowManager.getDialogManager().showError(error);
+		reset();
+	}
+
+	private ResultListener createRefreshListener() {
+		return createDefaultListener(new ResultCallback() {
+			public void onCallback(JavaScriptObject... result) {
 				refresh();
 			}
-		}));
-	}
-
-	public FileUploadResultHandler getFileUploadResultHandler() {
-		return new FileUploadResultHandler(
-				createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject result) {
-						refresh();
-					}
-				}));
-	}
-
-	public String getNewUploadId() {
-		return service.getNewUploadId();
-	}
-
-	public void getUploadProgress(String id, ResultCallback callback) {
-		service.getUploadProgress(id, createDefaultListener(callback));
+		});
 	}
 
 	private ResultListener createDefaultListener(final ResultCallback callback) {
@@ -227,7 +190,7 @@ public class MainViewPresenter implements DirectoryController,
 				reset();
 			}
 
-			public void onSuccess(JavaScriptObject result) {
+			public void onSuccess(JavaScriptObject... result) {
 				callback.onCallback(result);
 			}
 		};

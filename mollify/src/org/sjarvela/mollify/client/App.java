@@ -57,7 +57,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 				windowManager.getDialogManager().showError(error);
 			}
 
-			public void onSuccess(JavaScriptObject result) {
+			public void onSuccess(JavaScriptObject... result) {
 				showMain();
 			}
 		});
@@ -81,7 +81,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 						windowManager.getDialogManager().showError(error);
 					}
 
-					public void onSuccess(JavaScriptObject result) {
+					public void onSuccess(JavaScriptObject... result) {
 						listener.onConfirm();
 						showMain();
 					}

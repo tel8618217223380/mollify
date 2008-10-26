@@ -17,18 +17,18 @@ import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
+import org.sjarvela.mollify.client.ui.mainview.FileViewModel;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class DirectorySelector extends HorizontalPanel {
-	private MainViewModel model;
+	private FileViewModel model;
 	private DirectoryController directoryController;
 	private DirectoryProvider directoryProvider;
 	private Localizator localizator;
 
-	public DirectorySelector(MainViewModel model, Localizator localizator) {
+	public DirectorySelector(FileViewModel model, Localizator localizator) {
 		this.model = model;
 		this.localizator = localizator;
 

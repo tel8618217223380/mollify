@@ -9,11 +9,11 @@
  */
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.data.UploadStatus;
+import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
+import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.service.ServiceError;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 
@@ -36,7 +36,6 @@ class UploadMonitor {
 
 		timer = new Timer() {
 			public void run() {
-				GWT.log("MONITOR TIMER", null);
 				if (!stop)
 					onTimer();
 			}
@@ -53,10 +52,14 @@ class UploadMonitor {
 	}
 
 	private void onTimer() {
-		uploadHandler.getUploadProgress(uploadId, new ResultCallback() {
-			public void onCallback(JavaScriptObject result) {
-				UploadStatus status = result.cast();
-				listener.onUpdateProgress(status);
+		uploadHandler.getUploadProgress(uploadId, new ResultListener() {
+			public void onFail(ServiceError error) {
+				listener.onProgressUpdateFail(error);
+			}
+
+			public void onSuccess(JavaScriptObject... result) {
+				FileUploadStatus status = result[0].cast();
+				listener.onProgressUpdate(status);
 				if (!stop)
 					timer.schedule(INTERVAL);
 			}
