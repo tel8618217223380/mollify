@@ -1,9 +1,8 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.fileaction;
 
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopup;
 
 public class FileDetailsPopupFactory {
 	public FileDetailsPopupFactory(FileActionHandler fileActionHandler,

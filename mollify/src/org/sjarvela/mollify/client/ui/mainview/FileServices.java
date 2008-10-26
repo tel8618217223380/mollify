@@ -12,12 +12,12 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileOperator implements DirectoryProvider, FileDetailsProvider,
+public class FileServices implements DirectoryProvider, FileDetailsProvider,
 		FileOperationHandler {
 	private final MollifyService service;
 	private final FileViewModel model;
 
-	public FileOperator(MollifyService service, FileViewModel model) {
+	public FileServices(MollifyService service, FileViewModel model) {
 		this.service = service;
 		this.model = model;
 	}

@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.service.ServiceError;

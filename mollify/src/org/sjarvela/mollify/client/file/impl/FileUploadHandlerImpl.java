@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.file.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.sjarvela.mollify.client.service.FileUploadResultHandler;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.mainview.FileUploadController;
+import org.sjarvela.mollify.client.ui.mainview.FileUploadListener;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.FormHandler;

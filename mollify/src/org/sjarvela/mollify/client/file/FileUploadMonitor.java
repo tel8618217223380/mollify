@@ -7,17 +7,16 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileUploadStatus;
-import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 
-class UploadMonitor {
+class FileUploadMonitor {
 	static int INTERVAL = 1000;
 
 	private final FileUploadHandler uploadHandler;
@@ -27,7 +26,7 @@ class UploadMonitor {
 
 	private boolean stop = false;
 
-	public UploadMonitor(String uploadId, ProgressListener listener,
+	public FileUploadMonitor(String uploadId, ProgressListener listener,
 			FileUploadHandler uploadHandler) {
 
 		this.uploadId = uploadId;

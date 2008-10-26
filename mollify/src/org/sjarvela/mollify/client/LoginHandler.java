@@ -1,6 +1,5 @@
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
 
 public interface LoginHandler {
 	public void onLogin(String userName, String password,
