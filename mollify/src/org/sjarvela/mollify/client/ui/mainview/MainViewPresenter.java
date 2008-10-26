@@ -12,66 +12,58 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.service.MollifyService;
+import org.sjarvela.mollify.client.file.FileActionHandler;
+import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileUploadHandler;
+import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 
-public class MainViewPresenter implements DirectoryController {
+public class MainViewPresenter implements DirectoryController,
+		FileUploadListener {
 	private final FileViewModel model;
 	private final MainView view;
-
 	private final WindowManager windowManager;
-	private final FileServices fileOperator;
+	private final FileActionProvider fileActionProvider;
+	private FileUploadHandler fileUploadHandler;
 
-	public MainViewPresenter(MollifyService service,
-			WindowManager windowManager, FileViewModel model, MainView view,
-			FileServices fileOperator) {
+	public MainViewPresenter(WindowManager windowManager, FileViewModel model,
+			MainView view, FileActionProvider fileActionProvider,
+			FileActionHandler fileActionHandler,
+			FileUploadHandler fileUploadHandler) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
-		this.fileOperator = fileOperator;
+		this.fileActionProvider = fileActionProvider;
 
-		view.getDirectorySelector().initialize(fileOperator, this);
+		this.fileUploadHandler = fileUploadHandler;
+		this.fileUploadHandler.addListener(this);
+
+		fileActionHandler.addRenameListener(createRefreshListener());
+		fileActionHandler.addDeleteListener(createRefreshListener());
 	}
 
-	public void onRefreshRootDirectories() {
-		fileOperator
-				.getRootDirectories(createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject... result) {
-						JsArray<Directory> roots = result[0].cast();
-						onUpdateRootDirs(roots);
-					}
-				}));
+	public void initialize() {
+		model.refreshRootDirectories(createListener(new ResultCallback() {
+			public void onCallback(JavaScriptObject... result) {
+				changeToRootDirectory(model.getRootDirectories().get(0));
+			}
+		}));
 	}
 
-	private void onUpdateRootDirs(JsArray<Directory> rootDirs) {
-		model.setRootDirectories(rootDirs);
-
-		// select first one if none was selected
-		if (rootDirs.length() > 0
-				&& model.getDirectoryModel().getRootDirectory().isEmpty()) {
-			model.getDirectoryModel().setRootDirectory(rootDirs.get(0));
-			refresh();
-		}
+	public void changeToRootDirectory(Directory root) {
+		model.changeToRootDirectory(root, createRefreshListener());
 	}
 
-	public void changeRootDirectory(Directory root) {
-		model.getDirectoryModel().setRootDirectory(root);
-		refresh();
-	}
-
-	public void changeDirectory(Directory directory) {
+	public void changeToDirectory(Directory directory) {
 		GWT.log("Directory changed to: " + directory.getName() + ", id="
 				+ directory.getId(), null);
-		model.getDirectoryModel().descendIntoFolder(directory);
-		refresh();
+		model.changeToSubdirectory(directory, createRefreshListener());
 	}
 
 	public void reset() {
@@ -80,66 +72,61 @@ public class MainViewPresenter implements DirectoryController {
 	}
 
 	public void refresh() {
-		final String folder = model.getDirectoryModel().getCurrentFolder()
-				.getId();
-
-		fileOperator.getDirectoriesAndFiles(folder,
-				createDefaultListener(new ResultCallback() {
-					public void onCallback(JavaScriptObject... result) {
-						JsArray<Directory> directories = result[0].cast();
-						JsArray<File> files = result[1].cast();
-						onRefreshList(directories, files);
-					}
-				}));
-	}
-
-	private void onRefreshList(JsArray<Directory> directories,
-			JsArray<File> files) {
-		model.setData(directories, files);
 		view.refresh();
 	}
 
 	public void moveToParentDirectory() {
 		if (!model.getDirectoryModel().canAscend())
 			throw new RuntimeException("Cannot ascend");
-		model.getDirectoryModel().ascend();
-		refresh();
+		model.moveToParentDirectory(createRefreshListener());
 	}
 
-	public void changeDirectory(int level, Directory directory) {
-		model.getDirectoryModel().changeDirectory(level, directory);
-		refresh();
+	public void changeToDirectory(int level, Directory directory) {
+		model.changeToDirectory(level, directory, createRefreshListener());
 	}
-	
+
 	public void onError(ServiceError error) {
 		windowManager.getDialogManager().showError(error);
 		reset();
 	}
 
-	public boolean isUploadAllowed() {
-		if (model.getDirectoryModel().getCurrentFolder().isEmpty())
-			return false;
-		return true;
+	public void openUploadDialog() {
+		if (model.getCurrentFolder().isEmpty())
+			return;
+		windowManager.getDialogManager()
+				.openUploadDialog(model.getCurrentFolder(), fileActionProvider,
+						fileUploadHandler);
 	}
 
-	// private ResultListener createRefreshListener() {
-	// return createDefaultListener(new ResultCallback() {
-	// public void onCallback(JavaScriptObject... result) {
-	// refresh();
-	// }
-	// });
-	// }
+	public void onUploadStarted() {
 
-	private ResultListener createDefaultListener(final ResultCallback callback) {
+	}
+
+	public void onUploadFinished() {
+		refresh();
+	}
+
+	public void onUploadFailed(ServiceError error) {
+		onError(error);
+	}
+
+	private ResultListener createListener(final ResultCallback callback) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
-				windowManager.getDialogManager().showError(error);
-				reset();
+				onError(error);
 			}
 
 			public void onSuccess(JavaScriptObject... result) {
 				callback.onCallback(result);
 			}
 		};
+	}
+
+	private ResultListener createRefreshListener() {
+		return createListener(new ResultCallback() {
+			public void onCallback(JavaScriptObject... result) {
+				refresh();
+			}
+		});
 	}
 }

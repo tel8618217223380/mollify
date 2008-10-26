@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.file;
 
 import java.util.ListIterator;
 import java.util.Stack;

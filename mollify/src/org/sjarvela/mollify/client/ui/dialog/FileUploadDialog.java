@@ -13,10 +13,10 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.file.FileAction;
 import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileUploadController;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.mainview.FileUploadController;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -133,7 +133,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		return uploader;
 	}
 
-	public boolean onStartUpload() {
+	public boolean onUploadStarted() {
 		if (uploader.getFilename().length() < 1)
 			return false;
 		return true;

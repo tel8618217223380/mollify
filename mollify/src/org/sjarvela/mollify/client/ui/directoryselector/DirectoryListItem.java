@@ -73,7 +73,7 @@ public class DirectoryListItem extends HorizontalPanel {
 
 		label.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				controller.changeDirectory(level, currentDirectory);
+				controller.changeToDirectory(level, currentDirectory);
 			}
 		});
 		return label;
@@ -95,7 +95,7 @@ public class DirectoryListItem extends HorizontalPanel {
 		return new DirectoryListMenu(parentDirectory, currentDirectory,
 				dataProvider, new DirectoryListener() {
 					public void onDirectorySelected(Directory directory) {
-						controller.changeDirectory(level, directory);
+						controller.changeToDirectory(level, directory);
 					}
 				}, localizator, this.getElement(), dropDown.getElement());
 	}

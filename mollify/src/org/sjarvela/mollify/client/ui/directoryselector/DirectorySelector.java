@@ -13,46 +13,38 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 import java.util.ListIterator;
 
 import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
+import org.sjarvela.mollify.client.file.DirectoryModelProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.mainview.FileViewModel;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class DirectorySelector extends HorizontalPanel {
-	private FileViewModel model;
-	private DirectoryController directoryController;
-	private DirectoryProvider directoryProvider;
 	private Localizator localizator;
+	private final DirectoryModelProvider directoryModelProvider;
+	private final DirectoryListItemFactory listItemFactory;
 
-	public DirectorySelector(FileViewModel model, Localizator localizator) {
-		this.model = model;
+	public DirectorySelector(Localizator localizator,
+			DirectoryModelProvider directoryModelProvider,
+			DirectoryListItemFactory listItemFactory) {
+		this.directoryModelProvider = directoryModelProvider;
 		this.localizator = localizator;
-
+		this.listItemFactory = listItemFactory;
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
-	}
-
-	public void initialize(DirectoryProvider directoryProvider,
-			DirectoryController directoryController) {
-		this.directoryController = directoryController;
-		this.directoryProvider = directoryProvider;
 	}
 
 	public void refresh() {
 		this.clear();
 
-		ListIterator<Directory> list = model.getDirectoryModel()
-				.getDirectoryList();
+		ListIterator<Directory> list = directoryModelProvider
+				.getDirectoryModel().getDirectoryList();
 		int level = 0;
 		Directory parent = Directory.Empty();
 
 		while (list.hasNext()) {
 			Directory current = list.next();
-			this.add(new DirectoryListItem(current, level, parent,
-					directoryController, directoryProvider, localizator));
+			this.add(listItemFactory.createListItem(current, level, parent));
 			if (list.hasNext())
 				addSeparator();
 

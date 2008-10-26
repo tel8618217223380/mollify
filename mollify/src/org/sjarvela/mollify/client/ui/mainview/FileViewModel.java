@@ -10,21 +10,28 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.file.DirectoryModel;
+import org.sjarvela.mollify.client.service.FileServices;
+import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.service.ServiceError;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class FileViewModel {
-	private JsArray<Directory> rootDirectories;
+	private final FileServices fileServices;
 
+	private JsArray<Directory> rootDirectories;
 	private JsArray<Directory> directories;
 	private JsArray<File> files;
 
 	private DirectoryModel directoryModel;
 
-	public FileViewModel() {
-		super();
+	public FileViewModel(FileServices fileServices) {
+		this.fileServices = fileServices;
 		clear();
 	}
 
@@ -35,36 +42,91 @@ public class FileViewModel {
 		directoryModel = new DirectoryModel();
 	}
 
-	public void setData(JsArray<Directory> directories, JsArray<File> files) {
-		this.directories = directories;
-		this.files = files;
-	}
-
-	public JsArray<Directory> getDirectories() {
-		return directories;
-	}
-
-	public void setDirectories(JsArray<Directory> directories) {
-		this.directories = directories;
-	}
-
-	public JsArray<File> getFiles() {
-		return files;
-	}
-
-	public void setFiles(JsArray<File> files) {
-		this.files = files;
+	public DirectoryModel getDirectoryModel() {
+		return directoryModel;
 	}
 
 	public JsArray<Directory> getRootDirectories() {
 		return rootDirectories;
 	}
 
-	public void setRootDirectories(JsArray<Directory> dirs) {
-		this.rootDirectories = dirs;
+	public JsArray<Directory> getSubDirectories() {
+		return directories;
 	}
 
-	public DirectoryModel getDirectoryModel() {
-		return directoryModel;
+	public JsArray<File> getFiles() {
+		return files;
 	}
+
+	public Directory getCurrentFolder() {
+		return directoryModel.getCurrentFolder();
+	}
+
+	public void refreshRootDirectories(ResultListener listener) {
+		fileServices.getRootDirectories(createListener(listener,
+				new ResultCallback() {
+					public void onCallback(JavaScriptObject... result) {
+						JsArray<Directory> rootDirs = result[0].cast();
+						FileViewModel.this.rootDirectories = rootDirs;
+					}
+				}));
+	}
+
+	public void changeToRootDirectory(Directory root,
+			ResultListener resultListener) {
+		directoryModel.setRootDirectory(root);
+		refreshData(resultListener);
+	}
+
+	public void changeToSubdirectory(Directory directory,
+			ResultListener resultListener) {
+		directoryModel.descendIntoFolder(directory);
+		refreshData(resultListener);
+	}
+
+	public void changeToDirectory(int level, Directory directory,
+			ResultListener resultListener) {
+		directoryModel.changeDirectory(level, directory);
+		refreshData(resultListener);
+	}
+
+	public void moveToParentDirectory(ResultListener resultListener) {
+		directoryModel.ascend();
+		refreshData(resultListener);
+	}
+
+	public void refreshData(ResultListener resultListener) {
+		final String folder = getCurrentFolder().getId();
+
+		fileServices.getDirectoriesAndFiles(folder, createListener(
+				resultListener, new ResultCallback() {
+					public void onCallback(JavaScriptObject... result) {
+						JsArray<Directory> directories = result[0].cast();
+						JsArray<File> files = result[1].cast();
+						onUpdateData(directories, files);
+					}
+				}));
+	}
+
+	private void onUpdateData(JsArray<Directory> directories,
+			JsArray<File> files) {
+		this.directories = directories;
+		this.files = files;
+	}
+
+	private ResultListener createListener(final ResultListener listener,
+			final ResultCallback resultCallback) {
+		return new ResultListener() {
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
+
+			public void onSuccess(JavaScriptObject... result) {
+				resultCallback.onCallback(result);
+				listener.onSuccess(result);
+			}
+
+		};
+	}
+
 }
