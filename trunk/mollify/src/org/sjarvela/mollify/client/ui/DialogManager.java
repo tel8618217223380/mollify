@@ -52,8 +52,9 @@ public class DialogManager {
 				fileHandler);
 	}
 
-	public ProgressListener openProgressDialog(String title) {
-		return new ProgressDialog(title);
+	public ProgressListener openProgressDialog(String title,
+			boolean progressBarInitiallyVisible) {
+		return new ProgressDialog(title, progressBarInitiallyVisible);
 	}
 
 	public void showError(ServiceError error) {

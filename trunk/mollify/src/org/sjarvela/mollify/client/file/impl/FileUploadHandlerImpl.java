@@ -52,12 +52,14 @@ public class FileUploadHandlerImpl implements FileUploadHandler {
 		return new FormHandler() {
 
 			public void onSubmit(FormSubmitEvent event) {
-				String fileName = controller.getFileNameOnSubmit();
-				if (fileName == null || fileName.length() < 1)
+				if (!controller.onStartUpload()) {
 					event.setCancelled(true);
-				else
-					for (FileUploadListener listener : listeners)
-						listener.onUploadStarted(uploadId, fileName);
+					return;
+				}
+
+				String fileName = controller.getFileName();
+				for (FileUploadListener listener : listeners)
+					listener.onUploadStarted(uploadId, fileName);
 			}
 
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {

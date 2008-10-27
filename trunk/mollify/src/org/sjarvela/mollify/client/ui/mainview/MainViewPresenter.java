@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
@@ -38,6 +39,7 @@ public class MainViewPresenter implements DirectoryController,
 	private final Localizator localizator;
 	private final FileUploadHandler fileUploadHandler;
 	private ProgressListener uploadListener = null;
+	private FileUploadMonitor uploadMonitor;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileActionProvider fileActionProvider,
@@ -57,8 +59,8 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void initialize() {
-		model.refreshRootDirectories(createListener(new ResultCallback() {
-			public void onCallback(JavaScriptObject... result) {
+		model.refreshRootDirectories(createListener(new Callback() {
+			public void onCallback() {
 				changeToRootDirectory(model.getRootDirectories().get(0));
 			}
 		}));
@@ -80,7 +82,11 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void refresh() {
-		view.refresh();
+		model.refreshData(createListener(new Callback() {
+			public void onCallback() {
+				view.refresh();
+			}
+		}));
 	}
 
 	public void moveToParentDirectory() {
@@ -107,38 +113,65 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void onUploadStarted(String uploadId, String fileName) {
-		if (uploadListener != null)
-			throw new RuntimeException("Previous upload listener still running");
+		if (uploadListener != null || uploadMonitor != null)
+			throw new RuntimeException("Previous upload unfinished");
 
 		uploadListener = windowManager.getDialogManager().openProgressDialog(
-				localizator.getStrings().fileUploadProgressTitle());
+				localizator.getStrings().fileUploadProgressTitle(), false);
 		uploadListener.setInfo(fileName);
+		uploadListener.setDetails(localizator.getStrings()
+				.fileUploadProgressPleaseWait());
 
-		new FileUploadMonitor(uploadId, new FileUploadProgressListener() {
-			public void onProgressUpdate(FileUploadStatus status) {
-				int percentage = (int) status.getUploadedPercentage();
-				uploadListener.setProgress(percentage);
-				uploadListener.setDetails(String.valueOf(percentage) + "%");
-			}
+		uploadMonitor = new FileUploadMonitor(uploadId,
+				new FileUploadProgressListener() {
+					public void onProgressUpdate(FileUploadStatus status) {
+						int percentage = (int) status.getUploadedPercentage();
+						uploadListener.setProgress(percentage);
+						uploadListener.setDetails(String.valueOf(percentage)
+								+ "%");
+					}
 
-			public void onProgressUpdateFail(ServiceError error) {
-				GWT.log("Upload progress update error: " + error.name(), null);
-			}
-		}, fileUploadHandler);
+					public void onProgressUpdateFail(ServiceError error) {
+						uploadListener.setProgress(0);
+						uploadMonitor.stop();
+					}
+				}, fileUploadHandler);
+		uploadMonitor.start();
 	}
 
 	public void onUploadFinished() {
+		stopUploaders();
+		refresh();
+	}
+
+	public void onUploadFailed(ServiceError error) {
+		stopUploaders();
+		onError(error);
+	}
+
+	private void stopUploaders() {
 		if (uploadListener != null) {
 			uploadListener.setProgress(100);
 			uploadListener.setDetails("");
 			uploadListener.onFinished();
 		}
+		if (uploadMonitor != null) {
+			uploadMonitor.stop();
+		}
 		uploadListener = null;
-		refresh();
+		uploadMonitor = null;
 	}
 
-	public void onUploadFailed(ServiceError error) {
-		onError(error);
+	private ResultListener createListener(final Callback callback) {
+		return new ResultListener() {
+			public void onFail(ServiceError error) {
+				onError(error);
+			}
+
+			public void onSuccess(JavaScriptObject... result) {
+				callback.onCallback();
+			}
+		};
 	}
 
 	private ResultListener createListener(final ResultCallback callback) {

@@ -38,8 +38,6 @@ public class FileUploadDialog extends CenteredDialog implements
 	private final Localizator localizator;
 	private final FileActionProvider fileActionProvider;
 	private final FileUploadHandler fileUploadHandler;
-	private HorizontalPanel progressContent;
-	private Label progressLabel;
 	private Button uploadButton;
 
 	private FormPanel form;
@@ -89,16 +87,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
 		panel.add(createMessage());
 		panel.add(createForm());
-		panel.add(createProgressBar());
 		return panel;
-	}
-
-	private Widget createProgressBar() {
-		progressContent = new HorizontalPanel();
-		progressLabel = new Label();
-		progressContent.add(progressLabel);
-		progressContent.setVisible(false);
-		return progressContent;
 	}
 
 	private Widget createMessage() {
@@ -133,9 +122,13 @@ public class FileUploadDialog extends CenteredDialog implements
 		return uploader;
 	}
 
-	public String getFileNameOnSubmit() {
+	public boolean onStartUpload() {
 		if (uploader.getFilename().length() < 1)
-			return null;
+			return false;
+		return true;
+	}
+
+	public String getFileName() {
 		return uploader.getFilename();
 	}
 
