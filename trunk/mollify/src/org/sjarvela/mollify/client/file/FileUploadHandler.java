@@ -15,7 +15,8 @@ import org.sjarvela.mollify.client.service.ResultListener;
 import com.google.gwt.user.client.ui.FormHandler;
 
 public interface FileUploadHandler {
-	FormHandler getUploadFormHandler(FileUploadController controller);
+	FormHandler getUploadFormHandler(FileUploadController controller,
+			String uploadId);
 
 	void getUploadProgress(String id, ResultListener listener);
 

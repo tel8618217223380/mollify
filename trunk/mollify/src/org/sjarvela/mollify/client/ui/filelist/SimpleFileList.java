@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.mainview.FileViewModel;
+import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -30,11 +30,11 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SimpleFileList extends DataGrid {
-	private FileViewModel model;
+	private MainViewModel model;
 	private List<SimpleFileListListener> listeners = new ArrayList<SimpleFileListListener>();
 	private Localizator localizator;
 
-	public SimpleFileList(FileViewModel model, Localizator localizator) {
+	public SimpleFileList(MainViewModel model, Localizator localizator) {
 		super();
 
 		this.model = model;

@@ -23,27 +23,26 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListItem extends HorizontalPanel {
-	private DirectoryListMenu menu;
+	private final DirectoryController controller;
+	private final DirectoryProvider dataProvider;
+	private final Localizator localizator;
+	private final DirectoryListMenu menu;
 
 	private Directory currentDirectory;
 	private int level;
 	private Directory parentDirectory;
 
-	private DirectoryController controller;
-	private DirectoryProvider dataProvider;
-	private Localizator localizator;
-
 	private Label dropDown;
 
 	public DirectoryListItem(Directory currentDirectory, int level,
-			Directory parentDirectory, DirectoryController controller,
-			DirectoryProvider provider, Localizator localizator) {
+			Directory parentDirectory, DirectoryProvider provider,
+			DirectoryController controller, Localizator localizator) {
 		this.currentDirectory = currentDirectory;
 		this.level = level;
 		this.parentDirectory = parentDirectory;
 
-		this.controller = controller;
 		this.dataProvider = provider;
+		this.controller = controller;
 		this.localizator = localizator;
 
 		this.setStyleName(StyleConstants.DIRECTORY_LIST);

@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
+import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopup;
 import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.Column;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MainView extends Composite {
-	private final FileViewModel model;
+	private final MainViewModel model;
 	private final Localizator localizator;
 
 	private DirectorySelector directorySelector;
@@ -44,7 +45,7 @@ public class MainView extends Composite {
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
-	public MainView(FileViewModel model, Localizator localizator,
+	public MainView(MainViewModel model, Localizator localizator,
 			DirectorySelectorFactory directorySelectorFactory,
 			FileDetailsPopupFactory fileDetailsPopupFactory) {
 		this.model = model;

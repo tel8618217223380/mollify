@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.service;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -66,7 +65,7 @@ public class JsonRpcHandler {
 	      document.body.removeChild(script);
 	      delete window[callback];
 	      delete window[callback + "done"];
-	    }, 2000);
+	    }, 5000);
 	    
 	    document.body.appendChild(script);
 	}-*/;

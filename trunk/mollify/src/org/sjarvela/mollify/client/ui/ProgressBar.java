@@ -1,5 +1,14 @@
-package org.sjarvela.mollify.client.ui;
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
 
+package org.sjarvela.mollify.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -28,11 +37,11 @@ public class ProgressBar extends Composite {
 	private void createElement() {
 		Element row = DOM.createTR();
 		row.setClassName(StyleConstants.PROGRESS_BAR_TOTAL);
-		
+
 		current = DOM.createTD();
 		current.setClassName(StyleConstants.PROGRESS_BAR_CURRENT);
 		current.setInnerHTML("&nbsp;");
-		
+
 		left = DOM.createTD();
 		left.setClassName(StyleConstants.PROGRESS_BAR_LEFT);
 		left.setInnerHTML("&nbsp;");

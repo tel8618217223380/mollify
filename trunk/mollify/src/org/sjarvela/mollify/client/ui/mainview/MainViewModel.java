@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileViewModel {
+public class MainViewModel {
 	private final FileServices fileServices;
 
 	private JsArray<Directory> rootDirectories;
@@ -30,7 +30,7 @@ public class FileViewModel {
 
 	private DirectoryModel directoryModel;
 
-	public FileViewModel(FileServices fileServices) {
+	public MainViewModel(FileServices fileServices) {
 		this.fileServices = fileServices;
 		clear();
 	}
@@ -67,7 +67,7 @@ public class FileViewModel {
 				new ResultCallback() {
 					public void onCallback(JavaScriptObject... result) {
 						JsArray<Directory> rootDirs = result[0].cast();
-						FileViewModel.this.rootDirectories = rootDirs;
+						MainViewModel.this.rootDirectories = rootDirs;
 					}
 				}));
 	}
