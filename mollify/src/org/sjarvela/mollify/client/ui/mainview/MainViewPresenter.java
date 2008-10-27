@@ -12,11 +12,16 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
+import org.sjarvela.mollify.client.file.FileUploadMonitor;
+import org.sjarvela.mollify.client.file.FileUploadProgressListener;
+import org.sjarvela.mollify.client.file.ProgressListener;
+import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
@@ -26,22 +31,25 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class MainViewPresenter implements DirectoryController,
 		FileUploadListener {
-	private final FileViewModel model;
+	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
 	private final FileActionProvider fileActionProvider;
-	private FileUploadHandler fileUploadHandler;
+	private final Localizator localizator;
+	private final FileUploadHandler fileUploadHandler;
+	private ProgressListener uploadListener = null;
 
-	public MainViewPresenter(WindowManager windowManager, FileViewModel model,
+	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileActionProvider fileActionProvider,
 			FileActionHandler fileActionHandler,
-			FileUploadHandler fileUploadHandler) {
+			FileUploadHandler fileUploadHandler, Localizator localizator) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
 		this.fileActionProvider = fileActionProvider;
 
 		this.fileUploadHandler = fileUploadHandler;
+		this.localizator = localizator;
 		this.fileUploadHandler.addListener(this);
 
 		fileActionHandler.addRenameListener(createRefreshListener());
@@ -98,11 +106,34 @@ public class MainViewPresenter implements DirectoryController,
 						fileUploadHandler);
 	}
 
-	public void onUploadStarted() {
+	public void onUploadStarted(String uploadId, String fileName) {
+		if (uploadListener != null)
+			throw new RuntimeException("Previous upload listener still running");
 
+		uploadListener = windowManager.getDialogManager().openProgressDialog(
+				localizator.getStrings().fileUploadProgressTitle());
+		uploadListener.setInfo(fileName);
+
+		new FileUploadMonitor(uploadId, new FileUploadProgressListener() {
+			public void onProgressUpdate(FileUploadStatus status) {
+				int percentage = (int) status.getUploadedPercentage();
+				uploadListener.setProgress(percentage);
+				uploadListener.setDetails(String.valueOf(percentage) + "%");
+			}
+
+			public void onProgressUpdateFail(ServiceError error) {
+				GWT.log("Upload progress update error: " + error.name(), null);
+			}
+		}, fileUploadHandler);
 	}
 
 	public void onUploadFinished() {
+		if (uploadListener != null) {
+			uploadListener.setProgress(100);
+			uploadListener.setDetails("");
+			uploadListener.onFinished();
+		}
+		uploadListener = null;
 		refresh();
 	}
 

@@ -10,15 +10,13 @@
 
 package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.data.FileUploadStatus;
+import org.sjarvela.mollify.client.service.ServiceError;
 
-public interface FileActionHandler {
+public interface FileUploadProgressListener {
 
-	void addRenameListener(ResultListener listener);
+	void onProgressUpdateFail(ServiceError error);
 
-	void addDeleteListener(ResultListener listener);
-
-	void onFileAction(File file, FileAction action);
+	void onProgressUpdate(FileUploadStatus status);
 
 }

@@ -33,18 +33,17 @@ public class FileUploadDialog extends CenteredDialog implements
 	private static final String UPLOADER_NAME = "upload";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
-	private Directory directory;
-	private Localizator localizator;
-	private FileActionProvider fileActionProvider;
-	private FileUploadHandler uploadHandler;
+	private final String uploadId;
+	private final Directory directory;
+	private final Localizator localizator;
+	private final FileActionProvider fileActionProvider;
+	private final FileUploadHandler fileUploadHandler;
 	private HorizontalPanel progressContent;
 	private Label progressLabel;
 	private Button uploadButton;
 
 	private FormPanel form;
 	private FileUpload uploader;
-
-	String uploadId;
 
 	public FileUploadDialog(Directory directory, Localizator localizator,
 			FileActionProvider fileActionProvider,
@@ -55,7 +54,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		this.directory = directory;
 		this.localizator = localizator;
 		this.fileActionProvider = fileActionProvider;
-		this.uploadHandler = fileUploadHandler;
+		this.fileUploadHandler = fileUploadHandler;
 
 		initialize();
 	}
@@ -112,7 +111,8 @@ public class FileUploadDialog extends CenteredDialog implements
 	private Widget createForm() {
 		form = new FormPanel();
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
-		form.addFormHandler(uploadHandler.getUploadFormHandler(this));
+		form.addFormHandler(fileUploadHandler.getUploadFormHandler(this,
+				uploadId));
 		form.setAction(fileActionProvider.getActionURL(directory,
 				FileAction.UPLOAD));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -133,10 +133,10 @@ public class FileUploadDialog extends CenteredDialog implements
 		return uploader;
 	}
 
-	public boolean onUploadStarted() {
+	public String getFileNameOnSubmit() {
 		if (uploader.getFilename().length() < 1)
-			return false;
-		return true;
+			return null;
+		return uploader.getFilename();
 	}
 
 	public void onUploadFinished() {

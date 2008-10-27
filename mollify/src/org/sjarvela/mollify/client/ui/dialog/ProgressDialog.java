@@ -1,8 +1,16 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.ProgressListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ProgressBar;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
@@ -39,13 +47,20 @@ public class ProgressDialog extends CenteredDialog implements ProgressListener {
 		return panel;
 	}
 
-	public void onProgressUpdate(FileUploadStatus status) {
-		progressBar.setProgress(status.getUploadedPercentage());
-		details.setText(String.valueOf(status.getUploadedPercentage()));
+	public void setProgress(int percentage) {
+		progressBar.setProgress(percentage);
 	}
 
-	public void onProgressUpdateFail(ServiceError error) {
-		details.setText(error.name());
+	public void setInfo(String infoText) {
+		info.setText(infoText);
+	}
+
+	public void setDetails(String detailsText) {
+		details.setText(detailsText);
+	}
+
+	public void onFinished() {
+		this.hide();
 	}
 
 }

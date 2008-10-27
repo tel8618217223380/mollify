@@ -16,18 +16,18 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 
-class FileUploadMonitor {
+public class FileUploadMonitor {
 	static int INTERVAL = 1000;
 
 	private final FileUploadHandler uploadHandler;
 	private final Timer timer;
 	private final String uploadId;
-	private final ProgressListener listener;
+	private final FileUploadProgressListener listener;
 
 	private boolean stop = false;
 
-	public FileUploadMonitor(String uploadId, ProgressListener listener,
-			FileUploadHandler uploadHandler) {
+	public FileUploadMonitor(String uploadId,
+			FileUploadProgressListener listener, FileUploadHandler uploadHandler) {
 
 		this.uploadId = uploadId;
 		this.listener = listener;

@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.file.impl;
 
 import java.util.ArrayList;
@@ -38,15 +48,16 @@ public class FileUploadHandlerImpl implements FileUploadHandler {
 	}
 
 	public FormHandler getUploadFormHandler(
-			final FileUploadController controller) {
+			final FileUploadController controller, final String uploadId) {
 		return new FormHandler() {
 
 			public void onSubmit(FormSubmitEvent event) {
-				if (!controller.onUploadStarted())
+				String fileName = controller.getFileNameOnSubmit();
+				if (fileName == null || fileName.length() < 1)
 					event.setCancelled(true);
 				else
 					for (FileUploadListener listener : listeners)
-						listener.onUploadStarted();
+						listener.onUploadStarted(uploadId, fileName);
 			}
 
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {

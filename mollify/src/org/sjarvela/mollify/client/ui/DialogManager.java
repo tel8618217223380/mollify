@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
+import org.sjarvela.mollify.client.file.ProgressListener;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -51,8 +52,8 @@ public class DialogManager {
 				fileHandler);
 	}
 
-	public void openProgressDialog() {
-		new ProgressDialog("Testi");
+	public ProgressListener openProgressDialog(String title) {
+		return new ProgressDialog(title);
 	}
 
 	public void showError(ServiceError error) {
