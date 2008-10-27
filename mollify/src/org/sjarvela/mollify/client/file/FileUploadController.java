@@ -12,8 +12,10 @@ package org.sjarvela.mollify.client.file;
 
 public interface FileUploadController {
 
-	String getFileNameOnSubmit();
+	boolean onStartUpload();
 
 	void onUploadFinished();
+
+	String getFileName();
 
 }
