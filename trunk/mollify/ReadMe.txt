@@ -23,9 +23,9 @@ this entire header must remain intact.
 
 2) Copy extracted directories into your web server root directory
 
-2) Modify "configuration.php" under directory "mollify", for further instructions see chapter 2.
+3) Modify "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
-3) You are ready to go. Open address http://your.host.name/mollify to access your files.
+4) You are ready to go. Open address http://your.host.name/mollify to access your files.
 
 
 2. CONFIGURATION
@@ -118,6 +118,18 @@ Rules are:
 - Actual file system folder name is not shown to user, but instead the name [DIR_NAME] defined in the configuration
 
 NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
+
+
+2.3 FILE UPLOAD PROGRESS DISPLAY
+--------------------------------
+
+File upload progress can be enabled with parameter
+
+$ENABLE_UPLOAD_PROGRESS = TRUE;
+
+NOTE! File upload progress display requires APC (Alternative PHP Cache), see wiki page at
+"http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay" for more information
+
 
 
 3. MODIFYING INSTALLATION
