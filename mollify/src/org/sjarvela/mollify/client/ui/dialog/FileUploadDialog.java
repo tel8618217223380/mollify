@@ -125,6 +125,7 @@ public class FileUploadDialog extends CenteredDialog implements
 	public boolean onStartUpload() {
 		if (uploader.getFilename().length() < 1)
 			return false;
+		this.setVisible(false);
 		return true;
 	}
 

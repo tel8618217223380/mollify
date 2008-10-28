@@ -23,11 +23,9 @@ public class ProgressDialog extends CenteredDialog implements ProgressListener {
 	private ProgressBar progressBar;
 	private Label info;
 	private Label details;
-	private final boolean progressInitiallyBarVisible;
 
 	public ProgressDialog(String title, boolean progressInitiallyBarVisible) {
 		super(title, StyleConstants.PROGRESS_DIALOG);
-		this.progressInitiallyBarVisible = progressInitiallyBarVisible;
 		initialize();
 		if (!progressInitiallyBarVisible)
 			progressBar.setVisible(false);
@@ -45,15 +43,13 @@ public class ProgressDialog extends CenteredDialog implements ProgressListener {
 		panel.add(progressBar);
 
 		details = new Label();
-		info.setStyleName(StyleConstants.PROGRESS_DIALOG_DETAILS);
+		details.setStyleName(StyleConstants.PROGRESS_DIALOG_DETAILS);
 		panel.add(details);
 
 		return panel;
 	}
 
 	public void setProgress(int percentage) {
-		if (!progressInitiallyBarVisible && !progressBar.isVisible())
-			progressBar.setVisible(true);
 		progressBar.setProgress(percentage);
 	}
 
@@ -67,6 +63,10 @@ public class ProgressDialog extends CenteredDialog implements ProgressListener {
 
 	public void onFinished() {
 		this.hide();
+	}
+
+	public void setProgressBarVisible(boolean visible) {
+		progressBar.setVisible(visible);
 	}
 
 }

@@ -27,7 +27,6 @@ import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class MainViewPresenter implements DirectoryController,
@@ -71,8 +70,6 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void changeToDirectory(Directory directory) {
-		GWT.log("Directory changed to: " + directory.getName() + ", id="
-				+ directory.getId(), null);
 		model.changeToSubdirectory(directory, createRefreshListener());
 	}
 
@@ -126,6 +123,7 @@ public class MainViewPresenter implements DirectoryController,
 				new FileUploadProgressListener() {
 					public void onProgressUpdate(FileUploadStatus status) {
 						int percentage = (int) status.getUploadedPercentage();
+						uploadListener.setProgressBarVisible(true);
 						uploadListener.setProgress(percentage);
 						uploadListener.setDetails(String.valueOf(percentage)
 								+ "%");
