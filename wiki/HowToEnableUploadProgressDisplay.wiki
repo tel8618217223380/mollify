@@ -59,9 +59,9 @@ If you get complains about missing function "apc_fetch", APC is not installed. A
 
 == PHP error "Cannot run code from this file in conjunction with non encoded files"==
 
-Error "_Cannot run code from this file in conjunction with non encoded files_" is due to the fact that APC is primarily "Alternative PHP *Cache*" (and only secondarily file upload hook), which means that it tries to cache items. This message means that it cannot cache something.
+Error "_Cannot run code from this file in conjunction with non encoded files_" is due to the fact that APC is primarily a cache (and only secondarily file upload hook), which means that it tries to cache items.
 
-If APC is only for file upload hook, you can configure it to ignore regular php files. For example, following configuration caches only php classes (sure you could make it ignore them as well):
+If APC is only for file upload hook, you can configure it to ignore regular php files. For example, following configuration applies only php classes (sure you could make it ignore them as well):
 
 {{{
 apc.cache_by_default = "Off"
