@@ -18,6 +18,8 @@ public interface ProgressListener {
 	void setDetails(String details);
 
 	void setProgress(int percentage);
+	
+	void setProgressBarVisible(boolean visible);
 
 	void onFinished();
 
