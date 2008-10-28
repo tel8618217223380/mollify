@@ -33,9 +33,9 @@ Open configuration settings (configuration.php) and change following setting:
 
 
 
-= Troubleshooting =
+== Troubleshooting ==
 
-== PHP error for missing function "apc_fetch" ==
+=== PHP error for missing function "apc_fetch" ===
 
 If you get complains about missing function "apc_fetch", APC is not installed. APC is provided via PECL (PHP Extension Community Library), more information can be found here: [http://fi.php.net/manual/en/install.pecl.php]
 
