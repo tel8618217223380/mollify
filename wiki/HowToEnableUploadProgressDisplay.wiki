@@ -1,0 +1,31 @@
+#summary How to enable file upload progress display
+#labels Phase-Deploy
+
+= Introduction =
+
+Mollify supports PHP extension called APC (Alternative PHP Cache) to get file uploading status information. This document explains how to enable this feature.
+
+
+= Details =
+
+Mollify supports PHP extension called APC ([http://fi.php.net/manual/en/intro.apc.php Alternative PHP Cache]), which is a free cache implementation to PHP versions >= 4.3.
+
+By default this is disabled in Mollify. It can be enabled in configuration (configuration.php) with following steps:
+
+1) Make sure APC is installed in php server (for more information, see troubleshooting below)
+
+2) Make sure APC extension is enabled in php.ini
+
+In section "Dynamic Extensions", add line `extension=apc.so` (in linux or Mac) or `extension=apc.dll` (in Windows)
+
+3) Make sure 
+
+4) Enable Mollify feature
+
+Open configuration settings (configuration.php) and change following setting:
+`$ENABLE_UPLOAD_PROGRESS = TRUE;`
+
+
+= Troubleshooting =
+
+Coming soon
