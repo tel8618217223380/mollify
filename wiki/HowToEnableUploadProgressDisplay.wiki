@@ -11,8 +11,6 @@ Mollify supports PHP extension called APC (Alternative PHP Cache), which impleme
 APC requires PHP versions >= 5.2 and PEAR >= 1.4.
 
 
-
-
 = Installation =
 
 == 1. Installing APC ==
@@ -32,17 +30,28 @@ pecl install apc
 
 == 2. Configuring APC ==
 
-  #1 Make sure APC extension is enabled in php.ini. In section "Dynamic Extensions", add line `extension=apc.so` (in linux or Mac) or `extension=apc.dll` (in Windows)
-  #2 Make sure file upload hook is enabled in php.ini. Anywhere in the php.ini, following setting is needed: `apc.rfc1867 = on`
+  #1 Make sure APC extension is enabled in section "Dynamic Extensions" in php.ini.
+    # In Linux or Mac
+{{{
+extension=apc.so
+}}}
+    # In Windows
+{{{
+extension=apc.dll
+}}}
+  #2 Make sure file upload hook is enabled in php.ini with following setting
+{{{
+apc.rfc1867 = on
+}}}
 
 == 3. Configuring Mollify ==
 
-  # Open configuration settings (configuration.php) and change following setting: `$ENABLE_UPLOAD_PROGRESS = TRUE;`
-
-That's it.
+Open configuration settings (configuration.php) and change following setting: `$ENABLE_UPLOAD_PROGRESS = TRUE;`
 
 
-== Troubleshooting ==
+
+
+= Troubleshooting =
 
 === PHP error for missing function "apc_fetch" ===
 
@@ -50,11 +59,13 @@ If you get complains about missing function "apc_fetch", APC is not installed. A
 
 == PHP error "Cannot run code from this file in conjunction with non encoded files"==
 
-Error "Cannot run code from this file in conjunction with non encoded files" is due to the fact that APC is primarily Alternative PHP *Cache* (and only secondarily file upload hook), which means that it tries to cache items. This message means that it cannot cache something.
+Error "_Cannot run code from this file in conjunction with non encoded files_" is due to the fact that APC is primarily "Alternative PHP *Cache*" (and only secondarily file upload hook), which means that it tries to cache items. This message means that it cannot cache something.
 
 If APC is only for file upload hook, you can configure it to ignore regular php files. For example, following configuration caches only php classes (sure you could make it ignore them as well):
 
-`apc.cache_by_default = "Off"`
-`apc.filters = "+\.class\.php$"`
+{{{
+apc.cache_by_default = "Off"
+apc.filters = "+\.class\.php$"
+}}}
 
 For more information about configuring APC, see [http://fi.php.net/manual/en/apc.configuration.php]
