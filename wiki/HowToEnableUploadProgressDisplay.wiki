@@ -6,31 +6,33 @@
 Mollify supports PHP extension called APC (Alternative PHP Cache), which implements a file upload hook to php. APC is available at PECL ([http://pecl.php.net/ PHP Extension Community Library]) or PEAR ([http://pear.php.net/ PHP Extension and Application Repository]).
 
 
-= Requirements =
+== Requirements ==
 
 APC requires PHP versions >= 5.2 and PEAR >= 1.4.
+
+
+
 
 = Installation =
 
 == 1. Installing APC ==
 
-  # To install it in Windows, download PECL and the APC extension from [http://pecl4win.php.net/]
-
-  # To install it in Debian linux (Ubuntu etc), use following commands:
-
-`apt-get install apache2
+  #1 To install it in Windows, download PECL and the APC extension from [http://pecl4win.php.net/]
+  #2 To install it in Debian linux (Ubuntu etc), use following commands:
+{{{
+apt-get install apache2
 apt-get install libapache2-mod-php5
 apt-get install php-pear
 apt-get install php5-dev
 apt-get install make
 apt-get install apache2-prefork-dev
-pecl install apc`
-
-  # In Mac installations (MAMP), APC is already included as long as PHP 5 is selected.
+pecl install apc
+}}}
+  #3 In Mac installations (MAMP), APC is already included as long as PHP 5 is selected.
 
 == 2. Configuring APC ==
 
-1) Make sure APC extension is enabled in php.ini
+  #1 Make sure APC extension is enabled in php.ini
 
 In section "Dynamic Extensions", add line
 
@@ -40,7 +42,7 @@ or
 
 `extension=apc.dll` (in Windows)
 
-2) Make sure file upload hook is enabled in php.ini
+  #2 Make sure file upload hook is enabled in php.ini
 
 Anywhere in the php.ini, following setting is needed:
 
