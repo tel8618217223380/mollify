@@ -3,45 +3,20 @@
 
 = Introduction =
 
-Mollify supports PHP extension called APC (Alternative PHP Cache) to get file uploading status information. This document explains how to enable this feature.
+Mollify supports PHP extension called APC (Alternative PHP Cache), which implements a file upload hook to php. APC is available at PECL ([http://pecl.php.net/ PHP Extension Community Library]) or PEAR ([http://pear.php.net/ PHP Extension and Application Repository]).
 
 
+= Requirements =
 
-= Details =
+APC requires PHP versions >= 5.2 and PEAR >= 1.4.
 
+= Installation =
 
-Mollify supports PHP extension called APC ([http://fi.php.net/manual/en/intro.apc.php Alternative PHP Cache]), which is a free cache implementation to PHP versions >= 5.2.
+== 1. Installing APC ==
 
-By default this is disabled in Mollify. It can be enabled in configuration (configuration.php) with following steps:
+  # To install it in Windows, download PECL and the APC extension from [http://pecl4win.php.net/]
 
-1) Make sure APC is installed in php server (for more information, see troubleshooting below)
-
-2) Make sure APC extension is enabled in php.ini
-
-In section "Dynamic Extensions", add line `extension=apc.so` (in linux or Mac) or `extension=apc.dll` (in Windows)
-
-3) Make sure file upload hook is enabled in php.ini
-
-Anywhere in the php.ini, following setting is needed:
-
-`apc.rfc1867 = on`
-
-4) Enable Mollify feature
-
-Open configuration settings (configuration.php) and change following setting:
-`$ENABLE_UPLOAD_PROGRESS = TRUE;`
-
-
-
-== Troubleshooting ==
-
-=== PHP error for missing function "apc_fetch" ===
-
-If you get complains about missing function "apc_fetch", APC is not installed. APC is provided via PECL (PHP Extension Community Library), more information can be found here: [http://fi.php.net/manual/en/install.pecl.php]
-
-1) To install it in Windows, download PECL and the APC extension from [http://pecl4win.php.net/]
-
-2) To install it in Debian linux (Ubuntu etc), use following commands:
+  # To install it in Debian linux (Ubuntu etc), use following commands:
 
 `apt-get install apache2
 apt-get install libapache2-mod-php5
@@ -51,4 +26,38 @@ apt-get install make
 apt-get install apache2-prefork-dev
 pecl install apc`
 
-3) In Mac installations (MAMP), APC is already included as long as PHP 5 is selected.
+  # In Mac installations (MAMP), APC is already included as long as PHP 5 is selected.
+
+== 2. Configuring APC ==
+
+1) Make sure APC extension is enabled in php.ini
+
+In section "Dynamic Extensions", add line
+
+`extension=apc.so` (in linux or Mac)
+
+or
+
+`extension=apc.dll` (in Windows)
+
+2) Make sure file upload hook is enabled in php.ini
+
+Anywhere in the php.ini, following setting is needed:
+
+`apc.rfc1867 = on`
+
+
+== 3. Configuring Mollify ==
+
+Open configuration settings (configuration.php) and change following setting:
+
+`$ENABLE_UPLOAD_PROGRESS = TRUE;`
+
+That's it.
+
+
+== Troubleshooting ==
+
+=== PHP error for missing function "apc_fetch" ===
+
+If you get complains about missing function "apc_fetch", APC is not installed. APC is provided via PECL (PHP Extension Community Library), more information can be found here: [http://fi.php.net/manual/en/install.pecl.php]
