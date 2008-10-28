@@ -32,28 +32,12 @@ pecl install apc
 
 == 2. Configuring APC ==
 
-  #1 Make sure APC extension is enabled in php.ini
-
-In section "Dynamic Extensions", add line
-
-`extension=apc.so` (in linux or Mac)
-
-or
-
-`extension=apc.dll` (in Windows)
-
-  #2 Make sure file upload hook is enabled in php.ini
-
-Anywhere in the php.ini, following setting is needed:
-
-`apc.rfc1867 = on`
-
+  #1 Make sure APC extension is enabled in php.ini. In section "Dynamic Extensions", add line `extension=apc.so` (in linux or Mac) or `extension=apc.dll` (in Windows)
+  #2 Make sure file upload hook is enabled in php.ini. Anywhere in the php.ini, following setting is needed: `apc.rfc1867 = on`
 
 == 3. Configuring Mollify ==
 
-Open configuration settings (configuration.php) and change following setting:
-
-`$ENABLE_UPLOAD_PROGRESS = TRUE;`
+# Open configuration settings (configuration.php) and change following setting: `$ENABLE_UPLOAD_PROGRESS = TRUE;`
 
 That's it.
 
