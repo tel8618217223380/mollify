@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -22,6 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class MainViewModel {
+	private final SessionInfo info;
 	private final FileServices fileServices;
 
 	private JsArray<Directory> rootDirectories;
@@ -30,8 +32,9 @@ public class MainViewModel {
 
 	private DirectoryModel directoryModel;
 
-	public MainViewModel(FileServices fileServices) {
+	public MainViewModel(FileServices fileServices, SessionInfo info) {
 		this.fileServices = fileServices;
+		this.info = info;
 		clear();
 	}
 
@@ -40,6 +43,10 @@ public class MainViewModel {
 		directories = JsArray.createArray().cast();
 		files = JsArray.createArray().cast();
 		directoryModel = new DirectoryModel();
+	}
+
+	public SessionInfo getSessionInfo() {
+		return info;
 	}
 
 	public DirectoryModel getDirectoryModel() {

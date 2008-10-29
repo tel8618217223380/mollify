@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
@@ -33,11 +34,11 @@ public class MainViewFactory {
 		this.service = service;
 	}
 
-	public MainView createMainView(WindowManager windowManager) {
+	public MainView createMainView(WindowManager windowManager, SessionInfo info) {
 		FileActionProvider fileActionProvider = new FileActionProviderImpl(
 				service);
 		FileServices fileServices = new FileServices(service);
-		MainViewModel model = new MainViewModel(fileServices);
+		MainViewModel model = new MainViewModel(fileServices, info);
 		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
 		FileActionHandler fileActionHandler = new FileActionHandlerImpl(
 				fileActionProvider, fileServices, windowManager);
