@@ -23,7 +23,7 @@ public class MollifyService {
 	private String sessionId = "";
 
 	enum Action {
-		get, operate, auth, check_auth
+		get, operate, auth, session_info
 	};
 
 	enum GetType {
@@ -42,8 +42,8 @@ public class MollifyService {
 		this.baseUrl += "service.php";
 	}
 
-	public void checkAuthentication(ResultListener resultListener) {
-		doRequest(getUrl(Action.check_auth), resultListener);
+	public void getSessionInfo(ResultListener resultListener) {
+		doRequest(getUrl(Action.session_info), resultListener);
 	}
 
 	public void authenticate(String userName, String password,

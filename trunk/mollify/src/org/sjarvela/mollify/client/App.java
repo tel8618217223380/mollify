@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client;
 
+import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -47,7 +48,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 		windowManager = new WindowManager(panel, localizator, mainViewFactory,
 				new DialogManager(localizator));
 
-		service.checkAuthentication(new ResultListener() {
+		service.getSessionInfo(new ResultListener() {
 			public void onFail(ServiceError error) {
 				if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
 					showLogin();
@@ -57,7 +58,13 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 			}
 
 			public void onSuccess(JavaScriptObject... result) {
-				showMain();
+				SessionInfo info = result[0].cast();
+
+				if (info.getAuthenticationRequired()
+						&& !info.getAuthenticated())
+					showLogin();
+				else
+					showMain(info);
 			}
 		});
 	};
@@ -67,30 +74,34 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 			public void onLogin(String userName, String password,
 					final ConfirmationListener listener) {
 				service.authenticate(userName, password, new ResultListener() {
+
 					public void onFail(ServiceError error) {
 						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-							String title = localizator.getStrings()
-									.loginDialogTitle();
-							String msg = localizator.getStrings()
-									.loginDialogLoginFailedMessage();
-							windowManager.getDialogManager().showInfo(title,
-									msg);
+							showLoginError();
 							return;
 						}
 						windowManager.getDialogManager().showError(error);
 					}
 
 					public void onSuccess(JavaScriptObject... result) {
+						SessionInfo info = result[0].cast();
 						listener.onConfirm();
-						showMain();
+						showMain(info);
 					}
+
 				});
 			}
 		});
 	}
 
-	private void showMain() {
-		windowManager.showMainView();
+	private void showLoginError() {
+		String title = localizator.getStrings().loginDialogTitle();
+		String msg = localizator.getStrings().loginDialogLoginFailedMessage();
+		windowManager.getDialogManager().showInfo(title, msg);
+	}
+
+	private void showMain(SessionInfo info) {
+		windowManager.showMainView(info);
 	}
 
 	public void onUncaughtException(Throwable e) {
