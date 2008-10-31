@@ -485,3 +485,36 @@ input.rename-file-new-name-value {
 	width: 160px;
 }
 
+.progress-dialog .dialogContent {
+	width: 300px;
+	padding: 8px;
+	background: url(wait.gif) no-repeat 280px 22px;
+}
+
+.progress-dialog .progress-bar {
+	width: 266px;
+	background-color: #f3f3f3;
+	border: 1px dotted #c3c3c3;
+}
+
+.progress-bar .current, .progress-bar .left {
+	height: 23px;
+}
+
+.progress-bar .current {
+	background-color: #4a6dcb;
+}
+
+.progress-bar .left {
+	background-color: transparent;
+}
+
+.progress-dialog-title {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.progress-dialog-details {
+	margin-top: 5px;
+	margin-bottom: 1px;
+}

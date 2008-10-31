@@ -12,7 +12,7 @@
 	function authenticate() {
 		global $USERS;
 		
-		if (!$USERS) {
+		if (!authentication_required()) {
 			return TRUE;
 		}
 		
@@ -32,11 +32,16 @@
 		return FALSE;
 	}
 	
+	function authentication_required() {
+		global $USERS;
+		return ($USERS != FALSE and count($USERS) > 0);
+	}
+	
 	function check_authentication() {
 		global $USERS;
 
-		// if no users are defined, always pass authentication
-		if (count($USERS) === 0) return TRUE;
+		// always pass authentication
+		if (!authentication_required()) return TRUE;
 		// otherwise user must authenticate
 		if (!isset($_SESSION['user_id'])) return FALSE;
 		return array("name" => $USERS[$_SESSION['user_id']]["name"]);
@@ -52,9 +57,7 @@
 		global $USERS, $PUBLISHED_DIRECTORIES;
 
 		if (count($USERS) === 0) {
-			// if no users are defined, return first directory set
-			reset($PUBLISHED_DIRECTORIES);
-			return current($PUBLISHED_DIRECTORIES);
+			return $PUBLISHED_DIRECTORIES;
 		} else {
 			return $PUBLISHED_DIRECTORIES[$_SESSION['user_id']];
 		}

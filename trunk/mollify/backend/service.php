@@ -9,21 +9,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	$ERRORS = array(
-		"UNAUTHORIZED" => array(100, "Unauthorized request"), 
-		"INVALID_REQUEST" => array(101, "Invalid request"),
-		"UNSUPPORTED_ACTION" => array(102, "Unsupported action"),
-		"UNSUPPORTED_OPERATION" => array(103, "Unsupported operation"),
-		
-		"INVALID_PATH" => array(201, "Invalid path"), 
-		"FILE_DOES_NOT_EXIST" => array(202, "File does not exist"), 
-		"FILE_ALREADY_EXISTS" => array(203, "File already exists"), 
-		"NOT_A_FILE" => array(204, "Target is not a file"), 
-		"DELETE_FAILED" => array(205, "Could not delete"), 
-		"NO_UPLOAD_DATA" => array(206, "No upload data available"), 
-		"UPLOAD_FAILED" => array(207, "File upload failed"), 
-		"SAVING_FAILED" => array(208, "Saving file failed")
-	);
+	include "errors.php";
 	
 	function return_json($result_array) {
 		$ext = isset($_GET["callback"]);
@@ -46,14 +32,26 @@
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
+	function get_session_info() {
+		$user = check_authentication();
+		$authenticated = FALSE;
+		$name = "";
+		if ($user) {
+			$authenticated = TRUE;
+			if (isset($user["name"])) $name = $user["name"];
+		}
+		return array("authentication_required" => authentication_required(), "authenticated" => $authenticated, "user" => $name);
+	}
+	
 	function handle_authentication() {
 		$action = $_GET["action"];
 		$result = FALSE;
 		if ($action === "auth") {
-			$result = authenticate();
+			if (authenticate()) $result = get_session_info();
+		} else if ($action === "session_info") {
+			$result = get_session_info();
 		} else {
-			$result = check_authentication();
-			if ($result && ($action != "check_auth")) return TRUE;
+			if (check_authentication()) return TRUE;
 		}
 		if (!$result) {
 			return_json(get_error_message("UNAUTHORIZED"));
@@ -79,90 +77,12 @@
 		return;
 	}
 	
-	require "files.php";
 	$result = FALSE;
 	$error = "";
 	$error_details = "";
 	
-	switch ($_GET["action"]) {
-		case "get":
-			if (!isset($_GET["type"])) {
-				$error = "INVALID_REQUEST";
-				break;
-			}
-			
-			switch ($_GET["type"]) {
-				case "roots":
-					$result = array();
-					foreach($account["roots"] as $id => $root) {
-						$result[] = array(
-							"id" => get_filesystem_id($id),
-							"name" => $root["name"]
-						);
-					}
-					break;
-					
-				case "files":
-					$result = get_files($account);
-					break;
-					
-				case "dirs":
-					$result = get_directories($account);
-					break;
-
-				case "details":
-					$file = get_fileitem_from_url("id");
-					if (!$file) return;
-					$result = get_file_details($file);
-					break;
-			}
-			
-			break;
-		case "operate":
-			if (!isset($_GET["type"])) {
-				$error = "INVALID_REQUEST";
-				break;
-			}
-			$operation = $_GET["type"];
-			
-			$file = get_fileitem_from_url("id");
-			if (!$file) return;
-			
-			switch (strtolower($operation)) {
-				case "download":
-					// download writes the header and the content, just exit here
-					if (download($file)) return;
-					break;
-				
-				case "rename":
-					if (!isset($_GET["to"])) return;
-					if (rename_file($file, urldecode($_GET["to"])))
-						$result = get_success_message();
-					break;
-					
-				case "delete":
-					if (delete_file($file))
-						$result = get_success_message();
-					break;
-				
-				case "upload":
-					$dir = $file;
-					if (upload_file($dir)) $result = get_success_message();
-					header("Content-Type: text/html");
-					header("HTTP/1.1 200 OK", true);
-					break;
-
-				default:
-					$error = "UNSUPPORTED_OPERATION";
-					$error_details = $operation;
-					break;
-			}
-			break;
-		default:
-			$error = "UNSUPPORTED_ACTION";
-			$error_details = $_GET["action"];
-			break;	
-	}
+	// handle actual request
+	include "facade.php";
 
 	// return JSON
 	if ($result === FALSE) {
