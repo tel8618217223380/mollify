@@ -1,0 +1,49 @@
+#!/bin/sh
+
+APPDIR='/Users/cambba/Documents/Projects/Mollify';
+APPNAME='org.sjarvela.mollify.App';
+TARGET="$APPDIR/deploy";
+
+PACKAGE='mollify.tar.gz';
+SRC_PACKAGE='mollify-src.tar.gz';
+SRC_TEMP_DIR="$TARGET/temp/";
+SRC_DIR="mollify-src";
+
+echo Application dir: $APPDIR
+echo Deploy dir: $TARGET
+
+$APPDIR/App-compile
+rm -rf $TARGET
+mkdir $TARGET
+
+# Binaries
+
+mkdir $TARGET/mollify
+
+cp -R $APPDIR/build/$APPNAME $TARGET
+rm $TARGET/$APPNAME/App.html
+
+cp -R $APPDIR/svn/backend/* $TARGET/mollify/
+cp $APPDIR/svn/ReadMe.txt $TARGET
+
+cd $TARGET
+tar -czf $PACKAGE *
+rm -rf $TARGET/mollify
+rm -rf $TARGET/$APPNAME
+rm $TARGET/ReadMe.txt
+
+# Sources
+
+mkdir $SRC_TEMP_DIR
+mkdir $SRC_TEMP_DIR/$SRC_DIR
+
+# copy all sources
+cp -R $APPDIR/svn/backend $SRC_TEMP_DIR/$SRC_DIR
+cp -R $APPDIR/svn/src $SRC_TEMP_DIR/$SRC_DIR
+find $SRC_TEMP_DIR -iname ".svn" -exec rm -rf {} \;
+
+cd $SRC_TEMP_DIR
+tar -czf $SRC_PACKAGE *
+mv $SRC_PACKAGE ..
+cd $TARGET
+rm -rf $SRC_TEMP_DIR

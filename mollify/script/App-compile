@@ -1,0 +1,3 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/svn/src:$APPDIR/bin:/Users/cambba/bin/gwt-mac-1.5.2/gwt-user.jar:/Users/cambba/bin/gwt-mac-1.5.2/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/" "$@" org.sjarvela.mollify.App;

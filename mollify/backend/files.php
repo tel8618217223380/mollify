@@ -234,8 +234,9 @@
 			$error_details = basename($target);
 			return FALSE;
 		}
-
+		
 		if (move_uploaded_file($origin, $target)) {
+			$_SESSION['upload_file'] = "";
 			return TRUE;
 		}
 		
@@ -244,17 +245,25 @@
 		return FALSE;
 	}
 	
+	function get_upload_status($id) {
+		global $ENABLE_UPLOAD_PROGRESS;
+		if (!$ENABLE_UPLOAD_PROGRESS) return FALSE;
+		return apc_fetch('upload_'.$id);
+	}
+	
 	function download($file) {
 		global $error, $error_details;
 		
 		if (!assert_file($file)) return FALSE;
 		
 		$filename = $file["path"];
+		header("Cache-Control: public, must-revalidate");
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");
 		header("Content-Disposition: attachment; filename=".basename($filename).";");
 		header("Content-Transfer-Encoding: binary");
+		header("Pragma: hack");
 		header("Content-Length: ".filesize($filename));
 		
 		readfile($filename);
