@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
@@ -37,13 +38,16 @@ public class MainViewPresenter implements DirectoryController,
 	private final FileActionProvider fileActionProvider;
 	private final Localizator localizator;
 	private final FileUploadHandler fileUploadHandler;
+	private final LogoutListener logoutListener;
+
 	private ProgressListener uploadListener = null;
 	private FileUploadMonitor uploadMonitor;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileActionProvider fileActionProvider,
 			FileActionHandler fileActionHandler,
-			FileUploadHandler fileUploadHandler, Localizator localizator) {
+			FileUploadHandler fileUploadHandler, Localizator localizator,
+			LogoutListener logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
@@ -51,6 +55,7 @@ public class MainViewPresenter implements DirectoryController,
 
 		this.fileUploadHandler = fileUploadHandler;
 		this.localizator = localizator;
+		this.logoutListener = logoutListener;
 		this.fileUploadHandler.addListener(this);
 
 		fileActionHandler.addRenameListener(createRefreshListener());
@@ -187,8 +192,12 @@ public class MainViewPresenter implements DirectoryController,
 	private ResultListener createRefreshListener() {
 		return createListener(new ResultCallback() {
 			public void onCallback(JavaScriptObject... result) {
-				refresh();
+				view.refresh();
 			}
 		});
+	}
+
+	public void logout() {
+		logoutListener.onLogout(model.getSessionInfo());
 	}
 }

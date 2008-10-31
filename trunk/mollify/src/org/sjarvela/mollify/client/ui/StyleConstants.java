@@ -23,15 +23,16 @@ public class StyleConstants {
 	public static final String BORDERED_CONTROL_PADDING_SE = "se";
 	public static final String BORDERED_CONTROL_PADDING_S = "s";
 	public static final String BORDERED_CONTROL_PADDING_SW = "sw";
-	
+
 	public static final String PROGRESS_BAR = "progress-bar";
 	public static final String PROGRESS_BAR_TOTAL = "total";
 	public static final String PROGRESS_BAR_CURRENT = "current";
 	public static final String PROGRESS_BAR_LEFT = "left";
-	
+
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
+	public static final String MAIN_VIEW_HEADER_LOGOUT = "logout";
 	public static final String MAIN_VIEW_TOOL = "tool";
 	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
 	public static final String MAIN_VIEW_TOOL_PARENT_DIR = "parent-dir-button";
@@ -125,8 +126,7 @@ public class StyleConstants {
 	public static final String LOGIN_DIALOG_USERNAME_VALUE = "login-dialog-username-value";
 	public static final String LOGIN_DIALOG_PASSWORD_TITLE = "login-dialog-password-title";
 	public static final String LOGIN_DIALOG_PASSWORD_VALUE = "login-dialog-password-value";
-	
-	
+
 	public static final String PROGRESS_DIALOG = "progress-dialog";
 	public static final String PROGRESS_DIALOG_INFO = "progress-dialog-title";
 	public static final String PROGRESS_DIALOG_DETAILS = "progress-dialog-details";

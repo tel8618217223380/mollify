@@ -42,6 +42,7 @@ public class MainView extends Composite {
 	private Button refreshButton;
 	private Button parentDirButton;
 	private Button uploadFileButton;
+	private Button logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
@@ -97,6 +98,9 @@ public class MainView extends Composite {
 		rightPadding.addStyleName(StyleConstants.RIGHT);
 		panel.add(rightPadding);
 
+		if (model.getSessionInfo().isAuthenticationRequired())
+			panel.add(logoutButton);
+
 		return panel;
 	}
 
@@ -112,6 +116,10 @@ public class MainView extends Composite {
 		uploadFileButton = createToolButton(localizator.getStrings()
 				.mainViewUploadFileButtonTitle(),
 				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE);
+
+		logoutButton = new Button(localizator.getStrings()
+				.mainViewLogoutButtonTitle());
+		logoutButton.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGOUT);
 	}
 
 	private Button createToolButton(String title, String id) {
@@ -158,5 +166,9 @@ public class MainView extends Composite {
 
 	public Button getUploadFileButton() {
 		return uploadFileButton;
+	}
+
+	public Button getLogoutButton() {
+		return logoutButton;
 	}
 }

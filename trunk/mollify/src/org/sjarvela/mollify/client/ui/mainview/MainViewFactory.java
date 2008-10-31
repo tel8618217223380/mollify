@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
@@ -34,7 +35,8 @@ public class MainViewFactory {
 		this.service = service;
 	}
 
-	public MainView createMainView(WindowManager windowManager, SessionInfo info) {
+	public MainView createMainView(WindowManager windowManager,
+			SessionInfo info, LogoutListener logoutListener) {
 		FileActionProvider fileActionProvider = new FileActionProviderImpl(
 				service);
 		FileServices fileServices = new FileServices(service);
@@ -51,7 +53,7 @@ public class MainViewFactory {
 				directorySelectorFactory, fileDetailsPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
-				fileUploadHandler, localizator);
+				fileUploadHandler, localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter);
 		return view;

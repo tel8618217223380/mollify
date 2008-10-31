@@ -23,7 +23,7 @@ public class MollifyService {
 	private String sessionId = "";
 
 	enum Action {
-		get, operate, auth, session_info
+		get, operate, auth, session_info, logout
 	};
 
 	enum GetType {
@@ -50,6 +50,10 @@ public class MollifyService {
 			final ResultListener resultListener) {
 		doRequest(getUrl(Action.auth, "username=" + userName, "password="
 				+ password), resultListener);
+	}
+
+	public void logout(ResultListener resultListener) {
+		doRequest(getUrl(Action.logout), resultListener);
 	}
 
 	public void getFiles(ResultListener resultListener, String dir) {

@@ -25,7 +25,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class App implements EntryPoint, UncaughtExceptionHandler {
+public class App implements EntryPoint, UncaughtExceptionHandler,
+		LogoutListener {
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
 	MollifyService service;
@@ -59,15 +60,18 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 
 			public void onSuccess(JavaScriptObject... result) {
 				SessionInfo info = result[0].cast();
-
-				if (info.getAuthenticationRequired()
-						&& !info.getAuthenticated())
-					showLogin();
-				else
-					showMain(info);
+				onStart(info);
 			}
+
 		});
 	};
+
+	private void onStart(SessionInfo info) {
+		if (info.isAuthenticationRequired() && !info.getAuthenticated())
+			showLogin();
+		else
+			showMain(info);
+	}
 
 	private void showLogin() {
 		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {
@@ -94,17 +98,34 @@ public class App implements EntryPoint, UncaughtExceptionHandler {
 		});
 	}
 
+	private void showMain(SessionInfo info) {
+		windowManager.showMainView(info, this);
+	}
+
+	public void onLogout(SessionInfo info) {
+		service.logout(new ResultListener() {
+
+			public void onFail(ServiceError error) {
+				windowManager.getDialogManager().showError(error);
+			}
+
+			public void onSuccess(JavaScriptObject... result) {
+				GWT.log("LOGOUT", null);
+				windowManager.empty();
+				onStart(SessionInfo.createWithNeedAuthentication());
+			}
+
+		});
+	}
+
 	private void showLoginError() {
 		String title = localizator.getStrings().loginDialogTitle();
 		String msg = localizator.getStrings().loginDialogLoginFailedMessage();
 		windowManager.getDialogManager().showInfo(title, msg);
 	}
 
-	private void showMain(SessionInfo info) {
-		windowManager.showMainView(info);
-	}
-
 	public void onUncaughtException(Throwable e) {
 		GWT.log("UNCAUGHT", e);
 	}
+
 }

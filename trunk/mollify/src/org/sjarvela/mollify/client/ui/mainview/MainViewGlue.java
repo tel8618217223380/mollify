@@ -55,6 +55,12 @@ public class MainViewGlue implements SimpleFileListListener, ViewListener {
 				presenter.openUploadDialog();
 			}
 		});
+
+		view.getLogoutButton().addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				presenter.logout();
+			}
+		});
 	}
 
 	public void onDirectoryRowClicked(Directory directory, Column column) {
@@ -63,13 +69,13 @@ public class MainViewGlue implements SimpleFileListListener, ViewListener {
 		}
 	}
 
-	public void onDirectoryUpRowClicked(Column column) {
-		presenter.moveToParentDirectory();
-	}
-
 	public void onFileRowClicked(File file, Column column) {
 		if (column.equals(Column.NAME)) {
 			view.showFileDetails(file);
 		}
+	}
+
+	public void onDirectoryUpRowClicked(Column column) {
+		presenter.moveToParentDirectory();
 	}
 }
