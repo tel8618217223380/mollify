@@ -16,7 +16,7 @@ public class SessionInfo extends JavaScriptObject {
 	protected SessionInfo() {
 	}
 
-	public final native boolean getAuthenticationRequired() /*-{
+	public final native boolean isAuthenticationRequired() /*-{
 		return this.authentication_required;
 	}-*/;
 
@@ -26,5 +26,22 @@ public class SessionInfo extends JavaScriptObject {
 
 	public final native String getLoggedUser() /*-{
 		return this.user;
+	}-*/;
+
+	public static SessionInfo createWithNeedAuthentication() {
+		SessionInfo instance = JavaScriptObject.createObject().cast();
+		instance.clear();
+		instance.setRequireAuthentication(true);
+		return instance;
+	}
+
+	private final native void clear() /*-{
+		this.authentication_required = false;
+		this.authenticated = false;
+		this.user = '';
+	}-*/;
+	
+	private final native void setRequireAuthentication(boolean require) /*-{
+		this.authentication_required = require;
 	}-*/;
 }

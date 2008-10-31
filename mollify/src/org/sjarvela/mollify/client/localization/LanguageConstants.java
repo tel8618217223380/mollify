@@ -28,6 +28,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String mainViewRefreshButtonTitle();
 
 	public String mainViewUploadFileButtonTitle();
+	
+	public String mainViewLogoutButtonTitle();
 
 	public String fileDetailsLabelLastAccessed();
 
