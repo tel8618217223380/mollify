@@ -32,6 +32,18 @@
 		return FALSE;
 	}
 	
+	function logout() {
+		$_SESSION = array();
+
+		if (isset($_COOKIE[session_name()])) {
+		    setcookie(session_name(), '', time()-42000, '/');
+		}
+
+		session_destroy();
+		
+		return TRUE;
+	}
+	
 	function authentication_required() {
 		global $USERS;
 		return ($USERS != FALSE and count($USERS) > 0);

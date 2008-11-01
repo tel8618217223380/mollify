@@ -48,6 +48,32 @@
 	margin-right: 4px;
 }
 
+.header-option {
+	height: 40px;
+	border-style: none;
+	background: rgba(50,50,50,0.19);
+	color: transparent;
+
+	cursor: pointer;
+	cursor: hand;
+}
+
+#logout.header-option {
+	background: rgba(50,50,50,0.19) url(b-close.png) no-repeat 8px 15px;
+	width: 26px;
+	position: absolute;
+	right: 0;
+	font-size: 0;
+	line-height: 0;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: none;
+}
+
+#logout.header-option:hover {
+	background: rgba(50,50,50,0.22) url(b-close-over.png) no-repeat 8px 15px;
+}
+
 .tool:hover {
 	border-style: none;
 }

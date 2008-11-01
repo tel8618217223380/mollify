@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.LogoutListener;
+import org.sjarvela.mollify.client.ProgressListener;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
@@ -22,7 +23,6 @@ import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.file.FileUploadMonitor;
 import org.sjarvela.mollify.client.file.FileUploadProgressListener;
-import org.sjarvela.mollify.client.file.ProgressListener;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;

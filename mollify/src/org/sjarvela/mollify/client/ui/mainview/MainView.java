@@ -117,16 +117,22 @@ public class MainView extends Composite {
 				.mainViewUploadFileButtonTitle(),
 				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE);
 
-		logoutButton = new Button(localizator.getStrings()
-				.mainViewLogoutButtonTitle());
-		logoutButton.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGOUT);
+		logoutButton = createOptionButton(localizator.getStrings()
+				.mainViewLogoutButtonTitle(),
+				StyleConstants.MAIN_VIEW_HEADER_LOGOUT);
 	}
 
 	private Button createToolButton(String title, String id) {
 		Button button = new Button(title);
 		button.addStyleName(StyleConstants.MAIN_VIEW_TOOL);
 		button.getElement().setId(id);
+		return button;
+	}
 
+	private Button createOptionButton(String title, String id) {
+		Button button = new Button(title);
+		button.addStyleName(StyleConstants.MAIN_VIEW_HEADER_OPTION);
+		button.getElement().setId(id);
 		return button;
 	}
 

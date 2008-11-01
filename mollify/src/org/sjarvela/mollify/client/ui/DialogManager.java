@@ -12,12 +12,12 @@ package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.LoginHandler;
+import org.sjarvela.mollify.client.ProgressListener;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.ProgressListener;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;

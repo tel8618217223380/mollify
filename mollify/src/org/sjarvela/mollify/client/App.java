@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.VoidResultListener;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -51,22 +52,18 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 		service.getSessionInfo(new ResultListener() {
 			public void onFail(ServiceError error) {
-				if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-					showLogin();
-					return;
-				}
 				windowManager.getDialogManager().showError(error);
 			}
 
 			public void onSuccess(JavaScriptObject... result) {
 				SessionInfo info = result[0].cast();
-				onStart(info);
+				onStartSession(info);
 			}
 
 		});
 	};
 
-	private void onStart(SessionInfo info) {
+	private void onStartSession(SessionInfo info) {
 		if (info.isAuthenticationRequired() && !info.getAuthenticated())
 			showLogin();
 		else
@@ -103,19 +100,9 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	}
 
 	public void onLogout(SessionInfo info) {
-		service.logout(new ResultListener() {
-
-			public void onFail(ServiceError error) {
-				windowManager.getDialogManager().showError(error);
-			}
-
-			public void onSuccess(JavaScriptObject... result) {
-				GWT.log("LOGOUT", null);
-				windowManager.empty();
-				onStart(SessionInfo.createWithNeedAuthentication());
-			}
-
-		});
+		service.logout(new VoidResultListener());
+		windowManager.empty();
+		showLogin();
 	}
 
 	private void showLoginError() {
