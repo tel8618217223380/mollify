@@ -1,0 +1,9 @@
+#summary Mollify project change log
+#labels Phase-Deploy
+
+== Version 0.5.1 ==
+  * Added user logout action when user accounts are enabled
+  * File upload fix for IE
+
+== Version 0.5 ==
+  * Support for file upload progress display
