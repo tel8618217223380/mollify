@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.file;
+package org.sjarvela.mollify.client;
 
 public interface ProgressListener {
 	void setTitle(String title);

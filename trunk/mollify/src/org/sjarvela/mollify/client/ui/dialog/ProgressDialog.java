@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.file.ProgressListener;
+import org.sjarvela.mollify.client.ProgressListener;
 import org.sjarvela.mollify.client.ui.ProgressBar;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 

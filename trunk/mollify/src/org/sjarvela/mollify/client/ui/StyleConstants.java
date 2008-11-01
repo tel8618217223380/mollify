@@ -32,6 +32,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
+	public static final String MAIN_VIEW_HEADER_OPTION = "header-option";
 	public static final String MAIN_VIEW_HEADER_LOGOUT = "logout";
 	public static final String MAIN_VIEW_TOOL = "tool";
 	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
@@ -131,5 +132,4 @@ public class StyleConstants {
 	public static final String PROGRESS_DIALOG_INFO = "progress-dialog-title";
 	public static final String PROGRESS_DIALOG_DETAILS = "progress-dialog-details";
 	public static final String PROGRESS_DIALOG_PROGRESS_BAR = "progress-dialog-progress-bar";
-
 }
