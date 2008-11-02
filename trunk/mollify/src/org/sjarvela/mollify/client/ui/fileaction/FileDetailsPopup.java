@@ -210,6 +210,9 @@ public class FileDetailsPopup extends DropdownPopup {
 		for (Details detail : Details.values()) {
 			detailRowValues.get(detail.ordinal()).setText("");
 		}
+		
+		renameButton.setVisible(false);
+		deleteButton.setVisible(false);
 	}
 
 	private void updateDetails(FileDetails details) {
@@ -228,10 +231,9 @@ public class FileDetailsPopup extends DropdownPopup {
 				value.setText(dateTimeFormat.format(details.getLastChanged()));
 		}
 
-		if (details.getFilePermission().canWrite()) {
-			renameButton.setVisible(true);
-			deleteButton.setVisible(true);
-		}
+		boolean writable = details.getFilePermission().canWrite();
+		renameButton.setVisible(writable);
+		deleteButton.setVisible(writable);
 	}
 
 	private void onAction(FileAction action) {

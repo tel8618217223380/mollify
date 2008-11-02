@@ -80,7 +80,7 @@
 	function check_authentication() {
 		global $USERS;
 
-		// always pass authentication
+		// always pass authentication when it is not required
 		if (!authentication_required()) return TRUE;
 		// otherwise user must authenticate
 		if (!isset($_SESSION['user_id'])) return FALSE;

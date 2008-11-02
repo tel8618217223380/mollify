@@ -93,7 +93,7 @@
 	
 	function get_files($account) {
 		global $error, $error_details;
-		$ignored = array('descript.ion');
+		$ignored = array('descript.ion', 'mollify.uac');
 		
 		$dir = get_fileitem_from_url("dir");
 		if (!$dir) return FALSE;
@@ -193,7 +193,7 @@
 	function rename_file($file, $new_name) {
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
-			error_log("MOLLIFY: Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			file_error_log("Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
 			$error_details = basename($file);
 			return FALSE;
@@ -215,7 +215,7 @@
 		
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
-			error_log("MOLLIFY: Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			file_error_log("Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
 			$error_details = basename($file);
 			return FALSE;
@@ -291,7 +291,69 @@
 	function has_modify_rights($item) {
 		global $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
 		$base = $_SESSION['user_type'];
+		if ($base === $USER_TYPE_ADMIN) return TRUE;
 		
-		return ($base === $USER_TYPE_ADMIN or $base === $USER_TYPE_READWRITE);
+		$path = $item["path"];
+		if (!is_file($path)) return ($base === $USER_TYPE_READWRITE);
+		
+		$specific = get_permissions_from_file(dirname($path).DIRECTORY_SEPARATOR."mollify.uac", $_SESSION['user_id'], basename($path));
+		return (get_applicable_permission($base, $specific) === $USER_TYPE_READWRITE);
+	}
+
+	function get_permissions_from_file($file, $for_user_id, $for_file = FALSE) {
+		$result = array();
+		if (!file_exists($file)) return $result;
+	
+		$handle = @fopen($file, "r");
+		if (!$handle) return $result;
+		global $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
+		
+	    while (!feof($handle)) {
+	        $line = fgets($handle, 4096);
+			
+			$parts = explode(chr(9), $line);
+			if (count($parts) < 3) return $result;
+			
+			// results
+			$user_id = trim($parts[0]);
+			$file = trim($parts[1]);
+			$permission = strtoupper(trim($parts[2]));
+			
+			// ignore invalid permissions
+			if ($permission != $USER_TYPE_READWRITE and $permission != $USER_TYPE_READONLY) continue;
+						
+			// if requested only for a single file, skip if not the correct one
+			if ($for_file and $for_file != $file) continue;
+			
+			file_error_log($file);
+			
+			// only read lines that are applicable to current user
+			if ($for_user_id === "")
+			 	if ($for_user_id != "") continue;
+			else
+				if ($user_id != $for_user_id) continue;
+			
+			file_error_log($permission);
+			
+			if ($for_file) {
+				$result = $permission;
+				break;
+			}
+			$result[$file] = $permission;
+	    }
+	    fclose($handle);
+		
+		return $result;
+	}
+	
+	function get_applicable_permission($base, $specific) {
+		global $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
+		file_error_log("base=".$base.", specific=".$specific);
+		if (!$specific) return $base;
+		return $specific;
+	}
+	
+	function file_error_log($message) {
+		error_log("MOLLIFY: ".$message);
 	}
 ?>
