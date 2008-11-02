@@ -10,6 +10,7 @@
 	 */
 
 	include "errors.php";
+	include "configuration.php";
 	
 	function return_json($result_array) {
 		$ext = isset($_GET["callback"]);
@@ -67,8 +68,7 @@
 		return;
 	}
 	
-	include "configuration.php";
-	require "user.php";
+	require_once "user.php";
 	
 	session_start();
 	if (!handle_authentication()) return;
