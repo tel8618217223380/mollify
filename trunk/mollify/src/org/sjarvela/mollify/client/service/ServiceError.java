@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import com.google.gwt.core.client.GWT;
 
 public enum ServiceError {
-	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, AUTHENTICATION_FAILED, UNKNOWN_ERROR;
+	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, AUTHENTICATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION;
 
 	public String getMessage(Localizator localizator) {
 		switch (this) {
@@ -30,6 +30,8 @@ public enum ServiceError {
 			return localizator.getStrings().errorMessageOperationFailed();
 		case AUTHENTICATION_FAILED:
 			return localizator.getStrings().errorMessageAuthenticationFailed();
+		case INVALID_CONFIGURATION:
+			return localizator.getStrings().errorMessageInvalidConfiguration();
 		default:
 			return localizator.getStrings().errorMessageUnknown();
 		}
@@ -39,6 +41,8 @@ public enum ServiceError {
 		switch (error.getCode()) {
 		case 100:
 			return AUTHENTICATION_FAILED;
+		case 201:
+			return INVALID_CONFIGURATION; // actually invalid path
 		default:
 			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;

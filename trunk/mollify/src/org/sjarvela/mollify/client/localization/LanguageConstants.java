@@ -60,6 +60,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String errorMessageOperationFailed();
 
 	public String errorMessageAuthenticationFailed();
+	
+	public String errorMessageInvalidConfiguration();
 
 	public String errorMessageUnknown();
 

@@ -9,27 +9,56 @@
 	 * this entire header must remain intact.
 	 */
 	
+	$USER_TYPE_ADMIN = "A";
+	$USER_TYPE_READWRITE = "RW";
+	$USER_TYPE_READONLY = "RO";
+	
 	function authenticate() {
 		global $USERS;
 		
 		if (!authentication_required()) {
-			return TRUE;
+			$_SESSION['user_id'] = "";
+			$_SESSION['user_type'] = get_user_type();
+			return array("name" => "", "type" => $_SESSION['user_type']);
 		}
 		
 		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
+			error_log("MOLLIFY: Invalid authentication request, no username or password provided");
 			return FALSE;
 		}
 		
 		foreach($USERS as $id => $user) {
 			if ($user["name"] != $_GET["username"])
 				continue;
-			if ($user["password"] != $_GET["password"])
+			if ($user["password"] != $_GET["password"]) {
+				error_log("MOLLIFY: Authentication failed for user [".$user["name"]."], invalid password");
 			 	return FALSE;
+			}
 			
 			$_SESSION['user_id'] = $id;
-			return array("name" => $user["name"]);
+			$_SESSION['user_type'] = get_user_type($id);
+			return array("name" => $user["name"], "type" => $_SESSION['user_type']);
 		}
 		return FALSE;
+	}
+	
+	function get_user_type($id = "") {
+		global $USERS, $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY, $PERMISSION_MODE;
+		
+		if ($id === "") {
+			if (!isset($PERMISSION_MODE)) return $USER_TYPE_READONLY;
+			$type = strtoupper($PERMISSION_MODE);
+		} else {
+			if (!isset($USERS[$id]["type"])) return $USER_TYPE_READONLY;
+			$type = strtoupper($USERS[$id]["type"]);
+		}
+
+		if ($type != $USER_TYPE_ADMIN and $type != $USER_TYPE_READWRITE and $type != $USER_TYPE_READONLY) {
+			if ($id === "") error_log("MOLLIFY: Invalid permission mode defined [".$type."]. Fallback to default.");
+			else error_log("MOLLIFY: User ".$id." has invalid type defined [".$type."]. Fallback to default.");
+			return $USER_TYPE_READONLY;
+		}
+		return $type;
 	}
 	
 	function logout() {
@@ -38,7 +67,6 @@
 		if (isset($_COOKIE[session_name()])) {
 		    setcookie(session_name(), '', time()-42000, '/');
 		}
-
 		session_destroy();
 		
 		return TRUE;
@@ -76,7 +104,6 @@
 	}
 	
 	function get_account() {
-		//TODO get user rights etc and add to result array
 		return array("roots" => get_roots());
 	}
 ?>

@@ -49,6 +49,10 @@ public class FileDetailsPopup extends DropdownPopup {
 	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
 
+	private Button downloadButton;
+	private Button renameButton;
+	private Button deleteButton;
+
 	private enum Details {
 		Accessed, Modified, Changed
 	}
@@ -104,12 +108,18 @@ public class FileDetailsPopup extends DropdownPopup {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.FILE_ACTIONS_BUTTONS);
 
-		buttons.add(createActionButton(localizator.getStrings()
-				.fileActionDownloadTitle(), FileAction.DOWNLOAD));
-		buttons.add(createActionButton(localizator.getStrings()
-				.fileActionRenameTitle(), FileAction.RENAME));
-		buttons.add(createActionButton(localizator.getStrings()
-				.fileActionDeleteTitle(), FileAction.DELETE));
+		downloadButton = createActionButton(localizator.getStrings()
+				.fileActionDownloadTitle(), FileAction.DOWNLOAD);
+		renameButton = createActionButton(localizator.getStrings()
+				.fileActionRenameTitle(), FileAction.RENAME);
+		renameButton.setVisible(false);
+		deleteButton = createActionButton(localizator.getStrings()
+				.fileActionDeleteTitle(), FileAction.DELETE);
+		deleteButton.setVisible(false);
+
+		buttons.add(downloadButton);
+		buttons.add(renameButton);
+		buttons.add(deleteButton);
 
 		return buttons;
 	}
@@ -160,7 +170,7 @@ public class FileDetailsPopup extends DropdownPopup {
 		return file;
 	}
 
-	private Widget createActionButton(String title, final FileAction action) {
+	private Button createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
 		button.addStyleName(StyleConstants.FILE_ACTION);
 		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX
@@ -216,6 +226,11 @@ public class FileDetailsPopup extends DropdownPopup {
 				value.setText(dateTimeFormat.format(details.getLastModified()));
 			else if (detail.equals(Details.Changed))
 				value.setText(dateTimeFormat.format(details.getLastChanged()));
+		}
+
+		if (details.getFilePermission().canWrite()) {
+			renameButton.setVisible(true);
+			deleteButton.setVisible(true);
 		}
 	}
 
