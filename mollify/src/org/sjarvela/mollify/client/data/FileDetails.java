@@ -39,6 +39,10 @@ public class FileDetails extends JavaScriptObject {
 				getLastModifiedString());
 	}
 
+	public final FilePermission getFilePermission() {
+		return FilePermission.fromString(getFilePermissionString());
+	}
+
 	private final native String getLastAccessedString() /*-{
 		return this.last_accessed;
 	}-*/;
@@ -53,5 +57,9 @@ public class FileDetails extends JavaScriptObject {
 
 	public final native String getDescription() /*-{
 		return this.description;
+	}-*/;
+
+	private final native String getFilePermissionString() /*-{
+		return this.permissions;
 	}-*/;
 }

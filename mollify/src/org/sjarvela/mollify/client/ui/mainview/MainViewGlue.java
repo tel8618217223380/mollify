@@ -40,7 +40,7 @@ public class MainViewGlue implements SimpleFileListListener, ViewListener {
 	private void initializeActions() {
 		view.getRefreshButton().addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				presenter.refresh();
+				presenter.reload();
 			}
 		});
 

@@ -22,7 +22,8 @@
 		"DELETE_FAILED" => array(205, "Could not delete"), 
 		"NO_UPLOAD_DATA" => array(206, "No upload data available"), 
 		"UPLOAD_FAILED" => array(207, "File upload failed"), 
-		"SAVING_FAILED" => array(208, "Saving file failed")
+		"SAVING_FAILED" => array(208, "Saving file failed"),
+		"NO_MODIFY_RIGHTS" => array(209, "User has no rights to modify file")
 	);
 
 ?>

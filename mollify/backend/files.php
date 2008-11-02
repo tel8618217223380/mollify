@@ -143,8 +143,14 @@
 			"last_changed" => date($datetime_format, filectime($file["path"])),
 			"last_modified" => date($datetime_format, filemtime($file["path"])),
 			"last_accessed" => date($datetime_format, fileatime($file["path"])),
-			"description" => get_description($file["path"]));
+			"description" => get_description($file["path"]),
+			"permissions" => get_file_permissions($file));
 		return $result;
+	}
+	
+	function get_file_permissions($file) {
+		if (has_modify_rights($file)) return "rw";
+		return "ro";
 	}
 	
 	function get_description($filename) {
@@ -186,6 +192,12 @@
 	
 	function rename_file($file, $new_name) {
 		if (!assert_file($file)) return FALSE;
+		if (!has_modify_rights($file)) {
+			error_log("MOLLIFY: Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			$error = "NO_MODIFY_RIGHTS";
+			$error_details = basename($file);
+			return FALSE;
+		}
 		
 		$old = $file["path"];
 		$new = dirname($old).DIRECTORY_SEPARATOR.$new_name;
@@ -202,7 +214,13 @@
 		global $error, $error_details;
 		
 		if (!assert_file($file)) return FALSE;
-
+		if (!has_modify_rights($file)) {
+			error_log("MOLLIFY: Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			$error = "NO_MODIFY_RIGHTS";
+			$error_details = basename($file);
+			return FALSE;
+		}
+		
 		if (!unlink($file["path"])) {
 			$error = "CANNOT_DELETE";
 			$error_details = basename($file["path"]);
@@ -268,5 +286,12 @@
 		
 		readfile($filename);
 		return TRUE;
+	}
+	
+	function has_modify_rights($item) {
+		global $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
+		$base = $_SESSION['user_type'];
+		
+		return ($base === $USER_TYPE_ADMIN or $base === $USER_TYPE_READWRITE);
 	}
 ?>

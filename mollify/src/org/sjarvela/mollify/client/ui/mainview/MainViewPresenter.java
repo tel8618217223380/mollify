@@ -58,8 +58,8 @@ public class MainViewPresenter implements DirectoryController,
 		this.logoutListener = logoutListener;
 		this.fileUploadHandler.addListener(this);
 
-		fileActionHandler.addRenameListener(createRefreshListener());
-		fileActionHandler.addDeleteListener(createRefreshListener());
+		fileActionHandler.addRenameListener(createReloadListener());
+		fileActionHandler.addDeleteListener(createReloadListener());
 	}
 
 	public void initialize() {
@@ -83,7 +83,7 @@ public class MainViewPresenter implements DirectoryController,
 		model.clear();
 	}
 
-	public void refresh() {
+	public void reload() {
 		model.refreshData(createListener(new Callback() {
 			public void onCallback() {
 				view.refresh();
@@ -93,7 +93,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void moveToParentDirectory() {
 		if (!model.getDirectoryModel().canAscend())
-			throw new RuntimeException("Cannot ascend");
+			return;
 		model.moveToParentDirectory(createRefreshListener());
 	}
 
@@ -144,7 +144,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void onUploadFinished() {
 		stopUploaders();
-		refresh();
+		reload();
 	}
 
 	public void onUploadFailed(ServiceError error) {
@@ -187,6 +187,14 @@ public class MainViewPresenter implements DirectoryController,
 				callback.onCallback(result);
 			}
 		};
+	}
+
+	private ResultListener createReloadListener() {
+		return createListener(new ResultCallback() {
+			public void onCallback(JavaScriptObject... result) {
+				reload();
+			}
+		});
 	}
 
 	private ResultListener createRefreshListener() {
