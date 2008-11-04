@@ -68,10 +68,8 @@ A) When no user accounts are defined (see chapter 2.1, Users), use following for
 
 {{{
 $PUBLISHED_DIRECTORIES = array(
-	array(
-		[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
-		...
-	)
+	[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+	...
 );
 }}}
 
