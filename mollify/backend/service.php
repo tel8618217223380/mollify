@@ -42,11 +42,11 @@
 		$user = check_authentication();
 		
 		if ($user) {
-			$info["authenticated"] = TRUE;
-			if (isset($user["name"])) $info["user"] = $user["name"];
-			if (isset($_SESSION['settings'])) $info["settings"] = $_SESSION['settings'];
-		} else {
-			if (!$info["authentication_required"]) $info["settings"] = get_effective_settings();
+			if (isset($user["name"])) {
+				$info["authenticated"] = TRUE;
+				$info["user"] = $user["name"];
+			}
+			$info["settings"] = $_SESSION['settings'];
 		}
 		return $info;
 	}
@@ -54,6 +54,7 @@
 	function handle_authentication() {
 		$action = $_GET["action"];
 		$result = FALSE;
+		
 		if ($action === "auth") {
 			if (authenticate()) $result = get_session_info();
 		} else if ($action === "session_info") {

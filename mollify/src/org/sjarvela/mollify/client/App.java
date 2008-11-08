@@ -50,6 +50,10 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		windowManager = new WindowManager(panel, localizator, mainViewFactory,
 				new DialogManager(localizator));
 
+		onStart();
+	}
+
+	private void onStart() {
 		service.getSessionInfo(new ResultListener() {
 			public void onFail(ServiceError error) {
 				windowManager.getDialogManager().showError(error);
@@ -97,7 +101,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	public void onLogout(SessionInfo info) {
 		service.logout(new VoidResultListener());
 		windowManager.empty();
-		showLogin();
+		onStart();
 	}
 
 	private void showLoginError() {

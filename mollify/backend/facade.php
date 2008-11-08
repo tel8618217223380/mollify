@@ -9,7 +9,8 @@
 	 * this entire header must remain intact.
 	 */
 	
-	require "files.php";
+	require_once "files.php";
+	require_once "data_provider_file.php";	// TODO create db provider, and require one of them
 
 	switch ($_GET["action"]) {
 		case "get":
@@ -22,6 +23,11 @@
 				case "roots":
 					$result = array();
 					foreach($account["roots"] as $id => $root) {
+						if (!isset($root["name"])) {
+							$error = "INVALID_CONFIGURATION";
+							break;
+						}
+						
 						$result[] = array(
 							"id" => get_filesystem_id($id),
 							"name" => $root["name"]

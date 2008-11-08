@@ -17,7 +17,7 @@
 	
 	function get_effective_settings() {
 		return array(
-			"enable_file_upload" => get_setting("enable_file_upload", FALSE),
+			"enable_file_upload" => get_setting("enable_file_upload", TRUE),
 			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE)
 		);
 	}

@@ -143,51 +143,14 @@
 			"last_changed" => date($datetime_format, filectime($file["path"])),
 			"last_modified" => date($datetime_format, filemtime($file["path"])),
 			"last_accessed" => date($datetime_format, fileatime($file["path"])),
-			"description" => get_description($file["path"]),
-			"permissions" => get_file_permissions($file));
+			"description" => get_file_description($file["path"]),
+			"permissions" => get_file_permissions_value($file));
 		return $result;
 	}
 	
-	function get_file_permissions($file) {
+	function get_file_permissions_value($file) {
 		if (has_modify_rights($file)) return "rw";
 		return "ro";
-	}
-	
-	function get_description($filename) {
-		$path = dirname($filename);
-		$file = basename($filename);
-		$descriptions = get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
-
-		if (!isset($descriptions[$file])) return "";
-		return $descriptions[$file];
-	}
-		
-	function get_descriptions_from_file($descript_ion) {
-		$result = array();
-		if (!file_exists($descript_ion)) return $result;
-	
-		$handle = @fopen($descript_ion, "r");
-		if (!$handle) return $result;
-		
-	    while (!feof($handle)) {
-	        $line = fgets($handle, 4096);
-
-			// check for quote marks (")
-			if (ord(substr($line, 0, 1)) === 34) {
-				$line = substr($line, 1);
-				$split = strpos($line, chr(34));
-			} else {
-	        	$split = strpos($line, ' ');
-			}
-			if ($split <= 0) continue;
-
-			$name = trim(substr($line, 0, $split));
-			$desc = trim(substr($line, $split + 1));
-			$result[$name] = $desc;
-	    }
-	    fclose($handle);
-		
-		return $result;
 	}
 	
 	function rename_file($file, $new_name) {
@@ -294,64 +257,18 @@
 	}
 	
 	function has_modify_rights($item) {
-		global $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
-		$base = $_SESSION['user_type'];
-		if ($base === $USER_TYPE_ADMIN) return TRUE;
+		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
+		$base = $_SESSION['default_file_permission'];
+		if ($base === $FILE_PERMISSION_VALUE_ADMIN) return TRUE;
 		
 		$path = $item["path"];
-		if (!is_file($path)) return ($base === $USER_TYPE_READWRITE);
+		if (!is_file($path)) return ($base === $FILE_PERMISSION_VALUE_READWRITE);
 		
-		$specific = get_permissions_from_file(dirname($path).DIRECTORY_SEPARATOR."mollify.uac", $_SESSION['user_id'], basename($path));
-		return (get_applicable_permission($base, $specific) === $USER_TYPE_READWRITE);
-	}
-
-	function get_permissions_from_file($file, $for_user_id, $for_file = FALSE) {
-		$result = array();
-		if (!file_exists($file)) return $result;
-	
-		$handle = @fopen($file, "r");
-		if (!$handle) return $result;
-		global $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
-		
-	    while (!feof($handle)) {
-	        $line = fgets($handle, 4096);
-			
-			$parts = explode(chr(9), $line);
-			if (count($parts) < 3) return $result;
-			
-			// results
-			$user_id = trim($parts[0]);
-			$file = trim($parts[1]);
-			$permission = strtoupper(trim($parts[2]));
-			
-			// ignore invalid permissions
-			if ($permission != $USER_TYPE_READWRITE and $permission != $USER_TYPE_READONLY) continue;
-						
-			// if requested only for a single file, skip if not the correct one
-			if ($for_file and $for_file != $file) continue;
-			
-			// only read lines that are applicable to current user
-			if ($for_user_id === "")
-			 	if ($for_user_id != "") continue;
-			else
-				if ($user_id != $for_user_id) continue;
-			
-			log_error($permission);
-			
-			if ($for_file) {
-				$result = $permission;
-				break;
-			}
-			$result[$file] = $permission;
-	    }
-	    fclose($handle);
-		
-		return $result;
+		$specific = get_file_permissions($path, $_SESSION['user_id']);
+		return (get_applicable_permission($base, $specific) === $FILE_PERMISSION_VALUE_READWRITE);
 	}
 	
 	function get_applicable_permission($base, $specific) {
-		global $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
-		#log_error("base=".$base.", specific=".$specific);
 		if (!$specific) return $base;
 		return $specific;
 	}

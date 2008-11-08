@@ -9,19 +9,18 @@
 	 * this entire header must remain intact.
 	 */
 	
-	$USER_TYPE_ADMIN = "A";
-	$USER_TYPE_READWRITE = "RW";
-	$USER_TYPE_READONLY = "RO";
+	$FILE_PERMISSION_VALUE_ADMIN = "A";
+	$FILE_PERMISSION_VALUE_READWRITE = "RW";
+	$FILE_PERMISSION_VALUE_READONLY = "RO";
+	
+	function initialize_session_data($user_id = "") {
+		$_SESSION['user_id'] = $user_id;
+		$_SESSION['default_file_permission'] = get_default_permission_mode($user_id);
+		$_SESSION['settings'] = get_effective_settings();
+	}
 	
 	function authenticate() {
 		global $USERS;
-		
-		if (!authentication_required()) {
-			$_SESSION['user_id'] = "";
-			$_SESSION['user_type'] = get_user_type();
-			$_SESSION['settings'] = get_effective_settings();
-			return array("name" => "", "type" => $_SESSION['user_type']);
-		}
 		
 		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
 			log_error("Invalid authentication request, no username or password provided");
@@ -36,33 +35,31 @@
 			 	return FALSE;
 			}
 			
-			$_SESSION['user_id'] = $id;
-			$_SESSION['user_type'] = get_user_type($id);
-			$_SESSION['settings'] = get_effective_settings();
-			return array("name" => $user["name"], "type" => $_SESSION['user_type']);
+			initialize_session_data($id);
+			return array("name" => $user["name"]);
 		}
 		
 		log_error("Authentication failed, no user found with name [".$_GET["username"]."]");
 		return FALSE;
 	}
 	
-	function get_user_type($id = "") {
-		global $USERS, $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY, $FILE_PERMISSION_MODE;
+	function get_default_permission_mode($id = "") {
+		global $USERS, $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY, $FILE_PERMISSION_MODE;
 		
 		if ($id === "") {
-			if (!isset($FILE_PERMISSION_MODE)) return $USER_TYPE_READONLY;
-			$type = strtoupper($FILE_PERMISSION_MODE);
+			if (!isset($FILE_PERMISSION_MODE)) return $FILE_PERMISSION_VALUE_READONLY;
+			$mode = strtoupper($FILE_PERMISSION_MODE);
 		} else {
-			if (!isset($USERS[$id]["type"])) return $USER_TYPE_READONLY;
-			$type = strtoupper($USERS[$id]["type"]);
+			if (!isset($USERS[$id]["file_permission_mode"])) return $FILE_PERMISSION_VALUE_READONLY;
+			$mode = strtoupper($USERS[$id]["file_permission_mode"]);
 		}
 
-		if ($type != $USER_TYPE_ADMIN and $type != $USER_TYPE_READWRITE and $type != $USER_TYPE_READONLY) {
-			if ($id === "") log_error("Invalid permission mode defined [".$type."]. Fallback to default.");
-			else log_error("User ".$id." has invalid type defined [".$type."]. Fallback to default.");
-			return $USER_TYPE_READONLY;
+		if ($mode != $FILE_PERMISSION_VALUE_ADMIN and $mode != $FILE_PERMISSION_VALUE_READWRITE and $mode != $FILE_PERMISSION_VALUE_READONLY) {
+			if ($id === "") log_error("Invalid file permission mode [".$mode."]. Falling back to default.");
+			else log_error("Invalid file permission mode ".$mode." for user [".$id."]. Falling back to default.");
+			return $FILE_PERMISSION_VALUE_READONLY;
 		}
-		return $type;
+		return $mode;
 	}
 	
 	function logout() {
@@ -85,9 +82,12 @@
 		global $USERS;
 
 		// always pass authentication when it is not required
-		if (!authentication_required()) return TRUE;
+		if (!authentication_required()) {
+			if (!isset($_SESSION['user_id'])) initialize_session_data();
+			return TRUE;
+		}
 		// otherwise user must authenticate
-		if (!isset($_SESSION['user_id'])) return FALSE;
+		if (!isset($_SESSION['user_id']) or $_SESSION['user_id'] === "") return FALSE;
 		return array("name" => $USERS[$_SESSION['user_id']]["name"]);
 	}
 	

@@ -124,6 +124,10 @@ public class MainViewPresenter implements DirectoryController,
 		uploadListener.setDetails(localizator.getStrings()
 				.fileUploadProgressPleaseWait());
 
+		if (!model.getSessionInfo().getSettings().isFileUploadProgressEnabled()) {
+			return;
+		}
+
 		uploadMonitor = new FileUploadMonitor(uploadId,
 				new FileUploadProgressListener() {
 					public void onProgressUpdate(FileUploadStatus status) {
@@ -140,6 +144,7 @@ public class MainViewPresenter implements DirectoryController,
 					}
 				}, fileUploadHandler);
 		uploadMonitor.start();
+
 	}
 
 	public void onUploadFinished() {
