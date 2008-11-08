@@ -19,11 +19,12 @@
 		if (!authentication_required()) {
 			$_SESSION['user_id'] = "";
 			$_SESSION['user_type'] = get_user_type();
+			$_SESSION['settings'] = get_effective_settings();
 			return array("name" => "", "type" => $_SESSION['user_type']);
 		}
 		
 		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
-			error_log("MOLLIFY: Invalid authentication request, no username or password provided");
+			log_error("Invalid authentication request, no username or password provided");
 			return FALSE;
 		}
 		
@@ -31,31 +32,34 @@
 			if ($user["name"] != $_GET["username"])
 				continue;
 			if ($user["password"] != $_GET["password"]) {
-				error_log("MOLLIFY: Authentication failed for user [".$user["name"]."], invalid password");
+				log_error("Authentication failed for user [".$user["name"]."], invalid password");
 			 	return FALSE;
 			}
 			
 			$_SESSION['user_id'] = $id;
 			$_SESSION['user_type'] = get_user_type($id);
+			$_SESSION['settings'] = get_effective_settings();
 			return array("name" => $user["name"], "type" => $_SESSION['user_type']);
 		}
+		
+		log_error("Authentication failed, no user found with name [".$_GET["username"]."]");
 		return FALSE;
 	}
 	
 	function get_user_type($id = "") {
-		global $USERS, $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY, $PERMISSION_MODE;
+		global $USERS, $USER_TYPE_ADMIN, $USER_TYPE_READWRITE, $USER_TYPE_READONLY, $FILE_PERMISSION_MODE;
 		
 		if ($id === "") {
-			if (!isset($PERMISSION_MODE)) return $USER_TYPE_READONLY;
-			$type = strtoupper($PERMISSION_MODE);
+			if (!isset($FILE_PERMISSION_MODE)) return $USER_TYPE_READONLY;
+			$type = strtoupper($FILE_PERMISSION_MODE);
 		} else {
 			if (!isset($USERS[$id]["type"])) return $USER_TYPE_READONLY;
 			$type = strtoupper($USERS[$id]["type"]);
 		}
 
 		if ($type != $USER_TYPE_ADMIN and $type != $USER_TYPE_READWRITE and $type != $USER_TYPE_READONLY) {
-			if ($id === "") error_log("MOLLIFY: Invalid permission mode defined [".$type."]. Fallback to default.");
-			else error_log("MOLLIFY: User ".$id." has invalid type defined [".$type."]. Fallback to default.");
+			if ($id === "") log_error("Invalid permission mode defined [".$type."]. Fallback to default.");
+			else log_error("User ".$id." has invalid type defined [".$type."]. Fallback to default.");
 			return $USER_TYPE_READONLY;
 		}
 		return $type;

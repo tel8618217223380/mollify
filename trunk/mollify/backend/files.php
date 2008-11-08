@@ -193,7 +193,7 @@
 	function rename_file($file, $new_name) {
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
-			file_error_log("Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			log_error("Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
 			$error_details = basename($file);
 			return FALSE;
@@ -215,7 +215,7 @@
 		
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
-			file_error_log("Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			log_error("Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
 			$error_details = basename($file);
 			return FALSE;
@@ -231,6 +231,12 @@
 
 	function upload_file($dir) {
 		global $error, $error_details;
+		
+		if (!$_SESSION["settings"]["enable_file_upload"]) {
+			log_error("Cannot upload file, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
 		
 		if (!isset($_FILES['upload'])) {
 			$error = "NO_UPLOAD_DATA";
@@ -264,8 +270,7 @@
 	}
 	
 	function get_upload_status($id) {
-		global $ENABLE_UPLOAD_PROGRESS;
-		if (!$ENABLE_UPLOAD_PROGRESS) return FALSE;
+		if (!$_SESSION["settings"]["enable_file_upload_progress"]) return FALSE;
 		return apc_fetch('upload_'.$id);
 	}
 	
@@ -325,15 +330,13 @@
 			// if requested only for a single file, skip if not the correct one
 			if ($for_file and $for_file != $file) continue;
 			
-			file_error_log($file);
-			
 			// only read lines that are applicable to current user
 			if ($for_user_id === "")
 			 	if ($for_user_id != "") continue;
 			else
 				if ($user_id != $for_user_id) continue;
 			
-			file_error_log($permission);
+			log_error($permission);
 			
 			if ($for_file) {
 				$result = $permission;
@@ -348,12 +351,8 @@
 	
 	function get_applicable_permission($base, $specific) {
 		global $USER_TYPE_READWRITE, $USER_TYPE_READONLY;
-		file_error_log("base=".$base.", specific=".$specific);
+		#log_error("base=".$base.", specific=".$specific);
 		if (!$specific) return $base;
 		return $specific;
-	}
-	
-	function file_error_log($message) {
-		error_log("MOLLIFY: ".$message);
 	}
 ?>
