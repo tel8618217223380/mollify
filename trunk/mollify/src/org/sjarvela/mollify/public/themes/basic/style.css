@@ -511,6 +511,7 @@ input.rename-file-new-name-value {
 }
 
 .progress-dialog .dialogContent {
+	height: 60px;
 	width: 300px;
 	padding: 8px;
 	background: url(wait.gif) no-repeat 280px 22px;

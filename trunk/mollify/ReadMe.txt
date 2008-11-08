@@ -23,7 +23,7 @@ this entire header must remain intact.
 
 2) Copy extracted directories into your web server root directory
 
-3) Modify "configuration.php" under directory "mollify", for further instructions see chapter 2.
+3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
 4) You are ready to go. Open address http://your.host.name/mollify to access your files.
 
@@ -31,8 +31,11 @@ this entire header must remain intact.
 2. CONFIGURATION
 ================
 
-Backend file "configuration.php" contains all configuration properties needed by Mollify. Currently configurable
-aspects are users and published directories.
+Backend file "configuration.php" contains all configuration properties needed by Mollify. Configuration content depends
+on whether multi-user configuration is needed.
+
+Installation package contains folder "example", which has example configuration files for both scenarios. Copy one of them
+to directory "mollify" with name "configuration.php".
 
 
 2.1 USERS
@@ -120,12 +123,26 @@ Rules are:
 NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
-2.3 FILE UPLOAD PROGRESS DISPLAY
---------------------------------
+2.3 FILE UPLOAD
+---------------
 
-File upload progress can be enabled with parameter
+2.3.1 Disabling file upload
+---------------------------
 
-$ENABLE_UPLOAD_PROGRESS = TRUE;
+By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
+
+	$SETTINGS = array(
+		"enable_file_upload" => FALSE
+	);
+
+2.3.2 Enabling file upload progress
+-----------------------------------
+
+By default, file upload progress is not enabled. To enable this feature, use following setting in "configuration.php":
+
+	$SETTINGS = array(
+		"enable_file_upload_progress" => TRUE
+	);
 
 NOTE! File upload progress display requires APC (Alternative PHP Cache), see wiki page at
 "http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay" for more information

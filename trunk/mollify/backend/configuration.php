@@ -12,14 +12,10 @@
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 	
 	/* User types: "A" = Admin, "RW" = Read/write, "RO" = Read-only (default if omitted) */
-	
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "type" => "rw"),
-		"2" => array("name" => "User 2", "password" => "bar", "type" => "ro")
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "rw"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
 	);
-	
-	/* File permission mode when no users are defined, same as user types. */
-	$PERMISSION_MODE = "RO";
 	
 	$PUBLISHED_DIRECTORIES = array(
 		"1" => array(
@@ -32,9 +28,16 @@
 		)
 	);
 	
+	/*$FILE_PERMISSION_MODE = "RO";
+	
+	$PUBLISHED_DIRECTORIES = array(
+		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
+		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
+	);
+	
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
 		"enable_file_upload_progress" => TRUE
-	);
+	);*/
 	
 ?>
