@@ -57,18 +57,13 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 			public void onSuccess(JavaScriptObject... result) {
 				SessionInfo info = result[0].cast();
-				onStartSession(info);
+				if (info.isAuthenticationRequired() && !info.getAuthenticated())
+					showLogin();
+				else
+					showMain(info);
 			}
-
 		});
 	};
-
-	private void onStartSession(SessionInfo info) {
-		if (info.isAuthenticationRequired() && !info.getAuthenticated())
-			showLogin();
-		else
-			showMain(info);
-	}
 
 	private void showLogin() {
 		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {

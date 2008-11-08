@@ -12,23 +12,16 @@ package org.sjarvela.mollify.client.data;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class SessionInfo extends JavaScriptObject {
-	protected SessionInfo() {
+public class SessionSettings extends JavaScriptObject {
+	protected SessionSettings() {
 	}
-
-	public final native boolean isAuthenticationRequired() /*-{
-		return this.authentication_required;
+	
+	public final native boolean isFileUploadEnabled() /*-{
+		return this.enable_file_upload;
 	}-*/;
-
-	public final native boolean getAuthenticated() /*-{
-		return this.authenticated;
+	
+	public final native boolean isFileUploadProgressEnabled() /*-{
+		return this.enable_file_upload_progress;
 	}-*/;
-
-	public final native String getLoggedUser() /*-{
-		return this.user;
-	}-*/;
-
-	public final native SessionSettings getSettings() /*-{
-		return this.settings;
-	}-*/;
+	
 }

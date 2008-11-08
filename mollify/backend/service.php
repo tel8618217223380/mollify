@@ -18,6 +18,10 @@
 		echo json_encode($result_array);
 		if ($ext) echo ');';
 	}
+
+	function log_error($message) {
+		error_log("MOLLIFY: ".$message);
+	}
 	
 	function get_success_message($result = array()) {
 		return array("success" => TRUE, "result" => $result);
@@ -34,14 +38,17 @@
 	}
 	
 	function get_session_info() {
+		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
 		$user = check_authentication();
-		$authenticated = FALSE;
-		$name = "";
+		
 		if ($user) {
-			$authenticated = TRUE;
-			if (isset($user["name"])) $name = $user["name"];
+			$info["authenticated"] = TRUE;
+			if (isset($user["name"])) $info["user"] = $user["name"];
+			if (isset($_SESSION['settings'])) $info["settings"] = $_SESSION['settings'];
+		} else {
+			if (!$info["authentication_required"]) $info["settings"] = get_effective_settings();
 		}
-		return array("authentication_required" => authentication_required(), "authenticated" => $authenticated, "user" => $name);
+		return $info;
 	}
 	
 	function handle_authentication() {
@@ -68,6 +75,7 @@
 		return;
 	}
 	
+	require_once "settings.php";
 	require_once "user.php";
 	
 	session_start();

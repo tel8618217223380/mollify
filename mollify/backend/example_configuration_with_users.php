@@ -18,9 +18,6 @@
 		"2" => array("name" => "User 2", "password" => "bar", "type" => "ro")
 	);
 	
-	/* File permission mode when no users are defined, same as user types. */
-	$PERMISSION_MODE = "RO";
-	
 	$PUBLISHED_DIRECTORIES = array(
 		"1" => array(
 			"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
@@ -30,11 +27,6 @@
 			"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
 			"r2" => array("name" => "Folder C", "path" => "/foo/baz")
 		)
-	);
-	
-	$SETTINGS = array(
-		"enable_file_upload" => TRUE,
-		"enable_file_upload_progress" => TRUE
 	);
 	
 ?>

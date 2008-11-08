@@ -91,7 +91,8 @@ public class MainView extends Composite {
 		panel.add(refreshButton);
 		panel.add(directorySelector);
 		panel.add(parentDirButton);
-		panel.add(uploadFileButton);
+		if (model.getSessionInfo().getSettings().isFileUploadEnabled())
+			panel.add(uploadFileButton);
 
 		Label rightPadding = new Label();
 		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
