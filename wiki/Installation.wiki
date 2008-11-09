@@ -147,7 +147,7 @@ In single-user environment, default file permission applies to everybody, and it
 For example:
 
 {{{
-    $FILE_PERMISSION_MODE = "RO";
+    $FILE_PERMISSION_MODE = "RW";
 }}}
 
 This will give all users read/write permissions, unless file specific permissions override this.
@@ -160,8 +160,8 @@ For example:
 
 {{{
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "rw"),
-		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "RW"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
 	);
 }}}
 
@@ -173,8 +173,8 @@ For example:
 
 {{{
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "a"),
-		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
 	);
 }}}
 
@@ -187,13 +187,13 @@ Mollify supports file specific file permissions, which override any possible def
 Each folder can have its own user access control file, which applies only to files in that folder.
 
 Each file can have permissions set to user id's (see chapter 2.1 Users):
-  * With user id "*", setting applies to all users overriding possible user default permission
-  * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "*", or in user account configuration)
+  * With user id "`*`", setting applies to all users overriding possible user default permission
+  * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "`*`", or in user account configuration)
 
 Example scenarios:
-  * User has default permission "RO", file has permission "* = RW": User will get read and write permissions
-  * User has default permission "RW", file has permission "* = RO": User will get read-only permissions
-  * User with id "U1" has default permission "RO", file has permissions "* = RW" and "U1 = RO": User will get read-only permissions
+  * User has default permission "RO", file has permission "`* = RW`": User will get read and write permissions
+  * User has default permission "RW", file has permission "`* = RO`": User will get read-only permissions
+  * User with id "U1" has default permission "RW", file has permissions "`* = RW`" and "`U1 = RO`": User will get read-only permissions
 
 
 == 2.4 File Upload ==
