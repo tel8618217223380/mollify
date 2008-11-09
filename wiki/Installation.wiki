@@ -33,6 +33,7 @@ Mollify supports both single-user and multi-user environments. In single-user en
 To set up a single-user environment, make sure variable $USERS in file "configuration.php" is empty or not defined.
 
 For example:
+
 {{{ $USERS = array();}}}
 
 === 2.1.2 Multi-User Environment ===
@@ -66,10 +67,13 @@ Rules for user configuration:
 
 == 2.2 Published Directories ==
 
-Mollify supports freely selectable published directories. Directories need not to have any relation with each other.
-Also, if user accounts are configured, each user can have different set of directories available.
+Mollify supports freely selectable published directories, which need not to have any relation with each other.
 
-A) When no user accounts are defined (see chapter 2.1, Users), use following format:
+Also, in multi-user environment, each user can have different set of directories available.
+
+=== 2.2.1 Single-User Environment ===
+
+In single-user environment (see chapter 2.1, Users), use following format to define published directories:
 
 {{{
 $PUBLISHED_DIRECTORIES = array(
@@ -80,7 +84,9 @@ $PUBLISHED_DIRECTORIES = array(
 
 See rules below.
 
-B) When user accounts are defined (see chapter 2.1, Users), use following format:
+=== 2.2.2 Multi-User Environment ===
+
+In multi-user environment (see chapter 2.1, Users), use following format to define published directories:
 
 {{{
 $PUBLISHED_DIRECTORIES = array(
@@ -122,13 +128,27 @@ Rules are:
 *NOTE!* Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
-== 2.3 File Upload Progress Display ==
+== 2.3 File Upload ==
 
-File upload progress can be enabled with parameter
+=== 2.3.1 Disabling File Upload ===
+
+By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
+
 {{{
-$ENABLE_UPLOAD_PROGRESS = TRUE;
+	$SETTINGS = array(
+		"enable_file_upload" => FALSE
+	);
 }}}
 
+=== 2.3.2 Enabling File Upload Progress ===
+
+By default, file upload progress is disabled. To enable this feature, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_file_upload_progress" => TRUE
+	);
+}}}
 
 *NOTE!* File upload progress display requires APC (Alternative PHP Cache), see [http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay wiki page] for more information
 ----
