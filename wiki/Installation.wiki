@@ -128,9 +128,77 @@ Rules are:
 *NOTE!* Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
-== 2.3 File Upload ==
+== 2.3 User Access Control ==
 
-=== 2.3.1 Disabling File Upload ===
+Mollify supports configurable user access control for files. By default, when no configuration is done, users have read-only permissions to all files.
+
+File permissions can be granted in two levels:
+  * User default file permission
+  * File specific file permission
+
+Possible file permission values are:
+  * `RO` = Read-only
+  * `RW` = Read and write
+
+=== 2.3.1 User Default File Permission in Single-User Environment ===
+
+In single-user environment, default file permission applies to everybody, and it is defined with configuration variable `$FILE_PERMISSION_MODE`.
+
+For example:
+
+{{{
+    $FILE_PERMISSION_MODE = "RO";
+}}}
+
+This will give all users read/write permissions, unless file specific permissions override this.
+
+=== 2.3.2 User Default File Permission in Multi-User Environment ===
+
+In multi-user environment, default file permission is defined in user account configuration with attribute `file_permission_mode`.
+
+For example:
+
+{{{
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "rw"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
+	);
+}}}
+
+This configuration gives "User 1" read/write permissions, and "User 2" read-only permissions, unless file specific permissions override these.
+
+In addition to default permission modes, in multi-user environment user can be set to admin mode with value "A". Admin users are allowed to access everything regardless of file permission configurations.
+
+For example:
+
+{{{
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "a"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
+	);
+}}}
+
+This would make "User 1" an admin user. Later on, admin users will have options and actions available that are not visible for non-admins.
+
+=== 2.3.3 File Specific Permissions ===
+
+Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with user access control file (see wiki for more information).
+
+Each folder can have its own user access control file, which applies only to files in that folder.
+
+Each file can have permissions set to user id's (see chapter 2.1 Users):
+  * With user id "*", setting applies to all users overriding possible user default permission
+  * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "*", or in user account configuration)
+
+Example scenarios:
+  * User has default permission "RO", file has permission "* = RW": User will get read and write permissions
+  * User has default permission "RW", file has permission "* = RO": User will get read-only permissions
+  * User with id "U1" has default permission "RO", file has permissions "* = RW" and "U1 = RO": User will get read-only permissions
+
+
+== 2.4 File Upload ==
+
+=== 2.4.1 Disabling File Upload ===
 
 By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
 
@@ -140,7 +208,7 @@ By default, file upload feature is enabled. To disable this feature, use followi
 	);
 }}}
 
-=== 2.3.2 Enabling File Upload Progress ===
+=== 2.4.2 Enabling File Upload Progress ===
 
 By default, file upload progress is disabled. To enable this feature, use following setting in "configuration.php":
 
