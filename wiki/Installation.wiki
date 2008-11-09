@@ -167,7 +167,7 @@ For example:
 
 This configuration gives "User 1" read/write permissions, and "User 2" read-only permissions, unless file specific permissions override these.
 
-In addition to default permission modes, in multi-user environment user can be set to admin mode with value "A". Admin users are allowed to access everything regardless of file permission configurations.
+In addition to default permission modes, in multi-user environment user can be set to admin mode with value "A". Admin users are allowed to access everything regardless of file permission configurations. Later on, admin users will also have options and actions available that are not visible for non-admins.
 
 For example:
 
@@ -178,7 +178,7 @@ For example:
 	);
 }}}
 
-This would make "User 1" an admin user. Later on, admin users will have options and actions available that are not visible for non-admins.
+This would make "User 1" an admin user.
 
 === 2.3.3 File Specific Permissions ===
 
