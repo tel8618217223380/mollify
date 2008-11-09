@@ -46,8 +46,13 @@ apc.rfc1867 = on
 
 == 3. Configuring Mollify ==
 
-Open configuration settings (configuration.php) and change following setting: `$ENABLE_UPLOAD_PROGRESS = TRUE;`
+Open configuration settings (configuration.php) and make sure following setting is set: 
 
+{{{
+	$SETTINGS = array(
+		"enable_file_upload_progress" => TRUE
+	);
+}}}
 
 
 
