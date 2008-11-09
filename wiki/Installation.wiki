@@ -182,13 +182,14 @@ This would make "User 1" an admin user. Later on, admin users will have options 
 
 === 2.3.3 File Specific Permissions ===
 
-Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see wiki for more information).
+Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
 
 Each folder has its own user access control file, which applies only to files in that folder.
 
 Each file can have permissions set to user id's (see chapter 2.1 Users):
   * With user id "`*`", setting applies to all users overriding possible user default permission
   * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "`*`", or in user account configuration)
+  * In single-user environment, only permissions given with id "`*`" are applied
 
 Example scenarios:
   * User has default permission "RO", file has permission "`* = RW`": User will get read and write permissions
