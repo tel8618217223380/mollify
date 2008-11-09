@@ -137,8 +137,8 @@ File permissions can be granted in two levels:
   * File specific file permission
 
 Possible file permission values are:
-  * `RO` = Read-only
-  * `RW` = Read and write
+  * `RO` = Read-only (user can only download and view details)
+  * `RW` = Read and write (user can also rename and delete file)
 
 === 2.3.1 User Default File Permission in Single-User Environment ===
 
