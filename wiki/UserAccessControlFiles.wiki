@@ -16,8 +16,10 @@ Rules are:
   * Row format is "`<FILE NAME>[TAB]([TAB]...)<FILE PERMISSIONS>`" (ie. file name and permissions are separated with one or more tab characters)
   * Format for file permissions (`<FILE PERMISSIONS>`) is "`<USER ID>=<FILE PERMISSION>`"
   * Multiple user permissions are separated with a comma ","
-  * User id "`*`" applies to all users, unless user specific permission is given
-  * Possible permissions are: "RW" = read and write, "RO" = read-only
+  * User id "`*`" applies to all users, unless user specific permission is given. This is only applicable id for single-user environment
+  * Possible permissions are:
+    * "RW" = read and write
+    * "RO" = read-only
 
 For example (ignore syntax coloring):
 
@@ -28,7 +30,7 @@ Picture.png			U1=rw
 }}}
 
 This configuration gives:
-  * User with id "U1" read-only permission to "Example Datasheet.xls", and read and write permission for all other users
-  * User with id "U2" read and write permission to "ReadMe.txt", and read-only permissions for all other users
-  * User with id "U1" read and write permission to "Picture.png", for other users this file does not change permissions (default permission are applies)
+  * User with id "`U1`" read-only permission to "`Example Datasheet.xls`", and read and write permission for all other users
+  * User with id "`U2`" read and write permission to "`ReadMe.txt`", and read-only permissions for all other users
+  * User with id "`U1`" read and write permission to "`Picture.png`", for other users this file does not change permissions (default permission are applies)
   * For all other files in the folder, user default permissions apply
