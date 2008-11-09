@@ -10,10 +10,10 @@ This page describes how to write user access control files.
 Each folder in the published file system can have a user access control file. This file contains file specific permissions, which applies only for files in the same physical folder.
 
 Rules are:
-  * File name must be "mollify.uac" This file is not visible to clients.
+  * File name must be "*mollify.uac*" This file is not visible to clients.
   * File content must be plain text.
   * Each row defines permissions for one file
-  * Row format is "`<FILE NAME>[TAB]([TAB]...)<FILE PERMISSIONS>`" (separated with one or more tab characters)
+  * Row format is "`<FILE NAME>[TAB]([TAB]...)<FILE PERMISSIONS>`" (ie. file name and permissions are separated with one or more tab characters)
   * Format for file permissions (`<FILE PERMISSIONS>`) is "`<USER ID>=<FILE PERMISSION>`"
   * Multiple user permissions are separated with a comma ","
   * User id "`*`" applies to all users, unless user specific permission is given
