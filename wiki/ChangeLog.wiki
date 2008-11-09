@@ -3,7 +3,7 @@
 
 === Version 0.6 ===
   * User access control
-  * Settings list instead of separate variables in configuration
+  * Settings list instead of separate variables in configuration (*NOTE!* Makes configuration setting `$ENABLE_FILE_UPLOAD_PROGRESS` introduced in 0.5 obsolete)
 
 === Version 0.5.1 ===
   * Added user logout action when user accounts are enabled
