@@ -13,7 +13,7 @@
 
 2) Copy extracted directories into your web server root directory
 
-3) Modify "configuration.php" under directory "mollify", for further instructions see chapter 2.
+3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
 4) You are ready to go. Open address http://your.host.name/mollify to see your files.
 
@@ -21,20 +21,25 @@
 
 = 2. Configuration =
 
-Backend file "configuration.php" contains all configuration properties needed by Mollify. Currently configurable
-aspects are users and published directories.
+Backend file "configuration.php" contains all configuration properties needed by Mollify. Configuration depends on whether it is for single-user or multi-user environment.
 
 
 == 2.1 Users ==
 
-Mollify supports different user accounts, which can have different published directories. User configuration is
-optional, and when users are not defined, no authentication is requested.
+Mollify supports both single-user and multi-user environments. In single-user environment, no authentication is required and all access rules apply to everybody. In multi-user environment different user accounts are set up, where different users can have different published directories and different access permissions.
 
-A) For no authentication, use following format:
+=== 2.1.1 Single-User Environment ===
 
+To set up a single-user environment, make sure variable $USERS in file "configuration.php" is empty or not defined.
+
+For example:
 {{{ $USERS = array();}}}
 
-B) To configure user accounts, use following format:
+=== 2.1.2 Multi-User Environment ===
+
+To set up a multi-user environment, you have to define user accounts with variable $USERS in file "configuration.php".
+
+Syntax is:
 
 {{{
 $USERS = array(
@@ -55,8 +60,8 @@ $USERS = array(
 This configuration has two users, "User 1" and "User 2".
 
 Rules for user configuration:
-  * User id's `[USER_ID]` can be freely chosen, but they must be unique
-  * User names `[USER NAME]` must be unique
+  * User id's `[USER_ID]` can be freely chosen, but they must be unique (as all user related data is linked with user id)
+  * User names `[USER NAME]` can be freely chosen, but they must be unique (as user is identified with user name when logged in)
 
 
 == 2.2 Published Directories ==
