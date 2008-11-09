@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy
 
+=== Version 0.6 ===
+  * User access control
+  * Settings list instead of separate variables in configuration
+
 === Version 0.5.1 ===
   * Added user logout action when user accounts are enabled
   * File upload fix for IE
