@@ -10,13 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 
 public interface SimpleFileListListener {
-	void onFileRowClicked(File file, Column column);
-
-	void onDirectoryRowClicked(Directory directory, Column column);
-
-	void onDirectoryUpRowClicked(Column column);
+	void onRowClicked(FileSystemItem item, Column column);
 }

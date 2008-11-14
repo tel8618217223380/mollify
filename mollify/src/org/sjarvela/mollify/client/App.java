@@ -22,7 +22,6 @@ import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -59,8 +58,8 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 				windowManager.getDialogManager().showError(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
-				SessionInfo info = result[0].cast();
+			public void onSuccess(Object... result) {
+				SessionInfo info = (SessionInfo) result[0];
 				if (info.isAuthenticationRequired() && !info.getAuthenticated())
 					showLogin();
 				else
@@ -83,10 +82,9 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 						windowManager.getDialogManager().showError(error);
 					}
 
-					public void onSuccess(JavaScriptObject... result) {
-						SessionInfo info = result[0].cast();
+					public void onSuccess(Object... result) {
 						listener.onConfirm();
-						showMain(info);
+						showMain((SessionInfo) result[0]);
 					}
 
 				});

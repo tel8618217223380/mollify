@@ -31,83 +31,98 @@ this entire header must remain intact.
 2. CONFIGURATION
 ================
 
-Backend file "configuration.php" contains all configuration properties needed by Mollify. Configuration content depends
-on whether multi-user configuration is needed.
+Backend file "configuration.php" contains all configuration properties needed by Mollify. Configuration depends
+on whether it is for single-user or multi-user environment.
 
-Installation package contains folder "example", which has example configuration files for both scenarios. Copy one of them
-to directory "mollify" with name "configuration.php".
+Installation package has a folder named "example", which contains example configuration file for both scenarios. Copy one of them
+to directory "mollify" with name "configuration.php", and modify it to match your system.
 
 
 2.1 USERS
 ---------
 
-Mollify supports different user accounts, which can have different published directories. User configuration is
-optional, and when users are not defined, no authentication is requested.
+Mollify supports both single-user and multi-user environments. In single-user environment, no authentication is required and all access rules apply to everybody. In multi-user environment different user accounts are set up, where different users can have different published directories and different access permissions.
 
-A) For no authentication, use following format:
+2.1.1 Single-user environment
+-----------------------------
 
-$USERS = array();
-
-B) To configure user accounts, use following format:
-
-$USERS = array(
-	[USER_ID] => array("name" => [USER NAME], "password" => [PASSWORD]),
-	...
-);
+To set up a single-user environment, make sure variable $USERS in file "configuration.php" is empty or not defined.
 
 For example:
+	$USERS = array();
 
-$USERS = array(
-	"1" => array("name" => "User 1", "password" => "foo"),
-	"2" => array("name" => "User 2", "password" => "bar")
-);
+
+2.1.2 Multi-user environment
+----------------------------
+
+To set up a multi-user environment, you have to define user accounts with variable $USERS in file "configuration.php".
+
+Syntax is:
+	$USERS = array(
+		[USER_ID] => array("name" => [USER NAME], "password" => [PASSWORD]),
+		...
+	);
+
+For example:
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo"),
+		"2" => array("name" => "User 2", "password" => "bar")
+	);
 
 This configuration has two users, "User 1" and "User 2".
 
 Rules for user configuration:
-- User id's [USER_ID] can be freely chosen, but they must be unique
-- User names [USER NAME] must be unique
+- User id's [USER_ID] can be freely chosen, but they must be unique (as all user related data is linked
+  with user id)
+- User names [USER NAME] can be freely chosen, but they must be unique (as user is identified with user
+  name when logged in)
 
 
 2.2 PUBLISHED DIRECTORIES
 -------------------------
 
-Mollify supports freely selectable published directories. Directories need not to have any relation with each other.
-Also, if user accounts are configured, each user can have different set of directories available.
+Mollify supports freely selectable published directories, which need not to have any relation with each other.
+Also, in multi-user environment, each user can have different set of directories available.
 
-A) When no user accounts are defined (see chapter 2.1, Users), use following format:
+2.2.1 Single-user environment
+-----------------------------
 
-$PUBLISHED_DIRECTORIES = array(
-	array(
-		[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
-		...
-	)
-);
+In single-user environment (see chapter 2.1, Users), use following format to define published directories:
+
+	$PUBLISHED_DIRECTORIES = array(
+		array(
+			[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+			...
+		)
+	);
 
 See rules below.
 
-B) When user accounts are defined (see chapter 2.1, Users), use following format:
+2.2.2 Multi-user environment
+----------------------------
 
-$PUBLISHED_DIRECTORIES = array(
-	[USER_ID] => array(
-		[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+In multi-user environment (see chapter 2.1, Users), use following format to define published directories:
+
+	$PUBLISHED_DIRECTORIES = array(
+		[USER_ID] => array(
+			[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+			...
+		),
 		...
-	),
-	...
-);
+	);
 
 For example:
 
-$PUBLISHED_DIRECTORIES = array(
-	"1" => array(
-		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
-		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-	),
-	"2" => array(
-		"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
-		"r2" => array("name" => "Folder C", "path" => "/foo/baz")
-	)
-);
+	$PUBLISHED_DIRECTORIES = array(
+		"1" => array(
+			"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
+			"r2" => array("name" => "Folder B", "path" => "/foo/bay")
+		),
+		"2" => array(
+			"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
+			"r2" => array("name" => "Folder C", "path" => "/foo/baz")
+		)
+	);
 
 With this configuration
 - User with id "1" (defined in user configuration) has two visible directories: "Folder A" and "Folder B"
@@ -138,7 +153,7 @@ By default, file upload feature is enabled. To disable this feature, use followi
 2.3.2 Enabling file upload progress
 -----------------------------------
 
-By default, file upload progress is not enabled. To enable this feature, use following setting in "configuration.php":
+By default, file upload progress is disabled. To enable this feature, use following setting in "configuration.php":
 
 	$SETTINGS = array(
 		"enable_file_upload_progress" => TRUE

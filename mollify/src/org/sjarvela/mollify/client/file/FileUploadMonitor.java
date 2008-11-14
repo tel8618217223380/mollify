@@ -13,7 +13,6 @@ import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 
 public class FileUploadMonitor {
@@ -56,9 +55,8 @@ public class FileUploadMonitor {
 				listener.onProgressUpdateFail(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
-				FileUploadStatus status = result[0].cast();
-				listener.onProgressUpdate(status);
+			public void onSuccess(Object... result) {
+				listener.onProgressUpdate((FileUploadStatus) result[0]);
 				if (!stop)
 					timer.schedule(INTERVAL);
 			}

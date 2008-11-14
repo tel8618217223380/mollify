@@ -10,10 +10,8 @@
 
 package org.sjarvela.mollify.client.service;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 public interface ResultListener {
-	public void onSuccess(JavaScriptObject... result);
+	public void onSuccess(Object... result);
 
 	public void onFail(ServiceError error);
 }

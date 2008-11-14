@@ -65,6 +65,10 @@ public class MainView extends Composite {
 	public DirectorySelector getDirectorySelector() {
 		return directorySelector;
 	}
+	
+	public SimpleFileList getList() {
+		return list;
+	}
 
 	private Widget createControls() {
 		VerticalPanel content = new VerticalPanel();
@@ -74,7 +78,7 @@ public class MainView extends Composite {
 	}
 
 	private Widget createFileList() {
-		list = new SimpleFileList(model, localizator);
+		list = new SimpleFileList(localizator);
 		return list;
 	}
 
@@ -155,6 +159,7 @@ public class MainView extends Composite {
 
 	public void clear() {
 		list.removeAllRows();
+		model.clear();
 	}
 
 	public void showFileDetails(File file) {

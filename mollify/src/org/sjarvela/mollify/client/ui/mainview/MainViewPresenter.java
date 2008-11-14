@@ -10,11 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.ProgressListener;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
+import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.FileActionHandler;
@@ -27,8 +30,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
-
-import com.google.gwt.core.client.JavaScriptObject;
+import org.sjarvela.mollify.client.ui.filelist.Column;
 
 public class MainViewPresenter implements DirectoryController,
 		FileUploadListener {
@@ -70,6 +72,20 @@ public class MainViewPresenter implements DirectoryController,
 		}));
 	}
 
+	public void onFileSystemItemSelected(FileSystemItem item, Column column) {
+		if (column.equals(Column.NAME)) {
+			if (item.isFile()) {
+				view.showFileDetails((File) item);
+			} else {
+				Directory directory = (Directory) item;
+				if (directory == Directory.Parent)
+					moveToParentDirectory();
+				else
+					changeToDirectory(directory);
+			}
+		}
+	}
+
 	public void changeToRootDirectory(Directory root) {
 		model.changeToRootDirectory(root, createRefreshListener());
 	}
@@ -80,15 +96,24 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void reset() {
 		view.clear();
-		model.clear();
 	}
 
 	public void reload() {
 		model.refreshData(createListener(new Callback() {
 			public void onCallback() {
-				view.refresh();
+				refreshView();
 			}
+
 		}));
+	}
+
+	private void refreshView() {
+		List<FileSystemItem> allFileItems = model.getAllFileItems();
+		if (model.getDirectoryModel().canAscend()) {
+			allFileItems.add(0, Directory.Parent);
+		}
+		view.getList().setContent(allFileItems);
+		view.refresh();
 	}
 
 	public void moveToParentDirectory() {
@@ -176,36 +201,24 @@ public class MainViewPresenter implements DirectoryController,
 				onError(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
+			public void onSuccess(Object... result) {
 				callback.onCallback();
 			}
 		};
 	}
 
-	private ResultListener createListener(final ResultCallback callback) {
-		return new ResultListener() {
-			public void onFail(ServiceError error) {
-				onError(error);
-			}
-
-			public void onSuccess(JavaScriptObject... result) {
-				callback.onCallback(result);
-			}
-		};
-	}
-
 	private ResultListener createReloadListener() {
-		return createListener(new ResultCallback() {
-			public void onCallback(JavaScriptObject... result) {
+		return createListener(new Callback() {
+			public void onCallback() {
 				reload();
 			}
 		});
 	}
 
 	private ResultListener createRefreshListener() {
-		return createListener(new ResultCallback() {
-			public void onCallback(JavaScriptObject... result) {
-				view.refresh();
+		return createListener(new Callback() {
+			public void onCallback() {
+				refreshView();
 			}
 		});
 	}

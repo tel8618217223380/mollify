@@ -29,10 +29,11 @@ public class ResultValidator implements ResultListener {
 		resultListener.onFail(error);
 	}
 
-	public void onSuccess(JavaScriptObject... resultValue) {
-		ReturnValue result = resultValue[0].cast();
+	public void onSuccess(Object... resultValue) {
+		JavaScriptObject jso = (JavaScriptObject) resultValue[0];
+		ReturnValue result = jso.cast();
 		if (!result.isSuccess()) {
-			ErrorValue error = resultValue[0].cast();
+			ErrorValue error = jso.cast();
 			onFail(ServiceError.getFrom(error));
 			return;
 		}

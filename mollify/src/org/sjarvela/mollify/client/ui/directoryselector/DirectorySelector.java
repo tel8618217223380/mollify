@@ -40,7 +40,7 @@ public class DirectorySelector extends HorizontalPanel {
 		ListIterator<Directory> list = directoryModelProvider
 				.getDirectoryModel().getDirectoryList();
 		int level = 0;
-		Directory parent = Directory.Empty();
+		Directory parent = Directory.Empty;
 
 		while (list.hasNext()) {
 			Directory current = list.next();

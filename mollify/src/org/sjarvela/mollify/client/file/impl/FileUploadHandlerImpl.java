@@ -21,7 +21,6 @@ import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
@@ -76,7 +75,7 @@ public class FileUploadHandlerImpl implements FileUploadHandler {
 					listener.onUploadFailed(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
+			public void onSuccess(Object... result) {
 				for (FileUploadListener listener : listeners)
 					listener.onUploadFinished();
 			}

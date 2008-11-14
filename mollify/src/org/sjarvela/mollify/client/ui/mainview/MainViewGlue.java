@@ -10,8 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
@@ -63,19 +62,7 @@ public class MainViewGlue implements SimpleFileListListener, ViewListener {
 		});
 	}
 
-	public void onDirectoryRowClicked(Directory directory, Column column) {
-		if (column.equals(Column.NAME)) {
-			presenter.changeToDirectory(directory);
-		}
-	}
-
-	public void onFileRowClicked(File file, Column column) {
-		if (column.equals(Column.NAME)) {
-			view.showFileDetails(file);
-		}
-	}
-
-	public void onDirectoryUpRowClicked(Column column) {
-		presenter.moveToParentDirectory();
+	public void onRowClicked(FileSystemItem item, Column column) {
+		presenter.onFileSystemItemSelected(item, column);
 	}
 }
