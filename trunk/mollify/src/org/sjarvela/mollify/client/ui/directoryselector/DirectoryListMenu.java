@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.file.DirectoryListener;
 import org.sjarvela.mollify.client.file.DirectoryProvider;
@@ -19,8 +21,6 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
@@ -86,17 +86,16 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		container.add(failedLabel);
 	}
 
-	public void onSuccess(JavaScriptObject... result) {
-		JsArray<Directory> directories = result[0].cast();
+	public void onSuccess(Object... result) {
+		List<Directory> directories = (List<Directory>) result[0];
 		initialized = true;
 		container.clear();
 
 		int count = 0;
-		for (int i = 0, n = directories.length(); i < n; ++i) {
-			Directory current = directories.get(i);
-			if (current.getId().equals(this.currentDirectory.getId()))
+		for (Directory dir : directories) {
+			if (dir.getId().equals(this.currentDirectory.getId()))
 				continue;
-			container.add(createDirectoryLabel(current));
+			container.add(createDirectoryLabel(dir));
 			count++;
 		}
 

@@ -11,8 +11,8 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.DateTime;
-import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileAction;
 
 import com.google.gwt.core.client.GWT;
@@ -27,7 +27,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		details, files, dirs, roots, upload_status
+		details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
 	public MollifyService() {
@@ -64,6 +64,10 @@ public class MollifyService {
 		getType(resultListener, GetType.dirs, "dir=" + dir);
 	}
 
+	public void getDirectoriesAndFiles(ResultListener resultListener, String dir) {
+		getType(resultListener, GetType.dirs_and_files, "dir=" + dir);
+	}
+
 	public void getRootDirectories(ResultListener resultListener) {
 		getType(resultListener, GetType.roots);
 	}
@@ -89,28 +93,26 @@ public class MollifyService {
 		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 
-	public String getFileActionUrl(File file, FileAction action) {
-		if (action.equals(FileAction.UPLOAD)) {
-			throw new RuntimeException("Invalid file action request "
-					+ action.name());
-		}
+	public String getFileActionUrl(FileSystemItem item, FileAction action) {
+		if (!item.isFile()) {
+			if (!action.equals(FileAction.UPLOAD)) {
+				throw new RuntimeException("Invalid directory action request "
+						+ action.name());
+			}
+		} else {
+			if (action.equals(FileAction.UPLOAD)) {
+				throw new RuntimeException("Invalid file action request "
+						+ action.name());
+			}
 
-		if (file.isEmpty()) {
-			throw new RuntimeException("No file given, action " + action.name());
+			if (item.isEmpty()) {
+				throw new RuntimeException("No file given, action "
+						+ action.name());
+			}
 		}
 
 		return getUrl(Action.operate, "type=" + action.name(), "id="
-				+ file.getId());
-	}
-
-	public String getDirectoryActionUrl(Directory dir, FileAction action) {
-		if (!action.equals(FileAction.UPLOAD)) {
-			throw new RuntimeException("Invalid directory action request "
-					+ action.name());
-		}
-
-		return getUrl(Action.operate, "type=" + action.name(), "id="
-				+ dir.getId());
+				+ item.getId());
 	}
 
 	/* Utility functions */

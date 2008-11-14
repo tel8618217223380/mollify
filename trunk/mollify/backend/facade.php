@@ -34,7 +34,12 @@
 						);
 					}
 					break;
-				
+
+				case "dirs_and_files":
+					$result = array("directories" => get_directories($account),
+						"files" => get_files($account));
+					break;
+									
 				case "files":
 					$result = get_files($account);
 					break;

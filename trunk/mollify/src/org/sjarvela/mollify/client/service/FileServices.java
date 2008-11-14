@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.data.JsDirectory;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileOperationHandler;
 
@@ -29,31 +31,37 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler {
 		this.service.getDirectories(listener, parent.getId());
 	}
 
-	public void getRootDirectories(ResultListener listener) {
-		this.service.getRootDirectories(listener);
-	}
-
-	public void getDirectoriesAndFiles(final String folder,
-			final ResultListener listener) {
-		this.service.getDirectories(new ResultListener() {
+	public void getRootDirectories(final ResultListener listener) {
+		this.service.getRootDirectories(new ResultListener() {
 
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
-				final JsArray<Directory> directories = result[0].cast();
-				service.getFiles(new ResultListener() {
+			public void onSuccess(Object... result) {
+				listener
+						.onSuccess(FileSystemItem
+								.createFromDirectories((JsArray<JsDirectory>) result[0]));
+			}
+		});
+	}
 
-					public void onFail(ServiceError error) {
-						listener.onFail(error);
-					}
+	public void getDirectoriesAndFiles(final String folder,
+			final ResultListener listener) {
+		this.service.getDirectoriesAndFiles(new ResultListener() {
 
-					public void onSuccess(JavaScriptObject... result) {
-						JsArray<File> files = result[0].cast();
-						listener.onSuccess(directories, files);
-					}
-				}, folder);
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
+
+			public void onSuccess(Object... result) {
+				DirectoriesAndFiles dirsAndFiles = ((JavaScriptObject) result[0])
+						.cast();
+				listener
+						.onSuccess(FileSystemItem
+								.createFromDirectories(dirsAndFiles
+										.getDirectories()), FileSystemItem
+								.createFromFiles(dirsAndFiles.getFiles()));
 			}
 
 		}, folder);

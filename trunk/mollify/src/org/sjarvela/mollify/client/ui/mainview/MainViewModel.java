@@ -10,25 +10,27 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-
 public class MainViewModel {
 	private final SessionInfo info;
 	private final FileServices fileServices;
 
-	private JsArray<Directory> rootDirectories;
-	private JsArray<Directory> directories;
-	private JsArray<File> files;
+	private List<Directory> rootDirectories;
+	private List<Directory> directories;
+	private List<File> files;
+	private List<FileSystemItem> all;
 
 	private DirectoryModel directoryModel;
 
@@ -38,10 +40,11 @@ public class MainViewModel {
 		clear();
 	}
 
-	void clear() {
-		rootDirectories = JsArray.createArray().cast();
-		directories = JsArray.createArray().cast();
-		files = JsArray.createArray().cast();
+	public void clear() {
+		rootDirectories = new ArrayList();
+		directories = new ArrayList();
+		files = new ArrayList();
+		all = new ArrayList();
 		directoryModel = new DirectoryModel();
 	}
 
@@ -53,15 +56,15 @@ public class MainViewModel {
 		return directoryModel;
 	}
 
-	public JsArray<Directory> getRootDirectories() {
+	public List<Directory> getRootDirectories() {
 		return rootDirectories;
 	}
 
-	public JsArray<Directory> getSubDirectories() {
+	public List<Directory> getSubDirectories() {
 		return directories;
 	}
 
-	public JsArray<File> getFiles() {
+	public List<File> getFiles() {
 		return files;
 	}
 
@@ -72,9 +75,8 @@ public class MainViewModel {
 	public void refreshRootDirectories(ResultListener listener) {
 		fileServices.getRootDirectories(createListener(listener,
 				new ResultCallback() {
-					public void onCallback(JavaScriptObject... result) {
-						JsArray<Directory> rootDirs = result[0].cast();
-						MainViewModel.this.rootDirectories = rootDirs;
+					public void onCallback(Object... result) {
+						MainViewModel.this.rootDirectories = (List<Directory>) result[0];
 					}
 				}));
 	}
@@ -107,18 +109,18 @@ public class MainViewModel {
 
 		fileServices.getDirectoriesAndFiles(folder, createListener(
 				resultListener, new ResultCallback() {
-					public void onCallback(JavaScriptObject... result) {
-						JsArray<Directory> directories = result[0].cast();
-						JsArray<File> files = result[1].cast();
-						onUpdateData(directories, files);
+					public void onCallback(Object... result) {
+						onUpdateData((List<Directory>) result[0],
+								(List<File>) result[1]);
 					}
 				}));
 	}
 
-	private void onUpdateData(JsArray<Directory> directories,
-			JsArray<File> files) {
-		this.directories = directories;
+	private void onUpdateData(List<Directory> dirs, List<File> files) {
+		this.directories = dirs;
 		this.files = files;
+		this.all = new ArrayList(dirs);
+		this.all.addAll(files);
 	}
 
 	private ResultListener createListener(final ResultListener listener,
@@ -128,12 +130,16 @@ public class MainViewModel {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
+			public void onSuccess(Object... result) {
 				resultCallback.onCallback(result);
 				listener.onSuccess(result);
 			}
 
 		};
+	}
+
+	public List<FileSystemItem> getAllFileItems() {
+		return all;
 	}
 
 }

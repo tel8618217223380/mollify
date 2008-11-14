@@ -13,7 +13,7 @@
 	
 	/* User types: "A" = Admin, "RW" = Read/write, "RO" = Read-only (default if omitted) */
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "rw"),
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
 		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
 	);
 	
@@ -33,11 +33,11 @@
 	$PUBLISHED_DIRECTORIES = array(
 		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-	);
+	);*/
 	
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
 		"enable_file_upload_progress" => TRUE
-	);*/
+	);
 	
 ?>

@@ -10,50 +10,40 @@
 
 package org.sjarvela.mollify.client.data;
 
-import com.google.gwt.core.client.JavaScriptObject;
+public class File extends FileSystemItem {
+	public static File Empty = new File();
+	private final JsFile file;
 
-public class File extends JavaScriptObject {
-	static File emptyInstance = null;
-
-	public static File Empty() {
-		if (emptyInstance == null) {
-			emptyInstance = File.createObject().cast();
-			emptyInstance.clear();
-		}
-		
-		return emptyInstance;
+	private File() {
+		super("", "");
+		file = null;
 	}
 	
-	protected File() {}
+	protected File(JsFile file) {
+		super(file.getId(), file.getName());
+		this.file = file;
+	}
 
-	private final native void clear() /*-{
-		this.id = "";
-		this.name = "";
-		this.extension = "";
-		this.size = 0;
-	}-*/;
-	
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
+	public final String getExtension() {
+		return file.getExtension();
+	}
 
-	public final native String getName() /*-{
-		return this.name;
-	}-*/;
+	public final int getSize() {
+		return file.getSize();
+	}
 
-	public final native String getExtension() /*-{
-		return this.extension;
-	}-*/;
-	
-	public final native int getSize() /*-{
-		return this.size;
-	}-*/;
-	
 	public final int getSizeInKB() {
 		return getSize() / 1024;
 	}
-	
-	public final boolean isEmpty() {
-		return this.equals(Empty());
+
+	@Override
+	public boolean isFile() {
+		return true;
 	}
+
+	@Override
+	public boolean isEmpty() {
+		return this == Empty;
+	}
+
 }

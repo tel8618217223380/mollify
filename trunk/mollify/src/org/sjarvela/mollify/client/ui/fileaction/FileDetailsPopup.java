@@ -25,7 +25,6 @@ import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
@@ -44,7 +43,7 @@ public class FileDetailsPopup extends DropdownPopup {
 	private final FileDetailsProvider detailsProvider;
 
 	private Label filename;
-	private File file = File.Empty();
+	private File file = File.Empty;
 	private Label description;
 	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
@@ -197,9 +196,8 @@ public class FileDetailsPopup extends DropdownPopup {
 				description.setText(error.getMessage(localizator));
 			}
 
-			public void onSuccess(JavaScriptObject... result) {
-				FileDetails details = result[0].cast();
-				updateDetails(details);
+			public void onSuccess(Object... result) {
+				updateDetails((FileDetails) result[0]);
 			}
 		});
 	}
@@ -210,7 +208,7 @@ public class FileDetailsPopup extends DropdownPopup {
 		for (Details detail : Details.values()) {
 			detailRowValues.get(detail.ordinal()).setText("");
 		}
-		
+
 		renameButton.setVisible(false);
 		deleteButton.setVisible(false);
 	}

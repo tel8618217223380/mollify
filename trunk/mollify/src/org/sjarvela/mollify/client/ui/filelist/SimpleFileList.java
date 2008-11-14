@@ -11,15 +11,17 @@
 package org.sjarvela.mollify.client.ui.filelist;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -30,19 +32,19 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SimpleFileList extends DataGrid {
-	private MainViewModel model;
 	private List<SimpleFileListListener> listeners = new ArrayList<SimpleFileListListener>();
 	private Localizator localizator;
+	private List<FileSystemItem> content = new ArrayList();
+	private Comparator<FileSystemItem> comparator = new DefaultFileItemComparator();
 
-	public SimpleFileList(MainViewModel model, Localizator localizator) {
+	public SimpleFileList(Localizator localizator) {
 		super();
 
-		this.model = model;
 		this.localizator = localizator;
 
 		// setup header
-//		this.setHeaderText(Column.SELECT, localizator.getStrings()
-//				.fileListColumnTitleSelect());
+		// this.setHeaderText(Column.SELECT, localizator.getStrings()
+		// .fileListColumnTitleSelect());
 		this.setHeaderText(Column.NAME, localizator.getStrings()
 				.fileListColumnTitleName());
 		this.setHeaderText(Column.TYPE, localizator.getStrings()
@@ -71,41 +73,19 @@ public class SimpleFileList extends DataGrid {
 		listeners.add(listener);
 	}
 
+	public void setContent(List<FileSystemItem> list) {
+		this.content = new ArrayList(list);
+		Collections.sort(content, comparator);
+	}
+
 	private void onClick(int row, int col) {
 		Column column = Column.values()[col];
-
-		int offset = 0;
-		if (model.getDirectoryModel().canAscend()) {
-			offset = 1;
-
-			if (row == 0) {
-				for (SimpleFileListListener listener : listeners) {
-					listener.onDirectoryUpRowClicked(column);
-				}
-				return;
-			}
-		}
-
-		if (row >= (model.getSubDirectories().length() + offset)) {
-			File file = model.getFiles().get(
-					row - model.getSubDirectories().length() - offset);
-			notifyFileClickListeners(file, column);
-		} else {
-			Directory directory = model.getSubDirectories().get(row - offset);
-			notifyDirectoryClickListeners(directory, column);
-		}
+		notifyClickListeners(content.get(row), column);
 	}
 
-	private void notifyDirectoryClickListeners(Directory directory,
-			Column column) {
+	private void notifyClickListeners(FileSystemItem item, Column column) {
 		for (SimpleFileListListener listener : listeners) {
-			listener.onDirectoryRowClicked(directory, column);
-		}
-	}
-
-	private void notifyFileClickListeners(File file, Column column) {
-		for (SimpleFileListListener listener : listeners) {
-			listener.onFileRowClicked(file, column);
+			listener.onRowClicked(item, column);
 		}
 	}
 
@@ -118,28 +98,13 @@ public class SimpleFileList extends DataGrid {
 
 	public void refresh() {
 		removeRows();
-
 		int current = 0;
 
-		// If not at the root dir, add "up" directory
-		if (model.getDirectoryModel().canAscend()) {
-			addDirectoryRow(current, "..");
-			getRowFormatter().addStyleName(current,
-					StyleConstants.SIMPLE_FILE_LIST_ROW_PARENT_DIRECTORY);
-			current++;
-		}
-
-		// Directories first
-		for (int i = 0, n = model.getSubDirectories().length(); i < n; ++i) {
-			Directory dir = model.getSubDirectories().get(i);
-			addDirectoryRow(current, dir.getName());
-			current++;
-		}
-
-		// Files then
-		for (int i = 0, n = model.getFiles().length(); i < n; ++i) {
-			File file = model.getFiles().get(i);
-			addFileRow(current, file);
+		for (FileSystemItem item : content) {
+			if (item.isFile())
+				addFileRow(current, (File) item);
+			else
+				addDirectoryRow(current, (Directory) item);
 			current++;
 		}
 
@@ -163,12 +128,27 @@ public class SimpleFileList extends DataGrid {
 	}
 
 	private void addFileRow(int index, File file) {
-		//setWidget(index, Column.SELECT, createSelectWidget(file));
+		// setWidget(index, Column.SELECT, createSelectWidget(file));
 		setWidget(index, Column.NAME, createNameWidget(file));
 		setWidget(index, Column.TYPE, createExtensionWidget(file));
 		setWidget(index, Column.SIZE, createSizeWidget(file));
 
 		List<String> styles = getFileStyles(index, file);
+		for (String style : styles) {
+			getRowFormatter().addStyleName(index, style);
+		}
+	}
+
+	private void addDirectoryRow(int index, Directory directory) {
+		Label name = new Label(directory.getName());
+		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_NAME);
+
+		// setText(index, Column.SELECT.ordinal(), "");
+		setWidget(index, Column.NAME, name);
+		setText(index, Column.TYPE.ordinal(), "");
+		setHTML(index, Column.SIZE.ordinal(), "");
+
+		List<String> styles = getDirectoryStyles(index);
 		for (String style : styles) {
 			getRowFormatter().addStyleName(index, style);
 		}
@@ -190,11 +170,11 @@ public class SimpleFileList extends DataGrid {
 		return styles;
 	}
 
-//	private Widget createSelectWidget(File file) {
-//		CheckBox select = new CheckBox();
-//		select.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SELECT);
-//		return select;
-//	}
+	// private Widget createSelectWidget(File file) {
+	// CheckBox select = new CheckBox();
+	// select.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SELECT);
+	// return select;
+	// }
 
 	private Widget createNameWidget(File file) {
 		Label name = new Label(file.getName());
@@ -214,21 +194,6 @@ public class SimpleFileList extends DataGrid {
 		return name;
 	}
 
-	private void addDirectoryRow(int index, String title) {
-		Label name = new Label(title);
-		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_NAME);
-
-		//setText(index, Column.SELECT.ordinal(), "");
-		setWidget(index, Column.NAME, name);
-		setText(index, Column.TYPE.ordinal(), "");
-		setHTML(index, Column.SIZE.ordinal(), "");
-
-		List<String> styles = getDirectoryStyles(index);
-		for (String style : styles) {
-			getRowFormatter().addStyleName(index, style);
-		}
-	}
-
 	private List<String> getDirectoryStyles(int index) {
 		ArrayList<String> styles = new ArrayList<String>();
 		styles.add(StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY);
@@ -243,7 +208,7 @@ public class SimpleFileList extends DataGrid {
 		setWidget(row, column.ordinal(), widget);
 	}
 
-	//TODO externalize to a text provider etc
+	// TODO externalize to a text provider etc
 	private String getSizeText(File file) {
 		int bytes = file.getSize();
 
@@ -264,7 +229,7 @@ public class SimpleFileList extends DataGrid {
 	}
 
 	public Widget getWidget(File file, Column column) {
-		int row = getFileRowIndex(file);
+		int row = content.indexOf(file);
 		return this.getWidget(row, column.ordinal());
 	}
 
@@ -273,18 +238,6 @@ public class SimpleFileList extends DataGrid {
 
 		return new Coords(cell.getAbsoluteLeft(), cell.getAbsoluteTop(), cell
 				.getOffsetWidth(), cell.getOffsetHeight());
-	}
-
-	private int getFileRowIndex(File file) {
-		int offset = 0;
-		if (model.getDirectoryModel().canAscend())
-			offset = 1;
-
-		for (int i = 0, n = model.getFiles().length(); i < n; ++i) {
-			if (file.equals(model.getFiles().get(i)))
-				return offset + model.getSubDirectories().length() + i;
-		}
-		return -1;
 	}
 
 	public void onBrowserEvent(Event event) {

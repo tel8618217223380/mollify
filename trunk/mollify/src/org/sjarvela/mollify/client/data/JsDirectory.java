@@ -8,12 +8,19 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.file;
+package org.sjarvela.mollify.client.data;
 
-import org.sjarvela.mollify.client.data.FileSystemItem;
+import com.google.gwt.core.client.JavaScriptObject;
 
-public interface FileActionProvider {
-	public boolean isActionAllowed(FileSystemItem item, FileAction action);
+public class JsDirectory extends JavaScriptObject {
+	protected JsDirectory() {
+	}
 
-	public String getActionURL(FileSystemItem item, FileAction action);
+	public final native String getId() /*-{
+		return this.id;
+	}-*/;
+
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
 }

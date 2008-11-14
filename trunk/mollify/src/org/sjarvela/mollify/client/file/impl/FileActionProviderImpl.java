@@ -10,8 +10,7 @@
 
 package org.sjarvela.mollify.client.file.impl;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileAction;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.service.MollifyService;
@@ -24,15 +23,11 @@ public class FileActionProviderImpl implements FileActionProvider {
 		this.service = service;
 	}
 
-	public String getActionURL(File file, FileAction action) {
-		return service.getFileActionUrl(file, action);
+	public String getActionURL(FileSystemItem item, FileAction action) {
+		return service.getFileActionUrl(item, action);
 	}
 
-	public String getActionURL(Directory dir, FileAction action) {
-		return service.getDirectoryActionUrl(dir, action);
-	}
-
-	public boolean isActionAllowed(File file, FileAction action) {
+	public boolean isActionAllowed(FileSystemItem item, FileAction action) {
 		// TODO users rights
 		return true;
 	}

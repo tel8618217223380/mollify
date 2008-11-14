@@ -22,7 +22,7 @@ public class DirectoryModel {
 
 	public DirectoryModel() {
 		folders = new Stack<Directory>();
-		setRootDirectory(Directory.Empty());
+		setRootDirectory(Directory.Empty);
 	}
 
 	public Directory getRootDirectory() {
