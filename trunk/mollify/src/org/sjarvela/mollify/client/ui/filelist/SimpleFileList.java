@@ -39,7 +39,6 @@ public class SimpleFileList extends DataGrid {
 
 	public SimpleFileList(Localizator localizator) {
 		super();
-
 		this.localizator = localizator;
 
 		// setup header
@@ -156,16 +155,15 @@ public class SimpleFileList extends DataGrid {
 
 	private List<String> getFileStyles(int index, File file) {
 		ArrayList<String> styles = new ArrayList<String>();
-		styles.add(StyleConstants.SIMPLE_FILE_LIST_ROW_FILE);
+		styles
+				.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_FILE_EVEN
+						: StyleConstants.SIMPLE_FILE_LIST_ROW_FILE_ODD);
 
 		if (file.getExtension().length() > 0)
 			styles.add(StyleConstants.SIMPLE_FILE_LIST_FILE_EXTENSION_PREFIX
 					+ file.getExtension().toLowerCase());
 		else
 			styles.add(StyleConstants.SIMPLE_FILE_LIST_FILE_EXTENSION_UNKNOWN);
-
-		styles.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_EVEN
-				: StyleConstants.SIMPLE_FILE_LIST_ROW_ODD);
 
 		return styles;
 	}
@@ -196,9 +194,9 @@ public class SimpleFileList extends DataGrid {
 
 	private List<String> getDirectoryStyles(int index) {
 		ArrayList<String> styles = new ArrayList<String>();
-		styles.add(StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY);
-		styles.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_EVEN
-				: StyleConstants.SIMPLE_FILE_LIST_ROW_ODD);
+		styles
+				.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY_EVEN
+						: StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY_ODD);
 		return styles;
 	}
 

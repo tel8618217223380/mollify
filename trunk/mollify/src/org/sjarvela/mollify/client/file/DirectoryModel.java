@@ -15,8 +15,6 @@ import java.util.Stack;
 
 import org.sjarvela.mollify.client.data.Directory;
 
-import com.google.gwt.core.client.GWT;
-
 public class DirectoryModel {
 	private Stack<Directory> folders;
 
@@ -30,8 +28,8 @@ public class DirectoryModel {
 	}
 
 	public void setRootDirectory(Directory directory) {
-		if (!directory.isEmpty())
-			GWT.log("Current root directory: " + directory.getName(), null);
+		// if (!directory.isEmpty())
+		// GWT.log("Current root directory: " + directory.getName(), null);
 		this.folders.clear();
 		this.folders.add(directory);
 	}

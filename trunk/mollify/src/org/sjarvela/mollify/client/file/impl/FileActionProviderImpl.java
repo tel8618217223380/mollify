@@ -24,7 +24,7 @@ public class FileActionProviderImpl implements FileActionProvider {
 	}
 
 	public String getActionURL(FileSystemItem item, FileAction action) {
-		return service.getFileActionUrl(item, action);
+		return service.getActionUrl(item, action);
 	}
 
 	public boolean isActionAllowed(FileSystemItem item, FileAction action) {

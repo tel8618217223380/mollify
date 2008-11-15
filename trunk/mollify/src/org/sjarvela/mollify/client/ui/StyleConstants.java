@@ -12,8 +12,6 @@ package org.sjarvela.mollify.client.ui;
 
 public class StyleConstants {
 	public static final String MOUSE_OVER = "mouse-over";
-	public static final String LEFT = "left";
-	public static final String RIGHT = "right";
 
 	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
 	public static final String BORDERED_CONTROL_PADDING_N = "n";
@@ -31,7 +29,9 @@ public class StyleConstants {
 
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
-	public static final String MAIN_VIEW_HEADER_PADDING = "header-padding";
+	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "header-padding-left";
+	public static final String MAIN_VIEW_HEADER_PADDING_RIGHT = "header-padding-right";
+	public static final String MAIN_VIEW_HEADER_BUTTONS = "header-buttons";
 	public static final String MAIN_VIEW_HEADER_OPTION = "header-option";
 	public static final String MAIN_VIEW_HEADER_LOGOUT = "logout";
 	public static final String MAIN_VIEW_TOOL = "tool";
@@ -57,10 +57,10 @@ public class StyleConstants {
 	public static final String SIMPLE_FILE_LIST = "file-simple-list";
 	public static final String SIMPLE_FILE_LIST_COLUMN_PREFIX = "column-";
 	public static final String SIMPLE_FILE_LIST_ROW_PARENT_DIRECTORY = "row-directory-up";
-	public static final String SIMPLE_FILE_LIST_ROW_FILE = "row-file";
-	public static final String SIMPLE_FILE_LIST_ROW_DIRECTORY = "row-directory";
-	public static final String SIMPLE_FILE_LIST_ROW_EVEN = "even";
-	public static final String SIMPLE_FILE_LIST_ROW_ODD = "odd";
+	public static final String SIMPLE_FILE_LIST_ROW_FILE_EVEN = "row-file-even";
+	public static final String SIMPLE_FILE_LIST_ROW_FILE_ODD = "row-file-odd";
+	public static final String SIMPLE_FILE_LIST_ROW_DIRECTORY_EVEN = "row-directory-even";
+	public static final String SIMPLE_FILE_LIST_ROW_DIRECTORY_ODD = "row-directory-odd";
 	public static final String SIMPLE_FILE_LIST_ITEM_SELECT = "item-select";
 	public static final String SIMPLE_FILE_LIST_ITEM_NAME = "item-name";
 	public static final String SIMPLE_FILE_LIST_ITEM_TYPE = "item-type";
@@ -71,7 +71,8 @@ public class StyleConstants {
 	public static final String DIRECTORY_SELECTOR = "directory-selector";
 	public static final String DIRECTORY_SELECTOR_SEPARATOR = "directory-selector-separator";
 
-	public static final String DIRECTORY_LIST_PADDING = "directory-list-padding";
+	public static final String DIRECTORY_LIST_PADDING_LEFT = "directory-list-padding-left";
+	public static final String DIRECTORY_LIST_PADDING_RIGHT = "directory-list-padding-right";
 	public static final String DIRECTORY_LIST = "directory-list";
 	public static final String DIRECTORY_LIST_LABEL = "directory-list-label";
 	public static final String DIRECTORY_LIST_DROPDOWN = "directory-list-dropdown";
@@ -132,4 +133,5 @@ public class StyleConstants {
 	public static final String PROGRESS_DIALOG_INFO = "progress-dialog-title";
 	public static final String PROGRESS_DIALOG_DETAILS = "progress-dialog-details";
 	public static final String PROGRESS_DIALOG_PROGRESS_BAR = "progress-dialog-progress-bar";
+
 }

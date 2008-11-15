@@ -108,7 +108,7 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	private void refreshView() {
-		List<FileSystemItem> allFileItems = model.getAllFileItems();
+		List<FileSystemItem> allFileItems = model.getAllItems();
 		if (model.getDirectoryModel().canAscend()) {
 			allFileItems.add(0, Directory.Parent);
 		}
@@ -195,18 +195,6 @@ public class MainViewPresenter implements DirectoryController,
 		uploadMonitor = null;
 	}
 
-	private ResultListener createListener(final Callback callback) {
-		return new ResultListener() {
-			public void onFail(ServiceError error) {
-				onError(error);
-			}
-
-			public void onSuccess(Object... result) {
-				callback.onCallback();
-			}
-		};
-	}
-
 	private ResultListener createReloadListener() {
 		return createListener(new Callback() {
 			public void onCallback() {
@@ -221,6 +209,18 @@ public class MainViewPresenter implements DirectoryController,
 				refreshView();
 			}
 		});
+	}
+
+	private ResultListener createListener(final Callback callback) {
+		return new ResultListener() {
+			public void onFail(ServiceError error) {
+				onError(error);
+			}
+
+			public void onSuccess(Object... result) {
+				callback.onCallback();
+			}
+		};
 	}
 
 	public void logout() {

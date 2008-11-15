@@ -22,7 +22,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListItem extends HorizontalPanel {
+public class DirectoryListItem extends HorizontalPanel implements
+		DirectoryListener {
 	private final DirectoryController controller;
 	private final DirectoryProvider dataProvider;
 	private final Localizator localizator;
@@ -49,12 +50,10 @@ public class DirectoryListItem extends HorizontalPanel {
 		if (level == 0)
 			this.addStyleName(StyleConstants.DIRECTORY_LIST_ROOT_LEVEL);
 
-		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING,
-				StyleConstants.LEFT));
+		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING_LEFT));
 		this.add(createLabel());
 		this.add(createDropdownButton());
-		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING,
-				StyleConstants.RIGHT));
+		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING_RIGHT));
 		this.menu = createMenu();
 	}
 
@@ -92,10 +91,11 @@ public class DirectoryListItem extends HorizontalPanel {
 
 	private DirectoryListMenu createMenu() {
 		return new DirectoryListMenu(parentDirectory, currentDirectory,
-				dataProvider, new DirectoryListener() {
-					public void onDirectorySelected(Directory directory) {
-						controller.changeToDirectory(level, directory);
-					}
-				}, localizator, this.getElement(), dropDown.getElement());
+				dataProvider, this, localizator, this.getElement(), dropDown
+						.getElement());
+	}
+
+	public void onDirectorySelected(Directory directory) {
+		controller.changeToDirectory(level, directory);
 	}
 }
