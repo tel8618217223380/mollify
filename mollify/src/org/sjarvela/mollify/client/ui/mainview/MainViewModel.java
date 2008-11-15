@@ -68,6 +68,10 @@ public class MainViewModel {
 		return files;
 	}
 
+	public List<FileSystemItem> getAllItems() {
+		return all;
+	}
+
 	public Directory getCurrentFolder() {
 		return directoryModel.getCurrentFolder();
 	}
@@ -136,10 +140,6 @@ public class MainViewModel {
 			}
 
 		};
-	}
-
-	public List<FileSystemItem> getAllFileItems() {
-		return all;
 	}
 
 }

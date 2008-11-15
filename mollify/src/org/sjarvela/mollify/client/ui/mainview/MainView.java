@@ -65,7 +65,7 @@ public class MainView extends Composite {
 	public DirectorySelector getDirectorySelector() {
 		return directorySelector;
 	}
-	
+
 	public SimpleFileList getList() {
 		return list;
 	}
@@ -87,20 +87,23 @@ public class MainView extends Composite {
 		panel.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 
 		Label leftPadding = new Label();
-		leftPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
-		leftPadding.addStyleName(StyleConstants.LEFT);
+		leftPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING_LEFT);
 		panel.add(leftPadding);
 
 		createButtons();
-		panel.add(refreshButton);
-		panel.add(directorySelector);
-		panel.add(parentDirButton);
+
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
+		buttonPanel.add(refreshButton);
+		buttonPanel.add(directorySelector);
+		buttonPanel.add(parentDirButton);
 		if (model.getSessionInfo().getSettings().isFileUploadEnabled())
-			panel.add(uploadFileButton);
+			buttonPanel.add(uploadFileButton);
+		panel.add(buttonPanel);
 
 		Label rightPadding = new Label();
-		rightPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING);
-		rightPadding.addStyleName(StyleConstants.RIGHT);
+		rightPadding
+				.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING_RIGHT);
 		panel.add(rightPadding);
 
 		if (model.getSessionInfo().isAuthenticationRequired())

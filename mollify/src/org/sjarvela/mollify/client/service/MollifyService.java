@@ -20,7 +20,6 @@ import com.google.gwt.http.client.URL;
 
 public class MollifyService {
 	private String baseUrl;
-	private String sessionId = "";
 
 	enum Action {
 		get, operate, auth, session_info, logout
@@ -80,20 +79,20 @@ public class MollifyService {
 
 	public void renameFile(File file, String newName,
 			ResultListener resultListener) {
-		String url = getFileActionUrl(file, FileAction.RENAME) + "&to="
+		String url = getActionUrl(file, FileAction.RENAME) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, resultListener);
 	}
 
 	public void deleteFile(File file, ResultListener resultListener) {
-		doRequest(getFileActionUrl(file, FileAction.DELETE), resultListener);
+		doRequest(getActionUrl(file, FileAction.DELETE), resultListener);
 	}
 
 	public void getUploadProgress(String id, ResultListener resultListener) {
 		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 
-	public String getFileActionUrl(FileSystemItem item, FileAction action) {
+	public String getActionUrl(FileSystemItem item, FileAction action) {
 		if (!item.isFile()) {
 			if (!action.equals(FileAction.UPLOAD)) {
 				throw new RuntimeException("Invalid directory action request "
@@ -131,16 +130,14 @@ public class MollifyService {
 
 	private String getUrl(Action action, String... params) {
 		String url = baseUrl + "?action=" + action.name();
-		if (sessionId.length() > 0)
-			url += "&session=" + sessionId;
 		for (String param : params)
 			url += "&" + param;
 		return url;
 	}
 
 	private void doRequest(String url, ResultListener resultListener) {
-		ResultValidator listener = new ResultValidator(resultListener);
-		new JsonRpcHandler(URL.encode(url), listener).doRequest();
+		new JsonRpcHandler(URL.encode(url), new ResultValidator(resultListener))
+				.doRequest();
 	}
 
 	// Just any unique id, time in millisecond level is unique enough

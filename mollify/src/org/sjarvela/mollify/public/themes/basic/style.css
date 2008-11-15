@@ -1,9 +1,7 @@
-/* @override 
-	http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css
-*/
+/* @override http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css */
 
 /**
- * Copyright (c) 2008- Samuli Jrvel
+ * Copyright (c) 2008- Samuli Järvelä
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,6 +14,12 @@
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
 	padding: 0;
+	border-collapse: collapse;
+}
+
+#mollify-download-frame {
+	width: 0px;
+	height: 0px;
 }
 
 .gwt-Button {
@@ -28,9 +32,19 @@
 
 .mollify-header {
 	background: url(header-bg.png) repeat-x 0 -32px;
-	padding-left: 8px;
-	padding-right: 8px;
-	display: block;
+	width: 100%;
+}
+
+.header-buttons {
+	width: auto;
+}
+
+.header-padding-left {
+	width: 1px;
+}
+
+.header-padding-right {
+	width: 0px;
 }
 
 .tools {
@@ -58,19 +72,17 @@
 }
 
 #logout.header-option {
-	background: rgba(50,50,50,0.19) url(b-close.png) no-repeat 8px 15px;
+	background: #bababa url(b-close.png) no-repeat 8px 15px;
 	width: 26px;
 	position: absolute;
 	right: 0;
 	font-size: 0;
 	line-height: 0;
-	font-weight: normal;
-	font-style: normal;
-	text-decoration: none;
+	text-indent: -100px;
 }
 
 #logout.header-option:hover {
-	background: rgba(50,50,50,0.22) url(b-close-over.png) no-repeat 8px 15px;
+	background: #b3b3b3 url(b-close-over.png) no-repeat 8px 15px;
 }
 
 .tool:hover {
@@ -81,6 +93,7 @@
 	background: url(b-refresh.png) no-repeat 0 0;
 	font-size: 0;
 	width: 36px;
+	color: #dadada;
 }
 
 #refresh-button.tool:active {
@@ -116,13 +129,13 @@ table.directory-list.root-level {
 	margin: 8px 0;
 }
 
-.directory-list-padding.left {
+.directory-list-padding-left {
 	width: 11px;
 	background: url(b-l.png) no-repeat 0 0;
 	height: 22px;
 }
 
-.directory-list-padding.right {
+.directory-list-padding-right {
 	width: 10px;
 	background: url(b-r.png) no-repeat 0 0;
 	height: 22px;
@@ -182,9 +195,24 @@ table.directory-list.root-level {
 }
 
 .file-simple-list {
+	margin: 8px 0 1em;
 	width: 100%;
-	padding-left: 6px;
-	padding-right: 6px;
+	border-width: 0;
+	border-spacing: 0;
+	text-align: left;
+}
+
+.file-simple-list th {
+	color: #494949;
+	border-bottom: 2px solid #AAAAAA;
+	font-weight: bold;
+	padding-bottom: 3px;
+}
+
+.file-simple-list td {
+	padding-right: 5px;
+	padding-left: 5px;
+	height: 20px;
 }
 
 th#column-select {
@@ -197,12 +225,12 @@ th#column-name {
 
 th#column-type {
 	width: 150px;
-	padding-left: 4px;
+	padding-left: 13px;
 }
 
 th#column-size {
 	width: 75px;
-	padding-left: 4px;
+	padding-left: 10px;
 }
 
 td#column-size {
@@ -210,87 +238,76 @@ td#column-size {
 }
 
 .column-type {
-	padding-left: 6px;
 	padding-top: 6px;
 	padding-bottom: 6px;
-	height: 13px;
+	padding-left: 6px;
 }
 
-.even td .column-type {
-	background-color: #dadada;
+.row-file-even td, .row-file-odd td {
+	padding-left: 9px;
 }
 
-.odd td .column-type {
-	background-color: #cacaca;
+.row-file-odd td {
+	background-color: #dedede;
 }
 
-.file-simple-list {
-	margin: 8px 0 1em;
-	width: 100%;
-	border-width: 0;
-	border-spacing: 0;
+.row-file-even.mouse-over td {
+	background-color: #dde9f4;
 }
 
-.file-simple-list thead th {
-	color: #494949;
-	border-bottom: 2px solid #AAAAAA;
-	font-weight: bold;
-	padding-bottom: 3px;
+.row-file-odd.mouse-over td {
+	background-color: #cbcdef;
 }
 
-table.file-simple-list td {
-	padding-right: 5px;
+.row-file-even .column-type {
+	background-color: #bdbdbd;
 }
 
-.file-simple-list .odd td {
-	border-top: 1px solid #a6a6a6;
-	border-bottom: 1px solid #a6a6a6;
+.row-file-odd .column-type {
+	background-color: #a9a9a9;
 }
 
-.file-simple-list .column-select {
-	margin-left: 3px;
+.row-file-even.mouse-over .column-type {
+	background-color: #b4bdc7;
+}
+
+.row-file-odd.mouse-over .column-type {
+	background-color: #b0b3d0;
+}
+
+.row-directory-even td {
+	padding-top: 2;
+	padding-bottom: 4;
+	height:20px;
+	background: #fbdfde;
+}
+
+.row-directory-odd td {
+	padding-top: 2;
+	padding-bottom: 4;
+	height:20px;
+	background-color: #ead2d2;
+}
+
+.row-directory-odd.mouse-over td {
+	background-color: #dec7d6;
+}
+
+.row-directory-even.mouse-over td {
+	background-color: #f2d1e7;
+}
+
+.ie-crap.mouse-over td {
+	background-color: #d5d5d5;
 }
 
 .file-simple-list .item-name {
 	height: 20px;
 	padding-top: 5px;
 	cursor: pointer;
-	padding-left: 5px;
 }
 
-.file-simple-list .odd {
-	background-color: #dedede;
-}
-
-.row-file.even.mouse-over td {
-	background-color: #dde9f4;
-}
-
-.row-file.odd.mouse-over td {
-	background-color: #cbcdef;
-}
-
-.file-simple-list tr.even {
-	background-color: #686868;
-}
-
-.row-directory td {
-	background: #fbdfde;
-}
-
-.row-directory.odd td {
-	background-color: #ead2d2;
-}
-
-.row-directory.odd.mouse-over td {
-	background-color: #dec7d6;
-}
-
-.row-directory.even.mouse-over td {
-	background-color: #f2d1e7;
-}
-
-.row-directory .item-name {
+.row-directory-even .item-name, .row-directory-odd .item-name {
 	font-weight: bold;
 	font-size: 11px;
 	background: url(folder.png) no-repeat 4px 6px;
@@ -478,6 +495,10 @@ input.rename-file-new-name-value {
 	font-style: italic;
 	text-align: center;
 	width: 100%;
+}
+
+.ie-crap.file-selector {
+	width: 200px;
 }
 
 .file-upload-dialog-buttons {
