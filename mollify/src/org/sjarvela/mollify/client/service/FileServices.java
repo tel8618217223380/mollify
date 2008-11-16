@@ -27,8 +27,19 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler {
 		this.service = service;
 	}
 
-	public void getDirectories(Directory parent, ResultListener listener) {
-		this.service.getDirectories(listener, parent.getId());
+	public void getDirectories(Directory parent, final ResultListener listener) {
+		this.service.getDirectories(new ResultListener() {
+
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
+
+			public void onSuccess(Object... result) {
+				listener
+						.onSuccess(FileSystemItem
+								.createFromDirectories((JsArray<JsDirectory>) result[0]));
+			}
+		}, parent.getId());
 	}
 
 	public void getRootDirectories(final ResultListener listener) {

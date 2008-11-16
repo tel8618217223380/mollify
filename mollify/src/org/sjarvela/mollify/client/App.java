@@ -15,7 +15,6 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.VoidResultListener;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -49,24 +48,28 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		windowManager = new WindowManager(panel, localizator, mainViewFactory,
 				new DialogManager(localizator));
 
-		onStart();
+		start();
 	}
 
-	private void onStart() {
+	private void start() {
 		service.getSessionInfo(new ResultListener() {
 			public void onFail(ServiceError error) {
 				windowManager.getDialogManager().showError(error);
 			}
 
 			public void onSuccess(Object... result) {
-				SessionInfo info = (SessionInfo) result[0];
-				if (info.isAuthenticationRequired() && !info.getAuthenticated())
-					showLogin();
-				else
-					showMain(info);
+				startSession((SessionInfo) result[0]);
 			}
+
 		});
 	};
+
+	private void startSession(SessionInfo info) {
+		if (info.isAuthenticationRequired() && !info.getAuthenticated())
+			showLogin();
+		else
+			showMain(info);
+	}
 
 	private void showLogin() {
 		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {
@@ -97,9 +100,19 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	}
 
 	public void onLogout(SessionInfo info) {
-		service.logout(new VoidResultListener());
-		windowManager.empty();
-		onStart();
+		service.logout(new ResultListener() {
+
+			public void onFail(ServiceError error) {
+				windowManager.empty();
+				windowManager.getDialogManager().showError(error);
+			}
+
+			public void onSuccess(Object... result) {
+				windowManager.empty();
+				startSession((SessionInfo) result[0]);
+			}
+		});
+
 	}
 
 	private void showLoginError() {
@@ -110,6 +123,8 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 	public void onUncaughtException(Throwable e) {
 		GWT.log("UNCAUGHT", e);
+		windowManager.getDialogManager().showInfo("Unexpected error",
+				e.getMessage());
 	}
 
 }
