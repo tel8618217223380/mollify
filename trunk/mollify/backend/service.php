@@ -60,7 +60,7 @@
 		} else if ($action === "session_info") {
 			$result = get_session_info();
 		} else if ($action === "logout") {
-			$result = logout();
+			if (logout()) $result = get_session_info();
 		} else {
 			if (check_authentication()) return TRUE;
 		}
