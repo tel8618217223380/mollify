@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.6.1 ===
+  * Fixed logout failure
+  * CSS fixes to support IE (not complete)
+
 === Version 0.6 ===
   * User access control
   * Settings list instead of separate variables in configuration (*NOTE!* Makes configuration setting `$ENABLE_FILE_UPLOAD_PROGRESS` introduced in 0.5 obsolete)
