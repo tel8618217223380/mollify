@@ -16,7 +16,7 @@ Rules are:
   * Row format is "`<FILE NAME>[TAB]([TAB]...)<FILE PERMISSIONS>`" (ie. file name and permissions are separated with one or more tab characters)
   * Format for file permissions (`<FILE PERMISSIONS>`) is "`<USER ID>=<FILE PERMISSION>`"
   * Multiple user permissions are separated with a comma ","
-  * User id "`*`" applies to all users, unless user specific permission is given. This is only applicable id for single-user environment
+  * User id "`*`" applies to all users, unless user specific permission is given. This is only applicable for single-user environment
   * Possible permissions are:
     * "RW" = read and write
     * "RO" = read-only
