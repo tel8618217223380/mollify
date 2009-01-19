@@ -29,7 +29,7 @@ public class MollifyService {
 		details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
-	public MollifyService() {
+	public MollifyService(String path) {
 		// MollifyService assumes that development environment web server is
 		// localhost:7777
 
@@ -38,7 +38,31 @@ public class MollifyService {
 
 		this.baseUrl = GWT.isScript() ? GWT.getHostPageBaseURL()
 				: "http://localhost:7777/mollify/";
-		this.baseUrl += "service.php";
+		this.baseUrl += getOptionalPath(path) + "service.php";
+	}
+
+	private String getOptionalPath(String path) {
+		if (path == null || path.length() == 0)
+			return "";
+
+		String result = path.trim();
+
+		if (path.toLowerCase().startsWith("http://"))
+			result = result.substring(7);
+
+		while (true) {
+			char c = result.charAt(0);
+
+			if (c == '.' || c == '/')
+				result = result.substring(1);
+			else
+				break;
+		}
+
+		if (result.length() > 0 && !result.endsWith("/"))
+			result += "/";
+
+		return result;
 	}
 
 	public void getSessionInfo(ResultListener resultListener) {
