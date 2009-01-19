@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -41,7 +42,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 			return;
 
 		localizator = Localizator.getInstance();
-		service = new MollifyService();
+		service = new MollifyService(getParameter("mollify:property", "service_path"));
 
 		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
 				service);
@@ -50,6 +51,30 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 		start();
 	}
+
+	private String getParameter(String meta, String propertyName) {
+		String metaParam = getMetaParameter(meta);
+		if (metaParam == null || metaParam.length() == 0) return null;
+		
+		int index = metaParam.toLowerCase().indexOf(propertyName.toLowerCase() + "=");
+		if (index < 0) return null;
+		index += propertyName.length() + 1;
+		
+		int split = metaParam.indexOf(';', index);
+		
+		if (split >= 0) return metaParam.substring(index, split);
+		return metaParam.substring(index);
+	}
+
+	private native String getMetaParameter(String name) /*-{
+		var metaArray = $doc.getElementsByTagName("meta");
+		
+		for (var i = 0; i < metaArray.length; i++) {
+			if (metaArray[i].getAttribute("name") == name)
+				return metaArray[i].getAttribute("content");
+		}
+		return null;
+	}-*/;
 
 	private void start() {
 		service.getSessionInfo(new ResultListener() {
