@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.6.2 ===
+  * Possibility to define backend php files location
+
 === Version 0.6.1 ===
   * Fixed logout failure
   * CSS fixes to support IE (not complete)
