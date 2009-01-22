@@ -1,6 +1,12 @@
 #!/bin/sh
 
-APPDIR='/Users/cambba/Documents/Projects/Mollify';
+# To use this package script, do following steps:
+#
+# 1. Copy all scripts to application root dir
+# 2. Set missing variables below
+#
+
+APPDIR=[ABSOLUTE_PATH_FOR_APPLICATION_DIR];
 APPNAME='org.sjarvela.mollify.App';
 TARGET="$APPDIR/deploy";
 
