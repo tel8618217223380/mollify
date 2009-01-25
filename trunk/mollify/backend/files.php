@@ -211,7 +211,7 @@
 	function upload_file($dir) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_file_item_creation"]) {
+		if (!$_SESSION["settings"]["enable_file_upload"]) {
 			log_error("Cannot upload file, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -251,7 +251,7 @@
 	function create_folder($dir, $folder_name) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_file_item_creation"]) {
+		if (!$_SESSION["settings"]["enable_create_folder"]) {
 			log_error("Cannot create folder, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
