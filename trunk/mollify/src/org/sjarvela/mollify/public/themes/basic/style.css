@@ -262,11 +262,11 @@ td#column-size {
 	background-color: #dedede;
 }
 
-.row-file-even.mouse-over td {
+.row-file-even.hover td {
 	background-color: #dde9f4;
 }
 
-.row-file-odd.mouse-over td {
+.row-file-odd.hover td {
 	background-color: #cbcdef;
 }
 
@@ -278,11 +278,11 @@ td#column-size {
 	background-color: #a9a9a9;
 }
 
-.row-file-even.mouse-over .column-type {
+.row-file-even.hover .column-type {
 	background-color: #b4bdc7;
 }
 
-.row-file-odd.mouse-over .column-type {
+.row-file-odd.hover .column-type {
 	background-color: #b0b3d0;
 }
 
@@ -300,15 +300,15 @@ td#column-size {
 	background-color: #ead2d2;
 }
 
-.row-directory-odd.mouse-over td {
+.row-directory-odd.hover td {
 	background-color: #dec7d6;
 }
 
-.row-directory-even.mouse-over td {
+.row-directory-even.hover td {
 	background-color: #f2d1e7;
 }
 
-.ie-crap.mouse-over td {
+.ie-crap.hover td {
 	background-color: #d5d5d5;
 }
 

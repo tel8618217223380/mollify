@@ -22,10 +22,7 @@ public class DropdownButton extends Composite {
 	private DropdownPopupMenu menu;
 
 	public DropdownButton(ActionListener actionListener, String title, String id) {
-		button = new Label();
-		button.setStyleName(StyleConstants.DROPDOWN_BUTTON);
-		MouseEventDecorator.decorate(button);
-
+		button = new Button(title, null, StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
 		menu = new DropdownPopupMenu<String>(actionListener, this.getElement(),
@@ -37,7 +34,8 @@ public class DropdownButton extends Composite {
 			}
 		});
 
-		getElement().setId(id);
+		if (id != null)
+			getElement().setId(id);
 	}
 
 	public void addAction(Action action, String title) {

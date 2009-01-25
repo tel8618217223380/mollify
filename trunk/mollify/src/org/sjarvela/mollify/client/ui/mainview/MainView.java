@@ -13,12 +13,13 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.Button;
 import org.sjarvela.mollify.client.ui.DropdownButton;
-import org.sjarvela.mollify.client.ui.HeaderButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
@@ -44,22 +45,24 @@ public class MainView extends Composite {
 	private FileDetailsPopup fileDetails = null;
 
 	private DropdownButton addButton;
-	private HeaderButton refreshButton;
-	private HeaderButton parentDirButton;
-	private HeaderButton logoutButton;
+	private Button refreshButton;
+	private Button parentDirButton;
+	private Button logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private final ActionListener actionListener;
+	private final TextProvider textProvider;
 
 	public enum Action implements ActionId {
 		addFile, addDirectory, refresh, parentDir, logout;
 	};
 
-	public MainView(MainViewModel model, Localizator localizator,
-			ActionListener actionListener,
+	public MainView(MainViewModel model, TextProvider textProvider,
+			Localizator localizator, ActionListener actionListener,
 			DirectorySelectorFactory directorySelectorFactory,
 			FileDetailsPopupFactory fileDetailsPopupFactory) {
 		this.model = model;
+		this.textProvider = textProvider;
 		this.localizator = localizator;
 		this.actionListener = actionListener;
 		this.directorySelector = directorySelectorFactory.createSelector();
@@ -89,7 +92,7 @@ public class MainView extends Composite {
 	}
 
 	private Widget createFileList() {
-		list = new SimpleFileList(localizator);
+		list = new SimpleFileList(textProvider, localizator);
 		return list;
 	}
 
@@ -105,8 +108,13 @@ public class MainView extends Composite {
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
-		if (model.getSessionInfo().getSettings().isFileUploadEnabled()) // TODO
+
+		if (model.getSessionInfo().getSettings().isFileItemCreationEnabled()
+				&& model.getSessionInfo().getPermissionMode()
+						.hasWritePermission()) {
 			buttonPanel.add(addButton);
+		}
+
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(directorySelector);
 		buttonPanel.add(parentDirButton);
@@ -124,19 +132,19 @@ public class MainView extends Composite {
 	}
 
 	private void createButtons() {
-		refreshButton = new HeaderButton(localizator.getStrings()
+		refreshButton = new Button(localizator.getStrings()
 				.mainViewRefreshButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		parentDirButton = new HeaderButton(localizator.getStrings()
+		parentDirButton = new Button(localizator.getStrings()
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		parentDirButton.setAction(actionListener, Action.parentDir);
 
-		logoutButton = new HeaderButton(localizator.getStrings()
+		logoutButton = new Button(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
@@ -178,15 +186,15 @@ public class MainView extends Composite {
 		fileDetails.show();
 	}
 
-	public HeaderButton getRefreshButton() {
+	public Button getRefreshButton() {
 		return refreshButton;
 	}
 
-	public HeaderButton getParentDirButton() {
+	public Button getParentDirButton() {
 		return parentDirButton;
 	}
 
-	public HeaderButton getLogoutButton() {
+	public Button getLogoutButton() {
 		return logoutButton;
 	}
 }

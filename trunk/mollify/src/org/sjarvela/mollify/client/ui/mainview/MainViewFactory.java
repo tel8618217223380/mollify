@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.LogoutListener;
+import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
@@ -28,10 +29,12 @@ import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopupFactory;
 public class MainViewFactory {
 	private MollifyService service;
 	private Localizator localizator;
+	private final TextProvider textProvider;
 
-	public MainViewFactory(Localizator localizator, MollifyService service) {
-		super();
+	public MainViewFactory(Localizator localizator, TextProvider textProvider,
+			MollifyService service) {
 		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.service = service;
 	}
 
@@ -51,8 +54,9 @@ public class MainViewFactory {
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue
-		MainView view = new MainView(model, localizator, actionDelegator,
-				directorySelectorFactory, fileDetailsPopupFactory);
+		MainView view = new MainView(model, textProvider, localizator,
+				actionDelegator, directorySelectorFactory,
+				fileDetailsPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
 				fileUploadHandler, fileServices, localizator, logoutListener);
