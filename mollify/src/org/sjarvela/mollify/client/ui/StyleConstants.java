@@ -11,7 +11,8 @@
 package org.sjarvela.mollify.client.ui;
 
 public class StyleConstants {
-	public static final String MOUSE_OVER = "mouse-over";
+	public static final String HOVER = "hover";
+	public static final String PRESSED = "pressed";
 
 	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
 	public static final String BORDERED_CONTROL_PADDING_N = "n";

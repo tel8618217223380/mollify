@@ -41,11 +41,13 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 			return;
 
 		localizator = Localizator.getInstance();
+		TextProvider textProvider = new DefaultTextProvider(localizator);
+
 		service = new MollifyService(getParameter("mollify:property",
 				"service_path"));
 
 		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-				service);
+				textProvider, service);
 		windowManager = new WindowManager(panel, localizator, mainViewFactory,
 				new DialogManager(localizator));
 

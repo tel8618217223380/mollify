@@ -15,13 +15,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class SessionSettings extends JavaScriptObject {
 	protected SessionSettings() {
 	}
-	
-	public final native boolean isFileUploadEnabled() /*-{
-		return this.enable_file_upload;
+
+	public final native boolean isFileItemCreationEnabled() /*-{
+		return this.enable_file_item_creation;
 	}-*/;
-	
+
 	public final native boolean isFileUploadProgressEnabled() /*-{
 		return this.enable_file_upload_progress;
 	}-*/;
-	
+
 }

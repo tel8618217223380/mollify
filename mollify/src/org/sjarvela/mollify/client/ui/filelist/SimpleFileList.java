@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
@@ -33,13 +34,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SimpleFileList extends DataGrid {
 	private List<SimpleFileListListener> listeners = new ArrayList<SimpleFileListListener>();
-	private Localizator localizator;
 	private List<FileSystemItem> content = new ArrayList();
 	private Comparator<FileSystemItem> comparator = new DefaultFileItemComparator();
+	private TextProvider textProvider;
 
-	public SimpleFileList(Localizator localizator) {
+	public SimpleFileList(TextProvider textProvider, Localizator localizator) {
 		super();
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 
 		// setup header
 		// this.setHeaderText(Column.SELECT, localizator.getStrings()
@@ -187,7 +188,7 @@ public class SimpleFileList extends DataGrid {
 	}
 
 	private Widget createSizeWidget(File file) {
-		Label name = new Label(getSizeText(file));
+		Label name = new Label(textProvider.getSizeText(file.getSize()));
 		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SIZE);
 		return name;
 	}
@@ -204,26 +205,6 @@ public class SimpleFileList extends DataGrid {
 		widget.addStyleName(StyleConstants.SIMPLE_FILE_LIST_COLUMN_PREFIX
 				+ column.name().toLowerCase());
 		setWidget(row, column.ordinal(), widget);
-	}
-
-	// TODO externalize to a text provider etc
-	private String getSizeText(File file) {
-		int bytes = file.getSize();
-
-		if (bytes < 1024) {
-			return (bytes == 1 ? localizator.getMessages().sizeOneByte()
-					: localizator.getMessages().sizeInBytes(bytes));
-		}
-
-		if (bytes < 1024 * 1024) {
-			double kilobytes = (double) bytes / (double) 1024;
-			return (kilobytes == 1 ? localizator.getMessages()
-					.sizeOneKilobyte() : localizator.getMessages()
-					.sizeInKilobytes(kilobytes));
-		}
-
-		double megabytes = (double) bytes / (double) (1024 * 1024);
-		return localizator.getMessages().sizeInMegabytes(megabytes);
 	}
 
 	public Widget getWidget(File file, Column column) {
@@ -245,8 +226,7 @@ public class SimpleFileList extends DataGrid {
 			if (row < 0)
 				return;
 
-			this.getRowFormatter().addStyleName(row, StyleConstants.MOUSE_OVER);
-
+			this.getRowFormatter().addStyleName(row, StyleConstants.HOVER);
 			break;
 		}
 
@@ -255,9 +235,7 @@ public class SimpleFileList extends DataGrid {
 			if (row < 0)
 				return;
 
-			this.getRowFormatter().removeStyleName(row,
-					StyleConstants.MOUSE_OVER);
-
+			this.getRowFormatter().removeStyleName(row, StyleConstants.HOVER);
 			break;
 		}
 		}

@@ -13,6 +13,14 @@ package org.sjarvela.mollify.client.data;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class SessionInfo extends JavaScriptObject {
+	public enum PermissionMode {
+		Admin, ReadWrite, ReadOnly;
+
+		public boolean hasWritePermission() {
+			return this.equals(Admin) || this.equals(ReadWrite);
+		}
+	}
+
 	protected SessionInfo() {
 	}
 
@@ -30,5 +38,18 @@ public class SessionInfo extends JavaScriptObject {
 
 	public final native SessionSettings getSettings() /*-{
 		return this.settings;
+	}-*/;
+
+	public final PermissionMode getPermissionMode() {
+		String mode = getDefaultPermissionModeString().trim().toLowerCase();
+		if (mode.equals("a"))
+			return PermissionMode.Admin;
+		else if (mode.equals("rw"))
+			return PermissionMode.ReadWrite;
+		return PermissionMode.ReadOnly;
+	}
+
+	private final native String getDefaultPermissionModeString() /*-{
+		return this.default_permission_mode;
 	}-*/;
 }

@@ -49,7 +49,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	protected Label createMenuItemWidget(String title) {
 		Label label = new Label(title);
 		label.setStyleName(StyleConstants.DROPDOWN_MENU_ITEM);
-		MouseEventDecorator.decorate(label);
+		HoverDecorator.decorate(label);
 		return label;
 	}
 
