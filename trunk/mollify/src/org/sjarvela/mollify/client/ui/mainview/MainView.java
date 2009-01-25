@@ -134,7 +134,7 @@ public class MainView extends Composite {
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
-		refreshButton.setAction(actionListener, Action.parentDir);
+		parentDirButton.setAction(actionListener, Action.parentDir);
 
 		logoutButton = new HeaderButton(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
