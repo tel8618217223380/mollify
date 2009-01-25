@@ -14,13 +14,14 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.JsDirectory;
+import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileOperationHandler;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileServices implements FileDetailsProvider, FileOperationHandler {
+public class FileServices implements FileDetailsProvider, FileOperationHandler, DirectoryHandler {
 	private final MollifyService service;
 
 	public FileServices(MollifyService service) {
@@ -88,6 +89,11 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler {
 
 	public void onDelete(File file, ResultListener listener) {
 		service.deleteFile(file, listener);
+	}
+
+	public void onCreate(Directory parentFolder, String folderName,
+			ResultListener listener) {
+		service.createFolder(parentFolder, folderName, listener);
 	}
 
 }

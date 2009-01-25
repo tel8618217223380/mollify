@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.DirectoryController;
+import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
@@ -44,11 +45,13 @@ public class MainViewPresenter implements DirectoryController,
 
 	private ProgressListener uploadListener = null;
 	private FileUploadMonitor uploadMonitor;
+	private final DirectoryHandler directoryHandler;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileActionProvider fileActionProvider,
 			FileActionHandler fileActionHandler,
-			FileUploadHandler fileUploadHandler, Localizator localizator,
+			FileUploadHandler fileUploadHandler,
+			DirectoryHandler directoryHandler, Localizator localizator,
 			LogoutListener logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
@@ -56,6 +59,7 @@ public class MainViewPresenter implements DirectoryController,
 		this.fileActionProvider = fileActionProvider;
 
 		this.fileUploadHandler = fileUploadHandler;
+		this.directoryHandler = directoryHandler;
 		this.localizator = localizator;
 		this.logoutListener = logoutListener;
 		this.fileUploadHandler.addListener(this);
@@ -196,7 +200,11 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void openNewDirectoryDialog() {
-
+		if (model.getCurrentFolder().isEmpty())
+			return;
+		windowManager.getDialogManager().openCreateFolderDialog(
+				model.getCurrentFolder(), directoryHandler,
+				createReloadListener());
 	}
 
 	private ResultListener createReloadListener() {
