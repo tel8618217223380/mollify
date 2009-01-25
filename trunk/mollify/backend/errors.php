@@ -19,13 +19,16 @@
 	
 		"INVALID_PATH" => array(201, "Invalid path"), 
 		"FILE_DOES_NOT_EXIST" => array(202, "File does not exist"), 
-		"FILE_ALREADY_EXISTS" => array(203, "File already exists"), 
-		"NOT_A_FILE" => array(204, "Target is not a file"), 
-		"DELETE_FAILED" => array(205, "Could not delete"), 
-		"NO_UPLOAD_DATA" => array(206, "No upload data available"), 
-		"UPLOAD_FAILED" => array(207, "File upload failed"), 
-		"SAVING_FAILED" => array(208, "Saving file failed"),
-		"NO_MODIFY_RIGHTS" => array(209, "User has no rights to modify file")
+		"DIR_DOES_NOT_EXIST" => array(203, "Directory does not exist"), 
+		"FILE_ALREADY_EXISTS" => array(204, "File already exists"), 
+		"DIR_ALREADY_EXISTS" => array(205, "Directory already exists"), 
+		"NOT_A_FILE" => array(206, "Target is not a file"), 
+		"NOT_A_DIR" => array(207, "Target is not a directory"), 
+		"DELETE_FAILED" => array(208, "Could not delete"), 
+		"NO_UPLOAD_DATA" => array(209, "No upload data available"), 
+		"UPLOAD_FAILED" => array(210, "File upload failed"), 
+		"SAVING_FAILED" => array(211, "Saving file failed"),
+		"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file")
 	);
 
 ?>
