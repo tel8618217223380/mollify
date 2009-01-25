@@ -109,12 +109,8 @@ public class MainView extends Composite {
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
 
-		if (model.getSessionInfo().getSettings().isFileItemCreationEnabled()
-				&& model.getSessionInfo().getPermissionMode()
-						.hasWritePermission()) {
+		if (addButton != null)
 			buttonPanel.add(addButton);
-		}
-
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(directorySelector);
 		buttonPanel.add(parentDirButton);
@@ -150,13 +146,20 @@ public class MainView extends Composite {
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
 		logoutButton.setAction(actionListener, Action.logout);
 
-		addButton = new DropdownButton(actionListener, localizator.getStrings()
-				.mainViewAddButtonTitle(),
-				StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
-		addButton.addAction(Action.addFile, localizator.getStrings()
-				.mainViewAddFileMenuItem());
-		addButton.addAction(Action.addDirectory, localizator.getStrings()
-				.mainViewAddDirectoryMenuItem());
+		if ((model.getSessionInfo().getSettings().isFileUploadEnabled() || model
+				.getSessionInfo().getSettings().isCreateFolderEnabled())
+				&& model.getSessionInfo().getPermissionMode()
+						.hasWritePermission()) {
+			addButton = new DropdownButton(actionListener, localizator
+					.getStrings().mainViewAddButtonTitle(),
+					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
+			if (model.getSessionInfo().getSettings().isFileUploadEnabled())
+				addButton.addAction(Action.addFile, localizator.getStrings()
+						.mainViewAddFileMenuItem());
+			if (model.getSessionInfo().getSettings().isCreateFolderEnabled())
+				addButton.addAction(Action.addDirectory, localizator
+						.getStrings().mainViewAddDirectoryMenuItem());
+		}
 	}
 
 	void addFileListListener(SimpleFileListListener listener) {

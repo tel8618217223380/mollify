@@ -37,6 +37,7 @@
 	
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
+		"enable_create_folder" => TRUE,
 		"enable_file_upload_progress" => TRUE
 	);
 	

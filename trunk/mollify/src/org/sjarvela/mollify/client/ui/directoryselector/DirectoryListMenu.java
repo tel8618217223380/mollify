@@ -104,14 +104,14 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(label);
 	}
 
-	// TODO remove overridden listener behaviour, use action listener as regular popup menus
+	// TODO remove overridden listener behaviour, use action listener as regular
+	// popup menus
 	@Override
 	protected Label createMenuItemWidget(final ActionId action,
 			final Directory item) {
 		Label label = createMenuItemWidget(item.getName());
 		label.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				DirectoryListMenu.this.hide();
 				listener.onDirectorySelected(item);
 			}
 		});

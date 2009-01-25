@@ -107,7 +107,6 @@ public class MainViewPresenter implements DirectoryController,
 			public void onCallback() {
 				refreshView();
 			}
-
 		}));
 	}
 
