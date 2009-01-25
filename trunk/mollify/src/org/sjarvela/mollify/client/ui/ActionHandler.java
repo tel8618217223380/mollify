@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui;
 
-public interface ActionListener {
+public interface ActionHandler {
 
-	void onActionTriggered(ActionId action);
+	void onAction();
 
 }

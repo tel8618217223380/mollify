@@ -37,11 +37,11 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_PADDING_RIGHT = "header-padding-right";
 	public static final String MAIN_VIEW_HEADER_BUTTONS = "header-buttons";
 	public static final String MAIN_VIEW_HEADER_OPTION = "header-option";
-	public static final String MAIN_VIEW_HEADER_LOGOUT = "logout";
-	public static final String MAIN_VIEW_TOOL = "tool";
-	public static final String MAIN_VIEW_TOOL_ADD = "header-add-button";
-	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
-	public static final String MAIN_VIEW_TOOL_PARENT_DIR = "parent-dir-button";
+	public static final String MAIN_VIEW_HEADER_LOGOUT = "header-logout";
+	public static final String MAIN_VIEW_HEADER_BUTTON = "header-button";
+	public static final String MAIN_VIEW_HEADER_BUTTON_ADD = "header-add-button";
+	public static final String MAIN_VIEW_HEADER_BUTTON_REFRESH = "header-refresh-button";
+	public static final String MAIN_VIEW_HEADER_BUTTON_PARENT_DIR = "header-parent-dir-button";
 
 	public static final String FILE_ACTIONS = "file-actions";
 	public static final String FILE_ACTIONS_BORDER = "file-actions-border";

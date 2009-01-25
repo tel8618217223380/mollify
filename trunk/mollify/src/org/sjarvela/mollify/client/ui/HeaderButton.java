@@ -13,34 +13,25 @@ package org.sjarvela.mollify.client.ui;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DropdownButton extends Composite {
-	private Label button;
-	private DropdownPopupMenu menu;
+public class HeaderButton extends Label {
 
-	public DropdownButton(ActionListener actionListener, String title, String id) {
-		button = new Label();
-		button.setStyleName(StyleConstants.DROPDOWN_BUTTON);
-		MouseEventDecorator.decorate(button);
-
-		initWidget(button);
-
-		menu = new DropdownPopupMenu<String>(actionListener, this.getElement(),
-				button.getElement());
-
-		button.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				menu.show();
-			}
-		});
-
+	public HeaderButton(String title, String id, String styleClass) {
+		super(title);
+		setStyleName(styleClass);
+		MouseEventDecorator.decorate(this);
 		getElement().setId(id);
 	}
 
-	public void addAction(Action action, String title) {
-		menu.addMenuAction(action, title);
+	public void setAction(final ActionListener actionListener,
+			final Action action) {
+		this.addClickListener(new ClickListener() {
+
+			public void onClick(Widget sender) {
+				actionListener.onActionTriggered(action);
+			}
+		});
 	}
 }

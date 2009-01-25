@@ -11,24 +11,18 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.data.FileSystemItem;
-import org.sjarvela.mollify.client.ui.ActionId;
-import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
-
 public class MainViewGlue implements SimpleFileListListener, ViewListener {
-	private final MainView view;
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 
 	public MainViewGlue(MainView view, final MainViewPresenter presenter,
 			ActionDelegator actionDelegator) {
-		this.view = view;
 		this.presenter = presenter;
 		this.actionDelegator = actionDelegator;
 
@@ -43,34 +37,33 @@ public class MainViewGlue implements SimpleFileListListener, ViewListener {
 	}
 
 	private void initializeActions() {
-		view.getRefreshButton().addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				presenter.reload();
-			}
-		});
-
-		view.getParentDirButton().addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				presenter.moveToParentDirectory();
-			}
-		});
-
-		view.getLogoutButton().addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		actionDelegator.setActionHandler(Action.logout, new ActionHandler() {
+			public void onAction() {
 				presenter.logout();
 			}
 		});
 
-		actionDelegator.setActionListener(Action.addFile, new ActionListener() {
+		actionDelegator.setActionHandler(Action.refresh, new ActionHandler() {
+			public void onAction() {
+				presenter.reload();
+			}
+		});
 
-			public void onActionTriggered(ActionId action) {
+		actionDelegator.setActionHandler(Action.parentDir, new ActionHandler() {
+			public void onAction() {
+				presenter.moveToParentDirectory();
+			}
+		});
+
+		actionDelegator.setActionHandler(Action.addFile, new ActionHandler() {
+			public void onAction() {
 				presenter.openUploadDialog();
 			}
 		});
 
-		actionDelegator.setActionListener(Action.addDirectory,
-				new ActionListener() {
-					public void onActionTriggered(ActionId action) {
+		actionDelegator.setActionHandler(Action.addDirectory,
+				new ActionHandler() {
+					public void onAction() {
 						presenter.openNewDirectoryDialog();
 					}
 				});
