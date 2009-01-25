@@ -47,6 +47,17 @@
 	width: 0px;
 }
 
+.header-button {
+	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	background-image: none;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding: 0;
+	height: 23px;
+	border-style: none;
+	margin-right: 4px;
+}
+
 .dropdown-button {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	background-image: none;
@@ -68,6 +79,28 @@
 
 #header-add-button.dropdown-button-pressed {
 	background: url(b-add-d.png) no-repeat 0 0;
+}
+
+#header-refresh-button.header-button {
+	background: url(b-refresh.png) no-repeat 0 0;
+	font-size: 0;
+	width: 36px;
+	color: #dadada;
+}
+
+#header-refresh-button.header-button-pressed {
+	background: url(b-refresh-d.png) no-repeat 0 0;
+}
+
+#header-parent-dir-button.header-button {
+	background: url(b-up.png) no-repeat 0 0;
+	font-size: 0;
+	width: 36px;
+	margin-left: 4px;
+}
+
+#header-parent-dir-button.header-button-pressed  {
+	background: url(b-up-d.png) no-repeat 0 0;
 }
 
 .dropdown-menu {
@@ -94,24 +127,6 @@
 	text-decoration: underline;
 }
 
-
-
-
-.tools {
-	padding: 6px;
-}
-
-.tool {
-	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
-	background-image: none;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	padding: 0;
-	height: 23px;
-	border-style: none;
-	margin-right: 4px;
-}
-
 .header-option {
 	height: 40px;
 	border-style: none;
@@ -121,7 +136,7 @@
 	cursor: hand;
 }
 
-#logout.header-option {
+#header-logout.header-option {
 	background: #bababa url(b-close.png) no-repeat 8px 15px;
 	width: 26px;
 	position: absolute;
@@ -131,39 +146,9 @@
 	text-indent: -100px;
 }
 
-#logout.header-option:hover {
+#header-logout.header-option-hover {
 	background: #b3b3b3 url(b-close-over.png) no-repeat 8px 15px;
 }
-
-.tool:hover {
-	border-style: none;
-}
-
-#refresh-button.tool {
-	background: url(b-refresh.png) no-repeat 0 0;
-	font-size: 0;
-	width: 36px;
-	color: #dadada;
-}
-
-#refresh-button.tool:active {
-	background: url(b-refresh-d.png) no-repeat 0 0;
-}
-
-#parent-dir-button.tool {
-	background: url(b-up.png) no-repeat 0 0;
-	font-size: 0;
-	width: 36px;
-	margin-left: 4px;
-}
-
-#parent-dir-button.tool:active {
-	background: url(b-up-d.png) no-repeat 0 0;
-}
-
-
-
-
 
 table.directory-list.root-level {
 	padding-left: 0;

@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.DropdownButton;
+import org.sjarvela.mollify.client.ui.HeaderButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
@@ -28,7 +29,6 @@ import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileList;
 import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
 
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -44,15 +44,15 @@ public class MainView extends Composite {
 	private FileDetailsPopup fileDetails = null;
 
 	private DropdownButton addButton;
-	private Button refreshButton;
-	private Button parentDirButton;
-	private Button logoutButton;
+	private HeaderButton refreshButton;
+	private HeaderButton parentDirButton;
+	private HeaderButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private final ActionListener actionListener;
 
 	public enum Action implements ActionId {
-		addFile, addDirectory;
+		addFile, addDirectory, refresh, parentDir, logout;
 	};
 
 	public MainView(MainViewModel model, Localizator localizator,
@@ -124,44 +124,31 @@ public class MainView extends Composite {
 	}
 
 	private void createButtons() {
-		refreshButton = createToolButton(localizator.getStrings()
+		refreshButton = new HeaderButton(localizator.getStrings()
 				.mainViewRefreshButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_REFRESH);
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
+		refreshButton.setAction(actionListener, Action.refresh);
 
-		parentDirButton = createToolButton(localizator.getStrings()
+		parentDirButton = new HeaderButton(localizator.getStrings()
 				.mainViewParentDirButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR);
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
+		refreshButton.setAction(actionListener, Action.parentDir);
 
-		logoutButton = createOptionButton(localizator.getStrings()
+		logoutButton = new HeaderButton(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
-				StyleConstants.MAIN_VIEW_HEADER_LOGOUT);
+				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
+				StyleConstants.MAIN_VIEW_HEADER_OPTION);
+		logoutButton.setAction(actionListener, Action.logout);
 
-		addButton = createDropdownButton(localizator.getStrings()
-				.mainViewAddButtonTitle(), StyleConstants.MAIN_VIEW_TOOL_ADD);
+		addButton = new DropdownButton(actionListener, localizator.getStrings()
+				.mainViewAddButtonTitle(),
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
 		addButton.addAction(Action.addFile, localizator.getStrings()
 				.mainViewAddFileMenuItem());
 		addButton.addAction(Action.addDirectory, localizator.getStrings()
 				.mainViewAddDirectoryMenuItem());
-	}
-
-	private DropdownButton createDropdownButton(String title, String id) {
-		DropdownButton button = new DropdownButton(actionListener, title);
-		button.getElement().setId(id);
-		return button;
-	}
-
-	private Button createToolButton(String title, String id) {
-		Button button = new Button(title);
-		button.addStyleName(StyleConstants.MAIN_VIEW_TOOL);
-		button.getElement().setId(id);
-		return button;
-	}
-
-	private Button createOptionButton(String title, String id) {
-		Button button = new Button(title);
-		button.addStyleName(StyleConstants.MAIN_VIEW_HEADER_OPTION);
-		button.getElement().setId(id);
-		return button;
 	}
 
 	void addFileListListener(SimpleFileListListener listener) {
@@ -191,15 +178,15 @@ public class MainView extends Composite {
 		fileDetails.show();
 	}
 
-	public Button getRefreshButton() {
+	public HeaderButton getRefreshButton() {
 		return refreshButton;
 	}
 
-	public Button getParentDirButton() {
+	public HeaderButton getParentDirButton() {
 		return parentDirButton;
 	}
 
-	public Button getLogoutButton() {
+	public HeaderButton getLogoutButton() {
 		return logoutButton;
 	}
 }
