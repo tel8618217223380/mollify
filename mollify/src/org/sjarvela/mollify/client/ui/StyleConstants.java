@@ -27,6 +27,10 @@ public class StyleConstants {
 	public static final String PROGRESS_BAR_CURRENT = "current";
 	public static final String PROGRESS_BAR_LEFT = "left";
 
+	public static final String DROPDOWN_BUTTON = "dropdown-button";
+	public static final String DROPDOWN_MENU = "dropdown-menu";
+	public static final String DROPDOWN_MENU_ITEM = "dropdown-menu-item";
+
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "header-padding-left";
@@ -35,9 +39,9 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_OPTION = "header-option";
 	public static final String MAIN_VIEW_HEADER_LOGOUT = "logout";
 	public static final String MAIN_VIEW_TOOL = "tool";
+	public static final String MAIN_VIEW_TOOL_ADD = "header-add-button";
 	public static final String MAIN_VIEW_TOOL_REFRESH = "refresh-button";
 	public static final String MAIN_VIEW_TOOL_PARENT_DIR = "parent-dir-button";
-	public static final String MAIN_VIEW_TOOL_UPLOAD_FILE = "file-upload";
 
 	public static final String FILE_ACTIONS = "file-actions";
 	public static final String FILE_ACTIONS_BORDER = "file-actions-border";
@@ -78,11 +82,10 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_DROPDOWN = "directory-list-dropdown";
 	public static final String DIRECTORY_LIST_ROOT_LEVEL = "root-level";
 
-	public static final String DIRECTORY_LIST_MENU = "directory-list-menu";
-	public static final String DIRECTORY_LIST_MENU_WAIT = "menu-wait";
-	public static final String DIRECTORY_LIST_MENU_ERROR = "menu-error";
-	public static final String DIRECTORY_LIST_MENU_ITEM = "menu-item";
-	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "menu-item-none";
+	public static final String DIRECTORY_LIST_MENU_WAIT = "directory-menu-wait";
+	public static final String DIRECTORY_LIST_MENU_ERROR = "directory-menu-error";
+	public static final String DIRECTORY_LIST_MENU_ITEM = "directory-menu-item";
+	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "directory-menu-item-none";
 
 	public static final String DIALOG_BUTTON = "dialog-button";
 

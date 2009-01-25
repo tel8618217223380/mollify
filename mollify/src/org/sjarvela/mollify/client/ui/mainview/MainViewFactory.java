@@ -48,14 +48,17 @@ public class MainViewFactory {
 				model, fileServices, localizator);
 		FileDetailsPopupFactory fileDetailsPopupFactory = new FileDetailsPopupFactory(
 				fileActionHandler, fileServices, localizator);
+		ActionDelegator actionDelegator = new ActionDelegator();
 
-		MainView view = new MainView(model, localizator,
+		// create view, presenter and glue
+		MainView view = new MainView(model, localizator, actionDelegator,
 				directorySelectorFactory, fileDetailsPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
 				fileUploadHandler, localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
-		new MainViewGlue(view, presenter);
+		new MainViewGlue(view, presenter, actionDelegator);
+
 		return view;
 	}
 }

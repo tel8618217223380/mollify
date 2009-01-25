@@ -18,19 +18,17 @@ import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.ui.DropdownPopup;
+import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ui.DropdownPopupMenu;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListMenu extends DropdownPopup implements ResultListener {
-	private Panel container;
-
+public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
+		ResultListener {
 	boolean initialized = false;
 	boolean dataRequested = false;
 
@@ -44,7 +42,7 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 			Directory currentDirectory, DirectoryProvider directoryProvider,
 			DirectoryListener listener, Localizator localizator,
 			Element parent, Element opener) {
-		super(parent, opener);
+		super(null, parent, opener);
 
 		this.directoryProvider = directoryProvider;
 		this.currentDirectory = currentDirectory;
@@ -52,11 +50,7 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		this.listener = listener;
 		this.localizator = localizator;
 
-		container = new VerticalPanel();
-		container.add(createWaitLabel(localizator));
-		setWidget(container);
-
-		this.setStyleName(StyleConstants.DIRECTORY_LIST_MENU);
+		addItem(createWaitLabel(localizator));
 	}
 
 	private Label createWaitLabel(Localizator localizator) {
@@ -79,23 +73,23 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 
 	public void onFail(ServiceError error) {
 		initialized = true;
-		container.clear();
+		removeAllMenuItems();
 
 		Label failedLabel = new Label(error.getMessage(localizator));
 		failedLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ERROR);
-		container.add(failedLabel);
+		addItem(failedLabel);
 	}
 
 	public void onSuccess(Object... result) {
 		List<Directory> directories = (List<Directory>) result[0];
 		initialized = true;
-		container.clear();
+		removeAllMenuItems();
 
 		int count = 0;
 		for (Directory dir : directories) {
 			if (dir.getId().equals(this.currentDirectory.getId()))
 				continue;
-			container.add(createDirectoryLabel(dir));
+			addMenuAction(null, dir);
 			count++;
 		}
 
@@ -107,20 +101,21 @@ public class DirectoryListMenu extends DropdownPopup implements ResultListener {
 		Label label = new Label(localizator.getStrings()
 				.directorySelectorMenuNoItemsText());
 		label.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ITEM_NONE);
-		container.add(label);
+		addItem(label);
 	}
 
-	private Widget createDirectoryLabel(final Directory directory) {
-		Label label = new Label(directory.getName());
-		label.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ITEM);
-		final DirectoryListMenu instance = this;
-
+	// TODO remove overridden listener behaviour, use action listener as regular popup menus
+	@Override
+	protected Label createMenuItemWidget(final ActionId action,
+			final Directory item) {
+		Label label = createMenuItemWidget(item.getName());
 		label.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				instance.hide();
-				listener.onDirectorySelected(directory);
+				DirectoryListMenu.this.hide();
+				listener.onDirectorySelected(item);
 			}
 		});
 		return label;
 	}
+
 }

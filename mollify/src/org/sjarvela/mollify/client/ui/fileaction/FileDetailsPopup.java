@@ -77,7 +77,7 @@ public class FileDetailsPopup extends DropdownPopup {
 		// style)
 		content.setWidget(0, 1, createPointer());
 
-		this.add(content);
+		addItem(content);
 	}
 
 	private Widget createPointer() {

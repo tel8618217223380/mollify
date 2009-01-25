@@ -195,6 +195,10 @@ public class MainViewPresenter implements DirectoryController,
 		uploadMonitor = null;
 	}
 
+	public void openNewDirectoryDialog() {
+
+	}
+
 	private ResultListener createReloadListener() {
 		return createListener(new Callback() {
 			public void onCallback() {
@@ -226,4 +230,5 @@ public class MainViewPresenter implements DirectoryController,
 	public void logout() {
 		logoutListener.onLogout(model.getSessionInfo());
 	}
+
 }
