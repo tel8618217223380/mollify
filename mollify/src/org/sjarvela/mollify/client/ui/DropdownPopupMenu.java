@@ -38,7 +38,6 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		if (action != null)
 			label.addClickListener(new ClickListener() {
 				public void onClick(Widget sender) {
-					DropdownPopupMenu.this.hide();
 					if (actionListener != null)
 						actionListener.onActionTriggered(action);
 				}
@@ -50,6 +49,13 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		Label label = new Label(title);
 		label.setStyleName(StyleConstants.DROPDOWN_MENU_ITEM);
 		HoverDecorator.decorate(label);
+
+		label.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				sender.removeStyleDependentName(StyleConstants.HOVER);
+				DropdownPopupMenu.this.hide();
+			}
+		});
 		return label;
 	}
 
