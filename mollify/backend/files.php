@@ -211,7 +211,7 @@
 	function upload_file($dir) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_file_upload"]) {
+		if (!$_SESSION["settings"]["enable_file_item_creation"]) {
 			log_error("Cannot upload file, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -251,6 +251,11 @@
 	function create_folder($dir, $folder_name) {
 		global $error, $error_details;
 		
+		if (!$_SESSION["settings"]["enable_file_item_creation"]) {
+			log_error("Cannot create folder, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
 		if (!assert_dir($dir)) return FALSE;
 		if (!has_general_modify_rights()) {
 			log_error("Insufficient file permissions (create folder): User=[".$_SESSION['user_id']."]");

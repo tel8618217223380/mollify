@@ -47,6 +47,7 @@
 				$info["user"] = $user["name"];
 			}
 			$info["settings"] = $_SESSION['settings'];
+			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 		}
 		return $info;
 	}
