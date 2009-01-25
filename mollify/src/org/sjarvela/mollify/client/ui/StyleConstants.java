@@ -137,4 +137,11 @@ public class StyleConstants {
 	public static final String PROGRESS_DIALOG_DETAILS = "progress-dialog-details";
 	public static final String PROGRESS_DIALOG_PROGRESS_BAR = "progress-dialog-progress-bar";
 
+	public static final String CREATE_FOLDER_DIALOG = "create-folder-dialog";
+	public static final String CREATE_FOLDER_DIALOG_CONTENT = "create-folder-dialog-content";
+	public static final String CREATE_FOLDER_DIALOG_NAME_TITLE = "create-folder-dialog-name-title";
+	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "create-folder-dialog-name-value";
+	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "create-folder-dialog-buttons";
+	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "create-folder-dialog-button-create";
+
 }

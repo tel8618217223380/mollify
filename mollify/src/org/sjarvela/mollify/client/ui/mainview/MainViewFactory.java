@@ -55,7 +55,7 @@ public class MainViewFactory {
 				directorySelectorFactory, fileDetailsPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
-				fileUploadHandler, localizator, logoutListener);
+				fileUploadHandler, fileServices, localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter, actionDelegator);
 

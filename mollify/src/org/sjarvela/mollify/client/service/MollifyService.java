@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.DateTime;
+import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileAction;
@@ -112,18 +113,27 @@ public class MollifyService {
 		doRequest(getActionUrl(file, FileAction.DELETE), resultListener);
 	}
 
+	public void createFolder(Directory parentFolder, String folderName,
+			ResultListener listener) {
+		doRequest(getActionUrl(parentFolder, FileAction.CREATE_FOLDER, "name="
+				+ folderName), listener);
+	}
+
 	public void getUploadProgress(String id, ResultListener resultListener) {
 		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 
-	public String getActionUrl(FileSystemItem item, FileAction action) {
+	public String getActionUrl(FileSystemItem item, FileAction action,
+			String... params) {
 		if (!item.isFile()) {
-			if (!action.equals(FileAction.UPLOAD)) {
+			if (!action.equals(FileAction.UPLOAD)
+					&& !action.equals(FileAction.CREATE_FOLDER)) {
 				throw new RuntimeException("Invalid directory action request "
 						+ action.name());
 			}
 		} else {
-			if (action.equals(FileAction.UPLOAD)) {
+			if (action.equals(FileAction.UPLOAD)
+					|| action.equals(FileAction.CREATE_FOLDER)) {
 				throw new RuntimeException("Invalid file action request "
 						+ action.name());
 			}
@@ -134,8 +144,13 @@ public class MollifyService {
 			}
 		}
 
-		return getUrl(Action.operate, "type=" + action.name(), "id="
-				+ item.getId());
+		String[] urlParams = new String[params.length + 2];
+		urlParams[0] = "type=" + action.name();
+		urlParams[1] = "id=" + item.getId();
+		for (int i = 0; i < params.length; i++)
+			urlParams[i + 2] = params[i];
+
+		return getUrl(Action.operate, urlParams);
 	}
 
 	/* Utility functions */

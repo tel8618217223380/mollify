@@ -58,7 +58,23 @@
 		}
 		return TRUE;
 	}
-	
+
+	function assert_dir($dirname) {
+		global $error, $error_details;
+		
+		if (!file_exists($dirname["path"])) {
+			$error = "DIR_DOES_NOT_EXIST";
+			$error_details = basename($dirname["path"]);
+			return FALSE;
+		}
+		if(!is_dir($dirname["path"])) {
+			$error = "NOT_A_DIR";
+			$error_details = basename($dirname["path"]);
+			return FALSE;
+		}
+		return TRUE;
+	}
+		
 	function get_directories($account) {
 		global $error, $error_details;
 
@@ -231,6 +247,32 @@
 		$error_details = $name;
 		return FALSE;
 	}
+
+	function create_folder($dir, $folder_name) {
+		global $error, $error_details;
+		
+		if (!assert_dir($dir)) return FALSE;
+		if (!has_general_modify_rights()) {
+			log_error("Insufficient file permissions (create folder): User=[".$_SESSION['user_id']."]");
+			$error = "NO_MODIFY_RIGHTS";
+			return FALSE;
+		}
+		
+		$folder_path = $dir["path"].DIRECTORY_SEPARATOR.$folder_name;
+		
+		if (file_exists($folder_path)) {
+			$error = "DIR_ALREADY_EXISTS";
+			$error_details = dirname($folder_path);
+			return FALSE;
+		}
+		
+		if (!mkdir($folder_path, 0755)) {
+			$error = "CANNOT_CREATE_FOLDER";
+			$error_details = dirname($folder_path);
+			return FALSE;
+		}
+		return TRUE;
+	}
 	
 	function get_upload_status($id) {
 		if (!$_SESSION["settings"]["enable_file_upload_progress"]) return FALSE;
@@ -254,6 +296,12 @@
 		
 		readfile($filename);
 		return TRUE;
+	}
+	
+	function has_general_modify_rights() {
+		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
+		$base = $_SESSION['default_file_permission'];
+		return ($base === $FILE_PERMISSION_VALUE_ADMIN || $base === $FILE_PERMISSION_VALUE_READWRITE);
 	}
 	
 	function has_modify_rights($item) {

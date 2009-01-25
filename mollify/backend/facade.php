@@ -95,6 +95,13 @@
 					header("HTTP/1.1 200 OK", true);
 					break;
 
+				case "create_folder":
+					$dir = $file;
+					if (!isset($_GET["name"])) return;
+					if (create_folder($dir, $_GET["name"]))
+						$result = get_success_message();
+					break;
+					
 				default:
 					$error = "UNSUPPORTED_OPERATION";
 					$error_details = $operation;
