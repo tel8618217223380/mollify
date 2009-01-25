@@ -15,6 +15,9 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.DropdownButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
@@ -39,18 +42,26 @@ public class MainView extends Composite {
 	private DirectorySelector directorySelector;
 	private SimpleFileList list;
 	private FileDetailsPopup fileDetails = null;
+
+	private DropdownButton addButton;
 	private Button refreshButton;
 	private Button parentDirButton;
-	private Button uploadFileButton;
 	private Button logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
+	private final ActionListener actionListener;
+
+	public enum Action implements ActionId {
+		addFile, addDirectory;
+	};
 
 	public MainView(MainViewModel model, Localizator localizator,
+			ActionListener actionListener,
 			DirectorySelectorFactory directorySelectorFactory,
 			FileDetailsPopupFactory fileDetailsPopupFactory) {
 		this.model = model;
 		this.localizator = localizator;
+		this.actionListener = actionListener;
 		this.directorySelector = directorySelectorFactory.createSelector();
 		this.fileDetails = fileDetailsPopupFactory.createPopup();
 
@@ -94,11 +105,11 @@ public class MainView extends Composite {
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
+		if (model.getSessionInfo().getSettings().isFileUploadEnabled()) // TODO
+			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(directorySelector);
 		buttonPanel.add(parentDirButton);
-		if (model.getSessionInfo().getSettings().isFileUploadEnabled())
-			buttonPanel.add(uploadFileButton);
 		panel.add(buttonPanel);
 
 		Label rightPadding = new Label();
@@ -121,13 +132,22 @@ public class MainView extends Composite {
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_TOOL_PARENT_DIR);
 
-		uploadFileButton = createToolButton(localizator.getStrings()
-				.mainViewUploadFileButtonTitle(),
-				StyleConstants.MAIN_VIEW_TOOL_UPLOAD_FILE);
-
 		logoutButton = createOptionButton(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_LOGOUT);
+
+		addButton = createDropdownButton(localizator.getStrings()
+				.mainViewAddButtonTitle(), StyleConstants.MAIN_VIEW_TOOL_ADD);
+		addButton.addAction(Action.addFile, localizator.getStrings()
+				.mainViewAddFileMenuItem());
+		addButton.addAction(Action.addDirectory, localizator.getStrings()
+				.mainViewAddDirectoryMenuItem());
+	}
+
+	private DropdownButton createDropdownButton(String title, String id) {
+		DropdownButton button = new DropdownButton(actionListener, title);
+		button.getElement().setId(id);
+		return button;
 	}
 
 	private Button createToolButton(String title, String id) {
@@ -177,10 +197,6 @@ public class MainView extends Composite {
 
 	public Button getParentDirButton() {
 		return parentDirButton;
-	}
-
-	public Button getUploadFileButton() {
-		return uploadFileButton;
 	}
 
 	public Button getLogoutButton() {

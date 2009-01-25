@@ -47,6 +47,56 @@
 	width: 0px;
 }
 
+.dropdown-button {
+	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	background-image: none;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding: 0;
+	height: 23px;
+	border-style: none;
+	margin-right: 4px;
+	font-size: 0;
+	cursor: pointer;
+	cursor: hand;
+}
+
+#header-add-button.dropdown-button {
+	background: url(b-add.png) no-repeat 0 0;
+	width: 36px;
+}
+
+#header-add-button.dropdown-button-pressed {
+	background: url(b-add-d.png) no-repeat 0 0;
+}
+
+.dropdown-menu {
+	background: #f9f9f9;
+	margin-left: 11px;
+	margin-top: 21px;
+	border-right: 1px outset #c0c0c0;
+	border-left: 1px outset #c0c0c0;
+	border-bottom: 1px outset #c0c0c0;
+	padding: 8px;
+}
+
+.dropdown-menu-item {
+	padding: 3px;
+	cursor: pointer;
+	cursor: hand;
+	height: 15px;
+	white-space: nowrap;
+}
+
+.dropdown-menu-item-hover {
+	color: #565671;
+	background-color: #d5d5d5;
+	text-decoration: underline;
+}
+
+
+
+
 .tools {
 	padding: 6px;
 }
@@ -111,15 +161,9 @@
 	background: url(b-up-d.png) no-repeat 0 0;
 }
 
-#file-upload.tool {
-	background: url(b-add.png) no-repeat 0 0;
-	font-size: 0;
-	width: 36px;
-}
 
-#file-upload.tool:active {
-	background: url(b-add-d.png) no-repeat 0 0;
-}
+
+
 
 table.directory-list.root-level {
 	padding-left: 0;
@@ -148,7 +192,7 @@ table.directory-list.root-level {
 	height: 14px;
 }
 
-.directory-list-label:hover, .menu-item:hover {
+.directory-list-label:hover {
 	color: #565671;
 	background-color: #d5d5d5;
 	text-decoration: underline;
@@ -172,25 +216,7 @@ table.directory-list.root-level {
 	width: 5px;
 }
 
-.directory-list-menu {
-	background: #f9f9f9;
-	margin-left: 11px;
-	margin-top: 21px;
-	border-right: 1px outset #c0c0c0;
-	border-left: 1px outset #c0c0c0;
-	border-bottom: 1px outset #c0c0c0;
-	padding: 8px;
-}
-
-.menu-item {
-	padding: 3px;
-	cursor: pointer;
-	cursor: hand;
-	height: 15px;
-	white-space: nowrap;
-}
-
-.menu-item-none {
+.directory-menu-item-none {
 	font-style: italic;
 }
 

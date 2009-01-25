@@ -14,10 +14,13 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopup extends PopupPanel {
 	private Element parent;
 	private Element opener;
+	protected VerticalPanel container;
 
 	boolean cancelShow = false;
 
@@ -26,6 +29,17 @@ public class DropdownPopup extends PopupPanel {
 
 		this.opener = opener;
 		this.parent = parent;
+		this.container = new VerticalPanel();
+
+		setWidget(container);
+	}
+
+	protected void addItem(Widget item) {
+		container.add(item);
+	}
+
+	public void removeAllMenuItems() {
+		container.clear();
 	}
 
 	@Override
@@ -78,4 +92,5 @@ public class DropdownPopup extends PopupPanel {
 
 		return super.onEventPreview(event);
 	}
+
 }
