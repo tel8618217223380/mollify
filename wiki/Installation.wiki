@@ -224,11 +224,11 @@ By default, file upload progress is disabled. To enable this feature, use follow
 
 = 3. Modifying Installation =
 
-== Moving host page ==
+== Relocating host page or backend intrface files ==
 
 	Host page can be located anywhere, the only thing that matters is that backend interface files (.php) are located under the same directory.
 
-	If you wish to locate backend interface files into a subfolder, you must define this location in the host html file, with following format:
+	If you wish to locate backend interface files (*.php) into a subfolder, you must define this location in the host html file, with following format:
 
 {{{
 	<html>
@@ -249,10 +249,10 @@ By default, file upload progress is disabled. To enable this feature, use follow
 
 
 
-== Moving client application files ==
+== Relocating client application files ==
 
 	Client application files can be located anywhere, only the javascript reference in the host page
-	must be updated. While the location and the name of the folder "org.sjarvela.mollify.App" can be
+	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
 	changed, do not alter its contents.
 
 == Customizing Mollify host page, or integrating Mollify into existing web page ==
