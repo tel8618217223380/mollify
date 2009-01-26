@@ -226,9 +226,9 @@ By default, file upload progress is disabled. To enable this feature, use follow
 
 == Relocating host page or backend intrface files ==
 
-	Host page can be located anywhere, the only thing that matters is that backend interface files (.php) are located under the same directory.
+	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
 
-	If you wish to locate backend interface files (*.php) into a subfolder, you must define this location in the host html file, with following format:
+	If you wish to locate backend interface files (`*`.php) into a subfolder, you must define this location in the host html file, with following format:
 
 {{{
 	<html>
@@ -246,8 +246,6 @@ By default, file upload progress is disabled. To enable this feature, use follow
 	if you place host file in "http://your_host_name/mollify.html" and the backend interface files into "http://your_host_name/mollify/scripts/", the setting should be as follows:
 
 	`<meta name="mollify:property" content="service_path=scripts">`
-
-
 
 == Relocating client application files ==
 
