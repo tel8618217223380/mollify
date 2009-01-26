@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 0.6.2 ===
-  * Possibility to define backend php files location
+  * Possibility to define backend php files location (for more information, see [http://code.google.com/p/mollify/wiki/Installation Installation wiki page], _Modifying installation_)
 
 === Version 0.6.1 ===
   * Fixed logout failure
