@@ -131,7 +131,7 @@ public class FileDetailsPopup extends DropdownPopup {
 				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
 
 		VerticalPanel content = new VerticalPanel();
-		content.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
 
 		for (Details detail : Details.values()) {
 			String title = "?";
@@ -154,13 +154,15 @@ public class FileDetailsPopup extends DropdownPopup {
 		detailsRow.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW);
 
 		Label label = new Label(labelText);
-		label.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_LABEL);
-		label.addStyleName(style);
+		label
+				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_LABEL);
+		label.addStyleDependentName(style);
 		detailsRow.add(label);
 
 		Label value = new Label();
-		label.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_VALUE);
-		label.addStyleName(style);
+		label
+				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_VALUE);
+		label.addStyleDependentName(style);
 		detailsRow.add(value);
 
 		detailRowValues.add(value);
@@ -174,9 +176,8 @@ public class FileDetailsPopup extends DropdownPopup {
 
 	private Button createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
-		button.addStyleName(StyleConstants.FILE_CONTEXT_ACTION);
-		button.addStyleName(StyleConstants.FILE_CONTEXT_ACTION_PREFIX
-				+ action.name().toLowerCase());
+		button.setStylePrimaryName(StyleConstants.FILE_CONTEXT_ACTION);
+		button.addStyleDependentName(action.name().toLowerCase());
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				onAction(action);
