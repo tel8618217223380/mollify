@@ -39,7 +39,7 @@ public class SimpleFileList extends DataGrid {
 	private TextProvider textProvider;
 
 	public SimpleFileList(TextProvider textProvider, Localizator localizator) {
-		super();
+		super(StyleConstants.SIMPLE_FILE_LIST_HEADER);
 		this.textProvider = textProvider;
 
 		// setup header

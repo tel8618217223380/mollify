@@ -64,13 +64,13 @@ public class FileDetailsPopup extends DropdownPopup {
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.fileActionHandler = fileActionHandler;
-		this.setStyleName(StyleConstants.FILE_ACTIONS);
+		this.setStyleName(StyleConstants.FILE_CONTEXT);
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(localizator.getStrings().shortDateTimeFormat());
 
 		BorderedControl content = new BorderedControl(
-				StyleConstants.FILE_ACTIONS_BORDER);
+				StyleConstants.FILE_CONTEXT_BORDER);
 
 		content.setContent(createContent());
 		// extra content, tip pointing the file (just a div with a certain
@@ -82,20 +82,20 @@ public class FileDetailsPopup extends DropdownPopup {
 
 	private Widget createPointer() {
 		Label pointer = new Label();
-		pointer.setStyleName(StyleConstants.FILE_ACTIONS_POINTER);
+		pointer.setStyleName(StyleConstants.FILE_CONTEXT_POINTER);
 		return pointer;
 	}
 
 	private VerticalPanel createContent() {
 		VerticalPanel content = new VerticalPanel();
-		content.setStyleName(StyleConstants.FILE_ACTIONS_CONTENT);
+		content.setStyleName(StyleConstants.FILE_CONTEXT_CONTENT);
 
 		filename = new Label();
-		filename.setStyleName(StyleConstants.FILE_ACTIONS_FILENAME);
+		filename.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(filename);
 
 		description = new Label();
-		description.setStyleName(StyleConstants.FILE_ACTIONS_DESCRIPTION);
+		description.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
 		content.add(description);
 
 		content.add(createDetails());
@@ -105,7 +105,7 @@ public class FileDetailsPopup extends DropdownPopup {
 
 	private Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.setStyleName(StyleConstants.FILE_ACTIONS_BUTTONS);
+		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
 		downloadButton = createActionButton(localizator.getStrings()
 				.fileActionDownloadTitle(), FileAction.DOWNLOAD);
@@ -124,11 +124,14 @@ public class FileDetailsPopup extends DropdownPopup {
 	}
 
 	private Widget createDetails() {
-		details = new DisclosurePanel("Details", false);
-		details.addStyleName(StyleConstants.FILE_ACTIONS_DETAILS);
+		details = new DisclosurePanel(localizator.getStrings()
+				.fileActionDetailsTitle(), false);
+		details.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
+		details.getHeader().getElement().getParentElement().setClassName(
+				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
 
 		VerticalPanel content = new VerticalPanel();
-		content.addStyleName(StyleConstants.FILE_ACTIONS_DETAILS_CONTENT);
+		content.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
 
 		for (Details detail : Details.values()) {
 			String title = "?";
@@ -148,15 +151,15 @@ public class FileDetailsPopup extends DropdownPopup {
 
 	private Widget createDetailsRow(String labelText, String style) {
 		HorizontalPanel detailsRow = new HorizontalPanel();
-		detailsRow.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW);
+		detailsRow.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW);
 
 		Label label = new Label(labelText);
-		label.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW_LABEL);
+		label.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_LABEL);
 		label.addStyleName(style);
 		detailsRow.add(label);
 
 		Label value = new Label();
-		label.setStyleName(StyleConstants.FILE_ACTIONS_DETAILS_ROW_VALUE);
+		label.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_VALUE);
 		label.addStyleName(style);
 		detailsRow.add(value);
 
@@ -171,8 +174,8 @@ public class FileDetailsPopup extends DropdownPopup {
 
 	private Button createActionButton(String title, final FileAction action) {
 		Button button = new Button(title);
-		button.addStyleName(StyleConstants.FILE_ACTION);
-		button.addStyleName(StyleConstants.FILE_ACTION_PREFIX
+		button.addStyleName(StyleConstants.FILE_CONTEXT_ACTION);
+		button.addStyleName(StyleConstants.FILE_CONTEXT_ACTION_PREFIX
 				+ action.name().toLowerCase());
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
