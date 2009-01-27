@@ -17,9 +17,11 @@ import com.google.gwt.user.client.ui.FlexTable;
 public class DataGrid extends FlexTable {
 	private Element head;
 	private Element headerRow;
+	private final String headerCssClass;
 
-	public DataGrid() {
+	public DataGrid(String headerCssClass) {
 		super();
+		this.headerCssClass = headerCssClass;
 
 		// create elements
 		head = DOM.createTHead();
@@ -37,8 +39,8 @@ public class DataGrid extends FlexTable {
 	public void setHeaderText(int column, String text, String id) {
 		assureColumnCount(column);
 		Element col = DOM.getChild(headerRow, column);
-		col.setId("column-" + id);
-		DOM.setElementAttribute(col, "class", "column-header");
+		col.setId(headerCssClass + "-" + id);
+		DOM.setElementAttribute(col, "class", headerCssClass);
 		DOM.setInnerText(col, text);
 	}
 

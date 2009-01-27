@@ -35,19 +35,19 @@
 	width: 100%;
 }
 
-.header-buttons {
+.mollify-header-buttons {
 	width: auto;
 }
 
-.header-padding-left {
+.mollify-header-padding-left {
 	width: 1px;
 }
 
-.header-padding-right {
+.mollify-header-padding-right {
 	width: 0px;
 }
 
-.header-button {
+.mollify-header-button {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	background-image: none;
 	margin-top: 8px;
@@ -58,7 +58,7 @@
 	margin-right: 4px;
 }
 
-.dropdown-button {
+.mollify-dropdown-button {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	background-image: none;
 	margin-top: 8px;
@@ -72,38 +72,38 @@
 	cursor: hand;
 }
 
-#header-add-button.dropdown-button {
+#mollify-header-add-button.mollify-dropdown-button {
 	background: url(b-add.png) no-repeat 0 0;
 	width: 36px;
 }
 
-#header-add-button.dropdown-button-pressed {
+#mollify-header-add-button.mollify-dropdown-button-pressed {
 	background: url(b-add-d.png) no-repeat 0 0;
 }
 
-#header-refresh-button.header-button {
+#mollify-header-refresh-button.mollify-header-button {
 	background: url(b-refresh.png) no-repeat 0 0;
 	font-size: 0;
 	width: 36px;
 	color: #dadada;
 }
 
-#header-refresh-button.header-button-pressed {
+#mollify-header-refresh-button.mollify-header-button-pressed {
 	background: url(b-refresh-d.png) no-repeat 0 0;
 }
 
-#header-parent-dir-button.header-button {
+#mollify-header-parent-dir-button.mollify-header-button {
 	background: url(b-up.png) no-repeat 0 0;
 	font-size: 0;
 	width: 36px;
 	margin-left: 4px;
 }
 
-#header-parent-dir-button.header-button-pressed  {
+#mollify-header-parent-dir-button.mollify-header-button-pressed  {
 	background: url(b-up-d.png) no-repeat 0 0;
 }
 
-.dropdown-menu {
+.mollify-dropdown-menu {
 	background: #f9f9f9;
 	margin-left: 11px;
 	margin-top: 21px;
@@ -113,7 +113,7 @@
 	padding: 8px;
 }
 
-.dropdown-menu-item {
+.mollify-dropdown-menu-item {
 	padding: 3px;
 	cursor: pointer;
 	cursor: hand;
@@ -121,13 +121,13 @@
 	white-space: nowrap;
 }
 
-.dropdown-menu-item-hover {
+.mollify-dropdown-menu-item-hover {
 	color: #565671;
 	background-color: #d5d5d5;
 	text-decoration: underline;
 }
 
-.header-option {
+.mollify-header-option {
 	height: 40px;
 	border-style: none;
 	background: rgba(50,50,50,0.19);
@@ -136,7 +136,7 @@
 	cursor: hand;
 }
 
-#header-logout.header-option {
+#mollify-header-logout.mollify-header-option {
 	background: #bababa url(b-close.png) no-repeat 8px 15px;
 	width: 26px;
 	position: absolute;
@@ -146,66 +146,66 @@
 	text-indent: -100px;
 }
 
-#header-logout.header-option-hover {
+#mollify-header-logout.mollify-header-option-hover {
 	background: #b3b3b3 url(b-close-over.png) no-repeat 8px 15px;
 }
 
-table.directory-list.root-level {
+table.mollify-directory-list.mollify-directory-list-root-level {
 	padding-left: 0;
 }
 
-.directory-selector {
+.mollify-directory-selector {
 	margin: 8px 0;
 }
 
-.directory-list-padding-left {
+.mollify-directory-list-padding-left {
 	width: 11px;
 	background: url(b-l.png) no-repeat 0 0;
 	height: 22px;
 }
 
-.directory-list-padding-right {
+.mollify-directory-list-padding-right {
 	width: 10px;
 	background: url(b-r.png) no-repeat 0 0;
 	height: 22px;
 }
 
-.directory-list-label {
+.mollify-directory-list-label {
 	background: url(b-m.png) repeat-x 0 0;
 	padding: 4px;
 	cursor: pointer;
 	height: 14px;
 }
 
-.directory-list-label:hover {
+.mollify-directory-list-label:hover {
 	color: #565671;
 	background-color: #d5d5d5;
 	text-decoration: underline;
 }
 
-.directory-list-dropdown {
+.mollify-directory-list-dropdown {
 	height: 25px;
 	width: 13px;
 	background: url(b-arrow.png) no-repeat;
 	cursor: pointer;
 }
 
-.directory-list-dropdown:hover {
+.mollify-directory-list-dropdown:hover {
 	background: url(b-arrow-over.png) no-repeat;
 }
 
-.directory-selector-separator {
+.mollify-directory-selector-separator {
 	font-weight: bold;
 	font-size: 16px;
 	visibility: hidden;
 	width: 5px;
 }
 
-.directory-menu-item-none {
+.mollify-directory-menu-item-none {
 	font-style: italic;
 }
 
-.file-simple-list {
+.mollify-filelist {
 	margin: 8px 0 1em;
 	width: 100%;
 	border-width: 0;
@@ -213,98 +213,98 @@ table.directory-list.root-level {
 	text-align: left;
 }
 
-.file-simple-list th {
+.mollify-filelist th {
 	color: #494949;
 	border-bottom: 2px solid #AAAAAA;
 	font-weight: bold;
 	padding-bottom: 3px;
 }
 
-.file-simple-list td {
+.mollify-filelist td {
 	padding-right: 5px;
 	padding-left: 5px;
 	height: 20px;
 }
 
-th#column-select {
+th#mollify-filelist-column-select {
 	width: 22px;
 }
 
-th#column-name {
+th#mollify-filelist-column-name {
 	padding-left: 4px;
 }
 
-th#column-type {
+th#mollify-filelist-column-type {
 	width: 150px;
 	padding-left: 13px;
 }
 
-th#column-size {
+th#mollify-filelist-column-size {
 	width: 75px;
 	padding-left: 10px;
 }
 
-td#column-size {
+td#mollify-filelist-column-size {
 	background-color: #ebebeb;
 }
 
-.column-type {
+.mollify-filelist-column-type {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
 }
 
-.row-file-even td, .row-file-odd td {
+.mollify-filelist-row-file-even td, .mollify-filelist-row-file-odd td {
 	padding-left: 9px;
 }
 
-.row-file-odd td {
+.mollify-filelist-row-file-odd td {
 	background-color: #dedede;
 }
 
-.row-file-even.hover td {
+.mollify-filelist-row-file-even.hover td {
 	background-color: #dde9f4;
 }
 
-.row-file-odd.hover td {
+.mollify-filelist-row-file-odd.hover td {
 	background-color: #cbcdef;
 }
 
-.row-file-even .column-type {
+.mollify-filelist-row-file-even .mollify-filelist-column-type {
 	background-color: #bdbdbd;
 }
 
-.row-file-odd .column-type {
+.mollify-filelist-row-file-odd .mollify-filelist-column-type {
 	background-color: #a9a9a9;
 }
 
-.row-file-even.hover .column-type {
+.mollify-filelist-row-file-even.hover .mollify-filelist-column-type {
 	background-color: #b4bdc7;
 }
 
-.row-file-odd.hover .column-type {
+.mollify-filelist-row-file-odd.hover .mollify-filelist-column-type {
 	background-color: #b0b3d0;
 }
 
-.row-directory-even td {
+.mollify-filelist-row-directory-even td {
 	padding-top: 2;
 	padding-bottom: 4;
 	height:20px;
 	background: #fbdfde;
 }
 
-.row-directory-odd td {
+.mollify-filelist-row-directory-odd td {
 	padding-top: 2;
 	padding-bottom: 4;
 	height:20px;
 	background-color: #ead2d2;
 }
 
-.row-directory-odd.hover td {
+.mollify-filelist-row-directory-odd.hover td {
 	background-color: #dec7d6;
 }
 
-.row-directory-even.hover td {
+.mollify-filelist-row-directory-even.hover td {
 	background-color: #f2d1e7;
 }
 
@@ -312,24 +312,24 @@ td#column-size {
 	background-color: #d5d5d5;
 }
 
-.file-simple-list .item-name {
+.mollify-filelist .mollify-filelist-item-name {
 	height: 20px;
 	padding-top: 5px;
 	cursor: pointer;
 }
 
-.row-directory-even .item-name, .row-directory-odd .item-name {
+.mollify-filelist-row-directory-even .mollify-filelist-item-name, .mollify-filelist-row-directory-odd .mollify-filelist-item-name {
 	font-weight: bold;
 	font-size: 11px;
 	background: url(folder.png) no-repeat 4px 6px;
 	padding-left: 24px;
 }
 
-.file-actions {
+.mollify-file-context {
 	padding-top: 15px;
 }
 
-.file-action {
+.mollify-file-context-action {
 	height: 25px;
 	margin-right: 6px;
 	margin-top: 6px;
@@ -337,87 +337,88 @@ td#column-size {
 	font-weight: bold;
 }
 
-.file-actions-border {
+.mollify-file-context-border {
 	border-width: 0;
 	border-spacing: 0;
 	margin: 0;
 	padding: 0;
 }
 
-.file-actions-pointer {
+.mollify-file-context-pointer {
 	width: 30px;
 	height: 15px;
 	background: url(b-tip.png) no-repeat 0 0;
 }
 
-.file-actions-border td.nw {
+.mollify-file-context-border-nw {
 	background: url(b-nw.png) no-repeat 0 4px;
 	width: 19px;
 	height: 15px;
 }
 
-.file-actions-border td.n {
+.mollify-file-context-border-n {
 	background: url(b-n.png) repeat-x 0 4px;
 	height: 15px;
 }
 
-.file-actions-border td.ne {
+.mollify-file-context-border-ne {
 	background: url(b-ne.png) no-repeat 0 4px;
 	width: 19px;
 	height: 15px;
 }
 
-.file-actions-border td.w {
+.mollify-file-context-border-w {
 	background: url(b-w.png) repeat-y;
 	width: 19px;
 }
 
-.file-actions-border td.e {
+.mollify-file-context-border-e {
 	background: url(b-e.png) repeat-y;
 	width: 19px;
 }
 
-.file-actions-border td.sw {
+.mollify-file-context-border-sw {
 	background: url(b-sw.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.file-actions-border td.s {
+.mollify-file-context-border-s {
 	background: url(b-s.png) repeat-x;
 	height: 20px;
 }
 
-.file-actions-border td.se {
+.mollify-file-context-border-se {
 	background: url(b-se.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.file-actions-content {
+.mollify-file-context-content {
 	background-color: white;
 	padding-top: 3px;
 }
 
-.file-actions-filename {
+.mollify-file-context-filename {
 	font-weight: bold;
 	margin-bottom: 6px;
 }
-.file-actions-description {
+.mollify-file-context-description {
 	margin-bottom: 8px;
 	margin-top: 4px;
 }
 
-.file-actions-details {
+.mollify-file-context-details {
 	width: 300px;
 	margin-top: 4px;
 }
 
-.file-actions-details .header {
+.mollify-file-context-details-header {
 	background-color: #ebebeb;
+	color: #000;
 }
 
-.file-actions-details-content.content {
+.mollify-file-context-details-content.content {
 	width: 300px;
 	border-left: 1px;
 	padding: 8px;
@@ -425,47 +426,47 @@ td#column-size {
 	background-color: #f5f5f5;
 }
 
-.file-actions-details-row-value {
+.mollify-file-context-details-row-value {
 	font-weight: bold;
 	width: 150px;
 }
 
-.file-actions-buttons {
+.mollify-file-context-buttons {
 	margin-top: 7px;
 }
 
-.info-dialog-content {
+.mollify-info-dialog-content {
 	margin: 10px 4px 4px;
 }
 
-.info-dialog-buttons {
+.mollify-info-dialog-buttons {
 	width: 100%;
 	margin-top: 11px;
 	margin-bottom: 3px;
 }
 
-.confirm-dialog-content {
+.mollify-confirm-dialog-content {
 	margin: 10px 4px 4px;
 }
 
-.confirm-dialog-buttons {
+.mollify-confirm-dialog-buttons {
 	width: 100%;
 	margin-top: 14px;
 	margin-bottom: -1px;
 }
 
-.rename-file-original-name-title {
+.mollify-rename-file-original-name-title {
 	font-weight: bold;
 	margin-bottom: 4px;
 }
 
-.rename-file-new-name-title {
+.mollify-rename-file-new-name-title {
 	font-weight: bold;
 	padding-top: 9px;
 	margin-bottom: 4px;
 }
 
-.rename-file-original-name-value {
+.mollify-rename-file-original-name-value {
 	margin-top: 4px;
 	font-style: italic;
 	background-color: #f5f5f5;
@@ -479,50 +480,50 @@ td#column-size {
 	border-width: 1px;
 }
 
-input.rename-file-new-name-value {
+input.mollify-rename-file-new-name-value {
 	margin-bottom: 12px;
 	width: 250px;
 }
 
-.rename-file-dialog-buttons {
+.mollify-rename-file-dialog-buttons {
 	width: 250px;
 	padding-bottom: 4px;
 }
 
-.dialog-button {
+.mollify-dialog-button {
 	height: 25px;
 }
 
-.file-upload-dialog-content {
+.mollify-file-upload-dialog-content {
 	margin: 10px 4px 15px;
 }
 
-.file-upload-dialog-message {
+.mollify-file-upload-dialog-message {
 	font-weight: bold;
 	margin-bottom: 7px;
 }
 
-.file-selector {
+.mollify-file-selector {
 	font-style: italic;
 	text-align: center;
 	width: 100%;
 }
 
-.ie-crap.file-selector {
+.ie-crap.mollify-file-selector {
 	width: 200px;
 }
 
-.file-upload-dialog-buttons {
+.mollify-file-upload-dialog-buttons {
 	width: 250px;
 	padding-bottom: 4px;
 }
 
-.login-dialog-username-title, .login-dialog-password-title {
+.mollify-login-dialog-username-title, .mollify-login-dialog-password-title {
 	margin-bottom: 6px;
 	margin-top: 4px;
 }
 
-.login-dialog-buttons {
+.mollify-login-dialog-buttons {
 	width: 170px;
 	padding-bottom: 4px;
 	margin-top: 10px;
@@ -534,63 +535,62 @@ input.rename-file-new-name-value {
 	padding-left: 47px;
 }
 
-.login-dialog-username-value {
+.mollify-login-dialog-username-value {
 	width: 160px;
 }
 
-.login-dialog-password-value {
+.mollify-login-dialog-password-value {
 	width: 160px;
 }
 
-.progress-dialog .dialogContent {
+.mollify-progress-dialog .dialogContent {
 	height: 60px;
 	width: 300px;
 	padding: 8px;
 	background: url(wait.gif) no-repeat 280px 22px;
 }
 
-.progress-dialog .progress-bar {
+.mollify-progress-dialog .mollify-progress-bar {
 	width: 266px;
 	background-color: #f3f3f3;
 	border: 1px dotted #c3c3c3;
 }
 
-.progress-bar .current, .progress-bar .left {
+.mollify-progress-bar .current, .mollify-progress-bar .left {
 	height: 23px;
 }
 
-.progress-bar .current {
+.mollify-progress-bar .current {
 	background-color: #4a6dcb;
 }
 
-.progress-bar .left {
+.mollify-progress-bar .left {
 	background-color: transparent;
 }
 
-.progress-dialog-title {
+.mollify-progress-dialog-title {
 	font-weight: bold;
 	margin-bottom: 5px;
 }
 
-.progress-dialog-details {
+.mollify-progress-dialog-details {
 	margin-top: 5px;
 	margin-bottom: 1px;
 }
 
-.create-folder-dialog-name-title {
+.mollify-create-folder-dialog-name-title {
 	font-weight: bold;
 	margin-bottom: 4px;
 }
 
-.create-folder-dialog-name-title {
+.mollify-create-folder-dialog-name-title {
 	font-weight: bold;
 	padding-top: 9px;
 	margin-bottom: 4px;
 }
 
-.create-folder-dialog-name-value {
+.mollify-create-folder-dialog-name-value {
 	margin-top: 4px;
-	font-style: italic;
 	background-color: #f5f5f5;
 	height: 17px;
 	vertical-align: middle;
@@ -602,12 +602,12 @@ input.rename-file-new-name-value {
 	border-width: 1px;
 }
 
-input.create-folder-dialog-name-value {
+input.mollify-create-folder-dialog-name-value {
 	margin-bottom: 12px;
 	width: 250px;
 }
 
-.create-folder-dialog-buttons {
+.mollify-create-folder-dialog-buttons {
 	width: 250px;
 	padding-bottom: 4px;
 }

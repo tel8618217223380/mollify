@@ -41,6 +41,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileDetailsLabelLastChanged();
 
+	public String fileActionDetailsTitle();
+
 	public String fileActionDownloadTitle();
 
 	public String fileActionRenameTitle();

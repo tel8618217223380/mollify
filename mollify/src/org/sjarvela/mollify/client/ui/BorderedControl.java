@@ -24,7 +24,10 @@ public class BorderedControl extends FlexTable {
 					StyleConstants.BORDERED_CONTROL_PADDING_S,
 					StyleConstants.BORDERED_CONTROL_PADDING_SE } };
 
+	private final String style;
+
 	public BorderedControl(String style) {
+		this.style = style;
 		this.setStyleName(style);
 		createCells();
 	}
@@ -33,9 +36,10 @@ public class BorderedControl extends FlexTable {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				this.setText(x, y, "");
-				String style = STYLES[x][y];
-				if (style.length() > 0)
-					this.getCellFormatter().setStyleName(x, y, style);
+				String cellStyle = STYLES[x][y];
+				if (cellStyle.length() > 0)
+					this.getCellFormatter().setStyleName(x, y,
+							this.style + "-" + cellStyle);
 			}
 		}
 	}
