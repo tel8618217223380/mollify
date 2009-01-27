@@ -58,7 +58,6 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_DETAILS_ROW_VALUE = "mollify-file-context-details-row-value";
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
 	public static final String FILE_CONTEXT_ACTION = "mollify-file-context-action";
-	public static final String FILE_CONTEXT_ACTION_PREFIX = "mollify-file-context-action-";
 
 	public static final String SIMPLE_FILE_LIST = "mollify-filelist";
 	public static final String SIMPLE_FILE_LIST_HEADER = "mollify-filelist-column";
