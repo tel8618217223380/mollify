@@ -37,10 +37,11 @@
 
 .mollify-header-buttons {
 	width: auto;
+	margin-left: 5px;
 }
 
 .mollify-header-padding-left {
-	width: 1px;
+	width: 0px;
 }
 
 .mollify-header-padding-right {
@@ -77,7 +78,7 @@
 	width: 36px;
 }
 
-#mollify-header-add-button.mollify-dropdown-button-pressed {
+#mollify-header-add-button.mollify-dropdown-button:active {
 	background: url(b-add-d.png) no-repeat 0 0;
 }
 
@@ -88,7 +89,7 @@
 	color: #dadada;
 }
 
-#mollify-header-refresh-button.mollify-header-button-pressed {
+#mollify-header-refresh-button.mollify-header-button:active {
 	background: url(b-refresh-d.png) no-repeat 0 0;
 }
 
@@ -99,7 +100,7 @@
 	margin-left: 4px;
 }
 
-#mollify-header-parent-dir-button.mollify-header-button-pressed  {
+#mollify-header-parent-dir-button.mollify-header-button:active {
 	background: url(b-up-d.png) no-repeat 0 0;
 }
 
@@ -416,9 +417,11 @@ td#mollify-filelist-column-size {
 .mollify-file-context-details-header {
 	background-color: #ebebeb;
 	color: #000;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
-.mollify-file-context-details-content.content {
+.mollify-file-context-details-content {
 	width: 300px;
 	border-left: 1px;
 	padding: 8px;
