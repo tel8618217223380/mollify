@@ -59,20 +59,20 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
 	public static final String FILE_CONTEXT_ACTION = "mollify-file-context-action";
 
-	public static final String SIMPLE_FILE_LIST = "mollify-filelist";
-	public static final String SIMPLE_FILE_LIST_HEADER = "mollify-filelist-column";
-	public static final String SIMPLE_FILE_LIST_COLUMN_PREFIX = "mollify-filelist-column-";
+	public static final String FILE_LIST = "mollify-filelist";
+	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
+	public static final String FILE_LIST_COLUMN_PREFIX = "mollify-filelist-column-";
 	public static final String SIMPLE_FILE_LIST_ROW_PARENT_DIRECTORY = "mollify-filelist-row-directory-up";
-	public static final String SIMPLE_FILE_LIST_ROW_FILE_EVEN = "mollify-filelist-row-file-even";
-	public static final String SIMPLE_FILE_LIST_ROW_FILE_ODD = "mollify-filelist-row-file-odd";
-	public static final String SIMPLE_FILE_LIST_ROW_DIRECTORY_EVEN = "mollify-filelist-row-directory-even";
-	public static final String SIMPLE_FILE_LIST_ROW_DIRECTORY_ODD = "mollify-filelist-row-directory-odd";
+	public static final String FILE_LIST_ROW_FILE_EVEN = "mollify-filelist-row-file-even";
+	public static final String FILE_LIST_ROW_FILE_ODD = "mollify-filelist-row-file-odd";
+	public static final String FILE_LIST_ROW_DIRECTORY_EVEN = "mollify-filelist-row-directory-even";
+	public static final String FILE_LIST_ROW_DIRECTORY_ODD = "mollify-filelist-row-directory-odd";
 	public static final String SIMPLE_FILE_LIST_ITEM_SELECT = "mollify-filelist-item-select";
-	public static final String SIMPLE_FILE_LIST_ITEM_NAME = "mollify-filelist-item-name";
-	public static final String SIMPLE_FILE_LIST_ITEM_TYPE = "mollify-filelist-item-type";
-	public static final String SIMPLE_FILE_LIST_ITEM_SIZE = "mollify-filelist-item-size";
-	public static final String SIMPLE_FILE_LIST_FILE_EXTENSION_PREFIX = "mollify-filelist-filetype-";
-	public static final String SIMPLE_FILE_LIST_FILE_EXTENSION_UNKNOWN = "mollify-filelist-filetype-unknown";
+	public static final String FILE_LIST_ITEM_NAME = "mollify-filelist-item-name";
+	public static final String FILE_LIST_ITEM_TYPE = "mollify-filelist-item-type";
+	public static final String FILE_LIST_ITEM_SIZE = "mollify-filelist-item-size";
+	public static final String FILE_LIST_FILE_EXTENSION_PREFIX = "mollify-filelist-filetype-";
+	public static final String FILE_LIST_FILE_EXTENSION_UNKNOWN = "mollify-filelist-filetype-unknown";
 
 	public static final String DIRECTORY_SELECTOR = "mollify-directory-selector";
 	public static final String DIRECTORY_SELECTOR_SEPARATOR = "mollify-directory-selector-separator";

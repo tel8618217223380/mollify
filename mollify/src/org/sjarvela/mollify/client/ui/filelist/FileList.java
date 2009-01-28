@@ -32,14 +32,14 @@ import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SimpleFileList extends DataGrid {
-	private List<SimpleFileListListener> listeners = new ArrayList<SimpleFileListListener>();
+public class FileList extends DataGrid {
+	private List<FileListListener> listeners = new ArrayList<FileListListener>();
 	private List<FileSystemItem> content = new ArrayList();
 	private Comparator<FileSystemItem> comparator = new DefaultFileItemComparator();
 	private TextProvider textProvider;
 
-	public SimpleFileList(TextProvider textProvider, Localizator localizator) {
-		super(StyleConstants.SIMPLE_FILE_LIST_HEADER);
+	public FileList(TextProvider textProvider, Localizator localizator) {
+		super(StyleConstants.FILE_LIST_HEADER);
 		this.textProvider = textProvider;
 
 		// setup header
@@ -62,14 +62,14 @@ public class SimpleFileList extends DataGrid {
 		sinkEvents(Event.ONMOUSEOVER);
 		sinkEvents(Event.ONMOUSEOUT);
 
-		this.addStyleName(StyleConstants.SIMPLE_FILE_LIST);
+		this.addStyleName(StyleConstants.FILE_LIST);
 	}
 
 	private void setHeaderText(Column column, String text) {
 		this.setHeaderText(column.ordinal(), text, column.name().toLowerCase());
 	}
 
-	public void addListener(SimpleFileListListener listener) {
+	public void addListener(FileListListener listener) {
 		listeners.add(listener);
 	}
 
@@ -84,7 +84,7 @@ public class SimpleFileList extends DataGrid {
 	}
 
 	private void notifyClickListeners(FileSystemItem item, Column column) {
-		for (SimpleFileListListener listener : listeners) {
+		for (FileListListener listener : listeners) {
 			listener.onRowClicked(item, column);
 		}
 	}
@@ -112,7 +112,7 @@ public class SimpleFileList extends DataGrid {
 			Column col = Column.values()[i];
 			getColumnFormatter().addStyleName(
 					i,
-					StyleConstants.SIMPLE_FILE_LIST_COLUMN_PREFIX
+					StyleConstants.FILE_LIST_COLUMN_PREFIX
 							+ col.name().toLowerCase());
 		}
 	}
@@ -141,7 +141,7 @@ public class SimpleFileList extends DataGrid {
 
 	private void addDirectoryRow(int index, Directory directory) {
 		Label name = new Label(directory.getName());
-		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_NAME);
+		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
 
 		// setText(index, Column.SELECT.ordinal(), "");
 		setWidget(index, Column.NAME, name);
@@ -156,15 +156,14 @@ public class SimpleFileList extends DataGrid {
 
 	private List<String> getFileStyles(int index, File file) {
 		ArrayList<String> styles = new ArrayList<String>();
-		styles
-				.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_FILE_EVEN
-						: StyleConstants.SIMPLE_FILE_LIST_ROW_FILE_ODD);
+		styles.add(index % 2 == 0 ? StyleConstants.FILE_LIST_ROW_FILE_EVEN
+				: StyleConstants.FILE_LIST_ROW_FILE_ODD);
 
 		if (file.getExtension().length() > 0)
-			styles.add(StyleConstants.SIMPLE_FILE_LIST_FILE_EXTENSION_PREFIX
+			styles.add(StyleConstants.FILE_LIST_FILE_EXTENSION_PREFIX
 					+ file.getExtension().toLowerCase());
 		else
-			styles.add(StyleConstants.SIMPLE_FILE_LIST_FILE_EXTENSION_UNKNOWN);
+			styles.add(StyleConstants.FILE_LIST_FILE_EXTENSION_UNKNOWN);
 
 		return styles;
 	}
@@ -177,32 +176,31 @@ public class SimpleFileList extends DataGrid {
 
 	private Widget createNameWidget(File file) {
 		Label name = new Label(file.getName());
-		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_NAME);
+		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
 		return name;
 	}
 
 	private Widget createExtensionWidget(File file) {
 		Label name = new Label(file.getExtension());
-		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_TYPE);
+		name.setStyleName(StyleConstants.FILE_LIST_ITEM_TYPE);
 		return name;
 	}
 
 	private Widget createSizeWidget(File file) {
 		Label name = new Label(textProvider.getSizeText(file.getSize()));
-		name.setStyleName(StyleConstants.SIMPLE_FILE_LIST_ITEM_SIZE);
+		name.setStyleName(StyleConstants.FILE_LIST_ITEM_SIZE);
 		return name;
 	}
 
 	private List<String> getDirectoryStyles(int index) {
 		ArrayList<String> styles = new ArrayList<String>();
-		styles
-				.add(index % 2 == 0 ? StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY_EVEN
-						: StyleConstants.SIMPLE_FILE_LIST_ROW_DIRECTORY_ODD);
+		styles.add(index % 2 == 0 ? StyleConstants.FILE_LIST_ROW_DIRECTORY_EVEN
+				: StyleConstants.FILE_LIST_ROW_DIRECTORY_ODD);
 		return styles;
 	}
 
 	private void setWidget(int row, Column column, Widget widget) {
-		widget.addStyleName(StyleConstants.SIMPLE_FILE_LIST_COLUMN_PREFIX
+		widget.addStyleName(StyleConstants.FILE_LIST_COLUMN_PREFIX
 				+ column.name().toLowerCase());
 		setWidget(row, column.ordinal(), widget);
 	}

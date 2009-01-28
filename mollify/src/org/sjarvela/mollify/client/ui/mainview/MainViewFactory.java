@@ -22,9 +22,10 @@ import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.MollifyService;
+import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
-import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopupFactory;
+import org.sjarvela.mollify.client.ui.filecontext.FileContextPopupFactory;
 
 public class MainViewFactory {
 	private MollifyService service;
@@ -49,7 +50,7 @@ public class MainViewFactory {
 				fileActionProvider, fileServices, windowManager);
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileServices, localizator);
-		FileDetailsPopupFactory fileDetailsPopupFactory = new FileDetailsPopupFactory(
+		FileContextPopupFactory fileDetailsPopupFactory = new FileContextPopupFactory(
 				fileActionHandler, fileServices, localizator);
 		ActionDelegator actionDelegator = new ActionDelegator();
 

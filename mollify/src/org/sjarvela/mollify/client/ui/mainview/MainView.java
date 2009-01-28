@@ -18,17 +18,17 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
-import org.sjarvela.mollify.client.ui.Button;
+import org.sjarvela.mollify.client.ui.MollifyButton;
 import org.sjarvela.mollify.client.ui.DropdownButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
-import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopup;
-import org.sjarvela.mollify.client.ui.fileaction.FileDetailsPopupFactory;
+import org.sjarvela.mollify.client.ui.filecontext.FileContextPopup;
+import org.sjarvela.mollify.client.ui.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.Column;
-import org.sjarvela.mollify.client.ui.filelist.SimpleFileList;
-import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
+import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.ui.filelist.FileListListener;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -41,13 +41,13 @@ public class MainView extends Composite {
 	private final Localizator localizator;
 
 	private DirectorySelector directorySelector;
-	private SimpleFileList list;
-	private FileDetailsPopup fileDetails = null;
+	private FileList list;
+	private FileContextPopup fileDetails = null;
 
 	private DropdownButton addButton;
-	private Button refreshButton;
-	private Button parentDirButton;
-	private Button logoutButton;
+	private MollifyButton refreshButton;
+	private MollifyButton parentDirButton;
+	private MollifyButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private final ActionListener actionListener;
@@ -60,7 +60,7 @@ public class MainView extends Composite {
 	public MainView(MainViewModel model, TextProvider textProvider,
 			Localizator localizator, ActionListener actionListener,
 			DirectorySelectorFactory directorySelectorFactory,
-			FileDetailsPopupFactory fileDetailsPopupFactory) {
+			FileContextPopupFactory fileDetailsPopupFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.localizator = localizator;
@@ -80,7 +80,7 @@ public class MainView extends Composite {
 		return directorySelector;
 	}
 
-	public SimpleFileList getList() {
+	public FileList getList() {
 		return list;
 	}
 
@@ -92,7 +92,7 @@ public class MainView extends Composite {
 	}
 
 	private Widget createFileList() {
-		list = new SimpleFileList(textProvider, localizator);
+		list = new FileList(textProvider, localizator);
 		return list;
 	}
 
@@ -128,19 +128,19 @@ public class MainView extends Composite {
 	}
 
 	private void createButtons() {
-		refreshButton = new Button(localizator.getStrings()
+		refreshButton = new MollifyButton(localizator.getStrings()
 				.mainViewRefreshButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		parentDirButton = new Button(localizator.getStrings()
+		parentDirButton = new MollifyButton(localizator.getStrings()
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		parentDirButton.setAction(actionListener, Action.parentDir);
 
-		logoutButton = new Button(localizator.getStrings()
+		logoutButton = new MollifyButton(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
@@ -162,7 +162,7 @@ public class MainView extends Composite {
 		}
 	}
 
-	void addFileListListener(SimpleFileListListener listener) {
+	void addFileListListener(FileListListener listener) {
 		list.addListener(listener);
 	}
 
@@ -189,15 +189,15 @@ public class MainView extends Composite {
 		fileDetails.show();
 	}
 
-	public Button getRefreshButton() {
+	public MollifyButton getRefreshButton() {
 		return refreshButton;
 	}
 
-	public Button getParentDirButton() {
+	public MollifyButton getParentDirButton() {
 		return parentDirButton;
 	}
 
-	public Button getLogoutButton() {
+	public MollifyButton getLogoutButton() {
 		return logoutButton;
 	}
 }

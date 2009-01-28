@@ -14,15 +14,14 @@ import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownButton extends Composite {
-	private Label button;
+	private MollifyButton button;
 	private DropdownPopupMenu menu;
 
 	public DropdownButton(ActionListener actionListener, String title, String id) {
-		button = new Button(title, null, StyleConstants.DROPDOWN_BUTTON);
+		button = new MollifyButton(title, null, StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
 		menu = new DropdownPopupMenu<String>(actionListener, this.getElement(),

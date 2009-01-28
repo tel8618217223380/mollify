@@ -11,13 +11,14 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.filelist.Column;
-import org.sjarvela.mollify.client.ui.filelist.SimpleFileListListener;
+import org.sjarvela.mollify.client.ui.filelist.FileListListener;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
-public class MainViewGlue implements SimpleFileListListener, ViewListener {
+public class MainViewGlue implements FileListListener, ViewListener {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 

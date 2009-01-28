@@ -8,14 +8,11 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.ui.ActionHandler;
-import org.sjarvela.mollify.client.ui.ActionId;
-import org.sjarvela.mollify.client.ui.ActionListener;
 
 public class ActionDelegator implements ActionListener {
 	Map<ActionId, ActionHandler> actions = new HashMap();
