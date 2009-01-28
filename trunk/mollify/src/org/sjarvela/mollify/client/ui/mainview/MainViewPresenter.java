@@ -131,7 +131,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void onError(ServiceError error) {
 		windowManager.getDialogManager().showError(error);
-		reset();
+		reload();
 	}
 
 	public void openUploadDialog() {

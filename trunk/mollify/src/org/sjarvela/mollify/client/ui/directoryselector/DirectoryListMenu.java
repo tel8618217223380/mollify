@@ -104,8 +104,6 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(label);
 	}
 
-	// TODO remove overridden listener behaviour, use action listener as regular
-	// popup menus
 	@Override
 	protected Label createMenuItemWidget(final ActionId action,
 			final Directory item) {

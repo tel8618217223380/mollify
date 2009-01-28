@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import com.google.gwt.core.client.GWT;
 
 public enum ServiceError {
-	NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, AUTHENTICATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION;
+	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS;
 
 	public String getMessage(Localizator localizator) {
 		switch (this) {
@@ -32,7 +32,12 @@ public enum ServiceError {
 			return localizator.getStrings().errorMessageAuthenticationFailed();
 		case INVALID_CONFIGURATION:
 			return localizator.getStrings().errorMessageInvalidConfiguration();
+		case DIR_ALREADY_EXISTS:
+			return localizator.getStrings()
+					.errorMessageDirectoryAlreadyExists();
 		default:
+			if (!this.equals(UNKNOWN_ERROR))
+				return this.name();
 			return localizator.getStrings().errorMessageUnknown();
 		}
 	}
@@ -41,8 +46,33 @@ public enum ServiceError {
 		switch (error.getCode()) {
 		case 100:
 			return AUTHENTICATION_FAILED;
+		case 105:
 		case 201:
-			return INVALID_CONFIGURATION; // actually invalid path
+			// 201 is actually invalid path, but for user it is invalid
+			// configuration
+			return INVALID_CONFIGURATION;
+		case 202:
+			return FILE_DOES_NOT_EXIST;
+		case 203:
+			return DIR_DOES_NOT_EXIST;
+		case 204:
+			return FILE_ALREADY_EXISTS;
+		case 205:
+			return DIR_ALREADY_EXISTS;
+		case 206:
+			return NOT_A_FILE;
+		case 207:
+			return NOT_A_DIR;
+		case 208:
+			return DELETE_FAILED;
+		case 209:
+			return NO_UPLOAD_DATA;
+		case 210:
+			return UPLOAD_FAILED;
+		case 211:
+			return SAVING_FAILED;
+		case 212:
+			return NO_MODIFY_RIGHTS;
 		default:
 			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;
