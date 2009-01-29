@@ -224,7 +224,7 @@ By default, file upload progress is disabled. To enable this feature, use follow
 
 = 3. Modifying Installation =
 
-== Relocating host page or backend intrface files ==
+== Relocating host page or backend interface files ==
 
 	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
 
