@@ -21,7 +21,8 @@ import org.sjarvela.mollify.client.file.FileOperationHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileServices implements FileDetailsProvider, FileOperationHandler, DirectoryHandler {
+public class FileServices implements FileDetailsProvider, FileOperationHandler,
+		DirectoryHandler {
 	private final MollifyService service;
 
 	public FileServices(MollifyService service) {
@@ -31,7 +32,7 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler, 
 	public void getDirectories(Directory parent, final ResultListener listener) {
 		this.service.getDirectories(new ResultListener() {
 
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				listener.onFail(error);
 			}
 
@@ -46,7 +47,7 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler, 
 	public void getRootDirectories(final ResultListener listener) {
 		this.service.getRootDirectories(new ResultListener() {
 
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				listener.onFail(error);
 			}
 
@@ -62,7 +63,7 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler, 
 			final ResultListener listener) {
 		this.service.getDirectoriesAndFiles(new ResultListener() {
 
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				listener.onFail(error);
 			}
 

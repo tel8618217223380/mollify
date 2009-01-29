@@ -10,13 +10,13 @@
 
 package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.MollifyError;
 
 public interface FileUploadListener {
 
 	void onUploadStarted(String uploadId, String fileName);
 
-	void onUploadFailed(ServiceError error);
+	void onUploadFailed(MollifyError error);
 
 	void onUploadFinished();
 }

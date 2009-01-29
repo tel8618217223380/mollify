@@ -16,8 +16,8 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.file.DirectoryListener;
 import org.sjarvela.mollify.client.file.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.DropdownPopupMenu;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -71,11 +71,11 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		dataRequested = true;
 	}
 
-	public void onFail(ServiceError error) {
+	public void onFail(MollifyError error) {
 		initialized = true;
 		removeAllMenuItems();
 
-		Label failedLabel = new Label(error.getMessage(localizator));
+		Label failedLabel = new Label(error.getError().getMessage(localizator));
 		failedLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ERROR);
 		addItem(failedLabel);
 	}

@@ -78,4 +78,11 @@ public enum ServiceError {
 			return UNKNOWN_ERROR;
 		}
 	}
+
+	public static ServiceError getByName(String name) {
+		for (ServiceError e : ServiceError.values())
+			if (e.name().equals(name))
+				return e;
+		return UNKNOWN_ERROR;
+	}
 }

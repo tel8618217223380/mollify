@@ -175,8 +175,7 @@ public class MollifyService {
 	}
 
 	private void doRequest(String url, ResultListener resultListener) {
-		new JsonRpcHandler(URL.encode(url), new ResultValidator(resultListener))
-				.doRequest();
+		new JsonRpcHandler(URL.encode(url), resultListener).doRequest();
 	}
 
 	// Just any unique id, time in millisecond level is unique enough

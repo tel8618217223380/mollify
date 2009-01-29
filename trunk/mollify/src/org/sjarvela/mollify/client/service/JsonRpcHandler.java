@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.service;
 
+import org.sjarvela.mollify.client.data.ErrorValue;
+import org.sjarvela.mollify.client.data.ReturnValue;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -31,16 +34,28 @@ public class JsonRpcHandler {
 
 	public void handleResponse(JavaScriptObject jso) {
 		if (jso == null) {
-			handleError(ServiceError.INVALID_RESPONSE.ordinal());
-			return;
+			onError(new MollifyError(ServiceError.INVALID_RESPONSE));
+		} else {
+			ReturnValue result = jso.cast();
+
+			if (!result.isSuccess()) {
+				ErrorValue error = jso.cast();
+				onError(new MollifyError(ServiceError.getFrom(error), error
+						.getDetails()));
+				return;
+			}
+			listener.onSuccess(result.getResult());
 		}
-		listener.onSuccess(jso);
 	}
 
-	public void handleError(int error) {
+	private void onError(MollifyError error) {
 		GWT.log("Json request failed: id=[" + id + "] url=[" + url + "] msg="
-				+ error, null);
-		listener.onFail(ServiceError.values()[error]);
+				+ error.getError().name(), null);
+		listener.onFail(error);
+	}
+
+	public void handleError(String error) {
+		onError(new MollifyError(ServiceError.getByName(error)));
 	}
 
 	private native static void getExternalJson(int requestId, String url,
@@ -58,7 +73,7 @@ public class JsonRpcHandler {
 	    
 	    setTimeout(function() {
 	      if (!window[callback + "done"]) {
-	        handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleError(I)(0);
+	        handler.@org.sjarvela.mollify.client.service.JsonRpcHandler::handleError(Ljava/lang/String;)("NO_RESPONSE");
 	      } 
 	
 	      // cleanup

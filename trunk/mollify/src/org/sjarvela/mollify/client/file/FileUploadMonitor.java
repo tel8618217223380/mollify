@@ -10,8 +10,8 @@
 package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileUploadStatus;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 
 import com.google.gwt.user.client.Timer;
 
@@ -51,7 +51,7 @@ public class FileUploadMonitor {
 
 	private void onTimer() {
 		uploadHandler.getUploadProgress(uploadId, new ResultListener() {
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				listener.onProgressUpdateFail(error);
 			}
 

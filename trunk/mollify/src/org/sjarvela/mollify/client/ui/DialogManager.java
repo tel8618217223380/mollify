@@ -21,8 +21,8 @@ import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -65,10 +65,10 @@ public class DialogManager {
 		return new ProgressDialog(title, progressBarInitiallyVisible);
 	}
 
-	public void showError(ServiceError error) {
+	public void showError(MollifyError error) {
 		new InfoDialog(localizator, localizator.getStrings()
-				.infoDialogErrorTitle(), error.getMessage(localizator),
-				StyleConstants.INFO_DIALOG_TYPE_ERROR);
+				.infoDialogErrorTitle(), error.getError().getMessage(
+				localizator), StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
 	public void showError(ErrorValue errorResult) {

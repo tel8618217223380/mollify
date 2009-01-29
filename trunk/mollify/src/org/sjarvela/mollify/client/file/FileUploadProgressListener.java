@@ -11,11 +11,11 @@
 package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileUploadStatus;
-import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.MollifyError;
 
 public interface FileUploadProgressListener {
 
-	void onProgressUpdateFail(ServiceError error);
+	void onProgressUpdateFail(MollifyError error);
 
 	void onProgressUpdate(FileUploadStatus status);
 

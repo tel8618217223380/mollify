@@ -17,9 +17,9 @@ import org.sjarvela.mollify.client.file.FileUploadController;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadResultHandler;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
@@ -70,7 +70,7 @@ public class FileUploadHandlerImpl implements FileUploadHandler {
 
 	private FileUploadResultHandler getFileUploadResultHandler() {
 		return new FileUploadResultHandler(new ResultListener() {
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				for (FileUploadListener listener : listeners)
 					listener.onUploadFailed(error);
 			}

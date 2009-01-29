@@ -10,8 +10,24 @@
 
 package org.sjarvela.mollify.client.service;
 
-public interface ResultListener {
-	public void onSuccess(Object... result);
+public class MollifyError {
+	private ServiceError error;
+	private String details;
 
-	public void onFail(MollifyError error);
+	public MollifyError(ServiceError error) {
+		this(error, "");
+	}
+
+	public MollifyError(ServiceError error, String details) {
+		this.error = error;
+		this.details = details;
+	}
+
+	public ServiceError getError() {
+		return error;
+	}
+
+	public String getDetails() {
+		return details;
+	}
 }
