@@ -20,8 +20,8 @@ import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileServices;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 
 public class MainViewModel {
 	private final SessionInfo info;
@@ -130,7 +130,7 @@ public class MainViewModel {
 	private ResultListener createListener(final ResultListener listener,
 			final ResultCallback resultCallback) {
 		return new ResultListener() {
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				listener.onFail(error);
 			}
 

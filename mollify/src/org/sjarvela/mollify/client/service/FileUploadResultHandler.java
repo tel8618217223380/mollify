@@ -24,7 +24,7 @@ public class FileUploadResultHandler {
 
 	public void handleResult(String resultString) {
 		if (resultString == null || resultString.length() < 1)
-			listener.onFail(ServiceError.NO_RESPONSE);
+			listener.onFail(new MollifyError(ServiceError.NO_RESPONSE));
 
 		ReturnValue result = JSONParser.parse(resultString).isObject()
 				.getJavaScriptObject().cast();

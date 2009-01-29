@@ -28,8 +28,8 @@ import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.file.FileUploadMonitor;
 import org.sjarvela.mollify.client.file.FileUploadProgressListener;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 
@@ -129,7 +129,7 @@ public class MainViewPresenter implements DirectoryController,
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 
-	public void onError(ServiceError error) {
+	public void onError(MollifyError error) {
 		windowManager.getDialogManager().showError(error);
 		reload();
 	}
@@ -166,7 +166,7 @@ public class MainViewPresenter implements DirectoryController,
 								+ "%");
 					}
 
-					public void onProgressUpdateFail(ServiceError error) {
+					public void onProgressUpdateFail(MollifyError error) {
 						uploadListener.setProgress(0);
 						uploadMonitor.stop();
 					}
@@ -180,7 +180,7 @@ public class MainViewPresenter implements DirectoryController,
 		reload();
 	}
 
-	public void onUploadFailed(ServiceError error) {
+	public void onUploadFailed(MollifyError error) {
 		stopUploaders();
 		onError(error);
 	}
@@ -224,7 +224,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	private ResultListener createListener(final Callback callback) {
 		return new ResultListener() {
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				onError(error);
 			}
 

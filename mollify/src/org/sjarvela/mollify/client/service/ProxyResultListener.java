@@ -20,7 +20,7 @@ public class ProxyResultListener implements ResultListener {
 		listeners.add(listener);
 	}
 
-	public void onFail(ServiceError error) {
+	public void onFail(MollifyError error) {
 		for (ResultListener listener : listeners)
 			listener.onFail(error);
 	}

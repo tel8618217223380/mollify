@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -83,7 +84,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 	private void start() {
 		service.getSessionInfo(new ResultListener() {
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				windowManager.getDialogManager().showError(error);
 			}
 
@@ -107,7 +108,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 					final ConfirmationListener listener) {
 				service.authenticate(userName, password, new ResultListener() {
 
-					public void onFail(ServiceError error) {
+					public void onFail(MollifyError error) {
 						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
 							showLoginError();
 							return;
@@ -132,7 +133,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	public void onLogout(SessionInfo info) {
 		service.logout(new ResultListener() {
 
-			public void onFail(ServiceError error) {
+			public void onFail(MollifyError error) {
 				windowManager.empty();
 				windowManager.getDialogManager().showError(error);
 			}
