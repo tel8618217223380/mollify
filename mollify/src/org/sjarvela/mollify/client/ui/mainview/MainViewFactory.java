@@ -24,6 +24,7 @@ import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
+import org.sjarvela.mollify.client.ui.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.filecontext.FileContextPopupFactory;
 
@@ -50,14 +51,16 @@ public class MainViewFactory {
 				fileActionProvider, fileServices, windowManager);
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileServices, localizator);
-		FileContextPopupFactory fileDetailsPopupFactory = new FileContextPopupFactory(
+		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileActionHandler, fileServices, localizator);
+		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
+				localizator);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue
 		MainView view = new MainView(model, textProvider, localizator,
 				actionDelegator, directorySelectorFactory,
-				fileDetailsPopupFactory);
+				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
 				fileUploadHandler, fileServices, localizator, logoutListener);

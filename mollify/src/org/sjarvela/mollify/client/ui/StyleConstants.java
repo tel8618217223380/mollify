@@ -59,15 +59,23 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
 	public static final String FILE_CONTEXT_ACTION = "mollify-file-context-action";
 
+	public static final String DIR_CONTEXT = "mollify-dir-context";
+	public static final String DIR_CONTEXT_BORDER = "mollify-dir-context-border";
+	public static final String DIR_CONTEXT_POINTER = "mollify-dir-context-pointer";
+	public static final String DIR_CONTEXT_CONTENT = "mollify-dir-context-content";
+	public static final String DIR_CONTEXT_ACTION = "mollify-dir-context-action";
+	public static final String DIR_CONTEXT_BUTTONS = "mollify-dir-context-buttons";
+
 	public static final String FILE_LIST = "mollify-filelist";
 	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
 	public static final String FILE_LIST_COLUMN_PREFIX = "mollify-filelist-column-";
-	public static final String SIMPLE_FILE_LIST_ROW_PARENT_DIRECTORY = "mollify-filelist-row-directory-up";
+	public static final String FILE_LIST_ROW_PARENT_DIRECTORY = "mollify-filelist-row-directory-up";
 	public static final String FILE_LIST_ROW_FILE_EVEN = "mollify-filelist-row-file-even";
 	public static final String FILE_LIST_ROW_FILE_ODD = "mollify-filelist-row-file-odd";
 	public static final String FILE_LIST_ROW_DIRECTORY_EVEN = "mollify-filelist-row-directory-even";
 	public static final String FILE_LIST_ROW_DIRECTORY_ODD = "mollify-filelist-row-directory-odd";
-	public static final String SIMPLE_FILE_LIST_ITEM_SELECT = "mollify-filelist-item-select";
+	public static final String FILE_LIST_ROW_DIRECTORY_ICON = "mollify-filelist-row-directory-icon";
+	public static final String FILE_LIST_ITEM_SELECT = "mollify-filelist-item-select";
 	public static final String FILE_LIST_ITEM_NAME = "mollify-filelist-item-name";
 	public static final String FILE_LIST_ITEM_TYPE = "mollify-filelist-item-type";
 	public static final String FILE_LIST_ITEM_SIZE = "mollify-filelist-item-size";
@@ -145,4 +153,5 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "mollify-create-folder-dialog-name-value";
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "mollify-create-folder-dialog-button-create";
+
 }

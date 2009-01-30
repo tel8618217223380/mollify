@@ -322,8 +322,14 @@ td#mollify-filelist-column-size {
 .mollify-filelist-row-directory-even .mollify-filelist-item-name, .mollify-filelist-row-directory-odd .mollify-filelist-item-name {
 	font-weight: bold;
 	font-size: 11px;
+	padding-top: 6px;
+}
+
+.mollify-filelist-row-directory-icon {
+	width: 24px;
 	background: url(folder.png) no-repeat 4px 6px;
-	padding-left: 24px;
+	height: 20px;
+	float: left;
 }
 
 .mollify-file-context {

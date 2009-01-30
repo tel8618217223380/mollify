@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.TextProvider;
+import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.ActionId;
@@ -22,6 +23,8 @@ import org.sjarvela.mollify.client.ui.MollifyButton;
 import org.sjarvela.mollify.client.ui.DropdownButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
+import org.sjarvela.mollify.client.ui.directorycontext.DirectoryContextPopup;
+import org.sjarvela.mollify.client.ui.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.filecontext.FileContextPopup;
@@ -42,7 +45,8 @@ public class MainView extends Composite {
 
 	private DirectorySelector directorySelector;
 	private FileList list;
-	private FileContextPopup fileDetails = null;
+	private FileContextPopup fileContext = null;
+	private DirectoryContextPopup dirContext = null;
 
 	private DropdownButton addButton;
 	private MollifyButton refreshButton;
@@ -60,13 +64,14 @@ public class MainView extends Composite {
 	public MainView(MainViewModel model, TextProvider textProvider,
 			Localizator localizator, ActionListener actionListener,
 			DirectorySelectorFactory directorySelectorFactory,
-			FileContextPopupFactory fileDetailsPopupFactory) {
+			FileContextPopupFactory fileContextPopupFactory,
+			DirectoryContextPopupFactory directoryContextPopupFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.localizator = localizator;
 		this.actionListener = actionListener;
 		this.directorySelector = directorySelectorFactory.createSelector();
-		this.fileDetails = fileDetailsPopupFactory.createPopup();
+		this.fileContext = fileContextPopupFactory.createPopup();
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
@@ -183,10 +188,16 @@ public class MainView extends Composite {
 		model.clear();
 	}
 
-	public void showFileDetails(File file) {
-		fileDetails.initialize(file, list.getWidget(file, Column.NAME)
+	public void showFileContext(File file) {
+		fileContext.initialize(file, list.getWidget(file, Column.NAME)
 				.getElement());
-		fileDetails.show();
+		fileContext.show();
+	}
+
+	public void showDirectoryContext(Directory directory) {
+		dirContext.initialize(directory, list.getWidget(directory, Column.NAME)
+				.getElement());
+		dirContext.show();
 	}
 
 	public MollifyButton getRefreshButton() {
