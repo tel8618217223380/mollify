@@ -79,7 +79,7 @@ public class MainViewPresenter implements DirectoryController,
 	public void onFileSystemItemSelected(FileSystemItem item, Column column) {
 		if (column.equals(Column.NAME)) {
 			if (item.isFile()) {
-				view.showFileDetails((File) item);
+				view.showFileContext((File) item);
 			} else {
 				Directory directory = (Directory) item;
 				if (directory == Directory.Parent)

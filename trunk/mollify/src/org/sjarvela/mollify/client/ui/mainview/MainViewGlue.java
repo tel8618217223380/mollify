@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
@@ -21,9 +22,11 @@ import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 public class MainViewGlue implements FileListListener, ViewListener {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
+	private final MainView view;
 
 	public MainViewGlue(MainView view, final MainViewPresenter presenter,
 			ActionDelegator actionDelegator) {
+		this.view = view;
 		this.presenter = presenter;
 		this.actionDelegator = actionDelegator;
 
@@ -72,5 +75,9 @@ public class MainViewGlue implements FileListListener, ViewListener {
 
 	public void onRowClicked(FileSystemItem item, Column column) {
 		presenter.onFileSystemItemSelected(item, column);
+	}
+
+	public void onDirectoryIconClicked(Directory directory) {
+		view.showDirectoryContext(directory);
 	}
 }

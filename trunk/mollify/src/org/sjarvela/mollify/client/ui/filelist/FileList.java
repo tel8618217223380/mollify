@@ -27,6 +27,8 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
@@ -81,6 +83,12 @@ public class FileList extends DataGrid {
 	private void onClick(int row, int col) {
 		Column column = Column.values()[col];
 		notifyClickListeners(content.get(row), column);
+	}
+
+	protected void onDirectoryIconClicked(Directory directory) {
+		for (FileListListener listener : listeners) {
+			listener.onDirectoryIconClicked(directory);
+		}
 	}
 
 	private void notifyClickListeners(FileSystemItem item, Column column) {
@@ -139,12 +147,25 @@ public class FileList extends DataGrid {
 		}
 	}
 
-	private void addDirectoryRow(int index, Directory directory) {
+	private void addDirectoryRow(int index, final Directory directory) {
+		FlowPanel panel = new FlowPanel();
+
+		Label icon = new Label();
+		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
+		panel.add(icon);
+
+		icon.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				onDirectoryIconClicked(directory);
+			}
+		});
+
 		Label name = new Label(directory.getName());
 		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
+		panel.add(name);
 
 		// setText(index, Column.SELECT.ordinal(), "");
-		setWidget(index, Column.NAME, name);
+		setWidget(index, Column.NAME, panel);
 		setText(index, Column.TYPE.ordinal(), "");
 		setHTML(index, Column.SIZE.ordinal(), "");
 
@@ -205,8 +226,8 @@ public class FileList extends DataGrid {
 		setWidget(row, column.ordinal(), widget);
 	}
 
-	public Widget getWidget(File file, Column column) {
-		int row = content.indexOf(file);
+	public Widget getWidget(FileSystemItem item, Column column) {
+		int row = content.indexOf(item);
 		return this.getWidget(row, column.ordinal());
 	}
 
