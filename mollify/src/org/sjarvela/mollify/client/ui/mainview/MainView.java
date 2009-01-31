@@ -72,6 +72,7 @@ public class MainView extends Composite {
 		this.actionListener = actionListener;
 		this.directorySelector = directorySelectorFactory.createSelector();
 		this.fileContext = fileContextPopupFactory.createPopup();
+		this.dirContext = directoryContextPopupFactory.createPopup();
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);

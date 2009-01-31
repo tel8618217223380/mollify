@@ -30,8 +30,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SourcesTableEvents;
-import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileList extends DataGrid {
@@ -39,6 +37,7 @@ public class FileList extends DataGrid {
 	private List<FileSystemItem> content = new ArrayList();
 	private Comparator<FileSystemItem> comparator = new DefaultFileItemComparator();
 	private TextProvider textProvider;
+	private List<String> rowStyles = new ArrayList();
 
 	public FileList(TextProvider textProvider, Localizator localizator) {
 		super(StyleConstants.FILE_LIST_HEADER);
@@ -53,13 +52,6 @@ public class FileList extends DataGrid {
 				.fileListColumnTitleType());
 		this.setHeaderText(Column.SIZE, localizator.getStrings()
 				.fileListColumnTitleSize());
-
-		this.addTableListener(new TableListener() {
-			public void onCellClicked(SourcesTableEvents sender, int row,
-					int cell) {
-				onClick(row, cell);
-			}
-		});
 
 		sinkEvents(Event.ONMOUSEOVER);
 		sinkEvents(Event.ONMOUSEOUT);
@@ -87,7 +79,7 @@ public class FileList extends DataGrid {
 
 	protected void onDirectoryIconClicked(Directory directory) {
 		for (FileListListener listener : listeners) {
-			listener.onDirectoryIconClicked(directory);
+			listener.onIconClicked(directory);
 		}
 	}
 
@@ -109,10 +101,12 @@ public class FileList extends DataGrid {
 		int current = 0;
 
 		for (FileSystemItem item : content) {
+			String style = "";
 			if (item.isFile())
-				addFileRow(current, (File) item);
+				style = addFileRow(current, (File) item);
 			else
-				addDirectoryRow(current, (Directory) item);
+				style = addDirectoryRow(current, (Directory) item);
+			rowStyles.add(style);
 			current++;
 		}
 
@@ -133,11 +127,12 @@ public class FileList extends DataGrid {
 				removeRow(0);
 			}
 		}
+		rowStyles.clear();
 	}
 
-	private void addFileRow(int index, File file) {
+	private String addFileRow(int index, File file) {
 		// setWidget(index, Column.SELECT, createSelectWidget(file));
-		setWidget(index, Column.NAME, createNameWidget(file));
+		setWidget(index, Column.NAME, createNameWidget(index, file));
 		setWidget(index, Column.TYPE, createExtensionWidget(file));
 		setWidget(index, Column.SIZE, createSizeWidget(file));
 
@@ -145,9 +140,10 @@ public class FileList extends DataGrid {
 		for (String style : styles) {
 			getRowFormatter().addStyleName(index, style);
 		}
+		return styles.get(0);
 	}
 
-	private void addDirectoryRow(int index, final Directory directory) {
+	private String addDirectoryRow(final int row, final Directory directory) {
 		FlowPanel panel = new FlowPanel();
 
 		Label icon = new Label();
@@ -160,19 +156,18 @@ public class FileList extends DataGrid {
 			}
 		});
 
-		Label name = new Label(directory.getName());
-		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
-		panel.add(name);
+		panel.add(createNameWidget(row, directory));
 
 		// setText(index, Column.SELECT.ordinal(), "");
-		setWidget(index, Column.NAME, panel);
-		setText(index, Column.TYPE.ordinal(), "");
-		setHTML(index, Column.SIZE.ordinal(), "");
+		setWidget(row, Column.NAME, panel);
+		setText(row, Column.TYPE.ordinal(), "");
+		setHTML(row, Column.SIZE.ordinal(), "");
 
-		List<String> styles = getDirectoryStyles(index);
+		List<String> styles = getDirectoryStyles(row);
 		for (String style : styles) {
-			getRowFormatter().addStyleName(index, style);
+			getRowFormatter().addStyleName(row, style);
 		}
+		return styles.get(0);
 	}
 
 	private List<String> getFileStyles(int index, File file) {
@@ -195,9 +190,14 @@ public class FileList extends DataGrid {
 	// return select;
 	// }
 
-	private Widget createNameWidget(File file) {
-		Label name = new Label(file.getName());
+	private Widget createNameWidget(final int row, FileSystemItem item) {
+		Label name = new Label(item.getName());
 		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
+		name.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				FileList.this.onClick(row, Column.NAME.ordinal());
+			}
+		});
 		return name;
 	}
 
@@ -245,7 +245,8 @@ public class FileList extends DataGrid {
 			if (row < 0)
 				return;
 
-			this.getRowFormatter().addStyleName(row, StyleConstants.HOVER);
+			this.getRowFormatter().addStyleName(row,
+					rowStyles.get(row) + "-" + StyleConstants.HOVER);
 			break;
 		}
 
@@ -254,7 +255,8 @@ public class FileList extends DataGrid {
 			if (row < 0)
 				return;
 
-			this.getRowFormatter().removeStyleName(row, StyleConstants.HOVER);
+			this.getRowFormatter().removeStyleName(row,
+					rowStyles.get(row) + "-" + StyleConstants.HOVER);
 			break;
 		}
 		}
