@@ -1,0 +1,74 @@
+package org.sjarvela.mollify.client.ui.contextpopup;
+
+import org.sjarvela.mollify.client.file.FileSystemAction;
+import org.sjarvela.mollify.client.ui.BorderedControl;
+import org.sjarvela.mollify.client.ui.DropdownPopup;
+import org.sjarvela.mollify.client.ui.HoverDecorator;
+
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+
+public abstract class ContextPopup extends DropdownPopup {
+	private final String styleName;
+
+	public ContextPopup(String styleName) {
+		super(null, null);
+		this.styleName = styleName;
+		this.setStyleName(styleName);
+	}
+
+	protected void initialize() {
+		BorderedControl content = new BorderedControl(styleName + "-border");
+		content.setContent(createContent());
+
+		addItem(content);
+		addItem(createPointer());
+		addItem(createCloseButton());
+	}
+
+	protected abstract Widget createContent();
+
+	private Widget createPointer() {
+		FlowPanel pointer = new FlowPanel();
+		pointer.setStyleName(styleName + "-pointer");
+		return pointer;
+	}
+
+	private Widget createCloseButton() {
+		final Label close = new Label();
+		close.setStyleName(styleName + "-close");
+		HoverDecorator.decorate(close);
+		close.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				HoverDecorator.clear(close);
+				ContextPopup.this.hide();
+			}
+		});
+		return close;
+	}
+
+	protected Button createActionButton(String title, final FileSystemAction action) {
+		String base = styleName + "-action";
+
+		Button button = new Button(title);
+		button.addStyleName(base);
+		button.getElement().setId(base + "-" + action.name().toLowerCase());
+		button.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				onAction(action);
+			}
+		});
+		return button;
+	}
+
+	protected abstract void onAction(FileSystemAction action);
+
+	public void setParent(Element element) {
+		super.setParentElement(element);
+		super.setOpenerElement(element);
+	}
+}

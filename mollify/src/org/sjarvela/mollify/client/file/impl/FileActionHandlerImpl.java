@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.file.impl;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileOperationHandler;
@@ -47,14 +47,14 @@ public class FileActionHandlerImpl implements FileActionHandler {
 		deleteListener.addListener(listener);
 	}
 
-	public void onFileAction(final File file, FileAction action) {
-		if (action.equals(FileAction.DOWNLOAD)) {
+	public void onFileAction(final File file, FileSystemAction action) {
+		if (action.equals(FileSystemAction.DOWNLOAD)) {
 			windowManager.openDownloadUrl(fileActionProvider.getActionURL(file,
 					action));
-		} else if (action.equals(FileAction.RENAME)) {
+		} else if (action.equals(FileSystemAction.RENAME)) {
 			windowManager.getDialogManager().showRenameDialog(file,
 					fileOperator, renameListener);
-		} else if (action.equals(FileAction.DELETE)) {
+		} else if (action.equals(FileSystemAction.DELETE)) {
 			String title = windowManager.getLocalizator().getStrings()
 					.deleteFileConfirmationDialogTitle();
 			String message = windowManager.getLocalizator().getMessages()

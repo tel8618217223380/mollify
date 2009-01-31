@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.DateTime;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
-import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileSystemAction;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -27,7 +27,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		details, files, dirs, dirs_and_files, roots, upload_status
+		file_details, directory_details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
 	public MollifyService(String path) {
@@ -97,43 +97,50 @@ public class MollifyService {
 	}
 
 	public void getFileDetails(File file, ResultListener resultListener) {
-		String url = getUrl(Action.get, "type=" + GetType.details, "id="
+		String url = getUrl(Action.get, "type=" + GetType.file_details, "id="
 				+ file.getId());
+		doRequest(url, resultListener);
+	}
+
+	public void getDirectoryDetails(Directory directory,
+			ResultListener resultListener) {
+		String url = getUrl(Action.get, "type=" + GetType.directory_details,
+				"id=" + directory.getId());
 		doRequest(url, resultListener);
 	}
 
 	public void renameFile(File file, String newName,
 			ResultListener resultListener) {
-		String url = getActionUrl(file, FileAction.RENAME) + "&to="
+		String url = getActionUrl(file, FileSystemAction.RENAME) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, resultListener);
 	}
 
 	public void deleteFile(File file, ResultListener resultListener) {
-		doRequest(getActionUrl(file, FileAction.DELETE), resultListener);
+		doRequest(getActionUrl(file, FileSystemAction.DELETE), resultListener);
 	}
 
 	public void createFolder(Directory parentFolder, String folderName,
 			ResultListener listener) {
-		doRequest(getActionUrl(parentFolder, FileAction.CREATE_FOLDER, "name="
-				+ folderName), listener);
+		doRequest(getActionUrl(parentFolder, FileSystemAction.CREATE_FOLDER,
+				"name=" + folderName), listener);
 	}
 
 	public void getUploadProgress(String id, ResultListener resultListener) {
 		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 
-	public String getActionUrl(FileSystemItem item, FileAction action,
+	public String getActionUrl(FileSystemItem item, FileSystemAction action,
 			String... params) {
 		if (!item.isFile()) {
-			if (!action.equals(FileAction.UPLOAD)
-					&& !action.equals(FileAction.CREATE_FOLDER)) {
+			if (!action.equals(FileSystemAction.UPLOAD)
+					&& !action.equals(FileSystemAction.CREATE_FOLDER)) {
 				throw new RuntimeException("Invalid directory action request "
 						+ action.name());
 			}
 		} else {
-			if (action.equals(FileAction.UPLOAD)
-					|| action.equals(FileAction.CREATE_FOLDER)) {
+			if (action.equals(FileSystemAction.UPLOAD)
+					|| action.equals(FileSystemAction.CREATE_FOLDER)) {
 				throw new RuntimeException("Invalid file action request "
 						+ action.name());
 			}

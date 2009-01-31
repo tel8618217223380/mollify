@@ -164,8 +164,23 @@
 		return $result;
 	}
 	
+	function get_directory_details($dir) {
+		if (!assert_dir($dir)) return FALSE;
+
+		$datetime_format = "YmdHis";
+		$result = array(
+			"id" => $dir["id"],
+			"permissions" => get_directory_permissions_value($dir));
+		return $result;
+	}
+	
 	function get_file_permissions_value($file) {
 		if (has_modify_rights($file)) return "rw";
+		return "ro";
+	}
+	
+	function get_directory_permissions_value($dir) {
+		if (has_general_modify_rights()) return "rw";
 		return "ro";
 	}
 	

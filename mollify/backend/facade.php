@@ -48,12 +48,18 @@
 					$result = get_directories($account);
 					break;
 
-				case "details":
+				case "file_details":
 					$file = get_fileitem_from_url("id");
 					if (!$file) return;
 					$result = get_file_details($file);
 					break;
-			
+
+				case "directory_details":
+					$dir = get_fileitem_from_url("id");
+					if (!$dir) return;
+					$result = get_directory_details($dir);
+					break;
+					
 				case "upload_status":
 					if (!isset($_GET["id"])) break;
 					$result = get_upload_status($_GET["id"]);

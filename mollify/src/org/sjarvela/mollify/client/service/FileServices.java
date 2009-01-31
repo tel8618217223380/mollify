@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.JsDirectory;
+import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileOperationHandler;
@@ -22,7 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class FileServices implements FileDetailsProvider, FileOperationHandler,
-		DirectoryHandler {
+		DirectoryHandler, DirectoryDetailsProvider {
 	private final MollifyService service;
 
 	public FileServices(MollifyService service) {
@@ -83,6 +84,11 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler,
 	public void getFileDetails(File file, ResultListener resultListener) {
 		service.getFileDetails(file, resultListener);
 	}
+	
+	public void getDirectoryDetails(Directory directory,
+			ResultListener resultListener) {
+		service.getDirectoryDetails(directory, resultListener);
+	}
 
 	public void onRename(File file, String newName, ResultListener listener) {
 		service.renameFile(file, newName, listener);
@@ -96,5 +102,7 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler,
 			ResultListener listener) {
 		service.createFolder(parentFolder, folderName, listener);
 	}
+
+
 
 }

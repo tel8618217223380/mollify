@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.FileAction;
+import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadController;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
@@ -103,7 +103,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		form.addFormHandler(fileUploadHandler.getUploadFormHandler(this,
 				uploadId));
 		form.setAction(fileActionProvider.getActionURL(directory,
-				FileAction.UPLOAD));
+				FileSystemAction.UPLOAD));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 

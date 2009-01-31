@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.file;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 
 public interface FileActionProvider {
-	public boolean isActionAllowed(FileSystemItem item, FileAction action);
+	public boolean isActionAllowed(FileSystemItem item, FileSystemAction action);
 
-	public String getActionURL(FileSystemItem item, FileAction action);
+	public String getActionURL(FileSystemItem item, FileSystemAction action);
 }

@@ -19,6 +19,6 @@ public interface FileActionHandler {
 
 	void addDeleteListener(ResultListener listener);
 
-	void onFileAction(File file, FileAction action);
+	void onFileAction(File file, FileSystemAction action);
 
 }

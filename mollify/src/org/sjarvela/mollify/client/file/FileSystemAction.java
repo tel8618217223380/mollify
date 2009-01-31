@@ -10,6 +10,6 @@
 
 package org.sjarvela.mollify.client.file;
 
-public enum FileAction {
+public enum FileSystemAction {
 	DOWNLOAD, RENAME, DELETE, UPLOAD, DETAILS, CREATE_FOLDER
 }
