@@ -29,7 +29,7 @@ public class HoverDecorator {
 
 				@Override
 				public void onMouseLeave(Widget sender) {
-					sender.removeStyleDependentName(StyleConstants.HOVER);
+					clear(sender);
 				}
 			};
 		}
@@ -38,6 +38,10 @@ public class HoverDecorator {
 
 	public static void decorate(Label decorated) {
 		decorated.addMouseListener(getListener());
+	}
+
+	public static void clear(Widget decorated) {
+		decorated.removeStyleDependentName(StyleConstants.HOVER);
 	}
 
 }

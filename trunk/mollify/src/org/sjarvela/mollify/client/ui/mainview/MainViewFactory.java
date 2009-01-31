@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview;
 import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.SessionInfo;
+import org.sjarvela.mollify.client.file.DirectoryActionHandler;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
@@ -24,9 +25,9 @@ import org.sjarvela.mollify.client.service.FileServices;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.directorycontext.DirectoryContextPopupFactory;
+import org.sjarvela.mollify.client.ui.contextpopup.directorycontext.DirectoryContextPopupFactory;
+import org.sjarvela.mollify.client.ui.contextpopup.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
-import org.sjarvela.mollify.client.ui.filecontext.FileContextPopupFactory;
 
 public class MainViewFactory {
 	private MollifyService service;
@@ -53,8 +54,9 @@ public class MainViewFactory {
 				model, fileServices, localizator);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileActionHandler, fileServices, localizator);
+		DirectoryActionHandler directoryActionHandler = null;
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				localizator);
+				localizator, fileServices, directoryActionHandler);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue

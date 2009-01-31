@@ -57,6 +57,13 @@
 	height: 23px;
 	border-style: none;
 	margin-right: 4px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover {
+	text-decoration: underline;
+	color: #292c34;
 }
 
 .mollify-dropdown-button {
@@ -333,11 +340,11 @@ td#mollify-filelist-column-size {
 	cursor: pointer;
 }
 
-.mollify-file-context {
-	padding-top: 15px;
+.mollify-file-context, .mollify-directory-context {
+	margin-top: 20px;
 }
 
-.mollify-file-context-action {
+.mollify-file-context-action, .mollify-directory-context-action {
 	height: 25px;
 	margin-right: 6px;
 	margin-top: 6px;
@@ -345,64 +352,81 @@ td#mollify-filelist-column-size {
 	font-weight: bold;
 }
 
-.mollify-file-context-border {
+.mollify-file-context-border, .mollify-directory-context-border {
 	border-width: 0;
 	border-spacing: 0;
 	margin: 0;
 	padding: 0;
 }
 
-.mollify-file-context-pointer {
+.mollify-file-context-pointer, .mollify-directory-context-pointer {
 	width: 30px;
 	height: 15px;
 	background: url(b-tip.png) no-repeat 0 0;
+	position: absolute;
+	top: -4px;
+	left: 13px;
 }
 
-.mollify-file-context-border-nw {
-	background: url(b-nw.png) no-repeat 0 4px;
+.mollify-file-context-close, .mollify-file-context-close-hover, .mollify-directory-context-close, .mollify-directory-context-close-hover {
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	top: 10px;
+	right: 14px;
+	cursor: pointer;
+	background-image: url(b-close.png);
+}
+
+.mollify-file-context-close-hover, .mollify-directory-context-close-hover {
+	background-image: url(b-close-over.png);
+}
+
+.mollify-file-context-border-nw, .mollify-directory-context-border-nw {
+	background: url(b-nw.png) no-repeat 0 0;
 	width: 19px;
-	height: 15px;
+	height: 12px;
 }
 
-.mollify-file-context-border-n {
-	background: url(b-n.png) repeat-x 0 4px;
-	height: 15px;
+.mollify-file-context-border-n, .mollify-directory-context-border-n {
+	background: url(b-n.png) repeat-x 0 0;
+	height: 12px;
 }
 
-.mollify-file-context-border-ne {
-	background: url(b-ne.png) no-repeat 0 4px;
+.mollify-file-context-border-ne, .mollify-directory-context-border-ne {
+	background: url(b-ne.png) no-repeat 0 0;
 	width: 19px;
-	height: 15px;
+	height: 12px;
 }
 
-.mollify-file-context-border-w {
+.mollify-file-context-border-w, .mollify-directory-context-border-w {
 	background: url(b-w.png) repeat-y;
 	width: 19px;
 }
 
-.mollify-file-context-border-e {
+.mollify-file-context-border-e, .mollify-directory-context-border-e {
 	background: url(b-e.png) repeat-y;
 	width: 19px;
 }
 
-.mollify-file-context-border-sw {
+.mollify-file-context-border-sw, .mollify-directory-context-border-sw {
 	background: url(b-sw.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.mollify-file-context-border-s {
+.mollify-file-context-border-s, .mollify-directory-context-border-s {
 	background: url(b-s.png) repeat-x;
 	height: 20px;
 }
 
-.mollify-file-context-border-se {
+.mollify-file-context-border-se, .mollify-directory-context-border-se {
 	background: url(b-se.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.mollify-file-context-content {
+.mollify-file-context-content, .mollify-directory-context-content {
 	background-color: white;
 	padding-top: 3px;
 }
@@ -441,8 +465,18 @@ td#mollify-filelist-column-size {
 	width: 150px;
 }
 
-.mollify-file-context-buttons {
+.mollify-file-context-buttons, .mollify-directory-context-buttons {
 	margin-top: 7px;
+}
+
+.mollify-directory-context-content {
+	background: #fff url(folder.png) no-repeat 0 0;
+	width: 250px;
+}
+
+.mollify-directory-context-name {
+	font-weight: bold;
+	padding-left: 20px;
 }
 
 .mollify-info-dialog-content {

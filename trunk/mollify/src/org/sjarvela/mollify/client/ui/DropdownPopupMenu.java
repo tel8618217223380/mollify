@@ -12,7 +12,9 @@ package org.sjarvela.mollify.client.ui;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopupMenu<T> extends DropdownPopup {
@@ -26,6 +28,10 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		this.setStyleName(StyleConstants.DROPDOWN_MENU);
 
 		setWidget(container);
+	}
+
+	protected Panel createContainer() {
+		return new HorizontalPanel();
 	}
 
 	public void addMenuAction(final ActionId action, T item) {

@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
+import org.sjarvela.mollify.client.ui.HoverDecorator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.DOM;
@@ -148,6 +149,7 @@ public class FileList extends DataGrid {
 
 		Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
+		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
 		icon.addClickListener(new ClickListener() {
@@ -198,6 +200,7 @@ public class FileList extends DataGrid {
 				FileList.this.onClick(row, Column.NAME.ordinal());
 			}
 		});
+		HoverDecorator.decorate(name);
 		return name;
 	}
 

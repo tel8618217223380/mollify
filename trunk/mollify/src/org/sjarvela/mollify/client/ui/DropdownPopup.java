@@ -13,14 +13,15 @@ package org.sjarvela.mollify.client.ui;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopup extends PopupPanel {
 	private Element parent;
 	private Element opener;
-	protected VerticalPanel container;
+	protected Panel container;
 
 	boolean cancelShow = false;
 
@@ -29,9 +30,13 @@ public class DropdownPopup extends PopupPanel {
 
 		this.opener = opener;
 		this.parent = parent;
-		this.container = new VerticalPanel();
+		this.container = createContainer();
 
 		setWidget(container);
+	}
+
+	protected Panel createContainer() {
+		return new FlowPanel();
 	}
 
 	protected void addItem(Widget item) {

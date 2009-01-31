@@ -45,8 +45,6 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_BUTTON_PARENT_DIR = "mollify-header-parent-dir-button";
 
 	public static final String FILE_CONTEXT = "mollify-file-context";
-	public static final String FILE_CONTEXT_BORDER = "mollify-file-context-border";
-	public static final String FILE_CONTEXT_POINTER = "mollify-file-context-pointer";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "mollify-file-context-description";
@@ -57,14 +55,11 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_DETAILS_ROW_LABEL = "mollify-file-context-details-row-label";
 	public static final String FILE_CONTEXT_DETAILS_ROW_VALUE = "mollify-file-context-details-row-value";
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
-	public static final String FILE_CONTEXT_ACTION = "mollify-file-context-action";
 
-	public static final String DIR_CONTEXT = "mollify-dir-context";
-	public static final String DIR_CONTEXT_BORDER = "mollify-dir-context-border";
-	public static final String DIR_CONTEXT_POINTER = "mollify-dir-context-pointer";
-	public static final String DIR_CONTEXT_CONTENT = "mollify-dir-context-content";
-	public static final String DIR_CONTEXT_ACTION = "mollify-dir-context-action";
-	public static final String DIR_CONTEXT_BUTTONS = "mollify-dir-context-buttons";
+	public static final String DIR_CONTEXT = "mollify-directory-context";
+	public static final String DIR_CONTEXT_CONTENT = "mollify-directory-context-content";
+	public static final String DIR_CONTEXT_NAME = "mollify-directory-context-name";
+	public static final String DIR_CONTEXT_BUTTONS = "mollify-directory-context-buttons";
 
 	public static final String FILE_LIST = "mollify-filelist";
 	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
