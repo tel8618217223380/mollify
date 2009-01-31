@@ -48,16 +48,18 @@
 					$result = get_directories($account);
 					break;
 
-				case "file_details":
+				case "details":
+					if (!isset($_GET["item_type"])) return;
 					$file = get_fileitem_from_url("id");
 					if (!$file) return;
-					$result = get_file_details($file);
-					break;
-
-				case "directory_details":
-					$dir = get_fileitem_from_url("id");
-					if (!$dir) return;
-					$result = get_directory_details($dir);
+					$item_type = strtolower(trim($_GET["item_type"]));
+					
+					if ($item_type === 'f')
+						$result = get_file_details($file);
+					else if ($item_type === 'd')
+						$result = get_directory_details($file);
+					else
+						$error = "INVALID_REQUEST";
 					break;
 					
 				case "upload_status":
@@ -84,9 +86,20 @@
 					break;
 			
 				case "rename":
+					if (!isset($_GET["item_type"])) return;
 					if (!isset($_GET["to"])) return;
-					if (rename_file($file, urldecode($_GET["to"])))
-						$result = get_success_message();
+					$to = urldecode($_GET["to"]);
+					$item_type = strtolower(trim($_GET["item_type"]));
+					
+					if ($item_type === 'f') {
+						if (rename_file($file, $to))
+							$result = get_success_message();
+					} else if ($item_type === 'd') {
+						if (rename_directory($file, $to))
+							$result = get_success_message();
+					} else {
+						$error = "INVALID_REQUEST";
+					}
 					break;
 				
 				case "delete":

@@ -101,6 +101,6 @@ public class CreateFolderDialog extends CenteredDialog {
 		}
 
 		this.hide();
-		directoryHandler.onCreate(parentFolder, folderName, resultListener);
+		directoryHandler.onCreateDirectory(parentFolder, folderName, resultListener);
 	}
 }

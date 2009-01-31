@@ -5,7 +5,7 @@ import org.sjarvela.mollify.client.service.ResultListener;
 
 public interface DirectoryHandler {
 
-	void onCreate(Directory parentFolder, String folderName,
+	void onCreateDirectory(Directory parentFolder, String folderName,
 			ResultListener resultListener);
 
 }

@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.file.DirectoryActionHandler;
 import org.sjarvela.mollify.client.file.FileActionHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
+import org.sjarvela.mollify.client.file.impl.DirectoryActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileActionProviderImpl;
 import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
@@ -47,6 +48,7 @@ public class MainViewFactory {
 				service);
 		FileServices fileServices = new FileServices(service);
 		MainViewModel model = new MainViewModel(fileServices, info);
+
 		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
 		FileActionHandler fileActionHandler = new FileActionHandlerImpl(
 				fileActionProvider, fileServices, windowManager);
@@ -54,7 +56,8 @@ public class MainViewFactory {
 				model, fileServices, localizator);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileActionHandler, fileServices, localizator);
-		DirectoryActionHandler directoryActionHandler = null;
+		DirectoryActionHandler directoryActionHandler = new DirectoryActionHandlerImpl(
+				fileServices, fileServices, windowManager);
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
 				localizator, fileServices, directoryActionHandler);
 		ActionDelegator actionDelegator = new ActionDelegator();
@@ -65,7 +68,8 @@ public class MainViewFactory {
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileActionProvider, fileActionHandler,
-				fileUploadHandler, fileServices, localizator, logoutListener);
+				directoryActionHandler, fileUploadHandler, fileServices,
+				localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter, actionDelegator);
 

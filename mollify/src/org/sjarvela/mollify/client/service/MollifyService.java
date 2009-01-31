@@ -27,7 +27,7 @@ public class MollifyService {
 	};
 
 	enum GetType {
-		file_details, directory_details, files, dirs, dirs_and_files, roots, upload_status
+		details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
 	public MollifyService(String path) {
@@ -97,15 +97,15 @@ public class MollifyService {
 	}
 
 	public void getFileDetails(File file, ResultListener resultListener) {
-		String url = getUrl(Action.get, "type=" + GetType.file_details, "id="
-				+ file.getId());
+		String url = getUrl(Action.get, "type=" + GetType.details, "id="
+				+ file.getId(), getItemTypeParam(file));
 		doRequest(url, resultListener);
 	}
 
 	public void getDirectoryDetails(Directory directory,
 			ResultListener resultListener) {
-		String url = getUrl(Action.get, "type=" + GetType.directory_details,
-				"id=" + directory.getId());
+		String url = getUrl(Action.get, "type=" + GetType.details, "id="
+				+ directory.getId(), getItemTypeParam(directory));
 		doRequest(url, resultListener);
 	}
 
@@ -114,6 +114,13 @@ public class MollifyService {
 		String url = getActionUrl(file, FileSystemAction.RENAME) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, resultListener);
+	}
+
+	public void renameDirectory(Directory dir, String newName,
+			ResultListener listener) {
+		String url = getActionUrl(dir, FileSystemAction.RENAME) + "&to="
+				+ URL.encode(newName);
+		doRequest(url, listener);
 	}
 
 	public void deleteFile(File file, ResultListener resultListener) {
@@ -132,32 +139,27 @@ public class MollifyService {
 
 	public String getActionUrl(FileSystemItem item, FileSystemAction action,
 			String... params) {
-		if (!item.isFile()) {
-			if (!action.equals(FileSystemAction.UPLOAD)
-					&& !action.equals(FileSystemAction.CREATE_FOLDER)) {
-				throw new RuntimeException("Invalid directory action request "
-						+ action.name());
-			}
-		} else {
-			if (action.equals(FileSystemAction.UPLOAD)
-					|| action.equals(FileSystemAction.CREATE_FOLDER)) {
-				throw new RuntimeException("Invalid file action request "
-						+ action.name());
-			}
-
-			if (item.isEmpty()) {
-				throw new RuntimeException("No file given, action "
-						+ action.name());
-			}
+		if (item.isEmpty()) {
+			throw new RuntimeException("No item defined, action "
+					+ action.name());
+		}
+		if (!action.isApplicable(item)) {
+			throw new RuntimeException("Invalid action request "
+					+ action.name());
 		}
 
-		String[] urlParams = new String[params.length + 2];
+		String[] urlParams = new String[params.length + 3];
 		urlParams[0] = "type=" + action.name();
 		urlParams[1] = "id=" + item.getId();
+		urlParams[2] = getItemTypeParam(item);
 		for (int i = 0; i < params.length; i++)
-			urlParams[i + 2] = params[i];
+			urlParams[i + 3] = params[i];
 
 		return getUrl(Action.operate, urlParams);
+	}
+
+	private String getItemTypeParam(FileSystemItem item) {
+		return "item_type=" + (item.isFile() ? "f" : "d");
 	}
 
 	/* Utility functions */

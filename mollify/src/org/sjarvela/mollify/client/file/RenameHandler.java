@@ -10,9 +10,10 @@
 
 package org.sjarvela.mollify.client.file;
 
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.service.ResultListener;
 
 public interface RenameHandler {
-	public void onRename(File file, String newName, ResultListener listener);
+	public void onRename(FileSystemItem item, String newName,
+			ResultListener listener);
 }

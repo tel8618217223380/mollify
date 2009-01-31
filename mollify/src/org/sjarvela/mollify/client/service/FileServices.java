@@ -84,25 +84,30 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler,
 	public void getFileDetails(File file, ResultListener resultListener) {
 		service.getFileDetails(file, resultListener);
 	}
-	
+
 	public void getDirectoryDetails(Directory directory,
 			ResultListener resultListener) {
 		service.getDirectoryDetails(directory, resultListener);
 	}
 
-	public void onRename(File file, String newName, ResultListener listener) {
-		service.renameFile(file, newName, listener);
+	public void onRename(FileSystemItem item, String newName,
+			ResultListener listener) {
+		if (item.isFile())
+			service.renameFile((File) item, newName, listener);
+		else
+			service.renameDirectory((Directory) item, newName, listener);
 	}
 
-	public void onDelete(File file, ResultListener listener) {
-		service.deleteFile(file, listener);
+	public void onDelete(FileSystemItem item, ResultListener listener) {
+		if (item.isFile())
+			service.deleteFile((File) item, listener);
+		else
+			throw new RuntimeException("Not implemented yet");
 	}
 
-	public void onCreate(Directory parentFolder, String folderName,
+	public void onCreateDirectory(Directory parentFolder, String folderName,
 			ResultListener listener) {
 		service.createFolder(parentFolder, folderName, listener);
 	}
-
-
 
 }

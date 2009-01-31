@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
+import org.sjarvela.mollify.client.file.DirectoryActionHandler;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileActionHandler;
@@ -50,6 +51,7 @@ public class MainViewPresenter implements DirectoryController,
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileActionProvider fileActionProvider,
 			FileActionHandler fileActionHandler,
+			DirectoryActionHandler directoryActionHandler,
 			FileUploadHandler fileUploadHandler,
 			DirectoryHandler directoryHandler, Localizator localizator,
 			LogoutListener logoutListener) {
@@ -64,8 +66,11 @@ public class MainViewPresenter implements DirectoryController,
 		this.logoutListener = logoutListener;
 		this.fileUploadHandler.addListener(this);
 
-		fileActionHandler.addRenameListener(createReloadListener());
-		fileActionHandler.addDeleteListener(createReloadListener());
+		ResultListener reloadListener = createReloadListener();
+		fileActionHandler.addRenameListener(reloadListener);
+		fileActionHandler.addDeleteListener(reloadListener);
+		directoryActionHandler.addRenameListener(reloadListener);
+		directoryActionHandler.addDeleteListener(reloadListener);
 	}
 
 	public void initialize() {
