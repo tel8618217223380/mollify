@@ -51,7 +51,7 @@ public class LoginDialog extends CenteredDialog {
 			public void onClick(Widget sender) {
 				onLogin();
 			}
-		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME));
+		}, StyleConstants.RENAME_DIALOG_BUTTON_RENAME));
 
 		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
 				new ClickListener() {

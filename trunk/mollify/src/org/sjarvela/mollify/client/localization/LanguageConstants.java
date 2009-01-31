@@ -93,13 +93,15 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String dialogCancelButton();
 
-	public String renameFileDialogTitle();
+	public String renameDialogTitleFile();
+	
+	public String renameDialogTitleDirectory();
 
-	public String renameFileDialogOriginalName();
+	public String renameDialogOriginalName();
 
-	public String renameFileDialogNewName();
+	public String renameDialogNewName();
 
-	public String renameFileDialogRenameButton();
+	public String renameDialogRenameButton();
 
 	public String deleteFileConfirmationDialogTitle();
 

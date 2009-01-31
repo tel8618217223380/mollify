@@ -30,7 +30,6 @@ public class FileActionHandlerImpl implements FileActionHandler {
 
 	public FileActionHandlerImpl(FileActionProvider fileActionProvider,
 			FileOperationHandler fileOperator, WindowManager windowManager) {
-		super();
 		this.fileActionProvider = fileActionProvider;
 		this.fileOperator = fileOperator;
 		this.windowManager = windowManager;
@@ -69,7 +68,7 @@ public class FileActionHandlerImpl implements FileActionHandler {
 					});
 		} else {
 			windowManager.getDialogManager().showInfo("ERROR",
-					"Unsupported action:" + action.name());
+					"Unsupported file action:" + action.name());
 		}
 
 	}

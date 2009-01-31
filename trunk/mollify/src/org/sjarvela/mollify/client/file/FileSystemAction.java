@@ -10,6 +10,23 @@
 
 package org.sjarvela.mollify.client.file;
 
+import org.sjarvela.mollify.client.data.FileSystemItem;
+
 public enum FileSystemAction {
-	DOWNLOAD, RENAME, DELETE, UPLOAD, DETAILS, CREATE_FOLDER
+	DOWNLOAD, RENAME, DELETE, UPLOAD, DETAILS, CREATE_FOLDER;
+
+	public boolean isApplicableToDirectory() {
+		return (this.equals(UPLOAD) || this.equals(CREATE_FOLDER) || this
+				.equals(RENAME));
+	}
+
+	public boolean isApplicableToFile() {
+		return !(this.equals(UPLOAD) || this.equals(CREATE_FOLDER));
+	}
+
+	public boolean isApplicable(FileSystemItem item) {
+		if (item.isFile())
+			return isApplicableToFile();
+		return isApplicableToDirectory();
+	}
 }

@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.RenameHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -24,18 +25,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class RenameDialog extends CenteredDialog {
-	private File file;
+	private FileSystemItem item;
 	private Localizator localizator;
 	private TextBox name;
 	private RenameHandler renameHandler;
 	private final ResultListener resultListener;
 
-	public RenameDialog(File file, Localizator localizator,
+	public RenameDialog(FileSystemItem item, Localizator localizator,
 			RenameHandler renameHandler, ResultListener resultListener) {
-		super(localizator.getStrings().renameFileDialogTitle(),
-				StyleConstants.RENAME_FILE_DIALOG);
+		super(item.isFile() ? localizator.getStrings().renameDialogTitleFile()
+				: localizator.getStrings().renameDialogTitleDirectory(),
+				StyleConstants.RENAME_DIALOG);
 
-		this.file = file;
+		this.item = item;
 		this.localizator = localizator;
 		this.renameHandler = renameHandler;
 		this.resultListener = resultListener;
@@ -46,27 +48,26 @@ public class RenameDialog extends CenteredDialog {
 	@Override
 	Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
-		panel.addStyleName(StyleConstants.RENAME_FILE_DIALOG_CONTENT);
+		panel.addStyleName(StyleConstants.RENAME_DIALOG_CONTENT);
 
 		Label originalNameTitle = new Label(localizator.getStrings()
-				.renameFileDialogOriginalName());
+				.renameDialogOriginalName());
 		originalNameTitle
-				.setStyleName(StyleConstants.RENAME_FILE_ORIGINAL_NAME_TITLE);
+				.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_TITLE);
 		panel.add(originalNameTitle);
 
-		Label originalName = new Label(file.getName());
-		originalName
-				.setStyleName(StyleConstants.RENAME_FILE_ORIGINAL_NAME_VALUE);
+		Label originalName = new Label(item.getName());
+		originalName.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_VALUE);
 		panel.add(originalName);
 
 		Label newNameTitle = new Label(localizator.getStrings()
-				.renameFileDialogNewName());
-		newNameTitle.setStyleName(StyleConstants.RENAME_FILE_NEW_NAME_TITLE);
+				.renameDialogNewName());
+		newNameTitle.setStyleName(StyleConstants.RENAME_NEW_NAME_TITLE);
 		panel.add(newNameTitle);
 
 		name = new TextBox();
-		name.addStyleName(StyleConstants.RENAME_FILE_NEW_NAME_VALUE);
-		name.setText(file.getName());
+		name.addStyleName(StyleConstants.RENAME_NEW_NAME_VALUE);
+		name.setText(item.getName());
 
 		panel.add(name);
 
@@ -76,16 +77,16 @@ public class RenameDialog extends CenteredDialog {
 	@Override
 	Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.RENAME_FILE_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.RENAME_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(localizator.getStrings()
-				.renameFileDialogRenameButton(), new ClickListener() {
+				.renameDialogRenameButton(), new ClickListener() {
 
 			public void onClick(Widget sender) {
 				onRename();
 			}
-		}, StyleConstants.RENAME_FILE_DIALOG_BUTTON_RENAME));
+		}, StyleConstants.RENAME_DIALOG_BUTTON_RENAME));
 
 		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
 				new ClickListener() {
@@ -100,10 +101,12 @@ public class RenameDialog extends CenteredDialog {
 
 	@Override
 	void onShow() {
-		hilightFilename();
+		if (item.isFile())
+			hilightFilename();
 	}
 
 	private void hilightFilename() {
+		File file = (File) item;
 		if (file.getExtension().length() > 0)
 			name.setSelectionRange(0, file.getName().length()
 					- (file.getExtension().length() + 1));
@@ -118,12 +121,12 @@ public class RenameDialog extends CenteredDialog {
 			return;
 		}
 
-		if (newName.equals(file.getName())) {
+		if (newName.equals(item.getName())) {
 			hilightFilename();
 			return;
 		}
 
 		this.hide();
-		renameHandler.onRename(file, newName, resultListener);
+		renameHandler.onRename(item, newName, resultListener);
 	}
 }

@@ -112,14 +112,14 @@ public class StyleConstants {
 
 	public static final String CONFIRMATION_DIALOG_TYPE_DELETE_FILE = "mollify-confirm-delete-file";
 
-	public static final String RENAME_FILE_DIALOG = "mollify-rename-file-dialog";
-	public static final String RENAME_FILE_DIALOG_CONTENT = "mollify-rename-file-dialog-content";
-	public static final String RENAME_FILE_ORIGINAL_NAME_TITLE = "mollify-rename-file-original-name-title";
-	public static final String RENAME_FILE_ORIGINAL_NAME_VALUE = "mollify-rename-file-original-name-value";
-	public static final String RENAME_FILE_NEW_NAME_TITLE = "mollify-rename-file-new-name-title";
-	public static final String RENAME_FILE_NEW_NAME_VALUE = "mollify-rename-file-new-name-value";
-	public static final String RENAME_FILE_DIALOG_BUTTONS = "mollify-rename-file-dialog-buttons";
-	public static final String RENAME_FILE_DIALOG_BUTTON_RENAME = "mollify-button-rename";
+	public static final String RENAME_DIALOG = "mollify-rename-dialog";
+	public static final String RENAME_DIALOG_CONTENT = "mollify-rename-dialog-content";
+	public static final String RENAME_ORIGINAL_NAME_TITLE = "mollify-rename-dialog-original-name-title";
+	public static final String RENAME_ORIGINAL_NAME_VALUE = "mollify-rename-dialog-original-name-value";
+	public static final String RENAME_NEW_NAME_TITLE = "mollify-rename-dialog-new-name-title";
+	public static final String RENAME_NEW_NAME_VALUE = "mollify-rename-dialog-new-name-value";
+	public static final String RENAME_DIALOG_BUTTONS = "mollify-rename-dialog-buttons";
+	public static final String RENAME_DIALOG_BUTTON_RENAME = "mollify-button-rename";
 
 	public static final String FILE_UPLOAD_DIALOG = "mollify-file-upload-dialog";
 	public static final String FILE_UPLOAD_DIALOG_CONTENT = "mollify-file-upload-dialog-content";

@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.LoginHandler;
 import org.sjarvela.mollify.client.ProgressListener;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.ErrorValue;
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
@@ -43,9 +43,9 @@ public class DialogManager {
 		new LoginDialog(localizator, loginHandler);
 	}
 
-	public void showRenameDialog(File file, RenameHandler fileHandler,
-			ResultListener listener) {
-		new RenameDialog(file, localizator, fileHandler, listener);
+	public void showRenameDialog(FileSystemItem item,
+			RenameHandler fileHandler, ResultListener listener) {
+		new RenameDialog(item, localizator, fileHandler, listener);
 	}
 
 	public void openUploadDialog(Directory directory,

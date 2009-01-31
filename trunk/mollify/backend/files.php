@@ -187,7 +187,7 @@
 	function rename_file($file, $new_name) {
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
-			log_error("Insufficient file permissions (rename): User=[".$_SESSION['user_id']."], file=[".$file."]");
+			log_error("Insufficient file permissions (rename file): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
 			$error_details = basename($file);
 			return FALSE;
@@ -204,6 +204,25 @@
 		return rename($old, $new);
 	}
 
+	function rename_directory($dir, $new_name) {
+		if (!assert_dir($dir)) return FALSE;
+		if (!has_general_modify_rights()) {
+			log_error("Insufficient permissions (rename directory): User=[".$_SESSION['user_id']."], dir=[".$dir."]");
+			$error = "NO_MODIFY_RIGHTS";
+			return FALSE;
+		}
+		
+		$old = $dir["path"];
+		$new = dirname($old).DIRECTORY_SEPARATOR.$new_name;
+		if (file_exists($new)) {
+			$error = "DIR_ALREADY_EXISTS";
+			$error_details = $new_name;
+			return FALSE;
+		}
+		
+		return rename($old, $new);
+	}
+	
 	function delete_file($file) {
 		global $error, $error_details;
 		
