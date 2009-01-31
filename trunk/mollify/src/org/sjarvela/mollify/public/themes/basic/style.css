@@ -263,11 +263,11 @@ td#mollify-filelist-column-size {
 	background-color: #dedede;
 }
 
-.mollify-filelist-row-file-even.hover td {
+.mollify-filelist-row-file-even-hover td {
 	background-color: #dde9f4;
 }
 
-.mollify-filelist-row-file-odd.hover td {
+.mollify-filelist-row-file-odd-hover td {
 	background-color: #cbcdef;
 }
 
@@ -279,11 +279,11 @@ td#mollify-filelist-column-size {
 	background-color: #a9a9a9;
 }
 
-.mollify-filelist-row-file-even.hover .mollify-filelist-column-type {
+.mollify-filelist-row-file-even-hover .mollify-filelist-column-type {
 	background-color: #b4bdc7;
 }
 
-.mollify-filelist-row-file-odd.hover .mollify-filelist-column-type {
+.mollify-filelist-row-file-odd-hover .mollify-filelist-column-type {
 	background-color: #b0b3d0;
 }
 
@@ -301,17 +301,17 @@ td#mollify-filelist-column-size {
 	background-color: #ead2d2;
 }
 
-.mollify-filelist-row-directory-odd.hover td {
+.mollify-filelist-row-directory-odd-hover td {
 	background-color: #dec7d6;
 }
 
-.mollify-filelist-row-directory-even.hover td {
+.mollify-filelist-row-directory-even-hover td {
 	background-color: #f2d1e7;
 }
 
-.ie-crap.hover td {
+/*.ie-crap.hover td {
 	background-color: #d5d5d5;
-}
+}*/
 
 .mollify-filelist .mollify-filelist-item-name {
 	height: 20px;
@@ -330,6 +330,7 @@ td#mollify-filelist-column-size {
 	background: url(folder.png) no-repeat 4px 6px;
 	height: 20px;
 	float: left;
+	cursor: pointer;
 }
 
 .mollify-file-context {

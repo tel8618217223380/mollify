@@ -77,7 +77,9 @@ public class MainViewGlue implements FileListListener, ViewListener {
 		presenter.onFileSystemItemSelected(item, column);
 	}
 
-	public void onDirectoryIconClicked(Directory directory) {
-		view.showDirectoryContext(directory);
+	public void onIconClicked(FileSystemItem item) {
+		if (item.isFile())
+			return;
+		view.showDirectoryContext((Directory) item);
 	}
 }
