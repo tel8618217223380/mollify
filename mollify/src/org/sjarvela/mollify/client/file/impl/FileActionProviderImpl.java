@@ -12,14 +12,13 @@ package org.sjarvela.mollify.client.file.impl;
 
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileSystemActionProvider;
 import org.sjarvela.mollify.client.service.MollifyService;
 
-public class FileActionProviderImpl implements FileActionProvider {
+public class FileActionProviderImpl implements FileSystemActionProvider {
 	private MollifyService service;
 
 	public FileActionProviderImpl(MollifyService service) {
-		super();
 		this.service = service;
 	}
 

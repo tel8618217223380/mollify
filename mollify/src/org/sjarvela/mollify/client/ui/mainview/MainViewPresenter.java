@@ -19,11 +19,10 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
-import org.sjarvela.mollify.client.file.DirectoryActionHandler;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
-import org.sjarvela.mollify.client.file.FileActionHandler;
-import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.file.FileSystemActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.file.FileUploadMonitor;
@@ -39,7 +38,7 @@ public class MainViewPresenter implements DirectoryController,
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
-	private final FileActionProvider fileActionProvider;
+	private final FileSystemActionProvider fileActionProvider;
 	private final Localizator localizator;
 	private final FileUploadHandler fileUploadHandler;
 	private final LogoutListener logoutListener;
@@ -49,9 +48,8 @@ public class MainViewPresenter implements DirectoryController,
 	private final DirectoryHandler directoryHandler;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
-			MainView view, FileActionProvider fileActionProvider,
-			FileActionHandler fileActionHandler,
-			DirectoryActionHandler directoryActionHandler,
+			MainView view, FileSystemActionProvider fileActionProvider,
+			FileSystemActionHandler fileActionHandler,
 			FileUploadHandler fileUploadHandler,
 			DirectoryHandler directoryHandler, Localizator localizator,
 			LogoutListener logoutListener) {
@@ -69,8 +67,6 @@ public class MainViewPresenter implements DirectoryController,
 		ResultListener reloadListener = createReloadListener();
 		fileActionHandler.addRenameListener(reloadListener);
 		fileActionHandler.addDeleteListener(reloadListener);
-		directoryActionHandler.addRenameListener(reloadListener);
-		directoryActionHandler.addDeleteListener(reloadListener);
 	}
 
 	public void initialize() {
@@ -108,11 +104,15 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void reload() {
-		model.refreshData(createListener(new Callback() {
-			public void onCallback() {
+		model.refreshData(new ResultListener() {
+			public void onFail(MollifyError error) {
+				onError(error, false);
+			}
+
+			public void onSuccess(Object... result) {
 				refreshView();
 			}
-		}));
+		});
 	}
 
 	private void refreshView() {
@@ -134,9 +134,13 @@ public class MainViewPresenter implements DirectoryController,
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 
-	public void onError(MollifyError error) {
+	public void onError(MollifyError error, boolean reload) {
 		windowManager.getDialogManager().showError(error);
-		reload();
+
+		if (reload)
+			reload();
+		else
+			reset();
 	}
 
 	public void openUploadDialog() {
@@ -187,7 +191,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void onUploadFailed(MollifyError error) {
 		stopUploaders();
-		onError(error);
+		onError(error, true);
 	}
 
 	private void stopUploaders() {
@@ -230,7 +234,7 @@ public class MainViewPresenter implements DirectoryController,
 	private ResultListener createListener(final Callback callback) {
 		return new ResultListener() {
 			public void onFail(MollifyError error) {
-				onError(error);
+				onError(error, true);
 			}
 
 			public void onSuccess(Object... result) {

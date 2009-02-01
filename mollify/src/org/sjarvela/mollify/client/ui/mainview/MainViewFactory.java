@@ -13,13 +13,11 @@ package org.sjarvela.mollify.client.ui.mainview;
 import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.SessionInfo;
-import org.sjarvela.mollify.client.file.DirectoryActionHandler;
-import org.sjarvela.mollify.client.file.FileActionHandler;
-import org.sjarvela.mollify.client.file.FileActionProvider;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.file.FileSystemActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.impl.DirectoryActionHandlerImpl;
-import org.sjarvela.mollify.client.file.impl.FileActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileActionProviderImpl;
+import org.sjarvela.mollify.client.file.impl.FileSystemActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.FileServices;
@@ -44,22 +42,20 @@ public class MainViewFactory {
 
 	public MainView createMainView(WindowManager windowManager,
 			SessionInfo info, LogoutListener logoutListener) {
-		FileActionProvider fileActionProvider = new FileActionProviderImpl(
+		FileSystemActionProvider actionProvider = new FileActionProviderImpl(
 				service);
 		FileServices fileServices = new FileServices(service);
 		MainViewModel model = new MainViewModel(fileServices, info);
 
 		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
-		FileActionHandler fileActionHandler = new FileActionHandlerImpl(
-				fileActionProvider, fileServices, windowManager);
+		FileSystemActionHandler actionHandler = new FileSystemActionHandlerImpl(
+				actionProvider, fileServices, windowManager);
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileServices, localizator);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileActionHandler, fileServices, localizator);
-		DirectoryActionHandler directoryActionHandler = new DirectoryActionHandlerImpl(
-				fileServices, fileServices, windowManager);
+				actionHandler, fileServices, localizator);
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				localizator, fileServices, directoryActionHandler);
+				localizator, fileServices, actionHandler);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue
@@ -67,9 +63,8 @@ public class MainViewFactory {
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
-				model, view, fileActionProvider, fileActionHandler,
-				directoryActionHandler, fileUploadHandler, fileServices,
-				localizator, logoutListener);
+				model, view, actionProvider, actionHandler, fileUploadHandler,
+				fileServices, localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter, actionDelegator);
 

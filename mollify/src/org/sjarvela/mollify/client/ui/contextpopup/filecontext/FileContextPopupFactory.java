@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.contextpopup.filecontext;
 
-import org.sjarvela.mollify.client.file.FileActionHandler;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 
 public class FileContextPopupFactory {
-	public FileContextPopupFactory(FileActionHandler fileActionHandler,
+	public FileContextPopupFactory(FileSystemActionHandler fileActionHandler,
 			FileDetailsProvider fileDetailsProvider, Localizator localizator) {
 		this.fileActionHandler = fileActionHandler;
 		this.fileDetailsProvider = fileDetailsProvider;
@@ -24,7 +24,7 @@ public class FileContextPopupFactory {
 
 	private Localizator localizator;
 	private FileDetailsProvider fileDetailsProvider;
-	private FileActionHandler fileActionHandler;
+	private FileSystemActionHandler fileActionHandler;
 
 	public FileContextPopup createPopup() {
 		return new FileContextPopup(localizator, fileDetailsProvider,

@@ -16,7 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileDetails;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.file.FileActionHandler;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyError;
@@ -37,7 +37,7 @@ public class FileContextPopup extends ContextPopup {
 	private DateTimeFormat dateTimeFormat;
 
 	private final Localizator localizator;
-	private final FileActionHandler fileActionHandler;
+	private final FileSystemActionHandler fileActionHandler;
 	private final FileDetailsProvider detailsProvider;
 
 	private Label filename;
@@ -56,7 +56,7 @@ public class FileContextPopup extends ContextPopup {
 
 	public FileContextPopup(Localizator localizator,
 			FileDetailsProvider detailsProvider,
-			FileActionHandler fileActionHandler) {
+			FileSystemActionHandler fileActionHandler) {
 		super(StyleConstants.FILE_CONTEXT);
 
 		this.localizator = localizator;
@@ -91,12 +91,12 @@ public class FileContextPopup extends ContextPopup {
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
 		downloadButton = createActionButton(localizator.getStrings()
-				.fileActionDownloadTitle(), FileSystemAction.DOWNLOAD);
+				.fileActionDownloadTitle(), FileSystemAction.download);
 		renameButton = createActionButton(localizator.getStrings()
-				.fileActionRenameTitle(), FileSystemAction.RENAME);
+				.fileActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
 		deleteButton = createActionButton(localizator.getStrings()
-				.fileActionDeleteTitle(), FileSystemAction.DELETE);
+				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
 		buttons.add(downloadButton);
@@ -210,7 +210,7 @@ public class FileContextPopup extends ContextPopup {
 	}
 
 	protected void onAction(FileSystemAction action) {
-		fileActionHandler.onFileAction(file, action);
+		fileActionHandler.onAction(file, action);
 		this.hide();
 	}
 }

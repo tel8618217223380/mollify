@@ -10,6 +10,15 @@
 
 package org.sjarvela.mollify.client.file;
 
-public interface FileOperationHandler extends RenameHandler, DeleteHandler {
+import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.service.ResultListener;
+
+public interface FileSystemActionHandler {
+
+	void addRenameListener(ResultListener listener);
+
+	void addDeleteListener(ResultListener listener);
+
+	void onAction(FileSystemItem item, FileSystemAction action);
 
 }

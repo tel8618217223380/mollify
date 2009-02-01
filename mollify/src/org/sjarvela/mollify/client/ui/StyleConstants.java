@@ -110,7 +110,7 @@ public class StyleConstants {
 	public static final String CONFIRMATION_DIALOG_BUTTONS = "mollify-confirm-dialog-buttons";
 	public static final String DIALOG_BUTTON_CANCEL = "mollify-button-cancel";
 
-	public static final String CONFIRMATION_DIALOG_TYPE_DELETE_FILE = "mollify-confirm-delete-file";
+	public static final String CONFIRMATION_DIALOG_TYPE_DELETE = "mollify-confirm-dialog-delete";
 
 	public static final String RENAME_DIALOG = "mollify-rename-dialog";
 	public static final String RENAME_DIALOG_CONTENT = "mollify-rename-dialog-content";

@@ -111,25 +111,29 @@ public class MollifyService {
 
 	public void renameFile(File file, String newName,
 			ResultListener resultListener) {
-		String url = getActionUrl(file, FileSystemAction.RENAME) + "&to="
+		String url = getActionUrl(file, FileSystemAction.rename) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, resultListener);
 	}
 
 	public void renameDirectory(Directory dir, String newName,
 			ResultListener listener) {
-		String url = getActionUrl(dir, FileSystemAction.RENAME) + "&to="
+		String url = getActionUrl(dir, FileSystemAction.rename) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, listener);
 	}
 
 	public void deleteFile(File file, ResultListener resultListener) {
-		doRequest(getActionUrl(file, FileSystemAction.DELETE), resultListener);
+		doRequest(getActionUrl(file, FileSystemAction.delete), resultListener);
 	}
 
+	public void deleteDirectory(Directory dir, ResultListener listener) {
+		doRequest(getActionUrl(dir, FileSystemAction.delete), listener);
+	}
+	
 	public void createFolder(Directory parentFolder, String folderName,
 			ResultListener listener) {
-		doRequest(getActionUrl(parentFolder, FileSystemAction.CREATE_FOLDER,
+		doRequest(getActionUrl(parentFolder, FileSystemAction.create_folder,
 				"name=" + folderName), listener);
 	}
 
