@@ -152,11 +152,13 @@ public class FileList extends DataGrid {
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
-		icon.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				onDirectoryIconClicked(directory);
-			}
-		});
+		if (!directory.equals(Directory.Parent)) {
+			icon.addClickListener(new ClickListener() {
+				public void onClick(Widget sender) {
+					onDirectoryIconClicked(directory);
+				}
+			});
+		}
 
 		panel.add(createNameWidget(row, directory));
 
