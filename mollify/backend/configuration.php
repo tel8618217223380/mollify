@@ -33,12 +33,12 @@
 	$PUBLISHED_DIRECTORIES = array(
 		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-	);
+	);*/
 	
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
-		"enable_create_folder" => TRUE,
+		"enable_folder_actions" => TRUE,
 		"enable_file_upload_progress" => TRUE
-	);*/
+	);
 	
 ?>

@@ -185,6 +185,8 @@
 	}
 	
 	function rename_file($file, $new_name) {
+		global $error, $error_details;
+		
 		if (!assert_file($file)) return FALSE;
 		if (!has_modify_rights($file)) {
 			log_error("Insufficient file permissions (rename file): User=[".$_SESSION['user_id']."], file=[".$file."]");
@@ -205,6 +207,13 @@
 	}
 
 	function rename_directory($dir, $new_name) {
+		global $error, $error_details;
+		
+		if (!$_SESSION["settings"]["enable_folder_actions"]) {
+			log_error("Cannot delete folder, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
 		if (!assert_dir($dir)) return FALSE;
 		if (!has_general_modify_rights()) {
 			log_error("Insufficient permissions (rename directory): User=[".$_SESSION['user_id']."], dir=[".$dir."]");
@@ -244,7 +253,12 @@
 
 	function delete_directory($dir) {
 		global $error, $error_details;
-		
+
+		if (!$_SESSION["settings"]["enable_folder_actions"]) {
+			log_error("Cannot delete folder, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
 		if (!assert_dir($dir)) return FALSE;
 		if (!has_general_modify_rights()) {
 			log_error("Insufficient permissions (delete directory): User=[".$_SESSION['user_id']."], dir=[".$dir."]");
@@ -261,6 +275,7 @@
 	
 	function delete_directory_recurse($path) {
 		global $error_details;
+		
 		$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 		$handle = opendir($path);
 		

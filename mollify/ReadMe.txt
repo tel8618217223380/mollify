@@ -138,10 +138,91 @@ Rules are:
 NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
-2.3 FILE UPLOAD
+2.3 User Access Control
+-----------------------
+
+Mollify supports configurable user access control for files. By default, when no configuration is done, users have
+read-only permissions to all files.
+
+File permissions can be granted in two levels:
+
+    * User default file permission
+    * File specific file permission 
+
+Possible file permission values are:
+
+    * RO = Read-only (user can only download and view details)
+    * RW = Read and write (user can also rename and delete file) 
+
+2.3.1 User Default File Permission in Single-User Environment
+-------------------------------------------------------------
+
+In single-user environment, default file permission applies to everybody, and it is defined with configuration
+variable $FILE_PERMISSION_MODE.
+
+For example:
+
+    $FILE_PERMISSION_MODE = "RW";
+
+This will give all users read/write permissions, unless file specific permissions override this.
+
+2.3.2 User Default File Permission in Multi-User Environment
+------------------------------------------------------------
+
+In multi-user environment, default file permission is defined in user account configuration with attribute
+file_permission_mode.
+
+For example:
+
+        $USERS = array(
+                "1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "RW"),
+                "2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+        );
+
+This configuration gives "User 1" read/write permissions, and "User 2" read-only permissions, unless file
+specific permissions override these.
+
+In addition to default permission modes, in multi-user environment user can be set to admin mode with value "A".
+Admin users are allowed to access everything regardless of file permission configurations. Later on, admin users
+will also have options and actions available that are not visible for non-admins.
+
+For example:
+
+        $USERS = array(
+                "1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
+                "2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+        );
+
+This would make "User 1" an admin user.
+
+2.3.3 File Specific Permissions
+-------------------------------
+
+Mollify supports file specific file permissions, which override any possible default permissions. File specific
+permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file
+(see wiki page for more information).
+
+Each folder has its own user access control file, which applies only to files in that folder.
+
+Each file can have permissions set to user id's (see chapter 2.1 Users):
+
+    * With user id "*", setting applies to all users overriding possible user default permission
+    * With user specific id, setting applies only to user with that id, overriding any possible default settings
+      (either with user id "*", or in user account configuration)
+    * In single-user environment, only permissions given with id "*" are applied 
+
+Example scenarios:
+
+    * User has default permission "RO", file has permission "* = RW": User will get read and write permissions
+    * User has default permission "RW", file has permission "* = RO": User will get read-only permissions
+    * User with id "U1" has default permission "RW", file has permissions "* = RW" and "U1 = RO": User will get
+      read-only permissions 
+
+
+2.4 FILE UPLOAD
 ---------------
 
-2.3.1 Disabling file upload
+2.4.1 Disabling file upload
 ---------------------------
 
 By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
@@ -150,7 +231,7 @@ By default, file upload feature is enabled. To disable this feature, use followi
 		"enable_file_upload" => FALSE
 	);
 
-2.3.2 Enabling file upload progress
+2.4.2 Enabling file upload progress
 -----------------------------------
 
 By default, file upload progress is disabled. To enable this feature, use following setting in "configuration.php":
@@ -162,17 +243,61 @@ By default, file upload progress is disabled. To enable this feature, use follow
 NOTE! File upload progress display requires APC (Alternative PHP Cache), see wiki page at
 "http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay" for more information
 
+2.5 Folder Actions
+------------------
+
+Mollify supports folder actions, ie. creating, renaming and deleting folders.
+
+2.5.1 Disabling Folder Actions
+------------------------------
+
+By default, folder actions are enabled. To disable folder actions, use following setting in "configuration.php":
+
+        $SETTINGS = array(
+                "enable_folder_actions" => FALSE
+        );
+
+2.5.2 Folder Action User Permissions
+
+At the moment, folder actions are available to all users with user default file permissions set to read/write
+(see chapter 2.3 User Access Control).
+
+This is:
+
+    * In single-user permission when user default file permission mode is set to read/write (RW). Note that in
+      this case all users are allowed to create, rename and delete folders.
+    * In multi-user permission when user default file permission is set to read/write (RW) or admin (A). 
 
 
 3. MODIFYING INSTALLATION
 =========================
 
-1) Moving host page
+1) Relocating host page or backend interface files
 
-	Host page can be located anywhere, the only thing that matters is that backend interface files
-	(*.php) are located in the same directory.
+    Host page can be located anywhere, the only thing that matters is that backend interface files (*.php) are
+    located under the same directory or its subdirectories. 
 
-2) Moving client application files
+    If you wish to locate backend interface files (*.php) into a subdirectory, you must define this location in
+    the host html file, with following format: 
+
+        <html>
+            <head>
+                ...
+                <meta name="mollify:property" content="service_path=[RELATIVE_PATH]">
+           </head>
+           ...
+        </html>
+
+    Replace [RELATIVE_PATH] with path to the backend interface files, relative to the host file. Note that path
+    can only descend, you cannot go upwards in the folder hierarchy, and thus all leading dots and slashes are
+    removed ("." and "/"). 
+
+    For example, if you place host file in http://your_host_name/mollify.html and the backend interface files into
+    http://your_host_name/mollify/scripts/, the setting should be as follows: 
+
+        <meta name="mollify:property" content="service_path=mollify/scripts">
+
+2) Relocating client application files
 
 	Client application files can be located anywhere, only the javascript reference in the host page
 	must be updated. While the location and the name of the folder "org.sjarvela.mollify.App" can be

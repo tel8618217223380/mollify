@@ -18,7 +18,7 @@
 	function get_effective_settings() {
 		return array(
 			"enable_file_upload" => get_setting("enable_file_upload", TRUE),
-			"enable_create_folder" => get_setting("enable_create_folder", TRUE),
+			"enable_folder_actions" => get_setting("enable_folder_actions", TRUE),
 			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE)
 		);
 	}

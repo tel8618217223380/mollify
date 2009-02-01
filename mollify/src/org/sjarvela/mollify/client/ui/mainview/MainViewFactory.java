@@ -55,7 +55,9 @@ public class MainViewFactory {
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				actionHandler, fileServices, localizator);
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				localizator, fileServices, actionHandler);
+				localizator, fileServices, actionHandler, model
+						.getSessionInfo().getSettings()
+						.isFolderActionsEnabled());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue

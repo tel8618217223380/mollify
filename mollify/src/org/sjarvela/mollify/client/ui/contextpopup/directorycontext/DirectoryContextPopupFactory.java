@@ -17,19 +17,21 @@ import org.sjarvela.mollify.client.localization.Localizator;
 public class DirectoryContextPopupFactory {
 	private final DirectoryDetailsProvider detailsProvider;
 	private final FileSystemActionHandler actionHandler;
+	private final boolean folderActionsEnabled;
 
 	public DirectoryContextPopupFactory(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler) {
+			FileSystemActionHandler actionHandler, boolean folderActionsEnabled) {
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.actionHandler = actionHandler;
+		this.folderActionsEnabled = folderActionsEnabled;
 	}
 
 	private Localizator localizator;
 
 	public DirectoryContextPopup createPopup() {
 		return new DirectoryContextPopup(localizator, detailsProvider,
-				actionHandler);
+				actionHandler, folderActionsEnabled);
 	}
 }

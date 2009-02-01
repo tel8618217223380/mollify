@@ -16,8 +16,8 @@ public class SessionSettings extends JavaScriptObject {
 	protected SessionSettings() {
 	}
 
-	public final native boolean isCreateFolderEnabled() /*-{
-		return this.enable_create_folder;
+	public final native boolean isFolderActionsEnabled() /*-{
+		return this.enable_folder_actions;
 	}-*/;
 	
 	public final native boolean isFileUploadEnabled() /*-{

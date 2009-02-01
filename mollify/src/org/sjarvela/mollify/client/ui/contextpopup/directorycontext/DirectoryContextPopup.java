@@ -36,15 +36,17 @@ public class DirectoryContextPopup extends ContextPopup {
 	private final DirectoryDetailsProvider detailsProvider;
 	private final FileSystemActionHandler actionHandler;
 	private Directory directory;
+	private final boolean folderActionsEnabled;
 
 	public DirectoryContextPopup(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler) {
+			FileSystemActionHandler actionHandler, boolean folderActionsEnabled) {
 		super(StyleConstants.DIR_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.actionHandler = actionHandler;
+		this.folderActionsEnabled = folderActionsEnabled;
 
 		initialize();
 	}
@@ -100,7 +102,8 @@ public class DirectoryContextPopup extends ContextPopup {
 	}
 
 	protected void updateDetails(DirectoryDetails details) {
-		boolean writable = details.getFilePermission().canWrite();
+		boolean writable = folderActionsEnabled
+				&& details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
 	}
