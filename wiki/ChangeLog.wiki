@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 0.6.3 ===
-  * Support for folder actions (create, rename and delete folders)
+  * Support for folder actions: create, rename and delete folders (for more information, see [Installation Installation wiki page], chapter 2.5)
   * Rewritten css class naming
 
 === Version 0.6.2 ===
