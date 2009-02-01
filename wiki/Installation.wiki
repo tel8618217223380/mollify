@@ -220,7 +220,6 @@ By default, file upload progress is disabled. To enable this feature, use follow
 }}}
 
 *NOTE!* File upload progress display requires APC (Alternative PHP Cache), see [http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay wiki page] for more information
-----
 
 
 == 2.5 Folder Actions ==
@@ -243,7 +242,9 @@ At the moment, folder actions are available to all users with user default file 
 
 This is:
   * In single-user permission when user default file permission mode is set to read/write (RW). Note that in this case all users are allowed to create, rename and delete folders.
-  * In multi-user permission when user default file permission is set to read/wrote (RW) or admin (A).
+  * In multi-user permission when user default file permission is set to read/write (RW) or admin (A).
+----
+
 
 = 3. Modifying Installation =
 
