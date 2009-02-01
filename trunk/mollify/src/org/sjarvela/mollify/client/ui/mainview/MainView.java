@@ -153,7 +153,7 @@ public class MainView extends Composite {
 		logoutButton.setAction(actionListener, Action.logout);
 
 		if ((model.getSessionInfo().getSettings().isFileUploadEnabled() || model
-				.getSessionInfo().getSettings().isCreateFolderEnabled())
+				.getSessionInfo().getSettings().isFolderActionsEnabled())
 				&& model.getSessionInfo().getPermissionMode()
 						.hasWritePermission()) {
 			addButton = new DropdownButton(actionListener, localizator
@@ -162,7 +162,7 @@ public class MainView extends Composite {
 			if (model.getSessionInfo().getSettings().isFileUploadEnabled())
 				addButton.addAction(Action.addFile, localizator.getStrings()
 						.mainViewAddFileMenuItem());
-			if (model.getSessionInfo().getSettings().isCreateFolderEnabled())
+			if (model.getSessionInfo().getSettings().isFolderActionsEnabled())
 				addButton.addAction(Action.addDirectory, localizator
 						.getStrings().mainViewAddDirectoryMenuItem());
 		}
