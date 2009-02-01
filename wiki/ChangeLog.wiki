@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.6.3 ===
+  * Support for folder actions (create, rename and delete folders)
+  * Rewritten css class naming
+
 === Version 0.6.2 ===
   * Possibility to define backend php files location (for more information, see [Installation Installation wiki page], chapter 3)
 
