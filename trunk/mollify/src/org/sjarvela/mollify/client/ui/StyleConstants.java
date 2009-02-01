@@ -131,6 +131,7 @@ public class StyleConstants {
 
 	public static final String LOGIN_DIALOG = "mollify-login-dialog";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";
+	public static final String LOGIN_DIALOG_BUTTON_LOGIN = "mollify-login-dialog-button-login";
 	public static final String LOGIN_DIALOG_CONTENT = "mollify-login-dialog-content";
 	public static final String LOGIN_DIALOG_USERNAME_TITLE = "mollify-login-dialog-username-title";
 	public static final String LOGIN_DIALOG_USERNAME_VALUE = "mollify-login-dialog-username-value";
@@ -148,5 +149,6 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "mollify-create-folder-dialog-name-value";
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "mollify-create-folder-dialog-button-create";
+
 
 }
