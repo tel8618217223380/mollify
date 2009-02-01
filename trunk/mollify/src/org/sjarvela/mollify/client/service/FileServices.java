@@ -17,13 +17,13 @@ import org.sjarvela.mollify.client.data.JsDirectory;
 import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
-import org.sjarvela.mollify.client.file.FileOperationHandler;
+import org.sjarvela.mollify.client.file.FileSystemOperationHandler;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FileServices implements FileDetailsProvider, FileOperationHandler,
-		DirectoryHandler, DirectoryDetailsProvider {
+public class FileServices implements FileDetailsProvider,
+		FileSystemOperationHandler, DirectoryHandler, DirectoryDetailsProvider {
 	private final MollifyService service;
 
 	public FileServices(MollifyService service) {
@@ -102,7 +102,7 @@ public class FileServices implements FileDetailsProvider, FileOperationHandler,
 		if (item.isFile())
 			service.deleteFile((File) item, listener);
 		else
-			throw new RuntimeException("Not implemented yet");
+			service.deleteDirectory((Directory) item, listener);
 	}
 
 	public void onCreateDirectory(Directory parentFolder, String folderName,

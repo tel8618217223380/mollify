@@ -23,5 +23,7 @@ public interface MessageConstants extends Messages {
 
 	String sizeInMegabytes(double megabytes);
 
-	String confirmFileDeleteMessage(String filename);
+	String confirmFileDeleteMessage(String name);
+
+	String confirmDirectoryDeleteMessage(String name);
 }

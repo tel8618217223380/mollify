@@ -12,9 +12,9 @@ package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.DirectoryDetails;
-import org.sjarvela.mollify.client.file.DirectoryActionHandler;
 import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -35,12 +35,12 @@ public class DirectoryContextPopup extends ContextPopup {
 	private Button renameButton;
 	private Button deleteButton;
 	private final DirectoryDetailsProvider detailsProvider;
-	private final DirectoryActionHandler actionHandler;
+	private final FileSystemActionHandler actionHandler;
 	private Directory directory;
 
 	public DirectoryContextPopup(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
-			DirectoryActionHandler actionHandler) {
+			FileSystemActionHandler actionHandler) {
 		super(StyleConstants.DIR_CONTEXT);
 
 		this.localizator = localizator;
@@ -67,10 +67,10 @@ public class DirectoryContextPopup extends ContextPopup {
 		buttons.setStyleName(StyleConstants.DIR_CONTEXT_BUTTONS);
 
 		renameButton = createActionButton(localizator.getStrings()
-				.dirActionRenameTitle(), FileSystemAction.RENAME);
+				.dirActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
 		deleteButton = createActionButton(localizator.getStrings()
-				.dirActionDeleteTitle(), FileSystemAction.DELETE);
+				.dirActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
 		buttons.add(renameButton);
@@ -80,7 +80,7 @@ public class DirectoryContextPopup extends ContextPopup {
 	}
 
 	protected void onAction(FileSystemAction action) {
-		actionHandler.onDirectoryAction(directory, action);
+		actionHandler.onAction(directory, action);
 		this.hide();
 	}
 

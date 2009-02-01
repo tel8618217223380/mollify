@@ -13,15 +13,15 @@ package org.sjarvela.mollify.client.file;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 
 public enum FileSystemAction {
-	DOWNLOAD, RENAME, DELETE, UPLOAD, DETAILS, CREATE_FOLDER;
+	download, rename, delete, upload, details, create_folder;
 
 	public boolean isApplicableToDirectory() {
-		return (this.equals(UPLOAD) || this.equals(CREATE_FOLDER) || this
-				.equals(RENAME));
+		return (this.equals(upload) || this.equals(create_folder)
+				|| this.equals(rename) || this.equals(delete));
 	}
 
 	public boolean isApplicableToFile() {
-		return !(this.equals(UPLOAD) || this.equals(CREATE_FOLDER));
+		return !(this.equals(upload) || this.equals(create_folder));
 	}
 
 	public boolean isApplicable(FileSystemItem item) {

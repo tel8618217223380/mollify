@@ -242,6 +242,60 @@
 		return TRUE;
 	}
 
+	function delete_directory($dir) {
+		global $error, $error_details;
+		
+		if (!assert_dir($dir)) return FALSE;
+		if (!has_general_modify_rights()) {
+			log_error("Insufficient permissions (delete directory): User=[".$_SESSION['user_id']."], dir=[".$dir."]");
+			$error = "NO_MODIFY_RIGHTS";
+			return FALSE;
+		}
+		
+		if (!delete_directory_recurse($dir["path"])) {
+			$error = "CANNOT_DELETE";
+			return FALSE;
+		}
+		return TRUE;
+	}
+	
+	function delete_directory_recurse($path) {
+		global $error_details;
+		$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+		$handle = opendir($path);
+		
+		if (!$handle) {
+			log_error("Could not open directory for traversal (delete_directory_recurse): ".$path);
+			return FALSE;
+		}
+	    
+	    while (false !== ($item = readdir($handle))) {
+			if ($item != "." and $item != ".." ) {
+				$fullpath = $path.$item;
+
+				if (is_dir($fullpath)) {
+					if (!delete_directory_recurse($fullpath)) {
+						closedir($handle);
+						return FALSE;
+					}
+				} else {
+					if (!unlink($fullpath)) {
+						log_error("Failed to remove file (delete_directory_recurse): ".$fullpath);
+						closedir($handle);
+						return FALSE;
+					}
+				}
+			}
+		}
+		
+		closedir($handle);
+		if (!rmdir($path)) {
+			log_error("Failed to remove directory (delete_directory_recurse): ".$path);
+			return FALSE;
+		}
+	    return TRUE;
+	}
+
 	function upload_file($dir) {
 		global $error, $error_details;
 		

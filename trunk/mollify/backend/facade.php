@@ -86,8 +86,10 @@
 					break;
 			
 				case "rename":
-					if (!isset($_GET["item_type"])) return;
-					if (!isset($_GET["to"])) return;
+					if (!isset($_GET["item_type"]) or !isset($_GET["to"])) {
+						$error = "INVALID_REQUEST";
+						return;
+					}
 					$to = urldecode($_GET["to"]);
 					$item_type = strtolower(trim($_GET["item_type"]));
 					
@@ -103,8 +105,21 @@
 					break;
 				
 				case "delete":
-					if (delete_file($file))
-						$result = get_success_message();
+					if (!isset($_GET["item_type"])) {
+						$error = "INVALID_REQUEST";
+						return;
+					}
+					$item_type = strtolower(trim($_GET["item_type"]));
+					
+					if ($item_type === 'f') {
+						if (delete_file($file))
+							$result = get_success_message();
+					} else if ($item_type === 'd') {
+						if (delete_directory($file))
+							$result = get_success_message();
+					} else {
+						$error = "INVALID_REQUEST";
+					}
 					break;
 			
 				case "upload":
