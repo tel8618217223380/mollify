@@ -354,7 +354,7 @@
 	function create_folder($dir, $folder_name) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_create_folder"]) {
+		if (!$_SESSION["settings"]["enable_folder_actions"]) {
 			log_error("Cannot create folder, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
