@@ -50,6 +50,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		this.listener = listener;
 		this.localizator = localizator;
 
+		this.addStyleName(StyleConstants.DIRECTORY_LIST_MENU);
 		addItem(createWaitLabel(localizator));
 	}
 

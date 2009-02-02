@@ -16,11 +16,20 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MollifyButton extends Button {
+public class ActionButton extends Button {
+	public ActionButton(String title) {
+		this(title, null, null);
+	}
 
-	public MollifyButton(String title, String id, String styleClass) {
+	public ActionButton(String title, String id) {
+		this(title, id, null);
+	}
+
+	public ActionButton(String title, String id, String styleClass) {
 		super(title);
-		setStyleName(styleClass);
+
+		if (styleClass != null)
+			addStyleName(styleClass);
 
 		if (id != null)
 			getElement().setId(id);
@@ -29,7 +38,6 @@ public class MollifyButton extends Button {
 	public void setAction(final ActionListener actionListener,
 			final Action action) {
 		this.addClickListener(new ClickListener() {
-
 			public void onClick(Widget sender) {
 				actionListener.onActionTriggered(action);
 			}

@@ -14,9 +14,7 @@ import org.sjarvela.mollify.client.LogoutListener;
 import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileSystemActionProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.impl.FileActionProviderImpl;
 import org.sjarvela.mollify.client.file.impl.FileSystemActionHandlerImpl;
 import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
 import org.sjarvela.mollify.client.localization.Localizator;
@@ -42,14 +40,13 @@ public class MainViewFactory {
 
 	public MainView createMainView(WindowManager windowManager,
 			SessionInfo info, LogoutListener logoutListener) {
-		FileSystemActionProvider actionProvider = new FileActionProviderImpl(
-				service);
+
 		FileServices fileServices = new FileServices(service);
 		MainViewModel model = new MainViewModel(fileServices, info);
 
 		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
 		FileSystemActionHandler actionHandler = new FileSystemActionHandlerImpl(
-				actionProvider, fileServices, windowManager);
+				service, fileServices, windowManager);
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileServices, localizator);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
@@ -65,7 +62,7 @@ public class MainViewFactory {
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
-				model, view, actionProvider, actionHandler, fileUploadHandler,
+				model, view, service, actionHandler, fileUploadHandler,
 				fileServices, localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter, actionDelegator);

@@ -11,11 +11,10 @@
 package org.sjarvela.mollify.client.file.impl;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileSystemActionProvider;
+import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileSystemOperationHandler;
 import org.sjarvela.mollify.client.service.ProxyResultListener;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -24,14 +23,14 @@ import org.sjarvela.mollify.client.ui.WindowManager;
 
 public class FileSystemActionHandlerImpl implements FileSystemActionHandler {
 	private final WindowManager windowManager;
-	private final FileSystemActionProvider actionProvider;
+	private final FileActionUrlProvider actionUrlProvider;
 	private final FileSystemOperationHandler operator;
 	private ProxyResultListener renameListener;
 	private ProxyResultListener deleteListener;
 
-	public FileSystemActionHandlerImpl(FileSystemActionProvider actionProvider,
+	public FileSystemActionHandlerImpl(FileActionUrlProvider actionUrlProvider,
 			FileSystemOperationHandler operator, WindowManager windowManager) {
-		this.actionProvider = actionProvider;
+		this.actionUrlProvider = actionUrlProvider;
 		this.operator = operator;
 		this.windowManager = windowManager;
 
@@ -48,11 +47,10 @@ public class FileSystemActionHandlerImpl implements FileSystemActionHandler {
 	}
 
 	public void onAction(final FileSystemItem item, FileSystemAction action) {
-		if (action.equals(FileSystemAction.download)) {
-			if (!item.isFile())
-				throw new RuntimeException("Invalid action");
-			windowManager.openDownloadUrl(actionProvider.getActionURL(
-					(File) item, action));
+		if (action.equals(FileSystemAction.download)
+				|| action.equals(FileSystemAction.download_as_zip)) {
+			windowManager.openDownloadUrl(actionUrlProvider.getActionUrl(item,
+					action));
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(item, operator,
 					renameListener);

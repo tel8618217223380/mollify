@@ -1,9 +1,11 @@
 package org.sjarvela.mollify.client.ui.contextpopup;
 
 import org.sjarvela.mollify.client.file.FileSystemAction;
+import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
 import org.sjarvela.mollify.client.ui.HoverDecorator;
+import org.sjarvela.mollify.client.ui.MultiActionButton;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
@@ -51,7 +53,8 @@ public abstract class ContextPopup extends DropdownPopup {
 		return close;
 	}
 
-	protected Button createActionButton(String title, final FileSystemAction action) {
+	protected Button createActionButton(String title,
+			final FileSystemAction action) {
 		String base = styleName + "-action";
 
 		Button button = new Button(title);
@@ -63,6 +66,12 @@ public abstract class ContextPopup extends DropdownPopup {
 			}
 		});
 		return button;
+	}
+
+	protected MultiActionButton createMultiActionButton(ActionListener listener,
+			String title, String id) {
+		return new MultiActionButton(listener, title,
+				(styleName + "-multiaction"), id);
 	}
 
 	protected abstract void onAction(FileSystemAction action);

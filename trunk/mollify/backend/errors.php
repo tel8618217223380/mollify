@@ -28,7 +28,8 @@
 		"NO_UPLOAD_DATA" => array(209, "No upload data available"), 
 		"UPLOAD_FAILED" => array(210, "File upload failed"), 
 		"SAVING_FAILED" => array(211, "Saving file failed"),
-		"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file")
+		"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file"),
+		"ZIP_FAILED" => array(213, "Creating a zip package failed")
 	);
 
 ?>

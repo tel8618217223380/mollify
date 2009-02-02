@@ -12,8 +12,6 @@ package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileSystemItem;
 
-public interface FileSystemActionProvider {
-	public boolean isActionAllowed(FileSystemItem item, FileSystemAction action);
-
-	public String getActionURL(FileSystemItem item, FileSystemAction action);
+public interface FileActionUrlProvider {
+	public String getActionUrl(FileSystemItem item, FileSystemAction action);
 }

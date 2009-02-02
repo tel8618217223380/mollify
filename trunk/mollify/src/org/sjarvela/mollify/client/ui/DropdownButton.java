@@ -10,22 +10,30 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
-
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownButton extends Composite {
-	private MollifyButton button;
+	private ActionButton button;
 	private DropdownPopupMenu menu;
 
 	public DropdownButton(ActionListener actionListener, String title, String id) {
-		button = new MollifyButton(title, null, StyleConstants.DROPDOWN_BUTTON);
+		this(actionListener, title, id, null);
+	}
+
+	public DropdownButton(ActionListener actionListener, String title,
+			String id, Element parent) {
+		button = new ActionButton(title, id == null ? null : id + "-button",
+				StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
-		menu = new DropdownPopupMenu<String>(actionListener, this.getElement(),
-				button.getElement());
+		menu = new DropdownPopupMenu<String>(actionListener,
+				parent == null ? this.getElement() : parent, button
+						.getElement());
+		if (id != null)
+			menu.getElement().setId(id + "-menu");
 
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
@@ -37,7 +45,7 @@ public class DropdownButton extends Composite {
 			getElement().setId(id);
 	}
 
-	public void addAction(Action action, String title) {
+	public void addAction(ActionId action, String title) {
 		menu.addMenuAction(action, title);
 	}
 }

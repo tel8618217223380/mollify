@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.file.FileSystemActionProvider;
+import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileUploadController;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
@@ -36,7 +36,7 @@ public class FileUploadDialog extends CenteredDialog implements
 	private final String uploadId;
 	private final Directory directory;
 	private final Localizator localizator;
-	private final FileSystemActionProvider fileActionProvider;
+	private final FileActionUrlProvider actionUrlProvider;
 	private final FileUploadHandler fileUploadHandler;
 	private Button uploadButton;
 
@@ -44,14 +44,14 @@ public class FileUploadDialog extends CenteredDialog implements
 	private FileUpload uploader;
 
 	public FileUploadDialog(Directory directory, Localizator localizator,
-			FileSystemActionProvider fileActionProvider,
+			FileActionUrlProvider actionUrlProvider,
 			FileUploadHandler fileUploadHandler) {
 		super(localizator.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
 		this.uploadId = fileUploadHandler.getFileUploadId();
 		this.directory = directory;
 		this.localizator = localizator;
-		this.fileActionProvider = fileActionProvider;
+		this.actionUrlProvider = actionUrlProvider;
 		this.fileUploadHandler = fileUploadHandler;
 
 		initialize();
@@ -102,7 +102,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
 		form.addFormHandler(fileUploadHandler.getUploadFormHandler(this,
 				uploadId));
-		form.setAction(fileActionProvider.getActionURL(directory,
+		form.setAction(actionUrlProvider.getActionUrl(directory,
 				FileSystemAction.upload));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
