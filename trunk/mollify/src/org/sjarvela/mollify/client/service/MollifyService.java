@@ -143,7 +143,7 @@ public class MollifyService implements FileActionUrlProvider {
 	}
 
 	public String getActionUrl(FileSystemItem item, FileSystemAction action) {
-		return getActionUrl(item, action);
+		return getActionUrl(item, action, new String[0]);
 	}
 
 	public String getActionUrl(FileSystemItem item, FileSystemAction action,

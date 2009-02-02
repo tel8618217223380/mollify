@@ -41,4 +41,6 @@
 		"enable_file_upload_progress" => TRUE
 	);
 	
+	$ZIP_OPTIONS = array("large_file_size" => 3 * 1024 * 1024);
+	
 ?>

@@ -494,6 +494,12 @@ td#mollify-filelist-column-size {
 	margin-top: 7px;
 }
 
+#download-dropdown-menu.mollify-dropdown-menu {
+	background-color: #ececec;
+}
+
+
+
 .mollify-directory-context-content {
 	background: #fff url(folder.png) no-repeat 0 0;
 	width: 250px;

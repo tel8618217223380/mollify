@@ -400,20 +400,16 @@
 	
 	function download_file_as_zip($file) {
 		require "zipstream.php";
-		global $error, $error_details;
+		global $error, $error_details, $ZIP_OPTIONS;
 		
 		if (!assert_file($file)) return FALSE;
 		$path = $file["path"];
+		$zip_name = basename($path).'.zip';
 		
-		$zip = new ZipStream(basename($path).'.zip');
-		$file_data = file_get_contents($path);
-		if (!$file_data) {
-			log_error("Could not add file to zip: ".$path);
-			$error = "ZIP_FAILED";
-			$error_details = basename($path);
-			return FALSE;
-		}
-		$zip->add_file(basename($path), $file_data);
+		if (isset($ZIP_OPTIONS)) $zip = new ZipStream($zip_name, $ZIP_OPTIONS);
+		else $zip = new ZipStream($zip_name);
+
+		$zip->add_file_from_path(basename($path), $path);
 		$zip->finish();
 		
 		return TRUE;
@@ -421,26 +417,21 @@
 	
 	function download_dir_as_zip($dir) {
 		require "zipstream.php";
-		global $error, $error_details;
+		global $error, $error_details, $ZIP_OPTIONS;
 		
 		if (!assert_dir($dir)) return FALSE;
 		$files = get_visible_files_in_dir($dir["path"]);
 		if ($files === FALSE) return FALSE;
 		
 		$parent = dirname($dir["path"]);
-		$zip_name = substr($dir["path"], strlen($parent)).'.zip';
-		$zip = new ZipStream($zip_name);
+		$zip_name = substr($dir["path"], strlen($parent) + 1).'.zip';
+		
+		if (isset($ZIP_OPTIONS)) $zip = new ZipStream($zip_name, $ZIP_OPTIONS);
+		else $zip = new ZipStream($zip_name);
 		
 		foreach($files as $file) {
 			log_error("Zipping ".$file);
-			$file_data = file_get_contents($file);
-			if (!$file_data) {
-				log_error("Could not add file to zip: ".$file);
-				$error = "ZIP_FAILED";
-				$error_details = basename($file);
-				return FALSE;
-			}
-			$zip->add_file(basename($file), $file_data);
+			$zip->add_file_from_path(basename($file), $file);
 		}
 		$zip->finish();
 		
