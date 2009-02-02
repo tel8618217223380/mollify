@@ -14,12 +14,13 @@ import org.sjarvela.mollify.client.DateTime;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 
-public class MollifyService {
+public class MollifyService implements FileActionUrlProvider {
 	private String baseUrl;
 
 	enum Action {
@@ -130,7 +131,7 @@ public class MollifyService {
 	public void deleteDirectory(Directory dir, ResultListener listener) {
 		doRequest(getActionUrl(dir, FileSystemAction.delete), listener);
 	}
-	
+
 	public void createFolder(Directory parentFolder, String folderName,
 			ResultListener listener) {
 		doRequest(getActionUrl(parentFolder, FileSystemAction.create_folder,
@@ -139,6 +140,10 @@ public class MollifyService {
 
 	public void getUploadProgress(String id, ResultListener resultListener) {
 		getType(resultListener, GetType.upload_status, "id=" + id);
+	}
+
+	public String getActionUrl(FileSystemItem item, FileSystemAction action) {
+		return getActionUrl(item, action);
 	}
 
 	public String getActionUrl(FileSystemItem item, FileSystemAction action,

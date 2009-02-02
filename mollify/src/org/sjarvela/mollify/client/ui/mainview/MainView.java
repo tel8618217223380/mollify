@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
-import org.sjarvela.mollify.client.ui.MollifyButton;
+import org.sjarvela.mollify.client.ui.ActionButton;
 import org.sjarvela.mollify.client.ui.DropdownButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -49,9 +49,9 @@ public class MainView extends Composite {
 	private DirectoryContextPopup dirContext = null;
 
 	private DropdownButton addButton;
-	private MollifyButton refreshButton;
-	private MollifyButton parentDirButton;
-	private MollifyButton logoutButton;
+	private ActionButton refreshButton;
+	private ActionButton parentDirButton;
+	private ActionButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private final ActionListener actionListener;
@@ -134,19 +134,19 @@ public class MainView extends Composite {
 	}
 
 	private void createButtons() {
-		refreshButton = new MollifyButton(localizator.getStrings()
+		refreshButton = new ActionButton(localizator.getStrings()
 				.mainViewRefreshButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		parentDirButton = new MollifyButton(localizator.getStrings()
+		parentDirButton = new ActionButton(localizator.getStrings()
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		parentDirButton.setAction(actionListener, Action.parentDir);
 
-		logoutButton = new MollifyButton(localizator.getStrings()
+		logoutButton = new ActionButton(localizator.getStrings()
 				.mainViewLogoutButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
@@ -201,15 +201,15 @@ public class MainView extends Composite {
 		dirContext.show();
 	}
 
-	public MollifyButton getRefreshButton() {
+	public ActionButton getRefreshButton() {
 		return refreshButton;
 	}
 
-	public MollifyButton getParentDirButton() {
+	public ActionButton getParentDirButton() {
 		return parentDirButton;
 	}
 
-	public MollifyButton getLogoutButton() {
+	public ActionButton getLogoutButton() {
 		return logoutButton;
 	}
 }

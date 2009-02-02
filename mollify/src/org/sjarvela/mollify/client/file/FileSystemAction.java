@@ -11,13 +11,15 @@
 package org.sjarvela.mollify.client.file;
 
 import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.ui.ActionId;
 
-public enum FileSystemAction {
-	download, rename, delete, upload, details, create_folder;
+public enum FileSystemAction implements ActionId {
+	download, rename, delete, upload, details, create_folder, download_as_zip;
 
 	public boolean isApplicableToDirectory() {
 		return (this.equals(upload) || this.equals(create_folder)
-				|| this.equals(rename) || this.equals(delete));
+				|| this.equals(rename) || this.equals(delete) || this
+				.equals(download_as_zip));
 	}
 
 	public boolean isApplicableToFile() {

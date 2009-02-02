@@ -44,10 +44,14 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileActionDetailsTitle();
 
 	public String fileActionDownloadTitle();
+	
+	public String fileActionDownloadZippedTitle();
 
 	public String fileActionRenameTitle();
 
 	public String fileActionDeleteTitle();
+	
+	public String dirActionDownloadTitle();
 
 	public String dirActionRenameTitle();
 

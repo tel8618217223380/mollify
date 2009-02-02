@@ -30,13 +30,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryContextPopup extends ContextPopup {
 	private final Localizator localizator;
+	private final boolean folderActionsEnabled;
+
 	private Label name;
+	private Button downloadButton;
 	private Button renameButton;
 	private Button deleteButton;
+
 	private final DirectoryDetailsProvider detailsProvider;
 	private final FileSystemActionHandler actionHandler;
 	private Directory directory;
-	private final boolean folderActionsEnabled;
 
 	public DirectoryContextPopup(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
@@ -67,6 +70,8 @@ public class DirectoryContextPopup extends ContextPopup {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.DIR_CONTEXT_BUTTONS);
 
+		downloadButton = createActionButton(localizator.getStrings()
+				.dirActionDownloadTitle(), FileSystemAction.download_as_zip);
 		renameButton = createActionButton(localizator.getStrings()
 				.dirActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
@@ -74,6 +79,7 @@ public class DirectoryContextPopup extends ContextPopup {
 				.dirActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
+		buttons.add(downloadButton);
 		buttons.add(renameButton);
 		buttons.add(deleteButton);
 

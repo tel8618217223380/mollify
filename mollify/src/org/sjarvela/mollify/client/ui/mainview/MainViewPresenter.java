@@ -22,7 +22,7 @@ import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileSystemActionProvider;
+import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.file.FileUploadMonitor;
@@ -38,7 +38,7 @@ public class MainViewPresenter implements DirectoryController,
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
-	private final FileSystemActionProvider fileActionProvider;
+	private final FileActionUrlProvider fileActionProvider;
 	private final Localizator localizator;
 	private final FileUploadHandler fileUploadHandler;
 	private final LogoutListener logoutListener;
@@ -48,7 +48,7 @@ public class MainViewPresenter implements DirectoryController,
 	private final DirectoryHandler directoryHandler;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
-			MainView view, FileSystemActionProvider fileActionProvider,
+			MainView view, FileActionUrlProvider fileActionProvider,
 			FileSystemActionHandler fileActionHandler,
 			FileUploadHandler fileUploadHandler,
 			DirectoryHandler directoryHandler, Localizator localizator,

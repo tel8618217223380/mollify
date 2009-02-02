@@ -32,6 +32,10 @@ public class StyleConstants {
 	public static final String DROPDOWN_MENU = "mollify-dropdown-menu";
 	public static final String DROPDOWN_MENU_ITEM = "mollify-dropdown-menu-item";
 
+	public static final String MULTIACTION_BUTTON = "mollify-multiaction-button";
+	public static final String MULTIACTION_DEFAULT_BUTTON = "mollify-multiaction-button-default";
+	public static final String MULTIACTION_BUTTON_DROPDOWN = "mollify-multiaction-button-dropdown";
+
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "mollify-header-padding-left";
@@ -87,6 +91,7 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_DROPDOWN = "mollify-directory-list-dropdown";
 	public static final String DIRECTORY_LIST_ROOT_LEVEL = "mollify-directory-list-root-level";
 
+	public static final String DIRECTORY_LIST_MENU = "mollify-directory-list-menu";
 	public static final String DIRECTORY_LIST_MENU_WAIT = "mollify-directory-list-menu-wait";
 	public static final String DIRECTORY_LIST_MENU_ERROR = "mollify-directory-list-menu-error";
 	public static final String DIRECTORY_LIST_MENU_ITEM = "mollify-directory-list-menu-item";
@@ -149,6 +154,4 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "mollify-create-folder-dialog-name-value";
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "mollify-create-folder-dialog-button-create";
-
-
 }

@@ -116,34 +116,27 @@
 		
 		$root = $dir["root"];
 		$path = $dir["path"];
-		$files = scandir($path);
-		if (!$files) {
-			$error = "INVALID_PATH";
-			$error_details = $path;
-			return FALSE;
-		}
+		
+		$files = get_visible_files_in_dir($path);
+		if ($files === FALSE) return FALSE;
+		
 		$result = array();
 		
-		foreach($files as $i => $name) {
-			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored)) {
-				continue;
-			}
-			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
-			if (is_dir($fullPath)) continue;
-			
+		foreach($files as $full_path) {
+			$name = basename($full_path);
 			$ext_pos = strrpos($name, '.');
 			if ($ext_pos > 0) {
-				$extension = substr($name, strrpos($name, '.') + 1);
+				$extension = substr($name, $ext_pos + 1);
 			} else {
 				$extension = "";
 			}
 			
 			$result[] = array(
-				"id" => get_filesystem_id($root, $fullPath),
+				"id" => get_filesystem_id($root, $full_path),
 				"root" => $root,
 				"name" => $name,
 				"extension" => $extension,
-				"size" => filesize($fullPath)
+				"size" => filesize($full_path)
 			);
 		}
 		
@@ -389,7 +382,6 @@
 	
 	function download($file) {
 		global $error, $error_details;
-		
 		if (!assert_file($file)) return FALSE;
 		
 		$filename = $file["path"];
@@ -404,6 +396,79 @@
 		
 		readfile($filename);
 		return TRUE;
+	}
+	
+	function download_file_as_zip($file) {
+		require "zipstream.php";
+		global $error, $error_details;
+		
+		if (!assert_file($file)) return FALSE;
+		$path = $file["path"];
+		
+		$zip = new ZipStream(basename($path).'.zip');
+		$file_data = file_get_contents($path);
+		if (!$file_data) {
+			log_error("Could not add file to zip: ".$path);
+			$error = "ZIP_FAILED";
+			$error_details = basename($path);
+			return FALSE;
+		}
+		$zip->add_file(basename($path), $file_data);
+		$zip->finish();
+		
+		return TRUE;
+	}
+	
+	function download_dir_as_zip($dir) {
+		require "zipstream.php";
+		global $error, $error_details;
+		
+		if (!assert_dir($dir)) return FALSE;
+		$files = get_visible_files_in_dir($dir["path"]);
+		if ($files === FALSE) return FALSE;
+		
+		$parent = dirname($dir["path"]);
+		$zip_name = substr($dir["path"], strlen($parent)).'.zip';
+		$zip = new ZipStream($zip_name);
+		
+		foreach($files as $file) {
+			log_error("Zipping ".$file);
+			$file_data = file_get_contents($file);
+			if (!$file_data) {
+				log_error("Could not add file to zip: ".$file);
+				$error = "ZIP_FAILED";
+				$error_details = basename($file);
+				return FALSE;
+			}
+			$zip->add_file(basename($file), $file_data);
+		}
+		$zip->finish();
+		
+		return TRUE;
+	}
+	
+	function get_visible_files_in_dir($path) {
+		global $error, $error_details;
+		$ignored = array('descript.ion', 'mollify.uac');
+		
+		$files = scandir($path);
+		if (!$files) {
+			$error = "INVALID_PATH";
+			$error_details = $path;
+			return FALSE;
+		}
+		$result = array();
+		
+		foreach($files as $i => $name) {
+			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored)) {
+				continue;
+			}
+			$full_path = $path.DIRECTORY_SEPARATOR.$name;
+			if (is_dir($full_path)) continue;
+			
+			$result[] = $full_path;
+		}
+		return $result;
 	}
 	
 	function has_general_modify_rights() {

@@ -84,11 +84,28 @@
 					// download writes the header and the content, just exit here
 					if (download($file)) return;
 					break;
-			
+
+				case "download_as_zip":
+					if (!isset($_GET["item_type"])) {
+						$error = "INVALID_REQUEST";
+						break;
+					}
+					$item_type = strtolower(trim($_GET["item_type"]));
+					
+					// download writes the header and the content, just exit here
+					if ($item_type === 'f') {
+						if (download_file_as_zip($file)) return;
+					} else if ($item_type === 'd') {
+						if (download_dir_as_zip($file)) return;
+					} else {
+						$error = "INVALID_REQUEST";
+					}
+					break;
+					
 				case "rename":
 					if (!isset($_GET["item_type"]) or !isset($_GET["to"])) {
 						$error = "INVALID_REQUEST";
-						return;
+						break;
 					}
 					$to = urldecode($_GET["to"]);
 					$item_type = strtolower(trim($_GET["item_type"]));
@@ -107,7 +124,7 @@
 				case "delete":
 					if (!isset($_GET["item_type"])) {
 						$error = "INVALID_REQUEST";
-						return;
+						break;
 					}
 					$item_type = strtolower(trim($_GET["item_type"]));
 					
@@ -131,7 +148,10 @@
 
 				case "create_folder":
 					$dir = $file;
-					if (!isset($_GET["name"])) return;
+					if (!isset($_GET["name"])) {
+						$error = "INVALID_REQUEST";
+						break;
+					}
 					if (create_folder($dir, $_GET["name"]))
 						$result = get_success_message();
 					break;

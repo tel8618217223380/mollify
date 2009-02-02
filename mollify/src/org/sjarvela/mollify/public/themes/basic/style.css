@@ -26,6 +26,30 @@
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
 
+.mollify-dropdown-button {
+	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	height: 23px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.mollify-multiaction-button {
+	margin-top: 6px;
+	margin-bottom: 6px;
+	margin-right: 6px;
+}
+
+.mollify-multiaction-button-default {
+	height: 25px;
+	float: left;
+}
+
+.mollify-multiaction-button-dropdown {
+	width: 9px;
+	height: 25px;
+	background: transparent url(b-dropdown-arrow.png) scroll;
+}
+
 .mollify-main {
 	width: 100%;
 }
@@ -48,7 +72,7 @@
 	width: 0px;
 }
 
-.mollify-header-button {
+.mollify-header-button, #mollify-header-add-button {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	background-image: none;
 	margin-top: 8px;
@@ -57,25 +81,6 @@
 	height: 23px;
 	border-style: none;
 	margin-right: 4px;
-	cursor: pointer;
-	cursor: hand;
-}
-
-.mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover {
-	text-decoration: underline;
-	color: #292c34;
-}
-
-.mollify-dropdown-button {
-	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
-	background-image: none;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	padding: 0;
-	height: 23px;
-	border-style: none;
-	margin-right: 4px;
-	font-size: 0;
 	cursor: pointer;
 	cursor: hand;
 }
@@ -83,6 +88,17 @@
 #mollify-header-add-button.mollify-dropdown-button {
 	background: url(b-add.png) no-repeat 0 0;
 	width: 36px;
+	font-size: 0;
+}
+
+#mollify-header-add-button-menu {
+	margin-top: 22px;
+	margin-left: 7px;
+}
+
+.mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover {
+	text-decoration: underline;
+	color: #292c34;
 }
 
 #mollify-header-add-button.mollify-dropdown-button:active {
@@ -113,8 +129,7 @@
 
 .mollify-dropdown-menu {
 	background: #f9f9f9;
-	margin-left: 11px;
-	margin-top: 21px;
+	margin-top: 26px;
 	border-right: 1px outset #c0c0c0;
 	border-left: 1px outset #c0c0c0;
 	border-bottom: 1px outset #c0c0c0;
@@ -207,6 +222,11 @@ table.mollify-directory-list.mollify-directory-list-root-level {
 	font-size: 16px;
 	visibility: hidden;
 	width: 5px;
+}
+
+.mollify-directory-list-menu {
+	margin-top: 22px;
+	margin-left: 11px;
 }
 
 .mollify-directory-menu-item-none {
@@ -461,7 +481,6 @@ td#mollify-filelist-column-size {
 .mollify-file-context-details-content {
 	width: 300px;
 	border-left: 1px;
-	padding: 8px;
 	margin: 0;
 	background-color: #f5f5f5;
 }
