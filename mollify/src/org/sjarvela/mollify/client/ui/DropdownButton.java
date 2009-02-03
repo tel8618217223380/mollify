@@ -48,4 +48,8 @@ public class DropdownButton extends Composite {
 	public void addAction(ActionId action, String title) {
 		menu.addMenuAction(action, title);
 	}
+
+	public void setActionEnabled(ActionId action, boolean enabled) {
+		menu.setActionEnabled(action, enabled);
+	}
 }

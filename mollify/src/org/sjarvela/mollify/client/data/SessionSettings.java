@@ -28,4 +28,7 @@ public class SessionSettings extends JavaScriptObject {
 		return this.enable_file_upload_progress;
 	}-*/;
 
+	public final native boolean isZipDownloadEnabled() /*-{
+		return this.enable_zip_download;
+	}-*/;
 }

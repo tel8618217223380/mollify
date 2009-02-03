@@ -19,7 +19,8 @@
 		return array(
 			"enable_file_upload" => get_setting("enable_file_upload", TRUE),
 			"enable_folder_actions" => get_setting("enable_folder_actions", TRUE),
-			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE)
+			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE),
+			"enable_zip_download" => get_setting("enable_zip_download", FALSE)
 		);
 	}
 ?>

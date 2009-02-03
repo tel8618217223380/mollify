@@ -50,11 +50,11 @@ public class MainViewFactory {
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileServices, localizator);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				actionHandler, fileServices, localizator);
+				actionHandler, fileServices, localizator, model
+						.getSessionInfo().getSettings());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
 				localizator, fileServices, actionHandler, model
-						.getSessionInfo().getSettings()
-						.isFolderActionsEnabled());
+						.getSessionInfo().getSettings());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue

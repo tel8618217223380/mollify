@@ -10,13 +10,20 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopupMenu<T> extends DropdownPopup {
+	private static final String DISABLED = "disabled";
+
 	private ActionListener actionListener;
+	private Map<ActionId, Widget> items = new HashMap();
+	private Map<ActionId, Boolean> itemsEnabled = new HashMap();
 
 	public DropdownPopupMenu(ActionListener actionListener, Element parent,
 			Element opener) {
@@ -29,7 +36,20 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	}
 
 	public void addMenuAction(final ActionId action, T item) {
-		addItem(createMenuItemWidget(action, item));
+		Widget itemWidget = createMenuItemWidget(action, item);
+		items.put(action, itemWidget);
+		itemsEnabled.put(action, true);
+		addItem(itemWidget);
+	}
+
+	public void setActionEnabled(ActionId action, boolean enabled) {
+		Widget itemWidget = items.get(action);
+
+		if (enabled)
+			itemWidget.removeStyleDependentName(DISABLED);
+		else
+			itemWidget.addStyleDependentName(DISABLED);
+		itemsEnabled.put(action, enabled);
 	}
 
 	protected Label createMenuItemWidget(final ActionId action, T item) {
@@ -38,7 +58,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		if (action != null)
 			label.addClickListener(new ClickListener() {
 				public void onClick(Widget sender) {
-					if (actionListener != null)
+					if (actionListener != null && itemsEnabled.get(action))
 						actionListener.onActionTriggered(action);
 				}
 			});

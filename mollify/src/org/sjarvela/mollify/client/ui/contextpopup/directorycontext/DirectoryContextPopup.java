@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
 
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.DirectoryDetails;
+import org.sjarvela.mollify.client.data.SessionSettings;
 import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
@@ -30,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryContextPopup extends ContextPopup {
 	private final Localizator localizator;
-	private final boolean folderActionsEnabled;
+	private final SessionSettings settings;
 
 	private Label name;
 	private Button downloadButton;
@@ -43,13 +44,13 @@ public class DirectoryContextPopup extends ContextPopup {
 
 	public DirectoryContextPopup(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler, boolean folderActionsEnabled) {
+			FileSystemActionHandler actionHandler, SessionSettings settings) {
 		super(StyleConstants.DIR_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.actionHandler = actionHandler;
-		this.folderActionsEnabled = folderActionsEnabled;
+		this.settings = settings;
 
 		initialize();
 	}
@@ -70,8 +71,9 @@ public class DirectoryContextPopup extends ContextPopup {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.DIR_CONTEXT_BUTTONS);
 
-		downloadButton = createActionButton(localizator.getStrings()
-				.dirActionDownloadTitle(), FileSystemAction.download_as_zip);
+		if (settings.isZipDownloadEnabled())
+			downloadButton = createActionButton(localizator.getStrings()
+					.dirActionDownloadTitle(), FileSystemAction.download_as_zip);
 		renameButton = createActionButton(localizator.getStrings()
 				.dirActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
@@ -79,7 +81,8 @@ public class DirectoryContextPopup extends ContextPopup {
 				.dirActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		buttons.add(downloadButton);
+		if (settings.isZipDownloadEnabled())
+			buttons.add(downloadButton);
 		buttons.add(renameButton);
 		buttons.add(deleteButton);
 
@@ -108,7 +111,7 @@ public class DirectoryContextPopup extends ContextPopup {
 	}
 
 	protected void updateDetails(DirectoryDetails details) {
-		boolean writable = folderActionsEnabled
+		boolean writable = settings.isFolderActionsEnabled()
 				&& details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
