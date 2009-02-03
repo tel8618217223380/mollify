@@ -260,9 +260,9 @@ By default, zip downloads are disabled. To enable zip downloads, use following s
 
 === 2.6.2 Additional Zip Download Options ===
 
-Depending on your web server configuration, using zip downloading might require setting some options.
+Depending on your web server configuration, using zip downloading might require setting following options:
 
-1) File size limitation
+*1) File size limitation*
 
 Usually PHP configurations limit the amount of memory any PHP script can reserve. Mollify zip packages are created on-the-fly, ie. in memory, and this setting may result errors.
 
@@ -272,7 +272,7 @@ For example, if PHP configuration (php.ini) sets the maximum memory to 8M, use f
 	$ZIP_OPTIONS = array("large_file_size" => 7 * 1024 * 1024);
 }}}
 
-2) Execution time
+*2) Execution time*
 
 As well as maximum amount of memory reservable, PHP may also limit the time a script can execute.
 
@@ -283,6 +283,21 @@ This setting is called "max_execution_time", and can be changed if you have acce
 
 
 = 3. Modifying Installation =
+== Changing the theme ==
+
+	Default theme used is basic theme deployed in the package. If you wish to change the theme, you can define it with following property in host page:
+
+{{{
+	<html>
+		<head>
+			...
+			<meta name="mollify:property" content="theme=[PATH_TO_THEME_CSS]">
+		</head>
+		...
+	</html>
+}}}
+
+Value "PATH_TO_THEME_CSS" can be relative or absolute, put it must point into a css file. If it is relative, it will be relative to the host page.
 
 == Relocating host page or backend interface files ==
 
