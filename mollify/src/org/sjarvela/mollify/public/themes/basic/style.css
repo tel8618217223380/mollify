@@ -10,6 +10,8 @@
  * this entire header must remain intact.
  */
  
+ @import "../../gwt/standard/standard.css";
+ 
 *, table td {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;

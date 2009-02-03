@@ -27,6 +27,11 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, UncaughtExceptionHandler,
 		LogoutListener {
+	private static final String DEFAULT_THEME_CSS = "/themes/basic/style.css";
+
+	private static final String PARAM_THEME = "theme";
+	private static final String PARAM_SERVICE_PATH = "service-path";
+
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
 	MollifyService service;
@@ -41,11 +46,13 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		if (panel == null)
 			return;
 
+		importTheme(getParameter("mollify:property", PARAM_THEME));
+
 		localizator = Localizator.getInstance();
 		TextProvider textProvider = new DefaultTextProvider(localizator);
 
 		service = new MollifyService(getParameter("mollify:property",
-				"service_path"));
+				PARAM_SERVICE_PATH));
 
 		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
 				textProvider, service);
@@ -53,6 +60,19 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 				new DialogManager(localizator));
 
 		start();
+	}
+
+	private void importTheme(String theme) {
+		String themeUrl;
+		if (theme == null) {
+			themeUrl = GWT.getModuleBaseURL() + DEFAULT_THEME_CSS;
+		} else {
+			if (theme.toLowerCase().startsWith("http"))
+				themeUrl = theme;
+			else
+				themeUrl = GWT.getHostPageBaseURL() + theme;
+		}
+		importCss(themeUrl);
 	}
 
 	private String getParameter(String meta, String propertyName) {
@@ -80,6 +100,13 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 				return metaArray[i].getAttribute("content");
 		}
 		return null;
+	}-*/;
+
+	private native String importCss(String css) /*-{
+		var cssNode = document.createElement('link');
+		cssNode.rel = 'stylesheet';
+		cssNode.href = css;
+		$doc.getElementsByTagName("head")[0].appendChild(cssNode);
 	}-*/;
 
 	private void start() {
