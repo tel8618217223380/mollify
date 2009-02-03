@@ -5,6 +5,7 @@
   * Support for zip downloads
   * Support for theme selection in host page
   * Password is now transferred to backend in hashed format
+  * Renamed backend php file parameter to "service-path"
 
 === Version 0.6.3 ===
   * Support for folder actions: create, rename and delete folders (for more information, see [Installation Installation wiki page], chapter 2.5)
