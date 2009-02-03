@@ -243,6 +243,42 @@ At the moment, folder actions are available to all users with user default file 
 This is:
   * In single-user permission when user default file permission mode is set to read/write (RW). Note that in this case all users are allowed to create, rename and delete folders.
   * In multi-user permission when user default file permission is set to read/write (RW) or admin (A).
+
+== 2.6 Zip Downloads ==
+
+Mollify supports downloading files and folders in zipped package.
+
+=== 2.6.1 Enabling Zip Downloads ===
+
+By default, zip downloads are disabled. To enable zip downloads, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_zip_download" => TRUE
+	);
+}}}
+
+=== 2.6.2 Additional Zip Download Options ===
+
+Depending on your web server configuration, using zip downloading might require setting some options.
+
+1) File size limitation
+
+Usually PHP configurations limit the amount of memory any PHP script can reserve. Mollify zip packages are created on-the-fly, ie. in memory, and this setting may result errors.
+
+For example, if PHP configuration (php.ini) sets the maximum memory to 8M, use following setting in Mollify "configuration.php" to split zipping in 7M:
+
+{{{
+	$ZIP_OPTIONS = array("large_file_size" => 7 * 1024 * 1024);
+}}}
+
+2) Execution time
+
+As well as maximum amount of memory reservable, PHP may also limit the time a script can execute.
+
+Since zip packages are created dynamically and streamed, it may take a long time to zip large files or folders. If this time exceeds the maximum time set in php.ini, download will fail.
+
+This setting is called "max_execution_time", and can be changed if you have access to php.ini.
 ----
 
 
@@ -258,7 +294,7 @@ This is:
 	<html>
 		<head>
 			...
-			<meta name="mollify:property" content="service_path=[RELATIVE_PATH]">
+			<meta name="mollify:property" content="service-path=[RELATIVE_PATH]">
 		</head>
 		...
 	</html>
