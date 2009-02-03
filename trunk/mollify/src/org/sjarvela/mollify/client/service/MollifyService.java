@@ -74,7 +74,7 @@ public class MollifyService implements FileActionUrlProvider {
 	public void authenticate(String userName, String password,
 			final ResultListener resultListener) {
 		doRequest(getUrl(Action.auth, "username=" + userName, "password="
-				+ password), resultListener);
+				+ MD5.generateMD5(password)), resultListener);
 	}
 
 	public void logout(ResultListener resultListener) {

@@ -52,4 +52,8 @@ public class MultiActionButton extends Composite {
 			}
 		});
 	}
+
+	public void setActionEnabled(ActionId action, boolean enabled) {
+		dropdownButton.setActionEnabled(action, enabled);
+	}
 }

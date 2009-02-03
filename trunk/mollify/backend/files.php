@@ -401,6 +401,12 @@
 	function download_file_as_zip($file) {
 		require "zipstream.php";
 		global $error, $error_details, $ZIP_OPTIONS;
+
+		if (!$_SESSION["settings"]["enable_zip_download"]) {
+			log_error("Cannot download files zipped, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
 		
 		if (!assert_file($file)) return FALSE;
 		$path = $file["path"];
@@ -419,8 +425,15 @@
 		require "zipstream.php";
 		global $error, $error_details, $ZIP_OPTIONS;
 		
+		if (!$_SESSION["settings"]["enable_zip_download"]) {
+			log_error("Cannot download files zipped, feature disabled by settings");
+			$error = "FEATURE_DISABLED";
+			return FALSE;
+		}
+		
 		if (!assert_dir($dir)) return FALSE;
-		$files = get_visible_files_in_dir($dir["path"]);
+		$offset = strlen($dir["path"]) + 1;
+		$files = get_visible_files_in_dir($dir["path"], TRUE);
 		if ($files === FALSE) return FALSE;
 		
 		$parent = dirname($dir["path"]);
@@ -430,15 +443,14 @@
 		else $zip = new ZipStream($zip_name);
 		
 		foreach($files as $file) {
-			log_error("Zipping ".$file);
-			$zip->add_file_from_path(basename($file), $file);
+			$zip->add_file_from_path(substr($file, $offset), $file);
 		}
 		$zip->finish();
 		
 		return TRUE;
 	}
 	
-	function get_visible_files_in_dir($path) {
+	function get_visible_files_in_dir($path, $recursive = FALSE) {
 		global $error, $error_details;
 		$ignored = array('descript.ion', 'mollify.uac');
 		
@@ -455,7 +467,13 @@
 				continue;
 			}
 			$full_path = $path.DIRECTORY_SEPARATOR.$name;
-			if (is_dir($full_path)) continue;
+			if (is_dir($full_path)) {
+				if (!$recursive) continue;
+				
+				$sub = get_visible_files_in_dir($full_path);
+				if ($sub != FALSE) $result = array_merge($result, $sub);
+				continue;
+			}
 			
 			$result[] = $full_path;
 		}

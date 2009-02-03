@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
 
+import org.sjarvela.mollify.client.data.SessionSettings;
 import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
@@ -17,21 +18,21 @@ import org.sjarvela.mollify.client.localization.Localizator;
 public class DirectoryContextPopupFactory {
 	private final DirectoryDetailsProvider detailsProvider;
 	private final FileSystemActionHandler actionHandler;
-	private final boolean folderActionsEnabled;
+	private final SessionSettings settings;
 
 	public DirectoryContextPopupFactory(Localizator localizator,
 			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler, boolean folderActionsEnabled) {
+			FileSystemActionHandler actionHandler, SessionSettings settings) {
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.actionHandler = actionHandler;
-		this.folderActionsEnabled = folderActionsEnabled;
+		this.settings = settings;
 	}
 
 	private Localizator localizator;
 
 	public DirectoryContextPopup createPopup() {
 		return new DirectoryContextPopup(localizator, detailsProvider,
-				actionHandler, folderActionsEnabled);
+				actionHandler, settings);
 	}
 }

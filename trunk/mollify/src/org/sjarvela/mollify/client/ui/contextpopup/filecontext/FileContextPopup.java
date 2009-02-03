@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileDetails;
+import org.sjarvela.mollify.client.data.SessionSettings;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileSystemActionHandler;
@@ -42,6 +43,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private final Localizator localizator;
 	private final FileSystemActionHandler fileActionHandler;
 	private final FileDetailsProvider detailsProvider;
+	private final SessionSettings settings;
 
 	private Label filename;
 	private File file = File.Empty;
@@ -49,7 +51,6 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
 
-	private MultiActionButton downloadButton;
 	private Button renameButton;
 	private Button deleteButton;
 
@@ -59,12 +60,13 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 	public FileContextPopup(Localizator localizator,
 			FileDetailsProvider detailsProvider,
-			FileSystemActionHandler fileActionHandler) {
+			FileSystemActionHandler fileActionHandler, SessionSettings settings) {
 		super(StyleConstants.FILE_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
 		this.fileActionHandler = fileActionHandler;
+		this.settings = settings;
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(localizator.getStrings().shortDateTimeFormat());
@@ -93,14 +95,6 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
-		downloadButton = createMultiActionButton(this, localizator.getStrings()
-				.fileActionDownloadTitle(), FileSystemAction.download.name());
-		downloadButton.addAction(FileSystemAction.download, localizator
-				.getStrings().fileActionDownloadTitle());
-		downloadButton.addAction(FileSystemAction.download_as_zip, localizator
-				.getStrings().fileActionDownloadZippedTitle());
-		downloadButton.setDefaultAction(FileSystemAction.download);
-
 		renameButton = createActionButton(localizator.getStrings()
 				.fileActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
@@ -108,7 +102,21 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		buttons.add(downloadButton);
+		if (settings.isZipDownloadEnabled()) {
+			MultiActionButton downloadButton = createMultiActionButton(this,
+					localizator.getStrings().fileActionDownloadTitle(),
+					FileSystemAction.download.name());
+			downloadButton.addAction(FileSystemAction.download, localizator
+					.getStrings().fileActionDownloadTitle());
+			downloadButton.addAction(FileSystemAction.download_as_zip,
+					localizator.getStrings().fileActionDownloadZippedTitle());
+			downloadButton.setDefaultAction(FileSystemAction.download);
+			buttons.add(downloadButton);
+		} else {
+			buttons.add(createActionButton(localizator.getStrings()
+					.fileActionDownloadTitle(), FileSystemAction.download));
+		}
+
 		buttons.add(renameButton);
 		buttons.add(deleteButton);
 
@@ -126,7 +134,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
 
 		for (Details detail : Details.values()) {
-			String title = "?";
+			String title = "";
 			if (detail.equals(Details.Accessed))
 				title = localizator.getStrings().fileDetailsLabelLastAccessed();
 			else if (detail.equals(Details.Modified))

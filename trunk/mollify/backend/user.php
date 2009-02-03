@@ -30,7 +30,7 @@
 		foreach($USERS as $id => $user) {
 			if ($user["name"] != $_GET["username"])
 				continue;
-			if ($user["password"] != $_GET["password"]) {
+			if (md5($user["password"]) != $_GET["password"]) {
 				log_error("Authentication failed for user [".$user["name"]."], invalid password");
 			 	return FALSE;
 			}
