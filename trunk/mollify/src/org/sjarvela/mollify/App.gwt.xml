@@ -19,6 +19,4 @@
 	
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="fi"/>
-	
-	<stylesheet src='App.css' />
 </module>
