@@ -1,7 +1,7 @@
 #!/bin/sh
 
-APPROOT='/Users/cambba/Documents/Projects/Mollify';
-HTDOCS='/Applications/MAMP/htdocs';
+APPROOT=[ABSOLUTE_PATH_TO_MOLLIFY_PROJECT_ROOT];
+HTDOCS=[ABSOLUTE_PATH_TO_WWW_ROOT];
 APPNAME='org.sjarvela.mollify.App';
 APPDIR='org/sjarvela/mollify';
 TARGET="$HTDOCS/$APPNAME";
@@ -18,7 +18,6 @@ mkdir $TARGET
 cp -R $APPROOT/build/$APPNAME/* $TARGET
 
 # link stylesheets to development versions
-rm $TARGET/App.css
 ln -s $APPROOT/svn/src/$APPDIR/public/App.css $TARGET
 
 rm -rf $TARGET/themes

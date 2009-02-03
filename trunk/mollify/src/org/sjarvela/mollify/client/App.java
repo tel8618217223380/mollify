@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, UncaughtExceptionHandler,
 		LogoutListener {
-	private static final String DEFAULT_THEME_CSS = "/themes/basic/style.css";
+	private static final String DEFAULT_THEME_CSS = "themes/basic/style.css";
 
 	private static final String PARAM_THEME = "theme";
 	private static final String PARAM_SERVICE_PATH = "service-path";
