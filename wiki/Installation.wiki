@@ -125,7 +125,7 @@ $PUBLISHED_DIRECTORIES = array(
 	  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
 
 
-	*NOTE!* Currently all files and directories are recursively exposed, so carefully select your configuration.
+	NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
 == 2.3 User Access Control ==
@@ -150,13 +150,13 @@ $PUBLISHED_DIRECTORIES = array(
     $FILE_PERMISSION_MODE = "RW";
 }}}
 
-This will give all users read/write permissions, unless file specific permissions override this.
+	This will give all users read/write permissions, unless file specific permissions override this.
 
 === 2.3.2 User Default File Permission in Multi-User Environment ===
 
-In multi-user environment, default file permission is defined in user account configuration with attribute `file_permission_mode`.
+	In multi-user environment, default file permission is defined in user account configuration with attribute `file_permission_mode`.
 
-For example:
+	For example:
 
 {{{
 	$USERS = array(
@@ -306,7 +306,7 @@ For example:
 
 	Value `PATH_TO_THEME_CSS` can be relative or absolute path, but it must point into a css file. If it is relative, it will be relative to the host page.
 
-	*NOTE!* If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
+	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
 
 == Relocating host page or backend interface files ==
 
@@ -334,7 +334,7 @@ For example:
 }}}
 
 
-	*NOTE!* If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
+	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
 
 == Relocating client application files ==
 
