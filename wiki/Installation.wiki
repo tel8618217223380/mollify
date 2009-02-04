@@ -3,7 +3,7 @@
 
 = 1. Installation =
 
-	1) Untar package contents
+1) Untar package contents
 
 		{{{tar -xzvf mollify_VER.tar.gz}}}
 
@@ -11,11 +11,11 @@
 		  * "mollify": Application host page and backend service files
 		  * "org.sjarvela.mollify.App": Client application files
 
-	2) Copy extracted directories into your web server root directory
+2) Copy extracted directories into your web server root directory
 
-	3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
+3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
-	4) You are ready to go. Open address http://your.host.name/mollify to see your files.
+4) You are ready to go. Open address http://your.host.name/mollify to see your files.
 
 ----
 
