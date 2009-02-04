@@ -219,7 +219,7 @@ $PUBLISHED_DIRECTORIES = array(
 	);
 }}}
 
-	*NOTE!* File upload progress display requires APC (Alternative PHP Cache), see [http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay wiki page] for more information
+	NOTE! File upload progress display requires APC (Alternative PHP Cache), see [http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay wiki page] for more information
 
 
 == 2.5 Folder Actions ==
