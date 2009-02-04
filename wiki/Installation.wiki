@@ -336,13 +336,13 @@ $PUBLISHED_DIRECTORIES = array(
 
 	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2;...`
 
-== Relocating client application files ==
+== 3.3 Relocating client application files ==
 
 	Client application files can be located anywhere, only the javascript reference in the host page
 	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
 	changed, do not alter its contents.
 
-== 3.3 Customizing Mollify host page, or integrating Mollify into existing web page ==
+== 3.4 Customizing Mollify host page, or integrating Mollify into existing web page ==
 
 	Host page structure can be freely modified, as long as following rules are met:
 	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked
