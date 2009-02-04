@@ -260,13 +260,19 @@ By default, zip downloads are disabled. To enable zip downloads, use following s
 
 === 2.6.2 Additional Zip Download Options ===
 
-Depending on your web server configuration, using zip downloading might require setting following options:
+Depending on your web server configuration, using zip downloading might require changing configuration:
 
 *1) File size limitation*
 
-Usually PHP configurations limit the amount of memory any PHP script can reserve. Mollify zip packages are created on-the-fly, ie. in memory, and this setting may result errors.
+Usually PHP configurations limit the amount of memory any PHP script can reserve. Mollify zip packages are created in memory, and if the file size is greater than what PHP allows to reserve, operation will fail.
 
-For example, if PHP configuration (php.ini) sets the maximum memory to 8M, use following setting in Mollify "configuration.php" to split zipping in 7M:
+To fix this, there are two options: to change the PHP setting, or to set Mollify to read files in smaller parts.
+
+  * To change PHP memory limit, change PHP directive controlling maximum memory reservable "`memory_limit`", see [http://fi2.php.net/ini.core PHP documentation] for more information.
+
+  * To set the size of the file parts read, define ZIP_OPTIONS setting for "large_file_size" in Mollify "configuration.php".
+
+For example, if PHP configuration sets the memory limit to 8M, use following setting in Mollify "configuration.php" to split file reading in 7M parts:
 
 {{{
 	$ZIP_OPTIONS = array("large_file_size" => 7 * 1024 * 1024);
@@ -274,11 +280,11 @@ For example, if PHP configuration (php.ini) sets the maximum memory to 8M, use f
 
 *2) Execution time*
 
-As well as maximum amount of memory reservable, PHP may also limit the time a script can execute.
+As well as memory limit, PHP may also limit the maximum time a script can execute.
 
-Since zip packages are created dynamically and streamed, it may take a long time to zip large files or folders. If this time exceeds the maximum time set in php.ini, download will fail.
+Since zip packages are created in memory and streamed on-the-fly, it may take a long time to zip large files or folders. If this time exceeds the maximum time set in PHP, download will fail.
 
-This setting is called "max_execution_time", and can be changed if you have access to php.ini.
+PHP directive controlling this limit is "`max_execution_time`", see [http://fi2.php.net/manual/en/info.configuration.php#ini.max-execution-time PHP documentation] for more information.
 ----
 
 
