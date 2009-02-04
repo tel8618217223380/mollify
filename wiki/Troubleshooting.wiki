@@ -12,5 +12,7 @@ When this error occurs on the client, it is due to either of two things:
 
 In both cases, it is always best to first check php error log, usually the reason can be found there.
 
-  * If there is no entries, it is case of client cannot connect to server. If possible, you can check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see Installation wiki). FireBug plugin for Firefox browser is also very good tool for investigating what resources it tries to access.
-  * If php error log reveals errors, those must be resolved.
+If there is no entries, it is case of client cannot connect to server. If possible, you can check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see Installation wiki). FireBug plugin for Firefox browser is also very good tool for investigating what resources it tries to access.
+
+If PHP log reveals errors, those must be resolved. Common PHP errors are:
+  * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
