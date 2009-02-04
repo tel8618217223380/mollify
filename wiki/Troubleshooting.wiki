@@ -3,7 +3,7 @@
 
 = Troubleshooting =
 
-== 1. Failed to get response from server ==
+== 1. Client error "Failed to get response from server" ==
 
 When this error occurs on the client, it is due to either of two things:
 
@@ -16,3 +16,7 @@ If there is no entries, it is case of client cannot connect to server. If possib
 
 If PHP log reveals errors, those must be resolved. Common PHP errors are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
+
+== 2. Nothing happens on zip download ==
+
+When a file or a folder is downloaded as zip package and nothing happens, zip package processing fails. Check your PHP error log, and see installation wiki about zip options.
