@@ -1,0 +1,12 @@
+#summary Troubleshooting
+#labels Phase-Deploy
+
+= Troubleshooting =
+
+== 1. Failed to get response from server ==
+
+When this error occurs on the client, it is due to either of two things:
+
+1) Client cannot connect to the server
+2) Client can connect to server, but it never responds
+
