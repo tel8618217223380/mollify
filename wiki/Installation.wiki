@@ -299,7 +299,7 @@ This setting is called "max_execution_time", and can be changed if you have acce
 
 Value `PATH_TO_THEME_CSS` can be relative or absolute path, but it must point into a css file. If it is relative, it will be relative to the host page.
 
-NOTE! If you define multiple `mollify:property` values, use single line and separate values with comma. For example `name1=value1,name2=value2,...`
+NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
 
 == Relocating host page or backend interface files ==
 
@@ -327,7 +327,7 @@ NOTE! If you define multiple `mollify:property` values, use single line and sepa
 }}}
 
 
-NOTE! If you define multiple `mollify:property` values, use single line and separate values with comma. For example `name1=value1,name2=value2,...`
+NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2,...`
 
 == Relocating client application files ==
 
