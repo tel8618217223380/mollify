@@ -1,7 +1,5 @@
-#summary Troubleshooting
+#summary Troubleshooting errors
 #labels Phase-Deploy
-
-= Troubleshooting =
 
 == 1. Client error "Failed to get response from server" ==
 
