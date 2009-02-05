@@ -12,7 +12,7 @@
 	
 	In both cases, it is always best to first check PHP error log, usually the reason can be found there.
 
-	If there are no entries, it is case of client cannot connect to server (ie. it tries to access backend interface files in a wrong place). If possible, you should check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see Installation wiki), that it is set up properly. FireBug plugin for Firefox browser is also very good tool for investigating what resources a page tries to access.
+	If there are no entries, it is case of client cannot connect to server (ie. it tries to access backend interface files in a wrong place). If possible, you should check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see Installation wiki), that it is set up properly. [http://getfirebug.com/ Firebug] plugin for Firefox browser is also very good tool for investigating what resources a page tries to access.
 
 	If PHP log reveals errors, it is a case of invalid system setup or configuration.
 
