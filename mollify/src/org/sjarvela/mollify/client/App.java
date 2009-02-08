@@ -23,11 +23,14 @@ import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, UncaughtExceptionHandler,
 		LogoutListener {
-	private static final String DEFAULT_THEME_CSS = "themes/basic/style.css";
+	private static final String THEME_PATH = "themes/";
+	private static final String DEFAULT_THEME = "basic";
+	private static final String THEME_CSS = "/style.css";
 
 	private static final String PARAM_THEME = "theme";
 	private static final String PARAM_SERVICE_PATH = "service-path";
@@ -46,32 +49,44 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		if (panel == null)
 			return;
 
-		importTheme(getParameter("mollify:property", PARAM_THEME));
+		try {
+			importTheme(getParameter("mollify:property", PARAM_THEME));
 
-		localizator = Localizator.getInstance();
-		TextProvider textProvider = new DefaultTextProvider(localizator);
+			localizator = Localizator.getInstance();
+			TextProvider textProvider = new DefaultTextProvider(localizator);
 
-		service = new MollifyService(getParameter("mollify:property",
-				PARAM_SERVICE_PATH));
+			service = new MollifyService(getParameter("mollify:property",
+					PARAM_SERVICE_PATH));
 
-		MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-				textProvider, service);
-		windowManager = new WindowManager(panel, localizator, mainViewFactory,
-				new DialogManager(localizator));
-
+			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
+					textProvider, service);
+			windowManager = new WindowManager(panel, localizator,
+					mainViewFactory, new DialogManager(localizator));
+		} catch (RuntimeException e) {
+			panel
+					.add(new HTML("Error initializing Mollify: "
+							+ e.getMessage()));
+			return;
+		}
 		start();
 	}
 
 	private void importTheme(String theme) {
-		String themeUrl;
+		if (theme != null && theme.toLowerCase().equals("none"))
+			return;
+
+		String themeUrl = GWT.getModuleBaseURL() + THEME_PATH;
 		if (theme == null) {
-			themeUrl = GWT.getModuleBaseURL() + DEFAULT_THEME_CSS;
+			themeUrl += DEFAULT_THEME;
 		} else {
-			if (theme.toLowerCase().startsWith("http"))
-				themeUrl = theme;
-			else
-				themeUrl = GWT.getHostPageBaseURL() + theme;
+			if (theme.toLowerCase().startsWith("http")
+					|| theme.indexOf("/") >= 0) {
+				throw new RuntimeException(
+						"Invalid theme setting, no path allowed");
+			}
+			themeUrl += theme;
 		}
+		themeUrl += THEME_CSS;
 		importCss(themeUrl);
 	}
 

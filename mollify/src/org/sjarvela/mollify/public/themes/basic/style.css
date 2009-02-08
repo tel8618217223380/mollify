@@ -9,7 +9,8 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
- 
+@import url(../../gwt/standard.css);
+
 *, table td {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
@@ -159,14 +160,14 @@
 	cursor: hand;
 }
 
-#mollify-header-logout.mollify-header-option {
+#mollify-header-logout.mollify-header-option, #mollify-header-logout.mollify-header-option:hover {
 	background: #bababa url(b-close.png) no-repeat 8px 15px;
 	width: 26px;
-	position: absolute;
 	right: 0;
 	font-size: 0;
 	line-height: 0;
 	text-indent: -100px;
+	float: right;
 }
 
 #mollify-header-logout.mollify-header-option:hover {
