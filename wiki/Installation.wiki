@@ -292,19 +292,23 @@ $PUBLISHED_DIRECTORIES = array(
 
 == 3.1 Changing the theme ==
 
-	Default theme used is basic theme deployed in the package. If you wish to change the theme, you can define it with following property in host page:
+	Mollify supports different themes via CSS styling, and the default is theme called "basic". These themes are located under application folder (org.sjarvela.mollify.App/themes/). Each folder under "themes" is considered a separate theme, and each theme must have a file called "style.css" which is used as theme definition.
+
+	If you wish to change the theme, you can define it with following property in host page:
 
 {{{
 	<html>
 		<head>
 			...
-			<meta name="mollify:property" content="theme=[PATH_TO_THEME_CSS]">
+			<meta name="mollify:property" content="theme=[THEME_NAME]">
 		</head>
 		...
 	</html>
 }}}
 
-	Value `PATH_TO_THEME_CSS` can be relative or absolute path, but it must point into a css file. If it is relative, it will be relative to the host page.
+	Value `THEME_NAME` is the name of the theme found under 'themes' folder (for example "basic").
+
+	If you wish to use a custom theme which is not located under application folder, set this setting value to "`none`". Using this setting, Mollify will not import any css styles itself, instead the host page can link the styles needed with no restrictions.
 
 	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2;...`
 
