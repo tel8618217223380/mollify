@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.7.1 ===
+  * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used (for more information, see [Installation Installation wiki page])
+
 === Version 0.7 ===
   * Support for zip downloads
   * Support for theme selection in host page
