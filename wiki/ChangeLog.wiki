@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 0.7.1 ===
-  * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used (for more information, see [Installation Installation wiki page])
+  * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used (for more information, see [Installation Installation wiki page], chapter 3.1)
 
 === Version 0.7 ===
   * Support for zip downloads
