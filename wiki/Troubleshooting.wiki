@@ -19,6 +19,6 @@
 	Common PHP errors and their reasons are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
 
-== 2. Nothing happens on zip download ==
+== 2. Nothing happens on zip download, or downloaded zip is unreadable ==
 
-	When a file or a folder is downloaded as zip package and nothing happens, zip package processing fails. Check your PHP error log, and see [http://code.google.com/p/mollify/wiki/Installation Installation wiki] about zip options.
+	When a file or a folder is downloaded as zip package and nothing happens or downloaded zip cannot be read, zip package processing fails. Check your PHP error log, and see [http://code.google.com/p/mollify/wiki/Installation Installation wiki] for more information about zip options.
