@@ -66,6 +66,9 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 			panel
 					.add(new HTML("Error initializing Mollify: "
 							+ e.getMessage()));
+			panel.add(new HTML(e.toString()));
+			for (StackTraceElement ste : e.getStackTrace())
+				panel.add(new HTML(ste.toString()));
 			return;
 		}
 		start();

@@ -25,7 +25,7 @@ public class InfoDialog extends CenteredDialog {
 
 	public InfoDialog(Localizator localizator, String title, String text,
 			String type) {
-		super(title, StyleConstants.INFO_DIALOG, type);
+		super(title, type);
 		this.localizator = localizator;
 		this.text = text;
 		this.type = type;

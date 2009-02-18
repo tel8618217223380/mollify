@@ -67,7 +67,7 @@ public class LoginDialog extends CenteredDialog {
 	@Override
 	Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
-		panel.addStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
+		panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
 
 		Label usernameTitle = new Label(localizator.getStrings()
 				.loginDialogUsername());
