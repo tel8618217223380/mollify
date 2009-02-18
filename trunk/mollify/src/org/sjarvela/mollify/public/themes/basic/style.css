@@ -9,8 +9,6 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
- 
-@import url(gwt.css);
 
 *, table td {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
@@ -24,8 +22,132 @@
 	height: 0px;
 }
 
-.gwt-Button {
+.mollify-dialog .Caption {
+	background: #e3e8f3 url(hborder.png) repeat-x 0px -2003px;
+	padding: 4px 4px 4px 8px;
+	cursor: default;
+	border-bottom: 1px solid #bbbbbb;
+	border-top: 5px solid #d0e4f6;
+}
+
+.mollify-dialog .dialogMiddleCenter {
+	padding: 3px;
+	background: white;
+}
+
+html>body .mollify-dialog .dialogBottomCenter {
+	background: url(hborder.png) repeat-x 0px -4px;
+}
+
+* html .mollify-dialog .dialogBottomCenter {
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/hborder_blue_shadow.png',sizingMethod='scale');
+}
+
+.mollify-dialog .dialogMiddleLeft {
+	background: url(vborder.png) repeat-y;
+}
+
+html>body .mollify-dialog .dialogMiddleRight {
+	background: url(vborder.png) repeat-y -4px 0px;
+}
+
+* html .mollify-dialog .dialogMiddleRight {
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/vborder_blue_shadow.png',sizingMethod='scale');
+}
+
+.mollify-dialog .dialogTopLeftInner {
+	width: 5px;
+	zoom: 1;
+}
+
+.mollify-dialog .dialogTopRightInner {
+	width: 8px;
+	zoom: 1;
+}
+
+.mollify-dialog .dialogBottomLeftInner {
+	width: 5px;
+	height: 8px;
+	zoom: 1;
+}
+
+.mollify-dialog .dialogBottomRightInner {
+	width: 5px;
+	height: 8px;
+	zoom: 1;
+}
+
+html>body .mollify-dialog .dialogTopLeft {
+	background: url(corner.png) no-repeat -13px 0px;
+}
+
+html>body .mollify-dialog .dialogTopRight {
+	background: url(corner.png) no-repeat -18px 0px;
+}
+
+html>body .mollify-dialog .dialogBottomLeft {
+	background: url(corner.png) no-repeat 0px -15px;
+}
+
+html>body .mollify-dialog .dialogBottomRight {
+	background: url(corner.png) no-repeat -5px -15px;
+}
+
+* html .mollify-dialog .dialogTopLeft {
+	width: 5px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/corner_dialog_topleft.png',sizingMethod='crop');
+}
+
+* html .mollify-dialog .dialogTopRight {
+	width: 8px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/corner_dialog_topright.png',sizingMethod='crop');
+}
+
+* html .mollify-dialog .dialogBottomLeftInner {
+	width: 5px;
+	height: 23px;
+	margin-top: -15px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
+}
+
+* html .mollify-dialog .dialogBottomRightInner {
+	width: 13px;
+	height: 23px;
+	margin-left: -5px;
+	margin-top: -15px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
+}
+
+.mollify-dialog-button, .gwt-Button {
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	margin: 0;
+	padding: 3px 5px;
+	text-decoration: none;
+	cursor: pointer;
+	cursor: hand;
+	background: url("hborder.png") repeat-x 0px -27px;
+	border: 1px outset #ccc;
+}
+
+.mollify-dialog-button:active, .gwt-Button:active {
+	border: 1px inset #ccc;
+}
+
+.mollify-dialog-button:hover, .gwt-Button:hover {
+	border-color: #9cf #69e #69e #7af;
+}
+
+.mollify-dialog-button[disabled], .gwt-Button[disabled] {
+	cursor: default;
+	color: #888;
+}
+
+.mollify-dialog-button[disabled]:hover, .gwt-Button[disabled]:hover {
+	border: 1px outset #ccc;
 }
 
 .mollify-dropdown-button {
@@ -319,14 +441,14 @@ td#mollify-filelist-column-size {
 .mollify-filelist-row-directory-even td {
 	padding-top: 2;
 	padding-bottom: 4;
-	height:20px;
+	height: 20px;
 	background: #fbdfde;
 }
 
 .mollify-filelist-row-directory-odd td {
 	padding-top: 2;
 	padding-bottom: 4;
-	height:20px;
+	height: 20px;
 	background-color: #ead2d2;
 }
 
@@ -337,10 +459,6 @@ td#mollify-filelist-column-size {
 .mollify-filelist-row-directory-even-hover td {
 	background-color: #f2d1e7;
 }
-
-/*.ie-crap.hover td {
-	background-color: #d5d5d5;
-}*/
 
 .mollify-filelist .mollify-filelist-item-name {
 	height: 20px;
@@ -463,6 +581,7 @@ td#mollify-filelist-column-size {
 	font-weight: bold;
 	margin-bottom: 6px;
 }
+
 .mollify-file-context-description {
 	margin-bottom: 8px;
 	margin-top: 4px;
@@ -499,8 +618,6 @@ td#mollify-filelist-column-size {
 #download-dropdown-menu.mollify-dropdown-menu {
 	background-color: #ececec;
 }
-
-
 
 .mollify-directory-context-content {
 	background: #fff url(folder.png) no-repeat 0 0;
@@ -575,18 +692,24 @@ input.mollify-rename-dialog-new-name-value {
 .mollify-dialog-button {
 	height: 25px;
 	margin-bottom: 4px;
+	font-weight: bold;
+	padding: 4px;
 }
 
-.mollify-confirm-dialog-delete-yes, .mollify-confirm-dialog-delete-no {
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-confirm-delete-no {
 	width: 60px;
 }
 
-.mollify-confirm-dialog-delete-yes {
+.mollify-dialog-button-login, .mollify-dialog-button-rename, .mollify-dialog-button-cancel, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder {
+	width: 60px;
+}
+
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder {
 	float: right;
 	margin-right: 6px;
 }
 
-.mollify-confirm-dialog-delete-no {
+.mollify-dialog-button-confirm-delete-no, .mollify-dialog-button-cancel {
 	float: left;
 	margin-left: 6px;
 }
@@ -622,13 +745,17 @@ input.mollify-rename-dialog-new-name-value {
 
 .mollify-login-dialog-buttons {
 	padding-bottom: 4px;
-	margin-top: 10px;
+	margin-top: 14px;
 	padding-right: 47px;
-	width: 192px;
-	margin-left: 24px;
+	margin-left: 47px;
+	margin-bottom: 2px;
 }
 
-.mollify-login-dialog .dialogContent {
+.mollify-login-dialog-buttons .mollify-dialog-button-cancel {
+	margin-left: 13px;
+}
+
+.mollify-dialog-login .dialogContent {
 	background: url(home.png) no-repeat 3px 10px;
 }
 
@@ -645,14 +772,14 @@ table.mollify-login-dialog-content {
 	width: 160px;
 }
 
-.mollify-progress-dialog .dialogContent {
+.mollify-dialog-progress .dialogContent {
 	height: 60px;
 	width: 300px;
 	padding: 8px;
 	background: url(wait.gif) no-repeat 280px 22px;
 }
 
-.mollify-progress-dialog .mollify-progress-bar {
+.mollify-dialog-progress .mollify-progress-bar {
 	width: 266px;
 	background-color: #f3f3f3;
 	border: 1px dotted #c3c3c3;
