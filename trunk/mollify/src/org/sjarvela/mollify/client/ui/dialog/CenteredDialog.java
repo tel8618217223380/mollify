@@ -20,18 +20,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class CenteredDialog extends DialogBox {
-	public CenteredDialog(String title, String... styles) {
+	public CenteredDialog(String title, String style) {
 		super(false, true);
-
-		for (String style : styles) {
-			this.addStyleName(style);
-		}
+		this.setStylePrimaryName(StyleConstants.DIALOG);
+		this.addStyleDependentName(style);
 		this.setText(title);
 	}
 
 	void initialize() {
 		VerticalPanel content = new VerticalPanel();
 		content.add(createContent());
+		
 		Widget buttons = createButtons();
 		if (buttons != null)
 			content.add(buttons);
@@ -62,12 +61,10 @@ public abstract class CenteredDialog extends DialogBox {
 	}
 
 	protected Button createButton(String title, ClickListener listener,
-			String... styles) {
+			String style) {
 		Button button = new Button(title);
-		button.addStyleName(StyleConstants.DIALOG_BUTTON);
-		for (String style : styles) {
-			button.addStyleName(style);
-		}
+		button.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
+		button.addStyleDependentName(style);
 		button.addClickListener(listener);
 		return button;
 	}

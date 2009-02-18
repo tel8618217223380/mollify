@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui;
 public class StyleConstants {
 	public static final String HOVER = "hover";
 	public static final String PRESSED = "pressed";
+	public static final String DIALOG = "mollify-dialog";
 
 	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
 	public static final String BORDERED_CONTROL_PADDING_N = "n";
@@ -99,59 +100,57 @@ public class StyleConstants {
 
 	public static final String DIALOG_BUTTON = "mollify-dialog-button";
 
-	public static final String INFO_DIALOG = "mollify-info-dialog";
 	public static final String INFO_DIALOG_CONTENT = "mollify-info-dialog-content";
 	public static final String INFO_DIALOG_ICON = "mollify-info-dialog-icon";
 	public static final String INFO_DIALOG_MESSAGE = "mollify-info-dialog-message";
 	public static final String INFO_DIALOG_BUTTONS = "mollify-info-dialog-buttons";
 
-	public static final String INFO_DIALOG_TYPE_INFO = "mollify-dialog-type-info";
-	public static final String INFO_DIALOG_TYPE_ERROR = "mollify-dialog-type-error";
+	public static final String INFO_DIALOG_TYPE_INFO = "info";
+	public static final String INFO_DIALOG_TYPE_ERROR = "error";
 
-	public static final String CONFIRMATION_DIALOG = "mollify-confirm-dialog";
 	public static final String CONFIRMATION_DIALOG_CONTENT = "mollify-confirm-dialog-content";
 	public static final String CONFIRMATION_DIALOG_ICON = "mollify-confirm-dialog-icon";
 	public static final String CONFIRMATION_DIALOG_MESSAGE = "mollify-confirm-dialog-message";
 	public static final String CONFIRMATION_DIALOG_BUTTONS = "mollify-confirm-dialog-buttons";
-	public static final String DIALOG_BUTTON_CANCEL = "mollify-button-cancel";
+	public static final String DIALOG_BUTTON_CANCEL = "cancel";
 
-	public static final String CONFIRMATION_DIALOG_TYPE_DELETE = "mollify-confirm-dialog-delete";
+	public static final String CONFIRMATION_DIALOG_TYPE_DELETE = "confirm-delete";
 
-	public static final String RENAME_DIALOG = "mollify-rename-dialog";
+	public static final String RENAME_DIALOG = "rename";
 	public static final String RENAME_DIALOG_CONTENT = "mollify-rename-dialog-content";
 	public static final String RENAME_ORIGINAL_NAME_TITLE = "mollify-rename-dialog-original-name-title";
 	public static final String RENAME_ORIGINAL_NAME_VALUE = "mollify-rename-dialog-original-name-value";
 	public static final String RENAME_NEW_NAME_TITLE = "mollify-rename-dialog-new-name-title";
 	public static final String RENAME_NEW_NAME_VALUE = "mollify-rename-dialog-new-name-value";
 	public static final String RENAME_DIALOG_BUTTONS = "mollify-rename-dialog-buttons";
-	public static final String RENAME_DIALOG_BUTTON_RENAME = "mollify-button-rename";
+	public static final String RENAME_DIALOG_BUTTON_RENAME = "rename";
 
-	public static final String FILE_UPLOAD_DIALOG = "mollify-file-upload-dialog";
+	public static final String FILE_UPLOAD_DIALOG = "file-upload";
 	public static final String FILE_UPLOAD_DIALOG_CONTENT = "mollify-file-upload-dialog-content";
 	public static final String FILE_UPLOAD_DIALOG_MESSAGE = "mollify-file-upload-dialog-message";
 	public static final String FILE_UPLOAD_DIALOG_FORM = "mollify-file-upload-form";
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "mollify-file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "mollify-file-upload-dialog-buttons";
-	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "mollify-button-upload";
+	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
 
-	public static final String LOGIN_DIALOG = "mollify-login-dialog";
+	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";
-	public static final String LOGIN_DIALOG_BUTTON_LOGIN = "mollify-login-dialog-button-login";
+	public static final String LOGIN_DIALOG_BUTTON_LOGIN = "login";
 	public static final String LOGIN_DIALOG_CONTENT = "mollify-login-dialog-content";
 	public static final String LOGIN_DIALOG_USERNAME_TITLE = "mollify-login-dialog-username-title";
 	public static final String LOGIN_DIALOG_USERNAME_VALUE = "mollify-login-dialog-username-value";
 	public static final String LOGIN_DIALOG_PASSWORD_TITLE = "mollify-login-dialog-password-title";
 	public static final String LOGIN_DIALOG_PASSWORD_VALUE = "mollify-login-dialog-password-value";
 
-	public static final String PROGRESS_DIALOG = "mollify-progress-dialog";
+	public static final String PROGRESS_DIALOG = "progress";
 	public static final String PROGRESS_DIALOG_INFO = "mollify-progress-dialog-title";
 	public static final String PROGRESS_DIALOG_DETAILS = "mollify-progress-dialog-details";
 	public static final String PROGRESS_DIALOG_PROGRESS_BAR = "mollify-progress-dialog-progress-bar";
 
-	public static final String CREATE_FOLDER_DIALOG = "mollify-create-folder-dialog";
+	public static final String CREATE_FOLDER_DIALOG = "create-folder-dialog";
 	public static final String CREATE_FOLDER_DIALOG_CONTENT = "mollify-create-folder-dialog-content";
 	public static final String CREATE_FOLDER_DIALOG_NAME_TITLE = "mollify-create-folder-dialog-name-title";
 	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "mollify-create-folder-dialog-name-value";
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
-	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "mollify-create-folder-dialog-button-create";
+	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "create-folder";
 }
