@@ -129,9 +129,11 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_CONTENT = "mollify-file-upload-dialog-content";
 	public static final String FILE_UPLOAD_DIALOG_MESSAGE = "mollify-file-upload-dialog-message";
 	public static final String FILE_UPLOAD_DIALOG_FORM = "mollify-file-upload-form";
+	public static final String FILE_UPLOAD_DIALOG_FILES = "mollify-file-upload-files";
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "mollify-file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "mollify-file-upload-dialog-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
+	public static final String FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE = "add-file";
 
 	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";

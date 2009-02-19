@@ -21,8 +21,8 @@ import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.DirectoryController;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.file.FileActionUrlProvider;
+import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.file.FileUploadListener;
 import org.sjarvela.mollify.client.file.FileUploadMonitor;
@@ -151,19 +151,21 @@ public class MainViewPresenter implements DirectoryController,
 						fileUploadHandler);
 	}
 
-	public void onUploadStarted(String uploadId, String fileName) {
+	public void onUploadStarted(String uploadId, List<String> filenames) {
 		if (uploadListener != null || uploadMonitor != null)
 			throw new RuntimeException("Previous upload unfinished");
 
+		String info = filenames.size() == 1 ? filenames.get(0) : localizator
+				.getMessages().uploadingNFilesInfo(filenames.size());
+
 		uploadListener = windowManager.getDialogManager().openProgressDialog(
 				localizator.getStrings().fileUploadProgressTitle(), false);
-		uploadListener.setInfo(fileName);
+		uploadListener.setInfo(info);
 		uploadListener.setDetails(localizator.getStrings()
 				.fileUploadProgressPleaseWait());
 
-		if (!model.getSessionInfo().getSettings().isFileUploadProgressEnabled()) {
+		if (!model.getSessionInfo().getSettings().isFileUploadProgressEnabled())
 			return;
-		}
 
 		uploadMonitor = new FileUploadMonitor(uploadId,
 				new FileUploadProgressListener() {
