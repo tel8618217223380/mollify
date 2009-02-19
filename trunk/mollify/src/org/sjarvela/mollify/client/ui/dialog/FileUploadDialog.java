@@ -10,9 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileActionUrlProvider;
+import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileUploadController;
 import org.sjarvela.mollify.client.file.FileUploadHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
@@ -25,12 +28,13 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileUploadDialog extends CenteredDialog implements
 		FileUploadController {
-	private static final String UPLOADER_NAME = "upload";
+	private static final String UPLOADER_NAME = "upload[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
 	private final String uploadId;
@@ -41,7 +45,8 @@ public class FileUploadDialog extends CenteredDialog implements
 	private Button uploadButton;
 
 	private FormPanel form;
-	private FileUpload uploader;
+	private Panel uploadersPanel;
+	private List<FileUpload> uploaders = new ArrayList();
 
 	public FileUploadDialog(Directory directory, Localizator localizator,
 			FileActionUrlProvider actionUrlProvider,
@@ -110,27 +115,52 @@ public class FileUploadDialog extends CenteredDialog implements
 		VerticalPanel panel = new VerticalPanel();
 		form.setWidget(panel);
 		panel.add(new Hidden(UPLOAD_ID_FIELD_NAME, uploadId));
-		panel.add(createUploader());
+
+		uploadersPanel = new VerticalPanel();
+		uploadersPanel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FILES);
+		uploadersPanel.add(createUploader());
+
+		panel.add(uploadersPanel);
+		panel.add(createButton(localizator.getStrings()
+				.fileUploadDialogAddFileButton(), new ClickListener() {
+			public void onClick(Widget sender) {
+				onAddFile();
+			}
+		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
 
 		return form;
 	}
 
+	protected void onAddFile() {
+		if (getLastUploader().getFilename().length() < 1)
+			return;
+		uploadersPanel.add(createUploader());
+	}
+
 	private Widget createUploader() {
-		uploader = new FileUpload();
+		FileUpload uploader = new FileUpload();
 		uploader.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_SELECTOR);
 		uploader.setName(UPLOADER_NAME);
+		uploaders.add(uploader);
 		return uploader;
 	}
 
 	public boolean onStartUpload() {
-		if (uploader.getFilename().length() < 1)
+		if (getLastUploader().getFilename().length() < 1)
 			return false;
 		this.setVisible(false);
 		return true;
 	}
 
-	public String getFileName() {
-		return uploader.getFilename();
+	private FileUpload getLastUploader() {
+		return uploaders.get(uploaders.size() - 1);
+	}
+
+	public List<String> getFileNames() {
+		List<String> result = new ArrayList();
+		for (FileUpload uploader : uploaders)
+			result.add(uploader.getFilename());
+		return result;
 	}
 
 	public void onUploadFinished() {

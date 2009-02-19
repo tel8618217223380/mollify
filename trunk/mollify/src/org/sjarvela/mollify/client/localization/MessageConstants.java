@@ -26,4 +26,6 @@ public interface MessageConstants extends Messages {
 	String confirmFileDeleteMessage(String name);
 
 	String confirmDirectoryDeleteMessage(String name);
+
+	String uploadingNFilesInfo(int amount);
 }

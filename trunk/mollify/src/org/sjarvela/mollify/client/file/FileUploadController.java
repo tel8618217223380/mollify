@@ -10,12 +10,14 @@
 
 package org.sjarvela.mollify.client.file;
 
+import java.util.List;
+
 public interface FileUploadController {
 
 	boolean onStartUpload();
 
 	void onUploadFinished();
 
-	String getFileName();
+	List<String> getFileNames();
 
 }

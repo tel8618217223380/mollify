@@ -56,9 +56,9 @@ public class FileUploadHandlerImpl implements FileUploadHandler {
 					return;
 				}
 
-				String fileName = controller.getFileName();
+				List<String> filenames = controller.getFileNames();
 				for (FileUploadListener listener : listeners)
-					listener.onUploadStarted(uploadId, fileName);
+					listener.onUploadStarted(uploadId, filenames);
 			}
 
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {
