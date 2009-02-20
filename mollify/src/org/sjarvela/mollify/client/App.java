@@ -146,7 +146,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {
 			public void onLogin(String userName, String password,
 					final ConfirmationListener listener) {
-				logger.logInfo("User login '" + userName + "' & '" + password + "'");
+				logger.logInfo("User login: " + userName);
 
 				service.authenticate(userName, password, new ResultListener() {
 					public void onFail(MollifyError error) {
