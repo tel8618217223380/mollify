@@ -30,4 +30,8 @@ public class MollifyError {
 	public String getDetails() {
 		return details;
 	}
+	
+	public String toString() {
+		return "Error '" + error.name() + "' (" + details + ")";
+	}
 }

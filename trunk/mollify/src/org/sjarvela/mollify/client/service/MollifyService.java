@@ -16,12 +16,14 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
+import org.sjarvela.mollify.client.log.MollifyLogger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 
 public class MollifyService implements FileActionUrlProvider {
 	private String baseUrl;
+	private MollifyLogger logger;
 
 	enum Action {
 		get, operate, auth, session_info, logout
@@ -31,16 +33,19 @@ public class MollifyService implements FileActionUrlProvider {
 		details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
-	public MollifyService(String path) {
+	public MollifyService(MollifyLogger logger, String path) {
 		// MollifyService assumes that development environment web server is
 		// localhost:7777
 
 		// For a standalone version, it is assumed that backend facade
 		// (service.php) is in the same directory than the host html page.
 
+		this.logger = logger;
 		this.baseUrl = GWT.isScript() ? GWT.getHostPageBaseURL()
 				: "http://localhost:7777/mollify/";
 		this.baseUrl += getOptionalPath(path) + "service.php";
+
+		logger.logInfo("Mollify service location: " + this.baseUrl);
 	}
 
 	private String getOptionalPath(String path) {
@@ -193,7 +198,7 @@ public class MollifyService implements FileActionUrlProvider {
 	}
 
 	private void doRequest(String url, ResultListener resultListener) {
-		new JsonRpcHandler(URL.encode(url), resultListener).doRequest();
+		new JsonRpcHandler(logger, URL.encode(url), resultListener).doRequest();
 	}
 
 	// Just any unique id, time in millisecond level is unique enough
