@@ -11,7 +11,8 @@
  */
 
 *, table td {
-	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	font-size: 8pt;
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -26,7 +27,8 @@
 	width: 100%;
 	height: 100px;
 	visibility: visible;
-	overflow: visible;
+	overflow: auto;
+	white-space: nowrap;
 }
 
 #mollify-download-frame {
@@ -47,7 +49,7 @@
 	background: white;
 }
 
-html>body .mollify-dialog .dialogBottomCenter {
+.dialogBottomCenter {
 	background: url(hborder.png) repeat-x 0px -4px;
 }
 
@@ -55,11 +57,11 @@ html>body .mollify-dialog .dialogBottomCenter {
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/hborder_blue_shadow.png',sizingMethod='scale');
 }
 
-.mollify-dialog .dialogMiddleLeft {
+.dialogMiddleLeft {
 	background: url(vborder.png) repeat-y;
 }
 
-html>body .mollify-dialog .dialogMiddleRight {
+.dialogMiddleRight {
 	background: url(vborder.png) repeat-y -4px 0px;
 }
 
@@ -89,19 +91,19 @@ html>body .mollify-dialog .dialogMiddleRight {
 	zoom: 1;
 }
 
-html>body .mollify-dialog .dialogTopLeft {
+.dialogTopLeft {
 	background: url(corner.png) no-repeat -13px 0px;
 }
 
-html>body .mollify-dialog .dialogTopRight {
+.dialogTopRight {
 	background: url(corner.png) no-repeat -18px 0px;
 }
 
-html>body .mollify-dialog .dialogBottomLeft {
+.dialogBottomLeft {
 	background: url(corner.png) no-repeat 0px -15px;
 }
 
-html>body .mollify-dialog .dialogBottomRight {
+.dialogBottomRight {
 	background: url(corner.png) no-repeat -5px -15px;
 }
 
