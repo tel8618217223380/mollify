@@ -11,6 +11,8 @@
 package org.sjarvela.mollify.client.ui;
 
 public class StyleConstants {
+	public static final String MOLLIFY_LOG = "mollify-log";
+
 	public static final String HOVER = "hover";
 	public static final String PRESSED = "pressed";
 	public static final String DIALOG = "mollify-dialog";

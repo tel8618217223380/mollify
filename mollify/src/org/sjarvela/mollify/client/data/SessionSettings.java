@@ -19,7 +19,7 @@ public class SessionSettings extends JavaScriptObject {
 	public final native boolean isFolderActionsEnabled() /*-{
 		return this.enable_folder_actions;
 	}-*/;
-	
+
 	public final native boolean isFileUploadEnabled() /*-{
 		return this.enable_file_upload;
 	}-*/;
@@ -31,4 +31,12 @@ public class SessionSettings extends JavaScriptObject {
 	public final native boolean isZipDownloadEnabled() /*-{
 		return this.enable_zip_download;
 	}-*/;
+
+	public final String asString() {
+		return "folder_actions_enabled=" + isFolderActionsEnabled()
+				+ ", file_upload_enabled=" + isFileUploadEnabled()
+				+ ", file_upload_progress_enabled="
+				+ isFileUploadProgressEnabled() + ", zip_download_enabled="
+				+ isZipDownloadEnabled();
+	}
 }

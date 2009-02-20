@@ -24,6 +24,13 @@ public class SessionInfo extends JavaScriptObject {
 	protected SessionInfo() {
 	}
 
+	public final String asString() {
+		return "authentication_required=" + isAuthenticationRequired()
+				+ ", logged_user=" + getLoggedUser() + ", permission_mode="
+				+ getDefaultPermissionModeString() + ", settings=["
+				+ getSettings().asString() + "]";
+	}
+
 	public final native boolean isAuthenticationRequired() /*-{
 		return this.authentication_required;
 	}-*/;

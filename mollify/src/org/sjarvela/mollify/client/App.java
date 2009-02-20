@@ -12,6 +12,9 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.log.DefaultLogger;
+import org.sjarvela.mollify.client.log.HtmlLogger;
+import org.sjarvela.mollify.client.log.MollifyLogger;
 import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
@@ -28,6 +31,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, UncaughtExceptionHandler,
 		LogoutListener {
+	private static final String META_PROPERTY = "mollify:property";
+	private static final String NONE = "none";
+
 	private static final String THEME_PATH = "themes/";
 	private static final String DEFAULT_THEME = "basic";
 	private static final String THEME_CSS = "/style.css";
@@ -41,6 +47,7 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	Localizator localizator;
 	WindowManager windowManager;
 	RootPanel panel;
+	private MollifyLogger logger;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(this);
@@ -49,34 +56,39 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		if (panel == null)
 			return;
 
+		ParameterParser parser = new ParameterParser(META_PROPERTY);
 		try {
-			importTheme(getParameter("mollify:property", PARAM_THEME));
+			Settings settings = Settings.create(parser);
+			logger = createLogger(settings);
 
+			importTheme(parser.getParameter(PARAM_THEME));
+			service = new MollifyService(logger, parser
+					.getParameter(PARAM_SERVICE_PATH));
 			localizator = Localizator.getInstance();
-			TextProvider textProvider = new DefaultTextProvider(localizator);
-
-			service = new MollifyService(getParameter("mollify:property",
-					PARAM_SERVICE_PATH));
 
 			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-					textProvider, service);
+					new DefaultTextProvider(localizator), service);
 			windowManager = new WindowManager(panel, localizator,
 					mainViewFactory, new DialogManager(localizator));
 		} catch (RuntimeException e) {
-			panel
-					.add(new HTML("Error initializing Mollify: "
-							+ e.getMessage()));
-			panel.add(new HTML(e.toString()));
-			for (StackTraceElement ste : e.getStackTrace())
-				panel.add(new HTML(ste.toString()));
+			showExceptionError("Error initializing: ", e);
 			return;
 		}
+
 		start();
 	}
 
+	private MollifyLogger createLogger(Settings settings) {
+		if (settings.isDebug())
+			return new HtmlLogger(panel);
+		return new DefaultLogger();
+	}
+
 	private void importTheme(String theme) {
-		if (theme != null && theme.toLowerCase().equals("none"))
+		if (theme != null && theme.toLowerCase().equals(NONE)) {
+			logger.logInfo("Theme import disabled");
 			return;
+		}
 
 		String themeUrl = GWT.getModuleBaseURL() + THEME_PATH;
 		if (theme == null) {
@@ -87,38 +99,20 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 				throw new RuntimeException(
 						"Invalid theme setting, no path allowed");
 			}
+
 			themeUrl += theme;
 		}
 		themeUrl += THEME_CSS;
+
+		if (theme == null)
+			logger.logInfo("Importing default theme (" + themeUrl + ")");
+		else
+			logger
+					.logInfo("Importing theme '" + theme + "' (" + themeUrl
+							+ ")");
+
 		importCss(themeUrl);
 	}
-
-	private String getParameter(String meta, String propertyName) {
-		String metaParam = getMetaParameter(meta);
-		if (metaParam == null || metaParam.length() == 0)
-			return null;
-
-		int index = metaParam.toLowerCase().indexOf(
-				propertyName.toLowerCase() + "=");
-		if (index < 0)
-			return null;
-		index += propertyName.length() + 1;
-
-		int split = metaParam.indexOf(';', index);
-		if (split >= 0)
-			return metaParam.substring(index, split);
-		return metaParam.substring(index);
-	}
-
-	private native String getMetaParameter(String name) /*-{
-		var metaArray = $doc.getElementsByTagName("meta");
-		
-		for (var i = 0; i < metaArray.length; i++) {
-			if (metaArray[i].getAttribute("name") == name)
-				return metaArray[i].getAttribute("content");
-		}
-		return null;
-	}-*/;
 
 	private native String importCss(String css) /*-{
 		var cssNode = document.createElement('link');
@@ -128,6 +122,8 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 	}-*/;
 
 	private void start() {
+		logger.logInfo("Starting Mollify");
+
 		service.getSessionInfo(new ResultListener() {
 			public void onFail(MollifyError error) {
 				windowManager.getDialogManager().showError(error);
@@ -136,7 +132,6 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 			public void onSuccess(Object... result) {
 				startSession((SessionInfo) result[0]);
 			}
-
 		});
 	};
 
@@ -151,8 +146,9 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		windowManager.getDialogManager().showLoginDialog(new LoginHandler() {
 			public void onLogin(String userName, String password,
 					final ConfirmationListener listener) {
-				service.authenticate(userName, password, new ResultListener() {
+				logger.logInfo("User login '" + userName + "' & '" + password + "'");
 
+				service.authenticate(userName, password, new ResultListener() {
 					public void onFail(MollifyError error) {
 						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
 							showLoginError();
@@ -165,19 +161,20 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 						listener.onConfirm();
 						showMain((SessionInfo) result[0]);
 					}
-
 				});
 			}
 		});
 	}
 
 	private void showMain(SessionInfo info) {
+		logger.logInfo("Session started: " + info.asString());
 		windowManager.showMainView(info, this);
 	}
 
 	public void onLogout(SessionInfo info) {
-		service.logout(new ResultListener() {
+		logger.logInfo("Logging out");
 
+		service.logout(new ResultListener() {
 			public void onFail(MollifyError error) {
 				windowManager.empty();
 				windowManager.getDialogManager().showError(error);
@@ -188,7 +185,6 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 				startSession((SessionInfo) result[0]);
 			}
 		});
-
 	}
 
 	private void showLoginError() {
@@ -199,8 +195,19 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 
 	public void onUncaughtException(Throwable e) {
 		GWT.log("UNCAUGHT", e);
-		windowManager.getDialogManager().showInfo("Unexpected error",
-				e.getMessage());
+		panel.clear();
+		showExceptionError("Unexpected error: ", e);
+	}
+
+	private void showExceptionError(String message, Throwable e) {
+		if (logger != null)
+			logger.logError(message + e.getMessage());
+
+		panel.add(new HTML(message + e.getMessage()));
+		panel.add(new HTML(e.toString()));
+
+		for (StackTraceElement ste : e.getStackTrace())
+			panel.add(new HTML(ste.toString()));
 	}
 
 }

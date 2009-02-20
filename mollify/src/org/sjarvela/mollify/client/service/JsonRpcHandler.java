@@ -12,17 +12,20 @@ package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.data.ErrorValue;
 import org.sjarvela.mollify.client.data.ReturnValue;
+import org.sjarvela.mollify.client.log.MollifyLogger;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsonRpcHandler {
 	private static int requestId = 0;
-	private ResultListener listener;
-	private String url;
-	private int id;
+	private final ResultListener listener;
+	private final String url;
+	private final int id;
+	private final MollifyLogger logger;
 
-	public JsonRpcHandler(String url, ResultListener listener) {
+	public JsonRpcHandler(MollifyLogger logger, String url,
+			ResultListener listener) {
+		this.logger = logger;
 		this.listener = listener;
 		this.url = url;
 		this.id = requestId++;
@@ -49,8 +52,8 @@ public class JsonRpcHandler {
 	}
 
 	private void onError(MollifyError error) {
-		GWT.log("Json request failed: id=[" + id + "] url=[" + url + "] msg="
-				+ error.getError().name(), null);
+		logger.logError("Json request failed: id=[" + id + "] url=[" + url
+				+ "] msg=" + error.toString());
 		listener.onFail(error);
 	}
 
