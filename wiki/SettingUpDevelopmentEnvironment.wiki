@@ -8,7 +8,7 @@ This page describes how to set up Mollify development environment
 = 1. Requirements =
 
 	Mollify development environment requires following components:
-  	* Eclipse Java EE (http://www.eclipse.org/downloads/)
+  	* Eclipse IDE for Java EE (http://www.eclipse.org/downloads/)
   	* GWT 1.5 (http://code.google.com/webtoolkit/download.html)
   	* Cypal Studio Eclipse plugin (http://code.google.com/p/cypal-studio/)
   	* Eclipse Subversion plugin, such as Subclipse (no need to download manually)
@@ -20,7 +20,7 @@ This page describes how to set up Mollify development environment
 
 === 1. Eclipse ===
 		
-		Unpack Eclipse package into location of your selection, Eclipse is ready to run.
+		Unpack Eclipse (remember to choose "Eclipse IDE for Java EE" instead of just "Eclipse IDE for Java") package into preferred location, Eclipse is ready to run.
 		
 === 2. GWT ===
 	
@@ -50,7 +50,7 @@ This page describes how to set up Mollify development environment
 
 == 3.1 Mollify source directories ==
 
-  	* Create a root directory for the project into location of your selection, for example "/Projects/Mollify".
+  	* Create a root directory for the project into preferred location, for example "/Projects/Mollify".
   	* Create a directory for Eclipse workspace under the root, for example "/Projects/Mollify/ws"
   	* Create a directory for version controlled source files under the root, for example "/Projects/Mollify/svn"
 	
@@ -68,17 +68,15 @@ This page describes how to set up Mollify development environment
 	
 == 3.3 Setting up Eclipse project ==
 
-	Launch Eclipse. If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
-	
-	Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("/Projects/Mollify/svn"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
-	
-	If you see a compiler error "Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "GWT_HOME" as name, and click "Folder..." to choose the GWT installation root folder (for example "/bin/gwt-mac-1.5.3"). Accept changes, and Eclipse will suggest full rebuild (required).
-	
-	Open "Project -> Properties" and "Project Facets". From the "Configurations" dropdown list in top of the window, select "Cypal Studio for GWT", and click "OK".
-	
-	Open "Project -> Properties" and "Java Build Path". In libraries tab, remove following items from the list: "gwt-servlet.jar", "EAR Libraries" and "Web App Libraries". Click OK to accept changes.
-	
-	Finally, delete the folder "WebContent" in Project Explorer if it exists. Project is now configured.
+  	* Launch Eclipse
+  	* If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
+  	* Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("/Projects/Mollify/svn"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
+  	* If you see a compiler error "Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "GWT_HOME" as name, and click "Folder..." to choose the GWT installation root folder (for example "/bin/gwt-mac-1.5.3"). Accept changes, and Eclipse will suggest full rebuild (required).
+  	* Open "Project -> Properties" and "Project Facets". From the "Configurations" dropdown list in top of the window, select "Cypal Studio for GWT", and click "OK".
+  	* Open "Project -> Properties" and "Java Build Path". In libraries tab, remove following items from the list: "gwt-servlet.jar", "EAR Libraries" and "Web App Libraries". Click OK to accept changes.
+  	* Finally, delete the folder "WebContent" in Project Explorer if it exists.
+
+	Project is now configured.
 
 == 3.4 Setting up version control in Eclipse ==
 
@@ -90,7 +88,7 @@ This page describes how to set up Mollify development environment
 
 	First make sure your web server configuration is working, for example by installing Mollify release version under it. Once it is working, backend can be used also in development.
 	
-	The application host web page used in development is at "org.sjarvela.mollify.public.App.html". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without service file). For example, in LAMP configuration this is could be "http://localhost:7777/mollify/".
+	The application host page used in development is at "org.sjarvela.mollify/public/App.html". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without service file). For example, in MAMP configuration this is could be "http://localhost:7777/mollify/".
 	
 	In the host file, this would be a setting
 	{{{
@@ -98,7 +96,43 @@ This page describes how to set up Mollify development environment
 	}}}
 	
 	To create a launch configuration, select "Run -> Run Configurations...". Under "GWT Hosted Mode Application", select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also directly from the Run menu in toolbar. The same configuration can be used for debugging.
+
+== 3.5 Developing backend php files ==
+
+	Mollify development is divided into two separate areas, client development in Java, and backend development in PHP.
 	
+	Even running Mollify in Eclipse or browser requires backend files copied in the web server, as it is in no way under GWT emulation. Backend always acts as in real life. If you wish to develop the backend files, or just keep them always up to date with trunk, it is best to create a symbolic link into the trunk version.
+	
+	For example, in *nix environments:
+	
+	{{{
+	cd [WEB_SERVER_ROOT_HERE]
+	ln -s [MOLLIFY_SOURCE_FOLDER_HERE]/svn/backend mollify
+	}}}
+	
+	This would make a link from the trunk folder "backend" into a folder named "mollify" under the web root. This way, the service php file is accessible via url "http://localhost/mollify/service.php".
+	
+	Now you can keep editing the files under the trunk, and they are always reflected to the web server.
+
+= 4 Build scripts =
+
+	There are couple of (*nix) scripts that might be useful in development. They are located under folder "script" in source root. To use these scripts, copy them to the root folder of your Mollify project ("/Projects/Mollify"), and modify them as instructed in each of them.
+	
+== App-compile ==
+
+	Script "App-compile" simply compiles the sources into the build folder under the root.
+
+== App-create-package ==
+
+	Script "App-create-package" will compile sources, and create deploy packages, both installation and source packages.
+
+== App-update-devenv ==
+
+	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. Script "App-update-devenv" automates this so that you don't have to compile and copy folders manually. In the script, you define two paths:
+  	* Absolute path to the Mollify source folder (for example "/Projects/Mollify")
+  	* Absolute path to the web server root (for example "/Applications/MAMP/htdocs")
+
+	What this script does, it compiles sources into javascript package, copies it to the web root. It also makes a symbolic link to the development version of the themes folder, this way you can continue on editing the themes under source folder, and changes are reflected to the deployed version.
 	
 	
 	
