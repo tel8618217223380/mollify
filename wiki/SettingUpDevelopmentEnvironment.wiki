@@ -11,36 +11,36 @@ This page describes how to set up Mollify development environment
   	* Eclipse Java EE (http://www.eclipse.org/downloads/)
   	* GWT 1.5 (http://code.google.com/webtoolkit/download.html)
   	* Cypal Studio Eclipse plugin (http://code.google.com/p/cypal-studio/)
-	* Eclipse Subversion plugin, such as Subclipse (no need to download manually)
-	* PHP enabled web server, such as WAMP/MAMP/LAMP
+  	* Eclipse Subversion plugin, such as Subclipse (no need to download manually)
+  	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
 	Download these and continue to installation.
 
 = 2. Component Installation =
 
-	1. Eclipse
+  	1. Eclipse
 		
 		Unpack Eclipse package into location of your selection, Eclipse is ready to run.
 		
-	2. GWT
+  	2. GWT
 	
 		Follow installation instructions here: http://code.google.com/webtoolkit/gettingstarted.html#Install
 		
-	3. Cypal Studio
+  	3. Cypal Studio
 	
 		Follow installation instructions here: http://www.cypal.in/studiodocs#installation
 		
 		Remember to set GWT root for Cypal in Eclipse preferences.
 	
-	4. Subclipse
+  	4. Subclipse
 	
-		Start up Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
+		Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
 		
-		Add Subclipse update site url, which depends on Eclipse and Subclipse versions, and can be found from http://subclipse.tigris.org/servlets/ProjectProcess?pageID=p4wYuA. As an example, version 1.4 for Eclipse 3.4 is http://subclipse.tigris.org/update_1.4.x.
+		Add Subclipse update site url, which depends on Eclipse and Subclipse versions, and can be found from http://subclipse.tigris.org/servlets/ProjectProcess?pageID=p4wYuA. For example, update site url for Subclipse version 1.4 in Eclipse 3.4 is "http://subclipse.tigris.org/update_1.4.x".
 		
 		When this site is added, a Subclipse tree is added to Available Software list. Select at least "Subclipse" and "SVNKit Adapter", and click "Install...".
 	
-	5. Web server
+  	5. Web server
 	
 		WAMP: http://www.wampserver.com/en/
 		MAMP: http://www.mamp.info/en/index.html
@@ -50,9 +50,9 @@ This page describes how to set up Mollify development environment
 
 == 3.1 Mollify source directories ==
 
-	1. Create a root directory for the project into location of your selection, for example "/Projects/Mollify".
-	2. Create a directory for Eclipse workspace under the root, for example "/Projects/Mollify/ws"
-	3. Create a directory for version controlled source files under the root, for example "/Projects/Mollify/svn"
+  	1. Create a root directory for the project into location of your selection, for example "/Projects/Mollify".
+  	2. Create a directory for Eclipse workspace under the root, for example "/Projects/Mollify/ws"
+  	3. Create a directory for version controlled source files under the root, for example "/Projects/Mollify/svn"
 	
 	It is important to keep workspace folder outside the version controlled source folder, as it contains personal settings and preferences, and should not be committed to version control.
 	
@@ -68,29 +68,29 @@ This page describes how to set up Mollify development environment
 	
 == 3.3 Setting up Eclipse project ==
 
-	Launch Eclipse. If Eclipse prompts for workspace, select the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "Switch Workspace" from Eclipse File menu, and choose the correct workspace folder.
+	Launch Eclipse. If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
 	
-	Import Mollify project by choosing "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("/Projects/Mollify/svn"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
+	Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("/Projects/Mollify/svn"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
 	
-	If you get compiler error "Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'", variable needs to be set. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "GWT_HOME" as name, and click "Folder..." to choose the GWT installation root folder (for example "/bin/gwt-mac-1.5.3"). Accept changes, and Eclipse will suggest full rebuild (required).
+	If you see a compiler error "Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "GWT_HOME" as name, and click "Folder..." to choose the GWT installation root folder (for example "/bin/gwt-mac-1.5.3"). Accept changes, and Eclipse will suggest full rebuild (required).
 	
 	Open "Project -> Properties" and "Project Facets". From the "Configurations" dropdown list in top of the window, select "Cypal Studio for GWT", and click "OK".
 	
-	Open "Project -> Properties" and "Java Build Path". In libraries tab, remove "gwt-servlet.jar", "EAR Libraries" and "Web App Libraries". Click OK to accept changes.
+	Open "Project -> Properties" and "Java Build Path". In libraries tab, remove following items from the list: "gwt-servlet.jar", "EAR Libraries" and "Web App Libraries". Click OK to accept changes.
 	
 	Finally, delete the folder "WebContent" in Project Explorer if it exists. Project is now configured.
 
 == 3.4 Setting up version control in Eclipse ==
 
-	With a SVN plugin installed, changes to sources are easy to commit. Open Eclipse perspective "Team Synchronize", and click "Synchronize..." in a tool button. Accept default options for synchronize type (svn) and resources (mollify trunk), and click "Finish".
+	With a SVN plugin installed, changes in source folder are easy to synchronize. Open Eclipse perspective "Team Synchronize", and click "Synchronize..." toolbar button. Accept default options for synchronize type (svn) and resources (mollify trunk), and click "Finish".
 	
-	Project now appears into the Synchronize view. Any changes in the trunk can be updated simply by refreshing the view and clicking "Update All Incoming Changes". In the same way, committing your changes is done by clicking "Commit All Outgoing Changes".
+	Project appears into the Synchronize view. Any changes in the trunk can be updated simply by refreshing the view with F5 or by clicking "Synchronize", and then clicking "Update All Incoming Changes". Similarly, committing your changes is done by clicking "Commit All Outgoing Changes".
 	
 == 3.4 Running/Debugging Mollify in Eclipse ==
 
-	First make sure your web server is working, for example by installing Mollify release version. Once it is working, backend can be used also in development.
+	First make sure your web server configuration is working, for example by installing Mollify release version under it. Once it is working, backend can be used also in development.
 	
-	Create Launch configuration in Eclipse "Run -> Run Configurations...". Under GWT Hosted Mode Application, select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also from the Run menu in toolbar. The same configuration can be used for debugging.
+	Create Launch configuration in Eclipse "Run -> Run Configurations...". Under GWT Hosted Mode Application, select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also directly from the Run menu in toolbar. The same configuration can be used for debugging.
 	
 	
 	
