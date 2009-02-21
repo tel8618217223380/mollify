@@ -86,11 +86,11 @@ This page describes how to set up Mollify development environment
 	
 == 3.4 Running/Debugging Mollify in Eclipse ==
 
-	First make sure your web server configuration is working, for example by installing Mollify release version under it. Once it is working, backend can be used also in development.
+	First make sure your web server configuration is working by installing a Mollify release version as you would in a real web server host. Once you get the Mollify client running in browser, the backend can be used in development as well.
 	
-	The application host page used in development is at "org.sjarvela.mollify/public/App.html". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without service file). For example, in MAMP configuration this is could be "http://localhost:7777/mollify/".
+	The application host page used in GWT emulation is at "org.sjarvela.mollify/public/App.html". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without service file). For example, in MAMP configuration this could be "http://localhost:7777/mollify/".
 	
-	In the host file, this would be a setting
+	In the App.html file, this would be a setting
 	{{{
 	<meta name="mollify:property" content="service-path=http://localhost:7777/mollify/">
 	}}}
@@ -101,9 +101,9 @@ This page describes how to set up Mollify development environment
 
 	Mollify development is divided into two separate areas, client development in Java, and backend development in PHP.
 	
-	Even running Mollify in Eclipse or browser requires backend files copied in the web server, as it is in no way under GWT emulation. Backend always acts as in real life. If you wish to develop the backend files, or just keep them always up to date with trunk, it is best to create a symbolic link into the trunk version.
+	Even running Mollify in Eclipse or browser requires backend files copied in the web server, as it is in no way under GWT emulation. Backend always requires a real PHP web server, and a configuration as in production. If you wish to develop the backend files, or just keep them always up to date with trunk, it is best to create a symbolic link into the trunk version.
 	
-	For example, in *nix environments:
+	For example, in Mac/Linux environments:
 	
 	{{{
 	cd [WEB_SERVER_ROOT_HERE]
@@ -112,11 +112,11 @@ This page describes how to set up Mollify development environment
 	
 	This would make a link from the trunk folder "backend" into a folder named "mollify" under the web root. This way, the service php file is accessible via url "http://localhost/mollify/service.php".
 	
-	Now you can keep editing the files under the trunk, and they are always reflected to the web server.
+	Now you can keep editing the backend files under the trunk folder, and they are always reflected to the web server.
 
 = 4 Build scripts =
 
-	There are couple of (*nix) scripts that might be useful in development. They are located under folder "script" in source root. To use these scripts, copy them to the root folder of your Mollify project ("/Projects/Mollify"), and modify them as instructed in each of them.
+	There are couple of (Mac/Linux) scripts that might be useful in development. They are located under folder "script" in source root. To use these scripts, copy them to the root folder of your Mollify project ("/Projects/Mollify"), and modify them as instructed in each of them.
 	
 == App-compile ==
 
@@ -129,10 +129,10 @@ This page describes how to set up Mollify development environment
 == App-update-devenv ==
 
 	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. Script "App-update-devenv" automates this so that you don't have to compile and copy folders manually. In the script, you define two paths:
-  	* Absolute path to the Mollify source folder (for example "/Projects/Mollify")
+  	* Absolute path to the Mollify project folder (for example "/Projects/Mollify")
   	* Absolute path to the web server root (for example "/Applications/MAMP/htdocs")
 
-	What this script does, it compiles sources into javascript package, copies it to the web root. It also makes a symbolic link to the development version of the themes folder, this way you can continue on editing the themes under source folder, and changes are reflected to the deployed version.
+	What this script does, it compiles sources into javascript package, copies it to the web root. It also makes a symbolic link to the development version of the folder "themes", this way you can continue on editing the themes under the trunk, and changes are reflected to the web server.
 	
 	
 	
