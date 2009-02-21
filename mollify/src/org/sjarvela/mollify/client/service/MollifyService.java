@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 
 public class MollifyService implements FileActionUrlProvider {
+	private static final String SERVICE_FILE = "service.php";
 	private String baseUrl;
 	private MollifyLogger logger;
 
@@ -41,9 +42,17 @@ public class MollifyService implements FileActionUrlProvider {
 		// (service.php) is in the same directory than the host html page.
 
 		this.logger = logger;
-		this.baseUrl = GWT.isScript() ? GWT.getHostPageBaseURL()
-				: "http://localhost:7777/mollify/";
-		this.baseUrl += getOptionalPath(path) + "service.php";
+
+		if (GWT.isScript()) {
+			this.baseUrl = GWT.getHostPageBaseURL() + getOptionalPath(path);
+		} else {
+			if (path == null || path.length() == 0)
+				throw new RuntimeException(
+						"Development service path not defined");
+			this.baseUrl = path; // "http://localhost:7777/mollify/";
+		}
+
+		this.baseUrl += SERVICE_FILE;
 
 		logger.logInfo("Mollify service location: " + this.baseUrl);
 	}
