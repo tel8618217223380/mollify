@@ -18,21 +18,21 @@ This page describes how to set up Mollify development environment
 
 = 2. Component Installation =
 
-  	1. Eclipse
+=== 1. Eclipse ===
 		
 		Unpack Eclipse package into location of your selection, Eclipse is ready to run.
 		
-  	2. GWT
+=== 2. GWT ===
 	
 		Follow installation instructions here: http://code.google.com/webtoolkit/gettingstarted.html#Install
 		
-  	3. Cypal Studio
+=== 3. Cypal Studio ===
 	
 		Follow installation instructions here: http://www.cypal.in/studiodocs#installation
 		
 		Remember to set GWT root for Cypal in Eclipse preferences.
 	
-  	4. Subclipse
+=== 4. Subclipse ===
 	
 		Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
 		
@@ -40,19 +40,19 @@ This page describes how to set up Mollify development environment
 		
 		When this site is added, a Subclipse tree is added to Available Software list. Select at least "Subclipse" and "SVNKit Adapter", and click "Install...".
 	
-  	5. Web server
+=== 5. Web server ===
 	
-		WAMP: http://www.wampserver.com/en/
-		MAMP: http://www.mamp.info/en/index.html
-		LAMP: depends on distro, for example in Ubuntu: http://www.howtoforge.com/ubuntu_lamp_for_newbies
+		* WAMP: http://www.wampserver.com/en/
+		* MAMP: http://www.mamp.info/en/index.html
+		* LAMP: depends on distro, for example in Ubuntu: http://www.howtoforge.com/ubuntu_lamp_for_newbies
 
 = 3. Setting up environment =
 
 == 3.1 Mollify source directories ==
 
-  	1. Create a root directory for the project into location of your selection, for example "/Projects/Mollify".
-  	2. Create a directory for Eclipse workspace under the root, for example "/Projects/Mollify/ws"
-  	3. Create a directory for version controlled source files under the root, for example "/Projects/Mollify/svn"
+  	* Create a root directory for the project into location of your selection, for example "/Projects/Mollify".
+  	* Create a directory for Eclipse workspace under the root, for example "/Projects/Mollify/ws"
+  	* Create a directory for version controlled source files under the root, for example "/Projects/Mollify/svn"
 	
 	It is important to keep workspace folder outside the version controlled source folder, as it contains personal settings and preferences, and should not be committed to version control.
 	
@@ -90,7 +90,14 @@ This page describes how to set up Mollify development environment
 
 	First make sure your web server configuration is working, for example by installing Mollify release version under it. Once it is working, backend can be used also in development.
 	
-	Create Launch configuration in Eclipse "Run -> Run Configurations...". Under GWT Hosted Mode Application, select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also directly from the Run menu in toolbar. The same configuration can be used for debugging.
+	The application host web page used in development is at "org.sjarvela.mollify.public.App.html". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without service file). For example, in LAMP configuration this is could be "http://localhost:7777/mollify/".
+	
+	In the host file, this would be a setting
+	{{{
+	<meta name="mollify:property" content="service-path=http://localhost:7777/mollify/">
+	}}}
+	
+	To create a launch configuration, select "Run -> Run Configurations...". Under "GWT Hosted Mode Application", select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also directly from the Run menu in toolbar. The same configuration can be used for debugging.
 	
 	
 	
