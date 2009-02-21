@@ -1,3 +1,12 @@
 #!/bin/sh
+
+# To use this package script, do following steps:
+#
+# 1. Copy all scripts to application root dir
+# 2. Set variable GWT_DIR below
+# 3. If development environment is not Mac, replace "gwt-dev-mac.jar" with corresponding in your platform
+#
+
 APPDIR=`dirname $0`;
-java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/svn/src:$APPDIR/bin:/Users/cambba/bin/gwt-mac-1.5.2/gwt-user.jar:/Users/cambba/bin/gwt-mac-1.5.2/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/" "$@" org.sjarvela.mollify.App;
+GWT_DIR='FOLDER_TO_GWT';
+java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/svn/src:$APPDIR/bin:$GWT_DIR/gwt-user.jar:$GWT_DIR/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/" "$@" org.sjarvela.mollify.App;

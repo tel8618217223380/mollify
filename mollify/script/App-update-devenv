@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# To use this package script, do following steps:
+#
+# 1. Copy all scripts to application root dir
+# 2. Set missing variables below
+#
+
 APPROOT=[ABSOLUTE_PATH_TO_MOLLIFY_PROJECT_ROOT];
 HTDOCS=[ABSOLUTE_PATH_TO_WWW_ROOT];
 APPNAME='org.sjarvela.mollify.App';
@@ -18,7 +24,5 @@ mkdir $TARGET
 cp -R $APPROOT/build/$APPNAME/* $TARGET
 
 # link stylesheets to development versions
-ln -s $APPROOT/svn/src/$APPDIR/public/App.css $TARGET
-
 rm -rf $TARGET/themes
 ln -s $APPROOT/svn/src/$APPDIR/public/themes $TARGET
