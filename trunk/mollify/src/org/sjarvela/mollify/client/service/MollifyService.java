@@ -15,10 +15,9 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.log.MollifyLogger;
 
 public interface MollifyService extends FileActionUrlProvider {
-	void initialize(MollifyLogger logger, String parameter);
+	void initialize(String path);
 
 	void getSessionInfo(ResultListener resultListener);
 

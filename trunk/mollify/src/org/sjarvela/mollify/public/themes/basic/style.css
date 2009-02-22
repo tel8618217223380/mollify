@@ -221,6 +221,7 @@
 	margin-right: 4px;
 	cursor: pointer;
 	cursor: hand;
+	float: left;
 }
 
 #mollify-header-add-button.mollify-dropdown-button {
@@ -297,6 +298,10 @@
 	cursor: hand;
 }
 
+.mollify-header-username {
+	float: right;
+}
+
 #mollify-header-logout.mollify-header-option, #mollify-header-logout.mollify-header-option:hover {
 	background: #bababa url(b-close.png) no-repeat 8px 15px;
 	width: 26px;
@@ -311,12 +316,13 @@
 	background: #b3b3b3 url(b-close-over.png) no-repeat 8px 15px;
 }
 
-table.mollify-directory-list.mollify-directory-list-root-level {
+.mollify-directory-list-root-level {
 	padding-left: 0;
 }
 
 .mollify-directory-selector {
 	margin: 8px 0;
+	float: left;
 }
 
 .mollify-directory-list-padding-left {

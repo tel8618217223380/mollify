@@ -12,13 +12,8 @@ package org.sjarvela.mollify.client;
 
 public class Settings {
 
-	private static final String PARAM_DEBUG = "debug";
-
-	private final boolean debug;
-
 	public static Settings create(ParameterParser parser) {
-		String debugString = parser.getParameter(PARAM_DEBUG);
-		return new Settings(getBool(debugString));
+		return new Settings();
 	}
 
 	private static boolean getBool(String string) {
@@ -30,12 +25,6 @@ public class Settings {
 		return false;
 	}
 
-	public Settings(boolean debug) {
-		this.debug = debug;
+	private Settings() {
 	}
-
-	public boolean isDebug() {
-		return debug;
-	}
-
 }

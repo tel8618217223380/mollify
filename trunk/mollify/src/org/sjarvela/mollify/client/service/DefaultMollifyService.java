@@ -15,8 +15,8 @@ import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.log.MollifyLogger;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 
@@ -24,7 +24,6 @@ public class DefaultMollifyService implements MollifyService {
 	private static final String SERVICE_FILE = "service.php";
 
 	private String baseUrl;
-	private MollifyLogger logger;
 
 	enum Action {
 		get, operate, auth, session_info, logout
@@ -34,14 +33,12 @@ public class DefaultMollifyService implements MollifyService {
 		details, files, dirs, dirs_and_files, roots, upload_status
 	};
 
-	public void initialize(MollifyLogger logger, String path) {
+	public void initialize(String path) {
 		// MollifyService assumes that development environment web server is
 		// localhost:7777
 
 		// For a standalone version, it is assumed that backend facade
 		// (service.php) is in the same directory than the host html page.
-
-		this.logger = logger;
 
 		if (GWT.isScript()) {
 			this.baseUrl = GWT.getHostPageBaseURL() + getOptionalPath(path);
@@ -54,7 +51,7 @@ public class DefaultMollifyService implements MollifyService {
 
 		this.baseUrl += SERVICE_FILE;
 
-		logger.logInfo("Mollify service location: " + this.baseUrl);
+		Log.info("Mollify service location: " + this.baseUrl);
 	}
 
 	private String getOptionalPath(String path) {
@@ -207,7 +204,7 @@ public class DefaultMollifyService implements MollifyService {
 	}
 
 	private void doRequest(String url, ResultListener resultListener) {
-		new JsonRpcHandler(logger, URL.encode(url), resultListener).doRequest();
+		new JsonRpcHandler(URL.encode(url), resultListener).doRequest();
 	}
 
 	public String getNewUploadId() {
