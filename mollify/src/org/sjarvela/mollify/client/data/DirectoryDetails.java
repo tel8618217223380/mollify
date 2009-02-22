@@ -19,4 +19,14 @@ public class DirectoryDetails extends JavaScriptObject {
 		return this.permissions;
 	}-*/;
 
+	public static DirectoryDetails create(FilePermission permissions) {
+		DirectoryDetails result = DirectoryDetails.createObject().cast();
+		result.putValues(permissions.getStringValue());
+		return result;
+	}
+
+	private final native void putValues(String permissions) /*-{
+		this.permissions = permissions
+	}-*/;
+
 }

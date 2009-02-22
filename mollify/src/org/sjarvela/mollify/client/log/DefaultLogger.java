@@ -11,8 +11,11 @@
 package org.sjarvela.mollify.client.log;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.RootPanel;
 
 public class DefaultLogger implements MollifyLogger {
+	public void initialize(RootPanel panel) {
+	}
 
 	public void logError(String error) {
 		GWT.log(error, null);

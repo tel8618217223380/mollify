@@ -15,11 +15,15 @@ public enum FilePermission {
 
 	public static FilePermission fromString(String value) {
 		String val = value.trim().toLowerCase();
-		
+
 		for (FilePermission permission : FilePermission.values()) {
 			if (permission.stringValue.equals(val))
 				return permission;
 		}
 		return None;
+	}
+
+	public String getStringValue() {
+		return stringValue;
 	}
 }

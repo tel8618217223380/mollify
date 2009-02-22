@@ -18,8 +18,12 @@ public class Directory extends FileSystemItem {
 	}
 
 	protected Directory(JsDirectory dir) {
-		super(dir.getId(), dir.getName());
-		this.dir = dir;
+		this(dir.getId(), dir.getName());
+	}
+
+	public Directory(String id, String name) {
+		super(id, name);
+		dir = null;
 	}
 
 	@Override

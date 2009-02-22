@@ -23,4 +23,15 @@ public class JsDirectory extends JavaScriptObject {
 	public final native String getName() /*-{
 		return this.name;
 	}-*/;
+
+	public static JsDirectory create(String id, String name) {
+		JsDirectory result = JsDirectory.createObject().cast();
+		result.putValues(id, name);
+		return result;
+	}
+
+	private final native void putValues(String id, String name) /*-{
+		this.id = id;
+		this.name = name;
+	}-*/;
 }

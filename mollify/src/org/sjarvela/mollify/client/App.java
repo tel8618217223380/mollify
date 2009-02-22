@@ -12,8 +12,6 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.log.DefaultLogger;
-import org.sjarvela.mollify.client.log.HtmlLogger;
 import org.sjarvela.mollify.client.log.MollifyLogger;
 import org.sjarvela.mollify.client.service.MollifyError;
 import org.sjarvela.mollify.client.service.MollifyService;
@@ -57,13 +55,11 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 			return;
 
 		ParameterParser parser = new ParameterParser(META_PROPERTY);
+		logger = createLogger();
 		try {
-			Settings settings = Settings.create(parser);
-			logger = createLogger(settings);
-
 			importTheme(parser.getParameter(PARAM_THEME));
-			service = new MollifyService(logger, parser
-					.getParameter(PARAM_SERVICE_PATH));
+
+			service = createService(parser);
 			localizator = Localizator.getInstance();
 
 			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
@@ -78,10 +74,17 @@ public class App implements EntryPoint, UncaughtExceptionHandler,
 		start();
 	}
 
-	private MollifyLogger createLogger(Settings settings) {
-		if (settings.isDebug())
-			return new HtmlLogger(panel);
-		return new DefaultLogger();
+	private MollifyService createService(ParameterParser parser) {
+		MollifyService service = (MollifyService) GWT
+				.create(MollifyService.class);
+		service.initialize(logger, parser.getParameter(PARAM_SERVICE_PATH));
+		return service;
+	}
+
+	private MollifyLogger createLogger() {
+		MollifyLogger logger = (MollifyLogger) GWT.create(MollifyLogger.class);
+		logger.initialize(panel);
+		return logger;
 	}
 
 	private void importTheme(String theme) {
