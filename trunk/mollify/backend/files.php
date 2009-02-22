@@ -317,31 +317,33 @@
 			$error = "NO_UPLOAD_DATA";
 			return FALSE;
 		}
-		
-		$name = $_FILES['upload']['name'];
-		$origin = $_FILES['upload']['tmp_name'];
-		$target = $dir["path"].DIRECTORY_SEPARATOR.$name;
-		
+
 		if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK) {
 			$error = "UPLOAD_FAILED";
 			$error_details = $_FILES["file"]["error"];
 			return FALSE;
 		}
-		
-		if (file_exists($target)) {
-			$error = "FILE_ALREADY_EXISTS";
-			$error_details = basename($target);
-			return FALSE;
+				
+		foreach ($_FILES[upload][name] as $key => $value) { 
+			$name = $_FILES['upload']['name'][$key];
+			$origin = $_FILES['upload']['tmp_name'][$key];
+			$target = $dir["path"].DIRECTORY_SEPARATOR.$name;
+				
+			if (file_exists($target)) {
+				$error = "FILE_ALREADY_EXISTS";
+				$error_details = basename($target);
+				return FALSE;
+			}
+			
+			if (!move_uploaded_file($origin, $target)) {
+				$error = "SAVING_FAILED";
+				$error_details = $name;
+				return FALSE;
+			}
 		}
-		
-		if (move_uploaded_file($origin, $target)) {
-			$_SESSION['upload_file'] = "";
-			return TRUE;
-		}
-		
-		$error = "SAVING_FAILED";
-		$error_details = $name;
-		return FALSE;
+
+		$_SESSION['upload_file'] = "";
+		return TRUE;
 	}
 
 	function create_folder($dir, $folder_name) {

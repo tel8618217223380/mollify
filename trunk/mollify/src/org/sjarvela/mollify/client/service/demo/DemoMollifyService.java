@@ -97,8 +97,8 @@ public class DemoMollifyService implements MollifyService {
 	}
 
 	public void getUploadProgress(String id, ResultListener resultListener) {
-		resultListener.onSuccess(FileUploadStatus.create(100, 100, 100,
-				"Example.txt", 1));
+		resultListener.onSuccess(FileUploadStatus.create(100, 50, 100,
+				"Example.txt", 0));
 	}
 
 	public void logout(ResultListener resultListener) {

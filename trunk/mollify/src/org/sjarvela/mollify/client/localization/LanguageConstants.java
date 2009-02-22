@@ -118,6 +118,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadDialogUploadButton();
 	
 	public String fileUploadDialogAddFileButton();
+	
+	public String fileUploadDialogRemoveFileButton();
 
 	public String fileUploadProgressTitle();
 
