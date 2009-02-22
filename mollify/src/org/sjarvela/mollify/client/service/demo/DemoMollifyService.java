@@ -15,20 +15,19 @@ import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.FileUploadStatus;
 import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.log.MollifyLogger;
 import org.sjarvela.mollify.client.service.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.service.MollifyService;
 import org.sjarvela.mollify.client.service.ResultListener;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class DemoMollifyService implements MollifyService {
 	private static final String MOLLIFY_PACKAGE_URL = "http://mollify.googlecode.com/files/mollify_0.7.1.tar.gz";
 
-	private MollifyLogger logger;
 	private DemoData data;
 
-	public void initialize(MollifyLogger logger, String path) {
-		this.logger = logger;
-		this.logger.logInfo("Mollify Demo");
+	public void initialize(String path) {
+		Log.info("Mollify Demo");
 		this.data = new DemoData();
 	}
 

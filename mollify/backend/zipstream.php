@@ -250,15 +250,7 @@ class ZipStream {
   #   ));
   # 
   function add_file_from_path($name, $path, $opt = array()) {
-    if ($this->is_large_file($path)) {
-      # file is too large to be read into memory; add progressively
       $this->add_large_file($name, $path, $opt);
-    } else {
-      # file is small enough to read into memory; read file contents and
-      # handle with add_file()
-      $data = file_get_contents($path);
-      $this->add_file($name, $data, $opt);
-    }
   }
 
   #

@@ -45,6 +45,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_PADDING_RIGHT = "mollify-header-padding-right";
 	public static final String MAIN_VIEW_HEADER_BUTTONS = "mollify-header-buttons";
 	public static final String MAIN_VIEW_HEADER_OPTION = "mollify-header-option";
+	public static final String MAIN_VIEW_HEADER_USERNAME = "mollify-header-username";
 	public static final String MAIN_VIEW_HEADER_LOGOUT = "mollify-header-logout";
 	public static final String MAIN_VIEW_HEADER_BUTTON = "mollify-header-button";
 	public static final String MAIN_VIEW_HEADER_BUTTON_ADD = "mollify-header-add-button";

@@ -17,9 +17,9 @@ import org.sjarvela.mollify.client.TextProvider;
 import org.sjarvela.mollify.client.data.Directory;
 import org.sjarvela.mollify.client.data.File;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.ui.ActionButton;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
-import org.sjarvela.mollify.client.ui.ActionButton;
 import org.sjarvela.mollify.client.ui.DropdownButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -34,8 +34,9 @@ import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.filelist.FileListListener;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -56,6 +57,7 @@ public class MainView extends Composite {
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private final ActionListener actionListener;
 	private final TextProvider textProvider;
+	private Label username;
 
 	public enum Action implements ActionId {
 		addFile, addDirectory, refresh, parentDir, logout;
@@ -103,7 +105,7 @@ public class MainView extends Composite {
 	}
 
 	private Widget createHeader() {
-		HorizontalPanel panel = new HorizontalPanel();
+		Panel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 
 		Label leftPadding = new Label();
@@ -112,7 +114,7 @@ public class MainView extends Composite {
 
 		createButtons();
 
-		HorizontalPanel buttonPanel = new HorizontalPanel();
+		Panel buttonPanel = new FlowPanel();
 		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
 
 		if (addButton != null)
@@ -127,10 +129,18 @@ public class MainView extends Composite {
 				.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING_RIGHT);
 		panel.add(rightPadding);
 
-		if (model.getSessionInfo().isAuthenticationRequired())
+		if (model.getSessionInfo().isAuthenticationRequired()) {
+			panel.add(createUserName());
 			panel.add(logoutButton);
+		}
 
 		return panel;
+	}
+
+	private Widget createUserName() {
+		username = new Label();
+		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
+		return username;
 	}
 
 	private void createButtons() {
@@ -207,6 +217,10 @@ public class MainView extends Composite {
 
 	public ActionButton getParentDirButton() {
 		return parentDirButton;
+	}
+
+	public Label getUsername() {
+		return username;
 	}
 
 	public ActionButton getLogoutButton() {

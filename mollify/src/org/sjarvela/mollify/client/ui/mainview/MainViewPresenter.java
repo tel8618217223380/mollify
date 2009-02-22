@@ -64,6 +64,10 @@ public class MainViewPresenter implements DirectoryController,
 		this.logoutListener = logoutListener;
 		this.fileUploadHandler.addListener(this);
 
+		if (model.getSessionInfo().isAuthenticationRequired()) {
+			view.getUsername().setText(model.getSessionInfo().getLoggedUser());
+		}
+
 		ResultListener reloadListener = createReloadListener();
 		fileActionHandler.addRenameListener(reloadListener);
 		fileActionHandler.addDeleteListener(reloadListener);

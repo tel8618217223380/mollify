@@ -13,30 +13,16 @@
 	<inherits name="com.google.gwt.json.JSON"/>
 	<inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
 
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
+	<extend-property name="log_level" values="DEBUG,INFO"/>
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="fi"/>
 
-	<define-property name="debug" values="true,false" /> 
-	<property-provider name="debug">
-		<![CDATA[
-			var debug = __gwt_getMetaProperty("debug");
-			if (debug == null) return "false";
-			return debug; 
-		]]>
-	</property-provider>
-
-	<replace-with class="org.sjarvela.mollify.client.log.HtmlLogger">
-		<when-type-is class="org.sjarvela.mollify.client.log.MollifyLogger"/>
-		<when-property-is name="debug" value="true"/>
-	</replace-with>
-
-	<replace-with class="org.sjarvela.mollify.client.log.DefaultLogger">
-		<when-type-is class="org.sjarvela.mollify.client.log.MollifyLogger"/>
-		<when-property-is name="debug" value="false"/>
-	</replace-with> 
+	<set-property name="log_DivLogger" value="ENABLED" />
+	<set-property name="log_FirebugLogger" value="ENABLED" />
 	
 	<define-property name="demo" values="true,false" /> 
 	<property-provider name="demo">
