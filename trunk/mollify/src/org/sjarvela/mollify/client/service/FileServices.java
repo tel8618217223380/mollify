@@ -16,9 +16,7 @@ import org.sjarvela.mollify.client.data.FileSystemItem;
 import org.sjarvela.mollify.client.data.JsDirectory;
 import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.file.DirectoryHandler;
-import org.sjarvela.mollify.client.file.FileActionUrlProvider;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
-import org.sjarvela.mollify.client.file.FileSystemAction;
 import org.sjarvela.mollify.client.file.FileSystemOperationHandler;
 
 import com.google.gwt.core.client.JavaScriptObject;

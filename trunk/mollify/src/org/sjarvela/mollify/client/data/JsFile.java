@@ -32,4 +32,19 @@ public class JsFile extends JavaScriptObject {
 		return this.size;
 	}-*/;
 
+	public static JsFile create(String id, String name, String extension,
+			int size) {
+		JsFile result = JsFile.createObject().cast();
+		result.putValues(id, name, extension, size);
+		return result;
+	}
+
+	private final native void putValues(String id, String name,
+			String extension, int size) /*-{
+		this.id = id;
+		this.name = name;
+		this.extension = extension;
+		this.size = size;
+	}-*/;
+
 }

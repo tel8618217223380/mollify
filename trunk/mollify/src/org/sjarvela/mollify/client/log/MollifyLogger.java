@@ -10,7 +10,11 @@
 
 package org.sjarvela.mollify.client.log;
 
+import com.google.gwt.user.client.ui.RootPanel;
+
 public interface MollifyLogger {
+
+	void initialize(RootPanel panel);
 
 	void logError(String error);
 

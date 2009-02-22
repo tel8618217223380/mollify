@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.log;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -23,7 +24,7 @@ public class HtmlLogger implements MollifyLogger {
 
 	private Panel log;
 
-	public HtmlLogger(RootPanel rootPanel) {
+	public void initialize(RootPanel rootPanel) {
 		Panel panel = RootPanel.get(MOLLIFY_LOG_PANEL_ID);
 		if (panel == null) {
 			panel = new FlowPanel();
@@ -36,14 +37,16 @@ public class HtmlLogger implements MollifyLogger {
 	}
 
 	public void logError(String error) {
+		GWT.log(error, null);
 		add("<b>ERROR:</b>&nbsp;" + error);
 	}
 
-	public void logInfo(String string) {
-		add("<b>INFO:</b>&nbsp;" + string);
+	public void logInfo(String info) {
+		GWT.log(info, null);
+		add("<b>INFO:</b>&nbsp;" + info);
 	}
 
-	private void add(String error) {
-		log.add(new HTML(error));
+	private void add(String entry) {
+		log.add(new HTML(entry));
 	}
 }

@@ -13,6 +13,15 @@ package org.sjarvela.mollify.client.data;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class SessionSettings extends JavaScriptObject {
+	public static SessionSettings create(boolean folderActionsEnabled,
+			boolean fileUploadEnabled, boolean fileUploadProgressEnabled,
+			boolean zipDownloadEnabled) {
+		SessionSettings result = SessionSettings.createObject().cast();
+		result.putValues(folderActionsEnabled, fileUploadEnabled,
+				fileUploadProgressEnabled, zipDownloadEnabled);
+		return result;
+	}
+
 	protected SessionSettings() {
 	}
 
@@ -39,4 +48,13 @@ public class SessionSettings extends JavaScriptObject {
 				+ isFileUploadProgressEnabled() + ", zip_download_enabled="
 				+ isZipDownloadEnabled();
 	}
+
+	private final native void putValues(boolean folderActionsEnabled,
+			boolean fileUploadEnabled, boolean fileUploadProgressEnabled,
+			boolean zipDownloadEnabled) /*-{
+		this.enable_folder_actions = folderActionsEnabled;
+		this.enable_file_upload = fileUploadEnabled;
+		this.enable_file_upload_progress = fileUploadProgressEnabled;
+		this.enable_zip_download = zipDownloadEnabled;
+	}-*/;
 }

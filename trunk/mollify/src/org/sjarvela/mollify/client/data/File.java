@@ -12,24 +12,31 @@ package org.sjarvela.mollify.client.data;
 
 public class File extends FileSystemItem {
 	public static File Empty = new File();
-	private final JsFile file;
+	private final String extension;
+	private final int size;
 
 	private File() {
 		super("", "");
-		file = null;
+		extension = "";
+		size = 0;
 	}
-	
+
 	protected File(JsFile file) {
-		super(file.getId(), file.getName());
-		this.file = file;
+		this(file.getId(), file.getName(), file.getExtension(), file.getSize());
+	}
+
+	public File(String id, String name, String extension, int size) {
+		super(id, name);
+		this.extension = extension;
+		this.size = size;
 	}
 
 	public final String getExtension() {
-		return file.getExtension();
+		return extension;
 	}
 
 	public final int getSize() {
-		return file.getSize();
+		return size;
 	}
 
 	public final int getSizeInKB() {

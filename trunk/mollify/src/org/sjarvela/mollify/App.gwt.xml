@@ -18,4 +18,42 @@
 	
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="fi"/>
+
+	<define-property name="debug" values="true,false" /> 
+	<property-provider name="debug">
+		<![CDATA[
+			var debug = __gwt_getMetaProperty("debug");
+			if (debug == null) return "false";
+			return debug; 
+		]]>
+	</property-provider>
+
+	<replace-with class="org.sjarvela.mollify.client.log.HtmlLogger">
+		<when-type-is class="org.sjarvela.mollify.client.log.MollifyLogger"/>
+		<when-property-is name="debug" value="true"/>
+	</replace-with>
+
+	<replace-with class="org.sjarvela.mollify.client.log.DefaultLogger">
+		<when-type-is class="org.sjarvela.mollify.client.log.MollifyLogger"/>
+		<when-property-is name="debug" value="false"/>
+	</replace-with> 
+	
+	<define-property name="demo" values="true,false" /> 
+	<property-provider name="demo">
+		<![CDATA[
+			var demo = __gwt_getMetaProperty("demo");
+			if (demo == null) return "false";
+			return demo; 
+		]]>
+	</property-provider>
+	
+	<replace-with class="org.sjarvela.mollify.client.service.demo.DemoMollifyService">
+		<when-type-is class="org.sjarvela.mollify.client.service.MollifyService"/>
+		<when-property-is name="demo" value="true"/>
+	</replace-with>
+
+	<replace-with class="org.sjarvela.mollify.client.service.DefaultMollifyService">
+		<when-type-is class="org.sjarvela.mollify.client.service.MollifyService"/>
+		<when-property-is name="demo" value="false"/>
+	</replace-with> 
 </module>

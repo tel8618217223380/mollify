@@ -33,7 +33,7 @@ public class FileUploadStatus extends JavaScriptObject {
 	}-*/;
 
 	private final native int getIsDone() /*-{
-		return this.current;
+		return this.done;
 	}-*/;
 
 	public final boolean isDone() {
@@ -43,4 +43,20 @@ public class FileUploadStatus extends JavaScriptObject {
 	public final double getUploadedPercentage() {
 		return (double) getCurrent() / (double) getTotal() * 100d;
 	}
+
+	public static FileUploadStatus create(int total, int current, int rate,
+			String fileName, int done) {
+		FileUploadStatus result = FileUploadStatus.createObject().cast();
+		result.putValues(total, current, rate, fileName, done);
+		return result;
+	}
+
+	private final native void putValues(int total, int current, int rate,
+			String fileName, int done) /*-{
+		this.total = total;
+		this.current = current;
+		this.rate = rate;
+		this.filename = fileName;
+		this.done = done;
+	}-*/;
 }

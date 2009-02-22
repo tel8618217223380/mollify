@@ -13,11 +13,37 @@ package org.sjarvela.mollify.client.data;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class SessionInfo extends JavaScriptObject {
+	public static SessionInfo create(boolean authenticationRequired,
+			boolean authenticated, String user, PermissionMode permissionMode,
+			SessionSettings settings) {
+		SessionInfo result = SessionInfo.createObject().cast();
+		result.putValues(authenticationRequired, authenticated, user,
+				permissionMode.getStringValue(), settings);
+		return result;
+	}
+
 	public enum PermissionMode {
-		Admin, ReadWrite, ReadOnly;
+		Admin("a"), ReadWrite("rw"), ReadOnly("ro");
+
+		private final String value;
+
+		public static PermissionMode fromString(String mode) {
+			for (PermissionMode permissionMode : PermissionMode.values())
+				if (permissionMode.getStringValue().equals(mode))
+					return permissionMode;
+			return PermissionMode.ReadOnly;
+		}
+
+		private PermissionMode(String value) {
+			this.value = value;
+		}
 
 		public boolean hasWritePermission() {
 			return this.equals(Admin) || this.equals(ReadWrite);
+		}
+
+		public String getStringValue() {
+			return value;
 		}
 	}
 
@@ -48,15 +74,21 @@ public class SessionInfo extends JavaScriptObject {
 	}-*/;
 
 	public final PermissionMode getPermissionMode() {
-		String mode = getDefaultPermissionModeString().trim().toLowerCase();
-		if (mode.equals("a"))
-			return PermissionMode.Admin;
-		else if (mode.equals("rw"))
-			return PermissionMode.ReadWrite;
-		return PermissionMode.ReadOnly;
+		return PermissionMode.fromString(getDefaultPermissionModeString()
+				.trim().toLowerCase());
 	}
 
 	private final native String getDefaultPermissionModeString() /*-{
 		return this.default_permission_mode;
+	}-*/;
+
+	private final native void putValues(boolean authenticationRequired,
+			boolean authenticated, String user, String permissionMode,
+			SessionSettings settings) /*-{
+		this.authentication_required = authenticationRequired;
+		this.authenticated = authenticated;
+		this.user = user;
+		this.default_permission_mode = permissionMode;
+		this.settings = settings;
 	}-*/;
 }
