@@ -92,6 +92,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
 		panel.add(createMessage());
 		panel.add(createForm());
+		panel.add(createUploaderButtons());
 		return panel;
 	}
 
@@ -121,20 +122,45 @@ public class FileUploadDialog extends CenteredDialog implements
 		uploadersPanel.add(createUploader());
 
 		panel.add(uploadersPanel);
-		panel.add(createButton(localizator.getStrings()
+
+		return form;
+	}
+
+	private Panel createUploaderButtons() {
+		Panel uploaderButtons = new HorizontalPanel();
+		uploaderButtons
+				.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS);
+
+		uploaderButtons.add(createButton(localizator.getStrings()
 				.fileUploadDialogAddFileButton(), new ClickListener() {
 			public void onClick(Widget sender) {
 				onAddFile();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
 
-		return form;
+		uploaderButtons.add(createButton(localizator.getStrings()
+				.fileUploadDialogRemoveFileButton(), new ClickListener() {
+			public void onClick(Widget sender) {
+				onRemoveFile();
+			}
+		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE));
+
+		return uploaderButtons;
 	}
 
 	protected void onAddFile() {
 		if (getLastUploader().getFilename().length() < 1)
 			return;
 		uploadersPanel.add(createUploader());
+	}
+
+	protected void onRemoveFile() {
+		if (uploaders.size() < 2)
+			return;
+
+		FileUpload lastUploader = getLastUploader();
+		uploaders.remove(lastUploader);
+		uploadersPanel.remove(lastUploader);
 	}
 
 	private Widget createUploader() {
