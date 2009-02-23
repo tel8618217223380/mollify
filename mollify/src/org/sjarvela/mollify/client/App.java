@@ -25,7 +25,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, LogoutListener {
@@ -93,6 +92,11 @@ public class App implements EntryPoint, LogoutListener {
 			Log.info("Theme import disabled");
 			return;
 		}
+		
+		if (isIE()) {
+			Log.info("Theme not imported, IE does not support css injection");
+			return;			
+		}
 
 		String themeUrl = GWT.getModuleBaseURL() + THEME_PATH;
 		if (theme == null) {
@@ -116,11 +120,16 @@ public class App implements EntryPoint, LogoutListener {
 		importCss(themeUrl);
 	}
 
-	private native String importCss(String css) /*-{
+	private native void importCss(String css) /*-{		
 		var cssNode = document.createElement('link');
 		cssNode.rel = 'stylesheet';
 		cssNode.href = css;
 		$doc.getElementsByTagName("head")[0].appendChild(cssNode);
+	}-*/;
+	
+	private native boolean isIE()/*-{
+		var ua = navigator.userAgent.toLowerCase();
+		return (ua.indexOf('msie') >= 0);
 	}-*/;
 
 	private void start() {
@@ -197,12 +206,8 @@ public class App implements EntryPoint, LogoutListener {
 
 	private void showExceptionError(String message, Throwable e) {
 		Log.error(message, e);
-
-		panel.add(new HTML(message + e.getMessage()));
-		panel.add(new HTML(e.toString()));
-
-		for (StackTraceElement ste : e.getStackTrace())
-			panel.add(new HTML(ste.toString()));
+		windowManager.getDialogManager().showInfo("Mollify",
+				"Unexpected error: " + e.getMessage());
 	}
 
 }

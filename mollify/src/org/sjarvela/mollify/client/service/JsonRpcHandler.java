@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.data.ReturnValue;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
 
 public class JsonRpcHandler {
 	private static int requestId = 0;
@@ -29,6 +30,8 @@ public class JsonRpcHandler {
 	}
 
 	public void doRequest() {
+		if (Log.isDebugEnabled())
+			Log.debug("Request: " + url);
 		getExternalJson(id, url + "&callback=", this);
 	}
 
@@ -36,6 +39,11 @@ public class JsonRpcHandler {
 		if (jso == null) {
 			onError(new MollifyError(ServiceError.INVALID_RESPONSE));
 		} else {
+			if (Log.isDebugEnabled())
+				Log
+						.debug("Request response: "
+								+ new JSONObject(jso).toString());
+
 			ReturnValue result = jso.cast();
 
 			if (!result.isSuccess()) {
