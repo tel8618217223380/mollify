@@ -317,7 +317,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 == 3.2 Relocating client application files ==
 
-	Client application files can be located anywhere, only the javascript reference in the host page
+	Client application files can be located anywhere, only the javascript and theme css references in the host page
 	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
 	changed, do not alter its contents.
 
