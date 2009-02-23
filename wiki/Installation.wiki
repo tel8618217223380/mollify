@@ -290,29 +290,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 = 3. Modifying Installation =
 
-== 3.1 Changing the theme ==
-
-	Mollify supports different themes via CSS styling, and the default is theme called "basic". These themes are located under application folder (org.sjarvela.mollify.App/themes/). Each folder under "themes" is considered a separate theme, and each theme must have a file called "style.css" which is used as theme definition.
-
-	If you wish to change the theme, you can define it with following property in host page:
-
-{{{
-	<html>
-		<head>
-			...
-			<meta name="mollify:property" content="theme=[THEME_NAME]">
-		</head>
-		...
-	</html>
-}}}
-
-	Value `THEME_NAME` is the name of the theme found under 'themes' folder (for example "basic").
-
-	If you wish to use a custom theme which is not located under application folder, set this setting value to "`none`". Using this setting, Mollify will not import any css styles itself, instead the host page can link the styles needed with no restrictions.
-
-	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2;...`
-
-== 3.2 Relocating host page or backend interface files ==
+== 3.1 Relocating host page or backend interface files ==
 
 	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
 
@@ -337,16 +315,13 @@ $PUBLISHED_DIRECTORIES = array(
 	<meta name="mollify:property" content="service-path=mollify/scripts">
 }}}
 
-
-	NOTE! If you define multiple `mollify:property` values, use single line and separate values with semi-colon. For example `name1=value1;name2=value2;...`
-
-== 3.3 Relocating client application files ==
+== 3.2 Relocating client application files ==
 
 	Client application files can be located anywhere, only the javascript reference in the host page
 	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
 	changed, do not alter its contents.
 
-== 3.4 Customizing Mollify host page, or integrating Mollify into existing web page ==
+== 3.3 Customizing Mollify host page, or integrating Mollify into existing web page ==
 
 	Host page structure can be freely modified, as long as following rules are met:
 	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked

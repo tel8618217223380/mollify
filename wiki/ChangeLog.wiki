@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.7.2 ==
+  * Added support for multiple file uploads
+  * In multi-user environment, logged in user is shown in the header
+  * Fixed most IE CSS issues
+  * Added standalone demo mode (add '<meta name="gwt:property" content="demo=true">' into host page head)
+  * Added client side logging for troubleshooting (add '<meta name="gwt:property" content="log_level=DEBUG">' into host page head)
+  * Removed property "theme" as IE does not support CSS injection. CSS must now be linked manually in the host html page.
+
 === Version 0.7.1 ===
   * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used (for more information, see [Installation Installation wiki page], chapter 3.1)
 
