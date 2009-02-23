@@ -35,6 +35,7 @@ import org.sjarvela.mollify.client.ui.filelist.FileListListener;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -105,14 +106,10 @@ public class MainView extends Composite {
 	}
 
 	private Widget createHeader() {
-		Panel panel = new FlowPanel();
-		panel.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
-
-		Label leftPadding = new Label();
-		leftPadding.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING_LEFT);
-		panel.add(leftPadding);
-
 		createButtons();
+		
+		Panel header = new HorizontalPanel();
+		header.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 
 		Panel buttonPanel = new FlowPanel();
 		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
@@ -122,12 +119,7 @@ public class MainView extends Composite {
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(directorySelector);
 		buttonPanel.add(parentDirButton);
-		panel.add(buttonPanel);
-
-		Label rightPadding = new Label();
-		rightPadding
-				.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PADDING_RIGHT);
-		panel.add(rightPadding);
+		header.add(buttonPanel);
 
 		if (model.getSessionInfo().isAuthenticationRequired()) {
 			Panel loggedInPanel = new FlowPanel();
@@ -135,10 +127,10 @@ public class MainView extends Composite {
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
 			loggedInPanel.add(createUserName());
 			loggedInPanel.add(logoutButton);
-			panel.add(loggedInPanel);
+			header.add(loggedInPanel);
 		}
 
-		return panel;
+		return header;
 	}
 
 	private Widget createUserName() {

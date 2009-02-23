@@ -42,6 +42,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
 	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "mollify-header-padding-left";
+	public static final String MAIN_VIEW_HEADER_PADDING_MIDDLE = "mollify-header-padding-middle";
 	public static final String MAIN_VIEW_HEADER_PADDING_RIGHT = "mollify-header-padding-right";
 	public static final String MAIN_VIEW_HEADER_BUTTONS = "mollify-header-buttons";
 	public static final String MAIN_VIEW_HEADER_OPTION = "mollify-header-option";
@@ -137,7 +138,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "mollify-file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "mollify-file-upload-dialog-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
-	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS = "uploaders-buttons";
+	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS = "mollify-file-upload-dialog-uploaders-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE = "add-file";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE = "remove-file";
 
