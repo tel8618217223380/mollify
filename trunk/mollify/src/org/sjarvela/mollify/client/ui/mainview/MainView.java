@@ -130,8 +130,12 @@ public class MainView extends Composite {
 		panel.add(rightPadding);
 
 		if (model.getSessionInfo().isAuthenticationRequired()) {
-			panel.add(createUserName());
-			panel.add(logoutButton);
+			Panel loggedInPanel = new FlowPanel();
+			loggedInPanel
+					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
+			loggedInPanel.add(createUserName());
+			loggedInPanel.add(logoutButton);
+			panel.add(loggedInPanel);
 		}
 
 		return panel;

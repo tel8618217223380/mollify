@@ -195,6 +195,7 @@
 .mollify-header {
 	background: url(header-bg.png) repeat-x 0 -32px;
 	width: 100%;
+	height: 41px;
 }
 
 .mollify-header-buttons {
@@ -298,8 +299,18 @@
 	cursor: hand;
 }
 
-.mollify-header-username {
+.mollify-header-logged-in {
 	float: right;
+	width: auto;
+}
+
+.mollify-header-username {
+	float: left;
+	padding-right: 6px;
+	padding-left: 6px;
+	font-weight: bold;
+	height: 26px;
+	padding-top: 14px;
 }
 
 #mollify-header-logout.mollify-header-option, #mollify-header-logout.mollify-header-option:hover {

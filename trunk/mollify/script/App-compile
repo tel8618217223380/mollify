@@ -9,4 +9,4 @@
 
 APPDIR=`dirname $0`;
 GWT_DIR='FOLDER_TO_GWT';
-java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/svn/src:$APPDIR/bin:$GWT_DIR/gwt-user.jar:$GWT_DIR/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/" "$@" org.sjarvela.mollify.App;
+java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/svn/src:$APPDIR/bin:$APPDIR/svn/lib/gwt-log-2.5.3.jar:$GWT_DIR/gwt-user.jar:$GWT_DIR/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/build/" "$@" org.sjarvela.mollify.App;

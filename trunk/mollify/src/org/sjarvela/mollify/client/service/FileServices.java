@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.file.DirectoryHandler;
 import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.file.FileSystemOperationHandler;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
@@ -31,6 +32,9 @@ public class FileServices implements FileDetailsProvider,
 	}
 
 	public void getDirectories(Directory parent, final ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get directories: " + parent.getId());
+		
 		this.service.getDirectories(new ResultListener() {
 
 			public void onFail(MollifyError error) {
@@ -46,6 +50,9 @@ public class FileServices implements FileDetailsProvider,
 	}
 
 	public void getRootDirectories(final ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get root directories");
+		
 		this.service.getRootDirectories(new ResultListener() {
 
 			public void onFail(MollifyError error) {
@@ -62,6 +69,9 @@ public class FileServices implements FileDetailsProvider,
 
 	public void getDirectoriesAndFiles(final String folder,
 			final ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get directory contents: " + folder);
+		
 		this.service.getDirectoriesAndFiles(new ResultListener() {
 
 			public void onFail(MollifyError error) {
@@ -82,16 +92,25 @@ public class FileServices implements FileDetailsProvider,
 	}
 
 	public void getFileDetails(File file, ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get file details: " + file.getId());
+		
 		service.getFileDetails(file, resultListener);
 	}
 
 	public void getDirectoryDetails(Directory directory,
 			ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get directory details: " + directory.getId());
+
 		service.getDirectoryDetails(directory, resultListener);
 	}
 
 	public void onRename(FileSystemItem item, String newName,
 			ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
+		
 		if (item.isFile())
 			service.renameFile((File) item, newName, listener);
 		else
@@ -99,6 +118,9 @@ public class FileServices implements FileDetailsProvider,
 	}
 
 	public void onDelete(FileSystemItem item, ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Delete: " + item.getId());
+		
 		if (item.isFile())
 			service.deleteFile((File) item, listener);
 		else
@@ -107,6 +129,8 @@ public class FileServices implements FileDetailsProvider,
 
 	public void onCreateDirectory(Directory parentFolder, String folderName,
 			ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Create directory: [" + folderName + "]");
 		service.createFolder(parentFolder, folderName, listener);
 	}
 
