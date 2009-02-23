@@ -29,13 +29,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint, LogoutListener {
 	private static final String META_PROPERTY = "mollify:property";
-	private static final String NONE = "none";
-
-	private static final String THEME_PATH = "themes/";
-	private static final String DEFAULT_THEME = "basic";
-	private static final String THEME_CSS = "/style.css";
-
-	private static final String PARAM_THEME = "theme";
 	private static final String PARAM_SERVICE_PATH = "service-path";
 
 	private static final String MOLLIFY_PANEL_ID = "mollify";
@@ -63,8 +56,6 @@ public class App implements EntryPoint, LogoutListener {
 		ParameterParser parser = new ParameterParser(META_PROPERTY);
 
 		try {
-			importTheme(parser.getParameter(PARAM_THEME));
-
 			service = createService(parser);
 			localizator = Localizator.getInstance();
 
@@ -86,51 +77,6 @@ public class App implements EntryPoint, LogoutListener {
 		service.initialize(parser.getParameter(PARAM_SERVICE_PATH));
 		return service;
 	}
-
-	private void importTheme(String theme) {
-		if (theme != null && theme.toLowerCase().equals(NONE)) {
-			Log.info("Theme import disabled");
-			return;
-		}
-		
-		if (isIE()) {
-			Log.info("Theme not imported, IE does not support css injection");
-			return;			
-		}
-
-		String themeUrl = GWT.getModuleBaseURL() + THEME_PATH;
-		if (theme == null) {
-			themeUrl += DEFAULT_THEME;
-		} else {
-			if (theme.toLowerCase().startsWith("http")
-					|| theme.indexOf("/") >= 0) {
-				throw new RuntimeException(
-						"Invalid theme setting, no path allowed");
-			}
-
-			themeUrl += theme;
-		}
-		themeUrl += THEME_CSS;
-
-		if (theme == null)
-			Log.info("Importing default theme (" + themeUrl + ")");
-		else
-			Log.info("Importing theme '" + theme + "' (" + themeUrl + ")");
-
-		importCss(themeUrl);
-	}
-
-	private native void importCss(String css) /*-{		
-		var cssNode = document.createElement('link');
-		cssNode.rel = 'stylesheet';
-		cssNode.href = css;
-		$doc.getElementsByTagName("head")[0].appendChild(cssNode);
-	}-*/;
-	
-	private native boolean isIE()/*-{
-		var ua = navigator.userAgent.toLowerCase();
-		return (ua.indexOf('msie') >= 0);
-	}-*/;
 
 	private void start() {
 		Log.info("Starting Mollify");
