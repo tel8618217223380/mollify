@@ -39,7 +39,7 @@
 		"enable_file_upload" => TRUE,
 		"enable_folder_actions" => TRUE,
 		"enable_file_upload_progress" => TRUE,
-		"enable_zip_download" => FALSE
+		"enable_zip_download" => TRUE
 	);
 	
 	$ZIP_OPTIONS = array("large_file_size" => 3 * 1024 * 1024);

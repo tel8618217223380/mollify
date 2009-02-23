@@ -22,7 +22,7 @@ import org.sjarvela.mollify.client.service.ResultListener;
 import com.allen_sauer.gwt.log.client.Log;
 
 public class DemoMollifyService implements MollifyService {
-	private static final String MOLLIFY_PACKAGE_URL = "http://mollify.googlecode.com/files/mollify_0.7.1.tar.gz";
+	private static final String MOLLIFY_PACKAGE_URL = "http://mollify.googlecode.com/files/mollify_0.7.2.tar.gz";
 
 	private DemoData data;
 
