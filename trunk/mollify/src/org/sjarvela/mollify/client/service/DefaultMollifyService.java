@@ -34,11 +34,12 @@ public class DefaultMollifyService implements MollifyService {
 	};
 
 	public void initialize(String path) {
-		// MollifyService assumes that development environment web server is
-		// localhost:7777
+		// In hosted mode (development), MollifyService expects to get the full
+		// url to the backend service in path parameter
 
 		// For a standalone version, it is assumed that backend facade
-		// (service.php) is in the same directory than the host html page.
+		// (service.php) is in the same directory, or its descendants, than the
+		// host page.
 
 		if (GWT.isScript()) {
 			this.baseUrl = GWT.getHostPageBaseURL() + getOptionalPath(path);
@@ -46,7 +47,7 @@ public class DefaultMollifyService implements MollifyService {
 			if (path == null || path.length() == 0)
 				throw new RuntimeException(
 						"Development service path not defined");
-			this.baseUrl = path; // "http://localhost:7777/mollify/";
+			this.baseUrl = path;
 		}
 
 		this.baseUrl += SERVICE_FILE;
