@@ -345,6 +345,8 @@ $PUBLISHED_DIRECTORIES = array(
 
 	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
 
+----
+
 = 5. Demo Mode =
 
 	For demonstration and theme development purposes, Mollify has built-in standalone demo mode.
@@ -355,4 +357,4 @@ $PUBLISHED_DIRECTORIES = array(
 <meta name="gwt:property" content="demo=true">
 }}}
 
-	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually change anything.
+	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually affect anything.
