@@ -330,3 +330,29 @@ $PUBLISHED_DIRECTORIES = array(
 	Optionally
 	  * If you wish to choose the language, include meta information in the head section
 	  * If you wish to support browser history, keep the iframe element with id "__gwt_historyFrame"
+
+----
+
+= 4. Client Logging =
+
+	Mollify has support for client side logging, which makes it possible to troubleshoot any problems when backend log is not accessible or does not reveal anything.
+
+	Logging can be enabled with following property in host page head section:
+
+{{{
+<meta name="gwt:property" content="log_level=DEBUG">
+}}}
+
+	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
+
+= 5. Demo Mode =
+
+	For demonstration and theme development purposes, Mollify has built-in standalone demo mode.
+
+	It can be set up with following property in host page head section:
+
+{{{
+<meta name="gwt:property" content="demo=true">
+}}}
+
+	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually change anything.
