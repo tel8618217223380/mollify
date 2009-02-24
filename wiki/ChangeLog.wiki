@@ -5,8 +5,8 @@
   * Added support for multiple file uploads
   * In multi-user environment, logged in user is shown in the header
   * Fixed most IE CSS issues
-  * Added standalone demo mode (add '<meta name="gwt:property" content="demo=true">' into host page head)
-  * Added client side logging for troubleshooting (add '<meta name="gwt:property" content="log_level=DEBUG">' into host page head)
+  * Added client side logging for troubleshooting (for more information, see [Installation Installation wiki page], chapter 4)
+  * Added standalone demo mode (for more information, see [Installation Installation wiki page], chapter 5)
   * Removed property "theme" as IE does not support CSS injection. CSS must now be linked manually in the host html page.
 
 === Version 0.7.1 ===
