@@ -10,10 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.DirectoryHandler;
+import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.file.DirectoryHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -24,22 +23,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CreateFolderDialog extends CenteredDialog {
-	private Localizator localizator;
-	private TextBox name;
-	private final ResultListener resultListener;
-	private final DirectoryHandler directoryHandler;
 	private final Directory parentFolder;
+	private final Localizator localizator;
+	private final DirectoryHandler handler;
+	private TextBox name;
 
-	public CreateFolderDialog(Directory parentFolder,
-			DirectoryHandler directoryHandler, Localizator localizator,
-			ResultListener resultListener) {
+	public CreateFolderDialog(Directory parentFolder, Localizator localizator,
+			DirectoryHandler handler) {
 		super(localizator.getStrings().createFolderDialogTitle(),
 				StyleConstants.CREATE_FOLDER_DIALOG);
 
 		this.parentFolder = parentFolder;
-		this.directoryHandler = directoryHandler;
 		this.localizator = localizator;
-		this.resultListener = resultListener;
+		this.handler = handler;
 
 		initialize();
 	}
@@ -101,6 +97,6 @@ public class CreateFolderDialog extends CenteredDialog {
 		}
 
 		this.hide();
-		directoryHandler.onCreateDirectory(parentFolder, folderName, resultListener);
+		handler.createDirectory(parentFolder, folderName);
 	}
 }

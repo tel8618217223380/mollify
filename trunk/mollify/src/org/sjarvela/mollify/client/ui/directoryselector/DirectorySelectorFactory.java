@@ -10,14 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryModel;
-import org.sjarvela.mollify.client.file.DirectoryModelProvider;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryController;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.FileServices;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 public class DirectorySelectorFactory implements DirectoryModelProvider {
@@ -27,7 +27,7 @@ public class DirectorySelectorFactory implements DirectoryModelProvider {
 	private DirectoryListItemFactory listItemFactory;
 
 	public DirectorySelectorFactory(final MainViewModel model,
-			final FileServices fileServices, Localizator localizator) {
+			final FileSystemService fileServices, Localizator localizator) {
 		this.localizator = localizator;
 		this.model = model;
 		this.listItemFactory = new DirectoryListItemFactory(localizator,

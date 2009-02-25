@@ -12,65 +12,65 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.LogoutListener;
-import org.sjarvela.mollify.client.ProgressListener;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.FileSystemItem;
-import org.sjarvela.mollify.client.data.FileUploadStatus;
-import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryHandler;
-import org.sjarvela.mollify.client.file.FileActionUrlProvider;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.FileUploadListener;
-import org.sjarvela.mollify.client.file.FileUploadMonitor;
-import org.sjarvela.mollify.client.file.FileUploadProgressListener;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryController;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.Callback;
+import org.sjarvela.mollify.client.request.ConfirmationListener;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.file.DirectoryHandler;
+import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadListener;
+import org.sjarvela.mollify.client.request.file.FileUploadMonitor;
+import org.sjarvela.mollify.client.request.file.FileUploadProgressListener;
+import org.sjarvela.mollify.client.request.file.RenameHandler;
+import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.ui.ProgressDisplayer;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 
 public class MainViewPresenter implements DirectoryController,
-		FileUploadListener {
+		FileUploadListener, FileSystemActionHandler, DirectoryHandler,
+		RenameHandler {
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
-	private final FileActionUrlProvider fileActionProvider;
 	private final Localizator localizator;
+	private final FileSystemService fileSystemService;
 	private final FileUploadHandler fileUploadHandler;
-	private final LogoutListener logoutListener;
+	private final LogoutHandler logoutListener;
 
-	private ProgressListener uploadListener = null;
+	private ProgressDisplayer uploadListener = null;
 	private FileUploadMonitor uploadMonitor;
-	private final DirectoryHandler directoryHandler;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
-			MainView view, FileActionUrlProvider fileActionProvider,
-			FileSystemActionHandler fileActionHandler,
-			FileUploadHandler fileUploadHandler,
-			DirectoryHandler directoryHandler, Localizator localizator,
-			LogoutListener logoutListener) {
+			MainView view, FileSystemService fileSystemService,
+			FileUploadHandler fileUploadHandler, Localizator localizator,
+			LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
-		this.fileActionProvider = fileActionProvider;
+		this.fileSystemService = fileSystemService;
 
 		this.fileUploadHandler = fileUploadHandler;
-		this.directoryHandler = directoryHandler;
 		this.localizator = localizator;
 		this.logoutListener = logoutListener;
+
 		this.fileUploadHandler.addListener(this);
+		this.view.setFileContextHandler(this);
+		this.view.setDirectoryContextHandler(this);
 
 		if (model.getSessionInfo().isAuthenticationRequired()) {
 			view.getUsername().setText(model.getSessionInfo().getLoggedUser());
 		}
-
-		ResultListener reloadListener = createReloadListener();
-		fileActionHandler.addRenameListener(reloadListener);
-		fileActionHandler.addDeleteListener(reloadListener);
 	}
 
 	public void initialize() {
@@ -109,7 +109,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void reload() {
 		model.refreshData(new ResultListener() {
-			public void onFail(MollifyError error) {
+			public void onFail(ServiceError error) {
 				onError(error, false);
 			}
 
@@ -138,7 +138,7 @@ public class MainViewPresenter implements DirectoryController,
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 
-	public void onError(MollifyError error, boolean reload) {
+	public void onError(ServiceError error, boolean reload) {
 		windowManager.getDialogManager().showError(error);
 
 		if (reload)
@@ -150,9 +150,8 @@ public class MainViewPresenter implements DirectoryController,
 	public void openUploadDialog() {
 		if (model.getCurrentFolder().isEmpty())
 			return;
-		windowManager.getDialogManager()
-				.openUploadDialog(model.getCurrentFolder(), fileActionProvider,
-						fileUploadHandler);
+		windowManager.getDialogManager().openUploadDialog(
+				model.getCurrentFolder(), fileUploadHandler);
 	}
 
 	public void onUploadStarted(String uploadId, List<String> filenames) {
@@ -181,7 +180,7 @@ public class MainViewPresenter implements DirectoryController,
 								+ "%");
 					}
 
-					public void onProgressUpdateFail(MollifyError error) {
+					public void onProgressUpdateFail(ServiceError error) {
 						uploadListener.setProgress(0);
 						uploadMonitor.stop();
 					}
@@ -195,7 +194,7 @@ public class MainViewPresenter implements DirectoryController,
 		reload();
 	}
 
-	public void onUploadFailed(MollifyError error) {
+	public void onUploadFailed(ServiceError error) {
 		stopUploaders();
 		onError(error, true);
 	}
@@ -217,8 +216,7 @@ public class MainViewPresenter implements DirectoryController,
 		if (model.getCurrentFolder().isEmpty())
 			return;
 		windowManager.getDialogManager().openCreateFolderDialog(
-				model.getCurrentFolder(), directoryHandler,
-				createReloadListener());
+				model.getCurrentFolder(), this);
 	}
 
 	private ResultListener createReloadListener() {
@@ -239,7 +237,7 @@ public class MainViewPresenter implements DirectoryController,
 
 	private ResultListener createListener(final Callback callback) {
 		return new ResultListener() {
-			public void onFail(MollifyError error) {
+			public void onFail(ServiceError error) {
 				onError(error, true);
 			}
 
@@ -253,4 +251,68 @@ public class MainViewPresenter implements DirectoryController,
 		logoutListener.onLogout(model.getSessionInfo());
 	}
 
+	public void onAction(FileSystemItem item, FileSystemAction action) {
+		if (item.isFile())
+			onFileAction((File) item, action);
+		else
+			onDirectoryAction((Directory) item, action);
+	}
+
+	private void onFileAction(final File file, FileSystemAction action) {
+		if (action.equals(FileSystemAction.download)
+				|| action.equals(FileSystemAction.download_as_zip)) {
+			windowManager.openDownloadUrl(fileSystemService
+					.getDownloadUrl(file));
+		} else if (action.equals(FileSystemAction.rename)) {
+			windowManager.getDialogManager().showRenameDialog(file, this);
+		} else if (action.equals(FileSystemAction.delete)) {
+			String title = windowManager.getLocalizator().getStrings()
+					.deleteFileConfirmationDialogTitle();
+			String message = windowManager.getLocalizator().getMessages()
+					.confirmFileDeleteMessage(file.getName());
+			windowManager.getDialogManager().showConfirmationDialog(title,
+					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
+					new ConfirmationListener() {
+						public void onConfirm() {
+							delete(file);
+						}
+					});
+		} else {
+			windowManager.getDialogManager().showInfo("ERROR",
+					"Unsupported action:" + action.name());
+		}
+	}
+
+	private void onDirectoryAction(final Directory directory,
+			FileSystemAction action) {
+		if (action.equals(FileSystemAction.delete)) {
+			String title = windowManager.getLocalizator().getStrings()
+					.deleteDirectoryConfirmationDialogTitle();
+			String message = windowManager.getLocalizator().getMessages()
+					.confirmDirectoryDeleteMessage(directory.getName());
+			windowManager.getDialogManager().showConfirmationDialog(title,
+					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
+					new ConfirmationListener() {
+						public void onConfirm() {
+							delete(directory);
+						}
+					});
+		} else {
+			windowManager.getDialogManager().showInfo("ERROR",
+					"Unsupported action:" + action.name());
+		}
+	}
+
+	public void createDirectory(Directory parentFolder, String folderName) {
+		fileSystemService.createDirectory(parentFolder, folderName,
+				createReloadListener());
+	}
+
+	public void rename(FileSystemItem item, String newName) {
+		fileSystemService.rename(item, newName, createReloadListener());
+	}
+
+	private void delete(FileSystemItem item) {
+		fileSystemService.delete(item, createReloadListener());
+	}
 }

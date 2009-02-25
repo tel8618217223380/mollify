@@ -2,7 +2,7 @@ package org.sjarvela.mollify.client.ui.filelist;
 
 import java.util.Comparator;
 
-import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 public class DefaultFileItemComparator implements Comparator<FileSystemItem> {
 

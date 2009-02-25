@@ -10,15 +10,15 @@
 
 package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.DirectoryDetails;
-import org.sjarvela.mollify.client.data.SessionSettings;
-import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
-import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.file.DirectoryDetailsProvider;
+import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.contextpopup.ContextPopup;
 
@@ -32,27 +32,29 @@ import com.google.gwt.user.client.ui.Widget;
 public class DirectoryContextPopup extends ContextPopup {
 	private final Localizator localizator;
 	private final SessionSettings settings;
+	private final DirectoryDetailsProvider detailsProvider;
+	private FileSystemActionHandler actionHandler;
 
 	private Label name;
 	private Button downloadButton;
 	private Button renameButton;
 	private Button deleteButton;
 
-	private final DirectoryDetailsProvider detailsProvider;
-	private final FileSystemActionHandler actionHandler;
 	private Directory directory;
 
 	public DirectoryContextPopup(Localizator localizator,
-			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler, SessionSettings settings) {
+			DirectoryDetailsProvider detailsProvider, SessionSettings settings) {
 		super(StyleConstants.DIR_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
-		this.actionHandler = actionHandler;
 		this.settings = settings;
 
 		initialize();
+	}
+
+	public void setDirectoryActionHandler(FileSystemActionHandler actionHandler) {
+		this.actionHandler = actionHandler;
 	}
 
 	protected Widget createContent() {
@@ -100,8 +102,8 @@ public class DirectoryContextPopup extends ContextPopup {
 		name.setText(directory.getName());
 
 		detailsProvider.getDirectoryDetails(directory, new ResultListener() {
-			public void onFail(MollifyError error) {
-				name.setText(error.getError().getMessage(localizator));
+			public void onFail(ServiceError error) {
+				name.setText(error.getType().getMessage(localizator));
 			}
 
 			public void onSuccess(Object... result) {

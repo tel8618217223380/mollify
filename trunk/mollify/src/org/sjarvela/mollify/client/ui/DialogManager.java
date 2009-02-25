@@ -10,19 +10,16 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.LoginHandler;
-import org.sjarvela.mollify.client.ProgressListener;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.ErrorValue;
-import org.sjarvela.mollify.client.data.FileSystemItem;
-import org.sjarvela.mollify.client.file.DirectoryHandler;
-import org.sjarvela.mollify.client.file.FileActionUrlProvider;
-import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.RenameHandler;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.ConfirmationListener;
+import org.sjarvela.mollify.client.request.ErrorValue;
+import org.sjarvela.mollify.client.request.file.DirectoryHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.RenameHandler;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -44,31 +41,29 @@ public class DialogManager {
 	}
 
 	public void showRenameDialog(FileSystemItem item,
-			RenameHandler fileHandler, ResultListener listener) {
-		new RenameDialog(item, localizator, fileHandler, listener);
+			RenameHandler renameHandler) {
+		new RenameDialog(item, localizator, renameHandler);
 	}
 
 	public void openUploadDialog(Directory directory,
-			FileActionUrlProvider fileActionProvider, FileUploadHandler fileHandler) {
-		new FileUploadDialog(directory, localizator, fileActionProvider,
-				fileHandler);
+			FileUploadHandler fileHandler) {
+		new FileUploadDialog(directory, localizator, fileHandler);
 	}
 
 	public void openCreateFolderDialog(Directory parentDirectory,
-			DirectoryHandler directoryHandler, ResultListener resultListener) {
-		new CreateFolderDialog(parentDirectory, directoryHandler, localizator,
-				resultListener);
+			DirectoryHandler directoryHandler) {
+		new CreateFolderDialog(parentDirectory, localizator, directoryHandler);
 	}
 
-	public ProgressListener openProgressDialog(String title,
+	public ProgressDisplayer openProgressDialog(String title,
 			boolean progressBarInitiallyVisible) {
 		return new ProgressDialog(title, progressBarInitiallyVisible);
 	}
 
-	public void showError(MollifyError error) {
+	public void showError(ServiceError error) {
 		new InfoDialog(localizator, localizator.getStrings()
-				.infoDialogErrorTitle(), error.getError().getMessage(
-				localizator), StyleConstants.INFO_DIALOG_TYPE_ERROR);
+				.infoDialogErrorTitle(), error.getType()
+				.getMessage(localizator), StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
 	public void showError(ErrorValue errorResult) {

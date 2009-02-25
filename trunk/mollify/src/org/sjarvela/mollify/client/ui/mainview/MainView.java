@@ -13,10 +13,11 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.TextProvider;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.ui.ActionButton;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
@@ -85,6 +86,14 @@ public class MainView extends Composite {
 		viewListeners.add(listener);
 	}
 
+	public void setFileContextHandler(FileSystemActionHandler actionHandler) {
+		fileContext.setFileActionHandler(actionHandler);
+	}
+
+	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {
+		dirContext.setDirectoryActionHandler(actionHandler);
+	}
+
 	public DirectorySelector getDirectorySelector() {
 		return directorySelector;
 	}
@@ -107,7 +116,7 @@ public class MainView extends Composite {
 
 	private Widget createHeader() {
 		createButtons();
-		
+
 		Panel header = new HorizontalPanel();
 		header.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 

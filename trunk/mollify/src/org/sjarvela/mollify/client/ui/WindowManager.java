@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.LogoutListener;
-import org.sjarvela.mollify.client.data.SessionInfo;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.user.client.DOM;
@@ -43,7 +43,7 @@ public class WindowManager {
 		return localizator;
 	}
 
-	public void showMainView(SessionInfo info, LogoutListener logoutListener) {
+	public void showMainView(SessionInfo info, LogoutHandler logoutListener) {
 		empty();
 		rootPanel.add(mainViewFactory
 				.createMainView(this, info, logoutListener));

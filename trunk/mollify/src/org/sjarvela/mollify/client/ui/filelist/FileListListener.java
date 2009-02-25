@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 public interface FileListListener {
 	void onRowClicked(FileSystemItem item, Column column);

@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.DirectoryController;
-import org.sjarvela.mollify.client.file.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryController;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 
 public class DirectoryListItemFactory {

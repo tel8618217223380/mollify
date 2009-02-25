@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 
 import java.util.ListIterator;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.file.DirectoryModelProvider;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
