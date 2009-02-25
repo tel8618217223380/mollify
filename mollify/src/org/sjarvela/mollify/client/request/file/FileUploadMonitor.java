@@ -18,7 +18,7 @@ import com.google.gwt.user.client.Timer;
 public class FileUploadMonitor {
 	static int INTERVAL = 1000;
 
-	private final FileUploadHandler uploadHandler;
+	private final FileUploadService uploadHandler;
 	private final Timer timer;
 	private final String uploadId;
 	private final FileUploadProgressListener listener;
@@ -26,7 +26,7 @@ public class FileUploadMonitor {
 	private boolean stop = false;
 
 	public FileUploadMonitor(String uploadId,
-			FileUploadProgressListener listener, FileUploadHandler uploadHandler) {
+			FileUploadProgressListener listener, FileUploadService uploadHandler) {
 
 		this.uploadId = uploadId;
 		this.listener = listener;

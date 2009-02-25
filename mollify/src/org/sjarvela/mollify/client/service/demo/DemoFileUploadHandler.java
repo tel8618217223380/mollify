@@ -13,33 +13,18 @@ package org.sjarvela.mollify.client.service.demo;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.request.ResultListener;
-import org.sjarvela.mollify.client.request.file.FileUploadController;
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.ReturnValue;
 import org.sjarvela.mollify.client.request.file.FileUploadListener;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
+import org.sjarvela.mollify.client.service.MollifyServiceException;
 
-import com.google.gwt.user.client.ui.FormHandler;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
-
-public class DemoFileUploadHandler implements FileUploadHandler {
+public class DemoFileUploadHandler implements FileUploadService {
 
 	public void addListener(FileUploadListener listener) {
 	}
 
 	public String getFileUploadId() {
 		return "";
-	}
-
-	public FormHandler getUploadFormHandler(FileUploadController controller,
-			String uploadId) {
-		return new FormHandler() {
-
-			public void onSubmit(FormSubmitEvent event) {
-			}
-
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
-			}
-		};
 	}
 
 	public void getUploadProgress(String id, ResultListener listener) {
@@ -49,6 +34,11 @@ public class DemoFileUploadHandler implements FileUploadHandler {
 
 	public String getUploadUrl(Directory directory) {
 		return "";
+	}
+
+	public ReturnValue handleResult(String results)
+			throws MollifyServiceException {
+		return ReturnValue.success(null);
 	}
 
 }

@@ -13,6 +13,18 @@ package org.sjarvela.mollify.client.request;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class ReturnValue extends JavaScriptObject {
+	public static ReturnValue success(JavaScriptObject result) {
+		ReturnValue val = ReturnValue.createObject().cast();
+		val.setValues(true, result);
+		return val;
+	}
+
+	public static ReturnValue fail() {
+		ReturnValue val = ReturnValue.createObject().cast();
+		val.setValues(false, null);
+		return val;
+	}
+
 	protected ReturnValue() {
 	}
 
@@ -22,5 +34,11 @@ public class ReturnValue extends JavaScriptObject {
 
 	public final native JavaScriptObject getResult() /*-{
 		return this.result;
+	}-*/;
+
+	private final native JavaScriptObject setValues(boolean success,
+			JavaScriptObject result) /*-{
+		this.success = success;
+		this.result = result;
 	}-*/;
 }

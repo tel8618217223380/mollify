@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
 public interface ServiceEnvironment {
@@ -11,5 +11,5 @@ public interface ServiceEnvironment {
 
 	FileSystemService getFileSystemService();
 
-	FileUploadHandler getFileUploadHandler();
+	FileUploadService getFileUploadHandler();
 }

@@ -12,12 +12,10 @@ package org.sjarvela.mollify.client.request.file;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.ReturnValue;
+import org.sjarvela.mollify.client.service.MollifyServiceException;
 
-import com.google.gwt.user.client.ui.FormHandler;
-
-public interface FileUploadHandler {
-	FormHandler getUploadFormHandler(FileUploadController controller,
-			String uploadId);
+public interface FileUploadService {
 
 	void getUploadProgress(String id, ResultListener listener);
 
@@ -25,6 +23,6 @@ public interface FileUploadHandler {
 
 	String getUploadUrl(Directory directory);
 
-	void addListener(FileUploadListener listener);
+	ReturnValue handleResult(String results) throws MollifyServiceException;
 
 }

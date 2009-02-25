@@ -15,14 +15,18 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.file.FileUploadController;
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadListener;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
+import org.sjarvela.mollify.client.service.MollifyServiceException;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -30,25 +34,26 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileUploadDialog extends CenteredDialog implements
-		FileUploadController {
+public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	private static final String UPLOADER_NAME = "upload[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
 	private final String uploadId;
 	private final Directory directory;
 	private final Localizator localizator;
-	private final FileUploadHandler fileUploadHandler;
-	private Button uploadButton;
+	private final FileUploadService fileUploadHandler;
+	private final FileUploadListener listener;
 
 	private FormPanel form;
 	private Panel uploadersPanel;
+	private Button uploadButton;
 	private List<FileUpload> uploaders = new ArrayList();
 
 	public FileUploadDialog(Directory directory, Localizator localizator,
-			FileUploadHandler fileUploadHandler) {
+			FileUploadService fileUploadHandler, FileUploadListener listener) {
 		super(localizator.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
+		this.listener = listener;
 		this.uploadId = fileUploadHandler.getFileUploadId();
 		this.directory = directory;
 		this.localizator = localizator;
@@ -101,8 +106,7 @@ public class FileUploadDialog extends CenteredDialog implements
 	private Widget createForm() {
 		form = new FormPanel();
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
-		form.addFormHandler(fileUploadHandler.getUploadFormHandler(this,
-				uploadId));
+		form.addFormHandler(this);
 		form.setAction(this.fileUploadHandler.getUploadUrl(directory));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
@@ -165,7 +169,7 @@ public class FileUploadDialog extends CenteredDialog implements
 		return uploader;
 	}
 
-	public boolean onStartUpload() {
+	private boolean onStartUpload() {
 		if (getLastUploader().getFilename().length() < 1)
 			return false;
 		this.setVisible(false);
@@ -176,14 +180,29 @@ public class FileUploadDialog extends CenteredDialog implements
 		return uploaders.get(uploaders.size() - 1);
 	}
 
-	public List<String> getFileNames() {
+	private List<String> getFileNames() {
 		List<String> result = new ArrayList();
 		for (FileUpload uploader : uploaders)
 			result.add(uploader.getFilename());
 		return result;
 	}
 
-	public void onUploadFinished() {
+	public void onSubmit(FormSubmitEvent event) {
+		if (!onStartUpload()) {
+			event.setCancelled(true);
+			return;
+		}
+
+		listener.onUploadStarted(uploadId, getFileNames());
+	}
+
+	public void onSubmitComplete(FormSubmitCompleteEvent event) {
 		this.hide();
+		try {
+			listener.onUploadFinished(fileUploadHandler.handleResult(event
+					.getResults()));
+		} catch (MollifyServiceException e) {
+			listener.onUploadFailed(e.getError());
+		}
 	}
 }
