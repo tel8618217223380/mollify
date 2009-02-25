@@ -13,14 +13,22 @@ package org.sjarvela.mollify.client.service;
 public class MollifyServiceException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	ServiceErrorType type;
+	private final ServiceError error;
 
 	public MollifyServiceException(ServiceErrorType type) {
+		this(new ServiceError(type));
+	}
+
+	public MollifyServiceException(ServiceError error) {
 		super();
-		this.type = type;
+		this.error = error;
+	}
+
+	public ServiceError getError() {
+		return error;
 	}
 
 	public ServiceErrorType getType() {
-		return type;
+		return error.getType();
 	}
 }

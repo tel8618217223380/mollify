@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.service.demo;
 
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -15,7 +15,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private DemoSessionService sessionService;
 	private DemoData data;
 	private FileSystemService fileSystemService;
-	private FileUploadHandler demoFileUploadHandler;
+	private FileUploadService demoFileUploadHandler;
 
 	public void initialize(ClientSettings settings) {
 		Log.info("Mollify Demo");
@@ -34,7 +34,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		return fileSystemService;
 	}
 
-	public FileUploadHandler getFileUploadHandler() {
+	public FileUploadService getFileUploadHandler() {
 		return demoFileUploadHandler;
 	}
 

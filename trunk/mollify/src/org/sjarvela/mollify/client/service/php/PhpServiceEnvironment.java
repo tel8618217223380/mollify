@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.php;
 
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -20,14 +20,14 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private static final String PARAM_SERVICE_PATH = "service-path";
 	private PhpService service;
 	private PhpFileService fileSystemService;
-	private PhpFileUploadHandler uploadHandler;
+	private PhpFileUploadService uploadHandler;
 	private PhpSessionService sessionService;
 
 	public void initialize(ClientSettings settings) {
 		service = new PhpService(settings.getString(PARAM_SERVICE_PATH));
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
-		uploadHandler = new PhpFileUploadHandler(service);
+		uploadHandler = new PhpFileUploadService(service);
 	}
 
 	public SessionService getSessionService() {
@@ -38,7 +38,7 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 		return fileSystemService;
 	}
 
-	public FileUploadHandler getFileUploadHandler() {
+	public FileUploadService getFileUploadHandler() {
 		return uploadHandler;
 	}
 

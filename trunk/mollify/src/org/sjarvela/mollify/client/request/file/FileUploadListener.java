@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.request.file;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.request.ReturnValue;
 import org.sjarvela.mollify.client.service.ServiceError;
 
 public interface FileUploadListener {
@@ -20,5 +21,5 @@ public interface FileUploadListener {
 
 	void onUploadFailed(ServiceError error);
 
-	void onUploadFinished();
+	void onUploadFinished(ReturnValue result);
 }

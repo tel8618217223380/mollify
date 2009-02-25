@@ -22,12 +22,13 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.request.Callback;
 import org.sjarvela.mollify.client.request.ConfirmationListener;
 import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.ReturnValue;
 import org.sjarvela.mollify.client.request.file.DirectoryHandler;
 import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.request.file.FileUploadHandler;
 import org.sjarvela.mollify.client.request.file.FileUploadListener;
 import org.sjarvela.mollify.client.request.file.FileUploadMonitor;
 import org.sjarvela.mollify.client.request.file.FileUploadProgressListener;
+import org.sjarvela.mollify.client.request.file.FileUploadService;
 import org.sjarvela.mollify.client.request.file.RenameHandler;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -37,6 +38,8 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class MainViewPresenter implements DirectoryController,
 		FileUploadListener, FileSystemActionHandler, DirectoryHandler,
 		RenameHandler {
@@ -45,7 +48,7 @@ public class MainViewPresenter implements DirectoryController,
 	private final WindowManager windowManager;
 	private final Localizator localizator;
 	private final FileSystemService fileSystemService;
-	private final FileUploadHandler fileUploadHandler;
+	private final FileUploadService fileUploadService;
 	private final LogoutHandler logoutListener;
 
 	private ProgressDisplayer uploadListener = null;
@@ -53,18 +56,17 @@ public class MainViewPresenter implements DirectoryController,
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileSystemService fileSystemService,
-			FileUploadHandler fileUploadHandler, Localizator localizator,
+			FileUploadService fileUploadHandler, Localizator localizator,
 			LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
 		this.fileSystemService = fileSystemService;
 
-		this.fileUploadHandler = fileUploadHandler;
+		this.fileUploadService = fileUploadHandler;
 		this.localizator = localizator;
 		this.logoutListener = logoutListener;
 
-		this.fileUploadHandler.addListener(this);
 		this.view.setFileContextHandler(this);
 		this.view.setDirectoryContextHandler(this);
 
@@ -151,7 +153,7 @@ public class MainViewPresenter implements DirectoryController,
 		if (model.getCurrentFolder().isEmpty())
 			return;
 		windowManager.getDialogManager().openUploadDialog(
-				model.getCurrentFolder(), fileUploadHandler);
+				model.getCurrentFolder(), fileUploadService, this);
 	}
 
 	public void onUploadStarted(String uploadId, List<String> filenames) {
@@ -184,13 +186,16 @@ public class MainViewPresenter implements DirectoryController,
 						uploadListener.setProgress(0);
 						uploadMonitor.stop();
 					}
-				}, fileUploadHandler);
+				}, fileUploadService);
 		uploadMonitor.start();
 
 	}
 
-	public void onUploadFinished() {
+	public void onUploadFinished(ReturnValue result) {
 		stopUploaders();
+		if (!result.isSuccess()) {
+			Log.error("File upload failed: " + result.getResult().toString());
+		}
 		reload();
 	}
 
