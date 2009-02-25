@@ -8,8 +8,9 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.common;
 
+import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
 import com.google.gwt.user.client.ui.Button;

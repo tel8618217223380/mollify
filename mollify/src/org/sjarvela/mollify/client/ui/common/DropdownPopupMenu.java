@@ -8,10 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.common;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;

@@ -18,9 +18,9 @@ import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.contextpopup.directorycontext.DirectoryContextPopupFactory;
-import org.sjarvela.mollify.client.ui.contextpopup.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
+import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopupFactory;
+import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 
 public class MainViewFactory {
 	private final ServiceEnvironment environment;

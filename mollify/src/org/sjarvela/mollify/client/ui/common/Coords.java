@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.common;
 
 public class Coords {
 	int x, y, width, height;
