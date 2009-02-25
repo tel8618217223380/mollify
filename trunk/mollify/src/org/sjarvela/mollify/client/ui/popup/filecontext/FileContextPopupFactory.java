@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.contextpopup.filecontext;
+package org.sjarvela.mollify.client.ui.popup.filecontext;
 
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.request.file.FileDetailsProvider;

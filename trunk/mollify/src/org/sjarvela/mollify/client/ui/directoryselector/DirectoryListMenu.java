@@ -19,8 +19,8 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.request.ResultListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ActionId;
-import org.sjarvela.mollify.client.ui.DropdownPopupMenu;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.DropdownPopupMenu;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;

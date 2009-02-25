@@ -20,10 +20,10 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.ui.Coords;
-import org.sjarvela.mollify.client.ui.DataGrid;
-import org.sjarvela.mollify.client.ui.HoverDecorator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.Coords;
+import org.sjarvela.mollify.client.ui.common.DataGrid;
+import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

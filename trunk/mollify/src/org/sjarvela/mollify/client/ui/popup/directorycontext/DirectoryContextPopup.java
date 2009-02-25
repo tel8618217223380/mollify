@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
+package org.sjarvela.mollify.client.ui.popup.directorycontext;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
@@ -20,7 +20,7 @@ import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.contextpopup.ContextPopup;
+import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;

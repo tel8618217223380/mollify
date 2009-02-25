@@ -40,7 +40,7 @@ public class DemoSessionService implements SessionService {
 	}
 
 	public void logout(ResultListener resultListener) {
-		resultListener.onSuccess(true);
+		resultListener.onSuccess(data.getSessionInfo(""));
 	}
 
 }

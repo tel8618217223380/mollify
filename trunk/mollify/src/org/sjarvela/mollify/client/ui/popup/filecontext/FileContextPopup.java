@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.contextpopup.filecontext;
+package org.sjarvela.mollify.client.ui.popup.filecontext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,9 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
-import org.sjarvela.mollify.client.ui.MultiActionButton;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.contextpopup.ContextPopup;
+import org.sjarvela.mollify.client.ui.common.MultiActionButton;
+import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
