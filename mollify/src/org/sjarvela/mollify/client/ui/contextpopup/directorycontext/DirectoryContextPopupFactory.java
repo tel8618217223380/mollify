@@ -10,29 +10,24 @@
 
 package org.sjarvela.mollify.client.ui.contextpopup.directorycontext;
 
-import org.sjarvela.mollify.client.data.SessionSettings;
-import org.sjarvela.mollify.client.file.DirectoryDetailsProvider;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.request.file.DirectoryDetailsProvider;
+import org.sjarvela.mollify.client.session.SessionSettings;
 
 public class DirectoryContextPopupFactory {
 	private final DirectoryDetailsProvider detailsProvider;
-	private final FileSystemActionHandler actionHandler;
 	private final SessionSettings settings;
 
 	public DirectoryContextPopupFactory(Localizator localizator,
-			DirectoryDetailsProvider detailsProvider,
-			FileSystemActionHandler actionHandler, SessionSettings settings) {
+			DirectoryDetailsProvider detailsProvider, SessionSettings settings) {
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
-		this.actionHandler = actionHandler;
 		this.settings = settings;
 	}
 
 	private Localizator localizator;
 
 	public DirectoryContextPopup createPopup() {
-		return new DirectoryContextPopup(localizator, detailsProvider,
-				actionHandler, settings);
+		return new DirectoryContextPopup(localizator, detailsProvider, settings);
 	}
 }

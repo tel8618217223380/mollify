@@ -10,15 +10,15 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.ProgressListener;
 import org.sjarvela.mollify.client.ui.ProgressBar;
+import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ProgressDialog extends CenteredDialog implements ProgressListener {
+public class ProgressDialog extends CenteredDialog implements ProgressDisplayer {
 
 	private ProgressBar progressBar;
 	private Label info;

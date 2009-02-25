@@ -10,23 +10,21 @@
 
 package org.sjarvela.mollify.client.service.demo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.DateTime;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.DirectoryDetails;
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.FileDetails;
-import org.sjarvela.mollify.client.data.FilePermission;
-import org.sjarvela.mollify.client.data.JsDirectory;
-import org.sjarvela.mollify.client.data.JsFile;
-import org.sjarvela.mollify.client.data.SessionInfo;
-import org.sjarvela.mollify.client.data.SessionSettings;
-import org.sjarvela.mollify.client.data.SessionInfo.PermissionMode;
-
-import com.google.gwt.core.client.JsArray;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileDetails;
+import org.sjarvela.mollify.client.filesystem.FilePermission;
+import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionSettings;
+import org.sjarvela.mollify.client.session.SessionInfo.PermissionMode;
+import org.sjarvela.mollify.client.util.DateTime;
 
 public class DemoData {
 	private static final String ROOT_1 = "r1";
@@ -43,60 +41,67 @@ public class DemoData {
 	private static final String FILE_1A5 = "1a5";
 	private static final String FILE_1A6 = "1a6";
 
-	private JsArray<JsDirectory> rootDirectories;
-	private Map<String, JsArray<JsDirectory>> directories = new HashMap();
-	private JsArray<JsFile> files;
+	private List<Directory> rootDirectories;
+	private Map<String, List<Directory>> directories = new HashMap();
+	private List<File> files;
 
 	private PermissionMode permissionMode = PermissionMode.ReadWrite;
 	private SessionSettings settings;
+	private final boolean multiUser;
 
-	public DemoData() {
+	public DemoData(boolean multiUser) {
+		this.multiUser = multiUser;
 		settings = SessionSettings.create(true, true, true, true);
 		createDirectoriesAndFiles();
 	}
 
 	private void createDirectoriesAndFiles() {
-		rootDirectories = JsArray.createArray().cast();
-		rootDirectories.set(0, JsDirectory.create(ROOT_1, "Folder A"));
-		rootDirectories.set(1, JsDirectory.create(ROOT_2, "Folder B"));
+		rootDirectories = new ArrayList();
+		rootDirectories.add(new Directory(ROOT_1, "Folder A"));
+		rootDirectories.add(new Directory(ROOT_2, "Folder B"));
 
-		JsArray<JsDirectory> subDirs = JsArray.createArray().cast();
+		List<Directory> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
-		subDirs.set(0, JsDirectory.create(DIR_1A, "Sub folder A"));
-		subDirs.set(1, JsDirectory.create(DIR_1B, "Sub folder B"));
+		subDirs.add(new Directory(DIR_1A, "Sub folder A"));
+		subDirs.add(new Directory(DIR_1B, "Sub folder B"));
 
-		subDirs = JsArray.createArray().cast();
+		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
-		subDirs.set(0, JsDirectory.create(DIR_2A, "Sub folder A"));
+		subDirs.add(new Directory(DIR_2A, "Sub folder A"));
 
-		files = JsArray.createArray().cast();
-		files.set(0, JsFile.create(FILE_1A1, "Example.txt", "txt", 128));
-		files.set(1, JsFile.create(FILE_1A2, "Example.gif", "gif", 2228));
-		files.set(2, JsFile.create(FILE_1A3, "Example.png", "png", 64434));
-		files.set(3, JsFile.create(FILE_1A4, "Example.pdf", "pdf", 113428));
-		files.set(4, JsFile.create(FILE_1A5, "Example.doc", "doc", 5634347));
-		files.set(5, JsFile.create(FILE_1A6, "Example.html", "html", 23433231));
+		files = new ArrayList();
+		files.add(new File(FILE_1A1, "Example.txt", "txt", 128));
+		files.add(new File(FILE_1A2, "Example.gif", "gif", 2228));
+		files.add(new File(FILE_1A3, "Example.png", "png", 64434));
+		files.add(new File(FILE_1A4, "Example.pdf", "pdf", 113428));
+		files.add(new File(FILE_1A5, "Example.doc", "doc", 5634347));
+		files.add(new File(FILE_1A6, "Example.html", "html", 23433231));
 	}
 
 	public SessionInfo getSessionInfo(String user) {
+		if (!multiUser) {
+			return SessionInfo.create(false, false, "", permissionMode,
+					settings);
+		}
+
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, user, permissionMode,
 					settings);
 		return SessionInfo.create(true, false, "", permissionMode, settings);
 	}
 
-	public JsArray<JsDirectory> getRootDirectories() {
+	public List<Directory> getRootDirectories() {
 		return rootDirectories;
 	}
 
-	public JsArray<JsDirectory> getDirectories(String dir) {
+	public List<Directory> getDirectories(String dir) {
 		if (!directories.containsKey(dir))
-			return JsArray.createArray().cast();
+			return new ArrayList();
 		return directories.get(dir);
 	}
 
-	public JsArray<JsFile> getFiles(String dir) {
+	public List<File> getFiles(String dir) {
 		return files;
 	}
 

@@ -33,13 +33,13 @@
 		]]>
 	</property-provider>
 	
-	<replace-with class="org.sjarvela.mollify.client.service.demo.DemoMollifyService">
-		<when-type-is class="org.sjarvela.mollify.client.service.MollifyService"/>
+	<replace-with class="org.sjarvela.mollify.client.service.demo.DemoEnvironment">
+		<when-type-is class="org.sjarvela.mollify.client.service.ServiceEnvironment"/>
 		<when-property-is name="demo" value="true"/>
 	</replace-with>
 
-	<replace-with class="org.sjarvela.mollify.client.service.DefaultMollifyService">
-		<when-type-is class="org.sjarvela.mollify.client.service.MollifyService"/>
+	<replace-with class="org.sjarvela.mollify.client.service.php.PhpServiceEnvironment">
+		<when-type-is class="org.sjarvela.mollify.client.service.ServiceEnvironment"/>
 		<when-property-is name="demo" value="false"/>
 	</replace-with> 
 </module>

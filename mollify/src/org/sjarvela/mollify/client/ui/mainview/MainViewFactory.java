@@ -10,16 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.LogoutListener;
-import org.sjarvela.mollify.client.TextProvider;
-import org.sjarvela.mollify.client.data.SessionInfo;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileUploadHandler;
-import org.sjarvela.mollify.client.file.impl.FileSystemActionHandlerImpl;
-import org.sjarvela.mollify.client.file.impl.FileUploadHandlerImpl;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.FileServices;
-import org.sjarvela.mollify.client.service.MollifyService;
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.contextpopup.directorycontext.DirectoryContextPopupFactory;
@@ -27,34 +23,34 @@ import org.sjarvela.mollify.client.ui.contextpopup.filecontext.FileContextPopupF
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 
 public class MainViewFactory {
-	private MollifyService service;
-	private Localizator localizator;
+	private final ServiceEnvironment environment;
+	private final Localizator localizator;
 	private final TextProvider textProvider;
 
 	public MainViewFactory(Localizator localizator, TextProvider textProvider,
-			MollifyService service) {
+			ServiceEnvironment environment) {
 		this.localizator = localizator;
 		this.textProvider = textProvider;
-		this.service = service;
+		this.environment = environment;
 	}
 
 	public MainView createMainView(WindowManager windowManager,
-			SessionInfo info, LogoutListener logoutListener) {
+			SessionInfo info, LogoutHandler logoutListener) {
 
-		FileServices fileServices = new FileServices(service);
-		MainViewModel model = new MainViewModel(fileServices, info);
+		FileSystemService fileSystemService = environment
+				.getFileSystemService();
 
-		FileUploadHandler fileUploadHandler = new FileUploadHandlerImpl(service);
-		FileSystemActionHandler actionHandler = new FileSystemActionHandlerImpl(
-				service, fileServices, windowManager);
+		MainViewModel model = new MainViewModel(fileSystemService, info);
+
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
-				model, fileServices, localizator);
+				model, fileSystemService, localizator);
+
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				actionHandler, fileServices, localizator, model
-						.getSessionInfo().getSettings());
+				fileSystemService, localizator, model.getSessionInfo()
+						.getSettings());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				localizator, fileServices, actionHandler, model
-						.getSessionInfo().getSettings());
+				localizator, fileSystemService, model.getSessionInfo()
+						.getSettings());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		// create view, presenter and glue
@@ -62,8 +58,8 @@ public class MainViewFactory {
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
-				model, view, service, actionHandler, fileUploadHandler,
-				fileServices, localizator, logoutListener);
+				model, view, fileSystemService, environment
+						.getFileUploadHandler(), localizator, logoutListener);
 		directorySelectorFactory.setController(presenter);
 		new MainViewGlue(view, presenter, actionDelegator);
 

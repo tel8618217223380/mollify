@@ -10,28 +10,24 @@
 
 package org.sjarvela.mollify.client.ui.contextpopup.filecontext;
 
-import org.sjarvela.mollify.client.data.SessionSettings;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.request.file.FileDetailsProvider;
+import org.sjarvela.mollify.client.session.SessionSettings;
 
 public class FileContextPopupFactory {
 	private Localizator localizator;
 	private FileDetailsProvider fileDetailsProvider;
-	private FileSystemActionHandler fileActionHandler;
 	private SessionSettings settings;
 
-	public FileContextPopupFactory(FileSystemActionHandler fileActionHandler,
-			FileDetailsProvider fileDetailsProvider, Localizator localizator, SessionSettings settings) {
-		this.fileActionHandler = fileActionHandler;
+	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
+			Localizator localizator, SessionSettings settings) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.localizator = localizator;
 		this.settings = settings;
 	}
-	
+
 	public FileContextPopup createPopup() {
-		return new FileContextPopup(localizator, fileDetailsProvider,
-				fileActionHandler, settings);
+		return new FileContextPopup(localizator, fileDetailsProvider, settings);
 	}
 
 }

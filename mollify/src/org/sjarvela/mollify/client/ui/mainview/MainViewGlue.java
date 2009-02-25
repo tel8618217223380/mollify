@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;

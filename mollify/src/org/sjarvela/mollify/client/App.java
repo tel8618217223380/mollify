@@ -10,12 +10,18 @@
 
 package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.data.SessionInfo;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.MollifyService;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.ConfirmationListener;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.service.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.session.ClientSettings;
+import org.sjarvela.mollify.client.session.LoginHandler;
+import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.ParameterParser;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -27,13 +33,11 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class App implements EntryPoint, LogoutListener {
+public class App implements EntryPoint, LogoutHandler {
 	private static final String META_PROPERTY = "mollify:property";
-	private static final String PARAM_SERVICE_PATH = "service-path";
-
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
-	MollifyService service;
+	ServiceEnvironment environment;
 	Localizator localizator;
 	WindowManager windowManager;
 	RootPanel panel;
@@ -53,14 +57,15 @@ public class App implements EntryPoint, LogoutListener {
 		if (panel == null)
 			return;
 
-		ParameterParser parser = new ParameterParser(META_PROPERTY);
+		ClientSettings settings = new ClientSettings(new ParameterParser(
+				META_PROPERTY));
 
 		try {
-			service = createService(parser);
+			environment = createEnvironment(settings);
 			localizator = Localizator.getInstance();
 
 			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-					new DefaultTextProvider(localizator), service);
+					new DefaultTextProvider(localizator), environment);
 			windowManager = new WindowManager(panel, localizator,
 					mainViewFactory, new DialogManager(localizator));
 		} catch (RuntimeException e) {
@@ -71,18 +76,17 @@ public class App implements EntryPoint, LogoutListener {
 		start();
 	}
 
-	private MollifyService createService(ParameterParser parser) {
-		MollifyService service = (MollifyService) GWT
-				.create(MollifyService.class);
-		service.initialize(parser.getParameter(PARAM_SERVICE_PATH));
-		return service;
+	private ServiceEnvironment createEnvironment(ClientSettings settings) {
+		ServiceEnvironment environment = (ServiceEnvironment) GWT.create(ServiceEnvironment.class);
+		environment.initialize(settings);
+		return environment;
 	}
 
 	private void start() {
 		Log.info("Starting Mollify");
 
-		service.getSessionInfo(new ResultListener() {
-			public void onFail(MollifyError error) {
+		environment.getSessionService().getSessionInfo(new ResultListener() {
+			public void onFail(ServiceError error) {
 				windowManager.getDialogManager().showError(error);
 			}
 
@@ -105,20 +109,23 @@ public class App implements EntryPoint, LogoutListener {
 					final ConfirmationListener listener) {
 				Log.info("User login: " + userName);
 
-				service.authenticate(userName, password, new ResultListener() {
-					public void onFail(MollifyError error) {
-						if (ServiceError.AUTHENTICATION_FAILED.equals(error)) {
-							showLoginError();
-							return;
-						}
-						windowManager.getDialogManager().showError(error);
-					}
+				environment.getSessionService().authenticate(userName,
+						password, new ResultListener() {
+							public void onFail(ServiceError error) {
+								if (ServiceErrorType.AUTHENTICATION_FAILED
+										.equals(error)) {
+									showLoginError();
+									return;
+								}
+								windowManager.getDialogManager().showError(
+										error);
+							}
 
-					public void onSuccess(Object... result) {
-						listener.onConfirm();
-						showMain((SessionInfo) result[0]);
-					}
-				});
+							public void onSuccess(Object... result) {
+								listener.onConfirm();
+								showMain((SessionInfo) result[0]);
+							}
+						});
 			}
 		});
 	}
@@ -131,8 +138,8 @@ public class App implements EntryPoint, LogoutListener {
 	public void onLogout(SessionInfo info) {
 		Log.info("Logging out");
 
-		service.logout(new ResultListener() {
-			public void onFail(MollifyError error) {
+		environment.getSessionService().logout(new ResultListener() {
+			public void onFail(ServiceError error) {
 				windowManager.empty();
 				windowManager.getDialogManager().showError(error);
 			}

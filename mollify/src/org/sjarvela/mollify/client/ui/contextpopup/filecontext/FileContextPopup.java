@@ -13,15 +13,15 @@ package org.sjarvela.mollify.client.ui.contextpopup.filecontext;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.FileDetails;
-import org.sjarvela.mollify.client.data.SessionSettings;
-import org.sjarvela.mollify.client.file.FileDetailsProvider;
-import org.sjarvela.mollify.client.file.FileSystemAction;
-import org.sjarvela.mollify.client.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileDetails;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.file.FileDetailsProvider;
+import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.MultiActionButton;
@@ -41,9 +41,9 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private DateTimeFormat dateTimeFormat;
 
 	private final Localizator localizator;
-	private final FileSystemActionHandler fileActionHandler;
 	private final FileDetailsProvider detailsProvider;
 	private final SessionSettings settings;
+	private FileSystemActionHandler fileActionHandler;
 
 	private Label filename;
 	private File file = File.Empty;
@@ -59,19 +59,21 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	}
 
 	public FileContextPopup(Localizator localizator,
-			FileDetailsProvider detailsProvider,
-			FileSystemActionHandler fileActionHandler, SessionSettings settings) {
+			FileDetailsProvider detailsProvider, SessionSettings settings) {
 		super(StyleConstants.FILE_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
-		this.fileActionHandler = fileActionHandler;
 		this.settings = settings;
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(localizator.getStrings().shortDateTimeFormat());
 
 		initialize();
+	}
+	
+	public void setFileActionHandler(FileSystemActionHandler actionHandler) {
+		this.fileActionHandler = actionHandler;
 	}
 
 	protected Widget createContent() {
@@ -184,8 +186,8 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		emptyDetails();
 
 		detailsProvider.getFileDetails(file, new ResultListener() {
-			public void onFail(MollifyError error) {
-				description.setText(error.getError().getMessage(localizator));
+			public void onFail(ServiceError error) {
+				description.setText(error.getType().getMessage(localizator));
 			}
 
 			public void onSuccess(Object... result) {

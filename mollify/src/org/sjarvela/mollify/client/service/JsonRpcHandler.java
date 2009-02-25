@@ -10,8 +10,9 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.data.ErrorValue;
-import org.sjarvela.mollify.client.data.ReturnValue;
+import org.sjarvela.mollify.client.request.ErrorValue;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.request.ReturnValue;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -37,7 +38,7 @@ public class JsonRpcHandler {
 
 	public void handleResponse(JavaScriptObject jso) {
 		if (jso == null) {
-			onError(new MollifyError(ServiceError.INVALID_RESPONSE));
+			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 		} else {
 			if (Log.isDebugEnabled())
 				Log
@@ -48,7 +49,7 @@ public class JsonRpcHandler {
 
 			if (!result.isSuccess()) {
 				ErrorValue error = jso.cast();
-				onError(new MollifyError(ServiceError.getFrom(error), error
+				onError(new ServiceError(ServiceErrorType.getFrom(error), error
 						.getDetails()));
 				return;
 			}
@@ -56,14 +57,14 @@ public class JsonRpcHandler {
 		}
 	}
 
-	private void onError(MollifyError error) {
+	private void onError(ServiceError error) {
 		Log.error("Request failed: id=[" + id + "] url=[" + url + "] msg="
 				+ error.toString());
 		listener.onFail(error);
 	}
 
 	public void handleError(String error) {
-		onError(new MollifyError(ServiceError.getByName(error)));
+		onError(new ServiceError(ServiceErrorType.getByName(error)));
 	}
 
 	private native static void getExternalJson(int requestId, String url,

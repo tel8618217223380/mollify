@@ -13,19 +13,19 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.FileSystemItem;
-import org.sjarvela.mollify.client.data.SessionInfo;
-import org.sjarvela.mollify.client.file.DirectoryModel;
-import org.sjarvela.mollify.client.service.FileServices;
-import org.sjarvela.mollify.client.service.MollifyError;
-import org.sjarvela.mollify.client.service.ResultListener;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
+import org.sjarvela.mollify.client.request.ResultCallback;
+import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.SessionInfo;
 
 public class MainViewModel {
 	private final SessionInfo info;
-	private final FileServices fileServices;
+	private final FileSystemService fileServices;
 
 	private List<Directory> rootDirectories;
 	private List<Directory> directories;
@@ -34,7 +34,7 @@ public class MainViewModel {
 
 	private DirectoryModel directoryModel;
 
-	public MainViewModel(FileServices fileServices, SessionInfo info) {
+	public MainViewModel(FileSystemService fileServices, SessionInfo info) {
 		this.fileServices = fileServices;
 		this.info = info;
 		clear();
@@ -130,7 +130,7 @@ public class MainViewModel {
 	private ResultListener createListener(final ResultListener listener,
 			final ResultCallback resultCallback) {
 		return new ResultListener() {
-			public void onFail(MollifyError error) {
+			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 

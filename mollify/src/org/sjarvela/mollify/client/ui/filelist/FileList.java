@@ -15,11 +15,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.sjarvela.mollify.client.TextProvider;
-import org.sjarvela.mollify.client.data.Directory;
-import org.sjarvela.mollify.client.data.File;
-import org.sjarvela.mollify.client.data.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.Coords;
 import org.sjarvela.mollify.client.ui.DataGrid;
 import org.sjarvela.mollify.client.ui.HoverDecorator;

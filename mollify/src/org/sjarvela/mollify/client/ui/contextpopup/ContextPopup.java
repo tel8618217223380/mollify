@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.ui.contextpopup;
 
-import org.sjarvela.mollify.client.file.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.BorderedControl;
 import org.sjarvela.mollify.client.ui.DropdownPopup;
