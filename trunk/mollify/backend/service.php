@@ -48,6 +48,7 @@
 			}
 			$info["settings"] = $_SESSION['settings'];
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
+			$info["filesystem"] = get_filesystem_session_info();
 		}
 		return $info;
 	}
@@ -79,6 +80,7 @@
 	
 	require_once "settings.php";
 	require_once "user.php";
+	require_once "files.php";
 	
 	session_start();
 	if (!handle_authentication()) return;
