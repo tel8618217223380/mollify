@@ -14,8 +14,8 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.service.JsonRequestHandler;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.json.JsonRequestHandler;
 import org.sjarvela.mollify.client.util.DateTime;
 import org.sjarvela.mollify.client.util.MD5;
 
