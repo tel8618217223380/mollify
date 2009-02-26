@@ -8,8 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.service.request.json;
 
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.service.request.ReturnValue;
