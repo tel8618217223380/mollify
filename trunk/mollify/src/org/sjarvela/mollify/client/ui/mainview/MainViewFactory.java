@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionDelegator;

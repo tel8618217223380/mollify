@@ -14,10 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.file.FileUploadListener;
-import org.sjarvela.mollify.client.request.file.FileUploadService;
-import org.sjarvela.mollify.client.service.MollifyServiceException;
+import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Button;
@@ -198,11 +197,6 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 
 	public void onSubmitComplete(FormSubmitCompleteEvent event) {
 		this.hide();
-		try {
-			listener.onUploadFinished(fileUploadHandler.handleResult(event
-					.getResults()));
-		} catch (MollifyServiceException e) {
-			listener.onUploadFailed(e.getError());
-		}
+		fileUploadHandler.handleResult(event.getResults(), listener);
 	}
 }

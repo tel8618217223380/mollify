@@ -8,11 +8,21 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.service.request;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+public class ErrorValue extends ReturnValue {
+	protected ErrorValue() {
+	}
 
-public interface DirectoryProvider {
-	void getDirectories(Directory parent, ResultListener listener);
+	public final native int getCode() /*-{
+		return this.code;
+	}-*/;
+
+	public final native String getError() /*-{
+		return this.error;
+	}-*/;
+
+	public final native String getDetails() /*-{
+		return this.details;
+	}-*/;
 }

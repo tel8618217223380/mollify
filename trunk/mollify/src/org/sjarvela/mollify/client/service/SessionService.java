@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.ResultListener;
 
 public interface SessionService {
 

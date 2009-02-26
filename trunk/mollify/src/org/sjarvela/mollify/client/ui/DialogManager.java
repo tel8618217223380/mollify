@@ -10,16 +10,16 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
+import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.ConfirmationListener;
-import org.sjarvela.mollify.client.request.ErrorValue;
-import org.sjarvela.mollify.client.request.file.DirectoryHandler;
-import org.sjarvela.mollify.client.request.file.FileUploadListener;
-import org.sjarvela.mollify.client.request.file.FileUploadService;
-import org.sjarvela.mollify.client.request.file.RenameHandler;
+import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.request.ErrorValue;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;

@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.popup.directorycontext;
 
+import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.file.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.session.SessionSettings;
 
 public class DirectoryContextPopupFactory {
