@@ -126,8 +126,8 @@ public class MainView extends Composite {
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
-		buttonPanel.add(directorySelector);
 		buttonPanel.add(parentDirButton);
+		buttonPanel.add(directorySelector);
 		header.add(buttonPanel);
 
 		if (model.getSessionInfo().isAuthenticationRequired()) {
