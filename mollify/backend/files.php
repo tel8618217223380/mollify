@@ -10,7 +10,26 @@
 	 */
 	
 	function get_filesystem_session_info() {
-		return array();
+		return array(
+			"max_upload_file_size" => in_bytes(ini_get("upload_max_filesize")),
+			"max_upload_total_size" => in_bytes(ini_get("post_max_size"))
+		);
+	}
+	
+	function in_bytes($amount) {
+	    $amount = trim($amount);
+	    $last = strtolower($amount[strlen($amount)-1]);
+	    
+	    switch($last) {
+	        case 'g':
+	            $amount *= 1024;
+	        case 'm':
+	            $amount *= 1024;
+	        case 'k':
+	            $amount *= 1024;
+	    }
+	
+	    return $amount;
 	}
 	
 	function get_filesystem_id($root_id, $path = "") {
