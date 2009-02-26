@@ -82,6 +82,10 @@ public class SessionInfo extends JavaScriptObject {
 		return this.default_permission_mode;
 	}-*/;
 
+	public final native FileSystemInfo getFileSystemInfo() /*-{
+		return this.filesystem;
+	}-*/;
+	
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String user, String permissionMode,
 			SessionSettings settings) /*-{

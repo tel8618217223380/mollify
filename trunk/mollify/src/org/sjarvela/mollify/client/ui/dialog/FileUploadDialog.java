@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Button;
@@ -41,6 +42,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	private final Directory directory;
 	private final Localizator localizator;
 	private final FileUploadService fileUploadHandler;
+	private final FileSystemInfo info;
 	private final FileUploadListener listener;
 
 	private FormPanel form;
@@ -49,9 +51,11 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	private List<FileUpload> uploaders = new ArrayList();
 
 	public FileUploadDialog(Directory directory, Localizator localizator,
-			FileUploadService fileUploadHandler, FileUploadListener listener) {
+			FileUploadService fileUploadHandler, FileSystemInfo info,
+			FileUploadListener listener) {
 		super(localizator.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
+		this.info = info;
 		this.listener = listener;
 		this.uploadId = fileUploadHandler.getFileUploadId();
 		this.directory = directory;
@@ -92,7 +96,13 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		panel.add(createMessage());
 		panel.add(createForm());
 		panel.add(createUploaderButtons());
+		panel.add(createInfoPanel());
 		return panel;
+	}
+
+	private Widget createInfoPanel() {
+		return new Label(String.valueOf(info.getUploadMaxFileSize()) + "/"
+				+ String.valueOf(info.getUploadMaxTotalSize()));
 	}
 
 	private Widget createMessage() {
