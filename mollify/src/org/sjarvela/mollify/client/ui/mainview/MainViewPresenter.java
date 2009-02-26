@@ -148,9 +148,9 @@ public class MainViewPresenter implements DirectoryController,
 						.getDialogManager(), localizator,
 				createReloadListener());
 
-		windowManager.getDialogManager()
-				.openUploadDialog(model.getCurrentFolder(), fileUploadService,
-						fileUploadListener);
+		windowManager.getDialogManager().openUploadDialog(
+				model.getCurrentFolder(), fileUploadService,
+				model.getSessionInfo().getFileSystemInfo(), fileUploadListener);
 	}
 
 	public void openNewDirectoryDialog() {

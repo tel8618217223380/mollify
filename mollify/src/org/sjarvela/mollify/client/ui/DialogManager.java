@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
+import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
@@ -47,8 +48,9 @@ public class DialogManager {
 	}
 
 	public void openUploadDialog(Directory directory,
-			FileUploadService fileUploadService, FileUploadListener listener) {
-		new FileUploadDialog(directory, localizator, fileUploadService,
+			FileUploadService fileUploadService, FileSystemInfo info,
+			FileUploadListener listener) {
+		new FileUploadDialog(directory, localizator, fileUploadService, info,
 				listener);
 	}
 
