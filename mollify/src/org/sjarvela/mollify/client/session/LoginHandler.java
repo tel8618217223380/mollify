@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.session;
 
-import org.sjarvela.mollify.client.request.ConfirmationListener;
+import org.sjarvela.mollify.client.ConfirmationListener;
 
 public interface LoginHandler {
 	public void onLogin(String userName, String password,

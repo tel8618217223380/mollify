@@ -12,11 +12,10 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.ConfirmationListener;
-import org.sjarvela.mollify.client.request.ResultListener;
-import org.sjarvela.mollify.client.service.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.LogoutHandler;

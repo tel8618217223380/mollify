@@ -12,47 +12,37 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
+import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
+import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.Callback;
-import org.sjarvela.mollify.client.request.ConfirmationListener;
-import org.sjarvela.mollify.client.request.ResultListener;
-import org.sjarvela.mollify.client.request.ReturnValue;
-import org.sjarvela.mollify.client.request.file.DirectoryHandler;
-import org.sjarvela.mollify.client.request.file.FileSystemActionHandler;
-import org.sjarvela.mollify.client.request.file.FileUploadListener;
-import org.sjarvela.mollify.client.request.file.FileUploadMonitor;
-import org.sjarvela.mollify.client.request.file.FileUploadProgressListener;
-import org.sjarvela.mollify.client.request.file.FileUploadService;
-import org.sjarvela.mollify.client.request.file.RenameHandler;
 import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.request.Callback;
+import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
-import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.filelist.Column;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 public class MainViewPresenter implements DirectoryController,
-		FileUploadListener, FileSystemActionHandler, DirectoryHandler,
-		RenameHandler {
+		FileSystemActionHandler, DirectoryHandler, RenameHandler {
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
-	private final Localizator localizator;
+
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
 	private final LogoutHandler logoutListener;
-
-	private ProgressDisplayer uploadListener = null;
-	private FileUploadMonitor uploadMonitor;
+	private final Localizator localizator;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileSystemService fileSystemService,
@@ -62,7 +52,6 @@ public class MainViewPresenter implements DirectoryController,
 		this.model = model;
 		this.view = view;
 		this.fileSystemService = fileSystemService;
-
 		this.fileUploadService = fileUploadHandler;
 		this.localizator = localizator;
 		this.logoutListener = logoutListener;
@@ -152,74 +141,22 @@ public class MainViewPresenter implements DirectoryController,
 	public void openUploadDialog() {
 		if (model.getCurrentFolder().isEmpty())
 			return;
-		windowManager.getDialogManager().openUploadDialog(
-				model.getCurrentFolder(), fileUploadService, this);
-	}
 
-	public void onUploadStarted(String uploadId, List<String> filenames) {
-		if (uploadListener != null || uploadMonitor != null)
-			throw new RuntimeException("Previous upload unfinished");
+		DefaultFileUploadListener fileUploadListener = new DefaultFileUploadListener(
+				fileUploadService, model.getSessionInfo().getSettings()
+						.isFileUploadProgressEnabled(), windowManager
+						.getDialogManager(), localizator,
+				createReloadListener());
 
-		String info = filenames.size() == 1 ? filenames.get(0) : localizator
-				.getMessages().uploadingNFilesInfo(filenames.size());
-
-		uploadListener = windowManager.getDialogManager().openProgressDialog(
-				localizator.getStrings().fileUploadProgressTitle(), false);
-		uploadListener.setInfo(info);
-		uploadListener.setDetails(localizator.getStrings()
-				.fileUploadProgressPleaseWait());
-
-		if (!model.getSessionInfo().getSettings().isFileUploadProgressEnabled())
-			return;
-
-		uploadMonitor = new FileUploadMonitor(uploadId,
-				new FileUploadProgressListener() {
-					public void onProgressUpdate(FileUploadStatus status) {
-						int percentage = (int) status.getUploadedPercentage();
-						uploadListener.setProgressBarVisible(true);
-						uploadListener.setProgress(percentage);
-						uploadListener.setDetails(String.valueOf(percentage)
-								+ "%");
-					}
-
-					public void onProgressUpdateFail(ServiceError error) {
-						uploadListener.setProgress(0);
-						uploadMonitor.stop();
-					}
-				}, fileUploadService);
-		uploadMonitor.start();
-
-	}
-
-	public void onUploadFinished(ReturnValue result) {
-		stopUploaders();
-		if (!result.isSuccess()) {
-			Log.error("File upload failed: " + result.getResult().toString());
-		}
-		reload();
-	}
-
-	public void onUploadFailed(ServiceError error) {
-		stopUploaders();
-		onError(error, true);
-	}
-
-	private void stopUploaders() {
-		if (uploadListener != null) {
-			uploadListener.setProgress(100);
-			uploadListener.setDetails("");
-			uploadListener.onFinished();
-		}
-		if (uploadMonitor != null) {
-			uploadMonitor.stop();
-		}
-		uploadListener = null;
-		uploadMonitor = null;
+		windowManager.getDialogManager()
+				.openUploadDialog(model.getCurrentFolder(), fileUploadService,
+						fileUploadListener);
 	}
 
 	public void openNewDirectoryDialog() {
 		if (model.getCurrentFolder().isEmpty())
 			return;
+
 		windowManager.getDialogManager().openCreateFolderDialog(
 				model.getCurrentFolder(), this);
 	}

@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.popup.filecontext;
 
+import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.Localizator;
-import org.sjarvela.mollify.client.request.file.FileDetailsProvider;
 import org.sjarvela.mollify.client.session.SessionSettings;
 
 public class FileContextPopupFactory {
