@@ -78,19 +78,19 @@ public class JsonRequestHandler {
 	    script.setAttribute("type", "text/javascript");
 	
 	    window[callback] = function(jsonObj) {
-	      window[callback + "done"] = true;
-	      handler.@org.sjarvela.mollify.client.service.JsonRequestHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
+			window[callback + "done"] = true;
+			handler.@org.sjarvela.mollify.client.service.request.json.JsonRequestHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
 	    }
 	    
 	    setTimeout(function() {
-	      if (!window[callback + "done"]) {
-	        handler.@org.sjarvela.mollify.client.service.JsonRequestHandler::handleError(Ljava/lang/String;)("NO_RESPONSE");
-	      } 
+			if (!window[callback + "done"]) {
+				handler.@org.sjarvela.mollify.client.service.request.json.JsonRequestHandler::handleError(Ljava/lang/String;)("NO_RESPONSE");
+			} 
 	
-	      // cleanup
-	      document.body.removeChild(script);
-	      delete window[callback];
-	      delete window[callback + "done"];
+			// cleanup
+			document.body.removeChild(script);
+			delete window[callback];
+			delete window[callback + "done"];
 	    }, timeout * 1000);
 	    
 	    document.body.appendChild(script);
