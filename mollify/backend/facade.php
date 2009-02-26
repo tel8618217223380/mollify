@@ -9,7 +9,6 @@
 	 * this entire header must remain intact.
 	 */
 	
-	require_once "files.php";
 	require_once "data_provider_file.php";	// TODO create db provider, and require one of them
 
 	switch ($_GET["action"]) {

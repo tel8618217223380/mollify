@@ -9,6 +9,10 @@
 	 * this entire header must remain intact.
 	 */
 	
+	function get_filesystem_session_info() {
+		return array();
+	}
+	
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
 			$root_path = get_root_path($root_id);
