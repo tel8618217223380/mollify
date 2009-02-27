@@ -10,7 +10,7 @@
   * Removed configuration setting "theme" as IE does not support CSS injection. CSS must now be linked manually in the host html page.
 
 === Version 0.7.1 ===
-  * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used (for more information, see [Installation Installation wiki page], chapter 3.1)
+  * Changed theme setting to accept only pre-built theme name, or "none" if custom theme is used
 
 === Version 0.7 ===
   * Support for zip downloads
