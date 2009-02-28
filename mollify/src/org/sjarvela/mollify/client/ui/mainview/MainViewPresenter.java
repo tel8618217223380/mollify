@@ -32,6 +32,9 @@ import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
+import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
+import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 public class MainViewPresenter implements DirectoryController,
@@ -59,10 +62,10 @@ public class MainViewPresenter implements DirectoryController,
 
 		this.view.setFileContextHandler(this);
 		this.view.setDirectoryContextHandler(this);
+		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
 
-		if (model.getSessionInfo().isAuthenticationRequired()) {
+		if (model.getSessionInfo().isAuthenticationRequired())
 			view.getUsername().setText(model.getSessionInfo().getLoggedUser());
-		}
 	}
 
 	public void initialize() {
@@ -257,5 +260,14 @@ public class MainViewPresenter implements DirectoryController,
 
 	private void delete(FileSystemItem item) {
 		fileSystemService.delete(item, createReloadListener());
+	}
+
+	public void setListOrder(GridColumn column, Sort sort) {
+		view.getList().setComparator(createComparator(column, sort));
+	}
+
+	private GridComparator<FileSystemItem> createComparator(GridColumn column,
+			Sort sort) {
+		return new DefaultFileItemComparator(column, sort);
 	}
 }
