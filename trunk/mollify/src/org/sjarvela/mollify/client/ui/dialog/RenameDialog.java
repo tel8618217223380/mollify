@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -25,11 +25,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class RenameDialog extends CenteredDialog {
 	private final FileSystemItem item;
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final RenameHandler renameHandler;
 	private TextBox name;
 
-	public RenameDialog(FileSystemItem item, Localizator localizator,
+	public RenameDialog(FileSystemItem item, DefaultTextProvider localizator,
 			RenameHandler renameHandler) {
 		super(item.isFile() ? localizator.getStrings().renameDialogTitleFile()
 				: localizator.getStrings().renameDialogTitleDirectory(),

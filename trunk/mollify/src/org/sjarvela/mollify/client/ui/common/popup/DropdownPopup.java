@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.common;
+package org.sjarvela.mollify.client.ui.common.popup;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

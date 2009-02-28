@@ -3,7 +3,7 @@ package org.sjarvela.mollify.client.filesystem.upload;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
@@ -13,7 +13,7 @@ import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class DefaultFileUploadListener implements FileUploadListener {
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final boolean isProgressEnabled;
 	private final FileUploadService service;
 	private final DialogManager dialogManager;
@@ -24,7 +24,7 @@ public class DefaultFileUploadListener implements FileUploadListener {
 
 	public DefaultFileUploadListener(FileUploadService service,
 			boolean isProgressEnabled, DialogManager dialogManager,
-			Localizator localizator, ResultListener listener) {
+			DefaultTextProvider localizator, ResultListener listener) {
 		this.service = service;
 		this.isProgressEnabled = isProgressEnabled;
 		this.dialogManager = dialogManager;

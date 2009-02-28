@@ -10,29 +10,55 @@
 
 package org.sjarvela.mollify.client.localization;
 
+import org.sjarvela.mollify.client.service.request.ErrorValue;
+
+import com.google.gwt.core.client.GWT;
 
 public class DefaultTextProvider implements TextProvider {
-	private final Localizator localizator;
+	private static DefaultTextProvider instance = null;
 
-	public DefaultTextProvider(Localizator localizator) {
-		this.localizator = localizator;
+	public static DefaultTextProvider getInstance() {
+		if (instance == null) {
+			instance = new DefaultTextProvider();
+		}
+		return instance;
+	}
+
+	private LanguageConstants languageConstants;
+	private MessageConstants messageConstants;
+
+	public DefaultTextProvider() {
+		languageConstants = GWT.create(LanguageConstants.class);
+		messageConstants = GWT.create(MessageConstants.class);
+	}
+
+	public LanguageConstants getStrings() {
+		return languageConstants;
+	}
+
+	public MessageConstants getMessages() {
+		return messageConstants;
+	}
+
+	public String getErrorMessage(ErrorValue errorResult) {
+		// TODO get localized
+		return errorResult.getCode() + ": " + errorResult.getError() + "("
+				+ errorResult.getDetails() + ")";
 	}
 
 	public String getSizeText(int bytes) {
 		if (bytes < 1024) {
-			return (bytes == 1 ? localizator.getMessages().sizeOneByte()
-					: localizator.getMessages().sizeInBytes(bytes));
+			return (bytes == 1 ? getMessages().sizeOneByte() : getMessages()
+					.sizeInBytes(bytes));
 		}
 
 		if (bytes < 1024 * 1024) {
 			double kilobytes = (double) bytes / (double) 1024;
-			return (kilobytes == 1 ? localizator.getMessages()
-					.sizeOneKilobyte() : localizator.getMessages()
-					.sizeInKilobytes(kilobytes));
+			return (kilobytes == 1 ? getMessages().sizeOneKilobyte()
+					: getMessages().sizeInKilobytes(kilobytes));
 		}
 
 		double megabytes = (double) bytes / (double) (1024 * 1024);
-		return localizator.getMessages().sizeInMegabytes(megabytes);
+		return getMessages().sizeInMegabytes(megabytes);
 	}
-
 }

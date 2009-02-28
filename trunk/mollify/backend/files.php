@@ -29,7 +29,7 @@
 	            $amount *= 1024;
 	    }
 	
-	    return $amount;
+	    return (int)$amount;
 	}
 	
 	function get_filesystem_id($root_id, $path = "") {

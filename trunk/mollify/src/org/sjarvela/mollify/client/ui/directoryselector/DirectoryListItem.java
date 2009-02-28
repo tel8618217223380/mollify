@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryListener;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -26,7 +26,7 @@ public class DirectoryListItem extends HorizontalPanel implements
 		DirectoryListener {
 	private final DirectoryController controller;
 	private final DirectoryProvider dataProvider;
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final DirectoryListMenu menu;
 
 	private Directory currentDirectory;
@@ -37,7 +37,7 @@ public class DirectoryListItem extends HorizontalPanel implements
 
 	public DirectoryListItem(Directory currentDirectory, int level,
 			Directory parentDirectory, DirectoryProvider provider,
-			DirectoryController controller, Localizator localizator) {
+			DirectoryController controller, DefaultTextProvider localizator) {
 		this.currentDirectory = currentDirectory;
 		this.level = level;
 		this.parentDirectory = parentDirectory;

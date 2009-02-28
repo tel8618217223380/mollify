@@ -3,9 +3,9 @@ package org.sjarvela.mollify.client.ui.popup;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.common.BorderedControl;
-import org.sjarvela.mollify.client.ui.common.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;

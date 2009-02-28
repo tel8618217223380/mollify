@@ -42,6 +42,7 @@
 	cursor: default;
 	border-bottom: 1px solid #bbbbbb;
 	border-top: 5px solid #d0e4f6;
+	font-weight: bold;
 }
 
 .mollify-dialog .dialogMiddleCenter {
@@ -621,7 +622,7 @@ td#mollify-filelist-column-size {
 	margin-top: 4px;
 }
 
-.mollify-file-context-details-header {
+.mollify-file-context-details-header, .mollify-file-upload-info-header {
 	background-color: #ebebeb;
 	color: #000;
 	padding-top: 2px;
@@ -760,6 +761,25 @@ input.mollify-rename-dialog-new-name-value {
 
 .ie-crap.mollify-file-selector {
 	width: 200px;
+}
+
+.mollify-file-upload-info-header {
+	width: 240px;
+	margin-top: 6px;
+}
+
+.mollify-file-upload-info-content {
+	width: 220px;
+	margin-left: 0;
+	padding-left: 16px;
+	padding-top: 4px;
+	font-style: italic;
+	font-size: 9px;
+}
+
+span.mollify-upload-info-size {
+	font-weight: bold;
+	white-space: nowrap;
 }
 
 .mollify-file-upload-dialog-uploaders-buttons {

@@ -11,16 +11,16 @@
 package org.sjarvela.mollify.client.ui.popup.filecontext;
 
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.session.SessionSettings;
 
 public class FileContextPopupFactory {
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 	private FileDetailsProvider fileDetailsProvider;
 	private SessionSettings settings;
 
 	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
-			Localizator localizator, SessionSettings settings) {
+			DefaultTextProvider localizator, SessionSettings settings) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.localizator = localizator;
 		this.settings = settings;

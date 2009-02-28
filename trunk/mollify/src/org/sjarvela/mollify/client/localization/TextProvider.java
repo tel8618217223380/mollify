@@ -14,4 +14,8 @@ public interface TextProvider {
 
 	String getSizeText(int size);
 
+	LanguageConstants getStrings();
+
+	MessageConstants getMessages();
+
 }

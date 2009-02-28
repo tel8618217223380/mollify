@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
@@ -37,7 +36,7 @@ public class App implements EntryPoint, LogoutHandler {
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
 	ServiceEnvironment environment;
-	Localizator localizator;
+	DefaultTextProvider localizator;
 	WindowManager windowManager;
 	RootPanel panel;
 
@@ -61,10 +60,10 @@ public class App implements EntryPoint, LogoutHandler {
 
 		try {
 			environment = createEnvironment(settings);
-			localizator = Localizator.getInstance();
+			localizator = DefaultTextProvider.getInstance();
 
 			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-					new DefaultTextProvider(localizator), environment);
+					localizator, environment);
 			windowManager = new WindowManager(panel, localizator,
 					mainViewFactory, new DialogManager(localizator));
 		} catch (RuntimeException e) {
@@ -76,7 +75,8 @@ public class App implements EntryPoint, LogoutHandler {
 	}
 
 	private ServiceEnvironment createEnvironment(ClientSettings settings) {
-		ServiceEnvironment environment = (ServiceEnvironment) GWT.create(ServiceEnvironment.class);
+		ServiceEnvironment environment = (ServiceEnvironment) GWT
+				.create(ServiceEnvironment.class);
 		environment.initialize(settings);
 		return environment;
 	}

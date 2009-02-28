@@ -13,4 +13,9 @@ public class FileSystemInfo extends JavaScriptObject {
 	public final native int getUploadMaxTotalSize() /*-{
 		return this.max_upload_total_size;
 	}-*/;
+
+	public final String asString() {
+		return "max_upload_file_size=" + getUploadMaxFileSize()
+				+ ", max_upload_total_size=" + getUploadMaxTotalSize() + "]";
+	}
 }

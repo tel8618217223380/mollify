@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
@@ -31,9 +31,9 @@ import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 
 public class DialogManager {
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 
-	public DialogManager(Localizator localizator) {
+	public DialogManager(DefaultTextProvider localizator) {
 		super();
 		this.localizator = localizator;
 	}

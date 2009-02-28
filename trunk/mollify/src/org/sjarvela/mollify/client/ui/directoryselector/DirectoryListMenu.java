@@ -15,12 +15,12 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryListener;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.common.DropdownPopupMenu;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -36,11 +36,11 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	private Directory parentDirectory;
 	private Directory currentDirectory;
 	private DirectoryListener listener;
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 
 	public DirectoryListMenu(Directory parentDirectory,
 			Directory currentDirectory, DirectoryProvider directoryProvider,
-			DirectoryListener listener, Localizator localizator,
+			DirectoryListener listener, DefaultTextProvider localizator,
 			Element parent, Element opener) {
 		super(null, parent, opener);
 
@@ -54,7 +54,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(createWaitLabel(localizator));
 	}
 
-	private Label createWaitLabel(Localizator localizator) {
+	private Label createWaitLabel(DefaultTextProvider localizator) {
 		Label waitLabel = new Label(localizator.getStrings()
 				.directorySelectorMenuPleaseWait());
 		waitLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_WAIT);

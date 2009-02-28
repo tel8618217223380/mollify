@@ -141,6 +141,9 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS = "mollify-file-upload-dialog-uploaders-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE = "add-file";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE = "remove-file";
+	public static final String FILE_UPLOAD_DIALOG_INFO = "mollify-file-upload-info";
+	public static final String FILE_UPLOAD_DIALOG_INFO_CONTENT = "mollify-file-upload-info-content";
+	public static final String FILE_UPLOAD_DIALOG_INFO_HEADER = "mollify-file-upload-info-header";
 
 	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";
@@ -162,4 +165,5 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_NAME_VALUE = "mollify-create-folder-dialog-name-value";
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "create-folder";
+
 }
