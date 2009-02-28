@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 
 import com.google.gwt.core.client.GWT;
@@ -18,7 +18,7 @@ import com.google.gwt.core.client.GWT;
 public enum ServiceErrorType {
 	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS;
 
-	public String getMessage(Localizator localizator) {
+	public String getMessage(DefaultTextProvider localizator) {
 		switch (this) {
 		case NO_RESPONSE:
 			return localizator.getStrings().errorMessageNoResponse();

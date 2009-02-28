@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -27,11 +27,11 @@ public class WindowManager {
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private final RootPanel rootPanel;
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final MainViewFactory mainViewFactory;
 	private final DialogManager dialogManager;
 
-	public WindowManager(RootPanel rootPanel, Localizator localizator,
+	public WindowManager(RootPanel rootPanel, DefaultTextProvider localizator,
 			MainViewFactory mainViewFactory, DialogManager dialogManager) {
 		this.rootPanel = rootPanel;
 		this.localizator = localizator;
@@ -39,7 +39,7 @@ public class WindowManager {
 		this.dialogManager = dialogManager;
 	}
 
-	public Localizator getLocalizator() {
+	public DefaultTextProvider getLocalizator() {
 		return localizator;
 	}
 

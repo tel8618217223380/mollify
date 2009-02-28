@@ -16,14 +16,13 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
-import org.sjarvela.mollify.client.ui.common.DropdownButton;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.filelist.Column;
@@ -44,7 +43,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MainView extends Composite {
 	private final MainViewModel model;
-	private final Localizator localizator;
+	private final TextProvider textProvider;
+	private final ActionListener actionListener;
 
 	private DirectorySelector directorySelector;
 	private FileList list;
@@ -54,25 +54,22 @@ public class MainView extends Composite {
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
 	private ActionButton parentDirButton;
+	private Label username;
 	private ActionButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
-	private final ActionListener actionListener;
-	private final TextProvider textProvider;
-	private Label username;
 
 	public enum Action implements ActionId {
 		addFile, addDirectory, refresh, parentDir, logout;
 	};
 
 	public MainView(MainViewModel model, TextProvider textProvider,
-			Localizator localizator, ActionListener actionListener,
+			ActionListener actionListener,
 			DirectorySelectorFactory directorySelectorFactory,
 			FileContextPopupFactory fileContextPopupFactory,
 			DirectoryContextPopupFactory directoryContextPopupFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
-		this.localizator = localizator;
 		this.actionListener = actionListener;
 		this.directorySelector = directorySelectorFactory.createSelector();
 		this.fileContext = fileContextPopupFactory.createPopup();
@@ -110,7 +107,7 @@ public class MainView extends Composite {
 	}
 
 	private Widget createFileList() {
-		list = new FileList(textProvider, localizator);
+		list = new FileList(textProvider);
 		return list;
 	}
 
@@ -149,19 +146,19 @@ public class MainView extends Composite {
 	}
 
 	private void createButtons() {
-		refreshButton = new ActionButton(localizator.getStrings()
+		refreshButton = new ActionButton(textProvider.getStrings()
 				.mainViewRefreshButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		parentDirButton = new ActionButton(localizator.getStrings()
+		parentDirButton = new ActionButton(textProvider.getStrings()
 				.mainViewParentDirButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		parentDirButton.setAction(actionListener, Action.parentDir);
 
-		logoutButton = new ActionButton(localizator.getStrings()
+		logoutButton = new ActionButton(textProvider.getStrings()
 				.mainViewLogoutButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
@@ -171,14 +168,14 @@ public class MainView extends Composite {
 				.getSessionInfo().getSettings().isFolderActionsEnabled())
 				&& model.getSessionInfo().getPermissionMode()
 						.hasWritePermission()) {
-			addButton = new DropdownButton(actionListener, localizator
+			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
 			if (model.getSessionInfo().getSettings().isFileUploadEnabled())
-				addButton.addAction(Action.addFile, localizator.getStrings()
+				addButton.addAction(Action.addFile, textProvider.getStrings()
 						.mainViewAddFileMenuItem());
 			if (model.getSessionInfo().getSettings().isFolderActionsEnabled())
-				addButton.addAction(Action.addDirectory, localizator
+				addButton.addAction(Action.addDirectory, textProvider
 						.getStrings().mainViewAddDirectoryMenuItem());
 		}
 	}

@@ -18,12 +18,11 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.localization.Localizator;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Coords;
-import org.sjarvela.mollify.client.ui.common.DataGrid;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+import org.sjarvela.mollify.client.ui.common.grid.Grid;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -33,25 +32,25 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileList extends DataGrid {
+public class FileList extends Grid {
 	private List<FileListListener> listeners = new ArrayList<FileListListener>();
 	private List<FileSystemItem> content = new ArrayList();
 	private Comparator<FileSystemItem> comparator = new DefaultFileItemComparator();
 	private TextProvider textProvider;
 	private List<String> rowStyles = new ArrayList();
 
-	public FileList(TextProvider textProvider, Localizator localizator) {
+	public FileList(TextProvider textProvider) {
 		super(StyleConstants.FILE_LIST_HEADER);
 		this.textProvider = textProvider;
 
 		// setup header
 		// this.setHeaderText(Column.SELECT, localizator.getStrings()
 		// .fileListColumnTitleSelect());
-		this.setHeaderText(Column.NAME, localizator.getStrings()
+		this.setHeaderText(Column.NAME, textProvider.getStrings()
 				.fileListColumnTitleName());
-		this.setHeaderText(Column.TYPE, localizator.getStrings()
+		this.setHeaderText(Column.TYPE, textProvider.getStrings()
 				.fileListColumnTitleType());
-		this.setHeaderText(Column.SIZE, localizator.getStrings()
+		this.setHeaderText(Column.SIZE, textProvider.getStrings()
 				.fileListColumnTitleSize());
 
 		sinkEvents(Event.ONMOUSEOVER);

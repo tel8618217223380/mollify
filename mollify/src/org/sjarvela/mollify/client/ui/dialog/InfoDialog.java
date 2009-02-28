@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -19,11 +19,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class InfoDialog extends CenteredDialog {
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 	private String text;
 	private String type;
 
-	public InfoDialog(Localizator localizator, String title, String text,
+	public InfoDialog(DefaultTextProvider localizator, String title, String text,
 			String type) {
 		super(title, type);
 		this.localizator = localizator;

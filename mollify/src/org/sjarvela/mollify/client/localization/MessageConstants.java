@@ -28,4 +28,6 @@ public interface MessageConstants extends Messages {
 	String confirmDirectoryDeleteMessage(String name);
 
 	String uploadingNFilesInfo(int amount);
+
+	String uploadMaxSizeHtml(String fileMax, String totalMax);
 }

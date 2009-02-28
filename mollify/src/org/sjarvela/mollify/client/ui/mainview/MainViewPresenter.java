@@ -22,7 +22,7 @@ import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -42,11 +42,11 @@ public class MainViewPresenter implements DirectoryController,
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
 	private final LogoutHandler logoutListener;
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileSystemService fileSystemService,
-			FileUploadService fileUploadHandler, Localizator localizator,
+			FileUploadService fileUploadHandler, DefaultTextProvider localizator,
 			LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;

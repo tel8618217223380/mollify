@@ -8,18 +8,18 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.common;
+package org.sjarvela.mollify.client.ui.common.grid;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
 
-public class DataGrid extends FlexTable {
+public class Grid extends FlexTable {
 	private Element head;
 	private Element headerRow;
 	private final String headerCssClass;
 
-	public DataGrid(String headerCssClass) {
+	public Grid(String headerCssClass) {
 		super();
 		this.headerCssClass = headerCssClass;
 
@@ -33,7 +33,6 @@ public class DataGrid extends FlexTable {
 		DOM.setElementAttribute(getBodyElement(), "style",
 				"overflow:auto;text-align: left;");
 		DOM.setElementAttribute(head, "style", "text-align: left;");
-
 	}
 
 	public void setHeaderText(int column, String text, String id) {

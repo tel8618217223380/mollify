@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionSettings;
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryContextPopup extends ContextPopup {
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final SessionSettings settings;
 	private final DirectoryDetailsProvider detailsProvider;
 	private FileSystemActionHandler actionHandler;
@@ -42,7 +42,7 @@ public class DirectoryContextPopup extends ContextPopup {
 
 	private Directory directory;
 
-	public DirectoryContextPopup(Localizator localizator,
+	public DirectoryContextPopup(DefaultTextProvider localizator,
 			DirectoryDetailsProvider detailsProvider, SessionSettings settings) {
 		super(StyleConstants.DIR_CONTEXT);
 

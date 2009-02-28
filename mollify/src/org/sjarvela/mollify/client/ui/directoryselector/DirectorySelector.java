@@ -14,18 +14,18 @@ import java.util.ListIterator;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class DirectorySelector extends HorizontalPanel {
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 	private final DirectoryModelProvider directoryModelProvider;
 	private final DirectoryListItemFactory listItemFactory;
 
-	public DirectorySelector(Localizator localizator,
+	public DirectorySelector(DefaultTextProvider localizator,
 			DirectoryModelProvider directoryModelProvider,
 			DirectoryListItemFactory listItemFactory) {
 		this.directoryModelProvider = directoryModelProvider;

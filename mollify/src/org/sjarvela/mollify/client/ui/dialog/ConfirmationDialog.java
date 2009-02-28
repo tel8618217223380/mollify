@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Button;
@@ -21,12 +21,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfirmationDialog extends CenteredDialog {
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 	private String text;
 	private String type;
 	private ConfirmationListener listener;
 
-	public ConfirmationDialog(Localizator localizator, String title,
+	public ConfirmationDialog(DefaultTextProvider localizator, String title,
 			String text, String type, ConfirmationListener listener) {
 		super(title, type);
 		this.localizator = localizator;

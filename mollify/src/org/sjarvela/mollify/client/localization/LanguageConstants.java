@@ -44,13 +44,13 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileActionDetailsTitle();
 
 	public String fileActionDownloadTitle();
-	
+
 	public String fileActionDownloadZippedTitle();
 
 	public String fileActionRenameTitle();
 
 	public String fileActionDeleteTitle();
-	
+
 	public String dirActionDownloadTitle();
 
 	public String dirActionRenameTitle();
@@ -98,7 +98,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String dialogCancelButton();
 
 	public String renameDialogTitleFile();
-	
+
 	public String renameDialogTitleDirectory();
 
 	public String renameDialogOriginalName();
@@ -108,7 +108,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String renameDialogRenameButton();
 
 	public String deleteFileConfirmationDialogTitle();
-	
+
 	public String deleteDirectoryConfirmationDialogTitle();
 
 	public String fileUploadDialogTitle();
@@ -116,10 +116,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadDialogMessage();
 
 	public String fileUploadDialogUploadButton();
-	
+
 	public String fileUploadDialogAddFileButton();
-	
+
 	public String fileUploadDialogRemoveFileButton();
+
+	public String fileUploadDialogInfoTitle();
 
 	public String fileUploadProgressTitle();
 

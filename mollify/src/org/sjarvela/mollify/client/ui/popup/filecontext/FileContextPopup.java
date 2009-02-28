@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionSettings;
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileContextPopup extends ContextPopup implements ActionListener {
 	private DateTimeFormat dateTimeFormat;
 
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final FileDetailsProvider detailsProvider;
 	private final SessionSettings settings;
 	private FileSystemActionHandler fileActionHandler;
@@ -58,7 +58,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		Accessed, Modified, Changed
 	}
 
-	public FileContextPopup(Localizator localizator,
+	public FileContextPopup(DefaultTextProvider localizator,
 			FileDetailsProvider detailsProvider, SessionSettings settings) {
 		super(StyleConstants.FILE_CONTEXT);
 

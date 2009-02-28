@@ -13,14 +13,14 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 
 public class DirectoryListItemFactory {
 	private DirectoryProvider provider;
-	private Localizator localizator;
+	private DefaultTextProvider localizator;
 	private DirectoryController controller;
 
-	public DirectoryListItemFactory(Localizator localizator,
+	public DirectoryListItemFactory(DefaultTextProvider localizator,
 			DirectoryProvider provider) {
 		this.localizator = localizator;
 		this.provider = provider;

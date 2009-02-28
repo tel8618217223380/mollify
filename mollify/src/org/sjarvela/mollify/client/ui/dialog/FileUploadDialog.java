@@ -15,18 +15,20 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -40,7 +42,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 
 	private final String uploadId;
 	private final Directory directory;
-	private final Localizator localizator;
+	private final TextProvider textProvider;
 	private final FileUploadService fileUploadHandler;
 	private final FileSystemInfo info;
 	private final FileUploadListener listener;
@@ -49,17 +51,18 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	private Panel uploadersPanel;
 	private Button uploadButton;
 	private List<FileUpload> uploaders = new ArrayList();
+	private DisclosurePanel uploadInfo;
 
-	public FileUploadDialog(Directory directory, Localizator localizator,
+	public FileUploadDialog(Directory directory, TextProvider textProvider,
 			FileUploadService fileUploadHandler, FileSystemInfo info,
 			FileUploadListener listener) {
-		super(localizator.getStrings().fileUploadDialogTitle(),
+		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
 		this.info = info;
 		this.listener = listener;
 		this.uploadId = fileUploadHandler.getFileUploadId();
 		this.directory = directory;
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.fileUploadHandler = fileUploadHandler;
 
 		initialize();
@@ -71,7 +74,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		buttons.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		uploadButton = createButton(localizator.getStrings()
+		uploadButton = createButton(textProvider.getStrings()
 				.fileUploadDialogUploadButton(), new ClickListener() {
 			public void onClick(Widget sender) {
 				form.submit();
@@ -79,7 +82,8 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
 
 		buttons.add(uploadButton);
-		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
+		buttons.add(createButton(
+				textProvider.getStrings().dialogCancelButton(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
 						FileUploadDialog.this.hide();
@@ -101,12 +105,23 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	}
 
 	private Widget createInfoPanel() {
-		return new Label(String.valueOf(info.getUploadMaxFileSize()) + "/"
-				+ String.valueOf(info.getUploadMaxTotalSize()));
+		uploadInfo = new DisclosurePanel(textProvider.getStrings()
+				.fileUploadDialogInfoTitle(), false);
+		uploadInfo.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO);
+		uploadInfo.getHeader().getElement().getParentElement().setClassName(
+				StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);
+
+		HTML content = new HTML(textProvider.getMessages().uploadMaxSizeHtml(
+				textProvider.getSizeText(info.getUploadMaxFileSize()),
+				textProvider.getSizeText(info.getUploadMaxFileSize())));
+		content.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_CONTENT);
+
+		uploadInfo.setContent(content);
+		return uploadInfo;
 	}
 
 	private Widget createMessage() {
-		Label message = new Label(localizator.getStrings()
+		Label message = new Label(textProvider.getStrings()
 				.fileUploadDialogMessage());
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 		return message;
@@ -138,14 +153,14 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		uploaderButtons
 				.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS);
 
-		uploaderButtons.add(createButton(localizator.getStrings()
+		uploaderButtons.add(createButton(textProvider.getStrings()
 				.fileUploadDialogAddFileButton(), new ClickListener() {
 			public void onClick(Widget sender) {
 				onAddFile();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
 
-		uploaderButtons.add(createButton(localizator.getStrings()
+		uploaderButtons.add(createButton(textProvider.getStrings()
 				.fileUploadDialogRemoveFileButton(), new ClickListener() {
 			public void onClick(Widget sender) {
 				onRemoveFile();

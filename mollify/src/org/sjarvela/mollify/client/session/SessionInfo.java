@@ -53,7 +53,8 @@ public class SessionInfo extends JavaScriptObject {
 	public final String asString() {
 		return "authentication_required=" + isAuthenticationRequired()
 				+ ", logged_user=" + getLoggedUser() + ", permission_mode="
-				+ getDefaultPermissionModeString() + ", settings=["
+				+ getDefaultPermissionModeString() + ", filesystem=["
+				+ getFileSystemInfo().asString() + "], settings=["
 				+ getSettings().asString() + "]";
 	}
 
@@ -85,7 +86,7 @@ public class SessionInfo extends JavaScriptObject {
 	public final native FileSystemInfo getFileSystemInfo() /*-{
 		return this.filesystem;
 	}-*/;
-	
+
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String user, String permissionMode,
 			SessionSettings settings) /*-{

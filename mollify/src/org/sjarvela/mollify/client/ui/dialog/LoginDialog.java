@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.localization.Localizator;
+import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
@@ -25,13 +25,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class LoginDialog extends CenteredDialog {
-	private final Localizator localizator;
+	private final DefaultTextProvider localizator;
 	private final LoginHandler loginHandler;
 
 	private TextBox userName;
 	private PasswordTextBox password;
 
-	public LoginDialog(Localizator localizator, LoginHandler loginHandler) {
+	public LoginDialog(DefaultTextProvider localizator, LoginHandler loginHandler) {
 		super(localizator.getStrings().loginDialogTitle(),
 				StyleConstants.LOGIN_DIALOG);
 		this.localizator = localizator;
