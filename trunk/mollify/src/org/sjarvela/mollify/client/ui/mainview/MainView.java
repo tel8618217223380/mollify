@@ -22,12 +22,11 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
-import org.sjarvela.mollify.client.ui.filelist.Column;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
-import org.sjarvela.mollify.client.ui.filelist.FileListListener;
 import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopup;
 import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopup;
@@ -180,7 +179,7 @@ public class MainView extends Composite {
 		}
 	}
 
-	void addFileListListener(FileListListener listener) {
+	void addFileListListener(GridListener listener) {
 		list.addListener(listener);
 	}
 
@@ -202,14 +201,14 @@ public class MainView extends Composite {
 	}
 
 	public void showFileContext(File file) {
-		fileContext
-				.update(file, list.getWidget(file, Column.NAME).getElement());
+		fileContext.update(file, list.getWidget(file, FileList.COLUMN_NAME)
+				.getElement());
 		fileContext.show();
 	}
 
 	public void showDirectoryContext(Directory directory) {
-		dirContext.update(directory, list.getWidget(directory, Column.NAME)
-				.getElement());
+		dirContext.update(directory, list.getWidget(directory,
+				FileList.COLUMN_NAME).getElement());
 		dirContext.show();
 	}
 

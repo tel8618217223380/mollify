@@ -31,7 +31,8 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.filelist.Column;
+import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
+import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 public class MainViewPresenter implements DirectoryController,
 		FileSystemActionHandler, DirectoryHandler, RenameHandler {
@@ -46,8 +47,8 @@ public class MainViewPresenter implements DirectoryController,
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileSystemService fileSystemService,
-			FileUploadService fileUploadHandler, DefaultTextProvider localizator,
-			LogoutHandler logoutListener) {
+			FileUploadService fileUploadHandler,
+			DefaultTextProvider localizator, LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
@@ -72,8 +73,8 @@ public class MainViewPresenter implements DirectoryController,
 		}));
 	}
 
-	public void onFileSystemItemSelected(FileSystemItem item, Column column) {
-		if (column.equals(Column.NAME)) {
+	public void onFileSystemItemSelected(FileSystemItem item, GridColumn column) {
+		if (column.equals(FileList.COLUMN_NAME)) {
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
