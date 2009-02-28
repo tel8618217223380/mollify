@@ -17,7 +17,6 @@
 
 4) You are ready to go. Open address http://your.host.name/mollify to see your files.
 
-----
 
 = 2. Configuration =
 
@@ -29,13 +28,14 @@
 	 * [ConfigurationSingleUserMode Single-user mode]
 	 * [ConfigurationMultiUserMode Multi-user mode]
 	
+	Installation package has folder "example", which contains example configurations for both environments.
+	
 	Also, see instructions on [ConfigurationAdditionalOptions additional configuration options].
 
-----
 
 = 3. Modifying Installation =
 
-== 3.1 Relocating host page or backend interface files ==
+== 3.1. Relocating host page or backend interface files ==
 
 	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
 
@@ -60,13 +60,13 @@
 	<meta name="mollify:property" content="service-path=mollify/scripts">
 }}}
 
-== 3.2 Relocating client application files ==
+== 3.2. Relocating client application files ==
 
 	Client application files can be located anywhere, only the javascript and theme css references in the host page
 	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
 	changed, do not alter its contents.
 
-== 3.3 Customizing Mollify host page, or integrating Mollify into existing web page ==
+== 3.3. Customizing Mollify host page, or integrating Mollify into existing web page ==
 
 	Host page structure can be freely modified, as long as following rules are met:
 	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked
@@ -75,31 +75,3 @@
 	Optionally
 	  * If you wish to choose the language, include meta information in the head section
 	  * If you wish to support browser history, keep the iframe element with id "__gwt_historyFrame"
-
-----
-
-= 4. Client Logging =
-
-	Mollify has support for client side logging, which makes it possible to troubleshoot any problems when backend log is not accessible or does not reveal anything.
-
-	Logging can be enabled with following property in host page head section:
-
-{{{
-<meta name="gwt:property" content="log_level=DEBUG">
-}}}
-
-	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
-
-----
-
-= 5. Demo Mode =
-
-	For demonstration and theme development purposes, Mollify has built-in standalone demo mode.
-
-	It can be set up with following property in host page head section:
-
-{{{
-<meta name="gwt:property" content="demo=true">
-}}}
-
-	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually affect anything.
