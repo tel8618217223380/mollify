@@ -1,7 +1,7 @@
-#summary Configuration in single user mode
+#summary Configuration in single-user mode
 #labels Phase-Deploy
 
-= 1 Configuration =
+= 1. Configuration =
 
 	To set up a single-user environment, make sure variable $USERS in file "configuration.php" is empty or not defined.
 
@@ -9,7 +9,7 @@
 
 	{{{ $USERS = array();}}}
 
-= 2 Published Directories =
+= 2. Published Directories =
 
 	Mollify supports freely selectable published directories, which need not to have any relation with each other.
 
@@ -22,13 +22,13 @@ $PUBLISHED_DIRECTORIES = array(
 );
 }}}
 
-Rules are:
-  * Directory id's `[DIR_ID]` can be freely chosen, but they must be unique
-  * Path `[DIR_PATH]` must be absolute path in local file system
-  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
+	Rules are:
+	  * Directory id's `[DIR_ID]` can be freely chosen, but they must be unique
+	  * Path `[DIR_PATH]` must be absolute path in local file system
+	  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
 
 
-= 3 User Access Control ==
+= 3. User Access Control ==
 
 	Mollify supports configurable user access control for files. By default, when no configuration is done, users have read-only permissions to all files.
 
@@ -40,7 +40,7 @@ Rules are:
 	  * `RO` = Read-only (user can only download and view details)
 	  * `RW` = Read and write (user can also rename and delete file)
 
-== 3.1 User Default File Permission ==
+== 3.1. User Default File Permission ==
 
 	Default file permission applies to everybody, and it is defined with configuration variable `$FILE_PERMISSION_MODE`.
 
@@ -52,7 +52,7 @@ Rules are:
 
 	This will give all users read/write permissions, unless file specific permissions override this.
 
-=== 3.2 File Specific Permissions ===
+=== 3.2. File Specific Permissions ===
 
 	Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
 

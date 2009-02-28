@@ -3,7 +3,7 @@
 
 = 1. File Upload =
 
-== 1.1 Disabling File Upload ==
+== 1.1. Disabling File Upload ==
 
 	By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
 
@@ -74,7 +74,7 @@
 
 	PHP directive controlling this limit is "`max_execution_time`", see [http://fi2.php.net/manual/en/info.configuration.php#ini.max-execution-time PHP documentation] for more information.
 
-----
+
 
 = 4. Client Logging =
 
@@ -88,7 +88,7 @@
 
 	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
 
-----
+
 
 = 5. Demo Mode =
 

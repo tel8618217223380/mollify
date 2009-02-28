@@ -5,8 +5,8 @@
   * Added support for multiple file uploads
   * In multi-user environment, logged in user is shown in the header
   * Fixed most IE CSS issues
-  * Added client side logging for troubleshooting (for more information, see [Installation Installation wiki page], chapter 4)
-  * Added standalone demo mode (for more information, see [Installation Installation wiki page], chapter 5)
+  * Added client side logging for troubleshooting (for more information, see [ConfigurationAdditionalOptions Additional configuration options wiki page], chapter 4)
+  * Added standalone demo mode (for more information, see [ConfigurationAdditionalOptions Additional configuration options wiki page], chapter 5)
   * Removed configuration setting "theme" as IE does not support CSS injection. CSS must now be linked manually in the host html page.
 
 === Version 0.7.1 ===
@@ -19,7 +19,7 @@
   * Renamed backend php file parameter to "service-path"
 
 === Version 0.6.3 ===
-  * Support for folder actions: create, rename and delete folders (for more information, see [Installation Installation wiki page], chapter 2.5)
+  * Support for folder actions: create, rename and delete folders (for more information, see [ConfigurationAdditionalOptions Additional configuration options wiki page], chapter 2)
   * Rewritten css class naming
 
 === Version 0.6.2 ===
@@ -31,7 +31,7 @@
 
 === Version 0.6 ===
   * User access control
-  * Settings list instead of separate variables in configuration (*NOTE!* Makes configuration setting `$ENABLE_FILE_UPLOAD_PROGRESS` introduced in 0.5 obsolete)
+  * Settings list instead of separate variables in configuration (*NOTE!* Makes configuration setting `$ENABLE_FILE_UPLOAD_PROGRESS` introduced in version 0.5 obsolete)
 
 === Version 0.5.1 ===
   * Added user logout action when user accounts are enabled

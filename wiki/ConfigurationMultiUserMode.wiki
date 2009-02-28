@@ -1,7 +1,7 @@
-#summary Configuration in multi user mode
+#summary Configuration in multi-user mode
 #labels Phase-Deploy
 
-= 1 Configuration =
+= 1. Configuration =
 
 	To set up a multi-user environment, you have to define user accounts with variable $USERS in file "configuration.php".
 
@@ -30,7 +30,7 @@ $USERS = array(
 	  * User names `[USER NAME]` can be freely chosen, but they must be unique (as user is identified with user name when logged in)
 
 
-= 2 Published Directories =
+= 2. Published Directories =
 
 	Mollify supports freely selectable published directories, which need not to have any relation with each other. Each user can have different set of directories available.
 
@@ -76,7 +76,7 @@ $PUBLISHED_DIRECTORIES = array(
 	NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
 
-= 3 User Access Control =
+= 3. User Access Control =
 
 	Mollify supports configurable user access control for files. By default, when no configuration is done, users have read-only permissions to all files.
 
@@ -88,7 +88,7 @@ $PUBLISHED_DIRECTORIES = array(
 	  * `RO` = Read-only (user can only download and view details)
 	  * `RW` = Read and write (user can also rename and delete file)
 
-== 3.1 User Default File Permission ==
+== 3.1. User Default File Permission ==
 
 	Default file permission is defined in user account configuration with attribute `file_permission_mode`.
 
@@ -116,7 +116,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 	This would make "User 1" an admin user.
 
-== 3.2 File Specific Permissions ==
+== 3.2. File Specific Permissions ==
 
 	Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
 
