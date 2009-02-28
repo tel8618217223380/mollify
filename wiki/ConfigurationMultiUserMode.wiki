@@ -1,0 +1,132 @@
+#summary Configuration in multi user mode
+#labels Phase-Deploy
+
+= 1 Configuration =
+
+	To set up a multi-user environment, you have to define user accounts with variable $USERS in file "configuration.php".
+
+	Syntax is:
+
+	{{{
+$USERS = array(
+	[USER_ID] => array("name" => [USER NAME], "password" => [PASSWORD]),
+	...
+);
+	}}}
+
+	For example:
+
+{{{
+$USERS = array(
+	"1" => array("name" => "User 1", "password" => "foo"),
+	"2" => array("name" => "User 2", "password" => "bar")
+);
+}}}
+
+	This configuration has two users, "User 1" and "User 2".
+
+	Rules for user configuration:
+	  * User id's `[USER_ID]` can be freely chosen, but they must be unique (as all user related data is linked with user id)
+	  * User names `[USER NAME]` can be freely chosen, but they must be unique (as user is identified with user name when logged in)
+
+
+= 2 Published Directories =
+
+	Mollify supports freely selectable published directories, which need not to have any relation with each other. Each user can have different set of directories available.
+
+	Use following format to define published directories:
+
+{{{
+$PUBLISHED_DIRECTORIES = array(
+	[USER_ID] => array(
+		[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+		...
+	),
+	...
+);
+}}}
+
+	For example:
+
+{{{
+$PUBLISHED_DIRECTORIES = array(
+	"1" => array(
+		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
+		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
+	),
+	"2" => array(
+		"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
+		"r2" => array("name" => "Folder C", "path" => "/foo/baz")
+	)
+);
+}}}
+
+	With this configuration
+	  * User with id "1" (defined in user configuration) has two visible directories: "Folder A" and "Folder B"
+	  * User with id "2" (defined in user configuration) has two visible directories: "Folder A" and "Folder C"
+	  * Although "Folder A" exists in both users, they may point to different physical folder
+
+	Rules are:
+	  * User id `[USER_ID]` must exist in user configuration (see chapter 2.1)
+	  * Directory id's `[DIR_ID]` can be freely chosen, but they must be unique within user (two users can have same id's)
+	  * Path `[DIR_PATH]` must be absolute path in local file system
+	  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
+
+
+	NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
+
+
+= 3 User Access Control =
+
+	Mollify supports configurable user access control for files. By default, when no configuration is done, users have read-only permissions to all files.
+
+	File permissions can be granted in two levels:
+	  * User default file permission
+	  * File specific file permission
+
+	Possible file permission values are:
+	  * `RO` = Read-only (user can only download and view details)
+	  * `RW` = Read and write (user can also rename and delete file)
+
+== 3.1 User Default File Permission ==
+
+	Default file permission is defined in user account configuration with attribute `file_permission_mode`.
+
+	For example:
+
+{{{
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "RW"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+	);
+}}}
+
+	This configuration gives "User 1" read/write permissions, and "User 2" read-only permissions, unless file specific permissions override these.
+
+	In addition to default permission modes, in multi-user environment user can be set to admin mode with value "A". Admin users are allowed to access everything regardless of file permission configurations. Later on, admin users will also have options and actions available that are not visible for non-admins.
+
+	For example:
+
+{{{
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
+		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+	);
+}}}
+
+	This would make "User 1" an admin user.
+
+== 3.2 File Specific Permissions ==
+
+	Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
+
+	Each folder has its own user access control file, which applies only to files in that folder.
+
+	Each file can have permissions set to user id's (see chapter 2.1 Users):
+	  * With user id "`*`", setting applies to all users overriding possible user default permission
+	  * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "`*`", or in user account configuration)
+
+	Example scenarios:
+	  * User has default permission "RO", file has permission "`* = RW`": User will get read and write permissions
+	  * User has default permission "RW", file has permission "`* = RO`": User will get read-only permissions
+	  * User with id "U1" has default permission "RW", file has permissions "`* = RW`" and "`U1 = RO`": User will get read-only permissions

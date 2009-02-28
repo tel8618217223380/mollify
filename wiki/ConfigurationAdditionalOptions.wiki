@@ -1,0 +1,164 @@
+#summary Additional configuration options
+#labels Phase-Deploy
+
+= 1 File Upload =
+
+== 1.1 Disabling File Upload ==
+
+	By default, file upload feature is enabled. To disable this feature, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_file_upload" => FALSE
+	);
+}}}
+
+== 1.2 Enabling File Upload Progress ==
+
+	By default, file upload progress is disabled. To enable this feature, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_file_upload_progress" => TRUE
+	);
+}}}
+
+	NOTE! File upload progress display requires APC (Alternative PHP Cache), see [http://code.google.com/p/mollify/wiki/HowToEnableUploadProgressDisplay wiki page] for more information
+
+
+= 2 Folder Actions =
+
+	Mollify supports folder actions, ie. creating, renaming and deleting folders.
+
+== 2.1 Disabling Folder Actions ==
+
+	By default, folder actions are enabled. To disable folder actions, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_folder_actions" => FALSE
+	);
+}}}
+
+== 2.2 Folder Action User Permissions ==
+
+	At the moment, folder actions are available to all users with user default file permissions set to read/write (see chapter 2.3 User Access Control).
+
+	This is:
+	  * In single-user permission when user default file permission mode is set to read/write (RW). Note that in this case all users are allowed to create, rename and delete folders.
+	  * In multi-user permission when user default file permission is set to read/write (RW) or admin (A).
+
+= 3 Zip Downloads =
+
+	Mollify supports downloading files and folders in zipped package.
+
+== 3.1 Enabling Zip Downloads ==
+
+	By default, zip downloads are disabled. To enable zip downloads, use following setting in "configuration.php":
+
+{{{
+	$SETTINGS = array(
+		"enable_zip_download" => TRUE
+	);
+}}}
+
+== 3.2 Additional Zip Download Options ==
+
+	Depending on your web server configuration, using zip downloading might require changing configuration:
+
+*1) File size limitation*
+
+	Usually PHP configurations limit the amount of memory any PHP script can reserve. Mollify zip packages are created in memory, and if the file size is greater than what PHP allows to reserve, operation will fail.
+
+	To fix this, there are two options: to change the PHP setting, or to set Mollify to read files in smaller parts.
+
+	  * To change PHP memory limit, change PHP directive controlling maximum memory reservable "`memory_limit`", see [http://fi2.php.net/ini.core PHP documentation] for more information.
+	  * To set the size of the file parts read, define ZIP_OPTIONS setting for "large_file_size" in Mollify "configuration.php".
+
+	For example, if PHP configuration sets the memory limit to 8M, use following setting in Mollify "configuration.php" to split file reading in 7M parts:
+
+{{{
+	$ZIP_OPTIONS = array("large_file_size" => 7 * 1024 * 1024);
+}}}
+
+*2) Execution time*
+
+	As well as memory limit, PHP may also limit the maximum time a script can execute.
+
+	Since zip packages are created in memory and streamed on-the-fly, it may take a long time to zip large files or folders. If this time exceeds the maximum time set in PHP, download will fail.
+
+	PHP directive controlling this limit is "`max_execution_time`", see [http://fi2.php.net/manual/en/info.configuration.php#ini.max-execution-time PHP documentation] for more information.
+
+----
+
+
+= 3. Modifying Installation =
+
+== 3.1 Relocating host page or backend interface files ==
+
+	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
+
+	If you wish to locate backend interface files (`*`.php) into a subdirectory, you must define this location in the host html file, with following format:
+
+{{{
+	<html>
+		<head>
+			...
+			<meta name="mollify:property" content="service-path=[RELATIVE_PATH]">
+		</head>
+		...
+	</html>
+}}}
+
+	Replace `[RELATIVE_PATH]` with path to the backend interface files, relative to the host file. Note that path can only descend, you cannot go upwards in the folder hierarchy, and thus all leading dots and slashes are removed ("." and "/").
+
+	For example,
+	if you place host file in `http://your_host_name/mollify.html` and the backend interface files into `http://your_host_name/mollify/scripts/`, the setting should be as follows:
+
+{{{
+	<meta name="mollify:property" content="service-path=mollify/scripts">
+}}}
+
+== 3.2 Relocating client application files ==
+
+	Client application files can be located anywhere, only the javascript and theme css references in the host page
+	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
+	changed, do not alter its contents.
+
+== 3.3 Customizing Mollify host page, or integrating Mollify into existing web page ==
+
+	Host page structure can be freely modified, as long as following rules are met:
+	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked
+	  * In the page, there must be a div with id "mollify". Application is injected inside this element.
+	
+	Optionally
+	  * If you wish to choose the language, include meta information in the head section
+	  * If you wish to support browser history, keep the iframe element with id "__gwt_historyFrame"
+
+----
+
+= 4. Client Logging =
+
+	Mollify has support for client side logging, which makes it possible to troubleshoot any problems when backend log is not accessible or does not reveal anything.
+
+	Logging can be enabled with following property in host page head section:
+
+{{{
+<meta name="gwt:property" content="log_level=DEBUG">
+}}}
+
+	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
+
+----
+
+= 5. Demo Mode =
+
+	For demonstration and theme development purposes, Mollify has built-in standalone demo mode.
+
+	It can be set up with following property in host page head section:
+
+{{{
+<meta name="gwt:property" content="demo=true">
+}}}
+
+	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually affect anything.
