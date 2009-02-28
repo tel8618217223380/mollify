@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
 public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener {
@@ -81,5 +82,9 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 		if (item.isFile() || item.equals(Directory.Parent))
 			return;
 		view.showDirectoryContext((Directory) item);
+	}
+
+	public void onColumnSorted(GridColumn column, Sort sort) {
+		presenter.setListOrder(column, sort);
 	}
 }

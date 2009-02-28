@@ -12,8 +12,9 @@ package org.sjarvela.mollify.client.ui.common.grid;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Coords;
@@ -21,12 +22,17 @@ import org.sjarvela.mollify.client.ui.common.Coords;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Grid<T> extends FlexTable {
 	private final String headerCss;
 	private final List<GridColumn> columns;
+	private final Map<GridColumn, GridColumnSortButton> sortButtons = new HashMap();
 	private final List<GridListener> listeners = new ArrayList<GridListener>();
 	private final List<String> rowStyles = new ArrayList();
 
@@ -35,7 +41,7 @@ public class Grid<T> extends FlexTable {
 
 	private List<T> content = new ArrayList();
 	private GridDataProvider<T> dataProvider = null;
-	private Comparator<T> comparator = null;
+	private GridComparator<T> comparator = null;
 
 	public Grid(String headerCss, List<GridColumn> columns) {
 		super();
@@ -65,15 +71,48 @@ public class Grid<T> extends FlexTable {
 	}
 
 	private void initializeColumn(int index, GridColumn column) {
-		Element col = DOM.getChild(headerRow, index);
-		col.setId(headerCss + "-" + column.getId());
-		DOM.setElementAttribute(col, "class", headerCss);
+		Element th = DOM.getChild(headerRow, index);
+		th.setAttribute("class", headerCss + "-th");
+		th.setId(headerCss + "-th-" + column.getId());
 
-		col.setInnerHTML(createColumnHeaderHtml(column));
+		Widget headerElement = createHeaderWidget(column);
+		headerElement.setStyleName(headerCss);
+		headerElement.getElement().setId(headerCss + "-" + column.getId());
+
+		th.appendChild(headerElement.getElement());
 	}
 
-	private String createColumnHeaderHtml(GridColumn column) {
-		return column.getTitle();
+	private Widget createHeaderWidget(GridColumn column) {
+		if (!column.isSortable()) {
+			return new Label(column.getTitle());
+		}
+
+		Label label = new Label(column.getTitle());
+		label.setStyleName(headerCss + "-text");
+		label.getElement().setId(headerCss + "-text-" + column.getId());
+
+		Panel panel = new FlowPanel();
+		panel.add(label);
+		panel.add(createSortButton(column));
+
+		return panel;
+	}
+
+	private GridColumnSortButton createSortButton(final GridColumn column) {
+		final GridColumnSortButton sortButton = new GridColumnSortButton(
+				column, StyleConstants.FILE_LIST_COLUMN_PREFIX + "sort");
+		sortButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				Grid.this.onColumnSortClick(column, sortButton.toggle());
+			}
+		});
+		sortButtons.put(column, sortButton);
+		return sortButton;
+	}
+
+	protected void onColumnSortClick(GridColumn column, Sort sort) {
+		for (GridListener listener : listeners)
+			listener.onColumnSorted(column, sort);
 	}
 
 	public int getColumnIndex(GridColumn column) {
@@ -104,8 +143,11 @@ public class Grid<T> extends FlexTable {
 		this.dataProvider = dataProvider;
 	}
 
-	public void setComparator(Comparator<T> comparator) {
+	public void setComparator(GridComparator<T> comparator) {
 		this.comparator = comparator;
+		if (dataProvider == null)
+			return;
+		sort();
 	}
 
 	public void setContent(List<T> list) {
@@ -113,9 +155,21 @@ public class Grid<T> extends FlexTable {
 			throw new RuntimeException("No data provider");
 
 		this.content = new ArrayList(list);
+		sort();
+	}
+
+	private void sort() {
 		if (comparator != null)
 			Collections.sort(content, comparator);
 
+		for (GridColumn column : columns) {
+			if (sortButtons.containsKey(column)) {
+				Sort sort = comparator == null ? Sort.none : (column
+						.equals(comparator.getColumn()) ? comparator.getSort()
+						: Sort.none);
+				sortButtons.get(column).setSort(sort);
+			}
+		}
 		refresh();
 	}
 
@@ -128,6 +182,8 @@ public class Grid<T> extends FlexTable {
 
 			for (GridColumn col : columns) {
 				dataProvider.getData(t, col).applyTo(row, column, this);
+				getCellFormatter().addStyleName(row, column,
+						dataProvider.getColumnStyle(col));
 				column++;
 			}
 
@@ -141,13 +197,6 @@ public class Grid<T> extends FlexTable {
 				rowStyles.add("grid-row");
 
 			row++;
-		}
-
-		int column = 0;
-		for (GridColumn col : columns) {
-			getColumnFormatter().setStyleName(column,
-					dataProvider.getColumnStyle(col));
-			column++;
 		}
 	}
 

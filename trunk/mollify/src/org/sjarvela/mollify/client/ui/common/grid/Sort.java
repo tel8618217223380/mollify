@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-public interface GridListener<T> {
-	void onColumnClicked(T t, GridColumn column);
+public enum Sort {
+	asc, desc, none;
 
-	void onIconClicked(T t);
-
-	void onColumnSorted(GridColumn column, Sort sort);
+	public int getCompareFactor() {
+		return desc.equals(this) ? -1 : 1;
+	}
 }
