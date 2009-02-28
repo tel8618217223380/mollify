@@ -15,11 +15,11 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
-import org.sjarvela.mollify.client.ui.filelist.Column;
-import org.sjarvela.mollify.client.ui.filelist.FileListListener;
+import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
+import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
-public class MainViewGlue implements FileListListener, ViewListener {
+public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 	private final MainView view;
@@ -73,7 +73,7 @@ public class MainViewGlue implements FileListListener, ViewListener {
 				});
 	}
 
-	public void onRowClicked(FileSystemItem item, Column column) {
+	public void onColumnClicked(FileSystemItem item, GridColumn column) {
 		presenter.onFileSystemItemSelected(item, column);
 	}
 

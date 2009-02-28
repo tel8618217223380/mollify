@@ -8,12 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.filelist;
+package org.sjarvela.mollify.client.ui.common.grid;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import java.util.List;
 
-public interface FileListListener {
-	void onRowClicked(FileSystemItem item, Column column);
+public interface GridDataProvider<T> {
+	GridData getData(T t, GridColumn column);
 
-	void onIconClicked(FileSystemItem item);
+	List<String> getRowStyles(T t);
+
+	String getColumnStyle(GridColumn column);
 }

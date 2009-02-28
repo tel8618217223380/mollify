@@ -8,8 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.filelist;
+package org.sjarvela.mollify.client.ui.common.grid;
 
-public enum Column {
-	/* SELECT, */NAME, TYPE, SIZE
+public interface GridListener<T> {
+	void onColumnClicked(T t, GridColumn column);
+
+	void onIconClicked(T t);
 }
