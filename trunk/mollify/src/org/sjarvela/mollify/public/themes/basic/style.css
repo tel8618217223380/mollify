@@ -395,7 +395,7 @@ th#mollify-filelist-column-th-type.mollify-filelist-column-th {
 }
 
 .mollify-filelist-row-directory-even .mollify-filelist-item-type, .mollify-filelist-row-directory-odd .mollify-filelist-item-type {
-	color: #969696;
+	color: #797979;
 }
 
 th#mollify-filelist-column-th-size.mollify-filelist-column-th {
@@ -446,6 +446,7 @@ td#mollify-filelist-column-size {
 
 .mollify-filelist-column-sort-desc {
 	background: url(sort-desc.png) no-repeat;
+	margin-top: 5px;
 }
 
 .mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover {
@@ -485,11 +486,27 @@ td#mollify-filelist-column-size {
 	background-color: #b0b3d0;
 }
 
+.mollify-filelist-row-directory-even .mollify-filelist-column-type {
+	background-color: #e8cfd0;
+}
+
+.mollify-filelist-row-directory-odd .mollify-filelist-column-type {
+	background-color: #d3bcbd;
+}
+
+.mollify-filelist-row-directory-even-hover .mollify-filelist-column-type {
+	background-color: #e2c1da;
+}
+
+.mollify-filelist-row-directory-odd-hover .mollify-filelist-column-type {
+	background-color: #d3becf;
+}
+
 .mollify-filelist-row-directory-even td, .mollify-filelist-row-directory-odd td {
-	padding-left: 9;
-	padding-top: 2;
-	padding-bottom: 4;
+	padding-left: 9px;
+	padding-top: 3px;
 	height: 15px;
+	padding-bottom: 3px;
 }
 
 .mollify-filelist-row-directory-even td {
@@ -511,7 +528,7 @@ td#mollify-filelist-column-size {
 .mollify-filelist .mollify-filelist-item-name {
 	height: 15px;
 	padding-left: 5px;
-	padding-top: 3px;
+	padding-top: 2px;
 	cursor: pointer;
 }
 
@@ -524,7 +541,7 @@ td#mollify-filelist-column-size {
 .mollify-filelist-row-directory-icon, .mollify-filelist-row-directory-icon-hover {
 	width: 20px;
 	background: url(folder.png) no-repeat 3px 3px;
-	height: 18px;
+	height: 20px;
 	float: left;
 	cursor: pointer;
 	margin-right: 2px;

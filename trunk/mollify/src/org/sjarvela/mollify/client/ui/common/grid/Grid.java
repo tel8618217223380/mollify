@@ -255,6 +255,11 @@ public class Grid<T> extends FlexTable {
 			listener.onColumnClicked(t, column);
 	}
 
+	public void onIconClicked(T t) {
+		for (GridListener listener : listeners)
+			listener.onIconClicked(t);
+	}
+
 	public void removeAllRows() {
 		int count = getRowCount();
 		if (count > 0) {
