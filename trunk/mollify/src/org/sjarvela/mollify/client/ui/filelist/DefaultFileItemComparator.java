@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.ui.filelist;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -8,7 +18,6 @@ import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class DefaultFileItemComparator implements
 		GridComparator<FileSystemItem> {
-
 	private final GridColumn column;
 	private final Sort sort;
 
@@ -25,23 +34,28 @@ public class DefaultFileItemComparator implements
 		return sort;
 	}
 
-	public int compare(FileSystemItem f1, FileSystemItem f2) {
-		if (f1.isFile() && !f2.isFile())
+	public int compare(FileSystemItem item1, FileSystemItem item2) {
+		if (item1.isFile() && !item2.isFile())
 			return 1;
-		if (f2.isFile() && !f1.isFile())
+		if (item2.isFile() && !item1.isFile())
 			return -1;
 
-		String i1 = getData(f1);
-		String i2 = getData(f2);
+		if (FileList.COLUMN_SIZE.equals(column))
+			return (getSize(item1) - getSize(item2)) * sort.getCompareFactor();
 
-		return i1.compareTo(i2) * sort.getCompareFactor();
+		return getData(item1).compareToIgnoreCase(getData(item2))
+				* sort.getCompareFactor();
+	}
+
+	private int getSize(FileSystemItem item) {
+		if (item.isFile())
+			return ((File) item).getSize();
+		return 0;
 	}
 
 	private String getData(FileSystemItem item) {
 		if (column.equals(FileList.COLUMN_NAME))
 			return item.getName();
-		if (column.equals(FileList.COLUMN_SIZE) && item.isFile())
-			return String.valueOf(((File) item).getSize());
 
 		if (column.equals(FileList.COLUMN_TYPE) && item.isFile())
 			return String.valueOf(((File) item).getExtension());
