@@ -25,7 +25,6 @@ import org.sjarvela.mollify.client.ui.common.grid.Grid;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
-import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FileList extends Grid<FileSystemItem> implements
 		GridDataProvider<FileSystemItem> {
-	private List<GridListener> listeners = new ArrayList<GridListener>();
 	private TextProvider textProvider;
 
 	public static GridColumn COLUMN_NAME;
@@ -97,11 +95,6 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	protected void onDirectoryIconClicked(Directory directory) {
-		for (GridListener listener : listeners)
-			listener.onIconClicked(directory);
-	}
-
 	private FlowPanel createDirectoryNameWidget(final Directory directory) {
 		FlowPanel panel = new FlowPanel();
 
@@ -110,13 +103,11 @@ public class FileList extends Grid<FileSystemItem> implements
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
-		if (!directory.equals(Directory.Parent)) {
-			icon.addClickListener(new ClickListener() {
-				public void onClick(Widget sender) {
-					onDirectoryIconClicked(directory);
-				}
-			});
-		}
+		icon.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				FileList.this.onIconClicked(directory);
+			}
+		});
 
 		panel.add(createNameWidget(directory));
 		return panel;

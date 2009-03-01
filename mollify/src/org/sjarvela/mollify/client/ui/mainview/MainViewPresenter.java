@@ -231,7 +231,9 @@ public class MainViewPresenter implements DirectoryController,
 
 	private void onDirectoryAction(final Directory directory,
 			FileSystemAction action) {
-		if (action.equals(FileSystemAction.delete)) {
+		if (action.equals(FileSystemAction.rename)) {
+			windowManager.getDialogManager().showRenameDialog(directory, this);
+		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getLocalizator().getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
 			String message = windowManager.getLocalizator().getMessages()
