@@ -14,20 +14,16 @@ import com.google.gwt.user.client.ui.Label;
 
 public class GridColumnSortButton extends Label {
 	private Sort sort = Sort.none;
-	private final String style;
 
 	public GridColumnSortButton(GridColumn column, String styleClass) {
-		this.style = styleClass;
+		this.setStylePrimaryName(styleClass);
 		this.getElement().setId(styleClass + "-" + column.getId());
-		updateStyle();
+		this.addStyleDependentName(sort.name());
 	}
 
 	public void setSort(Sort sort) {
+		this.removeStyleDependentName(this.sort.name());
 		this.sort = sort;
-		updateStyle();
-	}
-
-	private void updateStyle() {
-		this.setStyleName(style + "-" + sort.name());
+		this.addStyleDependentName(sort.name());
 	}
 }
