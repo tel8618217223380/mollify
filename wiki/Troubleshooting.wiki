@@ -12,11 +12,11 @@
 	
 	In both cases, it is always best to first check PHP error log, usually the reason can be found there.
 
-	If there are no entries, it is case of client cannot connect to server (ie. it tries to access backend interface files in a wrong place). If possible, you should check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see [http://code.google.com/p/mollify/wiki/Installation Installation wiki]), that it is set up properly.
+	If there are no PHP error log entries, it is case of client cannot connect to server (ie. it tries to access backend interface files in a wrong place). If possible, you should check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see [http://code.google.com/p/mollify/wiki/Installation Installation wiki]), that it is set up properly.
 
-	In error cases, it may be useful to see client logs, see [http://code.google.com/p/mollify/wiki/ConfigurationAdditionalOptions configuration wiki] (chapter 4, Client Logging) for more information [http://getfirebug.com/ Firebug] plugin for Firefox browser is also very good tool for investigating what resources a page tries to access.
+	In such error cases, it may be useful to see client logs, see [http://code.google.com/p/mollify/wiki/ConfigurationAdditionalOptions configuration wiki] (chapter 4, Client Logging) for more information [http://getfirebug.com/ Firebug] plugin for Firefox browser is also very good tool for investigating what resources a page tries to access.
 
-	If PHP log reveals errors, it is a case of invalid system setup or configuration.
+	If, on the other hand, PHP log reveals errors, it is a case of invalid system setup or configuration.
 
 	Common PHP errors and their reasons are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
