@@ -22,13 +22,6 @@ public class GridColumnSortButton extends Label {
 		updateStyle();
 	}
 
-	public Sort toggle() {
-		if (sort.equals(Sort.asc))
-			return Sort.desc;
-		else
-			return Sort.asc;
-	}
-
 	public void setSort(Sort sort) {
 		this.sort = sort;
 		updateStyle();
@@ -37,5 +30,4 @@ public class GridColumnSortButton extends Label {
 	private void updateStyle() {
 		this.setStyleName(style + "-" + sort.name());
 	}
-
 }

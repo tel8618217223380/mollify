@@ -181,5 +181,4 @@ public class FileList extends Grid<FileSystemItem> implements
 	public String getColumnStyle(GridColumn column) {
 		return StyleConstants.FILE_LIST_COLUMN_PREFIX + column.getId();
 	}
-
 }

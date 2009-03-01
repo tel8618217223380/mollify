@@ -18,11 +18,11 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Coords;
+import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -36,8 +36,8 @@ public class Grid<T> extends FlexTable {
 	private final List<GridListener> listeners = new ArrayList<GridListener>();
 	private final List<String> rowStyles = new ArrayList();
 
-	private final Element head;
-	private final Element headerRow;
+	private Element head;
+	private Element headerRow;
 
 	private List<T> content = new ArrayList();
 	private GridDataProvider<T> dataProvider = null;
@@ -45,9 +45,18 @@ public class Grid<T> extends FlexTable {
 
 	public Grid(String headerCss, List<GridColumn> columns) {
 		super();
+
 		this.headerCss = headerCss;
 		this.columns = columns;
 
+		initializeElement();
+		initializeColumns();
+
+		sinkEvents(Event.ONMOUSEOVER);
+		sinkEvents(Event.ONMOUSEOUT);
+	}
+
+	private void initializeElement() {
 		// create elements
 		head = DOM.createTHead();
 		headerRow = DOM.createTR();
@@ -58,16 +67,16 @@ public class Grid<T> extends FlexTable {
 		DOM.setElementAttribute(getBodyElement(), "style",
 				"overflow:auto;text-align: left;");
 		DOM.setElementAttribute(head, "style", "text-align: left;");
+	}
 
+	private void initializeColumns() {
 		assureColumnCount(columns.size());
-		int i = 0;
-		for (GridColumn column : columns) {
-			initializeColumn(i, column);
-			i++;
-		}
 
-		sinkEvents(Event.ONMOUSEOVER);
-		sinkEvents(Event.ONMOUSEOUT);
+		int index = 0;
+		for (GridColumn column : columns) {
+			initializeColumn(index, column);
+			index++;
+		}
 	}
 
 	private void initializeColumn(int index, GridColumn column) {
@@ -82,14 +91,15 @@ public class Grid<T> extends FlexTable {
 		th.appendChild(headerElement.getElement());
 	}
 
-	private Widget createHeaderWidget(GridColumn column) {
-		if (!column.isSortable()) {
+	private Widget createHeaderWidget(final GridColumn column) {
+		if (!column.isSortable())
 			return new Label(column.getTitle());
-		}
 
 		Label label = new Label(column.getTitle());
 		label.setStyleName(headerCss + "-text");
 		label.getElement().setId(headerCss + "-text-" + column.getId());
+		addSortClickListener(this, label.getElement(), column);
+		HoverDecorator.decorate(label);
 
 		Panel panel = new FlowPanel();
 		panel.add(label);
@@ -98,21 +108,39 @@ public class Grid<T> extends FlexTable {
 		return panel;
 	}
 
+	private native void addSortClickListener(Grid grid, Element element,
+			GridColumn column) /*-{
+		element.onclick = function() {
+			grid.@org.sjarvela.mollify.client.ui.common.grid.Grid::onColumnSortClick(Lorg/sjarvela/mollify/client/ui/common/grid/GridColumn;)(column);
+		};
+	}-*/;
+
 	private GridColumnSortButton createSortButton(final GridColumn column) {
 		final GridColumnSortButton sortButton = new GridColumnSortButton(
 				column, StyleConstants.FILE_LIST_COLUMN_PREFIX + "sort");
-		sortButton.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				Grid.this.onColumnSortClick(column, sortButton.toggle());
-			}
-		});
+		addSortClickListener(this, sortButton.getElement(), column);
+		HoverDecorator.decorate(sortButton);
 		sortButtons.put(column, sortButton);
 		return sortButton;
 	}
 
-	protected void onColumnSortClick(GridColumn column, Sort sort) {
+	protected void onColumnSortClick(GridColumn column) {
+		Sort sort = Sort.none;
+
+		if (this.comparator != null)
+			if (this.comparator.getColumn().equals(column))
+				sort = toggleSort(this.comparator.getSort());
+			else
+				sort = Sort.asc;
+
 		for (GridListener listener : listeners)
 			listener.onColumnSorted(column, sort);
+	}
+
+	private Sort toggleSort(Sort sort) {
+		if (Sort.asc.equals(sort))
+			return Sort.desc;
+		return Sort.asc;
 	}
 
 	public int getColumnIndex(GridColumn column) {
@@ -256,6 +284,7 @@ public class Grid<T> extends FlexTable {
 		Element row = DOM.getParent(cell);
 		if (row == null)
 			return -1;
+
 		return DOM.getChildIndex(getBodyElement(), row);
 	}
 
