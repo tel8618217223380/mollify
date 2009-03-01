@@ -23,7 +23,6 @@ public class HoverDecorator {
 	static MouseListenerAdapter getListener() {
 		if (listener == null) {
 			listener = new MouseListenerAdapter() {
-
 				@Override
 				public void onMouseEnter(Widget sender) {
 					sender.addStyleDependentName(StyleConstants.HOVER);

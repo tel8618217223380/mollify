@@ -390,35 +390,27 @@
 	text-align: left;
 }
 
-.mollify-filelist th {
-	color: #494949;
-	border-bottom: 2px solid #AAAAAA;
-	font-weight: bold;
-	padding-bottom: 3px;
+th#mollify-filelist-column-th-type.mollify-filelist-column-th {
+	width: 130px;
 }
 
-.mollify-filelist td {
-	padding-right: 5px;
+.mollify-filelist-row-directory-even .mollify-filelist-item-type, .mollify-filelist-row-directory-odd .mollify-filelist-item-type {
+	color: #969696;
+}
+
+th#mollify-filelist-column-th-size.mollify-filelist-column-th {
+	width: 85px;
+}
+
+.mollify-filelist-column-title, .mollify-filelist-column-title-hover {
 	padding-left: 5px;
-	height: 20px;
+	float: left;
+	cursor: pointer;
+	cursor: hand;
 }
 
-th#mollify-filelist-column-select {
-	width: 22px;
-}
-
-th#mollify-filelist-column-name {
-	padding-left: 4px;
-}
-
-th#mollify-filelist-column-type {
-	width: 150px;
-	padding-left: 13px;
-}
-
-th#mollify-filelist-column-size {
-	width: 75px;
-	padding-left: 10px;
+.mollify-filelist-column-title-hover {
+	text-decoration: underline;
 }
 
 td#mollify-filelist-column-size {
@@ -429,6 +421,31 @@ td#mollify-filelist-column-size {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
+}
+
+.mollify-filelist th {
+	color: #494949;
+	border-bottom: 2px solid #AAAAAA;
+	font-weight: bold;
+	padding-bottom: 3px;
+}
+
+.mollify-filelist-column-sort {
+	float: left;
+	cursor: pointer;
+	cursor: hand;
+	margin-left: 3px;
+	height: 5px;
+	width: 8px;
+	margin-top: 4px;
+}
+
+.mollify-filelist-column-sort-asc {
+	background: url(sort-asc.png) no-repeat;
+}
+
+.mollify-filelist-column-sort-desc {
+	background: url(sort-desc.png) no-repeat;
 }
 
 .mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover {
@@ -468,17 +485,18 @@ td#mollify-filelist-column-size {
 	background-color: #b0b3d0;
 }
 
-.mollify-filelist-row-directory-even td {
+.mollify-filelist-row-directory-even td, .mollify-filelist-row-directory-odd td {
+	padding-left: 9;
 	padding-top: 2;
 	padding-bottom: 4;
-	height: 20px;
+	height: 15px;
+}
+
+.mollify-filelist-row-directory-even td {
 	background: #fbdfde;
 }
 
 .mollify-filelist-row-directory-odd td {
-	padding-top: 2;
-	padding-bottom: 4;
-	height: 20px;
 	background-color: #ead2d2;
 }
 
@@ -491,29 +509,35 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist .mollify-filelist-item-name {
-	height: 20px;
-	padding-top: 5px;
+	height: 15px;
+	padding-left: 5px;
+	padding-top: 3px;
 	cursor: pointer;
 }
 
 .mollify-filelist-row-directory-even .mollify-filelist-item-name, .mollify-filelist-row-directory-odd .mollify-filelist-item-name {
 	font-weight: bold;
 	font-size: 11px;
-	padding-top: 6px;
+	padding-top: 3px;
 }
 
 .mollify-filelist-row-directory-icon, .mollify-filelist-row-directory-icon-hover {
 	width: 20px;
 	background: url(folder.png) no-repeat 3px 3px;
-	height: 20px;
+	height: 18px;
 	float: left;
 	cursor: pointer;
-	margin-top: 3px;
 	margin-right: 2px;
 }
 
 .mollify-filelist-row-directory-icon-hover {
 	background: #c4c4c4 url(folder.png) no-repeat 3px 3px;
+}
+
+.mollify-filelist td {
+	padding-right: 5px;
+	padding-left: 5px;
+	height: 15px;
 }
 
 .mollify-file-context, .mollify-directory-context {
