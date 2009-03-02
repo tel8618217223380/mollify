@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FilePermission;
+import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.session.SessionInfo.PermissionMode;
@@ -47,11 +48,13 @@ public class DemoData {
 
 	private PermissionMode permissionMode = PermissionMode.ReadWrite;
 	private SessionSettings settings;
+	private FileSystemInfo fileSystemInfo;
 	private final boolean multiUser;
 
 	public DemoData(boolean multiUser) {
 		this.multiUser = multiUser;
 		settings = SessionSettings.create(true, true, true, true);
+		fileSystemInfo = FileSystemInfo.create(1024, 1024);
 		createDirectoriesAndFiles();
 	}
 
@@ -82,13 +85,14 @@ public class DemoData {
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", permissionMode,
-					settings);
+					settings, fileSystemInfo);
 		}
 
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, user, permissionMode,
-					settings);
-		return SessionInfo.create(true, false, "", permissionMode, settings);
+					settings, fileSystemInfo);
+		return SessionInfo.create(true, false, "", permissionMode, settings,
+				fileSystemInfo);
 	}
 
 	public List<Directory> getRootDirectories() {

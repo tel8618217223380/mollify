@@ -18,4 +18,15 @@ public class FileSystemInfo extends JavaScriptObject {
 		return "max_upload_file_size=" + getUploadMaxFileSize()
 				+ ", max_upload_total_size=" + getUploadMaxTotalSize() + "]";
 	}
+
+	public static FileSystemInfo create(int maxFileSize, int maxTotalSize) {
+		FileSystemInfo result = FileSystemInfo.createObject().cast();
+		result.putValues(maxFileSize, maxTotalSize);
+		return result;
+	}
+	
+	private final native void putValues(int maxFileSize, int maxTotalSize) /*-{
+		this.max_upload_file_size = maxFileSize;
+		this.max_upload_total_size = maxTotalSize;
+	}-*/;
 }

@@ -205,10 +205,12 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	private void onFileAction(final File file, FileSystemAction action) {
-		if (action.equals(FileSystemAction.download)
-				|| action.equals(FileSystemAction.download_as_zip)) {
+		if (action.equals(FileSystemAction.download)) {
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadUrl(file));
+		} else if (action.equals(FileSystemAction.download_as_zip)) {
+			windowManager.openDownloadUrl(fileSystemService
+					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(file, this);
 		} else if (action.equals(FileSystemAction.delete)) {
@@ -231,7 +233,10 @@ public class MainViewPresenter implements DirectoryController,
 
 	private void onDirectoryAction(final Directory directory,
 			FileSystemAction action) {
-		if (action.equals(FileSystemAction.rename)) {
+		if (action.equals(FileSystemAction.download_as_zip)) {
+			windowManager.openDownloadUrl(fileSystemService
+					.getDownloadAsZipUrl(directory));
+		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(directory, this);
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getLocalizator().getStrings()
