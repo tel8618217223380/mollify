@@ -92,12 +92,18 @@
 
 = 5. Demo Mode =
 
-	For demonstration and theme development purposes, Mollify has built-in standalone demo mode.
+	For demonstration and theme development purposes, Mollify has built-in standalone demo mode. In demo mode, client does not require backend, but will instead function entirely on demo data. All actions are available, but don't actually affect anything.
 
-	It can be set up with following property in host page head section:
+	Demo mode can be set up with following property in host page head section:
 
 {{{
 <meta name="gwt:property" content="demo=true">
 }}}
 
-	In demo mode, client does not require backend, but will function entirely on demo data. Demo mode simulates multi-user environment, where login accepts any user. All actions are available, but don't actually affect anything.
+	If not set otherwise, demo mode simulates multi-user environment (accepts login "demo/demo").
+
+	To use single-user mode, add following property in host page head section:
+
+{{{
+<meta name="mollify:property" content="multi-user=false">
+}}}
