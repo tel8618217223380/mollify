@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.8 ==
+  * Added support for sorting columns
+  * Added display for maximum upload sizes
+  * Added user environment option for demo mode
+  * Minor UI changes: moved "Up to parent folder" button before path bar, added type column for directories
+
 === Version 0.7.2 ==
   * Added support for multiple file uploads
   * In multi-user environment, logged in user is shown in the header
