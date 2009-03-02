@@ -44,10 +44,6 @@ public class DemoFileService implements FileSystemService {
 		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
 	}
 
-	public void getRootDirectories(ResultListener listener) {
-		listener.onSuccess(data.getRootDirectories());
-	}
-
 	public void rename(FileSystemItem item, String newName,
 			ResultListener listener) {
 		listener.onSuccess(true);
@@ -60,6 +56,14 @@ public class DemoFileService implements FileSystemService {
 	public void getDirectoryDetails(Directory directory,
 			ResultListener resultListener) {
 		resultListener.onSuccess(data.getDirectoryDetails(directory));
+	}
+
+	public void getRootDirectories(ResultListener listener) {
+		listener.onSuccess(data.getRootDirectories());
+	}
+
+	public String getDownloadAsZipUrl(FileSystemItem item) {
+		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
 	}
 
 }

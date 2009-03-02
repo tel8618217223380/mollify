@@ -174,7 +174,6 @@
 
 .mollify-multiaction-button {
 	margin-top: 6px;
-	margin-bottom: 6px;
 	margin-right: 6px;
 }
 
@@ -646,6 +645,7 @@ td#mollify-filelist-column-size {
 .mollify-file-context-content, .mollify-directory-context-content {
 	background-color: white;
 	padding-top: 3px;
+	padding-bottom: 0px;
 }
 
 .mollify-file-context-filename {
@@ -673,13 +673,13 @@ td#mollify-filelist-column-size {
 .mollify-file-context-details-content {
 	width: 300px;
 	border-left: 1px;
-	margin: 0;
 	background-color: #f5f5f5;
 }
 
 .mollify-file-context-details-row-value {
 	font-weight: bold;
-	width: 150px;
+	width: 110px;
+	padding-left: 16px;
 }
 
 .mollify-file-context-buttons, .mollify-directory-context-buttons {

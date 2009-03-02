@@ -24,4 +24,6 @@ public interface FileSystemService extends FileDetailsProvider,
 			ResultListener resultListener);
 
 	String getDownloadUrl(File file);
+	
+	String getDownloadAsZipUrl(FileSystemItem item);
 }

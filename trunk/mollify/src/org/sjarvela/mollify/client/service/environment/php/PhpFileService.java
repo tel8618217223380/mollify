@@ -138,4 +138,8 @@ public class PhpFileService implements FileSystemService {
 		return service.getActionUrl(file, FileSystemAction.download);
 	}
 
+	public String getDownloadAsZipUrl(FileSystemItem item) {
+		return service.getActionUrl(item, FileSystemAction.download_as_zip);
+	}
+
 }
