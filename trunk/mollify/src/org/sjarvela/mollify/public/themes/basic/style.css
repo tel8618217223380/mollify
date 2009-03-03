@@ -771,11 +771,11 @@ input.mollify-rename-dialog-new-name-value {
 	width: 60px;
 }
 
-.mollify-dialog-button-login, .mollify-dialog-button-rename, .mollify-dialog-button-cancel, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder {
+.mollify-dialog-button-login, .mollify-dialog-button-rename, .mollify-dialog-button-cancel, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select {
 	width: 60px;
 }
 
-.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder {
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select {
 	float: right;
 	margin-right: 6px;
 }
@@ -943,5 +943,19 @@ input.mollify-create-folder-dialog-name-value {
 
 .mollify-create-folder-dialog-buttons {
 	width: 250px;
+	padding-bottom: 4px;
+}
+
+.mollify-select-folder-dialog-folders {
+	width: 300px;
+	height: 120px;
+	padding: 4px;
+	border: 1px dotted #7e7e7e;
+	margin: 6px;
+	overflow: auto;
+}
+
+.mollify-select-folder-dialog-buttons {
+	width: 300px;
 	padding-bottom: 4px;
 }

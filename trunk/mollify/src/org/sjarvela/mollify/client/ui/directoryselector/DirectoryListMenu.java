@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
-		ResultListener {
+		ResultListener<List<Directory>> {
 	boolean initialized = false;
 	boolean dataRequested = false;
 
@@ -81,8 +81,8 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(failedLabel);
 	}
 
-	public void onSuccess(Object... result) {
-		List<Directory> directories = (List<Directory>) result[0];
+	public void onSuccess(List<Directory> result) {
+		List<Directory> directories = result;
 		initialized = true;
 		removeAllMenuItems();
 

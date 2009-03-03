@@ -84,15 +84,16 @@ public class App implements EntryPoint, LogoutHandler {
 	private void start() {
 		Log.info("Starting Mollify");
 
-		environment.getSessionService().getSessionInfo(new ResultListener() {
-			public void onFail(ServiceError error) {
-				windowManager.getDialogManager().showError(error);
-			}
+		environment.getSessionService().getSessionInfo(
+				new ResultListener<SessionInfo>() {
+					public void onFail(ServiceError error) {
+						windowManager.getDialogManager().showError(error);
+					}
 
-			public void onSuccess(Object... result) {
-				startSession((SessionInfo) result[0]);
-			}
-		});
+					public void onSuccess(SessionInfo result) {
+						startSession(result);
+					}
+				});
 	};
 
 	private void startSession(SessionInfo info) {
@@ -109,7 +110,7 @@ public class App implements EntryPoint, LogoutHandler {
 				Log.info("User login: " + userName);
 
 				environment.getSessionService().authenticate(userName,
-						password, new ResultListener() {
+						password, new ResultListener<SessionInfo>() {
 							public void onFail(ServiceError error) {
 								if (ServiceErrorType.AUTHENTICATION_FAILED
 										.equals(error)) {
@@ -120,9 +121,9 @@ public class App implements EntryPoint, LogoutHandler {
 										error);
 							}
 
-							public void onSuccess(Object... result) {
+							public void onSuccess(SessionInfo result) {
 								listener.onConfirm();
-								showMain((SessionInfo) result[0]);
+								showMain(result);
 							}
 						});
 			}
@@ -137,17 +138,18 @@ public class App implements EntryPoint, LogoutHandler {
 	public void onLogout(SessionInfo info) {
 		Log.info("Logging out");
 
-		environment.getSessionService().logout(new ResultListener() {
-			public void onFail(ServiceError error) {
-				windowManager.empty();
-				windowManager.getDialogManager().showError(error);
-			}
+		environment.getSessionService().logout(
+				new ResultListener<SessionInfo>() {
+					public void onFail(ServiceError error) {
+						windowManager.empty();
+						windowManager.getDialogManager().showError(error);
+					}
 
-			public void onSuccess(Object... result) {
-				windowManager.empty();
-				startSession((SessionInfo) result[0]);
-			}
-		});
+					public void onSuccess(SessionInfo result) {
+						windowManager.empty();
+						startSession(result);
+					}
+				});
 	}
 
 	private void showLoginError() {

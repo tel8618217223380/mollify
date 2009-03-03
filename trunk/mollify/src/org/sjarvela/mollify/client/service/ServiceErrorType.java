@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 
 import com.google.gwt.core.client.GWT;
@@ -18,27 +18,27 @@ import com.google.gwt.core.client.GWT;
 public enum ServiceErrorType {
 	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS;
 
-	public String getMessage(DefaultTextProvider localizator) {
+	public String getMessage(TextProvider textProvider) {
 		switch (this) {
 		case NO_RESPONSE:
-			return localizator.getStrings().errorMessageNoResponse();
+			return textProvider.getStrings().errorMessageNoResponse();
 		case INVALID_RESPONSE:
-			return localizator.getStrings().errorMessageInvalidResponse();
+			return textProvider.getStrings().errorMessageInvalidResponse();
 		case DATA_TYPE_MISMATCH:
-			return localizator.getStrings().errorMessageDataTypeMismatch();
+			return textProvider.getStrings().errorMessageDataTypeMismatch();
 		case OPERATION_FAILED:
-			return localizator.getStrings().errorMessageOperationFailed();
+			return textProvider.getStrings().errorMessageOperationFailed();
 		case AUTHENTICATION_FAILED:
-			return localizator.getStrings().errorMessageAuthenticationFailed();
+			return textProvider.getStrings().errorMessageAuthenticationFailed();
 		case INVALID_CONFIGURATION:
-			return localizator.getStrings().errorMessageInvalidConfiguration();
+			return textProvider.getStrings().errorMessageInvalidConfiguration();
 		case DIR_ALREADY_EXISTS:
-			return localizator.getStrings()
+			return textProvider.getStrings()
 					.errorMessageDirectoryAlreadyExists();
 		default:
 			if (!this.equals(UNKNOWN_ERROR))
 				return this.name();
-			return localizator.getStrings().errorMessageUnknown();
+			return textProvider.getStrings().errorMessageUnknown();
 		}
 	}
 

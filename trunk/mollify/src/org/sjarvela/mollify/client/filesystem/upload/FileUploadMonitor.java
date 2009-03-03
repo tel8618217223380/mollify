@@ -51,17 +51,18 @@ public class FileUploadMonitor {
 	}
 
 	private void onTimer() {
-		uploadHandler.getUploadProgress(uploadId, new ResultListener() {
-			public void onFail(ServiceError error) {
-				listener.onProgressUpdateFail(error);
-			}
+		uploadHandler.getUploadProgress(uploadId,
+				new ResultListener<FileUploadStatus>() {
+					public void onFail(ServiceError error) {
+						listener.onProgressUpdateFail(error);
+					}
 
-			public void onSuccess(Object... result) {
-				listener.onProgressUpdate((FileUploadStatus) result[0]);
-				if (!stop)
-					timer.schedule(INTERVAL);
-			}
-		});
+					public void onSuccess(FileUploadStatus result) {
+						listener.onProgressUpdate(result);
+						if (!stop)
+							timer.schedule(INTERVAL);
+					}
+				});
 
 	}
 }

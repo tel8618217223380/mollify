@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
@@ -25,16 +25,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class LoginDialog extends CenteredDialog {
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final LoginHandler loginHandler;
 
 	private TextBox userName;
 	private PasswordTextBox password;
 
-	public LoginDialog(DefaultTextProvider localizator, LoginHandler loginHandler) {
-		super(localizator.getStrings().loginDialogTitle(),
+	public LoginDialog(TextProvider textProvider, LoginHandler loginHandler) {
+		super(textProvider.getStrings().loginDialogTitle(),
 				StyleConstants.LOGIN_DIALOG);
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.loginHandler = loginHandler;
 		initialize();
 	}
@@ -45,7 +45,7 @@ public class LoginDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.LOGIN_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(localizator.getStrings()
+		buttons.add(createButton(textProvider.getStrings()
 				.loginDialogLoginButton(), new ClickListener() {
 
 			public void onClick(Widget sender) {
@@ -53,7 +53,8 @@ public class LoginDialog extends CenteredDialog {
 			}
 		}, StyleConstants.LOGIN_DIALOG_BUTTON_LOGIN));
 
-		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
+		buttons.add(createButton(
+				textProvider.getStrings().dialogCancelButton(),
 				new ClickListener() {
 
 					public void onClick(Widget sender) {
@@ -69,7 +70,7 @@ public class LoginDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
 
-		Label usernameTitle = new Label(localizator.getStrings()
+		Label usernameTitle = new Label(textProvider.getStrings()
 				.loginDialogUsername());
 		usernameTitle.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_TITLE);
 		panel.add(usernameTitle);
@@ -86,7 +87,7 @@ public class LoginDialog extends CenteredDialog {
 		});
 		panel.add(userName);
 
-		Label passwordTitle = new Label(localizator.getStrings()
+		Label passwordTitle = new Label(textProvider.getStrings()
 				.loginDialogPassword());
 		passwordTitle.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_TITLE);
 		panel.add(passwordTitle);

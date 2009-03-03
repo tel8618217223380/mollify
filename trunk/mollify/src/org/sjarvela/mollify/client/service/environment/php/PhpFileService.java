@@ -12,16 +12,18 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class PhpFileService implements FileSystemService {
@@ -35,16 +37,15 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
 
-		this.service.getDirectories(new ResultListener() {
+		this.service.getDirectories(new ResultListener<JsArray<JsDirectory>>() {
 
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(Object... result) {
+			public void onSuccess(JsArray<JsDirectory> result) {
 				listener
-						.onSuccess(FileSystemItem
-								.createFromDirectories((JsArray<JsDirectory>) result[0]));
+						.onSuccess(FileSystemItem.createFromDirectories(result));
 			}
 		}, parent.getId());
 	}
@@ -53,45 +54,43 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get root directories");
 
-		this.service.getRootDirectories(new ResultListener() {
+		this.service
+				.getRootDirectories(new ResultListener<JsArray<JsDirectory>>() {
+					public void onFail(ServiceError error) {
+						listener.onFail(error);
+					}
 
-			public void onFail(ServiceError error) {
-				listener.onFail(error);
-			}
-
-			public void onSuccess(Object... result) {
-				listener
-						.onSuccess(FileSystemItem
-								.createFromDirectories((JsArray<JsDirectory>) result[0]));
-			}
-		});
+					public void onSuccess(JsArray<JsDirectory> result) {
+						listener.onSuccess(FileSystemItem
+								.createFromDirectories(result));
+					}
+				});
 	}
 
 	public void getDirectoriesAndFiles(final String folder,
-			final ResultListener listener) {
+			final ResultListener<FilesAndDirs> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directory contents: " + folder);
 
-		this.service.getDirectoriesAndFiles(new ResultListener() {
+		this.service.getDirectoriesAndFiles(
+				new ResultListener<DirectoriesAndFiles>() {
 
-			public void onFail(ServiceError error) {
-				listener.onFail(error);
-			}
+					public void onFail(ServiceError error) {
+						listener.onFail(error);
+					}
 
-			public void onSuccess(Object... result) {
-				DirectoriesAndFiles dirsAndFiles = ((JavaScriptObject) result[0])
-						.cast();
-				listener
-						.onSuccess(FileSystemItem
-								.createFromDirectories(dirsAndFiles
+					public void onSuccess(DirectoriesAndFiles result) {
+						listener.onSuccess(new FilesAndDirs(
+								FileSystemItem.createFromDirectories(result
 										.getDirectories()), FileSystemItem
-								.createFromFiles(dirsAndFiles.getFiles()));
-			}
+										.createFromFiles(result.getFiles())));
+					}
 
-		}, folder);
+				}, folder);
 	}
 
-	public void getFileDetails(File file, ResultListener resultListener) {
+	public void getFileDetails(File file,
+			ResultListener<FileDetails> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + file.getId());
 
@@ -99,7 +98,7 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public void getDirectoryDetails(Directory directory,
-			ResultListener resultListener) {
+			ResultListener<DirectoryDetails> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directory details: " + directory.getId());
 
@@ -107,7 +106,7 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public void rename(FileSystemItem item, String newName,
-			ResultListener listener) {
+			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
 
@@ -117,7 +116,7 @@ public class PhpFileService implements FileSystemService {
 			service.renameDirectory((Directory) item, newName, listener);
 	}
 
-	public void delete(FileSystemItem item, ResultListener listener) {
+	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Delete: " + item.getId());
 
@@ -128,7 +127,7 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public void createDirectory(Directory parentFolder, String folderName,
-			ResultListener listener) {
+			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Create directory: [" + folderName + "]");
 		service.createFolder(parentFolder, folderName, listener);

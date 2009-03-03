@@ -10,9 +10,14 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
@@ -24,20 +29,23 @@ public class DemoFileService implements FileSystemService {
 	}
 
 	public void createDirectory(Directory parentFolder, String folderName,
-			ResultListener resultListener) {
+			ResultListener<Boolean> resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void delete(FileSystemItem item, ResultListener listener) {
+	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}
 
-	public void getDirectories(Directory parent, ResultListener listener) {
+	public void getDirectories(Directory parent,
+			ResultListener<List<Directory>> listener) {
 		listener.onSuccess(data.getDirectories(parent.getId()));
 	}
 
-	public void getDirectoriesAndFiles(String folder, ResultListener listener) {
-		listener.onSuccess(data.getDirectories(folder), data.getFiles(folder));
+	public void getDirectoriesAndFiles(String folder,
+			ResultListener<FilesAndDirs> listener) {
+		listener.onSuccess(new FilesAndDirs(data.getDirectories(folder), data
+				.getFiles(folder)));
 	}
 
 	public String getDownloadUrl(File file) {
@@ -45,20 +53,20 @@ public class DemoFileService implements FileSystemService {
 	}
 
 	public void rename(FileSystemItem item, String newName,
-			ResultListener listener) {
+			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}
 
-	public void getFileDetails(File file, ResultListener listener) {
+	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
 		listener.onSuccess(data.getFileDetails(file));
 	}
 
 	public void getDirectoryDetails(Directory directory,
-			ResultListener resultListener) {
+			ResultListener<DirectoryDetails> resultListener) {
 		resultListener.onSuccess(data.getDirectoryDetails(directory));
 	}
 
-	public void getRootDirectories(ResultListener listener) {
+	public void getRootDirectories(ResultListener<List<Directory>> listener) {
 		listener.onSuccess(data.getRootDirectories());
 	}
 

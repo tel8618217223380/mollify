@@ -52,6 +52,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private DisclosurePanel details;
 
 	private Button renameButton;
+	private Button copyButton;
 	private Button deleteButton;
 
 	private enum Details {
@@ -71,7 +72,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 		initialize();
 	}
-	
+
 	public void setFileActionHandler(FileSystemActionHandler actionHandler) {
 		this.fileActionHandler = actionHandler;
 	}
@@ -100,6 +101,11 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		renameButton = createActionButton(localizator.getStrings()
 				.fileActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
+
+		copyButton = createActionButton(localizator.getStrings()
+				.fileActionCopyTitle(), FileSystemAction.copy);
+		copyButton.setVisible(false);
+
 		deleteButton = createActionButton(localizator.getStrings()
 				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
@@ -120,6 +126,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		}
 
 		buttons.add(renameButton);
+		buttons.add(copyButton);
 		buttons.add(deleteButton);
 
 		return buttons;
@@ -185,13 +192,13 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		filename.setText(file.getName());
 		emptyDetails();
 
-		detailsProvider.getFileDetails(file, new ResultListener() {
+		detailsProvider.getFileDetails(file, new ResultListener<FileDetails>() {
 			public void onFail(ServiceError error) {
 				description.setText(error.getType().getMessage(localizator));
 			}
 
-			public void onSuccess(Object... result) {
-				updateDetails((FileDetails) result[0]);
+			public void onSuccess(FileDetails result) {
+				updateDetails(result);
 			}
 		});
 	}
@@ -204,6 +211,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		}
 
 		renameButton.setVisible(false);
+		copyButton.setVisible(false);
 		deleteButton.setVisible(false);
 	}
 
@@ -226,6 +234,8 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		boolean writable = details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
+
+		copyButton.setVisible(true); // TODO general write permissions
 	}
 
 	protected void onAction(FileSystemAction action) {

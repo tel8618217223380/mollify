@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.localization;
 
+import org.sjarvela.mollify.client.service.request.ErrorValue;
+
 public interface TextProvider {
 
 	String getSizeText(int size);
@@ -17,5 +19,7 @@ public interface TextProvider {
 	LanguageConstants getStrings();
 
 	MessageConstants getMessages();
+
+	String getErrorMessage(ErrorValue errorResult);
 
 }
