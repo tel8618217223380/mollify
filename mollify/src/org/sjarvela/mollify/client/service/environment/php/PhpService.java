@@ -10,17 +10,25 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
+import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.service.request.json.JsonRequestHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.util.DateTime;
 import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.http.client.URL;
 
 public class PhpService {
@@ -92,68 +100,74 @@ public class PhpService {
 				+ MD5.generateMD5(password)), resultListener);
 	}
 
-	public void logout(ResultListener resultListener) {
+	public void logout(ResultListener<SessionInfo> resultListener) {
 		doRequest(getUrl(Action.logout), resultListener);
 	}
 
-	public void getFiles(ResultListener resultListener, String dir) {
+	public void getFiles(ResultListener<JsArray<JsFile>> resultListener,
+			String dir) {
 		getType(resultListener, GetType.files, "dir=" + dir);
 	}
 
-	public void getDirectories(ResultListener resultListener, String dir) {
+	public void getDirectories(
+			ResultListener<JsArray<JsDirectory>> resultListener, String dir) {
 		getType(resultListener, GetType.dirs, "dir=" + dir);
 	}
 
-	public void getDirectoriesAndFiles(ResultListener resultListener, String dir) {
+	public void getDirectoriesAndFiles(
+			ResultListener<DirectoriesAndFiles> resultListener, String dir) {
 		getType(resultListener, GetType.dirs_and_files, "dir=" + dir);
 	}
 
-	public void getRootDirectories(ResultListener resultListener) {
+	public void getRootDirectories(
+			ResultListener<JsArray<JsDirectory>> resultListener) {
 		getType(resultListener, GetType.roots);
 	}
 
-	public void getFileDetails(File file, ResultListener resultListener) {
+	public void getFileDetails(File file,
+			ResultListener<FileDetails> resultListener) {
 		String url = getUrl(Action.get, "type=" + GetType.details, "id="
 				+ file.getId(), getItemTypeParam(file));
 		doRequest(url, resultListener);
 	}
 
 	public void getDirectoryDetails(Directory directory,
-			ResultListener resultListener) {
+			ResultListener<DirectoryDetails> resultListener) {
 		String url = getUrl(Action.get, "type=" + GetType.details, "id="
 				+ directory.getId(), getItemTypeParam(directory));
 		doRequest(url, resultListener);
 	}
 
 	public void renameFile(File file, String newName,
-			ResultListener resultListener) {
+			ResultListener<Boolean> resultListener) {
 		String url = getActionUrl(file, FileSystemAction.rename) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, resultListener);
 	}
 
 	public void renameDirectory(Directory dir, String newName,
-			ResultListener listener) {
+			ResultListener<Boolean> listener) {
 		String url = getActionUrl(dir, FileSystemAction.rename) + "&to="
 				+ URL.encode(newName);
 		doRequest(url, listener);
 	}
 
-	public void deleteFile(File file, ResultListener resultListener) {
+	public void deleteFile(File file, ResultListener<Boolean> resultListener) {
 		doRequest(getActionUrl(file, FileSystemAction.delete), resultListener);
 	}
 
-	public void deleteDirectory(Directory dir, ResultListener listener) {
+	public void deleteDirectory(Directory dir, ResultListener<Boolean> listener) {
 		doRequest(getActionUrl(dir, FileSystemAction.delete), listener);
 	}
 
 	public void createFolder(Directory parentFolder, String folderName,
-			ResultListener listener) {
+			ResultListener<Boolean> listener) {
 		doRequest(getActionUrl(parentFolder, FileSystemAction.create_folder,
 				"name=" + folderName), listener);
 	}
 
-	public void getUploadProgress(String id, ResultListener resultListener) {
+	public void getUploadProgress(String id,
+			ResultListener<FileUploadStatus> resultListener) {
 		getType(resultListener, GetType.upload_status, "id=" + id);
 	}
 

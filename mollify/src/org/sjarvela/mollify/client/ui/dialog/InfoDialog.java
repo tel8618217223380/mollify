@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -19,14 +19,14 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class InfoDialog extends CenteredDialog {
-	private DefaultTextProvider localizator;
+	private TextProvider textProvider;
 	private String text;
 	private String type;
 
-	public InfoDialog(DefaultTextProvider localizator, String title, String text,
+	public InfoDialog(TextProvider textProvider, String title, String text,
 			String type) {
 		super(title, type);
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.text = text;
 		this.type = type;
 
@@ -57,7 +57,7 @@ public class InfoDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.INFO_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(localizator.getStrings().infoDialogOKButton(),
+		buttons.add(createButton(textProvider.getStrings().infoDialogOKButton(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
 						InfoDialog.this.hide();

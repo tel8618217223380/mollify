@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -78,9 +79,9 @@ public class MainViewModel {
 
 	public void refreshRootDirectories(ResultListener listener) {
 		fileServices.getRootDirectories(createListener(listener,
-				new ResultCallback() {
-					public void onCallback(Object... result) {
-						MainViewModel.this.rootDirectories = (List<Directory>) result[0];
+				new ResultCallback<List<Directory>>() {
+					public void onCallback(List<Directory> result) {
+						MainViewModel.this.rootDirectories = result;
 					}
 				}));
 	}
@@ -108,33 +109,33 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void refreshData(ResultListener resultListener) {
+	public void refreshData(ResultListener<FilesAndDirs> resultListener) {
 		final String folder = getCurrentFolder().getId();
 
 		fileServices.getDirectoriesAndFiles(folder, createListener(
-				resultListener, new ResultCallback() {
-					public void onCallback(Object... result) {
-						onUpdateData((List<Directory>) result[0],
-								(List<File>) result[1]);
+				resultListener, new ResultCallback<FilesAndDirs>() {
+					public void onCallback(FilesAndDirs result) {
+						onUpdateData(result);
 					}
 				}));
 	}
 
-	private void onUpdateData(List<Directory> dirs, List<File> files) {
-		this.directories = dirs;
-		this.files = files;
-		this.all = new ArrayList(dirs);
+	private void onUpdateData(FilesAndDirs data) {
+		this.directories = data.getDirectories();
+		this.files = data.getFiles();
+		this.all = new ArrayList(data.getDirectories());
 		this.all.addAll(files);
 	}
 
-	private ResultListener createListener(final ResultListener listener,
+	private ResultListener createListener(
+			final ResultListener listener,
 			final ResultCallback resultCallback) {
-		return new ResultListener() {
+		return new ResultListener<Object>() {
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(Object... result) {
+			public void onSuccess(Object result) {
 				resultCallback.onCallback(result);
 				listener.onSuccess(result);
 			}

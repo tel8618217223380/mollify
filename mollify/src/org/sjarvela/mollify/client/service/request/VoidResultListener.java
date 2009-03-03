@@ -2,10 +2,10 @@ package org.sjarvela.mollify.client.service.request;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 
-public class VoidResultListener implements ResultListener {
+public class VoidResultListener implements ResultListener<Object> {
 	public void onFail(ServiceError error) {
 	}
 
-	public void onSuccess(Object... result) {
+	public void onSuccess(Object result) {
 	}
 }

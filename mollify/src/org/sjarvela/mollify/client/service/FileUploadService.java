@@ -11,17 +11,17 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
 public interface FileUploadService {
 
-	void getUploadProgress(String id, ResultListener listener);
+	void getUploadProgress(String id, ResultListener<FileUploadStatus> listener);
 
 	String getFileUploadId();
 
 	String getUploadUrl(Directory directory);
 
 	void handleResult(String resultString, FileUploadListener listener);
-
 }

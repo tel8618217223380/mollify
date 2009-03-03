@@ -30,4 +30,6 @@ public interface MessageConstants extends Messages {
 	String uploadingNFilesInfo(int amount);
 
 	String uploadMaxSizeHtml(String fileMax, String totalMax);
+
+	String copyFileMessage(String name);
 }

@@ -10,6 +10,6 @@
 
 package org.sjarvela.mollify.client.service.request;
 
-public interface ResultCallback {
-	public void onCallback(Object... result);
+public interface ResultCallback<T> {
+	public void onCallback(T result);
 }

@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -25,17 +25,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class RenameDialog extends CenteredDialog {
 	private final FileSystemItem item;
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final RenameHandler renameHandler;
 	private TextBox name;
 
-	public RenameDialog(FileSystemItem item, DefaultTextProvider localizator,
+	public RenameDialog(FileSystemItem item, TextProvider textProvider,
 			RenameHandler renameHandler) {
-		super(item.isFile() ? localizator.getStrings().renameDialogTitleFile()
-				: localizator.getStrings().renameDialogTitleDirectory(),
+		super(item.isFile() ? textProvider.getStrings().renameDialogTitleFile()
+				: textProvider.getStrings().renameDialogTitleDirectory(),
 				StyleConstants.RENAME_DIALOG);
 		this.item = item;
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.renameHandler = renameHandler;
 
 		initialize();
@@ -46,7 +46,7 @@ public class RenameDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.RENAME_DIALOG_CONTENT);
 
-		Label originalNameTitle = new Label(localizator.getStrings()
+		Label originalNameTitle = new Label(textProvider.getStrings()
 				.renameDialogOriginalName());
 		originalNameTitle
 				.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_TITLE);
@@ -56,7 +56,7 @@ public class RenameDialog extends CenteredDialog {
 		originalName.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_VALUE);
 		panel.add(originalName);
 
-		Label newNameTitle = new Label(localizator.getStrings()
+		Label newNameTitle = new Label(textProvider.getStrings()
 				.renameDialogNewName());
 		newNameTitle.setStyleName(StyleConstants.RENAME_NEW_NAME_TITLE);
 		panel.add(newNameTitle);
@@ -76,7 +76,7 @@ public class RenameDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.RENAME_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(localizator.getStrings()
+		buttons.add(createButton(textProvider.getStrings()
 				.renameDialogRenameButton(), new ClickListener() {
 
 			public void onClick(Widget sender) {
@@ -84,7 +84,8 @@ public class RenameDialog extends CenteredDialog {
 			}
 		}, StyleConstants.RENAME_DIALOG_BUTTON_RENAME));
 
-		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
+		buttons.add(createButton(
+				textProvider.getStrings().dialogCancelButton(),
 				new ClickListener() {
 
 					public void onClick(Widget sender) {

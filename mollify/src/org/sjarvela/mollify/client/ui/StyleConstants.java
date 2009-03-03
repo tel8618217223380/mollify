@@ -166,4 +166,13 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "create-folder";
 
+	public static final String SELECT_FOLDER_DIALOG = "select-folder-dialog";
+	public static final String SELECT_FOLDER_DIALOG_CONTENT = "mollify-select-folder-dialog-content";
+	public static final String SELECT_FOLDER_DIALOG_BUTTONS = "mollify-select-folder-dialog-buttons";
+	public static final String SELECT_FOLDER_DIALOG_BUTTON_SELECT = "select";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE = "mollify-select-folder-dialog-folders";
+	public static final String SELECT_FOLDER_DIALOG_FOLDERS_ROOT_ITEM = "mollify-select-folder-dialog-folders-root";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM = "mollify-select-folder-dialog-folders-item";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL = "mollify-select-folder-dialog-folders-item-label";
+	public static final String SELECT_FOLDER_DIALOG_MESSAGE = "mollify-select-folder-dialog-message";
 }

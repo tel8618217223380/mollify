@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 
-public class ProxyResultListener implements ResultListener {
-	private List<ResultListener> listeners = new ArrayList<ResultListener>();
+public class ProxyResultListener<T> implements ResultListener<T> {
+	private List<ResultListener<T>> listeners = new ArrayList();
 
 	public void addListener(ResultListener listener) {
 		listeners.add(listener);
@@ -27,7 +27,7 @@ public class ProxyResultListener implements ResultListener {
 			listener.onFail(error);
 	}
 
-	public void onSuccess(Object... result) {
+	public void onSuccess(T result) {
 		for (ResultListener listener : listeners)
 			listener.onSuccess(result);
 	}

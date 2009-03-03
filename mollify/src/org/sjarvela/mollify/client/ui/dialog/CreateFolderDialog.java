@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -24,17 +24,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class CreateFolderDialog extends CenteredDialog {
 	private final Directory parentFolder;
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final DirectoryHandler handler;
 	private TextBox name;
 
-	public CreateFolderDialog(Directory parentFolder, DefaultTextProvider localizator,
-			DirectoryHandler handler) {
-		super(localizator.getStrings().createFolderDialogTitle(),
+	public CreateFolderDialog(Directory parentFolder,
+			TextProvider textProvider, DirectoryHandler handler) {
+		super(textProvider.getStrings().createFolderDialogTitle(),
 				StyleConstants.CREATE_FOLDER_DIALOG);
 
 		this.parentFolder = parentFolder;
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.handler = handler;
 
 		initialize();
@@ -45,7 +45,7 @@ public class CreateFolderDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_CONTENT);
 
-		Label nameTitle = new Label(localizator.getStrings()
+		Label nameTitle = new Label(textProvider.getStrings()
 				.createFolderDialogName());
 		nameTitle.setStyleName(StyleConstants.CREATE_FOLDER_DIALOG_NAME_TITLE);
 		panel.add(nameTitle);
@@ -64,7 +64,7 @@ public class CreateFolderDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(localizator.getStrings()
+		buttons.add(createButton(textProvider.getStrings()
 				.createFolderDialogCreateButton(), new ClickListener() {
 
 			public void onClick(Widget sender) {
@@ -72,7 +72,8 @@ public class CreateFolderDialog extends CenteredDialog {
 			}
 		}, StyleConstants.CREATE_FOLDER_DIALOG_BUTTON_CREATE));
 
-		buttons.add(createButton(localizator.getStrings().dialogCancelButton(),
+		buttons.add(createButton(
+				textProvider.getStrings().dialogCancelButton(),
 				new ClickListener() {
 
 					public void onClick(Widget sender) {

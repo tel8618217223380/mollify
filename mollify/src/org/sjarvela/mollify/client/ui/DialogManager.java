@@ -13,10 +13,11 @@ package org.sjarvela.mollify.client.ui;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
@@ -29,34 +30,36 @@ import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
 
 public class DialogManager {
-	private DefaultTextProvider localizator;
+	private TextProvider textProvider;
 
-	public DialogManager(DefaultTextProvider localizator) {
+	public DialogManager(TextProvider textProvider) {
 		super();
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 	}
 
 	public void showLoginDialog(LoginHandler loginHandler) {
-		new LoginDialog(localizator, loginHandler);
+		new LoginDialog(textProvider, loginHandler);
 	}
 
 	public void showRenameDialog(FileSystemItem item,
 			RenameHandler renameHandler) {
-		new RenameDialog(item, localizator, renameHandler);
+		new RenameDialog(item, textProvider, renameHandler);
 	}
 
 	public void openUploadDialog(Directory directory,
 			FileUploadService fileUploadService, FileSystemInfo info,
 			FileUploadListener listener) {
-		new FileUploadDialog(directory, localizator, fileUploadService, info,
+		new FileUploadDialog(directory, textProvider, fileUploadService, info,
 				listener);
 	}
 
 	public void openCreateFolderDialog(Directory parentDirectory,
 			DirectoryHandler directoryHandler) {
-		new CreateFolderDialog(parentDirectory, localizator, directoryHandler);
+		new CreateFolderDialog(parentDirectory, textProvider, directoryHandler);
 	}
 
 	public ProgressDisplayer openProgressDialog(String title,
@@ -65,26 +68,33 @@ public class DialogManager {
 	}
 
 	public void showError(ServiceError error) {
-		new InfoDialog(localizator, localizator.getStrings()
-				.infoDialogErrorTitle(), error.getType()
-				.getMessage(localizator), StyleConstants.INFO_DIALOG_TYPE_ERROR);
+		new InfoDialog(textProvider, textProvider.getStrings()
+				.infoDialogErrorTitle(), error.getType().getMessage(
+				textProvider), StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
 	public void showError(ErrorValue errorResult) {
-		new InfoDialog(localizator, localizator.getStrings()
-				.infoDialogErrorTitle(), localizator
+		new InfoDialog(textProvider, textProvider.getStrings()
+				.infoDialogErrorTitle(), textProvider
 				.getErrorMessage(errorResult),
 				StyleConstants.INFO_DIALOG_TYPE_ERROR);
 	}
 
 	public void showInfo(String title, String text) {
-		new InfoDialog(localizator, title, text,
+		new InfoDialog(textProvider, title, text,
 				StyleConstants.INFO_DIALOG_TYPE_INFO);
 	}
 
 	public void showConfirmationDialog(String title, String message,
 			String style, ConfirmationListener listener) {
-		new ConfirmationDialog(localizator, title, message, style, listener);
+		new ConfirmationDialog(textProvider, title, message, style, listener);
+	}
+
+	public void showSelectFolderDialog(String title, String message,
+			String actionTitle, DirectoryProvider provider,
+			SelectFolderListener listener) {
+		new SelectFolderDialog(textProvider, title, message, actionTitle,
+				provider, listener);
 	}
 
 }

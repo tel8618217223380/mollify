@@ -101,15 +101,16 @@ public class DirectoryContextPopup extends ContextPopup {
 		this.directory = directory;
 		name.setText(directory.getName());
 
-		detailsProvider.getDirectoryDetails(directory, new ResultListener() {
-			public void onFail(ServiceError error) {
-				name.setText(error.getType().getMessage(localizator));
-			}
+		detailsProvider.getDirectoryDetails(directory,
+				new ResultListener<DirectoryDetails>() {
+					public void onFail(ServiceError error) {
+						name.setText(error.getType().getMessage(localizator));
+					}
 
-			public void onSuccess(Object... result) {
-				updateDetails((DirectoryDetails) result[0]);
-			}
-		});
+					public void onSuccess(DirectoryDetails result) {
+						updateDetails(result);
+					}
+				});
 	}
 
 	protected void updateDetails(DirectoryDetails details) {

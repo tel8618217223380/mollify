@@ -10,9 +10,12 @@
 
 package org.sjarvela.mollify.client.filesystem.directorymodel;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
 public interface DirectoryProvider {
-	void getDirectories(Directory parent, ResultListener listener);
+	void getDirectories(Directory parent,
+			ResultListener<List<Directory>> listener);
 }

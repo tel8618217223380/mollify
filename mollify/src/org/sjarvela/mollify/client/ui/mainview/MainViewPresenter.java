@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
@@ -34,6 +35,7 @@ import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
@@ -103,12 +105,12 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	public void reload() {
-		model.refreshData(new ResultListener() {
+		model.refreshData(new ResultListener<FilesAndDirs>() {
 			public void onFail(ServiceError error) {
 				onError(error, false);
 			}
 
-			public void onSuccess(Object... result) {
+			public void onSuccess(FilesAndDirs result) {
 				refreshView();
 			}
 		});
@@ -182,12 +184,12 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	private ResultListener createListener(final Callback callback) {
-		return new ResultListener() {
+		return new ResultListener<Object>() {
 			public void onFail(ServiceError error) {
 				onError(error, true);
 			}
 
-			public void onSuccess(Object... result) {
+			public void onSuccess(Object result) {
 				callback.onCallback();
 			}
 		};
@@ -213,10 +215,24 @@ public class MainViewPresenter implements DirectoryController,
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(file, this);
+		} else if (action.equals(FileSystemAction.copy)) {
+			windowManager.getDialogManager().showSelectFolderDialog(
+					windowManager.getTextProvider().getStrings()
+							.copyFileDialogTitle(),
+					windowManager.getTextProvider().getMessages()
+							.copyFileMessage(file.getName()),
+					windowManager.getTextProvider().getStrings()
+							.copyFileDialogAction(),
+					new DefaultDirectoryProvider(fileSystemService),
+					new SelectFolderListener() {
+						public void onSelect(Directory selected) {
+							copyFile(file, selected);
+						}
+					});
 		} else if (action.equals(FileSystemAction.delete)) {
-			String title = windowManager.getLocalizator().getStrings()
+			String title = windowManager.getTextProvider().getStrings()
 					.deleteFileConfirmationDialogTitle();
-			String message = windowManager.getLocalizator().getMessages()
+			String message = windowManager.getTextProvider().getMessages()
 					.confirmFileDeleteMessage(file.getName());
 			windowManager.getDialogManager().showConfirmationDialog(title,
 					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
@@ -239,9 +255,9 @@ public class MainViewPresenter implements DirectoryController,
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(directory, this);
 		} else if (action.equals(FileSystemAction.delete)) {
-			String title = windowManager.getLocalizator().getStrings()
+			String title = windowManager.getTextProvider().getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
-			String message = windowManager.getLocalizator().getMessages()
+			String message = windowManager.getTextProvider().getMessages()
 					.confirmDirectoryDeleteMessage(directory.getName());
 			windowManager.getDialogManager().showConfirmationDialog(title,
 					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
@@ -263,6 +279,10 @@ public class MainViewPresenter implements DirectoryController,
 
 	public void rename(FileSystemItem item, String newName) {
 		fileSystemService.rename(item, newName, createReloadListener());
+	}
+
+	protected void copyFile(File file, Directory toDirectory) {
+		// TODO
 	}
 
 	private void delete(FileSystemItem item) {
