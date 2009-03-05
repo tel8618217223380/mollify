@@ -74,7 +74,7 @@ public class SessionInfo extends JavaScriptObject {
 		return this.settings;
 	}-*/;
 
-	public final PermissionMode getPermissionMode() {
+	public final PermissionMode getDefaultPermissionMode() {
 		return PermissionMode.fromString(getDefaultPermissionModeString()
 				.trim().toLowerCase());
 	}

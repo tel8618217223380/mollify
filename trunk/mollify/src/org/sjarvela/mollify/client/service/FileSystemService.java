@@ -23,13 +23,18 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 public interface FileSystemService extends FileDetailsProvider,
 		DirectoryDetailsProvider {
 
-	void getDirectories(Directory parent, ResultListener<List<Directory>> listener);
+	void getDirectories(Directory parent,
+			ResultListener<List<Directory>> listener);
 
 	void getRootDirectories(ResultListener<List<Directory>> listener);
 
-	void getDirectoriesAndFiles(String folder, ResultListener<FilesAndDirs> listener);
+	void getDirectoriesAndFiles(String folder,
+			ResultListener<FilesAndDirs> listener);
 
-	void rename(FileSystemItem item, String newName, ResultListener<Boolean> listener);
+	void rename(FileSystemItem item, String newName,
+			ResultListener<Boolean> listener);
+
+	void copy(File file, Directory directory, ResultListener<Boolean> listener);
 
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
 
@@ -37,6 +42,7 @@ public interface FileSystemService extends FileDetailsProvider,
 			ResultListener<Boolean> resultListener);
 
 	String getDownloadUrl(File file);
-	
+
 	String getDownloadAsZipUrl(FileSystemItem item);
+
 }

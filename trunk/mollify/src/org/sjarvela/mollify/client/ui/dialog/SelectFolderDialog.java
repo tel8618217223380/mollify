@@ -20,11 +20,13 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
@@ -34,27 +36,40 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SelectFolderDialog extends CenteredDialog implements TreeListener {
+	private static String pleaseWaitText = null;
+
+	private final DialogManager dialogManager;
 	private final DirectoryProvider directoryProvider;
 	private final TextProvider textProvider;
 	private final String message;
 	private final String selectActionTitle;
+	private final List<Directory> initialDirectoryPath;
 
 	private Tree folders;
 	private TreeItem rootItem;
 	private Button selectButton;
 	private Map<TreeItem, Directory> items = new HashMap();
+
 	private List<TreeItem> itemsInitialized = new ArrayList();
 	private SelectFolderListener listener;
+	private TreeItem selected = null;
 
-	public SelectFolderDialog(TextProvider textProvider, String title,
-			String message, String selectActionTitle,
-			DirectoryProvider directoryProvider, SelectFolderListener listener) {
+	public SelectFolderDialog(DialogManager dialogManager,
+			TextProvider textProvider, String title, String message,
+			String selectActionTitle, DirectoryProvider directoryProvider,
+			SelectFolderListener listener, List<Directory> initialDirectoryPath) {
 		super(title, StyleConstants.SELECT_FOLDER_DIALOG);
+		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.message = message;
 		this.selectActionTitle = selectActionTitle;
 		this.directoryProvider = directoryProvider;
 		this.listener = listener;
+		this.initialDirectoryPath = initialDirectoryPath;
+
+		if (pleaseWaitText == null)
+			pleaseWaitText = textProvider.getStrings()
+					.selectFolderDialogRetrievingFolders();
 
 		initialize();
 	}
@@ -64,21 +79,19 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_CONTENT);
 
-		Label messageLabel = new Label(message);
-		messageLabel.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_MESSAGE);
-		panel.add(messageLabel);
+		HTML messageHtml = new HTML(message);
+		messageHtml.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_MESSAGE);
+		panel.add(messageHtml);
 
 		folders = new Tree();
 		folders.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE);
 		folders.addTreeListener(this);
 		panel.add(folders);
 
-		rootItem = new TreeItem();
-		rootItem
-				.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDERS_ROOT_ITEM);
-		rootItem.setText(textProvider.getStrings()
-				.selectFolderDialogFoldersRoot());
-		rootItem.setTitle(rootItem.getText());
+		rootItem = createItem(
+				textProvider.getStrings().selectFolderDialogFoldersRoot(),
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL,
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM);
 
 		folders.addItem(rootItem);
 		return panel;
@@ -100,11 +113,12 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
 				new ClickListener() {
-
 					public void onClick(Widget sender) {
 						SelectFolderDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
+
+		selectButton.setEnabled(false);
 
 		return buttons;
 	}
@@ -120,33 +134,57 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 					}
 
 					public void onSuccess(List<Directory> roots) {
-						addSubFolders(rootItem, roots);
-						rootItem.setState(true);
+						onUpdateRoots(roots);
 					}
 				});
 	}
 
-	private void addSubFolders(TreeItem parent, List<Directory> dirs) {
-		for (Directory dir : dirs)
-			parent.addItem(createItem(dir));
+	private void onUpdateRoots(List<Directory> roots) {
+		addSubFolders(rootItem, roots);
+		rootItem.setState(true);
+		selectInitialDir();
 	}
 
-	protected TreeItem createItem(Directory dir) {
-		Label label = new Label(dir.getName());
-		label
-				.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL);
+	private void selectInitialDir() {
+		if (initialDirectoryPath == null || initialDirectoryPath.size() == 0)
+			return;
+		// TODO
+	}
 
-		TreeItem item = new TreeItem(label);
-		item.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
-		item.addItem(textProvider.getStrings()
-				.selectFolderDialogRetrievingFolders());
+	private void addSubFolders(TreeItem parent, List<Directory> dirs) {
+		for (Directory dir : dirs)
+			parent.addItem(createDirItem(dir));
+	}
 
+	protected TreeItem createDirItem(Directory dir) {
+		TreeItem item = createItem(dir.getName(),
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL,
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
+		item.addItem(pleaseWaitText);
 		items.put(item, dir);
 		return item;
 	}
 
+	private TreeItem createItem(String labelTitle, String labelStyle,
+			String itemStyle) {
+		Label label = new Label(labelTitle);
+		label.setStylePrimaryName(labelStyle);
+
+		TreeItem item = new TreeItem(label);
+		item.addStyleName(itemStyle);
+
+		item.setUserObject(label);
+		return item;
+	}
+
+	private Widget getLabel(TreeItem item) {
+		return ((Widget) item.getUserObject());
+	}
+
 	protected void onError(ServiceError error) {
 		Log.error(error.toString());
+		dialogManager.showError(error);
+		this.hide();
 	}
 
 	private void onSelect() {
@@ -154,24 +192,29 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 				|| folders.getSelectedItem().equals(rootItem))
 			return;
 
-		Directory selected = items.get(folders.getSelectedItem());
-		listener.onSelect(selected);
+		this.hide();
+		listener.onSelect(items.get(folders.getSelectedItem()));
 	}
 
 	public void onTreeItemSelected(TreeItem item) {
 		this.selectButton.setEnabled(!item.equals(rootItem));
+
+		if (selected != null)
+			getLabel(selected)
+					.removeStyleDependentName(StyleConstants.SELECTED);
+		selected = item;
+		getLabel(selected).addStyleDependentName(StyleConstants.SELECTED);
 	}
 
 	public void onTreeItemStateChanged(final TreeItem item) {
 		if (item.equals(rootItem))
 			return;
 
-		if (item.getState() && !itemsInitialized.contains(item)) {
-			getSubDirectories(item);
-		}
+		if (item.getState() && !itemsInitialized.contains(item))
+			addSubDirectories(item);
 	}
 
-	private void getSubDirectories(final TreeItem item) {
+	private void addSubDirectories(final TreeItem item) {
 		final Directory dir = items.get(item);
 
 		directoryProvider.getDirectories(dir,

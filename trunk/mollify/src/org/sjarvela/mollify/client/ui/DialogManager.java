@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -92,9 +94,9 @@ public class DialogManager {
 
 	public void showSelectFolderDialog(String title, String message,
 			String actionTitle, DirectoryProvider provider,
-			SelectFolderListener listener) {
-		new SelectFolderDialog(textProvider, title, message, actionTitle,
-				provider, listener);
+			SelectFolderListener listener, List<Directory> initialDirectoryPath) {
+		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
+				provider, listener, initialDirectoryPath);
 	}
 
 }

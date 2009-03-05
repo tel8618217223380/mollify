@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.service.request.ErrorValue;
 import com.google.gwt.core.client.GWT;
 
 public enum ServiceErrorType {
-	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS;
+	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION;
 
 	public String getMessage(TextProvider textProvider) {
 		switch (this) {
@@ -32,6 +32,8 @@ public enum ServiceErrorType {
 			return textProvider.getStrings().errorMessageAuthenticationFailed();
 		case INVALID_CONFIGURATION:
 			return textProvider.getStrings().errorMessageInvalidConfiguration();
+		case FILE_ALREADY_EXISTS:
+			return textProvider.getStrings().errorMessageFileAlreadyExists();
 		case DIR_ALREADY_EXISTS:
 			return textProvider.getStrings()
 					.errorMessageDirectoryAlreadyExists();
@@ -73,6 +75,11 @@ public enum ServiceErrorType {
 			return SAVING_FAILED;
 		case 212:
 			return NO_MODIFY_RIGHTS;
+		case 213:
+			return ZIP_FAILED;
+		case 214:
+			return NO_GENERAL_WRITE_PERMISSION;
+
 		default:
 			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;
