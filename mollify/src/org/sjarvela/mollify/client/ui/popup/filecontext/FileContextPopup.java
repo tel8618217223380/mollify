@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.session.SessionSettings;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -42,7 +42,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 	private final DefaultTextProvider localizator;
 	private final FileDetailsProvider detailsProvider;
-	private final SessionSettings settings;
+	private final SessionInfo sessionInfo;
 	private FileSystemActionHandler fileActionHandler;
 
 	private Label filename;
@@ -60,12 +60,12 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	}
 
 	public FileContextPopup(DefaultTextProvider localizator,
-			FileDetailsProvider detailsProvider, SessionSettings settings) {
+			FileDetailsProvider detailsProvider, SessionInfo sessionInfo) {
 		super(StyleConstants.FILE_CONTEXT);
 
 		this.localizator = localizator;
 		this.detailsProvider = detailsProvider;
-		this.settings = settings;
+		this.sessionInfo = sessionInfo;
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(localizator.getStrings().shortDateTimeFormat());
@@ -110,7 +110,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		if (settings.isZipDownloadEnabled()) {
+		if (sessionInfo.getSettings().isZipDownloadEnabled()) {
 			MultiActionButton downloadButton = createMultiActionButton(this,
 					localizator.getStrings().fileActionDownloadTitle(),
 					FileSystemAction.download.name());
@@ -234,8 +234,8 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		boolean writable = details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
-
-		copyButton.setVisible(true); // TODO general write permissions
+		copyButton.setVisible(sessionInfo.getDefaultPermissionMode()
+				.hasWritePermission());
 	}
 
 	protected void onAction(FileSystemAction action) {

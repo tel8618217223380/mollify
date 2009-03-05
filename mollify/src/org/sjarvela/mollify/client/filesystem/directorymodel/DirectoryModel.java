@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.filesystem.directorymodel;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
@@ -40,8 +42,12 @@ public class DirectoryModel {
 		return folders.size();
 	}
 
-	public ListIterator<Directory> getDirectoryList() {
+	public ListIterator<Directory> getDirectories() {
 		return this.folders.listIterator();
+	}
+
+	public List<Directory> getDirectoryList() {
+		return Arrays.asList(this.folders.toArray(new Directory[0]));
 	}
 
 	public void descendIntoFolder(Directory folder) {

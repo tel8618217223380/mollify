@@ -27,8 +27,8 @@ public class MainViewFactory {
 	private final DefaultTextProvider localizator;
 	private final TextProvider textProvider;
 
-	public MainViewFactory(DefaultTextProvider localizator, TextProvider textProvider,
-			ServiceEnvironment environment) {
+	public MainViewFactory(DefaultTextProvider localizator,
+			TextProvider textProvider, ServiceEnvironment environment) {
 		this.localizator = localizator;
 		this.textProvider = textProvider;
 		this.environment = environment;
@@ -46,8 +46,7 @@ public class MainViewFactory {
 				model, fileSystemService, localizator);
 
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, localizator, model.getSessionInfo()
-						.getSettings());
+				fileSystemService, localizator, model.getSessionInfo());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
 				localizator, fileSystemService, model.getSessionInfo()
 						.getSettings());

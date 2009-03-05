@@ -165,7 +165,7 @@ public class MainView extends Composite {
 
 		if ((model.getSessionInfo().getSettings().isFileUploadEnabled() || model
 				.getSessionInfo().getSettings().isFolderActionsEnabled())
-				&& model.getSessionInfo().getPermissionMode()
+				&& model.getSessionInfo().getDefaultPermissionMode()
 						.hasWritePermission()) {
 			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),

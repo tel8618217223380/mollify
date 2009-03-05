@@ -228,7 +228,7 @@ public class MainViewPresenter implements DirectoryController,
 						public void onSelect(Directory selected) {
 							copyFile(file, selected);
 						}
-					});
+					}, model.getDirectoryModel().getDirectoryList());
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getTextProvider().getStrings()
 					.deleteFileConfirmationDialogTitle();
@@ -282,7 +282,7 @@ public class MainViewPresenter implements DirectoryController,
 	}
 
 	protected void copyFile(File file, Directory toDirectory) {
-		// TODO
+		fileSystemService.copy(file, toDirectory, createReloadListener());
 	}
 
 	private void delete(FileSystemItem item) {

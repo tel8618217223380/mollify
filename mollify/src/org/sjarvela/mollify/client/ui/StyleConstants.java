@@ -15,6 +15,8 @@ public class StyleConstants {
 
 	public static final String HOVER = "hover";
 	public static final String PRESSED = "pressed";
+	public static final String SELECTED = "selected";
+
 	public static final String DIALOG = "mollify-dialog";
 
 	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
@@ -171,7 +173,8 @@ public class StyleConstants {
 	public static final String SELECT_FOLDER_DIALOG_BUTTONS = "mollify-select-folder-dialog-buttons";
 	public static final String SELECT_FOLDER_DIALOG_BUTTON_SELECT = "select";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE = "mollify-select-folder-dialog-folders";
-	public static final String SELECT_FOLDER_DIALOG_FOLDERS_ROOT_ITEM = "mollify-select-folder-dialog-folders-root";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM = "mollify-select-folder-dialog-folders-root";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL = "mollify-select-folder-dialog-folders-root-item-label";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM = "mollify-select-folder-dialog-folders-item";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL = "mollify-select-folder-dialog-folders-item-label";
 	public static final String SELECT_FOLDER_DIALOG_MESSAGE = "mollify-select-folder-dialog-message";

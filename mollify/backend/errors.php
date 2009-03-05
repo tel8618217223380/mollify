@@ -29,7 +29,8 @@
 		"UPLOAD_FAILED" => array(210, "File upload failed"), 
 		"SAVING_FAILED" => array(211, "Saving file failed"),
 		"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file"),
-		"ZIP_FAILED" => array(213, "Creating a zip package failed")
+		"ZIP_FAILED" => array(213, "Creating a zip package failed"),
+		"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission")
 	);
 
 ?>

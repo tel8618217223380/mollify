@@ -119,7 +119,22 @@
 						$error = "INVALID_REQUEST";
 					}
 					break;
-				
+
+				case "copy":
+					if (!isset($_GET["to"])) {
+						$error = "INVALID_REQUEST";
+						break;
+					}
+					$to = get_fileitem_from_url("to");
+					if (!$to) {
+						$error = "INVALID_REQUEST";
+						break;
+					}
+					
+					if (copy_file($file, $to))
+						$result = get_success_message();
+					break;
+									
 				case "delete":
 					if (!isset($_GET["item_type"])) {
 						$error = "INVALID_REQUEST";

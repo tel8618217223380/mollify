@@ -48,7 +48,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileActionDownloadZippedTitle();
 
 	public String fileActionRenameTitle();
-	
+
 	public String fileActionCopyTitle();
 
 	public String fileActionDeleteTitle();
@@ -66,7 +66,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileListColumnTitleType();
 
 	public String fileListColumnTitleSize();
-	
+
 	public String fileListDirectoryType();
 
 	public String errorMessageNoResponse();
@@ -136,6 +136,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String createFolderDialogName();
 
 	public String createFolderDialogCreateButton();
+
+	public String errorMessageFileAlreadyExists();
 
 	public String errorMessageDirectoryAlreadyExists();
 

@@ -222,6 +222,29 @@
 		return rename($old, $new);
 	}
 
+	function copy_file($file, $to) {
+		global $error, $error_details;
+		
+		if (!assert_file($file)) return FALSE;
+		if (!assert_dir($to)) return FALSE;
+		
+		if (!has_general_modify_rights()) {
+			log_error("Insufficient permissions (copy file): User=[".$_SESSION['user_id']."]. General read/write permission is required.");
+			$error = "NO_GENERAL_WRITE_PERMISSION";
+			return FALSE;
+		}
+		
+		$origin = $file["path"];
+		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		if (file_exists($target)) {
+			$error = "FILE_ALREADY_EXISTS";
+			$error_details = basename($target);
+			return FALSE;
+		}
+		
+		return copy($origin, $target);
+	}
+	
 	function rename_directory($dir, $new_name) {
 		global $error, $error_details;
 		

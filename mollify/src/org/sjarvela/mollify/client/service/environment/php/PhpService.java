@@ -140,15 +140,22 @@ public class PhpService {
 
 	public void renameFile(File file, String newName,
 			ResultListener<Boolean> resultListener) {
-		String url = getActionUrl(file, FileSystemAction.rename) + "&to="
-				+ URL.encode(newName);
+		String url = getActionUrl(file, FileSystemAction.rename, "to="
+				+ URL.encode(newName));
 		doRequest(url, resultListener);
+	}
+
+	public void copyFile(File file, Directory directory,
+			ResultListener<Boolean> listener) {
+		String url = getActionUrl(file, FileSystemAction.copy, "to="
+				+ directory.getId());
+		doRequest(url, listener);
 	}
 
 	public void renameDirectory(Directory dir, String newName,
 			ResultListener<Boolean> listener) {
-		String url = getActionUrl(dir, FileSystemAction.rename) + "&to="
-				+ URL.encode(newName);
+		String url = getActionUrl(dir, FileSystemAction.rename, "to="
+				+ URL.encode(newName));
 		doRequest(url, listener);
 	}
 
@@ -230,5 +237,4 @@ public class PhpService {
 		return DateTime.getInstance().getInternalExactFormat().format(
 				DateTime.getInstance().currentTime());
 	}
-
 }

@@ -375,7 +375,7 @@
 	margin-top: 22px;
 	margin-left: 11px;
 	width: 200px;
-} 
+}
 
 .mollify-directory-menu-item-none {
 	font-style: italic;
@@ -947,15 +947,45 @@ input.mollify-create-folder-dialog-name-value {
 }
 
 .mollify-select-folder-dialog-folders {
-	width: 300px;
+	width: 290px;
 	height: 120px;
 	padding: 4px;
 	border: 1px dotted #7e7e7e;
 	margin: 6px;
 	overflow: auto;
+	background-color: #f3f3f3;
+}
+
+.mollify-select-folder-dialog-message {
+	padding: 6px;
+	width: 300px;
 }
 
 .mollify-select-folder-dialog-buttons {
 	width: 300px;
 	padding-bottom: 4px;
+	margin-top: 4px;
+}
+
+span.mollify-copy-file-message-file {
+	font-weight: bold;
+}
+
+.mollify-select-folder-dialog-folders-root-item-label, .mollify-select-folder-dialog-folders-item-label {
+	cursor: hand;
+	cursor: pointer;
+}
+
+.mollify-select-folder-dialog-folders-root-item-label {
+	font-weight: bold;
+}
+
+.gwt-Tree .gwt-TreeItem {
+	padding: 1px;
+	margin: 0px;
+	white-space: nowrap;
+}
+
+.mollify-select-folder-dialog-folders-item-label-selected {
+	background: #93c2f1 url(hborder.png) repeat-x 0px -1463px;
 }

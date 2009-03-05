@@ -116,6 +116,11 @@ public class PhpFileService implements FileSystemService {
 			service.renameDirectory((Directory) item, newName, listener);
 	}
 
+	public void copy(File file, Directory directory,
+			ResultListener<Boolean> listener) {
+		service.copyFile(file, directory, listener);
+	}
+
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Delete: " + item.getId());
@@ -140,5 +145,4 @@ public class PhpFileService implements FileSystemService {
 	public String getDownloadAsZipUrl(FileSystemItem item) {
 		return service.getActionUrl(item, FileSystemAction.download_as_zip);
 	}
-
 }
