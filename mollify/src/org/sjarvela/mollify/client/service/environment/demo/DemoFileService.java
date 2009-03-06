@@ -62,6 +62,11 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
+	public void move(File file, Directory directory,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
+
 	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
 		listener.onSuccess(data.getFileDetails(file));
 	}

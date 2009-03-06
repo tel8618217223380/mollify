@@ -53,6 +53,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 	private Button renameButton;
 	private Button copyButton;
+	private Button moveButton;
 	private Button deleteButton;
 
 	private enum Details {
@@ -106,6 +107,10 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 				.fileActionCopyTitle(), FileSystemAction.copy);
 		copyButton.setVisible(false);
 
+		moveButton = createActionButton(localizator.getStrings()
+				.fileActionMoveTitle(), FileSystemAction.move);
+		moveButton.setVisible(false);
+
 		deleteButton = createActionButton(localizator.getStrings()
 				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
@@ -127,6 +132,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 		buttons.add(renameButton);
 		buttons.add(copyButton);
+		buttons.add(moveButton);
 		buttons.add(deleteButton);
 
 		return buttons;
@@ -212,6 +218,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 		renameButton.setVisible(false);
 		copyButton.setVisible(false);
+		moveButton.setVisible(false);
 		deleteButton.setVisible(false);
 	}
 
@@ -234,8 +241,11 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		boolean writable = details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
-		copyButton.setVisible(sessionInfo.getDefaultPermissionMode()
-				.hasWritePermission());
+
+		boolean hasGeneralWritePermissions = sessionInfo
+				.getDefaultPermissionMode().hasWritePermission();
+		copyButton.setVisible(hasGeneralWritePermissions);
+		moveButton.setVisible(hasGeneralWritePermissions);
 	}
 
 	protected void onAction(FileSystemAction action) {
