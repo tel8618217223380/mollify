@@ -152,6 +152,13 @@ public class PhpService {
 		doRequest(url, listener);
 	}
 
+	public void moveFile(File file, Directory directory,
+			ResultListener<Boolean> listener) {
+		String url = getActionUrl(file, FileSystemAction.move, "to="
+				+ directory.getId());
+		doRequest(url, listener);
+	}
+
 	public void renameDirectory(Directory dir, String newName,
 			ResultListener<Boolean> listener) {
 		String url = getActionUrl(dir, FileSystemAction.rename, "to="
@@ -237,4 +244,5 @@ public class PhpService {
 		return DateTime.getInstance().getInternalExactFormat().format(
 				DateTime.getInstance().currentTime());
 	}
+
 }

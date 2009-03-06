@@ -36,6 +36,8 @@ public interface FileSystemService extends FileDetailsProvider,
 
 	void copy(File file, Directory directory, ResultListener<Boolean> listener);
 
+	void move(File file, Directory toDirectory, ResultListener<Boolean> listener);
+
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
 
 	void createDirectory(Directory parentFolder, String folderName,
@@ -44,5 +46,4 @@ public interface FileSystemService extends FileDetailsProvider,
 	String getDownloadUrl(File file);
 
 	String getDownloadAsZipUrl(FileSystemItem item);
-
 }

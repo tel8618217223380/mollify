@@ -51,6 +51,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileActionCopyTitle();
 
+	public String fileActionMoveTitle();
+
 	public String fileActionDeleteTitle();
 
 	public String dirActionDownloadTitle();
@@ -150,5 +152,9 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String copyFileDialogTitle();
 
 	public String copyFileDialogAction();
+
+	public String moveFileDialogTitle();
+
+	public String moveFileDialogAction();
 
 }

@@ -967,17 +967,19 @@ input.mollify-create-folder-dialog-name-value {
 	margin-top: 4px;
 }
 
-span.mollify-copy-file-message-file {
+span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 	font-weight: bold;
 }
 
 .mollify-select-folder-dialog-folders-root-item-label, .mollify-select-folder-dialog-folders-item-label {
 	cursor: hand;
 	cursor: pointer;
+	padding: 2px;
 }
 
 .mollify-select-folder-dialog-folders-root-item-label {
 	font-weight: bold;
+	padding: 2px;
 }
 
 .gwt-Tree .gwt-TreeItem {
@@ -987,5 +989,6 @@ span.mollify-copy-file-message-file {
 }
 
 .mollify-select-folder-dialog-folders-item-label-selected {
-	background: #93c2f1 url(hborder.png) repeat-x 0px -1463px;
+	background: #d5dcf6;
+	padding: 2px;
 }

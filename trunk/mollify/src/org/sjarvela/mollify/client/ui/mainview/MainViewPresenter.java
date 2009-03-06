@@ -229,6 +229,20 @@ public class MainViewPresenter implements DirectoryController,
 							copyFile(file, selected);
 						}
 					}, model.getDirectoryModel().getDirectoryList());
+		} else if (action.equals(FileSystemAction.move)) {
+			windowManager.getDialogManager().showSelectFolderDialog(
+					windowManager.getTextProvider().getStrings()
+							.moveFileDialogTitle(),
+					windowManager.getTextProvider().getMessages()
+							.moveFileMessage(file.getName()),
+					windowManager.getTextProvider().getStrings()
+							.moveFileDialogAction(),
+					new DefaultDirectoryProvider(fileSystemService),
+					new SelectFolderListener() {
+						public void onSelect(Directory selected) {
+							moveFile(file, selected);
+						}
+					}, model.getDirectoryModel().getDirectoryList());
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getTextProvider().getStrings()
 					.deleteFileConfirmationDialogTitle();
@@ -283,6 +297,10 @@ public class MainViewPresenter implements DirectoryController,
 
 	protected void copyFile(File file, Directory toDirectory) {
 		fileSystemService.copy(file, toDirectory, createReloadListener());
+	}
+
+	protected void moveFile(File file, Directory toDirectory) {
+		fileSystemService.move(file, toDirectory, createReloadListener());
 	}
 
 	private void delete(FileSystemItem item) {

@@ -121,6 +121,11 @@ public class PhpFileService implements FileSystemService {
 		service.copyFile(file, directory, listener);
 	}
 
+	public void move(File file, Directory directory,
+			ResultListener<Boolean> listener) {
+		service.moveFile(file, directory, listener);
+	}
+
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Delete: " + item.getId());

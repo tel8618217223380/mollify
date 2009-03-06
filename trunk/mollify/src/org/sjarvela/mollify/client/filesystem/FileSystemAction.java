@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.filesystem;
 import org.sjarvela.mollify.client.ui.ActionId;
 
 public enum FileSystemAction implements ActionId {
-	download, rename, copy, delete, upload, details, create_folder, download_as_zip;
+	download, rename, copy, move, delete, upload, details, create_folder, download_as_zip;
 
 	public boolean isApplicableToDirectory() {
 		return (this.equals(upload) || this.equals(create_folder)
