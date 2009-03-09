@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
@@ -36,7 +37,7 @@ public class App implements EntryPoint, LogoutHandler {
 	private static final String MOLLIFY_PANEL_ID = "mollify";
 
 	ServiceEnvironment environment;
-	DefaultTextProvider localizator;
+	TextProvider textProvider;
 	WindowManager windowManager;
 	RootPanel panel;
 
@@ -60,12 +61,12 @@ public class App implements EntryPoint, LogoutHandler {
 
 		try {
 			environment = createEnvironment(settings);
-			localizator = DefaultTextProvider.getInstance();
+			textProvider = DefaultTextProvider.getInstance();
 
-			MainViewFactory mainViewFactory = new MainViewFactory(localizator,
-					localizator, environment);
-			windowManager = new WindowManager(panel, localizator,
-					mainViewFactory, new DialogManager(localizator));
+			MainViewFactory mainViewFactory = new MainViewFactory(textProvider,
+					environment);
+			windowManager = new WindowManager(panel, textProvider,
+					mainViewFactory, new DialogManager(textProvider));
 		} catch (RuntimeException e) {
 			showExceptionError("Error initializing: ", e);
 			return;
@@ -153,8 +154,8 @@ public class App implements EntryPoint, LogoutHandler {
 	}
 
 	private void showLoginError() {
-		String title = localizator.getStrings().loginDialogTitle();
-		String msg = localizator.getStrings().loginDialogLoginFailedMessage();
+		String title = textProvider.getStrings().loginDialogTitle();
+		String msg = textProvider.getStrings().loginDialogLoginFailedMessage();
 		windowManager.getDialogManager().showInfo(title, msg);
 	}
 
