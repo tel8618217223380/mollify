@@ -113,7 +113,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 
 		HTML content = new HTML(textProvider.getMessages().uploadMaxSizeHtml(
 				textProvider.getSizeText(info.getUploadMaxFileSize()),
-				textProvider.getSizeText(info.getUploadMaxFileSize())));
+				textProvider.getSizeText(info.getUploadMaxTotalSize())));
 		content.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_CONTENT);
 
 		uploadInfo.setContent(content);
