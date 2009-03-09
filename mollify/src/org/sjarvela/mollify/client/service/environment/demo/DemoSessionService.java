@@ -10,14 +10,10 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
 public class DemoSessionService implements SessionService {
-	private static final String USERNAME = "demo";
-	private static final String PASSWORD = "demo";
 	private static final String VISIBLE_USERNAME = "Mollify Demo";
 
 	private final DemoData data;
@@ -28,11 +24,7 @@ public class DemoSessionService implements SessionService {
 
 	public void authenticate(String userName, String password,
 			ResultListener resultListener) {
-		if (userName.equals(USERNAME) && password.equals(PASSWORD))
-			resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
-		else
-			resultListener.onFail(new ServiceError(
-					ServiceErrorType.AUTHENTICATION_FAILED));
+		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
 	}
 
 	public void getSessionInfo(ResultListener resultListener) {
