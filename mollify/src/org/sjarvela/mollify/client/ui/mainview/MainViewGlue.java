@@ -54,12 +54,6 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 			}
 		});
 
-		actionDelegator.setActionHandler(Action.parentDir, new ActionHandler() {
-			public void onAction() {
-				presenter.moveToParentDirectory();
-			}
-		});
-
 		actionDelegator.setActionHandler(Action.addFile, new ActionHandler() {
 			public void onAction() {
 				presenter.openUploadDialog();

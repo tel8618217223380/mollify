@@ -1,9 +1,19 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.filesystem.upload;
 
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
@@ -13,7 +23,7 @@ import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class DefaultFileUploadListener implements FileUploadListener {
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final boolean isProgressEnabled;
 	private final FileUploadService service;
 	private final DialogManager dialogManager;
@@ -24,22 +34,22 @@ public class DefaultFileUploadListener implements FileUploadListener {
 
 	public DefaultFileUploadListener(FileUploadService service,
 			boolean isProgressEnabled, DialogManager dialogManager,
-			DefaultTextProvider localizator, ResultListener listener) {
+			TextProvider textProvider, ResultListener listener) {
 		this.service = service;
 		this.isProgressEnabled = isProgressEnabled;
 		this.dialogManager = dialogManager;
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.listener = listener;
 	}
 
 	public void onUploadStarted(String uploadId, List<String> filenames) {
-		String info = filenames.size() == 1 ? filenames.get(0) : localizator
+		String info = filenames.size() == 1 ? filenames.get(0) : textProvider
 				.getMessages().uploadingNFilesInfo(filenames.size());
 
-		uploadListener = dialogManager.openProgressDialog(localizator
+		uploadListener = dialogManager.openProgressDialog(textProvider
 				.getStrings().fileUploadProgressTitle(), false);
 		uploadListener.setInfo(info);
-		uploadListener.setDetails(localizator.getStrings()
+		uploadListener.setDetails(textProvider.getStrings()
 				.fileUploadProgressPleaseWait());
 
 		if (!isProgressEnabled)

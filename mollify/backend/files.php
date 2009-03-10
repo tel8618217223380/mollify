@@ -20,7 +20,7 @@
 	    $amount = trim($amount);
 	    $last = strtolower($amount[strlen($amount)-1]);
 	    
-	    switch($last) {
+	    switch ($last) {
 	        case 'g':
 	            $amount *= 1024;
 	        case 'm':

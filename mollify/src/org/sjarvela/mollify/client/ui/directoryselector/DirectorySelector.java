@@ -10,54 +10,105 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-public class DirectorySelector extends HorizontalPanel {
-	private DefaultTextProvider localizator;
+public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	private final DirectoryModelProvider directoryModelProvider;
 	private final DirectoryListItemFactory listItemFactory;
+	private final TextProvider textProvider;
+	private final List<DirectoryListener> listeners = new ArrayList();
 
-	public DirectorySelector(DefaultTextProvider localizator,
+	private final DirectoryListItem homeItem;
+	private final Button upButton;
+
+	public DirectorySelector(TextProvider textProvider,
 			DirectoryModelProvider directoryModelProvider,
 			DirectoryListItemFactory listItemFactory) {
+		this.textProvider = textProvider;
 		this.directoryModelProvider = directoryModelProvider;
-		this.localizator = localizator;
 		this.listItemFactory = listItemFactory;
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
+
+		this.upButton = createUpButton();
+		this.homeItem = createHomeButton();
+	}
+
+	public void addListener(DirectoryListener listener) {
+		this.listeners.add(listener);
+	}
+
+	private Button createUpButton() {
+		Button button = new Button(textProvider.getStrings()
+				.mainViewParentDirButtonTitle());
+		button.setStyleName(StyleConstants.DIRECTORY_SELECTOR_BUTTON);
+		button.getElement().setId(StyleConstants.DIRECTORY_SELECTOR_BUTTON_UP);
+		button.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				DirectorySelector.this.onMoveToParentDirectory();
+			}
+		});
+		return button;
+	}
+
+	private DirectoryListItem createHomeButton() {
+		return listItemFactory.createListItem(this,
+				StyleConstants.DIRECTORY_LISTITEM_HOME, Directory.Empty, 0,
+				Directory.Empty);
 	}
 
 	public void refresh() {
 		this.clear();
 
+		this.add(upButton);
+		this.add(homeItem);
+
+		FlowPanel items = new FlowPanel();
+		items.setStyleName(StyleConstants.DIRECTORY_SELECTOR_ITEMS);
+
+		for (DirectoryListItem item : createItems())
+			items.add(item);
+		this.add(items);
+	}
+
+	private List<DirectoryListItem> createItems() {
 		ListIterator<Directory> list = directoryModelProvider
 				.getDirectoryModel().getDirectories();
-		int level = 0;
+		int level = 1;
 		Directory parent = Directory.Empty;
 
+		List<DirectoryListItem> items = new ArrayList();
 		while (list.hasNext()) {
 			Directory current = list.next();
-			this.add(listItemFactory.createListItem(current, level, parent));
-			if (list.hasNext())
-				addSeparator();
+			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
+					: null;
+			items.add(0, listItemFactory.createListItem(this, style, current,
+					level, parent));
 
 			level++;
 			parent = current;
 		}
+		return items;
 	}
 
-	private void addSeparator() {
-		Label separator = new Label(localizator.getStrings()
-				.directorySelectorSeparatorLabel());
-		separator.setStyleName(StyleConstants.DIRECTORY_SELECTOR_SEPARATOR);
-		this.add(separator);
+	public void onChangeToDirectory(int level, Directory directory) {
+		for (DirectoryListener listener : listeners)
+			listener.onChangeToDirectory(level, directory);
 	}
 
+	public void onMoveToParentDirectory() {
+		for (DirectoryListener listener : listeners)
+			listener.onMoveToParentDirectory();
+	}
 }

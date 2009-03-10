@@ -193,60 +193,72 @@
 }
 
 .mollify-header {
-	background: url(header-bg.png) repeat-x 0 -32px;
+	background: url(header.png) repeat-x 0 0;
 	width: 100%;
-	height: 41px;
+	height: 38px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
 }
 
 .mollify-header-buttons {
 	padding-left: 4px;
+	height: 28px;
 }
 
 .mollify-header-button, #mollify-header-add-button {
 	font: normal 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	background-image: none;
 	margin-top: 8px;
-	margin-bottom: 8px;
-	padding: 0;
 	height: 23px;
 	border-style: none;
-	margin-right: 4px;
+	margin-right: 2px;
 	cursor: pointer;
 	cursor: hand;
 	float: left;
 }
 
 #mollify-header-add-button.mollify-dropdown-button {
-	background: url(b-add.png) no-repeat 0 0;
-	width: 36px;
+	background: url(button-add.png) no-repeat 0 0;
+	width: 23px;
 	font-size: 0;
 	float: left;
 }
 
 #mollify-header-add-button-menu {
 	margin-top: 22px;
-	margin-left: 7px;
+	margin-left: 1px;
 	width: 120px;
 }
 
 .mollify-directory-selector {
-	margin: 8px 0;
+	float: left;
+	background: url(dir-item-body.png) repeat-x;
+	margin-top: 8px;
+	margin-left: 0;
+	margin-right: -11px;
+}
+
+.mollify-directory-selector-items {
 	float: left;
 }
 
+.mollify-header-button:active, .mollify-dropdown-button:active {
+	border-style: none;
+}
+
 #mollify-header-add-button.mollify-dropdown-button:active {
-	background: url(b-add-d.png) no-repeat 0 0;
+	background: url(button-add.png) no-repeat 0 -23px;
 }
 
 #mollify-header-refresh-button.mollify-header-button {
-	background: url(b-refresh.png) no-repeat 0 0;
+	background: url(button-refresh.png) no-repeat 0 0;
 	font-size: 0;
-	width: 36px;
+	width: 23px;
 	color: #dadada;
 }
 
 #mollify-header-refresh-button.mollify-header-button:active {
-	background: url(b-refresh-d.png) no-repeat 0 0;
+	background: url(button-refresh.png) no-repeat 0 -23px;
 }
 
 #mollify-header-parent-dir-button.mollify-header-button {
@@ -283,7 +295,7 @@
 }
 
 .mollify-header-option {
-	height: 40px;
+	height: 27px;
 	border-style: none;
 	background: rgba(50,50,50,0.19);
 	color: transparent;
@@ -299,76 +311,126 @@
 	padding-right: 6px;
 	padding-left: 6px;
 	font-weight: bold;
-	height: 26px;
-	padding-top: 14px;
+	padding-top: 12px;
 	float: left;
 	text-align: right;
 }
 
 #mollify-header-logout.mollify-header-option, #mollify-header-logout.mollify-header-option:hover {
-	background: #bababa url(b-close.png) no-repeat 8px 15px;
+	background: #a5a5a5 url(b-close.png) no-repeat 8px 13px;
 	width: 26px;
 	right: 0;
 	font-size: 0;
 	line-height: 0;
 	text-indent: -100px;
 	float: left;
+	height: 38px;
 }
 
 #mollify-header-logout.mollify-header-option:hover {
-	background: #b3b3b3 url(b-close-over.png) no-repeat 8px 15px;
+	background: #969696 url(b-close-over.png) no-repeat 8px 13px;
 }
 
-.mollify-directory-list-root-level {
-	padding-left: 0;
+.mollify-directory-list-item {
+	float: right;
 }
 
-.mollify-directory-list-padding-left {
+.mollify-directory-selector-button {
+	float: left;
+}
+
+#mollify-directory-selector-button-up.mollify-directory-selector-button {
+	background: url(button-back.png) no-repeat;
+	font-size: 0;
+	line-height: 0;
+	text-indent: -100px;
+	height: 23px;
+	width: 23px;
+	border-style: none;
+	cursor: pointer;
+	cursor: hand;
+}
+
+#mollify-directory-selector-button-up.mollify-directory-selector-button:active {
+	background: url(button-back.png) no-repeat 0px -23px;
+}
+
+.mollify-directory-list-item-button-left {
+	width: 12px;
+	height: 22px;
+	float: left;
+	margin-left: -11px;
+}
+
+.mollify-directory-list-item-button-center {
+	height: 19px;
+	padding-top: 4px;
+	padding-left: 2px;
+	padding-right: 2px;
+	float: left;
+}
+
+.mollify-directory-list-item-button-right {
 	width: 11px;
-	background: url(b-l.png) no-repeat 0 0;
-	height: 22px;
+	background: url(dir-item-head.png) no-repeat;
+	height: 23px;
+	float: left;
 }
 
-.mollify-directory-list-padding-right {
-	width: 10px;
-	background: url(b-r.png) no-repeat 0 0;
-	height: 22px;
-}
-
-.mollify-directory-list-label {
-	background: url(b-m.png) repeat-x 0 0;
-	padding: 4px;
+.mollify-directory-list-item-button {
+	border-style: none;
 	cursor: pointer;
-	height: 14px;
+	cursor: hand;
 }
 
-.mollify-directory-list-label:hover {
-	color: #565671;
-	background-color: #d5d5d5;
-	text-decoration: underline;
+.mollify-directory-list-item-button-left-pressed {
+	background: url(dir-item-body.png) repeat-x 0 -23px;
 }
 
-.mollify-directory-list-dropdown {
-	height: 25px;
-	width: 13px;
-	background: url(b-arrow.png) no-repeat;
+.mollify-directory-list-item-button-center-pressed {
+	background: url(dir-item-body.png) repeat-x 0px -23px;
+}
+
+.mollify-directory-list-item-button-right-pressed {
+	background: url(dir-item-head.png) no-repeat 0px -23px;
+}
+
+.mollify-directory-list-item-dropdown {
+	width: 0;
+}
+
+.mollify-directory-list-item-home {
+	position: relative;
+	left: 0px;
+	float: left;
+}
+
+.mollify-directory-list-item-dropdown-home {
+	background: url(button-home.png) no-repeat -1px 0;
+	font-size: 0;
+	line-height: 0;
+	text-indent: -100px;
+	height: 23px;
+	width: 29px;
+	border-style: none;
 	cursor: pointer;
+	cursor: hand;
+	float: left;
 }
 
-.mollify-directory-list-dropdown:hover {
-	background: url(b-arrow-over.png) no-repeat;
+.mollify-directory-list-item-dropdown-home:active {
+	background: url(button-home.png) no-repeat -1px -23px;
 }
 
-.mollify-directory-selector-separator {
-	font-weight: bold;
-	font-size: 16px;
-	visibility: hidden;
-	width: 5px;
+.mollify-directory-list-item-button-home .mollify-directory-list-item-button-left, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-center, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-right {
+	margin: 0;
+	padding: 0;
+	width: 0;
 }
 
 .mollify-directory-list-menu {
 	margin-top: 22px;
-	margin-left: 11px;
+	margin-left: 0px;
 }
 
 .ie-crap.mollify-directory-list-menu {
@@ -458,47 +520,47 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-row-file-odd td {
-	background-color: #dedede;
+	background-color: #eeeeee;
 }
 
 .mollify-filelist-row-file-even-hover td {
-	background-color: #dde9f4;
+	background-color: #e1e2fc;
 }
 
 .mollify-filelist-row-file-odd-hover td {
-	background-color: #cbcdef;
+	background-color: #d3d4ee;
 }
 
 .mollify-filelist-row-file-even .mollify-filelist-column-type {
-	background-color: #bdbdbd;
+	background-color: #e5e5e5;
 }
 
 .mollify-filelist-row-file-odd .mollify-filelist-column-type {
-	background-color: #a9a9a9;
+	background-color: #d6d6d6;
 }
 
 .mollify-filelist-row-file-even-hover .mollify-filelist-column-type {
-	background-color: #b4bdc7;
+	background-color: #cacbe3;
 }
 
 .mollify-filelist-row-file-odd-hover .mollify-filelist-column-type {
-	background-color: #b0b3d0;
+	background-color: #bebfd6;
 }
 
 .mollify-filelist-row-directory-even .mollify-filelist-column-type {
-	background-color: #e8cfd0;
+	background-color: #dbced8;
 }
 
 .mollify-filelist-row-directory-odd .mollify-filelist-column-type {
-	background-color: #d3bcbd;
+	background-color: #d6c4d6;
 }
 
 .mollify-filelist-row-directory-even-hover .mollify-filelist-column-type {
-	background-color: #e2c1da;
+	background-color: #c2b7d8;
 }
 
 .mollify-filelist-row-directory-odd-hover .mollify-filelist-column-type {
-	background-color: #d3becf;
+	background-color: #beaed6;
 }
 
 .mollify-filelist-row-directory-even td, .mollify-filelist-row-directory-odd td {
@@ -509,19 +571,19 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-row-directory-even td {
-	background: #fbdfde;
+	background: #f4e5f0;
 }
 
 .mollify-filelist-row-directory-odd td {
-	background-color: #ead2d2;
+	background-color: #eedaee;
 }
 
 .mollify-filelist-row-directory-odd-hover td {
-	background-color: #dec7d6;
+	background-color: #d3c2ee;
 }
 
 .mollify-filelist-row-directory-even-hover td {
-	background-color: #f2d1e7;
+	background-color: #d8ccf0;
 }
 
 .mollify-filelist .mollify-filelist-item-name {

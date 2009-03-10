@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionSettings;
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryContextPopup extends ContextPopup {
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final SessionSettings settings;
 	private final DirectoryDetailsProvider detailsProvider;
 	private FileSystemActionHandler actionHandler;
@@ -42,11 +42,11 @@ public class DirectoryContextPopup extends ContextPopup {
 
 	private Directory directory;
 
-	public DirectoryContextPopup(DefaultTextProvider localizator,
+	public DirectoryContextPopup(TextProvider textProvider,
 			DirectoryDetailsProvider detailsProvider, SessionSettings settings) {
 		super(StyleConstants.DIR_CONTEXT);
 
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.detailsProvider = detailsProvider;
 		this.settings = settings;
 
@@ -74,12 +74,12 @@ public class DirectoryContextPopup extends ContextPopup {
 		buttons.setStyleName(StyleConstants.DIR_CONTEXT_BUTTONS);
 
 		if (settings.isZipDownloadEnabled())
-			downloadButton = createActionButton(localizator.getStrings()
+			downloadButton = createActionButton(textProvider.getStrings()
 					.dirActionDownloadTitle(), FileSystemAction.download_as_zip);
-		renameButton = createActionButton(localizator.getStrings()
+		renameButton = createActionButton(textProvider.getStrings()
 				.dirActionRenameTitle(), FileSystemAction.rename);
 		renameButton.setVisible(false);
-		deleteButton = createActionButton(localizator.getStrings()
+		deleteButton = createActionButton(textProvider.getStrings()
 				.dirActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
@@ -104,7 +104,7 @@ public class DirectoryContextPopup extends ContextPopup {
 		detailsProvider.getDirectoryDetails(directory,
 				new ResultListener<DirectoryDetails>() {
 					public void onFail(ServiceError error) {
-						name.setText(error.getType().getMessage(localizator));
+						name.setText(error.getType().getMessage(textProvider));
 					}
 
 					public void onSuccess(DirectoryDetails result) {
