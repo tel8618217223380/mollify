@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
@@ -24,14 +24,15 @@ import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 
 public class MainViewFactory {
 	private final ServiceEnvironment environment;
-	private final DefaultTextProvider localizator;
 	private final TextProvider textProvider;
+	private final DirectoryProvider directoryProvider;
 
-	public MainViewFactory(DefaultTextProvider localizator,
-			TextProvider textProvider, ServiceEnvironment environment) {
-		this.localizator = localizator;
+	public MainViewFactory(TextProvider textProvider,
+			ServiceEnvironment environment) {
 		this.textProvider = textProvider;
 		this.environment = environment;
+		this.directoryProvider = new DefaultDirectoryProvider(environment
+				.getFileSystemService());
 	}
 
 	public MainView createMainView(WindowManager windowManager,
@@ -43,12 +44,11 @@ public class MainViewFactory {
 		MainViewModel model = new MainViewModel(fileSystemService, info);
 
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
-				model, fileSystemService, localizator);
-
+				model, fileSystemService, textProvider, directoryProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, localizator, model.getSessionInfo());
+				fileSystemService, textProvider, model.getSessionInfo());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				localizator, fileSystemService, model.getSessionInfo()
+				textProvider, fileSystemService, model.getSessionInfo()
 						.getSettings());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
@@ -58,8 +58,8 @@ public class MainViewFactory {
 				directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, fileSystemService, environment
-						.getFileUploadHandler(), localizator, logoutListener);
-		directorySelectorFactory.setController(presenter);
+						.getFileUploadHandler(), directoryProvider,
+				textProvider, logoutListener);
 		new MainViewGlue(view, presenter, actionDelegator);
 
 		return view;

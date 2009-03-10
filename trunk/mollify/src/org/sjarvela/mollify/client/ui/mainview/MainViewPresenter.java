@@ -14,16 +14,17 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -36,10 +37,11 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
+import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
-public class MainViewPresenter implements DirectoryController,
+public class MainViewPresenter implements DirectoryListener,
 		FileSystemActionHandler, DirectoryHandler, RenameHandler {
 	private final MainViewModel model;
 	private final MainView view;
@@ -48,22 +50,27 @@ public class MainViewPresenter implements DirectoryController,
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
 	private final LogoutHandler logoutListener;
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
+	private final DirectoryProvider directoryProvider;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, FileSystemService fileSystemService,
 			FileUploadService fileUploadHandler,
-			DefaultTextProvider localizator, LogoutHandler logoutListener) {
+			DirectoryProvider directoryProvider, TextProvider textProvider,
+			LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
 		this.fileSystemService = fileSystemService;
 		this.fileUploadService = fileUploadHandler;
-		this.localizator = localizator;
+		this.directoryProvider = directoryProvider;
+		this.textProvider = textProvider;
 		this.logoutListener = logoutListener;
 
 		this.view.setFileContextHandler(this);
 		this.view.setDirectoryContextHandler(this);
+		this.view.getDirectorySelector().addListener(this);
+
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
 
 		if (model.getSessionInfo().isAuthenticationRequired())
@@ -84,8 +91,9 @@ public class MainViewPresenter implements DirectoryController,
 				view.showFileContext((File) item);
 			} else {
 				Directory directory = (Directory) item;
+
 				if (directory == Directory.Parent)
-					moveToParentDirectory();
+					onMoveToParentDirectory();
 				else
 					changeToDirectory(directory);
 			}
@@ -125,13 +133,13 @@ public class MainViewPresenter implements DirectoryController,
 		view.refresh();
 	}
 
-	public void moveToParentDirectory() {
+	public void onMoveToParentDirectory() {
 		if (!model.getDirectoryModel().canAscend())
 			return;
 		model.moveToParentDirectory(createRefreshListener());
 	}
 
-	public void changeToDirectory(int level, Directory directory) {
+	public void onChangeToDirectory(int level, Directory directory) {
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 
@@ -148,10 +156,10 @@ public class MainViewPresenter implements DirectoryController,
 		if (model.getCurrentFolder().isEmpty())
 			return;
 
-		DefaultFileUploadListener fileUploadListener = new DefaultFileUploadListener(
+		FileUploadListener fileUploadListener = new DefaultFileUploadListener(
 				fileUploadService, model.getSessionInfo().getSettings()
 						.isFileUploadProgressEnabled(), windowManager
-						.getDialogManager(), localizator,
+						.getDialogManager(), textProvider,
 				createReloadListener());
 
 		windowManager.getDialogManager().openUploadDialog(
@@ -215,49 +223,51 @@ public class MainViewPresenter implements DirectoryController,
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(file, this);
-		} else if (action.equals(FileSystemAction.copy)) {
-			windowManager.getDialogManager().showSelectFolderDialog(
-					windowManager.getTextProvider().getStrings()
-							.copyFileDialogTitle(),
-					windowManager.getTextProvider().getMessages()
-							.copyFileMessage(file.getName()),
-					windowManager.getTextProvider().getStrings()
-							.copyFileDialogAction(),
-					new DefaultDirectoryProvider(fileSystemService),
-					new SelectFolderListener() {
-						public void onSelect(Directory selected) {
-							copyFile(file, selected);
-						}
-					}, model.getDirectoryModel().getDirectoryList());
-		} else if (action.equals(FileSystemAction.move)) {
-			windowManager.getDialogManager().showSelectFolderDialog(
-					windowManager.getTextProvider().getStrings()
-							.moveFileDialogTitle(),
-					windowManager.getTextProvider().getMessages()
-							.moveFileMessage(file.getName()),
-					windowManager.getTextProvider().getStrings()
-							.moveFileDialogAction(),
-					new DefaultDirectoryProvider(fileSystemService),
-					new SelectFolderListener() {
-						public void onSelect(Directory selected) {
-							moveFile(file, selected);
-						}
-					}, model.getDirectoryModel().getDirectoryList());
-		} else if (action.equals(FileSystemAction.delete)) {
-			String title = windowManager.getTextProvider().getStrings()
-					.deleteFileConfirmationDialogTitle();
-			String message = windowManager.getTextProvider().getMessages()
-					.confirmFileDeleteMessage(file.getName());
-			windowManager.getDialogManager().showConfirmationDialog(title,
-					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
-					new ConfirmationListener() {
-						public void onConfirm() {
-							delete(file);
-						}
-					});
 		} else {
-			windowManager.getDialogManager().showInfo("ERROR",
-					"Unsupported action:" + action.name());
+
+			if (action.equals(FileSystemAction.copy)) {
+				windowManager.getDialogManager().showSelectFolderDialog(
+						windowManager.getTextProvider().getStrings()
+								.copyFileDialogTitle(),
+						windowManager.getTextProvider().getMessages()
+								.copyFileMessage(file.getName()),
+						windowManager.getTextProvider().getStrings()
+								.copyFileDialogAction(), directoryProvider,
+						new SelectFolderListener() {
+							public void onSelect(Directory selected) {
+								copyFile(file, selected);
+							}
+						}, model.getDirectoryModel().getDirectoryList());
+			} else if (action.equals(FileSystemAction.move)) {
+				windowManager.getDialogManager().showSelectFolderDialog(
+						windowManager.getTextProvider().getStrings()
+								.moveFileDialogTitle(),
+						windowManager.getTextProvider().getMessages()
+								.moveFileMessage(file.getName()),
+						windowManager.getTextProvider().getStrings()
+								.moveFileDialogAction(), directoryProvider,
+						new SelectFolderListener() {
+							public void onSelect(Directory selected) {
+								moveFile(file, selected);
+							}
+						}, model.getDirectoryModel().getDirectoryList());
+			} else if (action.equals(FileSystemAction.delete)) {
+				String title = windowManager.getTextProvider().getStrings()
+						.deleteFileConfirmationDialogTitle();
+				String message = windowManager.getTextProvider().getMessages()
+						.confirmFileDeleteMessage(file.getName());
+				windowManager.getDialogManager().showConfirmationDialog(title,
+						message,
+						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
+						new ConfirmationListener() {
+							public void onConfirm() {
+								delete(file);
+							}
+						});
+			} else {
+				windowManager.getDialogManager().showInfo("ERROR",
+						"Unsupported action:" + action.name());
+			}
 		}
 	}
 

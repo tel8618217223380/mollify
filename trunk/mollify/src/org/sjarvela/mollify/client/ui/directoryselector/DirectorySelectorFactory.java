@@ -10,60 +10,33 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
 
 public class DirectorySelectorFactory implements DirectoryModelProvider {
-
-	private DefaultTextProvider localizator;
-	private MainViewModel model;
-	private DirectoryListItemFactory listItemFactory;
+	private final MainViewModel model;
+	private final DirectoryListItemFactory listItemFactory;
+	private final TextProvider textProvider;
 
 	public DirectorySelectorFactory(final MainViewModel model,
-			final FileSystemService fileServices, DefaultTextProvider localizator) {
-		this.localizator = localizator;
+			final FileSystemService fileServices, TextProvider textProvider,
+			DirectoryProvider directoryProvider) {
 		this.model = model;
-		this.listItemFactory = new DirectoryListItemFactory(localizator,
-				new DirectoryProvider() {
-
-					public void getDirectories(Directory parent,
-							ResultListener listener) {
-						// if there is no parent, give root list
-						if (parent.isEmpty()) {
-							listener.onSuccess(model.getRootDirectories());
-							return;
-						}
-
-						// no need to retrieve current view directories, they
-						// are already retrieved
-						if (parent.equals(model.getDirectoryModel()
-								.getCurrentFolder())) {
-							listener.onSuccess(model.getSubDirectories());
-							return;
-						}
-
-						fileServices.getDirectories(parent, listener);
-					}
-				});
+		this.textProvider = textProvider;
+		this.listItemFactory = new DirectoryListItemFactory(textProvider,
+				directoryProvider);
 	}
 
 	public DirectorySelector createSelector() {
-		return new DirectorySelector(localizator, this, listItemFactory);
+		return new DirectorySelector(textProvider, this, listItemFactory);
 	}
 
 	public DirectoryModel getDirectoryModel() {
 		return model.getDirectoryModel();
-	}
-
-	public void setController(DirectoryController controller) {
-		listItemFactory.setController(controller);
 	}
 
 }

@@ -11,29 +11,23 @@
 package org.sjarvela.mollify.client.ui.directoryselector;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryController;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 
 public class DirectoryListItemFactory {
 	private DirectoryProvider provider;
-	private DefaultTextProvider localizator;
-	private DirectoryController controller;
+	private TextProvider textProvider;
 
-	public DirectoryListItemFactory(DefaultTextProvider localizator,
+	public DirectoryListItemFactory(TextProvider textProvider,
 			DirectoryProvider provider) {
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 		this.provider = provider;
 	}
 
-	public DirectoryListItem createListItem(Directory current, int level,
-			Directory parent) {
-		return new DirectoryListItem(current, level, parent, provider,
-				controller, localizator);
-	}
-
-	public void setController(DirectoryController controller) {
-		this.controller = controller;
+	public DirectoryListItem createListItem(DirectoryListener listener,
+			String style, Directory current, int level, Directory parent) {
+		return new DirectoryListItem(style, current, level, parent, provider,
+				listener, textProvider);
 	}
 
 }

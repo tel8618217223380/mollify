@@ -11,75 +11,65 @@
 package org.sjarvela.mollify.client.ui.directoryselector;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryController;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryListener;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListItem extends HorizontalPanel implements
-		DirectoryListener {
-	private final DirectoryController controller;
+public class DirectoryListItem extends FlowPanel {
+	private final String itemStyle;
+	private final DirectoryListener listener;
 	private final DirectoryProvider dataProvider;
-	private final DefaultTextProvider localizator;
+	private final TextProvider textProvider;
 	private final DirectoryListMenu menu;
 
-	private Directory currentDirectory;
-	private int level;
-	private Directory parentDirectory;
+	private final Directory currentDirectory;
+	private final int level;
 
 	private Label dropDown;
+	private DirectoryListItemButton button;
 
-	public DirectoryListItem(Directory currentDirectory, int level,
-			Directory parentDirectory, DirectoryProvider provider,
-			DirectoryController controller, DefaultTextProvider localizator) {
+	public DirectoryListItem(String itemStyle, Directory currentDirectory,
+			int level, Directory parentDirectory, DirectoryProvider provider,
+			DirectoryListener listener, TextProvider textProvider) {
+		this.itemStyle = itemStyle;
 		this.currentDirectory = currentDirectory;
 		this.level = level;
-		this.parentDirectory = parentDirectory;
 
 		this.dataProvider = provider;
-		this.controller = controller;
-		this.localizator = localizator;
+		this.listener = listener;
+		this.textProvider = textProvider;
 
-		this.setStyleName(StyleConstants.DIRECTORY_LIST);
-		if (level == 0)
-			this.addStyleName(StyleConstants.DIRECTORY_LIST_ROOT_LEVEL);
+		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM);
+		if (itemStyle != null)
+			this.addStyleDependentName(itemStyle);
 
-		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING_LEFT));
-		this.add(createLabel());
+		this.add(createButton());
 		this.add(createDropdownButton());
-		this.add(createPadding(StyleConstants.DIRECTORY_LIST_PADDING_RIGHT));
+
 		this.menu = createMenu();
 	}
 
-	private Widget createPadding(String... classes) {
-		Label label = new Label();
-		for (String className : classes) {
-			label.addStyleName(className);
-		}
-		return label;
-	}
-
-	private Label createLabel() {
-		Label label = new Label(currentDirectory.getName());
-		label.setStyleName(StyleConstants.DIRECTORY_LIST_LABEL);
-
-		label.addClickListener(new ClickListener() {
+	private Widget createButton() {
+		button = new DirectoryListItemButton(itemStyle);
+		button.setText(currentDirectory.getName());
+		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				controller.changeToDirectory(level, currentDirectory);
+				listener.onChangeToDirectory(level, currentDirectory);
 			}
 		});
-		return label;
+		return button;
 	}
 
 	private Widget createDropdownButton() {
 		dropDown = new Label();
-		dropDown.setStyleName(StyleConstants.DIRECTORY_LIST_DROPDOWN);
+		dropDown.setStyleName(StyleConstants.DIRECTORY_LISTITEM_DROPDOWN);
+		if (itemStyle != null)
+			dropDown.addStyleDependentName(itemStyle);
 
 		dropDown.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
@@ -90,12 +80,8 @@ public class DirectoryListItem extends HorizontalPanel implements
 	}
 
 	private DirectoryListMenu createMenu() {
-		return new DirectoryListMenu(parentDirectory, currentDirectory,
-				dataProvider, this, localizator, this.getElement(), dropDown
+		return new DirectoryListMenu(currentDirectory, level, dataProvider,
+				listener, textProvider, this.getElement(), dropDown
 						.getElement());
-	}
-
-	public void onDirectorySelected(Directory directory) {
-		controller.changeToDirectory(level, directory);
 	}
 }

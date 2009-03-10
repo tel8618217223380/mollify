@@ -13,9 +13,8 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryListener;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
-import org.sjarvela.mollify.client.localization.DefaultTextProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.ActionId;
@@ -29,33 +28,32 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		ResultListener<List<Directory>> {
+	private final int level;
+	private final Directory currentDirectory;
+	private final DirectoryProvider directoryProvider;
+	private final DirectoryListener listener;
+	private final TextProvider textProvider;
+
 	boolean initialized = false;
 	boolean dataRequested = false;
 
-	private DirectoryProvider directoryProvider;
-	private Directory parentDirectory;
-	private Directory currentDirectory;
-	private DirectoryListener listener;
-	private DefaultTextProvider localizator;
-
-	public DirectoryListMenu(Directory parentDirectory,
-			Directory currentDirectory, DirectoryProvider directoryProvider,
-			DirectoryListener listener, DefaultTextProvider localizator,
-			Element parent, Element opener) {
+	public DirectoryListMenu(Directory currentDirectory, int level,
+			DirectoryProvider directoryProvider, DirectoryListener listener,
+			TextProvider textProvider, Element parent, Element opener) {
 		super(null, parent, opener);
 
+		this.level = level;
 		this.directoryProvider = directoryProvider;
 		this.currentDirectory = currentDirectory;
-		this.parentDirectory = parentDirectory;
 		this.listener = listener;
-		this.localizator = localizator;
+		this.textProvider = textProvider;
 
 		this.addStyleName(StyleConstants.DIRECTORY_LIST_MENU);
-		addItem(createWaitLabel(localizator));
+		addItem(createWaitLabel());
 	}
 
-	private Label createWaitLabel(DefaultTextProvider localizator) {
-		Label waitLabel = new Label(localizator.getStrings()
+	private Label createWaitLabel() {
+		Label waitLabel = new Label(textProvider.getStrings()
 				.directorySelectorMenuPleaseWait());
 		waitLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_WAIT);
 		return waitLabel;
@@ -68,7 +66,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	}
 
 	private void requestData() {
-		directoryProvider.getDirectories(parentDirectory, this);
+		directoryProvider.getDirectories(currentDirectory, this);
 		dataRequested = true;
 	}
 
@@ -76,7 +74,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		initialized = true;
 		removeAllMenuItems();
 
-		Label failedLabel = new Label(error.getType().getMessage(localizator));
+		Label failedLabel = new Label(error.getType().getMessage(textProvider));
 		failedLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ERROR);
 		addItem(failedLabel);
 	}
@@ -99,7 +97,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	}
 
 	private void addNoDirectoriesLabel() {
-		Label label = new Label(localizator.getStrings()
+		Label label = new Label(textProvider.getStrings()
 				.directorySelectorMenuNoItemsText());
 		label.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ITEM_NONE);
 		addItem(label);
@@ -111,10 +109,9 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		Label label = createMenuItemWidget(item.getName());
 		label.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				listener.onDirectorySelected(item);
+				listener.onChangeToDirectory(level, item);
 			}
 		});
 		return label;
 	}
-
 }

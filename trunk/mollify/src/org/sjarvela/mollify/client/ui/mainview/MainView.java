@@ -52,14 +52,13 @@ public class MainView extends Composite {
 
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
-	private ActionButton parentDirButton;
 	private Label username;
 	private ActionButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public enum Action implements ActionId {
-		addFile, addDirectory, refresh, parentDir, logout;
+		addFile, addDirectory, refresh, logout;
 	};
 
 	public MainView(MainViewModel model, TextProvider textProvider,
@@ -90,10 +89,6 @@ public class MainView extends Composite {
 		dirContext.setDirectoryActionHandler(actionHandler);
 	}
 
-	public DirectorySelector getDirectorySelector() {
-		return directorySelector;
-	}
-
 	public FileList getList() {
 		return list;
 	}
@@ -122,7 +117,6 @@ public class MainView extends Composite {
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
-		buttonPanel.add(parentDirButton);
 		buttonPanel.add(directorySelector);
 		header.add(buttonPanel);
 
@@ -150,12 +144,6 @@ public class MainView extends Composite {
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
-
-		parentDirButton = new ActionButton(textProvider.getStrings()
-				.mainViewParentDirButtonTitle(),
-				StyleConstants.MAIN_VIEW_HEADER_BUTTON_PARENT_DIR,
-				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
-		parentDirButton.setAction(actionListener, Action.parentDir);
 
 		logoutButton = new ActionButton(textProvider.getStrings()
 				.mainViewLogoutButtonTitle(),
@@ -216,8 +204,8 @@ public class MainView extends Composite {
 		return refreshButton;
 	}
 
-	public ActionButton getParentDirButton() {
-		return parentDirButton;
+	public DirectorySelector getDirectorySelector() {
+		return directorySelector;
 	}
 
 	public Label getUsername() {

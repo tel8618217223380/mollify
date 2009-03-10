@@ -8,11 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem;
+package org.sjarvela.mollify.client.ui.directoryselector;
 
+import org.sjarvela.mollify.client.filesystem.Directory;
 
-public interface DirectoryController {
-	public void changeToDirectory(int level, Directory directory);
+public interface DirectoryListener {
+	public void onChangeToDirectory(int level, Directory directory);
 
-	public void moveToParentDirectory();
+	public void onMoveToParentDirectory();
 }
