@@ -37,9 +37,10 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	boolean initialized = false;
 	boolean dataRequested = false;
 
-	public DirectoryListMenu(Directory currentDirectory, int level,
-			DirectoryProvider directoryProvider, DirectoryListener listener,
-			TextProvider textProvider, Element parent, Element opener) {
+	public DirectoryListMenu(String itemStyle, Directory currentDirectory,
+			int level, DirectoryProvider directoryProvider,
+			DirectoryListener listener, TextProvider textProvider,
+			Element parent, Element opener) {
 		super(null, parent, opener);
 
 		this.level = level;
@@ -48,7 +49,9 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		this.listener = listener;
 		this.textProvider = textProvider;
 
-		this.addStyleName(StyleConstants.DIRECTORY_LIST_MENU);
+		this.setStylePrimaryName(StyleConstants.DIRECTORY_LIST_MENU);
+		if (itemStyle != null)
+			this.addStyleDependentName(itemStyle);
 		addItem(createWaitLabel());
 	}
 

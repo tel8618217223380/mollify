@@ -15,22 +15,20 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListItem extends FlowPanel {
-	private final String itemStyle;
 	private final DirectoryListener listener;
 	private final DirectoryProvider dataProvider;
 	private final TextProvider textProvider;
-	private final DirectoryListMenu menu;
 
+	private final String itemStyle;
 	private final Directory currentDirectory;
 	private final int level;
 
-	private Label dropDown;
 	private DirectoryListItemButton button;
 
 	public DirectoryListItem(String itemStyle, Directory currentDirectory,
@@ -49,9 +47,6 @@ public class DirectoryListItem extends FlowPanel {
 			this.addStyleDependentName(itemStyle);
 
 		this.add(createButton());
-		this.add(createDropdownButton());
-
-		this.menu = createMenu();
 	}
 
 	private Widget createButton() {
@@ -62,26 +57,13 @@ public class DirectoryListItem extends FlowPanel {
 				listener.onChangeToDirectory(level, currentDirectory);
 			}
 		});
+		button.setDropdownMenu(createMenu(button.getElement()));
 		return button;
 	}
 
-	private Widget createDropdownButton() {
-		dropDown = new Label();
-		dropDown.setStyleName(StyleConstants.DIRECTORY_LISTITEM_DROPDOWN);
-		if (itemStyle != null)
-			dropDown.addStyleDependentName(itemStyle);
-
-		dropDown.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				menu.show();
-			}
-		});
-		return dropDown;
-	}
-
-	private DirectoryListMenu createMenu() {
-		return new DirectoryListMenu(currentDirectory, level, dataProvider,
-				listener, textProvider, this.getElement(), dropDown
-						.getElement());
+	private DirectoryListMenu createMenu(Element popupElement) {
+		return new DirectoryListMenu(itemStyle, currentDirectory, level + 1,
+				dataProvider, listener, textProvider, this.getElement(),
+				popupElement);
 	}
 }

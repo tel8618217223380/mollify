@@ -230,18 +230,6 @@
 	width: 120px;
 }
 
-.mollify-directory-selector {
-	float: left;
-	background: url(dir-item-body.png) repeat-x;
-	margin-top: 8px;
-	margin-left: 0;
-	margin-right: -11px;
-}
-
-.mollify-directory-selector-items {
-	float: left;
-}
-
 .mollify-header-button:active, .mollify-dropdown-button:active {
 	border-style: none;
 }
@@ -271,7 +259,7 @@
 	background: url(b-up-d.png) no-repeat 0 0;
 }
 
-.mollify-dropdown-menu {
+.mollify-dropdown-menu, .mollify-directory-list-menu {
 	background: #f9f9f9;
 	margin-top: 26px;
 	border-right: 1px outset #c0c0c0;
@@ -335,6 +323,17 @@
 	float: right;
 }
 
+.mollify-directory-selector {
+	float: left;
+	margin-top: 8px;
+	margin-left: 0;
+	margin-right: 0px;
+}
+
+.mollify-directory-selector-items {
+	float: left;
+}
+
 .mollify-directory-selector-button {
 	float: left;
 }
@@ -357,8 +356,9 @@
 
 .mollify-directory-list-item-button-left {
 	width: 12px;
-	height: 22px;
+	height: 23px;
 	float: left;
+	background: url(dir-item-body.png) repeat-x;
 	margin-left: -11px;
 }
 
@@ -368,6 +368,7 @@
 	padding-left: 2px;
 	padding-right: 2px;
 	float: left;
+	background: url(dir-item-body.png) repeat-x;
 }
 
 .mollify-directory-list-item-button-right {
@@ -383,20 +384,23 @@
 	cursor: hand;
 }
 
-.mollify-directory-list-item-button-left-pressed {
-	background: url(dir-item-body.png) repeat-x 0 -23px;
+.mollify-directory-list-item-dropdown {
+	width: 7px;
+	float: left;
+	height: 23px;
+	background: url(dir-item-dropdown.png) no-repeat;
 }
 
-.mollify-directory-list-item-button-center-pressed {
-	background: url(dir-item-body.png) repeat-x 0px -23px;
+.mollify-directory-list-item-button-left-pressed, .mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
+	background: url(dir-item-body.png) repeat-x 0 -23px;
 }
 
 .mollify-directory-list-item-button-right-pressed {
 	background: url(dir-item-head.png) no-repeat 0px -23px;
 }
 
-.mollify-directory-list-item-dropdown {
-	width: 0;
+.mollify-directory-list-item-dropdown-hover {
+	background: url(dir-item-dropdown.png) no-repeat 0px -23px;
 }
 
 .mollify-directory-list-item-home {
@@ -430,13 +434,17 @@
 
 .mollify-directory-list-menu {
 	margin-top: 22px;
-	margin-left: 0px;
+	margin-left: -11px;
 }
 
 .ie-crap.mollify-directory-list-menu {
 	margin-top: 22px;
-	margin-left: 11px;
+	margin-left: -11px;
 	width: 200px;
+}
+
+.mollify-directory-list-menu-home {
+	margin-left: 0px;
 }
 
 .mollify-directory-menu-item-none {

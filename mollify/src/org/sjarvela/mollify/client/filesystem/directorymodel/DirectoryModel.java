@@ -63,12 +63,17 @@ public class DirectoryModel {
 	}
 
 	public void changeDirectory(int level, Directory directory) {
-		if (level < 0 || level >= (getLevels() + 1))
+		if (level < 1 || level >= (getLevels() + 1))
 			throw new RuntimeException("Invalid directory ("
 					+ directory.getName() + ") at level " + level);
 
+		if (level == 1) {
+			this.setRootDirectory(directory);
+			return;
+		}
+
 		// first back up until level is reached
-		while (level < getLevels())
+		while (level <= getLevels())
 			ascend();
 
 		// then ascend into the selected folder
