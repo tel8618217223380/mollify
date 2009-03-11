@@ -35,7 +35,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		super(parent, opener);
 
 		this.actionListener = actionListener;
-		this.setStyleName(StyleConstants.DROPDOWN_MENU);
+		this.setStylePrimaryName(StyleConstants.DROPDOWN_MENU);
 
 		setWidget(container);
 	}
