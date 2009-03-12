@@ -388,7 +388,7 @@
 	width: 7px;
 	float: left;
 	height: 23px;
-	background: url(dir-item-dropdown.png) no-repeat;
+	background: url(dir-item-body.png) repeat-x;
 }
 
 .mollify-directory-list-item-button-left-pressed, .mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
@@ -400,7 +400,7 @@
 }
 
 .mollify-directory-list-item-dropdown-hover {
-	background: url(dir-item-dropdown.png) no-repeat 0px -23px;
+	background: url(dir-item-dropdown.png) no-repeat;
 }
 
 .mollify-directory-list-item-home {

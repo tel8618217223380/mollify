@@ -82,8 +82,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(failedLabel);
 	}
 
-	public void onSuccess(List<Directory> result) {
-		List<Directory> directories = result;
+	public void onSuccess(List<Directory> directories) {
 		initialized = true;
 		removeAllMenuItems();
 
