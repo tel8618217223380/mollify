@@ -197,11 +197,16 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 	}
 
 	public void onTreeItemSelected(TreeItem item) {
-		this.selectButton.setEnabled(!item.equals(rootItem));
+		boolean allowed = item.equals(rootItem) ? false : listener
+				.isDirectoryAllowed(items.get(item));
+		this.selectButton.setEnabled(allowed);
 
 		if (selected != null)
 			getLabel(selected)
 					.removeStyleDependentName(StyleConstants.SELECTED);
+		if (!allowed)
+			return;
+
 		selected = item;
 		getLabel(selected).addStyleDependentName(StyleConstants.SELECTED);
 	}

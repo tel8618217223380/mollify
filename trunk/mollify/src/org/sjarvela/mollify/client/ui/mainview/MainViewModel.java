@@ -127,8 +127,7 @@ public class MainViewModel {
 		this.all.addAll(files);
 	}
 
-	private ResultListener createListener(
-			final ResultListener listener,
+	private ResultListener createListener(final ResultListener listener,
 			final ResultCallback resultCallback) {
 		return new ResultListener<Object>() {
 			public void onFail(ServiceError error) {
@@ -139,8 +138,6 @@ public class MainViewModel {
 				resultCallback.onCallback(result);
 				listener.onSuccess(result);
 			}
-
 		};
 	}
-
 }

@@ -113,9 +113,7 @@ public class DirectoryListItemButton extends FlowPanel {
 	}
 
 	public void addClickListener(ClickListener clickListener) {
-		// right.addClickListener(clickListener);
 		center.addClickListener(clickListener);
-		// left.addClickListener(clickListener);
 	}
 
 	public void setDropdownMenu(DirectoryListMenu menu) {

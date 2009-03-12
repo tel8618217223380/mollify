@@ -6,4 +6,6 @@ public interface SelectFolderListener {
 
 	void onSelect(Directory selected);
 
+	boolean isDirectoryAllowed(Directory directory);
+
 }

@@ -44,7 +44,7 @@ public abstract class FileSystemItem {
 			result.add(createFrom(files.get(i)));
 		return result;
 	}
-	
+
 	protected FileSystemItem(String id, String name) {
 		this.id = id;
 		this.name = name;
@@ -59,9 +59,22 @@ public abstract class FileSystemItem {
 	}
 
 	public abstract boolean isFile();
-	
+
 	public abstract boolean isEmpty();
 
+	@Override
+	public int hashCode() {
+		return new Boolean(isFile()).hashCode() + id.hashCode();
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || !(obj instanceof FileSystemItem))
+			return false;
 
+		FileSystemItem other = (FileSystemItem) obj;
+		return isFile() == other.isFile() && id.equals(other.id);
+	}
 }

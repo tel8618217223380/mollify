@@ -6,17 +6,12 @@ public class Directory extends FileSystemItem {
 	public static Directory Empty = new Directory();
 	public static FileSystemItem Parent = new Directory("..");
 
-	@SuppressWarnings("unused")
-	private final JsDirectory dir;
-
 	private Directory(String name) {
 		super("", name);
-		dir = null;
 	}
 
 	private Directory() {
 		super("", "");
-		dir = null;
 	}
 
 	protected Directory(JsDirectory dir) {
@@ -25,7 +20,6 @@ public class Directory extends FileSystemItem {
 
 	public Directory(String id, String name) {
 		super(id, name);
-		dir = null;
 	}
 
 	@Override

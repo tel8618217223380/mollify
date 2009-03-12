@@ -237,6 +237,12 @@ public class MainViewPresenter implements DirectoryListener,
 							public void onSelect(Directory selected) {
 								copyFile(file, selected);
 							}
+
+							public boolean isDirectoryAllowed(
+									Directory directory) {
+								return !model.getCurrentFolder().equals(
+										directory);
+							}
 						}, model.getDirectoryModel().getDirectoryList());
 			} else if (action.equals(FileSystemAction.move)) {
 				windowManager.getDialogManager().showSelectFolderDialog(
@@ -249,6 +255,12 @@ public class MainViewPresenter implements DirectoryListener,
 						new SelectFolderListener() {
 							public void onSelect(Directory selected) {
 								moveFile(file, selected);
+							}
+
+							public boolean isDirectoryAllowed(
+									Directory directory) {
+								return !model.getCurrentFolder().equals(
+										directory);
 							}
 						}, model.getDirectoryModel().getDirectoryList());
 			} else if (action.equals(FileSystemAction.delete)) {
@@ -306,10 +318,14 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	protected void copyFile(File file, Directory toDirectory) {
+		if (model.getCurrentFolder().equals(toDirectory))
+			return;
 		fileSystemService.copy(file, toDirectory, createReloadListener());
 	}
 
 	protected void moveFile(File file, Directory toDirectory) {
+		if (model.getCurrentFolder().equals(toDirectory))
+			return;
 		fileSystemService.move(file, toDirectory, createReloadListener());
 	}
 
