@@ -137,7 +137,7 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
 }
 
-.mollify-dialog-button, .gwt-Button {
+.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown {
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
 	padding: 3px 5px;
@@ -148,7 +148,11 @@
 	border: 1px outset #ccc;
 }
 
-.mollify-dialog-button:active, .gwt-Button:active {
+.mollify-header-button:active, .mollify-dropdown-button:active {
+	border-style: none;
+}
+
+.mollify-dialog-button:active, .gwt-Button:active, .mollify-multiaction-button-dropdown:active {
 	border: 1px inset #ccc;
 }
 
@@ -185,7 +189,7 @@
 .mollify-multiaction-button-dropdown {
 	width: 9px;
 	height: 25px;
-	background: transparent url(b-dropdown-arrow.png) scroll;
+	background: url(b-dropdown-arrow.png) no-repeat;
 }
 
 .mollify-main {
@@ -228,10 +232,6 @@
 	margin-top: 22px;
 	margin-left: 1px;
 	width: 120px;
-}
-
-.mollify-header-button:active, .mollify-dropdown-button:active {
-	border-style: none;
 }
 
 #mollify-header-add-button.mollify-dropdown-button:active {
