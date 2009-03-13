@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9 ==
+  * Added move and copy file features
+  * Finalized basic theme
+
 === Version 0.8 ==
   * Added support for sorting columns
   * Added display for maximum upload sizes
