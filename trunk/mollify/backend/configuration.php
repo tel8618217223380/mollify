@@ -8,6 +8,10 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 
+	$CONFIGURATION_PROVIDER = 'mysql';
+	$DB_USER = "mollify";
+	$DB_PASSWORD = "mollify";
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 	
@@ -43,5 +47,7 @@
 	);
 	
 	$ZIP_OPTIONS = array("large_file_size" => 3 * 1024 * 1024);
+	
+	$PASSWORDS_HASHED = FALSE;
 	
 ?>

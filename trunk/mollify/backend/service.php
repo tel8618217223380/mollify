@@ -9,8 +9,8 @@
 	 * this entire header must remain intact.
 	 */
 
-	include "errors.php";
-	include "configuration.php";
+	require_once("errors.php");
+	require_once("configuration.php");
 	
 	function return_json($result_array) {
 		$ext = isset($_GET["callback"]);
@@ -39,13 +39,11 @@
 	
 	function get_session_info() {
 		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
-		$user = check_authentication();
+		$auth = check_authentication();
 		
-		if ($user) {
-			if (isset($user["name"])) {
-				$info["authenticated"] = TRUE;
-				$info["user"] = $user["name"];
-			}
+		if ($auth) {
+			$info["authenticated"] = TRUE;
+			$info["user"] = $_SESSION['username'];
 			$info["settings"] = $_SESSION['settings'];
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 			$info["filesystem"] = get_filesystem_session_info();
@@ -73,20 +71,47 @@
 		}
 		return FALSE;
 	}
+	
+	function import_configuration_provider() {
+		global $CONFIGURATION_PROVIDER;
+		
+		if (isset($CONFIGURATION_PROVIDER)) {
+			$provider = trim(strtolower($CONFIGURATION_PROVIDER));
+			
+			if ($provider === 'file') {
+				require_once "configuration_provider_file.php";
+			} else if ($provider === 'mysql') {
+				require_once "configuration_provider_mysql.php";
+			} else {
+				log_error("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
+				die("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
+			}
+		} else {
+			require_once "data_provider_file.php";
+		}
+		
+		init_configuration_provider();
+	}
 
+	function get_configuration_info() {
+		return array("roots" => get_roots($_SESSION['user_id']));
+	}
+	
+	import_configuration_provider();
+	
 	if (!isset($_GET["action"])) {
 		return;
 	}
 	
-	require_once "settings.php";
-	require_once "user.php";
-	require_once "files.php";
+	require_once("settings.php");
+	require_once("user.php");
+	require_once("files.php");
 	
 	session_start();
 	if (!handle_authentication()) return;
 	
-	$account = get_account();
-	if (!$account) {
+	$configuration = get_configuration_info();
+	if (!$configuration) {
 		return_json(get_error_message("UNAUTHORIZED"));
 		return;
 	}
@@ -96,8 +121,9 @@
 	$error_details = "";
 	
 	// handle actual request
-	include "facade.php";
-
+	require_once("facade.php");
+	process_request();
+	
 	// return JSON
 	if ($result === FALSE) {
 		$result = get_error_message($error, $error_details);

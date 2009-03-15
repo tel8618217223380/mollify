@@ -45,6 +45,12 @@
 		return array("root" => $parts[0], "path" => $parts[1]);
 	}
 
+	function get_root_path($id) {
+		$roots = get_roots($_SESSION['user_id']);
+		if (!array_key_exists($id, $roots)) return FALSE;
+		return $roots[$id]["path"];
+	}
+	
 	function get_fileitem_from_url($id_param) {
 		if (!isset($_GET[$id_param])) return FALSE;
 		
@@ -98,7 +104,7 @@
 		return TRUE;
 	}
 		
-	function get_directories($account) {
+	function get_directories() {
 		global $error, $error_details;
 
 		$dir = get_fileitem_from_url("dir");
@@ -130,7 +136,7 @@
 		return $result;
 	}
 	
-	function get_files($account) {
+	function get_files() {
 		global $error, $error_details;
 		$ignored = array('descript.ion', 'mollify.uac');
 		
