@@ -9,16 +9,82 @@
 	 * this entire header must remain intact.
 	 */
 
+	function init_configuration_provider() {}
+	
+	function find_user($username, $password) {
+		global $USERS, $PASSWORDS_HASHED;
+			
+		foreach($USERS as $id => $user) {
+			if ($user["name"] != $username)
+				continue;
+				
+			$pw = $user["password"];
+			if (!isset($PASSWORDS_HASHED) or $PASSWORDS_HASHED != TRUE) {
+				$pw = md5($pw);
+			}
+
+			if ($pw != $password) {
+				log_error("Invalid password for user [".$user["name"]."]");
+			 	return FALSE;
+			}
+			
+			return array("id" => $id, "name" => $user["name"]);
+		}
+		
+		log_error("No user found with name [".$username."]");
+		return FALSE;
+	}
+	
+	function get_user($id) {
+		if ($id === "") return FALSE;
+		global $USERS;
+		return $USERS[$id];
+	}
+	
+	function get_default_user_permission_mode($user_id = "") {
+		global $USERS, $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY, $FILE_PERMISSION_MODE;
+		
+		if ($user_id === "") {
+			if (!isset($FILE_PERMISSION_MODE)) return $FILE_PERMISSION_VALUE_READONLY;
+			$mode = strtoupper($FILE_PERMISSION_MODE);
+		} else {
+			if (!isset($USERS[$user_id]["file_permission_mode"])) return $FILE_PERMISSION_VALUE_READONLY;
+			$mode = strtoupper($USERS[$user_id]["file_permission_mode"]);
+		}
+
+		if ($mode != $FILE_PERMISSION_VALUE_ADMIN and $mode != $FILE_PERMISSION_VALUE_READWRITE and $mode != $FILE_PERMISSION_VALUE_READONLY) {
+			if ($user_id === "") log_error("Invalid file permission mode [".$mode."]. Falling back to default.");
+			else log_error("Invalid file permission mode ".$mode." for user [".$user_id."]. Falling back to default.");
+			return $FILE_PERMISSION_VALUE_READONLY;
+		}
+		return $mode;
+	}
+
+	function authentication_required() {
+		global $USERS;
+		return ($USERS != FALSE and count($USERS) > 0);
+	}
+	
+	function get_roots($user_id) {
+		global $USERS, $PUBLISHED_DIRECTORIES;
+
+		if (count($USERS) === 0) {
+			return $PUBLISHED_DIRECTORIES;
+		} else {
+			return $PUBLISHED_DIRECTORIES[$user_id];
+		}
+	}
+	
 	function get_file_description($filename) {
 		$path = dirname($filename);
 		$file = basename($filename);
-		$descriptions = get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
+		$descriptions = _get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
 
 		if (!isset($descriptions[$file])) return "";
 		return $descriptions[$file];
 	}
 	
-	function get_descriptions_from_file($descript_ion) {
+	function _get_descriptions_from_file($descript_ion) {
 		$result = array();
 		if (!file_exists($descript_ion)) return $result;
 	
@@ -47,10 +113,10 @@
 	}
 	
 	function get_file_permissions($filename, $user_id) {
-		return get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
+		return _get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
 	}
 	
-	function get_permissions_from_file($uac_file, $for_user_id, $for_file = FALSE) {
+	function _get_permissions_from_file($uac_file, $for_user_id, $for_file = FALSE) {
 		$result = array();
 		if (!file_exists($uac_file)) return $result;
 	
@@ -73,13 +139,13 @@
 			
 			$data = trim($parts[count($parts) - 1]);
 			
-			$permissions = parse_permission_string($data);
+			$permissions = _parse_permission_string($data);
 			if (!$permissions) {
 				log_error("Invalid file permission definition in file [".$uac_file."] at line ".$line_nr);
 				continue;
 			}
 			
-			$permission = get_active_permission($permissions, $for_user_id);
+			$permission = _get_active_permission($permissions, $for_user_id);
 			// ignore lines that don't apply to current user
 			if (!$permission) continue;
 			
@@ -100,7 +166,7 @@
 		return $result;
 	}
 	
-	function parse_permission_string($string) {
+	function _parse_permission_string($string) {
 		$result = array();
 		if (strlen($string) < 1) return $result;
 		
@@ -120,7 +186,7 @@
 		return $result;
 	}
 	
-	function get_active_permission($permissions, $user_id) {
+	function _get_active_permission($permissions, $user_id) {
 		if ($user_id != "" and isset($permissions[$user_id])) return $permissions[$user_id];
 		if (isset($permissions["*"])) return $permissions["*"];
 		return FALSE;

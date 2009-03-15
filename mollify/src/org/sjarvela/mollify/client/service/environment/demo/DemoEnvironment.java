@@ -9,7 +9,7 @@ import org.sjarvela.mollify.client.session.ClientSettings;
 import com.allen_sauer.gwt.log.client.Log;
 
 public class DemoEnvironment implements ServiceEnvironment {
-	static final String MOLLIFY_PACKAGE_URL = "http://mollify.googlecode.com/files/mollify_0.8.tar.gz";
+	static final String MOLLIFY_PACKAGE_URL = "http://mollify.googlecode.com/files/mollify_0.9.tar.gz";
 	private static final String PARAM_MULTI_USER = "multi-user";
 
 	private DemoSessionService sessionService;
