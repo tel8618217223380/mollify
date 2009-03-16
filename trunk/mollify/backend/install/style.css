@@ -1,0 +1,42 @@
+/* @override http://localhost:7777/mollify/install/style.css */
+
+* {
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+body {
+	font-size: 15px;
+}
+
+#content {
+	padding: 4px;
+}
+
+span.info {
+	clear: both;
+	float: left;
+}
+
+span.confirmation {
+	float: left;
+	font-weight: bold;
+	font-size: 17px;
+	background-color: #f0f0f0;
+	padding: 5px;
+	margin-top: 12px;
+	clear: both;
+}
+
+span.item, span.title {
+	float: left;
+	clear: both;
+}
+
+span.title {
+	font-weight: bold;
+	margin-top: 14px;
+}
+
+code {
+	font-family: "Courier New", Courier, mono;
+}
