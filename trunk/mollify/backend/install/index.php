@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
 <!--
 	Copyright (c) 2008- Samuli Järvelä
 
@@ -8,6 +9,7 @@
 	http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	this entire header must remain intact.
 -->
+
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -15,17 +17,18 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<h1>Mollify Installation</h1>
+		<div id="title">Mollify Installation</div>
 		<div id="content">
 		<?php
 			function error($error) {
-				print "<span class='error'>$error <span class='details'>See <a href='http://code.google.com/p/mollify/wiki/Installation'>Installation instructions</a> for more information.</span></span>";
+				print "<span class='error'>$error</span>";
 			}
 			
 			function info($info) {
 				print "<span class='info'>$info</span>";
 			}
 			
+			$CONFIGURATION = "../configuration.php";
 			$VALID_TYPES = array("mysql");
 			$type = NULL;
 			
@@ -38,10 +41,10 @@
 					error("Invalid installation request");
 					return;
 				}
-				require("../configuration.php");
+				if (file_exists($CONFIGURATION)) include($CONFIGURATION);
 				require("installation_".$type.".php");
-				on_page();
 			}
+			on_page();
 		?>
 		</div>
 	</body>
