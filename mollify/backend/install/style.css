@@ -1,20 +1,62 @@
 /* @override http://localhost:7777/mollify/install/style.css */
 
 * {
-	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 body {
-	font-size: 15px;
+	font-size: 14px;
+	margin: 0;
+	padding: 0;
+}
+
+#title {
+	width: 100%;
+	background-color: #e8ceff;
+	font-size: 21px;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
 }
 
 #content {
 	padding: 4px;
+	margin-left: 6px;
+	margin-top: 20px;
 }
 
 span.info {
 	clear: both;
 	float: left;
+	width: 500px;
+}
+
+span.note {
+	clear: both;
+	float: left;
+	font-weight: bold;
+	font-style: italic;
+	background-color: #ffdf35;
+	padding: 10px;
+	margin-top: 12px;
+	width: 500px;
+}
+
+span.error, span.db-error {
+	clear: both;
+	float: left;
+	font-weight: bold;
+	font-style: italic;
+	background-color: #ff310b;
+	padding: 10px;
+	margin-bottom: 5px;
+	width: 500px;
+}
+
+span.db-error {
+	font: normal 11px "Courier New", Courier, mono;
+	background-color: #ffbd63;
 }
 
 span.confirmation {
@@ -22,14 +64,31 @@ span.confirmation {
 	font-weight: bold;
 	font-size: 17px;
 	background-color: #f0f0f0;
-	padding: 5px;
+	padding: 10px;
 	margin-top: 12px;
+	clear: both;
+	width: 500px;
+}
+
+span.confirmation .message {
+	float: left;
 	clear: both;
 }
 
-span.item, span.title {
+span.confirmation input {
+	margin-top: 8px;
+	float: left;
+	clear: both;	
+}
+
+span.item, .title {
 	float: left;
 	clear: both;
+}
+
+span.result {
+	font-weight: bold;
+	float: left;
 }
 
 span.title {
@@ -39,4 +98,66 @@ span.title {
 
 code {
 	font-family: "Courier New", Courier, mono;
+}
+
+.list {
+	clear: both;
+	float: left;
+	padding: 10px;
+	background-color: #fff1e8;
+	width: 500px;
+}
+
+.list .list-item {
+	float: left;
+	clear: left;
+}
+
+.list-item .name {
+	width: 159px;
+	font-weight: bold;
+	float: left;
+}
+
+.list-item .value {
+	float: left;
+}
+
+.list .title {
+	margin-bottom: 11px;
+	font-size: larger;
+}
+
+span.instructions {
+	clear: both;
+	float: left;
+	margin-top: 12px;
+}
+
+span.section {
+	float: left;
+}
+
+span.instructions span.example {
+	float: left;
+	margin-top: 12px;
+	font-family: "Courier New", Courier, mono;
+	font-style: italic;
+	background-color: #f7f7f7;
+	width: 100%;
+}
+
+span.user span.title {
+	float: left;
+	clear: both;
+	margin-bottom: 10px;
+}
+
+.user_data {
+	float: left;
+	clear: both;	
+}
+
+.user_data .title {
+	width: 100px;
 }
