@@ -1,0 +1,128 @@
+<project name="Mollify" default="compile">
+	<property file="build.properties" />
+	
+	<property name="project.name" value="Mollify" />
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" location="lib" /> 
+	<property name="build.dir" location="${root.dir}/build" />
+	<property name="deploy.dir" location="${root.dir}/deploy" />
+	<property name="gwt.entrypoint.class" value="org.sjarvela.mollify.App" />
+	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
+	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}.tar" />
+	
+	<path id="compile.classpath">  
+		<pathelement path="${java.class.path}/" />  
+		<pathelement location="${gwt.sdk.location}/gwt-user.jar" />  
+		<pathelement location="${gwt.sdk.location}/gwt-dev-mac.jar" />  
+		<pathelement location="${src.dir}" />  
+		<fileset dir="${lib.dir}" includes="**/*.jar" />  
+	</path>
+		
+	<target name="init">  
+		<tstamp />
+		<filter token="projectName" value="${project.name}" />
+	</target>
+
+	<target name="clean" description="Cleans the entire GWT build">
+		<delete dir="${build.dir}" />
+		<delete dir="${deploy.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<mkdir dir="${build.dir}" />
+		
+		<java classpathref="compile.classpath" classname="com.google.gwt.dev.GWTCompiler" fork="true">
+			<jvmarg line="-XstartOnFirstThread" />
+			<jvmarg line="-Xmx512m" />
+			<arg value="-out" />
+			<arg value="${build.dir}" />
+			<arg value="${gwt.entrypoint.class}" />
+		</java>
+	</target>
+	
+	<target name="deploy">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+		<delete dir="${deploy.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/mollify" />
+		
+		<!-- 1. Binaries -->
+		<!-- client -->
+		<copy todir="${target.dir}/${gwt.entrypoint.class}">
+			<fileset dir="${build.dir}/${gwt.entrypoint.class}">
+				<exclude name="App.html"/>
+			</fileset>
+		</copy>
+		
+		<!-- backend -->
+		<copy todir="${target.dir}/mollify">
+			<fileset dir="${root.dir}/svn/backend">
+				<exclude name="configuration.php"/>
+			</fileset>
+		</copy>
+		<copy file="${root.dir}/svn/ReadMe.txt" todir="${target.dir}"/>
+		
+		<tar destfile="${deploy.dir}/${deploy.package.name}" basedir="${target.dir}" />
+		<gzip destfile="${deploy.dir}/${deploy.package.name}.gz" src="${deploy.dir}/${deploy.package.name}"/>
+		
+		<delete dir="${target.dir}" />
+
+		<!-- 2. Sources -->
+		<property name="target.src.dir" location="${target.dir}/mollify-src" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.src.dir}" />
+		
+		<copy todir="${target.src.dir}">
+			<fileset dir="${root.dir}/svn/backend">
+				<exclude name="configuration.php" />
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		<copy todir="${target.src.dir}">
+			<fileset dir="${root.dir}/svn/src">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+
+		<tar destfile="${deploy.dir}/${deploy.src.package.name}" basedir="${target.dir}" />
+		<gzip destfile="${deploy.dir}/${deploy.src.package.name}.gz" src="${deploy.dir}/${deploy.src.package.name}" />
+
+		<delete dir="${target.dir}" />
+	</target>
+	
+	<target name="update-devenv">
+		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${build.dir}/${gwt.entrypoint.class}">
+			</fileset>
+		</copy>
+	</target>
+	
+<!--	APPROOT='/Users/cambba/Documents/Projects/Mollify';
+	HTDOCS='/Applications/MAMP/htdocs';
+	APPNAME='org.sjarvela.mollify.App';
+	APPDIR='org/sjarvela/mollify';
+	TARGET="$HTDOCS/$APPNAME";
+
+	echo Application dir: $APPROOT
+	echo Web root: $HTDOCS
+	echo Target dir: $TARGET
+
+	$APPROOT/App-compile
+
+	rm -rf $TARGET
+	mkdir $TARGET
+
+	cp -R $APPROOT/build/$APPNAME/* $TARGET
+
+	# link stylesheets to development versions
+	ln -s $APPROOT/svn/src/$APPDIR/public/App.css $TARGET
+
+	rm -rf $TARGET/themes
+	ln -s $APPROOT/svn/src/$APPDIR/public/themes $TARGET-->
+	
+</project>
