@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	function on_page() {
+	function process() {
 ?>
 	<span class="info">Mollify Installer supports only MySQL configuration, file based installation must be configured manually. <span class="details">See <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a> for more information.</span></span>
 	

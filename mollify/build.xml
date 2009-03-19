@@ -2,9 +2,10 @@
 	<property file="build.properties" />
 	
 	<property name="project.name" value="Mollify" />
-	<property name="src.dir" location="src" />
 	<property name="lib.dir" location="lib" /> 
 	<property name="build.dir" location="${root.dir}/build" />
+	<property name="svn.dir" location="${root.dir}/svn" />
+	<property name="src.dir" location="${svn.dir}/src" />
 	<property name="deploy.dir" location="${root.dir}/deploy" />
 	<property name="gwt.entrypoint.class" value="org.sjarvela.mollify.App" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
@@ -40,8 +41,9 @@
 		</java>
 	</target>
 	
-	<target name="deploy">
+	<target name="deploy" depends="compile">
 		<property name="target.dir" location="${deploy.dir}/temp" />
+		
 		<delete dir="${deploy.dir}" />
 		<mkdir dir="${deploy.dir}" />
 		<mkdir dir="${target.dir}" />
@@ -57,11 +59,11 @@
 		
 		<!-- backend -->
 		<copy todir="${target.dir}/mollify">
-			<fileset dir="${root.dir}/svn/backend">
+			<fileset dir="${svn.dir}/backend">
 				<exclude name="configuration.php"/>
 			</fileset>
 		</copy>
-		<copy file="${root.dir}/svn/ReadMe.txt" todir="${target.dir}"/>
+		<copy file="${svn.dir}/ReadMe.txt" todir="${target.dir}"/>
 		
 		<tar destfile="${deploy.dir}/${deploy.package.name}" basedir="${target.dir}" />
 		<gzip destfile="${deploy.dir}/${deploy.package.name}.gz" src="${deploy.dir}/${deploy.package.name}"/>
@@ -80,7 +82,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${target.src.dir}">
-			<fileset dir="${root.dir}/svn/src">
+			<fileset dir="${src.dir}">
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
@@ -91,7 +93,7 @@
 		<delete dir="${target.dir}" />
 	</target>
 	
-	<target name="update-devenv">
+	<target name="update-devenv" depends="compile">
 		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
 		<delete dir="${target.dir}" />
 		<mkdir dir="${target.dir}" />
@@ -100,29 +102,15 @@
 			<fileset dir="${build.dir}/${gwt.entrypoint.class}">
 			</fileset>
 		</copy>
+		
+		<delete dir="${target.dir}/themes/" />
+
+		<echo>Creating link from '${src.dir}/org/sjarvela/mollify/public/themes' to '${target.dir}'</echo>
+		<exec executable="ln" failonerror="true">
+			<arg value="-s" />
+			<arg value="${src.dir}/org/sjarvela/mollify/public/themes" />
+			<arg value="${target.dir}" />
+		</exec>
 	</target>
-	
-<!--	APPROOT='/Users/cambba/Documents/Projects/Mollify';
-	HTDOCS='/Applications/MAMP/htdocs';
-	APPNAME='org.sjarvela.mollify.App';
-	APPDIR='org/sjarvela/mollify';
-	TARGET="$HTDOCS/$APPNAME";
-
-	echo Application dir: $APPROOT
-	echo Web root: $HTDOCS
-	echo Target dir: $TARGET
-
-	$APPROOT/App-compile
-
-	rm -rf $TARGET
-	mkdir $TARGET
-
-	cp -R $APPROOT/build/$APPNAME/* $TARGET
-
-	# link stylesheets to development versions
-	ln -s $APPROOT/svn/src/$APPDIR/public/App.css $TARGET
-
-	rm -rf $TARGET/themes
-	ln -s $APPROOT/svn/src/$APPDIR/public/themes $TARGET-->
 	
 </project>

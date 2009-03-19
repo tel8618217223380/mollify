@@ -20,6 +20,10 @@
 		<div id="title">Mollify Installation</div>
 		<div id="content">
 		<?php
+			function title($current, $total, $title) {
+				print "<span class='title'><span class='nr'>$current/$total</span> $title</span>";
+			}
+			
 			function error($error) {
 				print "<span class='error'>$error</span>";
 			}
@@ -44,7 +48,7 @@
 				if (file_exists($CONFIGURATION)) include($CONFIGURATION);
 				require("installation_".$type.".php");
 			}
-			on_page();
+			process();
 		?>
 		</div>
 	</body>
