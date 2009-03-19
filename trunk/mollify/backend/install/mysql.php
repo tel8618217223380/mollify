@@ -15,6 +15,10 @@
 			error("MySQL not detected in the system, check system configuration.");
 			return FALSE;
 		}
+		if (!function_exists('mysqli_multi_query')) {
+			error("MySQLI extension not found. This is required for running SQL files.");
+			return FALSE;
+		}		
 		return TRUE;
 	}
 

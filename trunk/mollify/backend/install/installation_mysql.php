@@ -95,10 +95,12 @@
 	function list_item($name, $value) {
 		print("<div class='list-item'><div class='name'>$name</div><div class='value'>$value</div></div>");
 	}
+
+	function print_db_error($error) {
+		print "<span class='db-error'>".$error["no"].": ".$error["error"]."</span>";
+	}
 	
 	function step_database() {
-		print "<h2>1/3 Database Configuration</h2>";
-
 		if (!check_configuration()) return;
 		if (!check_mysql()) return;
 		if (!($db = get_db())) return;
@@ -118,18 +120,17 @@
 		print "<form method='post'>";
 		print "<span class='message'>Continue with this configuration?</span>";
 		print "<input type='hidden' name='type' value='mysql'>";
-		print "<input type='hidden' name='step' value='configuration'>";
+		print "<input type='hidden' name='step' value='0'>";
 		if (!$db_exists) print "<input type='hidden' name='create_db' value='1'>";
 		print "<input type='submit' name='action' value='Continue'>";
 		print "</form>";
 		print "</span>";
 	}
 
-	function step_configuration() {
+	function finish_database() {
 		if (!($db = get_db())) return;
 		
 		if (isset($_POST["create_db"]) and !create_database($db)) {
-			print "<h2>1/3 Database Configuration</h2>";
 			error("Could not create database. Try creating database manually and restarting installation.");
 			print_db_error();
 			print_db($db);
@@ -137,14 +138,16 @@
 		}
 				
 		if (($failed = check_db_permissions($db)) != NULL) {
-			print "<h2>1/3 Database Configuration</h2>";
 			error("Database permission test failed, could not ".$failed.". Check database user settings and try again.");
 			print_db_error();
 			print_db($db);
 			return FALSE;
 		}
 		
-		print "<h2>2/3 Mollify Configuration</h2>";
+		return TRUE;
+	}
+	
+	function step_configuration() {
 		print "<span class='user'>";
 		print "<form method='post'>";
 		print "<span class='title'>Enter Mollify admin user information:</span>";
@@ -154,61 +157,72 @@
 		print "<span class='confirmation'>";
 		print "<span class='message'>Continue to installation?</span>";
 		print "<input type='hidden' name='type' value='mysql'>";
-		print "<input type='hidden' name='step' value='install'>";
+		print "<input type='hidden' name='step' value='1'>";
 		print "<input type='submit' name='action' value='Install Mollify'>";
 		print "</span>";
 		print "</form>";
 	}
 	
-	function print_db_error($error) {
-		print "<span class='db-error'>".$error["no"].": ".$error["error"]."</span>";
-	}
-	
-	function step_install() {
+	function finish_configuration() {
 		if (!($db = get_db())) return;
 
 		if (!isset($_POST["user"]) or strlen($_POST["user"]) === 0 or !isset($_POST["password"]) or strlen($_POST["password"]) === 0) {
-			print "<h2>2/3 Mollify Configuration</h2>";
 			error("Missing admin user information.");
 			return FALSE;
 		}
 		if ($error = create_tables($db)) {
-			print "<h2>2/3 Mollify Configuration</h2>";
 			error("Could not create Mollify tables.");
 			print_db_error($error);
 			print_db($db);
 			return FALSE;
 		}
 		if ($error = insert_admin_user($db, $_POST["user"], $_POST["password"])) {
-			print "<h2>2/3 Mollify Configuration</h2>";
 			error("Could not create Mollify user.");
 			print_db_error($error);
 			print_db($db);
 			return FALSE;
 		}
-		if ($error = insert_param($db, "version", "100")) {
-			print "<h2>2/3 Mollify Configuration</h2>";
+		if ($error = insert_param($db, "version", "095")) {
 			error("Failed to update Mollify version data.");
 			print_db_error($error);
 			print_db($db);
 			return FALSE;
 		}
-		
-		print "<h2>3/3 Installation</h2>";
+		return TRUE;
+	}
+	
+	function step_install() {
 		info("Mollify successfully installed!");
 	}
 
-	function on_page() {
+	function process() {
 		require("mysql.php");
-				
-		if (!isset($_POST["step"])) {
-			step_database();
-		} else if ($_POST["step"] === 'configuration') {
-			step_configuration();
-		} else if ($_POST["step"] === 'install') {
-			step_install();
-		} else {
-			error("Error in installer script.");
+
+		$step = 0;
+		if (isset($_POST["step"])) {
+			$step = finish_step(intval($_POST["step"]));
 		}
+		
+		$TITLES = array("Database Configuration", "Mollify Configuration", "Installation");
+		title($step + 1, count($TITLES), $TITLES[$step]);
+
+		process_step($step);
+	}
+	
+	function finish_step($step) {
+		$proceed = TRUE;
+		
+		if ($step === 0) $proceed = finish_database();
+		else if ($step === 1) $proceed = finish_configuration();
+
+		if (!$proceed) return $step;
+		return $step + 1;
+	}
+	
+	function process_step($step) {
+		if ($step === 0) step_database();
+		else if ($step === 1) step_configuration();
+		else if ($step === 2) step_install();
+		else error("Error in installer script.");
 	}
 ?>
