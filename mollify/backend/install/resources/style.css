@@ -1,4 +1,7 @@
-/* @override http://localhost:7777/mollify/install/style.css */
+/* @override 
+	http://localhost:7777/mollify/install/style.css
+	http://localhost:7777/mollify/install/resources/style.css
+*/
 
 * {
 	font-family: Georgia, "Times New Roman", Times, serif;
@@ -6,11 +9,11 @@
 
 body {
 	font-size: 14px;
-	margin: 0;
+	margin: 0 0 0 0px;
 	padding: 0;
 }
 
-#title {
+#header {
 	width: 100%;
 	background-color: #e8ceff;
 	font-size: 21px;
@@ -22,14 +25,42 @@ body {
 
 #content {
 	padding: 4px;
-	margin-left: 6px;
 	margin-top: 20px;
+	float: left;
+	clear: both;
+	margin-left: 4px;
+}
+
+#db-content, #db-footer, #conf-footer {
+	float: left;
+	clear: both;	
+}
+
+.buttons {
+	clear: both;
+	float: left;
+	margin-top: 27px;
+}
+
+.button, .button-hover {
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	background-color: #ffac85;
+	border: 2px solid #d58e70;
+	cursor: pointer;
+	cursor: hand;
+	padding: 4px 10px;
+	margin-top: 10px;
+}
+
+.button-hover {
+	background-color: #f2a280;
 }
 
 span.info {
 	clear: both;
 	float: left;
 	width: 500px;
+	padding: 4px;
 }
 
 span.note {
@@ -43,7 +74,7 @@ span.note {
 	width: 500px;
 }
 
-span.error, span.db-error {
+.error-msg {
 	clear: both;
 	float: left;
 	font-weight: bold;
@@ -54,9 +85,14 @@ span.error, span.db-error {
 	width: 500px;
 }
 
-span.db-error {
-	font: normal 11px "Courier New", Courier, mono;
-	background-color: #ffbd63;
+.error-msg, .error-msg .title, .error-msg .details {
+	clear: both;
+	float: left;
+}
+
+.error-msg .details {
+	font: normal normal 12px "Lucida Grande", Lucida, Verdana, sans-serif;
+	margin-top: 4px;
 }
 
 span.confirmation {
@@ -88,12 +124,26 @@ span.item, .title {
 
 span.result {
 	font-weight: bold;
+	clear: both;
 	float: left;
 }
 
 span.title {
 	font-weight: bold;
-	margin-top: 14px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	font-size: 16px;
+	border-bottom: 1px solid #868686;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-bottom: 4px;
+}
+
+span.title span.nr {
+	font-size: 19px;
+	font-weight: bold;
+	margin-right: 7px;
+	color: #4f4f4f;
 }
 
 code {
@@ -106,6 +156,7 @@ code {
 	padding: 10px;
 	background-color: #fff1e8;
 	width: 500px;
+	margin-top: 6px;
 }
 
 .list .list-item {
@@ -128,6 +179,14 @@ code {
 	font-size: larger;
 }
 
+.progress {
+	clear: both;
+	float: left;
+	font-weight: bold;
+	padding-top: 18px;
+	padding-bottom: 8px;
+}
+
 span.instructions {
 	clear: both;
 	float: left;
@@ -135,6 +194,8 @@ span.instructions {
 }
 
 span.section {
+	float: left;
+	clear: both;
 	float: left;
 }
 
@@ -147,17 +208,48 @@ span.instructions span.example {
 	width: 100%;
 }
 
-span.user span.title {
+div.user {
+	background-color: #f3f3f3;
+	float: left;
+	padding: 10px;
+	margin-top: 6px;
+}
+
+.user span.title {
 	float: left;
 	clear: both;
-	margin-bottom: 10px;
+	margin-bottom: 4px;
+	font-size: 14px;
+	text-decoration: none;
+	border-style: none;
+	padding-left: 0;
+	margin-top: 0;
 }
 
-.user_data {
+.user input.value {
+	height: 15px;
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+#admin-username input.value {
+	margin-bottom: 4px;
+}
+
+.user-data {
 	float: left;
-	clear: both;	
+	clear: both;
+	margin-left: 6px;
 }
 
-.user_data .title {
+.user-data-invalid .title {
+	color: #ff924a;
+}
+
+.user-data-invalid input.value {
+	background-color: #ffefd5;
+	border-style: solid;
+}
+
+.user-data .title {
 	width: 100px;
 }

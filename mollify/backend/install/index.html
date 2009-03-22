@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<!--
+	Copyright (c) 2008- Samuli Järvelä
+
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	this entire header must remain intact.
+-->
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Mollify Installation</title>
+		<link rel="stylesheet" href="resources/style.css">
+		<script type="text/javascript" src="resources/jquery.js"></script>
+		<script type="text/javascript" src="resources/template.js"></script>
+		<script type="text/javascript" src="resources/md5.js"></script>
+		<script type="text/javascript">
+			function show_install_error(error) {
+				show_error("Installer error: <span class='details'>" + error + "</span>");
+			}
+			
+			function empty_errors() {
+				$("#error").empty();
+			}
+			
+			function show_error(error, $hide_details) {
+				var msg;
+				if (error.desc) msg = error.desc;
+				else msg = "Error: " + error.id;
+
+				show_error_msg(msg);
+				if (!$hide_details && error.details.length > 0) $("#error .error-msg").append("<div class='details'>" + error.details + "</div>");
+			}
+
+			function show_error_msg(error) {
+				$("#error").html("<div class='error-msg'><div class='title'>" + error + "</div></div>");
+				$("#error").show();
+			}
+			
+			function set_multipage_title(current, total, title) {
+				var t = $.template("<span class='title'><span class='nr'>Step ${current}/${total}:</span>${title}</span>");
+				$("#title").html("").append(t, { current: current, total: total, title: title });
+			}
+					
+			function set_title(title) {
+				$("#title").html("<span class='title'>" + title + "</span>");
+			}
+			
+			function add_button(selector, id, title, action) {
+				$(selector).html('<div class="button" id="' + id + '">' + title + '</div>');
+				$("#" + id + ".button").click(action);
+				set_effects();
+			}
+			
+			function set_effects() {
+			 	$(".button").hover(function() {
+					$(this).addClass("button-hover");
+				},function(){
+					$(this).removeClass("button-hover");
+				});
+			}
+			
+			function request(url, data, action) {
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: data,
+					dataType: "json",
+					success: action,
+					error: function (xhr, desc, exc) {
+						$("#page").empty();
+						show_install_error(xhr.responseText);
+					}
+				});
+			}
+			
+			function open_page(type, id) {
+				$("#content").fadeOut("medium", function() {	
+					var page = type + "/page_" + id + ".html";
+					$("#page").load(page, function() {
+						$.getScript(type + "/page_" + id + ".js", function() {
+							eval("init_page_" + id + "();");
+							set_effects();
+							$("#content").fadeIn("medium");
+						});
+					});
+				});
+			}
+			
+			$(document).ready(function() {
+				set_effects();
+				$("#page").load("installation-type.html");
+			 });
+		</script>
+	</head>
+	
+	<body>
+		<div id="header">Mollify Installation</div>
+		<div id="content">
+			<div id="title"></div>
+			<div id="error"></div>
+			<div id="page"></div>
+		</div>
+	</body>
+</html>
