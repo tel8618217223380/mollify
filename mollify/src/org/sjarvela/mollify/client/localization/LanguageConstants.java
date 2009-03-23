@@ -26,8 +26,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String mainViewParentDirButtonTitle();
 
 	public String mainViewRefreshButtonTitle();
+	
+	public String mainViewConfigurationTitle();
 
 	public String mainViewLogoutButtonTitle();
+	
+	public String mainViewChangePasswordTitle();
 
 	public String mainViewAddButtonTitle();
 

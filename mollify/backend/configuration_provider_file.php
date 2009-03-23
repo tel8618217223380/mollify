@@ -12,6 +12,10 @@
 
 	function init_configuration_provider() {}
 	
+	function is_configuration_update_supported() {
+		return FALSE;
+	}
+	
 	function find_user($username, $password) {
 		global $USERS, $PASSWORDS_HASHED;
 			

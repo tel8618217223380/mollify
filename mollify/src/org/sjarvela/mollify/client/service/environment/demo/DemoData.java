@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FilePermission;
+import org.sjarvela.mollify.client.session.ConfigurationInfo;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
@@ -46,15 +47,18 @@ public class DemoData {
 	private Map<String, List<Directory>> directories = new HashMap();
 	private List<File> files;
 
-	private PermissionMode permissionMode = PermissionMode.ReadWrite;
-	private SessionSettings settings;
-	private FileSystemInfo fileSystemInfo;
+	private final PermissionMode permissionMode = PermissionMode.ReadWrite;
+	private final SessionSettings settings;
+	private final ConfigurationInfo configurationInfo;
+	private final FileSystemInfo fileSystemInfo;
 	private final boolean multiUser;
 
 	public DemoData(boolean multiUser) {
 		this.multiUser = multiUser;
-		settings = SessionSettings.create(true, true, true, true);
-		fileSystemInfo = FileSystemInfo.create(1024, 1024);
+		this.settings = SessionSettings.create(true, true, true, true);
+		this.fileSystemInfo = FileSystemInfo.create(1024, 1024);
+		this.configurationInfo = ConfigurationInfo.create(true);
+
 		createDirectoriesAndFiles();
 	}
 
@@ -85,14 +89,14 @@ public class DemoData {
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", permissionMode,
-					settings, fileSystemInfo);
+					settings, configurationInfo, fileSystemInfo);
 		}
 
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, user, permissionMode,
-					settings, fileSystemInfo);
+					settings, configurationInfo, fileSystemInfo);
 		return SessionInfo.create(true, false, "", permissionMode, settings,
-				fileSystemInfo);
+				configurationInfo, fileSystemInfo);
 	}
 
 	public List<Directory> getRootDirectories() {

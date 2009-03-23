@@ -11,7 +11,11 @@
 	 */
 	
 	function init_configuration_provider() {}
-	
+
+	function is_configuration_update_supported() {
+		return TRUE;
+	}
+
 	function init_db() {
 		global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE;
 		

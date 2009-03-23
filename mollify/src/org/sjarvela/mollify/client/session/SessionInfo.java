@@ -15,10 +15,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
 			boolean authenticated, String user, PermissionMode permissionMode,
-			SessionSettings settings, FileSystemInfo fileInfo) {
+			SessionSettings settings, ConfigurationInfo configurationInfo,
+			FileSystemInfo fileInfo) {
 		SessionInfo result = SessionInfo.createObject().cast();
 		result.putValues(authenticationRequired, authenticated, user,
-				permissionMode.getStringValue(), settings, fileInfo);
+				permissionMode.getStringValue(), settings, configurationInfo,
+				fileInfo);
 		return result;
 	}
 
@@ -87,14 +89,20 @@ public class SessionInfo extends JavaScriptObject {
 		return this.filesystem;
 	}-*/;
 
+	public final native ConfigurationInfo getConfigurationInfo() /*-{
+		return this.configuration;
+	}-*/;
+
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String user, String permissionMode,
-			SessionSettings settings, FileSystemInfo fileInfo) /*-{
+			SessionSettings settings, ConfigurationInfo configurationInfo,
+			FileSystemInfo fileInfo) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
 		this.user = user;
 		this.default_permission_mode = permissionMode;
 		this.settings = settings;
+		this.configuration = configurationInfo;
 		this.filesystem = fileInfo;
 	}-*/;
 }
