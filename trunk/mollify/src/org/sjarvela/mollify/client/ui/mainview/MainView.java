@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.session.SessionInfo.PermissionMode;
 import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -35,7 +36,6 @@ import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,13 +52,13 @@ public class MainView extends Composite {
 
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
-	private Label username;
+	private DropdownButton username;
 	private ActionButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public enum Action implements ActionId {
-		addFile, addDirectory, refresh, logout;
+		addFile, addDirectory, refresh, logout, changePassword, configure;
 	};
 
 	public MainView(MainViewModel model, TextProvider textProvider,
@@ -133,8 +133,20 @@ public class MainView extends Composite {
 	}
 
 	private Widget createUserName() {
-		username = new Label();
+		username = new DropdownButton(actionListener, "", "username");
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
+		if (model.getSessionInfo().getConfigurationInfo()
+				.isConfigurationUpdateSupported()) {
+			username.addAction(Action.changePassword, textProvider.getStrings()
+					.mainViewChangePasswordTitle());
+			if (PermissionMode.Admin.equals(model.getSessionInfo()
+					.getDefaultPermissionMode())) {
+				username.addAction(Action.configure, textProvider.getStrings()
+						.mainViewConfigurationTitle());
+			}
+		}
+		username.addAction(Action.logout, textProvider.getStrings()
+				.mainViewLogoutButtonTitle());
 		return username;
 	}
 
@@ -208,7 +220,7 @@ public class MainView extends Composite {
 		return directorySelector;
 	}
 
-	public Label getUsername() {
+	public DropdownButton getUsername() {
 		return username;
 	}
 

@@ -38,6 +38,10 @@
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
+	function get_configuration_info() {
+		return array("supports_configuration_update" => is_configuration_update_supported());
+	}
+	
 	function get_session_info() {
 		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
 		$auth = check_authentication();
@@ -48,6 +52,7 @@
 			$info["settings"] = $_SESSION['settings'];
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 			$info["filesystem"] = get_filesystem_session_info();
+			$info["configuration"] = get_configuration_info();
 		}
 		return $info;
 	}
