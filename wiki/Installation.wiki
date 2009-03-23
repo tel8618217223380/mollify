@@ -71,7 +71,3 @@
 	Host page structure can be freely modified, as long as following rules are met:
 	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked
 	  * In the page, there must be a div with id "mollify". Application is injected inside this element.
-	
-	Optionally
-	  * If you wish to choose the language, include meta information in the head section
-	  * If you wish to support browser history, keep the iframe element with id "__gwt_historyFrame"
