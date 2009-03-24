@@ -32,6 +32,7 @@ import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPop
 import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
+import org.sjarvela.mollify.client.util.Browser;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -69,7 +70,8 @@ public class MainView extends Composite {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
-		this.directorySelector = directorySelectorFactory.createSelector();
+		this.directorySelector = directorySelectorFactory
+				.createSelector(!Browser.isIE());
 		this.fileContext = fileContextPopupFactory.createPopup();
 		this.dirContext = directoryContextPopupFactory.createPopup();
 
