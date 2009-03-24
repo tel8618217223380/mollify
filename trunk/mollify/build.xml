@@ -92,9 +92,13 @@
 
 		<delete dir="${target.dir}" />
 	</target>
-	
-	<target name="update-devenv" depends="compile">
+		
+	<target name="update-devenv">
 		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
+		
+		<exec executable="rm" failonerror="false">
+			<arg value="${target.dir}/themes" />
+		</exec>
 		<delete dir="${target.dir}" />
 		<mkdir dir="${target.dir}" />
 		
@@ -112,5 +116,8 @@
 			<arg value="${target.dir}" />
 		</exec>
 	</target>
-	
+
+	<target name="compile-and-update" depends="compile, update-devenv">
+	</target>
+
 </project>

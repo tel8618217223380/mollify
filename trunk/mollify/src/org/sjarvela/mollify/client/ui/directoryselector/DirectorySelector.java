@@ -32,13 +32,15 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 
 	private final DirectoryListItem homeItem;
 	private final Button upButton;
+	private final boolean reverse;
 
 	public DirectorySelector(TextProvider textProvider,
 			DirectoryModelProvider directoryModelProvider,
-			DirectoryListItemFactory listItemFactory) {
+			DirectoryListItemFactory listItemFactory, boolean reverse) {
 		this.textProvider = textProvider;
 		this.directoryModelProvider = directoryModelProvider;
 		this.listItemFactory = listItemFactory;
+		this.reverse = reverse;
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
 
 		this.upButton = createUpButton();
@@ -93,8 +95,12 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 			Directory current = list.next();
 			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
 					: null;
-			items.add(0, listItemFactory.createListItem(this, style, current,
-					level, parent));
+			if (reverse)
+				items.add(0, listItemFactory.createListItem(this, style,
+						current, level, parent));
+			else
+				items.add(listItemFactory.createListItem(this, style, current,
+						level, parent));
 
 			level++;
 			parent = current;

@@ -243,10 +243,12 @@
 	font-size: 0;
 	width: 23px;
 	color: #dadada;
+	border-style: none;
 }
 
 #mollify-header-refresh-button.mollify-header-button:active {
 	background: url(button-refresh.png) no-repeat 0 -23px;
+	border-style: none;
 }
 
 #mollify-header-parent-dir-button.mollify-header-button {
@@ -295,13 +297,20 @@
 	float: right;
 }
 
-.mollify-header-username {
-	padding-right: 6px;
-	padding-left: 6px;
+.mollify-header-username, .mollify-header-username:hover {
 	font-weight: bold;
-	padding-top: 12px;
 	float: left;
 	text-align: right;
+	background-image: none;
+	border-style: none;
+	background-color: transparent;
+	padding-left: 6px;
+	height: 38px;
+	padding-right: 6px;
+}
+
+.mollify-header-username:hover {
+	background-color: #b2b2b2;
 }
 
 #mollify-header-logout.mollify-header-option, #mollify-header-logout.mollify-header-option:hover {
@@ -321,6 +330,10 @@
 
 .mollify-directory-list-item {
 	float: right;
+}
+
+.ie-crap.mollify-directory-list-item {
+	float: left;
 }
 
 .mollify-directory-selector {
@@ -364,11 +377,11 @@
 
 .mollify-directory-list-item-button-center {
 	height: 19px;
-	padding-top: 4px;
 	padding-left: 2px;
 	padding-right: 2px;
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
+	padding-top: 4px;
 }
 
 .mollify-directory-list-item-button-right {
@@ -449,6 +462,10 @@
 
 .mollify-directory-menu-item-none {
 	font-style: italic;
+}
+
+#username-menu {
+	margin-top: 33px;
 }
 
 .mollify-filelist {

@@ -99,7 +99,7 @@
 		init_configuration_provider();
 	}
 
-	function get_configuration_info() {
+	function get_configuration() {
 		return array("roots" => get_roots($_SESSION['user_id']));
 	}
 	
@@ -116,7 +116,7 @@
 	session_start();
 	if (!handle_authentication()) return;
 	
-	$configuration = get_configuration_info();
+	$configuration = get_configuration();
 	if (!$configuration) {
 		return_json(get_error_message("UNAUTHORIZED"));
 		return;

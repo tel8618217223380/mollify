@@ -24,6 +24,7 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
+import org.sjarvela.mollify.client.util.Browser;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
@@ -55,6 +56,8 @@ public class App implements EntryPoint, LogoutHandler {
 		panel = RootPanel.get(MOLLIFY_PANEL_ID);
 		if (panel == null)
 			return;
+
+		Log.debug("IE:" + Browser.isIE());
 
 		ClientSettings settings = new ClientSettings(new ParameterParser(
 				META_PROPERTY));
