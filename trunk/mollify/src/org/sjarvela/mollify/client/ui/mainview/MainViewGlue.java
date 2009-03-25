@@ -66,6 +66,13 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 						presenter.openNewDirectoryDialog();
 					}
 				});
+
+		actionDelegator.setActionHandler(Action.changePassword,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.changePassword();
+					}
+				});
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {

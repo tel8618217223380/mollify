@@ -37,7 +37,7 @@ public class PhpService {
 	private String baseUrl;
 
 	enum Action {
-		get, operate, auth, session_info, logout
+		get, operate, auth, session_info, logout, change_pw
 	};
 
 	enum GetType {
@@ -98,6 +98,13 @@ public class PhpService {
 			final ResultListener resultListener) {
 		doRequest(getUrl(Action.auth, "username=" + userName, "password="
 				+ MD5.generateMD5(password)), resultListener);
+	}
+
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		doRequest(getUrl(Action.change_pw, "old="
+				+ MD5.generateMD5(oldPassword), "new="
+				+ MD5.generateMD5(newPassword)), resultListener);
 	}
 
 	public void logout(ResultListener<SessionInfo> resultListener) {
@@ -244,5 +251,4 @@ public class PhpService {
 		return DateTime.getInstance().getInternalExactFormat().format(
 				DateTime.getInstance().currentTime());
 	}
-
 }

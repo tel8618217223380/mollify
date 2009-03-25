@@ -21,10 +21,8 @@
 			
 				switch ($_GET["type"]) {
 					case "roots":
-						global $configuration;
-						
 						$result = array();
-						foreach($configuration["roots"] as $id => $root) {
+						foreach($_SESSION["roots"] as $id => $root) {
 							if (!isset($root["name"])) {
 								$error = "INVALID_CONFIGURATION";
 								break;

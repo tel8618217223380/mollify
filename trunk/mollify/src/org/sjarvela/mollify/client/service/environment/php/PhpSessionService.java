@@ -25,6 +25,11 @@ public class PhpSessionService implements SessionService {
 		service.authenticate(userName, password, resultListener);
 	}
 
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		service.changePassword(oldPassword, newPassword, resultListener);
+	}
+
 	public void getSessionInfo(ResultListener resultListener) {
 		service.getSessionInfo(resultListener);
 	}

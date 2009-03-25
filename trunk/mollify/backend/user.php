@@ -19,6 +19,7 @@
 		$_SESSION['username'] = $username;
 		$_SESSION['default_file_permission'] = get_default_user_permission_mode($user_id);
 		$_SESSION['settings'] = get_effective_settings();
+		$_SESSION['roots'] = get_roots($user_id);
 	}
 	
 	function authenticate() {

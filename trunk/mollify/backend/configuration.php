@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	$CONFIGURATION_PROVIDER = 'file';
+	$CONFIGURATION_PROVIDER = 'mysql';
 	$DB_USER = "mollify";
 	$DB_PASSWORD = "mollify";
 	

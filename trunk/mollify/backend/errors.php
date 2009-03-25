@@ -17,6 +17,7 @@
 		"UNSUPPORTED_OPERATION" => array(103, "Unsupported operation"),
 		"FEATURE_DISABLED" => array(104, "Feature disabled"),
 		"INVALID_CONFIGURATION" => array(105, "Invalid configuration"),
+		"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported"),
 	
 		"INVALID_PATH" => array(201, "Invalid path"), 
 		"FILE_DOES_NOT_EXIST" => array(202, "File does not exist"), 

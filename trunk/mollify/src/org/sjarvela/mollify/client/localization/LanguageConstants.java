@@ -161,4 +161,18 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String moveFileDialogAction();
 
+	public String passwordDialogTitle();
+
+	public String passwordDialogOriginalPassword();
+
+	public String passwordDialogNewPassword();
+
+	public String passwordDialogConfirmNewPassword();
+
+	public String passwordDialogChangeButton();
+
+	public String passwordDialogPasswordChangedSuccessfully();
+
+	public String passwordDialogOldPasswordIncorrect();
+
 }

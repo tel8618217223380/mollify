@@ -71,6 +71,30 @@
 		$result = _query(sprintf("SELECT id, name FROM user WHERE id='%s'", mysql_real_escape_string($id)));
 		return mysql_fetch_assoc($result);
 	}
+
+	function _get_password($id) {
+		$result = _query(sprintf("SELECT password FROM user WHERE id='%s'", mysql_real_escape_string($id)));
+		return mysql_result($result, 0);
+	}
+
+	function change_password($id, $old, $new) {
+		global $error, $error_details;
+		
+		if ($old != _get_password($id)) {
+			$error = "UNAUTHORIZED";
+			return FALSE;
+		}
+		
+		_query(sprintf("UPDATE user SET password VALUES ('%s') WHERE id='%s'", mysql_real_escape_string($new), mysql_real_escape_string($id)));
+		
+		if (mysql_affected_rows() != 1) {
+			log_error("Invalid change password request (user ".$id."), change affected ".mysql_affected_rows());
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
 	
 	function get_default_user_permission_mode($user_id) {
 		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY, $FILE_PERMISSION_MODE;

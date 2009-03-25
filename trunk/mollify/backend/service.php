@@ -67,6 +67,17 @@
 			$result = get_session_info();
 		} else if ($action === "logout") {
 			if (logout()) $result = get_session_info();
+		} else if ($action === "change_pw") {
+			if (!is_configuration_update_supported()) {
+				log_error("Cannot change password, feature not supported");
+				return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
+				return FALSE;
+			}
+			if (!isset($_GET["old"]) or !isset($_GET["new"])) {
+				return_json(get_error_message("INVALID_REQUEST"));
+				return FALSE;
+			}
+			$result = change_password($_SESSION['user_id'], $_GET["old"], $_GET["new"]);
 		} else {
 			if (check_authentication()) return TRUE;
 		}
@@ -98,10 +109,6 @@
 		
 		init_configuration_provider();
 	}
-
-	function get_configuration() {
-		return array("roots" => get_roots($_SESSION['user_id']));
-	}
 	
 	import_configuration_provider();
 	
@@ -115,12 +122,6 @@
 	
 	session_start();
 	if (!handle_authentication()) return;
-	
-	$configuration = get_configuration();
-	if (!$configuration) {
-		return_json(get_error_message("UNAUTHORIZED"));
-		return;
-	}
 	
 	$result = FALSE;
 	$error = "";
