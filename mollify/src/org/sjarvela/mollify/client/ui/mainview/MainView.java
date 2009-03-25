@@ -70,8 +70,11 @@ public class MainView extends Composite {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+
+		boolean buttonsInReverseOrder = !Browser.isIE();
 		this.directorySelector = directorySelectorFactory
-				.createSelector(!Browser.isIE());
+				.createSelector(buttonsInReverseOrder);
+
 		this.fileContext = fileContextPopupFactory.createPopup();
 		this.dirContext = directoryContextPopupFactory.createPopup();
 

@@ -25,11 +25,13 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
+import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
 import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
+import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
@@ -62,6 +64,10 @@ public class DialogManager {
 	public void openCreateFolderDialog(Directory parentDirectory,
 			DirectoryHandler directoryHandler) {
 		new CreateFolderDialog(parentDirectory, textProvider, directoryHandler);
+	}
+
+	public void openPasswordDialog(PasswordHandler passwordHandler) {
+		new PasswordDialog(textProvider, passwordHandler);
 	}
 
 	public ProgressDisplayer openProgressDialog(String title,

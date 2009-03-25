@@ -16,6 +16,7 @@ public class StyleConstants {
 	public static final String HOVER = "hover";
 	public static final String PRESSED = "pressed";
 	public static final String SELECTED = "selected";
+	public static final String INVALID = "invalid";
 
 	public static final String DIALOG = "mollify-dialog";
 
@@ -183,4 +184,15 @@ public class StyleConstants {
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM = "mollify-select-folder-dialog-folders-item";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL = "mollify-select-folder-dialog-folders-item-label";
 	public static final String SELECT_FOLDER_DIALOG_MESSAGE = "mollify-select-folder-dialog-message";
+
+	public static final String PASSWORD_DIALOG = "password-dialog-title";
+	public static final String PASSWORD_DIALOG_CONTENT = "mollify-password-dialog-content";
+	public static final String PASSWORD_ORIGINAL_PASSWORD_TITLE = "mollify-password-dialog-original-password-title";
+	public static final String PASSWORD_ORIGINAL_PASSWORD_VALUE = "mollify-password-dialog-original-password-value";
+	public static final String PASSWORD_NEW_PASSWORD_TITLE = "mollify-password-dialog-new-password-title";
+	public static final String PASSWORD_NEW_PASSWORD_VALUE = "mollify-password-dialog-new-password-value";
+	public static final String PASSWORD_CONFIRM_NEW_PASSWORD_TITLE = "mollify-password-dialog-confirm-new-password-title";
+	public static final String PASSWORD_CONFIRM_NEW_PASSWORD_VALUE = "mollify-password-dialog-confirm-new-password-value";
+	public static final String PASSWORD_DIALOG_BUTTONS = "mollify-password-dialog-buttons";
+	public static final String PASSWORD_DIALOG_BUTTON_CHANGE = "mollify-password-dialog-button-change";
 }

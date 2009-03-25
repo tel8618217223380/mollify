@@ -27,6 +27,11 @@ public class DemoSessionService implements SessionService {
 		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
 	}
 
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		resultListener.onSuccess(true);
+	}
+
 	public void getSessionInfo(ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo(""));
 	}

@@ -20,6 +20,9 @@ public interface SessionService {
 	void authenticate(String userName, String password,
 			ResultListener<SessionInfo> resultListener);
 
+	void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener);
+
 	void logout(ResultListener<SessionInfo> resultListener);
 
 }

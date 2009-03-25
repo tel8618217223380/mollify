@@ -28,9 +28,12 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
@@ -42,7 +45,8 @@ import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 public class MainViewPresenter implements DirectoryListener,
-		FileSystemActionHandler, DirectoryHandler, RenameHandler {
+		FileSystemActionHandler, DirectoryHandler, RenameHandler,
+		PasswordHandler {
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
@@ -52,15 +56,18 @@ public class MainViewPresenter implements DirectoryListener,
 	private final LogoutHandler logoutListener;
 	private final TextProvider textProvider;
 	private final DirectoryProvider directoryProvider;
+	private final SessionService sessionService;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
-			MainView view, FileSystemService fileSystemService,
+			MainView view, SessionService sessionService,
+			FileSystemService fileSystemService,
 			FileUploadService fileUploadHandler,
 			DirectoryProvider directoryProvider, TextProvider textProvider,
 			LogoutHandler logoutListener) {
 		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
+		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 		this.fileUploadService = fileUploadHandler;
 		this.directoryProvider = directoryProvider;
@@ -205,6 +212,42 @@ public class MainViewPresenter implements DirectoryListener,
 
 	public void logout() {
 		logoutListener.onLogout(model.getSessionInfo());
+	}
+
+	public void changePassword() {
+		windowManager.getDialogManager().openPasswordDialog(this);
+	}
+
+	public void changePassword(String oldPassword, String newPassword) {
+		sessionService.changePassword(oldPassword, newPassword,
+				new ResultListener() {
+					public void onFail(ServiceError error) {
+						if (error.getType().equals(
+								ServiceErrorType.AUTHENTICATION_FAILED)) {
+							windowManager
+									.getDialogManager()
+									.showInfo(
+											textProvider.getStrings()
+													.passwordDialogTitle(),
+											textProvider
+													.getStrings()
+													.passwordDialogOldPasswordIncorrect());
+						} else {
+							onError(error, false);
+						}
+					}
+
+					public void onSuccess(Object result) {
+						windowManager
+								.getDialogManager()
+								.showInfo(
+										textProvider.getStrings()
+												.passwordDialogTitle(),
+										textProvider
+												.getStrings()
+												.passwordDialogPasswordChangedSuccessfully());
+					}
+				});
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action) {
