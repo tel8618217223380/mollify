@@ -36,6 +36,7 @@ import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
 
 public class DialogManager {
 	private TextProvider textProvider;
@@ -103,6 +104,10 @@ public class DialogManager {
 			SelectFolderListener listener, List<Directory> initialDirectoryPath) {
 		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
 				provider, listener, initialDirectoryPath);
+	}
+
+	public void openConfigurationDialog() {
+		new ConfigurationDialog(textProvider);
 	}
 
 }

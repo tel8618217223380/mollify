@@ -10,8 +10,10 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import org.sjarvela.mollify.client.ResourceId;
+
 public interface ActionListener {
 
-	void onActionTriggered(ActionId action);
+	void onActionTriggered(ResourceId action);
 
 }

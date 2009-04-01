@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ProgressBar;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,7 +33,7 @@ public class ProgressDialog extends CenteredDialog implements ProgressDisplayer 
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		info = new Label();
 		info.setStyleName(StyleConstants.PROGRESS_DIALOG_INFO);

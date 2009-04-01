@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.Button;
@@ -75,7 +76,7 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_CONTENT);
 
@@ -98,7 +99,7 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
@@ -124,7 +125,7 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 	}
 
 	@Override
-	void onShow() {
+	protected void onShow() {
 		super.onShow();
 
 		directoryProvider.getDirectories(Directory.Empty,

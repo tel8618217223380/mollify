@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -69,7 +70,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
@@ -94,7 +95,7 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
 		panel.add(createMessage());

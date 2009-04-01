@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.common.popup;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
@@ -27,8 +27,8 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	private static final String DISABLED = "disabled";
 
 	private ActionListener actionListener;
-	private Map<ActionId, Widget> items = new HashMap();
-	private Map<ActionId, Boolean> itemsEnabled = new HashMap();
+	private Map<ResourceId, Widget> items = new HashMap();
+	private Map<ResourceId, Boolean> itemsEnabled = new HashMap();
 
 	public DropdownPopupMenu(ActionListener actionListener, Element parent,
 			Element opener) {
@@ -40,14 +40,14 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		setWidget(container);
 	}
 
-	public void addMenuAction(final ActionId action, T item) {
+	public void addMenuAction(final ResourceId action, T item) {
 		Widget itemWidget = createMenuItemWidget(action, item);
 		items.put(action, itemWidget);
 		itemsEnabled.put(action, true);
 		addItem(itemWidget);
 	}
 
-	public void setActionEnabled(ActionId action, boolean enabled) {
+	public void setActionEnabled(ResourceId action, boolean enabled) {
 		Widget itemWidget = items.get(action);
 
 		if (enabled)
@@ -57,7 +57,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		itemsEnabled.put(action, enabled);
 	}
 
-	protected Label createMenuItemWidget(final ActionId action, T item) {
+	protected Label createMenuItemWidget(final ResourceId action, T item) {
 		Label label = createMenuItemWidget(item.toString());
 
 		if (action != null)

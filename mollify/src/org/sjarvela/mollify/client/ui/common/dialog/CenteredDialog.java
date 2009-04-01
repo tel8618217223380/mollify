@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.ui.common.dialog;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
@@ -27,10 +27,10 @@ public abstract class CenteredDialog extends DialogBox {
 		this.setText(title);
 	}
 
-	void initialize() {
+	protected void initialize() {
 		VerticalPanel content = new VerticalPanel();
 		content.add(createContent());
-		
+
 		Widget buttons = createButtons();
 		if (buttons != null)
 			content.add(buttons);
@@ -45,11 +45,11 @@ public abstract class CenteredDialog extends DialogBox {
 		});
 	}
 
-	Widget createButtons() {
+	protected Widget createButtons() {
 		return null;
 	}
 
-	abstract Widget createContent();
+	protected abstract Widget createContent();
 
 	@Override
 	public void show() {
@@ -57,7 +57,7 @@ public abstract class CenteredDialog extends DialogBox {
 		onShow();
 	}
 
-	void onShow() {
+	protected void onShow() {
 	}
 
 	protected Button createButton(String title, ClickListener listener,

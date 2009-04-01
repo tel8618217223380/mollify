@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -41,7 +42,7 @@ public class CreateFolderDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_CONTENT);
 
@@ -59,7 +60,7 @@ public class CreateFolderDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
@@ -85,7 +86,7 @@ public class CreateFolderDialog extends CenteredDialog {
 	}
 
 	@Override
-	void onShow() {
+	protected void onShow() {
 		name.setFocus(true);
 	}
 

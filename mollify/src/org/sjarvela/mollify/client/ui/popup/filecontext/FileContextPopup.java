@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.popup.filecontext;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -22,7 +23,6 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
@@ -255,7 +255,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		this.hide();
 	}
 
-	public void onActionTriggered(ActionId action) {
+	public void onActionTriggered(ResourceId action) {
 		onAction((FileSystemAction) action);
 	}
 }

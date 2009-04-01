@@ -13,16 +13,18 @@ package org.sjarvela.mollify.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sjarvela.mollify.client.ResourceId;
+
 
 public class ActionDelegator implements ActionListener {
-	Map<ActionId, ActionHandler> actions = new HashMap();
+	Map<ResourceId, ActionHandler> actions = new HashMap();
 
-	public void onActionTriggered(ActionId action) {
+	public void onActionTriggered(ResourceId action) {
 		if (actions.containsKey(action))
 			actions.get(action).onAction();
 	}
 
-	public void setActionHandler(ActionId action, ActionHandler actionHandler) {
+	public void setActionHandler(ResourceId action, ActionHandler actionHandler) {
 		this.actions.put(action, actionHandler);
 	}
 

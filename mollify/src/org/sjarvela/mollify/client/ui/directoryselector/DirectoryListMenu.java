@@ -12,12 +12,12 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.ui.ActionId;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 
@@ -106,7 +106,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	}
 
 	@Override
-	protected Label createMenuItemWidget(final ActionId action,
+	protected Label createMenuItemWidget(final ResourceId action,
 			final Directory item) {
 		Label label = createMenuItemWidget(item.getName());
 		label.addClickListener(new ClickListener() {

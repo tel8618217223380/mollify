@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.popup;
 
-import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
@@ -24,19 +24,26 @@ public class DropdownButton extends Composite {
 	private ActionButton button;
 	private DropdownPopupMenu menu;
 
-	public DropdownButton(ActionListener actionListener, String title, String id) {
-		this(actionListener, title, id, null);
+	public DropdownButton(ActionListener actionListener, String title,
+			String id, boolean absolutePosition) {
+		this(actionListener, title, id);
+		if (absolutePosition)
+			menu.setParentElement(this.getElement());
 	}
 
 	public DropdownButton(ActionListener actionListener, String title,
 			String id, Element parent) {
+		this(actionListener, title, id);
+		menu.setParentElement(parent);
+	}
+
+	public DropdownButton(ActionListener actionListener, String title, String id) {
 		button = new ActionButton(title, id == null ? null : id + "-button",
 				StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
-		menu = new DropdownPopupMenu<String>(actionListener,
-				parent == null ? this.getElement() : parent, button
-						.getElement());
+		menu = new DropdownPopupMenu<String>(actionListener, null, button
+				.getElement());
 		if (id != null)
 			menu.getElement().setId(id + "-menu");
 
@@ -54,11 +61,11 @@ public class DropdownButton extends Composite {
 		button.setText(text);
 	}
 
-	public void addAction(ActionId action, String title) {
+	public void addAction(ResourceId action, String title) {
 		menu.addMenuAction(action, title);
 	}
 
-	public void setActionEnabled(ActionId action, boolean enabled) {
+	public void setActionEnabled(ResourceId action, boolean enabled) {
 		menu.setActionEnabled(action, enabled);
 	}
 

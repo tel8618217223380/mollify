@@ -195,4 +195,18 @@ public class StyleConstants {
 	public static final String PASSWORD_CONFIRM_NEW_PASSWORD_VALUE = "mollify-password-dialog-confirm-new-password-value";
 	public static final String PASSWORD_DIALOG_BUTTONS = "mollify-password-dialog-buttons";
 	public static final String PASSWORD_DIALOG_BUTTON_CHANGE = "mollify-password-dialog-button-change";
+
+	public static final String CONFIGURATION_DIALOG = null;
+	public static final String CONFIGURATION_DIALOG_BUTTONS = null;
+	public static final String CONFIGURATION_DIALOG_BUTTON_CLOSE = null;
+
+	public static final String CONFIGURATION_DIALOG_MENU = null;
+
+	public static final String CONFIGURATION_DIALOG_MENU_ITEM = null;
+
+	public static final String CONFIGURATION_DIALOG_MENU_ITEM_USERS = null;
+
+	public static final String CONFIGURATION_DIALOG_VIEW = null;
+
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS = null;
 }
