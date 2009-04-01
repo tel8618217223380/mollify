@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.ui.common;
 
-import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
@@ -46,11 +46,11 @@ public class MultiActionButton extends Composite {
 		return panel;
 	}
 
-	public void addAction(ActionId action, String title) {
+	public void addAction(ResourceId action, String title) {
 		dropdownButton.addAction(action, title);
 	}
 
-	public void setDefaultAction(final ActionId defaultAction) {
+	public void setDefaultAction(final ResourceId defaultAction) {
 		defaultActionButton.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				actionListener.onActionTriggered(defaultAction);
@@ -58,7 +58,7 @@ public class MultiActionButton extends Composite {
 		});
 	}
 
-	public void setActionEnabled(ActionId action, boolean enabled) {
+	public void setActionEnabled(ResourceId action, boolean enabled) {
 		dropdownButton.setActionEnabled(action, enabled);
 	}
 }

@@ -4,8 +4,7 @@
 	<property name="project.name" value="Mollify" />
 	<property name="lib.dir" location="lib" /> 
 	<property name="build.dir" location="${root.dir}/build" />
-	<property name="svn.dir" location="${root.dir}/svn" />
-	<property name="src.dir" location="${svn.dir}/src" />
+	<property name="src.dir" location="${root.dir}/src" />
 	<property name="deploy.dir" location="${root.dir}/deploy" />
 	<property name="gwt.entrypoint.class" value="org.sjarvela.mollify.App" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
@@ -30,11 +29,15 @@
 	</target>
 
 	<target name="compile" depends="init">
+		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m">
+			<os name="Mac OS X"/>  
+		</condition>  
+		
+		<echo>Platform: ${os.name}</echo>
 		<mkdir dir="${build.dir}" />
 		
 		<java classpathref="compile.classpath" classname="com.google.gwt.dev.GWTCompiler" fork="true">
-			<jvmarg line="-XstartOnFirstThread" />
-			<jvmarg line="-Xmx512m" />
+			<jvmarg line="${gwt.jvm.arg}" />
 			<arg value="-out" />
 			<arg value="${build.dir}" />
 			<arg value="${gwt.entrypoint.class}" />
@@ -59,11 +62,11 @@
 		
 		<!-- backend -->
 		<copy todir="${target.dir}/mollify">
-			<fileset dir="${svn.dir}/backend">
+			<fileset dir="${root.dir}/backend">
 				<exclude name="configuration.php"/>
 			</fileset>
 		</copy>
-		<copy file="${svn.dir}/ReadMe.txt" todir="${target.dir}"/>
+		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}"/>
 		
 		<tar destfile="${deploy.dir}/${deploy.package.name}" basedir="${target.dir}" />
 		<gzip destfile="${deploy.dir}/${deploy.package.name}.gz" src="${deploy.dir}/${deploy.package.name}"/>
@@ -76,7 +79,7 @@
 		<mkdir dir="${target.src.dir}" />
 		
 		<copy todir="${target.src.dir}">
-			<fileset dir="${root.dir}/svn/backend">
+			<fileset dir="${root.dir}/backend">
 				<exclude name="configuration.php" />
 				<exclude name="**/.svn" />
 			</fileset>

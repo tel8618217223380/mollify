@@ -384,4 +384,8 @@ public class MainViewPresenter implements DirectoryListener,
 			Sort sort) {
 		return new DefaultFileItemComparator(column, sort);
 	}
+
+	public void configure() {
+		windowManager.getDialogManager().openConfigurationDialog();
+	}
 }

@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -40,7 +41,7 @@ public class LoginDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.LOGIN_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
@@ -66,7 +67,7 @@ public class LoginDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
 

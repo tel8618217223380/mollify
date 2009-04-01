@@ -3,6 +3,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -30,7 +31,7 @@ public class PasswordDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.PASSWORD_DIALOG_CONTENT);
 
@@ -70,7 +71,7 @@ public class PasswordDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.PASSWORD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);

@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.ui.ActionId;
+import org.sjarvela.mollify.client.ResourceId;
 
-public enum FileSystemAction implements ActionId {
+public enum FileSystemAction implements ResourceId {
 	download, rename, copy, move, delete, upload, details, create_folder, download_as_zip;
 
 	public boolean isApplicableToDirectory() {

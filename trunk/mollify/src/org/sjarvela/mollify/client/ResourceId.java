@@ -8,8 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client;
 
-public interface ActionId {
+public interface ResourceId {
 	String name();
 }

@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -38,7 +39,7 @@ public class ConfirmationDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createContent() {
+	protected Widget createContent() {
 		HorizontalPanel content = new HorizontalPanel();
 		content.addStyleName(StyleConstants.CONFIRMATION_DIALOG_CONTENT);
 
@@ -56,7 +57,7 @@ public class ConfirmationDialog extends CenteredDialog {
 	}
 
 	@Override
-	Widget createButtons() {
+	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.CONFIRMATION_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
