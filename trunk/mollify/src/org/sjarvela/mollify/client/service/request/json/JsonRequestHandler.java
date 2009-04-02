@@ -25,17 +25,19 @@ public class JsonRequestHandler {
 	private final ResultListener listener;
 	private final String url;
 	private final int id;
+	private final int timeout;
 
-	public JsonRequestHandler(String url, ResultListener listener) {
+	public JsonRequestHandler(String url, ResultListener listener, int timeout) {
 		this.listener = listener;
 		this.url = url;
+		this.timeout = timeout;
 		this.id = requestId++;
 	}
 
 	public void doRequest() {
 		if (Log.isDebugEnabled())
 			Log.debug("Request: " + url);
-		getExternalJson(id, url + "&callback=", this, 5);
+		getExternalJson(id, url + "&callback=", this, timeout);
 	}
 
 	public void handleResponse(JavaScriptObject jso) {

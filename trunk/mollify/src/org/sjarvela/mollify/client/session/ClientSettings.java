@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.session;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class ClientSettings {
 	private final ParameterParser parser;
 
@@ -21,6 +23,13 @@ public class ClientSettings {
 		if (val.equals("yes") || val.equals("true") || val.equals("on"))
 			return true;
 		return false;
+	}
+
+	private static int getInt(String string) {
+		if (string == null)
+			throw new RuntimeException("Missing parameter " + string);
+
+		return Integer.parseInt(string.trim());
 	}
 
 	public ClientSettings(ParameterParser parser) {
@@ -35,5 +44,19 @@ public class ClientSettings {
 		if (!parser.hasParameter(param))
 			return defaultValue;
 		return getBool(parser.getParameter(param));
+	}
+
+	public int getInt(String param, int defaultValue) {
+		if (!parser.hasParameter(param))
+			return defaultValue;
+
+		try {
+			return getInt(parser.getParameter(param));
+		} catch (NumberFormatException e) {
+			if (Log.isDebugEnabled())
+				Log.debug("Invalid integer parameter " + param
+						+ " value, using default " + defaultValue);
+			return defaultValue;
+		}
 	}
 }
