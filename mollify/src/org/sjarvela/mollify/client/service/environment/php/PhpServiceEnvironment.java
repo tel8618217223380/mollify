@@ -18,13 +18,17 @@ import org.sjarvela.mollify.client.session.ClientSettings;
 
 public class PhpServiceEnvironment implements ServiceEnvironment {
 	private static final String PARAM_SERVICE_PATH = "service-path";
+	private static final String PARAM_TIMEOUT = "request-timeout";
+	private static final int DEFAULT_REQUEST_TIMEOUT = 5;
+
 	private PhpService service;
 	private PhpFileService fileSystemService;
 	private PhpFileUploadService uploadHandler;
 	private PhpSessionService sessionService;
 
 	public void initialize(ClientSettings settings) {
-		service = new PhpService(settings.getString(PARAM_SERVICE_PATH));
+		service = new PhpService(settings.getString(PARAM_SERVICE_PATH),
+				settings.getInt(PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT));
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);

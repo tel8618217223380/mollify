@@ -33,8 +33,8 @@ import com.google.gwt.http.client.URL;
 
 public class PhpService {
 	private static final String SERVICE_FILE = "service.php";
-
-	private String baseUrl;
+	private final int requestTimeout;
+	private final String requestBaseUrl;
 
 	enum Action {
 		get, operate, auth, session_info, logout, change_pw
@@ -51,19 +51,25 @@ public class PhpService {
 	// (service.php) is in the same directory, or its descendants, than the
 	// host page.
 
-	public PhpService(String path) {
+	public PhpService(String path, int requestTimeout) {
+		this.requestTimeout = requestTimeout;
+		this.requestBaseUrl = getBaseUrl(path);
+		Log.info("Mollify service location: " + this.requestBaseUrl);
+	}
+
+	private String getBaseUrl(String path) {
+		String result;
+
 		if (GWT.isScript()) {
-			this.baseUrl = GWT.getHostPageBaseURL() + getOptionalPath(path);
+			result = GWT.getHostPageBaseURL() + getOptionalPath(path);
 		} else {
 			if (path == null || path.length() == 0)
 				throw new RuntimeException(
 						"Development service path not defined");
-			this.baseUrl = path;
+			result = path;
 		}
 
-		this.baseUrl += SERVICE_FILE;
-
-		Log.info("Mollify service location: " + this.baseUrl);
+		return result + SERVICE_FILE;
 	}
 
 	private String getOptionalPath(String path) {
@@ -236,14 +242,15 @@ public class PhpService {
 	}
 
 	private String getUrl(Action action, String... params) {
-		String url = baseUrl + "?action=" + action.name();
+		String url = requestBaseUrl + "?action=" + action.name();
 		for (String param : params)
 			url += "&" + param;
 		return url;
 	}
 
 	private void doRequest(String url, ResultListener resultListener) {
-		new JsonRequestHandler(URL.encode(url), resultListener).doRequest();
+		new JsonRequestHandler(URL.encode(url), resultListener, requestTimeout)
+				.doRequest();
 	}
 
 	public String getNewUploadId() {
