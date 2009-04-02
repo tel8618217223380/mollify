@@ -13,7 +13,8 @@
 	<path id="compile.classpath">  
 		<pathelement path="${java.class.path}/" />  
 		<pathelement location="${gwt.sdk.location}/gwt-user.jar" />  
-		<pathelement location="${gwt.sdk.location}/gwt-dev-mac.jar" />  
+		<pathelement location="${gwt.sdk.location}/gwt-dev-mac.jar" />
+		<pathelement location="${gwt.sdk.location}/gwt-dev-linux.jar" />
 		<pathelement location="${src.dir}" />  
 		<fileset dir="${lib.dir}" includes="**/*.jar" />  
 	</path>
