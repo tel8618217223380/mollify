@@ -47,7 +47,12 @@
 					case "dirs":
 						$result = get_directories();
 						break;
-	
+
+					case "dir_list":
+						if (!isset($_GET["file"]) and !isset($_GET["dir"])) break;
+						$result = get_directory_list();
+						break;
+							
 					case "details":
 						if (!isset($_GET["item_type"])) return;
 						$file = get_fileitem_from_url("id");

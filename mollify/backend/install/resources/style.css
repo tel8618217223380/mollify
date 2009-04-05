@@ -126,6 +126,8 @@ span.result {
 	font-weight: bold;
 	clear: both;
 	float: left;
+	margin-top: 13px;
+	font-size: 26px;
 }
 
 span.title {
@@ -213,6 +215,7 @@ div.user {
 	float: left;
 	padding: 10px;
 	margin-top: 6px;
+	margin-bottom: 6px;
 }
 
 .user span.title {

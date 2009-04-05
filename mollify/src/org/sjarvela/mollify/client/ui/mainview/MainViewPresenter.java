@@ -30,6 +30,7 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
+import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
@@ -57,10 +58,12 @@ public class MainViewPresenter implements DirectoryListener,
 	private final TextProvider textProvider;
 	private final DirectoryProvider directoryProvider;
 	private final SessionService sessionService;
+	private final SettingsService settingsService;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
+			SettingsService settingsService,
 			FileUploadService fileUploadHandler,
 			DirectoryProvider directoryProvider, TextProvider textProvider,
 			LogoutHandler logoutListener) {
@@ -69,6 +72,7 @@ public class MainViewPresenter implements DirectoryListener,
 		this.view = view;
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
+		this.settingsService = settingsService;
 		this.fileUploadService = fileUploadHandler;
 		this.directoryProvider = directoryProvider;
 		this.textProvider = textProvider;
@@ -386,6 +390,7 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void configure() {
-		windowManager.getDialogManager().openConfigurationDialog();
+		windowManager.getDialogManager().openConfigurationDialog(
+				settingsService);
 	}
 }

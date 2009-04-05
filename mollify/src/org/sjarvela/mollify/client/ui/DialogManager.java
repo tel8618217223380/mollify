@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
@@ -106,8 +107,8 @@ public class DialogManager {
 				provider, listener, initialDirectoryPath);
 	}
 
-	public void openConfigurationDialog() {
-		new ConfigurationDialog(textProvider);
+	public void openConfigurationDialog(SettingsService service) {
+		new ConfigurationDialog(textProvider, this, service);
 	}
 
 }

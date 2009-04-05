@@ -270,6 +270,10 @@
 	padding: 8px;
 }
 
+#username-menu.mollify-dropdown-menu {
+	margin-left: -4px;
+}
+
 .mollify-dropdown-menu-item {
 	padding: 3px;
 	cursor: pointer;
@@ -1079,3 +1083,49 @@ span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 	background: #d5dcf6;
 	padding: 2px;
 }
+
+table.mollify-configuration-dialog-menu {
+	margin: 6px;
+}
+
+.mollify-configuration-dialog-menu-item, .mollify-configuration-dialog-menu-item-selected {
+	border: 1px solid #dfdfdf;
+	font-weight: bold;
+	padding: 6px;
+	height: 15px;
+	width: 100px;
+	cursor: pointer;
+}
+
+.mollify-configuration-dialog-menu-item {
+	background-color: #e6e6e6;
+}
+
+.mollify-configuration-dialog-view-title {
+	font-weight: bold;
+	font-size: 15px;
+	margin: 6px;
+	border-bottom: 3px solid black;
+	padding-bottom: 4px;
+}
+
+table.mollify-configuration-dialog-content-panel {
+	border-left: 1px dotted #c2c2c2;	
+}
+
+.mollify-configuration-dialog-view {
+	width: 400px;
+	height: 200px;
+	padding-top: 2px;
+	padding-left: 6px;
+	margin-top: 5px;
+}
+
+.mollify-dialog-button-configuration-dialog-close {
+	float: right;
+	width: 50px;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	margin-top: 6px;
+}
+

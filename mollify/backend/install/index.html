@@ -33,7 +33,7 @@
 				else msg = "Error: " + error.id;
 
 				show_error_msg(msg);
-				if (!$hide_details && error.details.length > 0) $("#error .error-msg").append("<div class='details'>" + error.details + "</div>");
+				if (!$hide_details && error.details && error.details.length > 0) $("#error .error-msg").append("<div class='details'>" + error.details + "</div>");
 			}
 
 			function show_error_msg(error) {

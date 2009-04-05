@@ -184,7 +184,7 @@
 				$error_detail = $err;
 				break;
 			}
-			if ($err = insert_param($db, "version", "095")) {
+			if ($err = insert_params($db)) {
 				$error = "COULD_NOT_INSERT_PARAMS";
 				$error_detail = $err;
 				break;
