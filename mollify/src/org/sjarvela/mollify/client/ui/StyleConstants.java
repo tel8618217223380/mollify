@@ -213,4 +213,5 @@ public class StyleConstants {
 	public static final String USER_LIST_HEADER = "mollify-userlist-column";
 	public static final String USER_LIST_COLUMN_PREFIX = "mollify-userlist-column-";
 	public static final String USER_LIST = "mollify-userlist";
+	public static final String USER_LIST_ROW = "mollify-userlist-row";
 }

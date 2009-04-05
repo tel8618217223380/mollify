@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 
 public class ConfigurationSettingsUsersPresenter {
 	private final ConfigurationSettingsUsersView view;
@@ -23,15 +24,17 @@ public class ConfigurationSettingsUsersPresenter {
 			ConfigurationDialog dialog, ConfigurationSettingsUsersView view) {
 		this.view = view;
 
+		view.list().setSelectionMode(SelectionMode.Single);
+
 		service.getUsers(dialog
 				.createResultListener(new ResultCallback<List<User>>() {
 					public void onCallback(List<User> list) {
-						initialize(list);
+						setUsers(list);
 					}
 				}));
 	}
 
-	protected void initialize(List<User> list) {
+	protected void setUsers(List<User> list) {
 		view.list().setContent(list);
 	}
 }

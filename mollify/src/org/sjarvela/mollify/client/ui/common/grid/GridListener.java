@@ -10,10 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
+import java.util.List;
+
 public interface GridListener<T> {
 	void onColumnClicked(T t, GridColumn column);
 
 	void onIconClicked(T t);
 
 	void onColumnSorted(GridColumn column, Sort sort);
+
+	void onSelectionChanged(List<T> selected);
 }

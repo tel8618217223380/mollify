@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
@@ -73,13 +75,12 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 						presenter.changePassword();
 					}
 				});
-		
-		actionDelegator.setActionHandler(Action.configure,
-				new ActionHandler() {
-					public void onAction() {
-						presenter.configure();
-					}
-				});
+
+		actionDelegator.setActionHandler(Action.configure, new ActionHandler() {
+			public void onAction() {
+				presenter.configure();
+			}
+		});
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {
@@ -94,5 +95,8 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 
 	public void onColumnSorted(GridColumn column, Sort sort) {
 		presenter.setListOrder(column, sort);
+	}
+
+	public void onSelectionChanged(List<FileSystemItem> selected) {
 	}
 }

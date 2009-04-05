@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog.configuration;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.UserList;
+import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 
 public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 	private UserList list;
@@ -21,6 +22,7 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 		super(textProvider, StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS);
 		list = new UserList(textProvider,
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_LIST);
+		list.setSelectionMode(SelectionMode.Single);
 
 		add(list);
 	}

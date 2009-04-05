@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.common;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,9 +39,9 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 	private static List<GridColumn> getColumns(TextProvider textProvider) {
 		if (ALL_COLUMNS == null) {
 			COLUMN_NAME = new DefaultGridColumn("name", textProvider
-					.getStrings().userListColumnTitleName(), true);
+					.getStrings().userListColumnTitleName(), false);
 			COLUMN_TYPE = new DefaultGridColumn("type", textProvider
-					.getStrings().userListColumnTitleType(), true);
+					.getStrings().userListColumnTitleType(), false);
 
 			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
 					(GridColumn) COLUMN_TYPE);
@@ -63,7 +62,10 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 		return new GridData.Text("");
 	}
 
+	private static final List<String> ROW_STYLE = Arrays
+			.asList(StyleConstants.USER_LIST_ROW);
+
 	public List<String> getRowStyles(User t) {
-		return new ArrayList();
+		return ROW_STYLE;
 	}
 }
