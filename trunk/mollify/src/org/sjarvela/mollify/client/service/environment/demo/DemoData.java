@@ -23,9 +23,9 @@ import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FilePermission;
 import org.sjarvela.mollify.client.session.ConfigurationInfo;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
+import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
-import org.sjarvela.mollify.client.session.SessionInfo.PermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
 public class DemoData {
@@ -47,7 +47,7 @@ public class DemoData {
 	private Map<String, List<Directory>> directories = new HashMap();
 	private List<File> files;
 
-	private final PermissionMode permissionMode = PermissionMode.ReadWrite;
+	private final PermissionMode permissionMode = PermissionMode.Admin;
 	private final SessionSettings settings;
 	private final ConfigurationInfo configurationInfo;
 	private final FileSystemInfo fileSystemInfo;

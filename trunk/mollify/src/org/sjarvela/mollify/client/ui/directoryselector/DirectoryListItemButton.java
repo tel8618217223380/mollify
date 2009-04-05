@@ -81,7 +81,7 @@ public class DirectoryListItemButton extends FlowPanel {
 
 	protected void onDropDownClicked() {
 		if (menu != null)
-			menu.show();
+			menu.showMenu();
 	}
 
 	private Label createPart(String style, String itemStyle,

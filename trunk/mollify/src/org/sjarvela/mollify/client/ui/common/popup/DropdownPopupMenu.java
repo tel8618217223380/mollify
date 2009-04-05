@@ -31,8 +31,8 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	private Map<ResourceId, Boolean> itemsEnabled = new HashMap();
 
 	public DropdownPopupMenu(ActionListener actionListener, Element parent,
-			Element opener) {
-		super(parent, opener);
+			Element opener, DropdownPopupListener dropdownListener) {
+		super(parent, opener, dropdownListener);
 
 		this.actionListener = actionListener;
 		this.setStylePrimaryName(StyleConstants.DROPDOWN_MENU);

@@ -12,6 +12,7 @@
 
 	$DEFAULT_HOST = 'localhost';
 	$DEFAULT_DB = 'mollify';
+	$VERSION = "0_9_5";
 	
 	function get_installed_version($db) {
 		$connection = @mysql_connect($db['host'], $db['user'], $db['password'], TRUE, 2);
@@ -45,10 +46,6 @@
 		if (isset($DB_PASSWORD)) $result["password"] = $DB_PASSWORD;
 				
 		return $result;
-	}
-	
-	function db_error($msg, $error) {
-		error("<span class='error'>$msg<span class='details'>$error</span></span>");
 	}
 	
 	function check_connection($db) {
@@ -140,11 +137,16 @@
 		
 		return FALSE;
 	}
+
+	function _exec_sql_file($db, $file) {
+		$sql = file_get_contents($file);
+		if (!$sql) return "Could not open sql file: ".$file;
+		return _queries($db, $sql);
+	}
 		
 	function create_tables($db) {
-		$sql = file_get_contents("sql/create_tables.sql");
-		if (!$sql) return "Could not open sql file";
-		return _queries($db, $sql);
+		global $VERSION;
+		return _exec_sql_file($db, "sql/create_tables_".$VERSION.".sql");
 	}
 	
 	function insert_admin_user($db, $user, $pw) {
@@ -152,8 +154,8 @@
 		return _query($db, $query);
 	}
 	
-	function insert_param($db, $name, $value) {
-		$query = "INSERT INTO parameter (name, value) VALUES ('".mysql_escape_string($name)."','".mysql_escape_string($value)."')";
-		return _query($db, $query);
+	function insert_params($db) {
+		global $VERSION;
+		return _exec_sql_file($db, "sql/params_".$VERSION.".sql");
 	}
 ?>

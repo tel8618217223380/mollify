@@ -196,17 +196,21 @@ public class StyleConstants {
 	public static final String PASSWORD_DIALOG_BUTTONS = "mollify-password-dialog-buttons";
 	public static final String PASSWORD_DIALOG_BUTTON_CHANGE = "mollify-password-dialog-button-change";
 
-	public static final String CONFIGURATION_DIALOG = null;
-	public static final String CONFIGURATION_DIALOG_BUTTONS = null;
-	public static final String CONFIGURATION_DIALOG_BUTTON_CLOSE = null;
+	public static final String CONFIGURATION_DIALOG = "configuration-dialog";
+	public static final String CONFIGURATION_DIALOG_CONTENT = "mollify-configuration-dialog-content";
+	public static final String CONFIGURATION_DIALOG_BUTTONS = "mollify-configuration-dialog-buttons";
+	public static final String CONFIGURATION_DIALOG_BUTTON_CLOSE = "configuration-dialog-close";
+	public static final String CONFIGURATION_DIALOG_MENU = "mollify-configuration-dialog-menu";
+	public static final String CONFIGURATION_DIALOG_MENU_ITEM = "mollify-configuration-dialog-menu-item";
+	public static final String CONFIGURATION_DIALOG_MENU_ITEM_USERS = "users";
+	public static final String CONFIGURATION_DIALOG_CONTENT_PANEL = "mollify-configuration-dialog-content-panel";
+	public static final String CONFIGURATION_DIALOG_VIEW_PANEL = "mollify-configuration-dialog-view-panel";
+	public static final String CONFIGURATION_DIALOG_VIEW_TITLE = "mollify-configuration-dialog-view-title";
+	public static final String CONFIGURATION_DIALOG_VIEW = "mollify-configuration-dialog-view";
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS = "users";
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS_LIST = "configuration";
 
-	public static final String CONFIGURATION_DIALOG_MENU = null;
-
-	public static final String CONFIGURATION_DIALOG_MENU_ITEM = null;
-
-	public static final String CONFIGURATION_DIALOG_MENU_ITEM_USERS = null;
-
-	public static final String CONFIGURATION_DIALOG_VIEW = null;
-
-	public static final String CONFIGURATION_DIALOG_VIEW_USERS = null;
+	public static final String USER_LIST_HEADER = "mollify-userlist-column";
+	public static final String USER_LIST_COLUMN_PREFIX = "mollify-userlist-column-";
+	public static final String USER_LIST = "mollify-userlist";
 }

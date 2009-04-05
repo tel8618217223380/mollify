@@ -224,8 +224,9 @@ public class Grid<T> extends FlexTable {
 
 			for (GridColumn col : columns) {
 				dataProvider.getData(t, col).applyTo(row, column, this);
-				getCellFormatter().addStyleName(row, column,
-						dataProvider.getColumnStyle(col));
+				String columnStyle = dataProvider.getColumnStyle(col);
+				if (columnStyle != null)
+					getCellFormatter().addStyleName(row, column, columnStyle);
 				column++;
 			}
 

@@ -41,7 +41,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 			int level, DirectoryProvider directoryProvider,
 			DirectoryListener listener, TextProvider textProvider,
 			Element parent, Element opener) {
-		super(null, parent, opener);
+		super(null, parent, opener, null);
 
 		this.level = level;
 		this.directoryProvider = directoryProvider;

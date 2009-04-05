@@ -182,4 +182,10 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String configurationDialogSettingUsers();
 
+	public String configurationDialogSettingUsersViewTitle();
+
+	public String userListColumnTitleName();
+
+	public String userListColumnTitleType();
+
 }

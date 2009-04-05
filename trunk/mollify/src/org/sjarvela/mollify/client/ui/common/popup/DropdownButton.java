@@ -24,37 +24,39 @@ public class DropdownButton extends Composite {
 	private ActionButton button;
 	private DropdownPopupMenu menu;
 
-	public DropdownButton(ActionListener actionListener, String title,
-			String id, boolean absolutePosition) {
-		this(actionListener, title, id);
-		if (absolutePosition)
-			menu.setParentElement(this.getElement());
+	public DropdownButton(ActionListener actionListener, String title, String id) {
+		this(actionListener, title, id, null, null);
 	}
 
 	public DropdownButton(ActionListener actionListener, String title,
 			String id, Element parent) {
-		this(actionListener, title, id);
-		menu.setParentElement(parent);
+		this(actionListener, title, id, parent, null);
 	}
 
-	public DropdownButton(ActionListener actionListener, String title, String id) {
+	public DropdownButton(ActionListener actionListener, String title,
+			String id, Element parent, DropdownPopupListener listener) {
 		button = new ActionButton(title, id == null ? null : id + "-button",
 				StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
 		menu = new DropdownPopupMenu<String>(actionListener, null, button
-				.getElement());
+				.getElement(), listener);
 		if (id != null)
 			menu.getElement().setId(id + "-menu");
 
 		button.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				menu.show();
+				menu.showMenu();
 			}
 		});
 
 		if (id != null)
 			getElement().setId(id);
+
+		if (parent != null)
+			menu.setParentElement(parent);
+		else
+			menu.setParentElement(this.getElement());
 	}
 
 	public void setText(String text) {

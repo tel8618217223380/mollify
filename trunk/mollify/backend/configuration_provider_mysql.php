@@ -85,10 +85,10 @@
 			return FALSE;
 		}
 		
-		_query(sprintf("UPDATE user SET password VALUES ('%s') WHERE id='%s'", mysql_real_escape_string($new), mysql_real_escape_string($id)));
+		_query(sprintf("UPDATE user SET password='%s' WHERE id='%s'", mysql_real_escape_string($new), mysql_real_escape_string($id)));
 		
-		if (mysql_affected_rows() != 1) {
-			log_error("Invalid change password request (user ".$id."), change affected ".mysql_affected_rows());
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid change password request, user ".$id." not found");
 			$error = "INVALID_REQUEST";
 			return FALSE;
 		}

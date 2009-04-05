@@ -18,13 +18,15 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.SessionInfo.PermissionMode;
+import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -34,6 +36,7 @@ import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.util.Browser;
 
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -138,8 +141,17 @@ public class MainView extends Composite {
 	}
 
 	private Widget createUserName() {
-		username = new DropdownButton(actionListener, "", "username", false);
+		username = new DropdownButton(actionListener, "", "username", null,
+				new DropdownPopupListener() {
+					public void setPosition(DropdownPopup popup,
+							Element parent, int offsetWidth, int offsetHeight) {
+						int x = Math.min(parent.getAbsoluteLeft(),
+								MainView.this.getOffsetWidth() - offsetWidth);
+						popup.setPopupPosition(x, parent.getAbsoluteTop());
+					}
+				});
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
+
 		if (model.getSessionInfo().getConfigurationInfo()
 				.isConfigurationUpdateSupported()) {
 			username.addAction(Action.changePassword, textProvider.getStrings()

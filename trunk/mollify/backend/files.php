@@ -46,7 +46,7 @@
 	}
 
 	function get_root_path($id) {
-		$roots = get_roots($_SESSION['user_id']);
+		$roots = $_SESSION["roots"];
 		if (!array_key_exists($id, $roots)) return FALSE;
 		return $roots[$id]["path"];
 	}
@@ -123,16 +123,45 @@
 		foreach($files as $i => $name) {
 			if (substr($name, 0, 1) == '.') continue;
 
-			$fullPath = $path.DIRECTORY_SEPARATOR.$name;
-			if (!is_dir($fullPath)) continue;
+			$full_path = $path.DIRECTORY_SEPARATOR.$name;
+			if (!is_dir($full_path)) continue;
 	
 			$result[] = array(
-				"id" => get_filesystem_id($root, $fullPath),
+				"id" => get_filesystem_id($root, $full_path),
 				"root" => $root,
 				"name" => $name
 			);
 		}
 		
+		return $result;
+	}
+	
+	function get_directory_list() {
+		global $error, $error_details;
+		$result = array();
+		
+		if (isset($_GET["dir"])) {
+			$item = get_fileitem_from_url("dir");
+			if (!assert_dir($item)) return FALSE;
+		} else if (isset($_GET["file"])) {
+			$item = get_fileitem_from_url("file");
+			if (!assert_file($item)) return FALSE;
+		}
+		
+		$path = $item["path"];
+		$root_id = $item["root"];
+		$root_path = get_root_path($root_id);
+		
+		while (true) {
+			$path = dirname($path);
+			$result[] = array(
+				"id" => get_filesystem_id($root_id, $path),
+				"root" => $root,
+				"name" => $name
+			);
+			if ($path === '' or $path === $root_path) break;
+		}
+			
 		return $result;
 	}
 	

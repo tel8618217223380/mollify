@@ -19,19 +19,25 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopup extends PopupPanel {
+	private final DropdownPopupListener listener;
 	private Element parent;
 	private Element opener;
 	protected Panel container;
-
 	boolean cancelShow = false;
 
 	public DropdownPopup(Element parent, Element opener) {
+		this(parent, opener, null);
+	}
+
+	public DropdownPopup(Element parent, Element opener,
+			DropdownPopupListener listener) {
 		super(true);
 
 		this.opener = opener;
 		this.parent = parent;
-		this.container = createContainer();
+		this.listener = listener;
 
+		this.container = createContainer();
 		setWidget(container);
 	}
 
@@ -47,6 +53,19 @@ public class DropdownPopup extends PopupPanel {
 		container.clear();
 	}
 
+	public void showMenu() {
+		this.setPopupPositionAndShow(new PositionCallback() {
+			public void setPosition(int offsetWidth, int offsetHeight) {
+				if (listener != null)
+					listener.setPosition(DropdownPopup.this, parent,
+							offsetWidth, offsetHeight);
+				else if (parent != null)
+					setPopupPosition(parent.getAbsoluteLeft(), parent
+							.getAbsoluteTop());
+			}
+		});
+	}
+
 	@Override
 	public void show() {
 		if (cancelShow) {
@@ -54,11 +73,8 @@ public class DropdownPopup extends PopupPanel {
 			return;
 		}
 
-		if (parent != null)
-			setPopupPosition(parent.getAbsoluteLeft(), parent.getAbsoluteTop());
-
-		super.show();
 		onShow();
+		super.show();
 	}
 
 	protected void onShow() {

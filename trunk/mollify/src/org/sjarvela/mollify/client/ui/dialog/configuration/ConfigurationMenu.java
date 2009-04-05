@@ -1,4 +1,17 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.ui.dialog.configuration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -10,9 +23,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfigurationMenu extends VerticalPanel {
-	private final MenuSelectionListener listener;
+	private final ConfigurationMenuSelectionListener listener;
+	private Widget selected = null;
+	private Map<ResourceId, Widget> items = new HashMap();
 
-	public ConfigurationMenu(MenuSelectionListener listener) {
+	public ConfigurationMenu(ConfigurationMenuSelectionListener listener) {
 		super();
 		this.listener = listener;
 		setStyleName(StyleConstants.CONFIGURATION_DIALOG_MENU);
@@ -23,17 +38,28 @@ public class ConfigurationMenu extends VerticalPanel {
 	}
 
 	private Widget createItem(final ResourceId id, String title, String style) {
-		Label item = new Label(title);
+		final Label item = new Label(title);
 		item.setStylePrimaryName(StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM);
 		item.addStyleDependentName(style);
 		HoverDecorator.decorate(item);
 
+		items.put(id, item);
 		item.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				listener.onItemSelected(id);
+				selectItem(id);
 			}
 		});
 		return item;
+	}
+
+	public void selectItem(ResourceId id) {
+		if (selected != null)
+			selected.removeStyleDependentName(StyleConstants.SELECTED);
+
+		selected = items.get(id);
+		selected.addStyleDependentName(StyleConstants.SELECTED);
+
+		listener.onConfigurationItemSelected(id);
 	}
 
 }

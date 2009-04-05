@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
+package org.sjarvela.mollify.client.ui.dialog.configuration;
+
+import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.Settings;
+
+public class ConfigurationViewManager {
+	private final SettingsService service;
+	private final TextProvider textProvider;
+	private final ConfigurationDialog dialog;
+
+	public ConfigurationViewManager(TextProvider textProvider,
+			SettingsService service, ConfigurationDialog dialog) {
+		this.textProvider = textProvider;
+		this.service = service;
+		this.dialog = dialog;
+	}
+
+	public ConfigurationSettingsView createView(ResourceId id) {
+		if (id.equals(Settings.Users)) {
+			ConfigurationSettingsUsersView view = new ConfigurationSettingsUsersView(
+					textProvider);
+			ConfigurationSettingsUsersPresenter presenter = new ConfigurationSettingsUsersPresenter(
+					service, dialog, view);
+			new ConfigurationSettingsUsersGlue(view, presenter);
+			return view;
+		}
+		return null;
+	}
+
+}
