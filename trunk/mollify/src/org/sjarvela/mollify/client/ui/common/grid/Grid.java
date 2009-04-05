@@ -46,6 +46,8 @@ public class Grid<T> extends FlexTable {
 	private Element headerRow;
 
 	private List<T> content = new ArrayList();
+	private List<T> selected = new ArrayList();
+	private SelectionMode selectionMode = SelectionMode.None;
 	private GridDataProvider<T> dataProvider = null;
 	private GridComparator<T> comparator = null;
 	private Map<Element, Widget> eventWidgets = new HashMap();
@@ -62,6 +64,7 @@ public class Grid<T> extends FlexTable {
 		initializeElement();
 		initializeColumns();
 
+		sinkEvents(Event.ONCLICK);
 		sinkEvents(Event.ONMOUSEOVER);
 		sinkEvents(Event.ONMOUSEOUT);
 	}
@@ -151,6 +154,15 @@ public class Grid<T> extends FlexTable {
 			listener.onColumnSorted(column, sort);
 	}
 
+	public void setSelectionMode(SelectionMode mode) {
+		selectionMode = mode;
+		removeAllSelections();
+	}
+
+	public List<T> getSelected() {
+		return selected;
+	}
+
 	private Sort toggleSort(Sort sort) {
 		if (Sort.asc.equals(sort))
 			return Sort.desc;
@@ -231,6 +243,7 @@ public class Grid<T> extends FlexTable {
 			}
 
 			List<String> styles = dataProvider.getRowStyles(t);
+
 			for (String style : styles)
 				getRowFormatter().addStyleName(row, style);
 
@@ -239,6 +252,8 @@ public class Grid<T> extends FlexTable {
 			else
 				rowStyles.add(DEFAULT_ROW_STYLE);
 
+			if (selected.contains(t))
+				addSelectedStyle(t);
 			row++;
 		}
 	}
@@ -254,6 +269,24 @@ public class Grid<T> extends FlexTable {
 	protected void onClick(T t, GridColumn column) {
 		for (GridListener listener : listeners)
 			listener.onColumnClicked(t, column);
+	}
+
+	private void removeAllSelections() {
+		for (T t : selected)
+			removeSelectedStyle(t);
+		selected.clear();
+	}
+
+	private void addSelectedStyle(T t) {
+		int row = content.indexOf(t);
+		getRowFormatter().addStyleName(row,
+				rowStyles.get(row) + "-" + StyleConstants.SELECTED);
+	}
+
+	private void removeSelectedStyle(T t) {
+		int row = content.indexOf(t);
+		getRowFormatter().removeStyleName(row,
+				rowStyles.get(row) + "-" + StyleConstants.SELECTED);
 	}
 
 	public void onIconClicked(T t) {
@@ -310,6 +343,9 @@ public class Grid<T> extends FlexTable {
 			return;
 
 		switch (DOM.eventGetType(event)) {
+		case Event.ONCLICK:
+			if (!selectionMode.equals(SelectionMode.None))
+				updateSelection(row);
 		case Event.ONMOUSEOVER:
 			this.getRowFormatter().addStyleName(row,
 					rowStyles.get(row) + "-" + StyleConstants.HOVER);
@@ -320,6 +356,18 @@ public class Grid<T> extends FlexTable {
 					rowStyles.get(row) + "-" + StyleConstants.HOVER);
 			break;
 		}
+	}
+
+	private void updateSelection(int row) {
+		if (selectionMode.equals(SelectionMode.Single))
+			removeAllSelections();
+
+		T t = content.get(row);
+		selected.add(t);
+		addSelectedStyle(t);
+
+		for (GridListener listener : listeners)
+			listener.onSelectionChanged(selected);
 	}
 
 	private int getEventRowNumber(Event event) {

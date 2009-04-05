@@ -220,13 +220,13 @@ public class MainView extends Composite {
 	public void showFileContext(File file) {
 		fileContext.update(file, list.getWidget(file, FileList.COLUMN_NAME)
 				.getElement());
-		fileContext.show();
+		fileContext.showMenu();
 	}
 
 	public void showDirectoryContext(Directory directory) {
 		dirContext.update(directory, list.getWidget(directory,
 				FileList.COLUMN_NAME).getElement());
-		dirContext.show();
+		dirContext.showMenu();
 	}
 
 	public ActionButton getRefreshButton() {
