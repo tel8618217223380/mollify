@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.common;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -37,10 +37,10 @@ public class ActionButton extends Button {
 	}
 
 	public void setAction(final ActionListener actionListener,
-			final Action action) {
+			final ResourceId actionId) {
 		this.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				actionListener.onActionTriggered(action);
+				actionListener.onActionTriggered(actionId);
 			}
 		});
 	}

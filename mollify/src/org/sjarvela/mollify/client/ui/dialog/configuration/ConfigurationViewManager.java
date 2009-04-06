@@ -13,7 +13,11 @@ package org.sjarvela.mollify.client.ui.dialog.configuration;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.Settings;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersView;
 
 public class ConfigurationViewManager {
 	private final SettingsService service;
@@ -28,15 +32,20 @@ public class ConfigurationViewManager {
 	}
 
 	public ConfigurationSettingsView createView(ResourceId id) {
-		if (id.equals(Settings.Users)) {
-			ConfigurationSettingsUsersView view = new ConfigurationSettingsUsersView(
-					textProvider);
-			ConfigurationSettingsUsersPresenter presenter = new ConfigurationSettingsUsersPresenter(
-					service, dialog, view);
-			new ConfigurationSettingsUsersGlue(view, presenter);
-			return view;
-		}
+		if (id.equals(Settings.Users))
+			return createUsersView();
+
 		return null;
+	}
+
+	private ConfigurationSettingsView createUsersView() {
+		ActionDelegator actionDelegator = new ActionDelegator();
+		ConfigurationSettingsUsersView view = new ConfigurationSettingsUsersView(
+				textProvider, actionDelegator);
+		ConfigurationSettingsUsersPresenter presenter = new ConfigurationSettingsUsersPresenter(
+				service, dialog, view);
+		new ConfigurationSettingsUsersGlue(view, presenter, actionDelegator);
+		return view;
 	}
 
 }
