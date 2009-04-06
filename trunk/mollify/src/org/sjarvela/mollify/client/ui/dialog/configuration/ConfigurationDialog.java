@@ -134,4 +134,8 @@ public class ConfigurationDialog extends CenteredDialog implements
 			}
 		};
 	}
+
+	public DialogManager getDialogManager() {
+		return dialogManager;
+	}
 }

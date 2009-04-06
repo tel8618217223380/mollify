@@ -52,7 +52,6 @@ public class MainViewFactory {
 						.getSettings());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
-		// create view, presenter and glue
 		MainView view = new MainView(model, textProvider, actionDelegator,
 				directorySelectorFactory, fileContextPopupFactory,
 				directoryContextPopupFactory);

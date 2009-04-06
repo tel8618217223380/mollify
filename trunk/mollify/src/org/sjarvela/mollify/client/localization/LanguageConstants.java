@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.localization;
 
-
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 	public String shortDateTimeFormat();
 
@@ -184,8 +183,24 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String configurationDialogSettingUsersViewTitle();
 
+	public String configurationDialogSettingUsersAdd();
+
+	public String configurationDialogSettingUsersRemove();
+
 	public String userListColumnTitleName();
 
 	public String userListColumnTitleType();
+
+	public String userDialogAddTitle();
+
+	public String userDialogEditTitle();
+
+	public String userDialogUserName();
+
+	public String userDialogUserType();
+
+	public String userDialogPassword();
+
+	public String userDialogGeneratePassword();
 
 }

@@ -24,8 +24,10 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
+import org.sjarvela.mollify.client.session.DefaultPasswordGenerator;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
+import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
@@ -38,13 +40,16 @@ import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserDialog;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserHandler;
 
 public class DialogManager {
 	private TextProvider textProvider;
+	private PasswordGenerator passwordGenerator;
 
 	public DialogManager(TextProvider textProvider) {
-		super();
 		this.textProvider = textProvider;
+		this.passwordGenerator = new DefaultPasswordGenerator();
 	}
 
 	public void showLoginDialog(LoginHandler loginHandler) {
@@ -109,6 +114,10 @@ public class DialogManager {
 
 	public void openConfigurationDialog(SettingsService service) {
 		new ConfigurationDialog(textProvider, this, service);
+	}
+
+	public void openAddUserDialog(UserHandler handler) {
+		new UserDialog(textProvider, passwordGenerator, handler);
 	}
 
 }

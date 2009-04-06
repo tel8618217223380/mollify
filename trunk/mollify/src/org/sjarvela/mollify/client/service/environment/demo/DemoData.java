@@ -79,11 +79,11 @@ public class DemoData {
 
 		files = new ArrayList();
 		files.add(new File(FILE_1A1, "Example.txt", "txt", 128));
-		files.add(new File(FILE_1A2, "Example.gif", "gif", 2228));
-		files.add(new File(FILE_1A3, "Example.png", "png", 64434));
-		files.add(new File(FILE_1A4, "Example.pdf", "pdf", 113428));
-		files.add(new File(FILE_1A5, "Example.doc", "doc", 5634347));
-		files.add(new File(FILE_1A6, "Example.html", "html", 23433231));
+		files.add(new File(FILE_1A2, "Picture.gif", "gif", 2228));
+		files.add(new File(FILE_1A3, "Picture.png", "png", 64434));
+		files.add(new File(FILE_1A4, "Portable Document Format.pdf", "pdf", 113428));
+		files.add(new File(FILE_1A5, "Word Document.doc", "doc", 5634347));
+		files.add(new File(FILE_1A6, "Web page.html", "html", 23433231));
 	}
 
 	public SessionInfo getSessionInfo(String user) {
