@@ -194,24 +194,28 @@ public class StyleConstants {
 	public static final String PASSWORD_CONFIRM_NEW_PASSWORD_TITLE = "mollify-password-dialog-confirm-new-password-title";
 	public static final String PASSWORD_CONFIRM_NEW_PASSWORD_VALUE = "mollify-password-dialog-confirm-new-password-value";
 	public static final String PASSWORD_DIALOG_BUTTONS = "mollify-password-dialog-buttons";
-	public static final String PASSWORD_DIALOG_BUTTON_CHANGE = "mollify-password-dialog-button-change";
+	public static final String PASSWORD_DIALOG_BUTTON_CHANGE = "password-change";
 
 	public static final String CONFIGURATION_DIALOG = "configuration-dialog";
 	public static final String CONFIGURATION_DIALOG_CONTENT = "mollify-configuration-dialog-content";
 	public static final String CONFIGURATION_DIALOG_BUTTONS = "mollify-configuration-dialog-buttons";
 	public static final String CONFIGURATION_DIALOG_BUTTON_CLOSE = "configuration-dialog-close";
+	public static final String CONFIGURATION_DIALOG_MENU_PANEL = "mollify-configuration-dialog-menu-panel";
 	public static final String CONFIGURATION_DIALOG_MENU = "mollify-configuration-dialog-menu";
 	public static final String CONFIGURATION_DIALOG_MENU_ITEM = "mollify-configuration-dialog-menu-item";
 	public static final String CONFIGURATION_DIALOG_MENU_ITEM_USERS = "users";
+	public static final String CONFIGURATION_DIALOG_MENU_ITEM_FOLDERS = "folders";
 	public static final String CONFIGURATION_DIALOG_CONTENT_PANEL = "mollify-configuration-dialog-content-panel";
 	public static final String CONFIGURATION_DIALOG_VIEW_PANEL = "mollify-configuration-dialog-view-panel";
 	public static final String CONFIGURATION_DIALOG_VIEW_TITLE = "mollify-configuration-dialog-view-title";
 	public static final String CONFIGURATION_DIALOG_VIEW = "mollify-configuration-dialog-view";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS = "users";
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS_LIST_PANEL = "mollify-configuration-dialog-view-user-list";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_LIST = "configuration";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTIONS = "mollify-configuration-dialog-users-actions";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION = "mollify-configuration-dialog-users-action";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_ADD = "mollify-configuration-dialog-users-action-add";
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_EDIT = "mollify-configuration-dialog-users-action-edit";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_REMOVE = "mollify-configuration-dialog-users-action-remove";
 
 	public static final String USER_LIST_HEADER = "mollify-userlist-column";
@@ -229,6 +233,5 @@ public class StyleConstants {
 	public static final String USER_DIALOG_TYPE_VALUE = "mollify-user-dialog-type-value";
 	public static final String USER_DIALOG_PASSWORD_TITLE = "mollify-user-dialog-password-title";
 	public static final String USER_DIALOG_PASSWORD_VALUE = "mollify-user-dialog-password-value";
-	public static final String USER_DIALOG_GENERATE_PASSWORD = "mollify-user-dialog-generate-password";
-
+	public static final String USER_DIALOG_GENERATE_PASSWORD = "user-generate-password";
 }

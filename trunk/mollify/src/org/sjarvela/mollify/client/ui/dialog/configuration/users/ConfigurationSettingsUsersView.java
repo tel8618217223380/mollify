@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.UserList;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationSettingsView;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,9 +26,10 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 	private final UserList list;
 	private final ActionButton addUserButton;
 	private final ActionButton removeUserButton;
+	private ActionButton editUserButton;
 
 	public enum Actions implements ResourceId {
-		addUser, removeUser
+		addUser, editUser, removeUser
 	}
 
 	public ConfigurationSettingsUsersView(TextProvider textProvider,
@@ -43,6 +44,12 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION);
 		addUserButton.setAction(actionListener, Actions.addUser);
 
+		editUserButton = new ActionButton(textProvider.getStrings()
+				.configurationDialogSettingUsersEdit(),
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION_EDIT,
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION);
+		editUserButton.setAction(actionListener, Actions.editUser);
+
 		removeUserButton = new ActionButton(textProvider.getStrings()
 				.configurationDialogSettingUsersRemove(),
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION_REMOVE,
@@ -54,14 +61,19 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 	}
 
 	private Widget createList() {
-		return list;
+		Panel panel = new FlowPanel();
+		panel
+				.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_LIST_PANEL);
+		panel.add(list);
+		return panel;
 	}
 
 	private Widget createButtons() {
-		Panel userActions = new HorizontalPanel();
+		Panel userActions = new FlowPanel();
 		userActions
 				.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTIONS);
 		userActions.add(addUserButton);
+		userActions.add(editUserButton);
 		userActions.add(removeUserButton);
 		return userActions;
 	}

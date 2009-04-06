@@ -180,10 +180,14 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String configurationDialogCloseButton();
 
 	public String configurationDialogSettingUsers();
+	
+	public String configurationDialogSettingFolders();
 
 	public String configurationDialogSettingUsersViewTitle();
 
 	public String configurationDialogSettingUsersAdd();
+	
+	public String configurationDialogSettingUsersEdit();
 
 	public String configurationDialogSettingUsersRemove();
 
@@ -202,5 +206,9 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String userDialogPassword();
 
 	public String userDialogGeneratePassword();
+
+	public String userDialogAddButton();
+
+	public String userDialogEditButton();
 
 }
