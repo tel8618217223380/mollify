@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfigurationDialog extends CenteredDialog implements
@@ -39,12 +38,12 @@ public class ConfigurationDialog extends CenteredDialog implements
 	private final ConfigurationViewManager viewManager;
 
 	private ConfigurationMenu menu;
-	private FlowPanel settings;
+	private FlowPanel settingsView;
 	private Label title;
 	private final DialogManager dialogManager;
 
 	public enum Settings implements ResourceId {
-		Users
+		Users, Folders
 	}
 
 	public ConfigurationDialog(TextProvider textProvider,
@@ -55,6 +54,14 @@ public class ConfigurationDialog extends CenteredDialog implements
 		this.dialogManager = dialogManager;
 		this.viewManager = new ConfigurationViewManager(textProvider, service,
 				this);
+
+		menu = new ConfigurationMenu(this);
+		menu.addItem(Settings.Users, textProvider.getStrings()
+				.configurationDialogSettingUsers(),
+				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_USERS);
+		menu.addItem(Settings.Folders, textProvider.getStrings()
+				.configurationDialogSettingFolders(),
+				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_FOLDERS);
 
 		initialize();
 	}
@@ -69,24 +76,25 @@ public class ConfigurationDialog extends CenteredDialog implements
 	}
 
 	private Widget createMenu() {
-		menu = new ConfigurationMenu(this);
-		menu.addItem(Settings.Users, textProvider.getStrings()
-				.configurationDialogSettingUsers(),
-				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_USERS);
-		return menu;
+		Panel panel = new FlowPanel();
+		panel.setStyleName(StyleConstants.CONFIGURATION_DIALOG_MENU_PANEL);
+		panel.add(menu);
+		return panel;
 	}
 
 	private Widget createSettingsPanel() {
-		Panel panel = new VerticalPanel();
+		Panel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.CONFIGURATION_DIALOG_CONTENT_PANEL);
 
 		title = new Label();
 		title.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_TITLE);
 		panel.add(title);
 
-		settings = new FlowPanel();
-		settings.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_PANEL);
-		panel.add(settings);
+		settingsView = new FlowPanel();
+		settingsView
+				.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_PANEL);
+		panel.add(settingsView);
+
 		return panel;
 	}
 
@@ -94,6 +102,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 	protected Widget createButtons() {
 		Panel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.CONFIGURATION_DIALOG_BUTTONS);
+
 		buttons.add(createButton(textProvider.getStrings()
 				.configurationDialogCloseButton(), new ClickListener() {
 			public void onClick(Widget sender) {
@@ -111,8 +120,8 @@ public class ConfigurationDialog extends CenteredDialog implements
 
 	public void onConfigurationItemSelected(ResourceId id) {
 		ConfigurationSettingsView view = getSettingsView(id);
-		settings.clear();
-		settings.add(view);
+		settingsView.clear();
+		settingsView.add(view);
 		title.setText(view.getTitle());
 	}
 

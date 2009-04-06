@@ -110,8 +110,9 @@ public class UserDialog extends CenteredDialog {
 
 		Button generatePassword = new Button(textProvider.getStrings()
 				.userDialogGeneratePassword());
+		generatePassword.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
 		generatePassword
-				.setStyleName(StyleConstants.USER_DIALOG_GENERATE_PASSWORD);
+				.addStyleDependentName(StyleConstants.USER_DIALOG_GENERATE_PASSWORD);
 		generatePassword.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				generateNewPassword();
@@ -128,9 +129,11 @@ public class UserDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.ADD_USER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings()
-				.passwordDialogChangeButton(), new ClickListener() {
+		String title = mode.equals(Mode.Add) ? textProvider.getStrings()
+				.userDialogAddButton() : textProvider.getStrings()
+				.userDialogEditButton();
 
+		buttons.add(createButton(title, new ClickListener() {
 			public void onClick(Widget sender) {
 				if (mode.equals(Mode.Add))
 					onAddUser();
