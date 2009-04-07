@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 
 public class PhpSettingsService implements SettingsService {
@@ -30,6 +31,23 @@ public class PhpSettingsService implements SettingsService {
 	}
 
 	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void addUser(String name, String password, PermissionMode mode,
+			ResultListener resultListener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void editUser(User user, String name, PermissionMode mode,
+			ResultListener resultListener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void removeUser(User selected, ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}

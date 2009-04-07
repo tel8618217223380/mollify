@@ -31,7 +31,10 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 		this.view = view;
 
 		view.list().setSelectionMode(SelectionMode.Single);
+		reload();
+	}
 
+	private void reload() {
 		service.getUsers(dialog
 				.createResultListener(new ResultCallback<List<User>>() {
 					public void onCallback(List<User> list) {
@@ -48,15 +51,43 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 		dialog.getDialogManager().openAddUserDialog(this);
 	}
 
-	public void onRemoveUser() {
+	public void onEditUser() {
+		if (view.list().getSelected().size() != 1)
+			return;
 
+		User selected = view.list().getSelected().get(0);
+		dialog.getDialogManager().openEditUserDialog(this, selected);
+	}
+
+	public void onRemoveUser() {
+		if (view.list().getSelected().size() != 1)
+			return;
+
+		User selected = view.list().getSelected().get(0);
+		service.removeUser(selected, dialog
+				.createResultListener(new ResultCallback<Boolean>() {
+					public void onCallback(Boolean result) {
+						reload();
+					}
+				}));
 	}
 
 	public void addUser(String name, String password, PermissionMode mode) {
-
+		service.addUser(name, password, mode, dialog
+				.createResultListener(new ResultCallback<Boolean>() {
+					public void onCallback(Boolean result) {
+						reload();
+					}
+				}));
 	}
 
-	public void editUser(String name, PermissionMode mode) {
-
+	public void editUser(User user, String name, PermissionMode mode) {
+		service.editUser(user, name, mode, dialog
+				.createResultListener(new ResultCallback<Boolean>() {
+					public void onCallback(Boolean result) {
+						reload();
+					}
+				}));
 	}
+
 }

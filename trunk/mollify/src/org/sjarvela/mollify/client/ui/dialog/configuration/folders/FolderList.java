@@ -40,9 +40,9 @@ public class FolderList extends Grid<DirectoryInfo> implements
 	private static List<GridColumn> getColumns(TextProvider textProvider) {
 		if (ALL_COLUMNS == null) {
 			COLUMN_NAME = new DefaultGridColumn("name", textProvider
-					.getStrings().userListColumnTitleName(), false);
+					.getStrings().folderListColumnTitleName(), false);
 			COLUMN_LOCATION = new DefaultGridColumn("location", textProvider
-					.getStrings().userListColumnTitleType(), false);
+					.getStrings().folderListColumnTitleLocation(), false);
 
 			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
 					(GridColumn) COLUMN_LOCATION);

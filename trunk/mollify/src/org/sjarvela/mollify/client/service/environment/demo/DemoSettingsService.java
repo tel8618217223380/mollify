@@ -34,4 +34,18 @@ public class DemoSettingsService implements SettingsService {
 				new Directory("", "Another Folder"), "/bar/foo")));
 	}
 
+	public void addUser(String name, String password, PermissionMode mode,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void editUser(User user, String name, PermissionMode mode,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void removeUser(User selected, ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
 }

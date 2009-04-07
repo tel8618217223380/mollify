@@ -217,4 +217,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String userDialogEditButton();
 
+	public String folderListColumnTitleName();
+
+	public String folderListColumnTitleLocation();
+
 }
