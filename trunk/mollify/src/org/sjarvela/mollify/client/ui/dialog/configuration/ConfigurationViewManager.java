@@ -15,6 +15,9 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.Settings;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersView;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersGlue;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersPresenter;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersView;
@@ -34,6 +37,8 @@ public class ConfigurationViewManager {
 	public ConfigurationSettingsView createView(ResourceId id) {
 		if (id.equals(Settings.Users))
 			return createUsersView();
+		else if (id.equals(Settings.Folders))
+			return createFoldersView();
 
 		return null;
 	}
@@ -48,4 +53,13 @@ public class ConfigurationViewManager {
 		return view;
 	}
 
+	private ConfigurationSettingsView createFoldersView() {
+		ActionDelegator actionDelegator = new ActionDelegator();
+		ConfigurationSettingsFoldersView view = new ConfigurationSettingsFoldersView(
+				textProvider, actionDelegator);
+		ConfigurationSettingsFoldersPresenter presenter = new ConfigurationSettingsFoldersPresenter(
+				service, dialog, view);
+		new ConfigurationSettingsFoldersGlue(view, presenter, actionDelegator);
+		return view;
+	}
 }

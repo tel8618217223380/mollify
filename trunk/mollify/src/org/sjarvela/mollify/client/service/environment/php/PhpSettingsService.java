@@ -12,17 +12,24 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 
 public class PhpSettingsService implements SettingsService {
+	private final PhpService service;
 
 	public PhpSettingsService(PhpService service) {
-		// TODO Auto-generated constructor stub
+		this.service = service;
 	}
 
 	public void getUsers(ResultListener<List<User>> resultListener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
 		// TODO Auto-generated method stub
 
 	}

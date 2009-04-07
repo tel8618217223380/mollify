@@ -126,7 +126,7 @@ public class UserDialog extends CenteredDialog {
 	@Override
 	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.ADD_USER_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.USER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		String title = mode.equals(Mode.Add) ? textProvider.getStrings()
@@ -140,7 +140,7 @@ public class UserDialog extends CenteredDialog {
 				else
 					onEditUser();
 			}
-		}, StyleConstants.ADD_USER_BUTTON_ADD));
+		}, StyleConstants.USER_DIALOG_BUTTON_ADD));
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
