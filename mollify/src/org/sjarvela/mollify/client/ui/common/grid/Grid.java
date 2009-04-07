@@ -86,7 +86,7 @@ public class Grid<T> extends FlexTable {
 	}
 
 	private void initializeColumns() {
-		assureColumnCount(columns.size());
+		addHeaderCells(headerRow, columns.size());
 
 		int index = 0;
 		for (GridColumn column : columns) {
@@ -94,6 +94,13 @@ public class Grid<T> extends FlexTable {
 			index++;
 		}
 	}
+	
+	private native void addHeaderCells(Element row, int count) /*-{ 	 
+		for(var i = 0; i < count; i++){ 
+			var cell = $doc.createElement("th"); 
+			row.appendChild(cell);   
+		} 
+	}-*/;
 
 	private void initializeColumn(int index, GridColumn column) {
 		Element th = DOM.getChild(headerRow, index);
@@ -172,22 +179,6 @@ public class Grid<T> extends FlexTable {
 	public int getColumnIndex(GridColumn column) {
 		return columns.indexOf(column);
 	}
-
-	private void assureColumnCount(int column) {
-		int cellCount = DOM.getChildCount(headerRow);
-		int required = column + 1 - cellCount;
-		if (required > 0)
-			addHeaderCells(head, required);
-	}
-
-	private native void addHeaderCells(Element table, int count) /*-{ 
-		var row = table.rows[0];
-		 
-		for(var i = 0; i < count; i++){ 
-			var cell = $doc.createElement("th"); 
-			row.appendChild(cell);   
-		} 
-	}-*/;
 
 	public void addListener(GridListener listener) {
 		listeners.add(listener);

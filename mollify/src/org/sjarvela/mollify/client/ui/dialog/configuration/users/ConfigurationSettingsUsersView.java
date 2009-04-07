@@ -92,6 +92,10 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 		return addUserButton;
 	}
 
+	public ActionButton editUserButton() {
+		return editUserButton;
+	}
+
 	public ActionButton removeUserButton() {
 		return removeUserButton;
 	}

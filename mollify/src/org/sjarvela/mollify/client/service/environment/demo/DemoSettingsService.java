@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
@@ -24,6 +26,12 @@ public class DemoSettingsService implements SettingsService {
 		resultListener.onSuccess(Arrays.asList(new User("Test User",
 				PermissionMode.Admin), new User("Another Test User",
 				PermissionMode.ReadWrite)));
+	}
+
+	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
+		resultListener.onSuccess(Arrays.asList(new DirectoryInfo(new Directory(
+				"", "Example Folder"), "/foo/bar"), new DirectoryInfo(
+				new Directory("", "Another Folder"), "/bar/foo")));
 	}
 
 }

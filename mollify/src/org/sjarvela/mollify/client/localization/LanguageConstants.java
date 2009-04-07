@@ -191,6 +191,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String configurationDialogSettingUsersRemove();
 
+	public String configurationDialogSettingFoldersViewTitle();
+
+	public String configurationDialogSettingFoldersAdd();
+
+	public String configurationDialogSettingFoldersRemove();
+	
 	public String userListColumnTitleName();
 
 	public String userListColumnTitleType();

@@ -12,11 +12,14 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 
 public interface SettingsService {
 
 	void getUsers(ResultListener<List<User>> resultListener);
+
+	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
 
 }
