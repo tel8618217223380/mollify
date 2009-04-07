@@ -27,6 +27,7 @@ public class UserDialog extends CenteredDialog {
 	private final PasswordGenerator passwordGenerator;
 	private final UserHandler handler;
 	private final Mode mode;
+	private final User user;
 
 	private TextBox userName;
 	private TextBox password;
@@ -40,18 +41,16 @@ public class UserDialog extends CenteredDialog {
 		this.mode = Mode.Add;
 		this.textProvider = textProvider;
 		this.handler = handler;
-
+		this.user = null;
+		
 		init();
 		generateNewPassword();
-	}
-
-	private void generateNewPassword() {
-		password.setText(passwordGenerator.generate());
 	}
 
 	public UserDialog(TextProvider textProvider, UserHandler handler, User user) {
 		super(textProvider.getStrings().userDialogEditTitle(),
 				StyleConstants.USER_DIALOG);
+		this.user = user;
 		this.mode = Mode.Edit;
 		this.passwordGenerator = null;
 		this.textProvider = textProvider;
@@ -67,6 +66,10 @@ public class UserDialog extends CenteredDialog {
 			userType.addItem(mode.name(), mode.getStringValue());
 	}
 
+	private void generateNewPassword() {
+		password.setText(passwordGenerator.generate());
+	}
+	
 	@Override
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
@@ -173,7 +176,7 @@ public class UserDialog extends CenteredDialog {
 		if (userType.getSelectedIndex() < 0)
 			return;
 
-		handler.editUser(userName.getText(), PermissionMode.fromString(userType
+		handler.editUser(user, userName.getText(), PermissionMode.fromString(userType
 				.getValue(userType.getSelectedIndex())));
 		this.hide();
 	}

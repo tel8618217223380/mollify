@@ -21,9 +21,13 @@ import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class ConfigurationSettingsUsersGlue {
 
+	private final ConfigurationSettingsUsersView view;
+
 	public ConfigurationSettingsUsersGlue(ConfigurationSettingsUsersView view,
 			final ConfigurationSettingsUsersPresenter presenter,
 			ActionDelegator actionDelegator) {
+		this.view = view;
+
 		view.list().addListener(new GridListener<User>() {
 			public void onColumnClicked(User t, GridColumn column) {
 			}
@@ -35,6 +39,7 @@ public class ConfigurationSettingsUsersGlue {
 			}
 
 			public void onSelectionChanged(List<User> selected) {
+				updateButtons(selected.size() == 1);
 			}
 		});
 
@@ -47,12 +52,27 @@ public class ConfigurationSettingsUsersGlue {
 				});
 
 		actionDelegator.setActionHandler(
+				ConfigurationSettingsUsersView.Actions.editUser,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onEditUser();
+					}
+				});
+
+		actionDelegator.setActionHandler(
 				ConfigurationSettingsUsersView.Actions.removeUser,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onRemoveUser();
 					}
 				});
+		
+		updateButtons(false);
+	}
+
+	protected void updateButtons(boolean selected) {
+		view.editUserButton().setEnabled(selected);
+		view.removeUserButton().setEnabled(selected);
 	}
 
 }

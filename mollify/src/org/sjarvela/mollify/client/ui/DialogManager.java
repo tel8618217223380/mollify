@@ -29,6 +29,7 @@ import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PasswordHandler;
+import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -118,6 +119,10 @@ public class DialogManager {
 
 	public void openAddUserDialog(UserHandler handler) {
 		new UserDialog(textProvider, passwordGenerator, handler);
+	}
+
+	public void openEditUserDialog(UserHandler handler, User user) {
+		new UserDialog(textProvider, handler, user);
 	}
 
 }

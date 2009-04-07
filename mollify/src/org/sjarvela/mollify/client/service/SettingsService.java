@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 
 public interface SettingsService {
@@ -21,5 +22,13 @@ public interface SettingsService {
 	void getUsers(ResultListener<List<User>> resultListener);
 
 	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
+
+	void addUser(String name, String password, PermissionMode mode,
+			ResultListener resultListener);
+
+	void removeUser(User selected, ResultListener resultListener);
+
+	void editUser(User user, String name, PermissionMode mode,
+			ResultListener resultListener);
 
 }
