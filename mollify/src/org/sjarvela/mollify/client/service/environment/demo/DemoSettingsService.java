@@ -23,8 +23,8 @@ import org.sjarvela.mollify.client.session.User;
 public class DemoSettingsService implements SettingsService {
 
 	public void getUsers(ResultListener<List<User>> resultListener) {
-		resultListener.onSuccess(Arrays.asList(new User("Test User",
-				PermissionMode.Admin), new User("Another Test User",
+		resultListener.onSuccess(Arrays.asList(User.create("1", "Test User",
+				PermissionMode.Admin), User.create("2", "Another Test User",
 				PermissionMode.ReadWrite)));
 	}
 

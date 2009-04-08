@@ -7,7 +7,7 @@ public enum PermissionMode {
 
 	public static PermissionMode fromString(String mode) {
 		for (PermissionMode permissionMode : PermissionMode.values())
-			if (permissionMode.getStringValue().equals(mode))
+			if (permissionMode.getStringValue().equalsIgnoreCase(mode))
 				return permissionMode;
 		return PermissionMode.ReadOnly;
 	}

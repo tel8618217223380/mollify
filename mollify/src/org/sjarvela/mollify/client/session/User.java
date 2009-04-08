@@ -10,22 +10,40 @@
 
 package org.sjarvela.mollify.client.session;
 
+import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 
-public class User {
-	private String name;
-	private PermissionMode type;
+import com.google.gwt.core.client.JavaScriptObject;
 
-	public User(String name, PermissionMode type) {
+public class User extends JavaScriptObject {
+	public static User create(String id, String name,
+			PermissionMode permissionMode) {
+		User result = JsDirectory.createObject().cast();
+		result.putValues(id, name, permissionMode.getStringValue());
+		return result;
+	}
+	
+	protected User() {}
+
+	public final native String getId() /*-{
+		return this.id;
+	}-*/;
+
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
+
+	private final native String getPermissionString() /*-{
+		return this.permission_mode;
+	}-*/;
+
+	public final PermissionMode getType() {
+		return PermissionMode.fromString(getPermissionString());
+	}
+
+	private final native void putValues(String id, String name,
+			String permissionMode) /*-{
+		this.id = id;
 		this.name = name;
-		this.type = type;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public PermissionMode getType() {
-		return type;
-	}
-
+		this.permission_mode = permissionMode;
+	}-*/;
 }

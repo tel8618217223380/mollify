@@ -40,12 +40,28 @@
 		$action = $_GET["action"];
 		switch ($action) {
 			case "get_users":
+				$result = get_all_users();
 				break;
 			case "add_user":
+				if (!isset($_GET["name"]) or !isset($_GET["password"]) or !isset($_GET["permission_mode"])) {
+					$error = "INVALID_REQUEST";
+					return;
+				}
+				$result = add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"]);
 				break;
 			case "remove_user":
+				if (!isset($_GET["id"])) {
+					$error = "INVALID_REQUEST";
+					return;
+				}
+				$result = remove_user($_GET["id"]);
 				break;
 			case "update_user":
+				if (!isset($_GET["id"]) or !isset($_GET["name"]) or !isset($_GET["password"]) or !isset($_GET["permission_mode"])) {
+					$error = "INVALID_REQUEST";
+					return;
+				}
+				$result = update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"]);
 				break;
 			default:
 				$error = "UNSUPPORTED_OPERATION";
