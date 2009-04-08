@@ -24,11 +24,11 @@ public interface SettingsService {
 	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
 
 	void addUser(String name, String password, PermissionMode mode,
-			ResultListener resultListener);
+			ResultListener<Boolean> resultListener);
 
-	void removeUser(User selected, ResultListener resultListener);
+	void removeUser(User user, ResultListener<Boolean> resultListener);
 
 	void editUser(User user, String name, PermissionMode mode,
-			ResultListener resultListener);
+			ResultListener<Boolean> resultListener);
 
 }

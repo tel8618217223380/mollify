@@ -94,7 +94,7 @@ public class Grid<T> extends FlexTable {
 			index++;
 		}
 	}
-	
+
 	private native void addHeaderCells(Element row, int count) /*-{ 	 
 		for(var i = 0; i < count; i++){ 
 			var cell = $doc.createElement("th"); 
@@ -199,6 +199,7 @@ public class Grid<T> extends FlexTable {
 		if (dataProvider == null)
 			throw new RuntimeException("No data provider");
 
+		selected.clear();
 		this.content = new ArrayList(list);
 		sort();
 	}

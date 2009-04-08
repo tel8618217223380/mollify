@@ -66,12 +66,57 @@
 		
 		return mysql_fetch_assoc($result);
 	}
-	
+
+	function get_all_users() {
+		$result = _query("SELECT id, name, permission_mode FROM user ORDER BY id ASC");
+		$list = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$list[] = $row;
+		}
+		mysql_free_result($result);
+		return $list;
+	}
+
 	function get_user($id) {
 		$result = _query(sprintf("SELECT id, name FROM user WHERE id='%s'", mysql_real_escape_string($id)));
 		return mysql_fetch_assoc($result);
 	}
 
+	function add_user($name, $pw, $permission) {
+		global $error, $error_details;
+				
+		_query(sprintf("INSERT INTO user (name, password, permission_mode) VALUES ('%s', '%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($pw), mysql_real_escape_string($permission)));
+		
+		return TRUE;
+	}
+
+	function update_user($id, $name, $permission) {
+		global $error, $error_details;
+				
+		_query(sprintf("UPDATE user SET name='%s', permission_mode='%s' WHERE id='%s'", mysql_real_escape_string($name), mysql_real_escape_string($permission), mysql_real_escape_string($id)));
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid update user request, user ".$id." not found");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+	
+	function remove_user($id) {
+		global $error, $error_details;
+
+		_query(sprintf("DELETE FROM user WHERE id='%s'", mysql_real_escape_string($id)));
+
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid delete user request, user ".$id." not found");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+		
 	function _get_password($id) {
 		$result = _query(sprintf("SELECT password FROM user WHERE id='%s'", mysql_real_escape_string($id)));
 		return mysql_result($result, 0);
