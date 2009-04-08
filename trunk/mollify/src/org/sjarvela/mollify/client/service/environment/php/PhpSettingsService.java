@@ -14,20 +14,31 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
+
+	enum ConfigurationAction {
+		get_users
+	}
 
 	public PhpSettingsService(PhpService service) {
 		this.service = service;
 	}
 
 	public void getUsers(ResultListener<List<User>> resultListener) {
-		// TODO Auto-generated method stub
+		if (Log.isDebugEnabled())
+			Log.debug("Get users");
 
+		service
+				.doRequest(getUrl(ConfigurationAction.get_users),
+						resultListener);
 	}
 
 	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
@@ -52,4 +63,8 @@ public class PhpSettingsService implements SettingsService {
 
 	}
 
+	private String getUrl(ConfigurationAction action) {
+		return service.getUrl(RequestType.configuration, "action="
+				+ action.name());
+	}
 }

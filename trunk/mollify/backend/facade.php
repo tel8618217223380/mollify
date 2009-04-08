@@ -12,14 +12,15 @@
 	function process_request() {
 		global $result, $error, $error_details;
 		
-		switch ($_GET["action"]) {
-			case "get":
-				if (!isset($_GET["type"])) {
+		switch (strtolower($_GET["type"])) {
+			case "file_data":
+				if (!isset($_GET["action"])) {
 					$error = "INVALID_REQUEST";
 					break;
 				}
+				$action = $_GET["action"];
 			
-				switch ($_GET["type"]) {
+				switch (strtolower($action)) {
 					case "roots":
 						$result = array();
 						foreach($_SESSION["roots"] as $id => $root) {
@@ -35,7 +36,7 @@
 						}
 						break;
 	
-					case "dirs_and_files":
+					case "contents":
 						$result = array("directories" => get_directories(),
 							"files" => get_files());
 						break;
@@ -44,7 +45,7 @@
 						$result = get_files();
 						break;
 					
-					case "dirs":
+					case "directories":
 						$result = get_directories();
 						break;
 
@@ -72,19 +73,19 @@
 						$result = get_upload_status($_GET["id"]);
 						break;
 				}
-			
 				break;
-			case "operate":
-				if (!isset($_GET["type"])) {
+				
+			case "file_action":
+				if (!isset($_GET["action"])) {
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				$operation = $_GET["type"];
+				$action = $_GET["action"];
 			
 				$file = get_fileitem_from_url("id");
 				if (!$file) return;
 			
-				switch (strtolower($operation)) {
+				switch (strtolower($action)) {
 					case "download":
 						// download writes the header and the content, just exit here
 						if (download($file)) return;
@@ -197,9 +198,13 @@
 						break;
 				}
 				break;
+			case "configuration":
+				handle_configuration_request();
+				break;
+
 			default:
 				$error = "UNSUPPORTED_ACTION";
-				$error_details = $_GET["action"];
+				$error_details = $_GET["type"];
 				break;	
 		}
 	}

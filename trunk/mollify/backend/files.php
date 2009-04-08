@@ -586,12 +586,6 @@
 		return $result;
 	}
 	
-	function has_general_modify_rights() {
-		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
-		$base = $_SESSION['default_file_permission'];
-		return ($base === $FILE_PERMISSION_VALUE_ADMIN || $base === $FILE_PERMISSION_VALUE_READWRITE);
-	}
-	
 	function has_modify_rights($item) {
 		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
 		$base = $_SESSION['default_file_permission'];
