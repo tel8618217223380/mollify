@@ -103,13 +103,13 @@ public class DemoData {
 		return rootDirectories;
 	}
 
-	public List<Directory> getDirectories(String dir) {
-		if (!directories.containsKey(dir))
+	public List<Directory> getDirectories(Directory dir) {
+		if (!directories.containsKey(dir.getId()))
 			return new ArrayList();
-		return directories.get(dir);
+		return directories.get(dir.getId());
 	}
 
-	public List<File> getFiles(String dir) {
+	public List<File> getFiles(Directory dir) {
 		return files;
 	}
 

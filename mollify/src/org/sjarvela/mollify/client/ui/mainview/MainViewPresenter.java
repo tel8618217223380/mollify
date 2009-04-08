@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -124,12 +124,12 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void reload() {
-		model.refreshData(new ResultListener<FilesAndDirs>() {
+		model.refreshData(new ResultListener<DirectoryContent>() {
 			public void onFail(ServiceError error) {
 				onError(error, false);
 			}
 
-			public void onSuccess(FilesAndDirs result) {
+			public void onSuccess(DirectoryContent result) {
 				refreshView();
 			}
 		});

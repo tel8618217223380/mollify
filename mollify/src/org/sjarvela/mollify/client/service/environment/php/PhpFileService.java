@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -47,18 +48,18 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.directories, "dir=" + parent.getId()),
-				new ResultListener<JsArray<JsDirectory>>() {
+		service.doRequest(getFileDataUrl(FileDataAction.directories, "dir="
+				+ parent.getId()), new ResultListener<JsArray<JsDirectory>>() {
 
-					public void onFail(ServiceError error) {
-						listener.onFail(error);
-					}
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
 
-					public void onSuccess(JsArray<JsDirectory> result) {
-						listener.onSuccess(FileSystemItem
-								.createFromDirectories(result));
-					}
-				});
+			public void onSuccess(JsArray<JsDirectory> result) {
+				listener
+						.onSuccess(FileSystemItem.createFromDirectories(result));
+			}
+		});
 	}
 
 	public void getRootDirectories(
@@ -79,26 +80,25 @@ public class PhpFileService implements FileSystemService {
 				});
 	}
 
-	public void getDirectoriesAndFiles(final String folder,
-			final ResultListener<FilesAndDirs> listener) {
+	public void getDirectoryContents(final Directory parent,
+			final ResultListener<DirectoryContent> listener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Get directory contents: " + folder);
+			Log.debug("Get directory contents: " + parent.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.contents, "dir=" + folder),
-				new ResultListener<DirectoriesAndFiles>() {
+		service.doRequest(getFileDataUrl(FileDataAction.contents, "dir="
+				+ parent.getId()), new ResultListener<DirectoriesAndFiles>() {
 
-					public void onFail(ServiceError error) {
-						listener.onFail(error);
-					}
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
 
-					public void onSuccess(DirectoriesAndFiles result) {
-						listener.onSuccess(new FilesAndDirs(
-								FileSystemItem.createFromDirectories(result
-										.getDirectories()), FileSystemItem
-										.createFromFiles(result.getFiles())));
-					}
+			public void onSuccess(DirectoriesAndFiles result) {
+				listener.onSuccess(new DirectoryContent(FileSystemItem
+						.createFromDirectories(result.getDirectories()),
+						FileSystemItem.createFromFiles(result.getFiles())));
+			}
 
-				});
+		});
 	}
 
 	public void getFileDetails(File item,
@@ -106,8 +106,9 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + item.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.details, getFileItemTypeParam(item),
-				"id=" + item.getId()), resultListener);
+		service.doRequest(getFileDataUrl(FileDataAction.details,
+				getFileItemTypeParam(item), "id=" + item.getId()),
+				resultListener);
 	}
 
 	public void getDirectoryDetails(Directory item,
@@ -115,8 +116,9 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.details, getFileItemTypeParam(item),
-				"id=" + item.getId()), resultListener);
+		service.doRequest(getFileDataUrl(FileDataAction.details,
+				getFileItemTypeParam(item), "id=" + item.getId()),
+				resultListener);
 	}
 
 	public void rename(FileSystemItem item, String newName,
@@ -181,7 +183,7 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public String getFileActionUrl(FileSystemItem item,
-			FileSystemAction action, List<String> params) {
+			FileSystemAction action, List<String> parameters) {
 		if (item.isEmpty()) {
 			throw new RuntimeException("No item defined, action "
 					+ action.name());
@@ -191,9 +193,10 @@ public class PhpFileService implements FileSystemService {
 					+ action.name());
 		}
 
-		params.add(0, "type=" + action.name());
-		params.add(1, "id=" + item.getId());
-		params.add(2, getFileItemTypeParam(item));
+		List<String> params = new ArrayList(parameters);
+		params.add("type=" + action.name());
+		params.add("id=" + item.getId());
+		params.add(getFileItemTypeParam(item));
 
 		return service.getUrl(RequestType.file_action, params);
 	}
@@ -202,11 +205,12 @@ public class PhpFileService implements FileSystemService {
 		return getFileDataUrl(action, Arrays.asList(params));
 	}
 
-	private String getFileDataUrl(FileDataAction action, List<String> params) {
+	private String getFileDataUrl(FileDataAction action, List<String> parameters) {
+		List<String> params = new ArrayList(parameters);
 		params.add(0, "action=" + action.name());
 		return service.getUrl(RequestType.file_data, params);
 	}
-	
+
 	private String getFileItemTypeParam(FileSystemItem item) {
 		return "item_type=" + (item.isFile() ? "f" : "d");
 	}

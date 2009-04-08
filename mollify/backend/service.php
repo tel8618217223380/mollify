@@ -81,7 +81,7 @@
 	
 	session_start();
 	if (strtolower($_GET["type"]) === "session") {
-		handle_session_request();
+		process_session_request();
 		exit(0);
 	}
 	if (!initialize_session()) return;

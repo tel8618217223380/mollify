@@ -39,7 +39,8 @@ public class PhpService {
 	public PhpService(String path, int requestTimeout) {
 		this.requestTimeout = requestTimeout;
 		this.requestBaseUrl = getBaseUrl(path);
-		Log.info("Mollify service location: " + this.requestBaseUrl);
+		Log.info("Mollify service location: " + this.requestBaseUrl
+				+ ", timeout: " + requestTimeout);
 	}
 
 	private String getBaseUrl(String path) {
@@ -93,6 +94,8 @@ public class PhpService {
 	}
 
 	void doRequest(String url, ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Requesting: " + url);
 		new JsonRequestHandler(URL.encode(url), resultListener, requestTimeout)
 				.doRequest();
 	}

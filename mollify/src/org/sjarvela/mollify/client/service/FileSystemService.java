@@ -15,7 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.service.request.ResultListener;
@@ -28,8 +28,8 @@ public interface FileSystemService extends FileDetailsProvider,
 
 	void getRootDirectories(ResultListener<List<Directory>> listener);
 
-	void getDirectoriesAndFiles(String folder,
-			ResultListener<FilesAndDirs> listener);
+	void getDirectoryContents(Directory parent,
+			ResultListener<DirectoryContent> listener);
 
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);

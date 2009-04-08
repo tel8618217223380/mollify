@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
@@ -39,13 +39,13 @@ public class DemoFileService implements FileSystemService {
 
 	public void getDirectories(Directory parent,
 			ResultListener<List<Directory>> listener) {
-		listener.onSuccess(data.getDirectories(parent.getId()));
+		listener.onSuccess(data.getDirectories(parent));
 	}
 
-	public void getDirectoriesAndFiles(String folder,
-			ResultListener<FilesAndDirs> listener) {
-		listener.onSuccess(new FilesAndDirs(data.getDirectories(folder), data
-				.getFiles(folder)));
+	public void getDirectoryContents(Directory parent,
+			ResultListener<DirectoryContent> listener) {
+		listener.onSuccess(new DirectoryContent(data.getDirectories(parent), data
+				.getFiles(parent)));
 	}
 
 	public String getDownloadUrl(File file) {
