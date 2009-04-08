@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PhpSessionService implements SessionService {
 	private final PhpService service;
 
 	enum SessionAction {
-		auth, session_info, logout, change_pw
+		authenticate, session_info, logout, change_pw
 	}
 
 	public PhpSessionService(PhpService service) {
@@ -40,7 +41,7 @@ public class PhpSessionService implements SessionService {
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
-		service.doRequest(getUrl(SessionAction.auth, Arrays.asList("username="
+		service.doRequest(getUrl(SessionAction.authenticate, Arrays.asList("username="
 				+ userName, "password=" + MD5.generateMD5(password))),
 				resultListener);
 	}
@@ -64,7 +65,8 @@ public class PhpSessionService implements SessionService {
 		return getUrl(action, Arrays.asList(params));
 	}
 
-	private String getUrl(SessionAction action, List<String> params) {
+	private String getUrl(SessionAction action, List<String> parameters) {
+		List<String> params = new ArrayList(parameters);
 		params.add(0, "action=" + action.name());
 		return service.getUrl(RequestType.session, params);
 	}

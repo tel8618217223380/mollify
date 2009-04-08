@@ -14,7 +14,7 @@
 	$FILE_PERMISSION_VALUE_READWRITE = "RW";
 	$FILE_PERMISSION_VALUE_READONLY = "RO";
 	
-	function handle_session_request() {
+	function process_session_request() {
 		if (!isset($_GET["action"])) {
 			return_json(get_error_message("INVALID_REQUEST"));
 			exit(0);

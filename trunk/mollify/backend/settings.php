@@ -25,7 +25,7 @@
 		);
 	}
 	
-	function handle_configuration_request() {
+	function process_configuration_request() {
 		global $result, $error, $error_details;
 		
 		if (!isset($_GET["action"]) or !is_configuration_update_supported()) {

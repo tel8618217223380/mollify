@@ -199,7 +199,7 @@
 				}
 				break;
 			case "configuration":
-				handle_configuration_request();
+				process_configuration_request();
 				break;
 
 			default:

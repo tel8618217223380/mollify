@@ -35,8 +35,6 @@ public class JsonRequestHandler {
 	}
 
 	public void doRequest() {
-		if (Log.isDebugEnabled())
-			Log.debug("Request: " + url);
 		getExternalJson(id, url + "&callback=", this, timeout);
 	}
 

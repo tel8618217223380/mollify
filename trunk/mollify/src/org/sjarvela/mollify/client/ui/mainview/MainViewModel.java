@@ -16,7 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FilesAndDirs;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -109,18 +109,16 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void refreshData(ResultListener<FilesAndDirs> resultListener) {
-		final String folder = getCurrentFolder().getId();
-
-		fileServices.getDirectoriesAndFiles(folder, createListener(
-				resultListener, new ResultCallback<FilesAndDirs>() {
-					public void onCallback(FilesAndDirs result) {
+	public void refreshData(ResultListener<DirectoryContent> resultListener) {
+		fileServices.getDirectoryContents(getCurrentFolder(), createListener(
+				resultListener, new ResultCallback<DirectoryContent>() {
+					public void onCallback(DirectoryContent result) {
 						onUpdateData(result);
 					}
 				}));
 	}
 
-	private void onUpdateData(FilesAndDirs data) {
+	private void onUpdateData(DirectoryContent data) {
 		this.directories = data.getDirectories();
 		this.files = data.getFiles();
 		this.all = new ArrayList(data.getDirectories());
