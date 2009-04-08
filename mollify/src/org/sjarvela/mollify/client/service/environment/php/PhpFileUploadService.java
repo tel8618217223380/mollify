@@ -12,34 +12,39 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.service.request.ReturnValue;
+import org.sjarvela.mollify.client.util.DateTime;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-public class PhpFileUploadService implements FileUploadService {
-	private final PhpService service;
-
+public class PhpFileUploadService extends PhpFileService implements
+		FileUploadService {
 	public PhpFileUploadService(PhpService service) {
-		this.service = service;
+		super(service);
 	}
 
 	public String getFileUploadId() {
-		return service.getNewUploadId();
+		// Just any unique id, time in millisecond level is unique enough
+		return DateTime.getInstance().getInternalExactFormat().format(
+				DateTime.getInstance().currentTime());
 	}
 
 	public String getUploadUrl(Directory directory) {
-		return service.getActionUrl(directory, FileSystemAction.upload);
+		return getFileActionUrl(directory, FileSystemAction.upload);
 	}
 
-	public void getUploadProgress(String id, ResultListener listener) {
-		service.getUploadProgress(id, listener);
+	public void getUploadProgress(String id,
+			ResultListener<FileUploadStatus> resultListener) {
+		service.doRequest(getFileDataUrl(FileDataAction.upload_status, "id=" + id),
+				resultListener);
 	}
 
 	public void handleResult(String resultString, FileUploadListener listener) {

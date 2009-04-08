@@ -10,32 +10,63 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.sjarvela.mollify.client.service.SessionService;
+import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.util.MD5;
+
+import com.allen_sauer.gwt.log.client.Log;
 
 public class PhpSessionService implements SessionService {
 	private final PhpService service;
+
+	enum SessionAction {
+		auth, session_info, logout, change_pw
+	}
 
 	public PhpSessionService(PhpService service) {
 		this.service = service;
 	}
 
+	public void getSessionInfo(ResultListener resultListener) {
+		service.doRequest(getUrl(SessionAction.session_info), resultListener);
+	}
+
 	public void authenticate(String userName, String password,
-			ResultListener resultListener) {
-		service.authenticate(userName, password, resultListener);
+			final ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Authenticating '" + userName + "'");
+		service.doRequest(getUrl(SessionAction.auth, Arrays.asList("username="
+				+ userName, "password=" + MD5.generateMD5(password))),
+				resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
-		service.changePassword(oldPassword, newPassword, resultListener);
+		if (Log.isDebugEnabled())
+			Log.debug("Change password");
+		service.doRequest(getUrl(SessionAction.change_pw, Arrays.asList("old="
+				+ MD5.generateMD5(oldPassword), "new="
+				+ MD5.generateMD5(newPassword))), resultListener);
 	}
 
-	public void getSessionInfo(ResultListener resultListener) {
-		service.getSessionInfo(resultListener);
+	public void logout(ResultListener<SessionInfo> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Logout");
+		service.doRequest(getUrl(SessionAction.logout), resultListener);
 	}
 
-	public void logout(ResultListener resultListener) {
-		service.logout(resultListener);
+	private String getUrl(SessionAction action, String... params) {
+		return getUrl(action, Arrays.asList(params));
+	}
+
+	private String getUrl(SessionAction action, List<String> params) {
+		params.add(0, "action=" + action.name());
+		return service.getUrl(RequestType.session, params);
 	}
 
 }

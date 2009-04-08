@@ -42,50 +42,9 @@
 		return array("supports_configuration_update" => is_configuration_update_supported());
 	}
 	
-	function get_session_info() {
-		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
-		$auth = check_authentication();
-		
-		if ($auth) {
-			$info["authenticated"] = TRUE;
-			$info["user"] = $_SESSION['username'];
-			$info["settings"] = $_SESSION['settings'];
-			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
-			$info["filesystem"] = get_filesystem_session_info();
-			$info["configuration"] = get_configuration_info();
-		}
-		return $info;
-	}
-	
-	function handle_authentication() {
-		$action = $_GET["action"];
-		$result = FALSE;
-		
-		if ($action === "auth") {
-			if (authenticate()) $result = get_session_info();
-		} else if ($action === "session_info") {
-			$result = get_session_info();
-		} else if ($action === "logout") {
-			if (logout()) $result = get_session_info();
-		} else if ($action === "change_pw") {
-			if (!is_configuration_update_supported()) {
-				log_error("Cannot change password, feature not supported");
-				return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
-				return FALSE;
-			}
-			if (!isset($_GET["old"]) or !isset($_GET["new"])) {
-				return_json(get_error_message("INVALID_REQUEST"));
-				return FALSE;
-			}
-			$result = change_password($_SESSION['user_id'], $_GET["old"], $_GET["new"]);
-		} else {
-			if (check_authentication()) return TRUE;
-		}
-		if (!$result) {
-			return_json(get_error_message("UNAUTHORIZED"));
-		} else {
-			return_json(get_success_message($result));
-		}
+	function initialize_session() {
+		if (check_authentication()) return TRUE;
+		return_json(get_error_message("UNAUTHORIZED"));
 		return FALSE;
 	}
 	
@@ -112,8 +71,8 @@
 	
 	import_configuration_provider();
 	
-	if (!isset($_GET["action"])) {
-		return;
+	if (!isset($_GET["type"])) {
+		exit(0);
 	}
 	
 	require_once("settings.php");
@@ -121,7 +80,11 @@
 	require_once("files.php");
 	
 	session_start();
-	if (!handle_authentication()) return;
+	if (strtolower($_GET["type"]) === "session") {
+		handle_session_request();
+		exit(0);
+	}
+	if (!initialize_session()) return;
 	
 	$result = FALSE;
 	$error = "";

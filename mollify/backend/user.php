@@ -14,6 +14,64 @@
 	$FILE_PERMISSION_VALUE_READWRITE = "RW";
 	$FILE_PERMISSION_VALUE_READONLY = "RO";
 	
+	function handle_session_request() {
+		if (!isset($_GET["action"])) {
+			return_json(get_error_message("INVALID_REQUEST"));
+			exit(0);
+		}
+		$action = $_GET["action"];
+		$result = FALSE;
+		
+		switch (strtolower($action)) {
+			case "authenticate":
+				if (authenticate()) $result = get_session_info();
+				break;
+			case "session_info":
+				$result = get_session_info();
+				break;
+			case "logout":
+				if (logout()) $result = get_session_info();
+				break;
+			case "change_pw":
+				if (!is_configuration_update_supported()) {
+					log_error("Cannot change password, feature not supported");
+					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
+					return;
+				}
+				if (!isset($_GET["old"]) or !isset($_GET["new"])) {
+					return_json(get_error_message("INVALID_REQUEST"));
+					return;
+				}
+				$result = change_password($_SESSION['user_id'], $_GET["old"], $_GET["new"]);
+				break;
+			default:
+				return_json(get_error_message("INVALID_REQUEST"));
+				exit(0);
+		}
+		
+		if (!$result) {
+			return_json(get_error_message("UNAUTHORIZED"));
+		} else {
+			return_json(get_success_message($result));
+		}
+		exit(0);
+	}
+	
+	function get_session_info() {
+		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
+		$auth = check_authentication();
+		
+		if ($auth) {
+			$info["authenticated"] = TRUE;
+			$info["user"] = $_SESSION['username'];
+			$info["settings"] = $_SESSION['settings'];
+			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
+			$info["filesystem"] = get_filesystem_session_info();
+			$info["configuration"] = get_configuration_info();
+		}
+		return $info;
+	}
+	
 	function initialize_session_data($user_id = "", $username = "") {
 		$_SESSION['user_id'] = $user_id;
 		$_SESSION['username'] = $username;
@@ -58,5 +116,16 @@
 		// otherwise user must authenticate
 		if (!isset($_SESSION['user_id']) or $_SESSION['user_id'] === "") return FALSE;
 		return TRUE;
+	}
+	
+	function has_general_modify_rights() {
+		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
+		$base = $_SESSION['default_file_permission'];
+		return ($base === $FILE_PERMISSION_VALUE_ADMIN || $base === $FILE_PERMISSION_VALUE_READWRITE);
+	}
+	
+	function is_admin() {
+		global $FILE_PERMISSION_VALUE_ADMIN;
+		return ($_SESSION['default_file_permission'] === $FILE_PERMISSION_VALUE_ADMIN);
 	}
 ?>
