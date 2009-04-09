@@ -68,16 +68,40 @@
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 			$info["filesystem"] = get_filesystem_session_info();
 			$info["configuration"] = get_configuration_info();
+			$info["roots"] = get_root_directory_info();
 		}
 		return $info;
 	}
 	
+	function get_root_directory_info() {
+		$result = array();
+		foreach($_SESSION["roots"] as $id => $root) {
+			$result[] = array(
+				"id" => get_filesystem_id($id),
+				"name" => $root["name"]
+			);
+		}
+		return $result;
+	}
+	
 	function initialize_session_data($user_id = "", $username = "") {
+		global $error, $error_details;
+		
 		$_SESSION['user_id'] = $user_id;
 		$_SESSION['username'] = $username;
 		$_SESSION['default_file_permission'] = get_default_user_permission_mode($user_id);
 		$_SESSION['settings'] = get_effective_settings();
-		$_SESSION['roots'] = get_roots($user_id);
+		$_SESSION['roots'] = get_user_root_directories($user_id);
+		
+		foreach($_SESSION["roots"] as $id => $root) {
+			if (!isset($root["name"])) {
+				log_error("Invalid published folder definition for id ".$id);
+				$error = "INVALID_CONFIGURATION";
+				session_destroy();
+				return FALSE;
+			}
+		}
+		return TRUE;
 	}
 	
 	function authenticate() {
@@ -92,8 +116,7 @@
 			return FALSE;
 		}
 		
-		initialize_session_data($user["id"], $user["name"]);
-		return TRUE;
+		return initialize_session_data($user["id"], $user["name"]);
 	}
 	
 	function logout() {

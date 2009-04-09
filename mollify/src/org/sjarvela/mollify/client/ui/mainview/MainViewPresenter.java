@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -89,11 +89,10 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void initialize() {
-		model.refreshRootDirectories(createListener(new Callback() {
-			public void onCallback() {
-				changeToRootDirectory(model.getRootDirectories().get(0));
-			}
-		}));
+		if (model.getRootDirectories().size() == 0)
+			changeToRootDirectory(null);
+		else
+			changeToRootDirectory(model.getRootDirectories().get(0));
 	}
 
 	public void onFileSystemItemSelected(FileSystemItem item, GridColumn column) {

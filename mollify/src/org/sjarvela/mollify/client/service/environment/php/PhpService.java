@@ -93,7 +93,7 @@ public class PhpService {
 		return url;
 	}
 
-	void doRequest(String url, ResultListener resultListener) {
+	void doRequest(String url, final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Requesting: " + url);
 		new JsonRequestHandler(URL.encode(url), resultListener, requestTimeout)

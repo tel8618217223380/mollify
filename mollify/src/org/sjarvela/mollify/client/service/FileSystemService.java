@@ -26,8 +26,6 @@ public interface FileSystemService extends FileDetailsProvider,
 	void getDirectories(Directory parent,
 			ResultListener<List<Directory>> listener);
 
-	void getRootDirectories(ResultListener<List<Directory>> listener);
-
 	void getDirectoryContents(Directory parent,
 			ResultListener<DirectoryContent> listener);
 

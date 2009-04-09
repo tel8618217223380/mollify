@@ -21,24 +21,12 @@
 				$action = $_GET["action"];
 			
 				switch (strtolower($action)) {
-					case "roots":
-						$result = array();
-						foreach($_SESSION["roots"] as $id => $root) {
-							if (!isset($root["name"])) {
-								$error = "INVALID_CONFIGURATION";
-								break;
-							}
-							
-							$result[] = array(
-								"id" => get_filesystem_id($id),
-								"name" => $root["name"]
-							);
-						}
-						break;
-	
 					case "contents":
-						$result = array("directories" => get_directories(),
-							"files" => get_files());
+						$dir = get_fileitem_from_url("dir");
+						if (!$dir) break;
+						
+						$result = array("directories" => get_directories($dir),
+							"files" => get_files($dir));
 						break;
 										
 					case "files":

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -38,6 +38,8 @@ public class MainViewModel {
 	public MainViewModel(FileSystemService fileServices, SessionInfo info) {
 		this.fileServices = fileServices;
 		this.info = info;
+		this.rootDirectories = info.getRootDirectories();
+
 		clear();
 	}
 
@@ -77,15 +79,6 @@ public class MainViewModel {
 		return directoryModel.getCurrentFolder();
 	}
 
-	public void refreshRootDirectories(ResultListener listener) {
-		fileServices.getRootDirectories(createListener(listener,
-				new ResultCallback<List<Directory>>() {
-					public void onCallback(List<Directory> result) {
-						MainViewModel.this.rootDirectories = result;
-					}
-				}));
-	}
-
 	public void changeToRootDirectory(Directory root,
 			ResultListener resultListener) {
 		directoryModel.setRootDirectory(root);
@@ -110,6 +103,11 @@ public class MainViewModel {
 	}
 
 	public void refreshData(ResultListener<DirectoryContent> resultListener) {
+		if (getCurrentFolder() == null) {
+			resultListener.onSuccess(new DirectoryContent());
+			return;
+		}
+
 		fileServices.getDirectoryContents(getCurrentFolder(), createListener(
 				resultListener, new ResultCallback<DirectoryContent>() {
 					public void onCallback(DirectoryContent result) {

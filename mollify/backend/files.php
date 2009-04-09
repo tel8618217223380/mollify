@@ -104,11 +104,13 @@
 		return TRUE;
 	}
 		
-	function get_directories() {
+	function get_directories($dir = NULL) {
 		global $error, $error_details;
 
-		$dir = get_fileitem_from_url("dir");
-		if (!$dir) return FALSE;
+		if ($dir === NULL) {
+			$dir = get_fileitem_from_url("dir");
+			if (!$dir) return FALSE;
+		}
 		
 		$root = $dir["root"];
 		$path = $dir["path"];
@@ -165,12 +167,14 @@
 		return $result;
 	}
 	
-	function get_files() {
+	function get_files($dir = NULL) {
 		global $error, $error_details;
 		$ignored = array('descript.ion', 'mollify.uac');
 		
-		$dir = get_fileitem_from_url("dir");
-		if (!$dir) return FALSE;
+		if ($dir === NULL) {
+			$dir = get_fileitem_from_url("dir");
+			if (!$dir) return FALSE;
+		}
 		
 		$root = $dir["root"];
 		$path = $dir["path"];
