@@ -12,9 +12,9 @@ package org.sjarvela.mollify.client.ui.common.dialog;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -60,12 +60,12 @@ public abstract class CenteredDialog extends DialogBox {
 	protected void onShow() {
 	}
 
-	protected Button createButton(String title, ClickListener listener,
+	protected Button createButton(String title, ClickHandler handler,
 			String style) {
 		Button button = new Button(title);
 		button.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
 		button.addStyleDependentName(style);
-		button.addClickListener(listener);
+		button.addClickHandler(handler);
 		return button;
 	}
 }

@@ -141,6 +141,26 @@
 		return TRUE;
 	}
 	
+	function get_all_folders() {
+		$result = _query("SELECT id, name, path FROM folder ORDER BY id ASC");
+		$list = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$list[] = $row;
+		}
+		mysql_free_result($result);
+		return $list;
+	}
+	
+	function get_user_root_directories($user_id) {
+		$result = _query(sprintf("SELECT folder.id, folder.name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
+
+		$roots = array();
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			$roots[$row["id"]] = array("id" => $row["id"], "name" => $row["name"], "path" => $row["path"]);
+		}
+		return $roots;
+	}
+	
 	function get_default_user_permission_mode($user_id) {
 		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY, $FILE_PERMISSION_MODE;
 		$mode = strtoupper(mysql_result(_query(sprintf("SELECT permission_mode FROM user WHERE id='%s'", mysql_real_escape_string($user_id))), 0));
@@ -154,16 +174,6 @@
 
 	function authentication_required() {
 		return TRUE;
-	}
-	
-	function get_user_root_directories($user_id) {
-		$result = _query(sprintf("SELECT folder.id, folder.name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
-
-		$roots = array();
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			$roots[$row["id"]] = array("name" => $row["name"], "path" => $row["path"]);
-		}
-		return $roots;
 	}
 	
 	function get_file_description($filename) {

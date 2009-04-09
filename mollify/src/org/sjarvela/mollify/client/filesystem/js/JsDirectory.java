@@ -10,9 +10,21 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import org.sjarvela.mollify.client.filesystem.Directory;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsDirectory extends JavaScriptObject {
+	public static JsDirectory create(Directory directory) {
+		return create(directory.getId(), directory.getName());
+	}
+
+	public static JsDirectory create(String id, String name) {
+		JsDirectory result = JsDirectory.createObject().cast();
+		result.putValues(id, name);
+		return result;
+	}
+
 	protected JsDirectory() {
 	}
 
@@ -24,14 +36,9 @@ public class JsDirectory extends JavaScriptObject {
 		return this.name;
 	}-*/;
 
-	public static JsDirectory create(String id, String name) {
-		JsDirectory result = JsDirectory.createObject().cast();
-		result.putValues(id, name);
-		return result;
-	}
-
 	private final native void putValues(String id, String name) /*-{
 		this.id = id;
 		this.name = name;
 	}-*/;
+
 }

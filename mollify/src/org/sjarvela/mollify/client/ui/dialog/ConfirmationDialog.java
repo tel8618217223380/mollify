@@ -15,8 +15,9 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -63,8 +64,8 @@ public class ConfirmationDialog extends CenteredDialog {
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		Button yesButton = createButton(textProvider.getStrings()
-				.confirmationDialogYesButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.confirmationDialogYesButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				ConfirmationDialog.this.hide();
 				listener.onConfirm();
 			}
@@ -72,8 +73,8 @@ public class ConfirmationDialog extends CenteredDialog {
 		buttons.add(yesButton);
 
 		Button noButton = createButton(textProvider.getStrings()
-				.confirmationDialogNoButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.confirmationDialogNoButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				ConfirmationDialog.this.hide();
 			}
 		}, type + "-no");

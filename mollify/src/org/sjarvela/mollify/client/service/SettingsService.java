@@ -21,7 +21,7 @@ public interface SettingsService {
 
 	void getUsers(ResultListener<List<User>> resultListener);
 
-	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
+	void getDirectories(ResultListener<List<DirectoryInfo>> resultListener);
 
 	void addUser(String name, String password, PermissionMode mode,
 			ResultListener<Boolean> resultListener);

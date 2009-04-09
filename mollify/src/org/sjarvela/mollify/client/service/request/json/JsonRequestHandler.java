@@ -55,8 +55,7 @@ public class JsonRequestHandler {
 						.getDetails()));
 				return;
 			}
-			JavaScriptObject javaScriptObject = result.getResult();
-			listener.onSuccess(javaScriptObject);
+			listener.onSuccess(result.getResult());
 		}
 	}
 

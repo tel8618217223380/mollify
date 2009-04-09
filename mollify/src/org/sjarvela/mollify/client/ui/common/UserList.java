@@ -27,8 +27,11 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 	public static GridColumn COLUMN_TYPE;
 	public static List<GridColumn> ALL_COLUMNS = null;
 
+	private final TextProvider textProvider;
+
 	public UserList(TextProvider textProvider, String style) {
 		super(StyleConstants.USER_LIST_HEADER, getColumns(textProvider));
+		this.textProvider = textProvider;
 
 		this.setStylePrimaryName(StyleConstants.USER_LIST);
 		if (style != null)
@@ -58,7 +61,8 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 		if (column.equals(UserList.COLUMN_NAME))
 			return new GridData.Text(user.getName());
 		else if (column.equals(UserList.COLUMN_TYPE))
-			return new GridData.Text(user.getType().name());
+			return new GridData.Text(user.getType().getLocalizedText(
+					textProvider));
 		return new GridData.Text("");
 	}
 

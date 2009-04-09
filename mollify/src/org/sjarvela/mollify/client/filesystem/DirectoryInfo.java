@@ -1,20 +1,34 @@
 package org.sjarvela.mollify.client.filesystem;
 
-public class DirectoryInfo {
-	private final Directory directory;
-	private final String Location;
+import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 
-	public DirectoryInfo(Directory directory, String location) {
-		super();
-		this.directory = directory;
-		Location = location;
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class DirectoryInfo extends JavaScriptObject {
+	public static DirectoryInfo create(String id, String name, String path) {
+		DirectoryInfo result = JsDirectory.createObject().cast();
+		result.putValues(id, name, path);
+		return result;
 	}
 
-	public Directory getDirectory() {
-		return directory;
+	protected DirectoryInfo() {
 	}
 
-	public String getLocation() {
-		return Location;
-	}
+	public final native String getId() /*-{
+		return this.id;
+	}-*/;
+
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
+
+	public final native String getPath() /*-{
+		return this.path;
+	}-*/;
+
+	private final native void putValues(String id, String name, String path) /*-{
+		this.id = id;
+		this.name = name;
+		this.path = path
+	}-*/;
 }

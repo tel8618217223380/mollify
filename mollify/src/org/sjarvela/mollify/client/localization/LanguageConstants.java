@@ -12,6 +12,12 @@ package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 	public String shortDateTimeFormat();
+	
+	public String permissionModeAdmin();
+
+	public String permissionModeReadWrite();
+
+	public String permissionModeReadOnly();
 
 	public String loginDialogTitle();
 
@@ -220,5 +226,4 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String folderListColumnTitleName();
 
 	public String folderListColumnTitleLocation();
-
 }

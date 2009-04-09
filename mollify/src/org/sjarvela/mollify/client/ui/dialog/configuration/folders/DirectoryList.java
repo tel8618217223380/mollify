@@ -22,13 +22,13 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
-public class FolderList extends Grid<DirectoryInfo> implements
+public class DirectoryList extends Grid<DirectoryInfo> implements
 		GridDataProvider<DirectoryInfo> {
 	public static GridColumn COLUMN_NAME;
 	public static GridColumn COLUMN_LOCATION;
 	public static List<GridColumn> ALL_COLUMNS = null;
 
-	public FolderList(TextProvider textProvider, String style) {
+	public DirectoryList(TextProvider textProvider, String style) {
 		super(StyleConstants.FOLDER_LIST_HEADER, getColumns(textProvider));
 
 		this.setStylePrimaryName(StyleConstants.FOLDER_LIST);
@@ -41,7 +41,7 @@ public class FolderList extends Grid<DirectoryInfo> implements
 		if (ALL_COLUMNS == null) {
 			COLUMN_NAME = new DefaultGridColumn("name", textProvider
 					.getStrings().folderListColumnTitleName(), false);
-			COLUMN_LOCATION = new DefaultGridColumn("location", textProvider
+			COLUMN_LOCATION = new DefaultGridColumn("path", textProvider
 					.getStrings().folderListColumnTitleLocation(), false);
 
 			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
@@ -56,10 +56,10 @@ public class FolderList extends Grid<DirectoryInfo> implements
 	}
 
 	public GridData getData(DirectoryInfo directory, GridColumn column) {
-		if (column.equals(FolderList.COLUMN_NAME))
-			return new GridData.Text(directory.getDirectory().getName());
-		else if (column.equals(FolderList.COLUMN_LOCATION))
-			return new GridData.Text(directory.getLocation());
+		if (column.equals(DirectoryList.COLUMN_NAME))
+			return new GridData.Text(directory.getName());
+		else if (column.equals(DirectoryList.COLUMN_LOCATION))
+			return new GridData.Text(directory.getPath());
 		return new GridData.Text("");
 	}
 

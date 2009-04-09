@@ -199,9 +199,15 @@ public class Grid<T> extends FlexTable {
 		if (dataProvider == null)
 			throw new RuntimeException("No data provider");
 
-		selected.clear();
+		clearSelection();
 		this.content = new ArrayList(list);
 		sort();
+	}
+
+	private void clearSelection() {
+		if (selected.size() > 0)
+			selected.clear();
+		notifySelectionChange();
 	}
 
 	private void sort() {
@@ -266,7 +272,7 @@ public class Grid<T> extends FlexTable {
 	private void removeAllSelections() {
 		for (T t : selected)
 			removeSelectedStyle(t);
-		selected.clear();
+		clearSelection();
 	}
 
 	private void addSelectedStyle(T t) {
@@ -357,7 +363,10 @@ public class Grid<T> extends FlexTable {
 		T t = content.get(row);
 		selected.add(t);
 		addSelectedStyle(t);
+		notifySelectionChange();
+	}
 
+	private void notifySelectionChange() {
 		for (GridListener listener : listeners)
 			listener.onSelectionChanged(selected);
 	}

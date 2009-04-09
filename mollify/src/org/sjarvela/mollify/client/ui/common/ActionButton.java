@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.ui.common;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ActionButton extends Button {
 	public ActionButton(String title) {
@@ -38,8 +38,8 @@ public class ActionButton extends Button {
 
 	public void setAction(final ActionListener actionListener,
 			final ResourceId actionId) {
-		this.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		this.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				actionListener.onActionTriggered(actionId);
 			}
 		});

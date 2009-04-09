@@ -13,7 +13,9 @@ package org.sjarvela.mollify.client.ui.dialog.configuration.users;
 import java.util.List;
 
 import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
+import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
@@ -64,30 +66,23 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		service.removeUser(selected, dialog
-				.createResultListener(new ResultCallback<Boolean>() {
-					public void onCallback(Boolean result) {
-						reload();
-					}
-				}));
+		service.removeUser(selected, createReloadListener());
 	}
 
 	public void addUser(String name, String password, PermissionMode mode) {
-		service.addUser(name, password, mode, dialog
-				.createResultListener(new ResultCallback<Boolean>() {
-					public void onCallback(Boolean result) {
-						reload();
-					}
-				}));
+		service.addUser(name, password, mode, createReloadListener());
 	}
 
 	public void editUser(User user, String name, PermissionMode mode) {
-		service.editUser(user, name, mode, dialog
-				.createResultListener(new ResultCallback<Boolean>() {
-					public void onCallback(Boolean result) {
-						reload();
-					}
-				}));
+		service.editUser(user, name, mode, createReloadListener());
+	}
+
+	private ResultListener createReloadListener() {
+		return dialog.createResultListener(new Callback() {
+			public void onCallback() {
+				reload();
+			}
+		});
 	}
 
 }

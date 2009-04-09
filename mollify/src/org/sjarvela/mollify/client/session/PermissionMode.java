@@ -1,5 +1,7 @@
 package org.sjarvela.mollify.client.session;
 
+import org.sjarvela.mollify.client.localization.TextProvider;
+
 public enum PermissionMode {
 	Admin("a"), ReadWrite("rw"), ReadOnly("ro");
 
@@ -22,5 +24,16 @@ public enum PermissionMode {
 
 	public String getStringValue() {
 		return value;
+	}
+
+	public String getLocalizedText(TextProvider textProvider) {
+		if (this.equals(Admin))
+			return textProvider.getStrings().permissionModeAdmin();
+		if (this.equals(ReadWrite))
+			return textProvider.getStrings().permissionModeReadWrite();
+		if (this.equals(ReadOnly))
+			return textProvider.getStrings().permissionModeReadOnly();
+		throw new RuntimeException("Unlocalized permission mode: "
+				+ this.name());
 	}
 }
