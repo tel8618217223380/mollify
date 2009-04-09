@@ -7,8 +7,9 @@ import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -42,7 +43,7 @@ public class UserDialog extends CenteredDialog {
 		this.textProvider = textProvider;
 		this.handler = handler;
 		this.user = null;
-		
+
 		init();
 		generateNewPassword();
 	}
@@ -57,19 +58,26 @@ public class UserDialog extends CenteredDialog {
 		this.handler = handler;
 
 		init();
+		setUserData();
+	}
+
+	private void setUserData() {
+		userName.setText(user.getName());
+		userType.setSelectedIndex(user.getType().ordinal());
 	}
 
 	private void init() {
 		initialize();
 
 		for (PermissionMode mode : PermissionMode.values())
-			userType.addItem(mode.name(), mode.getStringValue());
+			userType.addItem(mode.getLocalizedText(textProvider), mode
+					.getStringValue());
 	}
 
 	private void generateNewPassword() {
 		password.setText(passwordGenerator.generate());
 	}
-	
+
 	@Override
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
@@ -116,11 +124,12 @@ public class UserDialog extends CenteredDialog {
 		generatePassword.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
 		generatePassword
 				.addStyleDependentName(StyleConstants.USER_DIALOG_GENERATE_PASSWORD);
-		generatePassword.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		generatePassword.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				generateNewPassword();
 			}
 		});
+
 		panel.add(generatePassword);
 
 		return panel;
@@ -136,8 +145,8 @@ public class UserDialog extends CenteredDialog {
 				.userDialogAddButton() : textProvider.getStrings()
 				.userDialogEditButton();
 
-		buttons.add(createButton(title, new ClickListener() {
-			public void onClick(Widget sender) {
+		buttons.add(createButton(title, new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				if (mode.equals(Mode.Add))
 					onAddUser();
 				else
@@ -147,9 +156,8 @@ public class UserDialog extends CenteredDialog {
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				new ClickListener() {
-
-					public void onClick(Widget sender) {
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						UserDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
@@ -176,8 +184,8 @@ public class UserDialog extends CenteredDialog {
 		if (userType.getSelectedIndex() < 0)
 			return;
 
-		handler.editUser(user, userName.getText(), PermissionMode.fromString(userType
-				.getValue(userType.getSelectedIndex())));
+		handler.editUser(user, userName.getText(), PermissionMode
+				.fromString(userType.getValue(userType.getSelectedIndex())));
 		this.hide();
 	}
 }

@@ -17,7 +17,8 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -78,18 +79,16 @@ public class RenameDialog extends CenteredDialog {
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(textProvider.getStrings()
-				.renameDialogRenameButton(), new ClickListener() {
-
-			public void onClick(Widget sender) {
+				.renameDialogRenameButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				onRename();
 			}
 		}, StyleConstants.RENAME_DIALOG_BUTTON_RENAME));
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				new ClickListener() {
-
-					public void onClick(Widget sender) {
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						RenameDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));

@@ -32,7 +32,7 @@ public class ConfigurationSettingsFoldersPresenter {
 		view.list().setSelectionMode(SelectionMode.Single);
 
 		service
-				.getFolders(dialog
+				.getDirectories(dialog
 						.createResultListener(new ResultCallback<List<DirectoryInfo>>() {
 							public void onCallback(List<DirectoryInfo> list) {
 								setFolders(list);

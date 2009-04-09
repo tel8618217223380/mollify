@@ -17,13 +17,15 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -104,8 +106,8 @@ public class ConfigurationDialog extends CenteredDialog implements
 		buttons.addStyleName(StyleConstants.CONFIGURATION_DIALOG_BUTTONS);
 
 		buttons.add(createButton(textProvider.getStrings()
-				.configurationDialogCloseButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.configurationDialogCloseButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				ConfigurationDialog.this.hide();
 			}
 		}, StyleConstants.CONFIGURATION_DIALOG_BUTTON_CLOSE));
@@ -129,6 +131,18 @@ public class ConfigurationDialog extends CenteredDialog implements
 		if (!cache.containsKey(id))
 			cache.put(id, viewManager.createView(id));
 		return cache.get(id);
+	}
+
+	public ResultListener createResultListener(final Callback callback) {
+		return new ResultListener() {
+			public void onFail(ServiceError error) {
+				dialogManager.showError(error);
+			}
+
+			public void onSuccess(Object result) {
+				callback.onCallback();
+			}
+		};
 	}
 
 	public ResultListener createResultListener(

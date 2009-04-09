@@ -25,8 +25,9 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -104,8 +105,8 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		buttons.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		selectButton = createButton(selectActionTitle, new ClickListener() {
-			public void onClick(Widget sender) {
+		selectButton = createButton(selectActionTitle, new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				onSelect();
 			}
 		}, StyleConstants.SELECT_FOLDER_DIALOG_BUTTON_SELECT);
@@ -113,8 +114,8 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				new ClickListener() {
-					public void onClick(Widget sender) {
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						SelectFolderDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));

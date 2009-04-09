@@ -32,7 +32,7 @@ public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
 
 	enum ConfigurationAction {
-		get_users, add_user, edit_user, remove_user
+		get_users, add_user, update_user, remove_user, get_directories
 	}
 
 	public PhpSettingsService(PhpService service) {
@@ -56,9 +56,22 @@ public class PhpSettingsService implements SettingsService {
 				});
 	}
 
-	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
-		// TODO Auto-generated method stub
+	public void getDirectories(
+			final ResultListener<List<DirectoryInfo>> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get directories");
 
+		service.doRequest(getUrl(ConfigurationAction.get_directories),
+				new ResultListener<JsArray<DirectoryInfo>>() {
+					public void onFail(ServiceError error) {
+						resultListener.onFail(error);
+					}
+
+					public void onSuccess(JsArray<DirectoryInfo> result) {
+						resultListener.onSuccess(JsUtil.asList(result,
+								DirectoryInfo.class));
+					}
+				});
 	}
 
 	public void addUser(String name, String password, PermissionMode mode,
@@ -70,12 +83,12 @@ public class PhpSettingsService implements SettingsService {
 
 	public void editUser(User user, String name, PermissionMode mode,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.edit_user, "id="
+		service.doRequest(getUrl(ConfigurationAction.update_user, "id="
 				+ URL.encode(user.getId()), "name=" + URL.encode(name),
 				"permission_mode=" + mode.getStringValue()), resultListener);
 	}
 
-	public void removeUser(User user, ResultListener resultListener) {
+	public void removeUser(User user, final ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_user, "id="
 				+ URL.encode(user.getId())), resultListener);
 	}

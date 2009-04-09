@@ -16,7 +16,8 @@ import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.Label;
@@ -47,18 +48,16 @@ public class LoginDialog extends CenteredDialog {
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(textProvider.getStrings()
-				.loginDialogLoginButton(), new ClickListener() {
-
-			public void onClick(Widget sender) {
+				.loginDialogLoginButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				onLogin();
 			}
 		}, StyleConstants.LOGIN_DIALOG_BUTTON_LOGIN));
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				new ClickListener() {
-
-					public void onClick(Widget sender) {
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						LoginDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));

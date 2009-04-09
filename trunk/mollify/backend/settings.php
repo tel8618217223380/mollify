@@ -45,27 +45,36 @@
 			case "add_user":
 				if (!isset($_GET["name"]) or !isset($_GET["password"]) or !isset($_GET["permission_mode"])) {
 					$error = "INVALID_REQUEST";
-					return;
+					break;
 				}
-				$result = add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"]);
+				if (add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"])) {
+					$result = array();
+				}
 				break;
 			case "remove_user":
 				if (!isset($_GET["id"])) {
 					$error = "INVALID_REQUEST";
-					return;
+					break;
 				}
-				$result = remove_user($_GET["id"]);
+				if (remove_user($_GET["id"])) {
+					$result = array();
+				}
 				break;
 			case "update_user":
 				if (!isset($_GET["id"]) or !isset($_GET["name"]) or !isset($_GET["password"]) or !isset($_GET["permission_mode"])) {
 					$error = "INVALID_REQUEST";
-					return;
+					break;
 				}
-				$result = update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"]);
+				if (update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"])) {
+					$result = array();
+				}
+				break;
+			case "get_directories":
+				$result = get_all_folders();
 				break;
 			default:
 				$error = "UNSUPPORTED_OPERATION";
-				$error_details = $operation;
+				$error_details = $action;
 				break;
 		}
 	}

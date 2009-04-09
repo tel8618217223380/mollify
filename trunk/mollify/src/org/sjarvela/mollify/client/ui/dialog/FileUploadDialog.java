@@ -21,8 +21,9 @@ import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormHandler;
@@ -76,8 +77,8 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		uploadButton = createButton(textProvider.getStrings()
-				.fileUploadDialogUploadButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.fileUploadDialogUploadButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				form.submit();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
@@ -85,8 +86,8 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		buttons.add(uploadButton);
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				new ClickListener() {
-					public void onClick(Widget sender) {
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						FileUploadDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
@@ -155,15 +156,15 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 				.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS);
 
 		uploaderButtons.add(createButton(textProvider.getStrings()
-				.fileUploadDialogAddFileButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.fileUploadDialogAddFileButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				onAddFile();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
 
 		uploaderButtons.add(createButton(textProvider.getStrings()
-				.fileUploadDialogRemoveFileButton(), new ClickListener() {
-			public void onClick(Widget sender) {
+				.fileUploadDialogRemoveFileButton(), new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				onRemoveFile();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE));
