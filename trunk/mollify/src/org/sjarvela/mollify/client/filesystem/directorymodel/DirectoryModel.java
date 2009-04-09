@@ -31,10 +31,13 @@ public class DirectoryModel {
 
 	public void setRootDirectory(Directory directory) {
 		this.folders.clear();
-		this.folders.add(directory);
+		if (directory != null)
+			this.folders.add(directory);
 	}
 
 	public Directory getCurrentFolder() {
+		if (folders.isEmpty())
+			return null;
 		return folders.lastElement();
 	}
 

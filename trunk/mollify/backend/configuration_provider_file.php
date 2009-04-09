@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -70,7 +70,7 @@
 		return ($USERS != FALSE and count($USERS) > 0);
 	}
 	
-	function get_roots($user_id) {
+	function get_user_root_directories($user_id) {
 		global $USERS, $PUBLISHED_DIRECTORIES;
 
 		if (count($USERS) === 0) {

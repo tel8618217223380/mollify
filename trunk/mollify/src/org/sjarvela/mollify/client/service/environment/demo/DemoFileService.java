@@ -76,10 +76,6 @@ public class DemoFileService implements FileSystemService {
 		resultListener.onSuccess(data.getDirectoryDetails(directory));
 	}
 
-	public void getRootDirectories(ResultListener<List<Directory>> listener) {
-		listener.onSuccess(data.getRootDirectories());
-	}
-
 	public String getDownloadAsZipUrl(FileSystemItem item) {
 		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
 	}

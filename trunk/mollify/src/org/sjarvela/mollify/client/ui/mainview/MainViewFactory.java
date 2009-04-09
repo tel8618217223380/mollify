@@ -25,18 +25,17 @@ import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 public class MainViewFactory {
 	private final ServiceEnvironment environment;
 	private final TextProvider textProvider;
-	private final DirectoryProvider directoryProvider;
 
 	public MainViewFactory(TextProvider textProvider,
 			ServiceEnvironment environment) {
 		this.textProvider = textProvider;
 		this.environment = environment;
-		this.directoryProvider = new DefaultDirectoryProvider(environment
-				.getFileSystemService());
 	}
 
 	public MainView createMainView(WindowManager windowManager,
 			SessionInfo info, LogoutHandler logoutListener) {
+		DirectoryProvider directoryProvider = new DefaultDirectoryProvider(info
+				.getRootDirectories(), environment.getFileSystemService());
 
 		FileSystemService fileSystemService = environment
 				.getFileSystemService();

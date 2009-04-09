@@ -10,17 +10,23 @@
 
 package org.sjarvela.mollify.client.session;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
 			boolean authenticated, String user, PermissionMode permissionMode,
 			SessionSettings settings, ConfigurationInfo configurationInfo,
-			FileSystemInfo fileInfo) {
+			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
 		result.putValues(authenticationRequired, authenticated, user,
 				permissionMode.getStringValue(), settings, configurationInfo,
-				fileInfo);
+				fileInfo, roots);
 		return result;
 	}
 
@@ -68,10 +74,18 @@ public class SessionInfo extends JavaScriptObject {
 		return this.configuration;
 	}-*/;
 
+	public final List<Directory> getRootDirectories() {
+		return Directory.createFromDirectories(getRootDirectoryList());
+	}
+
+	public final native JsArray<JsDirectory> getRootDirectoryList() /*-{
+		return this.roots;
+	}-*/;
+	
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String user, String permissionMode,
 			SessionSettings settings, ConfigurationInfo configurationInfo,
-			FileSystemInfo fileInfo) /*-{
+			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
 		this.user = user;
@@ -79,5 +93,6 @@ public class SessionInfo extends JavaScriptObject {
 		this.settings = settings;
 		this.configuration = configurationInfo;
 		this.filesystem = fileInfo;
+		this.roots = roots;
 	}-*/;
 }

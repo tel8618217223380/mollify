@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -156,7 +156,7 @@
 		return TRUE;
 	}
 	
-	function get_roots($user_id) {
+	function get_user_root_directories($user_id) {
 		$result = _query(sprintf("SELECT folder.id, folder.name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
 
 		$roots = array();

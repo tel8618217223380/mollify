@@ -16,13 +16,12 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
-import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
@@ -36,7 +35,7 @@ public class PhpFileService implements FileSystemService {
 	protected final PhpService service;
 
 	enum FileDataAction {
-		roots, files, directories, contents, details, upload_status
+		files, directories, contents, details, upload_status
 	};
 
 	public PhpFileService(PhpService service) {
@@ -49,35 +48,17 @@ public class PhpFileService implements FileSystemService {
 			Log.debug("Get directories: " + parent.getId());
 
 		service.doRequest(getFileDataUrl(FileDataAction.directories, "dir="
-				+ parent.getId()), new ResultListener<JsArray<JsDirectory>>() {
+				+ parent.getId()), new ResultListener<JsArray>() {
 
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(JsArray<JsDirectory> result) {
+			public void onSuccess(JsArray result) {
 				listener
 						.onSuccess(FileSystemItem.createFromDirectories(result));
 			}
 		});
-	}
-
-	public void getRootDirectories(
-			final ResultListener<List<Directory>> listener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Get root directories");
-
-		service.doRequest(getFileDataUrl(FileDataAction.roots),
-				new ResultListener<JsArray<JsDirectory>>() {
-					public void onFail(ServiceError error) {
-						listener.onFail(error);
-					}
-
-					public void onSuccess(JsArray<JsDirectory> result) {
-						listener.onSuccess(FileSystemItem
-								.createFromDirectories(result));
-					}
-				});
 	}
 
 	public void getDirectoryContents(final Directory parent,

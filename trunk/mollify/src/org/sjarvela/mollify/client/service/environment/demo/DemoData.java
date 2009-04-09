@@ -21,12 +21,16 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FilePermission;
+import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.ConfigurationInfo;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.util.DateTime;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 public class DemoData {
 	private static final String ROOT_1 = "r1";
@@ -43,7 +47,7 @@ public class DemoData {
 	private static final String FILE_1A5 = "1a5";
 	private static final String FILE_1A6 = "1a6";
 
-	private List<Directory> rootDirectories;
+	private JsArray<JsDirectory> rootDirectories;
 	private Map<String, List<Directory>> directories = new HashMap();
 	private List<File> files;
 
@@ -63,9 +67,9 @@ public class DemoData {
 	}
 
 	private void createDirectoriesAndFiles() {
-		rootDirectories = new ArrayList();
-		rootDirectories.add(new Directory(ROOT_1, "Folder A"));
-		rootDirectories.add(new Directory(ROOT_2, "Folder B"));
+		rootDirectories = JavaScriptObject.createArray().cast();
+		rootDirectories.set(0, JsDirectory.create(ROOT_1, "Folder A"));
+		rootDirectories.set(1, JsDirectory.create(ROOT_2, "Folder B"));
 
 		List<Directory> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
@@ -81,7 +85,8 @@ public class DemoData {
 		files.add(new File(FILE_1A1, "Example.txt", "txt", 128));
 		files.add(new File(FILE_1A2, "Picture.gif", "gif", 2228));
 		files.add(new File(FILE_1A3, "Picture.png", "png", 64434));
-		files.add(new File(FILE_1A4, "Portable Document Format.pdf", "pdf", 113428));
+		files.add(new File(FILE_1A4, "Portable Document Format.pdf", "pdf",
+				113428));
 		files.add(new File(FILE_1A5, "Word Document.doc", "doc", 5634347));
 		files.add(new File(FILE_1A6, "Web page.html", "html", 23433231));
 	}
@@ -89,18 +94,16 @@ public class DemoData {
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", permissionMode,
-					settings, configurationInfo, fileSystemInfo);
+					settings, configurationInfo, fileSystemInfo,
+					rootDirectories);
 		}
 
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, user, permissionMode,
-					settings, configurationInfo, fileSystemInfo);
+					settings, configurationInfo, fileSystemInfo,
+					rootDirectories);
 		return SessionInfo.create(true, false, "", permissionMode, settings,
-				configurationInfo, fileSystemInfo);
-	}
-
-	public List<Directory> getRootDirectories() {
-		return rootDirectories;
+				configurationInfo, fileSystemInfo, rootDirectories);
 	}
 
 	public List<Directory> getDirectories(Directory dir) {
