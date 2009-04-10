@@ -32,7 +32,7 @@ public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
 
 	enum ConfigurationAction {
-		get_users, add_user, update_user, remove_user, get_directories
+		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder
 	}
 
 	public PhpSettingsService(PhpService service) {
@@ -56,12 +56,12 @@ public class PhpSettingsService implements SettingsService {
 				});
 	}
 
-	public void getDirectories(
+	public void getFolders(
 			final ResultListener<List<DirectoryInfo>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		service.doRequest(getUrl(ConfigurationAction.get_directories),
+		service.doRequest(getUrl(ConfigurationAction.get_folders),
 				new ResultListener<JsArray<DirectoryInfo>>() {
 					public void onFail(ServiceError error) {
 						resultListener.onFail(error);
@@ -75,7 +75,7 @@ public class PhpSettingsService implements SettingsService {
 	}
 
 	public void addUser(String name, String password, PermissionMode mode,
-			ResultListener<Boolean> resultListener) {
+			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.add_user, "name="
 				+ URL.encode(name), "password=" + MD5.generateMD5(password),
 				"permission_mode=" + mode.getStringValue()), resultListener);
@@ -91,6 +91,26 @@ public class PhpSettingsService implements SettingsService {
 	public void removeUser(User user, final ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_user, "id="
 				+ URL.encode(user.getId())), resultListener);
+	}
+
+	public void addFolder(String name, String path,
+			ResultListener resultListener) {
+		service
+				.doRequest(getUrl(ConfigurationAction.add_folder, "name="
+						+ URL.encode(name), "path=" + URL.encode(path)),
+						resultListener);
+	}
+
+	public void editFolder(DirectoryInfo dir, String name, String path,
+			ResultListener resultListener) {
+		service.doRequest(getUrl(ConfigurationAction.update_folder, "id="
+				+ URL.encode(dir.getId()), "name=" + URL.encode(name), "path="
+				+ URL.encode(path)), resultListener);
+	}
+
+	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
+		service.doRequest(getUrl(ConfigurationAction.remove_folder, "id="
+				+ URL.encode(dir.getId())), resultListener);
 	}
 
 	private String getUrl(ConfigurationAction action, String... params) {

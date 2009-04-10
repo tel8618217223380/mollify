@@ -200,6 +200,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String configurationDialogSettingFoldersViewTitle();
 
 	public String configurationDialogSettingFoldersAdd();
+	
+	public String configurationDialogSettingFoldersEdit();
 
 	public String configurationDialogSettingFoldersRemove();
 	
@@ -226,4 +228,16 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String folderListColumnTitleName();
 
 	public String folderListColumnTitleLocation();
+
+	public String folderDialogAddTitle();
+
+	public String folderDialogEditTitle();
+
+	public String folderDialogName();
+
+	public String folderDialogPath();
+
+	public String folderDialogAddButton();
+
+	public String folderDialogEditButton();
 }

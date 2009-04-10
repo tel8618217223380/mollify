@@ -47,30 +47,45 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				if (add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"])) {
-					$result = array();
-				}
+				$result = add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"]);
 				break;
 			case "remove_user":
 				if (!isset($_GET["id"])) {
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				if (remove_user($_GET["id"])) {
-					$result = array();
-				}
+				$result = remove_user($_GET["id"]);
 				break;
 			case "update_user":
-				if (!isset($_GET["id"]) or !isset($_GET["name"]) or !isset($_GET["password"]) or !isset($_GET["permission_mode"])) {
+				if (!isset($_GET["id"]) or !isset($_GET["name"]) or !isset($_GET["permission_mode"])) {
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				if (update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"])) {
-					$result = array();
-				}
+				$result = update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"]);
 				break;
-			case "get_directories":
+			case "get_folders":
 				$result = get_all_folders();
+				break;
+			case "add_folder":
+				if (!isset($_GET["name"]) or !isset($_GET["path"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				$result = add_folder(urldecode($_GET["name"]), urldecode($_GET["path"]));
+				break;
+			case "remove_folder":
+				if (!isset($_GET["id"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				$result = remove_folder($_GET["id"]);
+				break;
+			case "update_folder":
+				if (!isset($_GET["id"]) or !isset($_GET["name"]) or !isset($_GET["path"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				$result = update_folder($_GET["id"], urldecode($_GET["name"]), $_GET["path"]);
 				break;
 			default:
 				$error = "UNSUPPORTED_OPERATION";

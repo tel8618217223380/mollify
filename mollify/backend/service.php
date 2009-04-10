@@ -98,6 +98,7 @@
 	if ($result === FALSE) {
 		$result = get_error_message($error, $error_details);
 	} else {
+		if ($result === TRUE) $result = array();
 		$result = get_success_message($result);
 	}
 	return_json($result);

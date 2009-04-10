@@ -209,7 +209,7 @@ public class StyleConstants {
 	public static final String CONFIGURATION_DIALOG_VIEW_PANEL = "mollify-configuration-dialog-view-panel";
 	public static final String CONFIGURATION_DIALOG_VIEW_TITLE = "mollify-configuration-dialog-view-title";
 	public static final String CONFIGURATION_DIALOG_VIEW = "mollify-configuration-dialog-view";
-	
+
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS = "users";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_LIST_PANEL = "mollify-configuration-dialog-view-user-list";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_LIST = "configuration";
@@ -225,6 +225,7 @@ public class StyleConstants {
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTIONS = "mollify-configuration-dialog-folders-actions";
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION = "mollify-configuration-dialog-folders-action";
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION_ADD = "mollify-configuration-dialog-folders-action-add";
+	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION_EDIT = "mollify-configuration-dialog-folders-action-edit";
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION_REMOVE = "mollify-configuration-dialog-folders-action-remove";
 
 	public static final String USER_LIST_HEADER = "mollify-userlist-column";
@@ -235,7 +236,7 @@ public class StyleConstants {
 	public static final String USER_DIALOG = "user-dialog";
 	public static final String USER_DIALOG_CONTENT = "mollify-user-dialog-content";
 	public static final String USER_DIALOG_BUTTONS = "mollify-user-dialog-buttons";
-	public static final String USER_DIALOG_BUTTON_ADD = "user-dialog-add";
+	public static final String USER_DIALOG_BUTTON_ADD_EDIT = "user-dialog-add-edit";
 	public static final String USER_DIALOG_NAME_TITLE = "mollify-user-dialog-name-title";
 	public static final String USER_DIALOG_NAME_VALUE = "mollify-user-dialog-name-value";
 	public static final String USER_DIALOG_TYPE_TITLE = "mollify-user-dialog-type-title";
@@ -248,4 +249,13 @@ public class StyleConstants {
 	public static final String FOLDER_LIST = "mollify-folderlist";
 	public static final String FOLDER_LIST_COLUMN_PREFIX = "mollify-folderlist-column-";
 	public static final String FOLDER_LIST_ROW = "mollify-folderlist-row";
+
+	public static final String FOLDER_DIALOG = "folder-dialog";
+	public static final String FOLDER_DIALOG_CONTENT = "mollify-folder-dialog-content";
+	public static final String FOLDER_DIALOG_NAME_TITLE = "mollify-folder-dialog-name-title";
+	public static final String FOLDER_DIALOG_NAME_VALUE = "mollify-folder-dialog-name-value";
+	public static final String FOLDRE_DIALOG_PATH_TITLE = "mollify-folder-dialog-path-title";
+	public static final String FOLDER_DIALOG_PATH_VALUE = "mollify-folder-dialog-path-value";
+	public static final String FOLDER_DIALOG_BUTTONS = "mollify-folder-dialog-buttons";
+	public static final String FOLDER_DIALOG_BUTTON_ADD_EDIT = "folder-dialog-add-edit";
 }

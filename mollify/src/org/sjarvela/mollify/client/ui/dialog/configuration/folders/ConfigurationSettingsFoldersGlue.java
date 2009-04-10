@@ -21,10 +21,14 @@ import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class ConfigurationSettingsFoldersGlue {
 
+	private final ConfigurationSettingsFoldersView view;
+
 	public ConfigurationSettingsFoldersGlue(
 			ConfigurationSettingsFoldersView view,
 			final ConfigurationSettingsFoldersPresenter presenter,
 			ActionDelegator actionDelegator) {
+
+		this.view = view;
 
 		view.list().addListener(new GridListener<DirectoryInfo>() {
 			public void onColumnClicked(DirectoryInfo t, GridColumn column) {
@@ -37,6 +41,7 @@ public class ConfigurationSettingsFoldersGlue {
 			}
 
 			public void onSelectionChanged(List<DirectoryInfo> selected) {
+				updateButtons(selected.size() == 1);
 			}
 		});
 
@@ -49,12 +54,27 @@ public class ConfigurationSettingsFoldersGlue {
 				});
 
 		actionDelegator.setActionHandler(
+				ConfigurationSettingsFoldersView.Actions.editFolder,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onEditFolder();
+					}
+				});
+
+		actionDelegator.setActionHandler(
 				ConfigurationSettingsFoldersView.Actions.removeFolder,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onRemoveFolder();
 					}
 				});
+
+		updateButtons(false);
+	}
+
+	protected void updateButtons(boolean selected) {
+		view.editFolderButton().setEnabled(selected);
+		view.removeFolderButton().setEnabled(selected);
 	}
 
 }
