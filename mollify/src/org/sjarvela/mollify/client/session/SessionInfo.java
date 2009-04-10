@@ -20,11 +20,12 @@ import com.google.gwt.core.client.JsArray;
 
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
-			boolean authenticated, String user, PermissionMode permissionMode,
-			SessionSettings settings, ConfigurationInfo configurationInfo,
-			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) {
+			boolean authenticated, String userId, String user,
+			PermissionMode permissionMode, SessionSettings settings,
+			ConfigurationInfo configurationInfo, FileSystemInfo fileInfo,
+			JsArray<JsDirectory> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
-		result.putValues(authenticationRequired, authenticated, user,
+		result.putValues(authenticationRequired, authenticated, userId, user,
 				permissionMode.getStringValue(), settings, configurationInfo,
 				fileInfo, roots);
 		return result;
@@ -49,8 +50,12 @@ public class SessionInfo extends JavaScriptObject {
 		return this.authenticated;
 	}-*/;
 
+	public final native String getLoggedUserId() /*-{
+		return this.user_id;
+	}-*/;
+
 	public final native String getLoggedUser() /*-{
-		return this.user;
+		return this.username;
 	}-*/;
 
 	public final native SessionSettings getSettings() /*-{
@@ -81,14 +86,16 @@ public class SessionInfo extends JavaScriptObject {
 	public final native JsArray<JsDirectory> getRootDirectoryList() /*-{
 		return this.roots;
 	}-*/;
-	
+
 	private final native void putValues(boolean authenticationRequired,
-			boolean authenticated, String user, String permissionMode,
-			SessionSettings settings, ConfigurationInfo configurationInfo,
-			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) /*-{
+			boolean authenticated, String userId, String user,
+			String permissionMode, SessionSettings settings,
+			ConfigurationInfo configurationInfo, FileSystemInfo fileInfo,
+			JsArray<JsDirectory> roots) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
-		this.user = user;
+		this.user_id = userId;
+		this.username = user;
 		this.default_permission_mode = permissionMode;
 		this.settings = settings;
 		this.configuration = configurationInfo;

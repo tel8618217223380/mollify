@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -26,7 +27,7 @@ public class PhpSessionService implements SessionService {
 	private final PhpService service;
 
 	enum SessionAction {
-		authenticate, session_info, logout, change_pw
+		authenticate, session_info, logout, change_pw, reset_pw
 	}
 
 	public PhpSessionService(PhpService service) {
@@ -41,9 +42,9 @@ public class PhpSessionService implements SessionService {
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
-		service.doRequest(getUrl(SessionAction.authenticate, Arrays.asList("username="
-				+ userName, "password=" + MD5.generateMD5(password))),
-				resultListener);
+		service.doRequest(getUrl(SessionAction.authenticate, Arrays
+				.asList("username=" + userName, "password="
+						+ MD5.generateMD5(password))), resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
@@ -53,6 +54,15 @@ public class PhpSessionService implements SessionService {
 		service.doRequest(getUrl(SessionAction.change_pw, Arrays.asList("old="
 				+ MD5.generateMD5(oldPassword), "new="
 				+ MD5.generateMD5(newPassword))), resultListener);
+	}
+
+	public void resetPassword(User user, String password,
+			ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Reset password for user " + user.getId());
+		service.doRequest(getUrl(SessionAction.reset_pw, Arrays.asList("id="
+				+ user.getId(), "new=" + MD5.generateMD5(password))),
+				resultListener);
 	}
 
 	public void logout(ResultListener<SessionInfo> resultListener) {

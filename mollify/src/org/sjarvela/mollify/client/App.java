@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.ParameterParser;
+import org.sjarvela.mollify.client.session.SessionHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
@@ -41,6 +42,7 @@ public class App implements EntryPoint, LogoutHandler {
 	TextProvider textProvider;
 	WindowManager windowManager;
 	RootPanel panel;
+	SessionHandler sessionInfoProvider;
 
 	public void onModuleLoad() {
 		Log.setUncaughtExceptionHandler();
@@ -64,12 +66,13 @@ public class App implements EntryPoint, LogoutHandler {
 
 		try {
 			environment = createEnvironment(settings);
+			sessionInfoProvider = new SessionHandler();
 			textProvider = DefaultTextProvider.getInstance();
 
 			MainViewFactory mainViewFactory = new MainViewFactory(textProvider,
 					environment);
 			windowManager = new WindowManager(panel, textProvider,
-					mainViewFactory, new DialogManager(textProvider));
+					mainViewFactory, new DialogManager(textProvider, sessionInfoProvider));
 		} catch (RuntimeException e) {
 			showExceptionError("Error initializing: ", e);
 			return;
@@ -101,6 +104,8 @@ public class App implements EntryPoint, LogoutHandler {
 	};
 
 	private void startSession(SessionInfo info) {
+		sessionInfoProvider.setSession(info);
+		
 		if (info.isAuthenticationRequired() && !info.getAuthenticated())
 			showLogin();
 		else

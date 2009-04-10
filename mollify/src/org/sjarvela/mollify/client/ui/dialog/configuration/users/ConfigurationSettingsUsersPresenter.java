@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.dialog.configuration.users;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
@@ -25,11 +26,14 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 	private final ConfigurationSettingsUsersView view;
 	private final ConfigurationDialog dialog;
 	private final SettingsService service;
+	private final TextProvider textProvider;
 
 	public ConfigurationSettingsUsersPresenter(SettingsService service,
-			ConfigurationDialog dialog, ConfigurationSettingsUsersView view) {
+			ConfigurationDialog dialog, TextProvider textProvider,
+			ConfigurationSettingsUsersView view) {
 		this.service = service;
 		this.dialog = dialog;
+		this.textProvider = textProvider;
 		this.view = view;
 
 		view.list().setSelectionMode(SelectionMode.Single);
@@ -62,7 +66,27 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
+		if (selected.getId().equals(dialog.getSessionInfo().getLoggedUserId())) {
+			dialog
+					.getDialogManager()
+					.showInfo(
+							textProvider.getStrings()
+									.configurationDialogSettingUsers(),
+							textProvider
+									.getStrings()
+									.configurationDialogSettingUsersCannotDeleteYourself());
+			return;
+		}
 		service.removeUser(selected, createReloadListener());
+	}
+
+	public void onResetPassword() {
+		if (view.list().getSelected().size() != 1)
+			return;
+
+		User selected = view.list().getSelected().get(0);
+		dialog.getDialogManager().openResetPasswordDialog(selected,
+				dialog.getPasswordHandler());
 	}
 
 	public void addUser(String name, String password, PermissionMode mode) {
@@ -80,5 +104,4 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			}
 		});
 	}
-
 }

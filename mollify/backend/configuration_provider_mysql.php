@@ -85,7 +85,12 @@
 	function add_user($name, $pw, $permission) {
 		global $error, $error_details;
 				
-		_query(sprintf("INSERT INTO user (name, password, permission_mode) VALUES ('%s', '%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($pw), mysql_real_escape_string($permission)));
+		if (!_query(sprintf("INSERT INTO user (name, password, permission_mode) VALUES ('%s', '%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($pw), mysql_real_escape_string($permission)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to add user (".$error_details.")");
+			return FALSE;
+		}
 		
 		return TRUE;
 	}
@@ -93,7 +98,13 @@
 	function update_user($id, $name, $permission) {
 		global $error, $error_details;
 				
-		_query(sprintf("UPDATE user SET name='%s', permission_mode='%s' WHERE id='%s'", mysql_real_escape_string($name), mysql_real_escape_string($permission), mysql_real_escape_string($id)));
+		if (!_query(sprintf("UPDATE user SET name='%s', permission_mode='%s' WHERE id='%s'", mysql_real_escape_string($name), mysql_real_escape_string($permission), mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to update user (".$error_details.")");
+			return FALSE;
+		}
+		
 		if (mysql_affected_rows() == 0) {
 			log_error("Invalid update user request, user ".$id." not found");
 			$error = "INVALID_REQUEST";
@@ -106,7 +117,12 @@
 	function remove_user($id) {
 		global $error, $error_details;
 
-		_query(sprintf("DELETE FROM user WHERE id='%s'", mysql_real_escape_string($id)));
+		if (!_query(sprintf("DELETE FROM user WHERE id='%s'", mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to remove user (".$error_details.")");
+			return FALSE;
+		}
 
 		if (mysql_affected_rows() == 0) {
 			log_error("Invalid delete user request, user ".$id." not found");
@@ -130,7 +146,12 @@
 			return FALSE;
 		}
 		
-		_query(sprintf("UPDATE user SET password='%s' WHERE id='%s'", mysql_real_escape_string($new), mysql_real_escape_string($id)));
+		if (!_query(sprintf("UPDATE user SET password='%s' WHERE id='%s'", mysql_real_escape_string($new), mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to change password (".$error_details.")");
+			return FALSE;
+		}
 		
 		if (mysql_affected_rows() == 0) {
 			log_error("Invalid change password request, user ".$id." not found");
@@ -140,7 +161,26 @@
 		
 		return TRUE;
 	}
-	
+
+	function reset_password($id, $pw) {
+		global $error, $error_details;
+				
+		if (!_query(sprintf("UPDATE user SET password='%s' WHERE id='%s'", mysql_real_escape_string($pw), mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to reset password (".$error_details.")");
+			return FALSE;
+		}
+		
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid reset password request, user ".$id." not found");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
+
 	function get_all_folders() {
 		$result = _query("SELECT id, name, path FROM folder ORDER BY id ASC");
 		$list = array();
@@ -154,7 +194,12 @@
 	function add_folder($name, $path) {
 		global $error, $error_details;
 				
-		_query(sprintf("INSERT INTO folder (name, path) VALUES ('%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($path)));
+		if (!_query(sprintf("INSERT INTO folder (name, path) VALUES ('%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($path)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to add folder (".$error_details.")");
+			return FALSE;
+		}
 		
 		return TRUE;
 	}
@@ -175,7 +220,19 @@
 	function remove_folder($id) {
 		global $error, $error_details;
 
-		_query(sprintf("DELETE FROM folder WHERE id='%s'", mysql_real_escape_string($id)));
+		if (!_query(sprintf("DELETE FROM user_folder WHERE folder_id='%s'", mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to delete user published folders with id ".$id." (".$error_details.")");
+			return FALSE;
+		}
+		
+		if (!_query(sprintf("DELETE FROM folder WHERE id='%s'", mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to delete folders with id ".$id." (".$error_details.")");
+			return FALSE;
+		}
 
 		if (mysql_affected_rows() == 0) {
 			log_error("Invalid delete folder request, folder ".$id." not found");

@@ -27,9 +27,10 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 	private final ActionButton addUserButton;
 	private final ActionButton removeUserButton;
 	private ActionButton editUserButton;
+	private ActionButton resetPasswordButton;
 
 	public enum Actions implements ResourceId {
-		addUser, editUser, removeUser
+		addUser, editUser, removeUser, resetPassword
 	}
 
 	public ConfigurationSettingsUsersView(TextProvider textProvider,
@@ -56,6 +57,12 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION);
 		removeUserButton.setAction(actionListener, Actions.removeUser);
 
+		resetPasswordButton = new ActionButton(textProvider.getStrings()
+				.configurationDialogSettingUsersResetPassword(),
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION_RESET_PW,
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS_ACTION);
+		resetPasswordButton.setAction(actionListener, Actions.resetPassword);
+
 		add(createList());
 		add(createButtons());
 	}
@@ -75,6 +82,7 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 		userActions.add(addUserButton);
 		userActions.add(editUserButton);
 		userActions.add(removeUserButton);
+		userActions.add(resetPasswordButton);
 		return userActions;
 	}
 

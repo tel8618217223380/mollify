@@ -44,6 +44,22 @@
 				}
 				$result = change_password($_SESSION['user_id'], $_GET["old"], $_GET["new"]);
 				break;
+			case "reset_pw":
+				if (!is_admin()) {
+					return_json(get_error_message("UNAUTHORIZED"));
+					return;
+				}
+				if (!is_configuration_update_supported()) {
+					log_error("Cannot reset password, feature not supported");
+					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
+					return;
+				}
+				if (!isset($_GET["id"]) or !isset($_GET["password"])) {
+					return_json(get_error_message("INVALID_REQUEST"));
+					return;
+				}
+				$result = reset_password($_GET['id'], $_GET["password"]);
+				break;
 			default:
 				return_json(get_error_message("INVALID_REQUEST"));
 				exit(0);
@@ -63,7 +79,8 @@
 		
 		if ($auth) {
 			$info["authenticated"] = TRUE;
-			$info["user"] = $_SESSION['username'];
+			$info["username"] = $_SESSION['username'];
+			$info["user_id"] = $_SESSION['user_id'];
 			$info["settings"] = $_SESSION['settings'];
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 			$info["filesystem"] = get_filesystem_session_info();

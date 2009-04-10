@@ -29,6 +29,7 @@ import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PasswordHandler;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
@@ -38,6 +39,7 @@ import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
 import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
+import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
@@ -47,9 +49,12 @@ import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserHandler;
 public class DialogManager {
 	private TextProvider textProvider;
 	private PasswordGenerator passwordGenerator;
+	private final SessionProvider sessionProvider;
 
-	public DialogManager(TextProvider textProvider) {
+	public DialogManager(TextProvider textProvider,
+			SessionProvider sessionProvider) {
 		this.textProvider = textProvider;
+		this.sessionProvider = sessionProvider;
 		this.passwordGenerator = new DefaultPasswordGenerator();
 	}
 
@@ -113,8 +118,9 @@ public class DialogManager {
 				provider, listener, initialDirectoryPath);
 	}
 
-	public void openConfigurationDialog(SettingsService service) {
-		new ConfigurationDialog(textProvider, this, service);
+	public void openConfigurationDialog(SettingsService service, PasswordHandler passwordHandler) {
+		new ConfigurationDialog(textProvider, this, sessionProvider
+				.getSession(), service, passwordHandler);
 	}
 
 	public void openAddUserDialog(UserHandler handler) {
@@ -123,6 +129,10 @@ public class DialogManager {
 
 	public void openEditUserDialog(UserHandler handler, User user) {
 		new UserDialog(textProvider, handler, user);
+	}
+
+	public void openResetPasswordDialog(User user, PasswordHandler handler) {
+		new ResetPasswordDialog(textProvider, passwordGenerator, handler, user);
 	}
 
 }

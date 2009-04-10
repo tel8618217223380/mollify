@@ -51,7 +51,7 @@
 			}
 			
 			function add_button(selector, id, title, action) {
-				$(selector).html('<div class="button" id="' + id + '">' + title + '</div>');
+				$(selector).html('<button class="button" id="' + id + '">' + title + '</button>');
 				$("#" + id + ".button").click(action);
 				set_effects();
 			}

@@ -218,6 +218,7 @@ public class StyleConstants {
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_ADD = "mollify-configuration-dialog-users-action-add";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_EDIT = "mollify-configuration-dialog-users-action-edit";
 	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_REMOVE = "mollify-configuration-dialog-users-action-remove";
+	public static final String CONFIGURATION_DIALOG_VIEW_USERS_ACTION_RESET_PW = "mollify-configuration-dialog-users-action-reset-pw";
 
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS = "folders";
 	public static final String CONFIGURATION_DIALOG_VIEW_FOLDERS_LIST = "configuration";
@@ -258,4 +259,12 @@ public class StyleConstants {
 	public static final String FOLDER_DIALOG_PATH_VALUE = "mollify-folder-dialog-path-value";
 	public static final String FOLDER_DIALOG_BUTTONS = "mollify-folder-dialog-buttons";
 	public static final String FOLDER_DIALOG_BUTTON_ADD_EDIT = "folder-dialog-add-edit";
+
+	public static final String RESET_PASSWORD_DIALOG = "reset-password-dialog";
+	public static final String RESET_PASSWORD_DIALOG_CONTENT = "mollify-reset-password-dialog-content";
+	public static final String RESET_PASSWORD_DIALOG_PASSWORD_TITLE = "mollify-reset-password-dialog-password-title";
+	public static final String RESET_PASSWORD_DIALOG_PASSWORD_VALUE = "mollify-reset-password-dialog-password-value";
+	public static final String RESET_PASSWORD_DIALOG_GENERATE_PASSWORD = "reset-password-dialog-generate";
+	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
+	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "mollify-reset-password-dialog-button-reset";
 }
