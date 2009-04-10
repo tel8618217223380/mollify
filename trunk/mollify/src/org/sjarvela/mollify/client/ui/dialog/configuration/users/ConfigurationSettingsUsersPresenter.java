@@ -40,13 +40,9 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 		service.getUsers(dialog
 				.createResultListener(new ResultCallback<List<User>>() {
 					public void onCallback(List<User> list) {
-						setUsers(list);
+						view.list().setContent(list);
 					}
 				}));
-	}
-
-	private void setUsers(List<User> list) {
-		view.list().setContent(list);
 	}
 
 	public void onAddUser() {

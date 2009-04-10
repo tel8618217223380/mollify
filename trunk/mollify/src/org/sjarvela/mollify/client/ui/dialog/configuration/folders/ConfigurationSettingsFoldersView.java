@@ -22,19 +22,20 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView {
-	private final DirectoryList list;
+	private final DirectoryInfoList list;
 	private final ActionButton addFolderButton;
+	private final ActionButton editFolderButton;
 	private final ActionButton removeFolderButton;
 
 	public enum Actions implements ResourceId {
-		addFolder, removeFolder
+		addFolder, editFolder, removeFolder
 	}
 
 	public ConfigurationSettingsFoldersView(TextProvider textProvider,
 			ActionListener actionListener) {
 		super(textProvider, StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS);
 
-		list = new DirectoryList(textProvider,
+		list = new DirectoryInfoList(textProvider,
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_LIST);
 
 		addFolderButton = new ActionButton(textProvider.getStrings()
@@ -42,6 +43,12 @@ public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView 
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION_ADD,
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION);
 		addFolderButton.setAction(actionListener, Actions.addFolder);
+
+		editFolderButton = new ActionButton(textProvider.getStrings()
+				.configurationDialogSettingFoldersEdit(),
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION_EDIT,
+				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTION);
+		editFolderButton.setAction(actionListener, Actions.editFolder);
 
 		removeFolderButton = new ActionButton(textProvider.getStrings()
 				.configurationDialogSettingFoldersRemove(),
@@ -66,6 +73,7 @@ public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView 
 		userActions
 				.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_ACTIONS);
 		userActions.add(addFolderButton);
+		userActions.add(editFolderButton);
 		userActions.add(removeFolderButton);
 		return userActions;
 	}
@@ -76,12 +84,16 @@ public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView 
 				.configurationDialogSettingFoldersViewTitle();
 	}
 
-	public DirectoryList list() {
+	public DirectoryInfoList list() {
 		return list;
 	}
 
 	public ActionButton addFolderButton() {
 		return addFolderButton;
+	}
+
+	public ActionButton editFolderButton() {
+		return editFolderButton;
 	}
 
 	public ActionButton removeFolderButton() {

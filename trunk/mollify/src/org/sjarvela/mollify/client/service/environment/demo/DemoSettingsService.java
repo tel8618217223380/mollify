@@ -27,8 +27,7 @@ public class DemoSettingsService implements SettingsService {
 				PermissionMode.ReadWrite)));
 	}
 
-	public void getDirectories(
-			ResultListener<List<DirectoryInfo>> resultListener) {
+	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
 		DirectoryInfo dir1 = DirectoryInfo.create("1", "Example Folder",
 				"/foo/bar");
 		DirectoryInfo dir2 = DirectoryInfo.create("2", "Another Folder",
@@ -48,6 +47,20 @@ public class DemoSettingsService implements SettingsService {
 	}
 
 	public void removeUser(User selected, ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void addFolder(String name, String path,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void editFolder(DirectoryInfo dir, String name, String path,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 

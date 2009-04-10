@@ -58,7 +58,7 @@ public class ConfigurationViewManager {
 		ConfigurationSettingsFoldersView view = new ConfigurationSettingsFoldersView(
 				textProvider, actionDelegator);
 		ConfigurationSettingsFoldersPresenter presenter = new ConfigurationSettingsFoldersPresenter(
-				service, dialog, view);
+				service, textProvider, dialog, view);
 		new ConfigurationSettingsFoldersGlue(view, presenter, actionDelegator);
 		return view;
 	}

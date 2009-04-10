@@ -150,7 +150,42 @@
 		mysql_free_result($result);
 		return $list;
 	}
+
+	function add_folder($name, $path) {
+		global $error, $error_details;
+				
+		_query(sprintf("INSERT INTO folder (name, path) VALUES ('%s', '%s')", mysql_real_escape_string($name), mysql_real_escape_string($path)));
+		
+		return TRUE;
+	}
+
+	function update_folder($id, $name, $path) {
+		global $error, $error_details;
+				
+		_query(sprintf("UPDATE folder SET name='%s', path='%s' WHERE id='%s'", mysql_real_escape_string($name), mysql_real_escape_string($path), mysql_real_escape_string($id)));
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid update folder request, folder ".$id." not found");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
 	
+	function remove_folder($id) {
+		global $error, $error_details;
+
+		_query(sprintf("DELETE FROM folder WHERE id='%s'", mysql_real_escape_string($id)));
+
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid delete folder request, folder ".$id." not found");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+
 	function get_user_root_directories($user_id) {
 		$result = _query(sprintf("SELECT folder.id, folder.name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
 

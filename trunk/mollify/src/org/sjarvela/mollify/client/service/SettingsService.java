@@ -21,14 +21,21 @@ public interface SettingsService {
 
 	void getUsers(ResultListener<List<User>> resultListener);
 
-	void getDirectories(ResultListener<List<DirectoryInfo>> resultListener);
+	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
 
 	void addUser(String name, String password, PermissionMode mode,
-			ResultListener<Boolean> resultListener);
+			ResultListener resultListener);
 
 	void removeUser(User user, ResultListener<Boolean> resultListener);
 
 	void editUser(User user, String name, PermissionMode mode,
-			ResultListener<Boolean> resultListener);
+			ResultListener resultListener);
+
+	void addFolder(String name, String path, ResultListener resultListener);
+
+	void removeFolder(DirectoryInfo dir, ResultListener resultListener);
+
+	void editFolder(DirectoryInfo dir, String name, String path,
+			ResultListener resultListener);
 
 }

@@ -105,11 +105,9 @@
 						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							if (rename_file($file, $to))
-								$result = get_success_message();
+							$result = rename_file($file, $to);
 						} else if ($item_type === 'd') {
-							if (rename_directory($file, $to))
-								$result = get_success_message();
+							$result = rename_directory($file, $to);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
@@ -126,8 +124,7 @@
 							break;
 						}
 						
-						if (copy_file($file, $to))
-							$result = get_success_message();
+						$result = copy_file($file, $to);
 						break;
 	
 					case "move":
@@ -141,8 +138,7 @@
 							break;
 						}
 						
-						if (move_file($file, $to))
-							$result = get_success_message();
+						$result = move_file($file, $to);
 						break;
 										
 					case "delete":
@@ -153,11 +149,9 @@
 						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							if (delete_file($file))
-								$result = get_success_message();
+							$result = delete_file($file);
 						} else if ($item_type === 'd') {
-							if (delete_directory($file))
-								$result = get_success_message();
+							$result = delete_directory($file);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
@@ -176,8 +170,7 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						if (create_folder($dir, $_GET["name"]))
-							$result = get_success_message();
+						$result = create_folder($dir, $_GET["name"]);
 						break;
 						
 					default:
