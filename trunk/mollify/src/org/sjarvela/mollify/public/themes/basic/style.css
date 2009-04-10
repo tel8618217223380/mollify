@@ -1191,11 +1191,11 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 	height: 25px;
 }
 
-td.mollify-userlist-column-type, td.mollify-folderlist-column-location {
+td.mollify-userlist-column-type, td.mollify-folderlist-column-path {
 	cursor: pointer;
 }
 
-.mollify-userlist-column-type, .mollify-folderlist-column-location {
+.mollify-userlist-column-type, .mollify-folderlist-column-path {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
@@ -1222,18 +1222,17 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 	background-color: #a3bad8;
 }
 
-.mollify-user-dialog-content {
+.mollify-user-dialog-content, .mollify-folder-dialog-content {
 	margin-right: 6px;
 	margin-left: 6px;
 }
 
-.mollify-user-dialog-name-title, .mollify-user-dialog-type-title, .mollify-user-dialog-password-title {
+.mollify-user-dialog-name-title, .mollify-user-dialog-type-title, .mollify-user-dialog-password-title, .mollify-folder-dialog-name-title, .mollify-folder-dialog-path-title {
 	margin-bottom: 3px;
 	margin-top: 6px;
-	font-weight: bold;
 }
 
-.mollify-user-dialog-name-value, .mollify-user-dialog-type-value {
+.mollify-user-dialog-name-value, .mollify-user-dialog-type-value, .mollify-folder-dialog-name-value, .mollify-folder-dialog-path-value {
 	width: 200px;
 	height: 15px;
 }
@@ -1241,14 +1240,21 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 .mollify-user-dialog-password-value {
 	height: 15px;
 	font-style: italic;
+	color: #a9a9a9;
 }
 
-.mollify-user-dialog-buttons {
+.mollify-dialog-button-user-generate-password {
+	width: 50px;
+	height: 23px;
+	margin-left: 6px;
+}
+
+.mollify-user-dialog-buttons, .mollify-folder-dialog-buttons {
 	width: 100%;
-	margin-top: 6px;
+	margin-top: 12px;
 }
 
-.mollify-dialog-button-user-dialog-add {
+.mollify-dialog-button-user-dialog-add-edit, .mollify-dialog-button-folder-dialog-add-edit {
 	float: right;
 	width: 60px;
 }

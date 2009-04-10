@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.User;
 
 public interface SessionService {
 
@@ -22,6 +23,8 @@ public interface SessionService {
 
 	void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener);
+
+	void resetPassword(User user, String password, ResultListener resultListener);
 
 	void logout(ResultListener<SessionInfo> resultListener);
 

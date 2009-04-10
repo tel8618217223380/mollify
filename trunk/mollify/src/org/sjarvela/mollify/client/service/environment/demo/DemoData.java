@@ -93,17 +93,17 @@ public class DemoData {
 
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
-			return SessionInfo.create(false, false, "", permissionMode,
+			return SessionInfo.create(false, false, "", "", permissionMode,
 					settings, configurationInfo, fileSystemInfo,
 					rootDirectories);
 		}
 
 		if (user != null && user.length() > 0)
-			return SessionInfo.create(true, true, user, permissionMode,
+			return SessionInfo.create(true, true, user, "", permissionMode,
 					settings, configurationInfo, fileSystemInfo,
 					rootDirectories);
-		return SessionInfo.create(true, false, "", permissionMode, settings,
-				configurationInfo, fileSystemInfo, rootDirectories);
+		return SessionInfo.create(true, false, "", "", permissionMode,
+				settings, configurationInfo, fileSystemInfo, rootDirectories);
 	}
 
 	public List<Directory> getDirectories(Directory dir) {

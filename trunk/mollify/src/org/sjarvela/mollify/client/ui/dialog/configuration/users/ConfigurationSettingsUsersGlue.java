@@ -66,6 +66,14 @@ public class ConfigurationSettingsUsersGlue {
 						presenter.onRemoveUser();
 					}
 				});
+
+		actionDelegator.setActionHandler(
+				ConfigurationSettingsUsersView.Actions.resetPassword,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onResetPassword();
+					}
+				});
 		
 		updateButtons(false);
 	}

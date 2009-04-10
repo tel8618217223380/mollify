@@ -130,16 +130,12 @@ public class UserDialog extends CenteredDialog {
 		password.setReadOnly(true);
 		panel.add(password);
 
-		Button generatePassword = new Button(textProvider.getStrings()
-				.userDialogGeneratePassword());
-		generatePassword.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
-		generatePassword
-				.addStyleDependentName(StyleConstants.USER_DIALOG_GENERATE_PASSWORD);
-		generatePassword.addClickHandler(new ClickHandler() {
+		Button generatePassword = createButton(textProvider.getStrings()
+				.userDialogGeneratePassword(), new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				generateNewPassword();
 			}
-		});
+		}, StyleConstants.USER_DIALOG_GENERATE_PASSWORD);
 
 		panel.add(generatePassword);
 

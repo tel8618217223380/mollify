@@ -23,9 +23,13 @@
 		"MOLLIFY_ALREADY_INSTALLED" => "Mollify already installed",
 		"COULD_NOT_CREATE_DB" => "Could not create database",
 		"DB_PERMISSION_TEST_FAILED" => "Insufficient database permissions",
+		"COULD_NOT_CONNECT_DB" => "Could not connect to database",
+		"COULD_NOT_OPEN_SQL_FILE" => "Could not open SQL file",
+		"COULD_NOT_EXEC_SQL" => "Could not execute SQL query",
 		"COULD_NOT_CREATE_TABLES" => "Could not create database tables",
 		"COULD_NOT_CREATE_ADMIN" => "Could not create admin user",
-		"COULD_NOT_INSERT_PARAMS" => "Could not insert parameters"
+		"COULD_NOT_INSERT_PARAMS" => "Could not insert parameters",
+		"INSTALLATION_FAILED" => "Installation failed"
 	);
 		
 	function check_configuration() {
@@ -151,18 +155,20 @@
 		case "create_and_check_db":
 			$db = get_db();
 			if (!$db) break;
-		
-			if (isset($_POST["create"]) and $_POST["create"] === "true" and ($err = create_database($db))) {
-				$error = "COULD_NOT_CREATE_DB";
-				$error_detail = $err;
-				break;
+
+			$db_exists = check_database($db);
+					
+			if (isset($_POST["create"]) and $_POST["create"] === "true") {
+				if (!$db_exists and !create_database($db)) break;
+			} else {
+				if (!$db_exists) {
+					$error = "COULD_NOT_CONNECT_DB";
+					$error_detail = "Database does not exist";
+					break;
+				}
 			}
 				
-			if (($failed = check_db_permissions($db))) {
-				$error = "DB_PERMISSION_TEST_FAILED";
-				$error_detail = "Could not ".$failed["phase"]." (".$failed["error"].")";
-				break;
-			}
+			check_db_permissions($db);
 			break;
 		
 		case "install":
@@ -173,22 +179,14 @@
 			
 			$db = get_db();
 			if (!$db) break;
+			$connection = get_connection($db);
 			
-			if ($err = create_tables($db)) {
-				$error = "COULD_NOT_CREATE_TABLES";
-				$error_detail = $err;
-				break;
-			}
-			if ($err = insert_admin_user($db, $_POST["username"], $_POST["password"])) {
-				$error = "COULD_NOT_CREATE_ADMIN";
-				$error_detail = $err;
-				break;
-			}
-			if ($err = insert_params($db)) {
-				$error = "COULD_NOT_INSERT_PARAMS";
-				$error_detail = $err;
-				break;
-			}
+			if (!$connection) break;
+			if (!create_tables($connection)) break;
+			if (!insert_admin_user($connection, $_POST["username"], $_POST["password"])) break;
+			if (!insert_params($connection)) break;			
+			if (!close_connection($connection, "INSTALLATION_FAILED")) break;
+
 			break;
 
 		default:

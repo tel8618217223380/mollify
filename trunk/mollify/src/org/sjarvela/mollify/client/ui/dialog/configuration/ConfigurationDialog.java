@@ -20,6 +20,8 @@ import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.session.PasswordHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -38,22 +40,27 @@ public class ConfigurationDialog extends CenteredDialog implements
 	private final TextProvider textProvider;
 	private final Map<ResourceId, ConfigurationSettingsView> cache = new HashMap();
 	private final ConfigurationViewManager viewManager;
+	private final DialogManager dialogManager;
+	private final SessionInfo session;
+	private final PasswordHandler passwordHandler;
 
 	private ConfigurationMenu menu;
 	private FlowPanel settingsView;
 	private Label title;
-	private final DialogManager dialogManager;
 
 	public enum Settings implements ResourceId {
 		Users, Folders
 	}
 
 	public ConfigurationDialog(TextProvider textProvider,
-			DialogManager dialogManager, SettingsService service) {
+			DialogManager dialogManager, SessionInfo session,
+			SettingsService service, PasswordHandler passwordHandler) {
 		super(textProvider.getStrings().configurationDialogTitle(),
 				StyleConstants.CONFIGURATION_DIALOG);
 		this.textProvider = textProvider;
 		this.dialogManager = dialogManager;
+		this.session = session;
+		this.passwordHandler = passwordHandler;
 		this.viewManager = new ConfigurationViewManager(textProvider, service,
 				this);
 
@@ -160,5 +167,13 @@ public class ConfigurationDialog extends CenteredDialog implements
 
 	public DialogManager getDialogManager() {
 		return dialogManager;
+	}
+
+	public SessionInfo getSessionInfo() {
+		return session;
+	}
+
+	public PasswordHandler getPasswordHandler() {
+		return passwordHandler;
 	}
 }

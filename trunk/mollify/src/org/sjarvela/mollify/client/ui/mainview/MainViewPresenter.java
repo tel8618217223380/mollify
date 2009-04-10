@@ -35,6 +35,7 @@ import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.PasswordHandler;
+import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
@@ -253,6 +254,22 @@ public class MainViewPresenter implements DirectoryListener,
 				});
 	}
 
+	public void resetPassword(User user, String password) {
+		sessionService.resetPassword(user, password,
+				createListener(new Callback() {
+					public void onCallback() {
+						windowManager
+								.getDialogManager()
+								.showInfo(
+										textProvider.getStrings()
+												.passwordDialogTitle(),
+										textProvider
+												.getStrings()
+												.passwordDialogPasswordChangedSuccessfully());
+					}
+				}));
+	}
+
 	public void onAction(FileSystemItem item, FileSystemAction action) {
 		if (item.isFile())
 			onFileAction((File) item, action);
@@ -390,6 +407,6 @@ public class MainViewPresenter implements DirectoryListener,
 
 	public void configure() {
 		windowManager.getDialogManager().openConfigurationDialog(
-				settingsService);
+				settingsService, this);
 	}
 }

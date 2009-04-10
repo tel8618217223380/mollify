@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 	public String shortDateTimeFormat();
-	
+
 	public String permissionModeAdmin();
 
 	public String permissionModeReadWrite();
@@ -186,25 +186,29 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String configurationDialogCloseButton();
 
 	public String configurationDialogSettingUsers();
-	
+
 	public String configurationDialogSettingFolders();
 
 	public String configurationDialogSettingUsersViewTitle();
 
 	public String configurationDialogSettingUsersAdd();
-	
+
 	public String configurationDialogSettingUsersEdit();
 
 	public String configurationDialogSettingUsersRemove();
+	
+	public String configurationDialogSettingUsersResetPassword();
+
+	public String configurationDialogSettingUsersCannotDeleteYourself();
 
 	public String configurationDialogSettingFoldersViewTitle();
 
 	public String configurationDialogSettingFoldersAdd();
-	
+
 	public String configurationDialogSettingFoldersEdit();
 
 	public String configurationDialogSettingFoldersRemove();
-	
+
 	public String userListColumnTitleName();
 
 	public String userListColumnTitleType();
@@ -240,4 +244,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String folderDialogAddButton();
 
 	public String folderDialogEditButton();
+
+	public String resetPasswordDialogTitle();
+
+	public String resetPasswordDialogPassword();
+
+	public String resetPasswordDialogGeneratePassword();
+
+	public String resetPasswordDialogResetButton();
 }

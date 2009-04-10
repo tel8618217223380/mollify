@@ -47,10 +47,28 @@
 				
 		return $result;
 	}
+
+	function get_connection($db, $connect_db = TRUE) {
+		global $error, $error_detail;
+		
+		try {
+			if ($connect_db) $connection = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
+			else $connection = @mysqli_connect($db['host'], $db['user'], $db['password']);
+		} catch (mysqli_sql_exception $e) {
+			$error = "COULD_NOT_CONNECT_TO_DB";
+			$error_detail = $e->getMessage();
+			return FALSE;
+		}
+		if ($connection) return $connection;
+		$error = "COULD_NOT_CONNECT_TO_DB";
+		$error_detail = mysqli_connect_error();
+		return FALSE;
+	}
 	
 	function check_connection($db) {
 		$connection = @mysql_connect($db['host'], $db['user'], $db['password'], TRUE, 2);
 		if (!$connection) return FALSE;
+		
 		mysql_close($connection);
 		return TRUE;
 	}
@@ -58,35 +76,40 @@
 	function check_database($db) {
 		$connection = mysql_connect($db['host'], $db['user'], $db['password'], TRUE, 2);
 		if (!$connection) return FALSE;
+		
 		$result = mysql_select_db($db['database']);
 		mysql_close($connection);
 		return $result;		
 	}
 		
 	function create_database($db) {
+		global $error, $error_detail;
 		mysqli_report(MYSQLI_REPORT_ALL);
-				
+
+		$connection = get_connection($db, FALSE);
+		if (!$connection) return FALSE;
+								
 		try {
-			$connection = @mysqli_connect($db['host'], $db['user'], $db['password']);
-			if (!$connection) return mysqli_connect_error();
 			mysqli_query($connection, "CREATE DATABASE ".$db['database']."");		
 			mysqli_select_db($connection, $db['database']);
 		} catch (mysqli_sql_exception $e) {
-			return $e->getMessage();
+			$error = "COULD_NOT_CREATE_DB";
+			$error_detail = $e->getMessage();
+			return FALSE;
 		}
 		
 		mysqli_close($connection);
-		return FALSE;
+		return TRUE;
 	}
 	
 	function check_db_permissions($db) {
+		global $error, $error_detail;
 		mysqli_report(MYSQLI_REPORT_ERROR);
 		
-		$phase = "select database";
-		try {
-			$connection = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
-			if (!$connection) return array("phase" => $phase, "error" => mysqli_connect_error());
-						
+		$connection = get_connection($db);
+		if (!$connection) return FALSE;
+		
+		try {						
 			$tests = array("create table" => 'CREATE TABLE mollify_install_test (id int NULL)',
 				"insert data" => 'INSERT INTO mollify_install_test (id) VALUES (1)',
 				"update data" => 'UPDATE mollify_install_test SET id = 2',
@@ -100,62 +123,94 @@
 			
 			mysqli_close($connection);
 		} catch (mysqli_sql_exception $e) {
-			return array("phase" => $phase, "error" => $e->getMessage());
+			$error = "DB_PERMISSION_TEST_FAILED";
+			$error_detail = "Could not ".$phase." (".$e->getMessage().")";
+			return FALSE;
 		}
 		
-		return FALSE;
+		return TRUE;
+	}
+
+	function _query($connection, $query, $err, $has_result = TRUE) {
+		global $error, $error_detail;
+		mysqli_report(MYSQLI_REPORT_ALL);
+		
+		try {
+			$result = mysqli_query($connection, $query);
+			if (!$result) {
+				$error = $err;
+				$error_detail = mysqli_error($connection)." (".mysqli_errno($connection).")";
+				return FALSE;
+			}
+			if ($has_result) mysqli_free_result($result);
+		} catch (mysqli_sql_exception $e) {
+			$error = $err;
+			$error_detail = $e->getMessage();
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 	
-	function _query($db, $query) {
+	function _queries($connection, $sql, $err) {
+		global $error, $error_detail;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
 		try {
-			$connection = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
-			if (!$connection) return mysqli_connect_error();
-			mysqli_query($connection, $query);
-			mysqli_commit($connection);
-			mysqli_close($connection);
-		} catch (mysqli_sql_exception $e) {
-			return $e->getMessage();
-		}
-
-		return FALSE;
-	}
-
-	function _queries($db, $sql) {
-		mysqli_report(MYSQLI_REPORT_ALL);
-		
-		try {
-			$connection = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
-			if (!$connection) return mysqli_connect_error();
 			mysqli_multi_query($connection, $sql);
+		    do {
+		        if ($result = mysqli_store_result($connection))
+		        	mysqli_free_result($result);
+		    } while (mysqli_next_result($connection));
+		} catch (mysqli_sql_exception $e) {
+			$error = $err;
+			$error_detail = $e->getMessage();
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
+
+	function _exec_sql_file($connection, $file, $err = "COULD_NOT_EXEC_SQL") {
+		global $error, $error_detail;
+		
+		$sql = file_get_contents($file);
+		if (!$sql) {
+			$error = $err;
+			$error_detail = $file;
+			return FALSE;
+		}
+		return _queries($connection, $sql, $err);
+	}
+
+	function create_tables($connection) {
+		global $VERSION;
+		return _exec_sql_file($connection, "sql/create_tables_".$VERSION.".sql", "COULD_NOT_CREATE_TABLES");
+	}
+	
+	function insert_admin_user($connection, $user, $pw) {
+		$query = "INSERT INTO user (name, password, permission_mode) VALUES ('".mysql_escape_string($user)."','".$pw."','A')";
+		return _query($connection, $query, "COULD_NOT_CREATE_ADMIN", FALSE);
+	}
+	
+	function insert_params($connection) {
+		global $VERSION;
+		return _exec_sql_file($connection, "sql/params_".$VERSION.".sql", "COULD_NOT_INSERT_PARAMS");
+	}
+	
+	function close_connection($connection, $err) {
+		global $error, $error_detail;
+		mysqli_report(MYSQLI_REPORT_ALL);
+		
+		try {
 			mysqli_commit($connection);
 			mysqli_close($connection);
 		} catch (mysqli_sql_exception $e) {
-			return $e->getMessage();
+			$error = $err;
+			$error_detail = $e->getMessage();
+			return FALSE;
 		}
-		
-		return FALSE;
+		return TRUE;
 	}
 
-	function _exec_sql_file($db, $file) {
-		$sql = file_get_contents($file);
-		if (!$sql) return "Could not open sql file: ".$file;
-		return _queries($db, $sql);
-	}
-		
-	function create_tables($db) {
-		global $VERSION;
-		return _exec_sql_file($db, "sql/create_tables_".$VERSION.".sql");
-	}
-	
-	function insert_admin_user($db, $user, $pw) {
-		$query = "INSERT INTO user (name, password, permission_mode) VALUES ('".mysql_escape_string($user)."','".$pw."','A')";
-		return _query($db, $query);
-	}
-	
-	function insert_params($db) {
-		global $VERSION;
-		return _exec_sql_file($db, "sql/params_".$VERSION.".sql");
-	}
 ?>

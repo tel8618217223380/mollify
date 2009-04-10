@@ -48,7 +48,7 @@ public class ConfigurationViewManager {
 		ConfigurationSettingsUsersView view = new ConfigurationSettingsUsersView(
 				textProvider, actionDelegator);
 		ConfigurationSettingsUsersPresenter presenter = new ConfigurationSettingsUsersPresenter(
-				service, dialog, view);
+				service, dialog, textProvider, view);
 		new ConfigurationSettingsUsersGlue(view, presenter, actionDelegator);
 		return view;
 	}
