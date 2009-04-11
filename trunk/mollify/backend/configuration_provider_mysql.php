@@ -117,6 +117,13 @@
 	function remove_user($id) {
 		global $error, $error_details;
 
+		if (!_query(sprintf("DELETE FROM user_folder WHERE user_id='%s'", mysql_real_escape_string($id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to delete user published folders for user id ".$id." (".$error_details.")");
+			return FALSE;
+		}
+		
 		if (!_query(sprintf("DELETE FROM user WHERE id='%s'", mysql_real_escape_string($id)))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
@@ -242,13 +249,83 @@
 				
 		return TRUE;
 	}
+	
+	function get_user_folders($user_id) {
+		$result = _query(sprintf("SELECT folder.id, user_folder.name, folder.name as folder_name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
+		$list = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$list[] = $row;
+		}
+		mysql_free_result($result);
+		return $list;
+	}
+	
+	function add_user_folder($user_id, $folder_id, $name) {
+		global $error, $error_details;
+		
+		if ($name != NULL) {
+			$query = sprintf("INSERT INTO user_folder (user_id, folder_id, name) VALUES ('%s', '%s', '%s')", mysql_real_escape_string($user_id), mysql_real_escape_string($folder_id), mysql_real_escape_string($name));
+		} else {
+			$query = sprintf("INSERT INTO user_folder (user_id, folder_id, name) VALUES ('%s', '%s', NULL)", mysql_real_escape_string($user_id), mysql_real_escape_string($folder_id));
+		}
+		
+		if (!_query($query)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to add user folder (".$error_details.")");
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
 
+	function update_user_folder($user_id, $folder_id, $name) {
+		global $error, $error_details;
+		
+		if ($name != NULL) {
+			$query = sprintf("UPDATE user_folder SET name='%s' WHERE user_id='%s' AND folder_id='%s'", mysql_real_escape_string($name), mysql_real_escape_string($user_id), mysql_real_escape_string($folder_id));
+		} else {
+			$query = sprintf("UPDATE user_folder SET name = NULL WHERE user_id='%s' AND folder_id='%s'", mysql_real_escape_string($user_id), mysql_real_escape_string($folder_id));
+		}
+		
+		if (!_query($query)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to update user folder (".$error_details.")");
+			return FALSE;
+		}
+
+		if (mysql_affected_rows() == 0) {
+			log_error("Invalid update user folder request, folder ".$folder_id." not found for user ".$user_id);
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+	
+	function remove_user_folder($user_id, $folder_id) {
+		global $error, $error_details;
+
+		if (!_query(sprintf("DELETE FROM user_folder WHERE folder_id='%s' AND user_id='%s'", mysql_real_escape_string($folderid), mysql_real_escape_string($user_id)))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to delete user (".$user_id.") published folder with id ".$folder_id." (".$error_details.")");
+			return FALSE;
+		}
+						
+		return TRUE;
+	}
+	
 	function get_user_root_directories($user_id) {
-		$result = _query(sprintf("SELECT folder.id, folder.name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
+		$result = _query(sprintf("SELECT folder.id, user_folder.name, folder.name as folder_name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", mysql_real_escape_string($user_id)));
 
 		$roots = array();
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			$roots[$row["id"]] = array("id" => $row["id"], "name" => $row["name"], "path" => $row["path"]);
+			if ($row["name"] != NULL) $name = $row["name"];
+			else $name = $row["folder_name"];
+			
+			$roots[$row["id"]] = array("id" => $row["id"], "name" => $name, "path" => $row["path"]);
 		}
 		return $roots;
 	}

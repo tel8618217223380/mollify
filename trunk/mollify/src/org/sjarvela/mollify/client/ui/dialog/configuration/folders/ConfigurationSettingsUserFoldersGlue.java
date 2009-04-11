@@ -8,70 +8,72 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dialog.configuration.users;
+package org.sjarvela.mollify.client.ui.dialog.configuration.folders;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
-public class ConfigurationSettingsUsersGlue {
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 
-	private final ConfigurationSettingsUsersView view;
+public class ConfigurationSettingsUserFoldersGlue {
 
-	public ConfigurationSettingsUsersGlue(ConfigurationSettingsUsersView view,
-			final ConfigurationSettingsUsersPresenter presenter,
+	private final ConfigurationSettingsUserFoldersView view;
+
+	public ConfigurationSettingsUserFoldersGlue(
+			ConfigurationSettingsUserFoldersView view,
+			final ConfigurationSettingsUserFoldersPresenter presenter,
 			ActionDelegator actionDelegator) {
 		this.view = view;
 
-		view.list().addListener(new GridListener<User>() {
-			public void onColumnClicked(User t, GridColumn column) {
+		view.directories().addListener(new GridListener<UserDirectory>() {
+			public void onColumnClicked(UserDirectory t, GridColumn column) {
 			}
 
 			public void onColumnSorted(GridColumn column, Sort sort) {
 			}
 
-			public void onIconClicked(User t) {
+			public void onIconClicked(UserDirectory t) {
 			}
 
-			public void onSelectionChanged(List<User> selected) {
+			public void onSelectionChanged(List<UserDirectory> selected) {
 				updateButtons(selected.size() == 1);
 			}
 		});
 
+		view.user().addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
+				presenter.onUserChanged();
+			}
+		});
+
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.addUser,
+				ConfigurationSettingsUserFoldersView.Actions.addUserFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onAddUser();
+						presenter.onAddUserFolder();
 					}
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.editUser,
+				ConfigurationSettingsUserFoldersView.Actions.editUserFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onEditUser();
+						presenter.onEditUserFolder();
 					}
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.removeUser,
+				ConfigurationSettingsUserFoldersView.Actions.removeUserFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onRemoveUser();
-					}
-				});
-
-		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.resetPassword,
-				new ActionHandler() {
-					public void onAction() {
-						presenter.onResetPassword();
+						presenter.onRemoveUserFolder();
 					}
 				});
 
@@ -79,9 +81,7 @@ public class ConfigurationSettingsUsersGlue {
 	}
 
 	protected void updateButtons(boolean selected) {
-		view.editUserButton().setEnabled(selected);
-		view.removeUserButton().setEnabled(selected);
-		view.resetPasswordButton().setEnabled(selected);
+		view.editButton().setEnabled(selected);
+		view.removeButton().setEnabled(selected);
 	}
-
 }

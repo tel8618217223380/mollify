@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.dialog.configuration.folders;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
@@ -81,7 +82,7 @@ public class FolderDialog extends CenteredDialog {
 
 		Label pathTitle = new Label(textProvider.getStrings()
 				.folderDialogPath());
-		pathTitle.setStyleName(StyleConstants.FOLDRE_DIALOG_PATH_TITLE);
+		pathTitle.setStyleName(StyleConstants.FOLDER_DIALOG_PATH_TITLE);
 		panel.add(pathTitle);
 
 		path = new TextBox();
@@ -127,8 +128,7 @@ public class FolderDialog extends CenteredDialog {
 		if (path.getText().length() == 0)
 			return;
 
-		handler.addFolder(name.getText(), path.getText());
-		this.hide();
+		handler.addFolder(name.getText(), path.getText(), createHideCallback());
 	}
 
 	protected void onEditFolder() {
@@ -137,7 +137,15 @@ public class FolderDialog extends CenteredDialog {
 		if (path.getText().length() == 0)
 			return;
 
-		handler.editFolder(folder, name.getText(), path.getText());
-		this.hide();
+		handler.editFolder(folder, name.getText(), path.getText(),
+				createHideCallback());
+	}
+
+	private Callback createHideCallback() {
+		return new Callback() {
+			public void onCallback() {
+				FolderDialog.this.hide();
+			}
+		};
 	}
 }

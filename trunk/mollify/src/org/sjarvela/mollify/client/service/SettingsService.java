@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.service;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
@@ -38,4 +39,15 @@ public interface SettingsService {
 	void editFolder(DirectoryInfo dir, String name, String path,
 			ResultListener resultListener);
 
+	void getUserFolders(User user,
+			ResultListener<List<UserDirectory>> resultListener);
+
+	void addUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener);
+
+	void editUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener);
+
+	void removeUserFolder(User user, DirectoryInfo dir,
+			ResultListener resultListener);
 }

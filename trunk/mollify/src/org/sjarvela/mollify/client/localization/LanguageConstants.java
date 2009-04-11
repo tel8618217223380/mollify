@@ -152,6 +152,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String errorMessageFileAlreadyExists();
 
 	public String errorMessageDirectoryAlreadyExists();
+	
+	public String errorMessageDirectoryDoesNotExist();
 
 	public String selectFolderDialogSelectButton();
 
@@ -188,6 +190,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String configurationDialogSettingUsers();
 
 	public String configurationDialogSettingFolders();
+	
+	public String configurationDialogSettingUserFolders();
 
 	public String configurationDialogSettingUsersViewTitle();
 
@@ -208,6 +212,16 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String configurationDialogSettingFoldersEdit();
 
 	public String configurationDialogSettingFoldersRemove();
+
+	public String configurationDialogSettingUserFoldersViewTitle();
+	
+	public String configurationDialogSettingUserFoldersSelectUser();
+
+	public String configurationDialogSettingUserFoldersAdd();
+
+	public String configurationDialogSettingUserFoldersEdit();
+
+	public String configurationDialogSettingUserFoldersRemove();
 
 	public String userListColumnTitleName();
 
@@ -252,4 +266,19 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String resetPasswordDialogGeneratePassword();
 
 	public String resetPasswordDialogResetButton();
+
+	public String userFolderDialogUseDefaultName();
+
+	public String userFolderDialogName();
+
+	public String userFolderDialogAddTitle();
+
+	public String userFolderDialogEditTitle();
+
+	public String userFolderDialogDefaultNameTitle();
+
+	public String userFolderDialogAddButton();
+
+	public String userFolderDialogEditButton();
+
 }

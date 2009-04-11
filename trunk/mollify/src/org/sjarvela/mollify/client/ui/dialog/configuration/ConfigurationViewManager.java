@@ -18,6 +18,9 @@ import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.S
 import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersGlue;
 import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersPresenter;
 import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersView;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersGlue;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersPresenter;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersView;
@@ -39,6 +42,8 @@ public class ConfigurationViewManager {
 			return createUsersView();
 		else if (id.equals(Settings.Folders))
 			return createFoldersView();
+		else if (id.equals(Settings.UserFolders))
+			return createUserFoldersView();
 
 		return null;
 	}
@@ -60,6 +65,17 @@ public class ConfigurationViewManager {
 		ConfigurationSettingsFoldersPresenter presenter = new ConfigurationSettingsFoldersPresenter(
 				service, textProvider, dialog, view);
 		new ConfigurationSettingsFoldersGlue(view, presenter, actionDelegator);
+		return view;
+	}
+
+	private ConfigurationSettingsView createUserFoldersView() {
+		ActionDelegator actionDelegator = new ActionDelegator();
+		ConfigurationSettingsUserFoldersView view = new ConfigurationSettingsUserFoldersView(
+				textProvider, actionDelegator);
+		ConfigurationSettingsUserFoldersPresenter presenter = new ConfigurationSettingsUserFoldersPresenter(
+				service, textProvider, dialog, view);
+		new ConfigurationSettingsUserFoldersGlue(view, presenter,
+				actionDelegator);
 		return view;
 	}
 }

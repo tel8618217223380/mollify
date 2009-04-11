@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
@@ -61,6 +62,30 @@ public class DemoSettingsService implements SettingsService {
 	}
 
 	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void getUserFolders(User user, ResultListener resultListener) {
+		UserDirectory dir1 = UserDirectory.create("1", "Example Folder", "",
+				"/foo/bar");
+		UserDirectory dir2 = UserDirectory.create("2", null, "Another Folder",
+				"/bar/foo");
+
+		resultListener.onSuccess(Arrays.asList(dir1, dir2));
+	}
+
+	public void addUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void editUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void removeUserFolder(User user, DirectoryInfo dir,
+			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 

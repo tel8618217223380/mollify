@@ -37,6 +37,9 @@ public enum ServiceErrorType {
 		case DIR_ALREADY_EXISTS:
 			return textProvider.getStrings()
 					.errorMessageDirectoryAlreadyExists();
+		case DIR_DOES_NOT_EXIST:
+			return textProvider.getStrings()
+					.errorMessageDirectoryDoesNotExist();
 		default:
 			if (!this.equals(UNKNOWN_ERROR))
 				return this.name();
