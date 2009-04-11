@@ -65,20 +65,27 @@ public class ConfigurationSettingsFoldersPresenter implements FolderHandler {
 			return;
 
 		service.removeFolder(view.list().getSelected().get(0),
-				createReloadListener());
+				createReloadListener(null));
 	}
 
-	public void addFolder(String name, String path) {
-		service.addFolder(name, path, createReloadListener());
+	public void addFolder(String name, String path,
+			Callback operationSuccessfulCallback) {
+		service.addFolder(name, path,
+				createReloadListener(operationSuccessfulCallback));
 	}
 
-	public void editFolder(DirectoryInfo folder, String name, String path) {
-		service.editFolder(folder, name, path, createReloadListener());
+	public void editFolder(DirectoryInfo folder, String name, String path,
+			Callback operationSuccessfulCallback) {
+		service.editFolder(folder, name, path,
+				createReloadListener(operationSuccessfulCallback));
 	}
 
-	private ResultListener createReloadListener() {
+	private ResultListener createReloadListener(
+			final Callback operationSuccessfulCallback) {
 		return dialog.createResultListener(new Callback() {
 			public void onCallback() {
+				if (operationSuccessfulCallback != null)
+					operationSuccessfulCallback.onCallback();
 				reload();
 			}
 		});

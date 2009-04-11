@@ -108,4 +108,8 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 		return removeUserButton;
 	}
 
+	public ActionButton resetPasswordButton() {
+		return resetPasswordButton;
+	}
+
 }

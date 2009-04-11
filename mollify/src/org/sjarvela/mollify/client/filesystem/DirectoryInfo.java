@@ -26,7 +26,7 @@ public class DirectoryInfo extends JavaScriptObject {
 		return this.path;
 	}-*/;
 
-	private final native void putValues(String id, String name, String path) /*-{
+	protected final native void putValues(String id, String name, String path) /*-{
 		this.id = id;
 		this.name = name;
 		this.path = path

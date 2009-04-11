@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
@@ -32,7 +33,7 @@ public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
 
 	enum ConfigurationAction {
-		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder
+		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder, get_user_folders, add_user_folder, update_user_folder, remove_user_folder
 	}
 
 	public PhpSettingsService(PhpService service) {
@@ -121,5 +122,56 @@ public class PhpSettingsService implements SettingsService {
 		List<String> params = new ArrayList(parameters);
 		params.add("action=" + action.name());
 		return service.getUrl(RequestType.configuration, params);
+	}
+
+	public void getUserFolders(User user,
+			final ResultListener<List<UserDirectory>> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get directories");
+
+		service.doRequest(getUrl(ConfigurationAction.get_user_folders,
+				"user_id=" + user.getId()),
+				new ResultListener<JsArray<UserDirectory>>() {
+					public void onFail(ServiceError error) {
+						resultListener.onFail(error);
+					}
+
+					public void onSuccess(JsArray<UserDirectory> result) {
+						resultListener.onSuccess(JsUtil.asList(result,
+								UserDirectory.class));
+					}
+				});
+	}
+
+	public void addUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener) {
+		List<String> params = new ArrayList();
+		params.add("user_id=" + user.getId());
+		params.add("id=" + dir.getId());
+		if (name != null)
+			params.add("name=" + URL.encode(name));
+
+		service.doRequest(getUrl(ConfigurationAction.add_user_folder, params),
+				resultListener);
+	}
+
+	public void editUserFolder(User user, DirectoryInfo dir, String name,
+			ResultListener resultListener) {
+		List<String> params = new ArrayList();
+		params.add("user_id=" + user.getId());
+		params.add("id=" + dir.getId());
+		if (name != null)
+			params.add("name=" + URL.encode(name));
+
+		service.doRequest(
+				getUrl(ConfigurationAction.update_user_folder, params),
+				resultListener);
+	}
+
+	public void removeUserFolder(User user, DirectoryInfo dir,
+			ResultListener resultListener) {
+		service.doRequest(getUrl(ConfigurationAction.remove_user_folder,
+				"user_id=" + user.getId(), "id=" + URL.encode(dir.getId())),
+				resultListener);
 	}
 }

@@ -28,6 +28,7 @@ CREATE TABLE `item_permission` (
 CREATE TABLE `user_folder` (
   `user_id` int(11) NOT NULL,
   `folder_id` int(11) NOT NULL,
+  `name` varchar(255) NULL,
   PRIMARY KEY (`user_id`,`folder_id`),
   KEY `fk_pf_folder` (`folder_id`)
 );

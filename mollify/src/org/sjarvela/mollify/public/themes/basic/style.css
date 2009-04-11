@@ -1112,8 +1112,9 @@ table.mollify-configuration-dialog-menu {
 	border: 1px solid #dfdfdf;
 	padding: 6px;
 	height: 15px;
-	width: 100px;
+	width: 115px;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .mollify-configuration-dialog-menu-item {
@@ -1132,6 +1133,7 @@ table.mollify-configuration-dialog-menu {
 	margin: 6px;
 	border-bottom: 3px solid black;
 	padding-bottom: 4px;
+	padding-left: 6px;
 }
 
 .mollify-configuration-dialog-content-panel {
@@ -1183,6 +1185,7 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 .mollify-configuration-dialog-users-actions, .mollify-configuration-dialog-folders-actions {
 	margin-top: 6px;
 	margin-left: 6px;
+	margin-bottom: 6px;
 }
 
 .mollify-configuration-dialog-users-action, .mollify-configuration-dialog-folders-action {
@@ -1190,6 +1193,13 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 	margin-right: 6px;
 	height: 25px;
 }
+
+#mollify-configuration-dialog-users-action-reset-pw.mollify-configuration-dialog-users-action {
+	width: 112px;
+	white-space: nowrap;
+}
+
+
 
 td.mollify-userlist-column-type, td.mollify-folderlist-column-path {
 	cursor: pointer;

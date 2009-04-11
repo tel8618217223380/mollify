@@ -49,7 +49,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 	private Label title;
 
 	public enum Settings implements ResourceId {
-		Users, Folders
+		Users, Folders, UserFolders
 	}
 
 	public ConfigurationDialog(TextProvider textProvider,
@@ -71,7 +71,9 @@ public class ConfigurationDialog extends CenteredDialog implements
 		menu.addItem(Settings.Folders, textProvider.getStrings()
 				.configurationDialogSettingFolders(),
 				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_FOLDERS);
-
+		menu.addItem(Settings.UserFolders, textProvider.getStrings()
+				.configurationDialogSettingUserFolders(),
+				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_USER_FOLDERS);
 		initialize();
 	}
 
