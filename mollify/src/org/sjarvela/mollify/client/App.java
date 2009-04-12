@@ -25,7 +25,6 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
-import org.sjarvela.mollify.client.util.Browser;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
@@ -42,7 +41,7 @@ public class App implements EntryPoint, LogoutHandler {
 	TextProvider textProvider;
 	WindowManager windowManager;
 	RootPanel panel;
-	SessionHandler sessionInfoProvider;
+	SessionHandler sessionHandler;
 
 	public void onModuleLoad() {
 		Log.setUncaughtExceptionHandler();
@@ -59,20 +58,19 @@ public class App implements EntryPoint, LogoutHandler {
 		if (panel == null)
 			return;
 
-		Log.debug("IE:" + Browser.isIE());
-
 		ClientSettings settings = new ClientSettings(new ParameterParser(
 				META_PROPERTY));
 
 		try {
 			environment = createEnvironment(settings);
-			sessionInfoProvider = new SessionHandler();
+			sessionHandler = new SessionHandler();
 			textProvider = DefaultTextProvider.getInstance();
 
 			MainViewFactory mainViewFactory = new MainViewFactory(textProvider,
-					environment);
+					environment, sessionHandler);
 			windowManager = new WindowManager(panel, textProvider,
-					mainViewFactory, new DialogManager(textProvider, sessionInfoProvider));
+					mainViewFactory, new DialogManager(textProvider,
+							sessionHandler));
 		} catch (RuntimeException e) {
 			showExceptionError("Error initializing: ", e);
 			return;
@@ -97,19 +95,19 @@ public class App implements EntryPoint, LogoutHandler {
 						windowManager.getDialogManager().showError(error);
 					}
 
-					public void onSuccess(SessionInfo result) {
-						startSession(result);
+					public void onSuccess(SessionInfo session) {
+						startSession(session);
 					}
 				});
 	};
 
-	private void startSession(SessionInfo info) {
-		sessionInfoProvider.setSession(info);
-		
-		if (info.isAuthenticationRequired() && !info.getAuthenticated())
+	private void startSession(SessionInfo session) {
+		sessionHandler.setSession(session);
+
+		if (session.isAuthenticationRequired() && !session.getAuthenticated())
 			showLogin();
 		else
-			showMain(info);
+			showMain();
 	}
 
 	private void showLogin() {
@@ -130,21 +128,21 @@ public class App implements EntryPoint, LogoutHandler {
 										error);
 							}
 
-							public void onSuccess(SessionInfo result) {
+							public void onSuccess(SessionInfo session) {
+								sessionHandler.setSession(session);
 								listener.onConfirm();
-								showMain(result);
+								showMain();
 							}
 						});
 			}
 		});
 	}
 
-	private void showMain(SessionInfo info) {
-		Log.info("Session started: " + info.asString());
-		windowManager.showMainView(info, this);
+	private void showMain() {
+		windowManager.showMainView(this);
 	}
 
-	public void onLogout(SessionInfo info) {
+	public void onLogout(SessionInfo session) {
 		Log.info("Logging out");
 
 		environment.getSessionService().logout(
@@ -154,9 +152,9 @@ public class App implements EntryPoint, LogoutHandler {
 						windowManager.getDialogManager().showError(error);
 					}
 
-					public void onSuccess(SessionInfo result) {
+					public void onSuccess(SessionInfo session) {
 						windowManager.empty();
-						startSession(result);
+						startSession(session);
 					}
 				});
 	}

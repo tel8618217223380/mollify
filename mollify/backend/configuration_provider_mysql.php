@@ -307,7 +307,7 @@
 	function remove_user_folder($user_id, $folder_id) {
 		global $error, $error_details;
 
-		if (!_query(sprintf("DELETE FROM user_folder WHERE folder_id='%s' AND user_id='%s'", mysql_real_escape_string($folderid), mysql_real_escape_string($user_id)))) {
+		if (!_query(sprintf("DELETE FROM user_folder WHERE folder_id='%s' AND user_id='%s'", mysql_real_escape_string($folder_id), mysql_real_escape_string($user_id)))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to delete user (".$user_id.") published folder with id ".$folder_id." (".$error_details.")");

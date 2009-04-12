@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.json.client.JSONObject;
 
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
@@ -35,11 +36,7 @@ public class SessionInfo extends JavaScriptObject {
 	}
 
 	public final String asString() {
-		return "authentication_required=" + isAuthenticationRequired()
-				+ ", logged_user=" + getLoggedUser() + ", permission_mode="
-				+ getDefaultPermissionModeString() + ", filesystem=["
-				+ getFileSystemInfo().asString() + "], settings=["
-				+ getSettings().asString() + "]";
+		return new JSONObject(this).toString();
 	}
 
 	public final native boolean isAuthenticationRequired() /*-{
@@ -83,7 +80,7 @@ public class SessionInfo extends JavaScriptObject {
 		return Directory.createFromDirectories(getRootDirectoryList());
 	}
 
-	public final native JsArray<JsDirectory> getRootDirectoryList() /*-{
+	private final native JsArray getRootDirectoryList() /*-{
 		return this.roots;
 	}-*/;
 

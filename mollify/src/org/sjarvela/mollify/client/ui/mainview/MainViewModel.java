@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultCallback;
@@ -25,34 +26,34 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
 public class MainViewModel {
-	private final SessionInfo info;
+	private final SessionInfo session;
 	private final FileSystemService fileServices;
-
-	private List<Directory> rootDirectories;
-	private List<Directory> directories;
-	private List<File> files;
-	private List<FileSystemItem> all;
+	private final List<Directory> rootDirectories;
 
 	private DirectoryModel directoryModel;
+	private List<File> files = new ArrayList();
+	private List<Directory> directories = new ArrayList();
+	private List<FileSystemItem> all = new ArrayList();
 
-	public MainViewModel(FileSystemService fileServices, SessionInfo info) {
+	public MainViewModel(FileSystemService fileServices, SessionInfo session,
+			DirectoryProvider directoryProvider) {
 		this.fileServices = fileServices;
-		this.info = info;
-		this.rootDirectories = info.getRootDirectories();
+		this.session = session;
+		this.rootDirectories = directoryProvider.getRootDirectories();
 
 		clear();
 	}
 
 	public void clear() {
-		rootDirectories = new ArrayList();
-		directories = new ArrayList();
-		files = new ArrayList();
-		all = new ArrayList();
 		directoryModel = new DirectoryModel();
+
+		directories.clear();
+		files.clear();
+		all.clear();
 	}
 
 	public SessionInfo getSessionInfo() {
-		return info;
+		return session;
 	}
 
 	public DirectoryModel getDirectoryModel() {

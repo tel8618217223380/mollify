@@ -34,7 +34,7 @@ public class UserDirectoryList extends Grid<UserDirectory> implements
 		super(StyleConstants.FOLDER_LIST_HEADER, getColumns(textProvider));
 		this.textProvider = textProvider;
 
-		this.setStylePrimaryName(StyleConstants.FOLDER_LIST);
+		this.setStylePrimaryName(StyleConstants.USER_FOLDER_LIST);
 		if (style != null)
 			this.addStyleDependentName(style);
 		this.setDataProvider(this);

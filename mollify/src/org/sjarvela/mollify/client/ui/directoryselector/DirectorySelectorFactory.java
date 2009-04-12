@@ -31,9 +31,8 @@ public class DirectorySelectorFactory implements DirectoryModelProvider {
 				directoryProvider);
 	}
 
-	public DirectorySelector createSelector(boolean reverse) {
-		return new DirectorySelector(textProvider, this, listItemFactory,
-				reverse);
+	public DirectorySelector createSelector() {
+		return new DirectorySelector(textProvider, this, listItemFactory);
 	}
 
 	public DirectoryModel getDirectoryModel() {

@@ -18,13 +18,16 @@ import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.Configurator;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.ConfigurationType;
 
-public class ConfigurationSettingsUsersGlue {
+public class ConfigurationUsersGlue implements Configurator {
 
-	private final ConfigurationSettingsUsersView view;
+	private final ConfigurationUsersView view;
 
-	public ConfigurationSettingsUsersGlue(ConfigurationSettingsUsersView view,
-			final ConfigurationSettingsUsersPresenter presenter,
+	public ConfigurationUsersGlue(ConfigurationUsersView view,
+			final ConfigurationUsersPresenter presenter,
 			ActionDelegator actionDelegator) {
 		this.view = view;
 
@@ -44,7 +47,7 @@ public class ConfigurationSettingsUsersGlue {
 		});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.addUser,
+				ConfigurationUsersView.Actions.addUser,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onAddUser();
@@ -52,7 +55,7 @@ public class ConfigurationSettingsUsersGlue {
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.editUser,
+				ConfigurationUsersView.Actions.editUser,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onEditUser();
@@ -60,7 +63,7 @@ public class ConfigurationSettingsUsersGlue {
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.removeUser,
+				ConfigurationUsersView.Actions.removeUser,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onRemoveUser();
@@ -68,7 +71,7 @@ public class ConfigurationSettingsUsersGlue {
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUsersView.Actions.resetPassword,
+				ConfigurationUsersView.Actions.resetPassword,
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onResetPassword();
@@ -82,6 +85,13 @@ public class ConfigurationSettingsUsersGlue {
 		view.editUserButton().setEnabled(selected);
 		view.removeUserButton().setEnabled(selected);
 		view.resetPasswordButton().setEnabled(selected);
+	}
+
+	public ConfigurationView getView() {
+		return view;
+	}
+
+	public void onDataChanged(ConfigurationType type) {
 	}
 
 }

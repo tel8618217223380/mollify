@@ -5,10 +5,9 @@ import org.sjarvela.mollify.client.service.request.Callback;
 
 public interface FolderHandler {
 
-	void addFolder(String name, String path,
-			Callback operationSuccessfulCallback);
+	void addFolder(String name, String path, Callback successCallback);
 
 	void editFolder(DirectoryInfo folder, String name, String path,
-			Callback operationSuccessfulCallback);
+			Callback successCallback);
 
 }

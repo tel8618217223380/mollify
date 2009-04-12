@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
@@ -25,22 +26,28 @@ import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 public class MainViewFactory {
 	private final ServiceEnvironment environment;
 	private final TextProvider textProvider;
+	private final SessionProvider sessionProvider;
 
 	public MainViewFactory(TextProvider textProvider,
-			ServiceEnvironment environment) {
+			ServiceEnvironment environment, SessionProvider sessionProvider) {
 		this.textProvider = textProvider;
 		this.environment = environment;
+		this.sessionProvider = sessionProvider;
 	}
 
 	public MainView createMainView(WindowManager windowManager,
-			SessionInfo info, LogoutHandler logoutListener) {
-		DirectoryProvider directoryProvider = new DefaultDirectoryProvider(info
-				.getRootDirectories(), environment.getFileSystemService());
+			LogoutHandler logoutListener) {
+		SessionInfo session = sessionProvider.getSession();
+
+		DirectoryProvider directoryProvider = new DefaultDirectoryProvider(
+				session.getRootDirectories(), environment
+						.getFileSystemService());
 
 		FileSystemService fileSystemService = environment
 				.getFileSystemService();
 
-		MainViewModel model = new MainViewModel(fileSystemService, info);
+		MainViewModel model = new MainViewModel(fileSystemService, session,
+				directoryProvider);
 
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileSystemService, textProvider, directoryProvider);

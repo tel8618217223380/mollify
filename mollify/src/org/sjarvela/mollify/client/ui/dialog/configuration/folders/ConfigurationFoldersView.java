@@ -15,13 +15,13 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
-import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationSettingsView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationView;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView {
+public class ConfigurationFoldersView extends ConfigurationView {
 	private final DirectoryInfoList list;
 	private final ActionButton addFolderButton;
 	private final ActionButton editFolderButton;
@@ -31,7 +31,7 @@ public class ConfigurationSettingsFoldersView extends ConfigurationSettingsView 
 		addFolder, editFolder, removeFolder
 	}
 
-	public ConfigurationSettingsFoldersView(TextProvider textProvider,
+	public ConfigurationFoldersView(TextProvider textProvider,
 			ActionListener actionListener) {
 		super(textProvider, StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS);
 

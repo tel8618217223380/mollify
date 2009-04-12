@@ -79,12 +79,12 @@ public class DemoSettingsService implements SettingsService {
 		resultListener.onSuccess(true);
 	}
 
-	public void editUserFolder(User user, DirectoryInfo dir, String name,
+	public void editUserFolder(User user, UserDirectory dir, String name,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void removeUserFolder(User user, DirectoryInfo dir,
+	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}

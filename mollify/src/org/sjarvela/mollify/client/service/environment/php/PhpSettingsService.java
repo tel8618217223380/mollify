@@ -155,7 +155,7 @@ public class PhpSettingsService implements SettingsService {
 				resultListener);
 	}
 
-	public void editUserFolder(User user, DirectoryInfo dir, String name,
+	public void editUserFolder(User user, UserDirectory dir, String name,
 			ResultListener resultListener) {
 		List<String> params = new ArrayList();
 		params.add("user_id=" + user.getId());
@@ -168,7 +168,7 @@ public class PhpSettingsService implements SettingsService {
 				resultListener);
 	}
 
-	public void removeUserFolder(User user, DirectoryInfo dir,
+	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_user_folder,
 				"user_id=" + user.getId(), "id=" + URL.encode(dir.getId())),

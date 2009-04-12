@@ -8,20 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.ui.dialog.configuration.folders;
 
-import com.allen_sauer.gwt.log.client.Log;
-
-public class SessionHandler implements SessionProvider {
-	private SessionInfo session = null;
-
-	public void setSession(SessionInfo session) {
-		this.session = session;
-		Log.info("Session: " + session.asString());
-	}
-
-	public SessionInfo getSession() {
-		return session;
-	}
+public interface DataListener {
 
 }
