@@ -34,7 +34,6 @@ import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPop
 import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
-import org.sjarvela.mollify.client.util.Browser;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
@@ -74,10 +73,7 @@ public class MainView extends Composite {
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 
-		boolean buttonsInReverseOrder = !Browser.isIE();
-		this.directorySelector = directorySelectorFactory
-				.createSelector(buttonsInReverseOrder);
-
+		this.directorySelector = directorySelectorFactory.createSelector();
 		this.fileContext = fileContextPopupFactory.createPopup();
 		this.dirContext = directoryContextPopupFactory.createPopup();
 
@@ -133,7 +129,7 @@ public class MainView extends Composite {
 			loggedInPanel
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
 			loggedInPanel.add(createUserName());
-			loggedInPanel.add(logoutButton);
+			// loggedInPanel.add(logoutButton);
 			header.add(loggedInPanel);
 		}
 

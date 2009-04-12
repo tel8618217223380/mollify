@@ -10,9 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.dialog.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -38,17 +35,18 @@ public class ConfigurationDialog extends CenteredDialog implements
 		ConfigurationMenuSelectionListener {
 
 	private final TextProvider textProvider;
-	private final Map<ResourceId, ConfigurationSettingsView> cache = new HashMap();
+
 	private final ConfigurationViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final SessionInfo session;
 	private final PasswordHandler passwordHandler;
+	private final ConfigurationMenu menu;
 
-	private ConfigurationMenu menu;
 	private FlowPanel settingsView;
 	private Label title;
+	private Label status;
 
-	public enum Settings implements ResourceId {
+	public enum ConfigurationType implements ResourceId {
 		Users, Folders, UserFolders
 	}
 
@@ -65,13 +63,13 @@ public class ConfigurationDialog extends CenteredDialog implements
 				this);
 
 		menu = new ConfigurationMenu(this);
-		menu.addItem(Settings.Users, textProvider.getStrings()
+		menu.addItem(ConfigurationType.Users, textProvider.getStrings()
 				.configurationDialogSettingUsers(),
 				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_USERS);
-		menu.addItem(Settings.Folders, textProvider.getStrings()
+		menu.addItem(ConfigurationType.Folders, textProvider.getStrings()
 				.configurationDialogSettingFolders(),
 				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_FOLDERS);
-		menu.addItem(Settings.UserFolders, textProvider.getStrings()
+		menu.addItem(ConfigurationType.UserFolders, textProvider.getStrings()
 				.configurationDialogSettingUserFolders(),
 				StyleConstants.CONFIGURATION_DIALOG_MENU_ITEM_USER_FOLDERS);
 		initialize();
@@ -82,7 +80,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 		Panel panel = new HorizontalPanel();
 		panel.addStyleName(StyleConstants.CONFIGURATION_DIALOG_CONTENT);
 		panel.add(createMenu());
-		panel.add(createSettingsPanel());
+		panel.add(createConfigurationPanel());
 		return panel;
 	}
 
@@ -93,13 +91,11 @@ public class ConfigurationDialog extends CenteredDialog implements
 		return panel;
 	}
 
-	private Widget createSettingsPanel() {
+	private Widget createConfigurationPanel() {
 		Panel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.CONFIGURATION_DIALOG_CONTENT_PANEL);
 
-		title = new Label();
-		title.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_TITLE);
-		panel.add(title);
+		panel.add(createTitle());
 
 		settingsView = new FlowPanel();
 		settingsView
@@ -107,6 +103,22 @@ public class ConfigurationDialog extends CenteredDialog implements
 		panel.add(settingsView);
 
 		return panel;
+	}
+
+	private Widget createTitle() {
+		Panel titlePanel = new FlowPanel();
+		titlePanel
+				.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_TITLE_PANEL);
+		title = new Label();
+		title.setStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_TITLE);
+		titlePanel.add(title);
+
+		status = new Label();
+		status
+				.setStylePrimaryName(StyleConstants.CONFIGURATION_DIALOG_VIEW_STATUS);
+		titlePanel.add(status);
+
+		return titlePanel;
 	}
 
 	@Override
@@ -126,29 +138,25 @@ public class ConfigurationDialog extends CenteredDialog implements
 	@Override
 	protected void onShow() {
 		super.onShow();
-		menu.selectItem(Settings.Users);
+		menu.selectItem(ConfigurationType.Users);
 	}
 
 	public void onConfigurationItemSelected(ResourceId id) {
-		ConfigurationSettingsView view = getSettingsView(id);
+		ConfigurationView view = viewManager.getView(id).getView();
 		settingsView.clear();
 		settingsView.add(view);
 		title.setText(view.getTitle());
 	}
 
-	private ConfigurationSettingsView getSettingsView(ResourceId id) {
-		if (!cache.containsKey(id))
-			cache.put(id, viewManager.createView(id));
-		return cache.get(id);
-	}
-
 	public ResultListener createResultListener(final Callback callback) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
+				setLoading(false);
 				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {
+				setLoading(false);
 				callback.onCallback();
 			}
 		};
@@ -158,11 +166,21 @@ public class ConfigurationDialog extends CenteredDialog implements
 			final ResultCallback resultCallback) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
+				setLoading(false);
 				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {
+				setLoading(false);
 				resultCallback.onCallback(result);
+			}
+		};
+	}
+
+	public Callback createDataChangeNotifier(final ConfigurationType type) {
+		return new Callback() {
+			public void onCallback() {
+				viewManager.onDataChanged(type);
 			}
 		};
 	}
@@ -177,5 +195,12 @@ public class ConfigurationDialog extends CenteredDialog implements
 
 	public PasswordHandler getPasswordHandler() {
 		return passwordHandler;
+	}
+
+	public void setLoading(boolean loading) {
+		if (loading)
+			status.addStyleDependentName(StyleConstants.LOADING);
+		else
+			status.removeStyleDependentName(StyleConstants.LOADING);
 	}
 }

@@ -10,25 +10,29 @@
 
 package org.sjarvela.mollify.client.ui.dialog.configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
-import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.Settings;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersGlue;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersPresenter;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsFoldersView;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersGlue;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersPresenter;
-import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationSettingsUserFoldersView;
-import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersGlue;
-import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersPresenter;
-import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationSettingsUsersView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.ConfigurationType;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationFoldersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationFoldersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationFoldersView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationUserFoldersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationUserFoldersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.folders.ConfigurationUserFoldersView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationUsersGlue;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationUsersPresenter;
+import org.sjarvela.mollify.client.ui.dialog.configuration.users.ConfigurationUsersView;
 
 public class ConfigurationViewManager {
 	private final SettingsService service;
 	private final TextProvider textProvider;
 	private final ConfigurationDialog dialog;
+	private final Map<ResourceId, Configurator> cache = new HashMap();
 
 	public ConfigurationViewManager(TextProvider textProvider,
 			SettingsService service, ConfigurationDialog dialog) {
@@ -37,45 +41,55 @@ public class ConfigurationViewManager {
 		this.dialog = dialog;
 	}
 
-	public ConfigurationSettingsView createView(ResourceId id) {
-		if (id.equals(Settings.Users))
-			return createUsersView();
-		else if (id.equals(Settings.Folders))
-			return createFoldersView();
-		else if (id.equals(Settings.UserFolders))
-			return createUserFoldersView();
+	public Configurator getView(ResourceId id) {
+		if (!cache.containsKey(id))
+			cache.put(id, createConfigurator(id));
+		return cache.get(id);
+	}
 
+	private Configurator createConfigurator(ResourceId id) {
+		if (id.equals(ConfigurationType.Users))
+			return createUsersView();
+		else if (id.equals(ConfigurationType.Folders))
+			return createFoldersView();
+		else if (id.equals(ConfigurationType.UserFolders))
+			return createUserFoldersView();
 		return null;
 	}
 
-	private ConfigurationSettingsView createUsersView() {
+	private Configurator createUsersView() {
 		ActionDelegator actionDelegator = new ActionDelegator();
-		ConfigurationSettingsUsersView view = new ConfigurationSettingsUsersView(
+		ConfigurationUsersView view = new ConfigurationUsersView(
 				textProvider, actionDelegator);
-		ConfigurationSettingsUsersPresenter presenter = new ConfigurationSettingsUsersPresenter(
+		ConfigurationUsersPresenter presenter = new ConfigurationUsersPresenter(
 				service, dialog, textProvider, view);
-		new ConfigurationSettingsUsersGlue(view, presenter, actionDelegator);
-		return view;
-	}
-
-	private ConfigurationSettingsView createFoldersView() {
-		ActionDelegator actionDelegator = new ActionDelegator();
-		ConfigurationSettingsFoldersView view = new ConfigurationSettingsFoldersView(
-				textProvider, actionDelegator);
-		ConfigurationSettingsFoldersPresenter presenter = new ConfigurationSettingsFoldersPresenter(
-				service, textProvider, dialog, view);
-		new ConfigurationSettingsFoldersGlue(view, presenter, actionDelegator);
-		return view;
-	}
-
-	private ConfigurationSettingsView createUserFoldersView() {
-		ActionDelegator actionDelegator = new ActionDelegator();
-		ConfigurationSettingsUserFoldersView view = new ConfigurationSettingsUserFoldersView(
-				textProvider, actionDelegator);
-		ConfigurationSettingsUserFoldersPresenter presenter = new ConfigurationSettingsUserFoldersPresenter(
-				service, textProvider, dialog, view);
-		new ConfigurationSettingsUserFoldersGlue(view, presenter,
+		return new ConfigurationUsersGlue(view, presenter,
 				actionDelegator);
-		return view;
+	}
+
+	private Configurator createFoldersView() {
+		ActionDelegator actionDelegator = new ActionDelegator();
+		ConfigurationFoldersView view = new ConfigurationFoldersView(
+				textProvider, actionDelegator);
+		ConfigurationFoldersPresenter presenter = new ConfigurationFoldersPresenter(
+				service, textProvider, dialog, view);
+		return new ConfigurationFoldersGlue(view, presenter,
+				actionDelegator);
+	}
+
+	private Configurator createUserFoldersView() {
+		ActionDelegator actionDelegator = new ActionDelegator();
+		ConfigurationUserFoldersView view = new ConfigurationUserFoldersView(
+				textProvider, actionDelegator);
+		ConfigurationUserFoldersPresenter presenter = new ConfigurationUserFoldersPresenter(
+				service, textProvider, dialog, view);
+		return new ConfigurationUserFoldersGlue(view, presenter,
+				actionDelegator);
+	}
+
+	public void onDataChanged(ConfigurationType type) {
+		for (Configurator config : cache.values()) {
+			config.onDataChanged(type);
+		}
 	}
 }

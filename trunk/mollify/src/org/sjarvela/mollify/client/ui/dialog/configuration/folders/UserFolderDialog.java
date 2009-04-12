@@ -15,9 +15,12 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -38,26 +41,36 @@ public class UserFolderDialog extends CenteredDialog {
 	private final TextProvider textProvider;
 	private final UserFolderHandler handler;
 	private final Mode mode;
-	private final List<DirectoryInfo> selectableDirs;
+	private final List<DirectoryInfo> availableDirectories;
 
-	private UserDirectory folder;
+	private UserDirectory edited = null;
+	private DirectoryInfo selected = null;
 
-	private ListBox folders;
+	private ListBox directories;
+	private CheckBox useDefaultName;
 	private TextBox name;
 	private TextBox defaultName;
-	private CheckBox useDefaultName;
 
 	public UserFolderDialog(TextProvider textProvider,
-			UserFolderHandler handler, List<DirectoryInfo> selectable) {
+			UserFolderHandler handler, List<DirectoryInfo> availableDirectories) {
 		super(textProvider.getStrings().userFolderDialogAddTitle(),
 				StyleConstants.USER_FOLDER_DIALOG);
+		this.availableDirectories = availableDirectories;
 		this.mode = Mode.Add;
-		this.selectableDirs = selectable;
+
 		this.textProvider = textProvider;
 		this.handler = handler;
-		this.folder = null;
+		this.edited = null;
 
 		initialize();
+
+		directories.addItem(textProvider.getStrings()
+				.userFolderDialogSelectFolder(), null);
+		for (DirectoryInfo dir : availableDirectories)
+			directories.addItem(dir.getName(), dir.getId());
+
+		useDefaultName.setValue(true);
+		refreshNameField();
 	}
 
 	public UserFolderDialog(TextProvider textProvider,
@@ -65,18 +78,17 @@ public class UserFolderDialog extends CenteredDialog {
 		super(textProvider.getStrings().userFolderDialogEditTitle(),
 				StyleConstants.USER_FOLDER_DIALOG);
 		this.mode = Mode.Edit;
-		this.selectableDirs = null;
+		this.availableDirectories = null;
 		this.textProvider = textProvider;
 		this.handler = handler;
+		this.edited = folder;
 
 		initialize();
-		setFolderData(folder);
-		name.setText(folder.getName());
-	}
 
-	private void setFolderData(UserDirectory folder) {
-		this.folder = folder;
-		this.defaultName.setText(folder.getDefaultName());
+		name.setText((folder.getName() == null ? "" : folder.getName()));
+		useDefaultName.setValue(folder.getName() == null);
+		defaultName.setText(folder.getDefaultName());
+		refreshNameField();
 	}
 
 	@Override
@@ -84,8 +96,39 @@ public class UserFolderDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.USER_FOLDER_DIALOG_CONTENT);
 
-		folders = new ListBox();
-		folders.addStyleName(StyleConstants.USER_FOLDER_DIALOG_FOLDERS);
+		if (mode.equals(Mode.Add)) {
+			Label directoriesTitle = new Label(textProvider.getStrings()
+					.userFolderDialogDirectoriesTitle());
+			directoriesTitle
+					.setStyleName(StyleConstants.USER_FOLDER_DIALOG_FOLDERS_TITLE);
+			panel.add(directoriesTitle);
+
+			directories = new ListBox();
+			directories.addStyleName(StyleConstants.USER_FOLDER_DIALOG_FOLDERS);
+			directories.addChangeHandler(new ChangeHandler() {
+				public void onChange(ChangeEvent event) {
+					if (directories.getSelectedIndex() <= 0) {
+						selected = null;
+					} else {
+						selected = availableDirectories.get(directories
+								.getSelectedIndex() - 1);
+					}
+				}
+			});
+			panel.add(directories);
+		} else {
+			Label defaultNameTitle = new Label(textProvider.getStrings()
+					.userFolderDialogDefaultNameTitle());
+			defaultNameTitle
+					.setStyleName(StyleConstants.USER_FOLDER_DIALOG_DEFAULT_NAME);
+			panel.add(defaultNameTitle);
+
+			defaultName = new TextBox();
+			defaultName
+					.addStyleName(StyleConstants.USER_FOLDER_DIALOG_DEFAULT_NAME_VALUE);
+			defaultName.setReadOnly(true);
+			panel.add(defaultName);
+		}
 
 		useDefaultName = new CheckBox(textProvider.getStrings()
 				.userFolderDialogUseDefaultName());
@@ -93,9 +136,10 @@ public class UserFolderDialog extends CenteredDialog {
 				.addStyleName(StyleConstants.USER_FOLDER_DIALOG_USE_DEFAULT_NAME);
 		useDefaultName.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				name.setReadOnly(event.getValue());
+				refreshNameField();
 			}
 		});
+		panel.add(useDefaultName);
 
 		Label nameTitle = new Label(textProvider.getStrings()
 				.userFolderDialogName());
@@ -103,20 +147,8 @@ public class UserFolderDialog extends CenteredDialog {
 		panel.add(nameTitle);
 
 		name = new TextBox();
-		name.addStyleName(StyleConstants.USER_FOLDER_DIALOG_NAME_VALUE);
+		name.setStylePrimaryName(StyleConstants.USER_FOLDER_DIALOG_NAME_VALUE);
 		panel.add(name);
-
-		Label defaultNameTitle = new Label(textProvider.getStrings()
-				.userFolderDialogDefaultNameTitle());
-		defaultNameTitle
-				.setStyleName(StyleConstants.USER_FOLDER_DIALOG_DEFAULT_NAME);
-		panel.add(defaultNameTitle);
-
-		defaultName = new TextBox();
-		defaultName
-				.addStyleName(StyleConstants.USER_FOLDER_DIALOG_DEFAULT_NAME_VALUE);
-		defaultName.setReadOnly(true);
-		panel.add(defaultName);
 
 		return panel;
 	}
@@ -152,25 +184,38 @@ public class UserFolderDialog extends CenteredDialog {
 	}
 
 	protected void onAddFolder() {
-		if (name.getText().length() == 0)
+		if (selected == null)
+			return;
+		if (!useDefaultName.getValue() && name.getText().length() == 0)
 			return;
 
-		// handler.addFolder(useDefaultName.getValue() ? null : name.getText());
+		handler.addUserFolder(selected, getEffectiveName(),
+				createHideCallback());
 	}
 
 	protected void onEditFolder() {
-		if (name.getText().length() == 0)
+		if (!useDefaultName.getValue() && name.getText().length() == 0)
 			return;
 
-		// handler.editFolder(folder, name.getText(), path.getText(),
-		// createHideCallback());
+		handler
+				.editUserFolder(edited, getEffectiveName(),
+						createHideCallback());
 	}
 
-	// private Callback createHideCallback() {
-	// return new Callback() {
-	// public void onCallback() {
-	// UserFolderDialog.this.hide();
-	// }
-	// };
-	// }
+	private String getEffectiveName() {
+		return useDefaultName.getValue() ? null : name.getText();
+	}
+
+	private void refreshNameField() {
+		Boolean readOnly = useDefaultName.getValue();
+		name.setReadOnly(readOnly);
+	}
+
+	private Callback createHideCallback() {
+		return new Callback() {
+			public void onCallback() {
+				UserFolderDialog.this.hide();
+			}
+		};
+	}
 }

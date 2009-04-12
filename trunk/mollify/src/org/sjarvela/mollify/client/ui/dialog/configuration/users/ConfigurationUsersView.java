@@ -16,13 +16,13 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.UserList;
-import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationSettingsView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationView;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
+public class ConfigurationUsersView extends ConfigurationView {
 	private final UserList list;
 	private final ActionButton addUserButton;
 	private final ActionButton removeUserButton;
@@ -33,7 +33,7 @@ public class ConfigurationSettingsUsersView extends ConfigurationSettingsView {
 		addUser, editUser, removeUser, resetPassword
 	}
 
-	public ConfigurationSettingsUsersView(TextProvider textProvider,
+	public ConfigurationUsersView(TextProvider textProvider,
 			ActionListener actionListener) {
 		super(textProvider, StyleConstants.CONFIGURATION_DIALOG_VIEW_USERS);
 

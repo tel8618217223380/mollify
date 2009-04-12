@@ -21,10 +21,10 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		ResultListener<List<Directory>> {
@@ -109,8 +109,8 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	protected Label createMenuItemWidget(final ResourceId action,
 			final Directory item) {
 		Label label = createMenuItemWidget(item.getName());
-		label.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		label.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				listener.onChangeToDirectory(level, item);
 			}
 		});

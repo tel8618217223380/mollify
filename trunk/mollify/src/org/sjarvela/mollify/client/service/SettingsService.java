@@ -45,9 +45,9 @@ public interface SettingsService {
 	void addUserFolder(User user, DirectoryInfo dir, String name,
 			ResultListener resultListener);
 
-	void editUserFolder(User user, DirectoryInfo dir, String name,
+	void editUserFolder(User user, UserDirectory dir, String name,
 			ResultListener resultListener);
 
-	void removeUserFolder(User user, DirectoryInfo dir,
+	void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener);
 }

@@ -12,68 +12,63 @@ package org.sjarvela.mollify.client.ui.dialog.configuration.folders;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationView;
+import org.sjarvela.mollify.client.ui.dialog.configuration.Configurator;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.ConfigurationType;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
+public class ConfigurationFoldersGlue implements Configurator {
 
-public class ConfigurationSettingsUserFoldersGlue {
+	private final ConfigurationFoldersView view;
 
-	private final ConfigurationSettingsUserFoldersView view;
-
-	public ConfigurationSettingsUserFoldersGlue(
-			ConfigurationSettingsUserFoldersView view,
-			final ConfigurationSettingsUserFoldersPresenter presenter,
+	public ConfigurationFoldersGlue(
+			ConfigurationFoldersView view,
+			final ConfigurationFoldersPresenter presenter,
 			ActionDelegator actionDelegator) {
+
 		this.view = view;
 
-		view.directories().addListener(new GridListener<UserDirectory>() {
-			public void onColumnClicked(UserDirectory t, GridColumn column) {
+		view.list().addListener(new GridListener<DirectoryInfo>() {
+			public void onColumnClicked(DirectoryInfo t, GridColumn column) {
 			}
 
 			public void onColumnSorted(GridColumn column, Sort sort) {
 			}
 
-			public void onIconClicked(UserDirectory t) {
+			public void onIconClicked(DirectoryInfo t) {
 			}
 
-			public void onSelectionChanged(List<UserDirectory> selected) {
+			public void onSelectionChanged(List<DirectoryInfo> selected) {
 				updateButtons(selected.size() == 1);
 			}
 		});
 
-		view.user().addChangeHandler(new ChangeHandler() {
-			public void onChange(ChangeEvent event) {
-				presenter.onUserChanged();
-			}
-		});
-
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUserFoldersView.Actions.addUserFolder,
+				ConfigurationFoldersView.Actions.addFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onAddUserFolder();
+						presenter.onAddFolder();
 					}
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUserFoldersView.Actions.editUserFolder,
+				ConfigurationFoldersView.Actions.editFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onEditUserFolder();
+						presenter.onEditFolder();
 					}
 				});
 
 		actionDelegator.setActionHandler(
-				ConfigurationSettingsUserFoldersView.Actions.removeUserFolder,
+				ConfigurationFoldersView.Actions.removeFolder,
 				new ActionHandler() {
 					public void onAction() {
-						presenter.onRemoveUserFolder();
+						presenter.onRemoveFolder();
 					}
 				});
 
@@ -81,7 +76,15 @@ public class ConfigurationSettingsUserFoldersGlue {
 	}
 
 	protected void updateButtons(boolean selected) {
-		view.editButton().setEnabled(selected);
-		view.removeButton().setEnabled(selected);
+		view.editFolderButton().setEnabled(selected);
+		view.removeFolderButton().setEnabled(selected);
 	}
+
+	public ConfigurationView getView() {
+		return view;
+	}
+
+	public void onDataChanged(ConfigurationType type) {
+	}
+
 }

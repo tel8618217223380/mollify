@@ -19,10 +19,10 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvi
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	private final DirectoryModelProvider directoryModelProvider;
@@ -32,15 +32,13 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 
 	private final DirectoryListItem homeItem;
 	private final Button upButton;
-	private final boolean reverse;
 
 	public DirectorySelector(TextProvider textProvider,
 			DirectoryModelProvider directoryModelProvider,
-			DirectoryListItemFactory listItemFactory, boolean reverse) {
+			DirectoryListItemFactory listItemFactory) {
 		this.textProvider = textProvider;
 		this.directoryModelProvider = directoryModelProvider;
 		this.listItemFactory = listItemFactory;
-		this.reverse = reverse;
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
 
 		this.upButton = createUpButton();
@@ -56,8 +54,8 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 				.mainViewParentDirButtonTitle());
 		button.setStyleName(StyleConstants.DIRECTORY_SELECTOR_BUTTON);
 		button.getElement().setId(StyleConstants.DIRECTORY_SELECTOR_BUTTON_UP);
-		button.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		button.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				DirectorySelector.this.onMoveToParentDirectory();
 			}
 		});
@@ -95,12 +93,8 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 			Directory current = list.next();
 			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
 					: null;
-			if (reverse)
-				items.add(0, listItemFactory.createListItem(this, style,
-						current, level, parent));
-			else
-				items.add(listItemFactory.createListItem(this, style, current,
-						level, parent));
+			items.add(0, listItemFactory.createListItem(this, style, current,
+					level, parent));
 
 			level++;
 			parent = current;

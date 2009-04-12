@@ -21,18 +21,19 @@ import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.ConfigurationType;
 
-public class ConfigurationSettingsUsersPresenter implements UserHandler {
-	private final ConfigurationSettingsUsersView view;
-	private final ConfigurationDialog dialog;
+public class ConfigurationUsersPresenter implements UserHandler {
+	private final ConfigurationUsersView view;
+	private final ConfigurationDialog parent;
 	private final SettingsService service;
 	private final TextProvider textProvider;
 
-	public ConfigurationSettingsUsersPresenter(SettingsService service,
+	public ConfigurationUsersPresenter(SettingsService service,
 			ConfigurationDialog dialog, TextProvider textProvider,
-			ConfigurationSettingsUsersView view) {
+			ConfigurationUsersView view) {
 		this.service = service;
-		this.dialog = dialog;
+		this.parent = dialog;
 		this.textProvider = textProvider;
 		this.view = view;
 
@@ -41,7 +42,9 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 	}
 
 	private void reload() {
-		service.getUsers(dialog
+		parent.setLoading(true);
+
+		service.getUsers(parent
 				.createResultListener(new ResultCallback<List<User>>() {
 					public void onCallback(List<User> list) {
 						view.list().setContent(list);
@@ -50,7 +53,7 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 	}
 
 	public void onAddUser() {
-		dialog.getDialogManager().openAddUserDialog(this);
+		parent.getDialogManager().openAddUserDialog(this);
 	}
 
 	public void onEditUser() {
@@ -58,7 +61,7 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		dialog.getDialogManager().openEditUserDialog(this, selected);
+		parent.getDialogManager().openEditUserDialog(this, selected);
 	}
 
 	public void onRemoveUser() {
@@ -66,8 +69,8 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		if (selected.getId().equals(dialog.getSessionInfo().getLoggedUserId())) {
-			dialog
+		if (selected.getId().equals(parent.getSessionInfo().getLoggedUserId())) {
+			parent
 					.getDialogManager()
 					.showInfo(
 							textProvider.getStrings()
@@ -77,7 +80,8 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 									.configurationDialogSettingUsersCannotDeleteYourself());
 			return;
 		}
-		service.removeUser(selected, createReloadListener());
+		service.removeUser(selected, createReloadListener(parent
+				.createDataChangeNotifier(ConfigurationType.Users)));
 	}
 
 	public void onResetPassword() {
@@ -85,21 +89,27 @@ public class ConfigurationSettingsUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		dialog.getDialogManager().openResetPasswordDialog(selected,
-				dialog.getPasswordHandler());
+		parent.getDialogManager().openResetPasswordDialog(selected,
+				parent.getPasswordHandler());
 	}
 
 	public void addUser(String name, String password, PermissionMode mode) {
-		service.addUser(name, password, mode, createReloadListener());
+		service.addUser(name, password, mode, createReloadListener(parent
+				.createDataChangeNotifier(ConfigurationType.Users)));
 	}
 
 	public void editUser(User user, String name, PermissionMode mode) {
-		service.editUser(user, name, mode, createReloadListener());
+		service.editUser(user, name, mode, createReloadListener(parent
+				.createDataChangeNotifier(ConfigurationType.Users)));
 	}
 
-	private ResultListener createReloadListener() {
-		return dialog.createResultListener(new Callback() {
+	private ResultListener createReloadListener(
+			final Callback... operationSuccessfulCallbacks) {
+		return parent.createResultListener(new Callback() {
 			public void onCallback() {
+				if (operationSuccessfulCallbacks.length > 0)
+					for (Callback operationSuccessfulCallback : operationSuccessfulCallbacks)
+						operationSuccessfulCallback.onCallback();
 				reload();
 			}
 		});

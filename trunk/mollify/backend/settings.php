@@ -113,7 +113,7 @@
 				$result = add_user_folder($_GET["user_id"], $_GET["id"], $name);
 				break;
 			case "update_user_folder":
-				if (!isset($_GET["user_id"]) or !isset($_GET["id"]) or !isset($_GET["name"])) {
+				if (!isset($_GET["user_id"]) or !isset($_GET["id"])) {
 					$error = "INVALID_REQUEST";
 					break;
 				}

@@ -20,19 +20,20 @@ import org.sjarvela.mollify.client.service.request.ResultCallback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
+import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog.ConfigurationType;
 
-public class ConfigurationSettingsFoldersPresenter implements FolderHandler {
-	private final ConfigurationSettingsFoldersView view;
-	private final ConfigurationDialog dialog;
+public class ConfigurationFoldersPresenter implements FolderHandler {
+	private final ConfigurationFoldersView view;
+	private final ConfigurationDialog parent;
 	private final SettingsService service;
 	private final TextProvider textProvider;
 
-	public ConfigurationSettingsFoldersPresenter(SettingsService service,
+	public ConfigurationFoldersPresenter(SettingsService service,
 			TextProvider textProvider, ConfigurationDialog dialog,
-			ConfigurationSettingsFoldersView view) {
+			ConfigurationFoldersView view) {
 		this.service = service;
 		this.textProvider = textProvider;
-		this.dialog = dialog;
+		this.parent = dialog;
 		this.view = view;
 
 		view.list().setSelectionMode(SelectionMode.Single);
@@ -40,8 +41,10 @@ public class ConfigurationSettingsFoldersPresenter implements FolderHandler {
 	}
 
 	private void reload() {
+		parent.setLoading(true);
+
 		service
-				.getFolders(dialog
+				.getFolders(parent
 						.createResultListener(new ResultCallback<List<DirectoryInfo>>() {
 							public void onCallback(List<DirectoryInfo> list) {
 								view.list().setContent(list);
@@ -65,27 +68,30 @@ public class ConfigurationSettingsFoldersPresenter implements FolderHandler {
 			return;
 
 		service.removeFolder(view.list().getSelected().get(0),
-				createReloadListener(null));
+				createReloadListener(parent
+						.createDataChangeNotifier(ConfigurationType.Folders)));
 	}
 
-	public void addFolder(String name, String path,
-			Callback operationSuccessfulCallback) {
-		service.addFolder(name, path,
-				createReloadListener(operationSuccessfulCallback));
+	public void addFolder(String name, String path, Callback successCallback) {
+		service.addFolder(name, path, createReloadListener(parent
+				.createDataChangeNotifier(ConfigurationType.Folders),
+				successCallback));
 	}
 
 	public void editFolder(DirectoryInfo folder, String name, String path,
-			Callback operationSuccessfulCallback) {
-		service.editFolder(folder, name, path,
-				createReloadListener(operationSuccessfulCallback));
+			Callback successCallback) {
+		service.editFolder(folder, name, path, createReloadListener(parent
+				.createDataChangeNotifier(ConfigurationType.Folders),
+				successCallback));
 	}
 
 	private ResultListener createReloadListener(
-			final Callback operationSuccessfulCallback) {
-		return dialog.createResultListener(new Callback() {
+			final Callback... successCallbacks) {
+		return parent.createResultListener(new Callback() {
 			public void onCallback() {
-				if (operationSuccessfulCallback != null)
-					operationSuccessfulCallback.onCallback();
+				if (successCallbacks.length > 0)
+					for (Callback callback : successCallbacks)
+						callback.onCallback();
 				reload();
 			}
 		});
