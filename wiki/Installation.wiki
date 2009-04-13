@@ -32,6 +32,8 @@
 	
 	Also, see instructions on [ConfigurationAdditionalOptions additional configuration options].
 
+	For MySQL configuration instructions, see [ConfigurationMySql this page]
+
 
 = 3. Modifying Installation =
 
