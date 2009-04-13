@@ -91,13 +91,13 @@ $PASSWORDS_HASHED = TRUE;
 
 == 4.1. Request timeout ==
 
-By default, client requests timeout after 5 seconds if no response has been received. This timeout should be adequate for all environments, but if needed, this can be changed with following setting:
+	By default, client requests timeout after 5 seconds if no response has been received. This timeout should be adequate for all environments, but if needed, this can be changed with following setting:
 
 {{{
 <meta name="mollify:property" content="request-timeout=8">
 }}}
 
-Value given is timeout in seconds.
+	Value given is timeout in seconds.
 
 == 4.2. Logging ==
 
