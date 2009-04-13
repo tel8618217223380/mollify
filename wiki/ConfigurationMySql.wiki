@@ -3,11 +3,9 @@
 NOTE! This page is draft, more complete instructions will be added soon.
 
 
-1) First you have to create MySQL user and database for Mollify, and grant the user for CREATE/INSERT/UPDATE/DELETE rights in the database.
+1) First you have to create MySQL user and database for Mollify, and grant the new user for CREATE/INSERT/UPDATE/DELETE rights in the created database.
 
-2) Create following configuration.php:
-
-Example configuration.php for MySQL:
+2) Create configuration.php as in following example:
 
 {{{
 	<?php
@@ -34,4 +32,4 @@ Installer will create first administrator user, which you must now create manual
 	INSERT INTO user (name, password, permission_mode) VALUES ('[USER_NAME]','[PASSWORD]','A')
 }}}
 
-where [USER_NAME] is freely selectable user name, and [PASSWORD] an MD5 hashed password.
+where `[USER_NAME]` is freely selectable user name, and `[PASSWORD]` an MD5 hashed password.
