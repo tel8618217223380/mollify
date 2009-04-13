@@ -294,5 +294,5 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_PASSWORD_VALUE = "mollify-reset-password-dialog-password-value";
 	public static final String RESET_PASSWORD_DIALOG_GENERATE_PASSWORD = "reset-password-dialog-generate";
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
-	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "mollify-reset-password-dialog-button-reset";
+	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
 }

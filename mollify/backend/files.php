@@ -499,7 +499,7 @@
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");
-		header("Content-Disposition: attachment; filename=".basename($filename).";");
+		header("Content-Disposition: attachment; filename=\"".basename($filename)."\";");
 		header("Content-Transfer-Encoding: binary");
 		header("Pragma: hack");
 		header("Content-Length: ".filesize($filename));

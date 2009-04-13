@@ -17,7 +17,7 @@
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 	
 	/* User types: "A" = Admin, "RW" = Read/write, "RO" = Read-only (default if omitted) */
-	$USERS = array(
+	/*$USERS = array(
 		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
 		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
 	);
@@ -31,14 +31,14 @@
 			"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
 			"r2" => array("name" => "Folder C", "path" => "/foo/baz")
 		)
-	);
+	);*/
 	
-	/*$FILE_PERMISSION_MODE = "RW";
+	$FILE_PERMISSION_MODE = "RO";
 	
 	$PUBLISHED_DIRECTORIES = array(
 		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-	);*/
+	);
 	
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
@@ -46,8 +46,6 @@
 		"enable_file_upload_progress" => TRUE,
 		"enable_zip_download" => TRUE
 	);
-	
-	$ZIP_OPTIONS = array("large_file_size" => 3 * 1024 * 1024);
 	
 	$PASSWORDS_HASHED = FALSE;
 	

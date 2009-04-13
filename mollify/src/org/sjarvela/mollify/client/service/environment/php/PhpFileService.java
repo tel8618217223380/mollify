@@ -175,7 +175,7 @@ public class PhpFileService implements FileSystemService {
 		}
 
 		List<String> params = new ArrayList(parameters);
-		params.add("type=" + action.name());
+		params.add("action=" + action.name());
 		params.add("id=" + item.getId());
 		params.add(getFileItemTypeParam(item));
 
