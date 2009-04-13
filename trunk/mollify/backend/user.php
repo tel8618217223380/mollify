@@ -54,11 +54,11 @@
 					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
 					return;
 				}
-				if (!isset($_GET["id"]) or !isset($_GET["password"])) {
+				if (!isset($_GET["id"]) or !isset($_GET["new"])) {
 					return_json(get_error_message("INVALID_REQUEST"));
 					return;
 				}
-				$result = reset_password($_GET['id'], $_GET["password"]);
+				$result = reset_password($_GET['id'], $_GET["new"]);
 				break;
 			default:
 				return_json(get_error_message("INVALID_REQUEST"));
