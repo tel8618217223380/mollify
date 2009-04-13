@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.5 ==
+  * Added support for MySQL database configuration, along with client side configuration options for users and published folders
+  * Backend configuration option for password hashing
+  * Client configuration option for request timeout setting
+
 === Version 0.9 ==
   * Added move and copy file features
   * Finalized basic theme
