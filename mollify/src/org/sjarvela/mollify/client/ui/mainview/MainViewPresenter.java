@@ -262,7 +262,7 @@ public class MainViewPresenter implements DirectoryListener,
 								.getDialogManager()
 								.showInfo(
 										textProvider.getStrings()
-												.passwordDialogTitle(),
+												.resetPasswordDialogTitle(),
 										textProvider
 												.getStrings()
 												.passwordDialogPasswordChangedSuccessfully());

@@ -114,5 +114,6 @@ public class ResetPasswordDialog extends CenteredDialog {
 
 	protected void onReset() {
 		handler.resetPassword(user, password.getText());
+		this.hide();
 	}
 }
