@@ -26,10 +26,12 @@ Values $DB_HOST and $DB_DATABASE are optional. If these are not defined, it is a
 
 ----
 
-Alternatively, you can create database tables manually by running script "/install/mysql/sql/create_tables_[VERSION].sql", as well as "/install/mysql/sql/params_[VERSION].sql".
+Alternatively, you can create database tables manually by running script "`/install/mysql/sql/create_tables_[VERSION].sql`", as well as "`/install/mysql/sql/params_[VERSION].sql`".
 
 Installer will create first administrator user, which you must now create manually. Insert admin user with following SQL:
 
-INSERT INTO user (name, password, permission_mode) VALUES ('[USER_NAME]','[PASSWORD]','A')
+{{{
+	INSERT INTO user (name, password, permission_mode) VALUES ('[USER_NAME]','[PASSWORD]','A')
+}}}
 
 where [USER_NAME] is freely selectable user name, and [PASSWORD] an MD5 hashed password.
