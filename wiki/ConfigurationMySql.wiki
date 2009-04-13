@@ -3,9 +3,6 @@
 NOTE! This page is draft, more complete instructions will be added soon.
 
 
-
-Values $DB_HOST and $DB_DATABASE are optional. If these are not defined, it is assumed that MySQL server is running on localhost, and database is called "mollify".
-
 1) First you have to create MySQL user and database for Mollify, and grant the user for CREATE/INSERT/UPDATE/DELETE rights in the database.
 
 2) Create following configuration.php:
@@ -22,6 +19,8 @@ Example configuration.php for MySQL:
 
 	?>
 }}}
+
+Values $DB_HOST and $DB_DATABASE are optional. If these are not defined, it is assumed that MySQL server is running on localhost, and database is called "mollify".
 
 3) Opening installation PHP script in your browser: "http://[URL_TO_MOLLIFY_INSTALL_DIR]/install/", where URL_TO_MOLLIFY_INSTALL_DIR is the folder where, for example, configuration.php and service.php are located.
 
