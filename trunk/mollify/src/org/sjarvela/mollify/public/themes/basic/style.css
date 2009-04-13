@@ -274,6 +274,10 @@
 	margin-left: -4px;
 }
 
+#username-menu.ie-crap.mollify-dropdown-menu {
+	width:  200px;
+}
+
 .mollify-dropdown-menu-item {
 	padding: 3px;
 	cursor: pointer;
@@ -348,6 +352,15 @@
 	margin-right: 0px;
 }
 
+.ie-crap.mollify-directory-selector {
+	float: left;
+	margin-top: 8px;
+	margin-left: 0;
+	margin-right: 0px;
+	background: url(dir-item-body.png) repeat-x;
+	height: 22px;
+}
+
 .mollify-directory-selector-items {
 	float: left;
 }
@@ -387,6 +400,11 @@
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
 	padding-top: 4px;
+}
+
+.ie-crap.mollify-directory-list-item-button-center {
+	padding-top: 3px;
+	height: 23px;
 }
 
 .mollify-directory-list-item-button-right {
@@ -780,6 +798,10 @@ td#mollify-filelist-column-size {
 
 #download-dropdown-menu.mollify-dropdown-menu {
 	background-color: #ececec;
+}
+
+#download-dropdown-menu.ie-crap.mollify-dropdown-menu {
+	width: 150px;
 }
 
 .mollify-directory-context-content {
@@ -1301,12 +1323,12 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 	margin-left: 6px;
 }
 
-.mollify-user-dialog-buttons, .mollify-folder-dialog-buttons, .mollify-user-folder-dialog-buttons, .mollify-reset-password-dialog-buttons {
+.mollify-user-dialog-buttons, .mollify-folder-dialog-buttons, .mollify-user-folder-dialog-buttons, .mollify-reset-password-dialog-buttons, .mollify-password-dialog-buttons {
 	width: 100%;
 	margin-top: 12px;
 }
 
-.mollify-dialog-button-user-dialog-add-edit, .mollify-dialog-button-folder-dialog-add-edit, .mollify-dialog-button-user-folder-dialog-add-edit, .mollify-dialog-button-reset-password-dialog-reset {
+.mollify-dialog-button-user-dialog-add-edit, .mollify-dialog-button-folder-dialog-add-edit, .mollify-dialog-button-user-folder-dialog-add-edit, .mollify-dialog-button-reset-password-dialog-reset, .mollify-dialog-button-password-change {
 	float: right;
 	width: 60px;
 }

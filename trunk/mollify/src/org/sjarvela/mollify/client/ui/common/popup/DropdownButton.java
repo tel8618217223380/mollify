@@ -15,10 +15,10 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownButton extends Composite {
 	private ActionButton button;
@@ -44,8 +44,8 @@ public class DropdownButton extends Composite {
 		if (id != null)
 			menu.getElement().setId(id + "-menu");
 
-		button.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		button.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				menu.showMenu();
 			}
 		});

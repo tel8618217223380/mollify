@@ -63,7 +63,7 @@
 				die("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
 			}
 		} else {
-			require_once "data_provider_file.php";
+			require_once "configuration_provider_file.php";
 		}
 		
 		init_configuration_provider();
