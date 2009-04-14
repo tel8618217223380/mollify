@@ -3,7 +3,7 @@
 
 = 1. Configuration =
 
-	To set up a multi-user environment, you have to define user accounts with variable $USERS in file "configuration.php".
+	To set up a multi-user environment in file based configuration, you have to define user accounts with variable $USERS in file "configuration.php".
 
 	Syntax is:
 

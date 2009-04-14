@@ -1,7 +1,7 @@
-#summary Configuration instructions for MySQL database
+#summary Configuration for MySQL
+#labels Phase-Deploy
 
-NOTE! This page is draft, more complete instructions will be added soon.
-
+= 1. Prerequisities =
 
 1) First you have to create MySQL user and database for Mollify, and grant the new user for CREATE/INSERT/UPDATE/DELETE rights in the created database.
 
@@ -20,13 +20,17 @@ NOTE! This page is draft, more complete instructions will be added soon.
 
 Values $DB_HOST and $DB_DATABASE are optional. If these are not defined, it is assumed that MySQL server is running on localhost, and database is called "mollify".
 
-3) Opening installation PHP script in your browser: "http://[URL_TO_MOLLIFY_INSTALL_DIR]/install/", where URL_TO_MOLLIFY_INSTALL_DIR is the folder where, for example, configuration.php and service.php are located.
+= 2. Installation with Installer =
 
-----
+Start installation by opening following page into your browser: "`http://[URL_TO_MOLLIFY_INSTALL_DIR]/install/`", where `[URL_TO_MOLLIFY_INSTALL_DIR]` is the mollify backend folder where, for example, configuration.php and service.php are located.
 
-Alternatively, you can create database tables manually by running script "`/install/mysql/sql/create_tables_[VERSION].sql`", as well as "`/install/mysql/sql/params_[VERSION].sql`".
+Installer will check configuration and system, and guide you through the installation.
 
-Installer will create first administrator user, which you must now create manually. Insert admin user with following SQL:
+= 3. Manual Installation =
+
+Database tables can be created manually by running script "`/install/mysql/sql/create_tables_[VERSION].sql`". For required parameters, run "`/install/mysql/sql/params_[VERSION].sql`" as well.
+
+To be able to log into Mollify, you must create first admin user manually with following SQL:
 
 {{{
 	INSERT INTO user (name, password, permission_mode) VALUES ('[USER_NAME]','[PASSWORD]','A')
