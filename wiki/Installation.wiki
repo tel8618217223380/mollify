@@ -15,7 +15,7 @@
 
 3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
-4) Copy file host page file ("example_index.html") from directory "Examples" into directory "mollify", and modify it according to your configuration. For other options, see chapter 3.
+4) Copy host page file ("example_index.html") from directory "Examples" into directory "mollify", and modify it according to your configuration. For other options, see chapter 3.
 
 5) You are ready to go. Open address http://your.host.name/mollify to see your files.
 
