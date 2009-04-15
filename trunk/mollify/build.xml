@@ -36,10 +36,12 @@
 		<echo>Platform: ${os.name}</echo>
 		<mkdir dir="${build.dir}" />
 		
-		<java classpathref="compile.classpath" classname="com.google.gwt.dev.GWTCompiler" fork="true">
+		<java classpathref="compile.classpath" classname="com.google.gwt.dev.Compiler" fork="true">
 			<jvmarg line="${gwt.jvm.arg}" />
-			<arg value="-out" />
+			<arg value="-war" />
 			<arg value="${build.dir}" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />			
 			<arg value="${gwt.entrypoint.class}" />
 		</java>
 	</target>
