@@ -17,18 +17,17 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 public class FileContextPopupFactory {
 	private final TextProvider textProvider;
 	private final FileDetailsProvider fileDetailsProvider;
-	private final SessionInfo sessionInfo;
+	private final SessionInfo session;
 
 	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, SessionInfo sessionInfo) {
+			TextProvider textProvider, SessionInfo session) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
-		this.sessionInfo = sessionInfo;
+		this.session = session;
 	}
 
 	public FileContextPopup createPopup() {
-		return new FileContextPopup(textProvider, fileDetailsProvider,
-				sessionInfo);
+		return new FileContextPopup(textProvider, fileDetailsProvider, session);
 	}
 
 }

@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
@@ -48,7 +49,7 @@ import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 public class MainViewPresenter implements DirectoryListener,
 		FileSystemActionHandler, DirectoryHandler, RenameHandler,
-		PasswordHandler {
+		PasswordHandler, FileItemDescriptionHandler {
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
@@ -79,8 +80,9 @@ public class MainViewPresenter implements DirectoryListener,
 		this.textProvider = textProvider;
 		this.logoutListener = logoutListener;
 
-		this.view.setFileContextHandler(this);
-		this.view.setDirectoryContextHandler(this);
+		this.view.getFileContext().setFileActionHandler(this);
+		this.view.getFileContext().setFileItemDescriptionHandler(this);
+		this.view.getDirectoryContext().setDirectoryActionHandler(this);
 		this.view.getDirectorySelector().addListener(this);
 
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
@@ -408,5 +410,10 @@ public class MainViewPresenter implements DirectoryListener,
 	public void configure() {
 		windowManager.getDialogManager().openConfigurationDialog(
 				settingsService, this);
+	}
+
+	public void setDescription(File file, String description,
+			Callback successCallback) {
+		// fileSystemService.
 	}
 }

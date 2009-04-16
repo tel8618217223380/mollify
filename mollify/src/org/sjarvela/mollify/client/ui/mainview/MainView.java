@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.PermissionMode;
@@ -87,6 +88,11 @@ public class MainView extends Composite {
 
 	public void setFileContextHandler(FileSystemActionHandler actionHandler) {
 		fileContext.setFileActionHandler(actionHandler);
+	}
+
+	public void setFileItemDescriptionHandler(
+			FileItemDescriptionHandler descriptionHandler) {
+		fileContext.setFileItemDescriptionHandler(descriptionHandler);
 	}
 
 	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {
@@ -240,4 +246,13 @@ public class MainView extends Composite {
 	public ActionButton getLogoutButton() {
 		return logoutButton;
 	}
+	
+	public FileContextPopup getFileContext() {
+		return fileContext;
+	}
+	
+	public DirectoryContextPopup getDirectoryContext() {
+		return dirContext;
+	}
+
 }

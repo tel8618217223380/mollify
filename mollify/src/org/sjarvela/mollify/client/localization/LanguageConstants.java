@@ -287,4 +287,10 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String userFolderDialogDefaultNameTitle();
 
+	public String fileDetailsAddDescription();
+
+	public String fileDetailsEditDescription();
+
+	public String fileDetailsApplyDescription();
+
 }

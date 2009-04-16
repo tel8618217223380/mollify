@@ -345,7 +345,7 @@
 		return TRUE;
 	}
 	
-	function get_file_description($filename) {
+	function get_file_description($file) {
 		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string($file["id"])));
 		if (!$result or mysql_num_rows($result) < 1) return NULL;
 		return mysql_result($result, 0);

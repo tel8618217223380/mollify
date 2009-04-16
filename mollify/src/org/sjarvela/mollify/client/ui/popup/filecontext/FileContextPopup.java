@@ -17,10 +17,12 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionListener;
@@ -47,7 +49,9 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private final TextProvider textProvider;
 	private final FileDetailsProvider detailsProvider;
 	private final SessionInfo session;
+
 	private FileSystemActionHandler fileActionHandler;
+	private FileItemDescriptionHandler descriptionHandler;
 
 	private Label filename;
 	private File file = File.Empty;
@@ -85,6 +89,11 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		this.fileActionHandler = actionHandler;
 	}
 
+	public void setFileItemDescriptionHandler(
+			FileItemDescriptionHandler descriptionHandler) {
+		this.descriptionHandler = descriptionHandler;
+	}
+
 	protected Widget createContent() {
 		VerticalPanel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_CONTENT);
@@ -94,22 +103,32 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		content.add(filename);
 
 		description = new TextArea();
-		description.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
+		description
+				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
 		description.setReadOnly(true);
 		content.add(description);
 
 		if (session.getDefaultPermissionMode().isAdmin()) {
+			description
+					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
+
 			editDescriptionLabel = new Label();
 			editDescriptionLabel
 					.setStyleName(StyleConstants.FILE_CONTEXT_ADDEDIT_DESCRIPTION);
 			HoverDecorator.decorate(editDescriptionLabel);
+
 			editDescriptionLabel.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					if (!editingDescription) onStartEditDescription();
-					else onStopEditDescription();
+					if (!editingDescription)
+						onStartEditDescription();
+					else
+						onStopEditDescription();
 				}
 			});
 			content.add(editDescriptionLabel);
+		} else {
+			description
+					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
 		}
 
 		content.add(createDetails());
@@ -240,12 +259,14 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		this.description.setReadOnly(true);
 		this.description.setText(description != null ? description : "");
 		this.description.setVisible(description != null);
-		
+
 		if (session.getDefaultPermissionMode().isAdmin()) {
 			if (description != null)
-				editDescriptionLabel.setText("Edit description"); // TODO
+				editDescriptionLabel.setText(textProvider.getStrings()
+						.fileDetailsEditDescription());
 			else
-				editDescriptionLabel.setText("Add description");
+				editDescriptionLabel.setText(textProvider.getStrings()
+						.fileDetailsAddDescription());
 		}
 	}
 
@@ -287,18 +308,30 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	}
 
 	protected void onStartEditDescription() {
-		editingDescription  = true;
+		editingDescription = true;
+		description
+				.removeStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
+
 		description.setVisible(true);
-		editDescriptionLabel.setText("Apply");	//TODO
+		editDescriptionLabel.setText(textProvider.getStrings()
+				.fileDetailsApplyDescription());
 		description.setReadOnly(false);
 		description.setFocus(true);
 	}
 
 	protected void onStopEditDescription() {
-		editingDescription  = false;
-		updateDescription(description.getText());
+		editingDescription = false;
+		description
+				.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
+		final String text = description.getText();
+
+		this.descriptionHandler.setDescription(file, text, new Callback() {
+			public void onCallback() {
+				updateDescription(text);
+			}
+		});
 	}
-	
+
 	protected void onAction(FileSystemAction action) {
 		fileActionHandler.onAction(file, action);
 		this.hide();

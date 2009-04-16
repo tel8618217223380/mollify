@@ -62,6 +62,8 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "mollify-file-context-description";
+	public static final String FILE_CONTEXT_DESCRIPTION_READONLY = "readonly";
+	public static final String FILE_CONTEXT_DESCRIPTION_EDITABLE = "editable";
 	public static final String FILE_CONTEXT_ADDEDIT_DESCRIPTION = "mollify-file-context-addedit-description";
 	public static final String FILE_CONTEXT_DETAILS = "mollify-file-context-details";
 	public static final String FILE_CONTEXT_DETAILS_HEADER = "mollify-file-context-details-header";
@@ -296,4 +298,5 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_GENERATE_PASSWORD = "reset-password-dialog-generate";
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
 	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
+
 }
