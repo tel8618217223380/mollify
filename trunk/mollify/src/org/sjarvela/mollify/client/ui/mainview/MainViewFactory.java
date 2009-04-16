@@ -52,9 +52,9 @@ public class MainViewFactory {
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileSystemService, textProvider, directoryProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, textProvider, model.getSessionInfo());
+				fileSystemService, textProvider, model.getSession());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				textProvider, fileSystemService, model.getSessionInfo()
+				textProvider, fileSystemService, model.getSession()
 						.getSettings());
 		ActionDelegator actionDelegator = new ActionDelegator();
 

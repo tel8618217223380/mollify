@@ -124,7 +124,7 @@ public class MainView extends Composite {
 		buttonPanel.add(directorySelector);
 		header.add(buttonPanel);
 
-		if (model.getSessionInfo().isAuthenticationRequired()) {
+		if (model.getSession().isAuthenticationRequired()) {
 			Panel loggedInPanel = new FlowPanel();
 			loggedInPanel
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
@@ -148,11 +148,11 @@ public class MainView extends Composite {
 				});
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
 
-		if (model.getSessionInfo().getConfigurationInfo()
+		if (model.getSession().getConfigurationInfo()
 				.isConfigurationUpdateSupported()) {
 			username.addAction(Action.changePassword, textProvider.getStrings()
 					.mainViewChangePasswordTitle());
-			if (PermissionMode.Admin.equals(model.getSessionInfo()
+			if (PermissionMode.Admin.equals(model.getSession()
 					.getDefaultPermissionMode())) {
 				username.addAction(Action.configure, textProvider.getStrings()
 						.mainViewConfigurationTitle());
@@ -176,17 +176,17 @@ public class MainView extends Composite {
 				StyleConstants.MAIN_VIEW_HEADER_OPTION);
 		logoutButton.setAction(actionListener, Action.logout);
 
-		if ((model.getSessionInfo().getSettings().isFileUploadEnabled() || model
-				.getSessionInfo().getSettings().isFolderActionsEnabled())
-				&& model.getSessionInfo().getDefaultPermissionMode()
+		if ((model.getSession().getSettings().isFileUploadEnabled() || model
+				.getSession().getSettings().isFolderActionsEnabled())
+				&& model.getSession().getDefaultPermissionMode()
 						.hasWritePermission()) {
 			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
-			if (model.getSessionInfo().getSettings().isFileUploadEnabled())
+			if (model.getSession().getSettings().isFileUploadEnabled())
 				addButton.addAction(Action.addFile, textProvider.getStrings()
 						.mainViewAddFileMenuItem());
-			if (model.getSessionInfo().getSettings().isFolderActionsEnabled())
+			if (model.getSession().getSettings().isFolderActionsEnabled())
 				addButton.addAction(Action.addDirectory, textProvider
 						.getStrings().mainViewAddDirectoryMenuItem());
 		}

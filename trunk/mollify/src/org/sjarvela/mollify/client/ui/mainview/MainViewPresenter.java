@@ -85,8 +85,8 @@ public class MainViewPresenter implements DirectoryListener,
 
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
 
-		if (model.getSessionInfo().isAuthenticationRequired())
-			view.getUsername().setText(model.getSessionInfo().getLoggedUser());
+		if (model.getSession().isAuthenticationRequired())
+			view.getUsername().setText(model.getSession().getLoggedUser());
 	}
 
 	public void initialize() {
@@ -164,22 +164,22 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void openUploadDialog() {
-		if (model.getCurrentFolder().isEmpty())
+		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
 		FileUploadListener fileUploadListener = new DefaultFileUploadListener(
-				fileUploadService, model.getSessionInfo().getSettings()
+				fileUploadService, model.getSession().getSettings()
 						.isFileUploadProgressEnabled(), windowManager
 						.getDialogManager(), textProvider,
 				createReloadListener());
 
 		windowManager.getDialogManager().openUploadDialog(
 				model.getCurrentFolder(), fileUploadService,
-				model.getSessionInfo().getFileSystemInfo(), fileUploadListener);
+				model.getSession().getFileSystemInfo(), fileUploadListener);
 	}
 
 	public void openNewDirectoryDialog() {
-		if (model.getCurrentFolder().isEmpty())
+		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
 		windowManager.getDialogManager().openCreateFolderDialog(
@@ -215,7 +215,7 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void logout() {
-		logoutListener.onLogout(model.getSessionInfo());
+		logoutListener.onLogout(model.getSession());
 	}
 
 	public void changePassword() {

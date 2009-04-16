@@ -52,7 +52,7 @@ public class MainViewModel {
 		all.clear();
 	}
 
-	public SessionInfo getSessionInfo() {
+	public SessionInfo getSession() {
 		return session;
 	}
 
@@ -74,6 +74,10 @@ public class MainViewModel {
 
 	public List<FileSystemItem> getAllItems() {
 		return all;
+	}
+
+	public boolean hasFolder() {
+		return directoryModel.getCurrentFolder() != null;
 	}
 
 	public Directory getCurrentFolder() {
