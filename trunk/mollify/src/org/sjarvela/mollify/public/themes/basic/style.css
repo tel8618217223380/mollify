@@ -766,6 +766,18 @@ td#mollify-filelist-column-size {
 .mollify-file-context-description {
 	margin-bottom: 8px;
 	margin-top: 4px;
+	width: 100%;
+}
+
+.mollify-file-context-addedit-description, .mollify-file-context-addedit-description-hover {
+	text-align: right;
+	color: #6488cd;
+	cursor: pointer;
+}
+
+.mollify-file-context-addedit-description-hover {
+	color: #455f8f;
+	text-decoration: underline;
 }
 
 .mollify-file-context-details {
