@@ -80,12 +80,13 @@
 		}
 	}
 	
-	function get_file_description($filename) {
+	function get_file_description($file) {
+		$filename = $file["path"];
 		$path = dirname($filename);
 		$file = basename($filename);
 		$descriptions = _get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
 
-		if (!isset($descriptions[$file])) return "";
+		if (!isset($descriptions[$file])) return NULL;
 		return $descriptions[$file];
 	}
 	

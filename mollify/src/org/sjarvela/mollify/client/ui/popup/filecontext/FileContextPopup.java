@@ -25,15 +25,19 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,12 +46,13 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 
 	private final TextProvider textProvider;
 	private final FileDetailsProvider detailsProvider;
-	private final SessionInfo sessionInfo;
+	private final SessionInfo session;
 	private FileSystemActionHandler fileActionHandler;
 
 	private Label filename;
 	private File file = File.Empty;
-	private Label description;
+	private TextArea description;
+	private Label editDescriptionLabel;
 	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
 
@@ -56,17 +61,19 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	private Button moveButton;
 	private Button deleteButton;
 
+	private boolean editingDescription = false;
+
 	private enum Details {
 		Accessed, Modified, Changed
 	}
 
 	public FileContextPopup(TextProvider textProvider,
-			FileDetailsProvider detailsProvider, SessionInfo sessionInfo) {
+			FileDetailsProvider detailsProvider, SessionInfo session) {
 		super(StyleConstants.FILE_CONTEXT);
 
 		this.textProvider = textProvider;
 		this.detailsProvider = detailsProvider;
-		this.sessionInfo = sessionInfo;
+		this.session = session;
 
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
@@ -86,9 +93,24 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 		filename.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(filename);
 
-		description = new Label();
+		description = new TextArea();
 		description.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
+		description.setReadOnly(true);
 		content.add(description);
+
+		if (session.getDefaultPermissionMode().isAdmin()) {
+			editDescriptionLabel = new Label();
+			editDescriptionLabel
+					.setStyleName(StyleConstants.FILE_CONTEXT_ADDEDIT_DESCRIPTION);
+			HoverDecorator.decorate(editDescriptionLabel);
+			editDescriptionLabel.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					if (!editingDescription) onStartEditDescription();
+					else onStopEditDescription();
+				}
+			});
+			content.add(editDescriptionLabel);
+		}
 
 		content.add(createDetails());
 		content.add(createButtons());
@@ -115,7 +137,7 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 				.fileActionDeleteTitle(), FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		if (sessionInfo.getSettings().isZipDownloadEnabled()) {
+		if (session.getSettings().isZipDownloadEnabled()) {
 			MultiActionButton downloadButton = createMultiActionButton(this,
 					textProvider.getStrings().fileActionDownloadTitle(),
 					FileSystemAction.download.name());
@@ -205,10 +227,26 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 				description.setText(error.getType().getMessage(textProvider));
 			}
 
-			public void onSuccess(FileDetails result) {
-				updateDetails(result);
+			public void onSuccess(FileDetails details) {
+				updateDescription(details.getDescription());
+				updateDetails(details);
+				updateButtons(details);
 			}
 		});
+	}
+
+	protected void updateDescription(String description) {
+		this.editingDescription = false;
+		this.description.setReadOnly(true);
+		this.description.setText(description != null ? description : "");
+		this.description.setVisible(description != null);
+		
+		if (session.getDefaultPermissionMode().isAdmin()) {
+			if (description != null)
+				editDescriptionLabel.setText("Edit description"); // TODO
+			else
+				editDescriptionLabel.setText("Add description");
+		}
 	}
 
 	private void emptyDetails() {
@@ -225,10 +263,6 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 	}
 
 	private void updateDetails(FileDetails details) {
-		this.description.setText(details.getDescription());
-		this.description
-				.setVisible(details.getDescription().trim().length() > 0);
-
 		for (Details detail : Details.values()) {
 			Label value = detailRowValues.get(detail.ordinal());
 
@@ -239,17 +273,32 @@ public class FileContextPopup extends ContextPopup implements ActionListener {
 			else if (detail.equals(Details.Changed))
 				value.setText(dateTimeFormat.format(details.getLastChanged()));
 		}
+	}
 
+	private void updateButtons(FileDetails details) {
 		boolean writable = details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
 
-		boolean hasGeneralWritePermissions = sessionInfo
-				.getDefaultPermissionMode().hasWritePermission();
+		boolean hasGeneralWritePermissions = session.getDefaultPermissionMode()
+				.hasWritePermission();
 		copyButton.setVisible(hasGeneralWritePermissions);
 		moveButton.setVisible(hasGeneralWritePermissions);
 	}
 
+	protected void onStartEditDescription() {
+		editingDescription  = true;
+		description.setVisible(true);
+		editDescriptionLabel.setText("Apply");	//TODO
+		description.setReadOnly(false);
+		description.setFocus(true);
+	}
+
+	protected void onStopEditDescription() {
+		editingDescription  = false;
+		updateDescription(description.getText());
+	}
+	
 	protected void onAction(FileSystemAction action) {
 		fileActionHandler.onAction(file, action);
 		this.hide();
