@@ -214,7 +214,7 @@
 			"last_changed" => date($datetime_format, filectime($file["path"])),
 			"last_modified" => date($datetime_format, filemtime($file["path"])),
 			"last_accessed" => date($datetime_format, fileatime($file["path"])),
-			"description" => get_file_description($file["path"]),
+			"description" => get_file_description($file),
 			"permissions" => get_file_permissions_value($file));
 		return $result;
 	}

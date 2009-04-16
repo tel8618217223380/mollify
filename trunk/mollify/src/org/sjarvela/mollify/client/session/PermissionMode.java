@@ -36,4 +36,8 @@ public enum PermissionMode {
 		throw new RuntimeException("Unlocalized permission mode: "
 				+ this.name());
 	}
+
+	public boolean isAdmin() {
+		return this.equals(Admin);
+	}
 }

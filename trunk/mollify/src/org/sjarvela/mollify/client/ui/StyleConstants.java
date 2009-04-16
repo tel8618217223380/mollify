@@ -62,6 +62,7 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "mollify-file-context-description";
+	public static final String FILE_CONTEXT_ADDEDIT_DESCRIPTION = "mollify-file-context-addedit-description";
 	public static final String FILE_CONTEXT_DETAILS = "mollify-file-context-details";
 	public static final String FILE_CONTEXT_DETAILS_HEADER = "mollify-file-context-details-header";
 	public static final String FILE_CONTEXT_DETAILS_CONTENT = "mollify-file-context-details-content";

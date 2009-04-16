@@ -346,40 +346,9 @@
 	}
 	
 	function get_file_description($filename) {
-		$path = dirname($filename);
-		$file = basename($filename);
-		$descriptions = _get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
-
-		if (!isset($descriptions[$file])) return "";
-		return $descriptions[$file];
-	}
-	
-	function _get_descriptions_from_file($descript_ion) {
-		$result = array();
-		if (!file_exists($descript_ion)) return $result;
-	
-		$handle = @fopen($descript_ion, "r");
-		if (!$handle) return $result;
-		
-	    while (!feof($handle)) {
-	        $line = fgets($handle, 4096);
-
-			// check for quote marks (")
-			if (ord(substr($line, 0, 1)) === 34) {
-				$line = substr($line, 1);
-				$split = strpos($line, chr(34));
-			} else {
-	        	$split = strpos($line, ' ');
-			}
-			if ($split <= 0) continue;
-
-			$name = trim(substr($line, 0, $split));
-			$desc = trim(substr($line, $split + 1));
-			$result[$name] = $desc;
-	    }
-	    fclose($handle);
-		
-		return $result;
+		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string($file["id"])));
+		if (!$result or mysql_num_rows($result) < 1) return NULL;
+		return mysql_result($result, 0);
 	}
 	
 	function get_file_permissions($filename, $user_id) {
