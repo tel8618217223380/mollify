@@ -42,6 +42,8 @@ public class StyleConstants {
 	public static final String MULTIACTION_BUTTON = "mollify-multiaction-button";
 	public static final String MULTIACTION_DEFAULT_BUTTON = "mollify-multiaction-button-default";
 	public static final String MULTIACTION_BUTTON_DROPDOWN = "mollify-multiaction-button-dropdown";
+	
+	public static final String ACTION_LINK = "mollify-actionlink";
 
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
@@ -64,7 +66,12 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_DESCRIPTION = "mollify-file-context-description";
 	public static final String FILE_CONTEXT_DESCRIPTION_READONLY = "readonly";
 	public static final String FILE_CONTEXT_DESCRIPTION_EDITABLE = "editable";
-	public static final String FILE_CONTEXT_ADDEDIT_DESCRIPTION = "mollify-file-context-addedit-description";
+	public static final String FILE_CONTEXT_DESCRIPTION_ACTION = "file-context-description";
+	public static final String FILE_CONTEXT_ADD_DESCRIPTION = "mollify-file-context-add-description";
+	public static final String FILE_CONTEXT_EDIT_DESCRIPTION = "mollify-file-context-edit-description";
+	public static final String FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION = "mollify-file-context-cancel-edit-description";
+	public static final String FILE_CONTEXT_APPLY_DESCRIPTION = "mollify-file-context-apply-description";
+	public static final String FILE_CONTEXT_REMOVE_DESCRIPTION = "mollify-file-context-remove-description";
 	public static final String FILE_CONTEXT_DETAILS = "mollify-file-context-details";
 	public static final String FILE_CONTEXT_DETAILS_HEADER = "mollify-file-context-details-header";
 	public static final String FILE_CONTEXT_DETAILS_CONTENT = "mollify-file-context-details-content";

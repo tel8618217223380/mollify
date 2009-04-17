@@ -246,11 +246,11 @@ public class MainView extends Composite {
 	public ActionButton getLogoutButton() {
 		return logoutButton;
 	}
-	
+
 	public FileContextPopup getFileContext() {
 		return fileContext;
 	}
-	
+
 	public DirectoryContextPopup getDirectoryContext() {
 		return dirContext;
 	}

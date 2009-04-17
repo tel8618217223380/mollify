@@ -10,11 +10,14 @@
 
 package org.sjarvela.mollify.client.filesystem.handler;
 
-import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.request.Callback;
 
 public interface FileItemDescriptionHandler {
 
-	void setDescription(File file, String text, Callback successCallback);
+	void setItemDescription(FileSystemItem item, String text,
+			Callback successCallback);
+
+	void removeItemDescription(FileSystemItem item, Callback successCallback);
 
 }

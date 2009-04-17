@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.popup.filecontext;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
 
 public class FileContextPopupFactory {
 	private final TextProvider textProvider;
@@ -27,7 +28,12 @@ public class FileContextPopupFactory {
 	}
 
 	public FileContextPopup createPopup() {
-		return new FileContextPopup(textProvider, fileDetailsProvider, session);
+		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
+		FileContextPopupComponent popup = new FileContextPopupComponent(
+				textProvider, session, actionDelegator);
+		FileContextPresenter presenter = new FileContextPresenter(popup,
+				session, fileDetailsProvider, textProvider);
+		return new FileContextGlue(popup, presenter, actionDelegator);
 	}
 
 }

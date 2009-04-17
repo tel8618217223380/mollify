@@ -84,4 +84,12 @@ public class FileDetails extends JavaScriptObject {
 		this.description = description;
 		this.permissions = permission;
 	}-*/;
+
+	public final native void setDescription(String description) /*-{
+		this.description = description;
+	}-*/;
+
+	public final native void removeDescription()  /*-{
+		this.description = null;
+	}-*/;
 }

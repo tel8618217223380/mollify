@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.popup.directorycontext;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -19,6 +20,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionSettings;
+import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
@@ -29,7 +31,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryContextPopup extends ContextPopup {
+public class DirectoryContextPopup extends ContextPopup implements
+		ActionListener {
 	private final TextProvider textProvider;
 	private final SessionSettings settings;
 	private final DirectoryDetailsProvider detailsProvider;
@@ -75,12 +78,13 @@ public class DirectoryContextPopup extends ContextPopup {
 
 		if (settings.isZipDownloadEnabled())
 			downloadButton = createActionButton(textProvider.getStrings()
-					.dirActionDownloadTitle(), FileSystemAction.download_as_zip);
+					.dirActionDownloadTitle(), this,
+					FileSystemAction.download_as_zip);
 		renameButton = createActionButton(textProvider.getStrings()
-				.dirActionRenameTitle(), FileSystemAction.rename);
+				.dirActionRenameTitle(), this, FileSystemAction.rename);
 		renameButton.setVisible(false);
 		deleteButton = createActionButton(textProvider.getStrings()
-				.dirActionDeleteTitle(), FileSystemAction.delete);
+				.dirActionDeleteTitle(), this, FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
 		if (settings.isZipDownloadEnabled())
@@ -89,11 +93,6 @@ public class DirectoryContextPopup extends ContextPopup {
 		buttons.add(deleteButton);
 
 		return buttons;
-	}
-
-	protected void onAction(FileSystemAction action) {
-		actionHandler.onAction(directory, action);
-		this.hide();
 	}
 
 	public void update(Directory directory, Element element) {
@@ -118,6 +117,11 @@ public class DirectoryContextPopup extends ContextPopup {
 				&& details.getFilePermission().canWrite();
 		renameButton.setVisible(writable);
 		deleteButton.setVisible(writable);
+	}
+
+	public void onAction(ResourceId action) {
+		actionHandler.onAction(directory, (FileSystemAction) action);
+		this.hide();
 	}
 
 }

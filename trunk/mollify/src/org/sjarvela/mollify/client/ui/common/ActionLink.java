@@ -12,28 +12,32 @@ package org.sjarvela.mollify.client.ui.common;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 
-public class ActionButton extends Button {
-	public ActionButton(String title) {
+public class ActionLink extends Label {
+	public ActionLink(String title) {
 		this(title, null, null);
 	}
 
-	public ActionButton(String title, String id) {
+	public ActionLink(String title, String id) {
 		this(title, id, null);
 	}
 
-	public ActionButton(String title, String id, String styleClass) {
+	public ActionLink(String title, String id, String styleClass) {
 		super(title);
 
+		setStylePrimaryName(StyleConstants.ACTION_LINK);
 		if (styleClass != null)
-			addStyleName(styleClass);
+			addStyleDependentName(styleClass);
 
 		if (id != null)
 			getElement().setId(id);
+
+		HoverDecorator.decorate(this);
 	}
 
 	public void setAction(final ActionListener actionListener,
