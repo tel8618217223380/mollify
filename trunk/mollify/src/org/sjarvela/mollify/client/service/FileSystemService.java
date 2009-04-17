@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.service;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.service.request.ResultListener;
@@ -44,4 +44,9 @@ public interface FileSystemService extends FileDetailsProvider,
 	String getDownloadUrl(File file);
 
 	String getDownloadAsZipUrl(FileSystemItem item);
+
+	void setItemDescription(FileSystemItem item, String description,
+			ResultListener listener);
+
+	void removeItemDescription(FileSystemItem item, ResultListener listener);
 }

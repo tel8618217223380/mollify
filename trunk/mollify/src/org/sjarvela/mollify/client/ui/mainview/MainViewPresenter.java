@@ -414,12 +414,13 @@ public class MainViewPresenter implements DirectoryListener,
 
 	public void setItemDescription(FileSystemItem item, String description,
 			Callback successCallback) {
-		// fileSystemService.
+		fileSystemService.setItemDescription(item, description,
+				createListener(successCallback));
 	}
 
 	public void removeItemDescription(FileSystemItem item,
 			Callback successCallback) {
-		// TODO Auto-generated method stub
-
+		fileSystemService.removeItemDescription(item,
+				createListener(successCallback));
 	}
 }
