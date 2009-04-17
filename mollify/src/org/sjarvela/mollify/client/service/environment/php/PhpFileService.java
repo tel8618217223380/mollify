@@ -186,6 +186,25 @@ public class PhpFileService implements FileSystemService {
 		return getFileDataUrl(action, Arrays.asList(params));
 	}
 
+	public void setItemDescription(FileSystemItem item, String description,
+			ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Set description: " + item.getId());
+
+		service.doRequest(getFileActionUrl(item,
+				FileSystemAction.set_description, "description="
+						+ URL.encode(description)), listener);
+	}
+
+	public void removeItemDescription(FileSystemItem item,
+			ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Remove description: " + item.getId());
+
+		service.doRequest(getFileActionUrl(item,
+				FileSystemAction.remove_description), listener);
+	}
+
 	private String getFileDataUrl(FileDataAction action, List<String> parameters) {
 		List<String> params = new ArrayList(parameters);
 		params.add(0, "action=" + action.name());

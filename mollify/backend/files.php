@@ -238,7 +238,27 @@
 		if (has_general_modify_rights()) return "rw";
 		return "ro";
 	}
-	
+
+	function set_file_description($file, $description) {		
+		if (!assert_file($file)) return FALSE;
+		return set_item_description($file["id"], $description);
+	}
+
+	function set_dir_description($dir, $description) {		
+		if (!assert_dir($dir)) return FALSE;
+		return set_item_description($dir["id"], $description);
+	}
+
+	function remove_file_description($file) {
+		if (!assert_file($file)) return FALSE;
+		return remove_item_description($file["id"]);
+	}
+
+	function remove_dir_description($dir) {
+		if (!assert_dir($dir)) return FALSE;
+		return remove_item_description($dir["id"]);
+	}
+			
 	function rename_file($file, $new_name) {
 		global $error, $error_details;
 		

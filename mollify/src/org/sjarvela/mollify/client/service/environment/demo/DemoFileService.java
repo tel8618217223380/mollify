@@ -13,11 +13,11 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 
@@ -44,8 +44,8 @@ public class DemoFileService implements FileSystemService {
 
 	public void getDirectoryContents(Directory parent,
 			ResultListener<DirectoryContent> listener) {
-		listener.onSuccess(new DirectoryContent(data.getDirectories(parent), data
-				.getFiles(parent)));
+		listener.onSuccess(new DirectoryContent(data.getDirectories(parent),
+				data.getFiles(parent)));
 	}
 
 	public String getDownloadUrl(File file) {
@@ -78,6 +78,16 @@ public class DemoFileService implements FileSystemService {
 
 	public String getDownloadAsZipUrl(FileSystemItem item) {
 		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
+	}
+
+	public void removeItemDescription(FileSystemItem item,
+			ResultListener listener) {
+		listener.onSuccess(true);
+	}
+
+	public void setItemDescription(FileSystemItem item, String description,
+			ResultListener listener) {
+		listener.onSuccess(true);
 	}
 
 }

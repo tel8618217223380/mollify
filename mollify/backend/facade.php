@@ -172,7 +172,50 @@
 						}
 						$result = create_folder($dir, $_GET["name"]);
 						break;
+
+					case "set_description":
+						if (!isset($_GET["description"]) or !isset($_GET["item_type"])) {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						if (!is_admin()) {
+							log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
+							$error = "NOT_AN_ADMIN";
+							break;
+						}
+						$item_type = strtolower(trim($_GET["item_type"]));
+						$description = urldecode($_GET["description"]);
 						
+						if ($item_type === 'f') {
+							$result = set_file_description($file, $description);
+						} else if ($item_type === 'd') {
+							$result = set_directory_description($file, $description);
+						} else {
+							$error = "INVALID_REQUEST";
+						}
+						break;
+
+					case "remove_description":
+						if (!isset($_GET["item_type"])) {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						if (!is_admin()) {
+							log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
+							$error = "NOT_AN_ADMIN";
+							break;
+						}
+						$item_type = strtolower(trim($_GET["item_type"]));
+						
+						if ($item_type === 'f') {
+							$result = remove_file_description($file);
+						} else if ($item_type === 'd') {
+							$result = remove_directory_description($file);
+						} else {
+							$error = "INVALID_REQUEST";
+						}
+						break;
+																		
 					default:
 						$error = "UNSUPPORTED_OPERATION";
 						$error_details = $operation;
