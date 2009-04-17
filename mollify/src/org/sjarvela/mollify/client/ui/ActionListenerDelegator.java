@@ -10,22 +10,17 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.sjarvela.mollify.client.ResourceId;
 
+public class ActionListenerDelegator implements ActionListener {
+	ActionListener delegate = null;
 
-public class ActionDelegator implements ActionListener {
-	Map<ResourceId, ActionHandler> actions = new HashMap();
-
-	public void onAction(ResourceId action) {
-		if (actions.containsKey(action))
-			actions.get(action).onAction();
+	public void setActionListener(ActionListener actionListener) {
+		delegate = actionListener;
 	}
 
-	public void setActionHandler(ResourceId action, ActionHandler actionHandler) {
-		this.actions.put(action, actionHandler);
+	public void onAction(ResourceId action) {
+		delegate.onAction(action);
 	}
 
 }

@@ -12,33 +12,42 @@ package org.sjarvela.mollify.client.ui.common;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MouseListenerAdapter;
 import com.google.gwt.user.client.ui.Widget;
 
 public class HoverDecorator {
+	private static MouseOverHandler mouseOverHandler;
+	private static MouseOutHandler mouseOutHandler;
 
-	private static MouseListenerAdapter listener;
-
-	static MouseListenerAdapter getListener() {
-		if (listener == null) {
-			listener = new MouseListenerAdapter() {
-				@Override
-				public void onMouseEnter(Widget sender) {
-					sender.addStyleDependentName(StyleConstants.HOVER);
-				}
-
-				@Override
-				public void onMouseLeave(Widget sender) {
-					clear(sender);
+	static MouseOverHandler getMouseOverHandler() {
+		if (mouseOverHandler == null) {
+			mouseOverHandler = new MouseOverHandler() {
+				public void onMouseOver(MouseOverEvent event) {
+					((Widget) event.getSource())
+							.addStyleDependentName(StyleConstants.HOVER);
 				}
 			};
 		}
-		return listener;
+		return mouseOverHandler;
+	}
+
+	static MouseOutHandler getMouseOutHandler() {
+		if (mouseOutHandler == null) {
+			mouseOutHandler = new MouseOutHandler() {
+				public void onMouseOut(MouseOutEvent event) {
+					clear((Widget) event.getSource());
+				}
+			};
+		}
+		return mouseOutHandler;
 	}
 
 	public static void decorate(Label decorated) {
-		decorated.addMouseListener(getListener());
+		decorated.addMouseOverHandler(getMouseOverHandler());
 	}
 
 	public static void clear(Widget decorated) {

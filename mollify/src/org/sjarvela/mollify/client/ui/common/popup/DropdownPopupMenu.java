@@ -64,7 +64,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 			label.addClickListener(new ClickListener() {
 				public void onClick(Widget sender) {
 					if (actionListener != null && itemsEnabled.get(action))
-						actionListener.onActionTriggered(action);
+						actionListener.onAction(action);
 				}
 			});
 		return label;
