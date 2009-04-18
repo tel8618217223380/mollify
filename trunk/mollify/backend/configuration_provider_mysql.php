@@ -351,10 +351,10 @@
 		return mysql_result($result, 0);
 	}
 	
-	function set_item_description($item_id, $description) {
+	function set_item_description($item, $description) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", mysql_real_escape_string($description), mysql_real_escape_string($item_id)))) {
+		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", mysql_real_escape_string($description), mysql_real_escape_string($item["id"])))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to update description (".$error_details.")");
@@ -362,7 +362,7 @@
 		}
 
 		if (mysql_affected_rows() == 0) {
-			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", mysql_real_escape_string($item_id), mysql_real_escape_string($description)))) {
+			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", mysql_real_escape_string($item["id"]), mysql_real_escape_string($description)))) {
 				$error = "INVALID_REQUEST";
 				$error_details = mysql_error();
 				log_error("Failed to insert description (".$error_details.")");
@@ -373,10 +373,10 @@
 		return TRUE;
 	}
 
-	function remove_item_description($item_id) {
+	function remove_item_description($item) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($item_id)))) {
+		if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($item["id"])))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to remove description (".$error_details.")");
@@ -385,7 +385,20 @@
 				
 		return TRUE;
 	}
+
+	function move_item_description($from, $to) {
+		global $error, $error_details;
 		
+		if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to["id"]), mysql_real_escape_string($from["id"])))) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to move description (".$error_details.")");
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+	
 	function get_file_permissions($filename, $user_id) {
 		return _get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
 	}

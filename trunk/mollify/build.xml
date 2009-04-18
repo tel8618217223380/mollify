@@ -41,7 +41,9 @@
 			<arg value="-war" />
 			<arg value="${build.dir}" />
 			<arg value="-logLevel" />
-			<arg value="INFO" />			
+			<arg value="INFO" />	
+			<!--arg value="-style" />
+			<arg value="DETAILED" /-->		
 			<arg value="${gwt.entrypoint.class}" />
 		</java>
 	</target>

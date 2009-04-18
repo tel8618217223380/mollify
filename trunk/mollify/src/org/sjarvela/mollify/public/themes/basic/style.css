@@ -769,13 +769,29 @@ td#mollify-filelist-column-size {
 	width: 100%;
 }
 
-.mollify-file-context-addedit-description, .mollify-file-context-addedit-description-hover {
+.mollify-actionlink-file-context-description {
 	text-align: right;
 	color: #6488cd;
 	cursor: pointer;
+	display: inline;
+	margin-left: 6px;
 }
 
-.mollify-file-context-addedit-description-hover {
+.mollify-file-context-description-readonly {
+	border-style: none;
+	height: auto;
+}
+
+.mollify-file-context-description-editable {
+	border: 1px dotted #d8d8d8;
+	background-color: #fafbff;
+}
+
+.file-context-description-actions {
+	float: right;
+}
+
+.mollify-actionlink-hover {
 	color: #455f8f;
 	text-decoration: underline;
 }
@@ -790,6 +806,7 @@ td#mollify-filelist-column-size {
 	color: #000;
 	padding-top: 2px;
 	padding-bottom: 2px;
+	width: 100%;
 }
 
 .mollify-file-context-details-content {
