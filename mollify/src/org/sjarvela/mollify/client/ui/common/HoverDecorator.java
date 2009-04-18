@@ -48,6 +48,7 @@ public class HoverDecorator {
 
 	public static void decorate(Label decorated) {
 		decorated.addMouseOverHandler(getMouseOverHandler());
+		decorated.addMouseOutHandler(getMouseOutHandler());
 	}
 
 	public static void clear(Widget decorated) {

@@ -45,11 +45,14 @@ public class FileContextPopupComponent extends ContextPopup {
 	private Label filename;
 
 	private TextArea description;
-	private Panel descriptionActions;
+	private Panel descriptionActionsView;
+	private Panel descriptionActionsEdit;
+
 	private ActionLink editDescription;
 	private ActionLink addDescription;
 	private ActionLink applyDescription;
 	private ActionLink cancelEditDescription;
+	private ActionLink removeDescription;
 
 	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
@@ -58,7 +61,6 @@ public class FileContextPopupComponent extends ContextPopup {
 	private Button copyButton;
 	private Button moveButton;
 	private Button deleteButton;
-	private ActionLink removeDescription;
 
 	private enum Details {
 		Accessed, Modified, Changed
@@ -84,7 +86,7 @@ public class FileContextPopupComponent extends ContextPopup {
 	}
 
 	protected Widget createContent() {
-		VerticalPanel content = new VerticalPanel();
+		Panel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_CONTENT);
 
 		filename = new Label();
@@ -98,56 +100,63 @@ public class FileContextPopupComponent extends ContextPopup {
 		description.setReadOnly(true);
 		content.add(description);
 
-		if (session.getDefaultPermissionMode().isAdmin()) {
-			description
-					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
-
-			descriptionActions = new FlowPanel();
-
-			addDescription = new ActionLink(textProvider.getStrings()
-					.fileDetailsAddDescription(),
-					StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
-					StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-			addDescription.setAction(actionListener, Action.addDescription);
-
-			removeDescription = new ActionLink(textProvider.getStrings()
-					.fileDetailsRemoveDescription(),
-					StyleConstants.FILE_CONTEXT_REMOVE_DESCRIPTION,
-					StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-			removeDescription.setAction(actionListener,
-					Action.removeDescription);
-
-			editDescription = new ActionLink(textProvider.getStrings()
-					.fileDetailsEditDescription(),
-					StyleConstants.FILE_CONTEXT_EDIT_DESCRIPTION,
-					StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-			editDescription.setAction(actionListener, Action.editDescription);
-
-			applyDescription = new ActionLink(textProvider.getStrings()
-					.fileDetailsApplyDescription(),
-					StyleConstants.FILE_CONTEXT_APPLY_DESCRIPTION,
-					StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-			applyDescription.setAction(actionListener, Action.applyDescription);
-
-			cancelEditDescription = new ActionLink(textProvider.getStrings()
-					.fileDetailsCancelEditDescription(),
-					StyleConstants.FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION,
-					StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-			cancelEditDescription.setAction(actionListener,
-					Action.cancelEditDescription);
-
-			descriptionActions.add(addDescription);
-			descriptionActions.add(removeDescription);
-			descriptionActions.add(editDescription);
-			descriptionActions.add(applyDescription);
-			descriptionActions.add(cancelEditDescription);
-
-			content.add(descriptionActions);
-		}
+		if (session.getDefaultPermissionMode().isAdmin())
+			enableDescriptionActions(content);
 
 		content.add(createDetails());
 		content.add(createButtons());
 		return content;
+	}
+
+	private void enableDescriptionActions(Panel content) {
+		addDescription = new ActionLink(textProvider.getStrings()
+				.fileDetailsAddDescription(),
+				StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
+		addDescription.setAction(actionListener, Action.addDescription);
+
+		removeDescription = new ActionLink(textProvider.getStrings()
+				.fileDetailsRemoveDescription(),
+				StyleConstants.FILE_CONTEXT_REMOVE_DESCRIPTION,
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
+		removeDescription.setAction(actionListener, Action.removeDescription);
+
+		editDescription = new ActionLink(textProvider.getStrings()
+				.fileDetailsEditDescription(),
+				StyleConstants.FILE_CONTEXT_EDIT_DESCRIPTION,
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
+		editDescription.setAction(actionListener, Action.editDescription);
+
+		applyDescription = new ActionLink(textProvider.getStrings()
+				.fileDetailsApplyDescription(),
+				StyleConstants.FILE_CONTEXT_APPLY_DESCRIPTION,
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
+		applyDescription.setAction(actionListener, Action.applyDescription);
+
+		cancelEditDescription = new ActionLink(textProvider.getStrings()
+				.fileDetailsCancelEditDescription(),
+				StyleConstants.FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION,
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
+		cancelEditDescription.setAction(actionListener,
+				Action.cancelEditDescription);
+
+		descriptionActionsView = new FlowPanel();
+		descriptionActionsView
+				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
+
+		descriptionActionsView.add(addDescription);
+		descriptionActionsView.add(removeDescription);
+		descriptionActionsView.add(editDescription);
+
+		descriptionActionsEdit = new FlowPanel();
+		descriptionActionsEdit
+				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
+
+		descriptionActionsEdit.add(applyDescription);
+		descriptionActionsEdit.add(cancelEditDescription);
+
+		content.add(descriptionActionsView);
+		content.add(descriptionActionsEdit);
 	}
 
 	private Widget createButtons() {
@@ -283,16 +292,33 @@ public class FileContextPopupComponent extends ContextPopup {
 		moveButton.setVisible(writable && hasGeneralWritePermissions);
 	}
 
-	public void setDescriptionEditable(boolean editable) {
+	public void setDescriptionEditable(boolean editable,
+			boolean descriptionDefined) {
 		if (editable) {
 			description
 					.removeStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
+			description
+					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
 			description.setVisible(true);
 			description.setFocus(true);
 		} else {
 			description
+					.removeStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
+			description
 					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
+			description.setVisible(descriptionDefined);
 		}
+
+		boolean admin = session.getDefaultPermissionMode().isAdmin();
+
+		addDescription.setVisible(admin && !editable && !descriptionDefined);
+		editDescription.setVisible(admin && !editable && descriptionDefined);
+		removeDescription.setVisible(admin && !editable && descriptionDefined);
+		applyDescription.setVisible(admin && editable);
+		cancelEditDescription.setVisible(admin && editable);
+
+		descriptionActionsView.setVisible(admin && !editable);
+		descriptionActionsEdit.setVisible(admin && editable);
 
 		description.setReadOnly(!editable);
 	}

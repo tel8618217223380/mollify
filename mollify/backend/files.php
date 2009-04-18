@@ -32,16 +32,20 @@
 	    return (int)$amount;
 	}
 	
+	function get_fileitem($root_id, $path) {
+		return array("id" => get_filesystem_id($root_id, $path), "root" => $root_id, "path" => $path);
+	}
+	
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
 			$root_path = get_root_path($root_id);
 			$path = substr($path, strlen($root_path) + 1);
 		}
-		return base64_encode($root_id.'|'.$path);
+		return base64_encode($root_id.':'.$path);
 	}
 
 	function get_path_info_from_id($id) {
-		$parts = explode("|", base64_decode($id));
+		$parts = explode(":", base64_decode($id));
 		return array("root" => $parts[0], "path" => $parts[1]);
 	}
 
@@ -187,6 +191,7 @@
 		foreach($files as $full_path) {
 			$name = basename($full_path);
 			$ext_pos = strrpos($name, '.');
+			
 			if ($ext_pos > 0) {
 				$extension = substr($name, $ext_pos + 1);
 			} else {
@@ -241,22 +246,22 @@
 
 	function set_file_description($file, $description) {		
 		if (!assert_file($file)) return FALSE;
-		return set_item_description($file["id"], $description);
+		return set_item_description($file, $description);
 	}
 
 	function set_dir_description($dir, $description) {		
 		if (!assert_dir($dir)) return FALSE;
-		return set_item_description($dir["id"], $description);
+		return set_item_description($dir, $description);
 	}
 
 	function remove_file_description($file) {
 		if (!assert_file($file)) return FALSE;
-		return remove_item_description($file["id"]);
+		return remove_item_description($file);
 	}
 
 	function remove_dir_description($dir) {
 		if (!assert_dir($dir)) return FALSE;
-		return remove_item_description($dir["id"]);
+		return remove_item_description($dir);
 	}
 			
 	function rename_file($file, $new_name) {
@@ -278,7 +283,9 @@
 			return FALSE;
 		}
 		
-		return rename($old, $new);
+		if (!rename($old, $new)) return FALSE;
+		move_item_description($file, get_fileitem($file["root"], $new));
+		return TRUE;
 	}
 
 	function copy_file($file, $to) {
@@ -318,13 +325,16 @@
 		
 		$origin = $file["path"];
 		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
 			$error_details = basename($target);
 			return FALSE;
 		}
 		
-		return rename($origin, $target);
+		if (!rename($origin, $target)) return FALSE;
+		move_item_description($file, get_fileitem($to["root"], $target));
+		return TRUE;
 	}
 	
 	function rename_directory($dir, $new_name) {
@@ -350,7 +360,9 @@
 			return FALSE;
 		}
 		
-		return rename($old, $new);
+		if (!rename($old, $new)) return FALSE;
+		move_item_description($dir, get_fileitem($dir["root"], $new));
+		return TRUE;
 	}
 	
 	function delete_file($file) {
@@ -369,6 +381,8 @@
 			$error_details = basename($file["path"]);
 			return FALSE;
 		}
+		
+		remove_item_description($file);
 		return TRUE;
 	}
 
@@ -387,14 +401,15 @@
 			return FALSE;
 		}
 		
-		if (!delete_directory_recurse($dir["path"])) {
+		if (!delete_directory_recurse($dir["root"], $dir["path"])) {
 			$error = "CANNOT_DELETE";
 			return FALSE;
 		}
+
 		return TRUE;
 	}
 	
-	function delete_directory_recurse($path) {
+	function delete_directory_recurse($root_id, $path) {
 		global $error_details;
 		
 		$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -410,7 +425,7 @@
 				$fullpath = $path.$item;
 
 				if (is_dir($fullpath)) {
-					if (!delete_directory_recurse($fullpath)) {
+					if (!delete_directory_recurse($root_id, $fullpath)) {
 						closedir($handle);
 						return FALSE;
 					}
@@ -420,6 +435,7 @@
 						closedir($handle);
 						return FALSE;
 					}
+					remove_item_description(get_fileitem($root_id, $fullpath));
 				}
 			}
 		}
@@ -429,6 +445,7 @@
 			log_error("Failed to remove directory (delete_directory_recurse): ".$path);
 			return FALSE;
 		}
+		remove_item_description(get_fileitem($root_id, $path));
 	    return TRUE;
 	}
 

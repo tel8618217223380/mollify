@@ -28,7 +28,6 @@ public class FileContextPresenter implements ActionListener {
 	private final FileContextPopupComponent popup;
 	private final FileDetailsProvider fileDetailsProvider;
 	private final TextProvider textProvider;
-	private final SessionInfo session;
 
 	private FileSystemActionHandler fileActionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
@@ -40,7 +39,6 @@ public class FileContextPresenter implements ActionListener {
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider) {
 		this.popup = popup;
-		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 	}
@@ -63,9 +61,8 @@ public class FileContextPresenter implements ActionListener {
 
 		popup.getDetails().setOpen(false);
 		popup.getFilename().setText(file.getName());
-		popup.setDescriptionEditable(false);
-
 		updateDetails(null);
+
 		fileDetailsProvider.getFileDetails(file,
 				new ResultListener<FileDetails>() {
 					public void onFail(ServiceError error) {
@@ -81,43 +78,33 @@ public class FileContextPresenter implements ActionListener {
 
 	private void updateDetails(FileDetails details) {
 		this.details = details;
+		this.updateDescription();
 
-		popup.updateButtons(details == null ? false : details.getFilePermission().canWrite());
 		popup.updateDetails(details);
-
-		updateDescription();
+		boolean writable = (details == null ? false : details
+				.getFilePermission().canWrite());
+		popup.updateButtons(writable);
 	}
 
 	private void updateDescription() {
-		popup.getDescription().setText(
-				isDescriptionDefined() ? details.getDescription() : "");
-		popup.getDescription().setVisible(isDescriptionDefined());
-		updateDescriptionActions(false);
+		boolean descriptionDefined = isDescriptionDefined();
+		String visibleDescription = descriptionDefined ? details
+				.getDescription() : "";
+
+		popup.getDescription().setText(visibleDescription);
+		popup.setDescriptionEditable(false, descriptionDefined);
 	}
 
 	private boolean isDescriptionDefined() {
-		return (details == null || details.getDescription() != null);
-	}
-
-	private void updateDescriptionActions(boolean editing) {
-		if (!session.getDefaultPermissionMode().isAdmin())
-			return;
-		
-		boolean defined = isDescriptionDefined();
-		popup.getAddDescription().setVisible(!editing && !defined);
-		popup.getEditDescription().setVisible(!editing && defined);
-		popup.getRemoveDescription().setVisible(!editing && defined);
-		popup.getApplyDescription().setVisible(editing);
-		popup.getCancelEditDescription().setVisible(editing);
+		return (details != null && details.getDescription() != null);
 	}
 
 	protected void onStartEditDescription() {
-		popup.setDescriptionEditable(true);
-		updateDescriptionActions(true);
+		popup.setDescriptionEditable(true, isDescriptionDefined());
 	}
 
 	protected void onStopEditDescription() {
-		popup.setDescriptionEditable(false);
+		popup.setDescriptionEditable(false, isDescriptionDefined());
 
 		final String description = popup.getDescription().getText();
 		this.descriptionHandler.setItemDescription(file, description,
@@ -130,7 +117,6 @@ public class FileContextPresenter implements ActionListener {
 	}
 
 	protected void onCancelEditDescription() {
-		popup.setDescriptionEditable(false);
 		updateDescription();
 	}
 
