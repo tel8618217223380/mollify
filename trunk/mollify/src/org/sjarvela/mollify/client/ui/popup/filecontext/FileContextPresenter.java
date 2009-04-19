@@ -91,7 +91,7 @@ public class FileContextPresenter implements ActionListener {
 		String visibleDescription = descriptionDefined ? details
 				.getDescription() : "";
 
-		popup.getDescription().setText(visibleDescription);
+		popup.setDescription(visibleDescription);
 		popup.setDescriptionEditable(false, descriptionDefined);
 	}
 
@@ -106,7 +106,7 @@ public class FileContextPresenter implements ActionListener {
 	protected void onStopEditDescription() {
 		popup.setDescriptionEditable(false, isDescriptionDefined());
 
-		final String description = popup.getDescription().getText();
+		final String description = popup.getDescriptionEditor().getText();
 		this.descriptionHandler.setItemDescription(file, description,
 				new Callback() {
 					public void onCallback() {
