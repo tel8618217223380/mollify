@@ -698,8 +698,8 @@ td#mollify-filelist-column-size {
 	width: 12px;
 	height: 12px;
 	position: absolute;
-	top: 10px;
-	right: 14px;
+	top: 12px;
+	right: 16px;
 	cursor: pointer;
 	background: url(b-close.png) no-repeat;
 }
@@ -763,7 +763,7 @@ td#mollify-filelist-column-size {
 	margin-bottom: 6px;
 }
 
-.mollify-file-context-description {
+.mollify-file-context-description, .mollify-file-context-description-editor {
 	margin-bottom: 8px;
 	margin-top: 4px;
 	width: 100%;
@@ -774,17 +774,14 @@ td#mollify-filelist-column-size {
 	color: #6488cd;
 	cursor: pointer;
 	display: inline;
-	margin-left: 6px;
+	margin-left: 12px;
 }
 
-.mollify-file-context-description-readonly {
-	border-style: none;
-	height: auto;
-}
-
-.mollify-file-context-description-editable {
+.mollify-file-context-description-editor {
+	margin-bottom: 4px;
 	border: 1px dotted #d8d8d8;
 	background-color: #fafbff;
+	height: 55px;
 }
 
 .file-context-description-actions {

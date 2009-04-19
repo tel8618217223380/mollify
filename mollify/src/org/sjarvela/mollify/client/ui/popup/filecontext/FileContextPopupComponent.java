@@ -41,10 +41,12 @@ public class FileContextPopupComponent extends ContextPopup {
 	private final SessionInfo session;
 	private final ActionListener actionListener;
 	private final boolean hasGeneralWritePermissions;
+	private final boolean isAdmin;
 
 	private Label filename;
 
-	private TextArea description;
+	private Label description;
+	private TextArea descriptionEditor = null;
 	private Panel descriptionActionsView;
 	private Panel descriptionActionsEdit;
 
@@ -75,8 +77,9 @@ public class FileContextPopupComponent extends ContextPopup {
 		super(StyleConstants.FILE_CONTEXT);
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
-		hasGeneralWritePermissions = session.getDefaultPermissionMode()
+		this.hasGeneralWritePermissions = session.getDefaultPermissionMode()
 				.hasWritePermission();
+		this.isAdmin = session.getDefaultPermissionMode().isAdmin();
 
 		this.textProvider = textProvider;
 		this.session = session;
@@ -93,22 +96,25 @@ public class FileContextPopupComponent extends ContextPopup {
 		filename.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(filename);
 
-		description = new TextArea();
+		description = new Label();
 		description
 				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
-		description.setVisible(false);
-		description.setReadOnly(true);
 		content.add(description);
 
-		if (session.getDefaultPermissionMode().isAdmin())
-			enableDescriptionActions(content);
+		if (isAdmin)
+			createDescriptionEditor(content);
 
 		content.add(createDetails());
 		content.add(createButtons());
 		return content;
 	}
 
-	private void enableDescriptionActions(Panel content) {
+	private void createDescriptionEditor(Panel content) {
+		descriptionEditor = new TextArea();
+		descriptionEditor
+				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITOR);
+		content.add(descriptionEditor);
+
 		addDescription = new ActionLink(textProvider.getStrings()
 				.fileDetailsAddDescription(),
 				StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
@@ -145,8 +151,8 @@ public class FileContextPopupComponent extends ContextPopup {
 				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
 
 		descriptionActionsView.add(addDescription);
-		descriptionActionsView.add(removeDescription);
 		descriptionActionsView.add(editDescription);
+		descriptionActionsView.add(removeDescription);
 
 		descriptionActionsEdit = new FlowPanel();
 		descriptionActionsEdit
@@ -259,9 +265,8 @@ public class FileContextPopupComponent extends ContextPopup {
 	private void emptyDetails() {
 		description.setText("");
 
-		for (Details detail : Details.values()) {
+		for (Details detail : Details.values())
 			detailRowValues.get(detail.ordinal()).setText("");
-		}
 
 		renameButton.setVisible(false);
 		deleteButton.setVisible(false);
@@ -286,41 +291,42 @@ public class FileContextPopupComponent extends ContextPopup {
 		}
 	}
 
-	public void updateButtons(boolean writable) {
-		renameButton.setVisible(writable);
-		deleteButton.setVisible(writable);
-		moveButton.setVisible(writable && hasGeneralWritePermissions);
+	public void updateButtons(boolean isWritable) {
+		renameButton.setVisible(isWritable);
+		deleteButton.setVisible(isWritable);
+		moveButton.setVisible(isWritable && hasGeneralWritePermissions);
 	}
 
-	public void setDescriptionEditable(boolean editable,
+	public void setDescription(String description) {
+		this.description.setText(description);
+		if (this.descriptionEditor != null)
+			this.descriptionEditor.setText(description);
+	}
+
+	public void setDescriptionEditable(boolean isEditable,
 			boolean descriptionDefined) {
-		if (editable) {
-			description
-					.removeStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
-			description
-					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
-			description.setVisible(true);
-			description.setFocus(true);
+		if (isEditable) {
+			descriptionEditor.setVisible(true);
+			description.setVisible(false);
+			descriptionEditor.setFocus(true);
 		} else {
-			description
-					.removeStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITABLE);
-			description
-					.addStyleDependentName(StyleConstants.FILE_CONTEXT_DESCRIPTION_READONLY);
+			if (descriptionEditor != null)
+				descriptionEditor.setVisible(false);
 			description.setVisible(descriptionDefined);
 		}
 
-		boolean admin = session.getDefaultPermissionMode().isAdmin();
+		if (!isAdmin)
+			return;
 
-		addDescription.setVisible(admin && !editable && !descriptionDefined);
-		editDescription.setVisible(admin && !editable && descriptionDefined);
-		removeDescription.setVisible(admin && !editable && descriptionDefined);
-		applyDescription.setVisible(admin && editable);
-		cancelEditDescription.setVisible(admin && editable);
+		addDescription.setVisible(!isEditable && !descriptionDefined);
+		editDescription.setVisible(!isEditable && descriptionDefined);
+		removeDescription.setVisible(!isEditable && descriptionDefined);
+		applyDescription.setVisible(isEditable);
+		cancelEditDescription.setVisible(isEditable);
 
-		descriptionActionsView.setVisible(admin && !editable);
-		descriptionActionsEdit.setVisible(admin && editable);
+		descriptionActionsView.setVisible(!isEditable);
+		descriptionActionsEdit.setVisible(isEditable);
 
-		description.setReadOnly(!editable);
 	}
 
 	public DisclosurePanel getDetails() {
@@ -331,8 +337,12 @@ public class FileContextPopupComponent extends ContextPopup {
 		return filename;
 	}
 
-	public TextArea getDescription() {
+	public Label getDescription() {
 		return description;
+	}
+
+	public TextArea getDescriptionEditor() {
+		return descriptionEditor;
 	}
 
 	public ActionLink getEditDescription() {
