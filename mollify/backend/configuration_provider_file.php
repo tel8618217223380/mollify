@@ -90,6 +90,13 @@
 		return $descriptions[$file];
 	}
 	
+	function get_dir_description($dir) {
+		$descriptions = _get_descriptions_from_file(dirname($dir["path"]).DIRECTORY_SEPARATOR."descript.ion");
+
+		if (!isset($descriptions["."])) return NULL;
+		return $descriptions["."];
+	}
+	
 	function _get_descriptions_from_file($descript_ion) {
 		$result = array();
 		if (!file_exists($descript_ion)) return $result;

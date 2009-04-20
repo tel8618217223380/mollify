@@ -117,7 +117,7 @@ public class DemoData {
 	}
 
 	public DirectoryDetails getDirectoryDetails(Directory directory) {
-		return DirectoryDetails.create(FilePermission.ReadWrite);
+		return DirectoryDetails.create(FilePermission.ReadWrite, "Mollify demo");
 	}
 
 	public FileDetails getFileDetails(File file) {

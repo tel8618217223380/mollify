@@ -129,7 +129,7 @@
 		foreach($files as $i => $name) {
 			if (substr($name, 0, 1) == '.') continue;
 
-			$full_path = $path.DIRECTORY_SEPARATOR.$name;
+			$full_path = $path.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR;
 			if (!is_dir($full_path)) continue;
 	
 			$result[] = array(
@@ -161,7 +161,7 @@
 		while (true) {
 			$path = dirname($path);
 			$result[] = array(
-				"id" => get_filesystem_id($root_id, $path),
+				"id" => get_filesystem_id($root_id, $path.DIRECTORY_SEPARATOR),
 				"root" => $root,
 				"name" => $name
 			);
@@ -230,6 +230,7 @@
 		$datetime_format = "YmdHis";
 		$result = array(
 			"id" => $dir["id"],
+			"description" => get_dir_description($dir),
 			"permissions" => get_directory_permissions_value($dir));
 		return $result;
 	}
@@ -401,15 +402,16 @@
 			return FALSE;
 		}
 		
-		if (!delete_directory_recurse($dir["root"], $dir["path"])) {
+		if (!delete_directory_recurse($dir["path"])) {
 			$error = "CANNOT_DELETE";
 			return FALSE;
 		}
+		remove_item_descriptions_recursively($dir["id"]);
 
 		return TRUE;
 	}
 	
-	function delete_directory_recurse($root_id, $path) {
+	function delete_directory_recurse($path) {
 		global $error_details;
 		
 		$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -425,7 +427,7 @@
 				$fullpath = $path.$item;
 
 				if (is_dir($fullpath)) {
-					if (!delete_directory_recurse($root_id, $fullpath)) {
+					if (!delete_directory_recurse($fullpath)) {
 						closedir($handle);
 						return FALSE;
 					}
@@ -435,7 +437,6 @@
 						closedir($handle);
 						return FALSE;
 					}
-					remove_item_description(get_fileitem($root_id, $fullpath));
 				}
 			}
 		}
@@ -445,7 +446,6 @@
 			log_error("Failed to remove directory (delete_directory_recurse): ".$path);
 			return FALSE;
 		}
-		remove_item_description(get_fileitem($root_id, $path));
 	    return TRUE;
 	}
 

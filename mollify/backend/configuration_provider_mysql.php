@@ -246,6 +246,8 @@
 			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
+		
+		remove_item_descriptions_under(array("id" => $id));
 				
 		return TRUE;
 	}
@@ -346,15 +348,21 @@
 	}
 	
 	function get_file_description($file) {
-		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string($file["id"])));
+		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($file["id"]))));
 		if (!$result or mysql_num_rows($result) < 1) return NULL;
 		return mysql_result($result, 0);
 	}
-	
+
+	function get_dir_description($dir) {
+		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($dir["id"]))));
+		if (!$result or mysql_num_rows($result) < 1) return NULL;
+		return mysql_result($result, 0);
+	}
+
 	function set_item_description($item, $description) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", mysql_real_escape_string($description), mysql_real_escape_string($item["id"])))) {
+		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", mysql_real_escape_string($description), mysql_real_escape_string(base64_decode($item["id"]))))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to update description (".$error_details.")");
@@ -362,7 +370,7 @@
 		}
 
 		if (mysql_affected_rows() == 0) {
-			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", mysql_real_escape_string($item["id"]), mysql_real_escape_string($description)))) {
+			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", mysql_real_escape_string(base64_decode($item["id"])), mysql_real_escape_string($description)))) {
 				$error = "INVALID_REQUEST";
 				$error_details = mysql_error();
 				log_error("Failed to insert description (".$error_details.")");
@@ -376,7 +384,7 @@
 	function remove_item_description($item) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($item["id"])))) {
+		if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($item["id"]))))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to remove description (".$error_details.")");
@@ -386,10 +394,29 @@
 		return TRUE;
 	}
 
+	function remove_item_descriptions_recursively($item_id) {
+		global $error, $error_details;
+		
+		$id = base64_decode($item_id);
+		if ($id{strlen($id)-1} != DIRECTORY_SEPARATOR) $id .= DIRECTORY_SEPARATOR;
+		
+		$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id));
+		log_error($query);
+		
+		if (!_query($query)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to remove descriptions (".$error_details.")");
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+	
 	function move_item_description($from, $to) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to["id"]), mysql_real_escape_string($from["id"])))) {
+		if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string(base64_decode($to["id"])), mysql_real_escape_string(base64_decode($from["id"]))))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to move description (".$error_details.")");
