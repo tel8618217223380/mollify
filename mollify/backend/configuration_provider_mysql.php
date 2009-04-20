@@ -247,8 +247,7 @@
 			return FALSE;
 		}
 		
-		remove_item_descriptions_under(array("id" => $id));
-				
+		remove_item_descriptions_recursively($id.":", TRUE);
 		return TRUE;
 	}
 	
@@ -394,11 +393,12 @@
 		return TRUE;
 	}
 
-	function remove_item_descriptions_recursively($item_id) {
+	function remove_item_descriptions_recursively($item_id, $unencoded = FALSE) {
 		global $error, $error_details;
 		
-		$id = base64_decode($item_id);
-		if ($id{strlen($id)-1} != DIRECTORY_SEPARATOR) $id .= DIRECTORY_SEPARATOR;
+		$id = $item_id
+		if (!$unencoded) $id = base64_decode($id);
+		#if ($id{strlen($id)-1} != DIRECTORY_SEPARATOR) $id .= DIRECTORY_SEPARATOR;
 		
 		$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id));
 		log_error($query);

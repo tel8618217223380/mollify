@@ -81,20 +81,43 @@
 	}
 	
 	function get_file_description($file) {
-		$filename = $file["path"];
-		$path = dirname($filename);
-		$file = basename($filename);
-		$descriptions = _get_descriptions_from_file($path.DIRECTORY_SEPARATOR."descript.ion");
-
-		if (!isset($descriptions[$file])) return NULL;
-		return $descriptions[$file];
+		$path = $file["path"];
+		$descriptions = _get_descriptions($path);
+		$filename = basename($path);
+		
+		if (!isset($descriptions[$filename])) return NULL;
+		return $descriptions[$filename];
 	}
 	
 	function get_dir_description($dir) {
-		$descriptions = _get_descriptions_from_file(dirname($dir["path"]).DIRECTORY_SEPARATOR."descript.ion");
+		$descriptions = _get_descriptions($dir["path"]);
 
 		if (!isset($descriptions["."])) return NULL;
 		return $descriptions["."];
+	}
+	
+	function set_item_description($item, $description) {
+		$path = $item["path"];
+		
+		$descriptions = _get_descriptions($path);
+		$descriptions[basename($path)] = $description;
+		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
+	}
+
+	function remove_item_description($item) {
+		$path = $item["path"];
+		
+		$descriptions = _get_descriptions($path);
+		unset($descriptions[basename($path)]);
+		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
+	}
+	
+	function _get_description_filename($path) {
+		return dirname($path).DIRECTORY_SEPARATOR."descript.ion";
+	}
+	
+	function _get_descriptions($path) {
+		return _get_descriptions_from_file(_get_description_filename($path));
 	}
 	
 	function _get_descriptions_from_file($descript_ion) {
@@ -124,7 +147,20 @@
 		
 		return $result;
 	}
+
+	function _write_descriptions_to_file($descript_ion, $descriptions) {
+		if (!is_writable($descript_ion)) return FALSE;
 	
+		$handle = @fopen($descript_ion, "w");
+		if (!$handle) return FALSE;
+		
+	    foreach($descriptions as $name => $description)
+	        fwrite($handle, sprintf('"%s" %s', $name, $description)."\n");
+	    fclose($handle);
+		
+		return TRUE;
+	}
+		
 	function get_file_permissions($filename, $user_id) {
 		return _get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
 	}
