@@ -12,21 +12,26 @@ package org.sjarvela.mollify.client.ui.popup.directorycontext;
 
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.SessionSettings;
+import org.sjarvela.mollify.client.session.SessionInfo;
 
 public class DirectoryContextPopupFactory {
 	private final TextProvider textProvider;
 	private final DirectoryDetailsProvider detailsProvider;
-	private final SessionSettings settings;
+	private final SessionInfo session;
 
 	public DirectoryContextPopupFactory(TextProvider textProvider,
-			DirectoryDetailsProvider detailsProvider, SessionSettings settings) {
+			DirectoryDetailsProvider detailsProvider, SessionInfo session) {
 		this.textProvider = textProvider;
 		this.detailsProvider = detailsProvider;
-		this.settings = settings;
+		this.session = session;
 	}
 
 	public DirectoryContextPopup createPopup() {
-		return new DirectoryContextPopup(textProvider, detailsProvider, settings);
+		boolean isDescriptionUpdateEnabled = session.getSettings()
+				.isDescriptionUpdateEnabled()
+				&& session.getDefaultPermissionMode().isAdmin();
+		return new DirectoryContextPopup(textProvider, detailsProvider, session
+				.getSettings().isFolderActionsEnabled(), session.getSettings()
+				.isZipDownloadEnabled(), isDescriptionUpdateEnabled);
 	}
 }

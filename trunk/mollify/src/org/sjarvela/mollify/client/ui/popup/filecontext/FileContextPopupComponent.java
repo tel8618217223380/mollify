@@ -11,7 +11,9 @@
 package org.sjarvela.mollify.client.ui.popup.filecontext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
@@ -22,6 +24,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
+import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -31,7 +34,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,8 +49,7 @@ public class FileContextPopupComponent extends ContextPopup {
 	private Label filename;
 
 	private EditableLabel description;
-	private Panel descriptionActionsView;
-	private Panel descriptionActionsEdit;
+	private SwitchPanel<DescriptionActionGroup> descriptionActionsSwitch;
 
 	private ActionLink editDescription;
 	private ActionLink addDescription;
@@ -72,10 +73,15 @@ public class FileContextPopupComponent extends ContextPopup {
 		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription
 	}
 
+	public enum DescriptionActionGroup implements ResourceId {
+		view, edit
+	}
+
 	public FileContextPopupComponent(TextProvider textProvider,
 			boolean generalWritePermissions, boolean descriptionEditingEnabled,
 			boolean zipDownloadEnabled, ActionListener actionListener) {
 		super(StyleConstants.FILE_CONTEXT);
+
 		this.hasGeneralWritePermissions = generalWritePermissions;
 		this.descriptionEditingEnabled = descriptionEditingEnabled;
 		this.zipDownloadEnabled = zipDownloadEnabled;
@@ -139,27 +145,31 @@ public class FileContextPopupComponent extends ContextPopup {
 		cancelEditDescription.setAction(actionListener,
 				Action.cancelEditDescription);
 
-		descriptionActionsView = new FlowPanel();
+		Map<DescriptionActionGroup, Widget> groups = new HashMap();
+		Panel descriptionActionsView = new FlowPanel();
 		descriptionActionsView
 				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
-
 		descriptionActionsView.add(addDescription);
 		descriptionActionsView.add(editDescription);
 		descriptionActionsView.add(removeDescription);
+		groups.put(DescriptionActionGroup.view, descriptionActionsView);
 
-		descriptionActionsEdit = new FlowPanel();
+		Panel descriptionActionsEdit = new FlowPanel();
 		descriptionActionsEdit
 				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
 
 		descriptionActionsEdit.add(applyDescription);
 		descriptionActionsEdit.add(cancelEditDescription);
+		groups.put(DescriptionActionGroup.edit, descriptionActionsEdit);
 
-		content.add(descriptionActionsView);
-		content.add(descriptionActionsEdit);
+		descriptionActionsSwitch = new SwitchPanel(
+				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS_SWITCH, groups);
+
+		content.add(descriptionActionsSwitch);
 	}
 
 	private Widget createButtons() {
-		HorizontalPanel buttons = new HorizontalPanel();
+		Panel buttons = new HorizontalPanel();
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
 		renameButton = createActionButton(textProvider.getStrings()
@@ -212,7 +222,7 @@ public class FileContextPopupComponent extends ContextPopup {
 		details.getHeader().getElement().getParentElement().setClassName(
 				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
 
-		VerticalPanel content = new VerticalPanel();
+		Panel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
 
 		for (Details detail : Details.values()) {
@@ -306,9 +316,10 @@ public class FileContextPopupComponent extends ContextPopup {
 		applyDescription.setVisible(isEditable);
 		cancelEditDescription.setVisible(isEditable);
 
-		descriptionActionsView.setVisible(!isEditable);
-		descriptionActionsEdit.setVisible(isEditable);
-
+		if (isEditable)
+			descriptionActionsSwitch.switchTo(DescriptionActionGroup.edit);
+		else
+			descriptionActionsSwitch.switchTo(DescriptionActionGroup.view);
 	}
 
 	public DisclosurePanel getDetails() {
