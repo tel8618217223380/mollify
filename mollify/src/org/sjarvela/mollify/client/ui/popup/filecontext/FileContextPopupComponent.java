@@ -17,10 +17,10 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionLink;
+import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.popup.ContextPopup;
 
@@ -38,15 +38,15 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileContextPopupComponent extends ContextPopup {
 	private final DateTimeFormat dateTimeFormat;
 	private final TextProvider textProvider;
-	private final SessionInfo session;
 	private final ActionListener actionListener;
+
 	private final boolean hasGeneralWritePermissions;
-	private final boolean isAdmin;
+	private final boolean descriptionEditingEnabled;
+	private final boolean zipDownloadEnabled;
 
 	private Label filename;
 
-	private Label description;
-	private TextArea descriptionEditor = null;
+	private EditableLabel description;
 	private Panel descriptionActionsView;
 	private Panel descriptionActionsEdit;
 
@@ -56,8 +56,8 @@ public class FileContextPopupComponent extends ContextPopup {
 	private ActionLink cancelEditDescription;
 	private ActionLink removeDescription;
 
-	private List<Label> detailRowValues = new ArrayList<Label>();
 	private DisclosurePanel details;
+	private List<Label> detailRowValues = new ArrayList<Label>();
 
 	private Button renameButton;
 	private Button copyButton;
@@ -73,16 +73,16 @@ public class FileContextPopupComponent extends ContextPopup {
 	}
 
 	public FileContextPopupComponent(TextProvider textProvider,
-			SessionInfo session, ActionListener actionListener) {
+			boolean generalWritePermissions, boolean descriptionEditingEnabled,
+			boolean zipDownloadEnabled, ActionListener actionListener) {
 		super(StyleConstants.FILE_CONTEXT);
+		this.hasGeneralWritePermissions = generalWritePermissions;
+		this.descriptionEditingEnabled = descriptionEditingEnabled;
+		this.zipDownloadEnabled = zipDownloadEnabled;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
-		this.hasGeneralWritePermissions = session.getDefaultPermissionMode()
-				.hasWritePermission();
-		this.isAdmin = session.getDefaultPermissionMode().isAdmin();
 
 		this.textProvider = textProvider;
-		this.session = session;
 		this.actionListener = actionListener;
 
 		initialize();
@@ -96,25 +96,18 @@ public class FileContextPopupComponent extends ContextPopup {
 		filename.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(filename);
 
-		description = new Label();
-		description
-				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DESCRIPTION);
+		description = new EditableLabel(StyleConstants.FILE_CONTEXT_DESCRIPTION);
 		content.add(description);
 
-		if (isAdmin)
-			createDescriptionEditor(content);
+		if (descriptionEditingEnabled)
+			createDescriptionActions(content);
 
 		content.add(createDetails());
 		content.add(createButtons());
 		return content;
 	}
 
-	private void createDescriptionEditor(Panel content) {
-		descriptionEditor = new TextArea();
-		descriptionEditor
-				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DESCRIPTION_EDITOR);
-		content.add(descriptionEditor);
-
+	private void createDescriptionActions(Panel content) {
 		addDescription = new ActionLink(textProvider.getStrings()
 				.fileDetailsAddDescription(),
 				StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
@@ -187,7 +180,7 @@ public class FileContextPopupComponent extends ContextPopup {
 				FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		if (session.getSettings().isZipDownloadEnabled()) {
+		if (this.zipDownloadEnabled) {
 			MultiActionButton downloadButton = createMultiActionButton(
 					actionListener, textProvider.getStrings()
 							.fileActionDownloadTitle(),
@@ -299,23 +292,12 @@ public class FileContextPopupComponent extends ContextPopup {
 
 	public void setDescription(String description) {
 		this.description.setText(description);
-		if (this.descriptionEditor != null)
-			this.descriptionEditor.setText(description);
 	}
 
 	public void setDescriptionEditable(boolean isEditable,
 			boolean descriptionDefined) {
-		if (isEditable) {
-			descriptionEditor.setVisible(true);
-			description.setVisible(false);
-			descriptionEditor.setFocus(true);
-		} else {
-			if (descriptionEditor != null)
-				descriptionEditor.setVisible(false);
-			description.setVisible(descriptionDefined);
-		}
-
-		if (!isAdmin)
+		description.setEditable(isEditable);
+		if (!descriptionEditingEnabled)
 			return;
 
 		addDescription.setVisible(!isEditable && !descriptionDefined);
@@ -337,12 +319,8 @@ public class FileContextPopupComponent extends ContextPopup {
 		return filename;
 	}
 
-	public Label getDescription() {
+	public EditableLabel getDescription() {
 		return description;
-	}
-
-	public TextArea getDescriptionEditor() {
-		return descriptionEditor;
 	}
 
 	public ActionLink getEditDescription() {

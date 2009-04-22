@@ -128,7 +128,7 @@
 						break;
 	
 					case "move":
-						if (!isset($_GET["to"])) {
+						if (!isset($_GET["to"]) or !isset($_GET["item_type"])) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
@@ -137,8 +137,15 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
+						$item_type = strtolower(trim($_GET["item_type"]));
 						
-						$result = move_file($file, $to);
+						if ($item_type === 'f') {
+							$result = move_file($file, $to);
+						} else if ($item_type === 'd') {
+							$result = move_directory($file, $to);
+						} else {
+							$error = "INVALID_REQUEST";
+						}
 						break;
 										
 					case "delete":
@@ -178,6 +185,11 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
+						if (!$_SESSION["settings"]["enable_description_update"]) {
+							log_error("Cannot edit descriptions, feature disabled by settings");
+							$error = "FEATURE_DISABLED";
+							return FALSE;
+						}
 						if (!is_admin()) {
 							log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
 							$error = "NOT_AN_ADMIN";
@@ -200,8 +212,13 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
+						if (!$_SESSION["settings"]["enable_description_update"]) {
+							log_error("Cannot edit descriptions, feature disabled by settings");
+							$error = "FEATURE_DISABLED";
+							return FALSE;
+						}
 						if (!is_admin()) {
-							log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
+							log_error("Insufficient permissions (remove description): User=[".$_SESSION['user_id']."]");
 							$error = "NOT_AN_ADMIN";
 							break;
 						}

@@ -39,7 +39,7 @@
 	}
 	
 	function get_configuration_info() {
-		return array("supports_configuration_update" => is_configuration_update_supported());
+		return array("configuration_update_support" => get_configuration_setting("configuration_update"));
 	}
 	
 	function initialize_session() {
@@ -70,10 +70,7 @@
 	}
 	
 	import_configuration_provider();
-	
-	if (!isset($_GET["type"])) {
-		exit(0);
-	}
+	if (!isset($_GET["type"])) exit(0);
 	
 	require_once("settings.php");
 	require_once("user.php");

@@ -29,11 +29,17 @@ public class FileContextPopupFactory {
 
 	public FileContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
+
+		boolean descriptionEditable = session.getDefaultPermissionMode()
+				.isAdmin()
+				&& session.getSettings().isDescriptionUpdateEnabled();
+
 		FileContextPopupComponent popup = new FileContextPopupComponent(
-				textProvider, session, actionDelegator);
+				textProvider, session.getDefaultPermissionMode()
+						.hasWritePermission(), descriptionEditable, session
+						.getSettings().isZipDownloadEnabled(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider);
 		return new FileContextGlue(popup, presenter, actionDelegator);
 	}
-
 }

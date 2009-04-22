@@ -15,10 +15,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class SessionSettings extends JavaScriptObject {
 	public static SessionSettings create(boolean folderActionsEnabled,
 			boolean fileUploadEnabled, boolean fileUploadProgressEnabled,
-			boolean zipDownloadEnabled) {
+			boolean zipDownloadEnabled, boolean descriptionUpdateEnabled) {
 		SessionSettings result = SessionSettings.createObject().cast();
 		result.putValues(folderActionsEnabled, fileUploadEnabled,
-				fileUploadProgressEnabled, zipDownloadEnabled);
+				fileUploadProgressEnabled, zipDownloadEnabled,
+				descriptionUpdateEnabled);
 		return result;
 	}
 
@@ -41,20 +42,17 @@ public class SessionSettings extends JavaScriptObject {
 		return this.enable_zip_download;
 	}-*/;
 
-	public final String asString() {
-		return "folder_actions_enabled=" + isFolderActionsEnabled()
-				+ ", file_upload_enabled=" + isFileUploadEnabled()
-				+ ", file_upload_progress_enabled="
-				+ isFileUploadProgressEnabled() + ", zip_download_enabled="
-				+ isZipDownloadEnabled();
-	}
+	public final native boolean isDescriptionUpdateEnabled() /*-{
+		return this.enable_description_update;
+	}-*/;
 
 	private final native void putValues(boolean folderActionsEnabled,
 			boolean fileUploadEnabled, boolean fileUploadProgressEnabled,
-			boolean zipDownloadEnabled) /*-{
+			boolean zipDownloadEnabled, boolean descriptionUpdateEnabled) /*-{
 		this.enable_folder_actions = folderActionsEnabled;
 		this.enable_file_upload = fileUploadEnabled;
 		this.enable_file_upload_progress = fileUploadProgressEnabled;
 		this.enable_zip_download = zipDownloadEnabled;
+		this.enable_description_update = descriptionUpdateEnabled;
 	}-*/;
 }

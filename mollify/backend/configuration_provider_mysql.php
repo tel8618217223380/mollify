@@ -11,9 +11,11 @@
 	 */
 	
 	function init_configuration_provider() {}
-
-	function is_configuration_update_supported() {
-		return TRUE;
+	
+	function get_configuration_setting($setting) {
+		if ($name === 'configuration_update') return TRUE;
+		if ($name === 'description_update_default') return TRUE;
+		return FALSE;
 	}
 
 	function init_db() {

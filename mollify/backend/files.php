@@ -337,6 +337,32 @@
 		move_item_description($file, get_fileitem($to["root"], $target));
 		return TRUE;
 	}
+
+	function move_directory($dir, $to) {
+		global $error, $error_details;
+		
+		if (!assert_dir($dir)) return FALSE;
+		if (!assert_dir($to)) return FALSE;
+		
+		if (!has_general_modify_rights()) {
+			log_error("Insufficient permissions (move dir): User=[".$_SESSION['user_id']."]. General read/write permission is required.");
+			$error = "NO_GENERAL_WRITE_PERMISSION";
+			return FALSE;
+		}
+		
+		$origin = $dir["path"];
+		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		
+		if (file_exists($target)) {
+			$error = "DIR_ALREADY_EXISTS";
+			$error_details = basename($target);
+			return FALSE;
+		}
+		
+		if (!rename($origin, $target)) return FALSE;
+		move_item_description($dir, get_fileitem($to["root"], $target));
+		return TRUE;
+	}
 	
 	function rename_directory($dir, $new_name) {
 		global $error, $error_details;
