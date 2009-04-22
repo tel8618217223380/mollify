@@ -14,11 +14,11 @@ public class ConfigurationInfo extends JavaScriptObject {
 	}
 
 	public final native boolean isConfigurationUpdateSupported() /*-{
-		return this.supports_configuration_update;
+		return this.configuration_update_support;
 	}-*/;
 
 	private final native void putValues(boolean isConfigurationUpdateSupported) /*-{
-		this.supports_configuration_update = isConfigurationUpdateSupported;
+		this.configuration_update_support = isConfigurationUpdateSupported;
 	}-*/;
 
 }

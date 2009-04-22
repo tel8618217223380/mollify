@@ -12,7 +12,8 @@
 
 	function init_configuration_provider() {}
 	
-	function is_configuration_update_supported() {
+	function get_configuration_setting($name) {
+		if ($name === 'description_update_default') return FALSE;
 		return FALSE;
 	}
 	
@@ -112,6 +113,8 @@
 		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
 	}
 	
+	function move_item_description($from, $to) {}
+	
 	function _get_description_filename($path) {
 		return dirname($path).DIRECTORY_SEPARATOR."descript.ion";
 	}
@@ -149,14 +152,26 @@
 	}
 
 	function _write_descriptions_to_file($descript_ion, $descriptions) {
-		if (!is_writable($descript_ion)) return FALSE;
+		if (file_exists($descript_ion)) {
+			if (!is_writable($descript_ion)) {
+				log_error("Description file (".$descript_ion.") is not writable");
+				return FALSE;
+			}
+		} else {
+			$dir = dirname($descript_ion);
+			if (!is_writable($dir)) {
+				log_error("Directory for description file (".$dir.") is not writable");
+				return FALSE;
+			}
+		}
 	
 		$handle = @fopen($descript_ion, "w");
 		if (!$handle) return FALSE;
 		
-	    foreach($descriptions as $name => $description)
-	        fwrite($handle, sprintf('"%s" %s', $name, $description)."\n");
-	    fclose($handle);
+		foreach($descriptions as $name => $description)
+			fwrite($handle, sprintf('"%s" %s', $name, $description)."\n");
+
+		fclose($handle);
 		
 		return TRUE;
 	}
