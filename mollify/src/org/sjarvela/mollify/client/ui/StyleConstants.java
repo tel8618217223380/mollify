@@ -42,8 +42,13 @@ public class StyleConstants {
 	public static final String MULTIACTION_BUTTON = "mollify-multiaction-button";
 	public static final String MULTIACTION_DEFAULT_BUTTON = "mollify-multiaction-button-default";
 	public static final String MULTIACTION_BUTTON_DROPDOWN = "mollify-multiaction-button-dropdown";
-	
+
 	public static final String ACTION_LINK = "mollify-actionlink";
+
+	public static final String EDITABLE_LABEL = "mollify-editable-label";
+	public static final String EDITABLE_LABEL_PANEL = "mollify-editable-panel";
+
+	public static final String SWITCH_PANEL = "mollify-switch-panel";
 
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
@@ -64,7 +69,7 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "file-context-description";
-	public static final String FILE_CONTEXT_DESCRIPTION_EDITOR = "mollify-file-context-description-editor";
+	public static final String FILE_CONTEXT_DESCRIPTION_ACTIONS_SWITCH = "file-context-description-actions-switch";
 	public static final String FILE_CONTEXT_DESCRIPTION_ACTIONS = "file-context-description-actions";
 	public static final String FILE_CONTEXT_DESCRIPTION_ACTION = "file-context-description";
 	public static final String FILE_CONTEXT_ADD_DESCRIPTION = "mollify-file-context-add-description";
@@ -83,6 +88,7 @@ public class StyleConstants {
 	public static final String DIR_CONTEXT = "mollify-directory-context";
 	public static final String DIR_CONTEXT_CONTENT = "mollify-directory-context-content";
 	public static final String DIR_CONTEXT_NAME = "mollify-directory-context-name";
+	public static final String DIR_CONTEXT_DESCRIPTION = "directory-context-description";
 	public static final String DIR_CONTEXT_BUTTONS = "mollify-directory-context-buttons";
 
 	public static final String FILE_LIST = "mollify-filelist";
@@ -305,8 +311,4 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_GENERATE_PASSWORD = "reset-password-dialog-generate";
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
 	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
-
-	public static final String EDITABLE_LABEL = "mollify-editable-label";
-	public static final String EDITABLE_LABEL_PANEL = "mollify-editable-panel";
-
 }

@@ -54,8 +54,7 @@ public class MainViewFactory {
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileSystemService, textProvider, model.getSession());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				textProvider, fileSystemService, model.getSession()
-						.getSettings());
+				textProvider, fileSystemService, model.getSession());
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		MainView view = new MainView(model, textProvider, actionDelegator,
