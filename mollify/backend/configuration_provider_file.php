@@ -82,33 +82,36 @@
 	}
 	
 	function get_file_description($file) {
-		$path = $file["path"];
+		$path = dirname($file["path"]);
+		$name = basename($file["path"]);
 		$descriptions = _get_descriptions($path);
-		$filename = basename($path);
 		
-		if (!isset($descriptions[$filename])) return NULL;
-		return $descriptions[$filename];
+		if (!isset($descriptions[$name])) return NULL;
+		return $descriptions[$name];
 	}
 	
 	function get_dir_description($dir) {
-		$descriptions = _get_descriptions($dir["path"]);
-
-		if (!isset($descriptions["."])) return NULL;
-		return $descriptions["."];
+		$path = dirname($dir["path"]);
+		$name = basename($dir["path"]);
+		$descriptions = _get_descriptions($path);
+		
+		if (!isset($descriptions[$name])) return NULL;
+		return $descriptions[$name];
 	}
 	
 	function set_item_description($item, $description) {
-		$path = $item["path"];
-		
+		$path = dirname($item["path"]);
+		$name = basename($item["path"]);
+	
 		$descriptions = _get_descriptions($path);
-		$descriptions[basename($path)] = $description;
+		$descriptions[$name] = $description;
 		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
 	}
 
 	function remove_item_description($item) {
 		$path = $item["path"];
 		
-		$descriptions = _get_descriptions($path);
+		$descriptions = _get_descriptions(dirname($path));
 		unset($descriptions[basename($path)]);
 		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
 	}
@@ -116,7 +119,7 @@
 	function move_item_description($from, $to) {}
 	
 	function _get_description_filename($path) {
-		return dirname($path).DIRECTORY_SEPARATOR."descript.ion";
+		return $path.DIRECTORY_SEPARATOR."descript.ion";
 	}
 	
 	function _get_descriptions($path) {

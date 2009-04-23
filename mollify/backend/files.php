@@ -250,7 +250,7 @@
 		return set_item_description($file, $description);
 	}
 
-	function set_dir_description($dir, $description) {		
+	function set_directory_description($dir, $description) {		
 		if (!assert_dir($dir)) return FALSE;
 		return set_item_description($dir, $description);
 	}
@@ -260,7 +260,7 @@
 		return remove_item_description($file);
 	}
 
-	function remove_dir_description($dir) {
+	function remove_directory_description($dir) {
 		if (!assert_dir($dir)) return FALSE;
 		return remove_item_description($dir);
 	}
