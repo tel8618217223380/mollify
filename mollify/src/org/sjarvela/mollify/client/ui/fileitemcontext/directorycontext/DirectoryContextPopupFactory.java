@@ -8,11 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.popup.directorycontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
 public class DirectoryContextPopupFactory {
 	private final TextProvider textProvider;
@@ -27,11 +30,19 @@ public class DirectoryContextPopupFactory {
 	}
 
 	public DirectoryContextPopup createPopup() {
-		boolean isDescriptionUpdateEnabled = session.getSettings()
-				.isDescriptionUpdateEnabled()
-				&& session.getDefaultPermissionMode().isAdmin();
-		return new DirectoryContextPopup(textProvider, detailsProvider, session
-				.getSettings().isFolderActionsEnabled(), session.getSettings()
-				.isZipDownloadEnabled(), isDescriptionUpdateEnabled);
+		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
+
+		boolean descriptionEditable = session.getDefaultPermissionMode()
+				.isAdmin()
+				&& session.getSettings().isDescriptionUpdateEnabled();
+
+		FileItemContextComponent popup = new FileItemContextComponent(
+				Mode.Directory, textProvider, session
+						.getDefaultPermissionMode().hasWritePermission(),
+				descriptionEditable, session.getSettings()
+						.isZipDownloadEnabled(), actionDelegator);
+		DirectoryContextPresenter presenter = new DirectoryContextPresenter(
+				popup, session, detailsProvider, textProvider);
+		return new DirectoryContextGlue(popup, presenter, actionDelegator);
 	}
 }

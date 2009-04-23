@@ -8,22 +8,22 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.popup.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
-import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 
 import com.google.gwt.user.client.Element;
 
-public interface FileContextPopup {
+public interface DirectoryContextPopup {
 
-	void setFileActionHandler(FileSystemActionHandler actionHandler);
+	void setDirectoryActionHandler(FileSystemActionHandler actionHandler);
 
 	void setFileItemDescriptionHandler(
 			FileItemDescriptionHandler descriptionHandler);
 
-	void update(File file, Element element);
+	void update(Directory directory, Element element);
 
 	void showMenu();
 

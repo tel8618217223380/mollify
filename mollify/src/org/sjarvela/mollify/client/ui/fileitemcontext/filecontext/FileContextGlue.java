@@ -8,21 +8,22 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.popup.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 
 import com.google.gwt.user.client.Element;
 
 public class FileContextGlue implements FileContextPopup {
 
 	private final FileContextPresenter presenter;
-	private final FileContextPopupComponent popup;
+	private final FileItemContextComponent popup;
 
-	public FileContextGlue(FileContextPopupComponent popup,
+	public FileContextGlue(FileItemContextComponent popup,
 			FileContextPresenter presenter,
 			ActionListenerDelegator actionDelegator) {
 		this.popup = popup;

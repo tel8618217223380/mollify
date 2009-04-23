@@ -8,7 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.popup.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -23,11 +28,15 @@ import org.sjarvela.mollify.client.service.request.Callback;
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class FileContextPresenter implements ActionListener {
-	private final FileContextPopupComponent popup;
+	private final FileItemContextComponent popup;
 	private final FileDetailsProvider fileDetailsProvider;
 	private final TextProvider textProvider;
+	private final DateTimeFormat dateTimeFormat;
 
 	private FileSystemActionHandler fileActionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
@@ -35,12 +44,35 @@ public class FileContextPresenter implements ActionListener {
 	private File file = File.Empty;
 	private FileDetails details;
 
-	public FileContextPresenter(FileContextPopupComponent popup,
+	private enum Details implements ResourceId {
+		Accessed, Modified, Changed
+	}
+
+	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider) {
 		this.popup = popup;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
+		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
+				.getFormat(textProvider.getStrings().shortDateTimeFormat());
+
+		initializeDetails();
+	}
+
+	private void initializeDetails() {
+		List<ResourceId> order = (List<ResourceId>) Arrays.asList(
+				(ResourceId) Details.Modified, (ResourceId) Details.Changed,
+				(ResourceId) Details.Accessed);
+		Map<ResourceId, String> headers = new HashMap();
+		headers.put(Details.Accessed, textProvider.getStrings()
+				.fileDetailsLabelLastAccessed());
+		headers.put(Details.Changed, textProvider.getStrings()
+				.fileDetailsLabelLastChanged());
+		headers.put(Details.Modified, textProvider.getStrings()
+				.fileDetailsLabelLastModified());
+
+		this.popup.initializeDetailsSection(order, headers);
 	}
 
 	public void setFileActionHandler(FileSystemActionHandler actionHandler) {
@@ -60,7 +92,7 @@ public class FileContextPresenter implements ActionListener {
 		this.file = file;
 
 		popup.getDetails().setOpen(false);
-		popup.getFilename().setText(file.getName());
+		popup.getName().setText(file.getName());
 		updateDetails(null);
 
 		fileDetailsProvider.getFileDetails(file,
@@ -77,10 +109,19 @@ public class FileContextPresenter implements ActionListener {
 	}
 
 	private void updateDetails(FileDetails details) {
+		this.popup.reset();
 		this.details = details;
 		this.updateDescription();
 
-		popup.updateDetails(details);
+		if (details != null) {
+			this.popup.setDetailValue(Details.Accessed, dateTimeFormat
+					.format(details.getLastAccessed()));
+			this.popup.setDetailValue(Details.Modified, dateTimeFormat
+					.format(details.getLastModified()));
+			this.popup.setDetailValue(Details.Changed, dateTimeFormat
+					.format(details.getLastChanged()));
+		}
+
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 		popup.updateButtons(writable);
@@ -103,7 +144,7 @@ public class FileContextPresenter implements ActionListener {
 		popup.setDescriptionEditable(true, isDescriptionDefined());
 	}
 
-	protected void onStopEditDescription() {
+	protected void onApplyDescription() {
 		popup.setDescriptionEditable(false, isDescriptionDefined());
 
 		final String description = popup.getDescription().getText();
@@ -136,18 +177,17 @@ public class FileContextPresenter implements ActionListener {
 			return;
 		}
 
-		if (FileContextPopupComponent.Action.addDescription.equals(action))
+		if (FileItemContextComponent.Action.addDescription.equals(action))
 			onStartEditDescription();
-		else if (FileContextPopupComponent.Action.editDescription
-				.equals(action))
+		else if (FileItemContextComponent.Action.editDescription.equals(action))
 			onStartEditDescription();
-		else if (FileContextPopupComponent.Action.cancelEditDescription
+		else if (FileItemContextComponent.Action.cancelEditDescription
 				.equals(action))
 			onCancelEditDescription();
-		else if (FileContextPopupComponent.Action.applyDescription
+		else if (FileItemContextComponent.Action.applyDescription
 				.equals(action))
-			onStopEditDescription();
-		else if (FileContextPopupComponent.Action.removeDescription
+			onApplyDescription();
+		else if (FileItemContextComponent.Action.removeDescription
 				.equals(action))
 			onRemoveDescription();
 	}
