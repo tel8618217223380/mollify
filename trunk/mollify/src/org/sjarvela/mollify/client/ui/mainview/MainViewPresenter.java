@@ -83,6 +83,7 @@ public class MainViewPresenter implements DirectoryListener,
 		this.view.getFileContext().setFileActionHandler(this);
 		this.view.getFileContext().setFileItemDescriptionHandler(this);
 		this.view.getDirectoryContext().setDirectoryActionHandler(this);
+		this.view.getDirectoryContext().setFileItemDescriptionHandler(this);
 		this.view.getDirectorySelector().addListener(this);
 
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
