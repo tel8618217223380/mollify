@@ -30,11 +30,11 @@ import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopup;
+import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopup;
+import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
-import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopup;
-import org.sjarvela.mollify.client.ui.popup.directorycontext.DirectoryContextPopupFactory;
-import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopup;
-import org.sjarvela.mollify.client.ui.popup.filecontext.FileContextPopupFactory;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;

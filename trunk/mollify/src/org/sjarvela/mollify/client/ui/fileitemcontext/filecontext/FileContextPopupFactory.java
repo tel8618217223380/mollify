@@ -8,12 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.popup.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
 public class FileContextPopupFactory {
 	private final TextProvider textProvider;
@@ -34,8 +36,8 @@ public class FileContextPopupFactory {
 				.isAdmin()
 				&& session.getSettings().isDescriptionUpdateEnabled();
 
-		FileContextPopupComponent popup = new FileContextPopupComponent(
-				textProvider, session.getDefaultPermissionMode()
+		FileItemContextComponent popup = new FileItemContextComponent(
+				Mode.File, textProvider, session.getDefaultPermissionMode()
 						.hasWritePermission(), descriptionEditable, session
 						.getSettings().isZipDownloadEnabled(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
