@@ -18,12 +18,13 @@ public class DirectoryDetails extends JavaScriptObject {
 	public final native String getDescription() /*-{
 		return this.description;
 	}-*/;
-	
+
 	private final native String getFilePermissionString() /*-{
 		return this.permissions;
 	}-*/;
 
-	public static DirectoryDetails create(FilePermission permissions, String description) {
+	public static DirectoryDetails create(FilePermission permissions,
+			String description) {
 		DirectoryDetails result = DirectoryDetails.createObject().cast();
 		result.putValues(permissions.getStringValue(), description);
 		return result;
@@ -34,4 +35,11 @@ public class DirectoryDetails extends JavaScriptObject {
 		this.description = description;
 	}-*/;
 
+	public final native void setDescription(String description) /*-{
+		this.description = description;
+	}-*/;
+
+	public final native void removeDescription() /*-{
+		this.description = null;
+	}-*/;
 }
