@@ -297,4 +297,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileDetailsRemoveDescription();
 
+	public String moveDirectoryDialogTitle();
+
+	public String moveDirectoryDialogAction();
+
 }

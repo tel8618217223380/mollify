@@ -35,5 +35,8 @@ public interface MessageConstants extends Messages {
 
 	String moveFileMessage(String name);
 
+	String moveDirectoryMessage(String name);
+	
 	String userDirectoryListDefaultName(String defaultName);
+
 }

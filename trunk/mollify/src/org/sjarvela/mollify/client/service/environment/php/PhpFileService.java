@@ -121,13 +121,13 @@ public class PhpFileService implements FileSystemService {
 				+ directory.getId()), listener);
 	}
 
-	public void move(File file, Directory directory,
+	public void move(FileSystemItem item, Directory directory,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Move " + file.getId() + " to [" + directory.getId()
+			Log.debug("Move " + item.getId() + " to [" + directory.getId()
 					+ "]");
 
-		service.doRequest(getFileActionUrl(file, FileSystemAction.move, "to="
+		service.doRequest(getFileActionUrl(item, FileSystemAction.move, "to="
 				+ directory.getId()), listener);
 	}
 

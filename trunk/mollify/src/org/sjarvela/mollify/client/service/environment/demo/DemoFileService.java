@@ -62,7 +62,7 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void move(File file, Directory directory,
+	public void move(FileSystemItem item, Directory directory,
 			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}

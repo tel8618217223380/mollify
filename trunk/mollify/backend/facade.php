@@ -44,14 +44,14 @@
 							
 					case "details":
 						if (!isset($_GET["item_type"])) return;
-						$file = get_fileitem_from_url("id");
-						if (!$file) return;
+						$item = get_fileitem_from_url("id");
+						if (!$item) return;
 						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f')
-							$result = get_file_details($file);
+							$result = get_file_details($item);
 						else if ($item_type === 'd')
-							$result = get_directory_details($file);
+							$result = get_directory_details($item);
 						else
 							$error = "INVALID_REQUEST";
 						break;
@@ -70,44 +70,48 @@
 				}
 				$action = $_GET["action"];
 			
-				$file = get_fileitem_from_url("id");
-				if (!$file) return;
-			
+				$item = get_fileitem_from_url("id");
+				if (!$item) return;
+				
+				$item_type = FALSE;
+				if (isset($_GET["item_type"])) {
+					$item_type = strtolower(trim($_GET["item_type"]));
+					assert_item_type($item_type);
+				}
+				
 				switch (strtolower($action)) {
 					case "download":
 						// download writes the header and the content, just exit here
-						if (download($file)) return;
+						if (download($item)) return;
 						break;
 	
 					case "download_as_zip":
-						if (!isset($_GET["item_type"])) {
+						if (!$item_type) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						// download writes the header and the content, just exit here
 						if ($item_type === 'f') {
-							if (download_file_as_zip($file)) return;
+							if (download_file_as_zip($item)) return;
 						} else if ($item_type === 'd') {
-							if (download_dir_as_zip($file)) return;
+							if (download_dir_as_zip($item)) return;
 						} else {
 							$error = "INVALID_REQUEST";
 						}
 						break;
 						
 					case "rename":
-						if (!isset($_GET["item_type"]) or !isset($_GET["to"])) {
+						if (!$item_type or !isset($_GET["to"])) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
 						$to = urldecode($_GET["to"]);
-						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							$result = rename_file($file, $to);
+							$result = rename_file($item, $to);
 						} else if ($item_type === 'd') {
-							$result = rename_directory($file, $to);
+							$result = rename_directory($item, $to);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
@@ -124,11 +128,11 @@
 							break;
 						}
 						
-						$result = copy_file($file, $to);
+						$result = copy_file($item, $to);
 						break;
 	
 					case "move":
-						if (!isset($_GET["to"]) or !isset($_GET["item_type"])) {
+						if (!isset($_GET["to"]) or !$item_type) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
@@ -137,51 +141,47 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							$result = move_file($file, $to);
+							$result = move_file($item, $to);
 						} else if ($item_type === 'd') {
-							$result = move_directory($file, $to);
+							$result = move_directory($item, $to);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
 						break;
 										
 					case "delete":
-						if (!isset($_GET["item_type"])) {
+						if (!$item_type) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							$result = delete_file($file);
+							$result = delete_file($item);
 						} else if ($item_type === 'd') {
-							$result = delete_directory($file);
+							$result = delete_directory($item);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
 						break;
 				
 					case "upload":
-						$dir = $file;
-						if (upload_file($dir)) $result = get_success_message();
+						if (upload_file($item)) $result = get_success_message();
 						header("Content-Type: text/html");
 						header("HTTP/1.1 200 OK", true);
 						break;
 	
 					case "create_folder":
-						$dir = $file;
 						if (!isset($_GET["name"])) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$result = create_folder($dir, $_GET["name"]);
+						$result = create_folder($item, $_GET["name"]);
 						break;
 
 					case "set_description":
-						if (!isset($_GET["description"]) or !isset($_GET["item_type"])) {
+						if (!isset($_GET["description"]) or !$item_type) {
 							$error = "INVALID_REQUEST";
 							break;
 						}
@@ -195,16 +195,16 @@
 							$error = "NOT_AN_ADMIN";
 							break;
 						}
-						$item_type = strtolower(trim($_GET["item_type"]));
 						$description = urldecode($_GET["description"]);
 						
 						if ($item_type === 'f') {
-							$result = set_file_description($file, $description);
+							if (!assert_file($item)) break;
 						} else if ($item_type === 'd') {
-							$result = set_directory_description($file, $description);
+							if (!assert_dir($item)) break;
 						} else {
 							$error = "INVALID_REQUEST";
 						}
+						$result = set_item_description($item, $description);
 						break;
 
 					case "remove_description":
@@ -222,12 +222,11 @@
 							$error = "NOT_AN_ADMIN";
 							break;
 						}
-						$item_type = strtolower(trim($_GET["item_type"]));
 						
 						if ($item_type === 'f') {
-							$result = remove_file_description($file);
+							$result = remove_file_description($item);
 						} else if ($item_type === 'd') {
-							$result = remove_directory_description($file);
+							$result = remove_directory_description($item);
 						} else {
 							$error = "INVALID_REQUEST";
 						}
@@ -239,6 +238,7 @@
 						break;
 				}
 				break;
+
 			case "configuration":
 				process_configuration_request();
 				break;

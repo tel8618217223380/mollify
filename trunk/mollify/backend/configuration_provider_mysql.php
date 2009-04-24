@@ -249,7 +249,7 @@
 			return FALSE;
 		}
 		
-		remove_item_descriptions_recursively($id.":", TRUE);
+		remove_item_descriptions_recursively(array("id" => $id.":"), TRUE, TRUE);
 		return TRUE;
 	}
 	
@@ -382,47 +382,48 @@
 		return TRUE;
 	}
 
-	function remove_item_description($item) {
+	function remove_item_description($item, $recursively = FALSE, $unencoded = FALSE) {
 		global $error, $error_details;
-		
-		if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($item["id"]))))) {
-			$error = "INVALID_REQUEST";
-			$error_details = mysql_error();
-			log_error("Failed to remove description (".$error_details.")");
-			return FALSE;
-		}
-				
-		return TRUE;
-	}
 
-	function remove_item_descriptions_recursively($item_id, $unencoded = FALSE) {
-		global $error, $error_details;
-		
-		$id = $item_id
+		$id = $item["id"]
 		if (!$unencoded) $id = base64_decode($id);
-		#if ($id{strlen($id)-1} != DIRECTORY_SEPARATOR) $id .= DIRECTORY_SEPARATOR;
 		
-		$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id));
-		log_error($query);
-		
-		if (!_query($query)) {
-			$error = "INVALID_REQUEST";
-			$error_details = mysql_error();
-			log_error("Failed to remove descriptions (".$error_details.")");
-			return FALSE;
+		if ($recursively) {
+			$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id));
+			if (!_query($query)) {
+				$error = "INVALID_REQUEST";
+				$error_details = mysql_error();
+				log_error("Failed to remove descriptions (".$error_details.")");
+				return FALSE;
+			}
+		} else {
+			if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($id)))) {
+				$error = "INVALID_REQUEST";
+				$error_details = mysql_error();
+				log_error("Failed to remove description (".$error_details.")");
+				return FALSE;
+			}
 		}
 				
 		return TRUE;
 	}
 	
-	function move_item_description($from, $to) {
+	function move_item_description($from, $to, $recursively = FALSE) {
 		global $error, $error_details;
+
+		$from_id = base64_decode($from["id"]);
+		$to_id = base64_decode($to["id"]);
 		
-		if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string(base64_decode($to["id"])), mysql_real_escape_string(base64_decode($from["id"]))))) {
-			$error = "INVALID_REQUEST";
-			$error_details = mysql_error();
-			log_error("Failed to move description (".$error_details.")");
+		if ($recursively) {
+			#TODO update all rows starting with "FROM" to start with "TO" (replace path part)
 			return FALSE;
+		} else {
+			if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id), mysql_real_escape_string($from_id)))) {
+				$error = "INVALID_REQUEST";
+				$error_details = mysql_error();
+				log_error("Failed to move description (".$error_details.")");
+				return FALSE;
+			}
 		}
 				
 		return TRUE;
