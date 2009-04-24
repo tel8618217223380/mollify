@@ -237,6 +237,7 @@ public class FileItemContextComponent extends ContextPopup {
 					.get(id), id.name()));
 		}
 		details.add(content);
+		details.setVisible(true);
 	}
 
 	private Label createDetailsRow(Panel parent, String title, String style) {
