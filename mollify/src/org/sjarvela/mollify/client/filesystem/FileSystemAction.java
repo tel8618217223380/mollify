@@ -18,7 +18,9 @@ public enum FileSystemAction implements ResourceId {
 	public boolean isApplicableToDirectory() {
 		return (this.equals(upload) || this.equals(create_folder)
 				|| this.equals(move) || this.equals(rename)
-				|| this.equals(delete) || this.equals(download_as_zip));
+				|| this.equals(delete) || this.equals(download_as_zip)
+				|| this.equals(set_description) || this
+				.equals(remove_description));
 	}
 
 	public boolean isApplicableToFile() {

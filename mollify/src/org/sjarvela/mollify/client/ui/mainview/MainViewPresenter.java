@@ -356,6 +356,25 @@ public class MainViewPresenter implements DirectoryListener,
 					.getDownloadAsZipUrl(directory));
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(directory, this);
+		} else if (action.equals(FileSystemAction.move)) {
+			windowManager.getDialogManager().showSelectFolderDialog(
+					windowManager.getTextProvider().getStrings()
+							.moveDirectoryDialogTitle(),
+					windowManager.getTextProvider().getMessages()
+							.moveDirectoryMessage(directory.getName()),
+					windowManager.getTextProvider().getStrings()
+							.moveDirectoryDialogAction(), directoryProvider,
+					new SelectFolderListener() {
+						public void onSelect(Directory selected) {
+							moveDirectory(directory, selected);
+						}
+
+						public boolean isDirectoryAllowed(Directory candidate) {
+							return !directory.equals(candidate)
+									&& !model.getCurrentFolder().equals(
+											candidate);
+						}
+					}, model.getDirectoryModel().getDirectoryList());
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getTextProvider().getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
@@ -393,6 +412,12 @@ public class MainViewPresenter implements DirectoryListener,
 		if (model.getCurrentFolder().equals(toDirectory))
 			return;
 		fileSystemService.move(file, toDirectory, createReloadListener());
+	}
+
+	protected void moveDirectory(Directory directory, Directory toDirectory) {
+		if (model.getCurrentFolder().equals(toDirectory))
+			return;
+		fileSystemService.move(directory, toDirectory, createReloadListener());
 	}
 
 	private void delete(FileSystemItem item) {

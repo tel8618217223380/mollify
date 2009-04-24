@@ -107,6 +107,10 @@
 		}
 		return TRUE;
 	}
+	
+	function assert_item_type($item_type) {
+		return ($item_type === 'd' or $item_type === 'f');
+	}
 		
 	function get_directories($dir = NULL) {
 		global $error, $error_details;
@@ -334,7 +338,10 @@
 		}
 		
 		if (!rename($origin, $target)) return FALSE;
-		move_item_description($file, get_fileitem($to["root"], $target));
+		
+		if ($_SESSION["settings"]["enable_description_update"])
+			move_item_description($file, get_fileitem($to["root"], $target));
+
 		return TRUE;
 	}
 
@@ -360,7 +367,10 @@
 		}
 		
 		if (!rename($origin, $target)) return FALSE;
-		move_item_description($dir, get_fileitem($to["root"], $target));
+		
+		if ($_SESSION["settings"]["enable_description_update"])
+			move_item_description($dir, get_fileitem($to["root"], $target, TRUE));
+
 		return TRUE;
 	}
 	
@@ -388,7 +398,10 @@
 		}
 		
 		if (!rename($old, $new)) return FALSE;
-		move_item_description($dir, get_fileitem($dir["root"], $new));
+		
+		if ($_SESSION["settings"]["enable_description_update"])
+			move_item_description($dir, get_fileitem($dir["root"], $new, TRUE));
+
 		return TRUE;
 	}
 	
@@ -409,7 +422,9 @@
 			return FALSE;
 		}
 		
-		remove_item_description($file);
+		if ($_SESSION["settings"]["enable_description_update"])
+			remove_item_description($file);
+
 		return TRUE;
 	}
 
@@ -432,7 +447,9 @@
 			$error = "CANNOT_DELETE";
 			return FALSE;
 		}
-		remove_item_descriptions_recursively($dir["id"]);
+		
+		if ($_SESSION["settings"]["enable_description_update"])
+			remove_item_description($dir, TRUE);
 
 		return TRUE;
 	}

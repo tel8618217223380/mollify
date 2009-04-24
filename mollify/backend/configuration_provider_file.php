@@ -108,15 +108,41 @@
 		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
 	}
 
-	function remove_item_description($item) {
-		$path = $item["path"];
+	function remove_item_description($item, $recursively = FALSE) {
+		# we can ignore recursive flag, file "descript.ion" will be removed automatically when folder is removed		
+		$path = dirname($item["path"]);
+		$name = basename($item["path"]);
 		
-		$descriptions = _get_descriptions(dirname($path));
-		unset($descriptions[basename($path)]);
+		$descriptions = _get_descriptions($path);
+		if (!isset($descriptions[$name])) return TRUE;
+		
+		unset($descriptions[basename($name)]);
 		return _write_descriptions_to_file(_get_description_filename($path), $descriptions);
 	}
 	
-	function move_item_description($from, $to) {}
+	function move_item_description($from, $to, $recursively = FALSE) {
+		$from_path = dirname($from["path"]);
+		$from_name = basename($from["path"]);
+
+		$to_path = dirname($to["path"]);
+		$to_name = basename($to["path"]);
+		
+		$from_descriptions = _get_descriptions($from_path);
+		if (!isset($from_descriptions[$from_name])) return TRUE;
+		
+		$description = $from_descriptions[$from_name];
+		unset($from_descriptions[$from_name]);
+		
+		if ($to_path === $from_path) $from_descriptions[$to_name] = $description;
+		if (!_write_descriptions_to_file(_get_description_filename($from_path), $from_descriptions)) return FALSE;
+		
+		if ($to_path != $from_path) {
+			$to_descriptions = _get_descriptions($to_path);
+			$to_descriptions[$to_name] = $description;
+			return _write_descriptions_to_file(_get_description_filename($to_path), $to_descriptions);
+		}
+		return TRUE;
+	}
 	
 	function _get_description_filename($path) {
 		return $path.DIRECTORY_SEPARATOR."descript.ion";
