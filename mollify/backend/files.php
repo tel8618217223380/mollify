@@ -32,6 +32,14 @@
 	    return (int)$amount;
 	}
 	
+	function join_path($item1, $item2) {
+		return dir_path($item1).$item2;
+	}
+	
+	function dir_path($path) {
+		return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+	}
+	
 	function get_fileitem($root_id, $path) {
 		return array("id" => get_filesystem_id($root_id, $path), "root" => $root_id, "path" => $path);
 	}
@@ -67,7 +75,7 @@
 			return FALSE;
 		}
 		$path = $root_path;
-		if (strlen($file["path"]) > 0) $path .= DIRECTORY_SEPARATOR.$file["path"];
+		if (strlen($file["path"]) > 0) $path = join_path($path, $file["path"]);
 		
 		if (strpos("..", $path) != FALSE) {
 			$error = "INVALID_PATH";
@@ -122,6 +130,7 @@
 		
 		$root = $dir["root"];
 		$path = $dir["path"];
+		
 		$files = scandir($path);
 		if (!$files) {
 			$error = "INVALID_PATH";
@@ -133,7 +142,7 @@
 		foreach($files as $i => $name) {
 			if (substr($name, 0, 1) == '.') continue;
 
-			$full_path = $path.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR;
+			$full_path = dir_path(join_path($path, $name));
 			if (!is_dir($full_path)) continue;
 	
 			$result[] = array(
@@ -165,7 +174,7 @@
 		while (true) {
 			$path = dirname($path);
 			$result[] = array(
-				"id" => get_filesystem_id($root_id, $path.DIRECTORY_SEPARATOR),
+				"id" => get_filesystem_id($root_id, dir_path($path)),
 				"root" => $root,
 				"name" => $name
 			);
@@ -281,7 +290,8 @@
 		}
 		
 		$old = $file["path"];
-		$new = dirname($old).DIRECTORY_SEPARATOR.$new_name;
+		$new = join_path(dirname($old),$new_name);
+		
 		if (file_exists($new)) {
 			$error = "FILE_ALREADY_EXISTS";
 			$error_details = basename($new);
@@ -306,7 +316,8 @@
 		}
 		
 		$origin = $file["path"];
-		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		$target = join_path($to["path"], basename($origin));
+		
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
 			$error_details = basename($target);
@@ -329,7 +340,7 @@
 		}
 		
 		$origin = $file["path"];
-		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		$target = join_path($to["path"], basename($origin));
 		
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
@@ -358,7 +369,7 @@
 		}
 		
 		$origin = $dir["path"];
-		$target = $to["path"].DIRECTORY_SEPARATOR.basename($origin);
+		$target = dir_path(join_path($to["path"], basename($origin)));
 		
 		if (file_exists($target)) {
 			$error = "DIR_ALREADY_EXISTS";
@@ -369,7 +380,7 @@
 		if (!rename($origin, $target)) return FALSE;
 		
 		if ($_SESSION["settings"]["enable_description_update"])
-			move_item_description($dir, get_fileitem($to["root"], $target, TRUE));
+			move_item_description($dir, get_fileitem($to["root"], $target), TRUE);
 
 		return TRUE;
 	}
@@ -390,7 +401,8 @@
 		}
 		
 		$old = $dir["path"];
-		$new = dirname($old).DIRECTORY_SEPARATOR.$new_name;
+		$new = dir_path(join_path(dirname($old), $new_name));
+		
 		if (file_exists($new)) {
 			$error = "DIR_ALREADY_EXISTS";
 			$error_details = $new_name;
@@ -400,7 +412,7 @@
 		if (!rename($old, $new)) return FALSE;
 		
 		if ($_SESSION["settings"]["enable_description_update"])
-			move_item_description($dir, get_fileitem($dir["root"], $new, TRUE));
+			move_item_description($dir, get_fileitem($dir["root"], $new), TRUE);
 
 		return TRUE;
 	}
@@ -457,7 +469,7 @@
 	function delete_directory_recurse($path) {
 		global $error_details;
 		
-		$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+		$path = dir_path($path);
 		$handle = opendir($path);
 		
 		if (!$handle) {
@@ -515,7 +527,7 @@
 		foreach ($_FILES[upload][name] as $key => $value) { 
 			$name = $_FILES['upload']['name'][$key];
 			$origin = $_FILES['upload']['tmp_name'][$key];
-			$target = $dir["path"].DIRECTORY_SEPARATOR.$name;
+			$target = join_path($dir["path"], $name);
 				
 			if (file_exists($target)) {
 				$error = "FILE_ALREADY_EXISTS";
@@ -549,7 +561,7 @@
 			return FALSE;
 		}
 		
-		$folder_path = $dir["path"].DIRECTORY_SEPARATOR.$folder_name;
+		$folder_path = dir_path(join_path($dir["path"], $folder_name));
 		
 		if (file_exists($folder_path)) {
 			$error = "DIR_ALREADY_EXISTS";
@@ -656,7 +668,8 @@
 			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored)) {
 				continue;
 			}
-			$full_path = $path.DIRECTORY_SEPARATOR.$name;
+			$full_path = join_path($path, $name);
+			
 			if (is_dir($full_path)) {
 				if (!$recursive) continue;
 				

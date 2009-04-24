@@ -12,7 +12,7 @@
 	
 	function init_configuration_provider() {}
 	
-	function get_configuration_setting($setting) {
+	function get_configuration_setting($name) {
 		if ($name === 'configuration_update') return TRUE;
 		if ($name === 'description_update_default') return TRUE;
 		return FALSE;
@@ -385,7 +385,7 @@
 	function remove_item_description($item, $recursively = FALSE, $unencoded = FALSE) {
 		global $error, $error_details;
 
-		$id = $item["id"]
+		$id = $item["id"];
 		if (!$unencoded) $id = base64_decode($id);
 		
 		if ($recursively) {
@@ -415,15 +415,16 @@
 		$to_id = base64_decode($to["id"]);
 		
 		if ($recursively) {
-			#TODO update all rows starting with "FROM" to start with "TO" (replace path part)
-			return FALSE;
+			$query = sprintf("UPDATE item_description SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", mysql_real_escape_string($to_id), strlen($from_id)+1, mysql_real_escape_string($from_id));
 		} else {
-			if (!_query(sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id), mysql_real_escape_string($from_id)))) {
-				$error = "INVALID_REQUEST";
-				$error_details = mysql_error();
-				log_error("Failed to move description (".$error_details.")");
-				return FALSE;
-			}
+			$query = sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id), mysql_real_escape_string($from_id));
+		}
+		
+		if (!_query($query)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error();
+			log_error("Failed to move description (".$error_details.")");
+			return FALSE;
 		}
 				
 		return TRUE;
