@@ -28,6 +28,22 @@
 		<delete dir="${deploy.dir}" />
 	</target>
 
+	<target name="init-dev"> 
+		<copy todir="${src.dir}/org/sjarvela/mollify">
+			<resources>
+				<file file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml"/>
+			</resources>
+		</copy>
+	</target>
+
+	<target name="init-deploy">
+		<copy todir="${src.dir}/org/sjarvela/mollify">
+			<resources>
+				<file file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml"/>
+			</resources>
+		</copy>  
+	</target>
+	
 	<target name="compile" depends="init">
 		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m">
 			<os name="Mac OS X"/>  
@@ -125,9 +141,9 @@
 		</exec>
 	</target>
 
-	<target name="compile-and-update" depends="compile, update-devenv">
+	<target name="compile-and-update" depends="init-dev, compile, update-devenv">
 	</target>
 
-	<target name="compile-and-deploy" depends="compile, deploy">
+	<target name="compile-and-deploy" depends="init-deploy, compile, deploy, init-dev">
 	</target>
 </project>
