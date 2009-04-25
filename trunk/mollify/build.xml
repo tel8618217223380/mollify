@@ -29,19 +29,11 @@
 	</target>
 
 	<target name="init-dev"> 
-		<copy todir="${src.dir}/org/sjarvela/mollify">
-			<resources>
-				<file file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml"/>
-			</resources>
-		</copy>
+		<copy file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" />
 	</target>
 
 	<target name="init-deploy">
-		<copy todir="${src.dir}/org/sjarvela/mollify">
-			<resources>
-				<file file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml"/>
-			</resources>
-		</copy>  
+		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" />
 	</target>
 	
 	<target name="compile" depends="init">
