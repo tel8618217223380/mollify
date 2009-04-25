@@ -28,16 +28,18 @@
 		<delete dir="${deploy.dir}" />
 	</target>
 
-	<target name="init-dev"> 
-		<copy file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" />
+	<target name="init-dev">
+		<property name="gwt.style" value="DETAILED" />
+		<copy file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
 	</target>
 
 	<target name="init-deploy">
-		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" />
+		<property name="gwt.style" value="OBF" />
+		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
 	</target>
 	
 	<target name="compile" depends="init">
-		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m">
+		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
 			<os name="Mac OS X"/>  
 		</condition>  
 		
@@ -49,14 +51,16 @@
 			<arg value="-war" />
 			<arg value="${build.dir}" />
 			<arg value="-logLevel" />
-			<arg value="INFO" />	
-			<!--arg value="-style" />
-			<arg value="DETAILED" /-->		
+			<arg value="INFO" />
+			<arg value="-localWorkers" />
+			<arg value="6" />
+			<arg value="-style" />
+			<arg value="${gwt.style}" />		
 			<arg value="${gwt.entrypoint.class}" />
 		</java>
 	</target>
 	
-	<target name="deploy">
+	<target name="deploy-only">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 		
 		<delete dir="${deploy.dir}" />
@@ -136,6 +140,6 @@
 	<target name="compile-and-update" depends="init-dev, compile, update-devenv">
 	</target>
 
-	<target name="compile-and-deploy" depends="init-deploy, compile, deploy, init-dev">
+	<target name="deploy" depends="init-deploy, compile, deploy-only, init-dev">
 	</target>
 </project>
