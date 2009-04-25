@@ -11,20 +11,23 @@
 package org.sjarvela.mollify.client.ui.common;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.util.Html;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 public class EditableLabel extends Composite {
-	private Label label;
+	private HTML label;
 	private TextArea editor;
+	private final boolean html;
 
-	public EditableLabel(String style) {
+	public EditableLabel(String style, boolean html) {
 		super();
+		this.html = html;
 		initWidget(createContent(style));
 
 		this.setStylePrimaryName(StyleConstants.EDITABLE_LABEL);
@@ -38,7 +41,7 @@ public class EditableLabel extends Composite {
 		Panel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.EDITABLE_LABEL_PANEL);
 
-		label = new Label();
+		label = new HTML();
 		label.setStylePrimaryName(StyleConstants.EDITABLE_LABEL + "-label");
 		if (style != null)
 			label.addStyleDependentName(style);
@@ -54,14 +57,17 @@ public class EditableLabel extends Composite {
 	}
 
 	public void setText(String text) {
-		label.setText(text);
+		if (html)
+			label.setHTML(Html.convertLineBreaks(text));
+		else
+			label.setText(text);
 		editor.setText(text);
 	}
 
 	public void setEditable(boolean isEditable) {
 		editor.setVisible(isEditable);
 		label.setVisible(!isEditable);
-		
+
 		if (isEditable)
 			editor.setFocus(isEditable);
 	}
