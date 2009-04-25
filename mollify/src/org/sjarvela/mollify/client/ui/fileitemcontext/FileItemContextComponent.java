@@ -102,7 +102,8 @@ public class FileItemContextComponent extends ContextPopup {
 		name.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(name);
 
-		description = new EditableLabel(StyleConstants.FILE_CONTEXT_DESCRIPTION);
+		description = new EditableLabel(
+				StyleConstants.FILE_CONTEXT_DESCRIPTION, true);
 		content.add(description);
 
 		if (descriptionEditingEnabled)

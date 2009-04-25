@@ -172,7 +172,7 @@
 			if ($split <= 0) continue;
 
 			$name = trim(substr($line, 0, $split));
-			$desc = trim(substr($line, $split + 1));
+			$desc = str_replace('\n', "\n", trim(substr($line, $split + 1)));
 			$result[$name] = $desc;
 	    }
 	    fclose($handle);
@@ -198,7 +198,7 @@
 		if (!$handle) return FALSE;
 		
 		foreach($descriptions as $name => $description)
-			fwrite($handle, sprintf('"%s" %s', $name, $description)."\n");
+			fwrite($handle, sprintf('"%s" %s', $name, str_replace("\n", '\n', $description))."\n");
 
 		fclose($handle);
 		

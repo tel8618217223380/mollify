@@ -19,7 +19,7 @@
 	
 	<extend-property name="log_level" values="DEBUG"/>
 	<extend-property name="locale" values="en"/>
-	<extend-property name="locale" values="de"/>
+	<!--extend-property name="locale" values="de"/-->
 	<!--extend-property name="locale" values="fi"/-->
 
 	<set-property name="log_DivLogger" value="ENABLED" />
