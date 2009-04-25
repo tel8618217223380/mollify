@@ -231,7 +231,10 @@
 #mollify-header-add-button-menu {
 	margin-top: 22px;
 	margin-left: 1px;
-	width: 120px;
+}
+
+#mollify-header-add-button-menu.ie-crap.mollify-dropdown-menu {
+	width: 150px;
 }
 
 #mollify-header-add-button.mollify-dropdown-button:active {
@@ -763,10 +766,15 @@ td#mollify-filelist-column-size {
 	margin-bottom: 6px;
 }
 
-.mollify-file-context-description, .mollify-file-context-description-editor {
-	margin-bottom: 8px;
+.mollify-editable-label-label-file-context-description, .mollify-editable-label-editor-file-context-description {
+	margin-bottom: 4px;
 	margin-top: 4px;
 	width: 100%;
+}
+
+.mollify-editable-label-label-file-context-description {
+	background-color: #f9f9f9;
+	padding: 4px;
 }
 
 .mollify-actionlink-file-context-description {
@@ -777,11 +785,11 @@ td#mollify-filelist-column-size {
 	margin-left: 12px;
 }
 
-.mollify-file-context-description-editor {
+.mollify-editable-label-editor-file-context-description {
 	margin-bottom: 4px;
 	border: 1px dotted #d8d8d8;
 	background-color: #fafbff;
-	height: 55px;
+	height: 75px;
 }
 
 .file-context-description-actions {
