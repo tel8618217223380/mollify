@@ -117,7 +117,10 @@ public class DemoData {
 	}
 
 	public DirectoryDetails getDirectoryDetails(Directory directory) {
-		return DirectoryDetails.create(FilePermission.ReadWrite, "Mollify demo");
+		return DirectoryDetails
+				.create(
+						FilePermission.ReadWrite,
+						"Mollify demo, visit project <a href='http://www.jaervelae.com/mollify' target='_new'>homepage</a>");
 	}
 
 	public FileDetails getFileDetails(File file) {

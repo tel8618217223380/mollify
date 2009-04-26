@@ -145,9 +145,12 @@ public class FileContextPresenter implements ActionListener {
 	}
 
 	protected void onApplyDescription() {
+		final String description = popup.getDescription().getText();
+		if (!this.descriptionHandler.validateDescription(description))
+			return;
+
 		popup.setDescriptionEditable(false, isDescriptionDefined());
 
-		final String description = popup.getDescription().getText();
 		this.descriptionHandler.setItemDescription(file, description,
 				new Callback() {
 					public void onCallback() {
@@ -158,6 +161,7 @@ public class FileContextPresenter implements ActionListener {
 	}
 
 	protected void onCancelEditDescription() {
+		popup.setDescriptionEditable(false, isDescriptionDefined());
 		updateDescription();
 	}
 

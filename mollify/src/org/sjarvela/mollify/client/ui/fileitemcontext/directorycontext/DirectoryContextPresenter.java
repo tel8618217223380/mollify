@@ -100,9 +100,12 @@ public class DirectoryContextPresenter implements ActionListener {
 	}
 
 	protected void onApplyDescription() {
-		popup.setDescriptionEditable(false, isDescriptionDefined());
-
 		final String description = popup.getDescription().getText();
+		if (!this.descriptionHandler.validateDescription(description))
+			return;
+
+		popup.setDescriptionEditable(false, true);
+
 		this.descriptionHandler.setItemDescription(directory, description,
 				new Callback() {
 					public void onCallback() {
@@ -113,6 +116,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	}
 
 	protected void onCancelEditDescription() {
+		popup.setDescriptionEditable(false, isDescriptionDefined());
 		updateDescription();
 	}
 

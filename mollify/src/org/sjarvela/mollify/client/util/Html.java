@@ -10,6 +10,10 @@
 
 package org.sjarvela.mollify.client.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Html {
 	public static String convertLineBreaks(String s) {
 		StringBuilder result = new StringBuilder();
@@ -34,5 +38,44 @@ public class Html {
 			skip = false;
 		}
 		return result.toString();
+	}
+
+	static List<String> SAFE_TAGS = Arrays.asList(new String[] { "b", "br",
+			"i", "a", "li", "ol", "ul", "span", "code", "p", "u" });
+
+	public static List<String> findUnsafeTags(String html) {
+		List<String> unsafe = new ArrayList();
+		for (String tag : findTags(html)) {
+			if (!SAFE_TAGS.contains(tag))
+				unsafe.add(tag);
+		}
+		return unsafe;
+	}
+
+	private static List<String> findTags(String html) {
+		List<String> result = new ArrayList();
+		if (html == null || html.length() == 0)
+			return result;
+
+		int start = 0;
+		while (true) {
+			start = html.indexOf('<', start);
+			if (start < 0)
+				break;
+
+			int end = html.indexOf('>', start);
+			if (end < 0)
+				break;
+
+			String tag = html.substring(start + 1, end).trim().toLowerCase();
+			if (!tag.startsWith("/")) {
+				if (tag.endsWith("/"))
+					tag = tag.substring(0, tag.length() - 1);
+				result.add(tag.split(" ", 2)[0]);
+			}
+
+			start = end;
+		}
+		return result;
 	}
 }

@@ -30,12 +30,12 @@
 
 	<target name="init-dev">
 		<property name="gwt.style" value="DETAILED" />
-		<copy file="${src.dir}/org/sjarvela/mollify/Dev.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
+		<copy file="${src.dir}/org/sjarvela/mollify/Dev.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
 	</target>
 
 	<target name="init-deploy">
 		<property name="gwt.style" value="OBF" />
-		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.gwt.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
+		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
 	</target>
 	
 	<target name="compile" depends="init">

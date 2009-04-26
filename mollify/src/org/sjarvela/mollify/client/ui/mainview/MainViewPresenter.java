@@ -46,6 +46,7 @@ import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.util.Html;
 
 public class MainViewPresenter implements DirectoryListener,
 		FileSystemActionHandler, DirectoryHandler, RenameHandler,
@@ -448,5 +449,16 @@ public class MainViewPresenter implements DirectoryListener,
 			Callback successCallback) {
 		fileSystemService.removeItemDescription(item,
 				createListener(successCallback));
+	}
+
+	public boolean validateDescription(String description) {
+		List<String> unsafeTags = Html.findUnsafeTags(description);
+		if (unsafeTags.size() > 0) {
+			windowManager.getDialogManager().showInfo(
+					textProvider.getStrings().infoDialogErrorTitle(),
+					textProvider.getStrings().invalidDescriptionUnsafeTags());
+			return false;
+		}
+		return true;
 	}
 }
