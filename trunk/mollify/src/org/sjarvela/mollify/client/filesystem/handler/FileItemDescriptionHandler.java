@@ -20,4 +20,6 @@ public interface FileItemDescriptionHandler {
 
 	void removeItemDescription(FileSystemItem item, Callback successCallback);
 
+	boolean validateDescription(String description);
+
 }
