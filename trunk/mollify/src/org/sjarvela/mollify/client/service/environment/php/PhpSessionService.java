@@ -44,7 +44,7 @@ public class PhpSessionService implements SessionService {
 			Log.debug("Authenticating '" + userName + "'");
 		service.doRequest(getUrl(SessionAction.authenticate, Arrays
 				.asList("username=" + userName, "password="
-						+ MD5.generateMD5(password))), resultListener);
+						+ MD5.generate(password))), resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
@@ -52,8 +52,8 @@ public class PhpSessionService implements SessionService {
 		if (Log.isDebugEnabled())
 			Log.debug("Change password");
 		service.doRequest(getUrl(SessionAction.change_pw, Arrays.asList("old="
-				+ MD5.generateMD5(oldPassword), "new="
-				+ MD5.generateMD5(newPassword))), resultListener);
+				+ MD5.generate(oldPassword), "new="
+				+ MD5.generate(newPassword))), resultListener);
 	}
 
 	public void resetPassword(User user, String password,
@@ -61,7 +61,7 @@ public class PhpSessionService implements SessionService {
 		if (Log.isDebugEnabled())
 			Log.debug("Reset password for user " + user.getId());
 		service.doRequest(getUrl(SessionAction.reset_pw, Arrays.asList("id="
-				+ user.getId(), "new=" + MD5.generateMD5(password))),
+				+ user.getId(), "new=" + MD5.generate(password))),
 				resultListener);
 	}
 

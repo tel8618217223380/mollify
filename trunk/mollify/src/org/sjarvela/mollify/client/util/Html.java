@@ -14,28 +14,67 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.http.client.URL;
+
 public class Html {
-	public static String convertLineBreaks(String s) {
+	// public static String convertLineBreaks(String s) {
+	// StringBuilder result = new StringBuilder();
+	// int length = s.length();
+	//
+	// boolean skip = false;
+	// for (int i = 0; i < length; i++) {
+	// char c = s.charAt(i);
+	// char n = (length > i) ? s.charAt(i + 1) : 0;
+	//
+	// if (!skip) {
+	// if (c == (char) 10) {
+	// result.append("<br/>");
+	// } else if (c == (char) 13) {
+	// result.append("<br/>");
+	// if (n == (char) 10)
+	// skip = true;
+	// } else {
+	// result.append(c);
+	// }
+	// }
+	// skip = false;
+	// }
+	// return result.toString();
+	// }
+
+	static String SPECIAL_CHARS = "&%?$#/\\\"@¨^'´`;€";
+
+	public static String encodeSafeHtml(String text) {
 		StringBuilder result = new StringBuilder();
-		int length = s.length();
 
-		boolean skip = false;
-		for (int i = 0; i < length; i++) {
-			char c = s.charAt(i);
-			char n = (length > i) ? s.charAt(i + 1) : 0;
+		boolean inTag = false;
+		for (char c : text.toCharArray()) {
+			if (c == (char) 13 || c == (char) 10)
+				continue;
 
-			if (!skip) {
-				if (c == (char) 10) {
-					result.append("<br/>");
-				} else if (c == (char) 13) {
-					result.append("<br/>");
-					if (n == (char) 10)
-						skip = true;
-				} else {
-					result.append(c);
-				}
-			}
-			skip = false;
+			if (c == '<')
+				inTag = true;
+			else if (c == '>')
+				inTag = false;
+
+			if (!inTag && SPECIAL_CHARS.indexOf(c) >= 0)
+				result.append("&#" + Integer.toString(c) + ";");
+			else
+				result.append(c);
+		}
+		return result.toString();
+	}
+
+	static String CHARS = ";/?:&=+$,#";
+
+	public static String fullUrlEncode(String s) {
+		StringBuilder result = new StringBuilder();
+		for (char c : URL.encode(s).toCharArray()) {
+			int i = CHARS.indexOf(c);
+			if (i >= 0)
+				result.append("%" + Integer.toHexString(CHARS.charAt(i)));
+			else if (c != (char) 13 && c != (char) 10)
+				result.append(c);
 		}
 		return result.toString();
 	}

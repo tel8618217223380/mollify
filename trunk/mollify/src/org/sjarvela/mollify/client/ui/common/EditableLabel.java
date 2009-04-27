@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.common;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.util.Html;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -57,18 +58,10 @@ public class EditableLabel extends Composite {
 
 	public void setText(String text) {
 		if (html)
-			label.setHTML(removeLineBreaks(text));
+			label.setHTML(Html.encodeSafeHtml(text));
 		else
 			label.setText(text);
 		editor.setText(text);
-	}
-
-	private String removeLineBreaks(String text) {
-		StringBuilder result = new StringBuilder();
-		for (char c : text.toCharArray())
-			if (c != (char) 13 && c != (char) 10)
-				result.append(c);
-		return result.toString();
 	}
 
 	public void setEditable(boolean isEditable) {

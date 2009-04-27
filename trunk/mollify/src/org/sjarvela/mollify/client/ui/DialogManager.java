@@ -41,7 +41,7 @@ import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
+import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserDialog;
 import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserHandler;
@@ -113,7 +113,7 @@ public class DialogManager {
 
 	public void showSelectFolderDialog(String title, String message,
 			String actionTitle, DirectoryProvider provider,
-			SelectFolderListener listener, List<Directory> initialDirectoryPath) {
+			SelectDirectoryListener listener, List<Directory> initialDirectoryPath) {
 		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
 				provider, listener, initialDirectoryPath);
 	}

@@ -8,17 +8,16 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.ui.dialog;
 
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.ResultListener;
 
-public interface DirectoryProvider {
-	List<Directory> getRootDirectories();
+public interface SelectDirectoryListener {
 
-	void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener);
+	void onSelect(Directory selected);
+
+	boolean isDirectoryAllowed(Directory directory, List<Directory> path);
 
 }

@@ -26,6 +26,7 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.util.Base64;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
@@ -193,7 +194,7 @@ public class PhpFileService implements FileSystemService {
 
 		service.doRequest(getFileActionUrl(item,
 				FileSystemAction.set_description, "description="
-						+ URL.encode(description)), listener);
+						+ Base64.encode(description)), listener);
 	}
 
 	public void removeItemDescription(FileSystemItem item,
