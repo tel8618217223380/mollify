@@ -42,7 +42,7 @@ import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderListener;
+import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -300,13 +300,13 @@ public class MainViewPresenter implements DirectoryListener,
 								.copyFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
 								.copyFileDialogAction(), directoryProvider,
-						new SelectFolderListener() {
+						new SelectDirectoryListener() {
 							public void onSelect(Directory selected) {
 								copyFile(file, selected);
 							}
 
 							public boolean isDirectoryAllowed(
-									Directory directory) {
+									Directory directory, List<Directory> path) {
 								return !model.getCurrentFolder().equals(
 										directory);
 							}
@@ -319,13 +319,13 @@ public class MainViewPresenter implements DirectoryListener,
 								.moveFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
 								.moveFileDialogAction(), directoryProvider,
-						new SelectFolderListener() {
+						new SelectDirectoryListener() {
 							public void onSelect(Directory selected) {
 								moveFile(file, selected);
 							}
 
 							public boolean isDirectoryAllowed(
-									Directory directory) {
+									Directory directory, List<Directory> path) {
 								return !model.getCurrentFolder().equals(
 										directory);
 							}
@@ -365,15 +365,17 @@ public class MainViewPresenter implements DirectoryListener,
 							.moveDirectoryMessage(directory.getName()),
 					windowManager.getTextProvider().getStrings()
 							.moveDirectoryDialogAction(), directoryProvider,
-					new SelectFolderListener() {
+					new SelectDirectoryListener() {
 						public void onSelect(Directory selected) {
 							moveDirectory(directory, selected);
 						}
 
-						public boolean isDirectoryAllowed(Directory candidate) {
+						public boolean isDirectoryAllowed(Directory candidate,
+								List<Directory> path) {
 							return !directory.equals(candidate)
 									&& !model.getCurrentFolder().equals(
-											candidate);
+											candidate)
+									&& !path.contains(directory);
 						}
 					}, model.getDirectoryModel().getDirectoryList());
 		} else if (action.equals(FileSystemAction.delete)) {

@@ -78,7 +78,7 @@ public class PhpSettingsService implements SettingsService {
 	public void addUser(String name, String password, PermissionMode mode,
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.add_user, "name="
-				+ URL.encode(name), "password=" + MD5.generateMD5(password),
+				+ URL.encode(name), "password=" + MD5.generate(password),
 				"permission_mode=" + mode.getStringValue()), resultListener);
 	}
 

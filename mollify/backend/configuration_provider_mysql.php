@@ -363,7 +363,10 @@
 	function set_item_description($item, $description) {
 		global $error, $error_details;
 		
-		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", mysql_real_escape_string($description), mysql_real_escape_string(base64_decode($item["id"]))))) {
+		$sql_id = mysql_real_escape_string(base64_decode($item["id"]));
+		$sql_desc = mysql_real_escape_string($description);
+		
+		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", $sql_desc, $sql_id))) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error();
 			log_error("Failed to update description (".$error_details.")");
@@ -371,7 +374,7 @@
 		}
 
 		if (mysql_affected_rows() == 0) {
-			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", mysql_real_escape_string(base64_decode($item["id"])), mysql_real_escape_string($description)))) {
+			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", $sql_id, $sql_desc))) {
 				$error = "INVALID_REQUEST";
 				$error_details = mysql_error();
 				log_error("Failed to insert description (".$error_details.")");

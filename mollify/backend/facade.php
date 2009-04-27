@@ -195,7 +195,7 @@
 							$error = "NOT_AN_ADMIN";
 							break;
 						}
-						$description = urldecode($_GET["description"]);
+						$description = base64_decode($_GET["description"]);
 						
 						if ($item_type === 'f') {
 							if (!assert_file($item)) break;

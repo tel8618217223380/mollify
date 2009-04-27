@@ -27,17 +27,21 @@ import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SelectFolderDialog extends CenteredDialog implements TreeListener {
+public class SelectFolderDialog extends CenteredDialog implements
+		SelectionHandler<TreeItem>, OpenHandler<TreeItem> {
 	private static String pleaseWaitText = null;
 
 	private final DialogManager dialogManager;
@@ -53,13 +57,14 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 	private Map<TreeItem, Directory> items = new HashMap();
 
 	private List<TreeItem> itemsInitialized = new ArrayList();
-	private SelectFolderListener listener;
+	private SelectDirectoryListener listener;
 	private TreeItem selected = null;
 
 	public SelectFolderDialog(DialogManager dialogManager,
 			TextProvider textProvider, String title, String message,
 			String selectActionTitle, DirectoryProvider directoryProvider,
-			SelectFolderListener listener, List<Directory> initialDirectoryPath) {
+			SelectDirectoryListener listener,
+			List<Directory> initialDirectoryPath) {
 		super(title, StyleConstants.SELECT_FOLDER_DIALOG);
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
@@ -87,7 +92,8 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 
 		folders = new Tree();
 		folders.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE);
-		folders.addTreeListener(this);
+		folders.addSelectionHandler(this);
+		folders.addOpenHandler(this);
 		panel.add(folders);
 
 		rootItem = createItem(
@@ -132,7 +138,7 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		directoryProvider.getDirectories(Directory.Empty,
 				new ResultListener<List<Directory>>() {
 					public void onFail(ServiceError error) {
-						onError(error);
+						onRequestError(error);
 					}
 
 					public void onSuccess(List<Directory> roots) {
@@ -183,12 +189,6 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		return ((Widget) item.getUserObject());
 	}
 
-	protected void onError(ServiceError error) {
-		Log.error(error.toString());
-		dialogManager.showError(error);
-		this.hide();
-	}
-
 	private void onSelect() {
 		if (folders.getSelectedItem() == null
 				|| folders.getSelectedItem().equals(rootItem))
@@ -198,9 +198,14 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		listener.onSelect(items.get(folders.getSelectedItem()));
 	}
 
-	public void onTreeItemSelected(TreeItem item) {
-		boolean allowed = item.equals(rootItem) ? false : listener
-				.isDirectoryAllowed(items.get(item));
+	public void onSelection(SelectionEvent<TreeItem> event) {
+		TreeItem item = event.getSelectedItem();
+		boolean allowed = false;
+
+		if (!item.equals(rootItem))
+			allowed = listener.isDirectoryAllowed(items.get(item),
+					getDirectoryPath(item));
+
 		this.selectButton.setEnabled(allowed);
 
 		if (selected != null)
@@ -211,9 +216,25 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 
 		selected = item;
 		getLabel(selected).addStyleDependentName(StyleConstants.SELECTED);
+
 	}
 
-	public void onTreeItemStateChanged(final TreeItem item) {
+	private List<Directory> getDirectoryPath(TreeItem item) {
+		List<Directory> list = new ArrayList();
+		TreeItem current = item;
+
+		while (true) {
+			list.add(items.get(current));
+			if (current.equals(rootItem))
+				break;
+			current = current.getParentItem();
+		}
+		return list;
+	}
+
+	public void onOpen(OpenEvent<TreeItem> event) {
+		TreeItem item = event.getTarget();
+
 		if (item.equals(rootItem))
 			return;
 
@@ -227,7 +248,7 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 		directoryProvider.getDirectories(dir,
 				new ResultListener<List<Directory>>() {
 					public void onFail(ServiceError error) {
-						onError(error);
+						onRequestError(error);
 					}
 
 					public void onSuccess(List<Directory> subDirs) {
@@ -236,5 +257,11 @@ public class SelectFolderDialog extends CenteredDialog implements TreeListener {
 						addSubFolders(item, subDirs);
 					}
 				});
+	}
+
+	protected void onRequestError(ServiceError error) {
+		Log.error(error.toString());
+		dialogManager.showError(error);
+		this.hide();
 	}
 }
