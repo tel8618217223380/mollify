@@ -18,8 +18,10 @@
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
 	<extend-property name="log_level" values="DEBUG"/>
+	
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="de"/>
+	<extend-property name="locale" values="fr"/>
 	<extend-property name="locale" values="fi"/>
 
 	<set-property name="log_DivLogger" value="ENABLED" />
