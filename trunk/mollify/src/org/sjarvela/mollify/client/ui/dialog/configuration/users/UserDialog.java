@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserNameValidator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
@@ -178,6 +179,8 @@ public class UserDialog extends CenteredDialog {
 		if (password.getText().length() == 0)
 			return;
 		if (userType.getSelectedIndex() < 0)
+			return;
+		if (!new UserNameValidator().validate(userName.getText()))
 			return;
 
 		handler.addUser(userName.getText(), password.getText(), PermissionMode

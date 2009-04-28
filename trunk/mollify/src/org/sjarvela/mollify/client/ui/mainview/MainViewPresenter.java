@@ -454,7 +454,7 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public boolean validateDescription(String description) {
-		List<String> unsafeTags = Html.findUnsafeTags(description);
+		List<String> unsafeTags = Html.findUnsafeHtmlTags(description);
 		if (unsafeTags.size() > 0) {
 			windowManager.getDialogManager().showInfo(
 					textProvider.getStrings().infoDialogErrorTitle(),

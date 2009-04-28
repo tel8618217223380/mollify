@@ -26,11 +26,10 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.util.Base64;
+import org.sjarvela.mollify.client.util.Html;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.http.client.URL;
 
 public class PhpFileService implements FileSystemService {
 	protected final PhpService service;
@@ -79,7 +78,6 @@ public class PhpFileService implements FileSystemService {
 						.createFromDirectories(result.getDirectories()),
 						FileSystemItem.createFromFiles(result.getFiles())));
 			}
-
 		});
 	}
 
@@ -109,7 +107,7 @@ public class PhpFileService implements FileSystemService {
 			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
 
 		service.doRequest(getFileActionUrl(item, FileSystemAction.rename, "to="
-				+ URL.encode(newName)), listener);
+				+ newName), listener);
 	}
 
 	public void copy(File file, Directory directory,
@@ -194,7 +192,7 @@ public class PhpFileService implements FileSystemService {
 
 		service.doRequest(getFileActionUrl(item,
 				FileSystemAction.set_description, "description="
-						+ Base64.encode(description)), listener);
+						+ Html.fullUrlEncode(description)), listener);
 	}
 
 	public void removeItemDescription(FileSystemItem item,

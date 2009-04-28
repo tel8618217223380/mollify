@@ -104,12 +104,12 @@ public class ConfigurationUsersPresenter implements UserHandler {
 	}
 
 	private ResultListener createReloadListener(
-			final Callback... operationSuccessfulCallbacks) {
+			final Callback... successCallbacks) {
 		return parent.createResultListener(new Callback() {
 			public void onCallback() {
-				if (operationSuccessfulCallbacks.length > 0)
-					for (Callback operationSuccessfulCallback : operationSuccessfulCallbacks)
-						operationSuccessfulCallback.onCallback();
+				if (successCallbacks.length > 0)
+					for (Callback successCallback : successCallbacks)
+						successCallback.onCallback();
 				reload();
 			}
 		});

@@ -27,6 +27,7 @@ public class EditableLabel extends Composite {
 
 	public EditableLabel(String style, boolean html) {
 		super();
+
 		this.html = html;
 		initWidget(createContent(style));
 

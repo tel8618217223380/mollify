@@ -127,7 +127,7 @@
 			return FALSE;
 		}
 		
-		$user = find_user($_GET["username"], $_GET["password"]);
+		$user = find_user(base64_decode($_GET["username"]), $_GET["password"]);
 		if (!$user) {
 			log_error("Authentication failed");
 			return FALSE;

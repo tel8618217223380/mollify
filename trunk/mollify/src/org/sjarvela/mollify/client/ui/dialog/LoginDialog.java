@@ -13,13 +13,15 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
+import org.sjarvela.mollify.client.session.UserNameValidator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -67,6 +69,13 @@ public class LoginDialog extends CenteredDialog {
 
 	@Override
 	protected Widget createContent() {
+		KeyPressHandler loginHandler = new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == 13)
+					onLogin();
+			}
+		};
+
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
 
@@ -77,14 +86,7 @@ public class LoginDialog extends CenteredDialog {
 
 		userName = new TextBox();
 		userName.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_VALUE);
-		userName.addKeyboardListener(new KeyboardListenerAdapter() {
-			@Override
-			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-				super.onKeyPress(sender, keyCode, modifiers);
-				if (keyCode == 13)
-					onLogin();
-			}
-		});
+		userName.addKeyPressHandler(loginHandler);
 		panel.add(userName);
 
 		Label passwordTitle = new Label(textProvider.getStrings()
@@ -94,14 +96,7 @@ public class LoginDialog extends CenteredDialog {
 
 		password = new PasswordTextBox();
 		password.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_VALUE);
-		password.addKeyboardListener(new KeyboardListenerAdapter() {
-			@Override
-			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-				super.onKeyPress(sender, keyCode, modifiers);
-				if (keyCode == 13)
-					onLogin();
-			}
-		});
+		password.addKeyPressHandler(loginHandler);
 		panel.add(password);
 
 		return panel;
@@ -112,6 +107,9 @@ public class LoginDialog extends CenteredDialog {
 			return;
 
 		if (password.getText().length() < 1)
+			return;
+
+		if (!new UserNameValidator().validate(userName.getText()))
 			return;
 
 		loginHandler.onLogin(userName.getText(), password.getText(),
