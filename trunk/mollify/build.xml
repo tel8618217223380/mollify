@@ -113,7 +113,7 @@
 		<delete dir="${target.dir}" />
 	</target>
 		
-	<target name="update-devenv">
+	<target name="update-only">
 		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
 		
 		<exec executable="rm" failonerror="false">
@@ -137,7 +137,7 @@
 		</exec>
 	</target>
 
-	<target name="compile-and-update" depends="init-dev, compile, update-devenv">
+	<target name="update" depends="init-dev, compile, update-only">
 	</target>
 
 	<target name="deploy" depends="init-deploy, compile, deploy-only, init-dev">
