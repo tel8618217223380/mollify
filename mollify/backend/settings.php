@@ -48,7 +48,7 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				$result = add_user(urldecode($_GET["name"]), $_GET["password"], $_GET["permission_mode"]);
+				$result = add_user(base64_decode($_GET["name"]), $_GET["password"], $_GET["permission_mode"]);
 				break;
 			case "remove_user":
 				if (!isset($_GET["id"])) {
@@ -62,7 +62,7 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				$result = update_user($_GET["id"], urldecode($_GET["name"]), $_GET["permission_mode"]);
+				$result = update_user($_GET["id"], base64_decode($_GET["name"]), $_GET["permission_mode"]);
 				break;
 			case "get_folders":
 				$result = get_all_folders();
@@ -72,10 +72,10 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				$path = urldecode($_GET["path"]);
+				$path = base64_decode($_GET["path"]);
 				if (!assert_dir(array("path" => $path))) break;
 				
-				$result = add_folder(urldecode($_GET["name"]), $path);
+				$result = add_folder(base64_decode($_GET["name"]), $path);
 				break;
 			case "remove_folder":
 				if (!isset($_GET["id"])) {
@@ -89,10 +89,10 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				$path = urldecode($_GET["path"]);
+				$path = base64_decode($_GET["path"]);
 				if (!assert_dir(array("path" => $path))) break;
 
-				$result = update_folder($_GET["id"], urldecode($_GET["name"]), $path);
+				$result = update_folder($_GET["id"], base64_decode($_GET["name"]), $path);
 				break;
 			case "get_user_folders":
 				if (!isset($_GET["user_id"])) {
@@ -109,7 +109,7 @@
 				
 				$name = NULL;
 				if (isset($_GET["name"]))
-					$name = urldecode($_GET["name"]);
+					$name = base64_decode($_GET["name"]);
 				
 				$result = add_user_folder($_GET["user_id"], $_GET["id"], $name);
 				break;
@@ -120,7 +120,7 @@
 				}
 				
 				$name = NULL;
-				if (isset($_GET["name"])) $name = urldecode($_GET["name"]);
+				if (isset($_GET["name"])) $name = base64_decode($_GET["name"]);
 				
 				$result = update_user_folder($_GET["user_id"], $_GET["id"], $name);
 				break;

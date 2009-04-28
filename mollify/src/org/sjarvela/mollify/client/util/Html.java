@@ -17,32 +17,7 @@ import java.util.List;
 import com.google.gwt.http.client.URL;
 
 public class Html {
-	// public static String convertLineBreaks(String s) {
-	// StringBuilder result = new StringBuilder();
-	// int length = s.length();
-	//
-	// boolean skip = false;
-	// for (int i = 0; i < length; i++) {
-	// char c = s.charAt(i);
-	// char n = (length > i) ? s.charAt(i + 1) : 0;
-	//
-	// if (!skip) {
-	// if (c == (char) 10) {
-	// result.append("<br/>");
-	// } else if (c == (char) 13) {
-	// result.append("<br/>");
-	// if (n == (char) 10)
-	// skip = true;
-	// } else {
-	// result.append(c);
-	// }
-	// }
-	// skip = false;
-	// }
-	// return result.toString();
-	// }
-
-	static String SPECIAL_CHARS = "&%?$#/\\\"@¨^'´`;€";
+	static String ENCODED_CHARS = "&%?$#/\\\"@¨^'´`;€";
 
 	public static String encodeSafeHtml(String text) {
 		StringBuilder result = new StringBuilder();
@@ -57,7 +32,7 @@ public class Html {
 			else if (c == '>')
 				inTag = false;
 
-			if (!inTag && SPECIAL_CHARS.indexOf(c) >= 0)
+			if (!inTag && ENCODED_CHARS.indexOf(c) >= 0)
 				result.append("&#" + Integer.toString(c) + ";");
 			else
 				result.append(c);
@@ -65,33 +40,35 @@ public class Html {
 		return result.toString();
 	}
 
-	static String CHARS = ";/?:&=+$,#";
+	static String URL_ENCODED_CHARS = "-_.!~*();/?:&=+$,#'\"";
 
 	public static String fullUrlEncode(String s) {
 		StringBuilder result = new StringBuilder();
+
 		for (char c : URL.encode(s).toCharArray()) {
-			int i = CHARS.indexOf(c);
+			int i = URL_ENCODED_CHARS.indexOf(c);
 			if (i >= 0)
-				result.append("%" + Integer.toHexString(CHARS.charAt(i)));
+				result.append("%"
+						+ Integer.toHexString(URL_ENCODED_CHARS.charAt(i)));
 			else if (c != (char) 13 && c != (char) 10)
 				result.append(c);
 		}
 		return result.toString();
 	}
 
-	static List<String> SAFE_TAGS = Arrays.asList(new String[] { "b", "br",
-			"i", "a", "li", "ol", "ul", "span", "code", "p", "u" });
+	static List<String> SAFE_HTML_TAGS = Arrays.asList(new String[] { "b",
+			"br", "i", "a", "li", "ol", "ul", "span", "code", "p", "u" });
 
-	public static List<String> findUnsafeTags(String html) {
+	public static List<String> findUnsafeHtmlTags(String html) {
 		List<String> unsafe = new ArrayList();
-		for (String tag : findTags(html)) {
-			if (!SAFE_TAGS.contains(tag))
+		for (String tag : findHtmlTags(html)) {
+			if (!SAFE_HTML_TAGS.contains(tag))
 				unsafe.add(tag);
 		}
 		return unsafe;
 	}
 
-	private static List<String> findTags(String html) {
+	private static List<String> findHtmlTags(String html) {
 		List<String> result = new ArrayList();
 		if (html == null || html.length() == 0)
 			return result;

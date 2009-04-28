@@ -365,6 +365,7 @@
 		
 		$sql_id = mysql_real_escape_string(base64_decode($item["id"]));
 		$sql_desc = mysql_real_escape_string($description);
+		log_error($sql_desc);
 		
 		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", $sql_desc, $sql_id))) {
 			$error = "INVALID_REQUEST";

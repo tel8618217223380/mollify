@@ -22,12 +22,12 @@ import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestTyp
 import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.util.Base64;
 import org.sjarvela.mollify.client.util.JsUtil;
 import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.http.client.URL;
 
 public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
@@ -78,40 +78,39 @@ public class PhpSettingsService implements SettingsService {
 	public void addUser(String name, String password, PermissionMode mode,
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.add_user, "name="
-				+ URL.encode(name), "password=" + MD5.generate(password),
+				+ Base64.encode(name), "password=" + MD5.generate(password),
 				"permission_mode=" + mode.getStringValue()), resultListener);
 	}
 
 	public void editUser(User user, String name, PermissionMode mode,
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.update_user, "id="
-				+ URL.encode(user.getId()), "name=" + URL.encode(name),
+				+ user.getId(), "name=" + Base64.encode(name),
 				"permission_mode=" + mode.getStringValue()), resultListener);
 	}
 
 	public void removeUser(User user, final ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_user, "id="
-				+ URL.encode(user.getId())), resultListener);
+				+ user.getId()), resultListener);
 	}
 
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
-		service
-				.doRequest(getUrl(ConfigurationAction.add_folder, "name="
-						+ URL.encode(name), "path=" + URL.encode(path)),
-						resultListener);
+		service.doRequest(getUrl(ConfigurationAction.add_folder, "name="
+				+ Base64.encode(name), "path=" + Base64.encode(path)),
+				resultListener);
 	}
 
 	public void editFolder(DirectoryInfo dir, String name, String path,
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.update_folder, "id="
-				+ URL.encode(dir.getId()), "name=" + URL.encode(name), "path="
-				+ URL.encode(path)), resultListener);
+				+ dir.getId(), "name=" + Base64.encode(name), "path="
+				+ Base64.encode(path)), resultListener);
 	}
 
 	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_folder, "id="
-				+ URL.encode(dir.getId())), resultListener);
+				+ dir.getId()), resultListener);
 	}
 
 	private String getUrl(ConfigurationAction action, String... params) {
@@ -149,7 +148,7 @@ public class PhpSettingsService implements SettingsService {
 		params.add("user_id=" + user.getId());
 		params.add("id=" + dir.getId());
 		if (name != null)
-			params.add("name=" + URL.encode(name));
+			params.add("name=" + Base64.encode(name));
 
 		service.doRequest(getUrl(ConfigurationAction.add_user_folder, params),
 				resultListener);
@@ -161,7 +160,7 @@ public class PhpSettingsService implements SettingsService {
 		params.add("user_id=" + user.getId());
 		params.add("id=" + dir.getId());
 		if (name != null)
-			params.add("name=" + URL.encode(name));
+			params.add("name=" + Base64.encode(name));
 
 		service.doRequest(
 				getUrl(ConfigurationAction.update_user_folder, params),
@@ -170,8 +169,9 @@ public class PhpSettingsService implements SettingsService {
 
 	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.remove_user_folder,
-				"user_id=" + user.getId(), "id=" + URL.encode(dir.getId())),
-				resultListener);
+		service
+				.doRequest(getUrl(ConfigurationAction.remove_user_folder,
+						"user_id=" + user.getId(), "id=" + dir.getId()),
+						resultListener);
 	}
 }
