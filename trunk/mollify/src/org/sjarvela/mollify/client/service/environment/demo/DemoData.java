@@ -47,6 +47,8 @@ public class DemoData {
 	private static final String FILE_1A5 = "1a5";
 	private static final String FILE_1A6 = "1a6";
 
+	private static final String DESCRIPTION = "Mollify demo, visit project <a href='http://www.jaervelae.com/mollify' target='_new'>homepage</a>";
+
 	private JsArray<JsDirectory> rootDirectories;
 	private Map<String, List<Directory>> directories = new HashMap();
 	private List<File> files;
@@ -99,7 +101,7 @@ public class DemoData {
 		}
 
 		if (user != null && user.length() > 0)
-			return SessionInfo.create(true, true, user, "", permissionMode,
+			return SessionInfo.create(true, true, user, user, permissionMode,
 					settings, configurationInfo, fileSystemInfo,
 					rootDirectories);
 		return SessionInfo.create(true, false, "", "", permissionMode,
@@ -117,15 +119,12 @@ public class DemoData {
 	}
 
 	public DirectoryDetails getDirectoryDetails(Directory directory) {
-		return DirectoryDetails
-				.create(
-						FilePermission.ReadWrite,
-						"Mollify demo, visit project <a href='http://www.jaervelae.com/mollify' target='_new'>homepage</a>");
+		return DirectoryDetails.create(FilePermission.ReadWrite, DESCRIPTION);
 	}
 
 	public FileDetails getFileDetails(File file) {
 		Date now = DateTime.getInstance().currentTime();
-		return FileDetails.create(now, now, now, "Mollify demo",
+		return FileDetails.create(now, now, now, DESCRIPTION,
 				FilePermission.ReadWrite);
 	}
 }
