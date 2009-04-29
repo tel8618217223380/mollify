@@ -235,7 +235,7 @@ public class FileItemContextComponent extends ContextPopup {
 
 		for (ResourceId id : order) {
 			this.detailRowValues.put(id, createDetailsRow(content, headers
-					.get(id), id.name()));
+					.get(id), id.name().toLowerCase()));
 		}
 		details.add(content);
 		details.setVisible(true);
@@ -243,7 +243,8 @@ public class FileItemContextComponent extends ContextPopup {
 
 	private Label createDetailsRow(Panel parent, String title, String style) {
 		Panel detailsRow = new HorizontalPanel();
-		detailsRow.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_ROW);
+		detailsRow.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW);
+		detailsRow.addStyleDependentName(style);
 
 		Label label = new Label(title);
 		label
@@ -252,9 +253,9 @@ public class FileItemContextComponent extends ContextPopup {
 		detailsRow.add(label);
 
 		Label value = new Label();
-		label
+		value
 				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_VALUE);
-		label.addStyleDependentName(style);
+		value.addStyleDependentName(style);
 		detailsRow.add(value);
 
 		parent.add(detailsRow);
@@ -289,6 +290,8 @@ public class FileItemContextComponent extends ContextPopup {
 	public void setDescriptionEditable(boolean isEditable,
 			boolean descriptionDefined) {
 		description.setEditable(isEditable);
+		description.setVisible(isEditable || descriptionDefined);
+
 		if (!descriptionEditingEnabled)
 			return;
 
