@@ -47,7 +47,7 @@ public class DemoData {
 	private static final String FILE_1A5 = "1a5";
 	private static final String FILE_1A6 = "1a6";
 
-	private static final String DESCRIPTION = "Mollify demo, visit project <a href='http://www.jaervelae.com/mollify' target='_new'>homepage</a>";
+	private static final String DESCRIPTION = "<b>Mollify demo</b><br/><br/>For downloads and instructions, visit <a href='http://code.google.com/p/mollify/' target='_new'>project page</a>";
 
 	private JsArray<JsDirectory> rootDirectories;
 	private Map<String, List<Directory>> directories = new HashMap();
