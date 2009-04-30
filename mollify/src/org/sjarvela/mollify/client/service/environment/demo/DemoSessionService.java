@@ -34,7 +34,7 @@ public class DemoSessionService implements SessionService {
 	}
 
 	public void getSessionInfo(ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
+		resultListener.onSuccess(data.getSessionInfo(""));
 	}
 
 	public void logout(ResultListener resultListener) {
