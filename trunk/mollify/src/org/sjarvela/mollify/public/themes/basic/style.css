@@ -1,4 +1,7 @@
-/* @override http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css */
+/* @override 
+	http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css
+	http://localhost:7777/beta-demo/org.sjarvela.mollify.App/themes/basic/style.css
+*/
 
 /**
  * Copyright (c) 2008- Samuli Järvelä
@@ -878,6 +881,10 @@ td#mollify-filelist-column-size {
 	margin-bottom: 3px;
 }
 
+.mollify-dialog-button-info {
+	width: 80px;
+}
+
 .mollify-confirm-dialog-content {
 	margin: 10px 4px 4px;
 }
@@ -889,14 +896,12 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-rename-dialog-original-name-title {
-	font-weight: bold;
 	margin-bottom: 4px;
 	margin-left: 3px;
 	margin-top: 2px;
 }
 
 .mollify-rename-dialog-new-name-title {
-	font-weight: bold;
 	padding-top: 9px;
 	margin-bottom: 4px;
 	margin-left: 3px;
@@ -921,6 +926,7 @@ input.mollify-rename-dialog-new-name-value {
 	width: 250px;
 	margin-left: 2px;
 	margin-right: 2px;
+	height: 18px;
 }
 
 .mollify-rename-dialog-buttons {
@@ -935,15 +941,11 @@ input.mollify-rename-dialog-new-name-value {
 	padding: 4px;
 }
 
-.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-confirm-delete-no {
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-confirm-delete-no, .mollify-dialog-button-login, .mollify-dialog-button-rename, .mollify-dialog-button-cancel, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select {
 	width: 80px;
 }
 
-.mollify-dialog-button-login, .mollify-dialog-button-rename, .mollify-dialog-button-cancel, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select {
-	width: 80px;
-}
-
-.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select {
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select, .mollify-dialog-button-password-change {
 	float: right;
 	margin-right: 6px;
 }
@@ -1023,10 +1025,8 @@ span.mollify-upload-info-size {
 
 .mollify-login-dialog-buttons {
 	padding-bottom: 4px;
-	margin-top: 14px;
 	padding-right: 47px;
-	margin-left: 47px;
-	margin-bottom: 2px;
+	margin: 14px 8px 2px 47px;
 }
 
 .mollify-login-dialog-buttons .mollify-dialog-button-cancel {
@@ -1042,12 +1042,8 @@ table.mollify-login-dialog-content {
 	margin-right: 8px;
 }
 
-.mollify-login-dialog-username-value {
-	width: 160px;
-}
-
-.mollify-login-dialog-password-value {
-	width: 160px;
+.mollify-login-dialog-username-value, .mollify-login-dialog-password-value {
+	width: 170px;
 }
 
 .mollify-dialog-progress .dialogContent {
@@ -1085,16 +1081,13 @@ table.mollify-login-dialog-content {
 	margin-bottom: 1px;
 }
 
-.mollify-create-folder-dialog-name-title {
-	font-weight: bold;
-	margin-bottom: 4px;
+.mollify-create-folder-dialog-content {
+	margin: 4px;
 }
 
 .mollify-create-folder-dialog-name-title {
-	font-weight: bold;
 	padding-top: 9px;
 	margin-bottom: 4px;
-	margin-left: 2px;
 }
 
 .mollify-create-folder-dialog-name-value {
@@ -1104,8 +1097,6 @@ table.mollify-login-dialog-content {
 	vertical-align: middle;
 	padding-top: 2px;
 	padding-left: 4px;
-	margin-left: 2px;
-	margin-right: 2px;
 	border-style: inset;
 	border-width: 1px;
 }
@@ -1116,7 +1107,7 @@ input.mollify-create-folder-dialog-name-value {
 }
 
 .mollify-create-folder-dialog-buttons {
-	width: 250px;
+	width: 100%;
 	padding-bottom: 4px;
 }
 
@@ -1165,6 +1156,7 @@ span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 .mollify-password-dialog-content {
 	margin-right: 6px;
 	margin-left: 6px;
+	width: 180px;
 }
 
 .mollify-password-dialog-original-password-title, .mollify-password-dialog-new-password-title, .mollify-password-dialog-confirm-new-password-title {
@@ -1173,12 +1165,11 @@ span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 }
 
 .mollify-password-dialog-buttons {
-	margin-top: 6px;
 	width: 100%;
 }
 
 .mollify-password-dialog-original-password-value, .mollify-password-dialog-new-password-value, .mollify-password-dialog-confirm-new-password-value {
-	width: 150px;
+	width: 180px;
 }
 
 .mollify-select-folder-dialog-folders-item-label-selected {
@@ -1194,7 +1185,7 @@ table.mollify-configuration-dialog-menu {
 	border: 1px solid #dfdfdf;
 	padding: 6px;
 	height: 15px;
-	width: 115px;
+	width: 150px;
 	cursor: pointer;
 	white-space: nowrap;
 }
@@ -1214,8 +1205,10 @@ table.mollify-configuration-dialog-menu {
 	border-bottom: 3px solid black;
 	padding-bottom: 4px;
 	padding-left: 6px;
-	margin: 0 6px 6px;
-	width: 385px;
+	width: 490px;
+	margin-bottom: 6px;
+	margin-top: 0;
+	margin-left: 6px;
 }
 
 .mollify-configuration-dialog-view-panel {
@@ -1247,25 +1240,25 @@ table.mollify-configuration-dialog-menu {
 	border-bottom: 1px dotted #c2c2c2;
 	padding-bottom: 8px;
 	margin-right: 6px;
-	height: 245px;
-	width: 395px;
+	height: 300px;
+	width: 500px;
 }
 
 .mollify-configuration-dialog-view-user-list, .mollify-configuration-dialog-view-folder-list, .mollify-configuration-dialog-user-folders-list {
-	height: 175px;
 	overflow: auto;
 	margin-right: 6px;
 	padding-left: 6px;
 	padding-right: 6px;
+	height: 230px;
 }
 
 .mollify-configuration-dialog-user-folders-list {
-	height: 151px;
+	height: 206px;
 }
 
 .mollify-configuration-dialog-view {
-	width: 400px;
-	height: 200px;
+	width: 100%;
+	height: 265px;
 	padding-top: 2px;
 	padding-left: 6px;
 }
@@ -1309,7 +1302,7 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 }
 
 .mollify-configuration-dialog-users-action, .mollify-configuration-dialog-folders-action, .mollify-configuration-dialog-user-folders-action {
-	width: 60px;
+	width: 80px;
 	margin-right: 6px;
 	height: 25px;
 }
@@ -1317,6 +1310,10 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 #mollify-configuration-dialog-users-action-reset-pw.mollify-configuration-dialog-users-action {
 	width: auto;
 	white-space: nowrap;
+}
+
+.mollify-dialog-button-configuration-dialog-close {
+	width: 80px;
 }
 
 td.mollify-userlist-column-type, td.mollify-folderlist-column-path {
@@ -1361,7 +1358,7 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 }
 
 .mollify-user-dialog-name-value, .mollify-user-dialog-type-value, .mollify-folder-dialog-name-value, .mollify-folder-dialog-path-value, .mollify-user-folder-dialog-folders, .mollify-user-folder-dialog-name-value, .mollify-user-folder-dialog-default-name-value {
-	width: 200px;
+	width: 280px;
 	height: 15px;
 }
 
@@ -1369,8 +1366,13 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 	background-color: #efefef;
 	font-style: italic;
 	color: #969696;
-	height: 15px;
+	height: 18px;
 	border: 1px solid #8f8f8f;
+	width: 283px;
+}
+
+.mollify-user-dialog-password-value, .mollify-reset-password-dialog-password-value {
+	width: 195px;
 }
 
 .mollify-user-folder-dialog-folders, .mollify-user-folder-dialog-default-name-value {

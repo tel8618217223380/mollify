@@ -40,6 +40,8 @@ public class LoginDialog extends CenteredDialog {
 				StyleConstants.LOGIN_DIALOG);
 		this.textProvider = textProvider;
 		this.loginHandler = loginHandler;
+		this.setModal(false);
+		
 		initialize();
 	}
 
