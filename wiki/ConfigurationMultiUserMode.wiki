@@ -122,7 +122,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 	Each folder has its own user access control file, which applies only to files in that folder.
 
-	Each file can have permissions set to user id's (see chapter 2.1 Users):
+	Each file can have permissions set to user id's (see chapter 1. Configuration):
 	  * With user id "`*`", setting applies to all users overriding possible user default permission
 	  * With user specific id, setting applies only to user with that id, overriding any possible default settings (either with user id "`*`", or in user account configuration)
 
