@@ -14,20 +14,18 @@ Mollify supports description editing in client (available for administrator user
 Rules for file "descript.ion":
   * Plain text document
   * Each directory has its own file, containing only descriptions for files and subdirectories in that particular directory
-  * Line format is "<NAME> <DESCRIPTION>", where file or directory name and description separated by a white space
+  * Line format is "`<NAME> <DESCRIPTION>`", where file or directory name and description separated by a white space
   * If the name contains spaces, surround it with quote marks
   * One description per document line
 
 Example (ignore the syntax coloring):
 
-----
 {{{
 Document.pdf Description for a Portable Document Format file.
 "Example Datasheet.xls" Description for the Microsoft Excel document.
 }}}
-----
 
-It is suggested to prevent public access to this file, for example with Apache htaccess file rule.
+*NOTE!* It is suggested to prevent public access to this file, for example with Apache htaccess file rule.
 
 = 3. Safe HTML Formatting =
 
