@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.6 ==
+  * Localizations for German and French
+  * Editable and system managed descriptions, now also folders are supported
+  * Support for moving directories
+
 === Version 0.9.5 ==
   * Added support for MySQL database configuration, along with client side configuration options for users and published folders
   * Backend configuration option for password hashing
