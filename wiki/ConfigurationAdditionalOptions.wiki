@@ -85,7 +85,7 @@
 $PASSWORDS_HASHED = TRUE;
 }}}
 
-	This indicates that passwords defined are handled as MD5 hashed.
+	This indicates that passwords given are handled as MD5 hashed. Note that you have to generate hashed passwords manually, for example with [http://www.miraclesalad.com/webtools/md5.php this] online service.
 
 = 4. Client Options =
 
