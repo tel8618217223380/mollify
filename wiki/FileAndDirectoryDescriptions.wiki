@@ -1,0 +1,45 @@
+#summary Instructions for file and directory descriptions
+#labels Phase-Deploy
+
+= 1. Introduction =
+
+Mollify supports file and directory descriptions that is shown in the file or directory context popup panel.
+
+In file configuration, descriptions are stored in a file called "descript.ion" (hidden from client), and in MySQL configuration these are stored in database.
+
+Mollify supports description editing in client (available for administrator users) and system managed descriptions, ie. if file or folder is deleted, renamed or moved, Mollify will update descriptions accordingly. In file configuration this has to be explicitly enabled (for more information, see [ConfigurationAdditionalOptions configuration wiki]).
+
+= 2. File configuration ==
+
+Rules for file "descript.ion":
+  * Plain text document
+  * Each directory has its own file, containing only descriptions for files and subdirectories in that particular directory
+  * Line format is "<NAME> <DESCRIPTION>", where file or directory name and description separated by a white space
+  * If the name contains spaces, surround it with quote marks
+  * One description per document line
+
+Example (ignore the syntax coloring):
+
+----
+{{{
+Document.pdf Description for a Portable Document Format file.
+"Example Datasheet.xls" Description for the Microsoft Excel document.
+}}}
+----
+
+It is suggested to prevent public access to this file, for example with Apache htaccess file rule.
+
+= 3. Safe HTML Formatting =
+
+Descriptions (in both configurations, file and db) support "safe" HTML formatting. This is regular HTML syntax with restricted set of allowed tags, which are:
+  * a (link)
+  * b (bold)
+  * code (text in fixed width font)
+  * br (line break)
+  * i (italic)
+  * li (list item)
+  * ol (ordered list)
+  * ul (unordered list)
+  * p (paragraph)
+  * span (text element)
+  * u (underline)

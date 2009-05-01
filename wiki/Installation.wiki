@@ -15,7 +15,7 @@
 
 3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
 
-4) Copy host page file ("example_index.html") from directory "Examples" into directory "mollify", and modify it according to your configuration. For other options, see chapter 3.
+4) Copy host page file ("example_host_page.html") from directory "Examples" into directory "mollify", and modify it according to your configuration. For other options, see chapter 3.
 
 5) You are ready to go. Open address http://your.host.name/mollify to see your files.
 
@@ -24,15 +24,15 @@
 
 	Mollify supports different kind of configuration options.
 	
-	From technical point of view, Mollify supports file based configuration, and database (MySQL) based configuration. File based configuration is configured manually, and is static. Database configuration, in other hand, can be configured from client.
+	From technical point of view, Mollify supports file based configuration, and database (MySQL) based configuration. File based configuration is configured manually, and is static. Database configuration, on the other hand, can be configured from client.
 	
-	From functional point of view, Mollify supports single user configuration and multi user configuration. In single-user environment, no authentication is required and all access rules apply to everybody. In multi-user environment different user accounts are set up, where different users can have different published directories and different access permissions.
+	From functional point of view, Mollify supports single user configuration and multi user configuration. In single user configuration, no authentication is required and all access rules apply to everybody. In multi user configuration different user accounts are set up, where different users can have different published directories and different access permissions.
 	
 	Database configuration is always multi user configuration, where file based configuration can be set to either kind.
 	
 	To choose the configuration type, consider following:
-	 * Single user configuration is valid only when you don't want to control or limit the way users access files.
-	 * File based configuration is best for static environments, ie where users or published directories don't change often.
+	 * Single user configuration is suitable only when you don't want to control or limit the way how different users access files.
+	 * File based configuration is best for static environments, ie. where users or published directories don't change often.
 	 * Database configuration requires a bit more effort in installation, but allows configuration directly from Mollify client.
 	
 	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen.	

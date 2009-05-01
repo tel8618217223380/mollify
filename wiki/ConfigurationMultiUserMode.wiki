@@ -118,7 +118,7 @@ $PUBLISHED_DIRECTORIES = array(
 
 == 3.2. File Specific Permissions ==
 
-	Mollify supports file specific file permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
+	Mollify supports file specific permissions, which override any possible default permissions. File specific permissions are defined in folder level (no inheritance in folder hierarchy), with a user access control file (see [http://code.google.com/p/mollify/wiki/UserAccessControlFiles wiki page] for more information).
 
 	Each folder has its own user access control file, which applies only to files in that folder.
 

@@ -73,9 +73,23 @@
 
 	PHP directive controlling this limit is "`max_execution_time`", see [http://fi2.php.net/manual/en/info.configuration.php#ini.max-execution-time PHP documentation] for more information.
 
-== 3.3. Other Backend Options ==
+== 4. Description Update ==
 
-=== 3.3.1. Password hashing ===
+	Mollify supports editing descriptions directly from client (only for administrator users), and keep descriptions updated on file operations, such as rename, move and delete.
+	
+	For MySQL configuration, this feature is enabled by default, but for file configuration this has to be explicitly enabled. Reason for this is file based descriptions requires significant amount of file operations.
+	
+	To enable description update, use following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"enable_description_update" => TRUE
+		);
+	}}}
+
+== 5. Other Backend Options ==
+
+=== 5.1. Password hashing ===
 
 	By default, passwords are stored in plain text format in `configuration.php`. While this does not create any security risk, you can optionally store passwords in hashed format.
 
@@ -87,9 +101,9 @@ $PASSWORDS_HASHED = TRUE;
 
 	This indicates that passwords given are handled as MD5 hashed. Note that you have to generate hashed passwords manually, for example with [http://www.miraclesalad.com/webtools/md5.php this] online service.
 
-= 4. Client Options =
+= 6. Client Options =
 
-== 4.1. Request timeout ==
+== 6.1. Request timeout ==
 
 	By default, client requests timeout after 5 seconds if no response has been received. This timeout should be adequate for all environments, but if needed, this can be changed with following setting:
 
@@ -99,7 +113,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	Value given is timeout in seconds.
 
-== 4.2. Logging ==
+== 6.2. Logging ==
 
 	Mollify has support for client side logging, which makes it easier to troubleshoot any problems when backend log is not accessible or does not reveal anything.
 
@@ -113,7 +127,7 @@ $PASSWORDS_HASHED = TRUE;
 
 
 
-= 5. Demo Mode =
+= 7. Demo Mode =
 
 	For demonstration and theme development purposes, Mollify has built-in standalone demo mode. In demo mode, client does not require backend, but will instead function entirely on demo data. All actions are available, but don't actually affect anything.
 
