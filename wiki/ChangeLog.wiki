@@ -3,8 +3,10 @@
 
 === Version 0.9.6 ==
   * Localizations for German and French
-  * Editable and system managed descriptions, now also folders are supported
-  * Support for moving directories
+  * Support for editable and system managed descriptions
+  * Support for "safe" HTML formatted descriptions
+  * Support for folders descriptions
+  * Added move directory feature
 
 === Version 0.9.5 ==
   * Added support for MySQL database configuration, along with client side configuration options for users and published folders
