@@ -9,8 +9,8 @@ This page describes how to set up Mollify development environment
 
 	Mollify development environment requires following components:
   	* Eclipse IDE for Java EE (http://www.eclipse.org/downloads/)
-  	* GWT 1.5 (http://code.google.com/webtoolkit/download.html)
-  	* Cypal Studio Eclipse plugin (http://code.google.com/p/cypal-studio/)
+  	* GWT 1.6 (http://code.google.com/webtoolkit/download.html)
+  	* Google Eclipse Plugin (http://code.google.com/appengine/docs/java/tools/eclipse.html)
   	* Eclipse Subversion plugin, such as Subclipse (no need to download manually)
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
@@ -25,14 +25,8 @@ This page describes how to set up Mollify development environment
 === 2. GWT ===
 	
 		Follow installation instructions here: http://code.google.com/webtoolkit/gettingstarted.html#Install
-		
-=== 3. Cypal Studio ===
 	
-		Follow installation instructions here: http://www.cypal.in/studiodocs#installation
-		
-		Remember to set GWT root for Cypal in Eclipse preferences.
-	
-=== 4. Subclipse ===
+=== 3. Subclipse ===
 		Any subversion plugin is probably just fine, but following is instructions for Subclipse:
 	
   	# Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
@@ -40,7 +34,7 @@ This page describes how to set up Mollify development environment
   	# From the Subclipse tree added to Available Software list, select at least "Subclipse" and "SVNKit Adapter"
   	# Click "Install..."
 	
-=== 5. Web server ===
+=== 4. Web server ===
 	
 		* WAMP: http://www.wampserver.com/en/
 		* MAMP: http://www.mamp.info/en/index.html
@@ -71,8 +65,7 @@ This page describes how to set up Mollify development environment
   	# Launch Eclipse
   	# If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
   	# Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("`/Projects/Mollify/svn`"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
-  	# If you see a compiler error "`Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'`", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "`GWT_HOME`" as name, and click "Folder..." to choose the GWT installation root folder (for example "`/bin/gwt-mac-1.5.3`"). Accept changes, and Eclipse will suggest full rebuild (required).
-  	# Open "Project -> Properties" and "Project Facets". From the "Configurations" dropdown list in top of the window, select "Cypal Studio for GWT", and click "OK".
+  	# If you see a compiler error "`Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'`", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "`GWT_HOME`" as name, and click "Folder..." to choose the GWT installation root folder (for example "`/bin/gwt-mac-1.6.4`"). Accept changes, and Eclipse will suggest full rebuild (required).
   	# Open "Project -> Properties" and "Java Build Path". In libraries tab, remove following items from the list: "`gwt-servlet.jar`", "`EAR Libraries`" and "`Web App Libraries`". Click OK to accept changes.
   	# Finally, delete the folder "`WebContent`" in Project Explorer if it exists.
 
@@ -115,25 +108,27 @@ This page describes how to set up Mollify development environment
 	
 	Now you can keep editing the backend files under the trunk folder, and they are always reflected to the web server.
 
-= 4 Build scripts =
+= 4 Ant scripts =
 
-	There are couple of (Mac/Linux) scripts that might be useful in development. They are located under folder "script" in source root. To use these scripts, copy them to the root folder of your Mollify project ("`/Projects/Mollify`"), and modify them as instructed in each of them.
+	Source root contains Ant build script (build.xml), which needs configuration specific properties file. Example is located under folder "script" in source root. Copy this to the root folder of your Mollify project ("`/Projects/Mollify`"), and modify it as instructed.
+
+	Script contains following targets:
 	
-== App-compile ==
+== build ==
 
-	Script "`App-compile`" simply compiles the sources into the build folder under the root.
+	Simply compiles the sources into the build folder under the root.
 
-== App-create-package ==
+== deploy ==
 
-	Script "`App-create-package`" will compile sources, and create deploy packages, both installation and source packages.
+	Compilse sources and creates deploy packages, both installation and source packages.
 
-== App-update-devenv ==
+== update ==
 
-	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. Script "`App-update-devenv`" automates this so that you don't have to compile and copy folders manually. In the script, you define two paths:
+	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. This target automates this so that you don't have to compile and copy folders manually. In properties file, there are following paths defined:
   	* Absolute path to the Mollify project folder (for example "`/Projects/Mollify`")
   	* Absolute path to the web server root (for example "`/Applications/MAMP/htdocs`")
 
-	What this script does, it compiles sources into javascript package, copies it to the web root. It also makes a symbolic link to the development version of the folder "themes", this way you can continue on editing the themes under the trunk, and changes are reflected to the web server.
+	This target compiles sources into javascript package and copies it to the web root. It also makes a symbolic link to the development version of the folder "themes", this way you can continue on editing the themes under the trunk, and changes are reflected to the web server.
 	
 	
 	
