@@ -25,7 +25,7 @@ Document.pdf Description for a Portable Document Format file.
 "Example Datasheet.xls" Description for the Microsoft Excel document.
 }}}
 
-*NOTE!* It is suggested to prevent public access to this file, for example with Apache htaccess file rule.
+*NOTE!* It is suggested to prevent public access to these files, for example with Apache htaccess file rule.
 
 = 3. Safe HTML Formatting =
 
