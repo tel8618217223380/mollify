@@ -35,4 +35,4 @@ This configuration gives:
   * User with id "`U1`" read and write permission to "`Picture.png`", for other users this file does not change permissions (default permission are applied)
   * For all other files in the folder, user default permissions apply
 
-NOTE! It is important to prevent public access to these files, for example with Apache htaccess file rules.
+*NOTE!* It is important to prevent public web server access to these files, for example with Apache htaccess file rules.
