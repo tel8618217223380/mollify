@@ -12,8 +12,19 @@
 
 	$DEFAULT_HOST = 'localhost';
 	$DEFAULT_DB = 'mollify';
-	$VERSION = "0_9_5";
+	$VERSION = "0_9_7";
+	$VERSION_HISTORY = array("0_9_5", "0_9_7");
 	
+	function get_current_version() {
+		global $VERSION;
+		return $VERSION;
+	}
+
+	function is_version_in_history($ver) {
+		global $VERSION_HISTORY;
+		return in_array($ver, $VERSION_HISTORY);
+	}
+		
 	function get_installed_version($db) {
 		$connection = @mysql_connect($db['host'], $db['user'], $db['password'], TRUE, 2);
 		if (!$connection) return FALSE;
@@ -30,7 +41,6 @@
 	
 	function get_db_configuration() {
 		global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE;
-		
 		$result = array();
 
 		$result["host"] = NULL;
@@ -131,7 +141,7 @@
 		return TRUE;
 	}
 
-	function _query($connection, $query, $err, $has_result = TRUE) {
+	function _exec_query($connection, $query, $err, $has_result = TRUE) {
 		global $error, $error_detail;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
@@ -152,7 +162,7 @@
 		return TRUE;
 	}
 	
-	function _queries($connection, $sql, $err) {
+	function _exec_queries($connection, $sql, $err) {
 		global $error, $error_detail;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
@@ -180,22 +190,40 @@
 			$error_detail = $file;
 			return FALSE;
 		}
-		return _queries($connection, $sql, $err);
+		return _exec_queries($connection, $sql, $err);
 	}
 
 	function create_tables($connection) {
 		global $VERSION;
-		return _exec_sql_file($connection, "sql/create_tables_".$VERSION.".sql", "COULD_NOT_CREATE_TABLES");
+		return _exec_sql_file($connection, "sql/create_tables-".$VERSION.".sql", "COULD_NOT_CREATE_TABLES");
+	}
+
+	function update_db($connection, $from) {
+		global $VERSION, $VERSION_HISTORY;
+		$index_from = array_search($from, $VERSION_HISTORY) + 1;
+		$index_to = array_search($VERSION, $VERSION_HISTORY);
+		
+		$step_from = $from;
+		for ($i = $index_from; $i <= $index_to; $i++) {
+			$step_to = $VERSION_HISTORY[$i];
+			if (!update_db_version($connection, $step_from, $step_to)) return FALSE;
+			$step_from = $step_to;	
+		}
+		return TRUE;
 	}
 	
+	function update_db_version($connection, $from, $to) {
+		return _exec_sql_file($connection, "sql/updates/".$from."-".$to.".sql", "COULD_NOT_UPDATE_DB");
+	}
+		
 	function insert_admin_user($connection, $user, $pw) {
 		$query = "INSERT INTO user (name, password, permission_mode) VALUES ('".mysql_escape_string($user)."','".$pw."','A')";
-		return _query($connection, $query, "COULD_NOT_CREATE_ADMIN", FALSE);
+		return _exec_query($connection, $query, "COULD_NOT_CREATE_ADMIN", FALSE);
 	}
 	
 	function insert_params($connection) {
 		global $VERSION;
-		return _exec_sql_file($connection, "sql/params_".$VERSION.".sql", "COULD_NOT_INSERT_PARAMS");
+		return _exec_sql_file($connection, "sql/params-".$VERSION.".sql", "COULD_NOT_INSERT_PARAMS");
 	}
 	
 	function close_connection($connection, $err) {

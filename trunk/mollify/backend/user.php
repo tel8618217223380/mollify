@@ -33,7 +33,7 @@
 				if (logout()) $result = get_session_info();
 				break;
 			case "change_pw":
-				if (!is_configuration_update_supported()) {
+				if (!get_configuration_setting("configuration_update")) {
 					log_error("Cannot change password, feature not supported");
 					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
 					return;
@@ -49,7 +49,7 @@
 					return_json(get_error_message("UNAUTHORIZED"));
 					return;
 				}
-				if (!is_configuration_update_supported()) {
+				if (!get_configuration_setting("configuration_update")) {
 					log_error("Cannot reset password, feature not supported");
 					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
 					return;

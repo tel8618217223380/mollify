@@ -40,7 +40,7 @@ function on_install() {
 			$("#conf-footer").empty();
 			
 			if (!result.success) on_error(result.error);
-			else $("#page").load("mysql/page_install.html");
+			else $("#page").load("mysql/page_install_success.html");
 		}
 	);
 }

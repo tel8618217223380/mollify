@@ -20,12 +20,18 @@ function add_continue_button(action) {
 
 function on_conf_error(error) {	
 	if (error.id == 'MOLLIFY_ALREADY_INSTALLED') {
-		show_error(error, true);
 		$("#title").hide();
-		$("#db-content").hide();
+		
+		if (error.details.uptodate) {
+			$("#page").html("<span class='info'>Mollify already installed!</span>");
+			return;
+		}
+				
+		$("#db-content").html("<span class='info'>Mollify is already installed, but current version is newer than the installed version.</span>");
+		add_button('#db-footer', 'db-update', 'Update database to current version', function() { open_page("mysql", "update"); });
 	} else {
 		show_error(error);
-		$("#db-content").load("mysql/instructions-configuration.html");
+		$("#db-content").load("mysql/page-database-instructions.html");
 		add_retry_button(check_configuration);
 	}
 }
