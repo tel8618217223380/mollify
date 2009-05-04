@@ -44,10 +44,12 @@
 			function set_multipage_title(current, total, title) {
 				var t = $.template("<span class='title'><span class='nr'>Step ${current}/${total}:</span>${title}</span>");
 				$("#title").html("").append(t, { current: current, total: total, title: title });
+				$("#title").show();
 			}
 					
 			function set_title(title) {
 				$("#title").html("<span class='title'>" + title + "</span>");
+				$("#title").show();
 			}
 			
 			function add_button(selector, id, title, action) {

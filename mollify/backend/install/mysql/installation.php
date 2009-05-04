@@ -9,9 +9,7 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-	
-	$CONFIGURATION = "../../configuration.php";
-	
+
 	$ERRORS = array(
 		"CONFIGURATION_DOES_NOT_EXIST" => "Configuration does not exist",
 		"CONFIGURATION_PROVIDER_NOT_DEFINED" => "Configuration provider not defined",
@@ -31,7 +29,9 @@
 		"COULD_NOT_INSERT_PARAMS" => "Could not insert parameters",
 		"INSTALLATION_FAILED" => "Installation failed"
 	);
-		
+	
+	$CONFIGURATION = "../../configuration.php";
+	
 	function check_configuration() {
 		global $CONFIGURATION, $error, $error_detail;
 		
@@ -70,35 +70,6 @@
 		return TRUE;
 	}
 	
-	function get_db() {
-		global $error, $DEFAULT_HOST, $DEFAULT_DB;
-		$db = get_db_configuration();
-		
-		if ($db["user"] === NULL) {
-			$error = "DB_USER_NOT_DEFINED";
-			return FALSE;
-		}
-		
-		if ($db["password"] === NULL) {
-			$error = "DB_PW_NOT_DEFINED";
-			return FALSE;
-		}
-		
-		$db["host_defined"] = TRUE;
-		if ($db["host"] === NULL) {
-			$db["host"] = $DEFAULT_HOST;
-			$db["host_defined"] = FALSE;
-		}
-		
-		$db["database_defined"] = TRUE;
-		if ($db["database"] === NULL) {
-			$db["database"] = $DEFAULT_DB;
-			$db["database_defined"] = FALSE;
-		}
-				
-		return $db;
-	}
-	
 	function check_installed($db) {
 		global $error, $error_detail;
 		
@@ -106,28 +77,16 @@
 		if (!$version) return TRUE;
 		
 		$error = "MOLLIFY_ALREADY_INSTALLED";
-		$error_detail = $version;
+		$current = get_current_version();
+		
+		$error_detail = array("installed" => convert_version($version), "current" => convert_version($current), "uptodate" => ($version === $current));
 		return FALSE;
-	}
-	
-	function success($result) {
-		echo json_encode(array("success" => TRUE, "result" => $result));
-	}
-	
-	function failure($error) {
-		echo json_encode(array("success" => FALSE, "error" => $error));
-	}
-	
-	function get_error_value($error, $error_detail) {
-		global $ERRORS;
-		$desc = NULL;
-		if (array_key_exists($error, $ERRORS)) $desc = $ERRORS[$error];
-		return array("id" => $error, "details" => $error_detail, "desc" => $desc);
 	}
 
 	header("Content-type: text/plain");	
-
 	if (!$_POST or !isset($_POST["action"]) or $_POST["action"] === "") return;
+
+	require("common.php");	
 	require("mysql.php");
 	if (file_exists($CONFIGURATION)) include($CONFIGURATION);
 	

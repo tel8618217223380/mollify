@@ -19,10 +19,6 @@
 		echo json_encode($result_array);
 		if ($ext) echo ');';
 	}
-
-	function log_error($message) {
-		error_log("MOLLIFY: ".$message);
-	}
 	
 	function get_success_message($result = array()) {
 		return array("success" => TRUE, "result" => $result);
@@ -48,27 +44,7 @@
 		return FALSE;
 	}
 	
-	function import_configuration_provider() {
-		global $CONFIGURATION_PROVIDER;
-		
-		if (isset($CONFIGURATION_PROVIDER)) {
-			$provider = trim(strtolower($CONFIGURATION_PROVIDER));
-			
-			if ($provider === 'file') {
-				require_once "configuration_provider_file.php";
-			} else if ($provider === 'mysql') {
-				require_once "configuration_provider_mysql.php";
-			} else {
-				log_error("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
-				die("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
-			}
-		} else {
-			require_once "configuration_provider_file.php";
-		}
-		
-		init_configuration_provider();
-	}
-	
+	require_once("system.php");	
 	import_configuration_provider();
 	if (!isset($_GET["type"])) exit(0);
 	
