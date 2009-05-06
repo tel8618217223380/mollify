@@ -40,6 +40,7 @@ public class FileItemContextComponent extends ContextPopup {
 	private final boolean hasGeneralWritePermissions;
 	private final boolean descriptionEditingEnabled;
 	private final boolean zipDownloadEnabled;
+	private final boolean permissionsEditable;
 
 	private Label name;
 
@@ -75,13 +76,15 @@ public class FileItemContextComponent extends ContextPopup {
 
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
 			boolean generalWritePermissions, boolean descriptionEditingEnabled,
-			boolean zipDownloadEnabled, ActionListener actionListener) {
+			boolean permissionsEditable, boolean zipDownloadEnabled,
+			ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT);
 		this.mode = mode;
 
 		this.hasGeneralWritePermissions = generalWritePermissions;
 		this.descriptionEditingEnabled = descriptionEditingEnabled;
+		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
 
 		this.textProvider = textProvider;
@@ -110,8 +113,16 @@ public class FileItemContextComponent extends ContextPopup {
 			content.add(createDescriptionActions());
 
 		content.add(createDetails());
+
+		if (permissionsEditable)
+			content.add(createPermissionActions());
+
 		content.add(createButtons());
 		return content;
+	}
+
+	private Widget createPermissionActions() {
+		return new FlowPanel();
 	}
 
 	private Widget createDescriptionActions() {

@@ -13,13 +13,16 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.request.ErrorValue;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 
 public enum ServiceErrorType {
-	AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION;
+	REQUEST_FAILED, AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION;
 
 	public String getMessage(TextProvider textProvider) {
 		switch (this) {
+		case REQUEST_FAILED:
+			return textProvider.getStrings().errorMessageRequestFailed();
 		case NO_RESPONSE:
 			return textProvider.getStrings().errorMessageNoResponse();
 		case INVALID_RESPONSE:
@@ -84,6 +87,7 @@ public enum ServiceErrorType {
 			return NO_GENERAL_WRITE_PERMISSION;
 
 		default:
+			Log.error("ServiceError code " + error.getCode());
 			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;
 		}

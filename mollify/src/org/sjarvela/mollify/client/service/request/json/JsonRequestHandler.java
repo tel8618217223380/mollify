@@ -17,82 +17,101 @@ import org.sjarvela.mollify.client.service.request.ResultListener;
 import org.sjarvela.mollify.client.service.request.ReturnValue;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.RequestTimeoutException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 public class JsonRequestHandler {
-	private static int requestId = 0;
+	private static final int HTTP_STATUS_NOT_FOUND = 404;
+
 	private final ResultListener listener;
 	private final String url;
-	private final int id;
-	private final int timeout;
+	private final RequestBuilder requestBuilder;
 
-	public JsonRequestHandler(String url, ResultListener listener, int timeout) {
+	public JsonRequestHandler(String url, final ResultListener listener,
+			int timeout) {
 		this.listener = listener;
 		this.url = url;
-		this.timeout = timeout;
-		this.id = requestId++;
+
+		requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder.setTimeoutMillis(timeout * 1000);
+		requestBuilder.setCallback(new RequestCallback() {
+			public void onError(Request request, Throwable exception) {
+				Log.error("Request error", exception);
+				GWT.log("Request error", exception);
+
+				if (RequestTimeoutException.class.equals(exception.getClass()))
+					JsonRequestHandler.this.onError(new ServiceError(
+							ServiceErrorType.NO_RESPONSE));
+				else
+					JsonRequestHandler.this.onError(new ServiceError(
+							ServiceErrorType.REQUEST_FAILED));
+			}
+
+			public void onResponseReceived(Request request, Response response) {
+				if (Log.isDebugEnabled())
+					Log.debug("Request response: " + response.getStatusCode()
+							+ "/" + response.getText());
+				if (response.getStatusCode() == HTTP_STATUS_NOT_FOUND) {
+					Log.error("Service file not found: "
+							+ JsonRequestHandler.this.url);
+					JsonRequestHandler.this.onError(new ServiceError(
+							ServiceErrorType.INVALID_CONFIGURATION));
+					return;
+				}
+
+				try {
+					JSONObject o = JSONParser.parse(response.getText())
+							.isObject();
+					if (o == null) {
+						JsonRequestHandler.this.onError(new ServiceError(
+								ServiceErrorType.INVALID_RESPONSE));
+						return;
+					}
+					onResponse((ReturnValue) o.getJavaScriptObject().cast());
+				} catch (com.google.gwt.json.client.JSONException e) {
+					GWT.log("Invalid JSON response: "
+							+ response.getStatusCode() + "/"
+							+ response.getText(), e);
+					Log.error("Invalid JSON response: "
+							+ response.getStatusCode() + "/"
+							+ response.getText(), e);
+					JsonRequestHandler.this.onError(new ServiceError(
+							ServiceErrorType.DATA_TYPE_MISMATCH));
+				}
+			}
+		});
 	}
 
 	public void doRequest() {
-		getExternalJson(id, url + "&callback=", this, timeout);
-	}
+		try {
+			requestBuilder.send();
+		} catch (RequestException e) {
+			Log.error("Request failed", e);
+			JsonRequestHandler.this.onError(new ServiceError(
+					ServiceErrorType.REQUEST_FAILED));
 
-	public void handleResponse(JavaScriptObject jso) {
-		if (jso == null) {
-			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
-		} else {
-			if (Log.isDebugEnabled())
-				Log
-						.debug("Request response: "
-								+ new JSONObject(jso).toString());
-
-			ReturnValue result = jso.cast();
-
-			if (!result.isSuccess()) {
-				ErrorValue error = jso.cast();
-				onError(new ServiceError(ServiceErrorType.getFrom(error), error
-						.getDetails()));
-				return;
-			}
-			listener.onSuccess(result.getResult());
 		}
 	}
 
+	private void onResponse(ReturnValue result) {
+		if (!result.isSuccess()) {
+			ErrorValue error = result.cast();
+			JsonRequestHandler.this.onError(new ServiceError(ServiceErrorType
+					.getFrom(error), error.getDetails()));
+			return;
+		}
+		listener.onSuccess(result.getResult());
+	}
+
 	private void onError(ServiceError error) {
-		Log.error("Request failed: id=[" + id + "] url=[" + url + "] msg="
-				+ error.toString());
+		Log.error("Request failed: url=[" + url + "] msg=" + error.toString());
 		listener.onFail(error);
 	}
-
-	public void handleError(String error) {
-		onError(new ServiceError(ServiceErrorType.getByName(error)));
-	}
-
-	private native static void getExternalJson(int requestId, String url,
-			JsonRequestHandler handler, int timeout) /*-{
-	    var callback = "callback" + requestId;
-	    
-	    var script = document.createElement("script");
-	    script.setAttribute("src", url+callback);
-	    script.setAttribute("type", "text/javascript");
-	
-	    window[callback] = function(jsonObj) {
-			window[callback + "done"] = true;
-			handler.@org.sjarvela.mollify.client.service.request.json.JsonRequestHandler::handleResponse(Lcom/google/gwt/core/client/JavaScriptObject;)(jsonObj);
-	    }
-	    
-	    setTimeout(function() {
-			if (!window[callback + "done"]) {
-				handler.@org.sjarvela.mollify.client.service.request.json.JsonRequestHandler::handleError(Ljava/lang/String;)("NO_RESPONSE");
-			} 
-	
-			// cleanup
-			document.body.removeChild(script);
-			delete window[callback];
-			delete window[callback + "done"];
-	    }, timeout * 1000);
-	    
-	    document.body.appendChild(script);
-	}-*/;
 }

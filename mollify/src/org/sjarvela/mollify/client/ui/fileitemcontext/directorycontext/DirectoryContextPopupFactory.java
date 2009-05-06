@@ -40,7 +40,7 @@ public class DirectoryContextPopupFactory {
 				Mode.Directory, textProvider, session
 						.getDefaultPermissionMode().hasWritePermission(),
 				descriptionEditable, session.getSettings()
-						.isZipDownloadEnabled(), actionDelegator);
+						.isZipDownloadEnabled(), false, actionDelegator);
 		DirectoryContextPresenter presenter = new DirectoryContextPresenter(
 				popup, session, detailsProvider, textProvider);
 		return new DirectoryContextGlue(popup, presenter, actionDelegator);

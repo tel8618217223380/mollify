@@ -80,6 +80,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileListColumnTitleSize();
 
 	public String fileListDirectoryType();
+	
+	public String errorMessageRequestFailed();
 
 	public String errorMessageNoResponse();
 

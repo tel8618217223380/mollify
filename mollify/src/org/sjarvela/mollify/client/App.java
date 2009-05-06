@@ -166,9 +166,14 @@ public class App implements EntryPoint, LogoutHandler {
 	}
 
 	private void showExceptionError(String message, Throwable e) {
+		GWT.log(message, e);
 		Log.error(message, e);
-		windowManager.getDialogManager().showInfo("Mollify",
-				"Unexpected error: " + e.getMessage());
+
+		if (windowManager != null)
+			windowManager.getDialogManager().showInfo("Mollify",
+					"Unexpected error: " + e.getMessage());
+		else
+			e.printStackTrace();
 	}
 
 }
