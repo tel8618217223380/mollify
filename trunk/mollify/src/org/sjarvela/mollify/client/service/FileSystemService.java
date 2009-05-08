@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileSystemService extends FileDetailsProvider,
 		DirectoryDetailsProvider {

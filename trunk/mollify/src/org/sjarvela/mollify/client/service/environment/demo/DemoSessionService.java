@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.service.environment.demo;
 
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 
 public class DemoSessionService implements SessionService {

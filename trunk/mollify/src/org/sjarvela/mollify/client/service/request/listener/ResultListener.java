@@ -8,8 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.service.request.listener;
 
-public interface ResultCallback<T> {
-	public void onCallback(T result);
+import org.sjarvela.mollify.client.service.ServiceError;
+
+public interface ResultListener<T> {
+	public void onSuccess(T result);
+
+	public void onFail(ServiceError error);
 }

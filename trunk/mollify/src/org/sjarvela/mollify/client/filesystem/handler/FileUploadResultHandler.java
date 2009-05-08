@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.filesystem.handler;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.service.request.ReturnValue;
+import org.sjarvela.mollify.client.service.request.data.ReturnValue;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.google.gwt.json.client.JSONParser;
 

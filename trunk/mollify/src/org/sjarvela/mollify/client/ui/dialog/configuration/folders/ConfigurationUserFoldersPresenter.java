@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.SettingsService;
-import org.sjarvela.mollify.client.service.request.Callback;
-import org.sjarvela.mollify.client.service.request.ResultCallback;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;

@@ -15,7 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class DefaultDirectoryProvider implements DirectoryProvider {
 	private final FileSystemService fileSystemService;

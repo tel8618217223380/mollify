@@ -17,8 +17,8 @@ import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.service.request.ReturnValue;
+import org.sjarvela.mollify.client.service.request.data.ReturnValue;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.DateTime;
 
 import com.allen_sauer.gwt.log.client.Log;

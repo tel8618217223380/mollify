@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.util.Base64;

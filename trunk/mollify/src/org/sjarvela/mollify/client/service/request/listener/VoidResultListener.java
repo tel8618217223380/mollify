@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.service.request.listener;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 

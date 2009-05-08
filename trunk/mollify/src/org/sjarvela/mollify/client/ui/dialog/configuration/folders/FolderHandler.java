@@ -1,7 +1,7 @@
 package org.sjarvela.mollify.client.ui.dialog.configuration.folders;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.service.request.Callback;
 
 public interface FolderHandler {
 

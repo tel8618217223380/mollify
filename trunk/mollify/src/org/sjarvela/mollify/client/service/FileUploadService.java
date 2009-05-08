@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileUploadService {
 

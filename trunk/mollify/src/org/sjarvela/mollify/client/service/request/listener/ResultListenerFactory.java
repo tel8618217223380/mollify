@@ -8,8 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.service.request.listener;
 
-public interface Callback {
-	void onCallback();
+import org.sjarvela.mollify.client.ResultCallback;
+
+public interface ResultListenerFactory<T> {
+	ResultListener<T> createListener(ResultCallback<T> resultCallback);
 }

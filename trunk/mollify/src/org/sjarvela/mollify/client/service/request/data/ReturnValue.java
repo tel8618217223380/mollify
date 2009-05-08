@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.service.request.data;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

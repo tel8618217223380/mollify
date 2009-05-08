@@ -8,18 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.localization;
+package org.sjarvela.mollify.client.service.request;
 
-import org.sjarvela.mollify.client.service.request.data.ErrorValue;
-
-public interface TextProvider {
-
-	String getSizeText(int size);
-
-	LanguageConstants getStrings();
-
-	MessageConstants getMessages();
-
-	String getErrorMessage(ErrorValue errorResult);
-
+public interface RequestHandler {
+	void doRequest();
 }
