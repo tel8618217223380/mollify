@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
+package org.sjarvela.mollify.client.service.request;
+
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.request.data.ErrorValue;
+import org.sjarvela.mollify.client.service.request.data.ReturnValue;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+
+import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+
+public class JsonRequestHandler implements RequestHandler {
+	private final ResultListener listener;
+	private final HtmlRequestHandler requestHandler;
+	private final String url;
+
+	public JsonRequestHandler(
+			HtmlRequestHandlerFactory htmlRequestHandlerFactory, String url,
+			final ResultListener listener) {
+		this.url = url;
+		this.listener = listener;
+		this.requestHandler = htmlRequestHandlerFactory.create(url,
+				new ResultListener<Response>() {
+					public void onFail(ServiceError error) {
+						listener.onFail(error);
+					}
+
+					public void onSuccess(Response response) {
+						JsonRequestHandler.this.onHtmlResponse(response);
+					}
+				});
+	}
+
+	protected void onHtmlResponse(Response response) {
+		try {
+			JSONObject o = JSONParser.parse(response.getText()).isObject();
+			if (o == null) {
+				onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
+				return;
+			}
+			ReturnValue returnValue = (ReturnValue) o.getJavaScriptObject()
+					.cast();
+			onResponse(returnValue);
+		} catch (com.google.gwt.json.client.JSONException e) {
+			GWT.log("Invalid JSON response: " + response.getStatusCode() + "/"
+					+ response.getText(), e);
+			Log.error("Invalid JSON response: " + response.getStatusCode()
+					+ "/" + response.getText(), e);
+			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH));
+		}
+	}
+
+	private void onResponse(ReturnValue result) {
+		if (!result.isSuccess()) {
+			ErrorValue error = result.cast();
+			onError(new ServiceError(ServiceErrorType.getFrom(error), error
+					.getDetails()));
+			return;
+		}
+		listener.onSuccess(result.getResult());
+	}
+
+	private void onError(ServiceError error) {
+		Log.error("JSON request failed: url=[" + url + "], error="
+				+ error.toString());
+		listener.onFail(error);
+	}
+
+	public void doRequest() {
+		requestHandler.doRequest();
+	}
+}

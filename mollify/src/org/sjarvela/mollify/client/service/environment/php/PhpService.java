@@ -13,17 +13,17 @@ package org.sjarvela.mollify.client.service.environment.php;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.service.request.ResultListener;
-import org.sjarvela.mollify.client.service.request.json.JsonRequestHandler;
+import org.sjarvela.mollify.client.service.request.HtmlRequestHandlerFactory;
+import org.sjarvela.mollify.client.service.request.JsonRequestHandler;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
 
 public class PhpService {
 	private static final String SERVICE_FILE = "service.php";
-	private final int requestTimeout;
 	private final String requestBaseUrl;
+	private final HtmlRequestHandlerFactory htmlRequestHandlerFactory;
 
 	enum RequestType {
 		file_data, file_action, session, configuration
@@ -37,10 +37,11 @@ public class PhpService {
 	// host page.
 
 	public PhpService(String path, int requestTimeout) {
-		this.requestTimeout = requestTimeout;
 		this.requestBaseUrl = getBaseUrl(path);
+		this.htmlRequestHandlerFactory = new HtmlRequestHandlerFactory(
+				requestTimeout);
 		Log.info("Mollify service location: " + this.requestBaseUrl
-				+ ", timeout: " + requestTimeout);
+				+ ", timeout: " + requestTimeout + " sec");
 	}
 
 	private String getBaseUrl(String path) {
@@ -95,8 +96,9 @@ public class PhpService {
 
 	void doRequest(String url, final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Requesting: " + url);
-		new JsonRequestHandler(URL.encode(url), resultListener, requestTimeout)
+			Log.debug("Request: " + url);
+
+		new JsonRequestHandler(htmlRequestHandlerFactory, url, resultListener)
 				.doRequest();
 	}
 }

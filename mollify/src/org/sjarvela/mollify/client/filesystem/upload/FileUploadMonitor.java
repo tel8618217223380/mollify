@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.filesystem.upload;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.google.gwt.user.client.Timer;
 

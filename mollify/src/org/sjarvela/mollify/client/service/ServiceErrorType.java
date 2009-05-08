@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.request.ErrorValue;
+import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;

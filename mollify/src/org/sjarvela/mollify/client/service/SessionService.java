@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.service.request.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.User;
 

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.localization;
 
-import org.sjarvela.mollify.client.service.request.ErrorValue;
+import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 import com.google.gwt.core.client.GWT;
 

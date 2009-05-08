@@ -8,17 +8,22 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.service.request;
 
-import java.util.List;
-
-import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public interface DirectoryProvider {
-	List<Directory> getRootDirectories();
+import com.google.gwt.http.client.Response;
 
-	void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener);
+public class HtmlRequestHandlerFactory {
+	private int timeout;
+
+	public HtmlRequestHandlerFactory(int timeout) {
+		this.timeout = timeout;
+	}
+
+	public HtmlRequestHandler create(String url,
+			ResultListener<Response> listener) {
+		return new HtmlRequestHandler(url, listener, timeout);
+	}
 
 }
