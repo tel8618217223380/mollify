@@ -89,8 +89,8 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + item.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.details, PhpService
-				.getFileItemTypeParam(item), PhpService.getIdParam(item)),
+		service.doRequest(getFileDataUrl(FileDataAction.details,
+				getFileItemTypeParam(item), getFileItemIdParam(item)),
 				resultListener);
 	}
 
@@ -99,8 +99,8 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
-		service.doRequest(getFileDataUrl(FileDataAction.details, PhpService
-				.getFileItemTypeParam(item), PhpService.getIdParam(item)),
+		service.doRequest(getFileDataUrl(FileDataAction.details,
+				getFileItemTypeParam(item), getFileItemIdParam(item)),
 				resultListener);
 	}
 
@@ -181,7 +181,7 @@ public class PhpFileService implements FileSystemService {
 		List<UrlParam> params = new ArrayList(parameters);
 		params.add(new UrlParam("action", action.name()));
 		params.add(new UrlParam("id", item.getId()));
-		params.add(PhpService.getFileItemTypeParam(item));
+		params.add(getFileItemTypeParam(item));
 
 		return service.getUrl(RequestType.file_action, params);
 	}
@@ -214,5 +214,14 @@ public class PhpFileService implements FileSystemService {
 		List<UrlParam> params = new ArrayList(parameters);
 		params.add(0, new UrlParam("action", action.name()));
 		return service.getUrl(RequestType.file_data, params);
+	}
+
+	public static UrlParam getFileItemIdParam(FileSystemItem item) {
+		return new UrlParam("id", item.getId());
+	}
+
+	public static UrlParam getFileItemTypeParam(FileSystemItem item) {
+		return new UrlParam("item_type", (item.isFile() ? "f" : "d"),
+				UrlParam.Encoding.NONE);
 	}
 }

@@ -13,11 +13,10 @@ package org.sjarvela.mollify.client.service.environment.php;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.request.HtmlRequestHandlerFactory;
-import org.sjarvela.mollify.client.service.request.JsonRequestHandler;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.UrlParam;
+import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -101,16 +100,7 @@ public class PhpService {
 		if (Log.isDebugEnabled())
 			Log.debug("Request: " + url);
 
-		new JsonRequestHandler(htmlRequestHandlerFactory, url, resultListener)
-				.doRequest();
-	}
-
-	public static UrlParam getIdParam(FileSystemItem item) {
-		return new UrlParam("id", item.getId());
-	}
-
-	public static UrlParam getFileItemTypeParam(FileSystemItem item) {
-		return new UrlParam("item_type", (item.isFile() ? "f" : "d"),
-				UrlParam.Encoding.NONE);
+		htmlRequestHandlerFactory.create(url,
+				new JsonRequestListener(resultListener)).doRequest();
 	}
 }

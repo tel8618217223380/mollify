@@ -15,8 +15,9 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -52,8 +53,8 @@ public class DirectoryListItem extends FlowPanel {
 	private Widget createButton() {
 		button = new DirectoryListItemButton(itemStyle);
 		button.setText(currentDirectory.getName());
-		button.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		button.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				listener.onChangeToDirectory(level, currentDirectory);
 			}
 		});

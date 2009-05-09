@@ -26,10 +26,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -37,8 +34,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
-public class FileUploadDialog extends CenteredDialog implements FormHandler {
+public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
+		SubmitCompleteHandler {
 	private static final String UPLOADER_NAME = "upload[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
@@ -132,7 +134,8 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 	private Widget createForm() {
 		form = new FormPanel();
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
-		form.addFormHandler(this);
+		form.addSubmitHandler(this);
+		form.addSubmitCompleteHandler(this);
 		form.setAction(this.fileUploadHandler.getUploadUrl(directory));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
@@ -213,16 +216,16 @@ public class FileUploadDialog extends CenteredDialog implements FormHandler {
 		return result;
 	}
 
-	public void onSubmit(FormSubmitEvent event) {
+	public void onSubmit(SubmitEvent event) {
 		if (!onStartUpload()) {
-			event.setCancelled(true);
+			event.cancel();
 			return;
 		}
 
 		listener.onUploadStarted(uploadId, getFileNames());
 	}
 
-	public void onSubmitComplete(FormSubmitCompleteEvent event) {
+	public void onSubmitComplete(SubmitCompleteEvent event) {
 		this.hide();
 		fileUploadHandler.handleResult(event.getResults(), listener);
 	}

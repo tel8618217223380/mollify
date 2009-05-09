@@ -18,8 +18,9 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -61,8 +62,8 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		Label label = createMenuItemWidget(item.toString());
 
 		if (action != null)
-			label.addClickListener(new ClickListener() {
-				public void onClick(Widget sender) {
+			label.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
 					if (actionListener != null && itemsEnabled.get(action))
 						actionListener.onAction(action);
 				}
@@ -71,13 +72,13 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	}
 
 	protected Label createMenuItemWidget(String title) {
-		Label label = new Label(title);
+		final Label label = new Label(title);
 		label.setStyleName(StyleConstants.DROPDOWN_MENU_ITEM);
 		HoverDecorator.decorate(label);
 
-		label.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				sender.removeStyleDependentName(StyleConstants.HOVER);
+		label.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				label.removeStyleDependentName(StyleConstants.HOVER);
 				DropdownPopupMenu.this.hide();
 			}
 		});

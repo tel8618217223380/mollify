@@ -8,13 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.service.request.listener;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
@@ -22,29 +21,24 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-public class JsonRequestHandler implements RequestHandler {
+public class JsonRequestListener implements ResultListener<Response> {
 	private final ResultListener listener;
-	private final RequestHandler htmlRequestHandler;
-	private final String url;
 
-	public JsonRequestHandler(
-			HtmlRequestHandlerFactory htmlRequestHandlerFactory, String url,
-			final ResultListener listener) {
-		this.url = url;
+	public JsonRequestListener(final ResultListener listener) {
 		this.listener = listener;
-		this.htmlRequestHandler = htmlRequestHandlerFactory.create(url,
-				new ResultListener<Response>() {
-					public void onFail(ServiceError error) {
-						listener.onFail(error);
-					}
-
-					public void onSuccess(Response response) {
-						JsonRequestHandler.this.onHtmlResponse(response);
-					}
-				});
 	}
 
-	protected void onHtmlResponse(Response response) {
+	private void onResponse(ReturnValue result) {
+		if (!result.isSuccess()) {
+			ErrorValue error = result.cast();
+			onError(new ServiceError(ServiceErrorType.getFrom(error), error
+					.getDetails()));
+			return;
+		}
+		listener.onSuccess(result.getResult());
+	}
+
+	public void onSuccess(Response response) {
 		try {
 			JSONObject o = JSONParser.parse(response.getText()).isObject();
 			if (o == null) {
@@ -63,23 +57,12 @@ public class JsonRequestHandler implements RequestHandler {
 		}
 	}
 
-	private void onResponse(ReturnValue result) {
-		if (!result.isSuccess()) {
-			ErrorValue error = result.cast();
-			onError(new ServiceError(ServiceErrorType.getFrom(error), error
-					.getDetails()));
-			return;
-		}
-		listener.onSuccess(result.getResult());
+	public void onFail(ServiceError error) {
+		onError(error);
 	}
 
 	private void onError(ServiceError error) {
-		Log.error("JSON request failed: url=[" + url + "], error="
-				+ error.toString());
+		Log.error("JSON request failed: error=" + error.toString());
 		listener.onFail(error);
-	}
-
-	public void doRequest() {
-		htmlRequestHandler.doRequest();
 	}
 }
