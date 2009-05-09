@@ -17,7 +17,8 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +45,8 @@ public class ConfigurationMenu extends VerticalPanel {
 		HoverDecorator.decorate(item);
 
 		items.put(id, item);
-		item.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		item.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				selectItem(id);
 			}
 		});

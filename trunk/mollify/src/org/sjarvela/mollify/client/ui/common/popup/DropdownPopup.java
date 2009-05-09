@@ -10,9 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.common.popup;
 
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -20,10 +21,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownPopup extends PopupPanel {
 	private final DropdownPopupListener listener;
+
+	protected Panel container;
 	private Element parent;
 	private Element opener;
-	protected Panel container;
-	boolean cancelShow = false;
+
+	private boolean cancelShow = false;
 
 	public DropdownPopup(Element parent, Element opener) {
 		this(parent, opener, null);
@@ -39,6 +42,8 @@ public class DropdownPopup extends PopupPanel {
 
 		this.container = createContainer();
 		setWidget(container);
+
+		this.setPreviewingAllNativeEvents(true);
 	}
 
 	protected Panel createContainer() {
@@ -97,21 +102,26 @@ public class DropdownPopup extends PopupPanel {
 	}
 
 	@Override
-	public boolean onEventPreview(Event event) {
-		int type = DOM.eventGetType(event);
-		Element target = DOM.eventGetTarget(event);
+	protected void onPreviewNativeEvent(NativePreviewEvent event) {
+		if (event.getTypeInt() == Event.ONMOUSEDOWN) {
+			GWT.log(event.getNativeEvent().getCurrentEventTarget().toString(),
+					null);
+			com.google.gwt.dom.client.Element target = Element.as(event
+					.getNativeEvent().getCurrentEventTarget());
+			GWT.log(target.getClassName() + target.getId(), null);
 
-		if (type == Event.ONMOUSEDOWN && target != null && opener != null) {
-			boolean eventTargetsOpener = DOM.isOrHasChild(opener, target);
+			if (target != null && opener != null) {
+				boolean eventTargetsOpener = opener.isOrHasChild(target);
 
-			if (eventTargetsOpener) {
-				hide(true);
-				cancelShow = true;
-				return false;
+				if (eventTargetsOpener) {
+					event.getNativeEvent().preventDefault();
+					hide(true);
+					cancelShow = true;
+					return;
+				}
 			}
 		}
-
-		return super.onEventPreview(event);
+		super.onPreviewNativeEvent(event);
 	}
 
 }

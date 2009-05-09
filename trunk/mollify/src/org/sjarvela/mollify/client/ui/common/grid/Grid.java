@@ -95,11 +95,11 @@ public class Grid<T> extends FlexTable {
 		}
 	}
 
-	private native void addHeaderCells(Element row, int count) /*-{ 	 
+	private native void addHeaderCells(Element row, int count) /*-{
 		for(var i = 0; i < count; i++){ 
 			var cell = $doc.createElement("th"); 
 			row.appendChild(cell);   
-		} 
+		}
 	}-*/;
 
 	private void initializeColumn(int index, GridColumn column) {
@@ -313,9 +313,7 @@ public class Grid<T> extends FlexTable {
 	}
 
 	private Widget getWidget(Event event) {
-		com.google.gwt.dom.client.Element e = (event.getTypeInt() == Event.ONMOUSEOVER) ? event
-				.getToElement()
-				: event.getFromElement();
+		Element e = DOM.eventGetTarget(event);
 		if (!eventWidgets.containsKey(e))
 			return null;
 		return eventWidgets.get(e);
@@ -344,6 +342,8 @@ public class Grid<T> extends FlexTable {
 		case Event.ONCLICK:
 			if (!selectionMode.equals(SelectionMode.None))
 				updateSelection(row);
+			break;
+
 		case Event.ONMOUSEOVER:
 			this.getRowFormatter().addStyleName(row,
 					rowStyles.get(row) + "-" + StyleConstants.HOVER);

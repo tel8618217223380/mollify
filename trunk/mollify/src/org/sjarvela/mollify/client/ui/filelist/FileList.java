@@ -26,7 +26,8 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -103,8 +104,8 @@ public class FileList extends Grid<FileSystemItem> implements
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
-		icon.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		icon.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				FileList.this.onIconClicked(directory);
 			}
 		});
@@ -116,8 +117,8 @@ public class FileList extends Grid<FileSystemItem> implements
 	private Widget createNameWidget(final FileSystemItem item) {
 		Label name = new Label(item.getName());
 		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
-		name.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		name.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				FileList.this.onClick(item, COLUMN_NAME);
 			}
 		});

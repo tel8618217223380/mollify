@@ -5,11 +5,11 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class MultiActionButton extends Composite {
 	private Button defaultActionButton;
@@ -51,8 +51,8 @@ public class MultiActionButton extends Composite {
 	}
 
 	public void setDefaultAction(final ResourceId defaultAction) {
-		defaultActionButton.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		defaultActionButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				actionListener.onAction(defaultAction);
 			}
 		});
