@@ -13,8 +13,11 @@ package org.sjarvela.mollify.client.service.environment.php;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.request.HtmlRequestHandlerFactory;
 import org.sjarvela.mollify.client.service.request.JsonRequestHandler;
+import org.sjarvela.mollify.client.service.request.UrlBuilder;
+import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -83,15 +86,15 @@ public class PhpService {
 		return result;
 	}
 
-	String getUrl(RequestType type, String... params) {
+	String getUrl(RequestType type, UrlParam... params) {
 		return getUrl(type, Arrays.asList(params));
 	}
 
-	String getUrl(RequestType type, List<String> params) {
-		String url = requestBaseUrl + "?type=" + type.name();
-		for (String param : params)
-			url += "&" + param;
-		return url;
+	String getUrl(RequestType type, List<UrlParam> params) {
+		UrlBuilder result = new UrlBuilder(requestBaseUrl);
+		result.add(new UrlParam("type", type.name()));
+		result.add(params);
+		return result.getUrl();
 	}
 
 	void doRequest(String url, final ResultListener resultListener) {
@@ -100,5 +103,14 @@ public class PhpService {
 
 		new JsonRequestHandler(htmlRequestHandlerFactory, url, resultListener)
 				.doRequest();
+	}
+
+	public static UrlParam getIdParam(FileSystemItem item) {
+		return new UrlParam("id", item.getId());
+	}
+
+	public static UrlParam getFileItemTypeParam(FileSystemItem item) {
+		return new UrlParam("item_type", (item.isFile() ? "f" : "d"),
+				UrlParam.Encoding.NONE);
 	}
 }
