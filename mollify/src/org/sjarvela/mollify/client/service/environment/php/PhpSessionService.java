@@ -16,11 +16,10 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
+import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.util.Base64;
-import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 
@@ -43,27 +42,27 @@ public class PhpSessionService implements SessionService {
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
-		service.doRequest(getUrl(SessionAction.authenticate, Arrays.asList(
-				"username=" + Base64.encode(userName), "password="
-						+ MD5.generate(password))), resultListener);
+		service.doRequest(getUrl(SessionAction.authenticate, new UrlParam(
+				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
+				"password", password, UrlParam.Encoding.MD5)), resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Change password");
-		service.doRequest(getUrl(SessionAction.change_pw, Arrays
-				.asList("old=" + MD5.generate(oldPassword), "new="
-						+ MD5.generate(newPassword))), resultListener);
+		service.doRequest(getUrl(SessionAction.change_pw, new UrlParam("old",
+				oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
+				newPassword, UrlParam.Encoding.MD5)), resultListener);
 	}
 
 	public void resetPassword(User user, String password,
 			ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Reset password for user " + user.getId());
-		service.doRequest(getUrl(SessionAction.reset_pw, Arrays.asList("id="
-				+ user.getId(), "new=" + MD5.generate(password))),
-				resultListener);
+		service.doRequest(getUrl(SessionAction.reset_pw, new UrlParam("id",
+				user.getId()), new UrlParam("new", password,
+				UrlParam.Encoding.MD5)), resultListener);
 	}
 
 	public void logout(ResultListener<SessionInfo> resultListener) {
@@ -72,13 +71,13 @@ public class PhpSessionService implements SessionService {
 		service.doRequest(getUrl(SessionAction.logout), resultListener);
 	}
 
-	private String getUrl(SessionAction action, String... params) {
+	private String getUrl(SessionAction action, UrlParam... params) {
 		return getUrl(action, Arrays.asList(params));
 	}
 
-	private String getUrl(SessionAction action, List<String> parameters) {
-		List<String> params = new ArrayList(parameters);
-		params.add(0, "action=" + action.name());
+	private String getUrl(SessionAction action, List<UrlParam> parameters) {
+		List<UrlParam> params = new ArrayList(parameters);
+		params.add(0, new UrlParam("action", action.name()));
 		return service.getUrl(RequestType.session, params);
 	}
 

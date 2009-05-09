@@ -24,7 +24,7 @@ import com.google.gwt.json.client.JSONParser;
 
 public class JsonRequestHandler implements RequestHandler {
 	private final ResultListener listener;
-	private final HtmlRequestHandler requestHandler;
+	private final RequestHandler htmlRequestHandler;
 	private final String url;
 
 	public JsonRequestHandler(
@@ -32,7 +32,7 @@ public class JsonRequestHandler implements RequestHandler {
 			final ResultListener listener) {
 		this.url = url;
 		this.listener = listener;
-		this.requestHandler = htmlRequestHandlerFactory.create(url,
+		this.htmlRequestHandler = htmlRequestHandlerFactory.create(url,
 				new ResultListener<Response>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
@@ -80,6 +80,6 @@ public class JsonRequestHandler implements RequestHandler {
 	}
 
 	public void doRequest() {
-		requestHandler.doRequest();
+		htmlRequestHandler.doRequest();
 	}
 }

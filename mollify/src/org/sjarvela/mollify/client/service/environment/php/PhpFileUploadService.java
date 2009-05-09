@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.DateTime;
@@ -43,8 +44,8 @@ public class PhpFileUploadService extends PhpFileService implements
 
 	public void getUploadProgress(String id,
 			ResultListener<FileUploadStatus> resultListener) {
-		service.doRequest(getFileDataUrl(FileDataAction.upload_status, "id=" + id),
-				resultListener);
+		service.doRequest(getFileDataUrl(FileDataAction.upload_status,
+				new UrlParam("id", id)), resultListener);
 	}
 
 	public void handleResult(String resultString, FileUploadListener listener) {
