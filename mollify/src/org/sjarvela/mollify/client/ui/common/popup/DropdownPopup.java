@@ -21,8 +21,6 @@ public class DropdownPopup extends PopupPanel {
 	protected final Panel container;
 	private Widget parent;
 
-	private boolean cancelShow = false;
-
 	public DropdownPopup(Widget parent) {
 		this(parent, null);
 	}
@@ -67,11 +65,6 @@ public class DropdownPopup extends PopupPanel {
 
 	@Override
 	public void show() {
-		if (cancelShow) {
-			cancelShow = false;
-			return;
-		}
-
 		onShow();
 		super.show();
 	}

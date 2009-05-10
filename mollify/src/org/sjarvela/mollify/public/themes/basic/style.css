@@ -232,7 +232,6 @@
 }
 
 #mollify-header-add-button-menu {
-	margin-top: 22px;
 	margin-left: 1px;
 }
 
@@ -269,7 +268,6 @@
 
 .mollify-dropdown-menu, .mollify-directory-list-menu {
 	background: #f9f9f9;
-	margin-top: 26px;
 	border-right: 1px outset #c0c0c0;
 	border-left: 1px outset #c0c0c0;
 	border-bottom: 1px outset #c0c0c0;
@@ -423,14 +421,15 @@
 .mollify-directory-list-item-button {
 	border-style: none;
 	cursor: pointer;
-	cursor: hand;
 }
 
 .mollify-directory-list-item-dropdown {
+	border: 0px;
 	width: 7px;
 	float: left;
 	height: 23px;
 	background: url(dir-item-body.png) repeat-x;
+	cursor: pointer;
 }
 
 .mollify-directory-list-item-button-left-pressed, .mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
@@ -475,12 +474,10 @@
 }
 
 .mollify-directory-list-menu {
-	margin-top: 22px;
 	margin-left: -11px;
 }
 
 .ie-crap.mollify-directory-list-menu {
-	margin-top: 22px;
 	margin-left: -11px;
 	width: 200px;
 }
@@ -673,7 +670,6 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-file-context, .mollify-directory-context {
-	margin-top: 20px;
 }
 
 .mollify-file-context-action, .mollify-directory-context-action {
@@ -767,6 +763,7 @@ td#mollify-filelist-column-size {
 .mollify-file-context-filename {
 	font-weight: bold;
 	margin-bottom: 6px;
+	padding-right: 13px;
 }
 
 .mollify-editable-label-label-file-context-description, .mollify-editable-label-editor-file-context-description {
