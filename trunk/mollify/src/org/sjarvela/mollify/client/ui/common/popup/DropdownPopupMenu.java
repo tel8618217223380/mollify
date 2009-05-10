@@ -20,7 +20,6 @@ import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,9 +30,9 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	private Map<ResourceId, Widget> items = new HashMap();
 	private Map<ResourceId, Boolean> itemsEnabled = new HashMap();
 
-	public DropdownPopupMenu(ActionListener actionListener, Element parent,
-			Element opener, DropdownPopupListener dropdownListener) {
-		super(parent, opener, dropdownListener);
+	public DropdownPopupMenu(ActionListener actionListener, Widget parent,
+			PopupPositioner dropdownListener) {
+		super(parent, dropdownListener);
 
 		this.actionListener = actionListener;
 		this.setStylePrimaryName(StyleConstants.DROPDOWN_MENU);

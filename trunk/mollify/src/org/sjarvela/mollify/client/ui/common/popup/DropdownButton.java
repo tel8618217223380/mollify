@@ -15,10 +15,8 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DropdownButton extends Composite {
 	private ActionButton button;
@@ -29,34 +27,25 @@ public class DropdownButton extends Composite {
 	}
 
 	public DropdownButton(ActionListener actionListener, String title,
-			String id, Element parent) {
+			String id, Widget parent) {
 		this(actionListener, title, id, parent, null);
 	}
 
 	public DropdownButton(ActionListener actionListener, String title,
-			String id, Element parent, DropdownPopupListener listener) {
+			String id, Widget parent, PopupPositioner listener) {
 		button = new ActionButton(title, id == null ? null : id + "-button",
 				StyleConstants.DROPDOWN_BUTTON);
 		initWidget(button);
 
-		menu = new DropdownPopupMenu<String>(actionListener, null, button
-				.getElement(), listener);
-		if (id != null)
-			menu.getElement().setId(id + "-menu");
-
-		button.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				menu.showMenu();
-			}
-		});
-
 		if (id != null)
 			getElement().setId(id);
 
-		if (parent != null)
-			menu.setParentElement(parent);
-		else
-			menu.setParentElement(this.getElement());
+		menu = new DropdownPopupMenu<String>(actionListener,
+				parent != null ? parent : this, listener);
+		if (id != null)
+			menu.getElement().setId(id + "-menu");
+
+		new PopupClickTrigger(button, menu);
 	}
 
 	public void setText(String text) {

@@ -11,20 +11,11 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopup;
 
-import com.google.gwt.user.client.Element;
-
-public interface FileContextPopup {
+public interface FileContextPopup extends ContextPopup<File> {
 
 	void setFileActionHandler(FileSystemActionHandler actionHandler);
-
-	void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler);
-
-	void update(File file, Element element);
-
-	void showMenu();
 
 }

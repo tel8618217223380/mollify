@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileItemContextComponent extends ContextPopup {
+public class FileItemContextComponent extends ContextPopupComponent {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
@@ -79,7 +79,7 @@ public class FileItemContextComponent extends ContextPopup {
 			boolean permissionsEditable, boolean zipDownloadEnabled,
 			ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
-				: StyleConstants.DIR_CONTEXT);
+				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
 
 		this.hasGeneralWritePermissions = generalWritePermissions;

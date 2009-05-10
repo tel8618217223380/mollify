@@ -20,8 +20,8 @@
 	);
 	
 	$CONFIGURATION = "../../configuration.php";
-	$SYSTEM = "../../system.php";
-	$USER = "../../user.php";
+	$SYSTEM = "../../include/system.php";
+	$USER = "../../include/user.php";
 	
 	header("Content-type: text/plain");	
 	if (!$_POST or !isset($_POST["action"]) or $_POST["action"] === "") return;

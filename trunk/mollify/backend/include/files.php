@@ -47,7 +47,7 @@
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
 			$root_path = get_root_path($root_id);
-			$path = substr($path, strlen($root_path) + 1);
+			$path = substr($path, strlen($root_path));
 		}
 		return base64_encode($root_id.':'.$path);
 	}
@@ -60,7 +60,7 @@
 	function get_root_path($id) {
 		$roots = $_SESSION["roots"];
 		if (!array_key_exists($id, $roots)) return FALSE;
-		return $roots[$id]["path"];
+		return dir_path($roots[$id]["path"]);
 	}
 	
 	function get_fileitem_from_url($id_param) {

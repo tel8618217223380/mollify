@@ -19,6 +19,7 @@
 			return_json(get_error_message("INVALID_REQUEST"));
 			exit(0);
 		}
+		global $error, $error_details;
 		$action = $_GET["action"];
 		$result = FALSE;
 		
@@ -35,38 +36,37 @@
 			case "change_pw":
 				if (!get_configuration_setting("configuration_update")) {
 					log_error("Cannot change password, feature not supported");
-					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
-					return;
+					$error = "FEATURE_NOT_SUPPORTED";
+					break;
 				}
 				if (!isset($_GET["old"]) or !isset($_GET["new"])) {
-					return_json(get_error_message("INVALID_REQUEST"));
-					return;
+					$error = "INVALID_REQUEST";
+					break;
 				}
 				$result = change_password($_SESSION['user_id'], $_GET["old"], $_GET["new"]);
 				break;
 			case "reset_pw":
-				if (!is_admin()) {
-					return_json(get_error_message("UNAUTHORIZED"));
-					return;
-				}
+				if (!is_admin()) break;
 				if (!get_configuration_setting("configuration_update")) {
 					log_error("Cannot reset password, feature not supported");
-					return_json(get_error_message("FEATURE_NOT_SUPPORTED"));
-					return;
+					$error = "FEATURE_NOT_SUPPORTED";
+					break;
 				}
 				if (!isset($_GET["id"]) or !isset($_GET["new"])) {
-					return_json(get_error_message("INVALID_REQUEST"));
-					return;
+					$error = "INVALID_REQUEST";
+					break;
 				}
 				$result = reset_password($_GET['id'], $_GET["new"]);
 				break;
 			default:
-				return_json(get_error_message("INVALID_REQUEST"));
-				exit(0);
+				$error = "INVALID_REQUEST";
 		}
 		
 		if (!$result) {
-			return_json(get_error_message("UNAUTHORIZED"));
+			if (!$error or $error === "")
+				return_json(get_error_message("UNAUTHORIZED"));
+			else
+				return_json(get_error_message($error, $error_details));
 		} else {
 			return_json(get_success_message($result));
 		}
@@ -112,8 +112,16 @@
 		
 		foreach($_SESSION["roots"] as $id => $root) {
 			if (!isset($root["name"])) {
-				log_error("Invalid published folder definition for id ".$id);
+				log_error("Invalid published directory definition for id ".$id);
 				$error = "INVALID_CONFIGURATION";
+				$error_details = "Root directory definition does not have a name (".$id.")";
+				session_destroy();
+				return FALSE;
+			}
+			if (!file_exists($root["path"])) {
+				log_error("Root directory does not exist, id ".$id);
+				$error = "INVALID_CONFIGURATION";
+				$error_details = "Root directory does not exist (".$id.")";
 				session_destroy();
 				return FALSE;
 			}
