@@ -11,20 +11,11 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopup;
 
-import com.google.gwt.user.client.Element;
-
-public interface DirectoryContextPopup {
+public interface DirectoryContextPopup extends ContextPopup<Directory> {
 
 	void setDirectoryActionHandler(FileSystemActionHandler actionHandler);
-
-	void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler);
-
-	void update(Directory directory, Element element);
-
-	void showMenu();
 
 }

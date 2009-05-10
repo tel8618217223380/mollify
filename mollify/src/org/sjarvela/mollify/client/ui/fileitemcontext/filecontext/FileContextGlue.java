@@ -14,9 +14,14 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class FileContextGlue implements FileContextPopup {
 
@@ -41,13 +46,25 @@ public class FileContextGlue implements FileContextPopup {
 		presenter.setFileItemDescriptionHandler(descriptionHandler);
 	}
 
-	public void showMenu() {
+	public void showPopup() {
 		popup.showMenu();
 	}
 
-	public void update(File file, Element parent) {
-		popup.setParent(parent);
+	public void update(File file, Widget parent) {
+		popup.setParentWidget(parent);
 		presenter.setFile(file);
+	}
+
+	public void addPopupListener(final ContextPopupListener contextPopupListener) {
+		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+			public void onClose(CloseEvent<PopupPanel> event) {
+				contextPopupListener.onPopupClosed();
+			}
+		});
+	}
+
+	public void setPopupPositioner(PopupPositioner positioner) {
+		popup.setPositioner(positioner);
 	}
 
 }

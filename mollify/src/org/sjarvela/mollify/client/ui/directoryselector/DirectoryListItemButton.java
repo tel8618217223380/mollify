@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+import org.sjarvela.mollify.client.ui.common.popup.PopupClickTrigger;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -21,17 +21,15 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListItemButton extends FlowPanel {
 	private final Label left;
 	private final Label center;
 	private final Label right;
-	private final Widget dropDown;
-
-	private DirectoryListMenu menu = null;
+	private final Button dropDown;
 
 	public DirectoryListItemButton(String itemStyle) {
 		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM_BUTTON);
@@ -70,24 +68,15 @@ public class DirectoryListItemButton extends FlowPanel {
 		this.add(right);
 	}
 
-	private Widget createDropdownButton(String itemStyle) {
-		Label dropDown = new Label();
+	private Button createDropdownButton(String itemStyle) {
+		Button dropDown = new Button();
 		dropDown.setStyleName(StyleConstants.DIRECTORY_LISTITEM_DROPDOWN);
+
 		if (itemStyle != null)
 			dropDown.addStyleDependentName(itemStyle);
 		HoverDecorator.decorate(dropDown);
 
-		dropDown.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				DirectoryListItemButton.this.onDropDownClicked();
-			}
-		});
 		return dropDown;
-	}
-
-	protected void onDropDownClicked() {
-		if (menu != null)
-			menu.showMenu();
 	}
 
 	private Label createPart(String style, String itemStyle,
@@ -126,6 +115,6 @@ public class DirectoryListItemButton extends FlowPanel {
 	}
 
 	public void setDropdownMenu(DirectoryListMenu menu) {
-		this.menu = menu;
+		new PopupClickTrigger(dropDown, menu);
 	}
 }

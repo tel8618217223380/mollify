@@ -64,7 +64,6 @@ public class DirectoryListItem extends FlowPanel {
 
 	private DirectoryListMenu createMenu(Element popupElement) {
 		return new DirectoryListMenu(itemStyle, currentDirectory, level + 1,
-				dataProvider, listener, textProvider, this.getElement(),
-				popupElement);
+				dataProvider, listener, textProvider, this);
 	}
 }

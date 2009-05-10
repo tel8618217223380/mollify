@@ -38,7 +38,7 @@ public class MultiActionButton extends Composite {
 		defaultActionButton.getElement().setId(id + "-button");
 
 		dropdownButton = new DropdownButton(actionListener, "", id
-				+ "-dropdown", defaultActionButton.getElement());
+				+ "-dropdown", defaultActionButton);
 		dropdownButton.addStyleName(StyleConstants.MULTIACTION_BUTTON_DROPDOWN);
 
 		panel.add(defaultActionButton);

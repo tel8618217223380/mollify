@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("errors.php");
+	require_once("include/errors.php");
 	require_once("configuration.php");
 	
 	function return_json($result_array) {
@@ -40,17 +40,17 @@
 	
 	function initialize_session() {
 		if (check_authentication()) return TRUE;
-		return_json(get_error_message("UNAUTHORIZED"));
+		return_json(get_error_message("INVALID_REQUEST"));
 		return FALSE;
 	}
 	
-	require_once("system.php");	
+	require_once("include/system.php");	
 	import_configuration_provider();
 	if (!isset($_GET["type"])) exit(0);
 	
-	require_once("settings.php");
-	require_once("user.php");
-	require_once("files.php");
+	require_once("include/settings.php");
+	require_once("include/user.php");
+	require_once("include/files.php");
 	
 	session_start();
 	if (strtolower($_GET["type"]) === "session") {
@@ -64,7 +64,7 @@
 	$error_details = "";
 	
 	// handle actual request
-	require_once("facade.php");
+	require_once("include/facade.php");
 	process_request();
 	
 	// return JSON

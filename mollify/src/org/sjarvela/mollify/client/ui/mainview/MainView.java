@@ -27,16 +27,16 @@ import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
-import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupListener;
+import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopup;
 import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -44,15 +44,19 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MainView extends Composite {
+public class MainView extends Composite implements PopupPositioner {
 	private final MainViewModel model;
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
-	private DirectorySelector directorySelector;
-	private FileList list;
-	private FileContextPopup fileContext = null;
-	private DirectoryContextPopup dirContext = null;
+	private final DirectorySelector directorySelector;
+	private final FileList list;
+
+	private final FileContextPopup fileContextPopup;
+	private final ContextPopupHandler<File> fileContextHandler;
+
+	private final DirectoryContextPopup directoryContextPopup;
+	private final ContextPopupHandler<Directory> directoryContextHandler;
 
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
@@ -75,8 +79,17 @@ public class MainView extends Composite {
 		this.actionListener = actionListener;
 
 		this.directorySelector = directorySelectorFactory.createSelector();
-		this.fileContext = fileContextPopupFactory.createPopup();
-		this.dirContext = directoryContextPopupFactory.createPopup();
+		this.list = new FileList(textProvider);
+
+		this.fileContextPopup = fileContextPopupFactory.createPopup();
+		this.fileContextPopup.setPopupPositioner(this);
+		this.fileContextHandler = new ContextPopupHandler<File>(
+				fileContextPopup);
+
+		this.directoryContextPopup = directoryContextPopupFactory.createPopup();
+		this.fileContextPopup.setPopupPositioner(this);
+		this.directoryContextHandler = new ContextPopupHandler<Directory>(
+				directoryContextPopup);
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
@@ -87,16 +100,16 @@ public class MainView extends Composite {
 	}
 
 	public void setFileContextHandler(FileSystemActionHandler actionHandler) {
-		fileContext.setFileActionHandler(actionHandler);
+		fileContextPopup.setFileActionHandler(actionHandler);
 	}
 
 	public void setFileItemDescriptionHandler(
 			FileItemDescriptionHandler descriptionHandler) {
-		fileContext.setFileItemDescriptionHandler(descriptionHandler);
+		fileContextPopup.setFileItemDescriptionHandler(descriptionHandler);
 	}
 
 	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {
-		dirContext.setDirectoryActionHandler(actionHandler);
+		directoryContextPopup.setDirectoryActionHandler(actionHandler);
 	}
 
 	public FileList getList() {
@@ -106,13 +119,8 @@ public class MainView extends Composite {
 	private Widget createControls() {
 		VerticalPanel content = new VerticalPanel();
 		content.add(createHeader());
-		content.add(createFileList());
+		content.add(list);
 		return content;
-	}
-
-	private Widget createFileList() {
-		list = new FileList(textProvider);
-		return list;
 	}
 
 	private Widget createHeader() {
@@ -144,9 +152,9 @@ public class MainView extends Composite {
 
 	private Widget createUserName() {
 		username = new DropdownButton(actionListener, "", "username", null,
-				new DropdownPopupListener() {
-					public void setPosition(DropdownPopup popup,
-							Element parent, int offsetWidth, int offsetHeight) {
+				new PopupPositioner() {
+					public void setPositionOnShow(DropdownPopup popup,
+							Widget parent, int offsetWidth, int offsetHeight) {
 						int x = Math.min(parent.getAbsoluteLeft(),
 								MainView.this.getOffsetWidth() - offsetWidth);
 						popup.setPopupPosition(x, parent.getAbsoluteTop());
@@ -220,15 +228,13 @@ public class MainView extends Composite {
 	}
 
 	public void showFileContext(File file) {
-		fileContext.update(file, list.getWidget(file, FileList.COLUMN_NAME)
-				.getElement());
-		fileContext.showMenu();
+		fileContextHandler.onItemSelected(file, list.getWidget(file,
+				FileList.COLUMN_NAME));
 	}
 
 	public void showDirectoryContext(Directory directory) {
-		dirContext.update(directory, list.getWidget(directory,
-				FileList.COLUMN_NAME).getElement());
-		dirContext.showMenu();
+		directoryContextHandler.onItemSelected(directory, list.getWidget(
+				directory, FileList.COLUMN_NAME));
 	}
 
 	public ActionButton getRefreshButton() {
@@ -248,11 +254,18 @@ public class MainView extends Composite {
 	}
 
 	public FileContextPopup getFileContext() {
-		return fileContext;
+		return fileContextPopup;
 	}
 
 	public DirectoryContextPopup getDirectoryContext() {
-		return dirContext;
+		return directoryContextPopup;
+	}
+
+	public void setPositionOnShow(DropdownPopup popup, Widget parent,
+			int offsetWidth, int offsetHeight) {
+		popup.setPopupPosition(parent.getAbsoluteLeft(), parent
+				.getAbsoluteTop()
+				+ parent.getOffsetHeight());
 	}
 
 }

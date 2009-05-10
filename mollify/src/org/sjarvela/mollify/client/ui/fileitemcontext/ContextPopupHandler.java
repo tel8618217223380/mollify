@@ -10,20 +10,24 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
-import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
-
 import com.google.gwt.user.client.ui.Widget;
 
-public interface ContextPopup<T> {
-	void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler);
+public class ContextPopupHandler<T> {
+	private final ContextPopup<T> contextPopup;
+	private T current = null;
 
-	void showPopup();
+	public ContextPopupHandler(ContextPopup<T> contextPopup) {
+		this.contextPopup = contextPopup;
+	}
 
-	void addPopupListener(ContextPopupListener contextPopupListener);
-	
-	void setPopupPositioner(PopupPositioner positioner);
+	public void onItemSelected(T t, Widget parent) {
+		if (!t.equals(current)) {
+			contextPopup.update(t, parent);
+			contextPopup.showPopup();
+			current = t;
+		} else {
+			this.current = null;
+		}
+	}
 
-	void update(T t, Widget parent);
 }

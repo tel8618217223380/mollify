@@ -23,8 +23,8 @@ import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		ResultListener<List<Directory>> {
@@ -39,9 +39,8 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 
 	public DirectoryListMenu(String itemStyle, Directory currentDirectory,
 			int level, DirectoryProvider directoryProvider,
-			DirectoryListener listener, TextProvider textProvider,
-			Element parent, Element opener) {
-		super(null, parent, opener, null);
+			DirectoryListener listener, TextProvider textProvider, Widget parent) {
+		super(null, parent, null);
 
 		this.level = level;
 		this.directoryProvider = directoryProvider;
