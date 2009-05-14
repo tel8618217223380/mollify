@@ -42,6 +42,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
 
+	private final Mode mode;
+
 	private Label name;
 
 	private EditableLabel description;
@@ -60,14 +62,14 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private Button copyButton;
 	private Button moveButton;
 	private Button deleteButton;
-	private final Mode mode;
+	private ActionLink editPermissions;
 
 	public enum Mode {
 		File, Directory
 	}
 
 	public enum Action implements ResourceId {
-		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription
+		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions
 	}
 
 	public enum DescriptionActionGroup implements ResourceId {
@@ -122,7 +124,18 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	private Widget createPermissionActions() {
-		return new FlowPanel();
+		editPermissions = new ActionLink(textProvider.getStrings()
+				.fileDetailsAddDescription(),
+				StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
+				StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
+		editPermissions.setAction(actionListener, Action.editPermissions);
+
+		Panel permissionActionsEdit = new FlowPanel();
+		permissionActionsEdit
+				.setStyleName(StyleConstants.FILE_CONTEXT_PERMISSION_ACTIONS);
+		permissionActionsEdit.add(editPermissions);
+		
+		return permissionActionsEdit;
 	}
 
 	private Widget createDescriptionActions() {

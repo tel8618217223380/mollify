@@ -70,13 +70,16 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "file-context-description";
 	public static final String FILE_CONTEXT_DESCRIPTION_ACTIONS_SWITCH = "file-context-description-actions-switch";
-	public static final String FILE_CONTEXT_DESCRIPTION_ACTIONS = "file-context-description-actions";
+	public static final String FILE_CONTEXT_DESCRIPTION_ACTIONS = "mollify-file-context-description-actions";
 	public static final String FILE_CONTEXT_DESCRIPTION_ACTION = "file-context-description";
 	public static final String FILE_CONTEXT_ADD_DESCRIPTION = "mollify-file-context-add-description";
 	public static final String FILE_CONTEXT_EDIT_DESCRIPTION = "mollify-file-context-edit-description";
 	public static final String FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION = "mollify-file-context-cancel-edit-description";
 	public static final String FILE_CONTEXT_APPLY_DESCRIPTION = "mollify-file-context-apply-description";
 	public static final String FILE_CONTEXT_REMOVE_DESCRIPTION = "mollify-file-context-remove-description";
+	public static final String FILE_CONTEXT_EDIT_PERMISSIONS = "mollify-file-context-edit-permissions";
+	public static final String FILE_CONTEXT_PERMISSION_ACTION = "file-context-permission-action";
+	public static final String FILE_CONTEXT_PERMISSION_ACTIONS = "mollify-file-context-permission-actions";
 	public static final String FILE_CONTEXT_DETAILS = "mollify-file-context-details";
 	public static final String FILE_CONTEXT_DETAILS_HEADER = "mollify-file-context-details-header";
 	public static final String FILE_CONTEXT_DETAILS_CONTENT = "mollify-file-context-details-content";
@@ -311,4 +314,5 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_GENERATE_PASSWORD = "reset-password-dialog-generate";
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
 	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
+
 }
