@@ -13,12 +13,17 @@
  * this entire header must remain intact.
  */
 
-*, table td {
+#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
-	font-size: 8pt;
+	font-size: 8pt;	
+}
+
+#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
+	border: 0px;
+	border-spacing: 0;
 }
 
 .mollify-log {
@@ -37,6 +42,11 @@
 #mollify-download-frame {
 	width: 0px;
 	height: 0px;
+}
+
+.mollify-dialog {
+	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	font-size: 8pt;
 }
 
 .mollify-dialog .Caption {
@@ -220,7 +230,6 @@
 	border-style: none;
 	margin-right: 2px;
 	cursor: pointer;
-	cursor: hand;
 	float: left;
 }
 
@@ -285,7 +294,6 @@
 .mollify-dropdown-menu-item {
 	padding: 3px;
 	cursor: pointer;
-	cursor: hand;
 	height: 15px;
 	white-space: nowrap;
 }
@@ -302,7 +310,6 @@
 	background: rgba(50,50,50,0.19);
 	color: transparent;
 	cursor: pointer;
-	cursor: hand;
 }
 
 .mollify-header-logged-in {
@@ -382,7 +389,6 @@
 	width: 23px;
 	border-style: none;
 	cursor: pointer;
-	cursor: hand;
 }
 
 #mollify-directory-selector-button-up.mollify-directory-selector-button:active {
@@ -667,9 +673,6 @@ td#mollify-filelist-column-size {
 	padding-right: 5px;
 	padding-left: 5px;
 	height: 15px;
-}
-
-.mollify-file-context, .mollify-directory-context {
 }
 
 .mollify-file-context-action, .mollify-directory-context-action {
