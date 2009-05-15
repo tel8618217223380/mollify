@@ -9,10 +9,10 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	function process_request() {
-		global $result, $error, $error_details;
+	function process_filesystem_request() {
+		global $request_type, $result, $error, $error_details;
 		
-		switch (strtolower($_GET["type"])) {
+		switch ($request_type) {
 			case "file_data":
 				if (!isset($_GET["action"])) {
 					$error = "INVALID_REQUEST";
@@ -238,10 +238,6 @@
 						$error_details = $operation;
 						break;
 				}
-				break;
-
-			case "configuration":
-				process_configuration_request();
 				break;
 
 			default:

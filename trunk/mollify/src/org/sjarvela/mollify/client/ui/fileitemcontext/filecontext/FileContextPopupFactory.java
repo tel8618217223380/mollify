@@ -39,8 +39,8 @@ public class FileContextPopupFactory {
 		FileItemContextComponent popup = new FileItemContextComponent(
 				Mode.File, textProvider, session.getDefaultPermissionMode()
 						.hasWritePermission(), descriptionEditable, session
-						.getSettings().isZipDownloadEnabled(), false,
-				actionDelegator);
+						.getConfigurationInfo().isPermissionUpdateSupported(),
+				session.getSettings().isZipDownloadEnabled(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider);
 		return new FileContextGlue(popup, presenter, actionDelegator);

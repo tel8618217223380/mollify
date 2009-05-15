@@ -35,7 +35,10 @@
 	}
 	
 	function get_configuration_info() {
-		return array("configuration_update_support" => get_configuration_setting("configuration_update"));
+		return array(
+			"configuration_update_support" => get_configuration_setting("configuration_update"),
+			"permission_update_support" => get_configuration_setting("permission_update")
+		);
 	}
 	
 	function initialize_session() {
@@ -47,13 +50,14 @@
 	require_once("include/system.php");	
 	import_configuration_provider();
 	if (!isset($_GET["type"])) exit(0);
+	$request_type = trim(strtolower($_GET["type"]));
 	
 	require_once("include/settings.php");
 	require_once("include/user.php");
 	require_once("include/files.php");
 	
 	session_start();
-	if (strtolower($_GET["type"]) === "session") {
+	if ($request_type === "session") {
 		process_session_request();
 		exit(0);
 	}
@@ -64,8 +68,12 @@
 	$error_details = "";
 	
 	// handle actual request
-	require_once("include/facade.php");
-	process_request();
+	if ($request_type === "configuration") {
+		process_configuration_request();
+	} else {
+		require_once("include/filesystem_services.php");
+		process_filesystem_request();
+	}
 	
 	// return JSON
 	if ($result === FALSE) {

@@ -13,6 +13,7 @@
 	function init_configuration_provider() {}
 	
 	function get_configuration_setting($name) {
+		if ($name === 'permission_update') return TRUE;
 		if ($name === 'description_update_default') return FALSE;
 		return FALSE;
 	}

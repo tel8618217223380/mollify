@@ -125,7 +125,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private Widget createPermissionActions() {
 		editPermissions = new ActionLink(textProvider.getStrings()
-				.fileDetailsAddDescription(),
+				.fileDetailsEditPermissions(),
 				StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
 				StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
 		editPermissions.setAction(actionListener, Action.editPermissions);
@@ -134,7 +134,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		permissionActionsEdit
 				.setStyleName(StyleConstants.FILE_CONTEXT_PERMISSION_ACTIONS);
 		permissionActionsEdit.add(editPermissions);
-		
+
 		return permissionActionsEdit;
 	}
 
