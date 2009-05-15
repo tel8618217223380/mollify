@@ -14,6 +14,7 @@
 	
 	function get_configuration_setting($name) {
 		if ($name === 'configuration_update') return TRUE;
+		if ($name === 'permission_update') return TRUE;
 		if ($name === 'description_update_default') return TRUE;
 		return FALSE;
 	}

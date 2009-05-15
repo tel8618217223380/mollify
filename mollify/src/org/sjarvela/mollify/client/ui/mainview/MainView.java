@@ -61,7 +61,6 @@ public class MainView extends Composite implements PopupPositioner {
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
 	private DropdownButton username;
-	private ActionButton logoutButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
@@ -184,12 +183,6 @@ public class MainView extends Composite implements PopupPositioner {
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		logoutButton = new ActionButton(textProvider.getStrings()
-				.mainViewLogoutButtonTitle(),
-				StyleConstants.MAIN_VIEW_HEADER_LOGOUT,
-				StyleConstants.MAIN_VIEW_HEADER_OPTION);
-		logoutButton.setAction(actionListener, Action.logout);
-
 		if ((model.getSession().getSettings().isFileUploadEnabled() || model
 				.getSession().getSettings().isFolderActionsEnabled())
 				&& model.getSession().getDefaultPermissionMode()
@@ -247,10 +240,6 @@ public class MainView extends Composite implements PopupPositioner {
 
 	public DropdownButton getUsername() {
 		return username;
-	}
-
-	public ActionButton getLogoutButton() {
-		return logoutButton;
 	}
 
 	public FileContextPopup getFileContext() {
