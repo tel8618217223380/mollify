@@ -44,6 +44,13 @@
 		return array("id" => get_filesystem_id($root_id, $path), "root" => $root_id, "path" => $path);
 	}
 	
+	function get_parent_item($item) {
+		$path = dir_path(dirname($item["path"]));
+		$root = dir_path(get_root_path($item["root"]));
+		if (strlen($path) < strlen($root)) return NULL;	// cannot descend below root
+		return get_fileitem($item["root"], $path);
+	}
+	
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
 			$root_path = get_root_path($root_id);

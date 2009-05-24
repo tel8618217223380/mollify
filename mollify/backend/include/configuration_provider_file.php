@@ -214,7 +214,7 @@
 			$items[] = basename($path);
 			$path = dirname($path);
 		}
-		$items[] = ".";
+		$items[] = ".";	// lookup also folder rights, its default for files unless specific rights is defined
 		
 		$uac_file = $path.DIRECTORY_SEPARATOR."mollify.uac";
 		$permissions = _get_permissions_from_file($uac_file, $user_id, $items);
