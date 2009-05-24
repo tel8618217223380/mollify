@@ -20,7 +20,7 @@ CREATE TABLE `item_description` (
 ) COLLATE utf8_general_ci COMMENT = 'Mollify item descriptions';
 
 CREATE TABLE `item_permission` (
-  `user_id` int(11) NOT NULL,
+  `user_id` char(11) NULL DEFAULT '0',
   `item_id` char(255) NOT NULL,
   `permission` char(2) NOT NULL,
   PRIMARY KEY (`user_id`,`item_id`)
