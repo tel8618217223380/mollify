@@ -460,35 +460,31 @@
 		return TRUE;
 	}
 	
-	function get_item_permission($item, $user_id = NULL) {
+	function get_item_permission($item, $user_id) {
 		$db = init_db();
 		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);
-
-		$user_query = NULL;
-		if ($user_id != NULL) {
-			$user_query = sprintf("user_id = '%s'", $user_id);
-		} else {
-			$user_query = "user_id is null";
-		}
-		
+		$user_query = sprintf("(user_id = '%s' or user_id = '0')", $user_id);
 		$query = NULL;
 
 		if (!is_dir($item["path"])) {
 			$dir = get_parent_item($item);
+			
 			if ($dir != NULL) {
 				$dir_id = mysql_real_escape_string(base64_decode($dir["id"]), $db);
-				$query = sprintf("SELECT permission FROM ((SELECT permission, 1 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s) UNION ALL (SELECT permission, 2 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s)) AS u ORDER BY u.index ASC", $id, $user_query, $dir_id, $user_query);
+				$query = sprintf("SELECT permission FROM ((SELECT permission, user_id, 1 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s) UNION ALL (SELECT permission, user_id, 2 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s)) AS u ORDER BY u.user_id DESC, u.index ASC", $id, $user_query, $dir_id, $user_query);
 			}
 		}
-		if ($query === NULL) $query = sprintf("SELECT permission FROM item_permission WHERE item_id = '%s' AND %s", $id, $user_query);
+		if ($query === NULL) $query = sprintf("SELECT permission FROM item_permission WHERE item_id = '%s' AND %s ORDER BY user_id DESC", $id, $user_query);
 		
 		$result = _query($query, $db);
 		
-		if (!$result) return NULL;
-		if (mysql_num_rows($result) < 1) {
-			if ($user_id != NULL) return get_item_permission($item);
+		if (!$result) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to get item permission (".$error_details.")");
 			return NULL;
 		}
+		if (mysql_num_rows($result) < 1) return NULL;
 		
 		return mysql_result($result, 0);
 	}
