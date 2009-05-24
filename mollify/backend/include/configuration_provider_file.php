@@ -206,11 +206,26 @@
 		return TRUE;
 	}
 		
-	function get_file_permissions($filename, $user_id) {
-		return _get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
+	function get_item_permission($item, $user_id) {
+		$path = $item["path"];
+
+		$items = array();
+		if (!is_dir($path)) {
+			$items[] = basename($path);
+			$path = dirname($path);
+		}
+		$items[] = ".";
+		
+		$uac_file = $path.DIRECTORY_SEPARATOR."mollify.uac";
+		$permissions = _get_permissions_from_file($uac_file, $user_id, $items);
+		
+		foreach($items as $id)
+			if (array_key_exists($id, $permissions)) return $permissions[$id];
+		
+		return FALSE;		
 	}
 	
-	function _get_permissions_from_file($uac_file, $for_user_id, $for_file = FALSE) {
+	function _get_permissions_from_file($uac_file, $for_user_id, $items = NULL) {
 		$result = array();
 		if (!file_exists($uac_file)) return $result;
 	
@@ -228,8 +243,8 @@
 			
 			// results
 			$file = trim($parts[0]);
-			// if requested only for a single file, skip if not the correct one
-			if ($for_file and $for_file != $file) continue;
+			// if requested only for specific items, skip if not the one of them
+			if ($items == NULL or !in_array($file, $items)) continue;
 			
 			$data = trim($parts[count($parts) - 1]);
 			
@@ -249,11 +264,10 @@
 				continue;
 			}
 			
-			if ($for_file) {
-				$result = $permission;
-				break;
-			}
 			$result[$file] = $permission;
+			
+			// if requested only for specific items, stop once all of them are found
+			if ($items != NULL and count($result) === count($items)) break;
 	    }
 	    fclose($handle);
 		

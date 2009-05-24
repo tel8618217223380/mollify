@@ -254,7 +254,7 @@
 	}
 	
 	function get_directory_permissions_value($dir) {
-		if (has_general_modify_rights()) return "rw";
+		if (has_modify_rights($dir)) return "rw";
 		return "ro";
 	}
 
@@ -684,19 +684,16 @@
 	}
 	
 	function has_modify_rights($item) {
-		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
+		global $FILE_PERMISSION_VALUE_ADMIN, $FILE_PERMISSION_VALUE_READWRITE;
 		$base = $_SESSION['default_file_permission'];
 		if ($base === $FILE_PERMISSION_VALUE_ADMIN) return TRUE;
-		
-		$path = $item["path"];
-		if (!is_file($path)) return ($base === $FILE_PERMISSION_VALUE_READWRITE);
-		
-		$specific = get_file_permissions($path, $_SESSION['user_id']);
-		return (get_applicable_permission($base, $specific) === $FILE_PERMISSION_VALUE_READWRITE);
+				
+		$item_permission = get_item_permission($item, $_SESSION['user_id']);
+		return (get_applicable_permission($base, $item_permission) === $FILE_PERMISSION_VALUE_READWRITE);
 	}
 	
-	function get_applicable_permission($base, $specific) {
-		if (!$specific) return $base;
-		return $specific;
+	function get_applicable_permission($base, $item) {
+		if (!$item) return $base;
+		return $item;
 	}
 ?>
