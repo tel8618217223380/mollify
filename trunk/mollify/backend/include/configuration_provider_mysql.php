@@ -370,14 +370,15 @@
 	}
 	
 	function get_file_description($file) {
-		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($file["id"]))));
+		$db = init_db();
+		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($file["id"]), $db)), $db);
 		if (!$result or mysql_num_rows($result) < 1) return NULL;
 		return mysql_result($result, 0);
 	}
 
 	function get_dir_description($dir) {
 		$db = init_db();
-		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($dir["id"]))));
+		$result = _query(sprintf("SELECT description FROM item_description WHERE item_id='%s'", mysql_real_escape_string(base64_decode($dir["id"]), $db)), $db);
 		if (!$result or mysql_num_rows($result) < 1) return NULL;
 		return mysql_result($result, 0);
 	}
@@ -386,21 +387,21 @@
 		global $error, $error_details;
 
 		$db = init_db();
-		$sql_id = mysql_real_escape_string(base64_decode($item["id"]));
-		$sql_desc = mysql_real_escape_string($description);
+		$sql_id = mysql_real_escape_string(base64_decode($item["id"]), $db);
+		$sql_desc = mysql_real_escape_string($description, $db);
 		log_error($sql_desc);
 		
-		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", $sql_desc, $sql_id))) {
+		if (!_query(sprintf("UPDATE item_description SET description='%s' WHERE item_id='%s'", $sql_desc, $sql_id), $db)) {
 			$error = "INVALID_REQUEST";
-			$error_details = mysql_error();
+			$error_details = mysql_error($db);
 			log_error("Failed to update description (".$error_details.")");
 			return FALSE;
 		}
 
 		if (mysql_affected_rows() == 0) {
-			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", $sql_id, $sql_desc))) {
+			if (!_query(sprintf("INSERT INTO item_description (item_id, description) VALUES ('%s','%s')", $sql_id, $sql_desc), $db)) {
 				$error = "INVALID_REQUEST";
-				$error_details = mysql_error();
+				$error_details = mysql_error($db);
 				log_error("Failed to insert description (".$error_details.")");
 				return FALSE;
 			}
@@ -417,17 +418,17 @@
 		if (!$unencoded) $id = base64_decode($id);
 		
 		if ($recursively) {
-			$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id));
-			if (!_query($query)) {
+			$query = sprintf("DELETE FROM item_description WHERE item_id like '%s%%'", mysql_real_escape_string($id, $db));
+			if (!_query($query, $db)) {
 				$error = "INVALID_REQUEST";
-				$error_details = mysql_error();
+				$error_details = mysql_error($db);
 				log_error("Failed to remove descriptions (".$error_details.")");
 				return FALSE;
 			}
 		} else {
-			if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($id)))) {
+			if (!_query(sprintf("DELETE FROM item_description WHERE item_id='%s'", mysql_real_escape_string($id, $db)), $db)) {
 				$error = "INVALID_REQUEST";
-				$error_details = mysql_error();
+				$error_details = mysql_error($db);
 				log_error("Failed to remove description (".$error_details.")");
 				return FALSE;
 			}
@@ -444,14 +445,14 @@
 		$to_id = base64_decode($to["id"]);
 		
 		if ($recursively) {
-			$query = sprintf("UPDATE item_description SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", mysql_real_escape_string($to_id), strlen($from_id)+1, mysql_real_escape_string($from_id));
+			$query = sprintf("UPDATE item_description SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", mysql_real_escape_string($to_id, $db), strlen($from_id)+1, mysql_real_escape_string($from_id, $db));
 		} else {
-			$query = sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id), mysql_real_escape_string($from_id));
+			$query = sprintf("UPDATE item_description SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id, $db), mysql_real_escape_string($from_id, $db));
 		}
 		
-		if (!_query($query)) {
+		if (!_query($query, $db)) {
 			$error = "INVALID_REQUEST";
-			$error_details = mysql_error();
+			$error_details = mysql_error($db);
 			log_error("Failed to move description (".$error_details.")");
 			return FALSE;
 		}
@@ -459,83 +460,36 @@
 		return TRUE;
 	}
 	
-	function get_file_permissions($filename, $user_id) {
-		return _get_permissions_from_file(dirname($filename).DIRECTORY_SEPARATOR."mollify.uac", $user_id, basename($filename));
-	}
-	
-	function _get_permissions_from_file($uac_file, $for_user_id, $for_file = FALSE) {
-		$result = array();
-		if (!file_exists($uac_file)) return $result;
-	
-		$handle = @fopen($uac_file, "r");
-		if (!$handle) return $result;
-		
-		global $FILE_PERMISSION_VALUE_READWRITE, $FILE_PERMISSION_VALUE_READONLY;
-		$line_nr = 0;
-	    while (!feof($handle)) {
-	        $line = fgets($handle, 4096);
-			$line_nr = $line_nr + 1;
-			
-			$parts = explode(chr(9), $line);
-			if (count($parts) < 2) return $result;
-			
-			// results
-			$file = trim($parts[0]);
-			// if requested only for a single file, skip if not the correct one
-			if ($for_file and $for_file != $file) continue;
-			
-			$data = trim($parts[count($parts) - 1]);
-			
-			$permissions = _parse_permission_string($data);
-			if (!$permissions) {
-				log_error("Invalid file permission definition in file [".$uac_file."] at line ".$line_nr);
-				continue;
-			}
-			
-			$permission = _get_active_permission($permissions, $for_user_id);
-			// ignore lines that don't apply to current user
-			if (!$permission) continue;
-			
-			// ignore invalid permissions
-			if ($permission != $FILE_PERMISSION_VALUE_READWRITE and $permission != $FILE_PERMISSION_VALUE_READONLY) {
-				log_error("Invalid file permission definition [".$permission."] in file [".$uac_file."] at line ".$line_nr);
-				continue;
-			}
-			
-			if ($for_file) {
-				$result = $permission;
-				break;
-			}
-			$result[$file] = $permission;
-	    }
-	    fclose($handle);
-		
-		return $result;
-	}
-	
-	function _parse_permission_string($string) {
-		$result = array();
-		if (strlen($string) < 1) return $result;
-		
-		$parts = explode(',', $string);
-		if (count($parts) < 1) return $result;
-		
-		foreach($parts as $part) {
-			$value_parts = explode('=', $part);
-			if (count($value_parts) != 2) return FALSE;
+	function get_item_permission($item, $user_id = NULL) {
+		$db = init_db();
+		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);
 
-			$id = trim($value_parts[0]);
-			$permission = strtoupper(trim($value_parts[1]));
-			if (strlen($id) == 0 or strlen($permission) == 0) return FALSE;
-
-			$result[$id] = $permission;
+		$user_query = NULL;
+		if ($user_id != NULL) {
+			$user_query = sprintf("user_id = '%s'", $user_id);
+		} else {
+			$user_query = "user_id is null";
 		}
-		return $result;
-	}
-	
-	function _get_active_permission($permissions, $user_id) {
-		if ($user_id != "" and isset($permissions[$user_id])) return $permissions[$user_id];
-		if (isset($permissions["*"])) return $permissions["*"];
-		return FALSE;
+		
+		$query = NULL;
+
+		if (!is_dir($item["path"])) {
+			$dir = get_parent_item($item);
+			if ($dir != NULL) {
+				$dir_id = mysql_real_escape_string(base64_decode($dir["id"]), $db);
+				$query = sprintf("SELECT permission FROM ((SELECT permission, 1 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s) UNION ALL (SELECT permission, 2 AS 'index' FROM `item_permission` WHERE item_id = '%s' AND %s)) AS u ORDER BY u.index ASC", $id, $user_query, $dir_id, $user_query);
+			}
+		}
+		if ($query === NULL) $query = sprintf("SELECT permission FROM item_permission WHERE item_id = '%s' AND %s", $id, $user_query);
+		
+		$result = _query($query, $db);
+		
+		if (!$result) return NULL;
+		if (mysql_num_rows($result) < 1) {
+			if ($user_id != NULL) return get_item_permission($item);
+			return NULL;
+		}
+		
+		return mysql_result($result, 0);
 	}
 ?>
