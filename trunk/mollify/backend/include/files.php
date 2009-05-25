@@ -265,7 +265,7 @@
 		return "ro";
 	}
 
-	function set_file_description($file, $description) {		
+	/*function set_file_description($file, $description) {		
 		if (!assert_file($file)) return FALSE;
 		return set_item_description($file, $description);
 	}
@@ -283,7 +283,7 @@
 	function remove_directory_description($dir) {
 		if (!assert_dir($dir)) return FALSE;
 		return remove_item_description($dir);
-	}
+	}*/
 			
 	function rename_file($file, $new_name) {
 		global $error, $error_details;

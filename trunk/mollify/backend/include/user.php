@@ -103,6 +103,7 @@
 	
 	function initialize_session_data($user_id = "", $username = "") {
 		global $error, $error_details;
+		if (!on_session_start($user_id, $username)) return FALSE;
 		
 		$_SESSION['user_id'] = $user_id;
 		$_SESSION['username'] = $username;
