@@ -196,7 +196,6 @@
 							break;
 						}
 						$description = urldecode($_GET["description"]);
-						log_error($description);
 						
 						if ($item_type === 'f') {
 							if (!assert_file($item)) break;
@@ -223,14 +222,72 @@
 							$error = "NOT_AN_ADMIN";
 							break;
 						}
-						
+
 						if ($item_type === 'f') {
-							$result = remove_file_description($item);
+							if (!assert_file($item)) break;
 						} else if ($item_type === 'd') {
-							$result = remove_directory_description($item);
+							if (!assert_dir($item)) break;
 						} else {
 							$error = "INVALID_REQUEST";
+							break;
 						}
+						
+						$result = remove_item_description($item);
+						break;
+						
+					case "set_permission":
+						if (!isset($_GET["permission"]) or !$item_type) {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						if (!$_SESSION["settings"]["enable_permission_update"]) {
+							log_error("Cannot edit permissions, feature disabled by settings");
+							$error = "FEATURE_DISABLED";
+							return FALSE;
+						}
+						if (!is_admin()) {
+							log_error("Insufficient permissions (set permission): User=[".$_SESSION['user_id']."]");
+							$error = "NOT_AN_ADMIN";
+							break;
+						}
+						$permission = $_GET["permission"];
+						
+						if ($item_type === 'f') {
+							if (!assert_file($item)) break;
+						} else if ($item_type === 'd') {
+							if (!assert_dir($item)) break;
+						} else {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						$result = set_item_permission($item, $permission);
+						break;
+
+					case "remove_permission":
+						if (!isset($_GET["item_type"])) {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						if (!$_SESSION["settings"]["enable_permission_update"]) {
+							log_error("Cannot edit permissions, feature disabled by settings");
+							$error = "FEATURE_DISABLED";
+							return FALSE;
+						}
+						if (!is_admin()) {
+							log_error("Insufficient permissions (remove permission): User=[".$_SESSION['user_id']."]");
+							$error = "NOT_AN_ADMIN";
+							break;
+						}
+						
+						if ($item_type === 'f') {
+							if (!assert_file($item)) break;
+						} else if ($item_type === 'd') {
+							if (!assert_dir($item)) break;
+						} else {
+							$error = "INVALID_REQUEST";
+							break;
+						}
+						$result = remove_item_permission($item);
 						break;
 																		
 					default:

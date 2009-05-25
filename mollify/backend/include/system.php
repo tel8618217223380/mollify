@@ -34,4 +34,10 @@
 		
 		init_configuration_provider();
 	}
+	
+	function get_configuration_setting($name) {
+		$settings = get_configuration_settings();
+		if (array_key_exists($name, $settings)) return $settings[$name];
+		return FALSE;
+	}
 ?>

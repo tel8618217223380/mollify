@@ -10,9 +10,9 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("include/errors.php");
 	require_once("configuration.php");
-	
+	require_once("include/errors.php");
+		
 	function return_json($result_array) {
 		$ext = isset($_GET["callback"]);
 		if ($ext) echo $_GET["callback"]."(";
@@ -67,7 +67,6 @@
 	$error = "";
 	$error_details = "";
 	
-	// handle actual request
 	if ($request_type === "configuration") {
 		process_configuration_request();
 	} else {
@@ -75,7 +74,6 @@
 		process_filesystem_request();
 	}
 	
-	// return JSON
 	if ($result === FALSE) {
 		$result = get_error_message($error, $error_details);
 	} else {

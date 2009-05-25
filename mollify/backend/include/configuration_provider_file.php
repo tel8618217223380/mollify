@@ -12,12 +12,16 @@
 
 	function init_configuration_provider() {}
 	
-	function get_configuration_setting($name) {
-		if ($name === 'permission_update') return TRUE;
-		if ($name === 'description_update_default') return FALSE;
-		return FALSE;
+	function get_configuration_settings() {
+		return array(
+			'permission_update' => TRUE,
+			'description_update_default' => FALSE
+		);
 	}
 	
+	function on_session_start($user_id, $username) {
+	}
+
 	function find_user($username, $password) {
 		global $USERS, $PASSWORDS_HASHED;
 			
