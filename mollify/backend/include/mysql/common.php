@@ -12,30 +12,38 @@
 
 	$DEFAULT_HOST = 'localhost';
 	$DEFAULT_DB = 'mollify';
-	$VERSION = "0_9_7";
-	$VERSION_HISTORY = array("0_9_5", "0_9_7");
 	
 	function get_current_version() {
-		global $VERSION;
-		return $VERSION;
+		return "0_9_7";
+	}
+	
+	function get_version_history() {
+		return array("0_9_5", "0_9_7");
 	}
 
 	function is_version_in_history($ver) {
-		global $VERSION_HISTORY;
-		return in_array($ver, $VERSION_HISTORY);
+		return in_array($ver, get_version_history());
 	}
 		
 	function get_installed_version($db) {
 		$connection = @mysql_connect($db['host'], $db['user'], $db['password'], TRUE, 2);
 		if (!$connection) return FALSE;
 		if (!mysql_select_db($db['database'])) return FALSE;
+		return get_installed_version_from_db($connection);
+	}
+	
+	function get_installed_version_from_db($db) {	
+		$result = mysql_query("SELECT value FROM parameter WHERE name='version'", $db);
 		
-		$result = mysql_query("SELECT value FROM parameter WHERE name='version'");
-		if (mysql_error() or mysql_num_rows($result) === 0) return FALSE;
+		if (mysql_error($db) or mysql_num_rows($result) === 0) {
+			global $error, $error_detail;
+			$error = "INVALID_CONFIGURATION";
+			$error_details = mysql_error($db);
+			return FALSE;
+		}
 		
 		$version = mysql_result($result, 0);
-		if (trim($version) === "") return FALSE;
-
+		if (trim($version) === "") return NULL;
 		return $version;
 	}
 	
@@ -199,13 +207,13 @@
 	}
 
 	function update_db($connection, $from) {
-		global $VERSION, $VERSION_HISTORY;
-		$index_from = array_search($from, $VERSION_HISTORY) + 1;
-		$index_to = array_search($VERSION, $VERSION_HISTORY);
+		$history = get_version_history();
+		$index_from = array_search($from, $history) + 1;
+		$index_to = array_search(get_current_version(), $history);
 		
 		$step_from = $from;
 		for ($i = $index_from; $i <= $index_to; $i++) {
-			$step_to = $VERSION_HISTORY[$i];
+			$step_to = $history[$i];
 			if (!update_db_version($connection, $step_from, $step_to)) return FALSE;
 			$step_from = $step_to;	
 		}
@@ -222,8 +230,7 @@
 	}
 	
 	function insert_params($connection) {
-		global $VERSION;
-		return _exec_sql_file($connection, "sql/params-".$VERSION.".sql", "COULD_NOT_INSERT_PARAMS");
+		return _exec_sql_file($connection, "sql/params-".get_current_version().".sql", "COULD_NOT_INSERT_PARAMS");
 	}
 	
 	function close_connection($connection, $err) {

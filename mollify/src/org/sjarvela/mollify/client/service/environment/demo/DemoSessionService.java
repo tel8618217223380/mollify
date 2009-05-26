@@ -23,7 +23,7 @@ public class DemoSessionService implements SessionService {
 		this.data = data;
 	}
 
-	public void authenticate(String userName, String password,
+	public void authenticate(String userName, String password, String version,
 			ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
 	}

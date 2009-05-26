@@ -87,7 +87,7 @@
 	if (!$_POST or !isset($_POST["action"]) or $_POST["action"] === "") return;
 
 	require("common.php");	
-	require("mysql.php");
+	require("../../include/mysql/common.php");
 	if (file_exists($CONFIGURATION)) include($CONFIGURATION);
 	
 	$result = "";

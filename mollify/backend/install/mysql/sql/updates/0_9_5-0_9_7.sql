@@ -7,3 +7,5 @@ ALTER TABLE `parameter` CONVERT TO CHARACTER SET utf8;
 
 ALTER TABLE `item_permission` ADD `user_id` int( 11 ) NOT NULL DEFAULT '0' FIRST;
 ALTER TABLE `item_permission` DROP PRIMARY KEY, ADD PRIMARY KEY ( `user_id`, `item_id` );
+
+UPDATE 'parameter' SET 'value' = '0_9_7' where 'name' = 'version';

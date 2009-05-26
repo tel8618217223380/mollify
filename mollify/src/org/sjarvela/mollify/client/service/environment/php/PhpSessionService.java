@@ -38,13 +38,14 @@ public class PhpSessionService implements SessionService {
 		service.doRequest(getUrl(SessionAction.session_info), resultListener);
 	}
 
-	public void authenticate(String userName, String password,
+	public void authenticate(String userName, String password, String version,
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
 		service.doRequest(getUrl(SessionAction.authenticate, new UrlParam(
 				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
-				"password", password, UrlParam.Encoding.MD5)), resultListener);
+				"password", password, UrlParam.Encoding.MD5), new UrlParam(
+				"version", version)), resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,

@@ -16,11 +16,45 @@
 		return array(
 			'configuration_update' => TRUE,
 			'permission_update' => TRUE,
-			'description_update_default' => TRUE
+			'description_update_default' => TRUE,
+			'permission_update_default' => TRUE
 		);
 	}
 	
 	function on_session_start($user_id, $username) {
+		require_once("common.php");
+		
+		if (!isset($_GET["version"])) {
+			log_error("Invalid authentication request, no client version provided");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+		
+		$installed = get_installed_version_from_db(init_db());
+		if (!$installed) {
+			log_error("Could not resolve installed version");
+			global $error;
+			$error = "INVALID_CONFIGURATION";
+			return FALSE;
+		}
+		
+		$current = get_current_version();
+		if ($current != $installed) {
+			log_error("Database version does not match the current version (database=".$installed.", current=".$current."), update is required");
+			global $error, $error_details;
+			$error = "INVALID_CONFIGURATION";
+			$error_details = "Database version does not match the current version";
+			return FALSE;
+		}
+		if ($_GET["version"] != $current) {
+			log_error("Client version does not match the backend version (client=".$_GET["version"].", backend=".$current.")");
+			global $error, $error_details;
+			$error = "INVALID_CONFIGURATION";
+			$error_details = "Client version does not match the backend version";
+			return FALSE;
+		}
+		
+		return TRUE;
 	}
 
 	function init_db() {
@@ -42,7 +76,7 @@
 			log_error("Could not connect to database (host=".$host.", user=".$DB_USER.", password=".$DB_PASSWORD."), error: ".mysql_error());
 			die();
 		}
-		if (!mysql_select_db($database)) {
+		if (!mysql_select_db($database, $db)) {
 			log_error("Could not find database: ".$database);
 			die();
 		}
