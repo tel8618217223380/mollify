@@ -23,7 +23,7 @@
 			if ($provider === 'file') {
 				require_once "configuration_provider_file.php";
 			} else if ($provider === 'mysql') {
-				require_once "configuration_provider_mysql.php";
+				require_once "mysql/configuration_provider_mysql.php";
 			} else {
 				log_error("Unsupported data provider: ".$CONFIGURATION_PROVIDER);
 				die("Unsupported data provider: ".$CONFIGURATION_PROVIDER);

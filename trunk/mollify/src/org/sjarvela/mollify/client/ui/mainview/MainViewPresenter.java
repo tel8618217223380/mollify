@@ -141,9 +141,9 @@ public class MainViewPresenter implements DirectoryListener,
 
 	private void refreshView() {
 		List<FileSystemItem> allFileItems = model.getAllItems();
-		if (model.getDirectoryModel().canAscend()) {
+		if (model.getDirectoryModel().canAscend())
 			allFileItems.add(0, Directory.Parent);
-		}
+
 		view.getList().setContent(allFileItems);
 		view.refresh();
 	}
@@ -230,8 +230,8 @@ public class MainViewPresenter implements DirectoryListener,
 		sessionService.changePassword(oldPassword, newPassword,
 				new ResultListener() {
 					public void onFail(ServiceError error) {
-						if (error.getType().equals(
-								ServiceErrorType.AUTHENTICATION_FAILED)) {
+						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
+								.getType())) {
 							windowManager
 									.getDialogManager()
 									.showInfo(

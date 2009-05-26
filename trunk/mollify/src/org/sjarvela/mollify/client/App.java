@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class App implements EntryPoint, LogoutHandler {
 	private static final String META_PROPERTY = "mollify:property";
 	private static final String MOLLIFY_PANEL_ID = "mollify";
+	private static final String VERSION = "0_9_7";
 
 	ServiceEnvironment environment;
 	TextProvider textProvider;
@@ -117,7 +118,7 @@ public class App implements EntryPoint, LogoutHandler {
 				Log.info("User login: " + userName);
 
 				environment.getSessionService().authenticate(userName,
-						password, new ResultListener<SessionInfo>() {
+						password, VERSION, new ResultListener<SessionInfo>() {
 							public void onFail(ServiceError error) {
 								if (ServiceErrorType.AUTHENTICATION_FAILED
 										.equals(error)) {

@@ -315,4 +315,6 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
 	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
 
+	public static final String ITEM_PERMISSION_EDITOR_DIALOG = null;
+
 }

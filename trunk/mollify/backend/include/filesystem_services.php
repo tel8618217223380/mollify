@@ -251,6 +251,8 @@
 							break;
 						}
 						$permission = $_GET["permission"];
+						$user_id = NULL;
+						if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
 						
 						if ($item_type === 'f') {
 							if (!assert_file($item)) break;
@@ -260,7 +262,7 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$result = set_item_permission($item, $permission);
+						$result = set_item_permission($item, $user_id, $permission);
 						break;
 
 					case "remove_permission":
@@ -278,6 +280,8 @@
 							$error = "NOT_AN_ADMIN";
 							break;
 						}
+						$user_id = NULL;
+						if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
 						
 						if ($item_type === 'f') {
 							if (!assert_file($item)) break;
@@ -287,7 +291,7 @@
 							$error = "INVALID_REQUEST";
 							break;
 						}
-						$result = remove_item_permission($item);
+						$result = remove_item_permission($item, $user_id);
 						break;
 																		
 					default:

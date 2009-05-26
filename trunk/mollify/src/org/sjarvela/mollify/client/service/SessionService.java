@@ -19,7 +19,7 @@ public interface SessionService {
 	void getSessionInfo(ResultListener<SessionInfo> resultListener);
 
 	void authenticate(String userName, String password,
-			ResultListener<SessionInfo> resultListener);
+			String version, ResultListener<SessionInfo> resultListener);
 
 	void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener);

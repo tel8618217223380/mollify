@@ -22,7 +22,8 @@
 			"enable_folder_actions" => get_setting("enable_folder_actions", TRUE),
 			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE),
 			"enable_zip_download" => get_setting("enable_zip_download", FALSE),
-			"enable_description_update" => get_setting("enable_description_update", get_configuration_setting("description_update_default"))
+			"enable_description_update" => get_setting("enable_description_update", get_configuration_setting("description_update_default")),
+			"enable_permission_update" => get_setting("enable_permission_update", get_configuration_setting("permission_update_default"))
 		);
 	}
 	

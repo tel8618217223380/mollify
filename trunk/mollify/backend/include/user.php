@@ -25,7 +25,12 @@
 		
 		switch (strtolower($action)) {
 			case "authenticate":
-				if (authenticate()) $result = get_session_info();
+				$user = authenticate();
+				if (!$user) break;
+				
+				if (!on_session_start($user["id"], $user["name"])) break;
+				if (initialize_session_data($user["id"], $user["name"]))
+					$result = get_session_info();
 				break;
 			case "session_info":
 				$result = get_session_info();
@@ -64,7 +69,7 @@
 		
 		if (!$result) {
 			if (!$error or $error === "")
-				return_json(get_error_message("UNAUTHORIZED"));
+				return_json(get_error_message("INVALID_REQUEST"));
 			else
 				return_json(get_error_message($error, $error_details));
 		} else {
@@ -103,7 +108,6 @@
 	
 	function initialize_session_data($user_id = "", $username = "") {
 		global $error, $error_details;
-		if (!on_session_start($user_id, $username)) return FALSE;
 		
 		$_SESSION['user_id'] = $user_id;
 		$_SESSION['username'] = $username;
@@ -133,16 +137,18 @@
 	function authenticate() {
 		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
 			log_error("Invalid authentication request, no username or password provided");
+			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
 		
 		$user = find_user(base64_decode($_GET["username"]), $_GET["password"]);
 		if (!$user) {
 			log_error("Authentication failed");
+			$error = "UNAUTHORIZED";
 			return FALSE;
 		}
 		
-		return initialize_session_data($user["id"], $user["name"]);
+		return $user;
 	}
 	
 	function logout() {
