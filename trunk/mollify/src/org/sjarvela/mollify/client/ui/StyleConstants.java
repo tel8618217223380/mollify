@@ -132,6 +132,7 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "mollify-directory-list-menu-item-none";
 
 	public static final String DIALOG_BUTTON = "mollify-dialog-button";
+	public static final String DIALOG_BUTTON_CLOSE = "mollify-dialog-button";
 
 	public static final String INFO_DIALOG_CONTENT = "mollify-info-dialog-content";
 	public static final String INFO_DIALOG_ICON = "mollify-info-dialog-icon";
@@ -282,9 +283,9 @@ public class StyleConstants {
 
 	public static final String FOLDER_LIST_HEADER = "mollify-folderlist-column";
 	public static final String FOLDER_LIST = "mollify-folderlist";
-	public static final String USER_FOLDER_LIST = "mollify-userfolderlist";
 	public static final String FOLDER_LIST_COLUMN_PREFIX = "mollify-folderlist-column-";
 	public static final String FOLDER_LIST_ROW = "mollify-folderlist-row";
+	public static final String USER_FOLDER_LIST = "mollify-userfolderlist";
 
 	public static final String FOLDER_DIALOG = "folder-dialog";
 	public static final String FOLDER_DIALOG_CONTENT = "mollify-folder-dialog-content";
@@ -315,6 +316,12 @@ public class StyleConstants {
 	public static final String RESET_PASSWORD_DIALOG_BUTTONS = "mollify-reset-password-dialog-buttons";
 	public static final String RESET_PASSWORD_DIALOG_BUTTON_RESET = "reset-password-dialog-reset";
 
-	public static final String ITEM_PERMISSION_EDITOR_DIALOG = null;
+	public static final String ITEM_PERMISSION_LIST = "mollify-permission-list";
+	public static final String ITEM_PERMISSION_LIST_HEADER = "mollify-permissionlist-column";
+	public static final String ITEM_PERMISSION_LIST_COLUMN_PREFIX = "mollify-permissionlist-column-";
+	public static final String ITEM_PERMISSION_LIST_ROW = "mollify-permissionlist-row";
+
+	public static final String ITEM_PERMISSION_EDITOR_DIALOG = "mollify-permission-editor";
+	public static final String PERMISSION_EDITOR_VIEW_LIST = "editor";
 
 }

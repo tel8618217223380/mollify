@@ -38,7 +38,7 @@ public class FileContextPresenter implements ActionListener {
 	private final TextProvider textProvider;
 	private final DateTimeFormat dateTimeFormat;
 
-	private FileSystemActionHandler fileActionHandler;
+	private FileSystemActionHandler fileSystemActionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
 
 	private File file = File.Empty;
@@ -76,7 +76,7 @@ public class FileContextPresenter implements ActionListener {
 	}
 
 	public void setFileActionHandler(FileSystemActionHandler actionHandler) {
-		this.fileActionHandler = actionHandler;
+		this.fileSystemActionHandler = actionHandler;
 	}
 
 	public void setFileItemDescriptionHandler(
@@ -176,7 +176,7 @@ public class FileContextPresenter implements ActionListener {
 
 	public void onAction(ResourceId action) {
 		if (FileSystemAction.class.equals(action.getClass())) {
-			fileActionHandler.onAction(file, (FileSystemAction) action);
+			fileSystemActionHandler.onAction(file, (FileSystemAction) action);
 			popup.hide();
 			return;
 		}
@@ -194,6 +194,8 @@ public class FileContextPresenter implements ActionListener {
 		else if (FileItemContextComponent.Action.removeDescription
 				.equals(action))
 			onRemoveDescription();
+		else if (FileItemContextComponent.Action.editPermissions.equals(action))
+			fileSystemActionHandler.onEditPermissions(file);
 	}
 
 }

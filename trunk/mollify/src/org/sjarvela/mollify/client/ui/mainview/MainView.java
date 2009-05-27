@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.PermissionMode;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -165,7 +165,7 @@ public class MainView extends Composite implements PopupPositioner {
 				.isConfigurationUpdateSupported()) {
 			username.addAction(Action.changePassword, textProvider.getStrings()
 					.mainViewChangePasswordTitle());
-			if (PermissionMode.Admin.equals(model.getSession()
+			if (UserPermissionMode.Admin.equals(model.getSession()
 					.getDefaultPermissionMode())) {
 				username.addAction(Action.configure, textProvider.getStrings()
 						.mainViewConfigurationTitle());
@@ -207,7 +207,7 @@ public class MainView extends Composite implements PopupPositioner {
 	protected void onLoad() {
 		super.onLoad();
 		for (ViewListener listener : viewListeners)
-			listener.onViewLoad();
+			listener.onShow();
 	}
 
 	public void refresh() {

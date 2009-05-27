@@ -22,7 +22,7 @@ import com.google.gwt.json.client.JSONObject;
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
 			boolean authenticated, String userId, String user,
-			PermissionMode permissionMode, SessionSettings settings,
+			UserPermissionMode permissionMode, SessionSettings settings,
 			ConfigurationInfo configurationInfo, FileSystemInfo fileInfo,
 			JsArray<JsDirectory> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
@@ -59,8 +59,8 @@ public class SessionInfo extends JavaScriptObject {
 		return this.settings;
 	}-*/;
 
-	public final PermissionMode getDefaultPermissionMode() {
-		return PermissionMode.fromString(getDefaultPermissionModeString()
+	public final UserPermissionMode getDefaultPermissionMode() {
+		return UserPermissionMode.fromString(getDefaultPermissionModeString()
 				.trim().toLowerCase());
 	}
 

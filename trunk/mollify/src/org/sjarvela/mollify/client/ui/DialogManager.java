@@ -31,6 +31,9 @@ import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
+import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
+import org.sjarvela.mollify.client.ui.configuration.users.UserHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -40,11 +43,9 @@ import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
-import org.sjarvela.mollify.client.ui.dialog.configuration.ConfigurationDialog;
-import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserDialog;
-import org.sjarvela.mollify.client.ui.dialog.configuration.users.UserHandler;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
+import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
 public class DialogManager {
 	private TextProvider textProvider;
@@ -113,12 +114,14 @@ public class DialogManager {
 
 	public void showSelectFolderDialog(String title, String message,
 			String actionTitle, DirectoryProvider provider,
-			SelectDirectoryListener listener, List<Directory> initialDirectoryPath) {
+			SelectDirectoryListener listener,
+			List<Directory> initialDirectoryPath) {
 		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
 				provider, listener, initialDirectoryPath);
 	}
 
-	public void openConfigurationDialog(SettingsService service, PasswordHandler passwordHandler) {
+	public void openConfigurationDialog(SettingsService service,
+			PasswordHandler passwordHandler) {
 		new ConfigurationDialog(textProvider, this, sessionProvider
 				.getSession(), service, passwordHandler);
 	}
@@ -133,6 +136,11 @@ public class DialogManager {
 
 	public void openResetPasswordDialog(User user, PasswordHandler handler) {
 		new ResetPasswordDialog(textProvider, passwordGenerator, handler, user);
+	}
+
+	public void openFilePermissionEditor(SettingsService service,
+			FileSystemItem item) {
+		new PermissionEditorViewFactory(textProvider, service, this).show(item);
 	}
 
 }

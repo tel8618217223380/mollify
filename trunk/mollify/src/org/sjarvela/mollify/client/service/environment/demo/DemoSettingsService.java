@@ -14,18 +14,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.PermissionMode;
+import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 
 public class DemoSettingsService implements SettingsService {
 
+	private final DemoData data;
+
+	public DemoSettingsService(DemoData data) {
+		this.data = data;
+	}
+
 	public void getUsers(ResultListener<List<User>> resultListener) {
-		resultListener.onSuccess(Arrays.asList(User.create("1", "Test User",
-				PermissionMode.Admin), User.create("2", "Another Test User",
-				PermissionMode.ReadWrite)));
+		resultListener.onSuccess(data.getUsers());
 	}
 
 	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
@@ -37,12 +44,12 @@ public class DemoSettingsService implements SettingsService {
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
 	}
 
-	public void addUser(String name, String password, PermissionMode mode,
+	public void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void editUser(User user, String name, PermissionMode mode,
+	public void editUser(User user, String name, UserPermissionMode mode,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
@@ -89,4 +96,14 @@ public class DemoSettingsService implements SettingsService {
 		resultListener.onSuccess(true);
 	}
 
+	public void getItemPermissions(FileSystemItem item,
+			ResultListener<List<FileItemUserPermission>> resultListener) {
+		FileItemUserPermission p1 = new FileItemUserPermission(data.getFiles(
+				null).get(0), data.getUsers().get(0),
+				FilePermissionMode.ReadOnly);
+		FileItemUserPermission p2 = new FileItemUserPermission(data.getFiles(
+				null).get(1), data.getUsers().get(1),
+				FilePermissionMode.ReadOnly);
+		resultListener.onSuccess(Arrays.asList(p1, p2));
+	}
 }

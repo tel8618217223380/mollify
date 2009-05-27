@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,6 +39,12 @@ public class CreateFolderDialog extends CenteredDialog {
 		this.parentFolder = parentFolder;
 		this.textProvider = textProvider;
 		this.handler = handler;
+
+		this.addViewListener(new ViewListener() {
+			public void onShow() {
+				name.setFocus(true);
+			}
+		});
 
 		initialize();
 	}
@@ -82,11 +89,6 @@ public class CreateFolderDialog extends CenteredDialog {
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
 		return buttons;
-	}
-
-	@Override
-	protected void onShow() {
-		name.setFocus(true);
 	}
 
 	private void onCreate() {

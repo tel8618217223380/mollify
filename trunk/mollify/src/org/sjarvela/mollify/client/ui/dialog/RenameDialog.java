@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,7 +32,7 @@ public class RenameDialog extends CenteredDialog {
 	private final RenameHandler renameHandler;
 	private TextBox name;
 
-	public RenameDialog(FileSystemItem item, TextProvider textProvider,
+	public RenameDialog(final FileSystemItem item, TextProvider textProvider,
 			RenameHandler renameHandler) {
 		super(item.isFile() ? textProvider.getStrings().renameDialogTitleFile()
 				: textProvider.getStrings().renameDialogTitleDirectory(),
@@ -40,6 +41,12 @@ public class RenameDialog extends CenteredDialog {
 		this.textProvider = textProvider;
 		this.renameHandler = renameHandler;
 
+		this.addViewListener(new ViewListener() {
+			public void onShow() {
+				if (item.isFile())
+					hilightFilename();
+			}
+		});
 		initialize();
 	}
 
@@ -94,12 +101,6 @@ public class RenameDialog extends CenteredDialog {
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
 		return buttons;
-	}
-
-	@Override
-	protected void onShow() {
-		if (item.isFile())
-			hilightFilename();
 	}
 
 	private void hilightFilename() {
