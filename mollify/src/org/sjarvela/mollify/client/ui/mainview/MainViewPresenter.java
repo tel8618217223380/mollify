@@ -57,7 +57,7 @@ public class MainViewPresenter implements DirectoryListener,
 
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
-	private final LogoutHandler logoutListener;
+	private final LogoutHandler logoutHandler;
 	private final TextProvider textProvider;
 	private final DirectoryProvider directoryProvider;
 	private final SessionService sessionService;
@@ -67,19 +67,20 @@ public class MainViewPresenter implements DirectoryListener,
 			MainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
 			SettingsService settingsService,
-			FileUploadService fileUploadHandler,
+			FileUploadService fileUploadService,
 			DirectoryProvider directoryProvider, TextProvider textProvider,
-			LogoutHandler logoutListener) {
-		this.windowManager = windowManager;
-		this.model = model;
-		this.view = view;
+			LogoutHandler logoutHandler) {
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 		this.settingsService = settingsService;
-		this.fileUploadService = fileUploadHandler;
-		this.directoryProvider = directoryProvider;
+		this.fileUploadService = fileUploadService;
+
+		this.windowManager = windowManager;
+		this.model = model;
+		this.view = view;
 		this.textProvider = textProvider;
-		this.logoutListener = logoutListener;
+		this.directoryProvider = directoryProvider;
+		this.logoutHandler = logoutHandler;
 
 		this.view.getFileContext().setFileActionHandler(this);
 		this.view.getFileContext().setFileItemDescriptionHandler(this);
@@ -219,7 +220,7 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	public void logout() {
-		logoutListener.onLogout(model.getSession());
+		logoutHandler.onLogout(model.getSession());
 	}
 
 	public void changePassword() {
@@ -462,5 +463,10 @@ public class MainViewPresenter implements DirectoryListener,
 			return false;
 		}
 		return true;
+	}
+
+	public void onEditPermissions(FileSystemItem item) {
+		windowManager.getDialogManager().openFilePermissionEditor(
+				settingsService, item);
 	}
 }

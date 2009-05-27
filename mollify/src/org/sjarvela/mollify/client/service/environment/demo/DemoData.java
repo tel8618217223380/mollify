@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.environment.demo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,19 +21,25 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
-import org.sjarvela.mollify.client.filesystem.FilePermission;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.ConfigurationInfo;
+import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
-import org.sjarvela.mollify.client.session.PermissionMode;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
+import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class DemoData {
+	private static final List<User> users = Arrays.asList(User.create("1",
+			"Test User", UserPermissionMode.Admin), User.create("2",
+			"Another Test User", UserPermissionMode.ReadWrite), User.create(
+			"3", "Third Test User", UserPermissionMode.ReadOnly));
+
 	private static final String ROOT_1 = "r1";
 	private static final String ROOT_2 = "r2";
 
@@ -53,7 +60,7 @@ public class DemoData {
 	private Map<String, List<Directory>> directories = new HashMap();
 	private List<File> files;
 
-	private final PermissionMode permissionMode = PermissionMode.Admin;
+	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
 	private final SessionSettings settings;
 	private final ConfigurationInfo configurationInfo;
 	private final FileSystemInfo fileSystemInfo;
@@ -66,6 +73,10 @@ public class DemoData {
 		this.configurationInfo = ConfigurationInfo.create(true, true);
 
 		createDirectoriesAndFiles();
+	}
+
+	public List<User> getUsers() {
+		return users;
 	}
 
 	private void createDirectoriesAndFiles() {
@@ -119,12 +130,13 @@ public class DemoData {
 	}
 
 	public DirectoryDetails getDirectoryDetails(Directory directory) {
-		return DirectoryDetails.create(FilePermission.ReadWrite, DESCRIPTION);
+		return DirectoryDetails.create(FilePermissionMode.ReadWrite,
+				DESCRIPTION);
 	}
 
 	public FileDetails getFileDetails(File file) {
 		Date now = DateTime.getInstance().currentTime();
 		return FileDetails.create(now, now, now, DESCRIPTION,
-				FilePermission.ReadWrite);
+				FilePermissionMode.ReadWrite);
 	}
 }

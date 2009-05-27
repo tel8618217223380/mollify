@@ -36,7 +36,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		this.sessionService = new DemoSessionService(data);
 		this.fileSystemService = new DemoFileService(data);
 		this.demoFileUploadHandler = new DemoFileUploadHandler();
-		this.settingsHandler = new DemoSettingsService();
+		this.settingsHandler = new DemoSettingsService(data);
 	}
 
 	public SessionService getSessionService() {

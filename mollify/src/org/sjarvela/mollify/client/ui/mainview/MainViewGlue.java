@@ -22,7 +22,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 
-public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener {
+public class MainViewGlue implements GridListener<FileSystemItem> {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 	private final MainView view;
@@ -34,13 +34,13 @@ public class MainViewGlue implements GridListener<FileSystemItem>, ViewListener 
 		this.actionDelegator = actionDelegator;
 
 		view.addFileListListener(this);
-		view.addViewListener(this);
+		view.addViewListener(new ViewListener() {
+			public void onShow() {
+				presenter.initialize();
+			}
+		});
 
 		initializeActions();
-	}
-
-	public void onViewLoad() {
-		presenter.initialize();
 	}
 
 	private void initializeActions() {

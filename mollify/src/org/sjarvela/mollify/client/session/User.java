@@ -16,7 +16,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class User extends JavaScriptObject {
 	public static User create(String id, String name,
-			PermissionMode permissionMode) {
+			UserPermissionMode permissionMode) {
 		User result = JsDirectory.createObject().cast();
 		result.putValues(id, name, permissionMode.getStringValue());
 		return result;
@@ -36,8 +36,8 @@ public class User extends JavaScriptObject {
 		return this.permission_mode;
 	}-*/;
 
-	public final PermissionMode getType() {
-		return PermissionMode.fromString(getPermissionString());
+	public final UserPermissionMode getType() {
+		return UserPermissionMode.fromString(getPermissionString());
 	}
 
 	private final native void putValues(String id, String name,

@@ -8,10 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.configuration;
 
-public interface ViewListener {
+import org.sjarvela.mollify.client.ResourceId;
 
-	void onShow();
+public interface ConfigurationMenuSelectionListener {
+
+	void onConfigurationItemSelected(ResourceId id);
 
 }

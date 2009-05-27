@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.filesystem;
 
 import java.util.Date;
 
+import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
 
@@ -41,8 +42,8 @@ public class FileDetails extends JavaScriptObject {
 				getLastModifiedString());
 	}
 
-	public final FilePermission getFilePermission() {
-		return FilePermission.fromString(getFilePermissionString());
+	public final FilePermissionMode getFilePermission() {
+		return FilePermissionMode.fromString(getFilePermissionString());
 	}
 
 	private final native String getLastAccessedString() /*-{
@@ -66,7 +67,7 @@ public class FileDetails extends JavaScriptObject {
 	}-*/;
 
 	public static FileDetails create(Date lastAccessed, Date lastChanged,
-			Date lastModified, String description, FilePermission permission) {
+			Date lastModified, String description, FilePermissionMode permission) {
 		FileDetails result = FileDetails.createObject().cast();
 		DateTimeFormat fmt = DateTime.getInstance().getInternalFormat();
 		result

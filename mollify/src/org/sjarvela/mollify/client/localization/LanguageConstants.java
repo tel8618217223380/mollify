@@ -114,6 +114,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String confirmationDialogNoButton();
 
 	public String dialogCancelButton();
+	
+	public String dialogCloseButton();
 
 	public String renameDialogTitleFile();
 
@@ -306,7 +308,17 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String moveDirectoryDialogAction();
 
 	public String invalidDescriptionUnsafeTags();
+	
+	
+	
 
 	public String itemPermissionEditorDialogTitle();
+
+	public String permissionModeNone();
+
+	/**
+	 * @return
+	 */
+
 
 }

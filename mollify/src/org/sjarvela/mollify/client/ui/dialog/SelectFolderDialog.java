@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -78,6 +79,11 @@ public class SelectFolderDialog extends CenteredDialog implements
 			pleaseWaitText = textProvider.getStrings()
 					.selectFolderDialogRetrievingFolders();
 
+		this.addViewListener(new ViewListener() {
+			public void onShow() {
+				SelectFolderDialog.this.onShow();
+			}
+		});
 		initialize();
 	}
 
@@ -131,10 +137,7 @@ public class SelectFolderDialog extends CenteredDialog implements
 		return buttons;
 	}
 
-	@Override
-	protected void onShow() {
-		super.onShow();
-
+	private void onShow() {
 		directoryProvider.getDirectories(Directory.Empty,
 				new ResultListener<List<Directory>>() {
 					public void onFail(ServiceError error) {
