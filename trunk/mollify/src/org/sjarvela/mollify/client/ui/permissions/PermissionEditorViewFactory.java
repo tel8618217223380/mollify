@@ -33,7 +33,8 @@ public class PermissionEditorViewFactory {
 		PermissionEditorView view = new PermissionEditorView(textProvider,
 				actionDelegator);
 		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
-				view, service, item, dialogManager);
+				view, service, item, dialogManager,
+				new FilePermissionModeFormatter(textProvider));
 		new PermissionEditorGlue(presenter, view, actionDelegator);
 	}
 

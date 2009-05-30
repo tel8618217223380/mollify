@@ -321,7 +321,13 @@ public class StyleConstants {
 	public static final String ITEM_PERMISSION_LIST_COLUMN_PREFIX = "mollify-permissionlist-column-";
 	public static final String ITEM_PERMISSION_LIST_ROW = "mollify-permissionlist-row";
 
-	public static final String ITEM_PERMISSION_EDITOR_DIALOG = "mollify-permission-editor";
+	public static final String PERMISSION_EDITOR_VIEW = "mollify-permission-editor-dialog";
+	public static final String PERMISSION_EDITOR_VIEW_CONTENT = "mollify-permission-editor-content";
+	public static final String PERMISSION_EDITOR_VIEW_LIST_TITLE = "mollify-permission-editor-list-title";
 	public static final String PERMISSION_EDITOR_VIEW_LIST = "editor";
+	public static final String PERMISSION_EDITOR_VIEW_ITEM_TITLE = "mollify-permission-editor-item-title";
+	public static final String PERMISSION_EDITOR_VIEW_ITEM_NAME = "mollify-permission-editor-item-name";
+	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION = "mollify-permission-editor-default-permission";
+	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION_TITLE = "mollify-permission-editor-default-permission-title";
 
 }

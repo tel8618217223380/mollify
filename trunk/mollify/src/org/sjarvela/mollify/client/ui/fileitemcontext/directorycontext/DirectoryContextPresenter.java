@@ -30,7 +30,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	private final DirectoryDetailsProvider detailsProvider;
 	private final TextProvider textProvider;
 
-	private FileSystemActionHandler actionHandler;
+	private FileSystemActionHandler fileSystemActionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
 
 	private Directory directory;
@@ -45,7 +45,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	}
 
 	public void setDirectoryActionHandler(FileSystemActionHandler actionHandler) {
-		this.actionHandler = actionHandler;
+		this.fileSystemActionHandler = actionHandler;
 	}
 
 	public void setFileItemDescriptionHandler(
@@ -132,7 +132,8 @@ public class DirectoryContextPresenter implements ActionListener {
 
 	public void onAction(ResourceId action) {
 		if (FileSystemAction.class.equals(action.getClass())) {
-			actionHandler.onAction(directory, (FileSystemAction) action);
+			fileSystemActionHandler.onAction(directory,
+					(FileSystemAction) action);
 			popup.hide();
 			return;
 		}
@@ -150,6 +151,10 @@ public class DirectoryContextPresenter implements ActionListener {
 		else if (FileItemContextComponent.Action.removeDescription
 				.equals(action))
 			onRemoveDescription();
+		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
+			popup.hide();
+			fileSystemActionHandler.onEditPermissions(directory);
+		}
 	}
 
 }

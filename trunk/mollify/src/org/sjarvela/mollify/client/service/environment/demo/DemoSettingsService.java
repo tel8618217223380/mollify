@@ -98,12 +98,12 @@ public class DemoSettingsService implements SettingsService {
 
 	public void getItemPermissions(FileSystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener) {
-		FileItemUserPermission p1 = new FileItemUserPermission(data.getFiles(
-				null).get(0), data.getUsers().get(0),
-				FilePermissionMode.ReadOnly);
-		FileItemUserPermission p2 = new FileItemUserPermission(data.getFiles(
-				null).get(1), data.getUsers().get(1),
-				FilePermissionMode.ReadOnly);
-		resultListener.onSuccess(Arrays.asList(p1, p2));
+		FileItemUserPermission defaultPermission = new FileItemUserPermission(
+				item, null, FilePermissionMode.ReadOnly);
+		FileItemUserPermission p1 = new FileItemUserPermission(item, data
+				.getUsers().get(0), FilePermissionMode.ReadOnly);
+		FileItemUserPermission p2 = new FileItemUserPermission(item, data
+				.getUsers().get(1), FilePermissionMode.ReadWrite);
+		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}
 }

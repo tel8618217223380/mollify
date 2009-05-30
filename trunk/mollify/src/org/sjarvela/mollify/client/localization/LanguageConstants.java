@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.localization;
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 	public String shortDateTimeFormat();
 
+	public String permissionModeNone();
+
 	public String permissionModeAdmin();
 
 	public String permissionModeReadWrite();
@@ -80,7 +82,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileListColumnTitleSize();
 
 	public String fileListDirectoryType();
-	
+
 	public String errorMessageRequestFailed();
 
 	public String errorMessageNoResponse();
@@ -114,7 +116,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String confirmationDialogNoButton();
 
 	public String dialogCancelButton();
-	
+
 	public String dialogCloseButton();
 
 	public String renameDialogTitleFile();
@@ -300,7 +302,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileDetailsCancelEditDescription();
 
 	public String fileDetailsRemoveDescription();
-	
+
 	public String fileDetailsEditPermissions();
 
 	public String moveDirectoryDialogTitle();
@@ -308,17 +310,13 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String moveDirectoryDialogAction();
 
 	public String invalidDescriptionUnsafeTags();
-	
-	
-	
 
 	public String itemPermissionEditorDialogTitle();
 
-	public String permissionModeNone();
+	public String itemPermissionEditorItemTitle();
 
-	/**
-	 * @return
-	 */
+	public String itemPermissionEditorListTitle();
 
+	public String itemPermissionEditorDefaultPermissionTitle();
 
 }
