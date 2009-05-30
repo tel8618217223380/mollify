@@ -194,8 +194,10 @@ public class FileContextPresenter implements ActionListener {
 		else if (FileItemContextComponent.Action.removeDescription
 				.equals(action))
 			onRemoveDescription();
-		else if (FileItemContextComponent.Action.editPermissions.equals(action))
+		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
+			popup.hide();
 			fileSystemActionHandler.onEditPermissions(file);
+		}
 	}
 
 }
