@@ -16,6 +16,7 @@ public class File extends FileSystemItem {
 	public static File Empty = new File();
 	private final String extension;
 	private final int size;
+	private String pathId;
 
 	private File() {
 		super("", "");
@@ -24,11 +25,14 @@ public class File extends FileSystemItem {
 	}
 
 	protected File(JsFile file) {
-		this(file.getId(), file.getName(), file.getExtension(), file.getSize());
+		this(file.getId(), file.getPathId(), file.getName(), file
+				.getExtension(), file.getSize());
 	}
 
-	public File(String id, String name, String extension, int size) {
+	public File(String id, String pathId, String name, String extension,
+			int size) {
 		super(id, name);
+		this.pathId = pathId;
 		this.extension = extension;
 		this.size = size;
 	}
@@ -37,6 +41,10 @@ public class File extends FileSystemItem {
 		return extension;
 	}
 
+	public final String getPathId() {
+		return pathId;
+	}
+	
 	public final int getSize() {
 		return size;
 	}

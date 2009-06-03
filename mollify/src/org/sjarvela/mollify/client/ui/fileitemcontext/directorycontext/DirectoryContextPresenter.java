@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -31,6 +32,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	private final TextProvider textProvider;
 
 	private FileSystemActionHandler fileSystemActionHandler;
+	private FileSystemPermissionHandler permissionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
 
 	private Directory directory;
@@ -51,6 +53,11 @@ public class DirectoryContextPresenter implements ActionListener {
 	public void setFileItemDescriptionHandler(
 			FileItemDescriptionHandler descriptionHandler) {
 		this.descriptionHandler = descriptionHandler;
+	}
+
+	public void setPermissionHandler(
+			FileSystemPermissionHandler permissionHandler) {
+		this.permissionHandler = permissionHandler;
 	}
 
 	public void setDirectory(Directory directory) {
@@ -153,7 +160,7 @@ public class DirectoryContextPresenter implements ActionListener {
 			onRemoveDescription();
 		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
 			popup.hide();
-			fileSystemActionHandler.onEditPermissions(directory);
+			permissionHandler.onEditPermissions(directory);
 		}
 	}
 

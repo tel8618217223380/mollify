@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupListener;
@@ -44,6 +45,11 @@ public class DirectoryContextGlue implements DirectoryContextPopup {
 	public void setFileItemDescriptionHandler(
 			FileItemDescriptionHandler descriptionHandler) {
 		presenter.setFileItemDescriptionHandler(descriptionHandler);
+	}
+
+	public void setFilePermissionHandler(
+			FileSystemPermissionHandler permissionHandler) {
+		presenter.setPermissionHandler(permissionHandler);
 	}
 
 	public void showPopup() {

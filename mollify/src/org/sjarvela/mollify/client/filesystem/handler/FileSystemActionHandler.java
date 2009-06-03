@@ -17,6 +17,4 @@ public interface FileSystemActionHandler {
 
 	void onAction(FileSystemItem item, FileSystemAction action);
 
-	void onEditPermissions(FileSystemItem item);
-
 }

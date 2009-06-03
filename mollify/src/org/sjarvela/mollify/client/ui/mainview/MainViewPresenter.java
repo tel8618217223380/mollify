@@ -13,17 +13,14 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -37,39 +34,36 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
-import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.util.Html;
 
-public class MainViewPresenter implements DirectoryListener,
-		FileSystemActionHandler, DirectoryHandler, RenameHandler,
-		PasswordHandler, FileItemDescriptionHandler {
+public class MainViewPresenter implements DirectoryListener, PasswordHandler,
+		FileItemDescriptionHandler, FileSystemPermissionHandler {
 	private final MainViewModel model;
 	private final MainView view;
 	private final WindowManager windowManager;
 
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
-	private final LogoutHandler logoutHandler;
-	private final TextProvider textProvider;
-	private final DirectoryProvider directoryProvider;
 	private final SessionService sessionService;
 	private final SettingsService settingsService;
+	private final FileSystemActionHandler fileSystemActionHandler;
+	private final LogoutHandler logoutHandler;
+	private final TextProvider textProvider;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
 			SettingsService settingsService,
-			FileUploadService fileUploadService,
-			DirectoryProvider directoryProvider, TextProvider textProvider,
-			LogoutHandler logoutHandler) {
+			FileUploadService fileUploadService, TextProvider textProvider,
+			LogoutHandler logoutHandler,
+			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 		this.settingsService = settingsService;
@@ -79,13 +73,19 @@ public class MainViewPresenter implements DirectoryListener,
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
-		this.directoryProvider = directoryProvider;
 		this.logoutHandler = logoutHandler;
+		this.fileSystemActionHandler = fileSystemActionHandlerFactory
+				.create(createRefreshCallback());
 
-		this.view.getFileContext().setFileActionHandler(this);
+		this.view.getFileContext()
+				.setFileActionHandler(fileSystemActionHandler);
 		this.view.getFileContext().setFileItemDescriptionHandler(this);
-		this.view.getDirectoryContext().setDirectoryActionHandler(this);
+		this.view.getFileContext().setFilePermissionHandler(this);
+
+		this.view.getDirectoryContext().setDirectoryActionHandler(
+				fileSystemActionHandler);
 		this.view.getDirectoryContext().setFileItemDescriptionHandler(this);
+		this.view.getDirectoryContext().setFilePermissionHandler(this);
 		this.view.getDirectorySelector().addListener(this);
 
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
@@ -188,7 +188,13 @@ public class MainViewPresenter implements DirectoryListener,
 			return;
 
 		windowManager.getDialogManager().openCreateFolderDialog(
-				model.getCurrentFolder(), this);
+				model.getCurrentFolder(), new DirectoryHandler() {
+					public void createDirectory(Directory parentFolder,
+							String folderName) {
+						fileSystemService.createDirectory(parentFolder,
+								folderName, createReloadListener());
+					}
+				});
 	}
 
 	private ResultListener createReloadListener() {
@@ -200,11 +206,15 @@ public class MainViewPresenter implements DirectoryListener,
 	}
 
 	private ResultListener createRefreshListener() {
-		return createListener(new Callback() {
+		return createListener(createRefreshCallback());
+	}
+
+	private Callback createRefreshCallback() {
+		return new Callback() {
 			public void onCallback() {
 				refreshView();
 			}
-		});
+		};
 	}
 
 	private ResultListener createListener(final Callback callback) {
@@ -273,159 +283,6 @@ public class MainViewPresenter implements DirectoryListener,
 												.passwordDialogPasswordChangedSuccessfully());
 					}
 				}));
-	}
-
-	public void onAction(FileSystemItem item, FileSystemAction action) {
-		if (item.isFile())
-			onFileAction((File) item, action);
-		else
-			onDirectoryAction((Directory) item, action);
-	}
-
-	private void onFileAction(final File file, FileSystemAction action) {
-		if (action.equals(FileSystemAction.download)) {
-			windowManager.openDownloadUrl(fileSystemService
-					.getDownloadUrl(file));
-		} else if (action.equals(FileSystemAction.download_as_zip)) {
-			windowManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl(file));
-		} else if (action.equals(FileSystemAction.rename)) {
-			windowManager.getDialogManager().showRenameDialog(file, this);
-		} else {
-
-			if (action.equals(FileSystemAction.copy)) {
-				windowManager.getDialogManager().showSelectFolderDialog(
-						windowManager.getTextProvider().getStrings()
-								.copyFileDialogTitle(),
-						windowManager.getTextProvider().getMessages()
-								.copyFileMessage(file.getName()),
-						windowManager.getTextProvider().getStrings()
-								.copyFileDialogAction(), directoryProvider,
-						new SelectDirectoryListener() {
-							public void onSelect(Directory selected) {
-								copyFile(file, selected);
-							}
-
-							public boolean isDirectoryAllowed(
-									Directory directory, List<Directory> path) {
-								return !model.getCurrentFolder().equals(
-										directory);
-							}
-						}, model.getDirectoryModel().getDirectoryList());
-			} else if (action.equals(FileSystemAction.move)) {
-				windowManager.getDialogManager().showSelectFolderDialog(
-						windowManager.getTextProvider().getStrings()
-								.moveFileDialogTitle(),
-						windowManager.getTextProvider().getMessages()
-								.moveFileMessage(file.getName()),
-						windowManager.getTextProvider().getStrings()
-								.moveFileDialogAction(), directoryProvider,
-						new SelectDirectoryListener() {
-							public void onSelect(Directory selected) {
-								moveFile(file, selected);
-							}
-
-							public boolean isDirectoryAllowed(
-									Directory directory, List<Directory> path) {
-								return !model.getCurrentFolder().equals(
-										directory);
-							}
-						}, model.getDirectoryModel().getDirectoryList());
-			} else if (action.equals(FileSystemAction.delete)) {
-				String title = windowManager.getTextProvider().getStrings()
-						.deleteFileConfirmationDialogTitle();
-				String message = windowManager.getTextProvider().getMessages()
-						.confirmFileDeleteMessage(file.getName());
-				windowManager.getDialogManager().showConfirmationDialog(title,
-						message,
-						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
-						new ConfirmationListener() {
-							public void onConfirm() {
-								delete(file);
-							}
-						});
-			} else {
-				windowManager.getDialogManager().showInfo("ERROR",
-						"Unsupported action:" + action.name());
-			}
-		}
-	}
-
-	private void onDirectoryAction(final Directory directory,
-			FileSystemAction action) {
-		if (action.equals(FileSystemAction.download_as_zip)) {
-			windowManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl(directory));
-		} else if (action.equals(FileSystemAction.rename)) {
-			windowManager.getDialogManager().showRenameDialog(directory, this);
-		} else if (action.equals(FileSystemAction.move)) {
-			windowManager.getDialogManager().showSelectFolderDialog(
-					windowManager.getTextProvider().getStrings()
-							.moveDirectoryDialogTitle(),
-					windowManager.getTextProvider().getMessages()
-							.moveDirectoryMessage(directory.getName()),
-					windowManager.getTextProvider().getStrings()
-							.moveDirectoryDialogAction(), directoryProvider,
-					new SelectDirectoryListener() {
-						public void onSelect(Directory selected) {
-							moveDirectory(directory, selected);
-						}
-
-						public boolean isDirectoryAllowed(Directory candidate,
-								List<Directory> path) {
-							return !directory.equals(candidate)
-									&& !model.getCurrentFolder().equals(
-											candidate)
-									&& !path.contains(directory);
-						}
-					}, model.getDirectoryModel().getDirectoryList());
-		} else if (action.equals(FileSystemAction.delete)) {
-			String title = windowManager.getTextProvider().getStrings()
-					.deleteDirectoryConfirmationDialogTitle();
-			String message = windowManager.getTextProvider().getMessages()
-					.confirmDirectoryDeleteMessage(directory.getName());
-			windowManager.getDialogManager().showConfirmationDialog(title,
-					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
-					new ConfirmationListener() {
-						public void onConfirm() {
-							delete(directory);
-						}
-					});
-		} else {
-			windowManager.getDialogManager().showInfo("ERROR",
-					"Unsupported action:" + action.name());
-		}
-	}
-
-	public void createDirectory(Directory parentFolder, String folderName) {
-		fileSystemService.createDirectory(parentFolder, folderName,
-				createReloadListener());
-	}
-
-	public void rename(FileSystemItem item, String newName) {
-		fileSystemService.rename(item, newName, createReloadListener());
-	}
-
-	protected void copyFile(File file, Directory toDirectory) {
-		if (model.getCurrentFolder().equals(toDirectory))
-			return;
-		fileSystemService.copy(file, toDirectory, createReloadListener());
-	}
-
-	protected void moveFile(File file, Directory toDirectory) {
-		if (model.getCurrentFolder().equals(toDirectory))
-			return;
-		fileSystemService.move(file, toDirectory, createReloadListener());
-	}
-
-	protected void moveDirectory(Directory directory, Directory toDirectory) {
-		if (model.getCurrentFolder().equals(toDirectory))
-			return;
-		fileSystemService.move(directory, toDirectory, createReloadListener());
-	}
-
-	private void delete(FileSystemItem item) {
-		fileSystemService.delete(item, createReloadListener());
 	}
 
 	public void setListOrder(GridColumn column, Sort sort) {

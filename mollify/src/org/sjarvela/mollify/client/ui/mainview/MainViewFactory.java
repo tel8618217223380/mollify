@@ -55,6 +55,8 @@ public class MainViewFactory {
 				fileSystemService, textProvider, model.getSession());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
 				textProvider, fileSystemService, model.getSession());
+		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
+				windowManager, fileSystemService, directoryProvider);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		MainView view = new MainView(model, textProvider, actionDelegator,
@@ -63,8 +65,8 @@ public class MainViewFactory {
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, environment.getSessionService(),
 				fileSystemService, environment.getSettingsService(),
-				environment.getFileUploadHandler(), directoryProvider,
-				textProvider, logoutListener);
+				environment.getFileUploadHandler(), textProvider,
+				logoutListener, fileSystemActionHandlerFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
 
 		return view;
