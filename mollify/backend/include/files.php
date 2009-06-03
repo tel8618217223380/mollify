@@ -206,6 +206,7 @@
 		$files = get_visible_files_in_dir($path);
 		if ($files === FALSE) return FALSE;
 		
+		$path_id = get_filesystem_id($root, dir_path($path));
 		$result = array();
 		
 		foreach($files as $full_path) {
@@ -220,6 +221,7 @@
 			
 			$result[] = array(
 				"id" => get_filesystem_id($root, $full_path),
+				"path_id" => $path_id,
 				"root" => $root,
 				"name" => $name,
 				"extension" => $extension,
