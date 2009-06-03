@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.WindowManager;
 

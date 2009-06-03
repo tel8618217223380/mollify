@@ -1,7 +1,6 @@
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.filesystem.handler;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 
 public interface FileSystemActionHandlerFactory {
 
