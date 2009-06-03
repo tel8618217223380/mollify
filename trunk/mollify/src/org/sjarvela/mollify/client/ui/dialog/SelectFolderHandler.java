@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 
-public interface SelectDirectoryListener {
+public interface SelectFolderHandler {
 
 	void onSelect(Directory selected);
 

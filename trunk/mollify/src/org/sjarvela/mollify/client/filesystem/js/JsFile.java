@@ -20,8 +20,8 @@ public class JsFile extends JavaScriptObject {
 		return this.id;
 	}-*/;
 
-	public final native String getPathId() /*-{
-		return this.path_id;
+	public final native String getParentId() /*-{
+		return this.parent_id;
 	}-*/;
 
 	public final native String getName() /*-{
@@ -36,18 +36,18 @@ public class JsFile extends JavaScriptObject {
 		return this.size;
 	}-*/;
 
-	public static JsFile create(String id, String pathId, String name, String extension,
-			int size) {
+	public static JsFile create(String id, String name, String parentId,
+			String extension, int size) {
 		JsFile result = JsFile.createObject().cast();
-		result.putValues(id, pathId, name, extension, size);
+		result.putValues(id, name, parentId, extension, size);
 		return result;
 	}
 
-	private final native void putValues(String id, String pathId, String name,
-			String extension, int size) /*-{
+	private final native void putValues(String id, String name,
+			String parentId, String extension, int size) /*-{
 		this.id = id;
-		this.path_id = pathId;
 		this.name = name;
+		this.parent_id = parentId;
 		this.extension = extension;
 		this.size = size;
 	}-*/;

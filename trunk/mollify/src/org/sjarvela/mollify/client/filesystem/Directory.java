@@ -7,19 +7,19 @@ public class Directory extends FileSystemItem {
 	public static FileSystemItem Parent = new Directory("..");
 
 	private Directory(String name) {
-		super("", name);
+		super("", name, "");
 	}
 
 	private Directory() {
-		super("", "");
+		super("", "", "");
 	}
 
 	protected Directory(JsDirectory dir) {
-		this(dir.getId(), dir.getName());
+		this(dir.getId(), dir.getName(), dir.getParentId());
 	}
 
-	public Directory(String id, String name) {
-		super(id, name);
+	public Directory(String id, String name, String parentId) {
+		super(id, name, parentId);
 	}
 
 	@Override

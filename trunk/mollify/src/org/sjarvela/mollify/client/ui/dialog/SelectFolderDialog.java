@@ -50,7 +50,6 @@ public class SelectFolderDialog extends CenteredDialog implements
 	private final TextProvider textProvider;
 	private final String message;
 	private final String selectActionTitle;
-	private final List<Directory> initialDirectoryPath;
 
 	private Tree folders;
 	private TreeItem rootItem;
@@ -58,14 +57,13 @@ public class SelectFolderDialog extends CenteredDialog implements
 	private Map<TreeItem, Directory> items = new HashMap();
 
 	private List<TreeItem> itemsInitialized = new ArrayList();
-	private SelectDirectoryListener listener;
+	private SelectFolderHandler listener;
 	private TreeItem selected = null;
 
 	public SelectFolderDialog(DialogManager dialogManager,
 			TextProvider textProvider, String title, String message,
 			String selectActionTitle, DirectoryProvider directoryProvider,
-			SelectDirectoryListener listener,
-			List<Directory> initialDirectoryPath) {
+			SelectFolderHandler listener) {
 		super(title, StyleConstants.SELECT_FOLDER_DIALOG);
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
@@ -73,7 +71,6 @@ public class SelectFolderDialog extends CenteredDialog implements
 		this.selectActionTitle = selectActionTitle;
 		this.directoryProvider = directoryProvider;
 		this.listener = listener;
-		this.initialDirectoryPath = initialDirectoryPath;
 
 		if (pleaseWaitText == null)
 			pleaseWaitText = textProvider.getStrings()
@@ -157,8 +154,6 @@ public class SelectFolderDialog extends CenteredDialog implements
 	}
 
 	private void selectInitialDir() {
-		if (initialDirectoryPath == null || initialDirectoryPath.size() == 0)
-			return;
 		// TODO
 	}
 

@@ -81,18 +81,18 @@ public class DemoData {
 
 	private void createDirectoriesAndFiles() {
 		rootDirectories = JavaScriptObject.createArray().cast();
-		rootDirectories.set(0, JsDirectory.create(ROOT_1, "Folder A"));
-		rootDirectories.set(1, JsDirectory.create(ROOT_2, "Folder B"));
+		rootDirectories.set(0, JsDirectory.create(ROOT_1, "Folder A", ""));
+		rootDirectories.set(1, JsDirectory.create(ROOT_2, "Folder B", ""));
 
 		List<Directory> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
-		subDirs.add(new Directory(DIR_1A, "Sub folder A"));
-		subDirs.add(new Directory(DIR_1B, "Sub folder B"));
+		subDirs.add(new Directory(DIR_1A, "Sub folder A", ROOT_1));
+		subDirs.add(new Directory(DIR_1B, "Sub folder B", ROOT_1));
 
 		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
-		subDirs.add(new Directory(DIR_2A, "Sub folder A"));
+		subDirs.add(new Directory(DIR_2A, "Sub folder A", ROOT_2));
 
 		files = new ArrayList();
 		files.add(new File(FILE_1A1, "Example.txt", "path", "txt", 128));

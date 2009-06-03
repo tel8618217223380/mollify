@@ -78,7 +78,7 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_APPLY_DESCRIPTION = "mollify-file-context-apply-description";
 	public static final String FILE_CONTEXT_REMOVE_DESCRIPTION = "mollify-file-context-remove-description";
 	public static final String FILE_CONTEXT_EDIT_PERMISSIONS = "mollify-file-context-edit-permissions";
-	public static final String FILE_CONTEXT_PERMISSION_ACTION = "file-context-permission-action";
+	public static final String FILE_CONTEXT_PERMISSION_ACTION = "file-context-permission";
 	public static final String FILE_CONTEXT_PERMISSION_ACTIONS = "mollify-file-context-permission-actions";
 	public static final String FILE_CONTEXT_DETAILS = "mollify-file-context-details";
 	public static final String FILE_CONTEXT_DETAILS_HEADER = "mollify-file-context-details-header";
