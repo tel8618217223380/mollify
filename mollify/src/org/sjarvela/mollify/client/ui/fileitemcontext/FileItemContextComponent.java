@@ -116,9 +116,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		content.add(createDetails());
 
-		if (permissionsEditable)
-			content.add(createPermissionActions());
-
 		content.add(createButtons());
 		return content;
 	}
@@ -261,7 +258,11 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			this.detailRowValues.put(id, createDetailsRow(content, headers
 					.get(id), id.name().toLowerCase()));
 		}
+		if (permissionsEditable)
+			content.add(createPermissionActions());
+
 		details.add(content);
+
 		details.setVisible(true);
 	}
 

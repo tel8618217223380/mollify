@@ -1,6 +1,15 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
 package org.sjarvela.mollify.client.ui.mainview;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
@@ -17,7 +26,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
@@ -53,8 +62,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.getDialogManager().showRenameDialog(file, this);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
-				List<Directory> directoryList = new ArrayList(); // model.getDirectoryModel().getDirectoryList();
-
 				windowManager.getDialogManager().showSelectFolderDialog(
 						windowManager.getTextProvider().getStrings()
 								.copyFileDialogTitle(),
@@ -62,7 +69,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 								.copyFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
 								.copyFileDialogAction(), directoryProvider,
-						new SelectDirectoryListener() {
+						new SelectFolderHandler() {
 							public void onSelect(Directory selected) {
 								copyFile(file, selected);
 							}
@@ -70,12 +77,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public boolean isDirectoryAllowed(
 									Directory directory, List<Directory> path) {
 								return !directory.getId().equals(
-										file.getPathId());
+										file.getParentId());
 							}
-						}, directoryList);
+						});
 			} else if (action.equals(FileSystemAction.move)) {
-				List<Directory> directoryList = new ArrayList(); // model.getDirectoryModel().getDirectoryList();
-
 				windowManager.getDialogManager().showSelectFolderDialog(
 						windowManager.getTextProvider().getStrings()
 								.moveFileDialogTitle(),
@@ -83,7 +88,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 								.moveFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
 								.moveFileDialogAction(), directoryProvider,
-						new SelectDirectoryListener() {
+						new SelectFolderHandler() {
 							public void onSelect(Directory selected) {
 								moveFile(file, selected);
 							}
@@ -91,9 +96,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public boolean isDirectoryAllowed(
 									Directory directory, List<Directory> path) {
 								return !directory.getId().equals(
-										file.getPathId());
+										file.getParentId());
 							}
-						}, directoryList);
+						});
 			} else if (action.equals(FileSystemAction.delete)) {
 				String title = windowManager.getTextProvider().getStrings()
 						.deleteFileConfirmationDialogTitle();
@@ -122,8 +127,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (action.equals(FileSystemAction.rename)) {
 			windowManager.getDialogManager().showRenameDialog(directory, this);
 		} else if (action.equals(FileSystemAction.move)) {
-			List<Directory> directoryList = new ArrayList(); // model.getDirectoryModel().getDirectoryList();
-
 			windowManager.getDialogManager().showSelectFolderDialog(
 					windowManager.getTextProvider().getStrings()
 							.moveDirectoryDialogTitle(),
@@ -131,7 +134,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							.moveDirectoryMessage(directory.getName()),
 					windowManager.getTextProvider().getStrings()
 							.moveDirectoryDialogAction(), directoryProvider,
-					new SelectDirectoryListener() {
+					new SelectFolderHandler() {
 						public void onSelect(Directory selected) {
 							moveDirectory(directory, selected);
 						}
@@ -142,7 +145,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									&& !directory.equals(candidate)
 									&& !path.contains(directory);
 						}
-					}, directoryList);
+					});
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = windowManager.getTextProvider().getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
@@ -166,14 +169,20 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	protected void copyFile(File file, Directory toDirectory) {
+		if (toDirectory.getId().equals(file.getParentId()))
+			return;
 		fileSystemService.copy(file, toDirectory, createListener());
 	}
 
 	protected void moveFile(File file, Directory toDirectory) {
+		if (toDirectory.getId().equals(file.getParentId()))
+			return;
 		fileSystemService.move(file, toDirectory, createListener());
 	}
 
 	protected void moveDirectory(Directory directory, Directory toDirectory) {
+		if (directory.equals(toDirectory))
+			return;
 		fileSystemService.move(directory, toDirectory, createListener());
 	}
 

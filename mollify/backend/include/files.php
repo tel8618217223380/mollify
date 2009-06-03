@@ -144,6 +144,7 @@
 			$error_details = $path;
 			return FALSE;
 		}
+		
 		$result = array();
 		
 		foreach($files as $i => $name) {
@@ -154,8 +155,8 @@
 	
 			$result[] = array(
 				"id" => get_filesystem_id($root, $full_path),
-				"root" => $root,
-				"name" => $name
+				"name" => $name,
+				"parent_id" => $dir["id"]
 			);
 		}
 		
@@ -177,14 +178,19 @@
 		$path = $item["path"];
 		$root_id = $item["root"];
 		$root_path = get_root_path($root_id);
-		
+		$parent_id = $item["id"];
+				
 		while (true) {
 			$path = dirname($path);
+			$name = basename($path);
+			$id = get_filesystem_id($root_id, dir_path($path));
+			
 			$result[] = array(
-				"id" => get_filesystem_id($root_id, dir_path($path)),
-				"root" => $root,
-				"name" => $name
+				"id" => $id,
+				"name" => $name,
+				"parent_id" => $parent_id
 			);
+			$parent_id = $id;
 			if ($path === '' or $path === $root_path) break;
 		}
 			
@@ -206,7 +212,7 @@
 		$files = get_visible_files_in_dir($path);
 		if ($files === FALSE) return FALSE;
 		
-		$path_id = get_filesystem_id($root, dir_path($path));
+		$parent_id = $dir["id"];
 		$result = array();
 		
 		foreach($files as $full_path) {
@@ -221,8 +227,7 @@
 			
 			$result[] = array(
 				"id" => get_filesystem_id($root, $full_path),
-				"path_id" => $path_id,
-				"root" => $root,
+				"parent_id" => $parent_id,
 				"name" => $name,
 				"extension" => $extension,
 				"size" => filesize($full_path)
@@ -266,26 +271,6 @@
 		if (has_modify_rights($dir)) return "rw";
 		return "ro";
 	}
-
-	/*function set_file_description($file, $description) {		
-		if (!assert_file($file)) return FALSE;
-		return set_item_description($file, $description);
-	}
-
-	function set_directory_description($dir, $description) {		
-		if (!assert_dir($dir)) return FALSE;
-		return set_item_description($dir, $description);
-	}
-
-	function remove_file_description($file) {
-		if (!assert_file($file)) return FALSE;
-		return remove_item_description($file);
-	}
-
-	function remove_directory_description($dir) {
-		if (!assert_dir($dir)) return FALSE;
-		return remove_item_description($dir);
-	}*/
 			
 	function rename_file($file, $new_name) {
 		global $error, $error_details;

@@ -780,7 +780,7 @@ td#mollify-filelist-column-size {
 	padding: 4px;
 }
 
-.mollify-actionlink-file-context-description {
+.mollify-actionlink-file-context-description, .mollify-actionlink-file-context-permission {
 	text-align: right;
 	color: #6488cd;
 	cursor: pointer;
@@ -795,8 +795,12 @@ td#mollify-filelist-column-size {
 	height: 75px;
 }
 
-.file-context-description-actions {
+.mollify-file-context-description-actions, .mollify-file-context-permission-actions {
 	float: right;
+}
+
+.mollify-file-context-permission-actions {
+	padding-top: 6px;
 }
 
 .mollify-actionlink-hover {

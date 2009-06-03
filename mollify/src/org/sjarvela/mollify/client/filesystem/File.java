@@ -14,25 +14,24 @@ import org.sjarvela.mollify.client.filesystem.js.JsFile;
 
 public class File extends FileSystemItem {
 	public static File Empty = new File();
+
 	private final String extension;
 	private final int size;
-	private String pathId;
 
 	private File() {
-		super("", "");
+		super("", "", "");
 		extension = "";
 		size = 0;
 	}
 
 	protected File(JsFile file) {
-		this(file.getId(), file.getPathId(), file.getName(), file
+		this(file.getId(), file.getName(), file.getParentId(), file
 				.getExtension(), file.getSize());
 	}
 
-	public File(String id, String pathId, String name, String extension,
+	public File(String id, String name, String parentId, String extension,
 			int size) {
-		super(id, name);
-		this.pathId = pathId;
+		super(id, name, parentId);
 		this.extension = extension;
 		this.size = size;
 	}
@@ -41,10 +40,6 @@ public class File extends FileSystemItem {
 		return extension;
 	}
 
-	public final String getPathId() {
-		return pathId;
-	}
-	
 	public final int getSize() {
 		return size;
 	}

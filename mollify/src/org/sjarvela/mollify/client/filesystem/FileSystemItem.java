@@ -19,8 +19,9 @@ import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import com.google.gwt.core.client.JsArray;
 
 public abstract class FileSystemItem {
-	String id;
-	String name;
+	protected final String id;
+	protected final String name;
+	protected final String parentId;
 
 	public static File createFrom(JsFile file) {
 		return new File(file);
@@ -45,9 +46,10 @@ public abstract class FileSystemItem {
 		return result;
 	}
 
-	protected FileSystemItem(String id, String name) {
+	protected FileSystemItem(String id, String name, String parentId) {
 		this.id = id;
 		this.name = name;
+		this.parentId = parentId;
 	}
 
 	public String getId() {
@@ -58,6 +60,10 @@ public abstract class FileSystemItem {
 		return name;
 	}
 
+	public final String getParentId() {
+		return parentId;
+	}
+	
 	public abstract boolean isFile();
 
 	public abstract boolean isEmpty();

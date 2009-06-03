@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import java.util.List;
-
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -43,7 +41,7 @@ import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
-import org.sjarvela.mollify.client.ui.dialog.SelectDirectoryListener;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
@@ -114,10 +112,9 @@ public class DialogManager {
 
 	public void showSelectFolderDialog(String title, String message,
 			String actionTitle, DirectoryProvider provider,
-			SelectDirectoryListener listener,
-			List<Directory> initialDirectoryPath) {
+			SelectFolderHandler listener) {
 		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
-				provider, listener, initialDirectoryPath);
+				provider, listener);
 	}
 
 	public void openConfigurationDialog(SettingsService service,

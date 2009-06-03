@@ -16,12 +16,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsDirectory extends JavaScriptObject {
 	public static JsDirectory create(Directory directory) {
-		return create(directory.getId(), directory.getName());
+		return create(directory.getId(), directory.getName(), directory
+				.getParentId());
 	}
 
-	public static JsDirectory create(String id, String name) {
+	public static JsDirectory create(String id, String name, String parentId) {
 		JsDirectory result = JsDirectory.createObject().cast();
-		result.putValues(id, name);
+		result.putValues(id, name, parentId);
 		return result;
 	}
 
@@ -36,9 +37,14 @@ public class JsDirectory extends JavaScriptObject {
 		return this.name;
 	}-*/;
 
-	private final native void putValues(String id, String name) /*-{
+	public final native String getParentId() /*-{
+		return this.parent_id;
+	}-*/;
+
+	private final native void putValues(String id, String name, String parentId) /*-{
 		this.id = id;
 		this.name = name;
+		this.parent_id = parentId;
 	}-*/;
 
 }
