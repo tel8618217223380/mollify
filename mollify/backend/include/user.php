@@ -135,6 +135,7 @@
 	}
 	
 	function authenticate() {
+		global $error, $error_details;
 		if (!isset($_GET["username"]) || !isset($_GET["password"])) {
 			log_error("Invalid authentication request, no username or password provided");
 			$error = "INVALID_REQUEST";
