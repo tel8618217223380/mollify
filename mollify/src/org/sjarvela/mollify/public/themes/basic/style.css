@@ -18,7 +18,7 @@
 	font-size: 8pt;	
 }
 
-#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown {
+#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -703,7 +703,7 @@ td#mollify-filelist-column-size {
 	width: 12px;
 	height: 12px;
 	position: absolute;
-	top: 12px;
+	top: 16px;
 	right: 16px;
 	cursor: pointer;
 	background: url(b-close.png) no-repeat;
@@ -763,6 +763,11 @@ td#mollify-filelist-column-size {
 	padding-bottom: 0px;
 }
 
+.mollify-file-context-width-enforcer {
+	width: 300px;
+	height: 0;
+}
+
 .mollify-file-context-filename {
 	font-weight: bold;
 	margin-bottom: 6px;
@@ -800,7 +805,8 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-file-context-permission-actions {
-	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-right: 6px;
 }
 
 .mollify-actionlink-hover {
@@ -1183,10 +1189,15 @@ span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 
 table.mollify-configuration-dialog-menu {
 	margin: 6px 6px 6px 4px;
+	border: 1px solid #dfdfdf;
+	border-bottom: none;
 }
 
 .mollify-configuration-dialog-menu-item, .mollify-configuration-dialog-menu-item-selected {
-	border: 1px solid #dfdfdf;
+	border-left: 1px solid #ebebeb;
+	border-right: 1px solid #ebebeb;
+	border-bottom: 1px solid #ebebeb;
+	border-bottom: 1px solid #dfdfdf;
 	padding: 6px;
 	height: 15px;
 	width: 150px;
@@ -1199,7 +1210,10 @@ table.mollify-configuration-dialog-menu {
 }
 
 .mollify-configuration-dialog-menu-item-selected {
-	border: 1px solid #8a8a8a;
+	border-left: 1px solid #a3bad8;
+	border-right: 1px solid #a3bad8;
+	border-top: 1px dotted #8a8a8a;
+	border-bottom: 1px dotted #8a8a8a;
 	font-weight: bold;
 	background-color: #a3bad8;
 }

@@ -103,6 +103,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		Panel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_CONTENT);
 
+		Label widthEnforcer = new Label();
+		widthEnforcer.setStyleName(StyleConstants.FILE_CONTEXT_WIDTH_ENFORCER);
+		content.add(widthEnforcer);
+
 		name = new Label();
 		name.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(name);
