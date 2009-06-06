@@ -496,7 +496,27 @@
 				
 		return TRUE;
 	}
-	
+
+	function get_item_permissions($item) {
+		$db = init_db();
+		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);
+		$query = sprintf("SELECT p.user_id, u.name as 'user_name', p.permission, u.permission_mode as 'user_permission_mode' FROM item_permission as p, user as u WHERE p.item_id = '%s' AND u.id = p.user_id", $id);
+		$result = _query($query, $db);
+		
+		if (!$result) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to get item permissions (".$error_details.")");
+			return NULL;
+		}
+		$list = array();
+		while ($row = mysql_fetch_assoc($result)) {
+			$list[] = $row;
+		}
+		mysql_free_result($result);
+		return $list;
+	}
+		
 	function get_item_permission($item, $user_id) {
 		$db = init_db();
 		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);

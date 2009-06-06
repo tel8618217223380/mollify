@@ -84,6 +84,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileListDirectoryType();
 
 	public String errorMessageRequestFailed();
+	
+	public String errorMessageInvalidRequest();
 
 	public String errorMessageNoResponse();
 
@@ -318,5 +320,9 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String itemPermissionEditorListTitle();
 
 	public String itemPermissionEditorDefaultPermissionTitle();
+
+	public String itemPermissionListColumnTitleUser();
+
+	public String itemPermissionListColumnTitlePermission();
 
 }

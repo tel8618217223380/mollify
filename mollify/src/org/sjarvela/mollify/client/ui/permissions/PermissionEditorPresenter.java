@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.FilePermissionMode;
@@ -26,12 +26,12 @@ import org.sjarvela.mollify.client.ui.Formatter;
 
 public class PermissionEditorPresenter {
 	private final FileSystemItem item;
-	private final SettingsService service;
+	private final FileSystemService service;
 	private final PermissionEditorView view;
 	private final DialogManager dialogManager;
 
 	public PermissionEditorPresenter(PermissionEditorView view,
-			SettingsService service, FileSystemItem item,
+			FileSystemService service, FileSystemItem item,
 			DialogManager dialogManager,
 			Formatter<FilePermissionMode> filePermissionFormatter) {
 		this.view = view;

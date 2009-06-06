@@ -18,7 +18,7 @@
 	font-size: 8pt;	
 }
 
-#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu {
+#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -1035,8 +1035,8 @@ span.mollify-upload-info-size {
 
 .mollify-login-dialog-buttons {
 	padding-bottom: 4px;
-	padding-right: 47px;
-	margin: 14px 8px 2px 47px;
+	padding-right: 10px;
+	margin: 14px 8px 2px 55px;
 }
 
 .mollify-login-dialog-buttons .mollify-dialog-button-cancel {
@@ -1044,11 +1044,11 @@ span.mollify-upload-info-size {
 }
 
 .mollify-dialog-login .dialogContent {
-	background: url(home.png) no-repeat 3px 10px;
+	background: url(home.png) no-repeat 8px 11px;
 }
 
 table.mollify-login-dialog-content {
-	margin-left: 47px;
+	margin-left: 55px;
 	margin-right: 8px;
 }
 
@@ -1418,3 +1418,33 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 	height: 14px;
 }
 
+.mollify-permission-editor-content {
+	margin: 4px;
+}
+
+.mollify-permission-editor-item-title, .mollify-permission-editor-default-permission-title, .mollify-permission-editor-list-title {
+	margin-bottom: 3px;
+	margin-top: 6px;
+}
+
+.mollify-permission-editor-item-name {
+	background-color: #efefef;
+	font-style: italic;
+	color: #969696;
+	height: 15px;
+	border: 1px solid #8f8f8f;
+	width: 300px;
+	padding: 2px;
+}
+
+.mollify-permission-list {
+	overflow: auto;
+	margin-right: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	height: 230px;
+}
+
+table.mollify-permission-list-editor {
+	width: 100%;
+}

@@ -325,6 +325,6 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	public void onEditPermissions(FileSystemItem item) {
 		windowManager.getDialogManager().openFilePermissionEditor(
-				settingsService, item);
+				fileSystemService, item);
 	}
 }

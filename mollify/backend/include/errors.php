@@ -13,8 +13,6 @@
 	$ERRORS = array(
 		"UNAUTHORIZED" => array(100, "Unauthorized request"), 
 		"INVALID_REQUEST" => array(101, "Invalid request"),
-		"UNSUPPORTED_ACTION" => array(102, "Unsupported action"),
-		"UNSUPPORTED_OPERATION" => array(103, "Unsupported operation"),
 		"FEATURE_DISABLED" => array(104, "Feature disabled"),
 		"INVALID_CONFIGURATION" => array(105, "Invalid configuration"),
 		"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported"),

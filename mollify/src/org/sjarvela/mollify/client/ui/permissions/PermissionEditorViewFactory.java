@@ -12,17 +12,17 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.DialogManager;
 
 public class PermissionEditorViewFactory {
 	private final TextProvider textProvider;
-	private final SettingsService service;
+	private final FileSystemService service;
 	private final DialogManager dialogManager;
 
 	public PermissionEditorViewFactory(TextProvider textProvider,
-			SettingsService service, DialogManager dialogManager) {
+			FileSystemService service, DialogManager dialogManager) {
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dialogManager = dialogManager;

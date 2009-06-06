@@ -73,67 +73,74 @@
 	function get_fileitem_from_url($id_param) {
 		if (!isset($_GET[$id_param])) return FALSE;
 		
+		global $error;		
 		$id = $_GET[$id_param];
 		$file = get_path_info_from_id($id);
+		
+		if (strpos("..", $file["path"]) != FALSE) {
+			$error = "INVALID_PATH";
+			return FALSE;
+		}
+		
 		$root_id = $file["root"];
 		$root_path = get_root_path($root_id);
 		if (!$root_path) {
 			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
+		
 		$path = $root_path;
-		if (strlen($file["path"]) > 0) $path = join_path($path, $file["path"]);
+		$is_file = FALSE;
 		
-		if (strpos("..", $path) != FALSE) {
-			$error = "INVALID_PATH";
-			return FALSE;
+		if (strlen($file["path"]) > 0) {
+			$path = join_path($path, $file["path"]);
+			$is_file = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
 		}
-		return array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $file["path"]);
+		
+		$item = array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $file["path"], "is_file" => $is_file);
+		
+		if ($is_file and !assert_file($item)) return FALSE;
+		if (!$is_file and !assert_dir($item)) return FALSE;
+		
+		return $item;
 	}
 	
-	function assert_file($filename) {
+	function assert_file($item) {
 		global $error, $error_details;
 		
-		if (!file_exists($filename["path"])) {
+		if (!file_exists($item["path"])) {
+			log_error("File does not exist:".$item["path"]);
 			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($filename["path"]);
+			$error_details = basename($item["path"]);
 			return FALSE;
 		}
-		if(!is_file($filename["path"])) {
+		if(!is_file($item["path"])) {
+			log_error("Item is not a file:".$item["path"]);
 			$error = "NOT_A_FILE";
-			$error_details = basename($filename["path"]);
+			$error_details = basename($item["path"]);
 			return FALSE;
 		}
 		return TRUE;
 	}
 
-	function assert_dir($dirname) {
+	function assert_dir($item) {
 		global $error, $error_details;
 		
-		if (!file_exists($dirname["path"])) {
+		if (!file_exists($item["path"])) {
 			$error = "DIR_DOES_NOT_EXIST";
-			$error_details = basename($dirname["path"]);
+			$error_details = basename($item["path"]);
 			return FALSE;
 		}
-		if(!is_dir($dirname["path"])) {
+		if(!is_dir($item["path"])) {
 			$error = "NOT_A_DIR";
-			$error_details = basename($dirname["path"]);
+			$error_details = basename($item["path"]);
 			return FALSE;
 		}
 		return TRUE;
 	}
-	
-	function assert_item_type($item_type) {
-		return ($item_type === 'd' or $item_type === 'f');
-	}
 		
-	function get_directories($dir = NULL) {
+	function get_directories($dir) {
 		global $error, $error_details;
-
-		if ($dir === NULL) {
-			$dir = get_fileitem_from_url("dir");
-			if (!$dir) return FALSE;
-		}
 		
 		$root = $dir["root"];
 		$path = $dir["path"];
@@ -197,15 +204,10 @@
 		return $result;
 	}
 	
-	function get_files($dir = NULL) {
+	function get_files($dir) {
 		global $error, $error_details;
 		$ignored = array('descript.ion', 'mollify.uac');
-		
-		if ($dir === NULL) {
-			$dir = get_fileitem_from_url("dir");
-			if (!$dir) return FALSE;
-		}
-		
+				
 		$root = $dir["root"];
 		$path = $dir["path"];
 		

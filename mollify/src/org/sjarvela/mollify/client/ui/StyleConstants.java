@@ -330,5 +330,6 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_ITEM_NAME = "mollify-permission-editor-item-name";
 	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION = "mollify-permission-editor-default-permission";
 	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION_TITLE = "mollify-permission-editor-default-permission-title";
+	public static final String PERMISSION_EDITOR_VIEW_BUTTONS = "mollify-permission-editor-buttons";
 
 }

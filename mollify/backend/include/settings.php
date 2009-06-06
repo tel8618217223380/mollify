@@ -132,6 +132,7 @@
 				}
 				$result = remove_user_folder($_GET["user_id"], $_GET["id"]);
 				break;
+
 			default:
 				$error = "UNSUPPORTED_OPERATION";
 				$error_details = $action;
