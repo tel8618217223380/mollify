@@ -153,10 +153,6 @@
 				return set_item_description($item, urldecode($_GET["description"]));
 
 			case "remove_description":
-				if (!isset($_GET["item_type"])) {
-					$error = "INVALID_REQUEST";
-					break;
-				}
 				if (!$_SESSION["settings"]["enable_description_update"]) {
 					log_error("Cannot edit descriptions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
@@ -171,10 +167,6 @@
 				return remove_item_description($item);
 
 			case "get_item_permissions":
-				if (!isset($_GET["item_type"])) {
-					$error = "INVALID_REQUEST";
-					break;
-				}
 				if (!$_SESSION["settings"]["enable_permission_update"]) {
 					log_error("Cannot edit permissions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
