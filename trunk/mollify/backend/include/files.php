@@ -75,13 +75,7 @@
 		
 		global $error;		
 		$id = $_GET[$id_param];
-		$file = get_path_info_from_id($id);
-		
-		if (strpos("..", $file["path"]) != FALSE) {
-			$error = "INVALID_PATH";
-			return FALSE;
-		}
-		
+		$file = get_path_info_from_id($id);		
 		$root_id = $file["root"];
 		$root_path = get_root_path($root_id);
 		if (!$root_path) {
@@ -93,6 +87,10 @@
 		$is_file = FALSE;
 		
 		if (strlen($file["path"]) > 0) {
+			if (strpos("..", $file["path"]) != FALSE) {
+				$error = "INVALID_PATH";
+				return FALSE;
+			}
 			$path = join_path($path, $file["path"]);
 			$is_file = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
 		}

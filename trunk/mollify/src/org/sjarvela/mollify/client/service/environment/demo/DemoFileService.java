@@ -95,12 +95,12 @@ public class DemoFileService implements FileSystemService {
 
 	public void getItemPermissions(FileSystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener) {
-		FileItemUserPermission defaultPermission = new FileItemUserPermission(
-				item, null, FilePermissionMode.ReadOnly);
-		FileItemUserPermission p1 = new FileItemUserPermission(item, data
-				.getUsers().get(0), FilePermissionMode.ReadOnly);
-		FileItemUserPermission p2 = new FileItemUserPermission(item, data
-				.getUsers().get(1), FilePermissionMode.ReadWrite);
+		FileItemUserPermission defaultPermission = FileItemUserPermission
+				.create(item.getId(), null, FilePermissionMode.ReadOnly);
+		FileItemUserPermission p1 = FileItemUserPermission.create(item.getId(),
+				data.getUsers().get(0), FilePermissionMode.ReadOnly);
+		FileItemUserPermission p2 = FileItemUserPermission.create(item.getId(),
+				data.getUsers().get(1), FilePermissionMode.ReadWrite);
 		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}
 }

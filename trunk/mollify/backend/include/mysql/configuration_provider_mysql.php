@@ -511,7 +511,7 @@
 		}
 		$list = array();
 		while ($row = mysql_fetch_assoc($result)) {
-			$list[] = $row;
+			$list[] = array("item" => $item["id"], "user" => array("id" => $row["user_id"], "name" => $row["user_name"], "permission_mode" => $row["user_permission_mode"]), "permission" => $row["permission"]);
 		}
 		mysql_free_result($result);
 		return $list;

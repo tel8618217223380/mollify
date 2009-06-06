@@ -10,29 +10,40 @@
 
 package org.sjarvela.mollify.client.session;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import com.google.gwt.core.client.JavaScriptObject;
 
-public class FileItemUserPermission {
-	private final FileSystemItem item;
-	private final User user;
-	private final FilePermissionMode permission;
-
-	public FileItemUserPermission(FileSystemItem item, User user,
+public class FileItemUserPermission extends JavaScriptObject {
+	public static FileItemUserPermission create(String itemId, User user,
 			FilePermissionMode permission) {
-		this.item = item;
+		FileItemUserPermission result = FileItemUserPermission.createObject()
+				.cast();
+		result.putValues(itemId, user, permission.getStringValue());
+		return result;
+	}
+
+	private final native void putValues(String itemId, User user,
+			String permission) /*-{
+		this.item_id = itemId;
 		this.user = user;
 		this.permission = permission;
+	}-*/;
+
+	protected FileItemUserPermission() {
 	}
 
-	public FileSystemItem getItem() {
-		return item;
-	}
+	public final native String getItemId() /*-{
+		return this.item_id;
+	}-*/;
 
-	public FilePermissionMode getPermission() {
-		return permission;
-	}
+	public final native User getUser() /*-{
+		return this.user;
+	}-*/;
 
-	public User getUser() {
-		return user;
+	private final native String getPermissionString() /*-{
+		return this.permission;
+	}-*/;
+
+	public final FilePermissionMode getPermission() {
+		return FilePermissionMode.fromString(getPermissionString());
 	}
 }

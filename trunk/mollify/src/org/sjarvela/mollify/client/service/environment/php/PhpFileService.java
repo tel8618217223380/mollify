@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestTyp
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
@@ -86,7 +87,8 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.get_item_details, item), resultListener);
+		service.doRequest(getUrl(FileAction.get_item_details, item),
+				resultListener);
 	}
 
 	public void getDirectoryDetails(Directory item,
@@ -94,7 +96,8 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.get_item_details, item), resultListener);
+		service.doRequest(getUrl(FileAction.get_item_details, item),
+				resultListener);
 	}
 
 	public void rename(FileSystemItem item, String newName,
@@ -172,9 +175,18 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener) {
-		service.doRequest(getUrl(FileAction.get_item_permissions, item,
-				new UrlParam("id", item.getId())), resultListener);
+			final ResultListener<List<FileItemUserPermission>> resultListener) {
+		service.doRequest(getUrl(FileAction.get_item_permissions, item),
+				new ResultListener<JsArray<FileItemUserPermission>>() {
+					public void onFail(ServiceError error) {
+						resultListener.onFail(error);
+					}
+
+					public void onSuccess(JsArray<FileItemUserPermission> result) {
+						resultListener.onSuccess(JsUtil.asList(result,
+								FileItemUserPermission.class));
+					}
+				});
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,
