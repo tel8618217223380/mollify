@@ -69,13 +69,18 @@
 	
 	if ($request_type === "configuration") {
 		process_configuration_request();
-	} else {
+	} else if ($request_type === "filesystem") {
 		require_once("include/filesystem_services.php");
 		process_filesystem_request();
+	} else {
+		$error = "INVALID_REQUEST";
+		$error_details = "Unsupported request type: ".$request_type;
+		log_error($error_details);
 	}
 	
 	if ($result === FALSE) {
 		$result = get_error_message($error, $error_details);
+		log_error($result["error"].":".$result["details"]);
 	} else {
 		if ($result === TRUE) $result = array();
 		$result = get_success_message($result);

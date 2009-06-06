@@ -86,7 +86,7 @@ public class PermissionEditorView extends CenteredDialog {
 	@Override
 	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.RENAME_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_BUTTONS);
 		buttons.add(createButton(textProvider.getStrings().dialogCloseButton(),
 				StyleConstants.DIALOG_BUTTON_CLOSE,
 				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,

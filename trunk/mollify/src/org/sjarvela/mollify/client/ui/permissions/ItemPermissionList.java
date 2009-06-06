@@ -44,9 +44,10 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 	private static List<GridColumn> getColumns(TextProvider textProvider) {
 		if (ALL_COLUMNS == null) {
 			COLUMN_USER = new DefaultGridColumn("user", textProvider
-					.getStrings().userListColumnTitleName(), false);
+					.getStrings().itemPermissionListColumnTitleUser(), false);
 			COLUMN_PERMISSION = new DefaultGridColumn("permission",
-					textProvider.getStrings().userListColumnTitleType(), false);
+					textProvider.getStrings()
+							.itemPermissionListColumnTitlePermission(), false);
 
 			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_USER,
 					COLUMN_PERMISSION);

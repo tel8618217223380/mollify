@@ -10,301 +10,235 @@
 	 */
 	 
 	function process_filesystem_request() {
-		global $request_type, $result, $error, $error_details;
-		
-		switch ($request_type) {
-			case "file_data":
-				if (!isset($_GET["action"])) {
-					$error = "INVALID_REQUEST";
-					break;
-				}
-				$action = $_GET["action"];
-			
-				switch (strtolower($action)) {
-					case "contents":
-						$dir = get_fileitem_from_url("dir");
-						if (!$dir) break;
-						
-						$result = array("directories" => get_directories($dir),
-							"files" => get_files($dir));
-						break;
-										
-					case "files":
-						$result = get_files();
-						break;
-					
-					case "directories":
-						$result = get_directories();
-						break;
+		global $result, $error, $error_details;
 
-					case "dir_list":
-						if (!isset($_GET["file"]) and !isset($_GET["dir"])) break;
-						$result = get_directory_list();
-						break;
-							
-					case "details":
-						if (!isset($_GET["item_type"])) return;
-						$item = get_fileitem_from_url("id");
-						if (!$item) return;
-						$item_type = strtolower(trim($_GET["item_type"]));
-						
-						if ($item_type === 'f')
-							$result = get_file_details($item);
-						else if ($item_type === 'd')
-							$result = get_directory_details($item);
-						else
-							$error = "INVALID_REQUEST";
-						break;
-						
-					case "upload_status":
-						if (!isset($_GET["id"])) break;
-						$result = get_upload_status($_GET["id"]);
-						break;
-				}
-				break;
-				
-			case "file_action":
-				if (!isset($_GET["action"])) {
-					$error = "INVALID_REQUEST";
-					break;
-				}
-				$action = $_GET["action"];
-			
-				$item = get_fileitem_from_url("id");
-				if (!$item) return;
-				
-				$item_type = FALSE;
-				if (isset($_GET["item_type"])) {
-					$item_type = strtolower(trim($_GET["item_type"]));
-					assert_item_type($item_type);
-				}
-				
-				switch (strtolower($action)) {
-					case "download":
-						// download writes the header and the content, just exit here
-						if (download($item)) return;
-						break;
-	
-					case "download_as_zip":
-						if (!$item_type) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						
-						// download writes the header and the content, just exit here
-						if ($item_type === 'f') {
-							if (download_file_as_zip($item)) return;
-						} else if ($item_type === 'd') {
-							if (download_dir_as_zip($item)) return;
-						} else {
-							$error = "INVALID_REQUEST";
-						}
-						break;
-						
-					case "rename":
-						if (!$item_type or !isset($_GET["to"])) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$to = urldecode($_GET["to"]);
-						
-						if ($item_type === 'f') {
-							$result = rename_file($item, $to);
-						} else if ($item_type === 'd') {
-							$result = rename_directory($item, $to);
-						} else {
-							$error = "INVALID_REQUEST";
-						}
-						break;
-	
-					case "copy":
-						if (!isset($_GET["to"])) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$to = get_fileitem_from_url("to");
-						if (!$to) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						
-						$result = copy_file($item, $to);
-						break;
-	
-					case "move":
-						if (!isset($_GET["to"]) or !$item_type) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$to = get_fileitem_from_url("to");
-						if (!$to) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						
-						if ($item_type === 'f') {
-							$result = move_file($item, $to);
-						} else if ($item_type === 'd') {
-							$result = move_directory($item, $to);
-						} else {
-							$error = "INVALID_REQUEST";
-						}
-						break;
-										
-					case "delete":
-						if (!$item_type) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						
-						if ($item_type === 'f') {
-							$result = delete_file($item);
-						} else if ($item_type === 'd') {
-							$result = delete_directory($item);
-						} else {
-							$error = "INVALID_REQUEST";
-						}
-						break;
-				
-					case "upload":
-						if (upload_file($item)) $result = get_success_message();
-						header("Content-Type: text/html");
-						header("HTTP/1.1 200 OK", true);
-						break;
-	
-					case "create_folder":
-						if (!isset($_GET["name"])) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$result = create_folder($item, $_GET["name"]);
-						break;
-
-					case "set_description":
-						if (!isset($_GET["description"]) or !$item_type) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						if (!$_SESSION["settings"]["enable_description_update"]) {
-							log_error("Cannot edit descriptions, feature disabled by settings");
-							$error = "FEATURE_DISABLED";
-							return FALSE;
-						}
-						if (!is_admin()) {
-							log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
-							$error = "NOT_AN_ADMIN";
-							break;
-						}
-						$description = urldecode($_GET["description"]);
-						
-						if ($item_type === 'f') {
-							if (!assert_file($item)) break;
-						} else if ($item_type === 'd') {
-							if (!assert_dir($item)) break;
-						} else {
-							$error = "INVALID_REQUEST";
-						}
-						$result = set_item_description($item, $description);
-						break;
-
-					case "remove_description":
-						if (!isset($_GET["item_type"])) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						if (!$_SESSION["settings"]["enable_description_update"]) {
-							log_error("Cannot edit descriptions, feature disabled by settings");
-							$error = "FEATURE_DISABLED";
-							return FALSE;
-						}
-						if (!is_admin()) {
-							log_error("Insufficient permissions (remove description): User=[".$_SESSION['user_id']."]");
-							$error = "NOT_AN_ADMIN";
-							break;
-						}
-
-						if ($item_type === 'f') {
-							if (!assert_file($item)) break;
-						} else if ($item_type === 'd') {
-							if (!assert_dir($item)) break;
-						} else {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						
-						$result = remove_item_description($item);
-						break;
-						
-					case "set_permission":
-						if (!isset($_GET["permission"]) or !$item_type) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						if (!$_SESSION["settings"]["enable_permission_update"]) {
-							log_error("Cannot edit permissions, feature disabled by settings");
-							$error = "FEATURE_DISABLED";
-							return FALSE;
-						}
-						if (!is_admin()) {
-							log_error("Insufficient permissions (set permission): User=[".$_SESSION['user_id']."]");
-							$error = "NOT_AN_ADMIN";
-							break;
-						}
-						$permission = $_GET["permission"];
-						$user_id = NULL;
-						if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
-						
-						if ($item_type === 'f') {
-							if (!assert_file($item)) break;
-						} else if ($item_type === 'd') {
-							if (!assert_dir($item)) break;
-						} else {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$result = set_item_permission($item, $user_id, $permission);
-						break;
-
-					case "remove_permission":
-						if (!isset($_GET["item_type"])) {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						if (!$_SESSION["settings"]["enable_permission_update"]) {
-							log_error("Cannot edit permissions, feature disabled by settings");
-							$error = "FEATURE_DISABLED";
-							return FALSE;
-						}
-						if (!is_admin()) {
-							log_error("Insufficient permissions (remove permission): User=[".$_SESSION['user_id']."]");
-							$error = "NOT_AN_ADMIN";
-							break;
-						}
-						$user_id = NULL;
-						if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
-						
-						if ($item_type === 'f') {
-							if (!assert_file($item)) break;
-						} else if ($item_type === 'd') {
-							if (!assert_dir($item)) break;
-						} else {
-							$error = "INVALID_REQUEST";
-							break;
-						}
-						$result = remove_item_permission($item, $user_id);
-						break;
-																		
-					default:
-						$error = "UNSUPPORTED_OPERATION";
-						$error_details = $operation;
-						break;
-				}
-				break;
-
-			default:
-				$error = "UNSUPPORTED_ACTION";
-				$error_details = $_GET["type"];
-				break;	
+		if (!isset($_GET["action"])) {
+			$error = "INVALID_REQUEST";
+			return;
 		}
+		$DATA_ACTIONS = array("get_upload_status");
+		$ITEM_ACTIONS = array("get_files", "get_directories", "get_contents", "get_item_details", "download", "download_as_zip", "rename", "copy", "move", "delete", "upload", "create_folder", "set_description", "remove_description", "get_item_permissions", "get_item_permission", "set_item_permission", "remove_item_permission");
+		
+		$action = strtolower($_GET["action"]);
+		
+		if (in_array($action, $DATA_ACTIONS)) {
+			$result = process_data_request($action);
+		} else if (in_array($action, $ITEM_ACTIONS)) {
+			$result = process_item_request($action);
+		} else {
+			$error = "INVALID_REQUEST";
+			$error_details = "Unsupported action: ".$action;
+		}
+	}
+	
+	function process_item_request($action) {
+		global $result, $error, $error_details;
+
+		$item = get_fileitem_from_url("id");
+		if (!$item) return FALSE;
+		
+		switch ($action) {
+			case "get_contents":
+				return array("directories" => get_directories($item),
+					"files" => get_files($item));
+								
+			case "get_files":
+				return get_files($item);
+			
+			case "get_directories":
+				return get_directories($item);
+					
+			case "get_item_details":				
+				if ($item["is_file"])
+					return get_file_details($item);
+				else
+					return get_directory_details($item);
+				
+			case "download":
+				// download writes the header and the content, just exit here
+				if (download($item)) return TRUE;
+				break;
+
+			case "download_as_zip":
+				// download writes the header and the content, just exit here
+				if ($item["is_file"]) {
+					if (download_file_as_zip($item)) return TRUE;
+				} else {
+					if (download_dir_as_zip($item)) return TRUE;
+				}
+				break;
+				
+			case "rename":
+				if (!isset($_GET["to"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				$to = urldecode($_GET["to"]);
+				
+				if ($item["is_file"]) {
+					return rename_file($item, $to);
+				} else {
+					return rename_directory($item, $to);
+				} 
+
+			case "copy":
+				if (!isset($_GET["to"]) or !$item["is_file"]) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				
+				$to = get_fileitem_from_url("to");
+				if (!$to) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				
+				return copy_file($item, $to);
+
+			case "move":
+				if (!isset($_GET["to"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				
+				$to = get_fileitem_from_url("to");
+				if (!$to) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				
+				if ($item["is_file"]) {
+					return move_file($item, $to);
+				} else {
+					return move_directory($item, $to);
+				}
+								
+			case "delete":
+				if ($item["is_file"]) {
+					return delete_file($item);
+				} else {
+					return delete_directory($item);
+				}
+				break;
+		
+			case "upload":
+				if (upload_file($item)) return TRUE;
+				
+				header("Content-Type: text/html");
+				header("HTTP/1.1 200 OK", true);
+				break;
+
+			case "create_folder":
+				if (!isset($_GET["name"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				return create_folder($item, $_GET["name"]);
+
+			case "set_description":
+				if (!isset($_GET["description"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				if (!$_SESSION["settings"]["enable_description_update"]) {
+					log_error("Cannot edit descriptions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (set description): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+				return set_item_description($item, urldecode($_GET["description"]));
+
+			case "remove_description":
+				if (!isset($_GET["item_type"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				if (!$_SESSION["settings"]["enable_description_update"]) {
+					log_error("Cannot edit descriptions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (remove description): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+				
+				return remove_item_description($item);
+
+			case "get_item_permissions":
+				if (!isset($_GET["item_type"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				if (!$_SESSION["settings"]["enable_permission_update"]) {
+					log_error("Cannot edit permissions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (set permission): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+														
+				return get_item_permissions($item);
+				
+			case "set_item_permission":
+				if (!isset($_GET["permission"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				if (!$_SESSION["settings"]["enable_permission_update"]) {
+					log_error("Cannot edit permissions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (set permission): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+				$permission = $_GET["permission"];
+				$user_id = NULL;
+				if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
+				
+				return set_item_permission($item, $user_id, $permission);
+
+			case "remove_item_permission":
+				if (!$_SESSION["settings"]["enable_permission_update"]) {
+					log_error("Cannot edit permissions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (remove permission): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+				$user_id = NULL;
+				if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
+				
+				return remove_item_permission($item, $user_id);
+		}
+		
+		return FALSE;
+	}
+	
+	function process_data_request($action) {
+		switch ($action) {				
+			case "get_upload_status":
+				if (!isset($_GET["id"])) {
+					$error = "INVALID_REQUEST";
+					break;
+				}
+				return get_upload_status($_GET["id"]);
+		}
+
+		return FALSE;
 	}
 ?>

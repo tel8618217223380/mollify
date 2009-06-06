@@ -13,12 +13,10 @@ package org.sjarvela.mollify.client.service;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 
 public interface SettingsService {
 
@@ -52,7 +50,4 @@ public interface SettingsService {
 
 	void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener);
-
-	void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener);
 }

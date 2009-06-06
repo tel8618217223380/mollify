@@ -15,16 +15,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -34,7 +32,7 @@ public class PhpSettingsService implements SettingsService {
 	private final PhpService service;
 
 	enum ConfigurationAction {
-		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder, get_user_folders, add_user_folder, update_user_folder, remove_user_folder, get_item_permissions
+		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder, get_user_folders, add_user_folder, update_user_folder, remove_user_folder
 	}
 
 	public PhpSettingsService(PhpService service) {
@@ -176,13 +174,6 @@ public class PhpSettingsService implements SettingsService {
 			ResultListener resultListener) {
 		service.doRequest(getUrl(ConfigurationAction.remove_user_folder,
 				new UrlParam("user_id", user.getId()), new UrlParam("id", dir
-						.getId())), resultListener);
-	}
-
-	public void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.get_item_permissions,
-				new UrlParam("id", item
 						.getId())), resultListener);
 	}
 }

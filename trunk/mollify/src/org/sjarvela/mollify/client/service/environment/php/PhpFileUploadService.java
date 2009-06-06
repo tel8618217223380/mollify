@@ -10,13 +10,16 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -28,6 +31,10 @@ import com.google.gwt.json.client.JSONParser;
 
 public class PhpFileUploadService extends PhpFileService implements
 		FileUploadService {
+	enum FileUploadAction {
+		get_upload_status
+	};
+
 	public PhpFileUploadService(PhpService service) {
 		super(service);
 	}
@@ -39,13 +46,17 @@ public class PhpFileUploadService extends PhpFileService implements
 	}
 
 	public String getUploadUrl(Directory directory) {
-		return getFileActionUrl(directory, FileSystemAction.upload);
+		return getUrl(FileAction.upload, directory);
 	}
 
 	public void getUploadProgress(String id,
 			ResultListener<FileUploadStatus> resultListener) {
-		service.doRequest(getFileDataUrl(FileDataAction.upload_status,
-				new UrlParam("id", id)), resultListener);
+		List<UrlParam> params = new ArrayList();
+		params.add(new UrlParam("action", FileAction.get_upload_status.name()));
+		params.add(new UrlParam("id", id));
+
+		service.doRequest(service.getUrl(RequestType.filesystem, params),
+				resultListener);
 	}
 
 	public void handleResult(String resultString, FileUploadListener listener) {

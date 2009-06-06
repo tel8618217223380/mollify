@@ -28,7 +28,7 @@ public class PhpService {
 	private final HtmlRequestHandlerFactory htmlRequestHandlerFactory;
 
 	enum RequestType {
-		file_data, file_action, session, configuration
+		filesystem, session, configuration
 	};
 
 	// In hosted mode (development), MollifyService expects to get the full

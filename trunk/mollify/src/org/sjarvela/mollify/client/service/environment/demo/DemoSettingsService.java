@@ -14,12 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.session.UserPermissionMode;
 
@@ -94,16 +91,5 @@ public class DemoSettingsService implements SettingsService {
 	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
-	}
-
-	public void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener) {
-		FileItemUserPermission defaultPermission = new FileItemUserPermission(
-				item, null, FilePermissionMode.ReadOnly);
-		FileItemUserPermission p1 = new FileItemUserPermission(item, data
-				.getUsers().get(0), FilePermissionMode.ReadOnly);
-		FileItemUserPermission p2 = new FileItemUserPermission(item, data
-				.getUsers().get(1), FilePermissionMode.ReadWrite);
-		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}
 }
