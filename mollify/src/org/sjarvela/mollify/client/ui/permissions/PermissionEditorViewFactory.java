@@ -30,11 +30,12 @@ public class PermissionEditorViewFactory {
 
 	public void show(FileSystemItem item) {
 		ActionDelegator actionDelegator = new ActionDelegator();
+		PermissionEditorModel model = new PermissionEditorModel(item, service);
 		PermissionEditorView view = new PermissionEditorView(textProvider,
 				actionDelegator);
 		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
-				view, service, item, dialogManager,
-				new FilePermissionModeFormatter(textProvider));
+				model, view, dialogManager, new FilePermissionModeFormatter(
+						textProvider));
 		new PermissionEditorGlue(presenter, view, actionDelegator);
 	}
 
