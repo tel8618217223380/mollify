@@ -1299,7 +1299,7 @@ table.mollify-userlist-configuration, table.mollify-folderlist-configuration, ta
 	cursor: pointer;
 }
 
-td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
+td.mollify-userlist-column-name, td.mollify-folderlist-column-name, td.mollify-permissionlist-column-user {
 	padding-left: 6px;
 	cursor: pointer;
 }
@@ -1334,17 +1334,17 @@ td.mollify-userlist-column-name, td.mollify-folderlist-column-name {
 	width: 80px;
 }
 
-td.mollify-userlist-column-type, td.mollify-folderlist-column-path {
+td.mollify-userlist-column-type, td.mollify-folderlist-column-path, td.mollify-permissionlist-column-permission {
 	cursor: pointer;
 }
 
-.mollify-userlist-column-type, .mollify-folderlist-column-path {
+.mollify-userlist-column-type, .mollify-folderlist-column-path, .mollify-permissionlist-column-permission {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
 }
 
-.mollify-userlist th, .mollify-folderlist th, .mollify-userfolderlist th {
+.mollify-userlist th, .mollify-folderlist th, .mollify-userfolderlist th, .mollify-permission-list th {
 	color: #494949;
 	border-bottom: 2px solid #AAAAAA;
 	font-weight: bold;
@@ -1352,16 +1352,16 @@ td.mollify-userlist-column-type, td.mollify-folderlist-column-path {
 	padding-left: 5px;
 }
 
-tr.mollify-userlist-row, tr.mollify-folderlist-row {
+tr.mollify-userlist-row, tr.mollify-folderlist-row, .mollify-permissionlist-row {
 	background-color: #f7f7f7;
 	border-bottom: 1px dotted #c9c9c9;
 }
 
-tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover {
+tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover, .mollify-permissionlist-row-hover {
 	background-color: #efefef;
 }
 
-tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
+tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-permissionlist-row-selected {
 	background-color: #a3bad8;
 }
 
@@ -1423,8 +1423,16 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 }
 
 .mollify-permission-editor-item-title, .mollify-permission-editor-default-permission-title, .mollify-permission-editor-list-title {
-	margin-bottom: 3px;
+	margin-bottom: 4px;
 	margin-top: 6px;
+}
+
+.mollify-permission-editor-default-permission-title, .mollify-permission-editor-list-title {
+	margin-top: 10px;
+}
+
+.mollify-permission-editor-list-title {
+	margin-bottom: 7px;
 }
 
 .mollify-permission-editor-item-name {
@@ -1437,14 +1445,30 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected {
 	padding: 2px;
 }
 
-.mollify-permission-list {
+.mollify-permission-editor-default-permission {
+	width: 305px;
+}
+
+.mollify-permission-editor-list-panel {
 	overflow: auto;
 	margin-right: 6px;
-	padding-left: 6px;
-	padding-right: 6px;
-	height: 230px;
+	width: 300px;
+	height: 160px;
+}
+
+.mollify-permission-list {
+
+
+}
+
+td.mollify-permissionlist-column-user {
+	width: 135px;
 }
 
 table.mollify-permission-list-editor {
+	width: 100%;
+}
+
+.mollify-permission-editor-buttons {
 	width: 100%;
 }
