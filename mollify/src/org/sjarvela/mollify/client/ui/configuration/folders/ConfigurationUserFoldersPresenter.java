@@ -20,14 +20,14 @@ import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
 
 public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
-	private SettingsService service;
+	private ConfigurationService service;
 	private TextProvider textProvider;
 	private ConfigurationDialog parent;
 	private ConfigurationUserFoldersView view;
@@ -39,7 +39,7 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 	List<UserDirectory> userDirectories = null;
 	Map<String, DirectoryInfo> userDirectoryMap = new HashMap();
 
-	public ConfigurationUserFoldersPresenter(SettingsService service,
+	public ConfigurationUserFoldersPresenter(ConfigurationService service,
 			TextProvider textProvider, ConfigurationDialog dialog,
 			ConfigurationUserFoldersView view) {
 		this.service = service;

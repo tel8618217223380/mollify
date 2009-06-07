@@ -20,7 +20,6 @@ import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -37,7 +36,7 @@ public class PermissionEditorView extends CenteredDialog {
 	private ActionButton removeButton;
 
 	public enum Actions implements ResourceId {
-		close, addPermission, editPermission, removePermission
+		ok, cancel, addPermission, editPermission, removePermission
 	}
 
 	public PermissionEditorView(TextProvider textProvider,
@@ -94,12 +93,6 @@ public class PermissionEditorView extends CenteredDialog {
 		panel.add(defaultPermissionTitle);
 		panel.add(defaultPermission);
 
-		Label listTitle = new Label(textProvider.getStrings()
-				.itemPermissionEditorListTitle());
-		listTitle
-				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_LIST_TITLE);
-		panel.add(listTitle);
-
 		Panel listPanel = new FlowPanel();
 		listPanel
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_LIST_PANEL);
@@ -119,13 +112,15 @@ public class PermissionEditorView extends CenteredDialog {
 
 	@Override
 	protected Widget createButtons() {
-		HorizontalPanel buttons = new HorizontalPanel();
+		Panel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_BUTTONS);
-		buttons.add(createButton(textProvider.getStrings().dialogCloseButton(),
+		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
+				StyleConstants.DIALOG_BUTTON_OK, StyleConstants.DIALOG_BUTTON,
+				actionListener, Actions.ok));
+		buttons.add(createButton(
+				textProvider.getStrings().dialogCancelButton(),
 				StyleConstants.DIALOG_BUTTON_CLOSE,
-				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
-				Actions.close));
-
+				StyleConstants.DIALOG_BUTTON, actionListener, Actions.cancel));
 		return buttons;
 	}
 

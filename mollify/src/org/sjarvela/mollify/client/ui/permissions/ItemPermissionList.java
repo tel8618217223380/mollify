@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.Grid;
@@ -29,6 +31,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 	public static List<GridColumn> ALL_COLUMNS = null;
 
 	private final TextProvider textProvider;
+	private Formatter<FilePermissionMode> filePermissionFormatter;
 
 	public ItemPermissionList(TextProvider textProvider, String style) {
 		super(StyleConstants.ITEM_PERMISSION_LIST_HEADER,
@@ -61,13 +64,20 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 				+ column.getId();
 	}
 
-	public GridData getData(FileItemUserPermission permission, GridColumn column) {
+	public GridData getData(FileItemUserPermission userPermission,
+			GridColumn column) {
+		String text = "";
+
 		if (column.equals(ItemPermissionList.COLUMN_USER))
-			return new GridData.Text(permission.getUser().getName());
-		else if (column.equals(ItemPermissionList.COLUMN_PERMISSION))
-			return new GridData.Text(permission.getPermission()
-					.getLocalizedText(textProvider));
-		return new GridData.Text("");
+			text = userPermission.getUserId();
+		else if (column.equals(ItemPermissionList.COLUMN_PERMISSION)) {
+			FilePermissionMode permission = userPermission.getPermission();
+
+			text = filePermissionFormatter != null ? filePermissionFormatter
+					.format(permission) : permission
+					.getLocalizedText(textProvider);
+		}
+		return new GridData.Text(text);
 	}
 
 	private static final List<String> ROW_STYLE = Arrays
@@ -76,4 +86,10 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 	public List<String> getRowStyles(FileItemUserPermission t) {
 		return ROW_STYLE;
 	}
+
+	public void setPermissionFormatter(
+			Formatter<FilePermissionMode> filePermissionFormatter) {
+		this.filePermissionFormatter = filePermissionFormatter;
+	}
+
 }

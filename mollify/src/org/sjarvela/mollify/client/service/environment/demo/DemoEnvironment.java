@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
@@ -27,7 +27,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private DemoData data;
 	private FileSystemService fileSystemService;
 	private FileUploadService demoFileUploadHandler;
-	private SettingsService settingsHandler;
+	private ConfigurationService settingsHandler;
 
 	public void initialize(ClientSettings settings) {
 		Log.info("Mollify Demo");
@@ -36,7 +36,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		this.sessionService = new DemoSessionService(data);
 		this.fileSystemService = new DemoFileService(data);
 		this.demoFileUploadHandler = new DemoFileUploadHandler();
-		this.settingsHandler = new DemoSettingsService(data);
+		this.settingsHandler = new DemoConfigurationService(data);
 	}
 
 	public SessionService getSessionService() {
@@ -51,7 +51,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		return demoFileUploadHandler;
 	}
 
-	public SettingsService getSettingsService() {
+	public ConfigurationService getConfigurationService() {
 		return settingsHandler;
 	}
 

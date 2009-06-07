@@ -15,16 +15,16 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.session.UserPermissionMode;
 
-public class DemoSettingsService implements SettingsService {
+public class DemoConfigurationService implements ConfigurationService {
 
 	private final DemoData data;
 
-	public DemoSettingsService(DemoData data) {
+	public DemoConfigurationService(DemoData data) {
 		this.data = data;
 	}
 

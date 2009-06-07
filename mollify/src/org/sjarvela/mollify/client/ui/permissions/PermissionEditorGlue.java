@@ -27,13 +27,6 @@ public class PermissionEditorGlue {
 			PermissionEditorView view, ActionDelegator actionDelegator) {
 		this.view = view;
 
-		actionDelegator.setActionHandler(PermissionEditorView.Actions.close,
-				new ActionHandler() {
-					public void onAction() {
-						presenter.onClose();
-					}
-				});
-
 		view.addViewListener(new ViewListener() {
 			public void onShow() {
 				presenter.initialize();
@@ -55,6 +48,20 @@ public class PermissionEditorGlue {
 				updateButtons(selected.size() == 1);
 			}
 		});
+
+		actionDelegator.setActionHandler(PermissionEditorView.Actions.ok,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onOk();
+					}
+				});
+
+		actionDelegator.setActionHandler(PermissionEditorView.Actions.cancel,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onClose();
+					}
+				});
 
 		actionDelegator.setActionHandler(
 				PermissionEditorView.Actions.addPermission,

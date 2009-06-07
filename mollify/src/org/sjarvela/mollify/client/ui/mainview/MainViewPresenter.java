@@ -25,12 +25,12 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandle
 import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.PasswordHandler;
@@ -53,7 +53,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
 	private final SessionService sessionService;
-	private final SettingsService settingsService;
+	private final ConfigurationService configurationService;
 	private final FileSystemActionHandler fileSystemActionHandler;
 	private final LogoutHandler logoutHandler;
 	private final TextProvider textProvider;
@@ -61,13 +61,13 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
-			SettingsService settingsService,
+			ConfigurationService configurationService,
 			FileUploadService fileUploadService, TextProvider textProvider,
 			LogoutHandler logoutHandler,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
-		this.settingsService = settingsService;
+		this.configurationService = configurationService;
 		this.fileUploadService = fileUploadService;
 
 		this.windowManager = windowManager;
@@ -297,7 +297,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	public void configure() {
 		windowManager.getDialogManager().openConfigurationDialog(
-				settingsService, this);
+				configurationService, this);
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,
@@ -325,6 +325,6 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	public void onEditPermissions(FileSystemItem item) {
 		windowManager.getDialogManager().openFilePermissionEditor(
-				fileSystemService, item);
+				configurationService, fileSystemService, item);
 	}
 }

@@ -59,8 +59,7 @@ public class InfoDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.INFO_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(
-				textProvider.getStrings().infoDialogOKButton(),
+		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						InfoDialog.this.hide();

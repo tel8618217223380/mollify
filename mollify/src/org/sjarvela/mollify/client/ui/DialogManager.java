@@ -18,10 +18,10 @@ import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.SettingsService;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.session.DefaultPasswordGenerator;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
@@ -118,7 +118,7 @@ public class DialogManager {
 				provider, listener);
 	}
 
-	public void openConfigurationDialog(SettingsService service,
+	public void openConfigurationDialog(ConfigurationService service,
 			PasswordHandler passwordHandler) {
 		new ConfigurationDialog(textProvider, this, sessionProvider
 				.getSession(), service, passwordHandler);
@@ -136,9 +136,11 @@ public class DialogManager {
 		new ResetPasswordDialog(textProvider, passwordGenerator, handler, user);
 	}
 
-	public void openFilePermissionEditor(FileSystemService service,
-			FileSystemItem item) {
-		new PermissionEditorViewFactory(textProvider, service, this).show(item);
+	public void openFilePermissionEditor(
+			ConfigurationService configurationService,
+			FileSystemService fileSystemService, FileSystemItem item) {
+		new PermissionEditorViewFactory(textProvider, configurationService,
+				fileSystemService, this).show(item);
 	}
 
 }

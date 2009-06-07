@@ -184,6 +184,10 @@ public class Grid<T> extends FlexTable {
 		listeners.add(listener);
 	}
 
+	public GridDataProvider getDataProvider() {
+		return dataProvider;
+	}
+
 	public void setDataProvider(GridDataProvider dataProvider) {
 		this.dataProvider = dataProvider;
 	}

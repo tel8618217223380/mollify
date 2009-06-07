@@ -133,6 +133,7 @@ public class StyleConstants {
 	public static final String DIRECTORY_LIST_MENU_ITEM_NONE = "mollify-directory-list-menu-item-none";
 
 	public static final String DIALOG_BUTTON = "mollify-dialog-button";
+	public static final String DIALOG_BUTTON_OK = "mollify-dialog-button-ok";
 	public static final String DIALOG_BUTTON_CLOSE = "mollify-dialog-button-close";
 
 	public static final String INFO_DIALOG_CONTENT = "mollify-info-dialog-content";
@@ -324,7 +325,6 @@ public class StyleConstants {
 
 	public static final String PERMISSION_EDITOR_VIEW = "mollify-permission-editor-dialog";
 	public static final String PERMISSION_EDITOR_VIEW_CONTENT = "mollify-permission-editor-content";
-	public static final String PERMISSION_EDITOR_VIEW_LIST_TITLE = "mollify-permission-editor-list-title";
 	public static final String PERMISSION_EDITOR_VIEW_LIST = "editor";
 	public static final String PERMISSION_EDITOR_VIEW_LIST_PANEL = "mollify-permission-editor-list-panel";
 	public static final String PERMISSION_EDITOR_VIEW_ITEM_TITLE = "mollify-permission-editor-item-title";

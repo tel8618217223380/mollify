@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -53,7 +53,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 
 	public ConfigurationDialog(TextProvider textProvider,
 			DialogManager dialogManager, SessionInfo session,
-			SettingsService service, PasswordHandler passwordHandler) {
+			ConfigurationService service, PasswordHandler passwordHandler) {
 		super(textProvider.getStrings().configurationDialogTitle(),
 				StyleConstants.CONFIGURATION_DIALOG);
 		this.textProvider = textProvider;
