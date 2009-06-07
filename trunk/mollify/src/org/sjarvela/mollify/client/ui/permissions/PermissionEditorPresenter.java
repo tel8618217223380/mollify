@@ -15,6 +15,7 @@ import java.util.Arrays;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.session.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
@@ -39,6 +40,8 @@ public class PermissionEditorPresenter {
 		});
 
 		view.getList().setSelectionMode(SelectionMode.Single);
+		view.getList().setPermissionFormatter(filePermissionFormatter);
+
 		view.getDefaultPermission().setFormatter(filePermissionFormatter);
 	}
 
@@ -56,7 +59,7 @@ public class PermissionEditorPresenter {
 		view.getList().removeAllRows();
 		view.showProgress(true);
 
-		model.refreshPermissions(new Callback() {
+		model.refresh(new Callback() {
 			public void onCallback() {
 				view.showProgress(false);
 				updatePermissions();
@@ -67,7 +70,24 @@ public class PermissionEditorPresenter {
 	private void updatePermissions() {
 		view.getDefaultPermission().setSelectedItem(
 				model.getDefaultPermission());
+		refreshList();
+	}
+
+	private void refreshList() {
 		view.getList().setContent(model.getUserSpecificPermissions());
+	}
+
+	public void onOk() {
+		if (!model.hasChanged()) {
+			onClose();
+			return;
+		}
+
+		model.commit(new Callback() {
+			public void onCallback() {
+				onClose();
+			}
+		});
 	}
 
 	public void onClose() {
@@ -75,7 +95,9 @@ public class PermissionEditorPresenter {
 	}
 
 	public void onAddPermission() {
-
+		model.addPermission(FileItemUserPermission.create(model.getItem(),
+				model.getUsers().get(0), FilePermissionMode.ReadWrite));
+		refreshList();
 	}
 
 	public void onEditPermission() {
@@ -83,6 +105,7 @@ public class PermissionEditorPresenter {
 	}
 
 	public void onRemovePermission() {
-
+		model.removePermission(model.getUserSpecificPermissions().get(0));
+		refreshList();
 	}
 }

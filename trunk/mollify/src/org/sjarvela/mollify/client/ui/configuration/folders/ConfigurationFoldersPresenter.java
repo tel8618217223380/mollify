@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
@@ -25,10 +25,10 @@ import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.Configur
 public class ConfigurationFoldersPresenter implements FolderHandler {
 	private final ConfigurationFoldersView view;
 	private final ConfigurationDialog parent;
-	private final SettingsService service;
+	private final ConfigurationService service;
 	private final TextProvider textProvider;
 
-	public ConfigurationFoldersPresenter(SettingsService service,
+	public ConfigurationFoldersPresenter(ConfigurationService service,
 			TextProvider textProvider, ConfigurationDialog dialog,
 			ConfigurationFoldersView view) {
 		this.service = service;

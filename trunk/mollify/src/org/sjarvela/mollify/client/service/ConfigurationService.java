@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.session.UserPermissionMode;
 
-public interface SettingsService {
+public interface ConfigurationService {
 
 	void getUsers(ResultListener<List<User>> resultListener);
 

@@ -15,10 +15,10 @@ import java.util.List;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.ConfigurationType;
@@ -26,10 +26,10 @@ import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.Configur
 public class ConfigurationUsersPresenter implements UserHandler {
 	private final ConfigurationUsersView view;
 	private final ConfigurationDialog parent;
-	private final SettingsService service;
+	private final ConfigurationService service;
 	private final TextProvider textProvider;
 
-	public ConfigurationUsersPresenter(SettingsService service,
+	public ConfigurationUsersPresenter(ConfigurationService service,
 			ConfigurationDialog dialog, TextProvider textProvider,
 			ConfigurationUsersView view) {
 		this.service = service;

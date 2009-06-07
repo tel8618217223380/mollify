@@ -17,7 +17,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -28,14 +28,14 @@ import org.sjarvela.mollify.client.util.JsUtil;
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
 
-public class PhpSettingsService implements SettingsService {
+public class PhpConfigurationService implements ConfigurationService {
 	private final PhpService service;
 
 	enum ConfigurationAction {
 		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder, get_user_folders, add_user_folder, update_user_folder, remove_user_folder
 	}
 
-	public PhpSettingsService(PhpService service) {
+	public PhpConfigurationService(PhpService service) {
 		this.service = service;
 	}
 

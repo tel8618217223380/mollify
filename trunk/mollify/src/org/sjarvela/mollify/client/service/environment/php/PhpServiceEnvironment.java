@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service.environment.php;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
@@ -26,7 +26,7 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpFileService fileSystemService;
 	private PhpFileUploadService uploadHandler;
 	private PhpSessionService sessionService;
-	private PhpSettingsService settingsHandler;
+	private PhpConfigurationService settingsHandler;
 
 	public void initialize(ClientSettings settings) {
 		service = new PhpService(settings.getString(PARAM_SERVICE_PATH),
@@ -34,7 +34,7 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);
-		settingsHandler = new PhpSettingsService(service);
+		settingsHandler = new PhpConfigurationService(service);
 	}
 
 	public SessionService getSessionService() {
@@ -49,7 +49,7 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 		return uploadHandler;
 	}
 
-	public SettingsService getSettingsService() {
+	public ConfigurationService getConfigurationService() {
 		return settingsHandler;
 	}
 

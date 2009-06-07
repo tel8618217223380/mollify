@@ -500,7 +500,7 @@
 	function get_item_permissions($item) {
 		$db = init_db();
 		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);
-		$query = sprintf("SELECT p.user_id, u.name as 'user_name', p.permission, u.permission_mode as 'user_permission_mode' FROM item_permission as p, user as u WHERE p.item_id = '%s' AND u.id = p.user_id", $id);
+		$query = sprintf("SELECT p.user_id, p.permission FROM item_permission as p, user as u WHERE p.item_id = '%s' AND u.id = p.user_id", $id);
 		$result = _query($query, $db);
 		
 		if (!$result) {
@@ -511,7 +511,7 @@
 		}
 		$list = array();
 		while ($row = mysql_fetch_assoc($result)) {
-			$list[] = array("item" => $item["id"], "user" => array("id" => $row["user_id"], "name" => $row["user_name"], "permission_mode" => $row["user_permission_mode"]), "permission" => $row["permission"]);
+			$list[] = array("item" => $item["id"], "user_id" => $row["user_id"], "permission" => $row["permission"]);
 		}
 		mysql_free_result($result);
 		return $list;

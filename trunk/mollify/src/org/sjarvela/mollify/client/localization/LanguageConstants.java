@@ -84,7 +84,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileListDirectoryType();
 
 	public String errorMessageRequestFailed();
-	
+
 	public String errorMessageInvalidRequest();
 
 	public String errorMessageNoResponse();
@@ -107,8 +107,6 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String directorySelectorMenuNoItemsText();
 
-	public String infoDialogOKButton();
-
 	public String infoDialogInfoTitle();
 
 	public String infoDialogErrorTitle();
@@ -116,6 +114,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String confirmationDialogYesButton();
 
 	public String confirmationDialogNoButton();
+
+	public String dialogOkButton();
 
 	public String dialogCancelButton();
 
@@ -316,8 +316,6 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String itemPermissionEditorDialogTitle();
 
 	public String itemPermissionEditorItemTitle();
-
-	public String itemPermissionEditorListTitle();
 
 	public String itemPermissionEditorDefaultPermissionTitle();
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SettingsService;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.ConfigurationType;
 import org.sjarvela.mollify.client.ui.configuration.folders.ConfigurationFoldersGlue;
@@ -29,13 +29,13 @@ import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersPres
 import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersView;
 
 public class ConfigurationViewManager {
-	private final SettingsService service;
+	private final ConfigurationService service;
 	private final TextProvider textProvider;
 	private final ConfigurationDialog dialog;
 	private final Map<ResourceId, Configurator> cache = new HashMap();
 
 	public ConfigurationViewManager(TextProvider textProvider,
-			SettingsService service, ConfigurationDialog dialog) {
+			ConfigurationService service, ConfigurationDialog dialog) {
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dialog = dialog;

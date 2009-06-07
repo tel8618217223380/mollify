@@ -65,7 +65,7 @@ public class MainViewFactory {
 				directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(windowManager,
 				model, view, environment.getSessionService(),
-				fileSystemService, environment.getSettingsService(),
+				fileSystemService, environment.getConfigurationService(),
 				environment.getFileUploadHandler(), textProvider,
 				logoutListener, fileSystemActionHandlerFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
