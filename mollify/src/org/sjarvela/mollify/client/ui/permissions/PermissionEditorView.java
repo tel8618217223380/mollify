@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -79,7 +80,29 @@ public class PermissionEditorView extends CenteredDialog {
 		listTitle
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_LIST_TITLE);
 		panel.add(listTitle);
-		panel.add(list);
+
+		Panel listPanel = new FlowPanel();
+		listPanel
+				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_LIST_PANEL);
+		listPanel.add(list);
+		panel.add(listPanel);
+
+		HorizontalPanel actions = new HorizontalPanel();
+		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
+				StyleConstants.DIALOG_BUTTON_CLOSE,
+				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
+				Actions.addPermission));
+		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
+				StyleConstants.DIALOG_BUTTON_CLOSE,
+				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
+				Actions.editPermission));
+		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
+				StyleConstants.DIALOG_BUTTON_CLOSE,
+				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
+				Actions.removePermission));
+
+		panel.add(actions);
+
 		return panel;
 	}
 
