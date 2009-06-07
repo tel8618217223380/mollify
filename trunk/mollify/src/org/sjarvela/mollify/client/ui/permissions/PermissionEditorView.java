@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.session.FilePermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -31,6 +32,9 @@ public class PermissionEditorView extends CenteredDialog {
 	private final ItemPermissionList list;
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
+	private ActionButton addButton;
+	private ActionButton editButton;
+	private ActionButton removeButton;
 
 	public enum Actions implements ResourceId {
 		close, addPermission, editPermission, removePermission
@@ -53,6 +57,21 @@ public class PermissionEditorView extends CenteredDialog {
 		defaultPermission
 				.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION);
 
+		addButton = createButton(textProvider.getStrings()
+				.itemPermissionEditorButtonAddPermission(),
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.addPermission);
+		editButton = createButton(textProvider.getStrings()
+				.itemPermissionEditorButtonEditPermission(),
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.editPermission);
+		removeButton = createButton(textProvider.getStrings()
+				.itemPermissionEditorButtonRemovePermission(),
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_REMOVE_PERMISSION,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.removePermission);
 		initialize();
 	}
 
@@ -87,20 +106,12 @@ public class PermissionEditorView extends CenteredDialog {
 		listPanel.add(list);
 		panel.add(listPanel);
 
-		HorizontalPanel actions = new HorizontalPanel();
-		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
-				StyleConstants.DIALOG_BUTTON_CLOSE,
-				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
-				Actions.addPermission));
-		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
-				StyleConstants.DIALOG_BUTTON_CLOSE,
-				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
-				Actions.editPermission));
-		actions.add(createButton(textProvider.getStrings().dialogCloseButton(),
-				StyleConstants.DIALOG_BUTTON_CLOSE,
-				StyleConstants.DIALOG_BUTTON_CLOSE, actionListener,
-				Actions.removePermission));
-
+		Panel actions = new FlowPanel();
+		actions
+				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS);
+		actions.add(addButton);
+		actions.add(editButton);
+		actions.add(removeButton);
 		panel.add(actions);
 
 		return panel;
@@ -137,4 +148,15 @@ public class PermissionEditorView extends CenteredDialog {
 		return list;
 	}
 
+	public ActionButton getAddPermissionButton() {
+		return addButton;
+	}
+
+	public ActionButton getEditPermissionButton() {
+		return editButton;
+	}
+
+	public ActionButton getRemovePermissionButton() {
+		return removeButton;
+	}
 }

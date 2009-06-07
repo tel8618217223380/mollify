@@ -10,14 +10,23 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.session.FileItemUserPermission;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
+import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
+import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class PermissionEditorGlue {
+	private final PermissionEditorView view;
 
 	public PermissionEditorGlue(final PermissionEditorPresenter presenter,
 			PermissionEditorView view, ActionDelegator actionDelegator) {
+		this.view = view;
+
 		actionDelegator.setActionHandler(PermissionEditorView.Actions.close,
 				new ActionHandler() {
 					public void onAction() {
@@ -31,7 +40,52 @@ public class PermissionEditorGlue {
 			}
 		});
 
+		view.getList().addListener(new GridListener<FileItemUserPermission>() {
+			public void onColumnClicked(FileItemUserPermission t,
+					GridColumn column) {
+			}
+
+			public void onColumnSorted(GridColumn column, Sort sort) {
+			}
+
+			public void onIconClicked(FileItemUserPermission t) {
+			}
+
+			public void onSelectionChanged(List<FileItemUserPermission> selected) {
+				updateButtons(selected.size() == 1);
+			}
+		});
+
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.addPermission,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onAddPermission();
+					}
+				});
+
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.editPermission,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onEditPermission();
+					}
+				});
+
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.removePermission,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onRemovePermission();
+					}
+				});
+
 		view.show();
+	}
+
+	protected void updateButtons(boolean selected) {
+		view.getEditPermissionButton().setEnabled(selected);
+		view.getRemovePermissionButton().setEnabled(selected);
 	}
 
 }
