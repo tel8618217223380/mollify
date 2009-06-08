@@ -35,11 +35,13 @@ public class PermissionEditorModel {
 	private ResultCallback<ServiceError> errorCallback = null;
 	private List<User> users = null;
 	private Map<String, User> usersById = new HashMap();
-	private FilePermissionMode defaultPermission;
-	private FilePermissionMode originalDefaultPermission;
+
+	private FileItemUserPermission defaultPermission;
+	private boolean originalDefaultPermissionExists;
 
 	private List<FileItemUserPermission> effectivePermissions = new ArrayList();
 	private List<FileItemUserPermission> newPermissions = new ArrayList();
+	private List<FileItemUserPermission> modifiedPermissions = new ArrayList();
 	private List<FileItemUserPermission> removedPermissions = new ArrayList();
 
 	public PermissionEditorModel(FileSystemItem item,
@@ -103,7 +105,11 @@ public class PermissionEditorModel {
 		boolean defaultPermissionFound = false;
 
 		effectivePermissions.clear();
-		defaultPermission = FilePermissionMode.None;
+		newPermissions.clear();
+		modifiedPermissions.clear();
+		removedPermissions.clear();
+		defaultPermission = FileItemUserPermission.create(item, null,
+				FilePermissionMode.None);
 
 		for (FileItemUserPermission permission : permissions) {
 			if (permission.getUserId() != null) {
@@ -115,19 +121,35 @@ public class PermissionEditorModel {
 					return;
 				}
 				defaultPermissionFound = true;
-				defaultPermission = permission.getPermission();
+				defaultPermission = permission;
 			}
 		}
-		originalDefaultPermission = defaultPermission;
+		originalDefaultPermissionExists = defaultPermissionFound;
 	}
 
 	public boolean hasChanged() {
-		return !defaultPermission.equals(originalDefaultPermission)
-				|| newPermissions.size() > 0 || removedPermissions.size() > 0;
+		return newPermissions.size() > 0 || modifiedPermissions.size() > 0
+				|| removedPermissions.size() > 0;
 	}
 
 	public FilePermissionMode getDefaultPermission() {
-		return defaultPermission;
+		return defaultPermission.getPermission();
+	}
+
+	public void setDefaultPermission(FilePermissionMode permission) {
+		defaultPermission.setPermission(permission);
+
+		if (FilePermissionMode.None.equals(permission)) {
+			asRemoved(defaultPermission);
+
+			if (!originalDefaultPermissionExists)
+				modifiedPermissions.remove(defaultPermission);
+		} else {
+			if (originalDefaultPermissionExists)
+				asModified(defaultPermission);
+			else
+				asNew(defaultPermission);
+		}
 	}
 
 	public List<FileItemUserPermission> getUserSpecificPermissions() {
@@ -139,17 +161,59 @@ public class PermissionEditorModel {
 		effectivePermissions.add(permission);
 	}
 
+	public void editPermission(FileItemUserPermission permission) {
+		if (newPermissions.contains(permission))
+			return;
+		modifiedPermissions.add(permission);
+	}
+
 	public void removePermission(FileItemUserPermission permission) {
 		effectivePermissions.remove(permission);
 
-		if (newPermissions.contains(permission))
+		if (newPermissions.contains(permission)) {
 			newPermissions.remove(permission);
-		else
+		} else {
+			modifiedPermissions.remove(permission);
+			removedPermissions.add(permission);
+		}
+	}
+
+	public void commit(final Callback successCallback) {
+		fileSystemService.updateItemPermissions(newPermissions,
+				modifiedPermissions, removedPermissions,
+				new ResultListener<Boolean>() {
+					public void onFail(ServiceError error) {
+						onError(error);
+					}
+
+					public void onSuccess(Boolean result) {
+						successCallback.onCallback();
+					}
+				});
+	}
+
+	private void asNew(FileItemUserPermission permission) {
+		removedPermissions.remove(permission);
+		modifiedPermissions.remove(permission);
+
+		if (!newPermissions.contains(permission))
+			newPermissions.add(permission);
+	}
+
+	private void asModified(FileItemUserPermission permission) {
+		removedPermissions.remove(permission);
+		newPermissions.remove(permission);
+
+		if (!modifiedPermissions.contains(permission))
+			modifiedPermissions.add(permission);
+	}
+
+	private void asRemoved(FileItemUserPermission permission) {
+		removedPermissions.remove(permission);
+		modifiedPermissions.remove(permission);
+
+		if (!removedPermissions.contains(permission))
 			removedPermissions.add(permission);
 	}
 
-	public void commit(Callback successCallback) {
-		// TODO Auto-generated method stub
-
-	}
 }
