@@ -103,4 +103,12 @@ public class DemoFileService implements FileSystemService {
 				.getUsers().get(1), FilePermissionMode.ReadWrite);
 		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}
+
+	public void updateItemPermissions(
+			List<FileItemUserPermission> newPermissions,
+			List<FileItemUserPermission> modifiedPermissions,
+			List<FileItemUserPermission> removedPermissions,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
 }

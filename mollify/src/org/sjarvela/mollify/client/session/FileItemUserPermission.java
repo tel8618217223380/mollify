@@ -49,4 +49,13 @@ public class FileItemUserPermission extends JavaScriptObject {
 	public final FilePermissionMode getPermission() {
 		return FilePermissionMode.fromString(getPermissionString());
 	}
+
+	public final void setPermission(FilePermissionMode permission) {
+		setPermissionString(permission.getStringValue());
+	};
+
+	public final native void setPermissionString(String permission) /*-{
+		this.permission = permission;
+	}-*/;
+
 }

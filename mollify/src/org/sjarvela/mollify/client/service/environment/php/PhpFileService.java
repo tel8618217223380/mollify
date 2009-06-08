@@ -36,7 +36,7 @@ public class PhpFileService implements FileSystemService {
 	protected final PhpService service;
 
 	enum FileAction {
-		get_files, get_directories, get_contents, get_item_details, get_upload_status, rename, copy, move, delete, create_folder, download, download_as_zip, set_description, remove_description, get_item_permissions, upload
+		get_files, get_directories, get_contents, get_item_details, get_upload_status, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions
 	};
 
 	public PhpFileService(PhpService service) {
@@ -176,6 +176,9 @@ public class PhpFileService implements FileSystemService {
 
 	public void getItemPermissions(FileSystemItem item,
 			final ResultListener<List<FileItemUserPermission>> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Get user permissions: " + item.getId());
+
 		service.doRequest(getUrl(FileAction.get_item_permissions, item),
 				new ResultListener<JsArray<FileItemUserPermission>>() {
 					public void onFail(ServiceError error) {
@@ -187,6 +190,14 @@ public class PhpFileService implements FileSystemService {
 								FileItemUserPermission.class));
 					}
 				});
+	}
+
+	public void updateItemPermissions(
+			List<FileItemUserPermission> newPermissions,
+			List<FileItemUserPermission> modifiedPermissions,
+			List<FileItemUserPermission> removedPermissions,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,

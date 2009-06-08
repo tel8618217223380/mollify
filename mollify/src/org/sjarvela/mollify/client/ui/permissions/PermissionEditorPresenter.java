@@ -101,7 +101,7 @@ public class PermissionEditorPresenter {
 	}
 
 	public void onEditPermission() {
-
+		model.editPermission(model.getUserSpecificPermissions().get(0));
 	}
 
 	public void onRemovePermission() {
