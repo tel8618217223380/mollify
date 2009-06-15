@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.6.1 ==
+  * Fixed path ID issue causing "Failed to get response from server"
+  * Fixed MySQL issues
+
 === Version 0.9.6 ==
   * Localizations for German and French
   * Support for editable and system managed descriptions
