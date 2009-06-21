@@ -9,9 +9,8 @@ This page describes how to set up Mollify development environment
 
 	Mollify development environment requires following components:
   	* Eclipse IDE for Java EE (http://www.eclipse.org/downloads/)
-  	* GWT 1.6 (http://code.google.com/webtoolkit/download.html)
   	* Google Eclipse Plugin (http://code.google.com/appengine/docs/java/tools/eclipse.html)
-  	* Eclipse Subversion plugin, such as Subclipse (no need to download manually)
+  	* Subversive plugin for Eclipse
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
 	Download these and continue to installation.
@@ -22,18 +21,23 @@ This page describes how to set up Mollify development environment
 		
 		Unpack Eclipse (remember to choose "Eclipse IDE for Java EE" instead of just "Eclipse IDE for Java") package into preferred location, Eclipse is ready to run.
 		
-=== 2. GWT ===
+=== 2. Google Eclipse Plugin ===
 	
-		Follow installation instructions here: http://code.google.com/webtoolkit/gettingstarted.html#Install
+		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
+		
+		Install components "Google Plugin for Eclipse 3.4" and "Google Web Toolkit SDK 1.6.4"
 	
-=== 3. Subclipse ===
-		Any subversion plugin is probably just fine, but following is instructions for Subclipse:
-	
+=== 3. Subversive ===
+
   	# Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
-  	# Add Subclipse update site, which depends on Eclipse and Subclipse versions. This can be found from http://subclipse.tigris.org/servlets/ProjectProcess?pageID=p4wYuA. For example, update site url for Subclipse version 1.4 in Eclipse 3.4 is "http://subclipse.tigris.org/update_1.4.x".	
-  	# From the Subclipse tree added to Available Software list, select at least "Subclipse" and "SVNKit Adapter"
+  	# Add Subversive update site, for example "http://download.eclipse.org/technology/subversive/0.7/update-site/"
+  	# From the component tree added to Available Software list, select "Subversive SVN Team Provider"
   	# Click "Install..."
-	
+  	# Add SVN Connectors update sit, for example "http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/"
+  	# From the component tree added to Available Software list, select "Subversive SVN Connectors" and "SVNKit 1.3.0 Implementation"
+  	# Click "Install..."
+	# Open Eclipse preferences and select Team -> SVN -> SVN Connector, make sure there is a connector selected (if not, wrong combination of Subversive and SVN Connector was installed)
+
 === 4. Web server ===
 	
 		* WAMP: http://www.wampserver.com/en/
@@ -57,22 +61,24 @@ This page describes how to set up Mollify development environment
 	For example, to checkout read-only version from command line, open console and go to source folder ("/Projects/Mollify/svn"), and run following command:
 	
 	{{{
-	svn checkout http://mollify.googlecode.com/svn/trunk/ mollify-read-only
+	svn checkout http://mollify.googlecode.com/svn/trunk/ trunk-read-only
+	}}}
+	
+	Members can checkout writable copy with command:
+	
+	{{{
+	svn checkout https://mollify.googlecode.com/svn/trunk/ trunk --username [USERNAME]
 	}}}
 	
 == 3.3 Setting up Eclipse project ==
 
   	# Launch Eclipse
   	# If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
-  	# Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select the source folder created in step 3.1 ("`/Projects/Mollify/svn`"). Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
-  	# If you see a compiler error "`Unbound classpath variable: 'GWT_HOME/gwt-user.jar' in project 'mollify'`", a classpath variable is missing. Open Eclipse Preferences "Java -> Build Path -> Classpath Variables". Click "New..." to add a new variable. Enter "`GWT_HOME`" as name, and click "Folder..." to choose the GWT installation root folder (for example "`/bin/gwt-mac-1.6.4`"). Accept changes, and Eclipse will suggest full rebuild (required).
-  	# Open "Project -> Properties" and "Java Build Path". In libraries tab, remove following items from the list: "`gwt-servlet.jar`", "`EAR Libraries`" and "`Web App Libraries`". Click OK to accept changes.
-  	# Finally, delete the folder "`WebContent`" in Project Explorer if it exists.
+  	# Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select folder "/Projects/Mollify/svn/trunk/mollify" created in step 3.1. Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
 
 	Project is now configured.
 
 == 3.4 Setting up version control in Eclipse ==
-  	# Make sure that plugin is configured properly, by opening "Preferences / Team / SVN". Choose a correct SVN interface (for example "SVNKit"), and click OK
   	# Open Eclipse perspective "Team Synchronize", and click "Synchronize..." toolbar button.
   	# Select synchronization type "svn" and resources "mollify trunk", and click "Finish"
 	
@@ -82,35 +88,54 @@ This page describes how to set up Mollify development environment
 
 	First make sure your web server configuration is working by installing a Mollify release version as you would in a real web server host. Once you get the Mollify client running in browser, the backend can be used in development as well.
 	
-	The application host page used in GWT emulation is at "`org.sjarvela.mollify/public/App.html`". In development mode, the service path must be defined in the host file. This path is the location of the backend service file (service.php), and unlike in production version, this must be full path (without `service.php`). For example, in MAMP configuration this could be "`http://localhost:7777/mollify/`".
-	
-	In the App.html file, this would be a setting
-	{{{
-	<meta name="mollify:property" content="service-path=http://localhost:7777/mollify/">
-	}}}
-	
-	To create a launch configuration, select "Run -> Run Configurations...". Under "GWT Hosted Mode Application", select "org.sjarvela.mollify.App" and click "Run". This will launch GWT emulator, and after this the launch configuration is available also directly from the Run menu in toolbar. The same configuration can be used for debugging.
+	GWT has a built-in web server for running servlet based projects, but it does not support PHP. On the other hand, same origin policy (SOP) prevents Mollify client from referring into PHP service located in different server. This is why Mollify development version must be configured to run on the same server where PHP files are located.
 
-== 3.6 Developing backend php files ==
+=== Step 1: Create Run Configuration ==
+  	# Under folder "src/org.sjarvela.mollify" in Eclipse, copy "Dev.xml" to "App.gwt.xml" in same folder (if you already have "App.gwt.xml", skip this)
+	# Open run Configuration management by selecting Run -> Run Configurations...
+	# Select "Web Application" and click "New"
+	# Enter name for configuration
+	# Select project "mollify" via "Browse..."
+	# Apply changes, and run it once. Mollify will not start yet, but this force Eclipse to build needed files under "war/org.sjarvela.mollify.App"
 
-	Mollify development is divided into two separate areas, client development in Java, and backend development in PHP.
+=== Step 2: Create Development Version of Backend ==
+  	# Under your web server root, create a folder "mollify-dev"
+	# From the Eclipse build folder ("war/org.sjarvela.mollify.App"), copy following files into this folder: "index.html", "hosted.html", "org.sjarvela.mollify.App.nocache.js"
 	
-	Even running Mollify in Eclipse or browser requires backend files copied in the web server, as it is in no way under GWT emulation. Backend always requires a real PHP web server, and a configuration as in production. If you wish to develop the backend files, or just keep them always up to date with trunk, it is best to create a symbolic link into the trunk version.
+	Open "index.html" for editing
+		# Make sure it refers to the "org.sjarvela.mollify.App.nocache.js" in the same folder
+		# Add/edit service location meta parameter
+		
+		{{{
+		<meta name="mollify:property" content="service-path=[SERVICE_URL]">
+		}}}
+		
+	 Service path is URL to backend files, which must be located in the same web server. Any backend installation can be used, but for development it is recommended to create a symbolic link from "svn/trunk/backend" into a folder under www root, and use url pointing into this. See chapter 3.6 for more information.
+
+=== Step 3: Finish Run Configuration ==	
+
+	# Open previously created run configuration for editing
+	# Uncheck "Run built-in server"
+	# In GWT tab, enter URL to the web folder created earlier (for example with MAMP "http://localhost:8888/mollify-dev")
+
+== 3.6 Backend installation ==
+	
+	Running Mollify in Eclipse or browser requires backend installation in the web server, as it is in no way under GWT emulation. Backend always requires a PHP enabled web server, and a configuration as in production. In development environment it is recommended to create a symbolic link from version controlled backend folder into the web server root.
 	
 	For example, in Mac/Linux environments:
 	
 	{{{
 	cd [WEB_SERVER_ROOT_HERE]
-	ln -s [MOLLIFY_SOURCE_FOLDER_HERE]/svn/backend mollify
+	ln -s [MOLLIFY_SOURCE_FOLDER_HERE]/svn/trunk/mollify/backend mollify
 	}}}
 	
-	This would make a link from the trunk folder "backend" into a folder named "mollify" under the web root. This way, the service php file is accessible via url "http://localhost/mollify/service.php".
+	This creates a link from the trunk folder "backend" into a folder named "mollify" under the web root. This way, the service php file is accessible via url "http://localhost/mollify/service.php".
 	
-	Now you can keep editing the backend files under the trunk folder, and they are always reflected to the web server.
+	Any changes in trunk are always reflected to the web server, no need to copy files manually.
 
-= 4 Ant scripts =
+= 4 Build script =
 
-	Source root contains Ant build script (build.xml), which needs configuration specific properties file. Example is located under folder "script" in source root. Copy this to the root folder of your Mollify project ("`/Projects/Mollify`"), and modify it as instructed.
+	Source root contains Ant build script (build.xml), which needs configuration specific properties file. Example properties file is located under folder "script" in source root. Copy this to the root folder of your Mollify project ("`/Projects/Mollify`"), and modify it as instructed.
 
 	Script contains following targets:
 	
@@ -120,11 +145,11 @@ This page describes how to set up Mollify development environment
 
 == deploy ==
 
-	Compilse sources and creates deploy packages, both installation and source packages.
+	Compiles sources and creates deploy packages, both installation and source packages.
 
 == update ==
 
-	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. This target automates this so that you don't have to compile and copy folders manually. In properties file, there are following paths defined:
+	While developing client, it may be useful to try compiled version in a real browser instead of GWT emulator. This target automates this step that you don't have to compile and copy folders manually. In properties file, following paths must be defined:
   	* Absolute path to the Mollify project folder (for example "`/Projects/Mollify`")
   	* Absolute path to the web server root (for example "`/Applications/MAMP/htdocs`")
 
