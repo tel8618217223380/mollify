@@ -13,13 +13,11 @@ This page describes how to set up Mollify development environment
   	* Subversive plugin for Eclipse
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
-	Download these and continue to installation.
-
 = 2. Component Installation =
 
 === 1. Eclipse ===
 		
-		Unpack Eclipse (remember to choose "Eclipse IDE for Java EE" instead of just "Eclipse IDE for Java") package into preferred location, Eclipse is ready to run.
+		Download and unpack Eclipse (remember to choose "Eclipse IDE for Java EE" instead of just "Eclipse IDE for Java") package into preferred location, Eclipse is ready to run.
 		
 === 2. Google Eclipse Plugin ===
 	
@@ -30,13 +28,12 @@ This page describes how to set up Mollify development environment
 === 3. Subversive ===
 
   	# Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
-  	# Add Subversive update site, for example "http://download.eclipse.org/technology/subversive/0.7/update-site/"
-  	# From the component tree added to Available Software list, select "Subversive SVN Team Provider"
+  	# Add Subversive update site: "http://download.eclipse.org/technology/subversive/0.7/update-site/"
+  	# Add SVN Connectors update site: "http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/"
+  	# From the Subversive tree added to Available Software list, select "Subversive SVN Team Provider"
+  	# From the SVN connector tree added to Available Software list, select "Subversive SVN Connectors" and "SVNKit 1.3.0 Implementation"
   	# Click "Install..."
-  	# Add SVN Connectors update sit, for example "http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/"
-  	# From the component tree added to Available Software list, select "Subversive SVN Connectors" and "SVNKit 1.3.0 Implementation"
-  	# Click "Install..."
-	# Open Eclipse preferences and select Team -> SVN -> SVN Connector, make sure there is a connector selected (if not, wrong combination of Subversive and SVN Connector was installed)
+  	# Open Eclipse preferences and select Team -> SVN -> SVN Connector, make sure there is a connector selected (if not, wrong combination of Subversive and SVN Connector was installed)
 
 === 4. Web server ===
 	
