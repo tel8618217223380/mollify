@@ -20,6 +20,7 @@
 	}
 	
 	function on_session_start($user_id, $username) {
+		return TRUE;
 	}
 
 	function find_user($username, $password) {
