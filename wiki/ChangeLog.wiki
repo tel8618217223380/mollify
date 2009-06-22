@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.6.2 ==
+  * Fixed malformed 0.9.6.1 package
+
 === Version 0.9.6.1 ==
   * Fixed path ID issue causing "Failed to get response from server"
   * Fixed MySQL issues
