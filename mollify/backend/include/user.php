@@ -80,9 +80,8 @@
 	
 	function get_session_info() {
 		$info = array("authentication_required" => authentication_required(), "authenticated" => FALSE);
-		$auth = check_authentication();
 		
-		if ($auth) {
+		if (check_authentication()) {
 			$info["authenticated"] = TRUE;
 			$info["username"] = $_SESSION['username'];
 			$info["user_id"] = $_SESSION['user_id'];
@@ -155,11 +154,9 @@
 	function logout() {
 		$_SESSION = array();
 
-		if (isset($_COOKIE[session_name()])) {
-		    setcookie(session_name(), '', time()-42000, '/');
-		}
-		session_destroy();
-		
+		if (isset($_COOKIE[session_name()]))
+			setcookie(session_name(), '', time()-42000, '/');
+		session_destroy();		
 		return TRUE;
 	}
 	

@@ -74,6 +74,7 @@
 		global $error, $error_detail;
 		
 		$version = get_installed_version($db);
+		$error = NULL;
 		if (!$version) return TRUE;
 		
 		$error = "MOLLIFY_ALREADY_INSTALLED";
@@ -83,7 +84,7 @@
 		return FALSE;
 	}
 
-	header("Content-type: text/plain");	
+	header("Content-type: text/plain");
 	if (!$_POST or !isset($_POST["action"]) or $_POST["action"] === "") return;
 
 	require("common.php");	
@@ -98,11 +99,11 @@
 		case "check_db_conf":
 			if (!check_configuration()) break;
 			if (!check_mysql()) break;
-			
+
 			$db = get_db();
 			if (!$db) break;
 			if (!check_installed($db)) break;
-			
+
 			$connection = check_connection($db);
 			$db_exists = FALSE;
 			if ($connection) $db_exists = check_database($db);

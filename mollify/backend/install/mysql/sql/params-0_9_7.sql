@@ -1,1 +1,1 @@
-INSERT INTO parameter (name, value) VALUES ('version', '0_9_5');
+INSERT INTO parameter (name, value) VALUES ('version', '0_9_7');

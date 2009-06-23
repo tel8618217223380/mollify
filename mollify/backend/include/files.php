@@ -291,7 +291,7 @@
 			$error_details = basename($new);
 			return FALSE;
 		}
-		
+		log_error('['.$new.']');
 		if (!rename($old, $new)) return FALSE;
 		move_item_description($file, get_fileitem($file["root"], $new));
 		return TRUE;

@@ -76,7 +76,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		this.textProvider = textProvider;
 		this.logoutHandler = logoutHandler;
 		this.fileSystemActionHandler = fileSystemActionHandlerFactory
-				.create(createRefreshCallback());
+				.create(createReloadCallback());
 
 		this.view.getFileContext()
 				.setFileActionHandler(fileSystemActionHandler);
@@ -210,6 +210,14 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		return createListener(createRefreshCallback());
 	}
 
+	private Callback createReloadCallback() {
+		return new Callback() {
+			public void onCallback() {
+				reload();
+			}
+		};
+	}
+	
 	private Callback createRefreshCallback() {
 		return new Callback() {
 			public void onCallback() {

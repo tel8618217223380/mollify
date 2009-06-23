@@ -62,7 +62,7 @@
 		
 		if (!isset($DB_USER) or !isset($DB_PASSWORD)) {
 			log_error("No database information defined");
-			die();
+			fatal_error("INVALID_CONFIGURATION");
 		}
 		
 		if (isset($DB_HOST)) $host = $DB_HOST;
@@ -74,11 +74,11 @@
 		$db = mysql_connect($host, $DB_USER, $DB_PASSWORD);
 		if (!$db) {
 			log_error("Could not connect to database (host=".$host.", user=".$DB_USER.", password=".$DB_PASSWORD."), error: ".mysql_error());
-			die();
+			fatal_error("INVALID_CONFIGURATION");
 		}
 		if (!mysql_select_db($database, $db)) {
 			log_error("Could not find database: ".$database);
-			die();
+			fatal_error("INVALID_CONFIGURATION");
 		}
 		return $db;
 	}
@@ -87,7 +87,7 @@
 		$result = mysql_query($query, $db);
 		if (!$result) {
 			log_error("Error executing query (".$query."): ".mysql_error($db));
-			die();
+			fatal_error("INVALID_CONFIGURATION");
 		}
 		return $result;
 	}
@@ -103,7 +103,7 @@
 			return FALSE;
 		} else if ($matches > 1) {
 			log_error("Duplicate user found with name [".$username."] and password");
-			die();
+			return FALSE;
 		}
 		
 		return mysql_fetch_assoc($result);
