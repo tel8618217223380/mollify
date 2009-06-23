@@ -34,6 +34,12 @@
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
+	function fatal_error($error = "") {
+		if ($error === "") $error = "UNEXPECTED_ERROR";
+		return_json(get_error_message($error));
+		die();
+	}
+	
 	function get_configuration_info() {
 		return array(
 			"configuration_update_support" => get_configuration_setting("configuration_update"),

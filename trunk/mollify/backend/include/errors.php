@@ -31,7 +31,9 @@
 		"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file"),
 		"ZIP_FAILED" => array(213, "Creating a zip package failed"),
 		"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission"),
-		"NOT_AN_ADMIN" => array(215, "User is not an administrator")
+		"NOT_AN_ADMIN" => array(215, "User is not an administrator"),
+		
+		"UNEXPECTED_ERROR" => array(999, "Unexpected error occurred"),
 	);
 
 ?>

@@ -190,13 +190,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		fileSystemService.delete(item, createListener());
 	}
 
-	private ResultListener<Boolean> createListener() {
-		return new ResultListener<Boolean>() {
+	private ResultListener createListener() {
+		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				windowManager.getDialogManager().showError(error);
 			}
 
-			public void onSuccess(Boolean result) {
+			public void onSuccess(Object result) {
 				actionCallback.onCallback();
 			}
 		};

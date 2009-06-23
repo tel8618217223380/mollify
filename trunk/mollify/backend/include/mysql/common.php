@@ -202,8 +202,7 @@
 	}
 
 	function create_tables($connection) {
-		global $VERSION;
-		return _exec_sql_file($connection, "sql/create_tables-".$VERSION.".sql", "COULD_NOT_CREATE_TABLES");
+		return _exec_sql_file($connection, "sql/create_tables-".get_current_version().".sql", "COULD_NOT_CREATE_TABLES");
 	}
 
 	function update_db($connection, $from) {
