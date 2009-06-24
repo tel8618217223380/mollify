@@ -109,13 +109,13 @@
 		if (!file_exists($item["path"])) {
 			log_error("File does not exist:".$item["path"]);
 			$error = "FILE_DOES_NOT_EXIST";
-			$error_details = basename($item["path"]);
+			$error_details = _basename($item["path"]);
 			return FALSE;
 		}
 		if(!is_file($item["path"])) {
 			log_error("Item is not a file:".$item["path"]);
 			$error = "NOT_A_FILE";
-			$error_details = basename($item["path"]);
+			$error_details = _basename($item["path"]);
 			return FALSE;
 		}
 		return TRUE;
@@ -126,12 +126,12 @@
 		
 		if (!file_exists($item["path"])) {
 			$error = "DIR_DOES_NOT_EXIST";
-			$error_details = basename($item["path"]);
+			$error_details = _basename($item["path"]);
 			return FALSE;
 		}
 		if(!is_dir($item["path"])) {
 			$error = "NOT_A_DIR";
-			$error_details = basename($item["path"]);
+			$error_details = _basename($item["path"]);
 			return FALSE;
 		}
 		return TRUE;
@@ -187,7 +187,7 @@
 				
 		while (true) {
 			$path = dirname($path);
-			$name = basename($path);
+			$name = _basename($path);
 			$id = get_filesystem_id($root_id, dir_path($path));
 			
 			$result[] = array(
@@ -216,7 +216,7 @@
 		$result = array();
 		
 		foreach($files as $full_path) {
-			$name = basename($full_path);
+			$name = _basename($full_path);
 			$ext_pos = strrpos($name, '.');
 			
 			if ($ext_pos > 0) {
@@ -235,6 +235,12 @@
 		}
 		
 		return $result;
+	}
+	
+	function _basename($path) {
+		$name = strrchr($path, DIRECTORY_SEPARATOR);
+		if (!$name) return "";
+		return substr($name, 1);
 	}
 	
 	function get_file_details($file) {
@@ -279,7 +285,7 @@
 		if (!has_modify_rights($file)) {
 			log_error("Insufficient file permissions (rename file): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
-			$error_details = basename($file);
+			$error_details = _basename($file);
 			return FALSE;
 		}
 		
@@ -288,7 +294,7 @@
 		
 		if (file_exists($new)) {
 			$error = "FILE_ALREADY_EXISTS";
-			$error_details = basename($new);
+			$error_details = _basename($new);
 			return FALSE;
 		}
 		log_error('['.$new.']');
@@ -310,11 +316,11 @@
 		}
 		
 		$origin = $file["path"];
-		$target = join_path($to["path"], basename($origin));
+		$target = join_path($to["path"], _basename($origin));
 		
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
-			$error_details = basename($target);
+			$error_details = _basename($target);
 			return FALSE;
 		}
 		
@@ -334,11 +340,11 @@
 		}
 		
 		$origin = $file["path"];
-		$target = join_path($to["path"], basename($origin));
+		$target = join_path($to["path"], _basename($origin));
 		
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
-			$error_details = basename($target);
+			$error_details = _basename($target);
 			return FALSE;
 		}
 		
@@ -363,11 +369,11 @@
 		}
 		
 		$origin = $dir["path"];
-		$target = dir_path(join_path($to["path"], basename($origin)));
+		$target = dir_path(join_path($to["path"], _basename($origin)));
 		
 		if (file_exists($target)) {
 			$error = "DIR_ALREADY_EXISTS";
-			$error_details = basename($target);
+			$error_details = _basename($target);
 			return FALSE;
 		}
 		
@@ -418,13 +424,13 @@
 		if (!has_modify_rights($file)) {
 			log_error("Insufficient file permissions (delete): User=[".$_SESSION['user_id']."], file=[".$file."]");
 			$error = "NO_MODIFY_RIGHTS";
-			$error_details = basename($file);
+			$error_details = _basename($file);
 			return FALSE;
 		}
 		
 		if (!unlink($file["path"])) {
 			$error = "CANNOT_DELETE";
-			$error_details = basename($file["path"]);
+			$error_details = _basename($file["path"]);
 			return FALSE;
 		}
 		
@@ -525,7 +531,7 @@
 				
 			if (file_exists($target)) {
 				$error = "FILE_ALREADY_EXISTS";
-				$error_details = basename($target);
+				$error_details = _basename($target);
 				return FALSE;
 			}
 			
@@ -585,7 +591,7 @@
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");
-		header("Content-Disposition: attachment; filename=\"".basename($filename)."\";");
+		header("Content-Disposition: attachment; filename=\""._basename($filename)."\";");
 		header("Content-Transfer-Encoding: binary");
 		header("Pragma: hack");
 		header("Content-Length: ".filesize($filename));
@@ -606,12 +612,13 @@
 		
 		if (!assert_file($file)) return FALSE;
 		$path = $file["path"];
-		$zip_name = basename($path).'.zip';
+		$name = _basename($path);
+		$zip_name = $name.'.zip';
 		
 		if (isset($ZIP_OPTIONS)) $zip = new ZipStream($zip_name, $ZIP_OPTIONS);
 		else $zip = new ZipStream($zip_name);
 
-		$zip->add_file_from_path(basename($path), $path);
+		$zip->add_file_from_path($name, $path);
 		$zip->finish();
 		
 		return TRUE;
@@ -638,9 +645,8 @@
 		if (isset($ZIP_OPTIONS)) $zip = new ZipStream($zip_name, $ZIP_OPTIONS);
 		else $zip = new ZipStream($zip_name);
 		
-		foreach($files as $file) {
+		foreach($files as $file)
 			$zip->add_file_from_path(substr($file, $offset), $file);
-		}
 		$zip->finish();
 		
 		return TRUE;
@@ -659,9 +665,9 @@
 		$result = array();
 		
 		foreach($files as $i => $name) {
-			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored)) {
+			if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 				continue;
-			}
+
 			$full_path = join_path($path, $name);
 			
 			if (is_dir($full_path)) {
