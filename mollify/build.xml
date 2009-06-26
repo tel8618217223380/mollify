@@ -5,7 +5,6 @@
 	<property name="lib.dir" location="${root.dir}/lib" /> 
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="src.dir" location="${root.dir}/src" />
-	<property name="gwt.entrypoint.class" value="org.sjarvela.mollify.App" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
 	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}.tar" />
 	
@@ -30,15 +29,15 @@
 
 	<target name="init-dev">
 		<property name="gwt.style" value="DETAILED" />
-		<copy file="${src.dir}/org/sjarvela/mollify/Dev.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
+		<property name="gwt.module" value="org.sjarvela.mollify.DevelopmentClient" />
 	</target>
 
 	<target name="init-deploy">
 		<property name="gwt.style" value="OBF" />
-		<copy file="${src.dir}/org/sjarvela/mollify/Deploy.xml" tofile="${src.dir}/org/sjarvela/mollify/App.gwt.xml" overwrite="true" />
+		<property name="gwt.module" value="org.sjarvela.mollify.Client" />
 	</target>
 	
-	<target name="compile" depends="init">
+	<target name="do-compile" depends="init">
 		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
 			<os name="Mac OS X"/>  
 		</condition>  
@@ -56,11 +55,11 @@
 			<arg value="6" />
 			<arg value="-style" />
 			<arg value="${gwt.style}" />		
-			<arg value="${gwt.entrypoint.class}" />
+			<arg value="${gwt.module}" />
 		</java>
 	</target>
 	
-	<target name="deploy-only">
+	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 		
 		<delete dir="${deploy.dir}" />
@@ -85,8 +84,7 @@
 		</copy>
 		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}"/>
 		
-		<tar destfile="${deploy.dir}/${deploy.package.name}" basedir="${target.dir}" />
-		<gzip destfile="${deploy.dir}/${deploy.package.name}.gz" src="${deploy.dir}/${deploy.package.name}"/>
+		<gzip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}"/>
 		
 		<delete dir="${target.dir}" />
 
@@ -107,13 +105,12 @@
 			</fileset>
 		</copy>
 
-		<tar destfile="${deploy.dir}/${deploy.src.package.name}" basedir="${target.dir}" />
-		<gzip destfile="${deploy.dir}/${deploy.src.package.name}.gz" src="${deploy.dir}/${deploy.src.package.name}" />
+		<gzip destfile="${deploy.dir}/${deploy.src.package.name}.zip" basedir="${target.dir}" />
 
 		<delete dir="${target.dir}" />
 	</target>
 		
-	<target name="update-only">
+	<target name="do-update">
 		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
 		
 		<exec executable="rm" failonerror="false">
@@ -137,9 +134,12 @@
 		</exec>
 	</target>
 
-	<target name="update" depends="init-dev, compile, update-only">
+	<target name="compile" depends="init-dev, do-compile">
 	</target>
 
-	<target name="deploy" depends="init-deploy, compile, deploy-only, init-dev">
+	<target name="update" depends="init-dev, do-compile, do-update">
+	</target>
+	
+	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
 	</target>
 </project>
