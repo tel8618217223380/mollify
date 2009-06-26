@@ -9,10 +9,6 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-	 
-	function log_error($message) {
-		error_log("MOLLIFY: ".$message);
-	}
 	
 	function import_configuration_provider() {
 		global $CONFIGURATION_PROVIDER;
@@ -39,5 +35,26 @@
 		$settings = get_configuration_settings();
 		if (array_key_exists($name, $settings)) return $settings[$name];
 		return FALSE;
+	}
+	
+	function initialize_logging() {
+		global $SETTINGS;
+		if (!isset($SETTINGS['debug']) or !$SETTINGS['debug']) {
+			$SETTINGS['debug'] = FALSE;
+			return;
+		}
+		require_once('FirePHPCore/fb.php');
+		FB::setEnabled(true);
+	}
+	
+	function log_message($message) {
+		global $SETTINGS;
+		if ($SETTINGS['debug']) FB::log($message);
+	}
+	
+	function log_error($message) {
+		global $SETTINGS;
+		error_log("MOLLIFY: ".$message);
+		if ($SETTINGS['debug']) FB::error($message);
 	}
 ?>

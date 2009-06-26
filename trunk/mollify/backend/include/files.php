@@ -297,7 +297,7 @@
 			$error_details = _basename($new);
 			return FALSE;
 		}
-		log_error('['.$new.']');
+		log_message('rename from ['.$old.'] to ['.$new.']');
 		if (!rename($old, $new)) return FALSE;
 		move_item_description($file, get_fileitem($file["root"], $new));
 		return TRUE;
@@ -323,7 +323,8 @@
 			$error_details = _basename($target);
 			return FALSE;
 		}
-		
+
+		log_message('copy from ['.$origin.'] to ['.$target.']');
 		return copy($origin, $target);
 	}
 
@@ -347,7 +348,8 @@
 			$error_details = _basename($target);
 			return FALSE;
 		}
-		
+
+		log_message('move from ['.$origin.'] to ['.$target.']');		
 		if (!rename($origin, $target)) return FALSE;
 		
 		if ($_SESSION["settings"]["enable_description_update"])
@@ -377,6 +379,7 @@
 			return FALSE;
 		}
 		
+		log_message('move from ['.$origin.'] to ['.$target.']');
 		if (!rename($origin, $target)) return FALSE;
 		
 		if ($_SESSION["settings"]["enable_description_update"])
@@ -409,6 +412,7 @@
 			return FALSE;
 		}
 		
+		log_message('rename from ['.$old.'] to ['.$new.']');
 		if (!rename($old, $new)) return FALSE;
 		
 		if ($_SESSION["settings"]["enable_description_update"])
@@ -428,7 +432,10 @@
 			return FALSE;
 		}
 		
-		if (!unlink($file["path"])) {
+		$path = $file["path"];
+		log_message('delete ['.$path.']');
+		
+		if (!unlink($path)) {
 			$error = "CANNOT_DELETE";
 			$error_details = _basename($file["path"]);
 			return FALSE;
@@ -455,7 +462,9 @@
 			return FALSE;
 		}
 		
-		if (!delete_directory_recurse($dir["path"])) {
+		$path = $dir["path"];
+		log_message('delete ['.$path.']');
+		if (!delete_directory_recurse($path)) {
 			$error = "CANNOT_DELETE";
 			return FALSE;
 		}
@@ -528,6 +537,7 @@
 			$name = $_FILES['upload']['name'][$key];
 			$origin = $_FILES['upload']['tmp_name'][$key];
 			$target = join_path($dir["path"], $name);
+			log_message('upload ['.$target.']');
 				
 			if (file_exists($target)) {
 				$error = "FILE_ALREADY_EXISTS";
@@ -562,6 +572,7 @@
 		}
 		
 		$folder_path = dir_path(join_path($dir["path"], $folder_name));
+		log_message('create dir ['.$folder_path.']');
 		
 		if (file_exists($folder_path)) {
 			$error = "DIR_ALREADY_EXISTS";
@@ -587,6 +598,7 @@
 		if (!assert_file($file)) return FALSE;
 		
 		$filename = $file["path"];
+		log_message('download ['.$filename.']');
 		header("Cache-Control: public, must-revalidate");
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
@@ -612,6 +624,8 @@
 		
 		if (!assert_file($file)) return FALSE;
 		$path = $file["path"];
+		log_message('download as zip ['.$path.']');
+		
 		$name = _basename($path);
 		$zip_name = $name.'.zip';
 		
@@ -635,6 +649,8 @@
 		}
 		
 		if (!assert_dir($dir)) return FALSE;
+		
+		log_message('download as zip ['.$dir["path"].']');
 		$offset = strlen($dir["path"]) + 1;
 		$files = get_visible_files_in_dir($dir["path"], TRUE);
 		if ($files === FALSE) return FALSE;

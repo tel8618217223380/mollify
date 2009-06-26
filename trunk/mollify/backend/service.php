@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * Copyright (c) 2008- Samuli Järvelä
 	 *
@@ -14,6 +13,7 @@
 	require_once("include/errors.php");
 		
 	function return_json($result_array) {
+		log_message($result_array);
 		$ext = isset($_GET["callback"]);
 		if ($ext) echo $_GET["callback"]."(";
 		echo json_encode($result_array);
@@ -55,6 +55,8 @@
 	
 	require_once("include/system.php");	
 	import_configuration_provider();
+	initialize_logging();
+	
 	if (!isset($_GET["type"])) exit(0);
 	$request_type = trim(strtolower($_GET["type"]));
 	

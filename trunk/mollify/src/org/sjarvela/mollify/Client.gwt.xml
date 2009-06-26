@@ -8,7 +8,7 @@
   this entire header must remain intact.
  -->
  
-<module>
+<module rename-to="org.sjarvela.Mollify">
 	<inherits name='com.google.gwt.user.User'/>
 	<inherits name="com.google.gwt.json.JSON"/>
 	<inherits name="com.google.gwt.http.HTTP"/>
