@@ -1,11 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.6.3 ==
+  * Fixed issues with special characters when creating folders or renaming files/folders
+
 === Version 0.9.6.2 ==
   * Fixed malformed 0.9.6.1 package
 
 === Version 0.9.6.1 ==
-  * Fixed path ID issue causing "Failed to get response from server"
+  * Fixed path ID issue #12 causing "Failed to get response from server" (http://code.google.com/p/mollify/issues/detail?id=12)
   * Fixed MySQL issues
 
 === Version 0.9.6 ==
