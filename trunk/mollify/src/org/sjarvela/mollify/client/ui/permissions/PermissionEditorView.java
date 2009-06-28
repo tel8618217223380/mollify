@@ -97,7 +97,6 @@ public class PermissionEditorView extends CenteredDialog {
 		listPanel
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_LIST_PANEL);
 		listPanel.add(list);
-		panel.add(listPanel);
 
 		Panel actions = new FlowPanel();
 		actions
@@ -105,7 +104,9 @@ public class PermissionEditorView extends CenteredDialog {
 		actions.add(addButton);
 		actions.add(editButton);
 		actions.add(removeButton);
-		panel.add(actions);
+		listPanel.add(actions);
+
+		panel.add(listPanel);
 
 		return panel;
 	}
@@ -115,12 +116,14 @@ public class PermissionEditorView extends CenteredDialog {
 		Panel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_BUTTONS);
 		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
-				StyleConstants.DIALOG_BUTTON_OK, StyleConstants.DIALOG_BUTTON,
-				actionListener, Actions.ok));
+				StyleConstants.PERMISSION_EDITOR_VIEW_OK,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.ok));
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
-				StyleConstants.DIALOG_BUTTON_CLOSE,
-				StyleConstants.DIALOG_BUTTON, actionListener, Actions.cancel));
+				StyleConstants.PERMISSION_EDITOR_VIEW_CANCEL,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.cancel));
 		return buttons;
 	}
 
