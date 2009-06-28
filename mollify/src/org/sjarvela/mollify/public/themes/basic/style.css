@@ -1,6 +1,5 @@
 /* @override 
-	http://localhost:7777/org.sjarvela.mollify.App/themes/basic/style.css
-	http://localhost:7777/beta-demo/org.sjarvela.mollify.App/themes/basic/style.css
+	http://localhost:8888/org.sjarvela.Mollify/themes/basic/style.css
 */
 
 /**
@@ -1344,7 +1343,7 @@ td.mollify-userlist-column-type, td.mollify-folderlist-column-path, td.mollify-p
 	padding-left: 6px;
 }
 
-.mollify-userlist th, .mollify-folderlist th, .mollify-userfolderlist th, .mollify-permission-list th {
+.mollify-userlist th, .mollify-folderlist th, .mollify-userfolderlist th {
 	color: #494949;
 	border-bottom: 2px solid #AAAAAA;
 	font-weight: bold;
@@ -1450,25 +1449,74 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-p
 }
 
 .mollify-permission-editor-list-panel {
+	width: 306px;
+	margin-top: 6px;
+	margin-bottom: 3px;
+	border-bottom: 1px dotted #ddd;
+}
+
+table.mollify-permission-list {
+	width: 100%;
+}
+
+div.mollify-permissionlist-column {
+	color: #494949;
+	border-bottom: 2px solid #AAAAAA;
+	font-weight: bold;
+	padding-bottom: 3px;
+	padding-left: 5px;}
+
+table.mollify-permission-list > thead {
+	display: block;
+}
+
+table.mollify-permission-list > tbody {
+	height: 156px;
+	display: block;
 	overflow: auto;
-	margin-right: 6px;
-	width: 300px;
-	height: 160px;
 }
 
-.mollify-permission-list {
-
-
+.mollify-permission-editor-permission-actions {
+	padding-bottom: 5px;
+	margin-left: 114px;
+	padding-top: 5px;
 }
 
-td.mollify-permissionlist-column-user {
+th#mollify-permissionlist-column-th-user.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th
+{
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border: 0px;
+	border-spacing: 0;
+}
+
+th#mollify-permissionlist-column-th-user.mollify-permissionlist-column-th, td.mollify-permissionlist-column-user {
 	width: 135px;
 }
 
-table.mollify-permission-list-editor {
-	width: 100%;
+th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th, td.mollify-permissionlist-column-permission {
+	width: 200px;
 }
 
 .mollify-permission-editor-buttons {
-	width: 100%;
+	margin-bottom: 4px;
+	float: right;
+}
+
+.mollify-permission-editor-button {
+	width: 60px;
+	height: 23px;
+	margin-right: 6px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+#mollify-permission-editor-button-remove-permission.mollify-permission-editor-button {
+	margin-right: 0px;
+}
+
+#mollify-permission-editor-button-ok.mollify-permission-editor-button, #mollify-permission-editor-button-cancel.mollify-permission-editor-button {
+	width: 70px;
+	font-weight: bold;
 }

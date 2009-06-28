@@ -337,4 +337,6 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION = "mollify-permission-editor-button-add-permission";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION = "mollify-permission-editor-button-edit-permission";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_REMOVE_PERMISSION = "mollify-permission-editor-button-remove-permission";
+	public static final String PERMISSION_EDITOR_VIEW_OK = "mollify-permission-editor-button-ok";
+	public static final String PERMISSION_EDITOR_VIEW_CANCEL = "mollify-permission-editor-button-cancel";
 }

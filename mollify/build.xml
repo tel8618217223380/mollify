@@ -5,6 +5,7 @@
 	<property name="lib.dir" location="${root.dir}/lib" /> 
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="src.dir" location="${root.dir}/src" />
+	<property name="public.module.name" value="org.sjarvela.Mollify" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
 	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}.tar" />
 	
@@ -111,7 +112,7 @@
 	</target>
 		
 	<target name="do-update">
-		<property name="target.dir" location="${htdocs.root}/${gwt.entrypoint.class}" />
+		<property name="target.dir" location="${htdocs.root}/${public.module.name}" />
 		
 		<exec executable="rm" failonerror="false">
 			<arg value="${target.dir}/themes" />
@@ -120,7 +121,7 @@
 		<mkdir dir="${target.dir}" />
 		
 		<copy todir="${target.dir}">
-			<fileset dir="${build.dir}/${gwt.entrypoint.class}">
+			<fileset dir="${build.dir}/${public.module.name}">
 			</fileset>
 		</copy>
 		
@@ -139,7 +140,10 @@
 
 	<target name="update" depends="init-dev, do-compile, do-update">
 	</target>
-	
+
+	<target name="update-only" depends="init-dev, do-update">
+	</target>
+		
 	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
 	</target>
 </project>
