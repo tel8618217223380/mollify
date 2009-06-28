@@ -329,4 +329,16 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String itemPermissionEditorButtonRemovePermission();
 
+	public String fileItemUserPermissionDialogAddTitle();
+
+	public String fileItemUserPermissionDialogEditTitle();
+
+	public String fileItemUserPermissionDialogUser();
+
+	public String fileItemUserPermissionDialogPermission();
+
+	public String fileItemUserPermissionDialogAddButton();
+
+	public String fileItemUserPermissionDialogEditButton();
+
 }

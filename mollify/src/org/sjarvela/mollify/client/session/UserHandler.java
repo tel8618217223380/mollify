@@ -1,7 +1,5 @@
-package org.sjarvela.mollify.client.ui.configuration.users;
+package org.sjarvela.mollify.client.session;
 
-import org.sjarvela.mollify.client.session.UserPermissionMode;
-import org.sjarvela.mollify.client.session.User;
 
 public interface UserHandler {
 

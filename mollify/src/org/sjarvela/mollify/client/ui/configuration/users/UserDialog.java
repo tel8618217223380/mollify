@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.configuration.users;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.PasswordGenerator;
+import org.sjarvela.mollify.client.session.UserHandler;
 import org.sjarvela.mollify.client.session.UserPermissionMode;
 import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.session.UserNameValidator;

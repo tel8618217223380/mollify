@@ -11,17 +11,20 @@
 package org.sjarvela.mollify.client.ui.permissions;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.User;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 
-public class PermissionEditorPresenter {
+public class PermissionEditorPresenter implements FileItemUserPermissionHandler {
 	private final PermissionEditorView view;
 	private final DialogManager dialogManager;
 	private final PermissionEditorModel model;
@@ -95,17 +98,37 @@ public class PermissionEditorPresenter {
 	}
 
 	public void onAddPermission() {
-		model.addPermission(FileItemUserPermission.create(model.getItem(),
-				model.getUsers().get(0), FilePermissionMode.ReadWrite));
-		refreshList();
+		List<User> availableUsers = model.getUsersWithoutPermission();
+		if (availableUsers.size() == 0)
+			return;
+		dialogManager.openAddFileItemUserPermissionDialog(this, availableUsers);
 	}
 
 	public void onEditPermission() {
-		model.editPermission(model.getUserSpecificPermissions().get(0));
+		List<FileItemUserPermission> selected = view.getList().getSelected();
+		if (selected.size() != 1)
+			return;
+
+		dialogManager.openEditFileItemUserPermissionDialog(this, selected
+				.get(0));
 	}
 
 	public void onRemovePermission() {
-		model.removePermission(model.getUserSpecificPermissions().get(0));
+		List<FileItemUserPermission> selected = view.getList().getSelected();
+		if (selected.size() != 1)
+			return;
+		model.removePermission(selected.get(0));
+		refreshList();
+	}
+
+	public void addFileItemUserPermission(User user,
+			FilePermissionMode permission) {
+		model.addPermission(user, permission);
+		refreshList();
+	}
+
+	public void editFileItemUserPermission(FileItemUserPermission permission) {
+		model.editPermission(permission);
 		refreshList();
 	}
 }
