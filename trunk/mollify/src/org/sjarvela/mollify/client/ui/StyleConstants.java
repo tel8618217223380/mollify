@@ -339,4 +339,15 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_REMOVE_PERMISSION = "mollify-permission-editor-button-remove-permission";
 	public static final String PERMISSION_EDITOR_VIEW_OK = "mollify-permission-editor-button-ok";
 	public static final String PERMISSION_EDITOR_VIEW_CANCEL = "mollify-permission-editor-button-cancel";
+
+	public static final String FILEITEM_USER_PERMISSION_DIALOG = "mollify-fileitem-user-permission-dialog";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_CONTENT = "mollify-fileitem-user-permission-dialog-content";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_PERMISSION = "mollify-fileitem-user-permission-dialog-permission";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_USER = "mollify-fileitem-user-permission-dialog-user";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_USER_LABEL = "mollify-fileitem-user-permission-dialog-user-label";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_USER_TITLE = "mollify-fileitem-user-permission-dialog-user-title";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_PERMISSION_TITLE = "mollify-fileitem-user-permission-dialog-permission-title";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTONS = "mollify-fileitem-user-permission-dialog-buttons";
+	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTON_ADD_EDIT = "mollify-fileitem-user-permission-dialog-add-edit";
+
 }

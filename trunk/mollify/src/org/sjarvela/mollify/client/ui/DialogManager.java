@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -24,15 +26,17 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.session.DefaultPasswordGenerator;
+import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.PasswordGenerator;
 import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.UserHandler;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
 import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
-import org.sjarvela.mollify.client.ui.configuration.users.UserHandler;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.FileUploadDialog;
@@ -44,6 +48,7 @@ import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
+import org.sjarvela.mollify.client.ui.permissions.FileItemUserPermissionDialog;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
 public class DialogManager {
@@ -141,6 +146,19 @@ public class DialogManager {
 			FileSystemService fileSystemService, FileSystemItem item) {
 		new PermissionEditorViewFactory(textProvider, configurationService,
 				fileSystemService, this).show(item);
+	}
+
+	public void openAddFileItemUserPermissionDialog(
+			FileItemUserPermissionHandler fileItemUserPermissionHandler, List<User> availableUsers) {
+		new FileItemUserPermissionDialog(textProvider,
+				fileItemUserPermissionHandler, availableUsers);
+	}
+
+	public void openEditFileItemUserPermissionDialog(
+			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+			FileItemUserPermission fileItemUserPermission) {
+		new FileItemUserPermissionDialog(textProvider,
+				fileItemUserPermissionHandler, fileItemUserPermission);
 	}
 
 }

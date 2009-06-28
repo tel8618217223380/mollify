@@ -127,6 +127,16 @@ public class PermissionEditorModel {
 		originalDefaultPermissionExists = defaultPermissionFound;
 	}
 
+	public List<User> getUsersWithoutPermission() {
+		List<User> result = new ArrayList(users);
+		for (FileItemUserPermission permission : effectivePermissions) {
+			if (permission.getUserId() == null)
+				continue;
+			result.remove(usersById.get(permission.getUserId()));
+		}
+		return result;
+	}
+
 	public boolean hasChanged() {
 		return newPermissions.size() > 0 || modifiedPermissions.size() > 0
 				|| removedPermissions.size() > 0;
@@ -154,6 +164,10 @@ public class PermissionEditorModel {
 
 	public List<FileItemUserPermission> getUserSpecificPermissions() {
 		return effectivePermissions;
+	}
+
+	public void addPermission(User user, FilePermissionMode permission) {
+		addPermission(FileItemUserPermission.create(item, user, permission));
 	}
 
 	public void addPermission(FileItemUserPermission permission) {
