@@ -11,9 +11,9 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.PasswordGenerator;
-import org.sjarvela.mollify.client.session.PasswordHandler;
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.user.PasswordGenerator;
+import org.sjarvela.mollify.client.session.user.PasswordHandler;
+import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 

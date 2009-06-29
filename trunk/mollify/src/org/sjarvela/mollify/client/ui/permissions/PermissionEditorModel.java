@@ -11,9 +11,8 @@
 package org.sjarvela.mollify.client.ui.permissions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
@@ -23,9 +22,11 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserCache;
 
 public class PermissionEditorModel {
 	private final FileSystemItem item;
@@ -34,7 +35,7 @@ public class PermissionEditorModel {
 
 	private ResultCallback<ServiceError> errorCallback = null;
 	private List<User> users = null;
-	private Map<String, User> usersById = new HashMap();
+	// private Map<String, User> usersById = new HashMap();
 
 	private FileItemUserPermission defaultPermission;
 	private boolean originalDefaultPermissionExists;
@@ -43,6 +44,7 @@ public class PermissionEditorModel {
 	private List<FileItemUserPermission> newPermissions = new ArrayList();
 	private List<FileItemUserPermission> modifiedPermissions = new ArrayList();
 	private List<FileItemUserPermission> removedPermissions = new ArrayList();
+	protected UserCache userCache;
 
 	public PermissionEditorModel(FileSystemItem item,
 			ConfigurationService configurationService,
@@ -77,9 +79,7 @@ public class PermissionEditorModel {
 
 				public void onSuccess(List<User> result) {
 					users = result;
-					usersById.clear();
-					for (User user : users)
-						usersById.put(user.getId(), user);
+					userCache = new UserCache(users);
 					refreshPermissions(successCallback);
 				}
 			});
@@ -98,7 +98,7 @@ public class PermissionEditorModel {
 						updatePermissions(result);
 						successCallback.onCallback();
 					}
-				});
+				}, userCache, new FileSystemItemCache(Arrays.asList(item)));
 	}
 
 	protected void updatePermissions(List<FileItemUserPermission> permissions) {
@@ -108,11 +108,11 @@ public class PermissionEditorModel {
 		newPermissions.clear();
 		modifiedPermissions.clear();
 		removedPermissions.clear();
-		defaultPermission = FileItemUserPermission.create(item, null,
+		defaultPermission = new FileItemUserPermission(item, null,
 				FilePermissionMode.None);
 
 		for (FileItemUserPermission permission : permissions) {
-			if (permission.getUserId() != null) {
+			if (permission.getUser() != null) {
 				effectivePermissions.add(permission);
 			} else {
 				if (defaultPermissionFound) {
@@ -130,9 +130,9 @@ public class PermissionEditorModel {
 	public List<User> getUsersWithoutPermission() {
 		List<User> result = new ArrayList(users);
 		for (FileItemUserPermission permission : effectivePermissions) {
-			if (permission.getUserId() == null)
+			if (permission.getUser() == null)
 				continue;
-			result.remove(usersById.get(permission.getUserId()));
+			result.remove(permission.getUser());
 		}
 		return result;
 	}
@@ -147,7 +147,7 @@ public class PermissionEditorModel {
 	}
 
 	public void setDefaultPermission(FilePermissionMode permission) {
-		defaultPermission.setPermission(permission);
+		defaultPermission = new FileItemUserPermission(item, null, permission);
 
 		if (FilePermissionMode.None.equals(permission)) {
 			asRemoved(defaultPermission);
@@ -167,7 +167,7 @@ public class PermissionEditorModel {
 	}
 
 	public void addPermission(User user, FilePermissionMode permission) {
-		addPermission(FileItemUserPermission.create(item, user, permission));
+		addPermission(new FileItemUserPermission(item, user, permission));
 	}
 
 	public void addPermission(FileItemUserPermission permission) {

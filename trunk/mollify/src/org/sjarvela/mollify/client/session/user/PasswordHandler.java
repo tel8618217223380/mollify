@@ -8,10 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.session.user;
 
-public interface PasswordGenerator {
+public interface PasswordHandler {
 
-	String generate();
+	void changePassword(String oldPassword, String newPassword);
+
+	void resetPassword(User user, String password);
 
 }

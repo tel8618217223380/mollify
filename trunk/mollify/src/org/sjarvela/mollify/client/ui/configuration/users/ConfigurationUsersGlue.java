@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.configuration.users;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;

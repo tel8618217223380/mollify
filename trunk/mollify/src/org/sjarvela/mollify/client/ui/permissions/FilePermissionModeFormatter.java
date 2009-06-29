@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.ui.Formatter;
 
 public class FilePermissionModeFormatter implements

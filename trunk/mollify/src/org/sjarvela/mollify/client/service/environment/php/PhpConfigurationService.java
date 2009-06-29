@@ -21,8 +21,8 @@ import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;

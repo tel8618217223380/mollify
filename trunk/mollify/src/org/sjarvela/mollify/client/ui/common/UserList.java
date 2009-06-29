@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.Grid;

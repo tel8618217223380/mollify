@@ -21,8 +21,10 @@ import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
+import org.sjarvela.mollify.client.session.user.UserCache;
 
 public class DemoFileService implements FileSystemService {
 	private final DemoData data;
@@ -94,12 +96,13 @@ public class DemoFileService implements FileSystemService {
 	}
 
 	public void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener) {
-		FileItemUserPermission defaultPermission = FileItemUserPermission
-				.create(item, null, FilePermissionMode.ReadOnly);
-		FileItemUserPermission p1 = FileItemUserPermission.create(item, data
+			ResultListener<List<FileItemUserPermission>> resultListener,
+			UserCache userCache, FileSystemItemCache itemCache) {
+		FileItemUserPermission defaultPermission = new FileItemUserPermission(
+				item, null, FilePermissionMode.ReadOnly);
+		FileItemUserPermission p1 = new FileItemUserPermission(item, data
 				.getUsers().get(0), FilePermissionMode.ReadOnly);
-		FileItemUserPermission p2 = FileItemUserPermission.create(item, data
+		FileItemUserPermission p2 = new FileItemUserPermission(item, data
 				.getUsers().get(1), FilePermissionMode.ReadWrite);
 		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}

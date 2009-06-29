@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.session.file;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
