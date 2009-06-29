@@ -26,7 +26,10 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
+import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
+import org.sjarvela.mollify.client.session.user.UserCache;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -175,19 +178,23 @@ public class PhpFileService implements FileSystemService {
 	}
 
 	public void getItemPermissions(FileSystemItem item,
-			final ResultListener<List<FileItemUserPermission>> resultListener) {
+			final ResultListener<List<FileItemUserPermission>> resultListener,
+			final UserCache userCache, final FileSystemItemCache itemCache) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get user permissions: " + item.getId());
 
 		service.doRequest(getUrl(FileAction.get_item_permissions, item),
-				new ResultListener<JsArray<FileItemUserPermission>>() {
+				new ResultListener<JsArray<JsFileItemUserPermission>>() {
 					public void onFail(ServiceError error) {
 						resultListener.onFail(error);
 					}
 
-					public void onSuccess(JsArray<FileItemUserPermission> result) {
-						resultListener.onSuccess(JsUtil.asList(result,
-								FileItemUserPermission.class));
+					public void onSuccess(
+							JsArray<JsFileItemUserPermission> result) {
+						List<JsFileItemUserPermission> permissions = JsUtil
+								.asList(result, JsFileItemUserPermission.class);
+						resultListener.onSuccess(FileItemUserPermission
+								.convert(permissions, userCache, itemCache));
 					}
 				});
 	}

@@ -1,4 +1,4 @@
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.session.user;
 
 
 public interface UserHandler {

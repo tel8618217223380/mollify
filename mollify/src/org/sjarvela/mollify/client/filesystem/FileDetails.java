@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.filesystem;
 
 import java.util.Date;
 
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
 

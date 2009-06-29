@@ -8,19 +8,18 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.session.file.js;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class FileItemUserPermission extends JavaScriptObject {
-	public static FileItemUserPermission create(FileSystemItem item, User user,
+public class JsFileItemUserPermission extends JavaScriptObject {
+	public static JsFileItemUserPermission create(String itemId, String userId,
 			FilePermissionMode permission) {
-		FileItemUserPermission result = FileItemUserPermission.createObject()
-				.cast();
-		result.putValues(item.getId(), user.getId(), permission
-				.getStringValue());
+		JsFileItemUserPermission result = JsFileItemUserPermission
+				.createObject().cast();
+		result.putValues(itemId, userId, permission.getStringValue());
 		return result;
 	}
 
@@ -31,7 +30,7 @@ public class FileItemUserPermission extends JavaScriptObject {
 		this.permission = permission;
 	}-*/;
 
-	protected FileItemUserPermission() {
+	protected JsFileItemUserPermission() {
 	}
 
 	public final native String getItemId() /*-{

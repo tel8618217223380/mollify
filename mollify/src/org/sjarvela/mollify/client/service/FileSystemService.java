@@ -19,7 +19,9 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
+import org.sjarvela.mollify.client.session.user.UserCache;
 
 public interface FileSystemService extends FileDetailsProvider,
 		DirectoryDetailsProvider {
@@ -53,7 +55,8 @@ public interface FileSystemService extends FileDetailsProvider,
 	void removeItemDescription(FileSystemItem item, ResultListener listener);
 
 	void getItemPermissions(FileSystemItem item,
-			ResultListener<List<FileItemUserPermission>> resultListener);
+			ResultListener<List<FileItemUserPermission>> resultListener,
+			UserCache userCache, FileSystemItemCache fileSystemItemCache);
 
 	void updateItemPermissions(List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,

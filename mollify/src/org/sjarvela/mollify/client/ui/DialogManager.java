@@ -25,16 +25,16 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
-import org.sjarvela.mollify.client.session.DefaultPasswordGenerator;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.LoginHandler;
-import org.sjarvela.mollify.client.session.PasswordGenerator;
-import org.sjarvela.mollify.client.session.PasswordHandler;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.session.UserHandler;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
+import org.sjarvela.mollify.client.session.file.FileSystemInfo;
+import org.sjarvela.mollify.client.session.user.DefaultPasswordGenerator;
+import org.sjarvela.mollify.client.session.user.PasswordGenerator;
+import org.sjarvela.mollify.client.session.user.PasswordHandler;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserHandler;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
 import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
@@ -149,7 +149,8 @@ public class DialogManager {
 	}
 
 	public void openAddFileItemUserPermissionDialog(
-			FileItemUserPermissionHandler fileItemUserPermissionHandler, List<User> availableUsers) {
+			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+			List<User> availableUsers) {
 		new FileItemUserPermissionDialog(textProvider,
 				fileItemUserPermissionHandler, availableUsers);
 	}

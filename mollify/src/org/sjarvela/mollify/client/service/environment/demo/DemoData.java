@@ -23,12 +23,12 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.ConfigurationInfo;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
-import org.sjarvela.mollify.client.session.FileSystemInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionSettings;
-import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FileSystemInfo;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
 import com.google.gwt.core.client.JavaScriptObject;

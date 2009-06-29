@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.ActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;

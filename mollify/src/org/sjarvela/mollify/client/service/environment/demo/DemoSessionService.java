@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.service.environment.demo;
 
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.User;
+import org.sjarvela.mollify.client.session.user.User;
 
 public class DemoSessionService implements SessionService {
 	private static final String VISIBLE_USERNAME = "Mollify Demo";

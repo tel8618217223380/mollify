@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;

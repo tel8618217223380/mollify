@@ -11,11 +11,11 @@
 package org.sjarvela.mollify.client.ui.configuration.users;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.PasswordGenerator;
-import org.sjarvela.mollify.client.session.UserHandler;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
-import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.session.UserNameValidator;
+import org.sjarvela.mollify.client.session.user.PasswordGenerator;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserHandler;
+import org.sjarvela.mollify.client.session.user.UserNameValidator;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 

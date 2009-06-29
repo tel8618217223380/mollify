@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.session.file.FileSystemInfo;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;

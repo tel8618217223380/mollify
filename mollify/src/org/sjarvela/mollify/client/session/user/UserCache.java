@@ -8,18 +8,23 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.session.user;
 
-public class UserNameValidator {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-	private static char[] ILLEGAL_CHARS = new char[] { '\'', '"', '<', '>',
-			'%', '/', '\\' };
+public class UserCache {
 
-	public boolean validate(String userName) {
-		for (char c : ILLEGAL_CHARS)
-			if (userName.indexOf(c) >= 0)
-				return false;
-		return true;
+	private final Map<String, User> usersById = new HashMap();
+
+	public UserCache(List<User> users) {
+		for (User user : users)
+			usersById.put(user.getId(), user);
+	}
+
+	public User getUser(String id) {
+		return usersById.get(id);
 	}
 
 }

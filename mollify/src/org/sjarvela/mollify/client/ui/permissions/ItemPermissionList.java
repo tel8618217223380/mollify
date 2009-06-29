@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -69,7 +69,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		String text = "";
 
 		if (column.equals(ItemPermissionList.COLUMN_USER))
-			text = userPermission.getUserId();
+			text = userPermission.getUser().getName();
 		else if (column.equals(ItemPermissionList.COLUMN_PERMISSION)) {
 			FilePermissionMode permission = userPermission.getPermission();
 

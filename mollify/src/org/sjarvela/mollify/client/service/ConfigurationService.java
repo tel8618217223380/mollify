@@ -15,8 +15,8 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.User;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 
 public interface ConfigurationService {
 

@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;

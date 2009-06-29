@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.session.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
