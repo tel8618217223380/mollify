@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,7 +46,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	private final FileItemUserPermission original; // in Edit mode
 
 	private ListBox<User> user;
-	private Label userLabel;
+	private TextBox userLabel;
 	private ListBox<FilePermissionMode> permission;
 
 	public FileItemUserPermissionDialog(TextProvider textProvider,
@@ -101,7 +102,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 				}
 			});
 		} else {
-			userLabel = new Label();
+			userLabel = new TextBox();
+			userLabel.setReadOnly(true);
 			userLabel
 					.setStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER_LABEL);
 		}
@@ -123,7 +125,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 
 	@Override
 	protected Widget createContent() {
-		VerticalPanel panel = new VerticalPanel();
+		Panel panel = new VerticalPanel();
 		panel
 				.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_CONTENT);
 

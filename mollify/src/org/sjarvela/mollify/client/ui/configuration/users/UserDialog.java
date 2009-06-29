@@ -93,7 +93,7 @@ public class UserDialog extends CenteredDialog {
 
 	@Override
 	protected Widget createContent() {
-		VerticalPanel panel = new VerticalPanel();
+		Panel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.USER_DIALOG_CONTENT);
 
 		Label nameTitle = new Label(textProvider.getStrings()
