@@ -60,7 +60,7 @@
 	if (!isset($_GET["type"])) exit(0);
 	$request_type = trim(strtolower($_GET["type"]));
 	
-	require_once("include/settings.php");
+
 	require_once("include/user.php");
 	require_once("include/files.php");
 	
@@ -76,6 +76,7 @@
 	$error_details = "";
 	
 	if ($request_type === "configuration") {
+		require_once("include/configuration_services.php");
 		process_configuration_request();
 	} else if ($request_type === "filesystem") {
 		require_once("include/filesystem_services.php");
