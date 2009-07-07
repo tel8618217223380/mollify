@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 0.9.6.4 ==
+  * Removed pointless "Download" action from folder actions (folders can be downloaded only as zip, if enabled)
+  * Corrected errors in Deutsch translation
+
 === Version 0.9.6.3 ==
   * Fixed issues with special characters when creating folders or renaming files/folders
 
