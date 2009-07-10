@@ -17,7 +17,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 public class HtmlTest extends GWTTestCase {
 	@Override
 	public String getModuleName() {
-		return "org.sjarvela.mollify.Mollify";
+		return "org.sjarvela.mollify.Client";
 	}
 
 	@Test

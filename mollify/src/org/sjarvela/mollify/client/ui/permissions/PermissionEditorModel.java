@@ -35,7 +35,7 @@ public class PermissionEditorModel {
 
 	private ResultCallback<ServiceError> errorCallback = null;
 	private List<User> users = null;
-	// private Map<String, User> usersById = new HashMap();
+	private UserCache userCache;
 
 	private FileItemUserPermission defaultPermission;
 	private boolean originalDefaultPermissionExists;
@@ -44,7 +44,6 @@ public class PermissionEditorModel {
 	private List<FileItemUserPermission> newPermissions = new ArrayList();
 	private List<FileItemUserPermission> modifiedPermissions = new ArrayList();
 	private List<FileItemUserPermission> removedPermissions = new ArrayList();
-	protected UserCache userCache;
 
 	public PermissionEditorModel(FileSystemItem item,
 			ConfigurationService configurationService,
@@ -179,6 +178,17 @@ public class PermissionEditorModel {
 		if (newPermissions.contains(permission))
 			return;
 		modifiedPermissions.add(permission);
+
+		updateUserPermission(permission);
+	}
+
+	private void updateUserPermission(FileItemUserPermission permission) {
+		for (FileItemUserPermission userPermission : effectivePermissions)
+			if (userPermission.getUser().equals(permission.getUser())) {
+				effectivePermissions.remove(userPermission);
+				effectivePermissions.add(permission);
+				return;
+			}
 	}
 
 	public void removePermission(FileItemUserPermission permission) {

@@ -4,6 +4,7 @@
 	<property name="project.name" value="Mollify" />
 	<property name="lib.dir" location="${root.dir}/lib" /> 
 	<property name="build.dir" location="${root.dir}/build" />
+	<property name="test.report.dir" location="${build.dir}/test" />
 	<property name="src.dir" location="${root.dir}/src" />
 	<property name="public.module.name" value="org.sjarvela.Mollify" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
@@ -133,6 +134,30 @@
 			<arg value="${src.dir}/org/sjarvela/mollify/public/themes" />
 			<arg value="${target.dir}" />
 		</exec>
+	</target>
+	
+	<target name="test" depends="init-dev">
+		<mkdir dir="${test.report.dir}" />
+		
+		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+			<jvmarg value="-Dgwt.args=-out www-test" />
+ 			<sysproperty key="basedir" value="${root.dir}" />
+ 			<formatter type="xml" />
+ 			<formatter usefile="false" type="plain" />
+ 			
+			<classpath>
+				<path refid="compile.classpath" />
+				<pathelement path="src" />
+				<pathelement path="test" />
+				<pathelement path="${compile.dir}" />
+			</classpath>
+			
+			<batchtest todir="${test.report.dir}">
+				<fileset dir="test">
+					<include name="**/**Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 	<target name="compile" depends="init-dev, do-compile">
