@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.service.request;
 
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.Response;
 
 public class HtmlRequestHandlerFactory {
@@ -21,9 +22,16 @@ public class HtmlRequestHandlerFactory {
 		this.timeout = timeout;
 	}
 
-	public HtmlRequestHandler create(String url,
+	public HtmlRequestHandler createGET(String url,
 			ResultListener<Response> listener) {
-		return new HtmlRequestHandler(url, listener, timeout);
+		return new HtmlRequestHandler(RequestBuilder.GET, url, listener,
+				timeout);
+	}
+
+	public HtmlRequestHandler createPOST(String url,
+			ResultListener<Response> listener) {
+		return new HtmlRequestHandler(RequestBuilder.POST, url, listener,
+				timeout);
 	}
 
 }

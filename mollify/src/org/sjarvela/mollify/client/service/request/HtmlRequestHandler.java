@@ -22,6 +22,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.RequestBuilder.Method;
 
 public class HtmlRequestHandler implements RequestHandler {
 	private static final int HTTP_STATUS_OK = 200;
@@ -31,12 +32,12 @@ public class HtmlRequestHandler implements RequestHandler {
 	private String url;
 	private RequestBuilder requestBuilder;
 
-	public HtmlRequestHandler(String url,
+	public HtmlRequestHandler(Method method, String url,
 			final ResultListener<Response> listener, int timeout) {
 		this.listener = listener;
 		this.url = url;
 
-		requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+		requestBuilder = new RequestBuilder(method, url);
 		requestBuilder.setTimeoutMillis(timeout * 1000);
 		requestBuilder.setCallback(new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
@@ -82,6 +83,13 @@ public class HtmlRequestHandler implements RequestHandler {
 		Log.error("Html request failed: url=[" + url + "] msg="
 				+ error.toString());
 		listener.onFail(error);
+	}
+
+	public HtmlRequestHandler withData(String data) {
+		requestBuilder.setRequestData(data);
+		requestBuilder.setHeader("Content-Type",
+				"application/x-www-form-urlencoded-data; charset=utf-8");
+		return this;
 	}
 
 	public void doRequest() {

@@ -96,11 +96,21 @@ public class PhpService {
 		return result.getUrl();
 	}
 
-	void doRequest(String url, final ResultListener resultListener) {
+	void doGetRequest(String url, final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Request: " + url);
+			Log.debug("Request GET: " + url);
 
-		htmlRequestHandlerFactory.create(url,
+		htmlRequestHandlerFactory.createGET(url,
 				new JsonRequestListener(resultListener)).doRequest();
+	}
+
+	void doPostRequest(String url, String data,
+			final ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Request POST: " + url);
+
+		JsonRequestListener listener = new JsonRequestListener(resultListener);
+		htmlRequestHandlerFactory.createPOST(url, listener).withData(data)
+				.doRequest();
 	}
 }

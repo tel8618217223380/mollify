@@ -55,7 +55,7 @@ public class PhpFileUploadService extends PhpFileService implements
 		params.add(new UrlParam("action", FileAction.get_upload_status.name()));
 		params.add(new UrlParam("id", id));
 
-		service.doRequest(service.getUrl(RequestType.filesystem, params),
+		service.doGetRequest(service.getUrl(RequestType.filesystem, params),
 				resultListener);
 	}
 

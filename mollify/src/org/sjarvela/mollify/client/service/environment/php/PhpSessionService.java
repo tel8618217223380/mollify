@@ -35,14 +35,14 @@ public class PhpSessionService implements SessionService {
 	}
 
 	public void getSessionInfo(ResultListener resultListener) {
-		service.doRequest(getUrl(SessionAction.session_info), resultListener);
+		service.doGetRequest(getUrl(SessionAction.session_info), resultListener);
 	}
 
 	public void authenticate(String userName, String password, String version,
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
-		service.doRequest(getUrl(SessionAction.authenticate, new UrlParam(
+		service.doGetRequest(getUrl(SessionAction.authenticate, new UrlParam(
 				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
 				"password", password, UrlParam.Encoding.MD5), new UrlParam(
 				"version", version)), resultListener);
@@ -52,7 +52,7 @@ public class PhpSessionService implements SessionService {
 			ResultListener<Boolean> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Change password");
-		service.doRequest(getUrl(SessionAction.change_pw, new UrlParam("old",
+		service.doGetRequest(getUrl(SessionAction.change_pw, new UrlParam("old",
 				oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
 				newPassword, UrlParam.Encoding.MD5)), resultListener);
 	}
@@ -61,7 +61,7 @@ public class PhpSessionService implements SessionService {
 			ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Reset password for user " + user.getId());
-		service.doRequest(getUrl(SessionAction.reset_pw, new UrlParam("id",
+		service.doGetRequest(getUrl(SessionAction.reset_pw, new UrlParam("id",
 				user.getId()), new UrlParam("new", password,
 				UrlParam.Encoding.MD5)), resultListener);
 	}
@@ -69,7 +69,7 @@ public class PhpSessionService implements SessionService {
 	public void logout(ResultListener<SessionInfo> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Logout");
-		service.doRequest(getUrl(SessionAction.logout), resultListener);
+		service.doGetRequest(getUrl(SessionAction.logout), resultListener);
 	}
 
 	private String getUrl(SessionAction action, UrlParam... params) {

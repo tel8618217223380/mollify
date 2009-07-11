@@ -12,7 +12,9 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.filesystem.Directory;
@@ -33,13 +35,14 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class PhpFileService implements FileSystemService {
 	protected final PhpService service;
 
 	enum FileAction {
-		get_files, get_directories, get_contents, get_item_details, get_upload_status, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions
+		get_files, get_directories, get_contents, get_item_details, get_upload_status, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions, update_item_permissions
 	};
 
 	public PhpFileService(PhpService service) {
@@ -51,7 +54,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
 
-		service.doRequest(getUrl(FileAction.get_directories, parent),
+		service.doGetRequest(getUrl(FileAction.get_directories, parent),
 				new ResultListener<JsArray>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
@@ -69,7 +72,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directory contents: " + parent.getId());
 
-		service.doRequest(getUrl(FileAction.get_contents, parent),
+		service.doGetRequest(getUrl(FileAction.get_contents, parent),
 				new ResultListener<DirectoriesAndFiles>() {
 
 					public void onFail(ServiceError error) {
@@ -90,7 +93,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.get_item_details, item),
+		service.doGetRequest(getUrl(FileAction.get_item_details, item),
 				resultListener);
 	}
 
@@ -99,7 +102,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.get_item_details, item),
+		service.doGetRequest(getUrl(FileAction.get_item_details, item),
 				resultListener);
 	}
 
@@ -108,7 +111,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
 
-		service.doRequest(getUrl(FileAction.rename, item, new UrlParam("to",
+		service.doGetRequest(getUrl(FileAction.rename, item, new UrlParam("to",
 				newName, UrlParam.Encoding.URL_FULL)), listener);
 	}
 
@@ -118,7 +121,7 @@ public class PhpFileService implements FileSystemService {
 			Log.debug("Copy " + file.getId() + " to [" + directory.getId()
 					+ "]");
 
-		service.doRequest(getUrl(FileAction.copy, file, new UrlParam("to",
+		service.doGetRequest(getUrl(FileAction.copy, file, new UrlParam("to",
 				directory.getId(), UrlParam.Encoding.URL_FULL)), listener);
 	}
 
@@ -128,7 +131,7 @@ public class PhpFileService implements FileSystemService {
 			Log.debug("Move " + item.getId() + " to [" + directory.getId()
 					+ "]");
 
-		service.doRequest(getUrl(FileAction.move, item, new UrlParam("to",
+		service.doGetRequest(getUrl(FileAction.move, item, new UrlParam("to",
 				directory.getId(), UrlParam.Encoding.URL_FULL)), listener);
 	}
 
@@ -136,7 +139,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Delete: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.delete, item), listener);
+		service.doGetRequest(getUrl(FileAction.delete, item), listener);
 	}
 
 	public void createDirectory(Directory parentFolder, String folderName,
@@ -144,7 +147,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Create directory: [" + folderName + "]");
 
-		service.doRequest(getUrl(FileAction.create_folder, parentFolder,
+		service.doGetRequest(getUrl(FileAction.create_folder, parentFolder,
 				new UrlParam("name", folderName, UrlParam.Encoding.URL_FULL)),
 				listener);
 	}
@@ -162,7 +165,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Set description: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.set_description, item,
+		service.doGetRequest(getUrl(FileAction.set_description, item,
 				new UrlParam("description", description,
 						UrlParam.Encoding.URL_FULL)), listener);
 	}
@@ -172,9 +175,8 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Remove description: " + item.getId());
 
-		service
-				.doRequest(getUrl(FileAction.remove_description, item),
-						listener);
+		service.doGetRequest(getUrl(FileAction.remove_description, item),
+				listener);
 	}
 
 	public void getItemPermissions(FileSystemItem item,
@@ -183,7 +185,7 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get user permissions: " + item.getId());
 
-		service.doRequest(getUrl(FileAction.get_item_permissions, item),
+		service.doGetRequest(getUrl(FileAction.get_item_permissions, item),
 				new ResultListener<JsArray<JsFileItemUserPermission>>() {
 					public void onFail(ServiceError error) {
 						resultListener.onFail(error);
@@ -203,8 +205,19 @@ public class PhpFileService implements FileSystemService {
 			List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
-			ResultListener<Boolean> listener) {
-		listener.onSuccess(true);
+			final ResultListener<Boolean> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Update item permissions");
+
+		Map<String, JavaScriptObject> data = new HashMap();
+		data.put("new", FileItemUserPermission.asJsArray(newPermissions));
+		data.put("modified", FileItemUserPermission
+				.asJsArray(modifiedPermissions));
+		data.put("removed", FileItemUserPermission
+				.asJsArray(removedPermissions));
+
+		service.doPostRequest(getUrl(FileAction.update_item_permissions),
+				JsUtil.asJsonString(data), resultListener);
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,
@@ -221,6 +234,13 @@ public class PhpFileService implements FileSystemService {
 		List<UrlParam> params = new ArrayList(parameters);
 		params.add(new UrlParam("action", action.name()));
 		params.add(new UrlParam("id", item.getId()));
+
+		return service.getUrl(RequestType.filesystem, params);
+	}
+
+	public String getUrl(FileAction action, UrlParam... parameters) {
+		List<UrlParam> params = new ArrayList(Arrays.asList(parameters));
+		params.add(new UrlParam("action", action.name()));
 
 		return service.getUrl(RequestType.filesystem, params);
 	}
