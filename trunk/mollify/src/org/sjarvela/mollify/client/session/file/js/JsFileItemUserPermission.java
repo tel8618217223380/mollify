@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsFileItemUserPermission extends JavaScriptObject {
+
 	public static JsFileItemUserPermission create(String itemId, String userId,
 			FilePermissionMode permission) {
 		JsFileItemUserPermission result = JsFileItemUserPermission

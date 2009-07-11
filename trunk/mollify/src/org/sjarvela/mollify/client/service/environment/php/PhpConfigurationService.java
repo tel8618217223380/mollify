@@ -43,7 +43,7 @@ public class PhpConfigurationService implements ConfigurationService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get users");
 
-		service.doRequest(getUrl(ConfigurationAction.get_users),
+		service.doGetRequest(getUrl(ConfigurationAction.get_users),
 				new ResultListener<JsArray<User>>() {
 					public void onFail(ServiceError error) {
 						resultListener.onFail(error);
@@ -61,7 +61,7 @@ public class PhpConfigurationService implements ConfigurationService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		service.doRequest(getUrl(ConfigurationAction.get_folders),
+		service.doGetRequest(getUrl(ConfigurationAction.get_folders),
 				new ResultListener<JsArray<DirectoryInfo>>() {
 					public void onFail(ServiceError error) {
 						resultListener.onFail(error);
@@ -76,7 +76,7 @@ public class PhpConfigurationService implements ConfigurationService {
 
 	public void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.add_user, new UrlParam(
+		service.doGetRequest(getUrl(ConfigurationAction.add_user, new UrlParam(
 				"name", name, UrlParam.Encoding.BASE64), new UrlParam(
 				"password", password, UrlParam.Encoding.MD5), new UrlParam(
 				"permission_mode", mode.getStringValue(),
@@ -85,34 +85,34 @@ public class PhpConfigurationService implements ConfigurationService {
 
 	public void editUser(User user, String name, UserPermissionMode mode,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.update_user, new UrlParam(
+		service.doGetRequest(getUrl(ConfigurationAction.update_user, new UrlParam(
 				"id", user.getId()), new UrlParam("name", name,
 				UrlParam.Encoding.BASE64), new UrlParam("permission_mode", mode
 				.getStringValue(), UrlParam.Encoding.NONE)), resultListener);
 	}
 
 	public void removeUser(User user, final ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.remove_user, new UrlParam(
+		service.doGetRequest(getUrl(ConfigurationAction.remove_user, new UrlParam(
 				"id", user.getId())), resultListener);
 	}
 
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.add_folder, new UrlParam(
+		service.doGetRequest(getUrl(ConfigurationAction.add_folder, new UrlParam(
 				"name", name, UrlParam.Encoding.BASE64), new UrlParam("path",
 				path, UrlParam.Encoding.BASE64)), resultListener);
 	}
 
 	public void editFolder(DirectoryInfo dir, String name, String path,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.update_folder,
+		service.doGetRequest(getUrl(ConfigurationAction.update_folder,
 				new UrlParam("id", dir.getId()), new UrlParam("name", name,
 						UrlParam.Encoding.BASE64), new UrlParam("path", path,
 						UrlParam.Encoding.BASE64)), resultListener);
 	}
 
 	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.remove_folder,
+		service.doGetRequest(getUrl(ConfigurationAction.remove_folder,
 				new UrlParam("id", dir.getId())), resultListener);
 	}
 
@@ -131,7 +131,7 @@ public class PhpConfigurationService implements ConfigurationService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		service.doRequest(getUrl(ConfigurationAction.get_user_folders,
+		service.doGetRequest(getUrl(ConfigurationAction.get_user_folders,
 				new UrlParam("user_id", user.getId())),
 				new ResultListener<JsArray<UserDirectory>>() {
 					public void onFail(ServiceError error) {
@@ -153,7 +153,7 @@ public class PhpConfigurationService implements ConfigurationService {
 		if (name != null)
 			params.add(new UrlParam("name", name, UrlParam.Encoding.BASE64));
 
-		service.doRequest(getUrl(ConfigurationAction.add_user_folder, params),
+		service.doGetRequest(getUrl(ConfigurationAction.add_user_folder, params),
 				resultListener);
 	}
 
@@ -165,14 +165,14 @@ public class PhpConfigurationService implements ConfigurationService {
 		if (name != null)
 			params.add(new UrlParam("name", name, UrlParam.Encoding.BASE64));
 
-		service.doRequest(
+		service.doGetRequest(
 				getUrl(ConfigurationAction.update_user_folder, params),
 				resultListener);
 	}
 
 	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
-		service.doRequest(getUrl(ConfigurationAction.remove_user_folder,
+		service.doGetRequest(getUrl(ConfigurationAction.remove_user_folder,
 				new UrlParam("user_id", user.getId()), new UrlParam("id", dir
 						.getId())), resultListener);
 	}

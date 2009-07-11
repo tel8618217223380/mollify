@@ -59,9 +59,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		model = new PermissionEditorModel(item, configurationService,
 				fileSystemService);
 
-		callbackCalled = false;
-		model.refresh(this);
-		assertTrue(callbackCalled);
+		refresh();
 	}
 
 	@Test
@@ -124,9 +122,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		FileItemUserPermission editedPermission = getUserPermission(user2);
 		model.editPermission(editedPermission);
 
-		callbackCalled = false;
-		model.commit(this);
-		assertTrue(callbackCalled);
+		commit();
 
 		assertEquals(1, fileSystemService.getNewPermissions().size());
 		assertEquals(newPermission, fileSystemService.getNewPermissions()
@@ -139,10 +135,6 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		assertEquals(1, fileSystemService.getModifiedPermissions().size());
 		assertEquals(editedPermission, fileSystemService
 				.getModifiedPermissions().get(0));
-	}
-
-	public void onCallback() {
-		callbackCalled = true;
 	}
 
 	private FilePermissionMode getPermission(User user) {
@@ -164,4 +156,21 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 			FilePermissionMode permission) {
 		return new FileItemUserPermission(item, user, permission);
 	}
+
+	public void onCallback() {
+		callbackCalled = true;
+	}
+
+	private void refresh() {
+		callbackCalled = false;
+		model.refresh(this);
+		assertTrue(callbackCalled);
+	}
+
+	private void commit() {
+		callbackCalled = false;
+		model.commit(this);
+		assertTrue(callbackCalled);
+	}
+
 }

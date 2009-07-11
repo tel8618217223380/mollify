@@ -12,14 +12,14 @@
 	function process_filesystem_request() {
 		global $result, $error, $error_details;
 
-		if (!isset($_GET["action"])) {
+		if (!isset($_REQUEST["action"])) {
 			$error = "INVALID_REQUEST";
 			return;
 		}
-		$DATA_ACTIONS = array("get_upload_status");
+		$DATA_ACTIONS = array("get_upload_status", "update_item_permissions");
 		$ITEM_ACTIONS = array("get_files", "get_directories", "get_contents", "get_item_details", "download", "download_as_zip", "rename", "copy", "move", "delete", "upload", "create_folder", "set_description", "remove_description", "get_item_permissions", "get_item_permission", "set_item_permission", "remove_item_permission");
-		
-		$action = strtolower($_GET["action"]);
+				
+		$action = strtolower($_REQUEST["action"]);
 		
 		if (in_array($action, $DATA_ACTIONS)) {
 			$result = process_data_request($action);
@@ -222,7 +222,24 @@
 	}
 	
 	function process_data_request($action) {
-		switch ($action) {				
+		switch ($action) {
+			case "update_item_permissions":
+				print_r($_REQUEST);
+				
+				if (!$_SESSION["settings"]["enable_permission_update"]) {
+					log_error("Cannot edit permissions, feature disabled by settings");
+					$error = "FEATURE_DISABLED";
+					break;
+				}
+				if (!is_admin()) {
+					log_error("Insufficient permissions (update permissions): User=[".$_SESSION['user_id']."]");
+					$error = "NOT_AN_ADMIN";
+					break;
+				}
+//				print_r($_POST);
+//				$data = json_decode($_GET["data"]);
+//				log_message($data);
+				return TRUE;	
 			case "get_upload_status":
 				if (!isset($_GET["id"])) {
 					$error = "INVALID_REQUEST";

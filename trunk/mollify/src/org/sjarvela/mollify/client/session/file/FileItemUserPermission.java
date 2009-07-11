@@ -18,6 +18,8 @@ import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
+import com.google.gwt.core.client.JsArray;
+
 public class FileItemUserPermission {
 	private final FileSystemItem item;
 	private final User user;
@@ -32,6 +34,15 @@ public class FileItemUserPermission {
 			result.add(new FileItemUserPermission(itemCache.getItem(permission
 					.getItemId()), userCache.getUser(permission.getUserId()),
 					permission.getPermission()));
+		return result;
+	}
+
+	public static JsArray<JsFileItemUserPermission> asJsArray(
+			List<FileItemUserPermission> list) {
+		JsArray<JsFileItemUserPermission> result = JsArray.createArray().cast();
+		int index = 0;
+		for (FileItemUserPermission permission : list)
+			result.set(index++, permission.asJsObj());
 		return result;
 	}
 
