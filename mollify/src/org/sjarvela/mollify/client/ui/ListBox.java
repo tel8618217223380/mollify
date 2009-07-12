@@ -13,6 +13,11 @@ package org.sjarvela.mollify.client.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.ResourceId;
+
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+
 public class ListBox<T> extends com.google.gwt.user.client.ui.ListBox {
 	private List<T> objects = new ArrayList();
 	private Formatter<T> formatter = null;
@@ -41,4 +46,12 @@ public class ListBox<T> extends com.google.gwt.user.client.ui.ListBox {
 		return objects.get(super.getSelectedIndex());
 	}
 
+	public void setAction(final ActionListener actionListener,
+			final ResourceId action) {
+		this.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
+				actionListener.onAction(action);
+			}
+		});
+	}
 }

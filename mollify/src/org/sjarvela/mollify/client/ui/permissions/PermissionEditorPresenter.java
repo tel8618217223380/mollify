@@ -131,4 +131,8 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		model.editPermission(permission);
 		refreshList();
 	}
+
+	public void onDefaultPermissionChanged(FilePermissionMode defaultPermission) {
+		model.setDefaultPermission(defaultPermission);
+	}
 }

@@ -36,7 +36,7 @@ public class PermissionEditorView extends CenteredDialog {
 	private ActionButton removeButton;
 
 	public enum Actions implements ResourceId {
-		ok, cancel, addPermission, editPermission, removePermission
+		ok, cancel, addPermission, editPermission, removePermission, defaultPermissionChanged
 	}
 
 	public PermissionEditorView(TextProvider textProvider,
@@ -55,6 +55,8 @@ public class PermissionEditorView extends CenteredDialog {
 		defaultPermission = new ListBox();
 		defaultPermission
 				.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION);
+		defaultPermission.setAction(actionListener,
+				Actions.defaultPermissionChanged);
 
 		addButton = createButton(textProvider.getStrings()
 				.itemPermissionEditorButtonAddPermission(),

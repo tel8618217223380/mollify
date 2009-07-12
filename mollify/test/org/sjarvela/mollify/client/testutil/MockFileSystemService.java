@@ -105,7 +105,7 @@ public class MockFileSystemService implements FileSystemService {
 			List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
-			ResultListener<Boolean> resultListener) {
+			ResultListener resultListener) {
 		this.newPermissions = newPermissions;
 		this.modifiedPermissions = modifiedPermissions;
 		this.removedPermissions = removedPermissions;

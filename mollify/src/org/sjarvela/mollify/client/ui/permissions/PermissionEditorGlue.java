@@ -24,7 +24,7 @@ public class PermissionEditorGlue {
 	private final PermissionEditorView view;
 
 	public PermissionEditorGlue(final PermissionEditorPresenter presenter,
-			PermissionEditorView view, ActionDelegator actionDelegator) {
+			final PermissionEditorView view, ActionDelegator actionDelegator) {
 		this.view = view;
 
 		view.addViewListener(new ViewListener() {
@@ -84,6 +84,15 @@ public class PermissionEditorGlue {
 				new ActionHandler() {
 					public void onAction() {
 						presenter.onRemovePermission();
+					}
+				});
+
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.defaultPermissionChanged,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onDefaultPermissionChanged(view
+								.getDefaultPermission().getSelectedItem());
 					}
 				});
 
