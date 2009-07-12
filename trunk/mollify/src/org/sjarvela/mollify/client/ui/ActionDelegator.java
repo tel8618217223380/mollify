@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 
-
 public class ActionDelegator implements ActionListener {
 	Map<ResourceId, ActionHandler> actions = new HashMap();
 

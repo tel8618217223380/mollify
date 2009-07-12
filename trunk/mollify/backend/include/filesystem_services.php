@@ -17,7 +17,7 @@
 			return;
 		}
 		$DATA_ACTIONS = array("get_upload_status", "update_item_permissions");
-		$ITEM_ACTIONS = array("get_files", "get_directories", "get_contents", "get_item_details", "download", "download_as_zip", "rename", "copy", "move", "delete", "upload", "create_folder", "set_description", "remove_description", "get_item_permissions", "get_item_permission", "set_item_permission", "remove_item_permission");
+		$ITEM_ACTIONS = array("get_files", "get_directories", "get_contents", "get_item_details", "download", "download_as_zip", "rename", "copy", "move", "delete", "upload", "create_folder", "set_description", "remove_description", "get_item_permissions");
 				
 		$action = strtolower($_REQUEST["action"]);
 		
@@ -180,7 +180,7 @@
 														
 				return get_item_permissions($item);
 				
-			case "set_item_permission":
+/*			case "set_item_permission":
 				if (!isset($_GET["permission"])) {
 					$error = "INVALID_REQUEST";
 					break;
@@ -215,17 +215,17 @@
 				$user_id = NULL;
 				if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
 				
-				return remove_item_permission($item, $user_id);
+				return remove_item_permission($item, $user_id);*/
 		}
 		
 		return FALSE;
 	}
 	
 	function process_data_request($action) {
+		global $error, $error_details;
+		
 		switch ($action) {
 			case "update_item_permissions":
-				print_r($_REQUEST);
-				
 				if (!$_SESSION["settings"]["enable_permission_update"]) {
 					log_error("Cannot edit permissions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
@@ -236,10 +236,19 @@
 					$error = "NOT_AN_ADMIN";
 					break;
 				}
-//				print_r($_POST);
-//				$data = json_decode($_GET["data"]);
-//				log_message($data);
-				return TRUE;	
+				$data = file_get_contents("php://input");
+				if (!$data or strlen($data) === 0){
+					$error = "INVALID_REQUEST";
+					$error_details = "Missing data";
+					break;
+				}
+				$data = json_decode($data, TRUE);
+				if (!array_key_exists("new", $data) or !array_key_exists("modified", $data) or !array_key_exists("removed", $data)) {
+					$error = "INVALID_REQUEST";
+					$error_details = "Unexpected data structure";
+					break;
+				}
+				return update_item_permissions($data["new"],$data["modified"],$data["removed"]);
 			case "get_upload_status":
 				if (!isset($_GET["id"])) {
 					$error = "INVALID_REQUEST";

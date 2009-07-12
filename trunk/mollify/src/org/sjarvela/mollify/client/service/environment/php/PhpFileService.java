@@ -205,7 +205,7 @@ public class PhpFileService implements FileSystemService {
 			List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
-			final ResultListener<Boolean> resultListener) {
+			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Update item permissions");
 

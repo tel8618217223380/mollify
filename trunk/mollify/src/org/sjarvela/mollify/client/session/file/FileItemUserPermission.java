@@ -30,10 +30,13 @@ public class FileItemUserPermission {
 			FileSystemItemCache itemCache) {
 		List<FileItemUserPermission> result = new ArrayList();
 
-		for (JsFileItemUserPermission permission : permissions)
+		for (JsFileItemUserPermission permission : permissions) {
+			User user = permission.isDefault() ? null : userCache
+					.getUser(permission.getUserId());
+
 			result.add(new FileItemUserPermission(itemCache.getItem(permission
-					.getItemId()), userCache.getUser(permission.getUserId()),
-					permission.getPermission()));
+					.getItemId()), user, permission.getPermission()));
+		}
 		return result;
 	}
 

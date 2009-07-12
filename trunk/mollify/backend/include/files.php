@@ -354,7 +354,9 @@
 		
 		if ($_SESSION["settings"]["enable_description_update"])
 			move_item_description($file, get_fileitem($to["root"], $target));
-
+		if ($_SESSION["settings"]["enable_permission_update"])
+			move_item_permissions($dir, get_fileitem($to["root"], $target));
+			
 		return TRUE;
 	}
 
@@ -384,7 +386,9 @@
 		
 		if ($_SESSION["settings"]["enable_description_update"])
 			move_item_description($dir, get_fileitem($to["root"], $target), TRUE);
-
+		if ($_SESSION["settings"]["enable_permission_update"])
+			move_item_permissions($dir, get_fileitem($to["root"], $target), TRUE);
+			
 		return TRUE;
 	}
 	
@@ -417,6 +421,8 @@
 		
 		if ($_SESSION["settings"]["enable_description_update"])
 			move_item_description($dir, get_fileitem($dir["root"], $new), TRUE);
+		if ($_SESSION["settings"]["enable_permission_update"])
+			move_item_permissions($dir, get_fileitem($dir["root"], $new), TRUE);
 
 		return TRUE;
 	}
@@ -443,6 +449,8 @@
 		
 		if ($_SESSION["settings"]["enable_description_update"])
 			remove_item_description($file);
+		if ($_SESSION["settings"]["enable_permission_update"])
+			remove_all_item_permissions($file);
 
 		return TRUE;
 	}
@@ -471,6 +479,8 @@
 		
 		if ($_SESSION["settings"]["enable_description_update"])
 			remove_item_description($dir, TRUE);
+		if ($_SESSION["settings"]["enable_permission_update"])
+			remove_all_item_permissions($dir, TRUE);
 
 		return TRUE;
 	}

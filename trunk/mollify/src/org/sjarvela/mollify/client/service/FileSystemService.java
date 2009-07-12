@@ -61,5 +61,5 @@ public interface FileSystemService extends FileDetailsProvider,
 	void updateItemPermissions(List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
-			ResultListener<Boolean> resultListener);
+			ResultListener resultListener);
 }

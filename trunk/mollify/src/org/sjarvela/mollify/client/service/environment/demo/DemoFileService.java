@@ -111,7 +111,7 @@ public class DemoFileService implements FileSystemService {
 			List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
-			ResultListener<Boolean> listener) {
+			ResultListener listener) {
 		listener.onSuccess(true);
 	}
 }

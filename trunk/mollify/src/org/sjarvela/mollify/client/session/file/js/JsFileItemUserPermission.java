@@ -58,4 +58,8 @@ public class JsFileItemUserPermission extends JavaScriptObject {
 		this.permission = permission;
 	}-*/;
 
+	public final boolean isDefault() {
+		return getUserId().equals("0");
+	};
+
 }

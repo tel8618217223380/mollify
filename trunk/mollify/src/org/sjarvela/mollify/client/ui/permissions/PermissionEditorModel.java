@@ -204,13 +204,12 @@ public class PermissionEditorModel {
 
 	public void commit(final Callback successCallback) {
 		fileSystemService.updateItemPermissions(newPermissions,
-				modifiedPermissions, removedPermissions,
-				new ResultListener<Boolean>() {
+				modifiedPermissions, removedPermissions, new ResultListener() {
 					public void onFail(ServiceError error) {
 						onError(error);
 					}
 
-					public void onSuccess(Boolean result) {
+					public void onSuccess(Object result) {
 						successCallback.onCallback();
 					}
 				});

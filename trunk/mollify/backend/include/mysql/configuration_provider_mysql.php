@@ -499,9 +499,9 @@
 
 	function get_item_permissions($item) {
 		$db = init_db();
-		$id = mysql_real_escape_string(base64_decode($item["id"]), $db);
-		$query = sprintf("SELECT p.user_id, p.permission FROM item_permission as p, user as u WHERE p.item_id = '%s' AND u.id = p.user_id", $id);
-		$result = _query($query, $db);
+		$sql_id = mysql_real_escape_string(base64_decode($item["id"]), $db);
+		log_error(sprintf("SELECT user_id, permission FROM item_permission WHERE item_id = '%s'", $sql_id));
+		$result = _query(sprintf("SELECT user_id, permission FROM item_permission WHERE item_id = '%s'", $sql_id), $db);
 		
 		if (!$result) {
 			$error = "INVALID_REQUEST";
@@ -546,63 +546,153 @@
 		return mysql_result($result, 0);
 	}
 	
-	function set_item_permission($item, $user_id, $permission) {
+	function update_item_permissions($new, $modified, $removed) {
 		global $error, $error_details;
 
 		$db = init_db();
-		$sql_permission = mysql_real_escape_string(strtolower($permission), $db);
-		$sql_id = mysql_real_escape_string(base64_decode($item["id"]), $db);
-		if ($user_id != NULL) $sql_user = sprintf("user_id = '%s'", mysql_real_escape_string($user_id, $db));
-		else $sql_user = "user_id is null"; 
-		
-		if (!_query(sprintf("UPDATE item_permission SET permission='%s' WHERE item_id='%s' and %s", $sql_permission, $sql_id, $sql_user), $db)) {
+		if (!_query('START TRANSACTION;', $db)) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error($db);
-			log_error("Failed to update permission (".$error_details.")");
+			log_error("Failed to update permissions (".$error_details.")");
 			return FALSE;
 		}
+		
+		if (count($new) > 0 and !_set_item_permissions($db, $new)) return FALSE;
+		if (count($modified) > 0 and !_update_item_permissions($db, $modified)) return FALSE;
+		if (count($removed) > 0 and !_remove_item_permissions($db, $removed)) return FALSE;
+		
+		if (!_query('COMMIT;', $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to update permissions (".$error_details.")");
+			return FALSE;
+		}
+						
+		return TRUE;
+	}
 
-		if (mysql_affected_rows($db) == 0) {
-			if ($user_id != NULL) $query = sprintf("INSERT INTO item_permission (item_id, user_id, permission) VALUES ('%s','%s','%s')", $sql_id, mysql_real_escape_string($user_id, $db), $sql_permission);
-			else $query = sprintf("INSERT INTO item_permission (item_id, permission) VALUES ('%s','%s')", $sql_id, $sql_permission);
+	function _set_item_permissions($db, $list) {
+		global $error, $error_details;
+
+		$query = 'INSERT INTO item_permission (item_id, user_id, permission) VALUES ';
+		$first = TRUE;
+		foreach($list as $item) {
+			$sql_permission = mysql_real_escape_string(strtolower($item["permission"]), $db);
+			$sql_id = mysql_real_escape_string(base64_decode($item["item_id"]), $db);
+			$sql_user = '0';
+			if ($item["user_id"] != NULL) $sql_user = mysql_real_escape_string($item["user_id"], $db);
 			
-			if (!_query($query, $db)) {
+			if (!$first) $query .= ',';
+			$query .= sprintf(" ('%s', '%s', '%s')", $sql_id, $sql_user, $sql_permission);
+			$first = FALSE;
+		}
+		
+		if (!_query($query, $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to insert permissions (".$error_details.")");
+			return FALSE;
+		}
+						
+		return TRUE;
+	}
+
+	function _update_item_permissions($db, $list) {
+		global $error, $error_details;
+
+		foreach($list as $item) {
+			$sql_permission = mysql_real_escape_string(strtolower($item["permission"]), $db);
+			$sql_id = mysql_real_escape_string(base64_decode($item["item_id"]), $db);
+			$sql_user = '0';
+			if ($item["user_id"] != NULL) $sql_user = mysql_real_escape_string($item["user_id"], $db);
+		
+			if (!_query(sprintf("UPDATE item_permission SET permission='%s' WHERE item_id='%s' and user_id='%s'", $sql_permission, $sql_id, $sql_user), $db)) {
 				$error = "INVALID_REQUEST";
 				$error_details = mysql_error($db);
-				log_error("Failed to insert permission (".$error_details.")");
+				log_error("Failed to update permission (".$error_details.")");
 				return FALSE;
 			}
+	
+			if (mysql_affected_rows($db) == 0) {
+				$error = "INVALID_REQUEST";
+				$error_details = mysql_error($db);
+				log_error("Failed to update permission (".$error_details.")");
+				return FALSE;
+			}
+		}
+						
+		return TRUE;
+	}
+
+	function _remove_item_permissions($db, $list) {
+		global $error, $error_details;
+		
+		foreach($list as $item) {
+			$sql_id = mysql_real_escape_string(base64_decode($item["item_id"]), $db);
+			$sql_user = "user_id = '0'";
+			if ($item["user_id"] != NULL) $sql_user = sprintf("user_id = '%s'", mysql_real_escape_string($item["user_id"], $db));
+			
+			if (!_query(sprintf("DELETE FROM item_permission WHERE item_id='%s' AND %s", $sql_id, $sql_user), $db)) {
+				$error = "INVALID_REQUEST";
+				$error_details = mysql_error($db);
+				log_error("Failed to remove permission (".$error_details.")");
+				return FALSE;
+			}
+		}
+		
+		if (!_query($query, $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to insert permissions (".$error_details.")");
+			return FALSE;
 		}
 				
 		return TRUE;
 	}
 
-	function remove_item_permission($item, $user_id, $recursively = FALSE, $unencoded = FALSE) {
+	function remove_all_item_permissions($item, $recursively = FALSE) {
 		global $error, $error_details;
 
 		$db = init_db();
-		$id = $item["id"];
-		if (!$unencoded) $id = base64_decode($id);
-		if ($user_id != NULL) $sql_user = sprintf("user_id = '%s'", mysql_real_escape_string($user_id, $db));
-		else $sql_user = "user_id is null"; 
+		$sql_id = mysql_real_escape_string(base64_decode($item["id"]), $db);
 		
 		if ($recursively) {
-			$query = sprintf("DELETE FROM item_permission WHERE item_id like '%s%%' AND %s", mysql_real_escape_string($id, $db), $sql_user);
-			if (!_query($query, $db)) {
-				$error = "INVALID_REQUEST";
-				$error_details = mysql_error($db);
-				log_error("Failed to remove permission (".$error_details.")");
-				return FALSE;
-			}
+			$query = sprintf("DELETE FROM item_permission WHERE item_id like '%s%%'", $sql_id);
 		} else {
-			if (!_query(sprintf("DELETE FROM item_permission WHERE item_id='%s' AND %s", mysql_real_escape_string($id, $db), $sql_user), $db)) {
-				$error = "INVALID_REQUEST";
-				$error_details = mysql_error($db);
-				log_error("Failed to remove permission (".$error_details.")");
-				return FALSE;
-			}
+			$query = sprintf("DELETE FROM item_permission WHERE item_id='%s'", $sql_id);
+		}
+		
+		if (!_query($query, $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to remove permissions (".$error_details.")");
+			return FALSE;
 		}
 				
 		return TRUE;
 	}
+	
+	function move_item_permissions($from, $to, $recursively = FALSE) {
+		global $error, $error_details;
+
+		$db = init_db();
+		$from_id = base64_decode($from["id"]);
+		$to_id = base64_decode($to["id"]);
+		
+		if ($recursively) {
+			$query = sprintf("UPDATE item_permission SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", mysql_real_escape_string($to_id, $db), strlen($from_id)+1, mysql_real_escape_string($from_id, $db));
+		} else {
+			$query = sprintf("UPDATE item_permission SET item_id='%s' WHERE item_id='%s'", mysql_real_escape_string($to_id, $db), mysql_real_escape_string($from_id, $db));
+		}
+		
+		if (!_query($query, $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to move item permissions (".$error_details.")");
+			return FALSE;
+		}
+				
+		return TRUE;
+	}
+
 ?>
