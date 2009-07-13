@@ -146,19 +146,21 @@ public class PermissionEditorModel {
 	}
 
 	public void setDefaultPermission(FilePermissionMode permission) {
+		// remove old default permission from update lists
+		removedPermissions.remove(defaultPermission);
+		newPermissions.remove(defaultPermission);
+		modifiedPermissions.remove(defaultPermission);
+
+		// create new default permission
 		defaultPermission = new FileItemUserPermission(item, null, permission);
 
-		if (FilePermissionMode.None.equals(permission)) {
-			asRemoved(defaultPermission);
+		if (FilePermissionMode.None.equals(permission))
+			return;
 
-			if (!originalDefaultPermissionExists)
-				modifiedPermissions.remove(defaultPermission);
-		} else {
-			if (originalDefaultPermissionExists)
-				asModified(defaultPermission);
-			else
-				asNew(defaultPermission);
-		}
+		if (originalDefaultPermissionExists)
+			modifiedPermissions.add(defaultPermission);
+		else
+			newPermissions.add(defaultPermission);
 	}
 
 	public List<FileItemUserPermission> getUserSpecificPermissions() {
@@ -213,30 +215,6 @@ public class PermissionEditorModel {
 						successCallback.onCallback();
 					}
 				});
-	}
-
-	private void asNew(FileItemUserPermission permission) {
-		removedPermissions.remove(permission);
-		modifiedPermissions.remove(permission);
-
-		if (!newPermissions.contains(permission))
-			newPermissions.add(permission);
-	}
-
-	private void asModified(FileItemUserPermission permission) {
-		removedPermissions.remove(permission);
-		newPermissions.remove(permission);
-
-		if (!modifiedPermissions.contains(permission))
-			modifiedPermissions.add(permission);
-	}
-
-	private void asRemoved(FileItemUserPermission permission) {
-		removedPermissions.remove(permission);
-		modifiedPermissions.remove(permission);
-
-		if (!removedPermissions.contains(permission))
-			removedPermissions.add(permission);
 	}
 
 }
