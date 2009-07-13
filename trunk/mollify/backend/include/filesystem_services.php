@@ -179,43 +179,8 @@
 				}
 														
 				return get_item_permissions($item);
-				
-/*			case "set_item_permission":
-				if (!isset($_GET["permission"])) {
-					$error = "INVALID_REQUEST";
-					break;
-				}
-				if (!$_SESSION["settings"]["enable_permission_update"]) {
-					log_error("Cannot edit permissions, feature disabled by settings");
-					$error = "FEATURE_DISABLED";
-					break;
-				}
-				if (!is_admin()) {
-					log_error("Insufficient permissions (set permission): User=[".$_SESSION['user_id']."]");
-					$error = "NOT_AN_ADMIN";
-					break;
-				}
-				$permission = $_GET["permission"];
-				$user_id = NULL;
-				if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
-				
-				return set_item_permission($item, $user_id, $permission);
-
-			case "remove_item_permission":
-				if (!$_SESSION["settings"]["enable_permission_update"]) {
-					log_error("Cannot edit permissions, feature disabled by settings");
-					$error = "FEATURE_DISABLED";
-					break;
-				}
-				if (!is_admin()) {
-					log_error("Insufficient permissions (remove permission): User=[".$_SESSION['user_id']."]");
-					$error = "NOT_AN_ADMIN";
-					break;
-				}
-				$user_id = NULL;
-				if (isset($_GET["user_id"])) $user_id = $_GET["user_id"];
-				
-				return remove_item_permission($item, $user_id);*/
+			default:
+				break;
 		}
 		
 		return FALSE;
