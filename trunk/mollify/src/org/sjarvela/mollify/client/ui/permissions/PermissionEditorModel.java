@@ -82,8 +82,9 @@ public class PermissionEditorModel {
 					refreshPermissions(successCallback);
 				}
 			});
+		} else {
+			refreshPermissions(successCallback);
 		}
-		refreshPermissions(successCallback);
 	}
 
 	private void refreshPermissions(final Callback successCallback) {

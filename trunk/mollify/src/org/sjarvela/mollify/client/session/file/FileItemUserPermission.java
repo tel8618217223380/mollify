@@ -30,19 +30,20 @@ public class FileItemUserPermission {
 			FileSystemItemCache itemCache) {
 		List<FileItemUserPermission> result = new ArrayList();
 
-		for (JsFileItemUserPermission permission : permissions) {
-			User user = permission.isDefault() ? null : userCache
-					.getUser(permission.getUserId());
+		for (JsFileItemUserPermission jsPermission : permissions) {
+			User user = jsPermission.isDefault() ? null : userCache
+					.getUser(jsPermission.getUserId());
+			FileSystemItem item = itemCache.getItem(jsPermission.getItemId());
+			FilePermissionMode permission = jsPermission.getPermission();
 
-			result.add(new FileItemUserPermission(itemCache.getItem(permission
-					.getItemId()), user, permission.getPermission()));
+			result.add(new FileItemUserPermission(item, user, permission));
 		}
 		return result;
 	}
 
 	public static JsArray<JsFileItemUserPermission> asJsArray(
 			List<FileItemUserPermission> list) {
-		JsArray<JsFileItemUserPermission> result = JsArray.createArray().cast();
+		JsArray result = JsArray.createArray().cast();
 		int index = 0;
 		for (FileItemUserPermission permission : list)
 			result.set(index++, permission.asJsObj());
@@ -50,8 +51,8 @@ public class FileItemUserPermission {
 	}
 
 	public JsFileItemUserPermission asJsObj() {
-		return JsFileItemUserPermission.create(item.getId(), user.getId(),
-				permission);
+		return JsFileItemUserPermission.create(item.getId(),
+				user == null ? null : user.getId(), permission);
 	}
 
 	public FileItemUserPermission(FileSystemItem item, User user,

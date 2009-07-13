@@ -511,7 +511,7 @@
 		}
 		$list = array();
 		while ($row = mysql_fetch_assoc($result)) {
-			$list[] = array("item" => $item["id"], "user_id" => $row["user_id"], "permission" => $row["permission"]);
+			$list[] = array("item_id" => $item["id"], "user_id" => $row["user_id"], "permission" => $row["permission"]);
 		}
 		mysql_free_result($result);
 		return $list;
@@ -639,14 +639,7 @@
 				return FALSE;
 			}
 		}
-		
-		if (!_query($query, $db)) {
-			$error = "INVALID_REQUEST";
-			$error_details = mysql_error($db);
-			log_error("Failed to insert permissions (".$error_details.")");
-			return FALSE;
-		}
-				
+						
 		return TRUE;
 	}
 
