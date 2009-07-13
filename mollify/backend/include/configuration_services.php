@@ -13,7 +13,7 @@
 	function process_configuration_request() {
 		global $result, $error, $error_details;
 		
-		if (!isset($_GET["action"]) or !get_configuration_setting("configuration_update")) {
+		if (!isset($_REQUEST["action"])) {
 			$error = "INVALID_REQUEST";
 			return;
 		}
@@ -22,7 +22,13 @@
 			return;
 		}
 		
-		$action = $_GET["action"];
+		$action = strtolower($_REQUEST["action"]);
+		$NON_UPDATE_ACTIONS = array("get_users", "get_folders", "get_user_folders");
+		if (!in_array($action, $NON_UPDATE_ACTIONS) and !get_configuration_setting("configuration_update")) {
+			$error = "INVALID_REQUEST";
+			return;
+		}
+
 		switch ($action) {
 			case "get_users":
 				$result = get_all_users();

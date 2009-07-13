@@ -70,11 +70,9 @@
 		return dir_path($roots[$id]["path"]);
 	}
 	
-	function get_fileitem_from_url($id_param) {
-		if (!isset($_GET[$id_param])) return FALSE;
+	function get_fileitem_from_id($id) {
+		global $error;
 		
-		global $error;		
-		$id = $_GET[$id_param];
 		$file = get_path_info_from_id($id);		
 		$root_id = $file["root"];
 		$root_path = get_root_path($root_id);
@@ -101,6 +99,11 @@
 		if (!$is_file and !assert_dir($item)) return FALSE;
 		
 		return $item;
+	}
+	
+	function get_fileitem_from_url($id_param) {
+		if (!isset($_GET[$id_param])) return FALSE;
+		return get_fileitem_from_id($_GET[$id_param]);
 	}
 	
 	function assert_file($item) {

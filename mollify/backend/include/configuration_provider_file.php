@@ -211,26 +211,119 @@
 		return TRUE;
 	}
 		
-	function get_item_permission($item, $user_id) {
-		$path = $item["path"];
+	function get_item_permission($item, $user_id) {		
+		$permissions = _get_permissions(_get_permission_filename($item));
+		
+		$match = FALSE;
+		$id = _get_permission_id($item);
+		
+		if (array_key_exists($id, $permissions)) $match = $permissions[$id];
+		if (!$match and $item["is_file"] and array_key_exists(".", $permissions)) $match = $permissions["."];
+		if (!$match) return FALSE;
+		
+		return _get_effective_permission($match, $user_id);
+	}
 
-		$items = array();
-		if (!is_dir($path)) {
-			$items[] = basename($path);
-			$path = dirname($path);
+	function get_item_permissions($item) {
+		//log_message($item);
+		$permissions = _get_permissions(_get_permission_filename($item));
+		//log_message($permissions);
+		if ($permissions === FALSE) return FALSE;
+		
+		$id = _get_permission_id($item);
+		//log_message($id);
+		
+		$result = array();
+		if (array_key_exists($id, $permissions)) {
+			foreach ($permissions[$id] as $id => $permission) {
+				if ($id === "*") $permission_id = "0";
+				else $permission_id = "".$id;
+				
+				$result[] = array("item_id" => $item["id"], "user_id" => $permission_id, "permission" => $permission);
+			}
 		}
-		$items[] = ".";	// lookup also folder rights, its default for files unless specific rights is defined
-		
-		$uac_file = $path.DIRECTORY_SEPARATOR."mollify.uac";
-		$permissions = _get_permissions_from_file($uac_file, $user_id, $items);
-		
-		foreach($items as $id)
-			if (array_key_exists($id, $permissions)) return $permissions[$id];
-		
-		return FALSE;		
+		return $result;
 	}
 	
-	function _get_permissions_from_file($uac_file, $for_user_id, $items = NULL) {
+	function _get_permission_filename($item) {
+		$path = $item["path"];
+		if (!is_dir($path))
+			$path = dirname($path);
+
+		return $path.DIRECTORY_SEPARATOR."mollify.uac";
+	}
+
+	function _get_permission_id($item) {
+		if (!$item["is_file"]) return ".";		
+		return basename($item["path"]);
+	}
+
+	function update_item_permissions($new, $modified, $removed) {
+		// find item id (assumes that all are for the same item)
+		$id = NULL;
+		if (count($new) > 0) $id = $new[0]["item_id"];
+		else if (count($modified) > 0) $id = $modified[0]["item_id"];
+		else if (count($removed) > 0) $id = $removed[0]["item_id"];
+		else return TRUE;
+		
+		$item = get_fileitem_from_id($id);
+		if (!$item) {
+			global $error;
+			log_error("Could determine file item for permission (".$id.")");
+			$error = "INVALID_REQUEST";
+			return FALSE;
+		}
+		return _update_item_permissions($item, $new, $modified, $removed);
+	}
+	
+	function _update_item_permissions($item, $new, $modified, $removed) {
+		//log_message($new);
+		//log_message($modified);
+		//log_message($removed);
+		
+		$uac_file = _get_permission_filename($item);		
+		$permissions = _get_permissions($uac_file);
+		if (!$permissions) $permissions = array();
+
+		$id = _get_permission_id($item);
+		if (!array_key_exists($id, $permissions)) $permissions[$id] = array();
+		$list = $permissions[$id];
+		
+		foreach(array_merge($new, $modified) as $permission) {
+			if (!_check_item($item, $permission)) return FALSE;
+			$user_id = "*";
+			if ($permission["user_id"] != NULL) $user_id = $permission["user_id"];
+			
+			$list[$user_id] = $permission["permission"];
+		}
+		
+		foreach($removed as $permission) {
+			if (!_check_item($item, $permission)) return FALSE;			
+			$user_id = "*";
+			if ($permission["user_id"] != NULL) $user_id = $permission["user_id"];
+			
+			unset($list[$user_id]);
+		}
+		
+		if (count($list) === 0) unset($permissions[$id]);
+		else $permissions[$id] = $list;
+		
+		log_message($permissions);
+		return _write_permissions($uac_file, $permissions);
+	}
+	
+	function _check_item($item, $permission) {
+		if ($permission["item_id"] != $item["id"]) {
+			global $error, $error_details;
+			$error = "INVALID_REQUEST";
+			$error_details = "Permission update request for multiple items is not supported";
+			log_error($error_details);
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	function _get_permissions($uac_file) {
 		$result = array();
 		if (!file_exists($uac_file)) return $result;
 	
@@ -244,13 +337,9 @@
 			$line_nr = $line_nr + 1;
 			
 			$parts = explode(chr(9), $line);
-			if (count($parts) < 2) return $result;
+			if (count($parts) < 2) continue;
 			
-			// results
-			$file = trim($parts[0]);
-			// if requested only for specific items, skip if not the one of them
-			if ($items == NULL or !in_array($file, $items)) continue;
-			
+			$file = trim($parts[0], '" ');
 			$data = trim($parts[count($parts) - 1]);
 			
 			$permissions = _parse_permission_string($data);
@@ -258,25 +347,39 @@
 				log_error("Invalid file permission definition in file [".$uac_file."] at line ".$line_nr);
 				continue;
 			}
-			
-			$permission = _get_active_permission($permissions, $for_user_id);
-			// ignore lines that don't apply to current user
-			if (!$permission) continue;
-			
-			// ignore invalid permissions
-			if ($permission != $FILE_PERMISSION_VALUE_READWRITE and $permission != $FILE_PERMISSION_VALUE_READONLY) {
-				log_error("Invalid file permission definition [".$permission."] in file [".$uac_file."] at line ".$line_nr);
-				continue;
-			}
-			
-			$result[$file] = $permission;
-			
-			// if requested only for specific items, stop once all of them are found
-			if ($items != NULL and count($result) === count($items)) break;
+						
+			$result[$file] = $permissions;			
 	    }
 	    fclose($handle);
 		
 		return $result;
+	}
+
+	function _write_permissions($uac_file, $permission_table) {
+		if (file_exists($uac_file)) {
+			if (!is_writable($uac_file)) {
+				log_error("Permission file (".$uac_file.") is not writable");
+				return FALSE;
+			}
+		} else {
+			$dir = dirname($uac_file);
+			if (!is_writable($dir)) {
+				log_error("Directory for permission file (".$dir.") is not writable");
+				return FALSE;
+			}
+		}
+	
+		$handle = @fopen($uac_file, "w");
+		if (!$handle) return FALSE;
+		
+		foreach($permission_table as $file => $permissions) {
+			$value = _format_permission_string($permissions);
+			fwrite($handle, sprintf("\"%s\"\t%s\n", $file, $value));
+		}
+
+		fclose($handle);
+		
+		return TRUE;
 	}
 	
 	function _parse_permission_string($string) {
@@ -291,17 +394,40 @@
 			if (count($value_parts) != 2) return FALSE;
 
 			$id = trim($value_parts[0]);
-			$permission = strtoupper(trim($value_parts[1]));
+			$permission = strtolower(trim($value_parts[1]));
 			if (strlen($id) == 0 or strlen($permission) == 0) return FALSE;
 
 			$result[$id] = $permission;
 		}
 		return $result;
 	}
+
+	function _format_permission_string($permissions) {
+		$result = "";
+		if (count($permissions) < 1) return $result;
+		
+		$first = TRUE;
+		foreach($permissions as $id => $permission) {
+			if (!$first) $result .= ',';
+			$result .= sprintf("%s=%s", $id, strtolower($permission));
+			$first = FALSE;
+		}
+		return $result;
+	}
 	
-	function _get_active_permission($permissions, $user_id) {
+	function _get_effective_permission($permissions, $user_id) {
 		if ($user_id != "" and isset($permissions[$user_id])) return $permissions[$user_id];
 		if (isset($permissions["*"])) return $permissions["*"];
 		return FALSE;
 	}
+	
+	function get_all_users() {
+		global $USERS;
+
+		$result = array();
+		foreach($USERS as $id => $user)
+			$result[] = array("id" => "".$id, "name" => $user["name"], "permission_mode" => $user["file_permission_mode"]);
+		return $result;
+	}
+
 ?>
