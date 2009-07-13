@@ -110,6 +110,48 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	}
 
 	@Test
+	public void testHasChangedWithAdd() {
+		assertFalse(model.hasChanged());
+
+		FileItemUserPermission permission = createPermission(user3,
+				FilePermissionMode.ReadOnly);
+
+		model.addPermission(permission);
+		assertTrue(model.hasChanged());
+
+		model.removePermission(permission);
+		assertFalse(model.hasChanged());
+	}
+
+	@Test
+	public void testHasChangedWithEdit() {
+		assertFalse(model.hasChanged());
+		model.editPermission(getUserPermission(user1));
+		assertTrue(model.hasChanged());
+	}
+
+	@Test
+	public void testHasChangedWithRemove() {
+		assertFalse(model.hasChanged());
+		model.removePermission(getUserPermission(user1));
+		assertTrue(model.hasChanged());
+	}
+
+	@Test
+	public void testHasChangedWithDefaultPermission() {
+		assertFalse(model.hasChanged());
+
+		model.setDefaultPermission(FilePermissionMode.ReadOnly);
+		assertTrue(model.hasChanged());
+
+		model.setDefaultPermission(FilePermissionMode.ReadWrite);
+		assertTrue(model.hasChanged());
+
+		model.setDefaultPermission(FilePermissionMode.None);
+		assertFalse(model.hasChanged());
+	}
+
+	@Test
 	public void testCommit() {
 		FileItemUserPermission newPermission = createPermission(user3,
 				FilePermissionMode.ReadOnly);
