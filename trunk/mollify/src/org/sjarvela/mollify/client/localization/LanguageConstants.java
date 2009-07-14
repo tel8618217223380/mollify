@@ -37,6 +37,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String mainViewConfigurationTitle();
 
+	public String mainViewEditPermissionsTitle();
+
 	public String mainViewLogoutButtonTitle();
 
 	public String mainViewChangePasswordTitle();
@@ -322,6 +324,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String itemPermissionListColumnTitleUser();
 
 	public String itemPermissionListColumnTitlePermission();
+
+	public String itemPermissionEditorButtonSelectItem();
 
 	public String itemPermissionEditorButtonAddPermission();
 

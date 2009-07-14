@@ -225,13 +225,9 @@
 	}
 
 	function get_item_permissions($item) {
-		//log_message($item);
 		$permissions = _get_permissions(_get_permission_filename($item));
-		//log_message($permissions);
 		if ($permissions === FALSE) return FALSE;
-		
 		$id = _get_permission_id($item);
-		//log_message($id);
 		
 		$result = array();
 		if (array_key_exists($id, $permissions)) {
@@ -275,13 +271,9 @@
 		}
 		return _update_item_permissions($item, $new, $modified, $removed);
 	}
-	
+
 	function _update_item_permissions($item, $new, $modified, $removed) {
-		//log_message($new);
-		//log_message($modified);
-		//log_message($removed);
-		
-		$uac_file = _get_permission_filename($item);		
+		$uac_file = _get_permission_filename($item);
 		$permissions = _get_permissions($uac_file);
 		if (!$permissions) $permissions = array();
 
@@ -319,6 +311,38 @@
 			$error_details = "Permission update request for multiple items is not supported";
 			log_error($error_details);
 			return FALSE;
+		}
+		return TRUE;
+	}
+
+	function move_item_permissions($from, $to, $recursively = FALSE) {
+		if ($recursively) return TRUE;	// permission file is moved along the folder
+		
+		$from_path = dirname($from["path"]);
+		$from_name = basename($from["path"]);
+		$from_id = _get_permission_id($from);
+
+		$to_path = dirname($to["path"]);
+		$to_name = basename($to["path"]);
+		$to_id = _get_permission_id($to);
+
+		$from_uac_file = _get_permission_filename($from);
+		$from_permissions = _get_permissions($from_uac_file);
+		if (!$from_permissions or !array_key_exists($from_id, $from_permissions)) return TRUE;
+		
+		$item_permissions = $from_permissions[$from_id];
+		unset($from_permissions[$from_id]);
+		
+		if ($to_path === $from_path) $from_permissions[$to_id] = $item_permissions;
+		if (!_write_permissions($from_uac_file, $from_permissions)) return FALSE;
+		
+		if ($to_path != $from_path) {
+			$to_uac_file = _get_permission_filename($to);
+			$to_permissions = _get_permissions($to_uac_file);
+			if (!$to_permissions) $to_permissions = array();
+			
+			$to_permissions[$to_id] = $item_permissions;
+			return _write_permissions($to_uac_file, $to_permissions);
 		}
 		return TRUE;
 	}

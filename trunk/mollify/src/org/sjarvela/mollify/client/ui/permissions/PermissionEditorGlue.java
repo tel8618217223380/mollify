@@ -49,6 +49,13 @@ public class PermissionEditorGlue {
 			}
 		});
 
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.selectItem, new ActionHandler() {
+					public void onAction() {
+						presenter.onSelectItem();
+					}
+				});
+
 		actionDelegator.setActionHandler(PermissionEditorView.Actions.ok,
 				new ActionHandler() {
 					public void onAction() {

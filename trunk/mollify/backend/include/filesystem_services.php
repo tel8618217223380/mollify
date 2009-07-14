@@ -224,4 +224,10 @@
 
 		return FALSE;
 	}
+	
+	function get_fileitem_from_url($id_param) {
+		if (!isset($_GET[$id_param])) return FALSE;
+		return get_fileitem_from_id($_GET[$id_param]);
+	}
+
 ?>

@@ -61,6 +61,10 @@ public class PermissionEditorModel {
 		errorCallback.onCallback(error);
 	}
 
+	public boolean hasItem() {
+		return item != null;
+	}
+
 	public FileSystemItem getItem() {
 		return item;
 	}
@@ -88,6 +92,11 @@ public class PermissionEditorModel {
 	}
 
 	private void refreshPermissions(final Callback successCallback) {
+		if (!hasItem()) {
+			successCallback.onCallback();
+			return;
+		}
+
 		fileSystemService.getItemPermissions(item,
 				new ResultListener<List<FileItemUserPermission>>() {
 					public void onFail(ServiceError error) {

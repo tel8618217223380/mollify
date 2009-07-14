@@ -38,6 +38,7 @@ public class StyleConstants {
 	public static final String DROPDOWN_BUTTON = "mollify-dropdown-button";
 	public static final String DROPDOWN_MENU = "mollify-dropdown-menu";
 	public static final String DROPDOWN_MENU_ITEM = "mollify-dropdown-menu-item";
+	public static final String DROPDOWN_MENU_ITEM_SEPARATOR = "mollify-dropdown-menu-item-separator";
 
 	public static final String MULTIACTION_BUTTON = "mollify-multiaction-button";
 	public static final String MULTIACTION_DEFAULT_BUTTON = "mollify-multiaction-button-default";
@@ -333,6 +334,7 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION_TITLE = "mollify-permission-editor-default-permission-title";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTONS = "mollify-permission-editor-buttons";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON = "mollify-permission-editor-button";
+	public static final String PERMISSION_EDITOR_VIEW_BUTTON_SELECT_ITEM = "mollify-permission-editor-button-select-item";
 	public static final String PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS = "mollify-permission-editor-permission-actions";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION = "mollify-permission-editor-button-add-permission";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION = "mollify-permission-editor-button-edit-permission";

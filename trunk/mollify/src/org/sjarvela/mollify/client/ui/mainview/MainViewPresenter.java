@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -57,13 +58,14 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final FileSystemActionHandler fileSystemActionHandler;
 	private final LogoutHandler logoutHandler;
 	private final TextProvider textProvider;
+	private final DirectoryProvider directoryProvider;
 
 	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
 			MainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
 			ConfigurationService configurationService,
 			FileUploadService fileUploadService, TextProvider textProvider,
-			LogoutHandler logoutHandler,
+			DirectoryProvider directoryProvider, LogoutHandler logoutHandler,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
@@ -74,6 +76,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
+		this.directoryProvider = directoryProvider;
 		this.logoutHandler = logoutHandler;
 		this.fileSystemActionHandler = fileSystemActionHandlerFactory
 				.create(createReloadCallback());
@@ -217,7 +220,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			}
 		};
 	}
-	
+
 	private Callback createRefreshCallback() {
 		return new Callback() {
 			public void onCallback() {
@@ -333,6 +336,13 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	public void onEditPermissions(FileSystemItem item) {
 		windowManager.getDialogManager().openFilePermissionEditor(
-				configurationService, fileSystemService, item);
+				configurationService, fileSystemService, directoryProvider,
+				item);
+	}
+
+	public void onEditItemPermissions() {
+		windowManager.getDialogManager().openFilePermissionEditor(
+				configurationService, fileSystemService, directoryProvider,
+				null);
 	}
 }

@@ -84,4 +84,14 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		return label;
 	}
 
+	public void addSeparator() {
+		addItem(createSeparatorWidget());
+	}
+
+	private Widget createSeparatorWidget() {
+		final Label label = new Label();
+		label.setStyleName(StyleConstants.DROPDOWN_MENU_ITEM_SEPARATOR);
+		return label;
+	}
+
 }
