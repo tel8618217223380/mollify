@@ -13,11 +13,12 @@ package org.sjarvela.mollify.client.ui.dialog;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
-public interface SelectFolderHandler {
+public interface SelectItemHandler {
 
-	void onSelect(Directory selected);
+	void onSelect(FileSystemItem selected);
 
-	boolean isDirectoryAllowed(Directory directory, List<Directory> path);
+	boolean isItemAllowed(FileSystemItem item, List<Directory> path);
 
 }

@@ -29,7 +29,6 @@ import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
 public class PermissionEditorModel {
-	private final FileSystemItem item;
 	private final ConfigurationService configurationService;
 	private final FileSystemService fileSystemService;
 
@@ -37,8 +36,9 @@ public class PermissionEditorModel {
 	private List<User> users = null;
 	private UserCache userCache;
 
-	private FileItemUserPermission defaultPermission;
-	private boolean originalDefaultPermissionExists;
+	private FileSystemItem item;
+	private FileItemUserPermission defaultPermission = null;
+	private boolean originalDefaultPermissionExists = false;
 
 	private List<FileItemUserPermission> effectivePermissions = new ArrayList();
 	private List<FileItemUserPermission> newPermissions = new ArrayList();
@@ -48,9 +48,10 @@ public class PermissionEditorModel {
 	public PermissionEditorModel(FileSystemItem item,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService) {
-		this.item = item;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
+
+		setItem(item);
 	}
 
 	public void setErrorCallback(ResultCallback<ServiceError> errorCallback) {
@@ -59,6 +60,18 @@ public class PermissionEditorModel {
 
 	protected void onError(ServiceError error) {
 		errorCallback.onCallback(error);
+	}
+
+	public void setItem(FileSystemItem item) {
+		this.defaultPermission = null;
+		this.originalDefaultPermissionExists = false;
+
+		this.effectivePermissions = new ArrayList();
+		this.newPermissions = new ArrayList();
+		this.modifiedPermissions = new ArrayList();
+		this.removedPermissions = new ArrayList();
+
+		this.item = item;
 	}
 
 	public boolean hasItem() {
@@ -147,6 +160,9 @@ public class PermissionEditorModel {
 	}
 
 	public boolean hasChanged() {
+		if (!hasItem())
+			return false;
+
 		return newPermissions.size() > 0 || modifiedPermissions.size() > 0
 				|| removedPermissions.size() > 0;
 	}

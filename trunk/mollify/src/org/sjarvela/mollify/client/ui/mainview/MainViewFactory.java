@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -40,7 +40,7 @@ public class MainViewFactory {
 			LogoutHandler logoutListener) {
 		SessionInfo session = sessionProvider.getSession();
 
-		DirectoryProvider directoryProvider = new DefaultDirectoryProvider(
+		FileSystemItemProvider fileSystemItemProvider = new DefaultFileSystemItemProvider(
 				session.getRootDirectories(), environment
 						.getFileSystemService());
 
@@ -48,16 +48,16 @@ public class MainViewFactory {
 				.getFileSystemService();
 
 		MainViewModel model = new MainViewModel(fileSystemService, session,
-				directoryProvider);
+				fileSystemItemProvider);
 
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
-				model, fileSystemService, textProvider, directoryProvider);
+				model, fileSystemService, textProvider, fileSystemItemProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileSystemService, textProvider, model.getSession());
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
 				textProvider, fileSystemService, model.getSession());
 		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
-				windowManager, fileSystemService, directoryProvider);
+				windowManager, fileSystemService, fileSystemItemProvider);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		MainView view = new MainView(model, textProvider, actionDelegator,
@@ -67,7 +67,7 @@ public class MainViewFactory {
 				model, view, environment.getSessionService(),
 				fileSystemService, environment.getConfigurationService(),
 				environment.getFileUploadHandler(), textProvider,
-				directoryProvider, logoutListener,
+				fileSystemItemProvider, logoutListener,
 				fileSystemActionHandlerFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
 

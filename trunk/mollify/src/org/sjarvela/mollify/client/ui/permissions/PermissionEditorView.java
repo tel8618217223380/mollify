@@ -36,6 +36,7 @@ public class PermissionEditorView extends CenteredDialog {
 	private ActionButton addButton;
 	private ActionButton editButton;
 	private ActionButton removeButton;
+	private ActionButton okButton;
 
 	public enum Mode {
 		Fixed, Selectable
@@ -134,10 +135,12 @@ public class PermissionEditorView extends CenteredDialog {
 	protected Widget createButtons() {
 		Panel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_BUTTONS);
-		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
+
+		okButton = createButton(textProvider.getStrings().dialogOkButton(),
 				StyleConstants.PERMISSION_EDITOR_VIEW_OK,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
-				Actions.ok));
+				Actions.ok);
+		buttons.add(okButton);
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
 				StyleConstants.PERMISSION_EDITOR_VIEW_CANCEL,
@@ -175,5 +178,12 @@ public class PermissionEditorView extends CenteredDialog {
 
 	public ActionButton getRemovePermissionButton() {
 		return removeButton;
+	}
+
+	public void updateButtons(boolean itemDefined) {
+		this.okButton.setEnabled(itemDefined);
+		this.addButton.setEnabled(itemDefined);
+		this.editButton.setEnabled(false);
+		this.removeButton.setEnabled(false);
 	}
 }

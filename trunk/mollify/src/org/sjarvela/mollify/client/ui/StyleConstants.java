@@ -206,7 +206,8 @@ public class StyleConstants {
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM = "mollify-select-folder-dialog-folders-root";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL = "mollify-select-folder-dialog-folders-root-item-label";
 	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM = "mollify-select-folder-dialog-folders-item";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL = "mollify-select-folder-dialog-folders-item-label";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_DIR = "mollify-select-folder-dialog-folders-item-label-dir";
+	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_FILE = "mollify-select-folder-dialog-folders-item-label-file";
 	public static final String SELECT_FOLDER_DIALOG_MESSAGE = "mollify-select-folder-dialog-message";
 
 	public static final String PASSWORD_DIALOG = "password-dialog-title";

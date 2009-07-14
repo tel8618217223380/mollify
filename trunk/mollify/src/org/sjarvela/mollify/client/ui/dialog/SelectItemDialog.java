@@ -11,12 +11,17 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -41,36 +46,44 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SelectFolderDialog extends CenteredDialog implements
+public class SelectItemDialog extends CenteredDialog implements
 		SelectionHandler<TreeItem>, OpenHandler<TreeItem> {
+	public enum Mode {
+		Folders, FoldersAndFiles
+	};
+
 	private static String pleaseWaitText = null;
 
+	private final Mode mode;
 	private final DialogManager dialogManager;
-	private final DirectoryProvider directoryProvider;
+	private final FileSystemItemProvider fileSystemItemProvider;
 	private final TextProvider textProvider;
 	private final String message;
 	private final String selectActionTitle;
 
-	private Tree folders;
+	private Tree itemTree;
 	private TreeItem rootItem;
 	private Button selectButton;
-	private Map<TreeItem, Directory> items = new HashMap();
+	private Map<TreeItem, FileSystemItem> items = new HashMap();
 
 	private List<TreeItem> itemsInitialized = new ArrayList();
-	private SelectFolderHandler listener;
+	private SelectItemHandler listener;
 	private TreeItem selected = null;
 
-	public SelectFolderDialog(DialogManager dialogManager,
+	public SelectItemDialog(Mode mode, DialogManager dialogManager,
 			TextProvider textProvider, String title, String message,
-			String selectActionTitle, DirectoryProvider directoryProvider,
-			SelectFolderHandler listener) {
+			String selectActionTitle,
+			FileSystemItemProvider fileSystemItemProvider,
+			SelectItemHandler handler) {
 		super(title, StyleConstants.SELECT_FOLDER_DIALOG);
+
+		this.mode = mode;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.message = message;
 		this.selectActionTitle = selectActionTitle;
-		this.directoryProvider = directoryProvider;
-		this.listener = listener;
+		this.fileSystemItemProvider = fileSystemItemProvider;
+		this.listener = handler;
 
 		if (pleaseWaitText == null)
 			pleaseWaitText = textProvider.getStrings()
@@ -78,7 +91,7 @@ public class SelectFolderDialog extends CenteredDialog implements
 
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
-				SelectFolderDialog.this.onShow();
+				SelectItemDialog.this.onShow();
 			}
 		});
 		initialize();
@@ -93,18 +106,18 @@ public class SelectFolderDialog extends CenteredDialog implements
 		messageHtml.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_MESSAGE);
 		panel.add(messageHtml);
 
-		folders = new Tree();
-		folders.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE);
-		folders.addSelectionHandler(this);
-		folders.addOpenHandler(this);
-		panel.add(folders);
+		itemTree = new Tree();
+		itemTree.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE);
+		itemTree.addSelectionHandler(this);
+		itemTree.addOpenHandler(this);
+		panel.add(itemTree);
 
 		rootItem = createItem(
 				textProvider.getStrings().selectFolderDialogFoldersRoot(),
 				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL,
 				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM);
 
-		folders.addItem(rootItem);
+		itemTree.addItem(rootItem);
 		return panel;
 	}
 
@@ -125,7 +138,7 @@ public class SelectFolderDialog extends CenteredDialog implements
 				textProvider.getStrings().dialogCancelButton(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						SelectFolderDialog.this.hide();
+						SelectItemDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
@@ -135,20 +148,11 @@ public class SelectFolderDialog extends CenteredDialog implements
 	}
 
 	private void onShow() {
-		directoryProvider.getDirectories(Directory.Empty,
-				new ResultListener<List<Directory>>() {
-					public void onFail(ServiceError error) {
-						onRequestError(error);
-					}
-
-					public void onSuccess(List<Directory> roots) {
-						onUpdateRoots(roots);
-					}
-				});
+		onUpdateRoots(fileSystemItemProvider.getRootDirectories());
 	}
 
 	private void onUpdateRoots(List<Directory> roots) {
-		addSubFolders(rootItem, roots);
+		addSubItems(rootItem, roots);
 		rootItem.setState(true);
 		selectInitialDir();
 	}
@@ -157,17 +161,28 @@ public class SelectFolderDialog extends CenteredDialog implements
 		// TODO
 	}
 
-	private void addSubFolders(TreeItem parent, List<Directory> dirs) {
-		for (Directory dir : dirs)
-			parent.addItem(createDirItem(dir));
+	private void addSubItems(TreeItem parent,
+			List<? extends FileSystemItem> items) {
+		for (FileSystemItem item : items)
+			parent.addItem(item.isFile() ? createFileItem((File) item)
+					: createDirItem((Directory) item));
 	}
 
 	protected TreeItem createDirItem(Directory dir) {
 		TreeItem item = createItem(dir.getName(),
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL,
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_DIR,
 				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
 		item.addItem(pleaseWaitText);
 		items.put(item, dir);
+		return item;
+	}
+
+	protected TreeItem createFileItem(File file) {
+		TreeItem item = createItem(
+				file.getName(),
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_FILE,
+				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
+		items.put(item, file);
 		return item;
 	}
 
@@ -188,12 +203,12 @@ public class SelectFolderDialog extends CenteredDialog implements
 	}
 
 	private void onSelect() {
-		if (folders.getSelectedItem() == null
-				|| folders.getSelectedItem().equals(rootItem))
+		if (itemTree.getSelectedItem() == null
+				|| itemTree.getSelectedItem().equals(rootItem))
 			return;
 
 		this.hide();
-		listener.onSelect(items.get(folders.getSelectedItem()));
+		listener.onSelect(items.get(itemTree.getSelectedItem()));
 	}
 
 	public void onSelection(SelectionEvent<TreeItem> event) {
@@ -201,7 +216,7 @@ public class SelectFolderDialog extends CenteredDialog implements
 		boolean allowed = false;
 
 		if (!item.equals(rootItem))
-			allowed = listener.isDirectoryAllowed(items.get(item),
+			allowed = listener.isItemAllowed(items.get(item),
 					getDirectoryPath(item));
 
 		this.selectButton.setEnabled(allowed);
@@ -217,15 +232,17 @@ public class SelectFolderDialog extends CenteredDialog implements
 
 	}
 
-	private List<Directory> getDirectoryPath(TreeItem item) {
+	private List<Directory> getDirectoryPath(TreeItem treeItem) {
 		List<Directory> list = new ArrayList();
-		TreeItem current = item;
+		TreeItem current = treeItem;
 
 		while (true) {
-			list.add(items.get(current));
+			FileSystemItem item = items.get(current);
+			if (!item.isFile())
+				list.add((Directory) item);
+			current = current.getParentItem();
 			if (current.equals(rootItem))
 				break;
-			current = current.getParentItem();
 		}
 		return list;
 	}
@@ -237,24 +254,57 @@ public class SelectFolderDialog extends CenteredDialog implements
 			return;
 
 		if (item.getState() && !itemsInitialized.contains(item))
-			addSubDirectories(item);
+			addSubItems(item);
 	}
 
-	private void addSubDirectories(final TreeItem item) {
-		final Directory dir = items.get(item);
+	private void addSubItems(final TreeItem treeItem) {
+		final FileSystemItem item = items.get(treeItem);
+		if (item.isFile())
+			return;
 
-		directoryProvider.getDirectories(dir,
-				new ResultListener<List<Directory>>() {
-					public void onFail(ServiceError error) {
-						onRequestError(error);
-					}
+		if (Mode.Folders.equals(this.mode)) {
+			fileSystemItemProvider.getDirectories((Directory) item,
+					new ResultListener<List<Directory>>() {
+						public void onFail(ServiceError error) {
+							onRequestError(error);
+						}
 
-					public void onSuccess(List<Directory> subDirs) {
-						itemsInitialized.add(item);
-						item.removeItems();
-						addSubFolders(item, subDirs);
-					}
-				});
+						public void onSuccess(List<Directory> subDirs) {
+							itemsInitialized.add(treeItem);
+							treeItem.removeItems();
+							SelectItemDialog.this
+									.addSubItems(treeItem, subDirs);
+						}
+					});
+		} else {
+			fileSystemItemProvider.getFilesAndFolders((Directory) item,
+					new ResultListener<DirectoryContent>() {
+						public void onFail(ServiceError error) {
+							onRequestError(error);
+						}
+
+						public void onSuccess(DirectoryContent result) {
+							itemsInitialized.add(treeItem);
+							treeItem.removeItems();
+							addSubItems(treeItem, createItemList(result));
+						}
+					});
+		}
+	}
+
+	protected List<FileSystemItem> createItemList(DirectoryContent result) {
+		List<FileSystemItem> list = new ArrayList(result.getDirectories());
+		list.addAll(result.getFiles());
+		Collections.sort(list, new Comparator<FileSystemItem>() {
+			public int compare(FileSystemItem item1, FileSystemItem item2) {
+				if (item1.isFile() && !item2.isFile())
+					return 1;
+				if (item2.isFile() && !item1.isFile())
+					return -1;
+				return item1.getName().compareToIgnoreCase(item2.getName());
+			}
+		});
+		return list;
 	}
 
 	protected void onRequestError(ServiceError error) {

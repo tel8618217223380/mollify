@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -23,16 +23,17 @@ public class PermissionEditorViewFactory {
 	private final FileSystemService fileSystemService;
 	private final DialogManager dialogManager;
 	private final ConfigurationService configurationService;
-	private final DirectoryProvider directoryProvider;
+	private final FileSystemItemProvider fileSystemItemProvider;
 
 	public PermissionEditorViewFactory(TextProvider textProvider,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService,
-			DirectoryProvider directoryProvider, DialogManager dialogManager) {
+			FileSystemItemProvider fileSystemItemProvider,
+			DialogManager dialogManager) {
 		this.textProvider = textProvider;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
-		this.directoryProvider = directoryProvider;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.dialogManager = dialogManager;
 	}
 
@@ -44,8 +45,9 @@ public class PermissionEditorViewFactory {
 				actionDelegator, item != null ? PermissionEditorView.Mode.Fixed
 						: PermissionEditorView.Mode.Selectable);
 		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
-				model, view, dialogManager, new FilePermissionModeFormatter(
-						textProvider), directoryProvider);
+				textProvider, model, view, dialogManager,
+				new FilePermissionModeFormatter(textProvider),
+				fileSystemItemProvider);
 		new PermissionEditorGlue(presenter, view, actionDelegator);
 	}
 

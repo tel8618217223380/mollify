@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -21,19 +21,19 @@ public class DefaultFileSystemActionHandlerFactory implements
 		FileSystemActionHandlerFactory {
 	private WindowManager windowManager;
 	private FileSystemService fileSystemService;
-	private DirectoryProvider directoryProvider;
+	private FileSystemItemProvider fileSystemItemProvider;
 
 	public DefaultFileSystemActionHandlerFactory(WindowManager windowManager,
 			FileSystemService fileSystemService,
-			DirectoryProvider directoryProvider) {
+			FileSystemItemProvider fileSystemItemProvider) {
 		this.windowManager = windowManager;
 		this.fileSystemService = fileSystemService;
-		this.directoryProvider = directoryProvider;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 	}
 
 	public FileSystemActionHandler create(Callback actionCallback) {
 		return new DefaultFileSystemActionHandler(windowManager,
-				fileSystemService, directoryProvider, actionCallback);
+				fileSystemService, fileSystemItemProvider, actionCallback);
 	}
 
 }
