@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,22 +252,32 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return details;
 	}
 
+	public void initializeDetailsSection() {
+		initializeDetailsSection(Collections.EMPTY_LIST, Collections.EMPTY_MAP);
+	}
+
 	public void initializeDetailsSection(List<ResourceId> order,
 			Map<ResourceId, String> headers) {
 		this.detailRowValues.clear();
+		this.details.clear();
+
+		if (order.size() == 0 && !permissionsEditable)
+			return;
 
 		Panel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
 
-		for (ResourceId id : order) {
-			this.detailRowValues.put(id, createDetailsRow(content, headers
-					.get(id), id.name().toLowerCase()));
+		if (order.size() > 0) {
+			for (ResourceId id : order) {
+				this.detailRowValues.put(id, createDetailsRow(content, headers
+						.get(id), id.name().toLowerCase()));
+			}
 		}
+
 		if (permissionsEditable)
 			content.add(createPermissionActions());
 
 		details.add(content);
-
 		details.setVisible(true);
 	}
 

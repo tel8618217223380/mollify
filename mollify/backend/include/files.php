@@ -39,11 +39,7 @@
 	function dir_path($path) {
 		return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 	}
-	
-	function get_fileitem($root_id, $path) {
-		return array("id" => get_filesystem_id($root_id, $path), "root" => $root_id, "path" => $path);
-	}
-	
+		
 	function get_parent_item($item) {
 		$path = dir_path(dirname($item["path"]));
 		$root = dir_path(get_root_path($item["root"]));
@@ -56,12 +52,7 @@
 			$root_path = get_root_path($root_id);
 			$path = substr($path, strlen($root_path));
 		}
-		return base64_encode($root_id.':'.$path);
-	}
-
-	function get_path_info_from_id($id) {
-		$parts = explode(":", base64_decode($id));
-		return array("root" => $parts[0], "path" => $parts[1]);
+		return base64_encode($root_id.':'.DIRECTORY_SEPARATOR.$path);
 	}
 
 	function get_root_path($id) {
@@ -73,9 +64,11 @@
 	function get_fileitem_from_id($id) {
 		global $error;
 		
-		$file = get_path_info_from_id($id);		
-		$root_id = $file["root"];
+		$parts = explode(":".DIRECTORY_SEPARATOR, base64_decode($id));
+		$root_id = $parts[0];
+		$file_path = $parts[1];
 		$root_path = get_root_path($root_id);
+		
 		if (!$root_path) {
 			$error = "INVALID_REQUEST";
 			return FALSE;
@@ -84,28 +77,28 @@
 		$path = $root_path;
 		$is_file = FALSE;
 		
-		if (strlen($file["path"]) > 0) {
-			if (strpos("..", $file["path"]) != FALSE) {
+		if (strlen($file_path) > 0) {
+			if (strpos("..", $file_path) != FALSE) {
 				$error = "INVALID_PATH";
 				return FALSE;
 			}
-			$path = join_path($path, $file["path"]);
+			$path = join_path($path, $file_path);
 			$is_file = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
 		}
 		
-		$item = array("id" => $id, "root" => $root_id, "path" => $path, "public_path" => $file["path"], "is_file" => $is_file);
+		$item = array("id" => $id, "root" => $root_id, "path" => $path, "is_file" => $is_file);
 		
 		if ($is_file and !assert_file($item)) return FALSE;
 		if (!$is_file and !assert_dir($item)) return FALSE;
 		
 		return $item;
 	}
-	
-	function get_fileitem_from_url($id_param) {
-		if (!isset($_GET[$id_param])) return FALSE;
-		return get_fileitem_from_id($_GET[$id_param]);
+
+	function get_fileitem($root_id, $path) {
+		$is_file = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
+		return array("id" => get_filesystem_id($root_id, $path), "root" => $root_id, "path" => $path, "is_file" => $is_file);
 	}
-	
+
 	function assert_file($item) {
 		global $error, $error_details;
 		
@@ -171,17 +164,9 @@
 		return $result;
 	}
 	
-	function get_directory_list() {
+	function get_directory_list($item) {
 		global $error, $error_details;
 		$result = array();
-		
-		if (isset($_GET["dir"])) {
-			$item = get_fileitem_from_url("dir");
-			if (!assert_dir($item)) return FALSE;
-		} else if (isset($_GET["file"])) {
-			$item = get_fileitem_from_url("file");
-			if (!assert_file($item)) return FALSE;
-		}
 		
 		$path = $item["path"];
 		$root_id = $item["root"];
@@ -302,7 +287,12 @@
 		}
 		log_message('rename from ['.$old.'] to ['.$new.']');
 		if (!rename($old, $new)) return FALSE;
-		move_item_description($file, get_fileitem($file["root"], $new));
+		
+		if ($_SESSION["settings"]["enable_description_update"])
+			move_item_description($file, get_fileitem($file["root"], $new));
+		if ($_SESSION["settings"]["enable_permission_update"])
+			move_item_permissions($file, get_fileitem($file["root"], $new));
+
 		return TRUE;
 	}
 
@@ -358,7 +348,7 @@
 		if ($_SESSION["settings"]["enable_description_update"])
 			move_item_description($file, get_fileitem($to["root"], $target));
 		if ($_SESSION["settings"]["enable_permission_update"])
-			move_item_permissions($dir, get_fileitem($to["root"], $target));
+			move_item_permissions($file, get_fileitem($to["root"], $target));
 			
 		return TRUE;
 	}

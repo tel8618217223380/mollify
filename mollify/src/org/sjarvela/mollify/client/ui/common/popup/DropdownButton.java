@@ -60,4 +60,8 @@ public class DropdownButton extends Composite {
 		menu.setActionEnabled(action, enabled);
 	}
 
+	public void addSeparator() {
+		menu.addSeparator();
+	}
+
 }

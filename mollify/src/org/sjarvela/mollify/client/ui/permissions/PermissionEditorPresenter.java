@@ -14,7 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.ResultCallback;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
@@ -23,18 +26,21 @@ import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
+import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
 
 public class PermissionEditorPresenter implements FileItemUserPermissionHandler {
 	private final PermissionEditorView view;
 	private final DialogManager dialogManager;
 	private final PermissionEditorModel model;
+	private final DirectoryProvider directoryProvider;
 
 	public PermissionEditorPresenter(PermissionEditorModel model,
 			PermissionEditorView view, DialogManager dialogManager,
-			Formatter<FilePermissionMode> filePermissionFormatter) {
+			Formatter<FilePermissionMode> filePermissionFormatter, DirectoryProvider directoryProvider) {
 		this.model = model;
 		this.view = view;
 		this.dialogManager = dialogManager;
+		this.directoryProvider = directoryProvider;
 
 		model.setErrorCallback(new ResultCallback<ServiceError>() {
 			public void onCallback(ServiceError error) {
@@ -134,5 +140,33 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 
 	public void onDefaultPermissionChanged(FilePermissionMode defaultPermission) {
 		model.setDefaultPermission(defaultPermission);
+	}
+
+	public void onSelectItem() {
+		// TODO
+		if (model.hasChanged())
+			dialogManager.showConfirmationDialog("OK?", "Changed, continue?",
+					"", new ConfirmationListener() {
+						public void onConfirm() {
+							openSelectItemDialog();
+						}
+					});
+		else
+			openSelectItemDialog();
+	}
+
+	protected void openSelectItemDialog() {
+		dialogManager.showSelectFolderDialog("S", "Select", "", directoryProvider, new SelectFolderHandler() {
+
+			public boolean isDirectoryAllowed(Directory directory,
+					List<Directory> path) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public void onSelect(Directory selected) {
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 }

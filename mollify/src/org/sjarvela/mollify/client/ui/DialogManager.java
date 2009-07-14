@@ -52,8 +52,8 @@ import org.sjarvela.mollify.client.ui.permissions.FileItemUserPermissionDialog;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
 public class DialogManager {
-	private TextProvider textProvider;
-	private PasswordGenerator passwordGenerator;
+	private final TextProvider textProvider;
+	private final PasswordGenerator passwordGenerator;
 	private final SessionProvider sessionProvider;
 
 	public DialogManager(TextProvider textProvider,
@@ -143,9 +143,10 @@ public class DialogManager {
 
 	public void openFilePermissionEditor(
 			ConfigurationService configurationService,
-			FileSystemService fileSystemService, FileSystemItem item) {
+			FileSystemService fileSystemService,
+			DirectoryProvider directoryProvider, FileSystemItem item) {
 		new PermissionEditorViewFactory(textProvider, configurationService,
-				fileSystemService, this).show(item);
+				fileSystemService, directoryProvider, this).show(item);
 	}
 
 	public void openAddFileItemUserPermissionDialog(

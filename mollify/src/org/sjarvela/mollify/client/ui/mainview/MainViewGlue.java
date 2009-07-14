@@ -44,6 +44,13 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	}
 
 	private void initializeActions() {
+		actionDelegator.setActionHandler(Action.editItemPermissions,
+				new ActionHandler() {
+					public void onAction() {
+						presenter.onEditItemPermissions();
+					}
+				});
+
 		actionDelegator.setActionHandler(Action.logout, new ActionHandler() {
 			public void onAction() {
 				presenter.logout();

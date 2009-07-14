@@ -63,6 +63,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	public void setDirectory(Directory directory) {
 		this.directory = directory;
 
+		popup.getDetails().setOpen(false);
 		popup.getName().setText(directory.getName());
 		updateDetails(null);
 
@@ -86,7 +87,9 @@ public class DirectoryContextPresenter implements ActionListener {
 		this.updateDescription();
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
+		
 		this.popup.updateButtons(writable);
+		this.popup.initializeDetailsSection();
 	}
 
 	private boolean isDescriptionDefined() {

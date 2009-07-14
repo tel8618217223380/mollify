@@ -65,7 +65,7 @@ public class MainView extends Composite implements PopupPositioner {
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, configure;
+		addFile, addDirectory, refresh, logout, changePassword, configure, editItemPermissions;
 	};
 
 	public MainView(MainViewModel model, TextProvider textProvider,
@@ -142,7 +142,6 @@ public class MainView extends Composite implements PopupPositioner {
 			loggedInPanel
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
 			loggedInPanel.add(createUserName());
-			// loggedInPanel.add(logoutButton);
 			header.add(loggedInPanel);
 		}
 
@@ -170,7 +169,12 @@ public class MainView extends Composite implements PopupPositioner {
 				username.addAction(Action.configure, textProvider.getStrings()
 						.mainViewConfigurationTitle());
 			}
+		} else {
+			username.addSeparator();
+			username.addAction(Action.editItemPermissions, textProvider
+					.getStrings().mainViewEditPermissionsTitle());
 		}
+		username.addSeparator();
 		username.addAction(Action.logout, textProvider.getStrings()
 				.mainViewLogoutButtonTitle());
 		return username;

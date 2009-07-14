@@ -67,7 +67,8 @@ public class MainViewFactory {
 				model, view, environment.getSessionService(),
 				fileSystemService, environment.getConfigurationService(),
 				environment.getFileUploadHandler(), textProvider,
-				logoutListener, fileSystemActionHandlerFactory);
+				directoryProvider, logoutListener,
+				fileSystemActionHandlerFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
 
 		return view;

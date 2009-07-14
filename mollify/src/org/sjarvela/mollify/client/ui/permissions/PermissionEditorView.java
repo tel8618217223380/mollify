@@ -20,12 +20,14 @@ import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PermissionEditorView extends CenteredDialog {
+	private final Mode mode;
 	private final Label itemName;
 	private final ListBox<FilePermissionMode> defaultPermission;
 	private final ItemPermissionList list;
@@ -35,16 +37,21 @@ public class PermissionEditorView extends CenteredDialog {
 	private ActionButton editButton;
 	private ActionButton removeButton;
 
+	public enum Mode {
+		Fixed, Selectable
+	}
+
 	public enum Actions implements ResourceId {
-		ok, cancel, addPermission, editPermission, removePermission, defaultPermissionChanged
+		ok, cancel, addPermission, editPermission, removePermission, defaultPermissionChanged, selectItem
 	}
 
 	public PermissionEditorView(TextProvider textProvider,
-			ActionListener actionListener) {
+			ActionListener actionListener, Mode mode) {
 		super(textProvider.getStrings().itemPermissionEditorDialogTitle(),
 				StyleConstants.PERMISSION_EDITOR_VIEW);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.mode = mode;
 
 		itemName = new Label();
 		itemName.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_NAME);
@@ -86,7 +93,17 @@ public class PermissionEditorView extends CenteredDialog {
 		itemTitle
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_TITLE);
 		panel.add(itemTitle);
-		panel.add(itemName);
+
+		Panel itemPanel = new HorizontalPanel();
+		itemPanel.add(itemName);
+		if (Mode.Selectable.equals(this.mode)) {
+			itemPanel.add(createButton(textProvider.getStrings()
+					.itemPermissionEditorButtonSelectItem(),
+					StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_SELECT_ITEM,
+					StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON,
+					actionListener, Actions.selectItem));
+		}
+		panel.add(itemPanel);
 
 		Label defaultPermissionTitle = new Label(textProvider.getStrings()
 				.itemPermissionEditorDefaultPermissionTitle());

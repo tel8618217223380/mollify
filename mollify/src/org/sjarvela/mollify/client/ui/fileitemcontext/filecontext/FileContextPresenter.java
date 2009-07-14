@@ -97,7 +97,7 @@ public class FileContextPresenter implements ActionListener {
 
 	public void setFile(File file) {
 		this.file = file;
-
+		
 		popup.getDetails().setOpen(false);
 		popup.getName().setText(file.getName());
 		updateDetails(null);
