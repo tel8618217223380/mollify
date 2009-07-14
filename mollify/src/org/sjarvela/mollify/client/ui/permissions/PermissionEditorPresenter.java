@@ -17,7 +17,9 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
@@ -26,21 +28,25 @@ import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
+import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 
 public class PermissionEditorPresenter implements FileItemUserPermissionHandler {
 	private final PermissionEditorView view;
 	private final DialogManager dialogManager;
 	private final PermissionEditorModel model;
-	private final DirectoryProvider directoryProvider;
+	private final FileSystemItemProvider fileSystemItemProvider;
+	private final TextProvider textProvider;
 
-	public PermissionEditorPresenter(PermissionEditorModel model,
-			PermissionEditorView view, DialogManager dialogManager,
-			Formatter<FilePermissionMode> filePermissionFormatter, DirectoryProvider directoryProvider) {
+	public PermissionEditorPresenter(TextProvider textProvider,
+			PermissionEditorModel model, PermissionEditorView view,
+			DialogManager dialogManager,
+			Formatter<FilePermissionMode> filePermissionFormatter,
+			FileSystemItemProvider fileSystemItemProvider) {
+		this.textProvider = textProvider;
 		this.model = model;
 		this.view = view;
 		this.dialogManager = dialogManager;
-		this.directoryProvider = directoryProvider;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 
 		model.setErrorCallback(new ResultCallback<ServiceError>() {
 			public void onCallback(ServiceError error) {
@@ -60,10 +66,18 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void initialize() {
-		view.getItemName().setText(model.getItem().getName());
-
 		view.getDefaultPermission().setContent(
 				Arrays.asList(FilePermissionMode.values()));
+
+		updateView();
+	}
+
+	private void updateView() {
+		view.updateButtons(model.hasItem());
+		if (!model.hasItem())
+			return;
+
+		view.getItemName().setText(model.getItem().getName());
 
 		view.getList().removeAllRows();
 		view.showProgress(true);
@@ -74,6 +88,11 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 				updatePermissions();
 			}
 		});
+	}
+
+	private void updateItem(FileSystemItem item) {
+		model.setItem(item);
+		updateView();
 	}
 
 	private void updatePermissions() {
@@ -87,6 +106,9 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void onOk() {
+		if (!model.hasItem())
+			return;
+
 		if (!model.hasChanged()) {
 			onClose();
 			return;
@@ -146,7 +168,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		// TODO
 		if (model.hasChanged())
 			dialogManager.showConfirmationDialog("OK?", "Changed, continue?",
-					"", new ConfirmationListener() {
+					"s", new ConfirmationListener() {
 						public void onConfirm() {
 							openSelectItemDialog();
 						}
@@ -156,17 +178,20 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	protected void openSelectItemDialog() {
-		dialogManager.showSelectFolderDialog("S", "Select", "", directoryProvider, new SelectFolderHandler() {
+		// TODO
+		dialogManager.showSelectItemDialog(textProvider.getStrings()
+				.moveDirectoryDialogTitle(), "", textProvider.getStrings()
+				.moveDirectoryDialogAction(), fileSystemItemProvider,
+				new SelectItemHandler() {
+					public boolean isItemAllowed(FileSystemItem item,
+							List<Directory> path) {
+						return true;
+					}
 
-			public boolean isDirectoryAllowed(Directory directory,
-					List<Directory> path) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public void onSelect(Directory selected) {
-				// TODO Auto-generated method stub
-				
-			}});
+					public void onSelect(FileSystemItem selected) {
+						updateItem(selected);
+					}
+				});
 	}
+
 }

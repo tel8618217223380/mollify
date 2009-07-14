@@ -15,7 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
@@ -46,8 +46,8 @@ import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
 import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderDialog;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
+import org.sjarvela.mollify.client.ui.dialog.SelectItemDialog;
+import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.permissions.FileItemUserPermissionDialog;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
@@ -117,10 +117,17 @@ public class DialogManager {
 	}
 
 	public void showSelectFolderDialog(String title, String message,
-			String actionTitle, DirectoryProvider provider,
-			SelectFolderHandler listener) {
-		new SelectFolderDialog(this, textProvider, title, message, actionTitle,
-				provider, listener);
+			String actionTitle, FileSystemItemProvider provider,
+			SelectItemHandler listener) {
+		new SelectItemDialog(SelectItemDialog.Mode.Folders, this, textProvider,
+				title, message, actionTitle, provider, listener);
+	}
+
+	public void showSelectItemDialog(String title, String message,
+			String actionTitle, FileSystemItemProvider provider,
+			SelectItemHandler listener) {
+		new SelectItemDialog(SelectItemDialog.Mode.FoldersAndFiles, this,
+				textProvider, title, message, actionTitle, provider, listener);
 	}
 
 	public void openConfigurationDialog(ConfigurationService service,
@@ -144,9 +151,9 @@ public class DialogManager {
 	public void openFilePermissionEditor(
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService,
-			DirectoryProvider directoryProvider, FileSystemItem item) {
+			FileSystemItemProvider fileSystemItemProvider, FileSystemItem item) {
 		new PermissionEditorViewFactory(textProvider, configurationService,
-				fileSystemService, directoryProvider, this).show(item);
+				fileSystemService, fileSystemItemProvider, this).show(item);
 	}
 
 	public void openAddFileItemUserPermissionDialog(

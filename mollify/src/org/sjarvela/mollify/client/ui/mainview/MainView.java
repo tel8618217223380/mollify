@@ -169,11 +169,17 @@ public class MainView extends Composite implements PopupPositioner {
 				username.addAction(Action.configure, textProvider.getStrings()
 						.mainViewConfigurationTitle());
 			}
-		} else {
+		}
+
+		if (UserPermissionMode.Admin.equals(model.getSession()
+				.getDefaultPermissionMode())
+				&& model.getSession().getConfigurationInfo()
+						.isPermissionUpdateSupported()) {
 			username.addSeparator();
 			username.addAction(Action.editItemPermissions, textProvider
 					.getStrings().mainViewEditPermissionsTitle());
 		}
+
 		username.addSeparator();
 		username.addAction(Action.logout, textProvider.getStrings()
 				.mainViewLogoutButtonTitle());

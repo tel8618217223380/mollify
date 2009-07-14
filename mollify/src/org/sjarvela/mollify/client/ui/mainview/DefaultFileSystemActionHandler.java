@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -26,21 +26,21 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.WindowManager;
-import org.sjarvela.mollify.client.ui.dialog.SelectFolderHandler;
+import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
 	private WindowManager windowManager;
 	private FileSystemService fileSystemService;
-	private DirectoryProvider directoryProvider;
 	private Callback actionCallback;
+	private FileSystemItemProvider fileSystemItemProvider;
 
 	public DefaultFileSystemActionHandler(WindowManager windowManager,
 			FileSystemService fileSystemService,
-			DirectoryProvider directoryProvider, Callback actionCallback) {
+			FileSystemItemProvider fileSystemItemProvider, Callback actionCallback) {
 		this.windowManager = windowManager;
 		this.fileSystemService = fileSystemService;
-		this.directoryProvider = directoryProvider;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.actionCallback = actionCallback;
 	}
 
@@ -68,16 +68,17 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						windowManager.getTextProvider().getMessages()
 								.copyFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
-								.copyFileDialogAction(), directoryProvider,
-						new SelectFolderHandler() {
-							public void onSelect(Directory selected) {
-								copyFile(file, selected);
+								.copyFileDialogAction(), fileSystemItemProvider,
+						new SelectItemHandler() {
+							public void onSelect(FileSystemItem selected) {
+								copyFile(file, (Directory) selected);
 							}
 
-							public boolean isDirectoryAllowed(
-									Directory directory, List<Directory> path) {
-								return !directory.getId().equals(
-										file.getParentId());
+							public boolean isItemAllowed(FileSystemItem item,
+									List<Directory> path) {
+								if (item.isFile())
+									return false;
+								return !item.getId().equals(file.getParentId());
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
@@ -87,16 +88,17 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						windowManager.getTextProvider().getMessages()
 								.moveFileMessage(file.getName()),
 						windowManager.getTextProvider().getStrings()
-								.moveFileDialogAction(), directoryProvider,
-						new SelectFolderHandler() {
-							public void onSelect(Directory selected) {
-								moveFile(file, selected);
+								.moveFileDialogAction(), fileSystemItemProvider,
+						new SelectItemHandler() {
+							public void onSelect(FileSystemItem selected) {
+								moveFile(file, (Directory) selected);
 							}
 
-							public boolean isDirectoryAllowed(
-									Directory directory, List<Directory> path) {
-								return !directory.getId().equals(
-										file.getParentId());
+							public boolean isItemAllowed(FileSystemItem item,
+									List<Directory> path) {
+								if (item.isFile())
+									return false;
+								return !item.getId().equals(file.getParentId());
 							}
 						});
 			} else if (action.equals(FileSystemAction.delete)) {
@@ -133,14 +135,17 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					windowManager.getTextProvider().getMessages()
 							.moveDirectoryMessage(directory.getName()),
 					windowManager.getTextProvider().getStrings()
-							.moveDirectoryDialogAction(), directoryProvider,
-					new SelectFolderHandler() {
-						public void onSelect(Directory selected) {
-							moveDirectory(directory, selected);
+							.moveDirectoryDialogAction(), fileSystemItemProvider,
+					new SelectItemHandler() {
+						public void onSelect(FileSystemItem selected) {
+							moveDirectory(directory, (Directory) selected);
 						}
 
-						public boolean isDirectoryAllowed(Directory candidate,
+						public boolean isItemAllowed(FileSystemItem candidate,
 								List<Directory> path) {
+							if (candidate.isFile())
+								return false;
+
 							return !directory.equals(candidate)
 									&& !directory.equals(candidate)
 									&& !path.contains(directory);
