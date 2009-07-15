@@ -149,9 +149,10 @@ public class StyleConstants {
 	public static final String CONFIRMATION_DIALOG_ICON = "mollify-confirm-dialog-icon";
 	public static final String CONFIRMATION_DIALOG_MESSAGE = "mollify-confirm-dialog-message";
 	public static final String CONFIRMATION_DIALOG_BUTTONS = "mollify-confirm-dialog-buttons";
-	public static final String DIALOG_BUTTON_CANCEL = "cancel";
-
 	public static final String CONFIRMATION_DIALOG_TYPE_DELETE = "confirm-delete";
+	public static final String CONFIRMATION_DIALOG_TYPE_OVERRIDE = "confirm-override";
+
+	public static final String DIALOG_BUTTON_CANCEL = "cancel";
 
 	public static final String RENAME_DIALOG = "rename";
 	public static final String RENAME_DIALOG_CONTENT = "mollify-rename-dialog-content";
@@ -330,6 +331,7 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_LIST = "editor";
 	public static final String PERMISSION_EDITOR_VIEW_LIST_PANEL = "mollify-permission-editor-list-panel";
 	public static final String PERMISSION_EDITOR_VIEW_ITEM_TITLE = "mollify-permission-editor-item-title";
+	public static final String PERMISSION_EDITOR_VIEW_ITEM_PANEL = "mollify-permission-editor-item-panel";
 	public static final String PERMISSION_EDITOR_VIEW_ITEM_NAME = "mollify-permission-editor-item-name";
 	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION = "mollify-permission-editor-default-permission";
 	public static final String PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION_TITLE = "mollify-permission-editor-default-permission-title";

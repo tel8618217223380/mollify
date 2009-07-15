@@ -43,7 +43,7 @@ public class PermissionEditorViewFactory {
 				configurationService, fileSystemService);
 		PermissionEditorView view = new PermissionEditorView(textProvider,
 				actionDelegator, item != null ? PermissionEditorView.Mode.Fixed
-						: PermissionEditorView.Mode.Selectable);
+						: PermissionEditorView.Mode.ItemSelectable);
 		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
 				textProvider, model, view, dialogManager,
 				new FilePermissionModeFormatter(textProvider),
