@@ -9,29 +9,6 @@
 	 * this entire header must remain intact.
 	 */
 	
-	function get_filesystem_session_info() {
-		return array(
-			"max_upload_file_size" => in_bytes(ini_get("upload_max_filesize")),
-			"max_upload_total_size" => in_bytes(ini_get("post_max_size"))
-		);
-	}
-	
-	function in_bytes($amount) {
-	    $amount = trim($amount);
-	    $last = strtolower($amount[strlen($amount)-1]);
-	    
-	    switch ($last) {
-	        case 'g':
-	            $amount *= 1024;
-	        case 'm':
-	            $amount *= 1024;
-	        case 'k':
-	            $amount *= 1024;
-	    }
-	
-	    return (int)$amount;
-	}
-	
 	function join_path($item1, $item2) {
 		return dir_path($item1).$item2;
 	}
@@ -47,14 +24,6 @@
 		return get_fileitem($item["root"], $path);
 	}
 	
-	function get_filesystem_id($root_id, $path = "") {
-		if (strlen($path) > 0) {
-			$root_path = get_root_path($root_id);
-			$path = substr($path, strlen($root_path));
-		}
-		return base64_encode($root_id.':'.DIRECTORY_SEPARATOR.$path);
-	}
-
 	function get_root_path($id) {
 		$roots = $_SESSION["roots"];
 		if (!array_key_exists($id, $roots)) return FALSE;

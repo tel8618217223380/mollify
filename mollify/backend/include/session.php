@@ -85,10 +85,9 @@
 			$info["authenticated"] = TRUE;
 			$info["username"] = $_SESSION['username'];
 			$info["user_id"] = $_SESSION['user_id'];
-			$info["settings"] = $_SESSION['settings'];
+			$info["features"] = $_SESSION['features'];
 			$info["default_permission_mode"] = $_SESSION['default_file_permission'];
 			$info["filesystem"] = get_filesystem_session_info();
-			$info["configuration"] = get_configuration_info();
 			$info["roots"] = get_root_directory_info();
 		}
 		return $info;
@@ -111,9 +110,10 @@
 		$_SESSION['user_id'] = $user_id;
 		$_SESSION['username'] = $username;
 		$_SESSION['default_file_permission'] = get_default_user_permission_mode($user_id);
-		$_SESSION['settings'] = get_effective_settings();
 		$_SESSION['roots'] = get_user_root_directories($user_id);
-		
+		$_SESSION['configuration_settings'] = get_configuration_settings();
+		$_SESSION['features'] = get_features();
+				
 		foreach($_SESSION["roots"] as $id => $root) {
 			if (!isset($root["name"])) {
 				log_error("Invalid published directory definition for id ".$id);
