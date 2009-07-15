@@ -40,13 +40,6 @@
 		die();
 	}
 	
-	function get_configuration_info() {
-		return array(
-			"configuration_update_support" => get_configuration_setting("configuration_update"),
-			"permission_update_support" => get_configuration_setting("permission_update")
-		);
-	}
-	
 	function initialize_session() {
 		if (check_authentication()) return TRUE;
 		return_json(get_error_message("INVALID_REQUEST"));
@@ -57,12 +50,9 @@
 	import_configuration_provider();
 	initialize_logging();
 	
-	if (!isset($_GET["type"])) exit(0);
-	$request_type = trim(strtolower($_GET["type"]));
-	
-
-	require_once("include/user.php");
-	require_once("include/files.php");
+	if (!isset($_REQUEST["type"])) exit(0);
+	$request_type = trim(strtolower($_REQUEST["type"]));
+	require_once("include/session.php");
 	
 	session_start();
 	if ($request_type === "session") {
@@ -70,7 +60,8 @@
 		exit(0);
 	}
 	if (!initialize_session()) return;
-	
+	require_once("include/files.php");
+		
 	$result = FALSE;
 	$error = "";
 	$error_details = "";

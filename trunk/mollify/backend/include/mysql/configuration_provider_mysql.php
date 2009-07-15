@@ -15,9 +15,8 @@
 	function get_configuration_settings() {
 		return array(
 			'configuration_update' => TRUE,
-			'permission_update' => TRUE,
-			'description_update_default' => TRUE,
-			'permission_update_default' => TRUE
+			'permission_update' => get_setting("enable_permission_update", TRUE),
+			'description_update' => get_setting("enable_description_update", TRUE)
 		);
 	}
 	

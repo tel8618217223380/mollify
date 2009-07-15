@@ -9,7 +9,31 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+
+	function in_bytes($amount) {
+	    $amount = trim($amount);
+	    $last = strtolower($amount[strlen($amount)-1]);
+	    
+	    switch ($last) {
+	        case 'g':
+	            $amount *= 1024;
+	        case 'm':
+	            $amount *= 1024;
+	        case 'k':
+	            $amount *= 1024;
+	    }
 	
+	    return (int)$amount;
+	}
+
+	function get_filesystem_id($root_id, $path = "") {
+		if (strlen($path) > 0) {
+			$root_path = get_root_path($root_id);
+			$path = substr($path, strlen($root_path));
+		}
+		return base64_encode($root_id.':'.DIRECTORY_SEPARATOR.$path);
+	}
+
 	function import_configuration_provider() {
 		global $CONFIGURATION_PROVIDER;
 		
@@ -32,7 +56,7 @@
 	}
 	
 	function get_configuration_setting($name) {
-		$settings = get_configuration_settings();
+		$settings = $_SESSION["configuration_settings"];
 		if (array_key_exists($name, $settings)) return $settings[$name];
 		return FALSE;
 	}
@@ -42,15 +66,23 @@
 		if (!isset($SETTINGS) or !isset($SETTINGS[$setting_name])) return $default;
 		return $SETTINGS[$setting_name];
 	}
-	
-	function get_effective_settings() {
+
+	function get_filesystem_session_info() {
 		return array(
-			"enable_file_upload" => get_setting("enable_file_upload", TRUE),
-			"enable_folder_actions" => get_setting("enable_folder_actions", TRUE),
-			"enable_file_upload_progress" => get_setting("enable_file_upload_progress", FALSE),
-			"enable_zip_download" => get_setting("enable_zip_download", FALSE),
-			"enable_description_update" => get_setting("enable_description_update", get_configuration_setting("description_update_default")),
-			"enable_permission_update" => get_setting("enable_permission_update", get_configuration_setting("permission_update_default"))
+			"max_upload_file_size" => in_bytes(ini_get("upload_max_filesize")),
+			"max_upload_total_size" => in_bytes(ini_get("post_max_size"))
+		);
+	}
+
+	function get_features() {
+		return array(
+			"file_upload" => get_setting("enable_file_upload", TRUE),
+			"folder_actions" => get_setting("enable_folder_actions", TRUE),
+			"file_upload_progress" => get_setting("enable_file_upload_progress", FALSE),
+			"zip_download" => get_setting("enable_zip_download", FALSE),
+			"description_update" => get_configuration_setting("description_update"),
+			"permission_update" => get_configuration_setting("permission_update"),
+			"configuration_update" => get_configuration_setting("configuration_update")
 		);
 	}
 	

@@ -178,9 +178,9 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			return;
 
 		FileUploadListener fileUploadListener = new DefaultFileUploadListener(
-				fileUploadService, model.getSession().getSettings()
-						.isFileUploadProgressEnabled(), windowManager
-						.getDialogManager(), textProvider,
+				fileUploadService, model.getSession().getFeatures()
+						.fileUploadProgress(),
+				windowManager.getDialogManager(), textProvider,
 				createReloadListener());
 
 		windowManager.getDialogManager().openUploadDialog(

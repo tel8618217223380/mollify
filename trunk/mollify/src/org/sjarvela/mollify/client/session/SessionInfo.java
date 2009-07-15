@@ -24,13 +24,11 @@ import com.google.gwt.json.client.JSONObject;
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
 			boolean authenticated, String userId, String user,
-			UserPermissionMode permissionMode, SessionSettings settings,
-			ConfigurationInfo configurationInfo, FileSystemInfo fileInfo,
-			JsArray<JsDirectory> roots) {
+			UserPermissionMode permissionMode, FeatureInfo settings,
+			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
 		result.putValues(authenticationRequired, authenticated, userId, user,
-				permissionMode.getStringValue(), settings, configurationInfo,
-				fileInfo, roots);
+				permissionMode.getStringValue(), settings, fileInfo, roots);
 		return result;
 	}
 
@@ -57,8 +55,8 @@ public class SessionInfo extends JavaScriptObject {
 		return this.username;
 	}-*/;
 
-	public final native SessionSettings getSettings() /*-{
-		return this.settings;
+	public final native FeatureInfo getFeatures() /*-{
+		return this.features;
 	}-*/;
 
 	public final UserPermissionMode getDefaultPermissionMode() {
@@ -74,10 +72,6 @@ public class SessionInfo extends JavaScriptObject {
 		return this.filesystem;
 	}-*/;
 
-	public final native ConfigurationInfo getConfigurationInfo() /*-{
-		return this.configuration;
-	}-*/;
-
 	public final List<Directory> getRootDirectories() {
 		return Directory.createFromDirectories(getRootDirectoryList());
 	}
@@ -88,16 +82,14 @@ public class SessionInfo extends JavaScriptObject {
 
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String userId, String user,
-			String permissionMode, SessionSettings settings,
-			ConfigurationInfo configurationInfo, FileSystemInfo fileInfo,
-			JsArray<JsDirectory> roots) /*-{
+			String permissionMode, FeatureInfo features,
+			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
 		this.user_id = userId;
 		this.username = user;
 		this.default_permission_mode = permissionMode;
-		this.settings = settings;
-		this.configuration = configurationInfo;
+		this.features = features;
 		this.filesystem = fileInfo;
 		this.roots = roots;
 	}-*/;

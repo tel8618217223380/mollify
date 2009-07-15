@@ -34,16 +34,16 @@ public class FileContextPopupFactory {
 
 		boolean descriptionEditable = session.getDefaultPermissionMode()
 				.isAdmin()
-				&& session.getSettings().isDescriptionUpdateEnabled();
+				&& session.getFeatures().descriptionUpdate();
 		boolean permissionsEditable = session.getDefaultPermissionMode()
 				.isAdmin()
-				&& session.getConfigurationInfo().isPermissionUpdateSupported();
+				&& session.getFeatures().permissionUpdate();
 
 		FileItemContextComponent popup = new FileItemContextComponent(
 				Mode.File, textProvider, session.getDefaultPermissionMode()
 						.hasWritePermission(), descriptionEditable,
-				permissionsEditable, session.getSettings()
-						.isZipDownloadEnabled(), actionDelegator);
+				permissionsEditable, session.getFeatures().zipDownload(),
+				actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider);
 		return new FileContextGlue(popup, presenter, actionDelegator);

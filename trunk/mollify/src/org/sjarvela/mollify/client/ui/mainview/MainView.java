@@ -160,8 +160,7 @@ public class MainView extends Composite implements PopupPositioner {
 				});
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
 
-		if (model.getSession().getConfigurationInfo()
-				.isConfigurationUpdateSupported()) {
+		if (model.getSession().getFeatures().configurationUpdate()) {
 			username.addAction(Action.changePassword, textProvider.getStrings()
 					.mainViewChangePasswordTitle());
 			if (UserPermissionMode.Admin.equals(model.getSession()
@@ -173,8 +172,7 @@ public class MainView extends Composite implements PopupPositioner {
 
 		if (UserPermissionMode.Admin.equals(model.getSession()
 				.getDefaultPermissionMode())
-				&& model.getSession().getConfigurationInfo()
-						.isPermissionUpdateSupported()) {
+				&& model.getSession().getFeatures().permissionUpdate()) {
 			username.addSeparator();
 			username.addAction(Action.editItemPermissions, textProvider
 					.getStrings().mainViewEditPermissionsTitle());
@@ -193,17 +191,17 @@ public class MainView extends Composite implements PopupPositioner {
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		if ((model.getSession().getSettings().isFileUploadEnabled() || model
-				.getSession().getSettings().isFolderActionsEnabled())
+		if ((model.getSession().getFeatures().fileUpload() || model
+				.getSession().getFeatures().folderActions())
 				&& model.getSession().getDefaultPermissionMode()
 						.hasWritePermission()) {
 			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
-			if (model.getSession().getSettings().isFileUploadEnabled())
+			if (model.getSession().getFeatures().fileUpload())
 				addButton.addAction(Action.addFile, textProvider.getStrings()
 						.mainViewAddFileMenuItem());
-			if (model.getSession().getSettings().isFolderActionsEnabled())
+			if (model.getSession().getFeatures().folderActions())
 				addButton.addAction(Action.addDirectory, textProvider
 						.getStrings().mainViewAddDirectoryMenuItem());
 		}

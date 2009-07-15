@@ -13,9 +13,12 @@
 	function init_configuration_provider() {}
 	
 	function get_configuration_settings() {
+		$permission = FALSE;
+		if (authentication_required()) $permission = get_setting("enable_permission_update", FALSE);
+		
 		return array(
-			'permission_update' => TRUE,
-			'description_update_default' => FALSE
+			'permission_update' => $permission,
+			'description_update' => get_setting("enable_description_update", FALSE)
 		);
 	}
 	

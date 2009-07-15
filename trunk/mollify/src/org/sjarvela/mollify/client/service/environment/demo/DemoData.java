@@ -22,9 +22,8 @@ import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
-import org.sjarvela.mollify.client.session.ConfigurationInfo;
+import org.sjarvela.mollify.client.session.FeatureInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.session.SessionSettings;
 import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.User;
@@ -61,16 +60,15 @@ public class DemoData {
 	private List<File> files;
 
 	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
-	private final SessionSettings settings;
-	private final ConfigurationInfo configurationInfo;
+	private final FeatureInfo settings;
 	private final FileSystemInfo fileSystemInfo;
 	private final boolean multiUser;
 
 	public DemoData(boolean multiUser) {
 		this.multiUser = multiUser;
-		this.settings = SessionSettings.create(true, true, true, true, true);
+		this.settings = FeatureInfo.create(true, true, true, true, true, true,
+				true);
 		this.fileSystemInfo = FileSystemInfo.create(1024, 1024);
-		this.configurationInfo = ConfigurationInfo.create(true, true);
 
 		createDirectoriesAndFiles();
 	}
@@ -110,16 +108,14 @@ public class DemoData {
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", "", permissionMode,
-					settings, configurationInfo, fileSystemInfo,
-					rootDirectories);
+					settings, fileSystemInfo, rootDirectories);
 		}
 
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, user, user, permissionMode,
-					settings, configurationInfo, fileSystemInfo,
-					rootDirectories);
+					settings, fileSystemInfo, rootDirectories);
 		return SessionInfo.create(true, false, "", "", permissionMode,
-				settings, configurationInfo, fileSystemInfo, rootDirectories);
+				settings, fileSystemInfo, rootDirectories);
 	}
 
 	public List<Directory> getDirectories(Directory dir) {

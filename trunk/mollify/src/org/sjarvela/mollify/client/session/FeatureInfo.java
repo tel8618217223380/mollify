@@ -1,0 +1,70 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
+package org.sjarvela.mollify.client.session;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class FeatureInfo extends JavaScriptObject {
+	public static FeatureInfo create(boolean folderActions, boolean fileUpload,
+			boolean fileUploadProgress, boolean zipDownload,
+			boolean descriptionUpdate, boolean permissionUpdate,
+			boolean configurationUpdate) {
+		FeatureInfo result = FeatureInfo.createObject().cast();
+		result.putValues(folderActions, fileUpload, fileUploadProgress,
+				zipDownload, descriptionUpdate, permissionUpdate,
+				configurationUpdate);
+		return result;
+	}
+
+	protected FeatureInfo() {
+	}
+
+	public final native boolean folderActions() /*-{
+		return this.folder_actions;
+	}-*/;
+
+	public final native boolean fileUpload() /*-{
+		return this.file_upload;
+	}-*/;
+
+	public final native boolean fileUploadProgress() /*-{
+		return this.file_upload_progress;
+	}-*/;
+
+	public final native boolean zipDownload() /*-{
+		return this.zip_download;
+	}-*/;
+
+	public final native boolean descriptionUpdate() /*-{
+		return this.description_update;
+	}-*/;
+
+	public final native boolean permissionUpdate() /*-{
+		return this.permission_update;
+	}-*/;
+
+	public final native boolean configurationUpdate() /*-{
+		return this.configuration_update;
+	}-*/;
+
+	private final native void putValues(boolean folderActions,
+			boolean fileUpload, boolean fileUploadProgress,
+			boolean zipDownload, boolean descriptionUpdate,
+			boolean permissionUpdate, boolean configurationUpdate) /*-{
+		this.folder_actions = folderActions;
+		this.file_upload = fileUpload;
+		this.file_upload_progress = fileUploadProgress;
+		this.zip_download = zipDownload;
+		this.description_update = descriptionUpdate;
+		this.permission_update = permissionUpdate;
+		this.configuration_update = configurationUpdate;
+	}-*/;
+}
