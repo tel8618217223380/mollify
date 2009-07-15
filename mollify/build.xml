@@ -47,7 +47,7 @@
 		<echo>Platform: ${os.name}</echo>
 		<mkdir dir="${build.dir}" />
 		
-		<java classpathref="compile.classpath" classname="com.google.gwt.dev.Compiler" fork="true">
+		<java classpathref="compile.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
 			<jvmarg line="${gwt.jvm.arg}" />
 			<arg value="-war" />
 			<arg value="${build.dir}" />

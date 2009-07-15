@@ -39,7 +39,7 @@ public class PermissionEditorView extends CenteredDialog {
 	private ActionButton okButton;
 
 	public enum Mode {
-		Fixed, Selectable
+		Fixed, ItemSelectable
 	}
 
 	public enum Actions implements ResourceId {
@@ -96,8 +96,11 @@ public class PermissionEditorView extends CenteredDialog {
 		panel.add(itemTitle);
 
 		Panel itemPanel = new HorizontalPanel();
+		itemPanel
+				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_PANEL);
+
 		itemPanel.add(itemName);
-		if (Mode.Selectable.equals(this.mode)) {
+		if (Mode.ItemSelectable.equals(this.mode)) {
 			itemPanel.add(createButton(textProvider.getStrings()
 					.itemPermissionEditorButtonSelectItem(),
 					StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_SELECT_ITEM,
@@ -180,10 +183,11 @@ public class PermissionEditorView extends CenteredDialog {
 		return removeButton;
 	}
 
-	public void updateButtons(boolean itemDefined) {
+	public void updateControls(boolean itemDefined) {
 		this.okButton.setEnabled(itemDefined);
 		this.addButton.setEnabled(itemDefined);
 		this.editButton.setEnabled(false);
 		this.removeButton.setEnabled(false);
+		this.defaultPermission.setEnabled(itemDefined);
 	}
 }

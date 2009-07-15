@@ -333,6 +333,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String itemPermissionEditorButtonRemovePermission();
 
+	public String itemPermissionEditorConfirmItemChange();
+
 	public String fileItemUserPermissionDialogAddTitle();
 
 	public String fileItemUserPermissionDialogEditTitle();
@@ -344,5 +346,11 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileItemUserPermissionDialogAddButton();
 
 	public String fileItemUserPermissionDialogEditButton();
+
+	public String selectItemDialogTitle();
+
+	public String selectPermissionItemDialogMessage();
+
+	public String selectPermissionItemDialogAction();
 
 }

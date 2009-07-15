@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 
@@ -73,7 +74,8 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	private void updateView() {
-		view.updateButtons(model.hasItem());
+		view.updateControls(false);
+
 		if (!model.hasItem())
 			return;
 
@@ -86,6 +88,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 			public void onCallback() {
 				view.showProgress(false);
 				updatePermissions();
+				view.updateControls(true);
 			}
 		});
 	}
@@ -165,10 +168,12 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void onSelectItem() {
-		// TODO
 		if (model.hasChanged())
-			dialogManager.showConfirmationDialog("OK?", "Changed, continue?",
-					"s", new ConfirmationListener() {
+			dialogManager.showConfirmationDialog(textProvider.getStrings()
+					.itemPermissionEditorDialogTitle(), textProvider
+					.getStrings().itemPermissionEditorConfirmItemChange(),
+					StyleConstants.CONFIRMATION_DIALOG_TYPE_OVERRIDE,
+					new ConfirmationListener() {
 						public void onConfirm() {
 							openSelectItemDialog();
 						}
@@ -178,10 +183,10 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	protected void openSelectItemDialog() {
-		// TODO
 		dialogManager.showSelectItemDialog(textProvider.getStrings()
-				.moveDirectoryDialogTitle(), "", textProvider.getStrings()
-				.moveDirectoryDialogAction(), fileSystemItemProvider,
+				.selectItemDialogTitle(), textProvider.getStrings()
+				.selectPermissionItemDialogMessage(), textProvider.getStrings()
+				.selectPermissionItemDialogAction(), fileSystemItemProvider,
 				new SelectItemHandler() {
 					public boolean isItemAllowed(FileSystemItem item,
 							List<Directory> path) {
