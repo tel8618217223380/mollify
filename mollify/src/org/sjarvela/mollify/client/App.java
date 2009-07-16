@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class App implements EntryPoint, LogoutHandler {
 	private static final String META_PROPERTY = "mollify:property";
 	private static final String MOLLIFY_PANEL_ID = "mollify";
-	private static final String VERSION = "0_9_7";
+	private static final String VERSION = "1_0_0";
 
 	ServiceEnvironment environment;
 	TextProvider textProvider;

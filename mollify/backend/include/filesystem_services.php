@@ -140,7 +140,7 @@
 					$error = "INVALID_REQUEST";
 					break;
 				}
-				if (!$_SESSION["settings"]["enable_description_update"]) {
+				if (!$_SESSION["features"]["description_update"]) {
 					log_error("Cannot edit descriptions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
 					break;
@@ -153,7 +153,7 @@
 				return set_item_description($item, urldecode($_GET["description"]));
 
 			case "remove_description":
-				if (!$_SESSION["settings"]["enable_description_update"]) {
+				if (!$_SESSION["features"]["description_update"]) {
 					log_error("Cannot edit descriptions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
 					break;
@@ -167,7 +167,7 @@
 				return remove_item_description($item);
 
 			case "get_item_permissions":
-				if (!$_SESSION["settings"]["enable_permission_update"]) {
+				if (!$_SESSION["features"]["permission_update"]) {
 					log_error("Cannot edit permissions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
 					break;
@@ -191,7 +191,7 @@
 		
 		switch ($action) {
 			case "update_item_permissions":
-				if (!$_SESSION["settings"]["enable_permission_update"]) {
+				if (!$_SESSION["features"]["permission_update"]) {
 					log_error("Cannot edit permissions, feature disabled by settings");
 					$error = "FEATURE_DISABLED";
 					break;

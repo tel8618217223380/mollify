@@ -10,33 +10,25 @@
 
 function init_page_update() {
 	set_title("Database Update");
-	check_authentication();
+	$("#proceed.button").click(function() { check_authentication(); });
 }
 
 function check_authentication() {
 	empty_errors();
 	$("#db-footer").html("<div class='progress'>Checking authentication...</div>");
-	
-	request("mysql/update.php", "action=check_auth",
+
+	var data = "action=check_auth&username=" + $("#username-field").val() + "&password=" + generate_md5($("#password-field").val());
+	request("mysql/update.php", data,
 		function(result) {
 			$("#db-footer").empty();
 			
-			if (!result.success) on_auth_error(result.error);
-			else start_update();
+			if (!result.success) {
+				show_error(result.error);
+			} else {
+				start_update();
+			}
 		}
 	);
-}
-
-function on_auth_error(error) {
-	$("#db-content").load("mysql/page_update_auth.html", function() {
-		set_effects();
-		show_error(error);
-		$("#proceed.button").click(function() { check_authentication(); });
-	});
-}
-
-function on_update_error(error) {
-	show_error(error);
 }
 
 function start_update() {
@@ -48,7 +40,7 @@ function start_update() {
 			$("#db-footer").empty();
 			
 			if (!result.success) {
-				on_update_error(result.error);
+				show_error(result.error);
 			} else {
 				$("#db-content").load("mysql/page_update_info.html", function() {
 					set_effects();
@@ -69,7 +61,7 @@ function update() {
 		function(result) {
 			$("#db-footer").empty();
 			
-			if (!result.success) on_update_error(result.error);
+			if (!result.success) show_error(result.error);
 			else $("#db-content").load("mysql/page_update_success.html");
 		}
 	);
