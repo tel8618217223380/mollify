@@ -257,9 +257,9 @@
 		log_message('rename from ['.$old.'] to ['.$new.']');
 		if (!rename($old, $new)) return FALSE;
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			move_item_description($file, get_fileitem($file["root"], $new));
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			move_item_permissions($file, get_fileitem($file["root"], $new));
 
 		return TRUE;
@@ -314,9 +314,9 @@
 		log_message('move from ['.$origin.'] to ['.$target.']');		
 		if (!rename($origin, $target)) return FALSE;
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			move_item_description($file, get_fileitem($to["root"], $target));
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			move_item_permissions($file, get_fileitem($to["root"], $target));
 			
 		return TRUE;
@@ -346,9 +346,9 @@
 		log_message('move from ['.$origin.'] to ['.$target.']');
 		if (!rename($origin, $target)) return FALSE;
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			move_item_description($dir, get_fileitem($to["root"], $target), TRUE);
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			move_item_permissions($dir, get_fileitem($to["root"], $target), TRUE);
 			
 		return TRUE;
@@ -357,7 +357,7 @@
 	function rename_directory($dir, $new_name) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_folder_actions"]) {
+		if (!$_SESSION["features"]["folder_actions"]) {
 			log_error("Cannot delete folder, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -381,9 +381,9 @@
 		log_message('rename from ['.$old.'] to ['.$new.']');
 		if (!rename($old, $new)) return FALSE;
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			move_item_description($dir, get_fileitem($dir["root"], $new), TRUE);
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			move_item_permissions($dir, get_fileitem($dir["root"], $new), TRUE);
 
 		return TRUE;
@@ -409,9 +409,9 @@
 			return FALSE;
 		}
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			remove_item_description($file);
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			remove_all_item_permissions($file);
 
 		return TRUE;
@@ -420,7 +420,7 @@
 	function delete_directory($dir) {
 		global $error, $error_details;
 
-		if (!$_SESSION["settings"]["enable_folder_actions"]) {
+		if (!$_SESSION["features"]["folder_actions"]) {
 			log_error("Cannot delete folder, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -439,9 +439,9 @@
 			return FALSE;
 		}
 		
-		if ($_SESSION["settings"]["enable_description_update"])
+		if ($_SESSION["features"]["description_update"])
 			remove_item_description($dir, TRUE);
-		if ($_SESSION["settings"]["enable_permission_update"])
+		if ($_SESSION["features"]["permission_update"])
 			remove_all_item_permissions($dir, TRUE);
 
 		return TRUE;
@@ -488,7 +488,7 @@
 	function upload_file($dir) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_file_upload"]) {
+		if (!$_SESSION["features"]["file_upload"]) {
 			log_error("Cannot upload file, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -531,7 +531,7 @@
 	function create_folder($dir, $folder_name) {
 		global $error, $error_details;
 		
-		if (!$_SESSION["settings"]["enable_folder_actions"]) {
+		if (!$_SESSION["features"]["folder_actions"]) {
 			log_error("Cannot create folder, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -561,7 +561,7 @@
 	}
 	
 	function get_upload_status($id) {
-		if (!$_SESSION["settings"]["enable_file_upload_progress"]) return FALSE;
+		if (!$_SESSION["features"]["file_upload_progress"]) return FALSE;
 		return apc_fetch('upload_'.$id);
 	}
 	
@@ -588,7 +588,7 @@
 		require "zipstream.php";
 		global $error, $error_details, $ZIP_OPTIONS;
 
-		if (!$_SESSION["settings"]["enable_zip_download"]) {
+		if (!$_SESSION["features"]["zip_download"]) {
 			log_error("Cannot download files zipped, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;
@@ -614,7 +614,7 @@
 		require "zipstream.php";
 		global $error, $error_details, $ZIP_OPTIONS;
 		
-		if (!$_SESSION["settings"]["enable_zip_download"]) {
+		if (!$_SESSION["features"]["zip_download"]) {
 			log_error("Cannot download files zipped, feature disabled by settings");
 			$error = "FEATURE_DISABLED";
 			return FALSE;

@@ -9,6 +9,29 @@
 -->
 
 <div id="db-content">
+	<span class="section">
+		Mollify update requires administrator user. To continue, enter an administrator user login information, and click "Proceed".
+	</span>
+	
+	<div id="update-login">
+		<form method='post' id="mollify-update-login">
+			<div class='user'>
+				<div class='user-data' id='username'>
+					<div class='title'>User name:</div>
+					<input id='username-field' class='value' type='text' name='user' value=''>
+				</div>
+				<div class='user-data' id='password'>
+					<div class='title'>Password:</div>
+					<input id='password-field' class='value' type='password' name='password' value=''>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<div class="buttons">
+		<button class="button" id="proceed">Proceed</button>
+	</div>
 </div>
+
 <div id="db-footer">
 </div>

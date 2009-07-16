@@ -14,11 +14,11 @@
 	$DEFAULT_DB = 'mollify';
 	
 	function get_current_version() {
-		return "0_9_7";
+		return "1_0_0";
 	}
 	
 	function get_version_history() {
-		return array("0_9_5", "0_9_7");
+		return array("0_9_5", "1_0_0");
 	}
 
 	function is_version_in_history($ver) {
@@ -202,7 +202,7 @@
 	}
 
 	function create_tables($connection) {
-		return _exec_sql_file($connection, "sql/create_tables-".get_current_version().".sql", "COULD_NOT_CREATE_TABLES");
+		return _exec_sql_file($connection, "sql/create_tables.sql", "COULD_NOT_CREATE_TABLES");
 	}
 
 	function update_db($connection, $from) {
@@ -229,7 +229,7 @@
 	}
 	
 	function insert_params($connection) {
-		return _exec_sql_file($connection, "sql/params-".get_current_version().".sql", "COULD_NOT_INSERT_PARAMS");
+		return _exec_sql_file($connection, "sql/params.sql", "COULD_NOT_INSERT_PARAMS");
 	}
 	
 	function close_connection($connection, $err) {
