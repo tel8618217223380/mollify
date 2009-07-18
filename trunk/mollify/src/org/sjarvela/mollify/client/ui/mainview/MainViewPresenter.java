@@ -100,10 +100,12 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void initialize() {
-		if (model.getRootDirectories().size() == 0)
+		if (model.getRootDirectories().size() == 0) {
 			changeToRootDirectory(null);
-		else
+			view.hideButtons();
+		} else {
 			changeToRootDirectory(model.getRootDirectories().get(0));
+		}
 	}
 
 	public void onFileSystemItemSelected(FileSystemItem item, GridColumn column) {

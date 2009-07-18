@@ -12,7 +12,7 @@
  * this entire header must remain intact.
  */
 
-#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context {
+#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	font-size: 8pt;	
 }
@@ -290,11 +290,15 @@
 	width:  200px;
 }
 
-.mollify-dropdown-menu-item {
+.mollify-dropdown-menu-item, .mollify-directory-list-menu-item-none {
 	padding: 3px;
-	cursor: pointer;
 	height: 15px;
 	white-space: nowrap;
+	cursor: default;
+}
+
+.mollify-dropdown-menu-item {
+	cursor: pointer;
 }
 
 .mollify-dropdown-menu-item-separator {
@@ -355,7 +359,7 @@
 }
 
 .mollify-directory-list-item {
-	float: right;
+	float: left;
 }
 
 .ie-crap.mollify-directory-list-item {
@@ -374,7 +378,6 @@
 	margin-top: 8px;
 	margin-left: 0;
 	margin-right: 0px;
-	background: url(dir-item-body.png) repeat-x;
 	height: 22px;
 }
 
@@ -402,17 +405,16 @@
 }
 
 .mollify-directory-list-item-button-left {
-	width: 12px;
+	width: 4px;
 	height: 23px;
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
-	margin-left: -11px;
 }
 
 .mollify-directory-list-item-button-center {
 	height: 19px;
 	padding-left: 2px;
-	padding-right: 2px;
+	padding-right: 5px;
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
 	padding-top: 4px;
@@ -425,9 +427,13 @@
 
 .mollify-directory-list-item-button-right {
 	width: 11px;
-	background: url(dir-item-head.png) no-repeat;
+	background: url(dir-item-head-combined.png) no-repeat;
 	height: 23px;
 	float: left;
+}
+
+.mollify-directory-list-item-button-root-last .mollify-directory-list-item-button-right, .mollify-directory-list-item-button-last .mollify-directory-list-item-button-right {
+	background: url(dir-item-head.png) no-repeat;
 }
 
 .mollify-directory-list-item-button {
@@ -444,11 +450,19 @@
 	cursor: pointer;
 }
 
-.mollify-directory-list-item-button-left-pressed, .mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
+.mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
 	background: url(dir-item-body.png) repeat-x 0 -23px;
 }
 
+.mollify-directory-list-item-button-left-pressed {
+	background: url(dir-item-left-pressed.png) no-repeat;
+}
+
 .mollify-directory-list-item-button-right-pressed {
+	background: url(dir-item-head-combined.png) no-repeat 0px -23px;
+}
+
+.mollify-directory-list-item-button-root-last .mollify-directory-list-item-button-right-pressed, .mollify-directory-list-item-button-last .mollify-directory-list-item-button-right-pressed {
 	background: url(dir-item-head.png) no-repeat 0px -23px;
 }
 
@@ -463,12 +477,12 @@
 }
 
 .mollify-directory-list-item-dropdown-home {
-	background: url(button-home.png) no-repeat -1px 0;
+	background: url(button-home-combined.png) no-repeat -1px 0;
 	font-size: 0;
 	line-height: 0;
 	text-indent: -100px;
 	height: 23px;
-	width: 29px;
+	width: 28px;
 	border-style: none;
 	cursor: pointer;
 	cursor: hand;
@@ -476,7 +490,7 @@
 }
 
 .mollify-directory-list-item-dropdown-home:active {
-	background: url(button-home.png) no-repeat -1px -23px;
+	background: url(button-home-combined.png) no-repeat -1px -23px;
 }
 
 .mollify-directory-list-item-button-home .mollify-directory-list-item-button-left, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-center, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-right {

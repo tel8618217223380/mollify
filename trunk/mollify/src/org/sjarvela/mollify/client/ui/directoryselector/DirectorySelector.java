@@ -91,9 +91,16 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		List<DirectoryListItem> items = new ArrayList();
 		while (list.hasNext()) {
 			Directory current = list.next();
+
 			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
 					: null;
-			items.add(0, listItemFactory.createListItem(this, style, current,
+			if (!list.hasNext()) {
+				if (style == null)
+					style = StyleConstants.DIRECTORY_LISTITEM_LAST;
+				else
+					style += "-" + StyleConstants.DIRECTORY_LISTITEM_LAST;
+			}
+			items.add(listItemFactory.createListItem(this, style, current,
 					level, parent));
 
 			level++;
