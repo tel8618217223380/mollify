@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
@@ -81,10 +84,16 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(failedLabel);
 	}
 
-	public void onSuccess(List<Directory> directories) {
+	public void onSuccess(List<Directory> list) {
 		initialized = true;
 		removeAllMenuItems();
 
+		List<Directory> directories = new ArrayList(list);
+		Collections.sort(directories, new Comparator<Directory>() {
+			public int compare(Directory d1, Directory d2) {
+				return d1.getName().compareToIgnoreCase(d2.getName());
+			}
+		});
 		int count = 0;
 		for (Directory dir : directories) {
 			if (dir.getId().equals(this.currentDirectory.getId()))

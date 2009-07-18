@@ -163,14 +163,23 @@
 		global $error, $error_details;
 
 		$db = init_db();
-		if (!_query(sprintf("DELETE FROM user_folder WHERE user_id='%s'", mysql_real_escape_string($id, $db)), $db)) {
+		$sql_id = mysql_real_escape_string($id, $db);
+		
+		if (!_query(sprintf("DELETE FROM user_folder WHERE user_id='%s'", $sql_id), $db)) {
+			$error = "INVALID_REQUEST";
+			$error_details = mysql_error($db);
+			log_error("Failed to delete user published folders for user id ".$id." (".$error_details.")");
+			return FALSE;
+		}
+
+		if (!_query(sprintf("DELETE FROM item_permission WHERE user_id='%s'", $sql_id), $db)) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error($db);
 			log_error("Failed to delete user published folders for user id ".$id." (".$error_details.")");
 			return FALSE;
 		}
 		
-		if (!_query(sprintf("DELETE FROM user WHERE id='%s'", mysql_real_escape_string($id, $db)), $db)) {
+		if (!_query(sprintf("DELETE FROM user WHERE id='%s'", $sql_id), $db)) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error($db);
 			log_error("Failed to remove user (".$error_details.")");
@@ -280,10 +289,11 @@
 		global $error, $error_details;
 
 		$db = init_db();
+		
 		if (!_query(sprintf("DELETE FROM user_folder WHERE folder_id='%s'", mysql_real_escape_string($id)), $db)) {
 			$error = "INVALID_REQUEST";
 			$error_details = mysql_error($db);
-			log_error("Failed to delete user published folders with id ".$id." (".$error_details.")");
+			log_error("Failed to delete published folders with id ".$id." (".$error_details.")");
 			return FALSE;
 		}
 		
@@ -300,7 +310,7 @@
 			return FALSE;
 		}
 		
-		remove_item_descriptions_recursively(array("id" => $id.":"), TRUE, TRUE);
+		remove_item_description(array("id" => $id.":".DIRECTORY_SEPARATOR), TRUE, TRUE);
 		return TRUE;
 	}
 	

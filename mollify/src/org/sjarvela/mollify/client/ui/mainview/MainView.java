@@ -48,6 +48,7 @@ public class MainView extends Composite implements PopupPositioner {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
+	private final Panel buttonPanel;
 	private final DirectorySelector directorySelector;
 	private final FileList list;
 
@@ -75,6 +76,9 @@ public class MainView extends Composite implements PopupPositioner {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+
+		this.buttonPanel = new FlowPanel();
+		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
 
 		this.directorySelector = directorySelectorFactory.createSelector();
 		this.list = new FileList(textProvider);
@@ -126,9 +130,6 @@ public class MainView extends Composite implements PopupPositioner {
 
 		Panel header = new HorizontalPanel();
 		header.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
-
-		Panel buttonPanel = new FlowPanel();
-		buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
 
 		if (addButton != null)
 			buttonPanel.add(addButton);
@@ -263,4 +264,7 @@ public class MainView extends Composite implements PopupPositioner {
 				+ parent.getOffsetHeight());
 	}
 
+	public void hideButtons() {
+		buttonPanel.setVisible(false);
+	}
 }
