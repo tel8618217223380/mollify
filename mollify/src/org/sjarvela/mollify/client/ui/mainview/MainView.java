@@ -19,7 +19,6 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -160,25 +159,24 @@ public class MainView extends Composite implements PopupPositioner {
 				});
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
 
-		if (model.getSession().getFeatures().configurationUpdate()) {
-			username.addAction(Action.changePassword, textProvider.getStrings()
-					.mainViewChangePasswordTitle());
-			if (UserPermissionMode.Admin.equals(model.getSession()
-					.getDefaultPermissionMode())) {
+		if (model.getSession().getDefaultPermissionMode().isAdmin()
+				&& model.getSession().getFeatures().permissionUpdate()) {
+			username.addAction(Action.editItemPermissions, textProvider
+					.getStrings().mainViewEditPermissionsTitle());
+
+			if (model.getSession().getFeatures().configurationUpdate()) {
 				username.addAction(Action.configure, textProvider.getStrings()
 						.mainViewConfigurationTitle());
 			}
-		}
-
-		if (UserPermissionMode.Admin.equals(model.getSession()
-				.getDefaultPermissionMode())
-				&& model.getSession().getFeatures().permissionUpdate()) {
 			username.addSeparator();
-			username.addAction(Action.editItemPermissions, textProvider
-					.getStrings().mainViewEditPermissionsTitle());
 		}
 
-		username.addSeparator();
+		if (model.getSession().getFeatures().configurationUpdate()) {
+			username.addAction(Action.changePassword, textProvider.getStrings()
+					.mainViewChangePasswordTitle());
+			username.addSeparator();
+		}
+
 		username.addAction(Action.logout, textProvider.getStrings()
 				.mainViewLogoutButtonTitle());
 		return username;

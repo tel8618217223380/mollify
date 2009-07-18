@@ -65,7 +65,7 @@
 	
 	$result = "";
 	$error = NULL;
-	$error_detail = "";
+	$error_details = "";
 	
 	switch($action) {
 		case "check_auth":
@@ -105,7 +105,7 @@
 			return;
 	}
 	
-	if ($error != NULL) failure(get_error_value($error, $error_detail));
+	if ($error != NULL) failure(get_error_value($error, $error_details));
 	else success($result);
 	
 	function do_auth() {

@@ -67,19 +67,19 @@
 	}
 
 	function get_connection($db, $connect_db = TRUE) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		
 		try {
 			if ($connect_db) $connection = @mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 			else $connection = @mysqli_connect($db['host'], $db['user'], $db['password']);
 		} catch (mysqli_sql_exception $e) {
 			$error = "COULD_NOT_CONNECT_TO_DB";
-			$error_detail = $e->getMessage();
+			$error_details = $e->getMessage();
 			return FALSE;
 		}
 		if ($connection) return $connection;
 		$error = "COULD_NOT_CONNECT_TO_DB";
-		$error_detail = mysqli_connect_error();
+		$error_details = mysqli_connect_error();
 		return FALSE;
 	}
 	
@@ -101,7 +101,7 @@
 	}
 		
 	function create_database($db) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		mysqli_report(MYSQLI_REPORT_ALL);
 
 		$connection = get_connection($db, FALSE);
@@ -112,7 +112,7 @@
 			mysqli_select_db($connection, $db['database']);
 		} catch (mysqli_sql_exception $e) {
 			$error = "COULD_NOT_CREATE_DB";
-			$error_detail = $e->getMessage();
+			$error_details = $e->getMessage();
 			return FALSE;
 		}
 		
@@ -121,7 +121,7 @@
 	}
 	
 	function check_db_permissions($db) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		mysqli_report(MYSQLI_REPORT_ERROR);
 		
 		$connection = get_connection($db);
@@ -142,7 +142,7 @@
 			mysqli_close($connection);
 		} catch (mysqli_sql_exception $e) {
 			$error = "DB_PERMISSION_TEST_FAILED";
-			$error_detail = "Could not ".$phase." (".$e->getMessage().")";
+			$error_details = "Could not ".$phase." (".$e->getMessage().")";
 			return FALSE;
 		}
 		
@@ -150,20 +150,20 @@
 	}
 
 	function _exec_query($connection, $query, $err, $has_result = TRUE) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
 		try {
 			$result = mysqli_query($connection, $query);
 			if (!$result) {
 				$error = $err;
-				$error_detail = mysqli_error($connection)." (".mysqli_errno($connection).")";
+				$error_details = mysqli_error($connection)." (".mysqli_errno($connection).")";
 				return FALSE;
 			}
 			if ($has_result) mysqli_free_result($result);
 		} catch (mysqli_sql_exception $e) {
 			$error = $err;
-			$error_detail = $e->getMessage();
+			$error_details = $e->getMessage();
 			return FALSE;
 		}
 
@@ -171,18 +171,21 @@
 	}
 	
 	function _exec_queries($connection, $sql, $err) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
 		try {
 			mysqli_multi_query($connection, $sql);
 		    do {
-		        if ($result = mysqli_store_result($connection))
+		        if ($result = mysqli_store_result($connection)) {
+		        	log_message($result);
 		        	mysqli_free_result($result);
+		        }
 		    } while (mysqli_next_result($connection));
 		} catch (mysqli_sql_exception $e) {
 			$error = $err;
-			$error_detail = $e->getMessage();
+			$error_details = $e->getMessage();
+		    log_message($error.': '.$error_details);
 			return FALSE;
 		}
 		
@@ -190,12 +193,12 @@
 	}
 
 	function _exec_sql_file($connection, $file, $err = "COULD_NOT_EXEC_SQL") {
-		global $error, $error_detail;
+		global $error, $error_details;
 		
 		$sql = file_get_contents($file);
 		if (!$sql) {
 			$error = $err;
-			$error_detail = $file;
+			$error_details = $file;
 			return FALSE;
 		}
 		return _exec_queries($connection, $sql, $err);
@@ -220,7 +223,9 @@
 	}
 	
 	function update_db_version($connection, $from, $to) {
-		return _exec_sql_file($connection, "sql/updates/".$from."-".$to.".sql", "COULD_NOT_UPDATE_DB");
+		$file = "sql/updates/".$from."-".$to.".sql";
+		log_message("Running update '".$file."'");
+		return _exec_sql_file($connection, $file, "COULD_NOT_UPDATE_DB");
 	}
 		
 	function insert_admin_user($connection, $user, $pw) {
@@ -233,7 +238,7 @@
 	}
 	
 	function close_connection($connection, $err) {
-		global $error, $error_detail;
+		global $error, $error_details;
 		mysqli_report(MYSQLI_REPORT_ALL);
 		
 		try {
@@ -241,7 +246,7 @@
 			mysqli_close($connection);
 		} catch (mysqli_sql_exception $e) {
 			$error = $err;
-			$error_detail = $e->getMessage();
+			$error_details = $e->getMessage();
 			return FALSE;
 		}
 		return TRUE;

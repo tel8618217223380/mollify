@@ -297,6 +297,13 @@
 	white-space: nowrap;
 }
 
+.mollify-dropdown-menu-item-separator {
+	height: 1px;
+	border-top: 1px dotted #cecece;
+	margin-bottom: 3px;
+	margin-top: 3px;
+}
+
 .mollify-dropdown-menu-item-hover {
 	color: #565671;
 	background-color: #d5d5d5;
@@ -1434,14 +1441,31 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-p
 	margin-bottom: 7px;
 }
 
+.mollify-permission-editor-item-panel {
+	width: 300px;
+}
+
+#mollify-permission-editor-button-select-item.mollify-permission-editor-button {
+	width: 30px;
+	margin-left: 6px;
+	height: 21px;
+}
+
 .mollify-permission-editor-item-name {
-	background-color: #efefef;
-	font-style: italic;
 	color: #969696;
 	height: 15px;
 	border: 1px solid #8f8f8f;
-	width: 300px;
 	padding: 2px;
+	width: 300px;
+}
+
+.mollify-permission-editor-item-name-itemselectable {
+	width: 258px;
+}
+
+.mollify-permission-editor-item-name-undefined {
+	background-color: #efefef;
+	font-style: italic;
 }
 
 .mollify-permission-editor-default-permission {
