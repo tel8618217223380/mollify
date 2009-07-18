@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PermissionEditorView extends CenteredDialog {
+	private static final String UNDEFINED = "undefined";
+
 	private final Mode mode;
 	private final Label itemName;
 	private final ListBox<FilePermissionMode> defaultPermission;
@@ -56,6 +58,7 @@ public class PermissionEditorView extends CenteredDialog {
 
 		itemName = new Label();
 		itemName.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_NAME);
+		itemName.addStyleDependentName(this.mode.name().toLowerCase());
 
 		list = new ItemPermissionList(textProvider,
 				StyleConstants.PERMISSION_EDITOR_VIEW_LIST);
@@ -184,6 +187,11 @@ public class PermissionEditorView extends CenteredDialog {
 	}
 
 	public void updateControls(boolean itemDefined) {
+		if (!itemDefined)
+			itemName.addStyleDependentName(UNDEFINED);
+		else
+			itemName.removeStyleDependentName(UNDEFINED);
+
 		this.okButton.setEnabled(itemDefined);
 		this.addButton.setEnabled(itemDefined);
 		this.editButton.setEnabled(false);

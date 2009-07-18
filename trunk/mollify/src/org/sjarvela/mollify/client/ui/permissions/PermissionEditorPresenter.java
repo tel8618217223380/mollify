@@ -76,8 +76,12 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	private void updateView() {
 		view.updateControls(false);
 
-		if (!model.hasItem())
+		if (!model.hasItem()) {
+			view.getItemName().setText(
+					textProvider.getStrings()
+							.itemPermissionEditorSelectItemMessage());
 			return;
+		}
 
 		view.getItemName().setText(model.getItem().getName());
 

@@ -35,12 +35,15 @@ public class DirectoryContextPopupFactory {
 		boolean descriptionEditable = session.getDefaultPermissionMode()
 				.isAdmin()
 				&& session.getFeatures().descriptionUpdate();
+		boolean permissionsEditable = session.getDefaultPermissionMode()
+				.isAdmin()
+				&& session.getFeatures().permissionUpdate();
 
 		FileItemContextComponent popup = new FileItemContextComponent(
 				Mode.Directory, textProvider, session
 						.getDefaultPermissionMode().hasWritePermission(),
-				descriptionEditable, session.getFeatures()
-						.zipDownload(), false, actionDelegator);
+				descriptionEditable, permissionsEditable, session.getFeatures()
+						.zipDownload(), actionDelegator);
 		DirectoryContextPresenter presenter = new DirectoryContextPresenter(
 				popup, session, detailsProvider, textProvider);
 		return new DirectoryContextGlue(popup, presenter, actionDelegator);

@@ -57,6 +57,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private ActionLink removeDescription;
 
 	private DisclosurePanel details;
+	private Panel detailContent;
+	private Panel detailRows;
 	private Map<ResourceId, Label> detailRowValues = new HashMap();
 
 	private Button renameButton;
@@ -248,6 +250,19 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		details.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
 		details.getHeader().getElement().getParentElement().setClassName(
 				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
+
+		detailContent = new VerticalPanel();
+		detailContent.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+
+		detailRows = new VerticalPanel();
+		detailRows.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+
+		detailContent.add(detailRows);
+
+		if (permissionsEditable)
+			detailContent.add(createPermissionActions());
+
+		details.add(detailContent);
 		details.setVisible(false);
 		return details;
 	}
@@ -259,25 +274,19 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public void initializeDetailsSection(List<ResourceId> order,
 			Map<ResourceId, String> headers) {
 		this.detailRowValues.clear();
-		this.details.clear();
+		this.detailRows.clear();
+		this.details.setVisible(false);
 
 		if (order.size() == 0 && !permissionsEditable)
 			return;
 
-		Panel content = new VerticalPanel();
-		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
-
 		if (order.size() > 0) {
 			for (ResourceId id : order) {
-				this.detailRowValues.put(id, createDetailsRow(content, headers
-						.get(id), id.name().toLowerCase()));
+				this.detailRowValues.put(id, createDetailsRow(detailRows,
+						headers.get(id), id.name().toLowerCase()));
 			}
 		}
 
-		if (permissionsEditable)
-			content.add(createPermissionActions());
-
-		details.add(content);
 		details.setVisible(true);
 	}
 
