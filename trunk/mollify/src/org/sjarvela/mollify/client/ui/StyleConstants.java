@@ -201,17 +201,18 @@ public class StyleConstants {
 	public static final String CREATE_FOLDER_DIALOG_BUTTONS = "mollify-create-folder-dialog-buttons";
 	public static final String CREATE_FOLDER_DIALOG_BUTTON_CREATE = "create-folder";
 
-	public static final String SELECT_FOLDER_DIALOG = "select-folder-dialog";
-	public static final String SELECT_FOLDER_DIALOG_CONTENT = "mollify-select-folder-dialog-content";
-	public static final String SELECT_FOLDER_DIALOG_BUTTONS = "mollify-select-folder-dialog-buttons";
-	public static final String SELECT_FOLDER_DIALOG_BUTTON_SELECT = "select";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE = "mollify-select-folder-dialog-folders";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM = "mollify-select-folder-dialog-folders-root";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL = "mollify-select-folder-dialog-folders-root-item-label";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM = "mollify-select-folder-dialog-folders-item";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_DIR = "mollify-select-folder-dialog-folders-item-label-dir";
-	public static final String SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_FILE = "mollify-select-folder-dialog-folders-item-label-file";
-	public static final String SELECT_FOLDER_DIALOG_MESSAGE = "mollify-select-folder-dialog-message";
+	public static final String SELECT_ITEM_DIALOG = "select-item-dialog";
+	public static final String SELECT_ITEM_DIALOG_FOLDER = "select-item-dialog-folder";
+	public static final String SELECT_ITEM_DIALOG_CONTENT = "mollify-select-item-dialog-content";
+	public static final String SELECT_ITEM_DIALOG_BUTTONS = "mollify-select-item-dialog-buttons";
+	public static final String SELECT_ITEM_DIALOG_BUTTON_SELECT = "select";
+	public static final String SELECT_ITEM_DIALOG_TREE = "mollify-select-item-dialog-items";
+	public static final String SELECT_ITEM_DIALOG_TREE_ROOT_ITEM = "mollify-select-item-dialog-items-root";
+	public static final String SELECT_ITEM_DIALOG_TREE_ROOT_ITEM_LABEL = "mollify-select-item-dialog-items-root-item-label";
+	public static final String SELECT_ITEM_DIALOG_TREE_ITEM = "mollify-select-item-dialog-items-item";
+	public static final String SELECT_ITEM_DIALOG_TREE_ITEM_LABEL_DIR = "mollify-select-item-dialog-items-item-label-dir";
+	public static final String SELECT_ITEM_DIALOG_TREE_ITEM_LABEL_FILE = "mollify-select-item-dialog-items-item-label-file";
+	public static final String SELECT_ITEM_DIALOG_MESSAGE = "mollify-select-item-dialog-message";
 
 	public static final String PASSWORD_DIALOG = "password-dialog-title";
 	public static final String PASSWORD_DIALOG_CONTENT = "mollify-password-dialog-content";
