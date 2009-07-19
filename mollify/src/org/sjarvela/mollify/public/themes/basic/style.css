@@ -405,7 +405,7 @@
 }
 
 .mollify-directory-list-item-button-left {
-	width: 4px;
+	width: 6px;
 	height: 23px;
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
@@ -414,7 +414,7 @@
 .mollify-directory-list-item-button-center {
 	height: 19px;
 	padding-left: 2px;
-	padding-right: 5px;
+	padding-right: 3px;
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
 	padding-top: 4px;
@@ -1141,9 +1141,9 @@ input.mollify-create-folder-dialog-name-value {
 	padding-bottom: 4px;
 }
 
-.mollify-select-folder-dialog-folders {
-	width: 290px;
-	height: 120px;
+.mollify-select-item-dialog-items {
+	width: 350px;
+	height: 200px;
 	padding: 4px;
 	border: 1px dotted #7e7e7e;
 	margin: 6px;
@@ -1151,13 +1151,13 @@ input.mollify-create-folder-dialog-name-value {
 	background-color: #f3f3f3;
 }
 
-.mollify-select-folder-dialog-message {
+.mollify-select-item-dialog-message {
 	padding: 6px;
-	width: 300px;
+	width: 350px;
 }
 
-.mollify-select-folder-dialog-buttons {
-	width: 300px;
+.mollify-select-item-dialog-buttons {
+	width: 350px;
 	padding-bottom: 4px;
 	margin-top: 4px;
 }
@@ -1166,21 +1166,32 @@ span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 	font-weight: bold;
 }
 
-.mollify-select-folder-dialog-folders-root-item-label, .mollify-select-folder-dialog-folders-item-label {
+
+.mollify-select-item-dialog-items-root-item-label-dir, .mollify-select-item-dialog-items-item-label-file, .mollify-select-item-dialog-items-item-label-dir {
 	cursor: hand;
 	cursor: pointer;
-	padding: 2px;
+	padding: 2px 5px;
 }
 
-.mollify-select-folder-dialog-folders-root-item-label {
+.mollify-select-item-dialog-items-item-label-dir {
+	font-weight: bold;
+}
+
+.mollify-select-item-dialog-items-root-item-label {
 	font-weight: bold;
 	padding: 2px;
 }
 
-.gwt-Tree .gwt-TreeItem {
-	padding: 1px;
-	margin: 0px;
-	white-space: nowrap;
+.mollify-select-item-dialog-items-item-label-dir-selected, .mollify-select-item-dialog-items-item-label-file-selected {
+	background-color: #e1d9fa;
+}
+
+.gwt-TreeItem {
+	font-size: 90%;
+	padding: 1px 3px 0 3px;
+	cursor: hand;
+	cursor: pointer;
+	display: block !important;
 }
 
 .mollify-password-dialog-content {

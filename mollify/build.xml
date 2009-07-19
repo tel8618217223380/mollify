@@ -6,9 +6,10 @@
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="test.report.dir" location="${build.dir}/test" />
 	<property name="src.dir" location="${root.dir}/src" />
+	<property name="test.dir" location="${root.dir}/test" />
 	<property name="public.module.name" value="org.sjarvela.Mollify" />
-	<property name="deploy.package.name" value="mollify_${mollify.version}.tar" />
-	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}.tar" />
+	<property name="deploy.package.name" value="mollify_${mollify.version}" />
+	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}" />
 	
 	<path id="compile.classpath">  
 		<pathelement path="${java.class.path}/" />  
@@ -61,7 +62,7 @@
 		</java>
 	</target>
 	
-	<target name="do-deploy">
+	<target name="do-deploy" depends="init-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 		
 		<delete dir="${deploy.dir}" />
@@ -71,8 +72,8 @@
 		
 		<!-- 1. Binaries -->
 		<!-- client -->
-		<copy todir="${target.dir}/${gwt.entrypoint.class}">
-			<fileset dir="${build.dir}/${gwt.entrypoint.class}">
+		<copy todir="${target.dir}/${gwt.module}">
+			<fileset dir="${build.dir}/${public.module.name}">
 				<exclude name="App.html"/>
 			</fileset>
 		</copy>
@@ -84,30 +85,37 @@
 				<exclude name="index.html"/>
 			</fileset>
 		</copy>
+		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/index.html"/>
 		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}"/>
 		
-		<gzip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}"/>
+		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}"/>
 		
 		<delete dir="${target.dir}" />
 
 		<!-- 2. Sources -->
 		<property name="target.src.dir" location="${target.dir}/mollify-src" />
 		<mkdir dir="${target.dir}" />
-		<mkdir dir="${target.src.dir}" />
+		<mkdir dir="${target.src.dir}/backend" />
+		<mkdir dir="${target.src.dir}/client" />
 		
-		<copy todir="${target.src.dir}">
+		<copy todir="${target.src.dir}/backend">
 			<fileset dir="${root.dir}/backend">
 				<exclude name="configuration.php" />
+				<exclude name="index.html" />
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
-		<copy todir="${target.src.dir}">
-			<fileset dir="${src.dir}">
+		<copy todir="${target.src.dir}/client">
+			<fileset dir="${root.dir}">
 				<exclude name="**/.svn" />
+				<exclude name="backend/" />
+				<exclude name="tomcat/" />
+				<exclude name="war/" />
+				<exclude name="www-test/" />
 			</fileset>
 		</copy>
 
-		<gzip destfile="${deploy.dir}/${deploy.src.package.name}.zip" basedir="${target.dir}" />
+		<zip destfile="${deploy.dir}/${deploy.src.package.name}.zip" basedir="${target.dir}" />
 
 		<delete dir="${target.dir}" />
 	</target>

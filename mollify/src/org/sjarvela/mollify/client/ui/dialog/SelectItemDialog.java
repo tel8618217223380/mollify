@@ -75,7 +75,10 @@ public class SelectItemDialog extends CenteredDialog implements
 			String selectActionTitle,
 			FileSystemItemProvider fileSystemItemProvider,
 			SelectItemHandler handler) {
-		super(title, StyleConstants.SELECT_FOLDER_DIALOG);
+		super(
+				title,
+				Mode.Folders.equals(mode) ? StyleConstants.SELECT_ITEM_DIALOG_FOLDER
+						: StyleConstants.SELECT_ITEM_DIALOG);
 
 		this.mode = mode;
 		this.dialogManager = dialogManager;
@@ -100,22 +103,22 @@ public class SelectItemDialog extends CenteredDialog implements
 	@Override
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
-		panel.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_CONTENT);
+		panel.addStyleName(StyleConstants.SELECT_ITEM_DIALOG_CONTENT);
 
 		HTML messageHtml = new HTML(message);
-		messageHtml.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_MESSAGE);
+		messageHtml.setStyleName(StyleConstants.SELECT_ITEM_DIALOG_MESSAGE);
 		panel.add(messageHtml);
 
 		itemTree = new Tree();
-		itemTree.setStyleName(StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE);
+		itemTree.setStyleName(StyleConstants.SELECT_ITEM_DIALOG_TREE);
 		itemTree.addSelectionHandler(this);
 		itemTree.addOpenHandler(this);
 		panel.add(itemTree);
 
-		rootItem = createItem(
-				textProvider.getStrings().selectFolderDialogFoldersRoot(),
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM_LABEL,
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ROOT_ITEM);
+		rootItem = createItem(textProvider.getStrings()
+				.selectFolderDialogFoldersRoot(),
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ROOT_ITEM_LABEL,
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ROOT_ITEM);
 
 		itemTree.addItem(rootItem);
 		return panel;
@@ -124,14 +127,14 @@ public class SelectItemDialog extends CenteredDialog implements
 	@Override
 	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.SELECT_FOLDER_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.SELECT_ITEM_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		selectButton = createButton(selectActionTitle, new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				onSelect();
 			}
-		}, StyleConstants.SELECT_FOLDER_DIALOG_BUTTON_SELECT);
+		}, StyleConstants.SELECT_ITEM_DIALOG_BUTTON_SELECT);
 		buttons.add(selectButton);
 
 		buttons.add(createButton(
@@ -170,18 +173,17 @@ public class SelectItemDialog extends CenteredDialog implements
 
 	protected TreeItem createDirItem(Directory dir) {
 		TreeItem item = createItem(dir.getName(),
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_DIR,
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM_LABEL_DIR,
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM);
 		item.addItem(pleaseWaitText);
 		items.put(item, dir);
 		return item;
 	}
 
 	protected TreeItem createFileItem(File file) {
-		TreeItem item = createItem(
-				file.getName(),
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM_LABEL_FILE,
-				StyleConstants.SELECT_FOLDER_DIALOG_FOLDER_TREE_ITEM);
+		TreeItem item = createItem(file.getName(),
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM_LABEL_FILE,
+				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM);
 		items.put(item, file);
 		return item;
 	}
@@ -229,7 +231,6 @@ public class SelectItemDialog extends CenteredDialog implements
 
 		selected = item;
 		getLabel(selected).addStyleDependentName(StyleConstants.SELECTED);
-
 	}
 
 	private List<Directory> getDirectoryPath(TreeItem treeItem) {
