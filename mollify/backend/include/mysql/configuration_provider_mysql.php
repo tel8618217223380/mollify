@@ -509,7 +509,6 @@
 	function get_item_permissions($item) {
 		$db = init_db();
 		$sql_id = mysql_real_escape_string(base64_decode($item["id"]), $db);
-		log_error(sprintf("SELECT user_id, permission FROM item_permission WHERE item_id = '%s'", $sql_id));
 		$result = _query(sprintf("SELECT user_id, permission FROM item_permission WHERE item_id = '%s'", $sql_id), $db);
 		
 		if (!$result) {

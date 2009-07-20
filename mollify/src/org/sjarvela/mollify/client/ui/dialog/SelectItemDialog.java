@@ -166,7 +166,18 @@ public class SelectItemDialog extends CenteredDialog implements
 
 	private void addSubItems(TreeItem parent,
 			List<? extends FileSystemItem> items) {
-		for (FileSystemItem item : items)
+		List<? extends FileSystemItem> list = new ArrayList(items);
+		Collections.sort(list, new Comparator<FileSystemItem>() {
+			public int compare(FileSystemItem item1, FileSystemItem item2) {
+				if (item1.isFile() && !item2.isFile())
+					return 1;
+				if (item2.isFile() && !item1.isFile())
+					return -1;
+				return item1.getName().compareToIgnoreCase(item2.getName());
+			}
+		});
+
+		for (FileSystemItem item : list)
 			parent.addItem(item.isFile() ? createFileItem((File) item)
 					: createDirItem((Directory) item));
 	}
@@ -287,25 +298,14 @@ public class SelectItemDialog extends CenteredDialog implements
 						public void onSuccess(DirectoryContent result) {
 							itemsInitialized.add(treeItem);
 							treeItem.removeItems();
-							addSubItems(treeItem, createItemList(result));
+
+							List<FileSystemItem> list = new ArrayList(result
+									.getDirectories());
+							list.addAll(result.getFiles());
+							addSubItems(treeItem, list);
 						}
 					});
 		}
-	}
-
-	protected List<FileSystemItem> createItemList(DirectoryContent result) {
-		List<FileSystemItem> list = new ArrayList(result.getDirectories());
-		list.addAll(result.getFiles());
-		Collections.sort(list, new Comparator<FileSystemItem>() {
-			public int compare(FileSystemItem item1, FileSystemItem item2) {
-				if (item1.isFile() && !item2.isFile())
-					return 1;
-				if (item2.isFile() && !item1.isFile())
-					return -1;
-				return item1.getName().compareToIgnoreCase(item2.getName());
-			}
-		});
-		return list;
 	}
 
 	protected void onRequestError(ServiceError error) {

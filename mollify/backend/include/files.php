@@ -304,14 +304,13 @@
 		
 		$origin = $file["path"];
 		$target = join_path($to["path"], _basename($origin));
-		
+		log_message('move from ['.$origin.'] to ['.$target.']');
+				
 		if (file_exists($target)) {
 			$error = "FILE_ALREADY_EXISTS";
 			$error_details = _basename($target);
 			return FALSE;
 		}
-
-		log_message('move from ['.$origin.'] to ['.$target.']');		
 		if (!rename($origin, $target)) return FALSE;
 		
 		if ($_SESSION["features"]["description_update"])
@@ -336,14 +335,14 @@
 		
 		$origin = $dir["path"];
 		$target = dir_path(join_path($to["path"], _basename($origin)));
-		
+		log_message('move from ['.$origin.'] to ['.$target.']');
+				
 		if (file_exists($target)) {
 			$error = "DIR_ALREADY_EXISTS";
 			$error_details = _basename($target);
 			return FALSE;
 		}
-		
-		log_message('move from ['.$origin.'] to ['.$target.']');
+
 		if (!rename($origin, $target)) return FALSE;
 		
 		if ($_SESSION["features"]["description_update"])
