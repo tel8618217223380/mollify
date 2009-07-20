@@ -195,7 +195,7 @@
 	}
 	
 	function _basename($path) {
-		$name = strrchr($path, DIRECTORY_SEPARATOR);
+		$name = strrchr(rtrim($path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
 		if (!$name) return "";
 		return substr($name, 1);
 	}
@@ -622,7 +622,7 @@
 		if (!assert_dir($dir)) return FALSE;
 		
 		log_message('download as zip ['.$dir["path"].']');
-		$offset = strlen($dir["path"]) + 1;
+		$offset = strlen($dir["path"]);
 		$files = get_visible_files_in_dir($dir["path"], TRUE);
 		if ($files === FALSE) return FALSE;
 		

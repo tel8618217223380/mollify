@@ -12,8 +12,11 @@ package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -219,22 +222,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				FileSystemAction.delete);
 		deleteButton.setVisible(false);
 
-		if (this.zipDownloadEnabled) {
-			MultiActionButton downloadButton = createMultiActionButton(
-					actionListener, textProvider.getStrings()
-							.fileActionDownloadTitle(),
-					FileSystemAction.download.name());
-			downloadButton.addAction(FileSystemAction.download, textProvider
-					.getStrings().fileActionDownloadTitle());
-			downloadButton.addAction(FileSystemAction.download_as_zip,
-					textProvider.getStrings().fileActionDownloadZippedTitle());
-			downloadButton.setDefaultAction(FileSystemAction.download);
+		Widget downloadButton = getDownloadButton();
+		if (downloadButton != null)
 			buttons.add(downloadButton);
-		} else {
-			buttons.add(createActionButton(textProvider.getStrings()
-					.fileActionDownloadTitle(), actionListener,
-					FileSystemAction.download));
-		}
 
 		buttons.add(renameButton);
 		buttons.add(copyButton);
@@ -242,6 +232,47 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		buttons.add(deleteButton);
 
 		return buttons;
+	}
+
+	private Widget getDownloadButton() {
+		Map<FileSystemAction, String> downloadActions = new TreeMap();
+		if (Mode.File.equals(this.mode))
+			downloadActions.put(FileSystemAction.download, textProvider
+					.getStrings().fileActionDownloadTitle());
+		if (this.zipDownloadEnabled)
+			downloadActions.put(FileSystemAction.download_as_zip, textProvider
+					.getStrings().fileActionDownloadZippedTitle());
+
+		if (downloadActions.size() > 1) {
+			Iterator<Entry<FileSystemAction, String>> actions = downloadActions
+					.entrySet().iterator();
+
+			MultiActionButton downloadButton = createMultiActionButton(
+					actionListener, textProvider.getStrings()
+							.fileActionDownloadTitle(),
+					FileSystemAction.download.name());
+
+			boolean first = true;
+			while (actions.hasNext()) {
+				Entry<FileSystemAction, String> action = actions.next();
+				downloadButton.addAction(action.getKey(), action.getValue());
+
+				if (first)
+					downloadButton.setDefaultAction(action.getKey());
+				first = false;
+			}
+
+			return downloadButton;
+		}
+
+		if (downloadActions.size() == 1) {
+			Entry<FileSystemAction, String> action = downloadActions.entrySet()
+					.iterator().next();
+			return createActionButton(action.getValue(), actionListener, action
+					.getKey());
+		}
+
+		return null;
 	}
 
 	private Widget createDetails() {
