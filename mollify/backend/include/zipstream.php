@@ -15,10 +15,7 @@
 # the following conditions:                                              #
 #                                                                        #
 # The above copyright notice and this permission notice shall be         #
-# included in all copies of the Software, its documentation and          #
-# marketing & publicity materials, and acknowledgment shall be given in  #
-# the documentation, materials and software packages that this Software  #
-# was used.                                                              #
+# included in all copies or substantial portions of the of the Software. #
 #                                                                        #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        #
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     #
@@ -79,7 +76,7 @@
 #   $zip->finish();
 #
 class ZipStream {
-  const VERSION = '0.2.0';
+  const VERSION = '0.2.2';
 
   var $opt = array(),
       $files = array(),
@@ -159,9 +156,9 @@ class ZipStream {
     $this->opt = $opt;
 
     # set large file defaults: size = 20 megabytes, method = store
-    if (!$this->opt['large_file_size'])
+    if (!isset($this->opt['large_file_size']))
       $this->opt['large_file_size'] = 20 * 1024 * 1024;
-    if (!$this->opt['large_file_method'])
+    if (!isset($this->opt['large_file_method']))
       $this->opt['large_file_method'] = 'store';
 
     $this->output_name = $name;
@@ -288,13 +285,13 @@ class ZipStream {
     $nlen = strlen($name);
 
     # create dos timestamp
-    $opt['time'] = $opt['time'] ? $opt['time'] : time();
+    $opt['time'] = isset($opt['time']) ? $opt['time'] : time();
     $dts = $this->dostime($opt['time']);
 
     # build file header
     $fields = array(            # (from V.A of APPNOTE.TXT)
       array('V', 0x04034b50),     # local file header signature
-      array('v', 63),             # version needed to extract
+      array('v', (6 << 8) + 3),   # version needed to extract
       array('v', 0x00),           # general purpose bit flag
       array('v', $meth),          # compresion method (deflate or store)
       array('V', $dts),           # dos timestamp
@@ -400,15 +397,15 @@ class ZipStream {
     list ($name, $opt, $meth, $crc, $zlen, $len, $ofs) = $args;
 
     # get attributes
-    $comment = $opt['comment'] ? $opt['comment'] : '';
+    $comment = isset($opt['comment']) ? $opt['comment'] : '';
 
     # get dos timestamp
     $dts = $this->dostime($opt['time']);
 
     $fields = array(                  # (from V,F of APPNOTE.TXT)
       array('V', 0x02014b50),           # central file header signature
-      array('v', (3 << 8) & 63),        # version made by
-      array('v', 63),                   # version needed to extract
+      array('v', (6 << 8) + 3),         # version made by
+      array('v', (6 << 8) + 3),         # version needed to extract
       array('v', 0x00),                 # general purpose bit flag
       array('v', $meth),                # compresion method (deflate or store)
       array('V', $dts),                 # dos timestamp
@@ -494,12 +491,12 @@ class ZipStream {
     
     # grab content type from options
     $content_type = 'application/x-zip';
-    if ($opt['content_type'])
+    if (isset($opt['content_type']))
       $content_type = $this->opt['content_type'];
 
     # grab content disposition 
     $disposition = 'attachment';
-    if ($opt['content_disposition'])
+    if (isset($opt['content_disposition']))
       $disposition = $opt['content_disposition'];
 
     if ($this->output_name) 
