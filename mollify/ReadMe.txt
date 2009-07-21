@@ -13,7 +13,7 @@ this entire header must remain intact.
 1. INSTALLATION
 ===============
 
-1) Unzip Mollify package (for example with command "unzip mollify_[VER].zip")
+1) Unzip Mollify installation package (for example with command "unzip mollify_[VER].zip")
 
 2) Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
 
@@ -26,22 +26,14 @@ directory "backend/example". For further instructions see wiki pages at Mollify 
 2. UPGRADING
 ============
 
-Upgrading Mollify version 0.9 to version 1.0 or later requires following steps:
+Upgrading Mollify requires following steps:
 
-1) Remove "org.sjarvela.mollify.App"
-2) Backup "configuration.php" and "index.php" (if exists) under directory "mollify"
-3) Remove directory "mollify"
-4) Copy directory "mollify" from the latest package
-5) Restore "configuration.php" into directory "mollify/backend", and "index.php" into directory "mollify"
+1) For backup, move or rename old installation directory "mollify" into different name or location
+2) Copy directory "mollify" from the latest Mollify installation package
+3) From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
+4) Remove backup directory
 
-
-Upgrading Mollify versions later than 1.0 requires following steps:
-
-1) Backup "configuration.php" from directory "mollify/backend"
-2) Remove directories "backend" and "client" under directory "mollify"
-3) Copy directories "backend" and "client" from the latest package into directory "mollify"
-4) Restore "configuration.php" into "mollify/backend"
-
+If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
 
 With MySQL installations, also database may require an upgrade. Check this by opening installation script with at
 "http://your.host.name/mollify/backend/install", and it will start upgrade if required.
