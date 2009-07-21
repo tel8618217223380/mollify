@@ -21,8 +21,10 @@ public interface ContextPopup<T> {
 
 	void showPopup();
 
+	void hidePopup();
+
 	void addPopupListener(ContextPopupListener contextPopupListener);
-	
+
 	void setPopupPositioner(PopupPositioner positioner);
 
 	void update(T t, Widget parent);

@@ -113,7 +113,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	protected void initialize() {
 		super.initialize();
 
-		permission.setContent(Arrays.asList(FilePermissionMode.values()));
+		permission.setContent(Arrays.asList(FilePermissionMode.ReadOnly,
+				FilePermissionMode.ReadWrite));
 
 		if (Mode.Add.equals(this.mode)) {
 			user.setContent(availableUsers);

@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.user.UserNameValidator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,7 +42,12 @@ public class LoginDialog extends CenteredDialog {
 		this.textProvider = textProvider;
 		this.loginHandler = loginHandler;
 		this.setModal(false);
-		
+		this.addViewListener(new ViewListener() {
+			public void onShow() {
+				userName.setFocus(true);
+			}
+		});
+
 		initialize();
 	}
 

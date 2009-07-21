@@ -77,6 +77,9 @@ public class DropdownPopup extends PopupPanel {
 	}
 
 	public void setParentWidget(Widget parent) {
+		if (parent != null)
+			this.removeAutoHidePartner(parent.getElement());
 		this.parent = parent;
+		this.addAutoHidePartner(parent.getElement());
 	}
 }

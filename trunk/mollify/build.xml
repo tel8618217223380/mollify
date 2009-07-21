@@ -71,23 +71,22 @@
 		<mkdir dir="${target.dir}/mollify" />
 		
 		<!-- 1. Binaries -->
-		<!-- client -->
-		<copy todir="${target.dir}/${gwt.module}">
-			<fileset dir="${build.dir}/${public.module.name}">
-				<exclude name="App.html"/>
-			</fileset>
-		</copy>
 		
 		<!-- backend -->
-		<copy todir="${target.dir}/mollify">
+		<copy todir="${target.dir}/mollify/backend">
 			<fileset dir="${root.dir}/backend">
 				<exclude name="configuration.php"/>
 				<exclude name="index.html"/>
 			</fileset>
 		</copy>
-		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/index.html"/>
-		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}"/>
-		
+		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html"/>
+		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}/mollify"/>
+
+		<!-- client -->
+		<copy todir="${target.dir}/mollify/client">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
+
 		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}"/>
 		
 		<delete dir="${target.dir}" />

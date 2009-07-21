@@ -1482,6 +1482,8 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-p
 	border: 1px solid #8f8f8f;
 	padding: 2px;
 	width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .mollify-permission-editor-item-name-itemselectable {

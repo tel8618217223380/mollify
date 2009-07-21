@@ -18,15 +18,24 @@ public class ContextPopupHandler<T> {
 
 	public ContextPopupHandler(ContextPopup<T> contextPopup) {
 		this.contextPopup = contextPopup;
+		this.contextPopup.addPopupListener(new ContextPopupListener() {
+			public void onPopupClosed() {
+				current = null;
+			}
+
+			public void onPopupShow() {
+			}
+		});
 	}
 
 	public void onItemSelected(T t, Widget parent) {
-		if (!t.equals(current)) {
+		if (t.equals(current)) {
+			current = null;
+			contextPopup.hidePopup();
+		} else {
 			contextPopup.update(t, parent);
 			contextPopup.showPopup();
 			current = t;
-		} else {
-			this.current = null;
 		}
 	}
 
