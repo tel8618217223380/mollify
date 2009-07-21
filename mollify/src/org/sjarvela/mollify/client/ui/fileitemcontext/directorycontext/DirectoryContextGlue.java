@@ -56,6 +56,10 @@ public class DirectoryContextGlue implements DirectoryContextPopup {
 		popup.showMenu();
 	}
 
+	public void hidePopup() {
+		popup.hide();
+	}
+
 	public void update(Directory directory, Widget parent) {
 		popup.setParentWidget(parent);
 		presenter.setDirectory(directory);

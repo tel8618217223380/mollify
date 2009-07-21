@@ -56,6 +56,10 @@ public class FileContextGlue implements FileContextPopup {
 		popup.showMenu();
 	}
 
+	public void hidePopup() {
+		popup.hide();
+	}
+
 	public void update(File file, Widget parent) {
 		popup.setParentWidget(parent);
 		presenter.setFile(file);
