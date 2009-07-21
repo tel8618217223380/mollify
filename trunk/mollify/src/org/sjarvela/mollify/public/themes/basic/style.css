@@ -12,7 +12,7 @@
  * this entire header must remain intact.
  */
 
-#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none {
+#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	font-size: 8pt;	
 }
