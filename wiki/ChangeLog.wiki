@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.0.0 ==
-  * Added support for user permissions, both in folder and file level
+  * Added support for editable user permissions, both in folder and file level
   * Finalized theme, better support for IE and old Firefox versions
   * Reorganized installation package structure into single folder
   * Added debug logging in server (using FirePHP)
