@@ -1,6 +1,15 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.0.0 ==
+  * Added support for user permissions, both in folder and file level
+  * Finalized theme, better support for IE and old Firefox versions
+  * Reorganized installation package structure into single folder
+  * Added debug logging in server (using FirePHP)
+  * Changed Mollify package format into zip
+  * Updated GWT version to 1.7
+  * Updated Zipstream-PHP version to 0.2.2
+
 === Version 0.9.6.4 ==
   * Removed pointless "Download" action from folder actions (folders can be downloaded only as zip, if enabled)
   * Corrected errors in German translation

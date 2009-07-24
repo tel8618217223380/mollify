@@ -3,24 +3,31 @@
 
 = 1. Installation =
 
-1) Untar package contents
+1) Unzip Mollify installation package (for example with command "`unzip mollify_[VER].zip`")
 
-		{{{tar -xzvf mollify_VER.tar.gz}}}
+2) Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
 
-		This will extract two directories:
-		  * "mollify": Application host page and backend service files
-		  * "org.sjarvela.mollify.App": Client application files
+3) Create configuration file called "configuration.php" under directory "mollify/backend", examples can be found in
+directory "backend/example". For further instructions see chapter 3.
 
-2) Copy extracted directories into your web server root directory
-
-3) Create configuration file "configuration.php" under directory "mollify", for further instructions see chapter 2.
-
-4) Copy host page file ("example_host_page.html") from directory "Examples" into directory "mollify", and modify it according to your configuration. For other options, see chapter 3.
-
-5) You are ready to go. Open address http://your.host.name/mollify to see your files.
+4) You are ready to go. Open address "http://your.host.name/mollify" (if installed into root) to access your files.
 
 
-= 2. Configuration =
+= 2. Upgrading =
+
+Upgrading Mollify requires following steps:
+
+1) For backup, move or rename old installation directory "mollify" into different name or location
+2) Copy directory "mollify" from the latest Mollify installation package
+3) From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
+4) Remove backup directory
+
+If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
+
+With MySQL installations, also database may require an upgrade. Check this by opening installation script with at
+"http://your.host.name/mollify/backend/install", and it will start upgrade if required.
+
+= 3. Configuration =
 
 	Mollify supports different kind of configuration options.
 	
@@ -47,11 +54,11 @@
 	Also, see instructions on [ConfigurationAdditionalOptions additional configuration options].
 
 
-= 3. Modifying Installation =
+= 4. Modifying Installation =
 
-== 3.1. Relocating host page or backend interface files ==
+== 4.1. Relocating host page or backend interface files ==
 
-	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or its subdirectories.
+	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or in its subdirectories.
 
 	If you wish to locate backend interface files (`*`.php) into a subdirectory, you must define this location in the host html file, with following format:
 
@@ -74,14 +81,15 @@
 	<meta name="mollify:property" content="service-path=mollify/scripts">
 }}}
 
-== 3.2. Relocating client application files ==
+== 4.2. Relocating client application files ==
 
-	Client application files can be located anywhere, only the javascript and theme css references in the host page
-	must be updated to match the new location. While the location and the name of the folder "org.sjarvela.mollify.App" can be
-	changed, do not alter its contents.
+	Client application files ("/mollify/client") can be located anywhere, only the javascript and theme css references in the host page
+	must be updated to match the new location. While the location and the name of the client folder can be changed,
+	do not alter its contents.
 
-== 3.3. Customizing Mollify host page, or integrating Mollify into existing web page ==
+== 4.3. Customizing Mollify host page, or integrating Mollify into existing web page ==
 
 	Host page structure can be freely modified, as long as following rules are met:
-	  * Javascript file "org.sjarvela.mollify.App.nocache.js" must be linked
-	  * In the page, there must be a div with id "mollify". Application is injected inside this element.
+	  * Page must declare charset as UTF-8 with following: `<meta http-equiv="content-type" content="text/html; charset=UTF-8">`
+	  * Javascript file "org.sjarvela.Mollify.nocache.js" must be linked
+	  * In the page, there must be a div with id "mollify". Client application is injected inside this element.
