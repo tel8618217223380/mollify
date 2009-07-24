@@ -18,8 +18,11 @@ directory "backend/example". For further instructions see chapter 3.
 Upgrading Mollify requires following steps:
 
 1) For backup, move or rename old installation directory "mollify" into different name or location
+
 2) Copy directory "mollify" from the latest Mollify installation package
+
 3) From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
+
 4) Remove backup directory
 
 If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
