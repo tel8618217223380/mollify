@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.Tooltip;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -65,5 +66,9 @@ public class DirectoryListItem extends FlowPanel {
 	private DirectoryListMenu createMenu(Element popupElement) {
 		return new DirectoryListMenu(itemStyle, currentDirectory, level + 1,
 				dataProvider, listener, textProvider, this);
+	}
+
+	public void addTooltip(Tooltip tooltip) {
+		button.addTooltip(tooltip);
 	}
 }

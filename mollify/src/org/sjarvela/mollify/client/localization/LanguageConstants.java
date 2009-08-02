@@ -355,4 +355,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String selectPermissionItemDialogAction();
 
+	public String mainViewAddButtonTooltip();
+
+	public String mainViewRefreshButtonTooltip();
+
+	public String mainViewParentDirButtonTooltip();
+
+	public String mainViewHomeButtonTooltip();
+
 }

@@ -35,6 +35,9 @@ public class StyleConstants {
 	public static final String PROGRESS_BAR_CURRENT = "current";
 	public static final String PROGRESS_BAR_LEFT = "left";
 
+	public static final String TOOLTIP = "mollify-tooltip";
+	public static final String TOOLTIP_CONTENT = "mollify-tooltip-content";
+
 	public static final String DROPDOWN_BUTTON = "mollify-dropdown-button";
 	public static final String DROPDOWN_MENU = "mollify-dropdown-menu";
 	public static final String DROPDOWN_MENU_ITEM = "mollify-dropdown-menu-item";
@@ -65,6 +68,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_BUTTON_ADD = "mollify-header-add-button";
 	public static final String MAIN_VIEW_HEADER_BUTTON_REFRESH = "mollify-header-refresh-button";
 	public static final String MAIN_VIEW_HEADER_BUTTON_PARENT_DIR = "mollify-header-parent-dir-button";
+	public static final String MAIN_VIEW_HEADER_BUTTON_TOOLTIP = "mainview";
 
 	public static final String FILE_CONTEXT = "mollify-file-context";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
