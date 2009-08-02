@@ -15,11 +15,9 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DropdownButton extends Composite {
-	private ActionButton button;
+public class DropdownButton extends ActionButton {
 	private DropdownPopupMenu menu;
 
 	public DropdownButton(ActionListener actionListener, String title, String id) {
@@ -33,9 +31,8 @@ public class DropdownButton extends Composite {
 
 	public DropdownButton(ActionListener actionListener, String title,
 			String id, Widget parent, PopupPositioner listener) {
-		button = new ActionButton(title, id == null ? null : id + "-button",
+		super(title, id == null ? null : id + "-button",
 				StyleConstants.DROPDOWN_BUTTON);
-		initWidget(button);
 
 		if (id != null)
 			getElement().setId(id);
@@ -45,11 +42,7 @@ public class DropdownButton extends Composite {
 		if (id != null)
 			menu.getElement().setId(id + "-menu");
 
-		new PopupClickTrigger(button, menu);
-	}
-
-	public void setText(String text) {
-		button.setText(text);
+		new PopupClickTrigger(this, menu);
 	}
 
 	public void addAction(ResourceId action, String title) {

@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
@@ -188,6 +189,9 @@ public class MainView extends Composite implements PopupPositioner {
 				.mainViewRefreshButtonTitle(),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
+		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
+				textProvider.getStrings().mainViewRefreshButtonTooltip())
+				.attach(refreshButton);
 		refreshButton.setAction(actionListener, Action.refresh);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
@@ -197,6 +201,10 @@ public class MainView extends Composite implements PopupPositioner {
 			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
+			new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
+					textProvider.getStrings().mainViewAddButtonTooltip())
+					.attach(addButton);
+
 			if (model.getSession().getFeatures().fileUpload())
 				addButton.addAction(Action.addFile, textProvider.getStrings()
 						.mainViewAddFileMenuItem());

@@ -504,7 +504,7 @@
 			return FALSE;
 		}
 				
-		foreach ($_FILES[upload][name] as $key => $value) { 
+		foreach ($_FILES['upload']['name'] as $key => $value) { 
 			$name = $_FILES['upload']['name'][$key];
 			$origin = $_FILES['upload']['tmp_name'][$key];
 			$target = join_path($dir["path"], $name);

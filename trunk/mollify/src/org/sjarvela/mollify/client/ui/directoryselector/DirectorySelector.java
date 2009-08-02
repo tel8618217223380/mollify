@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.common.Tooltip;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,6 +55,9 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 				.mainViewParentDirButtonTitle());
 		button.setStyleName(StyleConstants.DIRECTORY_SELECTOR_BUTTON);
 		button.getElement().setId(StyleConstants.DIRECTORY_SELECTOR_BUTTON_UP);
+		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
+				textProvider.getStrings().mainViewParentDirButtonTooltip())
+				.attach(button);
 		button.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				DirectorySelector.this.onMoveToParentDirectory();
@@ -63,9 +67,13 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	}
 
 	private DirectoryListItem createHomeButton() {
-		return listItemFactory.createListItem(this,
+		DirectoryListItem item = listItemFactory.createListItem(this,
 				StyleConstants.DIRECTORY_LISTITEM_HOME, Directory.Empty, 0,
 				Directory.Empty);
+		item.addTooltip(new Tooltip(
+				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
+						.getStrings().mainViewHomeButtonTooltip()));
+		return item;
 	}
 
 	public void refresh() {

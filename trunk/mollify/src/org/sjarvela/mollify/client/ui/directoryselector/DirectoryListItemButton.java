@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.popup.PopupClickTrigger;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -116,5 +117,9 @@ public class DirectoryListItemButton extends FlowPanel {
 
 	public void setDropdownMenu(DirectoryListMenu menu) {
 		new PopupClickTrigger(dropDown, menu);
+	}
+
+	public void addTooltip(Tooltip tooltip) {
+		tooltip.attach(center);
 	}
 }
