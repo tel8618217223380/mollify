@@ -18,17 +18,14 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class Tooltip extends PopupPanel {
-	private MouseOutHandler mouseOutHandler = null;
+	private MouseOutHandler mouseOutHandler;
 	private ClickHandler clickHandler;
 
 	public Tooltip(String style, String text) {
-		// this.setAutoHideEnabled(true);
 		this.setStylePrimaryName(StyleConstants.TOOLTIP);
 		if (style != null)
 			this.addStyleDependentName(style);
@@ -49,27 +46,27 @@ public class Tooltip extends PopupPanel {
 		};
 	}
 
-	public void attach(final Button target) {
-		// this.addAutoHidePartner(target.getElement());
-
-		target.addMouseOverHandler(createMouseOverHandler(target));
-		target.addMouseOutHandler(mouseOutHandler);
-		target.addClickHandler(clickHandler);
+	public void attach(TooltipTarget target) {
+		if (target.getWidget() != null) {
+			target.getWidget().addMouseOverHandler(
+					createMouseOverHandler(target));
+			target.getWidget().addMouseOutHandler(mouseOutHandler);
+			target.getWidget().addClickHandler(clickHandler);
+		}
 	}
 
-	public void attach(Label target) {
-		target.addMouseOverHandler(createMouseOverHandler(target));
-		target.addMouseOutHandler(mouseOutHandler);
-		target.addClickHandler(clickHandler);
-	}
-
-	private MouseOverHandler createMouseOverHandler(final Widget target) {
+	private MouseOverHandler createMouseOverHandler(final TooltipTarget target) {
 		return new MouseOverHandler() {
 			public void onMouseOver(MouseOverEvent event) {
+				if (!target.showTooltip())
+					return;
+
 				Tooltip.this.setPopupPositionAndShow(new PositionCallback() {
 					public void setPosition(int offsetWidth, int offsetHeight) {
-						Tooltip.this.setPopupPosition(target.getAbsoluteLeft(),
-								target.getAbsoluteTop() + offsetHeight + 5);
+						Tooltip.this.setPopupPosition(target.getWidget()
+								.getAbsoluteLeft(), target.getWidget()
+								.getAbsoluteTop()
+								+ offsetHeight + 5);
 					}
 				});
 			}

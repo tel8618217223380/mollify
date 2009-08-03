@@ -68,7 +68,7 @@ public class DirectoryListItem extends FlowPanel {
 				dataProvider, listener, textProvider, this);
 	}
 
-	public void addTooltip(Tooltip tooltip) {
-		button.addTooltip(tooltip);
+	public void addDropdownTooltip(Tooltip tooltip) {
+		button.addDropdownTooltip(tooltip);
 	}
 }
