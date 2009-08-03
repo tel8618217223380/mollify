@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.directoryselector;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
+import org.sjarvela.mollify.client.ui.common.TooltipTarget;
 import org.sjarvela.mollify.client.ui.common.popup.PopupClickTrigger;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,6 +25,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
 
 public class DirectoryListItemButton extends FlowPanel {
@@ -31,6 +33,7 @@ public class DirectoryListItemButton extends FlowPanel {
 	private final Label center;
 	private final Label right;
 	private final Button dropDown;
+	private DirectoryListMenu menu = null;
 
 	public DirectoryListItemButton(String itemStyle) {
 		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM_BUTTON);
@@ -116,10 +119,19 @@ public class DirectoryListItemButton extends FlowPanel {
 	}
 
 	public void setDropdownMenu(DirectoryListMenu menu) {
+		this.menu = menu;
 		new PopupClickTrigger(dropDown, menu);
 	}
 
-	public void addTooltip(Tooltip tooltip) {
-		tooltip.attach(center);
+	public void addDropdownTooltip(Tooltip tooltip) {
+		tooltip.attach(new TooltipTarget() {
+			public FocusWidget getWidget() {
+				return dropDown;
+			}
+
+			public boolean showTooltip() {
+				return menu != null && !menu.isShowing();
+			}
+		});
 	}
 }

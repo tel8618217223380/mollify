@@ -19,11 +19,13 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvi
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
+import org.sjarvela.mollify.client.ui.common.TooltipTarget;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusWidget;
 
 public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	private final DirectoryModelProvider directoryModelProvider;
@@ -51,13 +53,23 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	}
 
 	private Button createUpButton() {
-		Button button = new Button(textProvider.getStrings()
+		final Button button = new Button(textProvider.getStrings()
 				.mainViewParentDirButtonTitle());
 		button.setStyleName(StyleConstants.DIRECTORY_SELECTOR_BUTTON);
 		button.getElement().setId(StyleConstants.DIRECTORY_SELECTOR_BUTTON_UP);
+
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
 				textProvider.getStrings().mainViewParentDirButtonTooltip())
-				.attach(button);
+				.attach(new TooltipTarget() {
+					public FocusWidget getWidget() {
+						return button;
+					}
+
+					public boolean showTooltip() {
+						return true;
+					}
+				});
+
 		button.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				DirectorySelector.this.onMoveToParentDirectory();
@@ -70,7 +82,7 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		DirectoryListItem item = listItemFactory.createListItem(this,
 				StyleConstants.DIRECTORY_LISTITEM_HOME, Directory.Empty, 0,
 				Directory.Empty);
-		item.addTooltip(new Tooltip(
+		item.addDropdownTooltip(new Tooltip(
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
 						.getStrings().mainViewHomeButtonTooltip()));
 		return item;

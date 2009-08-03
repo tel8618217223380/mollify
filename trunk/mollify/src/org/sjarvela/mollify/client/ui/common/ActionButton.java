@@ -16,8 +16,9 @@ import org.sjarvela.mollify.client.ui.ActionListener;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FocusWidget;
 
-public class ActionButton extends Button {
+public class ActionButton extends Button implements TooltipTarget {
 	public ActionButton(String title) {
 		this(title, null, null);
 	}
@@ -43,5 +44,13 @@ public class ActionButton extends Button {
 				actionListener.onAction(actionId);
 			}
 		});
+	}
+
+	public boolean showTooltip() {
+		return true;
+	}
+
+	public FocusWidget getWidget() {
+		return this;
 	}
 }

@@ -57,4 +57,8 @@ public class DropdownButton extends ActionButton {
 		menu.addSeparator();
 	}
 
+	@Override
+	public boolean showTooltip() {
+		return !menu.isShowing();
+	}
 }
