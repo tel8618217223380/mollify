@@ -1,0 +1,17 @@
+#summary Instructions for how to localize Mollify
+
+Localizing Mollify into new language requires following steps:
+
+1) Open latest English version for the texts
+
+  * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
+  * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
+
+2) Files contain name/value pairs, translate the values. In "`MessageConstants.properties`", following items should be left untouched:
+
+  * Variables, for example "`{0,number,#.#}`"
+  * HTML elements, for example: "`<span class="mollify-copy-file-message">`"
+
+3) Save the files with a locale identifier, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
+
+4) Send files to me
