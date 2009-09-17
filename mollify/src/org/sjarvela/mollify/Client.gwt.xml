@@ -23,6 +23,7 @@
 	<extend-property name="locale" values="de"/>
 	<extend-property name="locale" values="fr"/>
 	<extend-property name="locale" values="fi"/>
+	<extend-property name="locale" values="pt"/>
 
 	<set-property name="log_DivLogger" value="ENABLED" />
 	<set-property name="log_FirebugLogger" value="ENABLED" />
