@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.0.1 ==
+  * Added new language: Português
+  * Toolbar button tooltips
+
 === Version 1.0.0 ==
   * Added support for editable user permissions, both in folder and file level (see chapter 5 in ConfigurationAdditionalOptions)
   * Finalized theme, better support for IE and old Firefox versions
