@@ -173,6 +173,9 @@
 	<target name="update" depends="init-dev, do-compile, do-update">
 	</target>
 
+	<target name="update-full" depends="init-deploy, do-compile, do-update">
+	</target>
+	
 	<target name="update-only" depends="init-dev, do-update">
 	</target>
 		
