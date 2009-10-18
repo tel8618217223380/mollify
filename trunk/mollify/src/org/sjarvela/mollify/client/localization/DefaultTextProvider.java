@@ -15,15 +15,6 @@ import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import com.google.gwt.core.client.GWT;
 
 public class DefaultTextProvider implements TextProvider {
-	private static DefaultTextProvider instance = null;
-
-	public static DefaultTextProvider getInstance() {
-		if (instance == null) {
-			instance = new DefaultTextProvider();
-		}
-		return instance;
-	}
-
 	private LanguageConstants languageConstants;
 	private MessageConstants messageConstants;
 

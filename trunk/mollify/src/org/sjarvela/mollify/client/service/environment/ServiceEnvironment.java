@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.service.environment;
 
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
 public interface ServiceEnvironment {
@@ -27,4 +27,5 @@ public interface ServiceEnvironment {
 	FileSystemService getFileSystemService();
 
 	FileUploadService getFileUploadHandler();
+
 }

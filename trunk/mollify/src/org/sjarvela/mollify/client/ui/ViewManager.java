@@ -8,12 +8,18 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface MainView {
+public interface ViewManager {
 
-	Widget getViewWidget();
+	void openView(Widget view);
+
+	void empty();
+
+	void openDownloadUrl(String url);
+
+	void openUrlInNewWindow(String url);
 
 }

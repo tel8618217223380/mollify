@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
@@ -20,14 +20,14 @@ import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 public class MainViewGlue implements GridListener<FileSystemItem> {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
-	private final MainView view;
+	private final DefaultMainView view;
 
-	public MainViewGlue(MainView view, final MainViewPresenter presenter,
+	public MainViewGlue(DefaultMainView view, final MainViewPresenter presenter,
 			ActionDelegator actionDelegator) {
 		this.view = view;
 		this.presenter = presenter;

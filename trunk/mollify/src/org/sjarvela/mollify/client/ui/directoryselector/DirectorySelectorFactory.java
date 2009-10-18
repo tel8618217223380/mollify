@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvi
 import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.ui.mainview.MainViewModel;
+import org.sjarvela.mollify.client.ui.mainview.impl.MainViewModel;
 
 public class DirectorySelectorFactory implements DirectoryModelProvider {
 	private final MainViewModel model;
