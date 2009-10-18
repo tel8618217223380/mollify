@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
@@ -21,24 +21,32 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.WindowManager;
+import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
-	private WindowManager windowManager;
-	private FileSystemService fileSystemService;
-	private Callback actionCallback;
-	private FileSystemItemProvider fileSystemItemProvider;
+	private final ViewManager windowManager;
+	private final DialogManager dialogManager;
+	private final FileSystemService fileSystemService;
+	private final Callback actionCallback;
+	private final FileSystemItemProvider fileSystemItemProvider;
+	private final TextProvider textProvider;
 
-	public DefaultFileSystemActionHandler(WindowManager windowManager,
+	public DefaultFileSystemActionHandler(TextProvider textProvider,
+			ViewManager windowManager, DialogManager dialogManager,
 			FileSystemService fileSystemService,
-			FileSystemItemProvider fileSystemItemProvider, Callback actionCallback) {
+			FileSystemItemProvider fileSystemItemProvider,
+			Callback actionCallback) {
+		this.textProvider = textProvider;
 		this.windowManager = windowManager;
+		this.dialogManager = dialogManager;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.actionCallback = actionCallback;
@@ -59,17 +67,14 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
-			windowManager.getDialogManager().showRenameDialog(file, this);
+			dialogManager.openRenameDialog(file, this);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
-				windowManager.getDialogManager().showSelectFolderDialog(
-						windowManager.getTextProvider().getStrings()
-								.copyFileDialogTitle(),
-						windowManager.getTextProvider().getMessages()
-								.copyFileMessage(file.getName()),
-						windowManager.getTextProvider().getStrings()
-								.copyFileDialogAction(), fileSystemItemProvider,
-						new SelectItemHandler() {
+				dialogManager.showSelectFolderDialog(textProvider.getStrings()
+						.copyFileDialogTitle(), textProvider.getMessages()
+						.copyFileMessage(file.getName()), textProvider
+						.getStrings().copyFileDialogAction(),
+						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								copyFile(file, (Directory) selected);
 							}
@@ -82,14 +87,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
-				windowManager.getDialogManager().showSelectFolderDialog(
-						windowManager.getTextProvider().getStrings()
-								.moveFileDialogTitle(),
-						windowManager.getTextProvider().getMessages()
-								.moveFileMessage(file.getName()),
-						windowManager.getTextProvider().getStrings()
-								.moveFileDialogAction(), fileSystemItemProvider,
-						new SelectItemHandler() {
+				dialogManager.showSelectFolderDialog(textProvider.getStrings()
+						.moveFileDialogTitle(), textProvider.getMessages()
+						.moveFileMessage(file.getName()), textProvider
+						.getStrings().moveFileDialogAction(),
+						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								moveFile(file, (Directory) selected);
 							}
@@ -102,12 +104,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						});
 			} else if (action.equals(FileSystemAction.delete)) {
-				String title = windowManager.getTextProvider().getStrings()
+				String title = textProvider.getStrings()
 						.deleteFileConfirmationDialogTitle();
-				String message = windowManager.getTextProvider().getMessages()
+				String message = textProvider.getMessages()
 						.confirmFileDeleteMessage(file.getName());
-				windowManager.getDialogManager().showConfirmationDialog(title,
-						message,
+				dialogManager.showConfirmationDialog(title, message,
 						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 						new ConfirmationListener() {
 							public void onConfirm() {
@@ -115,8 +116,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						});
 			} else {
-				windowManager.getDialogManager().showInfo("ERROR",
-						"Unsupported action:" + action.name());
+				dialogManager.showInfo("ERROR", "Unsupported action:"
+						+ action.name());
 			}
 		}
 	}
@@ -127,16 +128,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(directory));
 		} else if (action.equals(FileSystemAction.rename)) {
-			windowManager.getDialogManager().showRenameDialog(directory, this);
+			dialogManager.openRenameDialog(directory, this);
 		} else if (action.equals(FileSystemAction.move)) {
-			windowManager.getDialogManager().showSelectFolderDialog(
-					windowManager.getTextProvider().getStrings()
-							.moveDirectoryDialogTitle(),
-					windowManager.getTextProvider().getMessages()
-							.moveDirectoryMessage(directory.getName()),
-					windowManager.getTextProvider().getStrings()
-							.moveDirectoryDialogAction(), fileSystemItemProvider,
-					new SelectItemHandler() {
+			dialogManager.showSelectFolderDialog(textProvider.getStrings()
+					.moveDirectoryDialogTitle(), textProvider.getMessages()
+					.moveDirectoryMessage(directory.getName()), textProvider
+					.getStrings().moveDirectoryDialogAction(),
+					fileSystemItemProvider, new SelectItemHandler() {
 						public void onSelect(FileSystemItem selected) {
 							moveDirectory(directory, (Directory) selected);
 						}
@@ -152,20 +150,20 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						}
 					});
 		} else if (action.equals(FileSystemAction.delete)) {
-			String title = windowManager.getTextProvider().getStrings()
+			String title = textProvider.getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
-			String message = windowManager.getTextProvider().getMessages()
+			String message = textProvider.getMessages()
 					.confirmDirectoryDeleteMessage(directory.getName());
-			windowManager.getDialogManager().showConfirmationDialog(title,
-					message, StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
+			dialogManager.showConfirmationDialog(title, message,
+					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
 							delete(directory);
 						}
 					});
 		} else {
-			windowManager.getDialogManager().showInfo("ERROR",
-					"Unsupported action:" + action.name());
+			dialogManager.showInfo("ERROR", "Unsupported action:"
+					+ action.name());
 		}
 	}
 
@@ -198,7 +196,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private ResultListener createListener() {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
-				windowManager.getDialogManager().showError(error);
+				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {

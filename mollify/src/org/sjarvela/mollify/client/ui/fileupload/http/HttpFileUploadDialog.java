@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.ui.fileupload.http;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
-public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
+public class HttpFileUploadDialog extends CenteredDialog implements SubmitHandler,
 		SubmitCompleteHandler {
 	private static final String UPLOADER_NAME = "upload[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
@@ -47,7 +47,7 @@ public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
 	private final String uploadId;
 	private final Directory directory;
 	private final TextProvider textProvider;
-	private final FileUploadService fileUploadHandler;
+	private final FileUploadService service;
 	private final FileSystemInfo info;
 	private final FileUploadListener listener;
 
@@ -57,17 +57,17 @@ public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
 	private List<FileUpload> uploaders = new ArrayList();
 	private DisclosurePanel uploadInfo;
 
-	public FileUploadDialog(Directory directory, TextProvider textProvider,
-			FileUploadService fileUploadHandler, FileSystemInfo info,
+	public HttpFileUploadDialog(Directory directory, TextProvider textProvider,
+			FileUploadService service, FileSystemInfo info,
 			FileUploadListener listener) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
 		this.info = info;
 		this.listener = listener;
-		this.uploadId = fileUploadHandler.getFileUploadId();
+		this.uploadId = service.getFileUploadId();
 		this.directory = directory;
 		this.textProvider = textProvider;
-		this.fileUploadHandler = fileUploadHandler;
+		this.service = service;
 
 		initialize();
 	}
@@ -90,7 +90,7 @@ public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
 				textProvider.getStrings().dialogCancelButton(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						FileUploadDialog.this.hide();
+						HttpFileUploadDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
@@ -136,7 +136,7 @@ public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
 		form.addSubmitHandler(this);
 		form.addSubmitCompleteHandler(this);
-		form.setAction(this.fileUploadHandler.getUploadUrl(directory));
+		form.setAction(this.service.getUploadUrl(directory));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
@@ -227,6 +227,6 @@ public class FileUploadDialog extends CenteredDialog implements SubmitHandler,
 
 	public void onSubmitComplete(SubmitCompleteEvent event) {
 		this.hide();
-		fileUploadHandler.handleResult(event.getResults(), listener);
+		service.handleResult(event.getResults(), listener);
 	}
 }

@@ -8,12 +8,13 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.fileupload;
 
-import com.google.gwt.user.client.ui.Widget;
+import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 
-public interface MainView {
+public interface FileUploadDialogFactory {
 
-	Widget getViewWidget();
+	void create(Directory directory, FileUploadListener listener);
 
 }

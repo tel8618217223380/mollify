@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.session.user.User;
-import org.sjarvela.mollify.client.ui.WindowManager;
+import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -48,8 +48,8 @@ import org.sjarvela.mollify.client.util.Html;
 public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		FileItemDescriptionHandler, FileSystemPermissionHandler {
 	private final MainViewModel model;
-	private final MainView view;
-	private final WindowManager windowManager;
+	private final DefaultMainView view;
+	private final DialogManager dialogManager;
 
 	private final FileSystemService fileSystemService;
 	private final FileUploadService fileUploadService;
@@ -60,20 +60,20 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final TextProvider textProvider;
 	private final FileSystemItemProvider fileSystemItemProvider;
 
-	public MainViewPresenter(WindowManager windowManager, MainViewModel model,
-			MainView view, SessionService sessionService,
+	public MainViewPresenter(DialogManager dialogManager, MainViewModel model,
+			DefaultMainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
 			ConfigurationService configurationService,
 			FileUploadService fileUploadService, TextProvider textProvider,
 			FileSystemItemProvider fileSystemItemProvider,
 			LogoutHandler logoutHandler,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
+		this.dialogManager = dialogManager;
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 		this.configurationService = configurationService;
 		this.fileUploadService = fileUploadService;
 
-		this.windowManager = windowManager;
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
@@ -167,7 +167,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void onError(ServiceError error, boolean reload) {
-		windowManager.getDialogManager().showError(error);
+		dialogManager.showError(error);
 
 		if (reload)
 			reload();
@@ -181,21 +181,19 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 		FileUploadListener fileUploadListener = new DefaultFileUploadListener(
 				fileUploadService, model.getSession().getFeatures()
-						.fileUploadProgress(),
-				windowManager.getDialogManager(), textProvider,
+						.fileUploadProgress(), dialogManager, textProvider,
 				createReloadListener());
 
-		windowManager.getDialogManager().openUploadDialog(
-				model.getCurrentFolder(), fileUploadService,
-				model.getSession().getFileSystemInfo(), fileUploadListener);
+		dialogManager.openUploadDialog(model.getCurrentFolder(),
+				fileUploadListener);
 	}
 
 	public void openNewDirectoryDialog() {
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		windowManager.getDialogManager().openCreateFolderDialog(
-				model.getCurrentFolder(), new DirectoryHandler() {
+		dialogManager.openCreateFolderDialog(model.getCurrentFolder(),
+				new DirectoryHandler() {
 					public void createDirectory(Directory parentFolder,
 							String folderName) {
 						fileSystemService.createDirectory(parentFolder,
@@ -249,7 +247,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void changePassword() {
-		windowManager.getDialogManager().openPasswordDialog(this);
+		dialogManager.openPasswordDialog(this);
 	}
 
 	public void changePassword(String oldPassword, String newPassword) {
@@ -258,28 +256,20 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 					public void onFail(ServiceError error) {
 						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
 								.getType())) {
-							windowManager
-									.getDialogManager()
-									.showInfo(
-											textProvider.getStrings()
-													.passwordDialogTitle(),
-											textProvider
-													.getStrings()
-													.passwordDialogOldPasswordIncorrect());
+							dialogManager.showInfo(textProvider.getStrings()
+									.passwordDialogTitle(), textProvider
+									.getStrings()
+									.passwordDialogOldPasswordIncorrect());
 						} else {
 							onError(error, false);
 						}
 					}
 
 					public void onSuccess(Object result) {
-						windowManager
-								.getDialogManager()
-								.showInfo(
-										textProvider.getStrings()
-												.passwordDialogTitle(),
-										textProvider
-												.getStrings()
-												.passwordDialogPasswordChangedSuccessfully());
+						dialogManager.showInfo(textProvider.getStrings()
+								.passwordDialogTitle(), textProvider
+								.getStrings()
+								.passwordDialogPasswordChangedSuccessfully());
 					}
 				});
 	}
@@ -288,14 +278,10 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		sessionService.resetPassword(user, password,
 				createListener(new Callback() {
 					public void onCallback() {
-						windowManager
-								.getDialogManager()
-								.showInfo(
-										textProvider.getStrings()
-												.resetPasswordDialogTitle(),
-										textProvider
-												.getStrings()
-												.passwordDialogPasswordChangedSuccessfully());
+						dialogManager.showInfo(textProvider.getStrings()
+								.resetPasswordDialogTitle(), textProvider
+								.getStrings()
+								.passwordDialogPasswordChangedSuccessfully());
 					}
 				}));
 	}
@@ -310,8 +296,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void configure() {
-		windowManager.getDialogManager().openConfigurationDialog(
-				configurationService, this);
+		dialogManager.openConfigurationDialog(configurationService, this);
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,
@@ -329,23 +314,21 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	public boolean validateDescription(String description) {
 		List<String> unsafeTags = Html.findUnsafeHtmlTags(description);
 		if (unsafeTags.size() > 0) {
-			windowManager.getDialogManager().showInfo(
-					textProvider.getStrings().infoDialogErrorTitle(),
-					textProvider.getStrings().invalidDescriptionUnsafeTags());
+			dialogManager.showInfo(textProvider.getStrings()
+					.infoDialogErrorTitle(), textProvider.getStrings()
+					.invalidDescriptionUnsafeTags());
 			return false;
 		}
 		return true;
 	}
 
 	public void onEditPermissions(FileSystemItem item) {
-		windowManager.getDialogManager().openFilePermissionEditor(
-				configurationService, fileSystemService,
-				fileSystemItemProvider, item);
+		dialogManager.openFilePermissionEditor(configurationService,
+				fileSystemService, fileSystemItemProvider, item);
 	}
 
 	public void onEditItemPermissions() {
-		windowManager.getDialogManager().openFilePermissionEditor(
-				configurationService, fileSystemService,
-				fileSystemItemProvider, null);
+		dialogManager.openFilePermissionEditor(configurationService,
+				fileSystemService, fileSystemItemProvider, null);
 	}
 }

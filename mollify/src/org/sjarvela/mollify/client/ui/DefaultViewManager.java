@@ -10,10 +10,6 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.LogoutHandler;
-import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -21,30 +17,22 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class WindowManager {
+public class DefaultViewManager implements ViewManager {
 	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private final RootPanel rootPanel;
-	private final TextProvider textProvider;
-	private final MainViewFactory mainViewFactory;
-	private final DialogManager dialogManager;
+	private RootPanel rootPanel;
 
-	public WindowManager(RootPanel rootPanel, TextProvider textProvider,
-			MainViewFactory mainViewFactory, DialogManager dialogManager) {
+	public DefaultViewManager() {
+	}
+
+	public void setRootPanel(RootPanel rootPanel) {
 		this.rootPanel = rootPanel;
-		this.textProvider = textProvider;
-		this.mainViewFactory = mainViewFactory;
-		this.dialogManager = dialogManager;
 	}
 
-	public TextProvider getTextProvider() {
-		return textProvider;
-	}
-
-	public void showMainView(LogoutHandler logoutListener) {
+	public void openView(Widget mainView) {
 		empty();
-		rootPanel.add(mainViewFactory.createMainView(this, logoutListener));
+		rootPanel.add(mainView);
 		rootPanel.add(createDownloadFrame());
 	}
 
@@ -74,10 +62,6 @@ public class WindowManager {
 
 	public void openUrlInNewWindow(String url) {
 		Window.open(url, "_blank", "");
-	}
-
-	public DialogManager getDialogManager() {
-		return dialogManager;
 	}
 
 	/* UTILITIES */
