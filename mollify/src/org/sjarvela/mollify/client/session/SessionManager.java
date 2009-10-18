@@ -10,9 +10,8 @@
 
 package org.sjarvela.mollify.client.session;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
+public interface SessionManager extends SessionProvider {
 
-public interface LoginHandler {
-	public void login(String userName, String password,
-			ConfirmationListener listener);
+	void setSession(SessionInfo session);
+
 }

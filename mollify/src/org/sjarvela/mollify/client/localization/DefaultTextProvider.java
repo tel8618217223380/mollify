@@ -13,7 +13,9 @@ package org.sjarvela.mollify.client.localization;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 import com.google.gwt.core.client.GWT;
+import com.google.inject.Singleton;
 
+@Singleton
 public class DefaultTextProvider implements TextProvider {
 	private LanguageConstants languageConstants;
 	private MessageConstants messageConstants;

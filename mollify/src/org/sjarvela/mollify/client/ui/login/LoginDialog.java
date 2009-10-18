@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.ui.login;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -120,7 +120,7 @@ public class LoginDialog extends CenteredDialog {
 		if (!new UserNameValidator().validate(userName.getText()))
 			return;
 
-		loginHandler.onLogin(userName.getText(), password.getText(),
+		loginHandler.login(userName.getText(), password.getText(),
 				new ConfirmationListener() {
 					public void onConfirm() {
 						LoginDialog.this.hide();

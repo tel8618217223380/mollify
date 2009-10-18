@@ -11,14 +11,9 @@
 package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.LoginHandler;
-import org.sjarvela.mollify.client.session.LogoutHandler;
-import org.sjarvela.mollify.client.session.SessionHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;
-import org.sjarvela.mollify.client.ui.ViewManager;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.EntryPoint;
@@ -28,14 +23,15 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class App implements EntryPoint, LogoutHandler {
+public class App implements EntryPoint {
 	private static final String MOLLIFY_PANEL_ID = "mollify";
-	private static final String PROTOCOL_VERSION = "1_0_0";
+	public static final String PROTOCOL_VERSION = "1_0_0";
 
 	static final String META_PROPERTY = "mollify:property";
-	static final String PARAM_FLASH_UPLOADER = "enable-flash-file-uploader";
 
-	private ViewManager viewManager;
+	static final String PARAM_FILE_UPLOADER = "file-uploader";
+	static final String VALUE_FILE_UPLOADER_FLASH = "flash";
+
 	private Container container;
 	private RootPanel panel;
 
@@ -72,90 +68,37 @@ public class App implements EntryPoint, LogoutHandler {
 		container.getEnvironment().getSessionService().getSessionInfo(
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
-						panel.clear();
-						panel.add(new HTML(container.getTextProvider()
-								.getStrings().infoDialogErrorTitle()
-								+ ": "
-								+ error.getType().getMessage(
-										container.getTextProvider())));
+						showNativeError(error);
 					}
 
 					public void onSuccess(SessionInfo session) {
-						startSession(session);
+						open(session);
 					}
 				});
 	};
 
-	private void startSession(SessionInfo session) {
-		setSession(session);
-
-		if (session.isAuthenticationRequired() && !session.getAuthenticated())
-			showLogin();
-		else
+	private void open(SessionInfo session) {
+		if (session.isAuthenticationRequired() && !session.getAuthenticated()) {
+			container.getUiSessionManager().login(new Callback() {
+				public void onCallback() {
+					showMain();
+				}
+			}, new Callback() {
+				public void onCallback() {
+					start();
+				}
+			});
+		} else {
+			container.getSessionManager().setSession(session);
 			showMain();
-	}
-
-	private void showLogin() {
-		container.getDialogManager().openLoginDialog(new LoginHandler() {
-			public void onLogin(String userName, String password,
-					final ConfirmationListener listener) {
-				Log.info("User login: " + userName);
-
-				container.getEnvironment().getSessionService().authenticate(
-						userName, password, PROTOCOL_VERSION,
-						new ResultListener<SessionInfo>() {
-							public void onFail(ServiceError error) {
-								if (ServiceErrorType.AUTHENTICATION_FAILED
-										.equals(error)) {
-									showLoginError();
-									return;
-								}
-								container.getDialogManager().showError(error);
-							}
-
-							public void onSuccess(SessionInfo session) {
-								setSession(session);
-								listener.onConfirm();
-								showMain();
-							}
-						});
-			}
-		});
+		}
 	}
 
 	private void showMain() {
 		container.getViewManager().openView(
-				container.getMainViewFactory().createMainView(this)
-						.getViewWidget());
-	}
+				container.getMainViewFactory().createMainView(
+						container.getUiSessionManager()).getViewWidget());
 
-	public void onLogout(SessionInfo session) {
-		Log.info("Logging out");
-
-		container.getEnvironment().getSessionService().logout(
-				new ResultListener<SessionInfo>() {
-					public void onFail(ServiceError error) {
-						viewManager.empty();
-						container.getDialogManager().showError(error);
-					}
-
-					public void onSuccess(SessionInfo session) {
-						viewManager.empty();
-						startSession(session);
-					}
-				});
-	}
-
-	private void showLoginError() {
-		String title = container.getTextProvider().getStrings()
-				.loginDialogTitle();
-		String msg = container.getTextProvider().getStrings()
-				.loginDialogLoginFailedMessage();
-		container.getDialogManager().showInfo(title, msg);
-	}
-
-	private void setSession(SessionInfo session) {
-		((SessionHandler) container.getSessionProvider()).setSession(session);
 	}
 
 	private void showExceptionError(String message, Throwable e) {
@@ -167,6 +110,14 @@ public class App implements EntryPoint, LogoutHandler {
 					"Unexpected error: " + e.getMessage());
 		else
 			e.printStackTrace();
+	}
+
+	private void showNativeError(ServiceError error) {
+		panel.clear();
+		panel.add(new HTML(container.getTextProvider().getStrings()
+				.infoDialogErrorTitle()
+				+ ": "
+				+ error.getType().getMessage(container.getTextProvider())));
 	}
 
 }

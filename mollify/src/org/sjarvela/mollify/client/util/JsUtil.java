@@ -48,4 +48,8 @@ public class JsUtil {
 			o.put(e.getKey(), new JSONObject(e.getValue()));
 		return o.toString();
 	}
+
+	public static String asJsonString(JavaScriptObject obj) {
+		return new JSONObject(obj).toString();
+	}
 }

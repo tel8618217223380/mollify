@@ -47,10 +47,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultMainView extends Composite implements PopupPositioner,
 		MainView {
-	private final MainViewModel model;
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
+	private final MainViewModel model;
 	private final Panel buttonPanel;
 	private final DirectorySelector directorySelector;
 	private final FileList list;
