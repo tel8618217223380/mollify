@@ -28,7 +28,9 @@ import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class DefaultMainViewFactory implements MainViewFactory {
 	private final ServiceEnvironment environment;
 	private final TextProvider textProvider;
@@ -49,7 +51,6 @@ public class DefaultMainViewFactory implements MainViewFactory {
 
 	public MainView createMainView(LogoutHandler logoutListener) {
 		SessionInfo session = sessionProvider.getSession();
-
 		FileSystemItemProvider fileSystemItemProvider = new DefaultFileSystemItemProvider(
 				session.getRootDirectories(), environment
 						.getFileSystemService());

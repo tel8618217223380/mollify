@@ -38,7 +38,6 @@ import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
 import org.sjarvela.mollify.client.ui.dialog.ConfirmationDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.InfoDialog;
-import org.sjarvela.mollify.client.ui.dialog.LoginDialog;
 import org.sjarvela.mollify.client.ui.dialog.PasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialog;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialog;
@@ -46,11 +45,14 @@ import org.sjarvela.mollify.client.ui.dialog.ResetPasswordDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectItemDialog;
 import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.login.LoginDialog;
 import org.sjarvela.mollify.client.ui.permissions.FileItemUserPermissionDialog;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class DefaultDialogManager implements DialogManager {
 	private final TextProvider textProvider;
 	private final PasswordGenerator passwordGenerator;

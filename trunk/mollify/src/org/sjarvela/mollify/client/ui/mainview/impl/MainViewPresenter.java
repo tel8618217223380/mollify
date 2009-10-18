@@ -243,7 +243,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void logout() {
-		logoutHandler.onLogout(model.getSession());
+		logoutHandler.logout();
 	}
 
 	public void changePassword() {

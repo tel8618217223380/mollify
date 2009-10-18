@@ -8,11 +8,13 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session;
+package org.sjarvela.mollify.client.ui.login;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
+import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.session.LogoutHandler;
 
-public interface LoginHandler {
-	public void login(String userName, String password,
-			ConfirmationListener listener);
+public interface UiSessionManager extends LogoutHandler {
+
+	void login(final Callback loginCallback, Callback logoutCallback);
+
 }

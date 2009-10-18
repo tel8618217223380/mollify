@@ -13,9 +13,11 @@ package org.sjarvela.mollify.client;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
+import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.inject.client.GinModules;
@@ -23,6 +25,10 @@ import com.google.gwt.inject.client.Ginjector;
 
 @GinModules(ContainerConfiguration.class)
 public interface Container extends Ginjector {
+	SessionManager getSessionManager();
+	
+	UiSessionManager getUiSessionManager();
+
 	TextProvider getTextProvider();
 
 	ClientSettings getClientSettings();
@@ -36,4 +42,5 @@ public interface Container extends Ginjector {
 	DialogManager getDialogManager();
 
 	MainViewFactory getMainViewFactory();
+
 }

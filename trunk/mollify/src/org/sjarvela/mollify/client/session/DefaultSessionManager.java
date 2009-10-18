@@ -11,17 +11,18 @@
 package org.sjarvela.mollify.client.session;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.inject.Singleton;
 
-public class SessionHandler implements SessionProvider {
+@Singleton
+public class DefaultSessionManager implements SessionManager {
 	private SessionInfo session = null;
 
 	public void setSession(SessionInfo session) {
-		this.session = session;
 		Log.info("Session: " + session.asString());
+		this.session = session;
 	}
 
 	public SessionInfo getSession() {
 		return session;
 	}
-
 }

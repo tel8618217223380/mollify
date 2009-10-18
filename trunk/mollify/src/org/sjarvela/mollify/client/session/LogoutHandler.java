@@ -13,6 +13,6 @@ package org.sjarvela.mollify.client.session;
 
 public interface LogoutHandler {
 
-	void onLogout(SessionInfo info);
+	void logout();
 
 }

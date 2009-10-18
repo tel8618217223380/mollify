@@ -14,8 +14,9 @@ import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
+import org.sjarvela.mollify.client.session.DefaultSessionManager;
 import org.sjarvela.mollify.client.session.ParameterParser;
-import org.sjarvela.mollify.client.session.SessionHandler;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;
@@ -24,6 +25,8 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.login.DefaultUiSessionManager;
+import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainViewFactory;
 
@@ -35,11 +38,17 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	@Override
 	protected void configure() {
+		bind(SessionManager.class).to(DefaultSessionManager.class);
+		bind(UiSessionManager.class).to(DefaultUiSessionManager.class);
 		bind(TextProvider.class).to(DefaultTextProvider.class);
-		bind(SessionProvider.class).to(SessionHandler.class);
 		bind(DialogManager.class).to(DefaultDialogManager.class);
 		bind(ViewManager.class).to(DefaultViewManager.class);
 		bind(MainViewFactory.class).to(DefaultMainViewFactory.class);
+	}
+
+	@Provides
+	SessionProvider getSessionProvider(SessionManager sessionManager) {
+		return sessionManager;
 	}
 
 	@Provides
@@ -58,7 +67,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			SessionProvider sessionProvider) {
-		if (settings.getBool(App.PARAM_FLASH_UPLOADER, false))
+		if (settings.getString(App.PARAM_FILE_UPLOADER).equalsIgnoreCase(
+				App.VALUE_FILE_UPLOADER_FLASH))
 			return new FlashFileUploadDialogFactory(textProvider, env
 					.getFileUploadHandler(), sessionProvider.getSession()
 					.getFileSystemInfo());
