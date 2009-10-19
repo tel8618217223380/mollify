@@ -12,6 +12,8 @@
 
 	function init_configuration_provider() {}
 	
+	function verify_version($ver) { return TRUE; }
+	
 	function get_configuration_settings() {
 		$permission = FALSE;
 		if (authentication_required()) $permission = get_setting("enable_permission_update", FALSE);

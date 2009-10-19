@@ -33,6 +33,14 @@
 					$result = get_session_info();
 				break;
 			case "session_info":
+				if (!isset($_GET["protocol_version"])) {
+					log_error("Invalid session request, no protocol version provided");
+					$error = "INVALID_REQUEST";
+					$error_details = "No client version";
+					return FALSE;
+				}
+				if (!verify_version($_GET["protocol_version"])) break;
+				
 				$result = get_session_info();
 				break;
 			case "logout":
