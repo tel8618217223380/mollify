@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.event.dom.client.ClickEvent;

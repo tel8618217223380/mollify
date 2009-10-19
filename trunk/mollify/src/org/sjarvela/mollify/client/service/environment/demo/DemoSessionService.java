@@ -23,7 +23,7 @@ public class DemoSessionService implements SessionService {
 		this.data = data;
 	}
 
-	public void authenticate(String userName, String password, String version,
+	public void authenticate(String userName, String password,
 			ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
 	}
@@ -33,7 +33,7 @@ public class DemoSessionService implements SessionService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getSessionInfo(ResultListener resultListener) {
+	public void getSessionInfo(String protocolVersion, ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo(""));
 	}
 

@@ -8,20 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.action;
 
-import com.google.gwt.user.client.ui.Widget;
+import org.sjarvela.mollify.client.ResourceId;
 
-public interface ViewManager {
+public interface ActionListener {
 
-	void openView(Widget view);
-
-	void empty();
-
-	void openDownloadUrl(String url);
-
-	void openUrlInNewWindow(String url);
-
-	void showPlainError(String error);
+	void onAction(ResourceId action);
 
 }

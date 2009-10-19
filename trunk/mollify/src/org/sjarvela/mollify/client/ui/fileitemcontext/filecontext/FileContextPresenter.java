@@ -28,7 +28,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 
 import com.google.gwt.i18n.client.DateTimeFormat;

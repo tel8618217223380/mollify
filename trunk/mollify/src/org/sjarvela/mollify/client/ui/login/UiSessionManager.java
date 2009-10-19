@@ -12,9 +12,12 @@ package org.sjarvela.mollify.client.ui.login;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
 
 public interface UiSessionManager extends LogoutHandler {
 
 	void login(final Callback loginCallback, Callback logoutCallback);
+
+	void setSession(SessionInfo session);
 
 }

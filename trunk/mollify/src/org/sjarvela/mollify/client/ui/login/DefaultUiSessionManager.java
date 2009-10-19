@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.login;
 
-import org.sjarvela.mollify.client.App;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -55,7 +54,6 @@ public class DefaultUiSessionManager implements UiSessionManager {
 				Log.info("User login: " + userName);
 
 				env.getSessionService().authenticate(userName, password,
-						App.PROTOCOL_VERSION,
 						new ResultListener<SessionInfo>() {
 							public void onFail(ServiceError error) {
 								if (ServiceErrorType.AUTHENTICATION_FAILED
@@ -96,6 +94,10 @@ public class DefaultUiSessionManager implements UiSessionManager {
 		String title = textProvider.getStrings().loginDialogTitle();
 		String msg = textProvider.getStrings().loginDialogLoginFailedMessage();
 		dialogManager.showInfo(title, msg);
+	}
+
+	public void setSession(SessionInfo session) {
+		sessionManager.setSession(session);
 	}
 
 }

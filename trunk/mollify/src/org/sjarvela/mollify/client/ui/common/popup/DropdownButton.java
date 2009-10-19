@@ -11,8 +11,8 @@
 package org.sjarvela.mollify.client.ui.common.popup;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.ui.ActionListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 
 import com.google.gwt.user.client.ui.Widget;

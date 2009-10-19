@@ -43,4 +43,6 @@ public interface Container extends Ginjector {
 
 	MainViewFactory getMainViewFactory();
 
+	Client getClient();
+
 }

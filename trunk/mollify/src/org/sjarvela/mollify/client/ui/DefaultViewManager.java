@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,12 +24,9 @@ public class DefaultViewManager implements ViewManager {
 	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private RootPanel rootPanel;
+	private final RootPanel rootPanel;
 
-	public DefaultViewManager() {
-	}
-
-	public void setRootPanel(RootPanel rootPanel) {
+	public DefaultViewManager(RootPanel rootPanel) {
 		this.rootPanel = rootPanel;
 	}
 
@@ -52,7 +50,6 @@ public class DefaultViewManager implements ViewManager {
 		downloadFrame
 				.setAttribute("style", "visibility:collapse; height: 0px;");
 		downloadFrame.setId(FILEMANAGER_DOWNLOAD_FRAME_ID);
-
 		downloadPanel.getElement().appendChild(downloadFrame);
 
 		return downloadPanel;
@@ -64,6 +61,11 @@ public class DefaultViewManager implements ViewManager {
 
 	public void openUrlInNewWindow(String url) {
 		Window.open(url, "_blank", "");
+	}
+
+	public void showPlainError(String error) {
+		empty();
+		rootPanel.add(new HTML(error));
 	}
 
 	/* UTILITIES */

@@ -20,14 +20,8 @@
 		);
 	}
 	
-	function on_session_start($user_id, $username) {
+	function verify_version($protocol_version) { 
 		require_once("common.php");
-		
-		if (!isset($_GET["version"])) {
-			log_error("Invalid authentication request, no client version provided");
-			$error = "INVALID_REQUEST";
-			return FALSE;
-		}
 		
 		$installed = get_installed_version_from_db(init_db());
 		if (!$installed) {
@@ -45,14 +39,18 @@
 			$error_details = "Database version does not match the current version";
 			return FALSE;
 		}
-		if ($_GET["version"] != $current) {
-			log_error("Client version does not match the backend version (client=".$_GET["version"].", backend=".$current.")");
+		if ($protocol_version != $current) {
+			log_error("Client protocol version does not match the backend protocol version (client=".$protocol_version.", backend=".$current.")");
 			global $error, $error_details;
 			$error = "INVALID_CONFIGURATION";
 			$error_details = "Client version does not match the backend version";
 			return FALSE;
 		}
 		
+		return TRUE;
+	}
+	
+	function on_session_start($user_id, $username) {
 		return TRUE;
 	}
 

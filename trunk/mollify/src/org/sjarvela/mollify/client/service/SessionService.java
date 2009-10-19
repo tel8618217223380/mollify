@@ -16,10 +16,11 @@ import org.sjarvela.mollify.client.session.user.User;
 
 public interface SessionService {
 
-	void getSessionInfo(ResultListener<SessionInfo> resultListener);
+	void getSessionInfo(String protocolVersion,
+			ResultListener<SessionInfo> resultListener);
 
 	void authenticate(String userName, String password,
-			String version, ResultListener<SessionInfo> resultListener);
+			ResultListener<SessionInfo> resultListener);
 
 	void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener);

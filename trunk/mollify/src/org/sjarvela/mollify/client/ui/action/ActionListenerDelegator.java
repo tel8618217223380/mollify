@@ -8,12 +8,19 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui;
+package org.sjarvela.mollify.client.ui.action;
 
 import org.sjarvela.mollify.client.ResourceId;
 
-public interface ActionListener {
+public class ActionListenerDelegator implements ActionListener {
+	ActionListener delegate = null;
 
-	void onAction(ResourceId action);
+	public void setActionListener(ActionListener actionListener) {
+		delegate = actionListener;
+	}
+
+	public void onAction(ResourceId action) {
+		delegate.onAction(action);
+	}
 
 }

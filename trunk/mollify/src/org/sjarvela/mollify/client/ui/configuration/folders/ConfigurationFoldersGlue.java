@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.ui.ActionDelegator;
-import org.sjarvela.mollify.client.ui.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
+import org.sjarvela.mollify.client.ui.action.ActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;

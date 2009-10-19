@@ -39,7 +39,9 @@
 		$root_path = get_root_path($root_id);
 		
 		if (!$root_path) {
-			$error = "INVALID_REQUEST";
+			log_error("Root directory not found: ".$root_id);
+			$error = "INVALID_CONFIGURATION";
+			$error_details = "Root directory not found: ".$root_id;
 			return FALSE;
 		}
 		
