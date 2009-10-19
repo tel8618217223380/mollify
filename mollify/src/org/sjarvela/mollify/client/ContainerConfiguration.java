@@ -34,6 +34,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 
 public class ContainerConfiguration extends AbstractGinModule {
 	static final String MOLLIFY_PANEL_ID = "mollify";
@@ -58,11 +59,13 @@ public class ContainerConfiguration extends AbstractGinModule {
 	}
 
 	@Provides
+	@Singleton
 	ClientSettings getClientSettings() {
 		return new ClientSettings(new ParameterParser(META_PROPERTY));
 	}
 
 	@Provides
+	@Singleton
 	ServiceEnvironment getEnvironment(ClientSettings clientSettings) {
 		ServiceEnvironment env = GWT.create(ServiceEnvironment.class);
 		env.initialize(clientSettings);
@@ -70,6 +73,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	}
 
 	@Provides
+	@Singleton
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			SessionProvider sessionProvider) {
@@ -85,6 +89,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	}
 
 	@Provides
+	@Singleton
 	ViewManager getViewManager() {
 		RootPanel panel = RootPanel.get(MOLLIFY_PANEL_ID);
 		if (panel == null)

@@ -34,6 +34,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 	private final TextProvider textProvider;
 
 	private Callback logoutCallback = null;
+	private Callback loginCallback = null;
 
 	@Inject
 	public DefaultUiSessionManager(SessionManager sessionManager,
@@ -45,9 +46,21 @@ public class DefaultUiSessionManager implements UiSessionManager {
 		this.env = env;
 	}
 
-	public void login(final Callback loginCallback, Callback logoutCallback) {
+	public void start(SessionInfo session, final Callback loginCallback,
+			Callback logoutCallback) {
+		this.loginCallback = loginCallback;
 		this.logoutCallback = logoutCallback;
+		setSession(session);
 
+		if (!session.isAuthenticationRequired() || session.getAuthenticated()) {
+			loginCallback.onCallback();
+			return;
+		}
+
+		login();
+	}
+
+	private void login() {
 		dialogManager.openLoginDialog(new LoginHandler() {
 			public void login(String userName, String password,
 					final ConfirmationListener listener) {
@@ -65,7 +78,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 							}
 
 							public void onSuccess(SessionInfo session) {
-								sessionManager.setSession(session);
+								setSession(session);
 								listener.onConfirm();
 								loginCallback.onCallback();
 							}
@@ -83,7 +96,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 			}
 
 			public void onSuccess(SessionInfo session) {
-				sessionManager.setSession(session);
+				setSession(session);
 				if (logoutCallback != null)
 					logoutCallback.onCallback();
 			}
@@ -96,7 +109,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 		dialogManager.showInfo(title, msg);
 	}
 
-	public void setSession(SessionInfo session) {
+	private void setSession(SessionInfo session) {
 		sessionManager.setSession(session);
 	}
 

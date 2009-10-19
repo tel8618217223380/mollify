@@ -54,7 +54,7 @@ public class MollifyClient implements Client {
 					}
 
 					public void onSuccess(SessionInfo session) {
-						onConnected(session);
+						start(session);
 					}
 				});
 	};
@@ -65,21 +65,17 @@ public class MollifyClient implements Client {
 				+ ": " + error.getType().getMessage(textProvider));
 	}
 
-	private void onConnected(SessionInfo session) {
-		if (session.isAuthenticationRequired() && !session.getAuthenticated()) {
-			sessionManager.login(new Callback() {
-				public void onCallback() {
-					showMain();
-				}
-			}, new Callback() {
-				public void onCallback() {
-					connect();
-				}
-			});
-		} else {
-			sessionManager.setSession(session);
-			showMain();
-		}
+	private void start(SessionInfo session) {
+		sessionManager.start(session, new Callback() {
+			public void onCallback() {
+				showMain();
+			}
+		}, new Callback() {
+			public void onCallback() {
+				connect();
+			}
+		});
+
 	}
 
 	private void showMain() {

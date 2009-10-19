@@ -16,8 +16,7 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 
 public interface UiSessionManager extends LogoutHandler {
 
-	void login(final Callback loginCallback, Callback logoutCallback);
-
-	void setSession(SessionInfo session);
+	void start(SessionInfo session, final Callback loginCallback,
+			Callback logoutCallback);
 
 }
