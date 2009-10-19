@@ -34,26 +34,30 @@ public class PhpSessionService implements SessionService {
 		this.service = service;
 	}
 
-	public void getSessionInfo(ResultListener resultListener) {
-		service.doGetRequest(getUrl(SessionAction.session_info), resultListener);
+	public void getSessionInfo(String protocolVersion, ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Requesting session info (protocol version '" + protocolVersion
+					+ "')");
+
+		service.doGetRequest(getUrl(SessionAction.session_info, new UrlParam(
+				"protocol_version", protocolVersion)), resultListener);
 	}
 
-	public void authenticate(String userName, String password, String version,
+	public void authenticate(String userName, String password,
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
 		service.doGetRequest(getUrl(SessionAction.authenticate, new UrlParam(
 				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
-				"password", password, UrlParam.Encoding.MD5), new UrlParam(
-				"version", version)), resultListener);
+				"password", password, UrlParam.Encoding.MD5)), resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Change password");
-		service.doGetRequest(getUrl(SessionAction.change_pw, new UrlParam("old",
-				oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
+		service.doGetRequest(getUrl(SessionAction.change_pw, new UrlParam(
+				"old", oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
 				newPassword, UrlParam.Encoding.MD5)), resultListener);
 	}
 

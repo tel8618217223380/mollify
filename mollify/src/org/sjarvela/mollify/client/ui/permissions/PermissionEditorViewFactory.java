@@ -15,8 +15,8 @@ import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvi
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.ui.ActionDelegator;
 import org.sjarvela.mollify.client.ui.DialogManager;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 
 public class PermissionEditorViewFactory {
 	private final TextProvider textProvider;

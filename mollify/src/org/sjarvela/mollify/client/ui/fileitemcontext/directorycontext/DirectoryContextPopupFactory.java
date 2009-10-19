@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 

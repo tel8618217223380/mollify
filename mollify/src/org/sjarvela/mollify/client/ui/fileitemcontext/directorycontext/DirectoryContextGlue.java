@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
-import org.sjarvela.mollify.client.ui.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;

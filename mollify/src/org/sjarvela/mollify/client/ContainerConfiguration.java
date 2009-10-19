@@ -32,9 +32,15 @@ import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainViewFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Provides;
 
 public class ContainerConfiguration extends AbstractGinModule {
+	static final String MOLLIFY_PANEL_ID = "mollify";
+	static final String META_PROPERTY = "mollify:property";
+
+	static final String PARAM_FILE_UPLOADER = "file-uploader";
+	static final String VALUE_FILE_UPLOADER_FLASH = "flash";
 
 	@Override
 	protected void configure() {
@@ -42,8 +48,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(UiSessionManager.class).to(DefaultUiSessionManager.class);
 		bind(TextProvider.class).to(DefaultTextProvider.class);
 		bind(DialogManager.class).to(DefaultDialogManager.class);
-		bind(ViewManager.class).to(DefaultViewManager.class);
 		bind(MainViewFactory.class).to(DefaultMainViewFactory.class);
+		bind(Client.class).to(MollifyClient.class);
 	}
 
 	@Provides
@@ -53,7 +59,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	@Provides
 	ClientSettings getClientSettings() {
-		return new ClientSettings(new ParameterParser(App.META_PROPERTY));
+		return new ClientSettings(new ParameterParser(META_PROPERTY));
 	}
 
 	@Provides
@@ -67,8 +73,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			SessionProvider sessionProvider) {
-		if (settings.getString(App.PARAM_FILE_UPLOADER).equalsIgnoreCase(
-				App.VALUE_FILE_UPLOADER_FLASH))
+		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(settings
+				.getString(PARAM_FILE_UPLOADER)))
 			return new FlashFileUploadDialogFactory(textProvider, env
 					.getFileUploadHandler(), sessionProvider.getSession()
 					.getFileSystemInfo());
@@ -76,6 +82,14 @@ public class ContainerConfiguration extends AbstractGinModule {
 		return new HttpFileUploadDialogFactory(textProvider, env
 				.getFileUploadHandler(), sessionProvider.getSession()
 				.getFileSystemInfo());
+	}
+
+	@Provides
+	ViewManager getViewManager() {
+		RootPanel panel = RootPanel.get(MOLLIFY_PANEL_ID);
+		if (panel == null)
+			throw new RuntimeException("No placeholder found for Mollify");
+		return new DefaultViewManager(panel);
 	}
 
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
-import org.sjarvela.mollify.client.ui.ActionDelegator;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.ConfigurationType;
 import org.sjarvela.mollify.client.ui.configuration.folders.ConfigurationFoldersGlue;
 import org.sjarvela.mollify.client.ui.configuration.folders.ConfigurationFoldersPresenter;

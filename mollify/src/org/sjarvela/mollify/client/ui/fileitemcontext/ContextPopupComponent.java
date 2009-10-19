@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.ui.ActionListener;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.BorderedControl;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
