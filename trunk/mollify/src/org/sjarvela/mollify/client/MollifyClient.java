@@ -44,7 +44,7 @@ public class MollifyClient implements Client {
 		this.mainViewFactory = mainViewFactory;
 	}
 
-	public void connect() {
+	public void start() {
 		Log.info("Starting Mollify, protocol version " + PROTOCOL_VERSION);
 
 		env.getSessionService().getSessionInfo(PROTOCOL_VERSION,
@@ -72,7 +72,7 @@ public class MollifyClient implements Client {
 			}
 		}, new Callback() {
 			public void onCallback() {
-				connect();
+				start();
 			}
 		});
 

@@ -43,7 +43,7 @@ public class App implements EntryPoint {
 			return;
 		}
 
-		container.getClient().connect();
+		container.getClient().start();
 	}
 
 }
