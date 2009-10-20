@@ -26,7 +26,7 @@ import com.google.gwt.inject.client.Ginjector;
 @GinModules(ContainerConfiguration.class)
 public interface Container extends Ginjector {
 	SessionManager getSessionManager();
-	
+
 	UiSessionManager getUiSessionManager();
 
 	TextProvider getTextProvider();
@@ -44,5 +44,4 @@ public interface Container extends Ginjector {
 	MainViewFactory getMainViewFactory();
 
 	Client getClient();
-
 }

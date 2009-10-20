@@ -2,14 +2,21 @@
 	<property file="build.properties" />
 	
 	<property name="project.name" value="Mollify" />
-	<property name="lib.dir" location="${root.dir}/lib" /> 
-	<property name="build.dir" location="${root.dir}/build" />
-	<property name="test.report.dir" location="${build.dir}/test" />
-	<property name="src.dir" location="${root.dir}/src" />
-	<property name="test.dir" location="${root.dir}/test" />
 	<property name="public.module.name" value="org.sjarvela.Mollify" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}" />
 	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}" />
+	
+	<property name="lib.dir" location="${root.dir}/lib" /> 
+	<property name="build.dir" location="${root.dir}/build" />
+	<property name="test.build.dir" location="${root.dir}/test/build" />
+	<property name="test.report.dir" location="${build.dir}/test" />
+	<property name="src.dir" location="${root.dir}/src" />
+	<property name="test.src.dir" location="${root.dir}/test" />
+	<property name="test.run.dir" location="${root.dir}/testrun" />
+	
+	<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
+		<os name="Mac OS X"/>  
+	</condition>
 	
 	<path id="compile.classpath">  
 		<pathelement path="${java.class.path}/" />  
@@ -17,9 +24,28 @@
 		<pathelement location="${gwt.sdk.location}/gwt-dev-mac.jar" />
 		<pathelement location="${gwt.sdk.location}/gwt-dev-linux.jar" />
 		<pathelement location="${src.dir}" />  
-		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<!--fileset dir="${lib.dir}" includes="**/*.jar" /-->
+		<pathelement location="${lib.dir}/aopalliance.jar" />
+		<pathelement location="${lib.dir}/gin.jar" />
+		<pathelement location="${lib.dir}/guice-2.0.jar" />
+		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
+		<pathelement location="${lib.dir}/junit-4.6.jar" />
+		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
 	</path>
-		
+	
+	<path id="test.src.path" path="${test.src.dir}"/>
+	
+	<path id="test.classpath">
+    	<pathelement location="${build.dir}"/>
+    	<pathelement location="${test.build.dir}"/>
+		<path refid="compile.classpath"/>
+		<path refid="test.src.path"/>
+	</path>
+  
+	<patternset id="compiler.resources">
+		<include name="**/?*.xml"/>
+	</patternset>
+  
 	<target name="init">  
 		<tstamp />
 		<filter token="projectName" value="${project.name}" />
@@ -27,6 +53,7 @@
 
 	<target name="clean" description="Cleans the entire GWT build">
 		<delete dir="${build.dir}" />
+		<delete dir="${test.build.dir}" />
 		<delete dir="${deploy.dir}" />
 	</target>
 
@@ -41,12 +68,10 @@
 	</target>
 	
 	<target name="do-compile" depends="init">
-		<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
-			<os name="Mac OS X"/>  
-		</condition>  
-		
 		<echo>Platform: ${os.name}</echo>
 		<mkdir dir="${build.dir}" />
+		
+		<javac classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" />
 		
 		<java classpathref="compile.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
 			<jvmarg line="${gwt.jvm.arg}" />
@@ -143,7 +168,7 @@
 		</exec>
 	</target>
 	
-	<target name="test" depends="init-dev">
+	<!--target name="test" depends="init-dev">
 		<mkdir dir="${test.report.dir}" />
 		
 		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
@@ -165,7 +190,7 @@
 				</fileset>
 			</batchtest>
 		</junit>
-	</target>
+	</target-->
 
 	<target name="compile" depends="init-dev, do-compile">
 	</target>
@@ -180,5 +205,79 @@
 	</target>
 		
 	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
+	</target>
+	
+	<target name="compile.tests" depends="init-dev"> <!-- do-compile -->
+    	<mkdir dir="${test.build.dir}"/>
+    	
+ 		<!--javac destdir="${test.build.dir}" debug="on" nowarn="off" memorymaximumsize="128m" fork="true">
+			<compilerarg line=""/>
+			<classpath refid="test.classpath"/>
+			<classpath location="${test.build.dir}"/>
+			<src refid="test.classpath"/>
+		</javac-->
+		<java classpathref="test.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
+			<jvmarg line="${gwt.jvm.arg}" />
+			<arg value="-war" />
+			<arg value="${test.build.dir}" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
+			<arg value="-localWorkers" />
+			<arg value="6" />
+			<arg value="-style" />
+			<arg value="DETAILED" />		
+			<arg value="${gwt.module}" />
+		</java>
+
+		<copy todir="${test.build.dir}">
+			<fileset dir="${test.src.dir}">
+				<patternset refid="compiler.resources"/>
+				<type type="file"/>
+			</fileset>
+    	</copy>
+	</target>
+
+	<target name="test" depends="init-dev, compile.tests, test.web, test.hosted" />	<!-- do-compile -->
+
+	<macrodef name="test-macro">
+    	<attribute name="extragwtargs" default="" />
+		<attribute name="outputbase" />
+
+		<sequential>
+			<mkdir dir="@{outputbase}/out"/>
+			<mkdir dir="@{outputbase}/gen"/>
+			<mkdir dir="@{outputbase}/reports"/>
+
+			<junit printsummary="yes" fork="yes" showoutput="true" maxmemory="256m" haltonerror="true" failureproperty="junit.failure" dir="@{outputbase}">
+				<jvmarg line="${gwt.jvm.arg}" />
+				<formatter type="brief" />
+				<formatter type="xml"/>
+        		<sysproperty key="gwt.args" value="@{extragwtargs} -gen gen -out out" />
+
+        		<classpath refid="gin.test.classpath"/>
+        		
+        		<batchtest todir="@{outputbase}/reports">
+          			<fileset dir="${test.build.dir}">
+            			<include name="com/google/gwt/inject/rebind/**/*Test.class"/>
+            			<include name="com/google/gwt/inject/*TestSuite.class"/>
+          			</fileset>
+        		</batchtest>
+			</junit>
+
+      		<junitreport todir="@{outputbase}/reports">
+        		<fileset dir="@{outputbase}/reports"/>
+        		<report todir="@{outputbase}/reports/html"/>
+			</junitreport>
+
+			<fail if="junit.failure" message="Tests failed. See reports in @{outputbase}/reports"/>
+		</sequential>
+	</macrodef>
+
+	<target name="test.web" depends="compile">
+    	<test-macro extragwtargs="-web -style PRETTY" outputbase="${test.run.dir}/web" />
+	</target>
+
+	<target name="test.hosted" depends="compile">
+		<test-macro outputbase="${test.run.dir}/hosted" />
 	</target>
 </project>

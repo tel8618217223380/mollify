@@ -12,6 +12,6 @@ package org.sjarvela.mollify.client;
 
 public interface Client {
 
-	void connect();
+	void start();
 
 }
