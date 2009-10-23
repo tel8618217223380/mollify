@@ -14,24 +14,37 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 	private final TextProvider textProvider;
 	private final FileUploadService service;
 	private final SessionProvider sessionProvider;
+	private final ServiceEnvironment env;
+	private final DialogManager dialogManager;
 
-	public HttpFileUploadDialogFactory(TextProvider textProvider,
-			FileUploadService service, SessionProvider sessionProvider) {
+	public HttpFileUploadDialogFactory(ServiceEnvironment env,
+			TextProvider textProvider, FileUploadService service,
+			SessionProvider sessionProvider, DialogManager dialogManager) {
+		this.env = env;
 		this.textProvider = textProvider;
 		this.service = service;
 		this.sessionProvider = sessionProvider;
+		this.dialogManager = dialogManager;
 	}
 
-	public void create(Directory directory, FileUploadListener listener) {
+	public void create(Directory directory, ResultListener listener) {
+		FileUploadListener fileUploadListener = new HttpFileUploadHandler(
+				env.getFileUploadService(), sessionProvider.getSession()
+						.getFeatures().fileUploadProgress(), dialogManager,
+				textProvider, listener);
 		new HttpFileUploadDialog(directory, textProvider, service,
-				sessionProvider.getSession().getFileSystemInfo(), listener);
+				sessionProvider.getSession().getFileSystemInfo(),
+				fileUploadListener);
 	}
 
 }
