@@ -75,7 +75,6 @@ public class MollifyClient implements Client {
 				start();
 			}
 		});
-
 	}
 
 	private void showMain() {
