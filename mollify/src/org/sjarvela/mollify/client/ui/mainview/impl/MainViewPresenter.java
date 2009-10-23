@@ -23,12 +23,9 @@ import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
-import org.sjarvela.mollify.client.filesystem.upload.DefaultFileUploadListener;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -52,7 +49,6 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final DialogManager dialogManager;
 
 	private final FileSystemService fileSystemService;
-	private final FileUploadService fileUploadService;
 	private final SessionService sessionService;
 	private final ConfigurationService configurationService;
 	private final FileSystemActionHandler fileSystemActionHandler;
@@ -64,7 +60,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			DefaultMainView view, SessionService sessionService,
 			FileSystemService fileSystemService,
 			ConfigurationService configurationService,
-			FileUploadService fileUploadService, TextProvider textProvider,
+			TextProvider textProvider,
 			FileSystemItemProvider fileSystemItemProvider,
 			LogoutHandler logoutHandler,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
@@ -72,7 +68,6 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 		this.configurationService = configurationService;
-		this.fileUploadService = fileUploadService;
 
 		this.model = model;
 		this.view = view;
@@ -179,13 +174,8 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		FileUploadListener fileUploadListener = new DefaultFileUploadListener(
-				fileUploadService, model.getSession().getFeatures()
-						.fileUploadProgress(), dialogManager, textProvider,
-				createReloadListener());
-
 		dialogManager.openUploadDialog(model.getCurrentFolder(),
-				fileUploadListener);
+				createReloadListener());
 	}
 
 	public void openNewDirectoryDialog() {

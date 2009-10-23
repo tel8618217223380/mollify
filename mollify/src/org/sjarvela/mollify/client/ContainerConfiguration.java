@@ -80,10 +80,10 @@ public class ContainerConfiguration extends AbstractGinModule {
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(settings
 				.getString(PARAM_FILE_UPLOADER)))
 			return new FlashFileUploadDialogFactory(textProvider, env
-					.getFileUploadHandler(), sessionProvider);
+					.getFileUploadService(), sessionProvider);
 
-		return new HttpFileUploadDialogFactory(textProvider, env
-				.getFileUploadHandler(), sessionProvider);
+		return new HttpFileUploadDialogFactory(env, textProvider, env
+				.getFileUploadService(), sessionProvider, null);
 	}
 
 	@Provides

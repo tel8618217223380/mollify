@@ -11,9 +11,9 @@
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
@@ -29,9 +29,12 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		this.sessionProvider = sessionProvider;
 	}
 
-	public void create(Directory directory, FileUploadListener listener) {
+	public void create(Directory directory, ResultListener listener) {
+		FlashFileUploadHandler fileUploadListener = new FlashFileUploadHandler(
+				listener);
 		new FlashFileUploadDialog(directory, textProvider, service,
-				sessionProvider.getSession().getFileSystemInfo(), null);
+				sessionProvider.getSession().getFileSystemInfo(),
+				fileUploadListener);
 	}
 
 }

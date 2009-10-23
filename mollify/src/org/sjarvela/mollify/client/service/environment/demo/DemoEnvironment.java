@@ -47,7 +47,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		return fileSystemService;
 	}
 
-	public FileUploadService getFileUploadHandler() {
+	public FileUploadService getFileUploadService() {
 		return demoFileUploadHandler;
 	}
 

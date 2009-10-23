@@ -18,12 +18,12 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -78,8 +78,7 @@ public class DefaultDialogManager implements DialogManager {
 		new RenameDialog(item, textProvider, renameHandler);
 	}
 
-	public void openUploadDialog(Directory directory,
-			FileUploadListener listener) {
+	public void openUploadDialog(Directory directory, ResultListener listener) {
 		fileUploadDialogFactory.create(directory, listener);
 	}
 

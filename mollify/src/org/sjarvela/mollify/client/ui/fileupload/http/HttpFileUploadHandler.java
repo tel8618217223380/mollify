@@ -8,11 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.upload;
+package org.sjarvela.mollify.client.ui.fileupload.http;
 
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadMonitor;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadProgressListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -22,17 +25,17 @@ import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class DefaultFileUploadListener implements FileUploadListener {
+public class HttpFileUploadHandler implements FileUploadListener {
 	private final TextProvider textProvider;
 	private final boolean isProgressEnabled;
 	private final FileUploadService service;
 	private final DialogManager dialogManager;
-
-	private FileUploadMonitor uploadMonitor;
-	private ProgressDisplayer uploadListener;
 	private final ResultListener listener;
 
-	public DefaultFileUploadListener(FileUploadService service,
+	private FileUploadMonitor uploadMonitor;
+	private ProgressDisplayer progressDisplayer;
+
+	public HttpFileUploadHandler(FileUploadService service,
 			boolean isProgressEnabled, DialogManager dialogManager,
 			TextProvider textProvider, ResultListener listener) {
 		this.service = service;
@@ -46,10 +49,10 @@ public class DefaultFileUploadListener implements FileUploadListener {
 		String info = filenames.size() == 1 ? filenames.get(0) : textProvider
 				.getMessages().uploadingNFilesInfo(filenames.size());
 
-		uploadListener = dialogManager.openProgressDialog(textProvider
+		progressDisplayer = dialogManager.openProgressDialog(textProvider
 				.getStrings().fileUploadProgressTitle(), false);
-		uploadListener.setInfo(info);
-		uploadListener.setDetails(textProvider.getStrings()
+		progressDisplayer.setInfo(info);
+		progressDisplayer.setDetails(textProvider.getStrings()
 				.fileUploadProgressPleaseWait());
 
 		if (!isProgressEnabled)
@@ -59,14 +62,14 @@ public class DefaultFileUploadListener implements FileUploadListener {
 				new FileUploadProgressListener() {
 					public void onProgressUpdate(FileUploadStatus status) {
 						int percentage = (int) status.getUploadedPercentage();
-						uploadListener.setProgressBarVisible(true);
-						uploadListener.setProgress(percentage);
-						uploadListener.setDetails(String.valueOf(percentage)
+						progressDisplayer.setProgressBarVisible(true);
+						progressDisplayer.setProgress(percentage);
+						progressDisplayer.setDetails(String.valueOf(percentage)
 								+ "%");
 					}
 
 					public void onProgressUpdateFail(ServiceError error) {
-						uploadListener.setProgress(0);
+						progressDisplayer.setProgress(0);
 						uploadMonitor.stop();
 					}
 				}, service);
@@ -85,9 +88,9 @@ public class DefaultFileUploadListener implements FileUploadListener {
 	}
 
 	private void stopUploaders() {
-		uploadListener.setProgress(100);
-		uploadListener.setDetails("");
-		uploadListener.onFinished();
+		progressDisplayer.setProgress(100);
+		progressDisplayer.setDetails("");
+		progressDisplayer.onFinished();
 
 		if (uploadMonitor != null)
 			uploadMonitor.stop();

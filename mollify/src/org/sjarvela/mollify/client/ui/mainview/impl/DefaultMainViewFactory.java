@@ -78,8 +78,7 @@ public class DefaultMainViewFactory implements MainViewFactory {
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				model, view, environment.getSessionService(),
 				fileSystemService, environment.getConfigurationService(),
-				environment.getFileUploadHandler(), textProvider,
-				fileSystemItemProvider, logoutListener,
+				textProvider, fileSystemItemProvider, logoutListener,
 				fileSystemActionHandlerFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
 

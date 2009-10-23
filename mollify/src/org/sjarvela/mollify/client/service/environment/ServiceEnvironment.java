@@ -26,6 +26,6 @@ public interface ServiceEnvironment {
 
 	FileSystemService getFileSystemService();
 
-	FileUploadService getFileUploadHandler();
+	FileUploadService getFileUploadService();
 
 }
