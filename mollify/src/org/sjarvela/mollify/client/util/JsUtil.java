@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -43,13 +42,18 @@ public class JsUtil {
 	}
 
 	public static String asJsonString(Map<String, JavaScriptObject> data) {
-		JSONObject o = new JSONObject();
-		for (Entry<String, JavaScriptObject> e : data.entrySet())
-			o.put(e.getKey(), new JSONObject(e.getValue()));
-		return o.toString();
+		return asJsonString(data, new ArrayList(data.keySet()));
 	}
 
 	public static String asJsonString(JavaScriptObject obj) {
 		return new JSONObject(obj).toString();
+	}
+
+	public static String asJsonString(Map<String, JavaScriptObject> data,
+			List<String> order) {
+		JSONObject o = new JSONObject();
+		for (String key : order)
+			o.put(key, new JSONObject(data.get(key)));
+		return o.toString();
 	}
 }

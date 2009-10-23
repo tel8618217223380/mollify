@@ -14,15 +14,22 @@
 	<property name="test.src.dir" location="${root.dir}/test" />
 	<property name="test.run.dir" location="${root.dir}/testrun" />
 	
-	<condition property="gwt.jvm.arg" value="-XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
+	<condition property="gwt.jvm.arg" value="-d32 -XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
 		<os name="Mac OS X"/>  
 	</condition>
-	
+
+	<path id="gwt-user.classpath">
+		<pathelement location="${gwt.sdk.location}/gwt-user.jar"/>
+	</path>
+
+	<path id="gwt-dev.classpath">
+		<fileset dir="${gwt.sdk.location}" includes="gwt-dev-*.jar"/>
+	</path>
+  
 	<path id="compile.classpath">  
-		<pathelement path="${java.class.path}/" />  
-		<pathelement location="${gwt.sdk.location}/gwt-user.jar" />  
-		<pathelement location="${gwt.sdk.location}/gwt-dev-mac.jar" />
-		<pathelement location="${gwt.sdk.location}/gwt-dev-linux.jar" />
+		<pathelement path="${java.class.path}/" />
+		<path refid="gwt-user.classpath"/>
+		<path refid="gwt-dev.classpath"/>  
 		<pathelement location="${src.dir}" />  
 		<!--fileset dir="${lib.dir}" includes="**/*.jar" /-->
 		<pathelement location="${lib.dir}/aopalliance.jar" />
@@ -167,30 +174,6 @@
 			<arg value="${target.dir}" />
 		</exec>
 	</target>
-	
-	<!--target name="test" depends="init-dev">
-		<mkdir dir="${test.report.dir}" />
-		
-		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
-			<jvmarg value="-Dgwt.args=-out www-test" />
- 			<sysproperty key="basedir" value="${root.dir}" />
- 			<formatter type="xml" />
- 			<formatter usefile="false" type="plain" />
- 			
-			<classpath>
-				<path refid="compile.classpath" />
-				<pathelement path="src" />
-				<pathelement path="test" />
-				<pathelement path="${compile.dir}" />
-			</classpath>
-			
-			<batchtest todir="${test.report.dir}">
-				<fileset dir="test">
-					<include name="**/**Test.java" />
-				</fileset>
-			</batchtest>
-		</junit>
-	</target-->
 
 	<target name="compile" depends="init-dev, do-compile">
 	</target>
@@ -207,27 +190,20 @@
 	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
 	</target>
 	
-	<target name="compile.tests" depends="init-dev"> <!-- do-compile -->
+	<target name="compile.prod" depends="init-dev">
+		<mkdir dir="${build.dir}" />
+		<javac destdir="${build.dir}" classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" />		
+	</target>
+	
+	<target name="compile.tests" depends="init-dev">
     	<mkdir dir="${test.build.dir}"/>
     	
- 		<!--javac destdir="${test.build.dir}" debug="on" nowarn="off" memorymaximumsize="128m" fork="true">
+ 		<javac destdir="${test.build.dir}" debug="on" nowarn="off" memorymaximumsize="128m" fork="true">
 			<compilerarg line=""/>
 			<classpath refid="test.classpath"/>
 			<classpath location="${test.build.dir}"/>
-			<src refid="test.classpath"/>
-		</javac-->
-		<java classpathref="test.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
-			<jvmarg line="${gwt.jvm.arg}" />
-			<arg value="-war" />
-			<arg value="${test.build.dir}" />
-			<arg value="-logLevel" />
-			<arg value="INFO" />
-			<arg value="-localWorkers" />
-			<arg value="6" />
-			<arg value="-style" />
-			<arg value="DETAILED" />		
-			<arg value="${gwt.module}" />
-		</java>
+			<src refid="test.src.path"/>
+		</javac>
 
 		<copy todir="${test.build.dir}">
 			<fileset dir="${test.src.dir}">
@@ -237,7 +213,7 @@
     	</copy>
 	</target>
 
-	<target name="test" depends="init-dev, compile.tests, test.web, test.hosted" />	<!-- do-compile -->
+	<target name="test" depends="init-dev, compile.prod, compile.tests, test.web, test.hosted" />	<!-- do-compile -->
 
 	<macrodef name="test-macro">
     	<attribute name="extragwtargs" default="" />
@@ -254,12 +230,11 @@
 				<formatter type="xml"/>
         		<sysproperty key="gwt.args" value="@{extragwtargs} -gen gen -out out" />
 
-        		<classpath refid="gin.test.classpath"/>
+        		<classpath refid="test.classpath"/>
         		
         		<batchtest todir="@{outputbase}/reports">
           			<fileset dir="${test.build.dir}">
-            			<include name="com/google/gwt/inject/rebind/**/*Test.class"/>
-            			<include name="com/google/gwt/inject/*TestSuite.class"/>
+            			<include name="org/sjarvela/mollify/AllTests.class"/>
           			</fileset>
         		</batchtest>
 			</junit>
@@ -273,11 +248,11 @@
 		</sequential>
 	</macrodef>
 
-	<target name="test.web" depends="compile">
+	<target name="test.web" depends="">
     	<test-macro extragwtargs="-web -style PRETTY" outputbase="${test.run.dir}/web" />
 	</target>
 
-	<target name="test.hosted" depends="compile">
+	<target name="test.hosted" depends="">
 		<test-macro outputbase="${test.run.dir}/hosted" />
 	</target>
 </project>

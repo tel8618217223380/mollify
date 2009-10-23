@@ -14,24 +14,24 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
-import org.sjarvela.mollify.client.session.file.FileSystemInfo;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 	private final TextProvider textProvider;
 	private final FileUploadService service;
-	private final FileSystemInfo info;
+	private final SessionProvider sessionProvider;
 
 	public HttpFileUploadDialogFactory(TextProvider textProvider,
-			FileUploadService service, FileSystemInfo info) {
+			FileUploadService service, SessionProvider sessionProvider) {
 		this.textProvider = textProvider;
 		this.service = service;
-		this.info = info;
+		this.sessionProvider = sessionProvider;
 	}
 
 	public void create(Directory directory, FileUploadListener listener) {
-		new HttpFileUploadDialog(directory, textProvider, service, info,
-				listener);
+		new HttpFileUploadDialog(directory, textProvider, service,
+				sessionProvider.getSession().getFileSystemInfo(), listener);
 	}
 
 }

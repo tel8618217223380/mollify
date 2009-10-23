@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,6 @@ public class JsUtilTest extends GWTTestCase {
 						123)));
 		assertEquals(
 				"{\"a\":{\"id\":\"a\", \"name\":\"file A\", \"parent_id\":\"p\", \"extension\":\"ext\", \"size\":123}, \"b\":[{\"id\":\"b\", \"name\":\"file B\", \"parent_id\":\"p\", \"extension\":\"ext\", \"size\":123},{\"id\":\"c\", \"name\":\"file C\", \"parent_id\":\"p\", \"extension\":\"ext\", \"size\":123}]}",
-				JsUtil.asJsonString(o));
+				JsUtil.asJsonString(o, Arrays.asList("a", "b")));
 	}
 }
