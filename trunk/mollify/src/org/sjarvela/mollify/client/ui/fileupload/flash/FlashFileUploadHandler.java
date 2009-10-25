@@ -40,9 +40,10 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 	private final UploadBuilder builder;
 	private final ResultListener listener;
 
+	private FlashProgressDisplayer progressDisplayer;
 	private SWFUpload uploader;
 
-	private FlashProgressDisplayer progressDisplayer;
+	private int index;
 
 	public FlashFileUploadHandler(SessionInfo session,
 			FileUploadService service, ResultListener listener,
@@ -69,62 +70,11 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 		builder.setDebugHandler(this);
 	}
 
-	public void initialize() {
-		uploader = builder.build();
-	}
-
 	public void setButtonProperties(String elementId, int w, int h, String text) {
 		builder.setButtonPlaceholderID(elementId);
 		builder.setButtonWidth(w);
 		builder.setButtonHeight(h);
 		builder.setButtonText(text);
-	}
-
-	public void onUploadStart(UploadStartEvent e) {
-		GWT.log("Upload start " + e.getFile().getName(), null);
-		progressDisplayer.onUploadStarted();
-	}
-
-	public void onUploadSuccess(UploadSuccessEvent e) {
-		GWT.log("Upload succeeded " + e.getFile().getName(), null);
-		progressDisplayer.onUploadEnded();
-	}
-
-	public void onUploadComplete(UploadCompleteEvent e) {
-		GWT.log("Upload completed " + e.getFile().getName(), null);
-	}
-
-	public void onUploadError(UploadErrorEvent e) {
-		listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED, e
-				.getMessage()));
-	}
-
-	public void onUploadProgress(UploadProgressEvent e) {
-		GWT.log("Upload progress " + e.getBytesTotal() + " / "
-				+ e.getBytesComplete(), null);
-	}
-
-	public UploadBuilder getBuilder() {
-		return builder;
-	}
-
-	public void startUpload() {
-		uploader.startUpload();
-
-	}
-
-	public void removeFile(String id) {
-		uploader.cancelUpload(id, false);
-	}
-
-	public void onSWFUploadLoaded() {
-		GWT.log("Flash uploader loaded", null);
-		Log.debug("Flash uploader loaded");
-	}
-
-	public void onDebug(DebugEvent e) {
-		GWT.log("SWF DEBUG " + e.getMessage(), null);
-		Log.debug("SWF DEBUG " + e.getMessage());
 	}
 
 	public void setFileQueueListener(final FileQueueListener listener) {
@@ -145,4 +95,69 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 	public void setProgressDisplayer(FlashProgressDisplayer progressDisplayer) {
 		this.progressDisplayer = progressDisplayer;
 	}
+
+	public void initialize() {
+		uploader = builder.build();
+	}
+
+	public void onUploadStart(UploadStartEvent e) {
+		GWT.log("Upload start " + e.getFile().getName(), null);
+		progressDisplayer.onActiveUploadFileChanged(e.getFile());
+	}
+
+	public void onUploadSuccess(UploadSuccessEvent e) {
+		GWT.log("Upload succeeded " + e.getFile().getName(), null);
+	}
+
+	public void onUploadComplete(UploadCompleteEvent e) {
+		GWT.log("Upload completed " + e.getFile().getName(), null);
+
+		if (uploader.getStats().getFilesQueued() == 0) {
+			progressDisplayer.onUploadEnded();
+			listener.onSuccess(null);
+			return;
+		}
+
+		startNextFileUpload();
+	}
+
+	public void onUploadError(UploadErrorEvent e) {
+		progressDisplayer.onUploadError();
+		listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED, e
+				.getMessage()));
+	}
+
+	public void onUploadProgress(UploadProgressEvent e) {
+		GWT.log("Upload progress " + e.getBytesTotal() + " / "
+				+ e.getBytesComplete(), null);
+	}
+
+	public void startUpload() {
+		progressDisplayer.onUploadStarted();
+		index = -1;
+		startNextFileUpload();
+	}
+
+	private boolean startNextFileUpload() {
+		if (uploader.getStats().getFilesQueued() <= 0)
+			return false;
+		index++;
+		uploader.startUpload(uploader.getFile(index).getId());
+		return true;
+	}
+
+	public void removeFile(String id) {
+		uploader.cancelUpload(id, false);
+	}
+
+	public void onSWFUploadLoaded() {
+		GWT.log("Flash uploader loaded", null);
+		Log.debug("Flash uploader loaded");
+	}
+
+	public void onDebug(DebugEvent e) {
+		GWT.log("SWF DEBUG " + e.getMessage(), null);
+		Log.debug("SWF DEBUG " + e.getMessage());
+	}
+
 }
