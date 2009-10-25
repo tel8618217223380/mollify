@@ -107,14 +107,14 @@ public class DemoData {
 
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
-			return SessionInfo.create(false, false, "", "", permissionMode,
-					settings, fileSystemInfo, rootDirectories);
+			return SessionInfo.create(false, false, "", "", "", "",
+					permissionMode, settings, fileSystemInfo, rootDirectories);
 		}
 
 		if (user != null && user.length() > 0)
-			return SessionInfo.create(true, true, user, user, permissionMode,
-					settings, fileSystemInfo, rootDirectories);
-		return SessionInfo.create(true, false, "", "", permissionMode,
+			return SessionInfo.create(true, true, "", "", user, user,
+					permissionMode, settings, fileSystemInfo, rootDirectories);
+		return SessionInfo.create(true, false, "", "", "", "", permissionMode,
 				settings, fileSystemInfo, rootDirectories);
 	}
 

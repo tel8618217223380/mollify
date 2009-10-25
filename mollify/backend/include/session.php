@@ -91,6 +91,8 @@
 		
 		if (check_authentication()) {
 			$info["authenticated"] = TRUE;
+			$info['session_name'] = session_name();
+			$info['session_id'] = session_id();
 			$info["username"] = $_SESSION['username'];
 			$info["user_id"] = $_SESSION['user_id'];
 			$info["features"] = $_SESSION['features'];

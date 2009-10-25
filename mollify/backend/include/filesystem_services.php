@@ -14,12 +14,14 @@
 
 		if (!isset($_REQUEST["action"])) {
 			$error = "INVALID_REQUEST";
+			$error_details = "No action defined";
 			return;
 		}
 		$DATA_ACTIONS = array("get_upload_status", "update_item_permissions");
 		$ITEM_ACTIONS = array("get_files", "get_directories", "get_contents", "get_item_details", "download", "download_as_zip", "rename", "copy", "move", "delete", "upload", "create_folder", "set_description", "remove_description", "get_item_permissions");
 				
 		$action = strtolower($_REQUEST["action"]);
+		log_debug("Filesystem action: [".$action."]");
 		
 		if (in_array($action, $DATA_ACTIONS)) {
 			$result = process_data_request($action);
@@ -35,7 +37,11 @@
 		global $result, $error, $error_details;
 
 		$item = get_fileitem_from_url("id");
-		if (!$item) return FALSE;
+		if (!$item) {
+			$error = "Target item not found";
+			$error_details = $_REQUEST["id"];
+			return FALSE;
+		}
 		
 		switch ($action) {
 			case "get_contents":
@@ -71,6 +77,7 @@
 			case "rename":
 				if (!isset($_GET["to"])) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Target name not defined";
 					break;
 				}
 				$to = urldecode($_GET["to"]);
@@ -84,12 +91,14 @@
 			case "copy":
 				if (!isset($_GET["to"]) or !$item["is_file"]) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Target item not defined";
 					break;
 				}
 				
 				$to = get_fileitem_from_url("to");
 				if (!$to) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Target item could not be resolved";
 					break;
 				}
 				
@@ -98,6 +107,7 @@
 			case "move":
 				if (!isset($_GET["to"])) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Target item not defined";
 					break;
 				}
 				
@@ -131,6 +141,7 @@
 			case "create_folder":
 				if (!isset($_GET["name"])) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Name not defined";
 					break;
 				}
 				return create_folder($item, $_GET["name"]);
@@ -138,6 +149,7 @@
 			case "set_description":
 				if (!isset($_GET["description"])) {
 					$error = "INVALID_REQUEST";
+					$error_details = "Description not defined";
 					break;
 				}
 				if (!$_SESSION["features"]["description_update"]) {

@@ -23,12 +23,14 @@ import com.google.gwt.json.client.JSONObject;
 
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
-			boolean authenticated, String userId, String user,
-			UserPermissionMode permissionMode, FeatureInfo settings,
-			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) {
+			boolean authenticated, String sessionName, String sessionId,
+			String userId, String user, UserPermissionMode permissionMode,
+			FeatureInfo settings, FileSystemInfo fileInfo,
+			JsArray<JsDirectory> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
-		result.putValues(authenticationRequired, authenticated, userId, user,
-				permissionMode.getStringValue(), settings, fileInfo, roots);
+		result.putValues(authenticationRequired, authenticated, sessionName,
+				sessionId, userId, user, permissionMode.getStringValue(),
+				settings, fileInfo, roots);
 		return result;
 	}
 
@@ -45,6 +47,14 @@ public class SessionInfo extends JavaScriptObject {
 
 	public final native boolean getAuthenticated() /*-{
 		return this.authenticated;
+	}-*/;
+
+	public final native String getSessionName() /*-{
+		return this.session_name;
+	}-*/;
+
+	public final native String getSessionId() /*-{
+		return this.session_id;
 	}-*/;
 
 	public final native String getLoggedUserId() /*-{
@@ -82,10 +92,13 @@ public class SessionInfo extends JavaScriptObject {
 
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String userId, String user,
-			String permissionMode, FeatureInfo features,
-			FileSystemInfo fileInfo, JsArray<JsDirectory> roots) /*-{
+			String permissionMode, String sessionName, String sessionId,
+			FeatureInfo features, FileSystemInfo fileInfo,
+			JsArray<JsDirectory> roots) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
+		this.session_name = sessionName;
+		this.session_id = sessionId;
 		this.user_id = userId;
 		this.username = user;
 		this.default_permission_mode = permissionMode;
