@@ -159,11 +159,19 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 				+ ": " + message);
 	}
 
-	public void onUploadEnded() {
-
+	public void onUploadStarted() {
+		// TODO
 	}
 
-	public void onUploadStarted() {
+	public void onUploadEnded() {
+		this.hide();
+	}
+
+	public void onUploadError() {
+		this.hide();
+	}
+
+	public void onActiveUploadFileChanged(File file) {
 
 	}
 

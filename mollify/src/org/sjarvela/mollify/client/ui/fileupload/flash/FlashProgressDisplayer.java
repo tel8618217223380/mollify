@@ -10,10 +10,16 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
+import org.swfupload.client.File;
+
 public interface FlashProgressDisplayer {
 
 	void onUploadStarted();
 
 	void onUploadEnded();
+
+	void onUploadError();
+
+	void onActiveUploadFileChanged(File file);
 
 }
