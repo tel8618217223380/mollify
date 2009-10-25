@@ -22,4 +22,6 @@ public interface FlashProgressDisplayer {
 
 	void onActiveUploadFileChanged(File file);
 
+	void setProgress(File file, double percentage);
+
 }

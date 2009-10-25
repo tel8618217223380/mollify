@@ -188,6 +188,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FLASH_UPLOADER = "mollify-file-upload-flash-selector";
 	public static final String FILE_UPLOAD_DIALOG_FILE = "mollify-file-upload-file";
 	public static final String FILE_UPLOAD_DIALOG_FILE_NAME = "mollify-file-upload-file-name";
+	public static final String FILE_UPLOAD_DIALOG_FILE_PROGRESS = "mollify-file-upload-file-progress";
 
 	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";
@@ -366,5 +367,7 @@ public class StyleConstants {
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_PERMISSION_TITLE = "mollify-fileitem-user-permission-dialog-permission-title";
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTONS = "mollify-fileitem-user-permission-dialog-buttons";
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTON_ADD_EDIT = "mollify-fileitem-user-permission-dialog-add-edit";
+
+	public static final String ACTIVE = "active";
 
 }

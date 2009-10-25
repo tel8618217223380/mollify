@@ -33,13 +33,24 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FlashFileUploadDialog extends CenteredDialog implements
 		FileQueueListener, FlashProgressDisplayer {
+	enum Mode {
+		Select, Upload
+	};
+
 	private static final String UPLOADER_ELEMENT_ID = "uploader";
 
 	private final TextProvider textProvider;
 	private final FlashFileUploadHandler handler;
 
-	private final Map<File, Widget> fileItems = new HashMap();
+	private final Map<File, FileComponent> fileItems = new HashMap();
+	private Mode mode;
+
+	private Panel selectHeader;
+	private Label uploadHeader;
 	private Panel fileList;
+	private HorizontalPanel buttons;
+
+	private FileComponent activeItem;
 
 	public FlashFileUploadDialog(TextProvider textProvider,
 			FlashFileUploadHandler handler) {
@@ -50,6 +61,8 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 
 		initialize();
 		initializeUploader();
+
+		setMode(Mode.Select);
 	}
 
 	private void initializeUploader() {
@@ -65,8 +78,8 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
-		panel.add(createMessage());
 		panel.add(createUploaderElement());
+		panel.add(createUploadingMessage());
 		panel.add(createFileList());
 		return panel;
 	}
@@ -78,16 +91,17 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 	}
 
 	private Widget createUploaderElement() {
-		Panel uploaderElement = new FlowPanel();
-		uploaderElement.add(new HTML("<div class='"
+		selectHeader = new FlowPanel();
+		selectHeader.add(createMessage());
+		selectHeader.add(new HTML("<div class='"
 				+ StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER + "' id='"
 				+ UPLOADER_ELEMENT_ID + "'/>"));
-		return uploaderElement;
+		return selectHeader;
 	}
 
 	@Override
 	protected Widget createButtons() {
-		HorizontalPanel buttons = new HorizontalPanel();
+		buttons = new HorizontalPanel();
 		buttons.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
@@ -117,8 +131,15 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 		return message;
 	}
 
+	private Widget createUploadingMessage() {
+		uploadHeader = new Label(textProvider.getStrings()
+				.fileUploadProgressPleaseWait());
+		uploadHeader.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
+		return uploadHeader;
+	}
+
 	public void onFileAdded(File file) {
-		Widget fileComponent = createFileComponent(file);
+		FileComponent fileComponent = createFileComponent(file);
 		fileItems.put(file, fileComponent);
 		fileList.add(fileComponent);
 	}
@@ -131,24 +152,14 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 		fileList.remove(item);
 	}
 
-	private Widget createFileComponent(final File file) {
-		Panel item = new HorizontalPanel();
-		item.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE);
-
-		Label name = new Label(file.getName());
-		name.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_NAME);
-		item.add(name);
-
-		Button button = new Button(textProvider.getStrings()
-				.fileUploadDialogRemoveFileButton());
-		button.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				removeFile(file);
-			}
-		});
-		item.add(button);
-
-		return item;
+	private FileComponent createFileComponent(final File file) {
+		FileComponent c = new FileComponent(textProvider, file,
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						removeFile(file);
+					}
+				});
+		return c;
 	}
 
 	public void onFileAddFailed(File file, int errorCode, String message) {
@@ -160,7 +171,22 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 	}
 
 	public void onUploadStarted() {
-		// TODO
+		setMode(Mode.Upload);
+	}
+
+	private void setMode(Mode mode) {
+		this.mode = mode;
+
+		if (Mode.Upload.equals(mode)) {
+			selectHeader.setHeight("0px");
+			uploadHeader.setVisible(true);
+			buttons.setVisible(false);
+		} else {
+			uploadHeader.setVisible(false);
+		}
+
+		for (FileComponent fc : fileItems.values())
+			fc.setMode(mode);
 	}
 
 	public void onUploadEnded() {
@@ -172,7 +198,18 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 	}
 
 	public void onActiveUploadFileChanged(File file) {
+		if (activeItem != null)
+			activeItem.setActive(false);
 
+		FileComponent current = fileItems.get(file);
+		current.setActive(true);
+		current.setProgress(0d);
+
+		activeItem = current;
+	}
+
+	public void setProgress(File file, double percentage) {
+		activeItem.setProgress(percentage);
 	}
 
 }
