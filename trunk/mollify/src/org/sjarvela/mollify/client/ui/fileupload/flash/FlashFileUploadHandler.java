@@ -128,8 +128,11 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 	}
 
 	public void onUploadProgress(UploadProgressEvent e) {
-		GWT.log("Upload progress " + e.getBytesTotal() + " / "
-				+ e.getBytesComplete(), null);
+		double percentage = 0;
+		if (e.getBytesTotal() > 0 && e.getBytesComplete() > 0)
+			percentage = (((double) e.getBytesTotal() / (double) e
+					.getBytesComplete()) * 100d);
+		progressDisplayer.setProgress(e.getFile(), percentage);
 	}
 
 	public void startUpload() {
