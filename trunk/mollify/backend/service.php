@@ -13,10 +13,11 @@
 	require_once("include/errors.php");
 		
 	function return_json($result_array) {
-		log_message($result_array);
+		$json = json_encode($result_array);
+		log_debug("RESULT=".$json);
 		$ext = isset($_GET["callback"]);
 		if ($ext) echo $_GET["callback"]."(";
-		echo json_encode($result_array);
+		echo $json;
 		if ($ext) echo ');';
 	}
 	
@@ -25,12 +26,13 @@
 	}
 	
 	function get_error_message($error, $details = "") {
-		global $ERRORS;
+		global $SETTINGS, $ERRORS;
 		
 		if (!isset($ERRORS[$error])) {
 			return array("success" => FALSE, "code" => 0, "error" => "Unknown error: " + $error, "details" => $details);
 		}
 		$err = $ERRORS[$error];
+		if ($SETTINGS["debug"]) return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details, "trace" => get_trace());
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
@@ -42,19 +44,29 @@
 	
 	function initialize_session() {
 		if (check_authentication()) return TRUE;
-		return_json(get_error_message("INVALID_REQUEST"));
+		return_json(get_error_message("UNAUTHORIZED"));
 		return FALSE;
 	}
 	
-	require_once("include/system.php");	
+	function start_session() {
+		if (isset($_POST["MOLLIFY_SESSION_ID"])) {
+			log_debug("Restoring session id: ".$_POST["MOLLIFY_SESSION_ID"]);
+			session_id($_REQUEST["MOLLIFY_SESSION_ID"]);
+		}
+		session_start();
+		if (is_debug()) log_debug("SESSION=".array_to_str($_SESSION));
+	}
+	
+	require_once("include/system.php");
 	import_configuration_provider();
 	initialize_logging();
 	
+	log_request();
 	if (!isset($_REQUEST["type"])) exit(0);
 	$request_type = trim(strtolower($_REQUEST["type"]));
 	require_once("include/session.php");
 	
-	session_start();
+	start_session();
 	if ($request_type === "session") {
 		process_session_request();
 		exit(0);

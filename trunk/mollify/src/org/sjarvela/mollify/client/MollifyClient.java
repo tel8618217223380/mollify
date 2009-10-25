@@ -72,6 +72,7 @@ public class MollifyClient implements Client {
 			}
 		}, new Callback() {
 			public void onCallback() {
+				viewManager.empty();
 				start();
 			}
 		});

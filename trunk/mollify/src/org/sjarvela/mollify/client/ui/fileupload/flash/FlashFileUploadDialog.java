@@ -13,20 +13,10 @@ package org.sjarvela.mollify.client.ui.fileupload.flash;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.FileUploadService;
-import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.swfupload.client.File;
-import org.swfupload.client.SWFUpload;
-import org.swfupload.client.UploadBuilder;
-import org.swfupload.client.SWFUpload.ButtonAction;
-import org.swfupload.client.event.FileDialogCompleteHandler;
-import org.swfupload.client.event.FileQueueErrorHandler;
-import org.swfupload.client.event.FileQueuedHandler;
-import org.swfupload.client.event.SWFUploadLoadedHandler;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
@@ -42,57 +32,33 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FlashFileUploadDialog extends CenteredDialog implements
-		FileDialogCompleteHandler, FileQueuedHandler, FileQueueErrorHandler,
-		SWFUploadLoadedHandler {
+		FileQueueListener, FlashProgressDisplayer {
 	private static final String UPLOADER_ELEMENT_ID = "uploader";
 
 	private final TextProvider textProvider;
-	private final FileUploadService service;
-	private final FlashFileUploadHandler listener;
+	private final FlashFileUploadHandler handler;
 
 	private final Map<File, Widget> fileItems = new HashMap();
-	private final SWFUpload uploader;
-
 	private Panel fileList;
 
-	public FlashFileUploadDialog(Directory directory,
-			TextProvider textProvider, FileUploadService fileUploadHandler,
-			FileSystemInfo info, FlashFileUploadHandler listener) {
+	public FlashFileUploadDialog(TextProvider textProvider,
+			FlashFileUploadHandler handler) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG_FLASH);
 		this.textProvider = textProvider;
-		this.service = fileUploadHandler;
-		this.listener = listener;
+		this.handler = handler;
 
 		initialize();
-
-		uploader = createUploader(directory);
+		initializeUploader();
 	}
 
-	private SWFUpload createUploader(Directory directory) {
-		UploadBuilder builder = new UploadBuilder();
-		builder.setDebug(true);
-		builder.setUploadURL(service.getUploadUrl(directory));
+	private void initializeUploader() {
+		handler.setProgressDisplayer(this);
 
-		builder.setButtonPlaceholderID(UPLOADER_ELEMENT_ID);
-		builder.setButtonHeight(20);
-		builder.setButtonWidth(100);
-		builder.setButtonText(textProvider.getStrings()
-				.fileUploadDialogAddFileButton());
-		builder.setButtonAction(ButtonAction.SELECT_FILES);
-
-		builder.setSWFUploadLoadedHandler(this);
-		builder.setFileDialogCompleteHandler(this);
-		builder.setFileQueuedHandler(this);
-		builder.setFileQueueErrorHandler(this);
-
-		builder.setUploadStartHandler(listener);
-		builder.setUploadErrorHandler(listener);
-		builder.setUploadCompleteHandler(listener);
-		builder.setUploadProgressHandler(listener);
-		builder.setUploadSuccessHandler(listener);
-
-		return builder.build();
+		handler.setButtonProperties(UPLOADER_ELEMENT_ID, 100, 20, textProvider
+				.getStrings().fileUploadDialogAddFileButton());
+		handler.setFileQueueListener(this);
+		handler.initialize();
 	}
 
 	@Override
@@ -128,7 +94,7 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 		Button uploadButton = createButton(textProvider.getStrings()
 				.fileUploadDialogUploadButton(), new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				uploader.startUpload();
+				handler.startUpload();
 			}
 		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
 
@@ -151,25 +117,14 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 		return message;
 	}
 
-	public void onFileDialogComplete(FileDialogCompleteEvent e) {
-		Log.debug("File selection completed");
-	}
-
-	public void onFileQueued(FileQueuedEvent e) {
-		Log.debug("File queued: " + e.getFile().toString());
-		addFile(e.getFile());
-	}
-
-	private void addFile(File file) {
-		uploader.addFileParam(file.getId(), "P", "V");
-
+	public void onFileAdded(File file) {
 		Widget fileComponent = createFileComponent(file);
 		fileItems.put(file, fileComponent);
 		fileList.add(fileComponent);
 	}
 
 	protected void removeFile(File file) {
-		uploader.cancelUpload(file.getId(), false);
+		handler.removeFile(file.getId());
 
 		Widget item = fileItems.get(file);
 		fileItems.remove(file);
@@ -179,9 +134,11 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 	private Widget createFileComponent(final File file) {
 		Panel item = new HorizontalPanel();
 		item.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE);
+
 		Label name = new Label(file.getName());
 		name.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_NAME);
 		item.add(name);
+
 		Button button = new Button(textProvider.getStrings()
 				.fileUploadDialogRemoveFileButton());
 		button.addClickHandler(new ClickHandler() {
@@ -190,18 +147,24 @@ public class FlashFileUploadDialog extends CenteredDialog implements
 			}
 		});
 		item.add(button);
+
 		return item;
 	}
 
-	public void onFileQueueError(FileQueueErrorEvent e) {
-		GWT.log("ERROR (" + e.getErrorCode() + ") " + e.getFile().toString()
-				+ ": " + e.getMessage(), null);
-		Log.error("File queue error (" + e.getErrorCode() + ") "
-				+ e.getFile().toString() + ": " + e.getMessage());
+	public void onFileAddFailed(File file, int errorCode, String message) {
+		GWT
+				.log("ERROR (" + errorCode + ") " + file.toString() + ": "
+						+ message, null);
+		Log.error("File queue error (" + errorCode + ") " + file.toString()
+				+ ": " + message);
 	}
 
-	public void onSWFUploadLoaded() {
-		GWT.log("Flash uploader loaded", null);
-		Log.info("Flash uploader loaded");
+	public void onUploadEnded() {
+
 	}
+
+	public void onUploadStarted() {
+
+	}
+
 }

@@ -178,7 +178,6 @@
 			mysqli_multi_query($connection, $sql);
 		    do {
 		        if ($result = mysqli_store_result($connection)) {
-		        	log_message($result);
 		        	mysqli_free_result($result);
 		        }
 		    } while (mysqli_next_result($connection));

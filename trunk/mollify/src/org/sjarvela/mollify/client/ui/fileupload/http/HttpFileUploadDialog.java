@@ -39,9 +39,9 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
-public class HttpFileUploadDialog extends CenteredDialog implements SubmitHandler,
-		SubmitCompleteHandler {
-	private static final String UPLOADER_NAME = "upload[]";
+public class HttpFileUploadDialog extends CenteredDialog implements
+		SubmitHandler, SubmitCompleteHandler {
+	private static final String UPLOADER_ID = "uploader-http[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
 	private final String uploadId;
@@ -193,7 +193,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements SubmitHandle
 	private Widget createUploader() {
 		FileUpload uploader = new FileUpload();
 		uploader.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_SELECTOR);
-		uploader.setName(UPLOADER_NAME);
+		uploader.setName(UPLOADER_ID);
 		uploaders.add(uploader);
 		return uploader;
 	}

@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 public class JsUtil {
 	public static <T> List<T> asList(JsArray array, Class<T> t) {
@@ -56,4 +58,12 @@ public class JsUtil {
 			o.put(key, new JSONObject(data.get(key)));
 		return o.toString();
 	}
+
+	public static JavaScriptObject asJavascriptObject(Map<String, String> data) {
+		JSONObject o = new JSONObject();
+		for (Entry<String, String> e : data.entrySet())
+			o.put(e.getKey(), new JSONString(e.getValue()));
+		return o.getJavaScriptObject();
+	}
+
 }

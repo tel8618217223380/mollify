@@ -9,6 +9,8 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 
+	$trace = array();
 
 	function in_bytes($amount) {
 	    $amount = trim($amount);
@@ -95,15 +97,60 @@
 		require_once('FirePHPCore/fb.php');
 		FB::setEnabled(true);
 	}
+
+	function log_debug($message) {
+		global $trace;
+		if (!is_debug()) return;
+		$trace[] = $message;
+		error_log("MOLLIFY DEBUG: ".$message);
+		FB::log($message);
+	}
 	
 	function log_message($message) {
-		global $SETTINGS;
-		if ($SETTINGS['debug']) FB::log($message);
+		global $trace;
+		error_log("MOLLIFY: ".$message);
+		if (is_debug()) {
+			$trace[] = $message;
+			FB::log($message);
+		}
 	}
 	
 	function log_error($message) {
+		global $trace;
+		error_log("MOLLIFY ERROR: ".$message);
+		if (is_debug()) {
+			$trace[] = $message;
+			FB::error($message);
+		}
+	}
+	
+	function log_request() {
+		if (!is_debug()) return;
+		log_debug("REQUEST=".array_to_str($_SERVER).", POST=".array_to_str($_POST).", GET=".array_to_str($_GET));
+	}
+	
+	function array_to_str($a) {
+		$r = "{";
+		$first = TRUE;
+		foreach($a as $k=>$v) {
+			if (!$first) $r .= ", ";
+			
+			$val = $v;
+			if (is_array($v)) $val = array_to_str($v);
+			
+			$r .= $k.':'.$val;
+			$first = FALSE;
+		}
+		return $r."}";
+	}
+		
+	function get_trace() {
+		global $trace;
+		return $trace;
+	}
+	
+	function is_debug() {
 		global $SETTINGS;
-		error_log("MOLLIFY: ".$message);
-		if ($SETTINGS['debug']) FB::error($message);
+		return $SETTINGS['debug'];
 	}
 ?>

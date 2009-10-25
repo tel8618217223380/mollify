@@ -495,37 +495,53 @@
 			return FALSE;
 		}
 		
-		if (!isset($_FILES['upload'])) {
+		if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash'])) {
 			$error = "NO_UPLOAD_DATA";
 			return FALSE;
 		}
+		
+		if (is_debug()) log_debug("Upload to ".array_to_str($dir).", FILES=".array_to_str($_FILES));
+		
+		// flash uploader (uploads one file at a time)
+		if (isset($_FILES['uploader-flash'])) {
+			return do_upload($dir, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
+		}
 
+		// http
 		if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK) {
 			$error = "UPLOAD_FAILED";
 			$error_details = $_FILES["file"]["error"];
 			return FALSE;
 		}
 				
-		foreach ($_FILES['upload']['name'] as $key => $value) { 
-			$name = $_FILES['upload']['name'][$key];
-			$origin = $_FILES['upload']['tmp_name'][$key];
-			$target = join_path($dir["path"], $name);
-			log_message('upload ['.$target.']');
-				
-			if (file_exists($target)) {
-				$error = "FILE_ALREADY_EXISTS";
-				$error_details = _basename($target);
-				return FALSE;
-			}
-			
-			if (!move_uploaded_file($origin, $target)) {
-				$error = "SAVING_FAILED";
-				$error_details = $name;
-				return FALSE;
-			}
+		foreach ($_FILES['uploader-http']['name'] as $key => $value) { 
+			$name = $_FILES['uploader-http']['name'][$key];
+			$origin = $_FILES['uploader-http']['tmp_name'][$key];
+			if (!do_upload($dir, $name, $origin)) return FALSE;
 		}
 
 		$_SESSION['upload_file'] = "";
+		return TRUE;
+	}
+	
+	function do_upload($dir, $name, $origin) {
+		global $error, $error_details;
+		
+		$target = join_path($dir["path"], $name);
+		log_message('upload ['.$target.']');
+				
+		if (file_exists($target)) {
+			$error = "FILE_ALREADY_EXISTS";
+			$error_details = _basename($target);
+			return FALSE;
+		}
+			
+		if (!move_uploaded_file($origin, $target)) {
+			$error = "SAVING_FAILED";
+			$error_details = $name;
+			return FALSE;
+		}
+		
 		return TRUE;
 	}
 
