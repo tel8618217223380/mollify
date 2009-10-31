@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -26,8 +26,7 @@ public class ConfigurationFoldersGlue implements Configurator {
 
 	private final ConfigurationFoldersView view;
 
-	public ConfigurationFoldersGlue(
-			ConfigurationFoldersView view,
+	public ConfigurationFoldersGlue(ConfigurationFoldersView view,
 			final ConfigurationFoldersPresenter presenter,
 			ActionDelegator actionDelegator) {
 
@@ -50,7 +49,7 @@ public class ConfigurationFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationFoldersView.Actions.addFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onAddFolder();
 					}
@@ -58,7 +57,7 @@ public class ConfigurationFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationFoldersView.Actions.editFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onEditFolder();
 					}
@@ -66,7 +65,7 @@ public class ConfigurationFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationFoldersView.Actions.removeFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onRemoveFolder();
 					}

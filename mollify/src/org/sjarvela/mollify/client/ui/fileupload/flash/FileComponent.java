@@ -10,33 +10,34 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.ProgressBar;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialog.Mode;
 import org.swfupload.client.File;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class FileComponent extends FlowPanel {
 
-	private Button button;
+	private ActionButton button;
 	private ProgressBar pb;
 
 	public FileComponent(TextProvider textProvider, File file,
-			ClickHandler removeClickHandler) {
+			ActionListener actionListener, ResourceId clickAction) {
 		this.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE);
 
 		Label name = new Label(file.getName());
 		name.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_NAME);
 		add(name);
 
-		button = new Button(textProvider.getStrings()
+		button = new ActionButton(textProvider.getStrings()
 				.fileUploadDialogRemoveFileButton());
-		button.addClickHandler(removeClickHandler);
+		button.setAction(actionListener, clickAction, file);
 		add(button);
 
 		pb = new ProgressBar(StyleConstants.FILE_UPLOAD_DIALOG_FILE_PROGRESS);
@@ -60,6 +61,11 @@ public class FileComponent extends FlowPanel {
 
 	public void setProgress(double progress) {
 		pb.setProgress(progress);
+	}
+
+	public void setFinished() {
+		setActive(false);
+		addStyleDependentName(StyleConstants.COMPLETE);
 	}
 
 }

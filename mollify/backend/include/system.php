@@ -27,6 +27,13 @@
 	
 	    return (int)$amount;
 	}
+	
+	function get_session_name() {
+		global $SETTINGS;
+		
+		if (isset($SETTINGS["SESSION_NAME"])) return "MOLLIFY_SESSION_".$SETTINGS["SESSION_NAME"];
+		return "MOLLIFY_SESSION";
+	}
 
 	function get_filesystem_id($root_id, $path = "") {
 		if (strlen($path) > 0) {
@@ -82,6 +89,7 @@
 			"folder_actions" => get_setting("enable_folder_actions", TRUE),
 			"file_upload_progress" => get_setting("enable_file_upload_progress", FALSE),
 			"zip_download" => get_setting("enable_zip_download", FALSE),
+			"change_password" => get_setting("enable_change_password", TRUE),
 			"description_update" => get_configuration_setting("description_update"),
 			"permission_update" => get_configuration_setting("permission_update"),
 			"configuration_update" => get_configuration_setting("configuration_update")

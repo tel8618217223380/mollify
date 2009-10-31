@@ -39,9 +39,14 @@ public class ActionButton extends Button implements TooltipTarget {
 
 	public void setAction(final ActionListener actionListener,
 			final ResourceId actionId) {
+		setAction(actionListener, actionId, null);
+	}
+
+	public void setAction(final ActionListener actionListener,
+			final ResourceId actionId, final Object o) {
 		this.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				actionListener.onAction(actionId);
+				actionListener.onAction(actionId, o);
 			}
 		});
 	}

@@ -51,7 +51,7 @@ public class ListBox<T> extends com.google.gwt.user.client.ui.ListBox {
 			final ResourceId action) {
 		this.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
-				actionListener.onAction(action);
+				actionListener.onAction(action, getSelectedItem());
 			}
 		});
 	}

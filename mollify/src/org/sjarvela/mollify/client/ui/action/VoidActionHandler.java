@@ -8,20 +8,13 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload.flash;
+package org.sjarvela.mollify.client.ui.action;
 
-import org.swfupload.client.File;
+public abstract class VoidActionHandler implements ActionHandler {
+	public abstract void onAction();
 
-public interface FlashProgressDisplayer {
-
-	void onUploadStarted();
-
-	void onUploadEnded();
-
-	void onUploadError();
-
-	void onActiveUploadFileChanged(File file);
-
-	void setProgress(File file, double percentage);
+	public void onAction(Object t) {
+		onAction();
+	}
 
 }

@@ -18,13 +18,17 @@ import org.sjarvela.mollify.client.ResourceId;
 public class ActionDelegator implements ActionListener {
 	Map<ResourceId, ActionHandler> actions = new HashMap();
 
-	public void onAction(ResourceId action) {
+	public void onAction(ResourceId action, Object o) {
 		if (actions.containsKey(action))
-			actions.get(action).onAction();
+			actions.get(action).onAction(o);
 	}
 
 	public void setActionHandler(ResourceId action, ActionHandler actionHandler) {
 		this.actions.put(action, actionHandler);
+	}
+
+	public void onAction(ResourceId action) {
+		this.onAction(action, null);
 	}
 
 }

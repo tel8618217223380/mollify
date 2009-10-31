@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.session;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -19,8 +17,6 @@ public class DefaultSessionManager implements SessionManager {
 	private SessionInfo session = null;
 
 	public void setSession(SessionInfo session) {
-		Log.info("Session: " + session.asString());
-		GWT.log("Session: " + session.asString(), null);
 		this.session = session;
 	}
 

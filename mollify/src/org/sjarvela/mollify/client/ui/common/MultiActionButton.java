@@ -53,7 +53,7 @@ public class MultiActionButton extends Composite {
 	public void setDefaultAction(final ResourceId defaultAction) {
 		defaultActionButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				actionListener.onAction(defaultAction);
+				actionListener.onAction(defaultAction, null);
 			}
 		});
 	}

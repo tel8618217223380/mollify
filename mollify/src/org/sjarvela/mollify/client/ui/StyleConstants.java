@@ -18,6 +18,10 @@ public class StyleConstants {
 	public static final String SELECTED = "selected";
 	public static final String INVALID = "invalid";
 	public static final String LOADING = "loading";
+	public static final String ACTIVE = "active";
+	public static final String COMPLETE = "complete";
+	public static final String HIDDEN = "hidden";
+	public static final String UPLOAD = "upload";
 
 	public static final String DIALOG = "mollify-dialog";
 
@@ -176,6 +180,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FILES = "mollify-file-upload-files";
 	public static final String FILE_UPLOAD_DIALOG_FILE_SELECTOR = "mollify-file-selector";
 	public static final String FILE_UPLOAD_DIALOG_BUTTONS = "mollify-file-upload-dialog-buttons";
+	public static final String FILE_UPLOAD_DIALOG_BUTTON = "mollify-file-upload-dialog-button";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS = "mollify-file-upload-dialog-uploaders-buttons";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE = "add-file";
@@ -367,7 +372,5 @@ public class StyleConstants {
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_PERMISSION_TITLE = "mollify-fileitem-user-permission-dialog-permission-title";
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTONS = "mollify-fileitem-user-permission-dialog-buttons";
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTON_ADD_EDIT = "mollify-fileitem-user-permission-dialog-add-edit";
-
-	public static final String ACTIVE = "active";
 
 }

@@ -10,12 +10,16 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.swfupload.client.File;
 import org.swfupload.client.SWFUpload;
 import org.swfupload.client.UploadBuilder;
 import org.swfupload.client.SWFUpload.ButtonAction;
@@ -32,25 +36,29 @@ import org.swfupload.client.event.UploadSuccessHandler;
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 
-public class FlashFileUploadHandler implements UploadStartHandler,
+public class FlashFileUploadPresenter implements UploadStartHandler,
 		UploadSuccessHandler, UploadCompleteHandler, UploadErrorHandler,
 		UploadProgressHandler, SWFUploadLoadedHandler, DebugHandler {
 	private static final String UPLOADER_ID = "uploader-flash";
 
-	private final UploadBuilder builder;
 	private final ResultListener listener;
-
-	private FlashProgressDisplayer progressDisplayer;
-	private SWFUpload uploader;
+	private final SWFUpload uploader;
+	private final FlashFileUploadDialog dialog;
 
 	private int index;
 
-	public FlashFileUploadHandler(SessionInfo session,
+	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
-			String uploaderSrc, Directory directory) {
+			String uploaderSrc, Directory directory,
+			FlashFileUploadDialog dialog) {
 		this.listener = listener;
+		this.dialog = dialog;
+		this.uploader = createUploader(session, service, uploaderSrc, directory);
+	}
 
-		builder = new UploadBuilder();
+	private SWFUpload createUploader(SessionInfo session,
+			FileUploadService service, String uploaderSrc, Directory directory) {
+		UploadBuilder builder = new UploadBuilder();
 		builder.setDebug(true);
 		builder.setUploadURL(service.getUploadUrl(directory));
 		if (uploaderSrc != null)
@@ -68,41 +76,60 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 		builder.setUploadProgressHandler(this);
 		builder.setUploadSuccessHandler(this);
 		builder.setDebugHandler(this);
-	}
 
-	public void setButtonProperties(String elementId, int w, int h, String text) {
-		builder.setButtonPlaceholderID(elementId);
-		builder.setButtonWidth(w);
-		builder.setButtonHeight(h);
-		builder.setButtonText(text);
-	}
-
-	public void setFileQueueListener(final FileQueueListener listener) {
 		builder.setFileQueuedHandler(new FileQueuedHandler() {
 			public void onFileQueued(FileQueuedEvent event) {
-				listener.onFileAdded(event.getFile());
+				dialog.addFile(event.getFile());
 			}
 		});
 
 		builder.setFileQueueErrorHandler(new FileQueueErrorHandler() {
 			public void onFileQueueError(FileQueueErrorEvent e) {
-				listener.onFileAddFailed(e.getFile(), e.getErrorCode(), e
-						.getMessage());
+				GWT.log("File adding failed: " + e.getFile().getName() + " ("
+						+ e.getErrorCode() + ") " + e.getMessage(), null);
+				Log.debug("File adding failed: " + e.getFile().getName() + " ("
+						+ e.getErrorCode() + ") " + e.getMessage());
 			}
 		});
+
+		dialog.setVisualProperties(builder);
+
+		return builder.build();
 	}
 
-	public void setProgressDisplayer(FlashProgressDisplayer progressDisplayer) {
-		this.progressDisplayer = progressDisplayer;
+	public List<File> getFiles() {
+		List<File> files = new ArrayList();
+		for (int i = 0; i < uploader.getStats().getFilesQueued(); i++)
+			files.add(uploader.getFile(i));
+		return files;
 	}
 
-	public void initialize() {
-		uploader = builder.build();
+	public void onRemoveFile(File f) {
+		uploader.cancelUpload(f.getId(), false);
+		dialog.removeFile(f);
+	}
+
+	public void onStartUpload() {
+		setDemoMode();
+	}
+
+	protected void setDemoMode() {
+		dialog.onUploadStarted();
+
+		List<File> files = getFiles();
+		if (files.size() == 0)
+			return;
+
+		dialog.onFileUploadCompleted(files.get(0));
+		if (files.size() > 1) {
+			dialog.onActiveUploadFileChanged(files.get(1));
+			dialog.setProgress(files.get(1), 20.0d);
+		}
 	}
 
 	public void onUploadStart(UploadStartEvent e) {
 		GWT.log("Upload start " + e.getFile().getName(), null);
-		progressDisplayer.onActiveUploadFileChanged(e.getFile());
+		dialog.onActiveUploadFileChanged(e.getFile());
 	}
 
 	public void onUploadSuccess(UploadSuccessEvent e) {
@@ -112,8 +139,9 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 	public void onUploadComplete(UploadCompleteEvent e) {
 		GWT.log("Upload completed " + e.getFile().getName(), null);
 
+		dialog.onFileUploadCompleted(e.getFile());
 		if (uploader.getStats().getFilesQueued() == 0) {
-			progressDisplayer.onUploadEnded();
+			dialog.onUploadEnded();
 			listener.onSuccess(null);
 			return;
 		}
@@ -122,7 +150,7 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 	}
 
 	public void onUploadError(UploadErrorEvent e) {
-		progressDisplayer.onUploadError();
+		dialog.hide();
 		listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED, e
 				.getMessage()));
 	}
@@ -132,11 +160,11 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 		if (e.getBytesTotal() > 0 && e.getBytesComplete() > 0)
 			percentage = (((double) e.getBytesTotal() / (double) e
 					.getBytesComplete()) * 100d);
-		progressDisplayer.setProgress(e.getFile(), percentage);
+		dialog.setProgress(e.getFile(), percentage);
 	}
 
 	public void startUpload() {
-		progressDisplayer.onUploadStarted();
+		dialog.onUploadStarted();
 		index = -1;
 		startNextFileUpload();
 	}
@@ -147,10 +175,6 @@ public class FlashFileUploadHandler implements UploadStartHandler,
 		index++;
 		uploader.startUpload(uploader.getFile(index).getId());
 		return true;
-	}
-
-	public void removeFile(String id) {
-		uploader.cancelUpload(id, false);
 	}
 
 	public void onSWFUploadLoaded() {

@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -48,7 +48,7 @@ public class ConfigurationUsersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUsersView.Actions.addUser,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onAddUser();
 					}
@@ -56,7 +56,7 @@ public class ConfigurationUsersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUsersView.Actions.editUser,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onEditUser();
 					}
@@ -64,7 +64,7 @@ public class ConfigurationUsersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUsersView.Actions.removeUser,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onRemoveUser();
 					}
@@ -72,7 +72,7 @@ public class ConfigurationUsersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUsersView.Actions.resetPassword,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onResetPassword();
 					}
