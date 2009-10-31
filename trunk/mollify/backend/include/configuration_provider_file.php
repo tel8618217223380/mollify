@@ -270,7 +270,7 @@
 		$item = get_fileitem_from_id($id);
 		if (!$item) {
 			global $error;
-			log_error("Could determine file item for permission (".$id.")");
+			log_error("Could not determine file item for permission (".$id.")");
 			$error = "INVALID_REQUEST";
 			return FALSE;
 		}
@@ -320,6 +320,18 @@
 		return TRUE;
 	}
 
+	function remove_all_item_permissions($item, $recursively = FALSE) {
+		if ($recursively) return TRUE;	// permission file is removed along the folder
+
+		$id = _get_permission_id($item);
+		$uac_file = _get_permission_filename($id);
+		$permissions = _get_permissions($uac_file);
+		
+		if (!$permissions or !array_key_exists($id, $permissions)) return TRUE;
+		unset($permissions[$id]);
+		return _write_permissions($uac_file, $permissions);
+	}
+	
 	function move_item_permissions($from, $to, $recursively = FALSE) {
 		if ($recursively) return TRUE;	// permission file is moved along the folder
 		

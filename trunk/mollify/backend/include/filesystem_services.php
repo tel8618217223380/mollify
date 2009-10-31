@@ -62,15 +62,15 @@
 				
 			case "download":
 				// download writes the header and the content, just exit here
-				if (download($item)) return TRUE;
+				if (download($item)) exit(0);
 				break;
 
 			case "download_as_zip":
 				// download writes the header and the content, just exit here
 				if ($item["is_file"]) {
-					if (download_file_as_zip($item)) return TRUE;
+					if (download_file_as_zip($item)) exit(0);
 				} else {
-					if (download_dir_as_zip($item)) return TRUE;
+					if (download_dir_as_zip($item)) exit(0);
 				}
 				break;
 				
