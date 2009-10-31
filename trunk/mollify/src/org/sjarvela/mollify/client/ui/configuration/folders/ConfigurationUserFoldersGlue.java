@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -30,8 +30,7 @@ public class ConfigurationUserFoldersGlue implements Configurator {
 	private final ConfigurationUserFoldersView view;
 	private final ConfigurationUserFoldersPresenter presenter;
 
-	public ConfigurationUserFoldersGlue(
-			ConfigurationUserFoldersView view,
+	public ConfigurationUserFoldersGlue(ConfigurationUserFoldersView view,
 			final ConfigurationUserFoldersPresenter presenter,
 			ActionDelegator actionDelegator) {
 		this.view = view;
@@ -61,7 +60,7 @@ public class ConfigurationUserFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUserFoldersView.Actions.addUserFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onAddUserFolder();
 					}
@@ -69,7 +68,7 @@ public class ConfigurationUserFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUserFoldersView.Actions.editUserFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onEditUserFolder();
 					}
@@ -77,7 +76,7 @@ public class ConfigurationUserFoldersGlue implements Configurator {
 
 		actionDelegator.setActionHandler(
 				ConfigurationUserFoldersView.Actions.removeUserFolder,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onRemoveUserFolder();
 					}

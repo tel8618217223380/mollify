@@ -20,7 +20,11 @@ public class ActionListenerDelegator implements ActionListener {
 	}
 
 	public void onAction(ResourceId action) {
-		delegate.onAction(action);
+		delegate.onAction(action, null);
+	}
+
+	public void onAction(ResourceId action, Object o) {
+		delegate.onAction(action, o);
 	}
 
 }

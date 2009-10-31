@@ -26,13 +26,13 @@
 	}
 	
 	function get_error_message($error, $details = "") {
-		global $SETTINGS, $ERRORS;
+		global $ERRORS;
 		
 		if (!isset($ERRORS[$error])) {
 			return array("success" => FALSE, "code" => 0, "error" => "Unknown error: " + $error, "details" => $details);
 		}
 		$err = $ERRORS[$error];
-		if ($SETTINGS["debug"]) return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details, "trace" => get_trace());
+		if (is_debug()) return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details, "trace" => get_trace());
 		return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
 	}
 	
@@ -49,6 +49,7 @@
 	}
 	
 	function start_session() {
+		session_name(get_session_name());
 		if (isset($_POST["MOLLIFY_SESSION_ID"])) {
 			log_debug("Restoring session id: ".$_POST["MOLLIFY_SESSION_ID"]);
 			session_id($_REQUEST["MOLLIFY_SESSION_ID"]);

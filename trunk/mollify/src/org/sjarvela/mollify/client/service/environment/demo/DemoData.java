@@ -67,7 +67,7 @@ public class DemoData {
 	public DemoData(boolean multiUser) {
 		this.multiUser = multiUser;
 		this.settings = FeatureInfo.create(true, true, true, true, true, true,
-				true);
+				true, true);
 		this.fileSystemInfo = FileSystemInfo.create(1024, 1024);
 
 		createDirectoriesAndFiles();

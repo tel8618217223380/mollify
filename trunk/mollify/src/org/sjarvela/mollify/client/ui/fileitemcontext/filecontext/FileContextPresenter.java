@@ -97,7 +97,7 @@ public class FileContextPresenter implements ActionListener {
 
 	public void setFile(File file) {
 		this.file = file;
-		
+
 		popup.getDetails().setOpen(false);
 		popup.getName().setText(file.getName());
 		updateDetails(null);
@@ -181,7 +181,7 @@ public class FileContextPresenter implements ActionListener {
 		});
 	}
 
-	public void onAction(ResourceId action) {
+	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
 			fileSystemActionHandler.onAction(file, (FileSystemAction) action);
 			popup.hide();

@@ -87,7 +87,7 @@ public class DirectoryContextPresenter implements ActionListener {
 		this.updateDescription();
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
-		
+
 		this.popup.updateButtons(writable);
 		this.popup.initializeDetailsSection();
 	}
@@ -140,7 +140,7 @@ public class DirectoryContextPresenter implements ActionListener {
 				});
 	}
 
-	public void onAction(ResourceId action) {
+	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
 			fileSystemActionHandler.onAction(directory,
 					(FileSystemAction) action);

@@ -176,7 +176,9 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			username.addSeparator();
 		}
 
-		if (model.getSession().getFeatures().configurationUpdate()) {
+		if (model.getSession().getFeatures().configurationUpdate()
+				&& (model.getSession().getDefaultPermissionMode().isAdmin() || model
+						.getSession().getFeatures().changePassword())) {
 			username.addAction(Action.changePassword, textProvider.getStrings()
 					.mainViewChangePasswordTitle());
 			username.addSeparator();

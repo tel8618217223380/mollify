@@ -14,6 +14,6 @@ import org.sjarvela.mollify.client.ResourceId;
 
 public interface ActionListener {
 
-	void onAction(ResourceId action);
+	void onAction(ResourceId action, Object o);
 
 }

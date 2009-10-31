@@ -15,12 +15,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class FeatureInfo extends JavaScriptObject {
 	public static FeatureInfo create(boolean folderActions, boolean fileUpload,
 			boolean fileUploadProgress, boolean zipDownload,
-			boolean descriptionUpdate, boolean permissionUpdate,
-			boolean configurationUpdate) {
+			boolean descriptionUpdate, boolean changePassword,
+			boolean permissionUpdate, boolean configurationUpdate) {
 		FeatureInfo result = FeatureInfo.createObject().cast();
 		result.putValues(folderActions, fileUpload, fileUploadProgress,
-				zipDownload, descriptionUpdate, permissionUpdate,
-				configurationUpdate);
+				zipDownload, descriptionUpdate, changePassword,
+				permissionUpdate, configurationUpdate);
 		return result;
 	}
 
@@ -47,6 +47,10 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.description_update;
 	}-*/;
 
+	public final native boolean changePassword() /*-{
+		return this.change_password;
+	}-*/;
+
 	public final native boolean permissionUpdate() /*-{
 		return this.permission_update;
 	}-*/;
@@ -58,11 +62,13 @@ public class FeatureInfo extends JavaScriptObject {
 	private final native void putValues(boolean folderActions,
 			boolean fileUpload, boolean fileUploadProgress,
 			boolean zipDownload, boolean descriptionUpdate,
-			boolean permissionUpdate, boolean configurationUpdate) /*-{
+			boolean changePassword, boolean permissionUpdate,
+			boolean configurationUpdate) /*-{
 		this.folder_actions = folderActions;
 		this.file_upload = fileUpload;
 		this.file_upload_progress = fileUploadProgress;
 		this.zip_download = zipDownload;
+		this.change_password = changePassword;
 		this.description_update = descriptionUpdate;
 		this.permission_update = permissionUpdate;
 		this.configuration_update = configurationUpdate;

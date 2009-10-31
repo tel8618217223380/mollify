@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
@@ -35,9 +36,12 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 
 	public void create(Directory directory, ResultListener listener) {
 		SessionInfo session = sessionProvider.getSession();
-		FlashFileUploadHandler fileUploadHandler = new FlashFileUploadHandler(
-				session, service, listener, uploaderSrc, directory);
-		new FlashFileUploadDialog(textProvider, fileUploadHandler);
+		ActionDelegator actionDelegator = new ActionDelegator();
+		FlashFileUploadDialog dialog = new FlashFileUploadDialog(textProvider,
+				actionDelegator);
+		FlashFileUploadPresenter presenter = new FlashFileUploadPresenter(
+				session, service, listener, uploaderSrc, directory, dialog);
+		new FlashFileUploadGlue(dialog, presenter, actionDelegator);
 	}
 
 }

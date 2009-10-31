@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -27,8 +27,8 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	private final ActionDelegator actionDelegator;
 	private final DefaultMainView view;
 
-	public MainViewGlue(DefaultMainView view, final MainViewPresenter presenter,
-			ActionDelegator actionDelegator) {
+	public MainViewGlue(DefaultMainView view,
+			final MainViewPresenter presenter, ActionDelegator actionDelegator) {
 		this.view = view;
 		this.presenter = presenter;
 		this.actionDelegator = actionDelegator;
@@ -45,49 +45,53 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 
 	private void initializeActions() {
 		actionDelegator.setActionHandler(Action.editItemPermissions,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onEditItemPermissions();
 					}
 				});
 
-		actionDelegator.setActionHandler(Action.logout, new ActionHandler() {
-			public void onAction() {
-				presenter.logout();
-			}
-		});
+		actionDelegator.setActionHandler(Action.logout,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.logout();
+					}
+				});
 
-		actionDelegator.setActionHandler(Action.refresh, new ActionHandler() {
-			public void onAction() {
-				presenter.reload();
-			}
-		});
+		actionDelegator.setActionHandler(Action.refresh,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.reload();
+					}
+				});
 
-		actionDelegator.setActionHandler(Action.addFile, new ActionHandler() {
-			public void onAction() {
-				presenter.openUploadDialog();
-			}
-		});
+		actionDelegator.setActionHandler(Action.addFile,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.openUploadDialog();
+					}
+				});
 
 		actionDelegator.setActionHandler(Action.addDirectory,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.openNewDirectoryDialog();
 					}
 				});
 
 		actionDelegator.setActionHandler(Action.changePassword,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.changePassword();
 					}
 				});
 
-		actionDelegator.setActionHandler(Action.configure, new ActionHandler() {
-			public void onAction() {
-				presenter.configure();
-			}
-		});
+		actionDelegator.setActionHandler(Action.configure,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.configure();
+					}
+				});
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {

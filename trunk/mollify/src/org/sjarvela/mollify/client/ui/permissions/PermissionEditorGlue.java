@@ -15,7 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -50,21 +50,22 @@ public class PermissionEditorGlue {
 		});
 
 		actionDelegator.setActionHandler(
-				PermissionEditorView.Actions.selectItem, new ActionHandler() {
+				PermissionEditorView.Actions.selectItem,
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onSelectItem();
 					}
 				});
 
 		actionDelegator.setActionHandler(PermissionEditorView.Actions.ok,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onOk();
 					}
 				});
 
 		actionDelegator.setActionHandler(PermissionEditorView.Actions.cancel,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onClose();
 					}
@@ -72,7 +73,7 @@ public class PermissionEditorGlue {
 
 		actionDelegator.setActionHandler(
 				PermissionEditorView.Actions.addPermission,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onAddPermission();
 					}
@@ -80,7 +81,7 @@ public class PermissionEditorGlue {
 
 		actionDelegator.setActionHandler(
 				PermissionEditorView.Actions.editPermission,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onEditPermission();
 					}
@@ -88,7 +89,7 @@ public class PermissionEditorGlue {
 
 		actionDelegator.setActionHandler(
 				PermissionEditorView.Actions.removePermission,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onRemovePermission();
 					}
@@ -96,7 +97,7 @@ public class PermissionEditorGlue {
 
 		actionDelegator.setActionHandler(
 				PermissionEditorView.Actions.defaultPermissionChanged,
-				new ActionHandler() {
+				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onDefaultPermissionChanged(view
 								.getDefaultPermission().getSelectedItem());
