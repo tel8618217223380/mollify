@@ -190,8 +190,10 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_INFO_HEADER = "mollify-file-upload-info-header";
 
 	public static final String FILE_UPLOAD_DIALOG_FLASH = "file-upload-flash";
+	public static final String FILE_UPLOAD_DIALOG_FLASH_HEADER = "mollify-file-upload-flash-header";
 	public static final String FILE_UPLOAD_DIALOG_FLASH_UPLOADER = "mollify-file-upload-flash-selector";
 	public static final String FILE_UPLOAD_DIALOG_FILE = "mollify-file-upload-file";
+	public static final String FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON = "mollify-file-upload-file-remove-button";
 	public static final String FILE_UPLOAD_DIALOG_FILE_NAME = "mollify-file-upload-file-name";
 	public static final String FILE_UPLOAD_DIALOG_FILE_PROGRESS = "mollify-file-upload-file-progress";
 

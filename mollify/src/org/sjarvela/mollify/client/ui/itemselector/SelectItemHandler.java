@@ -8,13 +8,17 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.ui.itemselector;
+
+import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
-public interface FileUploadDialogFactory {
+public interface SelectItemHandler {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	void onSelect(FileSystemItem selected);
+
+	boolean isItemAllowed(FileSystemItem item, List<Directory> path);
 
 }

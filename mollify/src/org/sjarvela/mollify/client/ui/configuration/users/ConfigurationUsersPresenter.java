@@ -23,20 +23,25 @@ import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.ConfigurationType;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 
 public class ConfigurationUsersPresenter implements UserHandler {
 	private final ConfigurationUsersView view;
 	private final ConfigurationDialog parent;
 	private final ConfigurationService service;
 	private final TextProvider textProvider;
+	private final UserDialogFactory userDialogFactory;
+	private final PasswordDialogFactory passwordDialogFactory;
 
 	public ConfigurationUsersPresenter(ConfigurationService service,
 			ConfigurationDialog dialog, TextProvider textProvider,
-			ConfigurationUsersView view) {
+			ConfigurationUsersView view, UserDialogFactory userDialogFactory, PasswordDialogFactory passwordDialogFactory) {
 		this.service = service;
 		this.parent = dialog;
 		this.textProvider = textProvider;
 		this.view = view;
+		this.userDialogFactory = userDialogFactory;
+		this.passwordDialogFactory = passwordDialogFactory;
 
 		view.list().setSelectionMode(SelectionMode.Single);
 		reload();
@@ -54,7 +59,7 @@ public class ConfigurationUsersPresenter implements UserHandler {
 	}
 
 	public void onAddUser() {
-		parent.getDialogManager().openAddUserDialog(this);
+		userDialogFactory.openAddUserDialog(this);
 	}
 
 	public void onEditUser() {
@@ -62,7 +67,7 @@ public class ConfigurationUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		parent.getDialogManager().openEditUserDialog(this, selected);
+		userDialogFactory.openEditUserDialog(this, selected);
 	}
 
 	public void onRemoveUser() {
@@ -90,7 +95,7 @@ public class ConfigurationUsersPresenter implements UserHandler {
 			return;
 
 		User selected = view.list().getSelected().get(0);
-		parent.getDialogManager().openResetPasswordDialog(selected,
+		passwordDialogFactory.openResetPasswordDialog(selected,
 				parent.getPasswordHandler());
 	}
 

@@ -34,7 +34,7 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		this.uploaderSrc = uploaderSrc;
 	}
 
-	public void create(Directory directory, ResultListener listener) {
+	public void openFileUploadDialog(Directory directory, ResultListener listener) {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		FlashFileUploadDialog dialog = new FlashFileUploadDialog(textProvider,

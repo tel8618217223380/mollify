@@ -17,14 +17,12 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -33,13 +31,18 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.session.user.User;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
+import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.util.Html;
 
 public class MainViewPresenter implements DirectoryListener, PasswordHandler,
@@ -50,30 +53,38 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	private final FileSystemService fileSystemService;
 	private final SessionService sessionService;
-	private final ConfigurationService configurationService;
 	private final FileSystemActionHandler fileSystemActionHandler;
 	private final LogoutHandler logoutHandler;
 	private final TextProvider textProvider;
-	private final FileSystemItemProvider fileSystemItemProvider;
+	private final PermissionEditorViewFactory permissionEditorViewFactory;
+	private final PasswordDialogFactory passwordDialogFactory;
+	private final FileUploadDialogFactory fileUploadDialogFactory;
+	private final CreateFolderDialogFactory createFolderDialogFactory;
+	private final ConfigurationDialogFactory configurationDialogFactory;
 
 	public MainViewPresenter(DialogManager dialogManager, MainViewModel model,
 			DefaultMainView view, SessionService sessionService,
-			FileSystemService fileSystemService,
-			ConfigurationService configurationService,
-			TextProvider textProvider,
-			FileSystemItemProvider fileSystemItemProvider,
+			FileSystemService fileSystemService, TextProvider textProvider,
 			LogoutHandler logoutHandler,
-			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
+			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
+			PermissionEditorViewFactory permissionEditorViewFactory,
+			PasswordDialogFactory passwordDialogFactory,
+			FileUploadDialogFactory fileUploadDialogFactory,
+			CreateFolderDialogFactory createFolderDialogFactory,
+			ConfigurationDialogFactory configurationDialogFactory) {
 		this.dialogManager = dialogManager;
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
-		this.configurationService = configurationService;
 
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
-		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.logoutHandler = logoutHandler;
+		this.permissionEditorViewFactory = permissionEditorViewFactory;
+		this.passwordDialogFactory = passwordDialogFactory;
+		this.fileUploadDialogFactory = fileUploadDialogFactory;
+		this.createFolderDialogFactory = createFolderDialogFactory;
+		this.configurationDialogFactory = configurationDialogFactory;
 		this.fileSystemActionHandler = fileSystemActionHandlerFactory
 				.create(createReloadCallback());
 
@@ -174,7 +185,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		dialogManager.openUploadDialog(model.getCurrentFolder(),
+		fileUploadDialogFactory.openFileUploadDialog(model.getCurrentFolder(),
 				createReloadListener());
 	}
 
@@ -182,14 +193,14 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		dialogManager.openCreateFolderDialog(model.getCurrentFolder(),
-				new DirectoryHandler() {
-					public void createDirectory(Directory parentFolder,
-							String folderName) {
-						fileSystemService.createDirectory(parentFolder,
-								folderName, createReloadListener());
-					}
-				});
+		createFolderDialogFactory.openCreateFolderDialog(model
+				.getCurrentFolder(), new DirectoryHandler() {
+			public void createDirectory(Directory parentFolder,
+					String folderName) {
+				fileSystemService.createDirectory(parentFolder, folderName,
+						createReloadListener());
+			}
+		});
 	}
 
 	private ResultListener createReloadListener() {
@@ -237,7 +248,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void changePassword() {
-		dialogManager.openPasswordDialog(this);
+		passwordDialogFactory.openPasswordDialog(this);
 	}
 
 	public void changePassword(String oldPassword, String newPassword) {
@@ -286,7 +297,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void configure() {
-		dialogManager.openConfigurationDialog(configurationService, this);
+		configurationDialogFactory.openConfigurationDialog(this);
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,
@@ -313,12 +324,10 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void onEditPermissions(FileSystemItem item) {
-		dialogManager.openFilePermissionEditor(configurationService,
-				fileSystemService, fileSystemItemProvider, item);
+		permissionEditorViewFactory.openPermissionEditor(item);
 	}
 
 	public void onEditItemPermissions() {
-		dialogManager.openFilePermissionEditor(configurationService,
-				fileSystemService, fileSystemItemProvider, null);
+		permissionEditorViewFactory.openPermissionEditor(null);
 	}
 }

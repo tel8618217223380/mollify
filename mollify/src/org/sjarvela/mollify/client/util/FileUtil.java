@@ -8,13 +8,17 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.util;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+public class FileUtil {
 
-public interface FileUploadDialogFactory {
-
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	public static String getExtension(String filename) {
+		if (filename == null || filename.length() == 0)
+			return "";
+		int lastPoint = filename.lastIndexOf('.');
+		if (lastPoint < 0)
+			return "";
+		return filename.substring(lastPoint + 1);
+	}
 
 }

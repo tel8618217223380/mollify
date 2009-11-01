@@ -8,13 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 
-public interface FileUploadDialogFactory {
+public class ProgressDialogFactory {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	public ProgressDisplayer openProgressDialog(String title,
+			boolean progressBarInitiallyVisible) {
+		return new ProgressDialog(title, progressBarInitiallyVisible);
+	}
 
 }

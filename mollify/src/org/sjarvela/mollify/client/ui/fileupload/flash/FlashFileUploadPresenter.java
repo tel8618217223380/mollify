@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.util.FileUtil;
 import org.swfupload.client.File;
 import org.swfupload.client.SWFUpload;
 import org.swfupload.client.UploadBuilder;
@@ -44,8 +45,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	private final ResultListener listener;
 	private final SWFUpload uploader;
 	private final FlashFileUploadDialog dialog;
+	private final List<File> files = new ArrayList();
+	private final List<String> allowedTypes;
 
-	private int index;
+	private File current = null;
 
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
@@ -53,6 +56,8 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			FlashFileUploadDialog dialog) {
 		this.listener = listener;
 		this.dialog = dialog;
+		this.allowedTypes = session.getFileSystemInfo()
+				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, uploaderSrc, directory);
 	}
 
@@ -77,9 +82,14 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		builder.setUploadSuccessHandler(this);
 		builder.setDebugHandler(this);
 
+		if (!allowedTypes.isEmpty()) {
+			builder.setFileTypes(getFileTypeList());
+			builder.setFileTypesDescription("");
+		}
+
 		builder.setFileQueuedHandler(new FileQueuedHandler() {
 			public void onFileQueued(FileQueuedEvent event) {
-				dialog.addFile(event.getFile());
+				onAddFile(event.getFile());
 			}
 		});
 
@@ -97,15 +107,33 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		return builder.build();
 	}
 
-	public List<File> getFiles() {
-		List<File> files = new ArrayList();
-		for (int i = 0; i < uploader.getStats().getFilesQueued(); i++)
-			files.add(uploader.getFile(i));
-		return files;
+	private String getFileTypeList() {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for (String type : allowedTypes) {
+			if (!first)
+				result.append(";");
+			result.append("*.").append(type);
+			first = false;
+		}
+		return result.toString();
+	}
+
+	protected void onAddFile(File file) {
+		if (!allowedTypes.isEmpty()
+				&& !allowedTypes
+						.contains(FileUtil.getExtension(file.getName())))
+			return;
+		for (File f : files)
+			if (f.getName().equals(file.getName()))
+				return;
+		files.add(file);
+		dialog.addFile(file);
 	}
 
 	public void onRemoveFile(File f) {
 		uploader.cancelUpload(f.getId(), false);
+		files.remove(f);
 		dialog.removeFile(f);
 	}
 
@@ -116,7 +144,6 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	protected void setDemoMode() {
 		dialog.onUploadStarted();
 
-		List<File> files = getFiles();
 		if (files.size() == 0)
 			return;
 
@@ -138,15 +165,15 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public void onUploadComplete(UploadCompleteEvent e) {
 		GWT.log("Upload completed " + e.getFile().getName(), null);
-
 		dialog.onFileUploadCompleted(e.getFile());
-		if (uploader.getStats().getFilesQueued() == 0) {
+
+		File nextFile = getNextFile();
+		if (nextFile == null) {
 			dialog.onUploadEnded();
 			listener.onSuccess(null);
 			return;
 		}
-
-		startNextFileUpload();
+		startFileUpload(nextFile);
 	}
 
 	public void onUploadError(UploadErrorEvent e) {
@@ -165,16 +192,25 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public void startUpload() {
 		dialog.onUploadStarted();
-		index = -1;
-		startNextFileUpload();
+		current = null;
+		startFileUpload(getNextFile());
 	}
 
-	private boolean startNextFileUpload() {
-		if (uploader.getStats().getFilesQueued() <= 0)
-			return false;
-		index++;
-		uploader.startUpload(uploader.getFile(index).getId());
-		return true;
+	private File getNextFile() {
+		if (files.size() == 0)
+			return null;
+		int index = 0;
+		if (current != null)
+			index = files.indexOf(current) + 1;
+		if (index <= files.size())
+			return null;
+		return files.get(index);
+	}
+
+	private void startFileUpload(File f) {
+		if (f == null)
+			return;
+		uploader.startUpload(f.getId());
 	}
 
 	public void onSWFUploadLoaded() {

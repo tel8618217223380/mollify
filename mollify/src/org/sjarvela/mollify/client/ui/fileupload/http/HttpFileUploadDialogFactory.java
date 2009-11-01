@@ -17,7 +17,8 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.ui.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.ProgressDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
@@ -37,14 +38,14 @@ public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 		this.dialogManager = dialogManager;
 	}
 
-	public void create(Directory directory, ResultListener listener) {
-		FileUploadListener fileUploadListener = new HttpFileUploadHandler(
-				env.getFileUploadService(), sessionProvider.getSession()
-						.getFeatures().fileUploadProgress(), dialogManager,
-				textProvider, listener);
+	public void openFileUploadDialog(Directory directory, ResultListener listener) {
+		FileUploadListener fileUploadHandler = new HttpFileUploadHandler(env
+				.getFileUploadService(), sessionProvider.getSession()
+				.getFeatures().fileUploadProgress(), textProvider, listener,
+				new ProgressDialogFactory());
 		new HttpFileUploadDialog(directory, textProvider, service,
 				sessionProvider.getSession().getFileSystemInfo(),
-				fileUploadListener);
+				fileUploadHandler, dialogManager);
 	}
 
 }

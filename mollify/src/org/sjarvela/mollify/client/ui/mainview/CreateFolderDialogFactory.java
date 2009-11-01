@@ -8,13 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.ui.mainview;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 
-public interface FileUploadDialogFactory {
+public interface CreateFolderDialogFactory {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	void openCreateFolderDialog(Directory folder,
+			DirectoryHandler directoryHandler);
 
 }

@@ -20,7 +20,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
-import org.sjarvela.mollify.client.ui.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.inject.Inject;
@@ -61,7 +61,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 	}
 
 	private void login() {
-		dialogManager.openLoginDialog(new LoginHandler() {
+		new LoginDialog(textProvider, new LoginHandler() {
 			public void login(String userName, String password,
 					final ConfirmationListener listener) {
 				Log.info("User login: " + userName);

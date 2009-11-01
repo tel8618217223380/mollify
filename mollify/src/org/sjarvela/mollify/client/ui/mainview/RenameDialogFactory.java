@@ -8,13 +8,13 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 
-public interface FileUploadDialogFactory {
+public interface RenameDialogFactory {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	void openRenameDialog(FileSystemItem item, RenameHandler handler);
 
 }

@@ -8,13 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileupload;
+package org.sjarvela.mollify.client.ui.password;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.user.PasswordHandler;
+import org.sjarvela.mollify.client.session.user.User;
 
-public interface FileUploadDialogFactory {
+public interface PasswordDialogFactory {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	void openPasswordDialog(PasswordHandler handler);
+
+	void openResetPasswordDialog(User selected, PasswordHandler passwordHandler);
 
 }

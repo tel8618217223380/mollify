@@ -10,45 +10,23 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
-import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.ConfigurationService;
-import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.ui.DialogManager;
-import org.sjarvela.mollify.client.ui.action.ActionDelegator;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
+import org.sjarvela.mollify.client.session.user.User;
 
-public class PermissionEditorViewFactory {
-	private final TextProvider textProvider;
-	private final FileSystemService fileSystemService;
-	private final DialogManager dialogManager;
-	private final ConfigurationService configurationService;
-	private final FileSystemItemProvider fileSystemItemProvider;
+public interface PermissionEditorViewFactory {
 
-	public PermissionEditorViewFactory(TextProvider textProvider,
-			ConfigurationService configurationService,
-			FileSystemService fileSystemService,
-			FileSystemItemProvider fileSystemItemProvider,
-			DialogManager dialogManager) {
-		this.textProvider = textProvider;
-		this.configurationService = configurationService;
-		this.fileSystemService = fileSystemService;
-		this.fileSystemItemProvider = fileSystemItemProvider;
-		this.dialogManager = dialogManager;
-	}
+	void openPermissionEditor(FileSystemItem item);
 
-	public void show(FileSystemItem item) {
-		ActionDelegator actionDelegator = new ActionDelegator();
-		PermissionEditorModel model = new PermissionEditorModel(item,
-				configurationService, fileSystemService);
-		PermissionEditorView view = new PermissionEditorView(textProvider,
-				actionDelegator, item != null ? PermissionEditorView.Mode.Fixed
-						: PermissionEditorView.Mode.ItemSelectable);
-		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
-				textProvider, model, view, dialogManager,
-				new FilePermissionModeFormatter(textProvider),
-				fileSystemItemProvider);
-		new PermissionEditorGlue(presenter, view, actionDelegator);
-	}
+	void openAddFileItemUserPermissionDialog(
+			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+			List<User> availableUsers);
+
+	void openEditFileItemUserPermissionDialog(
+			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+			FileItemUserPermission fileItemUserPermission);
 
 }
