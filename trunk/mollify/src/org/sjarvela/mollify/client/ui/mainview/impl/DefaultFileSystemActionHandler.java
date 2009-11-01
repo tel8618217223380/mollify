@@ -25,10 +25,12 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
+import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
+import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
@@ -38,15 +40,21 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private final Callback actionCallback;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final TextProvider textProvider;
+	private final ItemSelectorFactory itemSelectorFactory;
+	private final RenameDialogFactory renameDialogFactory;
 
 	public DefaultFileSystemActionHandler(TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
+			ItemSelectorFactory itemSelectorFactory,
+			RenameDialogFactory renameDialogFactory,
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider,
 			Callback actionCallback) {
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
+		this.itemSelectorFactory = itemSelectorFactory;
+		this.renameDialogFactory = renameDialogFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.actionCallback = actionCallback;
@@ -67,13 +75,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
-			dialogManager.openRenameDialog(file, this);
+			renameDialogFactory.openRenameDialog(file, this);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
-				dialogManager.showSelectFolderDialog(textProvider.getStrings()
-						.copyFileDialogTitle(), textProvider.getMessages()
-						.copyFileMessage(file.getName()), textProvider
-						.getStrings().copyFileDialogAction(),
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getStrings().copyFileDialogTitle(), textProvider
+						.getMessages().copyFileMessage(file.getName()),
+						textProvider.getStrings().copyFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								copyFile(file, (Directory) selected);
@@ -87,10 +95,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
-				dialogManager.showSelectFolderDialog(textProvider.getStrings()
-						.moveFileDialogTitle(), textProvider.getMessages()
-						.moveFileMessage(file.getName()), textProvider
-						.getStrings().moveFileDialogAction(),
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getStrings().moveFileDialogTitle(), textProvider
+						.getMessages().moveFileMessage(file.getName()),
+						textProvider.getStrings().moveFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								moveFile(file, (Directory) selected);
@@ -128,9 +136,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(directory));
 		} else if (action.equals(FileSystemAction.rename)) {
-			dialogManager.openRenameDialog(directory, this);
+			renameDialogFactory.openRenameDialog(directory, this);
 		} else if (action.equals(FileSystemAction.move)) {
-			dialogManager.showSelectFolderDialog(textProvider.getStrings()
+			itemSelectorFactory.openFolderSelector(textProvider.getStrings()
 					.moveDirectoryDialogTitle(), textProvider.getMessages()
 					.moveDirectoryMessage(directory.getName()), textProvider
 					.getStrings().moveDirectoryDialogAction(),

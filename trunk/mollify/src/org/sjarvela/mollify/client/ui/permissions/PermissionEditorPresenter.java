@@ -25,11 +25,12 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.file.FilePermissionMode;
 import org.sjarvela.mollify.client.session.user.User;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
-import org.sjarvela.mollify.client.ui.dialog.SelectItemHandler;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
+import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
 
 public class PermissionEditorPresenter implements FileItemUserPermissionHandler {
 	private final PermissionEditorView view;
@@ -37,16 +38,22 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	private final PermissionEditorModel model;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final TextProvider textProvider;
+	private final DefaultPermissionEditorViewFactory permissionEditorViewFactory;
+	private final ItemSelectorFactory itemSelectorFactory;
 
 	public PermissionEditorPresenter(TextProvider textProvider,
 			PermissionEditorModel model, PermissionEditorView view,
 			DialogManager dialogManager,
+			DefaultPermissionEditorViewFactory permissionEditorViewFactory,
+			ItemSelectorFactory itemSelectorFactory,
 			Formatter<FilePermissionMode> filePermissionFormatter,
 			FileSystemItemProvider fileSystemItemProvider) {
 		this.textProvider = textProvider;
 		this.model = model;
 		this.view = view;
 		this.dialogManager = dialogManager;
+		this.permissionEditorViewFactory = permissionEditorViewFactory;
+		this.itemSelectorFactory = itemSelectorFactory;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 
 		model.setErrorCallback(new ResultCallback<ServiceError>() {
@@ -136,7 +143,8 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		List<User> availableUsers = model.getUsersWithoutPermission();
 		if (availableUsers.size() == 0)
 			return;
-		dialogManager.openAddFileItemUserPermissionDialog(this, availableUsers);
+		permissionEditorViewFactory.openAddFileItemUserPermissionDialog(this,
+				availableUsers);
 	}
 
 	public void onEditPermission() {
@@ -144,8 +152,8 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		if (selected.size() != 1)
 			return;
 
-		dialogManager.openEditFileItemUserPermissionDialog(this, selected
-				.get(0));
+		permissionEditorViewFactory.openEditFileItemUserPermissionDialog(this,
+				selected.get(0));
 	}
 
 	public void onRemovePermission() {
@@ -187,7 +195,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	protected void openSelectItemDialog() {
-		dialogManager.showSelectItemDialog(textProvider.getStrings()
+		itemSelectorFactory.openItemSelector(textProvider.getStrings()
 				.selectItemDialogTitle(), textProvider.getStrings()
 				.selectPermissionItemDialogMessage(), textProvider.getStrings()
 				.selectPermissionItemDialogAction(), fileSystemItemProvider,

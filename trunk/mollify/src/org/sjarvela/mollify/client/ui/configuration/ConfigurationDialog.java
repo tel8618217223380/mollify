@@ -14,15 +14,16 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -53,7 +54,8 @@ public class ConfigurationDialog extends CenteredDialog implements
 
 	public ConfigurationDialog(TextProvider textProvider,
 			DialogManager dialogManager, SessionInfo session,
-			ConfigurationService service, PasswordHandler passwordHandler) {
+			ConfigurationService service, PasswordHandler passwordHandler,
+			PasswordGenerator passwordGenerator) {
 		super(textProvider.getStrings().configurationDialogTitle(),
 				StyleConstants.CONFIGURATION_DIALOG);
 		this.textProvider = textProvider;
@@ -61,7 +63,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 		this.session = session;
 		this.passwordHandler = passwordHandler;
 		this.viewManager = new ConfigurationViewManager(textProvider, service,
-				this);
+				this, passwordGenerator);
 
 		menu = new ConfigurationMenu(this);
 		menu.addItem(ConfigurationType.Users, textProvider.getStrings()

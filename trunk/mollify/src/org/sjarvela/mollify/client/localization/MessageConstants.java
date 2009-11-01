@@ -39,4 +39,6 @@ public interface MessageConstants extends Messages {
 	
 	String userDirectoryListDefaultName(String defaultName);
 
+	String fileUploadDialogUnallowedFileType(String extension);
+
 }

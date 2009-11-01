@@ -20,8 +20,8 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.ProgressDisplayer;
+import org.sjarvela.mollify.client.ui.dialog.ProgressDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -29,28 +29,28 @@ public class HttpFileUploadHandler implements FileUploadListener {
 	private final TextProvider textProvider;
 	private final boolean isProgressEnabled;
 	private final FileUploadService service;
-	private final DialogManager dialogManager;
 	private final ResultListener listener;
+	private final ProgressDialogFactory progressDialogFactory;
 
 	private FileUploadMonitor uploadMonitor;
 	private ProgressDisplayer progressDisplayer;
 
 	public HttpFileUploadHandler(FileUploadService service,
-			boolean isProgressEnabled, DialogManager dialogManager,
-			TextProvider textProvider, ResultListener listener) {
+			boolean isProgressEnabled, TextProvider textProvider,
+			ResultListener listener, ProgressDialogFactory progressDialogFactory) {
 		this.service = service;
 		this.isProgressEnabled = isProgressEnabled;
-		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.listener = listener;
+		this.progressDialogFactory = progressDialogFactory;
 	}
 
 	public void onUploadStarted(String uploadId, List<String> filenames) {
 		String info = filenames.size() == 1 ? filenames.get(0) : textProvider
 				.getMessages().uploadingNFilesInfo(filenames.size());
 
-		progressDisplayer = dialogManager.openProgressDialog(textProvider
-				.getStrings().fileUploadProgressTitle(), false);
+		progressDisplayer = progressDialogFactory.openProgressDialog(
+				textProvider.getStrings().fileUploadProgressTitle(), false);
 		progressDisplayer.setInfo(info);
 		progressDisplayer.setDetails(textProvider.getStrings()
 				.fileUploadProgressPleaseWait());

@@ -20,6 +20,8 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.util.FileUtil;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,6 +52,8 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private final FileUploadService service;
 	private final FileSystemInfo info;
 	private final FileUploadListener listener;
+	private final List<String> allowedFileTypes;
+	private final DialogManager dialogManager;
 
 	private FormPanel form;
 	private Panel uploadersPanel;
@@ -59,15 +63,17 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 
 	public HttpFileUploadDialog(Directory directory, TextProvider textProvider,
 			FileUploadService service, FileSystemInfo info,
-			FileUploadListener listener) {
+			FileUploadListener listener, DialogManager dialogManager) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG);
 		this.info = info;
 		this.listener = listener;
+		this.dialogManager = dialogManager;
 		this.uploadId = service.getFileUploadId();
 		this.directory = directory;
 		this.textProvider = textProvider;
 		this.service = service;
+		this.allowedFileTypes = info.getAllowedFileUploadTypes();
 
 		initialize();
 	}
@@ -178,6 +184,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	protected void onAddFile() {
 		if (getLastUploader().getFilename().length() < 1)
 			return;
+
 		uploadersPanel.add(createUploader());
 	}
 
@@ -201,8 +208,26 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private boolean onStartUpload() {
 		if (getLastUploader().getFilename().length() < 1)
 			return false;
+		if (!verifyFileTypes())
+			return false;
+
 		this.setVisible(false);
 		return true;
+	}
+
+	private boolean verifyFileTypes() {
+		if (allowedFileTypes.isEmpty())
+			return true;
+		for (FileUpload fu : uploaders) {
+			String extension = FileUtil.getExtension(fu.getFilename());
+			if (!allowedFileTypes.contains(extension)) {
+				dialogManager.showInfo(textProvider.getStrings()
+						.fileUploadDialogTitle(), textProvider.getMessages()
+						.fileUploadDialogUnallowedFileType(extension));
+				return false;
+			}
+		}
+		return false;
 	}
 
 	private FileUpload getLastUploader() {

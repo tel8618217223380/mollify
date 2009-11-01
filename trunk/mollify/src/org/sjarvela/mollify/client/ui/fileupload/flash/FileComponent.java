@@ -36,7 +36,9 @@ public class FileComponent extends FlowPanel {
 		add(name);
 
 		button = new ActionButton(textProvider.getStrings()
-				.fileUploadDialogRemoveFileButton());
+				.fileUploadDialogRemoveFileButton(),
+				StyleConstants.FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON,
+				StyleConstants.FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON);
 		button.setAction(actionListener, clickAction, file);
 		add(button);
 

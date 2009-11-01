@@ -17,17 +17,23 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultViewManager implements ViewManager {
+	static final String MOLLIFY_PANEL_ID = "mollify";
+
 	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private final RootPanel rootPanel;
 
-	public DefaultViewManager(RootPanel rootPanel) {
-		this.rootPanel = rootPanel;
+	@Inject
+	public DefaultViewManager() {
+		if (RootPanel.get(MOLLIFY_PANEL_ID) == null)
+			throw new RuntimeException("No placeholder found for Mollify");
+		this.rootPanel = RootPanel.get(MOLLIFY_PANEL_ID);
 	}
 
 	public void openView(Widget mainView) {

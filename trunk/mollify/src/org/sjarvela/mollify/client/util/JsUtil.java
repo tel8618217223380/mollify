@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -64,6 +65,14 @@ public class JsUtil {
 		for (Entry<String, String> e : data.entrySet())
 			o.put(e.getKey(), new JSONString(e.getValue()));
 		return o.getJavaScriptObject();
+	}
+
+	public static List<String> asList(JsArrayString array) {
+		List<String> list = new ArrayList();
+		int s = array.length();
+		for (int i = 0; i < s; i++)
+			list.add(array.get(i));
+		return list;
 	}
 
 }

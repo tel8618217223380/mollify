@@ -16,8 +16,10 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.ui.DialogManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
+import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
 
 public class DefaultFileSystemActionHandlerFactory implements
 		FileSystemActionHandlerFactory {
@@ -26,22 +28,28 @@ public class DefaultFileSystemActionHandlerFactory implements
 	private final FileSystemService fileSystemService;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final ViewManager windowManager;
+	private final ItemSelectorFactory itemSelectorFactory;
+	private final RenameDialogFactory renameDialogFactory;
 
 	public DefaultFileSystemActionHandlerFactory(TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
+			ItemSelectorFactory itemSelectorFactory,
+			RenameDialogFactory renameDialogFactory,
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider) {
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
+		this.itemSelectorFactory = itemSelectorFactory;
+		this.renameDialogFactory = renameDialogFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 	}
 
 	public FileSystemActionHandler create(Callback actionCallback) {
 		return new DefaultFileSystemActionHandler(textProvider, windowManager,
-				dialogManager, fileSystemService, fileSystemItemProvider,
-				actionCallback);
+				dialogManager, itemSelectorFactory, renameDialogFactory,
+				fileSystemService, fileSystemItemProvider, actionCallback);
 	}
 
 }

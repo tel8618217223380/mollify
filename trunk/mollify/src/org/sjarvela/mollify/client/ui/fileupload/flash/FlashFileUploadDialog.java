@@ -82,13 +82,15 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	}
 
 	private Widget createFileList() {
-		fileList = new VerticalPanel();
+		fileList = new FlowPanel();
 		fileList.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILES);
 		return fileList;
 	}
 
 	private Widget createSelectModeHeader() {
 		selectHeader = new FlowPanel();
+		selectHeader
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_HEADER);
 
 		Label message = new Label(textProvider.getStrings()
 				.fileUploadDialogMessage());

@@ -8,17 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dialog;
+package org.sjarvela.mollify.client.ui.configuration.users;
 
-import java.util.List;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserHandler;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+public interface UserDialogFactory {
 
-public interface SelectItemHandler {
+	void openAddUserDialog(UserHandler userHandler);
 
-	void onSelect(FileSystemItem selected);
-
-	boolean isItemAllowed(FileSystemItem item, List<Directory> path);
+	void openEditUserDialog(UserHandler userHandler, User selected);
 
 }

@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview.impl;
+package org.sjarvela.mollify.client.session.file;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,16 +17,23 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.SessionProvider;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
-	private final List<Directory> roots;
+	private List<Directory> roots = null;
 
-	public DefaultFileSystemItemProvider(List<Directory> roots,
-			FileSystemService fileSystemService) {
-		this.roots = roots;
-		this.fileSystemService = fileSystemService;
+	@Inject
+	public DefaultFileSystemItemProvider(SessionProvider sessionProvider,
+			ServiceEnvironment env) {
+		this.roots = sessionProvider.getSession().getRootDirectories();
+		this.fileSystemService = env.getFileSystemService();
 	}
 
 	public void getDirectories(Directory parent,

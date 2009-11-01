@@ -16,6 +16,9 @@ import java.util.Map;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.session.user.PasswordGenerator;
+import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserHandler;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog.ConfigurationType;
 import org.sjarvela.mollify.client.ui.configuration.folders.ConfigurationFoldersGlue;
@@ -27,18 +30,22 @@ import org.sjarvela.mollify.client.ui.configuration.folders.ConfigurationUserFol
 import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersGlue;
 import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersPresenter;
 import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersView;
+import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
+import org.sjarvela.mollify.client.ui.configuration.users.UserDialogFactory;
 
-public class ConfigurationViewManager {
+public class ConfigurationViewManager implements UserDialogFactory {
 	private final ConfigurationService service;
 	private final TextProvider textProvider;
 	private final ConfigurationDialog dialog;
 	private final Map<ResourceId, Configurator> cache = new HashMap();
+	private final PasswordGenerator passwordGenerator;
 
 	public ConfigurationViewManager(TextProvider textProvider,
-			ConfigurationService service, ConfigurationDialog dialog) {
+			ConfigurationService service, ConfigurationDialog dialog, PasswordGenerator passwordGenerator) {
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dialog = dialog;
+		this.passwordGenerator = passwordGenerator;
 	}
 
 	public Configurator getView(ResourceId id) {
@@ -59,12 +66,11 @@ public class ConfigurationViewManager {
 
 	private Configurator createUsersView() {
 		ActionDelegator actionDelegator = new ActionDelegator();
-		ConfigurationUsersView view = new ConfigurationUsersView(
-				textProvider, actionDelegator);
-		ConfigurationUsersPresenter presenter = new ConfigurationUsersPresenter(
-				service, dialog, textProvider, view);
-		return new ConfigurationUsersGlue(view, presenter,
+		ConfigurationUsersView view = new ConfigurationUsersView(textProvider,
 				actionDelegator);
+		ConfigurationUsersPresenter presenter = new ConfigurationUsersPresenter(
+				service, dialog, textProvider, view, this, null);
+		return new ConfigurationUsersGlue(view, presenter, actionDelegator);
 	}
 
 	private Configurator createFoldersView() {
@@ -73,8 +79,7 @@ public class ConfigurationViewManager {
 				textProvider, actionDelegator);
 		ConfigurationFoldersPresenter presenter = new ConfigurationFoldersPresenter(
 				service, textProvider, dialog, view);
-		return new ConfigurationFoldersGlue(view, presenter,
-				actionDelegator);
+		return new ConfigurationFoldersGlue(view, presenter, actionDelegator);
 	}
 
 	private Configurator createUserFoldersView() {
@@ -91,5 +96,13 @@ public class ConfigurationViewManager {
 		for (Configurator config : cache.values()) {
 			config.onDataChanged(type);
 		}
+	}
+
+	public void openAddUserDialog(UserHandler userHandler) {
+		new UserDialog(textProvider, passwordGenerator, userHandler);
+	}
+
+	public void openEditUserDialog(UserHandler userHandler, User user) {
+		new UserDialog(textProvider, userHandler, user);
 	}
 }
