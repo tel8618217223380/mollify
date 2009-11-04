@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.session;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
@@ -79,6 +80,8 @@ public class SessionInfo extends JavaScriptObject {
 	}-*/;
 
 	public final UserPermissionMode getDefaultPermissionMode() {
+		if (getDefaultPermissionModeString() == null)
+			return null;
 		return UserPermissionMode.fromString(getDefaultPermissionModeString()
 				.trim().toLowerCase());
 	}
@@ -92,6 +95,8 @@ public class SessionInfo extends JavaScriptObject {
 	}-*/;
 
 	public final List<Directory> getRootDirectories() {
+		if (getRootDirectoryList() == null)
+			return Collections.EMPTY_LIST;
 		return Directory.createFromDirectories(getRootDirectoryList());
 	}
 

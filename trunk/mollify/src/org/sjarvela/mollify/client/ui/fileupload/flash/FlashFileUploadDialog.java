@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,6 +45,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 	private Panel selectHeader;
 	private Label uploadHeader;
+	private ScrollPanel fileScrollPanel;
 	private Panel fileList;
 	private HorizontalPanel buttons;
 	private FileComponent activeItem;
@@ -82,9 +84,13 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	}
 
 	private Widget createFileList() {
+		fileScrollPanel = new ScrollPanel();
+		fileScrollPanel
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILES_PANEL);
 		fileList = new FlowPanel();
 		fileList.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILES);
-		return fileList;
+		fileScrollPanel.add(fileList);
+		return fileScrollPanel;
 	}
 
 	private Widget createSelectModeHeader() {
@@ -189,13 +195,14 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 		FileComponent current = fileItems.get(file.getId());
 		current.setActive(true);
-		current.setProgress(0d);
+		current.setProgress(0d, 0l);
 
 		activeItem = current;
+		fileScrollPanel.ensureVisible(activeItem);
 	}
 
-	public void setProgress(File file, double percentage) {
-		activeItem.setProgress(percentage);
+	public void setProgress(File file, double percentage, long complete) {
+		activeItem.setProgress(percentage, complete);
 	}
 
 	public void onFileUploadCompleted(File file) {

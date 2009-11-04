@@ -15,7 +15,7 @@ import com.google.gwt.i18n.client.Messages;
 public interface MessageConstants extends Messages {
 	String sizeOneByte();
 
-	String sizeInBytes(int bytes);
+	String sizeInBytes(long bytes);
 
 	String sizeOneKilobyte();
 

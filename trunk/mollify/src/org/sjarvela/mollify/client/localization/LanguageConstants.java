@@ -152,6 +152,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadProgressTitle();
 
 	public String fileUploadProgressPleaseWait();
+	
+	public String fileUploadDialogMessageFileCompleted();
 
 	public String createFolderDialogTitle();
 
