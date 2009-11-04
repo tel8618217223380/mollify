@@ -17,12 +17,12 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.ProgressBar;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.swfupload.client.File;
 import org.swfupload.client.UploadBuilder;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -49,6 +49,12 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	private Panel fileList;
 	private HorizontalPanel buttons;
 	private FileComponent activeItem;
+
+	private Panel totalPanel;
+	private Label totalProgress;
+	private ProgressBar totalProgressBar;
+
+	private String totalSizeText;
 
 	public enum Actions implements ResourceId {
 		upload, cancel, removeFile
@@ -80,6 +86,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		panel.add(createSelectModeHeader());
 		panel.add(createUploadingMessage());
 		panel.add(createFileList());
+		panel.add(createTotalPanel());
 		return panel;
 	}
 
@@ -107,6 +114,34 @@ public class FlashFileUploadDialog extends CenteredDialog {
 				+ StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER + "' id='"
 				+ UPLOADER_ELEMENT_ID + "'/>"));
 		return selectHeader;
+	}
+
+	private Widget createTotalPanel() {
+		totalPanel = new VerticalPanel();
+		totalPanel
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PANEL);
+
+		Panel row1 = new HorizontalPanel();
+
+		Label label = new Label(textProvider.getStrings()
+				.fileUploadTotalProgressTitle());
+		label
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
+		row1.add(label);
+
+		totalProgressBar = new ProgressBar(
+				StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_BAR);
+		totalProgressBar.setProgress(0d);
+		row1.add(totalProgressBar);
+		totalPanel.add(row1);
+
+		totalProgress = new Label();
+		totalProgress
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PROGRESS);
+		totalPanel.add(totalProgress);
+
+		totalPanel.setVisible(false);
+		return totalPanel;
 	}
 
 	@Override
@@ -154,14 +189,12 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	}
 
 	public void onFileAddFailed(File file, int errorCode, String message) {
-		GWT
-				.log("ERROR (" + errorCode + ") " + file.toString() + ": "
-						+ message, null);
 		Log.error("File queue error (" + errorCode + ") " + file.toString()
 				+ ": " + message);
 	}
 
-	public void onUploadStarted() {
+	public void onUploadStarted(long totalSize) {
+		totalSizeText = textProvider.getSizeText(totalSize);
 		setMode(Mode.Upload);
 	}
 
@@ -174,11 +207,13 @@ public class FlashFileUploadDialog extends CenteredDialog {
 			selectHeader.addStyleDependentName(StyleConstants.HIDDEN);
 			fileList.addStyleDependentName(StyleConstants.UPLOAD);
 			uploadHeader.setVisible(true);
-			// buttons.setVisible(false);
+			totalPanel.setVisible(true);
+			buttons.setVisible(false);
 		} else {
 			selectHeader.removeStyleDependentName(StyleConstants.HIDDEN);
 			fileList.removeStyleDependentName(StyleConstants.UPLOAD);
 			uploadHeader.setVisible(false);
+			totalPanel.setVisible(false);
 		}
 
 		for (FileComponent fc : fileItems.values())
@@ -201,8 +236,13 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		fileScrollPanel.ensureVisible(activeItem);
 	}
 
-	public void setProgress(File file, double percentage, long complete) {
+	public void setProgress(File file, double percentage, long complete,
+			double totalPercentage, long totalProgress) {
 		activeItem.setProgress(percentage, complete);
+
+		this.totalProgress.setText(textProvider.getSizeText(totalProgress)
+				+ " / " + totalSizeText);
+		this.totalProgressBar.setProgress(totalPercentage);
 	}
 
 	public void onFileUploadCompleted(File file) {

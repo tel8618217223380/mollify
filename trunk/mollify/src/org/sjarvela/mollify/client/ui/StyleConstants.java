@@ -201,6 +201,10 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FILE_INFO = "mollify-file-upload-file-info";
 	public static final String FILE_UPLOAD_DIALOG_FILE_PROGRESS_PANEL = "mollify-file-upload-file-progress-panel";
 	public static final String FILE_UPLOAD_DIALOG_FILE_PROGRESS = "mollify-file-upload-file-progress";
+	public static final String FILE_UPLOAD_DIALOG_TOTAL_PANEL = "mollify-file-upload-total-progress-panel";
+	public static final String FILE_UPLOAD_DIALOG_TOTAL_TITLE = "mollify-file-upload-total-progress-title";
+	public static final String FILE_UPLOAD_DIALOG_TOTAL_PROGRESS = "mollify-file-upload-total-progress";
+	public static final String FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_BAR = "mollify-file-upload-total-progress-bar";
 
 	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";

@@ -1619,6 +1619,10 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message {
 	float: left;
+	background: url(wait2.gif) no-repeat right;
+	width: 300px;
+	height: 16px;
+	padding-top: 1px;
 }
 
 .swfupload {
@@ -1634,13 +1638,12 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-file-active {
-	background: #c9dbe5 url(wait2.gif) no-repeat 265px 5px;
+	background: #c9dbe5;
 	font-weight: bold;
 }
 
 .mollify-file-upload-file-progress-panel {
-	width: 120px;
-	float: right;
+	width: 125px;
 }
 
 .mollify-file-upload-file-progress {
@@ -1649,15 +1652,15 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	width: 100%;
 }
 
-.mollify-file-upload-file-progress .current, .mollify-file-upload-file-progress .left {
+.mollify-file-upload-total-progress-bar .current, .mollify-file-upload-total-progress-bar .left, .mollify-file-upload-file-progress .current, .mollify-file-upload-file-progress .left {
 	height: 10px;
 }
 
-.mollify-file-upload-file-progress .current {
+.mollify-file-upload-total-progress-bar .current, .mollify-file-upload-file-progress .current {
 	background-color: #b9c1e2;
 }
 
-.mollify-file-upload-file-progress .left {
+.mollify-file-upload-total-progress-bar .left, .mollify-file-upload-file-progress .left {
 	background-color: #f6f6f6;
 }
 
@@ -1668,7 +1671,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 
 .mollify-file-upload-file-row2 {
 	margin: 4px;
-	width: 240px;
+	width: 270px;
 }
 
 .mollify-file-upload-file-name {
@@ -1679,8 +1682,36 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	font-weight: normal;
 	font-style: normal;
 	color: #737373;
+	width: 120px;
+	margin-left: 4px;
 }
 
-.mollify-file-upload-file-complete {
-	background-color: #bbfad1;
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-complete {
+	background-color: #d5fbe9;
+}
+
+.mollify-file-upload-total-progress-panel {
+	width: 100%;
+	margin-top: 9px;
+}
+
+.mollify-file-upload-total-progress-title {
+	font-weight: bold;
+	margin-top: 1px;
+	margin-left: 4px;
+	margin-right: 4px;
+	width: 75px;
+}
+
+.mollify-file-upload-total-progress {
+	margin-left: 4px;
+	margin-top: 4px;
+	color: #737373;
+	float: right;
+	margin-right: 3px;
+}
+
+.mollify-file-upload-total-progress-bar {
+	width: 217px;
+	border: 1px solid #8f95c4;
 }
