@@ -27,9 +27,6 @@
 	<extend-property name="locale" values="fr"/>
 	<extend-property name="locale" values="fi"/>
 	<extend-property name="locale" values="pt"/>
-
-	<set-property name="log_DivLogger" value="ENABLED" />
-	<set-property name="log_FirebugLogger" value="ENABLED" />
 	
 	<define-property name="demo" values="true,false" /> 
 	<property-provider name="demo">

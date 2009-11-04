@@ -75,4 +75,12 @@ public class JsUtil {
 		return list;
 	}
 
+	public static JsArrayString asArray(List<String> list) {
+		JsArrayString array = JsArrayString.createArray().cast();
+		int index = 0;
+		for (String s : list)
+			array.set(index++, s);
+		return array;
+	}
+
 }

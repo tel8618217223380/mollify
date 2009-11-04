@@ -62,6 +62,11 @@
 		<delete dir="${build.dir}" />
 		<delete dir="${test.build.dir}" />
 		<delete dir="${deploy.dir}" />
+		
+		<delete>
+			<fileset dir="${src.dir}" includes="**/*.class"/>
+			<fileset dir="${test.src.dir}" includes="**/*.class"/>
+		</delete>
 	</target>
 
 	<target name="init-dev">

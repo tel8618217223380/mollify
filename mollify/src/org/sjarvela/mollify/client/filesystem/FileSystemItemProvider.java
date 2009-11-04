@@ -8,10 +8,9 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileSystemItemProvider extends DirectoryProvider {

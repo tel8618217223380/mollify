@@ -35,13 +35,13 @@ public class FileSystemInfo extends JavaScriptObject {
 	public static FileSystemInfo create(int maxFileSize, int maxTotalSize,
 			List<String> allowedFileUploadTypes) {
 		FileSystemInfo result = FileSystemInfo.createObject().cast();
-		result.putValues(maxFileSize, maxTotalSize, allowedFileUploadTypes
-				.toArray(new String[0]));
+		result.putValues(maxFileSize, maxTotalSize, JsUtil
+				.asArray(allowedFileUploadTypes));
 		return result;
 	}
 
 	private final native void putValues(int maxFileSize, int maxTotalSize,
-			String[] allowedFileUploadTypes) /*-{
+			JsArrayString allowedFileUploadTypes) /*-{
 		this.max_upload_file_size = maxFileSize;
 		this.max_upload_total_size = maxTotalSize;
 		this.allowed_file_upload_types = allowedFileUploadTypes;

@@ -33,12 +33,13 @@ public class DemoSessionService implements SessionService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getSessionInfo(String protocolVersion, ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo(""));
+	public void getSessionInfo(String protocolVersion,
+			ResultListener resultListener) {
+		resultListener.onSuccess(data.getSessionInfo());
 	}
 
 	public void logout(ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo(""));
+		resultListener.onSuccess(data.getSessionInfo());
 	}
 
 	public void resetPassword(User user, String password,

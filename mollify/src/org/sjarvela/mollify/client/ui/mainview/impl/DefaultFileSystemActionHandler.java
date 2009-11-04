@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;

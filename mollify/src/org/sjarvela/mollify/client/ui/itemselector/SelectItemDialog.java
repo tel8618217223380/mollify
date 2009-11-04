@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;

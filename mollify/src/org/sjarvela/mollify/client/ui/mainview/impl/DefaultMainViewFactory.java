@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
@@ -92,9 +92,9 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, textProvider, model.getSession());
+				fileSystemService, textProvider, session);
 		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
-				textProvider, fileSystemService, model.getSession());
+				textProvider, fileSystemService, session);
 		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
 				textProvider, windowManager, dialogManager,
 				itemSelectorFactory, this, fileSystemService,

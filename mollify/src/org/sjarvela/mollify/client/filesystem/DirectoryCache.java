@@ -19,7 +19,6 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class DirectoryCache implements DirectoryProvider {
-
 	private final DirectoryProvider directoryProvider;
 	private final Map<Directory, List<Directory>> cache = new HashMap();
 

@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;

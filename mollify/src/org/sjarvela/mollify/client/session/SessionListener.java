@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.session;
 
-public interface SessionProvider {
-	SessionInfo getSession();
+public interface SessionListener {
 
-	void setSessionListener(SessionListener listener);
+	void onSessionChanged();
+
 }
