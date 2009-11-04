@@ -106,6 +106,10 @@ public class DemoData {
 						23433231));
 	}
 
+	public SessionInfo getSessionInfo() {
+		return getSessionInfo(null);
+	}
+
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", "", "", "",

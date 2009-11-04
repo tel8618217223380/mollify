@@ -52,7 +52,7 @@ public class DefaultUiSessionManager implements UiSessionManager {
 		this.logoutCallback = logoutCallback;
 		setSession(session);
 
-		if (!session.isAuthenticationRequired() || session.getAuthenticated()) {
+		if (!session.isAuthenticationRequired() || session.isAuthenticated()) {
 			loginCallback.onCallback();
 			return;
 		}

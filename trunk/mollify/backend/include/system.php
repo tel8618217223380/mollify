@@ -79,8 +79,22 @@
 	function get_filesystem_session_info() {
 		return array(
 			"max_upload_file_size" => in_bytes(ini_get("upload_max_filesize")),
-			"max_upload_total_size" => in_bytes(ini_get("post_max_size"))
+			"max_upload_total_size" => in_bytes(ini_get("post_max_size")),
+			"allowed_file_upload_types" => get_allowed_file_upload_types()
 		);
+	}
+	
+	function get_allowed_file_upload_types() {
+		global $SETTINGS;
+		if (!isset($SETTINGS['allowed_file_upload_types'])) return array();
+		
+		$types = array();
+		foreach($SETTINGS['allowed_file_upload_types'] as $type) {
+			$pos = strrpos($type, ".");
+			if ($pos === FALSE) $types[] = $type;
+			else $types[] = substr($type, $pos+1);
+		}
+		return $types;
 	}
 
 	function get_features() {

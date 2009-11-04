@@ -10,16 +10,16 @@
 
 package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
+import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.DefaultSessionManager;
 import org.sjarvela.mollify.client.session.ParameterParser;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.session.file.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.user.DefaultPasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;

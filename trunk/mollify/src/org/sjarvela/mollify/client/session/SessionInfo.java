@@ -16,10 +16,10 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.google.gwt.json.client.JSONObject;
 
 public class SessionInfo extends JavaScriptObject {
 	public static SessionInfo create(boolean authenticationRequired,
@@ -38,14 +38,23 @@ public class SessionInfo extends JavaScriptObject {
 	}
 
 	public final String asString() {
-		return new JSONObject(this).toString();
+		return JsUtil.asJsonString(this);
+		// StringBuilder s = new StringBuilder("[SessionInfo");
+		//
+		// if (isAuthenticationRequired())
+		// s.append(" auth=").append(isAuthenticated()).append(" user=")
+		// .append(getLoggedUser());
+		// s.append(" permission=").append(getDefaultPermissionModeString());
+		// s.append(" filesystem=").append(getFileSystemInfo().asString());
+		// s.append("]");
+		// return s.toString();
 	}
 
 	public final native boolean isAuthenticationRequired() /*-{
 		return this.authentication_required;
 	}-*/;
 
-	public final native boolean getAuthenticated() /*-{
+	public final native boolean isAuthenticated() /*-{
 		return this.authenticated;
 	}-*/;
 
@@ -91,9 +100,9 @@ public class SessionInfo extends JavaScriptObject {
 	}-*/;
 
 	private final native void putValues(boolean authenticationRequired,
-			boolean authenticated, String userId, String user,
-			String permissionMode, String sessionName, String sessionId,
-			FeatureInfo features, FileSystemInfo fileInfo,
+			boolean authenticated, String sessionName, String sessionId,
+			String userId, String user, String permissionMode,
+			FeatureInfo features, FileSystemInfo fileSystemInfo,
 			JsArray<JsDirectory> roots) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
@@ -103,7 +112,7 @@ public class SessionInfo extends JavaScriptObject {
 		this.username = user;
 		this.default_permission_mode = permissionMode;
 		this.features = features;
-		this.filesystem = fileInfo;
+		this.filesystem = fileSystemInfo;
 		this.roots = roots;
 	}-*/;
 }

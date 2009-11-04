@@ -8,18 +8,18 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session.file;
+package org.sjarvela.mollify.client.session;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.DirectoryContent;
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.SessionProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -27,13 +27,25 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
-	private List<Directory> roots = null;
+	private final SessionProvider sessionProvider;
+	
+	private List<Directory> roots = new ArrayList();
 
 	@Inject
 	public DefaultFileSystemItemProvider(SessionProvider sessionProvider,
 			ServiceEnvironment env) {
-		this.roots = sessionProvider.getSession().getRootDirectories();
+		this.sessionProvider = sessionProvider;
+		this.sessionProvider.setSessionListener(new SessionListener() {
+			public void onSessionChanged() {
+				updateRootFolders();
+			}
+		});
+
 		this.fileSystemService = env.getFileSystemService();
+	}
+
+	protected void updateRootFolders() {
+		this.roots = sessionProvider.getSession().getRootDirectories();
 	}
 
 	public void getDirectories(Directory parent,

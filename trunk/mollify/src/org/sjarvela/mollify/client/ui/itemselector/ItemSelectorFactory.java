@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.itemselector;
 
-import org.sjarvela.mollify.client.filesystem.directorymodel.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 
 public interface ItemSelectorFactory {
 
