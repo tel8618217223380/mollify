@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 public interface TextProvider {
 
-	String getSizeText(int size);
+	String getSizeText(long bytes);
 
 	LanguageConstants getStrings();
 

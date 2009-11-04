@@ -1600,19 +1600,21 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	display: none;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-files {
+.mollify-dialog-file-upload-flash .mollify-file-upload-files-panel {
 	background-color: #f7f6f8;
 	width: 300px;
 	height: 180px;
-	border: 1px solid #a3a3a3;
-	overflow: auto;
+	border: 1px solid #a3a3a3;	
+}
+
+.mollify-dialog-file-upload-flash .mollify-file-upload-files {
 }
 
 .mollify-file-upload-file-remove-button {
-	float: right;
 	margin: 4px;
 	height: 22px;
 	width: 30px;
+	float: right;
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message {
@@ -1628,18 +1630,23 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	padding: 2px;
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
+	background-color: #eaeaea;
 }
 
-.mollify-file-upload-file-active {
-	background: #d3e4ed url(wait.gif) no-repeat 254px 7px;
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-active {
+	background: #c9dbe5 url(wait2.gif) no-repeat 265px 5px;
 	font-weight: bold;
 }
 
+.mollify-file-upload-file-progress-panel {
+	width: 120px;
+	float: right;
+}
+
 .mollify-file-upload-file-progress {
-	width: 235px;
 	border-bottom-style: solid;
 	border: 1px solid #8f95c4;
-	margin: 4px;
+	width: 100%;
 }
 
 .mollify-file-upload-file-progress .current, .mollify-file-upload-file-progress .left {
@@ -1654,12 +1661,26 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	background-color: #f6f6f6;
 }
 
+.mollify-file-upload-file-row1 {
+	margin: 4px;
+	width: 240px;
+}
+
+.mollify-file-upload-file-row2 {
+	margin: 4px;
+	width: 240px;
+}
+
 .mollify-file-upload-file-name {
 	height: 16px;
-	margin: 4px 4px -2px;
-	float: left;
+}
+
+.mollify-file-upload-file-info {
+	font-weight: normal;
+	font-style: normal;
+	color: #737373;
 }
 
 .mollify-file-upload-file-complete {
-	background-color: #dffce4;
+	background-color: #bbfad1;
 }

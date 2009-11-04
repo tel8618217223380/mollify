@@ -201,6 +201,7 @@
 	</target>
 	
 	<target name="compile.tests" depends="init-dev">
+		<delete dir="${test.run.dir}" />
     	<mkdir dir="${test.build.dir}"/>
     	
  		<javac destdir="${test.build.dir}" debug="on" nowarn="off" memorymaximumsize="128m" fork="true">
@@ -239,7 +240,8 @@
         		
         		<batchtest todir="@{outputbase}/reports">
           			<fileset dir="${test.build.dir}">
-            			<include name="org/sjarvela/mollify/AllTests.class"/>
+          				<include name="org/sjarvela/**/*Test.class"/>
+            			<exclude name="org/sjarvela/mollify/AllTests.class"/>
           			</fileset>
         		</batchtest>
 			</junit>

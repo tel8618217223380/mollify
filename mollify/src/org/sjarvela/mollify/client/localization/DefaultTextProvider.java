@@ -39,13 +39,13 @@ public class DefaultTextProvider implements TextProvider {
 				+ errorResult.getDetails() + ")";
 	}
 
-	public String getSizeText(int bytes) {
-		if (bytes < 1024) {
+	public String getSizeText(long bytes) {
+		if (bytes < 1024l) {
 			return (bytes == 1 ? getMessages().sizeOneByte() : getMessages()
 					.sizeInBytes(bytes));
 		}
 
-		if (bytes < 1024 * 1024) {
+		if (bytes < (1024l * 1024l)) {
 			double kilobytes = (double) bytes / (double) 1024;
 			return (kilobytes == 1 ? getMessages().sizeOneKilobyte()
 					: getMessages().sizeInKilobytes(kilobytes));

@@ -150,7 +150,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		dialog.onFileUploadCompleted(files.get(0));
 		if (files.size() > 1) {
 			dialog.onActiveUploadFileChanged(files.get(1));
-			dialog.setProgress(files.get(1), 20.0d);
+			dialog.setProgress(files.get(1), 20.0d, 200);
 		}
 	}
 
@@ -183,11 +183,11 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onUploadProgress(UploadProgressEvent e) {
-		double percentage = 0;
-		if (e.getBytesTotal() > 0 && e.getBytesComplete() > 0)
+		double percentage = 0d;
+		if (e.getBytesTotal() > 0d && e.getBytesComplete() > 0d)
 			percentage = (((double) e.getBytesTotal() / (double) e
 					.getBytesComplete()) * 100d);
-		dialog.setProgress(e.getFile(), percentage);
+		dialog.setProgress(e.getFile(), percentage, e.getBytesComplete());
 	}
 
 	public void startUpload() {

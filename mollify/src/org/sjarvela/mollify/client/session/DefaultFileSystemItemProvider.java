@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
 	private final SessionProvider sessionProvider;
-	
+
 	private List<Directory> roots = new ArrayList();
 
 	@Inject
