@@ -6,6 +6,19 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public final class File extends JavaScriptObject {
 
+	public final static File create(int index, String id, String name, long size) {
+		File f = File.createObject().cast();
+		f.set(index, id, name, (double) size);
+		return f;
+	}
+
+	private native void set(int ind, String i, String n, double s) /*-{
+		this.index = ind;
+		this.id = i;
+		this.name = n;
+		this.size = s;
+	}-*/;
+
 	protected File() {
 		// Required for overlay types
 	}

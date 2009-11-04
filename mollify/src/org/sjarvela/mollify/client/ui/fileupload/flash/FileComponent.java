@@ -60,10 +60,6 @@ public class FileComponent extends FlowPanel {
 		Panel lower = new HorizontalPanel();
 		lower.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_ROW2);
 
-		info = new Label(totalSize);
-		info.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_INFO);
-		lower.add(info);
-
 		progressPanel = new FlowPanel();
 		progressPanel
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_PROGRESS_PANEL);
@@ -72,6 +68,11 @@ public class FileComponent extends FlowPanel {
 		progressPanel.add(pb);
 		progressPanel.setVisible(false);
 		lower.add(progressPanel);
+
+		info = new Label(totalSize);
+		info.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_INFO);
+		lower.add(info);
+
 		add(lower);
 
 	}

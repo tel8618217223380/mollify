@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.util.FileUtil;
@@ -47,8 +48,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	private final FlashFileUploadDialog dialog;
 	private final List<File> files = new ArrayList();
 	private final List<String> allowedTypes;
+	private final boolean demo;
 
-	private File current = null;
+	private UploadModel uploadModel;
 
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
@@ -59,6 +61,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, uploaderSrc, directory);
+		this.demo = (service instanceof DemoFileUploadHandler);
 	}
 
 	private SWFUpload createUploader(SessionInfo session,
@@ -138,11 +141,15 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onStartUpload() {
-		setDemoMode();
+		if (demo) {
+			setDemoMode();
+			return;
+		}
+		startUpload();
 	}
 
 	protected void setDemoMode() {
-		dialog.onUploadStarted();
+		dialog.onUploadStarted(1024l);
 
 		if (files.size() == 0)
 			return;
@@ -150,7 +157,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		dialog.onFileUploadCompleted(files.get(0));
 		if (files.size() > 1) {
 			dialog.onActiveUploadFileChanged(files.get(1));
-			dialog.setProgress(files.get(1), 20.0d, 200);
+			dialog.setProgress(files.get(1), 20.0d, 200, 25d, 250l);
 		}
 	}
 
@@ -165,15 +172,15 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public void onUploadComplete(UploadCompleteEvent e) {
 		GWT.log("Upload completed " + e.getFile().getName(), null);
+		uploadModel.uploadComplete(e.getFile());
 		dialog.onFileUploadCompleted(e.getFile());
 
-		File nextFile = getNextFile();
-		if (nextFile == null) {
+		if (!uploadModel.hasNext()) {
 			dialog.onUploadEnded();
 			listener.onSuccess(null);
 			return;
 		}
-		startFileUpload(nextFile);
+		startUpload(uploadModel.nextFile());
 	}
 
 	public void onUploadError(UploadErrorEvent e) {
@@ -187,27 +194,19 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		if (e.getBytesTotal() > 0d && e.getBytesComplete() > 0d)
 			percentage = (((double) e.getBytesTotal() / (double) e
 					.getBytesComplete()) * 100d);
-		dialog.setProgress(e.getFile(), percentage, e.getBytesComplete());
+		long totalProgress = uploadModel.getTotalProgress(e.getBytesComplete());
+		double totalPercentage = (((double) uploadModel.getTotalBytes() / (double) totalProgress) * 100d);
+		dialog.setProgress(e.getFile(), percentage, e.getBytesComplete(),
+				totalPercentage, totalProgress);
 	}
 
 	public void startUpload() {
-		dialog.onUploadStarted();
-		current = null;
-		startFileUpload(getNextFile());
+		uploadModel = new UploadModel(files);
+		dialog.onUploadStarted(uploadModel.getTotalBytes());
+		startUpload(uploadModel.nextFile());
 	}
 
-	private File getNextFile() {
-		if (files.size() == 0)
-			return null;
-		int index = 0;
-		if (current != null)
-			index = files.indexOf(current) + 1;
-		if (index <= files.size())
-			return null;
-		return files.get(index);
-	}
-
-	private void startFileUpload(File f) {
+	private void startUpload(File f) {
 		if (f == null)
 			return;
 		uploader.startUpload(f.getId());
