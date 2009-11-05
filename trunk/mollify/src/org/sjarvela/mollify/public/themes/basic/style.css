@@ -149,7 +149,7 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
 }
 
-.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown {
+.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector {
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
 	padding: 3px 5px;
@@ -1597,7 +1597,8 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-flash-header-hidden {
-	display: none;
+	visibility: collapse;
+	position: absolute;
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-files-panel {
@@ -1619,14 +1620,16 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message {
 	float: left;
+	margin-top: 5px;
+	margin-left: 3px;
+}
+
+.mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message-active {
+	float: left;
 	background: url(wait2.gif) no-repeat right;
 	width: 300px;
 	height: 16px;
 	padding-top: 1px;
-}
-
-.swfupload {
-	float: right;
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-file {
@@ -1691,8 +1694,12 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-total-progress-panel {
-	width: 100%;
 	margin-top: 9px;
+	margin-right: 1px;
+}
+
+.mollify-file-upload-total-progress-bar-panel {
+	width: 197px;
 }
 
 .mollify-file-upload-total-progress-title {
@@ -1700,7 +1707,8 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	margin-top: 1px;
 	margin-left: 4px;
 	margin-right: 4px;
-	width: 75px;
+	width: 96px;
+	float: left;
 }
 
 .mollify-file-upload-total-progress {
@@ -1709,9 +1717,34 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	color: #737373;
 	float: right;
 	margin-right: 3px;
+	width: 100%;
+	text-align: right;
 }
 
 .mollify-file-upload-total-progress-bar {
-	width: 217px;
+	width: 100%;
 	border: 1px solid #8f95c4;
+}
+
+.mollify-file-upload-flash-selector {
+	background-color: #ff612b;
+	width: 80px;
+	height: 15px;
+	float: right;
+	margin-bottom: 4px;
+}
+
+.mollify-file-upload-flash-selector-label {
+	width: 80px;
+	height: 15px;
+	text-align: center;
+	font-weight: normal;
+	font-style: normal;
+	margin-top: 1px;
+}
+
+.swfupload {
+	position: absolute;
+	top: 44px;
+	z-index: 10;
 }

@@ -87,6 +87,7 @@ public class FileComponent extends FlowPanel {
 			progressPanel.setVisible(true);
 		} else {
 			removeStyleDependentName(StyleConstants.ACTIVE);
+			progressPanel.setVisible(false);
 		}
 	}
 
