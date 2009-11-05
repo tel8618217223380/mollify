@@ -14,33 +14,42 @@ import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
+	static final String PARAM_FLASH_UPLOADER_SRC = "flash-uploader-src";
+	static final String PARAM_FLASH_UPLOADER_STYLE = "flash-uploader-style";
+
 	private final TextProvider textProvider;
 	private final FileUploadService service;
 	private final SessionProvider sessionProvider;
 	private final String uploaderSrc;
+	private final String uploaderStyle;
 
 	public FlashFileUploadDialogFactory(TextProvider textProvider,
 			FileUploadService fileUploadService,
-			SessionProvider sessionProvider, String uploaderSrc) {
+			SessionProvider sessionProvider, ClientSettings settings) {
 		this.textProvider = textProvider;
 		this.service = fileUploadService;
 		this.sessionProvider = sessionProvider;
-		this.uploaderSrc = uploaderSrc;
+
+		this.uploaderSrc = settings.getString(PARAM_FLASH_UPLOADER_SRC);
+		this.uploaderStyle = settings.getString(PARAM_FLASH_UPLOADER_STYLE);
 	}
 
-	public void openFileUploadDialog(Directory directory, ResultListener listener) {
+	public void openFileUploadDialog(Directory directory,
+			ResultListener listener) {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		FlashFileUploadDialog dialog = new FlashFileUploadDialog(textProvider,
-				actionDelegator);
+				actionDelegator, uploaderStyle);
 		FlashFileUploadPresenter presenter = new FlashFileUploadPresenter(
-				session, service, listener, uploaderSrc, directory, dialog);
+				session, service, listener, uploaderSrc, directory, dialog,
+				textProvider);
 		new FlashFileUploadGlue(dialog, presenter, actionDelegator);
 	}
 

@@ -184,6 +184,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_BUTTON = "mollify-file-upload-dialog-button";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOAD = "upload";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS = "mollify-file-upload-dialog-uploaders-buttons";
+
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE = "add-file";
 	public static final String FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE = "remove-file";
 	public static final String FILE_UPLOAD_DIALOG_INFO = "mollify-file-upload-info";
@@ -193,6 +194,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FLASH = "file-upload-flash";
 	public static final String FILE_UPLOAD_DIALOG_FLASH_HEADER = "mollify-file-upload-flash-header";
 	public static final String FILE_UPLOAD_DIALOG_FLASH_UPLOADER = "mollify-file-upload-flash-selector";
+	public static final String FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL = "mollify-file-upload-flash-selector-label";
 	public static final String FILE_UPLOAD_DIALOG_FILE = "mollify-file-upload-file";
 	public static final String FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON = "mollify-file-upload-file-remove-button";
 	public static final String FILE_UPLOAD_DIALOG_FILE_NAME = "mollify-file-upload-file-name";
@@ -203,6 +205,7 @@ public class StyleConstants {
 	public static final String FILE_UPLOAD_DIALOG_FILE_PROGRESS = "mollify-file-upload-file-progress";
 	public static final String FILE_UPLOAD_DIALOG_TOTAL_PANEL = "mollify-file-upload-total-progress-panel";
 	public static final String FILE_UPLOAD_DIALOG_TOTAL_TITLE = "mollify-file-upload-total-progress-title";
+	public static final String FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_PANEL = "mollify-file-upload-total-progress-bar-panel";
 	public static final String FILE_UPLOAD_DIALOG_TOTAL_PROGRESS = "mollify-file-upload-total-progress";
 	public static final String FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_BAR = "mollify-file-upload-total-progress-bar";
 

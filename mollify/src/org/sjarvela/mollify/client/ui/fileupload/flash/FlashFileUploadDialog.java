@@ -21,6 +21,8 @@ import org.sjarvela.mollify.client.ui.common.ProgressBar;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.swfupload.client.File;
 import org.swfupload.client.UploadBuilder;
+import org.swfupload.client.SWFUpload.ButtonCursor;
+import org.swfupload.client.SWFUpload.WindowMode;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -42,6 +44,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 	private final Map<String, FileComponent> fileItems = new HashMap();
+	private final String uploaderStyle;
 
 	private Panel selectHeader;
 	private Label uploadHeader;
@@ -61,22 +64,25 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	}
 
 	public FlashFileUploadDialog(TextProvider textProvider,
-			ActionListener actionListener) {
+			ActionListener actionListener, String uploaderStyle) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG_FLASH);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.uploaderStyle = uploaderStyle;
 
 		initialize();
 		setMode(Mode.Select);
 	}
 
 	public void setVisualProperties(UploadBuilder builder) {
-		builder.setButtonText(textProvider.getStrings()
-				.fileUploadDialogAddFileButton());
 		builder.setButtonPlaceholderID(UPLOADER_ELEMENT_ID);
-		builder.setButtonWidth(100);
-		builder.setButtonHeight(20);
+		builder.setButtonWidth(80);
+		builder.setButtonHeight(15);
+		builder.setButtonCursor(ButtonCursor.HAND);
+		if (uploaderStyle != null && uploaderStyle.length() > 0)
+			builder.setButtonTextStyle(uploaderStyle);
+		builder.setWindowMode(WindowMode.TRANSPARENT);
 	}
 
 	@Override
@@ -110,30 +116,42 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 
 		selectHeader.add(message);
-		selectHeader.add(new HTML("<div class='"
-				+ StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER + "' id='"
-				+ UPLOADER_ELEMENT_ID + "'/>"));
+
+		Panel container = new FlowPanel();
+		Label label = new Label(textProvider.getStrings()
+				.fileUploadDialogAddFilesButton());
+		label
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL);
+		container.add(label);
+		container
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER);
+		container.add(new HTML("<div id='" + UPLOADER_ELEMENT_ID + "'/>"));
+		selectHeader.add(container);
 		return selectHeader;
 	}
 
 	private Widget createTotalPanel() {
-		totalPanel = new VerticalPanel();
+		totalPanel = new FlowPanel();
 		totalPanel
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PANEL);
 
-		Panel row1 = new HorizontalPanel();
+		// Panel row1 = new HorizontalPanel();
 
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadTotalProgressTitle());
 		label
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
-		row1.add(label);
+		totalPanel.add(label);
 
+		Panel progressPanel = new FlowPanel();
+		progressPanel
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_PANEL);
 		totalProgressBar = new ProgressBar(
 				StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PROGRESS_BAR);
 		totalProgressBar.setProgress(0d);
-		row1.add(totalProgressBar);
-		totalPanel.add(row1);
+		progressPanel.add(totalProgressBar);
+		totalPanel.add(progressPanel);
+		// totalPanel.add(row1);
 
 		totalProgress = new Label();
 		totalProgress
@@ -168,6 +186,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		uploadHeader = new Label(textProvider.getStrings()
 				.fileUploadProgressPleaseWait());
 		uploadHeader.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
+		uploadHeader.addStyleDependentName(StyleConstants.ACTIVE);
 		return uploadHeader;
 	}
 

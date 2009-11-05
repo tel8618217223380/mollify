@@ -52,7 +52,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	static final String PARAM_FILE_UPLOADER = "file-uploader";
 	static final String VALUE_FILE_UPLOADER_FLASH = "flash";
-	static final String PARAM_FLASH_UPLOADER_SRC = "flash-uploader-src";
 
 	@Override
 	protected void configure() {
@@ -103,8 +102,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(settings
 				.getString(PARAM_FILE_UPLOADER)))
 			return new FlashFileUploadDialogFactory(textProvider, env
-					.getFileUploadService(), sessionProvider, settings
-					.getString(PARAM_FLASH_UPLOADER_SRC));
+					.getFileUploadService(), sessionProvider, settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);

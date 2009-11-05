@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -43,6 +44,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		UploadProgressHandler, SWFUploadLoadedHandler, DebugHandler {
 	private static final String UPLOADER_ID = "uploader-flash";
 
+	private final TextProvider textProvider;
 	private final ResultListener listener;
 	private final SWFUpload uploader;
 	private final FlashFileUploadDialog dialog;
@@ -55,9 +57,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
 			String uploaderSrc, Directory directory,
-			FlashFileUploadDialog dialog) {
+			FlashFileUploadDialog dialog, TextProvider textProvider) {
 		this.listener = listener;
 		this.dialog = dialog;
+		this.textProvider = textProvider;
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, uploaderSrc, directory);
@@ -87,7 +90,8 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 		if (!allowedTypes.isEmpty()) {
 			builder.setFileTypes(getFileTypeList());
-			builder.setFileTypesDescription("");
+			builder.setFileTypesDescription(textProvider.getStrings()
+					.fileUploadDialogSelectFileTypesDescription());
 		}
 
 		builder.setFileQueuedHandler(new FileQueuedHandler() {
@@ -192,10 +196,15 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	public void onUploadProgress(UploadProgressEvent e) {
 		double percentage = 0d;
 		if (e.getBytesTotal() > 0d && e.getBytesComplete() > 0d)
-			percentage = (((double) e.getBytesTotal() / (double) e
-					.getBytesComplete()) * 100d);
+			percentage = (((double) e.getBytesComplete() / (double) e
+					.getBytesTotal()) * 100d);
 		long totalProgress = uploadModel.getTotalProgress(e.getBytesComplete());
-		double totalPercentage = (((double) uploadModel.getTotalBytes() / (double) totalProgress) * 100d);
+		double totalPercentage = (((double) totalProgress / (double) uploadModel
+				.getTotalBytes()) * 100d);
+		if (Log.isDebugEnabled())
+			Log.debug("Progress: file " + e.getBytesComplete() + "/"
+					+ e.getBytesTotal() + "=" + percentage + ", total "
+					+ totalProgress + "=" + totalPercentage);
 		dialog.setProgress(e.getFile(), percentage, e.getBytesComplete(),
 				totalPercentage, totalProgress);
 	}
