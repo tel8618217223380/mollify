@@ -139,11 +139,13 @@
 				<exclude name="configuration.php" />
 				<exclude name="index.html" />
 				<exclude name="**/.svn" />
+				<exclude name="**/*.class" />
 			</fileset>
 		</copy>
 		<copy todir="${target.src.dir}/client">
 			<fileset dir="${root.dir}">
 				<exclude name="**/.svn" />
+				<exclude name="**/*.class" />
 				<exclude name="backend/" />
 				<exclude name="tomcat/" />
 				<exclude name="war/" />

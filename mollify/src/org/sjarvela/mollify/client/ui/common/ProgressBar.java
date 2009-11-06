@@ -54,10 +54,24 @@ public class ProgressBar extends Composite {
 	}
 
 	public void setProgress(double progress) {
+		if (progress == 0d) {
+			current.setAttribute("width", "0px");
+			current.setAttribute("style", "display:none");
+			left.setAttribute("width", "100%");
+			return;
+		}
+		if (progress == 100d) {
+			current.setAttribute("width", "100%");
+			left.setAttribute("style", "display:none");
+			left.setAttribute("width", "0px");
+			return;
+		}
 		String currentWidth = String.valueOf((int) progress) + "%";
 		String leftWidth = String.valueOf(100 - (int) progress) + "%";
 
+		current.removeAttribute("style");
 		current.setAttribute("width", currentWidth);
+		left.removeAttribute("style");
 		left.setAttribute("width", leftWidth);
 	}
 
