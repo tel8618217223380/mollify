@@ -145,6 +145,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onStartUpload() {
+		if (files.isEmpty())
+			return;
+
 		if (demo) {
 			setDemoMode();
 			return;
@@ -153,7 +156,8 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	protected void setDemoMode() {
-		dialog.onUploadStarted(1024l);
+		uploadModel = new UploadModel(files);
+		dialog.onUploadStarted(uploadModel.getTotalBytes());
 
 		if (files.size() == 0)
 			return;
@@ -161,7 +165,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		dialog.onFileUploadCompleted(files.get(0));
 		if (files.size() > 1) {
 			dialog.onActiveUploadFileChanged(files.get(1));
-			dialog.setProgress(files.get(1), 20.0d, 200, 25d, 250l);
+			dialog.setProgress(files.get(1), 0.0d, 0, 25d, 250l);
 		}
 	}
 

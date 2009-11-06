@@ -31,7 +31,7 @@
 	function get_session_name() {
 		global $SETTINGS;
 		
-		if (isset($SETTINGS["SESSION_NAME"])) return "MOLLIFY_SESSION_".$SETTINGS["SESSION_NAME"];
+		if (isset($SETTINGS["session_name"])) return "MOLLIFY_SESSION_".$SETTINGS["session_name"];
 		return "MOLLIFY_SESSION";
 	}
 
