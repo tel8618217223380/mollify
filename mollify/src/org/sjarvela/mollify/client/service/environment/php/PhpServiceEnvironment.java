@@ -29,8 +29,8 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpSessionService sessionService;
 	private PhpConfigurationService settingsHandler;
 
-	public void initialize(UrlResolver urlProvider, ClientSettings settings) {
-		service = new PhpService(urlProvider, settings.getString(PARAM_SERVICE_PATH),
+	public void initialize(UrlResolver urlResolver, ClientSettings settings) {
+		service = new PhpService(urlResolver, settings.getString(PARAM_SERVICE_PATH),
 				settings.getInt(PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT));
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);

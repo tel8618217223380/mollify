@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 	static final String PARAM_FLASH_UPLOADER_SRC = "flash-uploader-src";
 	static final String PARAM_FLASH_UPLOADER_STYLE = "flash-uploader-style";
+	static final String FLASH_FILE_NAME = "swfupload.swf";
 
 	private final TextProvider textProvider;
 	private final FileUploadService service;
@@ -33,8 +34,8 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 	private final String uploaderStyle;
 	private final UrlResolver urlProvider;
 
-	public FlashFileUploadDialogFactory(TextProvider textProvider, UrlResolver urlProvider,
-			FileUploadService fileUploadService,
+	public FlashFileUploadDialogFactory(TextProvider textProvider,
+			UrlResolver urlProvider, FileUploadService fileUploadService,
 			SessionProvider sessionProvider, ClientSettings settings) {
 		this.textProvider = textProvider;
 		this.urlProvider = urlProvider;
@@ -47,10 +48,9 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 	}
 
 	private String getSourceUrl(String url) {
-		String uploaderSrc = url;
-		if (uploaderSrc != null && uploaderSrc.length() > 0)
-			uploaderSrc = urlProvider.getUrl(uploaderSrc);
-		return uploaderSrc;
+		if (url != null && url.length() > 0)
+			return urlProvider.getHostPageUrl(url);
+		return urlProvider.getModuleUrl(FLASH_FILE_NAME);
 	}
 
 	public void openFileUploadDialog(Directory directory,
