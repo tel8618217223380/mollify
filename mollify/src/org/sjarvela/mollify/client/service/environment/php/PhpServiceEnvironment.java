@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -28,8 +29,8 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpSessionService sessionService;
 	private PhpConfigurationService settingsHandler;
 
-	public void initialize(ClientSettings settings) {
-		service = new PhpService(settings.getString(PARAM_SERVICE_PATH),
+	public void initialize(UrlResolver urlProvider, ClientSettings settings) {
+		service = new PhpService(urlProvider, settings.getString(PARAM_SERVICE_PATH),
 				settings.getInt(PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT));
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);

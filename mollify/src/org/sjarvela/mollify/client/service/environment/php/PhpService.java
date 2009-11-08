@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.service.environment.php;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.service.request.HtmlRequestHandlerFactory;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.UrlParam;
@@ -26,6 +27,7 @@ public class PhpService {
 	private static final String SERVICE_FILE = "service.php";
 	private final String requestBaseUrl;
 	private final HtmlRequestHandlerFactory htmlRequestHandlerFactory;
+	private final UrlResolver urlResolver;
 
 	enum RequestType {
 		filesystem, session, configuration
@@ -38,51 +40,22 @@ public class PhpService {
 	// (service.php) is in the same directory, or its descendants, than the
 	// host page.
 
-	public PhpService(String path, int requestTimeout) {
-		this.requestBaseUrl = getBaseUrl(path);
+	public PhpService(UrlResolver urlResolver, String path, int requestTimeout) {
+		this.urlResolver = urlResolver;
+		this.requestBaseUrl = getPath(path);
 		this.htmlRequestHandlerFactory = new HtmlRequestHandlerFactory(
 				requestTimeout);
 		Log.info("Mollify service location: " + this.requestBaseUrl
 				+ ", timeout: " + requestTimeout + " sec");
 	}
 
-	private String getBaseUrl(String path) {
-		String result;
+	private String getPath(String path) {
+		if (GWT.isScript())
+			return urlResolver.getUrl(path) + SERVICE_FILE;
 
-		if (GWT.isScript()) {
-			result = GWT.getHostPageBaseURL() + getOptionalPath(path);
-		} else {
-			if (path == null || path.length() == 0)
-				throw new RuntimeException(
-						"Development service path not defined");
-			result = path;
-		}
-
-		return result + SERVICE_FILE;
-	}
-
-	private String getOptionalPath(String path) {
 		if (path == null || path.length() == 0)
-			return "";
-
-		String result = path.trim();
-
-		if (path.toLowerCase().startsWith("http://"))
-			result = result.substring(7);
-
-		while (true) {
-			char c = result.charAt(0);
-
-			if (c == '.' || c == '/')
-				result = result.substring(1);
-			else
-				break;
-		}
-
-		if (result.length() > 0 && !result.endsWith("/"))
-			result += "/";
-
-		return result;
+			throw new RuntimeException("Development service path not defined");
+		return path + SERVICE_FILE;
 	}
 
 	String getUrl(RequestType type, UrlParam... params) {

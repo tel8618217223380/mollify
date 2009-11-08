@@ -88,9 +88,16 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	@Provides
 	@Singleton
-	ServiceEnvironment getEnvironment(ClientSettings clientSettings) {
+	UrlResolver getUrlResolver() {
+		return new UrlResolver(GWT.getHostPageBaseURL());
+	}
+
+	@Provides
+	@Singleton
+	ServiceEnvironment getEnvironment(UrlResolver urlResolver,
+			ClientSettings clientSettings) {
 		ServiceEnvironment env = GWT.create(ServiceEnvironment.class);
-		env.initialize(clientSettings);
+		env.initialize(urlResolver, clientSettings);
 		return env;
 	}
 
@@ -98,11 +105,12 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Singleton
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
-			SessionProvider sessionProvider, DialogManager dialogManager) {
+			UrlResolver urlResolver, SessionProvider sessionProvider,
+			DialogManager dialogManager) {
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(settings
 				.getString(PARAM_FILE_UPLOADER)))
-			return new FlashFileUploadDialogFactory(textProvider, env
-					.getFileUploadService(), sessionProvider, settings);
+			return new FlashFileUploadDialogFactory(textProvider, urlResolver,
+					env.getFileUploadService(), sessionProvider, settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);

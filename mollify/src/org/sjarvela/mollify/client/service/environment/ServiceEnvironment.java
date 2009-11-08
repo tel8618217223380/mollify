@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment;
 
+import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -18,7 +19,7 @@ import org.sjarvela.mollify.client.session.ClientSettings;
 
 public interface ServiceEnvironment {
 
-	void initialize(ClientSettings settings);
+	void initialize(UrlResolver urlProvider, ClientSettings settings);
 
 	SessionService getSessionService();
 
