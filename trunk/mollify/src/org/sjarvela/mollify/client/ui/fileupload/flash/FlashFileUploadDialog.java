@@ -48,6 +48,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 	private Panel selectHeader;
 	private Label uploadHeader;
+	private Panel uploadButtonContainer;
 	private ScrollPanel fileScrollPanel;
 	private Panel fileList;
 	private HorizontalPanel buttons;
@@ -117,17 +118,23 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 		selectHeader.add(message);
 
-		Panel container = new FlowPanel();
+		uploadButtonContainer = new FlowPanel();
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadDialogAddFilesButton());
 		label
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL);
-		container.add(label);
-		container
+		uploadButtonContainer.add(label);
+		uploadButtonContainer
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER);
-		container.add(new HTML("<div id='" + UPLOADER_ELEMENT_ID + "'/>"));
-		selectHeader.add(container);
+		uploadButtonContainer.addStyleDependentName(StyleConstants.HIDDEN);
+		uploadButtonContainer.add(new HTML("<div id='" + UPLOADER_ELEMENT_ID
+				+ "'/>"));
+		selectHeader.add(uploadButtonContainer);
 		return selectHeader;
+	}
+
+	public void showUploadButton() {
+		uploadButtonContainer.removeStyleDependentName(StyleConstants.HIDDEN);
 	}
 
 	private Widget createTotalPanel() {

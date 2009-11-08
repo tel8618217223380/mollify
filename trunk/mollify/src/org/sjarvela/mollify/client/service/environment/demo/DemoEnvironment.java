@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -29,7 +30,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private FileUploadService demoFileUploadHandler;
 	private ConfigurationService settingsHandler;
 
-	public void initialize(ClientSettings settings) {
+	public void initialize(UrlResolver urlProvider, ClientSettings settings) {
 		Log.info("Mollify Demo");
 
 		this.data = new DemoData(settings.getBool(PARAM_MULTI_USER, true));

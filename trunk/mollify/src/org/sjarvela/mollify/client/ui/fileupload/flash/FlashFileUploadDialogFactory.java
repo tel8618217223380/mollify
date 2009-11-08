@@ -10,9 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
+import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -29,20 +31,31 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 	private final SessionProvider sessionProvider;
 	private final String uploaderSrc;
 	private final String uploaderStyle;
+	private final UrlResolver urlProvider;
 
-	public FlashFileUploadDialogFactory(TextProvider textProvider,
+	public FlashFileUploadDialogFactory(TextProvider textProvider, UrlResolver urlProvider,
 			FileUploadService fileUploadService,
 			SessionProvider sessionProvider, ClientSettings settings) {
 		this.textProvider = textProvider;
+		this.urlProvider = urlProvider;
 		this.service = fileUploadService;
 		this.sessionProvider = sessionProvider;
 
-		this.uploaderSrc = settings.getString(PARAM_FLASH_UPLOADER_SRC);
+		this.uploaderSrc = getSourceUrl(settings
+				.getString(PARAM_FLASH_UPLOADER_SRC));
 		this.uploaderStyle = settings.getString(PARAM_FLASH_UPLOADER_STYLE);
+	}
+
+	private String getSourceUrl(String url) {
+		String uploaderSrc = url;
+		if (uploaderSrc != null && uploaderSrc.length() > 0)
+			uploaderSrc = urlProvider.getUrl(uploaderSrc);
+		return uploaderSrc;
 	}
 
 	public void openFileUploadDialog(Directory directory,
 			ResultListener listener) {
+
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		FlashFileUploadDialog dialog = new FlashFileUploadDialog(textProvider,
@@ -50,6 +63,8 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		FlashFileUploadPresenter presenter = new FlashFileUploadPresenter(
 				session, service, listener, uploaderSrc, directory, dialog,
 				textProvider);
+		if (service instanceof DemoFileUploadHandler)
+			presenter.setDemoMode();
 		new FlashFileUploadGlue(dialog, presenter, actionDelegator);
 	}
 

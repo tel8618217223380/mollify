@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,6 +47,9 @@ public class MollifyClient implements Client {
 
 	public void start() {
 		Log.info("Starting Mollify, protocol version " + PROTOCOL_VERSION);
+		Log.debug("Host page location: " + GWT.getHostPageBaseURL());
+		Log.debug("Module name: " + GWT.getModuleName());
+		Log.debug("Module location: " + GWT.getModuleBaseURL());
 
 		env.getSessionService().getSessionInfo(PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {

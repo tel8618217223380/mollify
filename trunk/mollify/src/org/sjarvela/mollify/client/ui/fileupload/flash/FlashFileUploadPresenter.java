@@ -18,7 +18,6 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.util.FileUtil;
@@ -38,10 +37,12 @@ import org.swfupload.client.event.UploadSuccessHandler;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 
 public class FlashFileUploadPresenter implements UploadStartHandler,
 		UploadSuccessHandler, UploadCompleteHandler, UploadErrorHandler,
 		UploadProgressHandler, SWFUploadLoadedHandler, DebugHandler {
+	private static final String SESSION_ID_PARAM = "MOLLIFY_SESSION_ID";
 	private static final String UPLOADER_ID = "uploader-flash";
 
 	private final TextProvider textProvider;
@@ -50,9 +51,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	private final FlashFileUploadDialog dialog;
 	private final List<File> files = new ArrayList();
 	private final List<String> allowedTypes;
-	private final boolean demo;
 
 	private UploadModel uploadModel;
+	private boolean demo = false;
+	private Timer flashLoadTimer;
 
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
@@ -64,7 +66,26 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, uploaderSrc, directory);
-		this.demo = (service instanceof DemoFileUploadHandler);
+
+		flashLoadTimer = new Timer() {
+			@Override
+			public void run() {
+				onLoadFailed();
+			}
+		};
+		flashLoadTimer.schedule(10 * 1000);
+	}
+
+	protected void onLoadFailed() {
+		dialog.hide();
+		listener
+				.onFail(new ServiceError(
+						ServiceErrorType.INVALID_CONFIGURATION,
+						"Flash uploader initialization timeout, either it is missing, it has wrong src url or browser cannot load flash components"));
+	}
+
+	public void setDemoMode() {
+		this.demo = true;
 	}
 
 	private SWFUpload createUploader(SessionInfo session,
@@ -76,7 +97,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			builder.setFlashURL(uploaderSrc);
 
 		if (session.getSessionId() != null)
-			builder.addPostParam("MOLLIFY_SESSION_ID", session.getSessionId());
+			builder.addPostParam(SESSION_ID_PARAM, session.getSessionId());
 		builder.setFilePostName(UPLOADER_ID);
 		builder.setButtonAction(ButtonAction.SELECT_FILES);
 
@@ -149,13 +170,13 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			return;
 
 		if (demo) {
-			setDemoMode();
+			startDemoMode();
 			return;
 		}
 		startUpload();
 	}
 
-	protected void setDemoMode() {
+	protected void startDemoMode() {
 		uploadModel = new UploadModel(files);
 		dialog.onUploadStarted(uploadModel.getTotalBytes());
 
@@ -164,8 +185,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 		dialog.onFileUploadCompleted(files.get(0));
 		if (files.size() > 1) {
-			dialog.onActiveUploadFileChanged(files.get(1));
-			dialog.setProgress(files.get(1), 0.0d, 0, 25d, 250l);
+			File file = files.get(1);
+			dialog.onActiveUploadFileChanged(file);
+			dialog.setProgress(file, 20.0d, (file.getSize() / 100l) * 20l, 25d,
+					(uploadModel.getTotalBytes() / 100l) * 25l);
 		}
 	}
 
@@ -226,6 +249,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onSWFUploadLoaded() {
+		flashLoadTimer.cancel();
+		flashLoadTimer = null;
+		dialog.showUploadButton();
 		GWT.log("Flash uploader loaded", null);
 		Log.debug("Flash uploader loaded");
 	}
