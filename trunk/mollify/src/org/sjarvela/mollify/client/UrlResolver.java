@@ -11,13 +11,15 @@
 package org.sjarvela.mollify.client;
 
 public class UrlResolver {
-	private final String baseUrl;
+	private final String hostPageUrl;
+	private final String moduleUrl;
 
-	public UrlResolver(String baseUrl) {
-		this.baseUrl = getBaseUrl(baseUrl);
+	public UrlResolver(String hostPageUrl, String moduleUrl) {
+		this.hostPageUrl = getBaseUrl(hostPageUrl);
+		this.moduleUrl = getBaseUrl(moduleUrl);
 	}
 
-	public String getBaseUrl(String url) {
+	private String getBaseUrl(String url) {
 		if (url == null)
 			return "";
 		String baseUrl = url;
@@ -26,7 +28,15 @@ public class UrlResolver {
 		return baseUrl;
 	}
 
-	public String getUrl(String p) {
+	public String getHostPageUrl(String p) {
+		return getUrl(hostPageUrl, p);
+	}
+
+	public String getModuleUrl(String p) {
+		return getUrl(moduleUrl, p);
+	}
+
+	private String getUrl(String baseUrl, String p) {
 		String base = (baseUrl == null) ? "" : baseUrl;
 		String path = p == null ? "" : p.trim();
 

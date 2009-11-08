@@ -89,7 +89,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Provides
 	@Singleton
 	UrlResolver getUrlResolver() {
-		return new UrlResolver(GWT.getHostPageBaseURL());
+		return new UrlResolver(GWT.getHostPageBaseURL(), GWT.getModuleBaseURL());
 	}
 
 	@Provides

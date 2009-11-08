@@ -1727,11 +1727,19 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-flash-selector {
-	background-color: #ff612b;
 	width: 80px;
 	height: 15px;
 	float: right;
 	margin-bottom: 4px;
+}
+
+.mollify-file-upload-flash-selector-hidden {
+	border: none;
+	background: url(wait2.gif) no-repeat right;
+}
+
+.mollify-file-upload-flash-selector-hidden .mollify-file-upload-flash-selector-label {
+	visibility: hidden;
 }
 
 .mollify-file-upload-flash-selector-label {
