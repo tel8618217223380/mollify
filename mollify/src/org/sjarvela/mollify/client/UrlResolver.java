@@ -28,15 +28,15 @@ public class UrlResolver {
 		return baseUrl;
 	}
 
-	public String getHostPageUrl(String p) {
-		return getUrl(hostPageUrl, p);
+	public String getHostPageUrl(String p, boolean folder) {
+		return getUrl(hostPageUrl, p, folder);
 	}
 
-	public String getModuleUrl(String p) {
-		return getUrl(moduleUrl, p);
+	public String getModuleUrl(String p, boolean folder) {
+		return getUrl(moduleUrl, p, folder);
 	}
 
-	private String getUrl(String baseUrl, String p) {
+	private String getUrl(String baseUrl, String p, boolean isFolder) {
 		String base = (baseUrl == null) ? "" : baseUrl;
 		String path = p == null ? "" : p.trim();
 
@@ -46,7 +46,12 @@ public class UrlResolver {
 
 		if (path.startsWith("/"))
 			base = findRoot(baseUrl);
-		return base + getOptionalPath(path);
+
+		String url = base + getOptionalPath(path);
+		if (isFolder && url.length() > 0 && !url.endsWith("/"))
+			url += "/";
+
+		return url;
 	}
 
 	private String findRoot(String url) {

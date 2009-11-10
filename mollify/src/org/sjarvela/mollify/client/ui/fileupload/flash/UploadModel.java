@@ -79,6 +79,15 @@ public class UploadModel {
 			return;
 		totalSize -= f.getSize();
 		files.remove(file);
+		if (file.equals(current))
+			lastTotal = getCompletedSize();
+	}
+
+	private long getCompletedSize() {
+		long s = 0l;
+		for (File f : completed)
+			s += f.getSize();
+		return s;
 	}
 
 	public boolean isCompleted(File f) {

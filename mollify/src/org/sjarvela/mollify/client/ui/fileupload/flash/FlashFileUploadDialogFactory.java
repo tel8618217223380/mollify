@@ -49,8 +49,8 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 
 	private String getSourceUrl(String url) {
 		if (url != null && url.length() > 0)
-			return urlProvider.getHostPageUrl(url);
-		return urlProvider.getModuleUrl(FLASH_FILE_NAME);
+			return urlProvider.getHostPageUrl(url, false);
+		return urlProvider.getModuleUrl(FLASH_FILE_NAME, false);
 	}
 
 	public void openFileUploadDialog(Directory directory,

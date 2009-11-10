@@ -22,23 +22,28 @@ public class UrlResolverTest {
 		UrlResolver urlProvider = new UrlResolver("http://test.domain/folder/",
 				"");
 
-		assertEquals("http://test.domain/folder/", urlProvider
-				.getHostPageUrl(""));
+		assertEquals("http://test.domain/folder/", urlProvider.getHostPageUrl(
+				"", true));
+		assertEquals("http://test.domain/folder/", urlProvider.getHostPageUrl(
+				"", false));
 		assertEquals("http://test.domain/folder/test/", urlProvider
-				.getHostPageUrl("test/"));
+				.getHostPageUrl("test", true));
+		assertEquals("http://test.domain/folder/test/", urlProvider
+				.getHostPageUrl("test", true));
 		assertEquals("http://test.domain/folder/testfile.php", urlProvider
-				.getHostPageUrl("testfile.php"));
+				.getHostPageUrl("testfile.php", false));
 		assertEquals("http://test.domain/folder/test/sub/", urlProvider
-				.getHostPageUrl("test/sub/"));
+				.getHostPageUrl("test/sub/", true));
 		assertEquals("http://test.domain/root/test/", urlProvider
-				.getHostPageUrl("/root/test/"));
+				.getHostPageUrl("/root/test/", true));
 		assertEquals("http://test.domain/root/testfile.php", urlProvider
-				.getHostPageUrl("/root/testfile.php"));
+				.getHostPageUrl("/root/testfile.php", false));
 		assertEquals("http://test.domain/testfile.php", urlProvider
-				.getHostPageUrl("/testfile.php"));
-		assertEquals("http://test.domain/", urlProvider.getHostPageUrl("/"));
-		assertEquals("http://test.domain/folder/", urlProvider
-				.getHostPageUrl(null));
+				.getHostPageUrl("/testfile.php", false));
+		assertEquals("http://test.domain/", urlProvider.getHostPageUrl("/",
+				true));
+		assertEquals("http://test.domain/folder/", urlProvider.getHostPageUrl(
+				null, false));
 	}
 
 	@Test
@@ -46,22 +51,23 @@ public class UrlResolverTest {
 		UrlResolver urlProvider = new UrlResolver("",
 				"http://test.domain/folder/");
 
-		assertEquals("http://test.domain/folder/", urlProvider.getModuleUrl(""));
+		assertEquals("http://test.domain/folder/", urlProvider.getModuleUrl("",
+				true));
 		assertEquals("http://test.domain/folder/test/", urlProvider
-				.getModuleUrl("test/"));
+				.getModuleUrl("test", true));
 		assertEquals("http://test.domain/folder/testfile.php", urlProvider
-				.getModuleUrl("testfile.php"));
+				.getModuleUrl("testfile.php", false));
 		assertEquals("http://test.domain/folder/test/sub/", urlProvider
-				.getModuleUrl("test/sub/"));
-		assertEquals("http://test.domain/root/test/", urlProvider
-				.getModuleUrl("/root/test/"));
+				.getModuleUrl("test/sub/", true));
+		assertEquals("http://test.domain/root/test/", urlProvider.getModuleUrl(
+				"/root/test/", true));
 		assertEquals("http://test.domain/root/testfile.php", urlProvider
-				.getModuleUrl("/root/testfile.php"));
+				.getModuleUrl("/root/testfile.php", false));
 		assertEquals("http://test.domain/testfile.php", urlProvider
-				.getModuleUrl("/testfile.php"));
-		assertEquals("http://test.domain/", urlProvider.getModuleUrl("/"));
-		assertEquals("http://test.domain/folder/", urlProvider
-				.getModuleUrl(null));
+				.getModuleUrl("/testfile.php", false));
+		assertEquals("http://test.domain/", urlProvider.getModuleUrl("/", true));
+		assertEquals("http://test.domain/folder/", urlProvider.getModuleUrl(
+				null, false));
 	}
 
 	@Test
@@ -69,12 +75,12 @@ public class UrlResolverTest {
 		UrlResolver urlProvider = new UrlResolver(
 				"https://test.domain/folder/", "");
 
-		assertEquals("https://test.domain/folder/", urlProvider
-				.getHostPageUrl(""));
+		assertEquals("https://test.domain/folder/", urlProvider.getHostPageUrl(
+				"", true));
 		assertEquals("https://test.domain/folder/test/", urlProvider
-				.getHostPageUrl("test/"));
+				.getHostPageUrl("test/", true));
 		assertEquals("https://test.domain/root/test/", urlProvider
-				.getHostPageUrl("/root/test/"));
+				.getHostPageUrl("/root/test/", true));
 	}
 
 	@Test
@@ -83,14 +89,14 @@ public class UrlResolverTest {
 				"");
 
 		try {
-			urlProvider.getHostPageUrl("http://test");
+			urlProvider.getHostPageUrl("http://test", true);
 			fail("Illegal");
 		} catch (RuntimeException e) {
 			// ok
 		}
 
 		try {
-			urlProvider.getHostPageUrl("https://test");
+			urlProvider.getHostPageUrl("https://test", true);
 			fail("Illegal");
 		} catch (RuntimeException e) {
 			// ok

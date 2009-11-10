@@ -51,7 +51,7 @@ public class PhpService {
 
 	private String getPath(String path) {
 		if (GWT.isScript())
-			return urlResolver.getHostPageUrl(path) + SERVICE_FILE;
+			return urlResolver.getHostPageUrl(path, true) + SERVICE_FILE;
 
 		if (path == null || path.length() == 0)
 			throw new RuntimeException("Development service path not defined");
