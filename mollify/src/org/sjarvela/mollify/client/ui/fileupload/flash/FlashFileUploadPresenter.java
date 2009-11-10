@@ -216,16 +216,16 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onUploadStart(UploadStartEvent e) {
-		GWT.log("Upload start " + e.getFile().getName(), null);
+		Log.debug("Upload start " + e.getFile().getName());
 		dialog.onActiveUploadFileChanged(e.getFile());
 	}
 
 	public void onUploadSuccess(UploadSuccessEvent e) {
-		GWT.log("Upload succeeded " + e.getFile().getName(), null);
+		Log.debug("Upload succeeded " + e.getFile().getName());
 	}
 
 	public void onUploadComplete(UploadCompleteEvent e) {
-		GWT.log("Upload completed " + e.getFile().getName(), null);
+		Log.debug("Upload completed " + e.getFile().getName());
 		uploadModel.uploadComplete(e.getFile());
 		dialog.onFileUploadCompleted(e.getFile());
 		startNextFile();
@@ -253,11 +253,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			return;
 		updateProgress = false;
 
-		double percentage = 0d;
-		if (e.getBytesTotal() > 0d && e.getBytesComplete() > 0d)
-			percentage = (((double) e.getBytesComplete() / (double) e
-					.getBytesTotal()) * 100d);
+		double percentage = uploadModel.getPercentage(e.getBytesComplete(), e
+				.getBytesTotal());
 		uploadModel.updateProgress(e.getBytesComplete());
+
 		if (Log.isDebugEnabled())
 			Log.debug("Progress: file " + e.getBytesComplete() + "/"
 					+ e.getBytesTotal() + "=" + percentage + ", total "
@@ -305,12 +304,10 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		flashLoadTimer.cancel();
 		flashLoadTimer = null;
 		dialog.showUploadButton();
-		GWT.log("Flash uploader loaded", null);
 		Log.debug("Flash uploader loaded");
 	}
 
 	public void onDebug(DebugEvent e) {
-		GWT.log("SWF DEBUG " + e.getMessage(), null);
 		Log.debug("SWF DEBUG " + e.getMessage());
 	}
 
