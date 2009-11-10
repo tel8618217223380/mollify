@@ -30,8 +30,8 @@
 		<pathelement path="${java.class.path}/" />
 		<path refid="gwt-user.classpath"/>
 		<path refid="gwt-dev.classpath"/>  
-		<pathelement location="${src.dir}" />  
-		<!--fileset dir="${lib.dir}" includes="**/*.jar" /-->
+		<pathelement location="${src.dir}" />
+		<pathelement location="${build.dir}"/>
 		<pathelement location="${lib.dir}/aopalliance.jar" />
 		<pathelement location="${lib.dir}/gin.jar" />
 		<pathelement location="${lib.dir}/guice-2.0.jar" />
@@ -43,10 +43,9 @@
 	<path id="test.src.path" path="${test.src.dir}"/>
 	
 	<path id="test.classpath">
-    	<pathelement location="${build.dir}"/>
-    	<pathelement location="${test.build.dir}"/>
 		<path refid="compile.classpath"/>
 		<path refid="test.src.path"/>
+    	<pathelement location="${test.build.dir}"/>
 	</path>
   
 	<patternset id="compiler.resources">
@@ -79,11 +78,8 @@
 		<property name="gwt.module" value="org.sjarvela.mollify.Client" />
 	</target>
 	
-	<target name="do-compile" depends="init">
+	<target name="do-compile" depends="init, compile.prod">
 		<echo>Platform: ${os.name}</echo>
-		<mkdir dir="${build.dir}" />
-		
-		<javac classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" />
 		
 		<java classpathref="compile.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
 			<jvmarg line="${gwt.jvm.arg}" />
@@ -92,7 +88,7 @@
 			<arg value="-logLevel" />
 			<arg value="INFO" />
 			<arg value="-localWorkers" />
-			<arg value="6" />
+			<arg value="4" />
 			<arg value="-style" />
 			<arg value="${gwt.style}" />		
 			<arg value="${gwt.module}" />
@@ -150,6 +146,7 @@
 				<exclude name="tomcat/" />
 				<exclude name="war/" />
 				<exclude name="www-test/" />
+				<exclude name="build.properties" />
 			</fileset>
 		</copy>
 
@@ -197,7 +194,7 @@
 	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
 	</target>
 	
-	<target name="compile.prod" depends="init-dev">
+	<target name="compile.prod">
 		<mkdir dir="${build.dir}" />
 		<javac destdir="${build.dir}" classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" />		
 	</target>
@@ -237,7 +234,6 @@
 				<formatter type="brief" />
 				<formatter type="xml"/>
         		<sysproperty key="gwt.args" value="@{extragwtargs} -gen gen -out out" />
-
         		<classpath refid="test.classpath"/>
         		
         		<batchtest todir="@{outputbase}/reports">
