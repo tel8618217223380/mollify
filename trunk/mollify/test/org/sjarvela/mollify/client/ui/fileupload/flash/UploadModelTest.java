@@ -49,13 +49,25 @@ public class UploadModelTest extends GWTTestCase {
 		assertTrue(model.hasNext());
 		assertEquals(600l, model.getTotalBytes());
 
-		assertEquals(0l, model.getTotalProgress(100l));
+		model.updateProgress(100l);
+		assertEquals(0l, model.getTotalProgress());
+		assertEquals(0d, model.getTotalPercentage());
+
 		assertEquals(file1, model.nextFile());
-		assertEquals(55l, model.getTotalProgress(55l));
+		model.updateProgress(57l);
+		assertEquals(57l, model.getTotalProgress());
+		assertEquals(9.5d, model.getTotalPercentage());
+
 		assertEquals(file2, model.nextFile());
-		assertEquals(155l, model.getTotalProgress(55l));
+		model.updateProgress(50l);
+		assertEquals(150l, model.getTotalProgress());
+		assertEquals(25d, model.getTotalPercentage());
+
 		assertEquals(file3, model.nextFile());
-		assertEquals(355l, model.getTotalProgress(55l));
+		model.updateProgress(60l);
+		assertEquals(360l, model.getTotalProgress());
+		assertEquals(60d, model.getTotalPercentage());
+
 		assertFalse(model.hasNext());
 		assertNull(model.nextFile());
 	}
