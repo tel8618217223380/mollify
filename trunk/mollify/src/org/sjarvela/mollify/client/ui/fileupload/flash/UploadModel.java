@@ -97,4 +97,10 @@ public class UploadModel {
 		return (((double) getTotalProgress() / (double) getTotalBytes()) * 100d);
 	}
 
+	public double getPercentage(long bytesComplete, long bytesTotal) {
+		if (bytesTotal == 0d || bytesComplete == 0d)
+			return 0d;
+		return (((double) bytesComplete / (double) bytesTotal) * 100d);
+	}
+
 }
