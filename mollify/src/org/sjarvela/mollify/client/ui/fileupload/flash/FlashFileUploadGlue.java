@@ -29,7 +29,14 @@ public class FlashFileUploadGlue {
 		actionDelegator.setActionHandler(FlashFileUploadDialog.Actions.cancel,
 				new VoidActionHandler() {
 					public void onAction() {
-						dialog.hide();
+						presenter.onCancel();
+					}
+				});
+		actionDelegator.setActionHandler(
+				FlashFileUploadDialog.Actions.cancelUpload,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.onCancelUpload();
 					}
 				});
 		actionDelegator.setActionHandler(

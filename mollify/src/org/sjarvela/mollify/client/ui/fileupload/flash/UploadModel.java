@@ -22,6 +22,7 @@ public class UploadModel {
 	private File current = null;
 	private long totalSize = 0l;
 	private long completedBytes = 0l;
+	private long lastTotal = 0l;
 
 	public UploadModel(List<File> files) {
 		this.files = files;
@@ -66,10 +67,34 @@ public class UploadModel {
 		return totalSize;
 	}
 
-	public long getTotalProgress(long bytesComplete) {
+	public void updateProgress(long bytesComplete) {
 		if (current == null)
-			return 0l;
-		return completedBytes + bytesComplete;
+			return;
+		lastTotal = completedBytes + bytesComplete;
+	}
+
+	public void cancelFile(File f) {
+		File file = getFile(f);
+		if (file == null)
+			return;
+		totalSize -= f.getSize();
+		files.remove(file);
+	}
+
+	public boolean isCompleted(File f) {
+		return completed.contains(getFile(f));
+	}
+
+	public File getCurrentFile() {
+		return current;
+	}
+
+	public long getTotalProgress() {
+		return lastTotal;
+	}
+
+	public double getTotalPercentage() {
+		return (((double) getTotalProgress() / (double) getTotalBytes()) * 100d);
 	}
 
 }
