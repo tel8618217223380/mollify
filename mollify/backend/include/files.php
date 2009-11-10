@@ -694,10 +694,12 @@
 		if ($base === $FILE_PERMISSION_VALUE_ADMIN) return TRUE;
 				
 		$item_permission = get_item_permission($item, $_SESSION['user_id']);
-		return (get_applicable_permission($base, $item_permission) === $FILE_PERMISSION_VALUE_READWRITE);
+		$effective = get_effective_permission($base, $item_permission);
+		log_debug("has_modify_rights: item=".$item_permission." effective=".$effective);
+		return (strcasecmp($effective, $FILE_PERMISSION_VALUE_READWRITE) == 0);
 	}
 	
-	function get_applicable_permission($base, $item) {
+	function get_effective_permission($base, $item) {
 		if (!$item) return $base;
 		return $item;
 	}

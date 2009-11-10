@@ -22,6 +22,7 @@
 	}
 	
 	function get_success_message($result = array()) {
+		if (is_debug()) return array("success" => TRUE, "result" => $result, "trace" => get_trace());
 		return array("success" => TRUE, "result" => $result);
 	}
 	
