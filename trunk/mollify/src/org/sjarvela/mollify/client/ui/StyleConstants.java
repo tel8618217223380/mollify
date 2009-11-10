@@ -22,6 +22,7 @@ public class StyleConstants {
 	public static final String COMPLETE = "complete";
 	public static final String HIDDEN = "hidden";
 	public static final String UPLOAD = "upload";
+	public static final String CANCEL = "cancel";
 
 	public static final String DIALOG = "mollify-dialog";
 

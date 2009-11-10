@@ -56,6 +56,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	private boolean demo = false;
 	private Timer flashLoadTimer;
 
+	private Timer progressTimer = null;
+	private boolean updateProgress = true;
+
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
 			String uploaderSrc, Directory directory,
@@ -161,8 +164,25 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public void onRemoveFile(File f) {
 		uploader.cancelUpload(f.getId(), false);
-		files.remove(f);
-		dialog.removeFile(f);
+		if (!isUploading()) {
+			files.remove(f);
+			dialog.removeFile(f);
+		} else {
+			cancelFile(f);
+		}
+	}
+
+	private void cancelFile(File f) {
+		if (uploadModel.isCompleted(f))
+			return;
+		File current = uploadModel.getCurrentFile();
+		uploadModel.cancelFile(f);
+
+		dialog.cancelFile(f, uploadModel.getTotalBytes(), uploadModel
+				.getTotalProgress(), uploadModel.getTotalPercentage());
+
+		if (current != null && current.getId().equals(f.getId()))
+			startNextFile();
 	}
 
 	public void onStartUpload() {
@@ -190,6 +210,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			dialog.setProgress(file, 20.0d, (file.getSize() / 100l) * 20l, 25d,
 					(uploadModel.getTotalBytes() / 100l) * 25l);
 		}
+
+		if (files.size() > 3)
+			cancelFile(files.get(3));
 	}
 
 	public void onUploadStart(UploadStartEvent e) {
@@ -205,9 +228,13 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		GWT.log("Upload completed " + e.getFile().getName(), null);
 		uploadModel.uploadComplete(e.getFile());
 		dialog.onFileUploadCompleted(e.getFile());
+		startNextFile();
+	}
 
+	private void startNextFile() {
 		if (!uploadModel.hasNext()) {
-			dialog.onUploadEnded();
+			dialog.hide();
+			stopUpload(false);
 			listener.onSuccess(null);
 			return;
 		}
@@ -215,31 +242,57 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onUploadError(UploadErrorEvent e) {
+		stopUpload(true);
 		dialog.hide();
 		listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED, e
 				.getMessage()));
 	}
 
 	public void onUploadProgress(UploadProgressEvent e) {
+		if (!updateProgress)
+			return;
+		updateProgress = false;
+
 		double percentage = 0d;
 		if (e.getBytesTotal() > 0d && e.getBytesComplete() > 0d)
 			percentage = (((double) e.getBytesComplete() / (double) e
 					.getBytesTotal()) * 100d);
-		long totalProgress = uploadModel.getTotalProgress(e.getBytesComplete());
-		double totalPercentage = (((double) totalProgress / (double) uploadModel
-				.getTotalBytes()) * 100d);
+		uploadModel.updateProgress(e.getBytesComplete());
 		if (Log.isDebugEnabled())
 			Log.debug("Progress: file " + e.getBytesComplete() + "/"
 					+ e.getBytesTotal() + "=" + percentage + ", total "
-					+ totalProgress + "=" + totalPercentage);
+					+ uploadModel.getTotalProgress() + "="
+					+ uploadModel.getTotalPercentage());
 		dialog.setProgress(e.getFile(), percentage, e.getBytesComplete(),
-				totalPercentage, totalProgress);
+				uploadModel.getTotalPercentage(), uploadModel
+						.getTotalProgress());
 	}
 
 	public void startUpload() {
 		uploadModel = new UploadModel(files);
 		dialog.onUploadStarted(uploadModel.getTotalBytes());
+
+		progressTimer = new Timer() {
+			@Override
+			public void run() {
+				updateProgress = true;
+			}
+		};
+		progressTimer.scheduleRepeating(500);
 		startUpload(uploadModel.nextFile());
+	}
+
+	private void stopUpload(boolean cancelFiles) {
+		if (progressTimer != null) {
+			progressTimer.cancel();
+			progressTimer = null;
+		}
+
+		if (cancelFiles)
+			for (File f : files)
+				uploader.cancelUpload(f.getId(), false);
+
+		uploadModel = null;
 	}
 
 	private void startUpload(File f) {
@@ -261,4 +314,16 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		Log.debug("SWF DEBUG " + e.getMessage());
 	}
 
+	public void onCancel() {
+		dialog.hide();
+	}
+
+	private boolean isUploading() {
+		return uploadModel != null;
+	}
+
+	public void onCancelUpload() {
+		stopUpload(true);
+		dialog.hide();
+	}
 }

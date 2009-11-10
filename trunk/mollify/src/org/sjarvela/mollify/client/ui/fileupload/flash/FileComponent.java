@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.ProgressBar;
-import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialog.Mode;
 import org.swfupload.client.File;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -74,11 +73,6 @@ public class FileComponent extends FlowPanel {
 		lower.add(info);
 
 		add(lower);
-
-	}
-
-	public void setMode(Mode mode) {
-		button.setVisible(mode.equals(Mode.Select));
 	}
 
 	public void setActive(boolean active) {
@@ -97,10 +91,19 @@ public class FileComponent extends FlowPanel {
 	}
 
 	public void setFinished() {
+		button.setVisible(false);
 		setActive(false);
 		info.setText(textProvider.getStrings()
 				.fileUploadDialogMessageFileCompleted());
 		addStyleDependentName(StyleConstants.COMPLETE);
+	}
+
+	public void setCancelled() {
+		button.setVisible(false);
+		setActive(false);
+		info.setText(textProvider.getStrings()
+				.fileUploadDialogMessageFileCancelled());
+		addStyleDependentName(StyleConstants.CANCEL);
 	}
 
 }

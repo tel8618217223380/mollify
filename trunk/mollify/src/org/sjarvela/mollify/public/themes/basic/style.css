@@ -149,7 +149,7 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
 }
 
-.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector {
+.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector, .mollify-file-upload-dialog-button {
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
 	padding: 3px 5px;
@@ -973,7 +973,7 @@ input.mollify-rename-dialog-new-name-value {
 	padding-bottom: 4px;
 }
 
-.mollify-dialog-button {
+.mollify-dialog-button, .mollify-file-upload-dialog-button {
 	height: 25px;
 	margin-bottom: 4px;
 	font-weight: bold;
@@ -996,7 +996,7 @@ input.mollify-rename-dialog-new-name-value {
 }
 
 .mollify-file-upload-dialog-content {
-	margin: 10px 4px 15px;
+	margin: 10px 4px 4px;
 }
 
 .mollify-file-upload-dialog-message {
@@ -1055,6 +1055,7 @@ span.mollify-upload-info-size {
 .mollify-file-upload-dialog-buttons {
 	width: 100%;
 	padding-bottom: 4px;
+	padding-top: 4px;
 }
 
 .mollify-login-dialog-username-title, .mollify-login-dialog-password-title {
@@ -1612,10 +1613,20 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-file-remove-button {
-	margin: 4px;
-	height: 22px;
-	width: 30px;
+	border: none;
+	height: 12px;
+	width: 12px;
 	float: right;
+	background: url(b-close.png) no-repeat;
+	text-indent: 100px;
+	font-size: 0;
+	line-height: 0;
+	margin-top: 4px;
+	margin-right: 4px;
+}
+
+.mollify-file-upload-file-remove-button:hover {
+	background: url(b-close-over.png) no-repeat;
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message {
@@ -1668,7 +1679,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-file-row1 {
-	margin: 4px;
+	margin: 4px 4px 0;
 	width: 240px;
 }
 
@@ -1686,11 +1697,24 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	font-style: normal;
 	color: #737373;
 	width: 120px;
-	margin-left: 4px;
+}
+
+#cancel-upload.mollify-file-upload-dialog-button {
+	margin-left: 104px;
+	margin-top: 11px;
 }
 
 .mollify-dialog-file-upload-flash .mollify-file-upload-file-complete {
 	background-color: #d5fbe9;
+}
+
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel {
+	background-color: #edd3d1;
+	color: #909191;
+}
+
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel .mollify-file-upload-file-info {
+	color: #a8a9a9;
 }
 
 .mollify-file-upload-total-progress-panel {

@@ -57,11 +57,12 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	private Panel totalPanel;
 	private Label totalProgress;
 	private ProgressBar totalProgressBar;
+	private Panel uploadButtonPanel;
 
 	private String totalSizeText;
 
 	public enum Actions implements ResourceId {
-		upload, cancel, removeFile
+		upload, cancel, cancelUpload, removeFile
 	}
 
 	public FlashFileUploadDialog(TextProvider textProvider,
@@ -94,6 +95,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		panel.add(createUploadingMessage());
 		panel.add(createFileList());
 		panel.add(createTotalPanel());
+		panel.add(createUploadButtons());
 		return panel;
 	}
 
@@ -142,8 +144,6 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		totalPanel
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PANEL);
 
-		// Panel row1 = new HorizontalPanel();
-
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadTotalProgressTitle());
 		label
@@ -158,7 +158,6 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		totalProgressBar.setProgress(0d);
 		progressPanel.add(totalProgressBar);
 		totalPanel.add(progressPanel);
-		// totalPanel.add(row1);
 
 		totalProgress = new Label();
 		totalProgress
@@ -195,6 +194,15 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		uploadHeader.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 		uploadHeader.addStyleDependentName(StyleConstants.ACTIVE);
 		return uploadHeader;
+	}
+
+	private Widget createUploadButtons() {
+		uploadButtonPanel = new FlowPanel();
+		uploadButtonPanel.add(createButton(textProvider.getStrings()
+				.dialogCancelButton(), "cancel-upload",
+				StyleConstants.FILE_UPLOAD_DIALOG_BUTTON, actionListener,
+				Actions.cancelUpload));
+		return uploadButtonPanel;
 	}
 
 	public void addFile(File file) {
@@ -235,19 +243,14 @@ public class FlashFileUploadDialog extends CenteredDialog {
 			uploadHeader.setVisible(true);
 			totalPanel.setVisible(true);
 			buttons.setVisible(false);
+			uploadButtonPanel.setVisible(true);
 		} else {
 			selectHeader.removeStyleDependentName(StyleConstants.HIDDEN);
 			fileList.removeStyleDependentName(StyleConstants.UPLOAD);
 			uploadHeader.setVisible(false);
 			totalPanel.setVisible(false);
+			uploadButtonPanel.setVisible(false);
 		}
-
-		for (FileComponent fc : fileItems.values())
-			fc.setMode(mode);
-	}
-
-	public void onUploadEnded() {
-		this.hide();
 	}
 
 	public void onActiveUploadFileChanged(File file) {
@@ -262,10 +265,20 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		fileScrollPanel.ensureVisible(activeItem);
 	}
 
+	public void cancelFile(File f, long totalSize, long totalProgress,
+			double totalPercentage) {
+		totalSizeText = textProvider.getSizeText(totalSize);
+		fileItems.get(f.getId()).setCancelled();
+		updateTotal(totalPercentage, totalProgress);
+	}
+
 	public void setProgress(File file, double percentage, long complete,
 			double totalPercentage, long totalProgress) {
 		activeItem.setProgress(percentage, complete);
+		updateTotal(totalPercentage, totalProgress);
+	}
 
+	private void updateTotal(double totalPercentage, long totalProgress) {
 		this.totalProgress.setText(textProvider.getSizeText(totalProgress)
 				+ " / " + totalSizeText);
 		this.totalProgressBar.setProgress(totalPercentage);
