@@ -2,6 +2,13 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.0.1 ==
+  * Added new languages: Espanol and Italiano
+  * New custom theme: charcoal (by Lukas Upton)
+  * Support for flash uploader (SWFUpload)
+  * Support for multiple Mollify installations in one site
+  * New setting for disabling change password option
+
+=== Version 1.0.1 ==
   * Added new language: Português
   * Toolbar button tooltips
 
