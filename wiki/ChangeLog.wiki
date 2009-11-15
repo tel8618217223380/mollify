@@ -4,10 +4,10 @@
 === Version 1.0.5 ==
   * Added new languages: Espanol and Italiano
   * New custom theme: charcoal (by Lukas Upton)
-  * Support for flash uploader (SWFUpload)
-  * New setting for limiting allowed file upload types
-  * Support for multiple Mollify installations in one site
-  * New setting for disabling change password option
+  * Support for flash uploader (SWFUpload) (see chapter 7 in ConfigurationAdditionalOptions)
+  * New setting for limiting allowed file upload types (see chapter 6 in ConfigurationAdditionalOptions)
+  * Support for multiple Mollify installations in one site (see chapter 6 in ConfigurationAdditionalOptions)
+  * New setting for disabling change password option (see chapter 6 in ConfigurationAdditionalOptions)
 
 === Version 1.0.1 ==
   * Added new language: Português
