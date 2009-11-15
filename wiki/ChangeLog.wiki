@@ -5,6 +5,7 @@
   * Added new languages: Espanol and Italiano
   * New custom theme: charcoal (by Lukas Upton)
   * Support for flash uploader (SWFUpload)
+  * New setting for limiting allowed file upload types
   * Support for multiple Mollify installations in one site
   * New setting for disabling change password option
 
