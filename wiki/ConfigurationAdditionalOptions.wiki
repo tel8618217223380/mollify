@@ -115,6 +115,26 @@ $PASSWORDS_HASHED = TRUE;
 
 	This indicates that passwords given are handled as MD5 hashed. Note that you have to generate hashed passwords manually, for example with [http://www.miraclesalad.com/webtools/md5.php this] online service.
 
+=== 6.2. Disabling change password option ===
+
+	By default, users are allowed to change their passwords (if configuration supports this). If required, this option can be disabled with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"enable_change_password" => FALSE
+		);
+	}}}
+
+=== 6.3. Limiting allowed file upload types ===
+
+	By default, all types of files are allowed to upload. If required, file types can be limited with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"allowed_file_upload_types" => array(".gif", ".png")
+		);
+	}}}
+
 = 7. Client Options =
 
 == 7.1. Request timeout ==
