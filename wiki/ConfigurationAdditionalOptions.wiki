@@ -137,7 +137,25 @@ $PASSWORDS_HASHED = TRUE;
 
 = 7. Client Options =
 
-== 7.1. Request timeout ==
+== 7.1. File uploader ==
+
+	By default, Mollify uses basic HTTP file uploader. It is guaranteed to work on all browsers, but for displaying upload progress, server side support is required. Alternatively, a flash uploader can be used. It has more features, for example selecting multiple files at once, showing individual file upload progress, but requires Flash support from the browser.
+
+	If flash uploader is preferred, add following setting in host page:
+
+{{{
+<meta name="mollify:property" content="file-uploader=flash">
+}}}
+
+	Also the javascript library needs to be loaded with following line:
+
+{{{
+<script type="text/javascript" language="javascript" src="[PATH_TO_CLIENT_FILES]/swfupload.js"></script>
+}}}
+
+	The path used is the same than what is used for loading the Mollify app javascript (org.sjarvela.Mollify.nocache.js).
+
+== 7.2. Request timeout ==
 
 	By default, client requests timeout after 5 seconds if no response has been received. This timeout should be adequate for all environments, but if needed, this can be changed with following setting:
 
@@ -147,7 +165,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	Value given is timeout in seconds.
 
-== 7.2. Logging ==
+== 7.3. Logging ==
 
 	Mollify has support for client side logging, which makes it easier to troubleshoot any problems when backend log is not accessible or does not reveal anything.
 
