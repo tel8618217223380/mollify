@@ -135,6 +135,18 @@ $PASSWORDS_HASHED = TRUE;
 		);
 	}}}
 
+=== 6.4. Multiple installations in one site ===
+
+	Mollify uses PHP sessions, which contain information about the configuration. Installing multiple instances of Mollify would use the same session information, unless installations are identified. To do so, use with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"session_name" => "1"
+		);
+	}}}
+
+	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "STUDENTS", "TEACHERS" etc.
+
 = 7. Client Options =
 
 == 7.1. File uploader ==
