@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 1.0.1 ==
+=== Version 1.0.5 ==
   * Added new languages: Espanol and Italiano
   * New custom theme: charcoal (by Lukas Upton)
   * Support for flash uploader (SWFUpload)
