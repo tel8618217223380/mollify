@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SystemServiceAdapter;
+import org.sjarvela.mollify.client.service.SystemServiceLayer;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
@@ -106,8 +106,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Provides
 	@Singleton
 	ServiceProvider getServiceProvider(ServiceEnvironment env,
-			ViewManager viewManager) {
-		return new SystemServiceAdapter(env, viewManager);
+			ViewManager viewManager, UiSessionManager sessionManager) {
+		return new SystemServiceLayer(env, viewManager, sessionManager);
 	}
 
 	@Provides

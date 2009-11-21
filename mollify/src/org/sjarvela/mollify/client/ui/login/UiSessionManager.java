@@ -19,4 +19,6 @@ public interface UiSessionManager extends LogoutHandler {
 	void start(SessionInfo session, final Callback loginCallback,
 			Callback logoutCallback);
 
+	void reset();
+
 }

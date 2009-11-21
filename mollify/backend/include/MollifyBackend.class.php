@@ -53,7 +53,7 @@
 			$this->environment->initialize($request);
 			
 			$service = $this->environment->getService($request);
-			if ($service->isAuthenticationRequired() and !$this->serviceEnvironment->getAuthentication()->isAuthenticated()) throw new ServiceException("UNAUTHORIZED");
+			if ($service->isAuthenticationRequired() and !$this->environment->getAuthentication()->isAuthenticated()) throw new ServiceException("UNAUTHORIZED");
 			
 			$service->processRequest();
 		}

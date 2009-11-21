@@ -113,4 +113,10 @@ public class DefaultUiSessionManager implements UiSessionManager {
 		sessionManager.setSession(session);
 	}
 
+	public void reset() {
+		setSession(null);
+		if (logoutCallback != null)
+			logoutCallback.onCallback();
+	}
+
 }

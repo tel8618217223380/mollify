@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import java.util.List;
+import org.sjarvela.mollify.client.service.ServiceError;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,6 +26,6 @@ public interface ViewManager {
 
 	void showPlainError(String error);
 
-	void showCriticalError(String title, String details, List<String> debugInfo);
+	void showServiceError(String title, ServiceError error);
 
 }

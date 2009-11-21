@@ -5,6 +5,8 @@
 			$session->setSessionParam('roots', $this->getUserRootDirectories($userId));
 		}
 		
+		public function isProtocolVersionSupported($version) { return TRUE; }
+		
 		public function getSupportedFeatures() {
 			return array();
 		}

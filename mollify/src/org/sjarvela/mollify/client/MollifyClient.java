@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -31,16 +30,14 @@ public class MollifyClient implements Client {
 	private final ViewManager viewManager;
 	private final UiSessionManager sessionManager;
 	private final MainViewFactory mainViewFactory;
-	private final TextProvider textProvider;
 	private final ServiceProvider serviceProvider;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager,
-			ServiceProvider serviceProvider, TextProvider textProvider,
-			UiSessionManager sessionManager, MainViewFactory mainViewFactory) {
+			ServiceProvider serviceProvider, UiSessionManager sessionManager,
+			MainViewFactory mainViewFactory) {
 		this.viewManager = viewManager;
 		this.serviceProvider = serviceProvider;
-		this.textProvider = textProvider;
 		this.sessionManager = sessionManager;
 		this.mainViewFactory = mainViewFactory;
 	}
@@ -54,7 +51,8 @@ public class MollifyClient implements Client {
 		serviceProvider.getSessionService().getSessionInfo(PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
-						showPlainError(error);
+						viewManager.showServiceError(error.getError()
+								.getError(), error);
 					}
 
 					public void onSuccess(SessionInfo session) {
@@ -62,12 +60,6 @@ public class MollifyClient implements Client {
 					}
 				});
 	};
-
-	protected void showPlainError(ServiceError error) {
-		viewManager.showPlainError(textProvider.getStrings()
-				.infoDialogErrorTitle()
-				+ ": " + error.getType().getMessage(textProvider));
-	}
 
 	private void start(SessionInfo session) {
 		sessionManager.start(session, new Callback() {
