@@ -10,10 +10,6 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
@@ -23,30 +19,30 @@ import org.sjarvela.mollify.client.session.user.User;
 
 import com.allen_sauer.gwt.log.client.Log;
 
-public class PhpSessionService implements SessionService {
-	private final PhpService service;
-
-	enum SessionAction {
-		authenticate, session_info, logout, change_pw, reset_pw
+public class PhpSessionService extends ServiceBase implements SessionService {
+	enum SessionAction implements ActionId {
+		authenticate, info, logout, change_pw, reset_pw
 	}
 
 	public PhpSessionService(PhpService service) {
-		this.service = service;
+		super(service, RequestType.session);
 	}
 
-	public void getSessionInfo(String protocolVersion, ResultListener resultListener) {
+	public void getSessionInfo(String protocolVersion,
+			ResultListener resultListener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Requesting session info (protocol version '" + protocolVersion
-					+ "')");
+			Log.debug("Requesting session info (protocol version '"
+					+ protocolVersion + "')");
 
-		service.doGetRequest(getUrl(SessionAction.session_info, new UrlParam(
-				"protocol_version", protocolVersion)), resultListener);
+		service.doGetRequest(getUrl(SessionAction.info, protocolVersion),
+				resultListener);
 	}
 
 	public void authenticate(String userName, String password,
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
+
 		service.doGetRequest(getUrl(SessionAction.authenticate, new UrlParam(
 				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
 				"password", password, UrlParam.Encoding.MD5)), resultListener);
@@ -56,6 +52,7 @@ public class PhpSessionService implements SessionService {
 			ResultListener<Boolean> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Change password");
+
 		service.doGetRequest(getUrl(SessionAction.change_pw, new UrlParam(
 				"old", oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
 				newPassword, UrlParam.Encoding.MD5)), resultListener);
@@ -65,6 +62,7 @@ public class PhpSessionService implements SessionService {
 			ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Reset password for user " + user.getId());
+
 		service.doGetRequest(getUrl(SessionAction.reset_pw, new UrlParam("id",
 				user.getId()), new UrlParam("new", password,
 				UrlParam.Encoding.MD5)), resultListener);
@@ -73,17 +71,8 @@ public class PhpSessionService implements SessionService {
 	public void logout(ResultListener<SessionInfo> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Logout");
+
 		service.doGetRequest(getUrl(SessionAction.logout), resultListener);
-	}
-
-	private String getUrl(SessionAction action, UrlParam... params) {
-		return getUrl(action, Arrays.asList(params));
-	}
-
-	private String getUrl(SessionAction action, List<UrlParam> parameters) {
-		List<UrlParam> params = new ArrayList(parameters);
-		params.add(0, new UrlParam("action", action.name()));
-		return service.getUrl(RequestType.session, params);
 	}
 
 }

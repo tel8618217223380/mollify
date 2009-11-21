@@ -11,6 +11,8 @@
 package org.sjarvela.mollify.client.service.request;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.service.request.UrlParam.Encoding;
@@ -24,6 +26,7 @@ public class UrlBuilder {
 
 	private final String requestBaseUrl;
 	private List<UrlParam> params = new ArrayList();
+	private List<String> path = Collections.EMPTY_LIST;
 
 	public UrlBuilder(String requestBaseUrl) {
 		this.requestBaseUrl = requestBaseUrl;
@@ -37,8 +40,19 @@ public class UrlBuilder {
 		this.params.addAll(params);
 	}
 
+	public void add(UrlParam... params) {
+		this.params.addAll(Arrays.asList(params));
+	}
+
+	public void addPathItems(List<String> path) {
+		this.path = path;
+	}
+
 	public String getUrl() {
-		StringBuilder result = new StringBuilder(requestBaseUrl);
+		StringBuilder result = new StringBuilder(requestBaseUrl).append("/");
+		for (String item : path)
+			result.append(item).append("/");
+
 		boolean first = true;
 		for (UrlParam param : params) {
 			if (first)
@@ -68,4 +82,5 @@ public class UrlBuilder {
 
 		result.append(name).append('=').append(value);
 	}
+
 }

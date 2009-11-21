@@ -10,17 +10,27 @@
 
 package org.sjarvela.mollify.client.service;
 
-public class ServiceError {
-	private ServiceErrorType type;
-	private String details;
+import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
-	public ServiceError(ServiceErrorType error) {
-		this(error, "");
+public class ServiceError {
+	private final ServiceErrorType type;
+	private final ErrorValue error;
+	private final String details;
+
+	public ServiceError(ServiceErrorType type) {
+		this(type, "");
 	}
 
-	public ServiceError(ServiceErrorType error, String details) {
-		this.type = error;
+	public ServiceError(ServiceErrorType type, String details) {
+		this.type = type;
 		this.details = details;
+		this.error = null;
+	}
+
+	public ServiceError(ServiceErrorType type, ErrorValue error) {
+		this.type = type;
+		this.details = error.getDetails();
+		this.error = error;
 	}
 
 	public ServiceErrorType getType() {
@@ -30,7 +40,11 @@ public class ServiceError {
 	public String getDetails() {
 		return details;
 	}
-	
+
+	public ErrorValue getError() {
+		return error;
+	}
+
 	public String toString() {
 		return "Error '" + type.name() + "' (" + details + ")";
 	}

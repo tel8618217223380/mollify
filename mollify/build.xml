@@ -23,7 +23,7 @@
 	</path>
 
 	<path id="gwt-dev.classpath">
-		<fileset dir="${gwt.sdk.location}" includes="gwt-dev-*.jar"/>
+		<fileset dir="${gwt.sdk.location}" includes="gwt-dev*.jar"/>
 	</path>
   
 	<path id="compile.classpath">  
@@ -196,7 +196,7 @@
 	
 	<target name="compile.prod">
 		<mkdir dir="${build.dir}" />
-		<javac destdir="${build.dir}" classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" />		
+		<javac destdir="${build.dir}" classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" debuglevel="lines,vars,source" source="1.5" target="1.5" />		
 	</target>
 	
 	<target name="compile.tests" depends="init-dev">

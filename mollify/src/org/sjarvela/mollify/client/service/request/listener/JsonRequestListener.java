@@ -31,8 +31,7 @@ public class JsonRequestListener implements ResultListener<Response> {
 	private void onResponse(ReturnValue result) {
 		if (!result.isSuccess()) {
 			ErrorValue error = result.cast();
-			onError(new ServiceError(ServiceErrorType.getFrom(error), error
-					.getDetails()));
+			onError(new ServiceError(ServiceErrorType.getFrom(error), error));
 			return;
 		}
 		listener.onSuccess(result.getResult());

@@ -277,7 +277,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private Widget createDetails() {
 		details = new DisclosurePanel(textProvider.getStrings()
-				.fileActionDetailsTitle(), false);
+				.fileActionDetailsTitle());
+		details.setOpen(false);
 		details.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
 		details.getHeader().getElement().getParentElement().setClassName(
 				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);

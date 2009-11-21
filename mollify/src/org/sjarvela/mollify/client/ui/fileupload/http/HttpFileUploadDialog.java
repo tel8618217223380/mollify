@@ -116,7 +116,8 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 
 	private Widget createInfoPanel() {
 		uploadInfo = new DisclosurePanel(textProvider.getStrings()
-				.fileUploadDialogInfoTitle(), false);
+				.fileUploadDialogInfoTitle());
+		uploadInfo.setOpen(false);
 		uploadInfo.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO);
 		uploadInfo.getHeader().getElement().getParentElement().setClassName(
 				StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);

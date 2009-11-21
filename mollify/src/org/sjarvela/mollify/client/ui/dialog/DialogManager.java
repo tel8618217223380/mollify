@@ -12,13 +12,10 @@ package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 public interface DialogManager {
 
 	public abstract void showError(ServiceError error);
-
-	public abstract void showError(ErrorValue errorResult);
 
 	public abstract void showInfo(String title, String text);
 

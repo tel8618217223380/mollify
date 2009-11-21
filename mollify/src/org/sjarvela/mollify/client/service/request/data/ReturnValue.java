@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.request.data;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 
 public class ReturnValue extends JavaScriptObject {
 	public static ReturnValue success(JavaScriptObject result) {
@@ -34,6 +35,10 @@ public class ReturnValue extends JavaScriptObject {
 
 	public final native JavaScriptObject getResult() /*-{
 		return this.result;
+	}-*/;
+
+	public final native JsArrayString getDebugInfo() /*-{
+		return this.trace;
 	}-*/;
 
 	private final native JavaScriptObject setValues(boolean success,
