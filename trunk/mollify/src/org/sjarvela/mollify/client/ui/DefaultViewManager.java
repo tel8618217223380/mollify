@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -72,6 +74,26 @@ public class DefaultViewManager implements ViewManager {
 	public void showPlainError(String error) {
 		empty();
 		rootPanel.add(new HTML(error));
+	}
+
+	public void showCriticalError(String title, String details,
+			List<String> debugInfo) {
+		empty();
+
+		StringBuilder errorHtml = new StringBuilder();
+		errorHtml
+				.append("<span class='mollify-app-error'><p class='title'><b>")
+				.append(title).append("</b></p>");
+		errorHtml.append("<p class='details'>").append(details).append("</p>");
+		if (debugInfo.size() > 0) {
+			errorHtml.append("<p class='debug-info'>");
+			for (String d : debugInfo)
+				errorHtml.append(d).append("<br/>");
+			errorHtml.append("</p>");
+		}
+		errorHtml.append("</span>");
+
+		rootPanel.add(new HTML(errorHtml.toString()));
 	}
 
 	/* UTILITIES */

@@ -19,7 +19,6 @@ import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -31,7 +30,7 @@ import com.google.gwt.json.client.JSONParser;
 
 public class PhpFileUploadService extends PhpFileService implements
 		FileUploadService {
-	enum FileUploadAction {
+	enum FileUploadAction implements ActionId {
 		get_upload_status
 	};
 
@@ -52,10 +51,10 @@ public class PhpFileUploadService extends PhpFileService implements
 	public void getUploadProgress(String id,
 			ResultListener<FileUploadStatus> resultListener) {
 		List<UrlParam> params = new ArrayList();
-		params.add(new UrlParam("action", FileAction.get_upload_status.name()));
 		params.add(new UrlParam("id", id));
 
-		service.doGetRequest(service.getUrl(RequestType.filesystem, params),
+		service.doGetRequest(
+				getUrl(FileUploadAction.get_upload_status, params),
 				resultListener);
 	}
 

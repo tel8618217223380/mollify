@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.inject.Inject;
@@ -29,16 +28,7 @@ public class DefaultDialogManager implements DialogManager {
 	}
 
 	public void showError(ServiceError error) {
-		new InfoDialog(textProvider, textProvider.getStrings()
-				.infoDialogErrorTitle(), error.getType().getMessage(
-				textProvider), StyleConstants.INFO_DIALOG_TYPE_ERROR);
-	}
-
-	public void showError(ErrorValue errorResult) {
-		new InfoDialog(textProvider, textProvider.getStrings()
-				.infoDialogErrorTitle(), textProvider
-				.getErrorMessage(errorResult),
-				StyleConstants.INFO_DIALOG_TYPE_ERROR);
+		new ErrorDialog(textProvider, error);
 	}
 
 	public void showInfo(String title, String text) {

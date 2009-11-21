@@ -10,11 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
 import org.sjarvela.mollify.client.filesystem.Directory;
@@ -27,6 +23,7 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
+import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -35,18 +32,15 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class PhpFileService implements FileSystemService {
-	protected final PhpService service;
-
-	enum FileAction {
-		get_files, get_directories, get_contents, get_item_details, get_upload_status, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions, update_item_permissions
+public class PhpFileService extends ServiceBase implements FileSystemService {
+	enum FileAction implements ActionId {
+		get_files, get_directories, get_contents, get_item_details, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions, update_item_permissions
 	};
 
 	public PhpFileService(PhpService service) {
-		this.service = service;
+		super(service, RequestType.filesystem);
 	}
 
 	public void getDirectories(Directory parent,
@@ -209,39 +203,42 @@ public class PhpFileService implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Update item permissions");
 
-		Map<String, JavaScriptObject> data = new HashMap();
-		data.put("new", FileItemUserPermission.asJsArray(newPermissions));
-		data.put("modified", FileItemUserPermission
+		JSONStringBuilder data = new JSONStringBuilder();
+		data.add("new", FileItemUserPermission.asJsArray(newPermissions));
+		data.add("modified", FileItemUserPermission
 				.asJsArray(modifiedPermissions));
-		data.put("removed", FileItemUserPermission
+		data.add("removed", FileItemUserPermission
 				.asJsArray(removedPermissions));
 
-		service.doPostRequest(getUrl(FileAction.update_item_permissions),
-				JsUtil.asJsonString(data), resultListener);
+		service.doPostRequest(getUrl(FileAction.update_item_permissions), data
+				.toString(), resultListener);
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,
 			UrlParam... params) {
-		if (item.isEmpty()) {
-			throw new RuntimeException("No item defined, action "
-					+ action.name());
-		}
-		return getUrl(action, item, Arrays.asList(params));
+		return null;
+		// if (item.isEmpty()) {
+		// throw new RuntimeException("No item defined, action "
+		// + action.name());
+		// }
+		// return getUrl(action, item, Arrays.asList(params));
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,
 			List<UrlParam> parameters) {
-		List<UrlParam> params = new ArrayList(parameters);
-		params.add(new UrlParam("action", action.name()));
-		params.add(new UrlParam("id", item.getId()));
-
-		return service.getUrl(RequestType.filesystem, params);
+		return null;
+		// List<UrlParam> params = new ArrayList(parameters);
+		// params.add(new UrlParam("action", action.name()));
+		// params.add(new UrlParam("id", item.getId()));
+		//
+		// return service.getUrl(RequestType.filesystem, params);
 	}
 
 	public String getUrl(FileAction action, UrlParam... parameters) {
-		List<UrlParam> params = new ArrayList(Arrays.asList(parameters));
-		params.add(new UrlParam("action", action.name()));
-
-		return service.getUrl(RequestType.filesystem, params);
+		return null;
+		// List<UrlParam> params = new ArrayList(Arrays.asList(parameters));
+		// params.add(new UrlParam("action", action.name()));
+		//
+		// return service.getUrl(RequestType.filesystem, params);
 	}
 }

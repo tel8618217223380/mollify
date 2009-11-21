@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.UrlResolver;
@@ -24,7 +23,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 
 public class PhpService {
-	private static final String SERVICE_FILE = "service.php";
+	private static final String SERVICE_FILE = "r.php";
 	private final String requestBaseUrl;
 	private final HtmlRequestHandlerFactory htmlRequestHandlerFactory;
 	private final UrlResolver urlResolver;
@@ -58,23 +57,25 @@ public class PhpService {
 		return path + SERVICE_FILE;
 	}
 
-	String getUrl(RequestType type, UrlParam... params) {
-		return getUrl(type, Arrays.asList(params));
-	}
-
-	String getUrl(RequestType type, List<UrlParam> params) {
-		UrlBuilder result = new UrlBuilder(requestBaseUrl);
-		result.add(new UrlParam("type", type.name()));
-		result.add(params);
-		return result.getUrl();
+	String getUrl(List<String> path, List<UrlParam> params) {
+		UrlBuilder b = new UrlBuilder(requestBaseUrl);
+		b.addPathItems(path);
+		b.add(params);
+		return b.getUrl();
 	}
 
 	void doGetRequest(String url, final ResultListener resultListener) {
+		doGetRequest(url, null, resultListener);
+	}
+
+	void doGetRequest(String url, String data,
+			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Request GET: " + url);
 
 		htmlRequestHandlerFactory.createGET(url,
-				new JsonRequestListener(resultListener)).doRequest();
+				new JsonRequestListener(resultListener)).withData(data)
+				.doRequest();
 	}
 
 	void doPostRequest(String url, String data,

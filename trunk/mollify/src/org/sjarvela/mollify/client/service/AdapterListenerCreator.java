@@ -8,22 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request.data;
+package org.sjarvela.mollify.client.service;
 
-public class ErrorValue extends ReturnValue {
-	protected ErrorValue() {
-	}
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-	public final native int getCode() /*-{
-		return this.code;
-	}-*/;
+public interface AdapterListenerCreator {
 
-	public final native String getError() /*-{
-		return this.error;
-	}-*/;
-
-	public final native String getDetails() /*-{
-		return this.details;
-	}-*/;
+	<T> ResultListener createAdapterListener(ResultListener<T> resultListener);
 
 }

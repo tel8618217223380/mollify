@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ViewManager;
@@ -29,17 +29,17 @@ public class MollifyClient implements Client {
 	public static final String PROTOCOL_VERSION = "1_0_0";
 
 	private final ViewManager viewManager;
-	private final ServiceEnvironment env;
 	private final UiSessionManager sessionManager;
 	private final MainViewFactory mainViewFactory;
 	private final TextProvider textProvider;
+	private final ServiceProvider serviceProvider;
 
 	@Inject
-	public MollifyClient(ViewManager viewManager, ServiceEnvironment env,
-			TextProvider textProvider, UiSessionManager sessionManager,
-			MainViewFactory mainViewFactory) {
+	public MollifyClient(ViewManager viewManager,
+			ServiceProvider serviceProvider, TextProvider textProvider,
+			UiSessionManager sessionManager, MainViewFactory mainViewFactory) {
 		this.viewManager = viewManager;
-		this.env = env;
+		this.serviceProvider = serviceProvider;
 		this.textProvider = textProvider;
 		this.sessionManager = sessionManager;
 		this.mainViewFactory = mainViewFactory;
@@ -51,7 +51,7 @@ public class MollifyClient implements Client {
 		Log.debug("Module name: " + GWT.getModuleName());
 		Log.debug("Module location: " + GWT.getModuleBaseURL());
 
-		env.getSessionService().getSessionInfo(PROTOCOL_VERSION,
+		serviceProvider.getSessionService().getSessionInfo(PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
 						showPlainError(error);

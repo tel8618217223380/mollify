@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.SystemServiceAdapter;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
@@ -99,6 +101,13 @@ public class ContainerConfiguration extends AbstractGinModule {
 		ServiceEnvironment env = GWT.create(ServiceEnvironment.class);
 		env.initialize(urlResolver, clientSettings);
 		return env;
+	}
+
+	@Provides
+	@Singleton
+	ServiceProvider getServiceProvider(ServiceEnvironment env,
+			ViewManager viewManager) {
+		return new SystemServiceAdapter(env, viewManager);
 	}
 
 	@Provides

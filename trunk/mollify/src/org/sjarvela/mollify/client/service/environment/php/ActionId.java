@@ -8,22 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request.data;
+package org.sjarvela.mollify.client.service.environment.php;
 
-public class ErrorValue extends ReturnValue {
-	protected ErrorValue() {
-	}
-
-	public final native int getCode() /*-{
-		return this.code;
-	}-*/;
-
-	public final native String getError() /*-{
-		return this.error;
-	}-*/;
-
-	public final native String getDetails() /*-{
-		return this.details;
-	}-*/;
-
+public interface ActionId {
+	String name();
 }

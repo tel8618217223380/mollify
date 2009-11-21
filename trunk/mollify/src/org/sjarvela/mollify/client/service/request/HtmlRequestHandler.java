@@ -15,7 +15,6 @@ import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -27,6 +26,7 @@ import com.google.gwt.http.client.RequestBuilder.Method;
 public class HtmlRequestHandler implements RequestHandler {
 	private static final int HTTP_STATUS_OK = 200;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
+	private static final int HTTP_STATUS_SERVER_ERROR = 500;
 
 	private ResultListener listener;
 	private String url;
@@ -42,7 +42,6 @@ public class HtmlRequestHandler implements RequestHandler {
 		requestBuilder.setCallback(new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
 				Log.error("Request error", exception);
-				GWT.log("Request error", exception);
 
 				if (RequestTimeoutException.class.equals(exception.getClass()))
 					HtmlRequestHandler.this.onError(new ServiceError(
@@ -70,6 +69,15 @@ public class HtmlRequestHandler implements RequestHandler {
 							ServiceErrorType.INVALID_CONFIGURATION));
 					return;
 				}
+				if (statusCode == HTTP_STATUS_SERVER_ERROR) {
+					Log.error("Server error: " + HtmlRequestHandler.this.url
+							+ " (" + response.getText() + ")");
+					HtmlRequestHandler.this
+							.onError(new ServiceError(
+									ServiceErrorType.UNKNOWN_ERROR, response
+											.getText()));
+					return;
+				}
 				Log.error("Html request failed: url="
 						+ HtmlRequestHandler.this.url + ", status: "
 						+ statusCode);
@@ -86,6 +94,8 @@ public class HtmlRequestHandler implements RequestHandler {
 	}
 
 	public HtmlRequestHandler withData(String data) {
+		if (data == null)
+			return this;
 		requestBuilder.setRequestData(data);
 		requestBuilder.setHeader("Content-Type",
 				"application/x-www-form-urlencoded-data; charset=utf-8");

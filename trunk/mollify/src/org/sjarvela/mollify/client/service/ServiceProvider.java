@@ -8,22 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request.data;
+package org.sjarvela.mollify.client.service;
 
-public class ErrorValue extends ReturnValue {
-	protected ErrorValue() {
-	}
+public interface ServiceProvider {
+	SessionService getSessionService();
 
-	public final native int getCode() /*-{
-		return this.code;
-	}-*/;
+	ConfigurationService getConfigurationService();
 
-	public final native String getError() /*-{
-		return this.error;
-	}-*/;
+	FileSystemService getFileSystemService();
 
-	public final native String getDetails() /*-{
-		return this.details;
-	}-*/;
-
+	FileUploadService getFileUploadService();
 }

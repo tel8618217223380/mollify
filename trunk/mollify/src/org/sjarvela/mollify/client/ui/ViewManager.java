@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewManager {
@@ -23,5 +25,7 @@ public interface ViewManager {
 	void openUrlInNewWindow(String url);
 
 	void showPlainError(String error);
+
+	void showCriticalError(String title, String details, List<String> debugInfo);
 
 }
