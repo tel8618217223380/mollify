@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -48,11 +47,8 @@ public class JsonRequestListener implements ResultListener<Response> {
 					.cast();
 			onResponse(returnValue);
 		} catch (com.google.gwt.json.client.JSONException e) {
-			GWT.log("Invalid JSON response: " + response.getStatusCode() + "/"
-					+ response.getText(), e);
-			Log.error("Invalid JSON response: " + response.getStatusCode()
-					+ "/" + response.getText(), e);
-			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH));
+			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
+					"Got malformed JSON response: " + response.getText()));
 		}
 	}
 

@@ -5,5 +5,6 @@
 			if ($this->isAuthenticationRequired()) $features[] = 'permission_update';
 			return $features;
 		}
+		
 	}
 ?>

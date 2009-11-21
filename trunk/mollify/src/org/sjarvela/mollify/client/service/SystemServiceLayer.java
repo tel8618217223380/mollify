@@ -13,16 +13,19 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.util.JsUtil;
+import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 
-public class SystemServiceAdapter implements ServiceProvider,
+public class SystemServiceLayer implements ServiceProvider,
 		AdapterListenerCreator {
 	private final ServiceEnvironment env;
 	private final ViewManager viewManager;
+	private final UiSessionManager sessionManager;
 
-	public SystemServiceAdapter(ServiceEnvironment env, ViewManager viewManager) {
+	public SystemServiceLayer(ServiceEnvironment env, ViewManager viewManager,
+			UiSessionManager sessionManager) {
 		this.env = env;
 		this.viewManager = viewManager;
+		this.sessionManager = sessionManager;
 	}
 
 	public ConfigurationService getConfigurationService() {
@@ -60,12 +63,16 @@ public class SystemServiceAdapter implements ServiceProvider,
 
 	protected boolean handleError(ServiceError error) {
 		if (error.getType().equals(ServiceErrorType.AUTHENTICATION_FAILED)) {
-			// TODO logout
+			viewManager.empty();
+			sessionManager.reset();
+			return true;
 		}
 		if (error.getType().equals(ServiceErrorType.INVALID_CONFIGURATION)) {
-			viewManager.showCriticalError("Configuration Error", error
-					.getError().getDetails(), JsUtil.asList(error.getError()
-					.getDebugInfo()));
+			viewManager.showServiceError("Configuration Error", error);
+			return true;
+		}
+		if (error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
+			viewManager.showServiceError("Protocol error", error);
 			return true;
 		}
 		return false;

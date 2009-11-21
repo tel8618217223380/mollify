@@ -35,7 +35,7 @@ public class DefaultTextProvider implements TextProvider {
 
 	public String getErrorMessage(ErrorValue errorResult) {
 		// TODO get localized
-		return errorResult.getCode() + ": " + errorResult.getError() + "("
+		return errorResult.getCode() + ": " + errorResult.getError() + " ("
 				+ errorResult.getDetails() + ")";
 	}
 
