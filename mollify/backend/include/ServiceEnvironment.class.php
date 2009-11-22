@@ -20,27 +20,27 @@
 			$this->filesystem = new Filesystem($settings);
 		}
 		
-		public function getSession() {
+		public function session() {
 			return $this->session;
 		}
 
-		public function getResponseHandler() {
+		public function response() {
 			return $this->responseHandler;
 		}
 		
-		public function getAuthentication() {
+		public function authentication() {
 			return $this->authentication;
 		}
 		
-		public function getConfigurationProvider() {
+		public function configuration() {
 			return $this->configurationProvider;
 		}
 
-		public function getFeatures() {
+		public function features() {
 			return $this->features;
 		}
 
-		public function getFilesystem() {
+		public function filesystem() {
 			return $this->filesystem;
 		}
 				
@@ -54,13 +54,6 @@
 		public function addService($path, $controller) {
 			$this->services[$path] = $controller;
 		}
-		
-//		public function startSession($userId = "", $username = "") {
-//			$this->verifyConfiguration($userId);
-//			
-//			$this->authentication->initializeSession($userId, $username);
-//			$this->configurationProvider->initializeSession($this->sessionHandler, $userId);
-//		}
 		
 		private function verifyConfiguration($userId) {
 			$roots = $this->configurationProvider->getUserRootDirectories($userId);
@@ -79,10 +72,10 @@
 		}
 		
 		public function getService($request) {
-			$parts = $request->getParts();
-			$id = $parts[0];
+			$path = $request->path();
+			$id = $path[0];
 			if (!array_key_exists($id, $this->services)) throw new ServiceException("Unknown service '".$id."'");
-			$service = $this->createService($this->services[$id], $request, array_slice($parts, 1));
+			$service = $this->createService($this->services[$id], $request, array_slice($path, 1));
 			if (Logging::isDebug()) $service->log();
 			return $service;
 		}
@@ -114,11 +107,11 @@
 			$this->type = $type;
 		}
 		
-		function getType() {
+		function type() {
 			return $this->type;
 		}
 		
-		function getDetails() {
+		function details() {
 			return $this->getMessage();
 		}
 	}

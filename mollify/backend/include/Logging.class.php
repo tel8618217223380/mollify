@@ -61,7 +61,7 @@
 		public static function logException($e) {
 			$c = get_class($e);
 			if ($c === "ServiceException") {
-				$msg = "ServiceException: ".$e->getType()."=".$e->getDetails();
+				$msg = "ServiceException: ".$e->type()."=".$e->details();
 			} else {
 				$msg = "Exception (".$c."): ".$e->getMessage();
 			}

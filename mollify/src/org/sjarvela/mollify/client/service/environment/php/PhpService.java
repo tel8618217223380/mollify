@@ -78,6 +78,10 @@ public class PhpService {
 				.doRequest();
 	}
 
+	void doPostRequest(String url, final ResultListener resultListener) {
+		doPostRequest(url, null, resultListener);
+	}
+
 	void doPostRequest(String url, String data,
 			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())

@@ -11,46 +11,47 @@
 package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.user.User;
 
 public class SessionServiceAdapter implements SessionService {
 	private final SessionService sessionService;
-	private final AdapterListenerCreator adapterListenerCreator;
+	private final ResultListenerFactory resultListenerFactory;
 
 	public SessionServiceAdapter(SessionService sessionService,
-			AdapterListenerCreator adapterListenerCreator) {
+			ResultListenerFactory resultListenerFactory) {
 		this.sessionService = sessionService;
-		this.adapterListenerCreator = adapterListenerCreator;
+		this.resultListenerFactory = resultListenerFactory;
 	}
 
 	public void getSessionInfo(String protocolVersion,
 			final ResultListener<SessionInfo> resultListener) {
-		sessionService.getSessionInfo(protocolVersion, adapterListenerCreator
-				.createAdapterListener(resultListener));
+		sessionService.getSessionInfo(protocolVersion, resultListenerFactory
+				.createListener(resultListener));
 	}
 
 	public void authenticate(String userName, String password,
-			ResultListener<SessionInfo> resultListener) {
-		sessionService.authenticate(userName, password, adapterListenerCreator
-				.createAdapterListener(resultListener));
+			String protocolVersion, ResultListener<SessionInfo> resultListener) {
+		sessionService.authenticate(userName, password, protocolVersion,
+				resultListenerFactory.createListener(resultListener));
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
 		sessionService.changePassword(oldPassword, newPassword,
-				adapterListenerCreator.createAdapterListener(resultListener));
+				resultListenerFactory.createListener(resultListener));
 	}
 
-	public void logout(ResultListener<SessionInfo> resultListener) {
-		sessionService.logout(adapterListenerCreator
-				.createAdapterListener(resultListener));
+	public void logout(ResultListener resultListener) {
+		sessionService.logout(resultListenerFactory
+				.createListener(resultListener));
 	}
 
 	public void resetPassword(User user, String password,
 			ResultListener resultListener) {
-		sessionService.resetPassword(user, password, adapterListenerCreator
-				.createAdapterListener(resultListener));
+		sessionService.resetPassword(user, password, resultListenerFactory
+				.createListener(resultListener));
 	}
 
 }

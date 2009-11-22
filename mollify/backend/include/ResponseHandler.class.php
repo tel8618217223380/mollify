@@ -26,23 +26,23 @@
 			
 			"UNEXPECTED_ERROR" => array(999, "Unexpected error occurred", 200),
 		);
-		private $outputHandler;
+		private $output;
 		
-		function __construct($outputHandler) {
-			$this->outputHandler = $outputHandler;
+		function __construct($output) {
+			$this->output = $output;
 		}
 		
 		public function success($data) {
-			$this->outputHandler->sendResponse(new Response(200, "json", $this->getSuccessResponse($data)));
+			$this->output->sendResponse(new Response(200, "json", $this->getSuccessResponse($data)));
 		}
 		
 		public function error($type, $details) {
 			$error = $this->getError($type);
-			$this->outputHandler->sendResponse(new Response($error[2], "json", $this->getErrorResponse($error, $details)));
+			$this->output->sendResponse(new Response($error[2], "json", $this->getErrorResponse($error, $details)));
 		}
 		
 		public function unknownServerError($msg) {
-			$this->outputHandler->sendResponse(new Response(500, "plain", $msg));
+			$this->output->sendResponse(new Response(500, "plain", $msg));
 		}
 		
 		private function getSuccessResponse($data) {

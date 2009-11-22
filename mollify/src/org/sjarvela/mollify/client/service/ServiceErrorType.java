@@ -14,10 +14,9 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.core.client.GWT;
 
 public enum ServiceErrorType {
-	REQUEST_FAILED, AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION, INVALID_REQUEST, FEATURE_DISABLED;
+	UNAUTHORIZED, REQUEST_FAILED, AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, NO_MODIFY_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION, INVALID_REQUEST, FEATURE_DISABLED, FEATURE_NOT_SUPPORTED;
 
 	public String getMessage(TextProvider textProvider) {
 		switch (this) {
@@ -55,11 +54,15 @@ public enum ServiceErrorType {
 	public static ServiceErrorType getFrom(ErrorValue error) {
 		switch (error.getCode()) {
 		case 100:
-			return AUTHENTICATION_FAILED;
+			return UNAUTHORIZED;
 		case 101:
 			return INVALID_REQUEST;
 		case 104:
 			return FEATURE_DISABLED;
+		case 106:
+			return FEATURE_NOT_SUPPORTED;
+		case 107:
+			return AUTHENTICATION_FAILED;
 		case 105:
 		case 201:
 			// 201 is actually invalid path, but for user it is invalid
@@ -94,7 +97,6 @@ public enum ServiceErrorType {
 
 		default:
 			Log.error("ServiceError code " + error.getCode());
-			GWT.log("ServiceError code " + error.getCode(), null);
 			return UNKNOWN_ERROR;
 		}
 	}

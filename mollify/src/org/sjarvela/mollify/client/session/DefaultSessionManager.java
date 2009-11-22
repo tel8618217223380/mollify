@@ -27,14 +27,27 @@ public class DefaultSessionManager implements SessionManager {
 		this.session = session;
 
 		for (SessionListener listener : listeners)
-			listener.onSessionChanged();
+			listener.onSessionStarted(session);
+	}
+
+	public void endSession() {
+		Log.debug("SESSION ENDED");
+		this.session = null;
+
+		for (SessionListener listener : listeners)
+			listener.onSessionEnded();
+	}
+
+	public void addSessionListener(SessionListener listener) {
+		listeners.add(listener);
 	}
 
 	public SessionInfo getSession() {
 		return session;
 	}
 
-	public void setSessionListener(SessionListener listener) {
-		listeners.add(listener);
+	public boolean hasSession() {
+		return session != null;
 	}
+
 }

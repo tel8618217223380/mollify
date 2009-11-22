@@ -13,8 +13,8 @@
 		
 		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "configuration_update");
 		
-		function __construct($configurationProvider, $settings) {
-			$configurationFeatures = $configurationProvider->getSupportedFeatures();
+		function __construct($configuration, $settings) {
+			$configurationFeatures = $configuration->getSupportedFeatures();
 			
 			foreach ($this->features as $f=>$k) {
 				$enabled = FALSE;

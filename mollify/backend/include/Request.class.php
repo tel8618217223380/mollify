@@ -1,5 +1,8 @@
 <?php
 	class Request {
+		public static $METHOD_GET = 'get';
+		public static $METHOD_POST = 'post';
+		
 		private $method;
 		private $uri;
 		private $parts;
@@ -11,30 +14,37 @@
 			$this->parts = explode("/", $this->uri);
 			
 			switch($this->method) {
-				case 'get':
+				case self::$METHOD_GET:
 					$this->params = $_GET;
 					break;
-				case 'post':
+				case self::$METHOD_POST:
 					$this->params = $_POST;
+					
+					$data = file_get_contents("php://input");
+					if ($data and strlen($data) > 0) {
+						$data = json_decode($data, TRUE);
+						$this->params = array_merge($this->params, $data);
+					}
+
 					break;
 				default:
 					throw new Exception("Unsupported method");
 			}
 		}
 		
-		public function getMethod() {
+		public function method() {
 			return $this->method;
 		}
 		
-		public function getURI() {
+		public function URI() {
 			return $this->uri;
 		}
 		
-		public function getParts() {
+		public function path() {
 			return $this->parts;
 		}
 		
-		public function getParams() {
+		public function params() {
 			return $this->params;
 		}
 		
@@ -42,7 +52,7 @@
 			return array_key_exists($param, $this->params);
 		}
 		
-		public function getParam($param) {
+		public function param($param) {
 			return $this->params[$param];
 		}
 		
@@ -62,15 +72,15 @@
 			$this->data = $data;
 		}
 		
-		public function getCode() {
+		public function code() {
 			return $this->code;
 		}
 
-		public function getType() {
+		public function type() {
 			return $this->type;
 		}
 		
-		public function getData() {
+		public function data() {
 			return $this->data;
 		}
 	}

@@ -19,9 +19,8 @@ import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
-import org.sjarvela.mollify.client.session.LogoutHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
@@ -48,9 +47,9 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		RenameDialogFactory, CreateFolderDialogFactory {
 	private final ServiceEnvironment environment;
 	private final TextProvider textProvider;
-	private final SessionProvider sessionProvider;
 	private final ViewManager windowManager;
 	private final DialogManager dialogManager;
+	private final SessionManager sessionManager;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
@@ -61,7 +60,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
-			ServiceEnvironment environment, SessionProvider sessionProvider,
+			ServiceEnvironment environment, SessionManager sessionManager,
 			FileSystemItemProvider fileSystemItemProvider,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -72,7 +71,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
 		this.environment = environment;
-		this.sessionProvider = sessionProvider;
+		this.sessionManager = sessionManager;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
@@ -81,8 +80,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.passwordDialogFactory = passwordDialogFactory;
 	}
 
-	public MainView createMainView(LogoutHandler logoutListener) {
-		SessionInfo session = sessionProvider.getSession();
+	public MainView createMainView() {
+		SessionInfo session = sessionManager.getSession();
 
 		FileSystemService fileSystemService = environment
 				.getFileSystemService();
@@ -105,8 +104,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
-				model, view, environment.getSessionService(),
-				fileSystemService, textProvider, logoutListener,
+				sessionManager, model, view, environment.getSessionService(),
+				fileSystemService, textProvider,
 				fileSystemActionHandlerFactory, permissionEditorViewFactory,
 				passwordDialogFactory, fileUploadDialogFactory, this,
 				configurationDialogFactory);

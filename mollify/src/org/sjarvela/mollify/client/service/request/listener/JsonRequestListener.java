@@ -27,15 +27,6 @@ public class JsonRequestListener implements ResultListener<Response> {
 		this.listener = listener;
 	}
 
-	private void onResponse(ReturnValue result) {
-		if (!result.isSuccess()) {
-			ErrorValue error = result.cast();
-			onError(new ServiceError(ServiceErrorType.getFrom(error), error));
-			return;
-		}
-		listener.onSuccess(result.getResult());
-	}
-
 	public void onSuccess(Response response) {
 		try {
 			JSONObject o = JSONParser.parse(response.getText()).isObject();
@@ -50,6 +41,27 @@ public class JsonRequestListener implements ResultListener<Response> {
 			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
 					"Got malformed JSON response: " + response.getText()));
 		}
+	}
+
+	private void onResponse(ReturnValue result) {
+		if (!result.isSuccess()) {
+			ErrorValue error = result.cast();
+			onError(new ServiceError(ServiceErrorType.getFrom(error), error));
+			return;
+		}
+
+		if (result.isResultBoolean()) {
+			listener.onSuccess(new Boolean(result.getResultAsBoolean()));
+			return;
+		}
+
+		listener.onSuccess(result.getResult());
+		// JSONObject o = val.isObject();
+		// if (o != null)
+		// listener.onSuccess(o.getJavaScriptObject());
+		// onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
+		// "Got unknown response format: " + val.toString()));
+
 	}
 
 	public void onFail(ServiceError error) {

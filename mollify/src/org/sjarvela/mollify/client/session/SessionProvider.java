@@ -13,5 +13,5 @@ package org.sjarvela.mollify.client.session;
 public interface SessionProvider {
 	SessionInfo getSession();
 
-	void setSessionListener(SessionListener listener);
+	boolean hasSession();
 }

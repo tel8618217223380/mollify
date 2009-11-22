@@ -28,7 +28,7 @@
 			$authentication = new Authentication($session, $configurationProvider);
 			
 			$this->environment = new ServiceEnvironment($session, $authentication, $responseHandler, $configurationProvider, $settings);
-			$this->setupEnvironment();
+			$this->setup();
 		}
 	
 		private function createConfigurationProvider($configurationProviderId) {
@@ -42,7 +42,7 @@
 			}
 		}
 
-		private function setupEnvironment() {
+		private function setup() {
 			$this->environment->addService("authentication", "AuthenticationServices");
 			$this->environment->addService("session", "SessionServices");
 			$this->environment->addService("configuration", "ConfigurationServices");
@@ -51,9 +51,12 @@
 		
 		public function processRequest($request) {
 			$this->environment->initialize($request);
-			
 			$service = $this->environment->getService($request);
-			if ($service->isAuthenticationRequired() and !$this->environment->getAuthentication()->isAuthenticated()) throw new ServiceException("UNAUTHORIZED");
+			
+			if ($service->isAuthenticationRequired() and !$this->environment->authentication()->isAuthenticated()) {
+				$this->environment->session()->reset();
+				throw new ServiceException("UNAUTHORIZED");
+			}
 			
 			$service->processRequest();
 		}

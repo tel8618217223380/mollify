@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.session;
 
 public interface SessionListener {
 
-	void onSessionChanged();
+	void onSessionStarted(SessionInfo session);
+
+	void onSessionEnded();
 
 }

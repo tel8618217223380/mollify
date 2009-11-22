@@ -10,8 +10,9 @@
 
 package org.sjarvela.mollify.client.service.request.listener;
 
-import org.sjarvela.mollify.client.ResultCallback;
 
-public interface ResultListenerFactory<T> {
-	ResultListener<T> createListener(ResultCallback<T> resultCallback);
+public interface ResultListenerFactory {
+
+	<T> ResultListener createListener(ResultListener<T> resultListener);
+
 }

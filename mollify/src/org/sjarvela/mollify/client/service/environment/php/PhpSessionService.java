@@ -13,9 +13,10 @@ package org.sjarvela.mollify.client.service.environment.php;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.UrlParam;
+import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 
@@ -39,13 +40,15 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 	}
 
 	public void authenticate(String userName, String password,
-			final ResultListener resultListener) {
+			String protocolVersion, final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Authenticating '" + userName + "'");
 
-		service.doGetRequest(getUrl(SessionAction.authenticate, new UrlParam(
-				"username", userName, UrlParam.Encoding.BASE64), new UrlParam(
-				"password", password, UrlParam.Encoding.MD5)), resultListener);
+		String data = new JSONStringBuilder("username", userName).add(
+				"password", MD5.generate(password)).add("protocol_version",
+				protocolVersion).toString();
+		service.doPostRequest(getUrl(SessionAction.authenticate), data,
+				resultListener);
 	}
 
 	public void changePassword(String oldPassword, String newPassword,
@@ -68,11 +71,11 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 				UrlParam.Encoding.MD5)), resultListener);
 	}
 
-	public void logout(ResultListener<SessionInfo> resultListener) {
+	public void logout(ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Logout");
 
-		service.doGetRequest(getUrl(SessionAction.logout), resultListener);
+		service.doPostRequest(getUrl(SessionAction.logout), resultListener);
 	}
 
 }

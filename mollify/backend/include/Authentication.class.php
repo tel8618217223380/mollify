@@ -5,21 +5,25 @@
 		public static $PERMISSION_VALUE_READONLY = "RO";
 	
 		private $session;
-		private $configurationProvider;
+		private $configuration;
 		
-		public function __construct($session, $configurationProvider) {
+		public function __construct($session, $configuration) {
 			$this->session = $session;
-			$this->configurationProvider = $configurationProvider;
+			$this->configuration = $configuration;
 		}
 		
 		public function initialize($request) {
 			if (!$this->isAuthenticationRequired() and !$this->isAuthenticated()) $this->authenticate("", "");
 		}
 		
-		public function authenticate($userId, $username) {
-			$this->session->setSessionParam('user_id', $userId);
-			$this->session->setSessionParam('username', $username);
-			$this->session->setSessionParam('default_permission', $this->configurationProvider->getDefaultPermissionMode($userId));
+		public function authenticate($userId, $password) {
+			$user = $this->configuration->findUser($userId, $password);
+			if (!$user)
+				throw new ServiceException("AUTHENTICATION_FAILED");
+			
+			$this->session->setSessionParam('user_id', $user["id"]);
+			$this->session->setSessionParam('username', $user["name"]);
+			$this->session->setSessionParam('default_permission', $this->configuration->getDefaultPermissionMode($user["id"]));
 		}
 		
 		public function isAuthenticated() {
@@ -27,7 +31,7 @@
 		}
 
 		public function isAuthenticationRequired() {
-			return $this->configurationProvider->isAuthenticationRequired();
+			return $this->configuration->isAuthenticationRequired();
 		}
 		
 		public function getSessionInfo() {

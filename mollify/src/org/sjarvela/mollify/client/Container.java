@@ -18,7 +18,7 @@ import com.google.gwt.inject.client.Ginjector;
 @GinModules(ContainerConfiguration.class)
 public interface Container extends Ginjector {
 
-	ViewManager getViewManager();
-
 	Client getClient();
+
+	ViewManager getViewManager();
 }
