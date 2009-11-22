@@ -12,17 +12,18 @@ package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 
-public class SystemServiceLayer implements ServiceProvider,
-		AdapterListenerCreator {
+public class SystemServiceProvider implements ServiceProvider,
+		ResultListenerFactory {
 	private final ServiceEnvironment env;
 	private final ViewManager viewManager;
-	private final UiSessionManager sessionManager;
+	private final SessionManager sessionManager;
 
-	public SystemServiceLayer(ServiceEnvironment env, ViewManager viewManager,
-			UiSessionManager sessionManager) {
+	public SystemServiceProvider(ServiceEnvironment env,
+			ViewManager viewManager, SessionManager sessionManager) {
 		this.env = env;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -46,7 +47,7 @@ public class SystemServiceLayer implements ServiceProvider,
 		return new SessionServiceAdapter(env.getSessionService(), this);
 	}
 
-	public <T> ResultListener createAdapterListener(
+	public <T> ResultListener createListener(
 			final ResultListener<T> resultListener) {
 		return new ResultListener<T>() {
 			public void onFail(ServiceError error) {
@@ -62,9 +63,9 @@ public class SystemServiceLayer implements ServiceProvider,
 	}
 
 	protected boolean handleError(ServiceError error) {
-		if (error.getType().equals(ServiceErrorType.AUTHENTICATION_FAILED)) {
-			viewManager.empty();
-			sessionManager.reset();
+		if (error.getType().equals(ServiceErrorType.UNAUTHORIZED)) {
+			if (sessionManager != null)
+				sessionManager.endSession();
 			return true;
 		}
 		if (error.getType().equals(ServiceErrorType.INVALID_CONFIGURATION)) {

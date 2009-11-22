@@ -25,20 +25,24 @@ public class JSONStringBuilder {
 		add(name, val);
 	}
 
-	public void add(String name, String value) {
+	public JSONStringBuilder add(String name, String value) {
 		result.put(name, new JSONString(value));
+		return this;
 	}
 
-	public void add(String name, int i) {
+	public JSONStringBuilder add(String name, int i) {
 		result.put(name, new JSONNumber(i));
+		return this;
 	}
 
-	public void add(String name, JsArray a) {
+	public JSONStringBuilder add(String name, JsArray a) {
 		result.put(name, new JSONObject(a));
+		return this;
 	}
 
-	public void add(String name, double d) {
+	public JSONStringBuilder add(String name, double d) {
 		result.put(name, new JSONNumber(d));
+		return this;
 	}
 
 	@Override

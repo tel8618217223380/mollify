@@ -8,32 +8,32 @@
 			$this->env = $serviceEnvironment;
 			$this->request = $request;
 			$this->path = $path;
+			
+			if (!$this->isValidPath($this->request->method(), $this->path)) throw new ServiceException("INVALID_REQUEST", "Invalid path: ".strtoupper($this->request->method())." ".$this->request->URI());
 		}
 		
 		public function isAuthenticationRequired() {
-			return $this->env->getConfigurationProvider()->isAuthenticationRequired();
+			return $this->env->configuration()->isAuthenticationRequired();
 		}
 		
-		protected function isValidPath($path) {
+		protected function isValidPath($method, $path) {
 			return count($path) == 0;
 		}
 		
 		public function response() {
-			return $this->env->getResponseHandler();
+			return $this->env->response();
 		}
 		
 		public function processRequest() {
-			if (!$this->isValidPath($this->path)) throw new ServiceException("INVALID_REQUEST", "Invalid path: ".$this->request->getURI());
-			
-			switch($this->request->getMethod()) {
-				case 'get':
+			switch($this->request->method()) {
+				case Request::$METHOD_GET:
 					$this->processGet();
 					break;
-				case 'post':
+				case Request::$METHOD_POST:
 					$this->processPost();
 					break;
 				default:
-					throw new RequestException("Unsupported method '".$this->request->getMethod()."'");
+					throw new RequestException("Unsupported method '".$this->request->method()."'");
 			}
 		}
 		

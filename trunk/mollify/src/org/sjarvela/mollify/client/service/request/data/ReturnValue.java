@@ -37,6 +37,14 @@ public class ReturnValue extends JavaScriptObject {
 		return this.result;
 	}-*/;
 
+	public final native boolean isResultBoolean() /*-{
+		return (this.result == true || this.result == false);
+	}-*/;
+
+	public final native boolean getResultAsBoolean() /*-{
+		return (this.result == true ? true : false);
+	}-*/;
+
 	public final native JsArrayString getDebugInfo() /*-{
 		return this.trace;
 	}-*/;

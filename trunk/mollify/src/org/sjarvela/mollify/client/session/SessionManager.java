@@ -12,6 +12,10 @@ package org.sjarvela.mollify.client.session;
 
 public interface SessionManager extends SessionProvider {
 
+	void addSessionListener(SessionListener listener);
+
 	void setSession(SessionInfo session);
+
+	void endSession();
 
 }

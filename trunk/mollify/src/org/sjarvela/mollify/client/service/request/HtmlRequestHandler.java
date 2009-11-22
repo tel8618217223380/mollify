@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestBuilder.Method;
 
 public class HtmlRequestHandler implements RequestHandler {
 	private static final int HTTP_STATUS_OK = 200;
+	private static final int HTTP_STATUS_UNAUTHORIZED = 403;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
 	private static final int HTTP_STATUS_SERVER_ERROR = 500;
 
@@ -54,33 +55,34 @@ public class HtmlRequestHandler implements RequestHandler {
 			public void onResponseReceived(Request request, Response response) {
 				int statusCode = response.getStatusCode();
 				if (Log.isDebugEnabled())
-					Log.debug("Request response: " + statusCode + "/"
-							+ response.getText());
+					Log.debug("Request response: " + statusCode);
 
 				if (statusCode == HTTP_STATUS_OK) {
 					listener.onSuccess(response);
 					return;
 				}
 
-				if (statusCode == HTTP_STATUS_NOT_FOUND) {
-					Log.error("Service file not found: "
-							+ HtmlRequestHandler.this.url);
+				if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
 					HtmlRequestHandler.this.onError(new ServiceError(
-							ServiceErrorType.INVALID_CONFIGURATION));
+							ServiceErrorType.UNAUTHORIZED, response.getText()));
+					return;
+
+				}
+
+				if (statusCode == HTTP_STATUS_NOT_FOUND) {
+					HtmlRequestHandler.this.onError(new ServiceError(
+							ServiceErrorType.INVALID_CONFIGURATION,
+							"Service file not found: "
+									+ HtmlRequestHandler.this.url));
 					return;
 				}
 				if (statusCode == HTTP_STATUS_SERVER_ERROR) {
-					Log.error("Server error: " + HtmlRequestHandler.this.url
-							+ " (" + response.getText() + ")");
 					HtmlRequestHandler.this
 							.onError(new ServiceError(
 									ServiceErrorType.UNKNOWN_ERROR, response
 											.getText()));
 					return;
 				}
-				Log.error("Html request failed: url="
-						+ HtmlRequestHandler.this.url + ", status: "
-						+ statusCode);
 				HtmlRequestHandler.this.onError(new ServiceError(
 						ServiceErrorType.REQUEST_FAILED));
 			}
@@ -88,8 +90,6 @@ public class HtmlRequestHandler implements RequestHandler {
 	}
 
 	protected void onError(ServiceError error) {
-		Log.error("Html request failed: url=[" + url + "] msg="
-				+ error.toString());
 		listener.onFail(error);
 	}
 

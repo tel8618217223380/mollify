@@ -33,7 +33,6 @@ public class App implements EntryPoint {
 		try {
 			container = (Container) GWT.create(Container.class);
 		} catch (RuntimeException e) {
-			GWT.log("Error initializing application", e);
 			Log.error("Error initializing application", e);
 
 			if (container != null)

@@ -8,12 +8,17 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.session;
 
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+public abstract class SessionStartListener implements SessionListener {
 
-public interface AdapterListenerCreator {
+	public final void onSessionEnded() {
+	}
 
-	<T> ResultListener createAdapterListener(ResultListener<T> resultListener);
+	public final void onSessionStarted(SessionInfo session) {
+		onSessionStarted();
+	}
+
+	public abstract void onSessionStarted();
 
 }

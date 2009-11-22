@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.SystemServiceLayer;
 import org.sjarvela.mollify.client.service.ServiceProvider;
+import org.sjarvela.mollify.client.service.SystemServiceProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
@@ -35,8 +35,6 @@ import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFact
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.itemselector.DefaultItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
-import org.sjarvela.mollify.client.ui.login.DefaultUiSessionManager;
-import org.sjarvela.mollify.client.ui.login.UiSessionManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainViewFactory;
 import org.sjarvela.mollify.client.ui.password.DefaultPasswordDialogFactory;
@@ -72,7 +70,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 				DefaultPermissionEditorViewFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
-		bind(UiSessionManager.class).to(DefaultUiSessionManager.class);
 		bind(Client.class).to(MollifyClient.class);
 	}
 
@@ -106,8 +103,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Provides
 	@Singleton
 	ServiceProvider getServiceProvider(ServiceEnvironment env,
-			ViewManager viewManager, UiSessionManager sessionManager) {
-		return new SystemServiceLayer(env, viewManager, sessionManager);
+			ViewManager viewManager, SessionManager sessionManager) {
+		return new SystemServiceProvider(env, viewManager, sessionManager);
 	}
 
 	@Provides

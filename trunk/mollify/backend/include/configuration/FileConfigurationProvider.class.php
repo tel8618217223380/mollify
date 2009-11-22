@@ -20,14 +20,14 @@
 	
 				if ($pw != $password) {
 					Logging::logError("Invalid password for user [".$user["name"]."]");
-				 	throw new ServiceException("AUTHORIZATION_FAILED");
+					return NULL;
 				}
 				
 				return array("id" => $id, "name" => $user["name"]);
 			}
 			
 			Logging::logError("No user found with name [".$username."]");
-			throw new ServiceException("AUTHORIZATION_FAILED");
+			return NULL;
 		}
 		
 		function getAllUsers() {
@@ -51,8 +51,8 @@
 				if (!isset($FILE_PERMISSION_MODE)) return Authentication::$PERMISSION_VALUE_READONLY;
 				$mode = strtoupper($FILE_PERMISSION_MODE);
 			} else {
-				if (!isset($USERS[$user_id]["file_permission_mode"])) return Authentication::$PERMISSION_VALUE_READONLY;
-				$mode = strtoupper($USERS[$user_id]["file_permission_mode"]);
+				if (!isset($USERS[$userId]["file_permission_mode"])) return Authentication::$PERMISSION_VALUE_READONLY;
+				$mode = strtoupper($USERS[$userId]["file_permission_mode"]);
 			}
 	
 			if ($mode != Authentication::$PERMISSION_VALUE_ADMIN and $mode != Authentication::$PERMISSION_VALUE_READWRITE and $mode != Authentication::$PERMISSION_VALUE_READONLY) {

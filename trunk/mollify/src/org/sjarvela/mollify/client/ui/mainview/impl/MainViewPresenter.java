@@ -28,7 +28,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.LogoutHandler;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
@@ -50,11 +50,11 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final MainViewModel model;
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
+	private final SessionManager sessionManager;
 
 	private final FileSystemService fileSystemService;
 	private final SessionService sessionService;
 	private final FileSystemActionHandler fileSystemActionHandler;
-	private final LogoutHandler logoutHandler;
 	private final TextProvider textProvider;
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
 	private final PasswordDialogFactory passwordDialogFactory;
@@ -62,10 +62,10 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ConfigurationDialogFactory configurationDialogFactory;
 
-	public MainViewPresenter(DialogManager dialogManager, MainViewModel model,
+	public MainViewPresenter(DialogManager dialogManager,
+			SessionManager sessionManager, MainViewModel model,
 			DefaultMainView view, SessionService sessionService,
 			FileSystemService fileSystemService, TextProvider textProvider,
-			LogoutHandler logoutHandler,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
@@ -73,13 +73,13 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			CreateFolderDialogFactory createFolderDialogFactory,
 			ConfigurationDialogFactory configurationDialogFactory) {
 		this.dialogManager = dialogManager;
+		this.sessionManager = sessionManager;
 		this.sessionService = sessionService;
 		this.fileSystemService = fileSystemService;
 
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
-		this.logoutHandler = logoutHandler;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
@@ -244,7 +244,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void logout() {
-		logoutHandler.logout();
+		sessionManager.endSession();
 	}
 
 	public void changePassword() {

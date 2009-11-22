@@ -10,12 +10,19 @@
 
 package org.sjarvela.mollify.client;
 
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.ServiceProvider;
+import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionListener;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.login.UiSessionManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.login.LoginDialog;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -24,22 +31,28 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class MollifyClient implements Client {
-	public static final String PROTOCOL_VERSION = "1_0_0";
+public class MollifyClient implements Client, SessionListener {
+	public static final String PROTOCOL_VERSION = "1_5_0";
 
 	private final ViewManager viewManager;
-	private final UiSessionManager sessionManager;
+	private final DialogManager dialogManager;
 	private final MainViewFactory mainViewFactory;
-	private final ServiceProvider serviceProvider;
+	private final SessionManager sessionManager;
+	private final SessionService service;
+	private final TextProvider textProvider;
 
 	@Inject
-	public MollifyClient(ViewManager viewManager,
-			ServiceProvider serviceProvider, UiSessionManager sessionManager,
-			MainViewFactory mainViewFactory) {
+	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
+			MainViewFactory mainViewFactory, SessionManager sessionManager,
+			ServiceProvider serviceProvider, TextProvider textProvider) {
 		this.viewManager = viewManager;
-		this.serviceProvider = serviceProvider;
-		this.sessionManager = sessionManager;
+		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
+		this.sessionManager = sessionManager;
+		this.textProvider = textProvider;
+		this.service = serviceProvider.getSessionService();
+
+		sessionManager.addSessionListener(this);
 	}
 
 	public void start() {
@@ -48,7 +61,9 @@ public class MollifyClient implements Client {
 		Log.debug("Module name: " + GWT.getModuleName());
 		Log.debug("Module location: " + GWT.getModuleBaseURL());
 
-		serviceProvider.getSessionService().getSessionInfo(PROTOCOL_VERSION,
+		viewManager.empty();
+
+		service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
 						viewManager.showServiceError(error.getError()
@@ -56,26 +71,62 @@ public class MollifyClient implements Client {
 					}
 
 					public void onSuccess(SessionInfo session) {
-						start(session);
+						sessionManager.setSession(session);
 					}
 				});
-	};
+	}
 
-	private void start(SessionInfo session) {
-		sessionManager.start(session, new Callback() {
-			public void onCallback() {
-				showMain();
+	public void onSessionStarted(SessionInfo session) {
+		if (!session.isAuthenticationRequired() || !session.isAuthenticated())
+			openLogin();
+		else
+			viewManager.openView(mainViewFactory.createMainView()
+					.getViewWidget());
+	}
+
+	public void onSessionEnded() {
+		service.logout(new ResultListener<Boolean>() {
+			public void onFail(ServiceError error) {
+				openLogin();
 			}
-		}, new Callback() {
-			public void onCallback() {
-				viewManager.empty();
-				start();
+
+			public void onSuccess(Boolean b) {
+				openLogin();
 			}
 		});
 	}
 
-	private void showMain() {
-		viewManager.openView(mainViewFactory.createMainView(sessionManager)
-				.getViewWidget());
+	private void openLogin() {
+		new LoginDialog(textProvider, new LoginHandler() {
+			public void login(String userName, String password,
+					final ConfirmationListener listener) {
+				Log.info("User login: " + userName);
+
+				service.authenticate(userName, password,
+						MollifyClient.PROTOCOL_VERSION,
+						new ResultListener<SessionInfo>() {
+							public void onFail(ServiceError error) {
+								if (ServiceErrorType.AUTHENTICATION_FAILED
+										.equals(error)) {
+									showLoginError();
+									return;
+								}
+								dialogManager.showError(error);
+							}
+
+							public void onSuccess(SessionInfo session) {
+								listener.onConfirm();
+								sessionManager.setSession(session);
+							}
+						});
+			}
+		});
 	}
+
+	private void showLoginError() {
+		String title = textProvider.getStrings().loginDialogTitle();
+		String msg = textProvider.getStrings().loginDialogLoginFailedMessage();
+		dialogManager.showInfo(title, msg);
+	}
+
 }

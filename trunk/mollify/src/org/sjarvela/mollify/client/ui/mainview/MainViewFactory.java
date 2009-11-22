@@ -10,10 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.session.LogoutHandler;
-
 public interface MainViewFactory {
 
-	MainView createMainView(LogoutHandler logoutListener);
+	MainView createMainView();
 
 }

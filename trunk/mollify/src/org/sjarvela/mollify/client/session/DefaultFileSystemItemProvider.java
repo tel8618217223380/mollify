@@ -27,25 +27,27 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
-	private final SessionProvider sessionProvider;
 
 	private List<Directory> roots = new ArrayList();
 
 	@Inject
-	public DefaultFileSystemItemProvider(SessionProvider sessionProvider,
+	public DefaultFileSystemItemProvider(SessionManager sessionManager,
 			ServiceEnvironment env) {
-		this.sessionProvider = sessionProvider;
-		this.sessionProvider.setSessionListener(new SessionListener() {
-			public void onSessionChanged() {
-				updateRootFolders();
+		sessionManager.addSessionListener(new SessionListener() {
+			public void onSessionStarted(SessionInfo session) {
+				updateRootFolders(session);
+			}
+
+			public void onSessionEnded() {
+				roots.clear();
 			}
 		});
 
 		this.fileSystemService = env.getFileSystemService();
 	}
 
-	protected void updateRootFolders() {
-		this.roots = sessionProvider.getSession().getRootDirectories();
+	protected void updateRootFolders(SessionInfo session) {
+		this.roots = session.getRootDirectories();
 	}
 
 	public void getDirectories(Directory parent,

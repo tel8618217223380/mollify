@@ -50,10 +50,10 @@
 			header($this->getStatus($response));
 			header('Content-type: text/html');
 			
-			$data = $response->getData();
+			$data = $response->data();
 			if (!$data) return;
 			
-			if ($response->getType() === 'json') {
+			if ($response->type() === 'json') {
 				echo json_encode($data);
 			} else {
 				echo $data;
@@ -61,7 +61,7 @@
 		}
 		
 		private function getStatus($response) {
-			return 'HTTP/1.1 '.$response->getCode().' '.$this->codes[$response->getCode()];
+			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
 		}
 	}
 ?>
