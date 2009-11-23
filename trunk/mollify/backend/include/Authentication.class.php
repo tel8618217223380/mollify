@@ -4,46 +4,50 @@
 		public static $PERMISSION_VALUE_READWRITE = "RW";
 		public static $PERMISSION_VALUE_READONLY = "RO";
 	
-		private $session;
-		private $configuration;
+		private $env;
 		
-		public function __construct($session, $configuration) {
-			$this->session = $session;
-			$this->configuration = $configuration;
+		public function __construct($env) {
+			$this->env = $env;
 		}
 		
 		public function initialize($request) {
-			if (!$this->isAuthenticationRequired() and !$this->isAuthenticated()) $this->authenticate("", "");
+			if (!$this->env->authentication()->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) $this->authenticate("", "");
 		}
 		
 		public function authenticate($userId, $password) {
-			$user = $this->configuration->findUser($userId, $password);
+			$user = $this->env->configuration()->findUser($userId, $password);
 			if (!$user)
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			
-			$this->session->setSessionParam('user_id', $user["id"]);
-			$this->session->setSessionParam('username', $user["name"]);
-			$this->session->setSessionParam('default_permission', $this->configuration->getDefaultPermissionMode($user["id"]));
+			$this->env->session()->param('user_id', $user["id"]);
+			$this->env->session()->param('username', $user["name"]);
+			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermissionMode($user["id"]));
+			
+			$this->env->onSessionStarted();
 		}
 		
 		public function isAuthenticated() {
-			return $this->session->hasSessionParam('user_id');
+			return $this->env->session()->hasParam('user_id');
 		}
 
 		public function isAuthenticationRequired() {
-			return $this->configuration->isAuthenticationRequired();
+			return $this->env->configuration()->isAuthenticationRequired();
+		}
+
+		public function getUserId() {
+			return $this->env->session()->param('user_id');
 		}
 		
-		public function getSessionInfo() {
-			$result = array();
-			$result['user_id'] = $this->session->getSessionParam('user_id');
-			$result['username'] = $this->session->getSessionParam('username');
-			$result['default_permission'] = $this->session->getSessionParam('default_permission');
-			return $result;
+		public function getUserInfo() {
+			return array(
+				'user_id' => $this->env->session()->param('user_id'),
+				'username' => $this->env->session()->param('username'),
+				'default_permission' => $this->env->session()->param('default_permission')
+			);
 		}
 		
 		public function getDefaultPermission() {
-			return $this->session->getSessionParam('default_permission');
+			return $this->session->param('default_permission');
 		}
 		
 		function hasModifyRights() {

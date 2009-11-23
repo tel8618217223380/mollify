@@ -26,4 +26,7 @@ public class ErrorValue extends ReturnValue {
 		return this.details;
 	}-*/;
 
+	public final String asString() {
+		return getCode() + ": " + getError();
+	}
 }
