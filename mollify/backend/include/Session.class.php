@@ -27,15 +27,12 @@
 			session_destroy();
 		}
 
-		public function hasSessionParam($param) {
+		public function hasParam($param) {
 			return isset($_SESSION[$param]);
 		}
-		
-		public function getSessionParam($param) {
-			return $_SESSION[$param];
-		}
-		
-		public function setSessionParam($param, $value) {
+				
+		public function param($param, $value = NULL) {
+			if ($value === NULL) return $_SESSION[$param];
 			return $_SESSION[$param] = $value;
 		}
 		

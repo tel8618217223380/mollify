@@ -10,14 +10,14 @@
 		private $settings;
 		private $filesystem;
 		
-		public function __construct($session, $authentication, $responseHandler, $configurationProvider, $settings) {
+		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
 			$this->session = $session;
-			$this->authentication = $authentication; 
 			$this->responseHandler = $responseHandler;
 			$this->configurationProvider = $configurationProvider;
 			$this->settings = $settings;
 			$this->features = new Features($configurationProvider, $settings);
-			$this->filesystem = new Filesystem($settings);
+			$this->authentication = new Authentication($this); 
+			$this->filesystem = new Filesystem($this);
 		}
 		
 		public function session() {
@@ -43,32 +43,24 @@
 		public function filesystem() {
 			return $this->filesystem;
 		}
-				
+
+		public function settings() {
+			return $this->settings;
+		}
+						
 		public function initialize($request) {
 			$this->session->initialize($request);
-			$this->authentication->initialize($request);
 			$this->filesystem->initialize($request);
+			$this->authentication->initialize($request);
 			$this->log();
+		}
+		
+		public function onSessionStarted() {
+			$this->filesystem->onSessionStarted();
 		}
 						
 		public function addService($path, $controller) {
 			$this->services[$path] = $controller;
-		}
-		
-		private function verifyConfiguration($userId) {
-			$roots = $this->configurationProvider->getUserRootDirectories($userId);
-			
-			foreach($roots as $id => $root) {
-				if (!isset($root["name"])) {
-					$this->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root directory definition does not have a name (".$id.")");
-				}
-				
-				if (!file_exists($root["path"])) {
-					$this->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root directory does not exist (".$id.")");
-				}
-			}
 		}
 		
 		public function getService($request) {

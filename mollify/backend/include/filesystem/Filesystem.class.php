@@ -1,19 +1,47 @@
 <?php
 	class Filesystem {
+		private $env;
 		private $allowedUploadTypes;
 		
-		function __construct($settings) {
-			$this->allowedUploadTypes = $settings->getSetting('allowed_file_upload_types');
+		function __construct($env) {
+			$this->env = $env;
+			$this->allowedUploadTypes = $env->settings()->getSetting('allowed_file_upload_types');
 		}
 		
 		public function initialize($request) {}
 		
-		public function getId($root_id, $path = "") {
+		public function onSessionStarted() {
+			$this->env->session()->param('roots', $this->validateRootDirectories());
+		}
+
+		public static function getId($rootId, $path = "") {
 			if (strlen($path) > 0) {
-				$root_path = get_root_path($root_id);
-				$path = substr($path, strlen($root_path));
+				$rootPath = getRootPath($rootId);
+				$path = substr($path, strlen($rootPath));
 			}
-			return base64_encode($root_id.':'.DIRECTORY_SEPARATOR.$path);
+			return base64_encode($rootId.':'.DIRECTORY_SEPARATOR.$path);
+		}
+		
+		public function getRootDirectories() {
+			return $this->env->session()->param('roots');
+		}
+				
+		private function validateRootDirectories() {
+			$roots = $this->env->configuration()->getUserRootDirectories($this->env->authentication()->getUserId());
+			
+			foreach($roots as $id => $root) {
+				if (!isset($root["name"])) {
+					$this->session->reset();
+					throw new ServiceException("INVALID_CONFIGURATION", "Root directory definition does not have a name (".$id.")");
+				}
+				
+				if (!file_exists($root["path"])) {
+					$this->session->reset();
+					throw new ServiceException("INVALID_CONFIGURATION", "Root directory does not exist (".$id.")");
+				}
+			}
+			
+			return $roots;
 		}
 		
 		public function getSessionInfo() {
@@ -25,7 +53,15 @@
 				"allowed_file_upload_types" => $this->getAllowedFileUploadTypes()
 			);
 			
-//			$result["roots"] = get_root_directory_info();
+			$result["roots"] = array();
+			
+			foreach($this->getRootDirectories() as $id => $root) {
+				$result["roots"][] = array(
+					"id" => FileSystem::getId($id),
+					"name" => $root["name"]
+				);
+			}
+
 			return $result;
 		}
 		

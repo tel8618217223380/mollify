@@ -37,7 +37,6 @@
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
 			$this->env->authentication()->authenticate($this->request->param("username"), $this->request->param("password"));
-			
 			$this->response()->success($this->getSessionInfo($this->request->param("protocol_version")));
 		}
 		
@@ -54,7 +53,7 @@
 				$info = array_merge(
 					$info,
 					$this->env->session()->getSessionInfo(),
-					$this->env->authentication()->getSessionInfo(),
+					$this->env->authentication()->getUserInfo(),
 					$this->env->filesystem()->getSessionInfo()
 				);
 				$info["features"] = $this->env->features()->getFeatures();

@@ -56,12 +56,6 @@ public class JsonRequestListener implements ResultListener<Response> {
 		}
 
 		listener.onSuccess(result.getResult());
-		// JSONObject o = val.isObject();
-		// if (o != null)
-		// listener.onSuccess(o.getJavaScriptObject());
-		// onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
-		// "Got unknown response format: " + val.toString()));
-
 	}
 
 	public void onFail(ServiceError error) {
@@ -69,7 +63,7 @@ public class JsonRequestListener implements ResultListener<Response> {
 	}
 
 	private void onError(ServiceError error) {
-		Log.error("JSON request failed: error=" + error.toString());
+		Log.error("Request failed: error=" + error.toString());
 		listener.onFail(error);
 	}
 }

@@ -25,9 +25,8 @@
 			$settings = new Settings($settingsVar);
 			$session = new Session($settings);
 			$configurationProvider = $this->createConfigurationProvider($configurationProviderId);
-			$authentication = new Authentication($session, $configurationProvider);
 			
-			$this->environment = new ServiceEnvironment($session, $authentication, $responseHandler, $configurationProvider, $settings);
+			$this->environment = new ServiceEnvironment($session, $responseHandler, $configurationProvider, $settings);
 			$this->setup();
 		}
 	

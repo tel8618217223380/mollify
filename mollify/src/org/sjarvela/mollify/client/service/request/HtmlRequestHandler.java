@@ -55,7 +55,8 @@ public class HtmlRequestHandler implements RequestHandler {
 			public void onResponseReceived(Request request, Response response) {
 				int statusCode = response.getStatusCode();
 				if (Log.isDebugEnabled())
-					Log.debug("Request response: " + statusCode);
+					Log.debug("Request response: " + statusCode + " "
+							+ response.getText());
 
 				if (statusCode == HTTP_STATUS_OK) {
 					listener.onSuccess(response);
