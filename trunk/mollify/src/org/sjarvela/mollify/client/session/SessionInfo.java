@@ -87,7 +87,7 @@ public class SessionInfo extends JavaScriptObject {
 	}
 
 	private final native String getDefaultPermissionModeString() /*-{
-		return this.default_permission_mode;
+		return this.default_permission;
 	}-*/;
 
 	public final native FileSystemInfo getFileSystemInfo() /*-{

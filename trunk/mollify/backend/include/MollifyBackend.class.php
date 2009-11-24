@@ -45,7 +45,7 @@
 			$this->environment->addService("authentication", "AuthenticationServices");
 			$this->environment->addService("session", "SessionServices");
 			$this->environment->addService("configuration", "ConfigurationServices");
-			$this->environment->addService("file", "FilesystemServices");
+			$this->environment->addService("filesystem", "FilesystemServices");
 		}
 		
 		public function processRequest($request) {
