@@ -54,7 +54,7 @@
 			if (array_key_exists($error, self::$ERRORS)) {
 				return self::$ERRORS[$error];
 			} else {
-				return array(0, "Unknown error: ".$ERROR);
+				return array(0, "Unknown error: ".$error);
 			}			
 		}
 		

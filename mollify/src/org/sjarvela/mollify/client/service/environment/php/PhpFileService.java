@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
@@ -36,7 +38,7 @@ import com.google.gwt.core.client.JsArray;
 
 public class PhpFileService extends ServiceBase implements FileSystemService {
 	enum FileAction implements ActionId {
-		get_files, get_directories, get_contents, get_item_details, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions, update_item_permissions
+		get_files, directories, items, details, rename, copy, move, delete, create_folder, download, upload, download_as_zip, set_description, remove_description, get_item_permissions, update_item_permissions
 	};
 
 	public PhpFileService(PhpService service) {
@@ -48,7 +50,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
 
-		service.doGetRequest(getUrl(FileAction.get_directories, parent),
+		service.doGetRequest(getUrl(parent, FileAction.directories),
 				new ResultListener<JsArray>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
@@ -66,7 +68,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directory contents: " + parent.getId());
 
-		service.doGetRequest(getUrl(FileAction.get_contents, parent),
+		service.doGetRequest(getUrl(parent, FileAction.items),
 				new ResultListener<DirectoriesAndFiles>() {
 
 					public void onFail(ServiceError error) {
@@ -87,8 +89,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get file details: " + item.getId());
 
-		service.doGetRequest(getUrl(FileAction.get_item_details, item),
-				resultListener);
+		service.doGetRequest(getUrl(item, FileAction.details), resultListener);
 	}
 
 	public void getDirectoryDetails(Directory item,
@@ -96,8 +97,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
-		service.doGetRequest(getUrl(FileAction.get_item_details, item),
-				resultListener);
+		service.doGetRequest(getUrl(item, FileAction.details), resultListener);
 	}
 
 	public void rename(FileSystemItem item, String newName,
@@ -212,6 +212,11 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		service.doPostRequest(getUrl(FileAction.update_item_permissions), data
 				.toString(), resultListener);
+	}
+
+	private String getUrl(FileSystemItem item, FileAction action) {
+		return service.getUrl(Arrays.asList(RequestType.filesystem.name(), item
+				.getId(), action.name()), Collections.EMPTY_LIST);
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,
