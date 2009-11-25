@@ -25,8 +25,8 @@
 		public function getItemFromPath($rootId, $path) {
 			$isFile = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
 			
-			if ($isFile) return new File($this->getId($rootId, $path), $rootId, $path);
-			return new Folder(self::getId($rootId, $path), $rootId, $path);
+			if ($isFile) return new File($this, $this->getId($rootId, $path), $rootId, $path);
+			return new Folder($this, $this->getId($rootId, $path), $rootId, $path);
 		}
 		
 		public function getItemFromId($id) {
@@ -75,6 +75,22 @@
 			}
 			
 			return $roots;
+		}
+		
+		public function getIgnoredItems($folder) {
+			return array('descript.ion', 'mollify.uac');
+		}
+		
+		public function getDatetimeFormat() {
+			return "YmdHis";
+		}
+		
+		public function description($item) {
+			return "TODO";
+		}
+		
+		public function permissions($item) {
+			return "ro";
 		}
 		
 		public function getSessionInfo() {

@@ -9,8 +9,53 @@
 			$id = $this->path[0];
 			$item = $this->env->filesystem()->getItemFromId($id);
 			
-			$this->response()->success($item->getPath());
+			if ($item->isFile()) $this->processGetFile($item);
+			else $this->processGetFolder($item);
 		}
-
+		
+		private function processGetFile($item) {
+			if (count($this->path) == 1) {
+				$item->download();
+				return;
+			}
+			
+			switch (strtolower($this->path[1])) {
+				case 'items':
+					$this->response()->success(array("directories" => $item->folders(), "files" => $item->files()));
+					break;
+				case 'files':
+					$this->response()->success($item->files());
+					break;
+				case 'directories':
+					$this->response()->success($item->folders());
+					break;
+				case 'details':
+					$this->response()->success($item->details());
+					break;
+				default:
+					throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			}
+		}
+		
+		private function processGetFolder($item) {
+			if (count($this->path) != 2) throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			
+			switch (strtolower($this->path[1])) {
+				case 'items':
+					$this->response()->success(array("directories" => $item->folders(), "files" => $item->files()));
+					break;
+				case 'files':
+					$this->response()->success($item->files());
+					break;
+				case 'directories':
+					$this->response()->success($item->folders());
+					break;
+				case 'details':
+					$this->response()->success($item->details());
+					break;
+				default:
+					throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			}
+		}
 	}
 ?>
