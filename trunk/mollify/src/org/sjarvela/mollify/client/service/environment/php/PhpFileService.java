@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
@@ -215,8 +213,13 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	}
 
 	private String getUrl(FileSystemItem item, FileAction action) {
-		return service.getUrl(Arrays.asList(RequestType.filesystem.name(), item
-				.getId(), action.name()), Collections.EMPTY_LIST);
+		return service.getUrl(RequestType.filesystem.name(), getItemId(item),
+				action.name());
+	}
+
+	private String getItemId(FileSystemItem item) {
+		return item.getId().replaceAll("=", ",").replaceAll("\\+", "-")
+				.replaceAll("/", "_");
 	}
 
 	public String getUrl(FileAction action, FileSystemItem item,

@@ -19,7 +19,7 @@
 			"NO_UPLOAD_DATA" => array(209, "No upload data available", 200), 
 			"UPLOAD_FAILED" => array(210, "File upload failed", 200), 
 			"SAVING_FAILED" => array(211, "Saving file failed", 200),
-			"NO_MODIFY_RIGHTS" => array(212, "User has no rights to modify file", 200),
+			"INSUFFICIENT_RIGHTS" => array(212, "User does not have sufficient rights", 200),
 			"ZIP_FAILED" => array(213, "Creating a zip package failed", 200),
 			"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission", 200),
 			"NOT_AN_ADMIN" => array(215, "User is not an administrator", 200),

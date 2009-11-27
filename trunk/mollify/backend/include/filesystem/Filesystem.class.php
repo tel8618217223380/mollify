@@ -30,7 +30,10 @@
 		}
 		
 		public function getItemFromId($id) {
-			$parts = explode(":".DIRECTORY_SEPARATOR, base64_decode($id));
+			$plainId = base64_decode($id);
+			$parts = explode(":".DIRECTORY_SEPARATOR, $plainId);
+			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid file item id: ".$plainId);
+			
 			$rootId = $parts[0];
 			$filePath = $parts[1];
 			$rootPath = $this->getRootPath($rootId);
@@ -46,6 +49,10 @@
 			}
 			
 			return $this->getItemFromPath($rootId, $path);
+		}
+		
+		public function assertRights($item, $required, $desc = "Unknown action") {
+			$this->env->authentication()->assertRights($item->permissions(), $required, "filesystemitem ".$item->path()."/".$desc);
 		}
 		
 		public function getRootDirectories() {
