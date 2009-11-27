@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.UrlResolver;
@@ -32,12 +34,11 @@ public class PhpService {
 		filesystem, session, configuration
 	};
 
-	// In hosted mode (development), MollifyService expects to get the full
+	// In development mode, MollifyService expects to get the full
 	// url to the backend service in path parameter
 
-	// For a standalone version, it is assumed that backend facade
-	// (service.php) is in the same directory, or its descendants, than the
-	// host page.
+	// For a production version, it is assumed that backend facade
+	// (r.php) is in the same site.
 
 	public PhpService(UrlResolver urlResolver, String path, int requestTimeout) {
 		this.urlResolver = urlResolver;
@@ -57,6 +58,14 @@ public class PhpService {
 		return path + SERVICE_FILE;
 	}
 
+	String getUrl(String... path) {
+		return getUrl(Arrays.asList(path));
+	}
+
+	String getUrl(List<String> path) {
+		return getUrl(path, Collections.EMPTY_LIST);
+	}
+
 	String getUrl(List<String> path, List<UrlParam> params) {
 		UrlBuilder b = new UrlBuilder(requestBaseUrl);
 		b.addPathItems(path);
@@ -65,17 +74,11 @@ public class PhpService {
 	}
 
 	void doGetRequest(String url, final ResultListener resultListener) {
-		doGetRequest(url, null, resultListener);
-	}
-
-	void doGetRequest(String url, String data,
-			final ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Request GET: " + url);
 
 		htmlRequestHandlerFactory.createGET(url,
-				new JsonRequestListener(resultListener)).withData(data)
-				.doRequest();
+				new JsonRequestListener(resultListener)).doRequest();
 	}
 
 	void doPostRequest(String url, final ResultListener resultListener) {

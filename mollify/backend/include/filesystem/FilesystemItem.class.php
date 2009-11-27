@@ -20,6 +20,14 @@
 		public function id() {
 			return $this->id;
 		}
+
+		public function description() {
+			return $this->filesystem->description($this);
+		}
+				
+		public function permissions() {
+			return $this->filesystem->permissions($this);
+		}
 		
 		public function rootId() {
 			return $this->rootId;
@@ -49,8 +57,8 @@
 				"last_changed" => date($datetime_format, filectime($this->path)),
 				"last_modified" => date($datetime_format, filemtime($this->path)),
 				"last_accessed" => date($datetime_format, fileatime($this->path)),
-				"description" => $this->filesystem->description($this),
-				"permissions" => $this->filesystem->permissions($this));
+				"description" => $this->description(),
+				"permissions" => $this->permissions());
 		}
 		
 		public function download() {
@@ -139,9 +147,8 @@
 					continue;
 	
 				$fullPath = Filesystem::joinPath($this->path, $name);
-				
-				if ($recursive and is_dir($fullPath)) {
-					$result = array_merge($result, $this->getVisibleFiles($fullPath, TRUE));
+				if (is_dir($fullPath)) {
+					if ($recursive) $result = array_merge($result, $this->getVisibleFiles($fullPath, TRUE));
 					continue;
 				}
 				

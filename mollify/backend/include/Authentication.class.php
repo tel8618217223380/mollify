@@ -3,6 +3,11 @@
 		public static $PERMISSION_VALUE_ADMIN = "A";
 		public static $PERMISSION_VALUE_READWRITE = "RW";
 		public static $PERMISSION_VALUE_READONLY = "RO";
+		
+		const RIGHTS_NONE = "-";
+		const RIGHTS_READ = "R";
+		const RIGHTS_WRITE = "W";
+		const RIGHTS_ADMIN = "A";
 	
 		private $env;
 		
@@ -47,7 +52,20 @@
 		}
 		
 		public function getDefaultPermission() {
-			return $this->session->param('default_permission');
+			return $this->env->session()->param('default_permission');
+		}
+		
+		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
+			if ($required === self::RIGHTS_NONE or $this->isAdmin()) return;
+					
+			if ($permissions === self::$PERMISSION_VALUE_READWRITE) {
+				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;
+			}
+			if ($permissions === self::$PERMISSION_VALUE_READ) {
+				if ($required === self::RIGHTS_READ) return;
+			}
+			
+			throw new ServiceException("INSUFFICIENT_RIGHTS", $desc.", required:".$required.", permissions:".$permissions);
 		}
 		
 		function hasModifyRights() {

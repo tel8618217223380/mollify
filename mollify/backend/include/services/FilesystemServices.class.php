@@ -6,8 +6,8 @@
 		}
 		
 		public function processGet() {
-			$id = $this->path[0];
-			$item = $this->env->filesystem()->getItemFromId($id);
+			$item = $this->env->filesystem()->getItemFromId(strtr($this->path[0], '-_,', '+/='));
+			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, Util::array2str($this->path));
 			
 			if ($item->isFile()) $this->processGetFile($item);
 			else $this->processGetFolder($item);
@@ -18,7 +18,7 @@
 				$item->download();
 				return;
 			}
-			
+						
 			switch (strtolower($this->path[1])) {
 				case 'items':
 					$this->response()->success(array("directories" => $item->folders(), "files" => $item->files()));
