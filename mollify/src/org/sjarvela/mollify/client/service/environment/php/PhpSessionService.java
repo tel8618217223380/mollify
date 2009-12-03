@@ -12,17 +12,15 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.UrlParam;
 import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 
 public class PhpSessionService extends ServiceBase implements SessionService {
 	enum SessionAction implements ActionId {
-		authenticate, info, logout, change_pw, reset_pw
+		authenticate, info, logout
 	}
 
 	public PhpSessionService(PhpService service) {
@@ -35,8 +33,9 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 			Log.debug("Requesting session info (protocol version '"
 					+ protocolVersion + "')");
 
-		service.doGetRequest(getUrl(SessionAction.info, protocolVersion),
-				resultListener);
+		request().url(
+				serviceUrl().action(SessionAction.info).item(protocolVersion))
+				.get(resultListener);
 	}
 
 	public void authenticate(String userName, String password,
@@ -47,35 +46,17 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 		String data = new JSONStringBuilder("username", userName).add(
 				"password", MD5.generate(password)).add("protocol_version",
 				protocolVersion).toString();
-		service.doPostRequest(getUrl(SessionAction.authenticate), data,
-				resultListener);
-	}
 
-	public void changePassword(String oldPassword, String newPassword,
-			ResultListener<Boolean> resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Change password");
-
-		service.doGetRequest(getUrl(SessionAction.change_pw, new UrlParam(
-				"old", oldPassword, UrlParam.Encoding.MD5), new UrlParam("new",
-				newPassword, UrlParam.Encoding.MD5)), resultListener);
-	}
-
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Reset password for user " + user.getId());
-
-		service.doGetRequest(getUrl(SessionAction.reset_pw, new UrlParam("id",
-				user.getId()), new UrlParam("new", password,
-				UrlParam.Encoding.MD5)), resultListener);
+		request().url(serviceUrl().action(SessionAction.authenticate)).data(
+				data).post(resultListener);
 	}
 
 	public void logout(ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Logout");
 
-		service.doPostRequest(getUrl(SessionAction.logout), resultListener);
+		request().url(serviceUrl().action(SessionAction.logout)).post(
+				resultListener);
 	}
 
 }

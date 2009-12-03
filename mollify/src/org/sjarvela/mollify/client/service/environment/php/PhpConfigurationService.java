@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
@@ -18,11 +17,12 @@ import org.sjarvela.mollify.client.filesystem.UserDirectory;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.UrlParam;
+import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.JsUtil;
+import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JsArray;
@@ -30,28 +30,54 @@ import com.google.gwt.core.client.JsArray;
 public class PhpConfigurationService extends ServiceBase implements
 		ConfigurationService {
 	enum ConfigurationAction implements ActionId {
-		get_users, add_user, update_user, remove_user, get_folders, add_folder, update_folder, remove_folder, get_user_folders, add_user_folder, update_user_folder, remove_user_folder
+		users, password, folders, userfolders
 	}
 
 	public PhpConfigurationService(PhpService service) {
 		super(service, RequestType.configuration);
 	}
 
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Change password");
+
+		String data = new JSONStringBuilder("old", MD5.generate(oldPassword))
+				.add("new", MD5.generate(newPassword)).toString();
+
+		request().url(
+				serviceUrl().item("users").item("current").action(
+						ConfigurationAction.password)).data(data).put(
+				resultListener);
+	}
+
+	public void resetPassword(User user, String password,
+			ResultListener resultListener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Reset password for user " + user.getId());
+
+		request().url(
+				serviceUrl().item("users").item(user.getId()).action(
+						ConfigurationAction.password)).data(
+				MD5.generate(password)).put(resultListener);
+	}
+
 	public void getUsers(final ResultListener<List<User>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get users");
 
-		service.doGetRequest(getUrl(ConfigurationAction.get_users),
-				new ResultListener<JsArray<User>>() {
-					public void onFail(ServiceError error) {
-						resultListener.onFail(error);
-					}
+		ResultListener<JsArray<User>> listener = new ResultListener<JsArray<User>>() {
+			public void onFail(ServiceError error) {
+				resultListener.onFail(error);
+			}
 
-					public void onSuccess(JsArray<User> result) {
-						resultListener.onSuccess(JsUtil.asList(result,
-								User.class));
-					}
-				});
+			public void onSuccess(JsArray<User> result) {
+				resultListener.onSuccess(JsUtil.asList(result, User.class));
+			}
+		};
+
+		request().url(serviceUrl().action(ConfigurationAction.users)).get(
+				listener);
 	}
 
 	public void getFolders(
@@ -59,61 +85,70 @@ public class PhpConfigurationService extends ServiceBase implements
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		service.doGetRequest(getUrl(ConfigurationAction.get_folders),
-				new ResultListener<JsArray<DirectoryInfo>>() {
-					public void onFail(ServiceError error) {
-						resultListener.onFail(error);
-					}
+		ResultListener<JsArray<DirectoryInfo>> listener = new ResultListener<JsArray<DirectoryInfo>>() {
+			public void onFail(ServiceError error) {
+				resultListener.onFail(error);
+			}
 
-					public void onSuccess(JsArray<DirectoryInfo> result) {
-						resultListener.onSuccess(JsUtil.asList(result,
-								DirectoryInfo.class));
-					}
-				});
+			public void onSuccess(JsArray<DirectoryInfo> result) {
+				resultListener.onSuccess(JsUtil.asList(result,
+						DirectoryInfo.class));
+			}
+		};
+
+		request().url(serviceUrl().action(ConfigurationAction.folders)).get(
+				listener);
 	}
 
 	public void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.add_user, new UrlParam(
-				"name", name, UrlParam.Encoding.BASE64), new UrlParam(
-				"password", password, UrlParam.Encoding.MD5), new UrlParam(
-				"permission_mode", mode.getStringValue(),
-				UrlParam.Encoding.NONE)), resultListener);
+		String data = new JSONStringBuilder("name", name).add("password",
+				MD5.generate(password)).add("permission_mode",
+				mode.getStringValue()).toString();
+
+		request().url(serviceUrl().action(ConfigurationAction.users))
+				.data(data).post(resultListener);
 	}
 
 	public void editUser(User user, String name, UserPermissionMode mode,
 			ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.update_user,
-				new UrlParam("id", user.getId()), new UrlParam("name", name,
-						UrlParam.Encoding.BASE64), new UrlParam(
-						"permission_mode", mode.getStringValue(),
-						UrlParam.Encoding.NONE)), resultListener);
+		String data = new JSONStringBuilder("name", name).add(
+				"permission_mode", mode.getStringValue()).toString();
+
+		request().url(
+				serviceUrl().action(ConfigurationAction.users).item(
+						user.getId())).data(data).put(resultListener);
 	}
 
 	public void removeUser(User user, final ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.remove_user,
-				new UrlParam("id", user.getId())), resultListener);
+		request().url(
+				serviceUrl().action(ConfigurationAction.users).item(
+						user.getId())).delete(resultListener);
 	}
 
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.add_folder,
-				new UrlParam("name", name, UrlParam.Encoding.BASE64),
-				new UrlParam("path", path, UrlParam.Encoding.BASE64)),
-				resultListener);
+		String data = new JSONStringBuilder("name", name).add("path", path)
+				.toString();
+
+		request().url(serviceUrl().action(ConfigurationAction.folders)).data(
+				data).post(resultListener);
 	}
 
 	public void editFolder(DirectoryInfo dir, String name, String path,
 			ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.update_folder,
-				new UrlParam("id", dir.getId()), new UrlParam("name", name,
-						UrlParam.Encoding.BASE64), new UrlParam("path", path,
-						UrlParam.Encoding.BASE64)), resultListener);
+		String data = new JSONStringBuilder("name", name).add("path", path)
+				.toString();
+
+		request().url(
+				serviceUrl().action(ConfigurationAction.folders).item(
+						dir.getId())).data(data).put(resultListener);
 	}
 
 	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.remove_folder,
-				new UrlParam("id", dir.getId())), resultListener);
+		request().url(
+				serviceUrl().action(ConfigurationAction.folders).item(
+						dir.getId())).delete(resultListener);
 	}
 
 	public void getUserFolders(User user,
@@ -121,49 +156,44 @@ public class PhpConfigurationService extends ServiceBase implements
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		service.doGetRequest(getUrl(ConfigurationAction.get_user_folders,
-				new UrlParam("user_id", user.getId())),
-				new ResultListener<JsArray<UserDirectory>>() {
-					public void onFail(ServiceError error) {
-						resultListener.onFail(error);
-					}
+		ResultListener<JsArray<UserDirectory>> listener = new ResultListener<JsArray<UserDirectory>>() {
+			public void onFail(ServiceError error) {
+				resultListener.onFail(error);
+			}
 
-					public void onSuccess(JsArray<UserDirectory> result) {
-						resultListener.onSuccess(JsUtil.asList(result,
-								UserDirectory.class));
-					}
-				});
+			public void onSuccess(JsArray<UserDirectory> result) {
+				resultListener.onSuccess(JsUtil.asList(result,
+						UserDirectory.class));
+			}
+		};
+		request().url(
+				serviceUrl().action(ConfigurationAction.userfolders).item(
+						user.getId())).get(listener);
 	}
 
 	public void addUserFolder(User user, DirectoryInfo dir, String name,
 			ResultListener resultListener) {
-		List<UrlParam> params = new ArrayList();
-		params.add(new UrlParam("user_id", user.getId()));
-		params.add(new UrlParam("id", dir.getId()));
-		if (name != null)
-			params.add(new UrlParam("name", name, UrlParam.Encoding.BASE64));
+		String data = new JSONStringBuilder("user_id", user.getId()).add("id",
+				dir.getId()).add("name", name).toString();
 
-		service.doGetRequest(
-				getUrl(ConfigurationAction.add_user_folder, params),
-				resultListener);
+		request().url(serviceUrl().action(ConfigurationAction.userfolders))
+				.data(data).post(resultListener);
 	}
 
 	public void editUserFolder(User user, UserDirectory dir, String name,
 			ResultListener resultListener) {
-		List<UrlParam> params = new ArrayList();
-		params.add(new UrlParam("user_id", user.getId()));
-		params.add(new UrlParam("id", dir.getId()));
-		if (name != null)
-			params.add(new UrlParam("name", name, UrlParam.Encoding.BASE64));
+		String data = new JSONStringBuilder("user_id", user.getId()).add(
+				"name", name).toString();
 
-		service.doGetRequest(getUrl(ConfigurationAction.update_user_folder,
-				params), resultListener);
+		request().url(
+				serviceUrl().action(ConfigurationAction.userfolders).item(
+						dir.getId())).data(data).put(resultListener);
 	}
 
 	public void removeUserFolder(User user, UserDirectory dir,
 			ResultListener resultListener) {
-		service.doGetRequest(getUrl(ConfigurationAction.remove_user_folder,
-				new UrlParam("user_id", user.getId()), new UrlParam("id", dir
-						.getId())), resultListener);
+		request().url(
+				serviceUrl().action(ConfigurationAction.userfolders).item(
+						dir.getId())).delete(resultListener);
 	}
 }

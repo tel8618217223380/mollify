@@ -22,6 +22,11 @@ public interface ConfigurationService {
 
 	void getUsers(ResultListener<List<User>> resultListener);
 
+	void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener);
+
+	void resetPassword(User user, String password, ResultListener resultListener);
+
 	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
 
 	void addUser(String name, String password, UserPermissionMode mode,

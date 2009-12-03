@@ -11,76 +11,56 @@
 package org.sjarvela.mollify.client.service.request;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.service.request.UrlParam.Encoding;
-import org.sjarvela.mollify.client.util.Base64;
-import org.sjarvela.mollify.client.util.Html;
-import org.sjarvela.mollify.client.util.MD5;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.environment.php.ActionId;
 
 import com.google.gwt.http.client.URL;
 
 public class UrlBuilder {
+	private String baseUrl;
+	private List<String> items = new ArrayList();
 
-	private final String requestBaseUrl;
-	private List<UrlParam> params = new ArrayList();
-	private List<String> path = Collections.EMPTY_LIST;
-
-	public UrlBuilder(String requestBaseUrl) {
-		this.requestBaseUrl = requestBaseUrl;
+	public UrlBuilder baseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+		return this;
 	}
 
-	public void add(UrlParam param) {
-		params.add(param);
+	public UrlBuilder fileItem(FileSystemItem item) {
+		items.add(convertItemId(item));
+		return this;
 	}
 
-	public void add(List<UrlParam> params) {
-		this.params.addAll(params);
+	public UrlBuilder action(ActionId action) {
+		items.add(action.name());
+		return this;
 	}
 
-	public void add(UrlParam... params) {
-		this.params.addAll(Arrays.asList(params));
+	public UrlBuilder item(String item) {
+		items.add(item);
+		return this;
 	}
 
-	public void addPathItems(List<String> path) {
-		this.path = path;
-	}
-
-	public String getUrl() {
-		StringBuilder result = new StringBuilder(requestBaseUrl).append("/");
-		for (String item : path)
+	public String build() {
+		StringBuilder result = new StringBuilder(baseUrl).append("/");
+		for (String item : items)
 			result.append(URL.encodeComponent(item)).append("/");
 
-		boolean first = true;
-		for (UrlParam param : params) {
-			if (first)
-				result.append('?');
-			else
-				result.append('&');
-			addParam(result, param);
-			first = false;
-		}
+		// boolean first = true;
+		// for (UrlParam param : params) {
+		// if (first)
+		// result.append('?');
+		// else
+		// result.append('&');
+		// addParam(result, param);
+		// first = false;
+		// }
 		return result.toString();
 	}
 
-	private void addParam(StringBuilder result, UrlParam param) {
-		String name = param.getName();
-		String value = param.getValue();
-		Encoding encoding = param.getEncoding();
-
-		if (UrlParam.Encoding.URL.equals(encoding)) {
-			value = URL.encodeComponent(value);
-		} else if (UrlParam.Encoding.URL_FULL.equals(encoding)) {
-			value = Html.fullUrlEncode(value);
-		} else if (UrlParam.Encoding.BASE64.equals(encoding)) {
-			value = Base64.encode(value);
-		} else if (UrlParam.Encoding.MD5.equals(encoding)) {
-			value = MD5.generate(value);
-		}
-
-		result.append(name).append('=').append(value);
+	private String convertItemId(FileSystemItem item) {
+		return item.getId().replaceAll("=", ",").replaceAll("\\+", "-")
+				.replaceAll("/", "_");
 	}
-
 }

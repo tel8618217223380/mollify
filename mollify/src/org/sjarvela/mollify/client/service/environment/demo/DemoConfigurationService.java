@@ -32,6 +32,16 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(data.getUsers());
 	}
 
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		resultListener.onSuccess(true);
+	}
+
+	public void resetPassword(User user, String password,
+			ResultListener resultListener) {
+		resultListener.onSuccess(true);
+	}
+
 	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
 		DirectoryInfo dir1 = DirectoryInfo.create("1", "Example Folder",
 				"/foo/bar");
