@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
@@ -99,9 +99,9 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	}
 
 	public void onIconClicked(FileSystemItem item) {
-		if (item.isFile() || item.equals(Directory.Parent))
+		if (item.isFile() || item.equals(Folder.Parent))
 			return;
-		view.showDirectoryContext((Directory) item);
+		view.showDirectoryContext((Folder) item);
 	}
 
 	public void onColumnSorted(GridColumn column, Sort sort) {

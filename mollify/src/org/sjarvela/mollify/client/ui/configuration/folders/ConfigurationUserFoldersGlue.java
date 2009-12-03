@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
@@ -36,17 +36,17 @@ public class ConfigurationUserFoldersGlue implements Configurator {
 		this.view = view;
 		this.presenter = presenter;
 
-		view.directories().addListener(new GridListener<UserDirectory>() {
-			public void onColumnClicked(UserDirectory t, GridColumn column) {
+		view.directories().addListener(new GridListener<UserFolder>() {
+			public void onColumnClicked(UserFolder t, GridColumn column) {
 			}
 
 			public void onColumnSorted(GridColumn column, Sort sort) {
 			}
 
-			public void onIconClicked(UserDirectory t) {
+			public void onIconClicked(UserFolder t) {
 			}
 
-			public void onSelectionChanged(List<UserDirectory> selected) {
+			public void onSelectionChanged(List<UserFolder> selected) {
 				updateButtons();
 			}
 		});

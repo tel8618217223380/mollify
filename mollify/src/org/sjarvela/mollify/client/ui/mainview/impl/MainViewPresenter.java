@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
@@ -119,9 +119,9 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
-				Directory directory = (Directory) item;
+				Folder directory = (Folder) item;
 
-				if (directory == Directory.Parent)
+				if (directory == Folder.Parent)
 					onMoveToParentDirectory();
 				else
 					changeToDirectory(directory);
@@ -129,11 +129,11 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		}
 	}
 
-	public void changeToRootDirectory(Directory root) {
+	public void changeToRootDirectory(Folder root) {
 		model.changeToRootDirectory(root, createRefreshListener());
 	}
 
-	public void changeToDirectory(Directory directory) {
+	public void changeToDirectory(Folder directory) {
 		model.changeToSubdirectory(directory, createRefreshListener());
 	}
 
@@ -142,12 +142,12 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void reload() {
-		model.refreshData(new ResultListener<DirectoryContent>() {
+		model.refreshData(new ResultListener<FolderContent>() {
 			public void onFail(ServiceError error) {
 				onError(error, false);
 			}
 
-			public void onSuccess(DirectoryContent result) {
+			public void onSuccess(FolderContent result) {
 				refreshView();
 			}
 		});
@@ -156,7 +156,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private void refreshView() {
 		List<FileSystemItem> allFileItems = model.getAllItems();
 		if (model.getDirectoryModel().canAscend())
-			allFileItems.add(0, Directory.Parent);
+			allFileItems.add(0, Folder.Parent);
 
 		view.getList().setContent(allFileItems);
 		view.refresh();
@@ -168,7 +168,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		model.moveToParentDirectory(createRefreshListener());
 	}
 
-	public void onChangeToDirectory(int level, Directory directory) {
+	public void onChangeToDirectory(int level, Folder directory) {
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 
@@ -195,7 +195,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 		createFolderDialogFactory.openCreateFolderDialog(model
 				.getCurrentFolder(), new DirectoryHandler() {
-			public void createDirectory(Directory parentFolder,
+			public void createDirectory(Folder parentFolder,
 					String folderName) {
 				fileSystemService.createDirectory(parentFolder, folderName,
 						createReloadListener());

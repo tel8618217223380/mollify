@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -40,7 +40,7 @@ public class PhpFileUploadService extends PhpFileService implements
 				DateTime.getInstance().currentTime());
 	}
 
-	public String getUploadUrl(Directory directory) {
+	public String getUploadUrl(Folder directory) {
 		return serviceUrl().fileItem(directory).toString();
 	}
 

@@ -11,15 +11,15 @@
 package org.sjarvela.mollify.client.ui.configuration.folders;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 
 public interface UserFolderHandler {
 
-	void addUserFolder(DirectoryInfo directory, String name,
+	void addUserFolder(FolderInfo directory, String name,
 			Callback successCallback);
 
-	void editUserFolder(UserDirectory edited, String effectiveName,
+	void editUserFolder(UserFolder edited, String effectiveName,
 			Callback successCallback);
 
 }

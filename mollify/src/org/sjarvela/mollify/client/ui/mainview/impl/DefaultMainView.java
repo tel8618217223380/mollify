@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -59,7 +59,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final ContextPopupHandler<File> fileContextHandler;
 
 	private final DirectoryContextPopup directoryContextPopup;
-	private final ContextPopupHandler<Directory> directoryContextHandler;
+	private final ContextPopupHandler<Folder> directoryContextHandler;
 
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
@@ -93,7 +93,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		this.directoryContextPopup = directoryContextPopupFactory.createPopup();
 		this.fileContextPopup.setPopupPositioner(this);
-		this.directoryContextHandler = new ContextPopupHandler<Directory>(
+		this.directoryContextHandler = new ContextPopupHandler<Folder>(
 				directoryContextPopup);
 
 		initWidget(createControls());
@@ -245,7 +245,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				FileList.COLUMN_NAME));
 	}
 
-	public void showDirectoryContext(Directory directory) {
+	public void showDirectoryContext(Folder directory) {
 		directoryContextHandler.onItemSelected(directory, list.getWidget(
 				directory, FileList.COLUMN_NAME));
 	}

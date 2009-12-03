@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
@@ -26,23 +26,23 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 public interface FileSystemService extends FileDetailsProvider,
 		DirectoryDetailsProvider {
 
-	void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener);
+	void getDirectories(Folder parent,
+			ResultListener<List<Folder>> listener);
 
-	void getDirectoryContents(Directory parent,
-			ResultListener<DirectoryContent> listener);
+	void getDirectoryContents(Folder parent,
+			ResultListener<FolderContent> listener);
 
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);
 
-	void copy(File file, Directory directory, ResultListener<Boolean> listener);
+	void copy(File file, Folder directory, ResultListener<Boolean> listener);
 
-	void move(FileSystemItem file, Directory toDirectory,
+	void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener);
 
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
 
-	void createDirectory(Directory parentFolder, String folderName,
+	void createDirectory(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener);
 
 	String getDownloadUrl(File file);

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -26,12 +26,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CreateFolderDialog extends CenteredDialog {
-	private final Directory parentFolder;
+	private final Folder parentFolder;
 	private final TextProvider textProvider;
 	private final DirectoryHandler handler;
 	private TextBox name;
 
-	public CreateFolderDialog(Directory parentFolder,
+	public CreateFolderDialog(Folder parentFolder,
 			TextProvider textProvider, DirectoryHandler handler) {
 		super(textProvider.getStrings().createFolderDialogTitle(),
 				StyleConstants.CREATE_FOLDER_DIALOG);

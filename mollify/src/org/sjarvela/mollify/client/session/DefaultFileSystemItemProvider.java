@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
 
-	private List<Directory> roots = new ArrayList();
+	private List<Folder> roots = new ArrayList();
 
 	@Inject
 	public DefaultFileSystemItemProvider(SessionManager sessionManager,
@@ -50,22 +50,22 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		this.roots = session.getRootDirectories();
 	}
 
-	public void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener) {
+	public void getFolders(Folder parent,
+			ResultListener<List<Folder>> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
 		else
 			fileSystemService.getDirectories(parent, listener);
 	}
 
-	public List<Directory> getRootDirectories() {
+	public List<Folder> getRootFolders() {
 		return roots;
 	}
 
-	public void getFilesAndFolders(Directory parent,
-			ResultListener<DirectoryContent> listener) {
+	public void getFilesAndFolders(Folder parent,
+			ResultListener<FolderContent> listener) {
 		if (parent.isEmpty())
-			listener.onSuccess(new DirectoryContent(roots,
+			listener.onSuccess(new FolderContent(roots,
 					Collections.EMPTY_LIST));
 		else
 			fileSystemService.getDirectoryContents(parent, listener);

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
@@ -122,7 +122,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		new PasswordDialog(textProvider, handler);
 	}
 
-	public void openCreateFolderDialog(Directory folder,
+	public void openCreateFolderDialog(Folder folder,
 			DirectoryHandler directoryHandler) {
 		new CreateFolderDialog(folder, textProvider, directoryHandler);
 	}

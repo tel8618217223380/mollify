@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopup;
 
-public interface DirectoryContextPopup extends ContextPopup<Directory> {
+public interface DirectoryContextPopup extends ContextPopup<Folder> {
 
 	void setDirectoryActionHandler(FileSystemActionHandler actionHandler);
 

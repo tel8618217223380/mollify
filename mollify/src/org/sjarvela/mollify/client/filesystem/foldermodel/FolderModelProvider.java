@@ -8,10 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.filesystem.foldermodel;
 
-public interface DirectoryModelProvider {
+public interface FolderModelProvider {
 
-	DirectoryModel getDirectoryModel();
+	FolderModel getFolderModel();
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -64,7 +64,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		if (item.isFile())
 			onFileAction((File) item, action);
 		else
-			onDirectoryAction((Directory) item, action);
+			onDirectoryAction((Folder) item, action);
 	}
 
 	private void onFileAction(final File file, FileSystemAction action) {
@@ -84,11 +84,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						textProvider.getStrings().copyFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
-								copyFile(file, (Directory) selected);
+								copyFile(file, (Folder) selected);
 							}
 
 							public boolean isItemAllowed(FileSystemItem item,
-									List<Directory> path) {
+									List<Folder> path) {
 								if (item.isFile())
 									return false;
 								return !item.getId().equals(file.getParentId());
@@ -101,11 +101,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						textProvider.getStrings().moveFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
-								moveFile(file, (Directory) selected);
+								moveFile(file, (Folder) selected);
 							}
 
 							public boolean isItemAllowed(FileSystemItem item,
-									List<Directory> path) {
+									List<Folder> path) {
 								if (item.isFile())
 									return false;
 								return !item.getId().equals(file.getParentId());
@@ -130,7 +130,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		}
 	}
 
-	private void onDirectoryAction(final Directory directory,
+	private void onDirectoryAction(final Folder directory,
 			FileSystemAction action) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
 			windowManager.openDownloadUrl(fileSystemService
@@ -144,11 +144,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					.getStrings().moveDirectoryDialogAction(),
 					fileSystemItemProvider, new SelectItemHandler() {
 						public void onSelect(FileSystemItem selected) {
-							moveDirectory(directory, (Directory) selected);
+							moveDirectory(directory, (Folder) selected);
 						}
 
 						public boolean isItemAllowed(FileSystemItem candidate,
-								List<Directory> path) {
+								List<Folder> path) {
 							if (candidate.isFile())
 								return false;
 
@@ -179,19 +179,19 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		fileSystemService.rename(item, newName, createListener());
 	}
 
-	protected void copyFile(File file, Directory toDirectory) {
+	protected void copyFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
 		fileSystemService.copy(file, toDirectory, createListener());
 	}
 
-	protected void moveFile(File file, Directory toDirectory) {
+	protected void moveFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
 		fileSystemService.move(file, toDirectory, createListener());
 	}
 
-	protected void moveDirectory(Directory directory, Directory toDirectory) {
+	protected void moveDirectory(Folder directory, Folder toDirectory) {
 		if (directory.equals(toDirectory))
 			return;
 		fileSystemService.move(directory, toDirectory, createListener());

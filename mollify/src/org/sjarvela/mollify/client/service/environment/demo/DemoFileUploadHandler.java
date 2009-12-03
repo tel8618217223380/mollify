@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -31,7 +31,7 @@ public class DemoFileUploadHandler implements FileUploadService {
 				0));
 	}
 
-	public String getUploadUrl(Directory directory) {
+	public String getUploadUrl(Folder directory) {
 		return "";
 	}
 

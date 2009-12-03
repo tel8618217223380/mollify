@@ -2,23 +2,23 @@ package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 
-public class Directory extends FileSystemItem {
-	public static Directory Empty = new Directory();
-	public static FileSystemItem Parent = new Directory("..");
+public class Folder extends FileSystemItem {
+	public static Folder Empty = new Folder();
+	public static FileSystemItem Parent = new Folder("..");
 
-	private Directory(String name) {
+	private Folder(String name) {
 		super("", name, "");
 	}
 
-	private Directory() {
+	private Folder() {
 		super("", "", "");
 	}
 
-	protected Directory(JsDirectory dir) {
+	protected Folder(JsDirectory dir) {
 		this(dir.getId(), dir.getName(), dir.getParentId());
 	}
 
-	public Directory(String id, String name, String parentId) {
+	public Folder(String id, String name, String parentId) {
 		super(id, name, parentId);
 	}
 

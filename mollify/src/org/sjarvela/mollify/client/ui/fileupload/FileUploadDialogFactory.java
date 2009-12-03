@@ -10,11 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.fileupload;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileUploadDialogFactory {
 
-	void openFileUploadDialog(Directory directory, ResultListener listener);
+	void openFileUploadDialog(Folder directory, ResultListener listener);
 
 }

@@ -29,8 +29,14 @@
 				case Request::$METHOD_GET:
 					$this->processGet();
 					break;
+				case Request::$METHOD_PUT:
+					$this->processPut();
+					break;
 				case Request::$METHOD_POST:
 					$this->processPost();
+					break;
+				case Request::$METHOD_DELETE:
+					$this->processDelete();
 					break;
 				default:
 					throw new RequestException("Unsupported method '".$this->request->method()."'");
@@ -39,7 +45,11 @@
 		
 		function processGet() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'get'"); }
 		
+		function processPut() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'put'"); }
+		
 		function processPost() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'post'"); }
+		
+		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
 		
 		function log() {
 			if (!Logging::isDebug()) return;

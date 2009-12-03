@@ -3,20 +3,20 @@ package org.sjarvela.mollify.client.filesystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectoryContent {
-	final List<Directory> dirs;
+public class FolderContent {
+	final List<Folder> dirs;
 	final List<File> files;
 
-	public DirectoryContent() {
+	public FolderContent() {
 		this(new ArrayList(), new ArrayList());
 	}
 	
-	public DirectoryContent(List<Directory> dirs, List<File> files) {
+	public FolderContent(List<Folder> dirs, List<File> files) {
 		this.dirs = dirs;
 		this.files = files;
 	}
 
-	public List<Directory> getDirectories() {
+	public List<Folder> getDirectories() {
 		return dirs;
 	}
 

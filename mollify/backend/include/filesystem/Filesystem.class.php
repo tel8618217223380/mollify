@@ -84,6 +84,23 @@
 			return $roots;
 		}
 		
+		public function rename($item, $name) {
+			$old = $item->path();
+			$new = self::joinPath(dirname($old),$new_name);
+			
+			if (file_exists($new)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
+			Logging.logDebug('rename from ['.$old.'] to ['.$new.']');
+			
+			if (!rename($old, $new)) return FALSE;
+			
+//			if ($_SESSION["features"]["description_update"])
+//				move_item_description($file, get_fileitem($file["root"], $new));
+//			if ($_SESSION["features"]["permission_update"])
+//				move_item_permissions($file, get_fileitem($file["root"], $new));
+	
+			return TRUE;
+		}
+		
 		public function getIgnoredItems($folder) {
 			return array('descript.ion', 'mollify.uac');
 		}

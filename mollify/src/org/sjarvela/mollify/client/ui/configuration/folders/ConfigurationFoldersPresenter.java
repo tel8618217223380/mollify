@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -45,8 +45,8 @@ public class ConfigurationFoldersPresenter implements FolderHandler {
 
 		service
 				.getFolders(parent
-						.createResultListener(new ResultCallback<List<DirectoryInfo>>() {
-							public void onCallback(List<DirectoryInfo> list) {
+						.createResultListener(new ResultCallback<List<FolderInfo>>() {
+							public void onCallback(List<FolderInfo> list) {
 								view.list().setContent(list);
 							}
 						}));
@@ -78,7 +78,7 @@ public class ConfigurationFoldersPresenter implements FolderHandler {
 				successCallback));
 	}
 
-	public void editFolder(DirectoryInfo folder, String name, String path,
+	public void editFolder(FolderInfo folder, String name, String path,
 			Callback successCallback) {
 		service.editFolder(folder, name, path, createReloadListener(parent
 				.createDataChangeNotifier(ConfigurationType.Folders),

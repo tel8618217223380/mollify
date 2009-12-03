@@ -16,7 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -201,7 +201,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 				.selectPermissionItemDialogAction(), fileSystemItemProvider,
 				new SelectItemHandler() {
 					public boolean isItemAllowed(FileSystemItem item,
-							List<Directory> path) {
+							List<Folder> path) {
 						return true;
 					}
 

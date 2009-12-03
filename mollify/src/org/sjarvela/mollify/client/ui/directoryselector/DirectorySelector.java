@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModelProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModelProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 
 public class DirectorySelector extends FlowPanel implements DirectoryListener {
-	private final DirectoryModelProvider directoryModelProvider;
+	private final FolderModelProvider directoryModelProvider;
 	private final DirectoryListItemFactory listItemFactory;
 	private final TextProvider textProvider;
 	private final List<DirectoryListener> listeners = new ArrayList();
@@ -37,7 +37,7 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	private final Button upButton;
 
 	public DirectorySelector(TextProvider textProvider,
-			DirectoryModelProvider directoryModelProvider,
+			FolderModelProvider directoryModelProvider,
 			DirectoryListItemFactory listItemFactory) {
 		this.textProvider = textProvider;
 		this.directoryModelProvider = directoryModelProvider;
@@ -80,8 +80,8 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 
 	private DirectoryListItem createHomeButton() {
 		DirectoryListItem item = listItemFactory.createListItem(this,
-				StyleConstants.DIRECTORY_LISTITEM_HOME, Directory.Empty, 0,
-				Directory.Empty);
+				StyleConstants.DIRECTORY_LISTITEM_HOME, Folder.Empty, 0,
+				Folder.Empty);
 		item.addDropdownTooltip(new Tooltip(
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
 						.getStrings().mainViewHomeButtonTooltip()));
@@ -103,14 +103,14 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 	}
 
 	private List<DirectoryListItem> createItems() {
-		ListIterator<Directory> list = directoryModelProvider
-				.getDirectoryModel().getDirectories();
+		ListIterator<Folder> list = directoryModelProvider
+				.getFolderModel().getDirectories();
 		int level = 1;
-		Directory parent = Directory.Empty;
+		Folder parent = Folder.Empty;
 
 		List<DirectoryListItem> items = new ArrayList();
 		while (list.hasNext()) {
-			Directory current = list.next();
+			Folder current = list.next();
 
 			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
 					: null;
@@ -129,7 +129,7 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		return items;
 	}
 
-	public void onChangeToDirectory(int level, Directory directory) {
+	public void onChangeToDirectory(int level, Folder directory) {
 		for (DirectoryListener listener : listeners)
 			listener.onChangeToDirectory(level, directory);
 	}

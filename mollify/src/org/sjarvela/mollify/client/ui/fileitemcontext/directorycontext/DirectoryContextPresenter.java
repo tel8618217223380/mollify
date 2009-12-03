@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -35,8 +35,8 @@ public class DirectoryContextPresenter implements ActionListener {
 	private FileSystemPermissionHandler permissionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
 
-	private Directory directory;
-	private DirectoryDetails details;
+	private Folder directory;
+	private FolderDetails details;
 
 	public DirectoryContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, DirectoryDetailsProvider detailsProvider,
@@ -60,7 +60,7 @@ public class DirectoryContextPresenter implements ActionListener {
 		this.permissionHandler = permissionHandler;
 	}
 
-	public void setDirectory(Directory directory) {
+	public void setDirectory(Folder directory) {
 		this.directory = directory;
 
 		popup.getDetails().setOpen(false);
@@ -68,19 +68,19 @@ public class DirectoryContextPresenter implements ActionListener {
 		updateDetails(null);
 
 		detailsProvider.getDirectoryDetails(directory,
-				new ResultListener<DirectoryDetails>() {
+				new ResultListener<FolderDetails>() {
 					public void onFail(ServiceError error) {
 						popup.getDescription().setText(
 								error.getType().getMessage(textProvider));
 					}
 
-					public void onSuccess(DirectoryDetails details) {
+					public void onSuccess(FolderDetails details) {
 						updateDetails(details);
 					}
 				});
 	}
 
-	protected void updateDetails(DirectoryDetails details) {
+	protected void updateDetails(FolderDetails details) {
 		this.popup.reset();
 		this.details = details;
 

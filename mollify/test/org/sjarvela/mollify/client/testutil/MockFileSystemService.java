@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.testutil;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -32,13 +32,13 @@ public class MockFileSystemService implements FileSystemService {
 	private List<FileItemUserPermission> modifiedPermissions;
 	private List<FileItemUserPermission> removedPermissions;
 
-	public void copy(File file, Directory directory,
+	public void copy(File file, Folder directory,
 			ResultListener<Boolean> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void createDirectory(Directory parentFolder, String folderName,
+	public void createDirectory(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		// TODO Auto-generated method stub
 
@@ -49,14 +49,14 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener) {
+	public void getDirectories(Folder parent,
+			ResultListener<List<Folder>> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void getDirectoryContents(Directory parent,
-			ResultListener<DirectoryContent> listener) {
+	public void getDirectoryContents(Folder parent,
+			ResultListener<FolderContent> listener) {
 		// TODO Auto-generated method stub
 
 	}
@@ -77,7 +77,7 @@ public class MockFileSystemService implements FileSystemService {
 		resultListener.onSuccess(permissions);
 	}
 
-	public void move(FileSystemItem file, Directory toDirectory,
+	public void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener) {
 		// TODO Auto-generated method stub
 
@@ -117,8 +117,8 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getDirectoryDetails(Directory directory,
-			ResultListener<DirectoryDetails> resultListener) {
+	public void getDirectoryDetails(Folder directory,
+			ResultListener<FolderDetails> resultListener) {
 		// TODO Auto-generated method stub
 
 	}

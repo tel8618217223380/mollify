@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.fileupload.http;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -47,7 +47,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
 	private final String uploadId;
-	private final Directory directory;
+	private final Folder directory;
 	private final TextProvider textProvider;
 	private final FileUploadService service;
 	private final FileSystemInfo info;
@@ -61,7 +61,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private List<FileUpload> uploaders = new ArrayList();
 	private DisclosurePanel uploadInfo;
 
-	public HttpFileUploadDialog(Directory directory, TextProvider textProvider,
+	public HttpFileUploadDialog(Folder directory, TextProvider textProvider,
 			FileUploadService service, FileSystemInfo info,
 			FileUploadListener listener, DialogManager dialogManager) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),

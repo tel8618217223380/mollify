@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -33,7 +33,7 @@ public class DemoFileService implements FileSystemService {
 		this.data = data;
 	}
 
-	public void createDirectory(Directory parentFolder, String folderName,
+	public void createDirectory(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		resultListener.onSuccess(true);
 	}
@@ -42,14 +42,14 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener) {
+	public void getDirectories(Folder parent,
+			ResultListener<List<Folder>> listener) {
 		listener.onSuccess(data.getDirectories(parent));
 	}
 
-	public void getDirectoryContents(Directory parent,
-			ResultListener<DirectoryContent> listener) {
-		listener.onSuccess(new DirectoryContent(data.getDirectories(parent),
+	public void getDirectoryContents(Folder parent,
+			ResultListener<FolderContent> listener) {
+		listener.onSuccess(new FolderContent(data.getDirectories(parent),
 				data.getFiles(parent)));
 	}
 
@@ -62,12 +62,12 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void copy(File file, Directory directory,
+	public void copy(File file, Folder directory,
 			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}
 
-	public void move(FileSystemItem item, Directory directory,
+	public void move(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}
@@ -76,8 +76,8 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(data.getFileDetails(file));
 	}
 
-	public void getDirectoryDetails(Directory directory,
-			ResultListener<DirectoryDetails> resultListener) {
+	public void getDirectoryDetails(Folder directory,
+			ResultListener<FolderDetails> resultListener) {
 		resultListener.onSuccess(data.getDirectoryDetails(directory));
 	}
 

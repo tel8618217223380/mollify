@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.configuration.folders;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -32,7 +32,7 @@ public class FolderDialog extends CenteredDialog {
 	private final TextProvider textProvider;
 	private final FolderHandler handler;
 	private final Mode mode;
-	private final DirectoryInfo folder;
+	private final FolderInfo folder;
 
 	private TextBox name;
 	private TextBox path;
@@ -49,7 +49,7 @@ public class FolderDialog extends CenteredDialog {
 	}
 
 	public FolderDialog(TextProvider textProvider, FolderHandler handler,
-			DirectoryInfo folder) {
+			FolderInfo folder) {
 		super(textProvider.getStrings().folderDialogEditTitle(),
 				StyleConstants.FOLDER_DIALOG);
 		this.folder = folder;

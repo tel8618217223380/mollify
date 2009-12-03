@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
@@ -56,7 +56,7 @@ public class DemoData {
 	private static final String DESCRIPTION = "<b>Mollify demo</b><br/><br/>For downloads and instructions, visit <a href='http://code.google.com/p/mollify/' target='_new'>project page</a>";
 
 	private JsArray<JsDirectory> rootDirectories;
-	private Map<String, List<Directory>> directories = new HashMap();
+	private Map<String, List<Folder>> directories = new HashMap();
 	private List<File> files;
 
 	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
@@ -83,15 +83,15 @@ public class DemoData {
 		rootDirectories.set(0, JsDirectory.create(ROOT_1, "Folder A", ""));
 		rootDirectories.set(1, JsDirectory.create(ROOT_2, "Folder B", ""));
 
-		List<Directory> subDirs = new ArrayList();
+		List<Folder> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
-		subDirs.add(new Directory(DIR_1A, "Sub folder A", ROOT_1));
-		subDirs.add(new Directory(DIR_1B, "Sub folder B", ROOT_1));
+		subDirs.add(new Folder(DIR_1A, "Sub folder A", ROOT_1));
+		subDirs.add(new Folder(DIR_1B, "Sub folder B", ROOT_1));
 
 		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
-		subDirs.add(new Directory(DIR_2A, "Sub folder A", ROOT_2));
+		subDirs.add(new Folder(DIR_2A, "Sub folder A", ROOT_2));
 
 		files = new ArrayList();
 		files.add(new File(FILE_1A1, "Example.txt", "path", "txt", 128));
@@ -123,18 +123,18 @@ public class DemoData {
 				settings, fileSystemInfo, rootDirectories);
 	}
 
-	public List<Directory> getDirectories(Directory dir) {
+	public List<Folder> getDirectories(Folder dir) {
 		if (!directories.containsKey(dir.getId()))
 			return new ArrayList();
 		return directories.get(dir.getId());
 	}
 
-	public List<File> getFiles(Directory dir) {
+	public List<File> getFiles(Folder dir) {
 		return files;
 	}
 
-	public DirectoryDetails getDirectoryDetails(Directory directory) {
-		return DirectoryDetails.create(FilePermissionMode.ReadWrite,
+	public FolderDetails getDirectoryDetails(Folder directory) {
+		return FolderDetails.create(FilePermissionMode.ReadWrite,
 				DESCRIPTION);
 	}
 

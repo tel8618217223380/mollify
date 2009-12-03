@@ -8,17 +8,16 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.filesystem.foldermodel;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public interface DirectoryProvider {
-	List<Directory> getRootDirectories();
+public interface FolderProvider {
+	List<Folder> getRootFolders();
 
-	void getDirectories(Directory parent,
-			ResultListener<List<Directory>> listener);
+	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
 }

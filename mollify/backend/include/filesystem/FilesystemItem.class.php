@@ -49,6 +49,10 @@
 		
 		public function isFile() { return TRUE; }
 		
+		public function rename($name) {
+			return $this->filesystem->rename($this, $name);
+		}
+		
 		public function details() {
 			$datetime_format = $this->filesystem->getDatetimeFormat();
 			

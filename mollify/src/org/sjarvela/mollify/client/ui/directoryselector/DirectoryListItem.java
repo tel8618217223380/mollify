@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
@@ -24,17 +24,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DirectoryListItem extends FlowPanel {
 	private final DirectoryListener listener;
-	private final DirectoryProvider dataProvider;
+	private final FolderProvider dataProvider;
 	private final TextProvider textProvider;
 
 	private final String itemStyle;
-	private final Directory currentDirectory;
+	private final Folder currentDirectory;
 	private final int level;
 
 	private DirectoryListItemButton button;
 
-	public DirectoryListItem(String itemStyle, Directory currentDirectory,
-			int level, Directory parentDirectory, DirectoryProvider provider,
+	public DirectoryListItem(String itemStyle, Folder currentDirectory,
+			int level, Folder parentDirectory, FolderProvider provider,
 			DirectoryListener listener, TextProvider textProvider) {
 		this.itemStyle = itemStyle;
 		this.currentDirectory = currentDirectory;

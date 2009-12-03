@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -22,8 +22,8 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
-public class UserDirectoryList extends Grid<UserDirectory> implements
-		GridDataProvider<UserDirectory> {
+public class UserDirectoryList extends Grid<UserFolder> implements
+		GridDataProvider<UserFolder> {
 	public static GridColumn COLUMN_NAME;
 	public static GridColumn COLUMN_LOCATION;
 	public static List<GridColumn> ALL_COLUMNS = null;
@@ -58,7 +58,7 @@ public class UserDirectoryList extends Grid<UserDirectory> implements
 		return StyleConstants.FOLDER_LIST_COLUMN_PREFIX + column.getId();
 	}
 
-	public GridData getData(UserDirectory directory, GridColumn column) {
+	public GridData getData(UserFolder directory, GridColumn column) {
 		if (column.equals(UserDirectoryList.COLUMN_NAME)) {
 			if (directory.getName() == null)
 				return new GridData.Text(textProvider.getMessages()
@@ -73,7 +73,7 @@ public class UserDirectoryList extends Grid<UserDirectory> implements
 	private static final List<String> ROW_STYLE = Arrays
 			.asList(StyleConstants.FOLDER_LIST_ROW);
 
-	public List<String> getRowStyles(UserDirectory t) {
+	public List<String> getRowStyles(UserFolder t) {
 		return ROW_STYLE;
 	}
 }

@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.testutil;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
@@ -36,13 +36,13 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void addUserFolder(User user, DirectoryInfo dir, String name,
+	public void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void editFolder(DirectoryInfo dir, String name, String path,
+	public void editFolder(FolderInfo dir, String name, String path,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
@@ -54,19 +54,19 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void editUserFolder(User user, UserDirectory dir, String name,
+	public void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
+	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	public void getUserFolders(User user,
-			ResultListener<List<UserDirectory>> resultListener) {
+			ResultListener<List<UserFolder>> resultListener) {
 		// TODO Auto-generated method stub
 
 	}
@@ -75,7 +75,7 @@ public class MockConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(users);
 	}
 
-	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}
@@ -85,7 +85,7 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void removeUserFolder(User user, UserDirectory dir,
+	public void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
