@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.directoryselector;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 public interface DirectoryListener {
-	public void onChangeToDirectory(int level, Directory directory);
+	public void onChangeToDirectory(int level, Folder directory);
 
 	public void onMoveToParentDirectory();
 }

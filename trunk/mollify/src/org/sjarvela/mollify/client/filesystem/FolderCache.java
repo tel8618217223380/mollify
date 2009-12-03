@@ -14,36 +14,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public class DirectoryCache implements DirectoryProvider {
-	private final DirectoryProvider directoryProvider;
-	private final Map<Directory, List<Directory>> cache = new HashMap();
+public class FolderCache implements FolderProvider {
+	private final FolderProvider directoryProvider;
+	private final Map<Folder, List<Folder>> cache = new HashMap();
 
-	public DirectoryCache(DirectoryProvider directoryProvider) {
+	public FolderCache(FolderProvider directoryProvider) {
 		this.directoryProvider = directoryProvider;
 	}
 
-	public List<Directory> getRootDirectories() {
-		return directoryProvider.getRootDirectories();
+	public List<Folder> getRootFolders() {
+		return directoryProvider.getRootFolders();
 	}
 
-	public void getDirectories(final Directory parent,
-			final ResultListener<List<Directory>> listener) {
+	public void getFolders(final Folder parent,
+			final ResultListener<List<Folder>> listener) {
 		if (cache.containsKey(parent)) {
 			listener.onSuccess(cache.get(parent));
 			return;
 		}
 
-		directoryProvider.getDirectories(parent,
-				new ResultListener<List<Directory>>() {
+		directoryProvider.getFolders(parent,
+				new ResultListener<List<Folder>>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
 					}
 
-					public void onSuccess(List<Directory> result) {
+					public void onSuccess(List<Folder> result) {
 						cache.put(parent, result);
 						listener.onSuccess(result);
 					}

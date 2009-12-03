@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public interface FileSystemItemProvider extends DirectoryProvider {
-	void getFilesAndFolders(Directory parent,
-			ResultListener<DirectoryContent> listener);
+public interface FileSystemItemProvider extends FolderProvider {
+	void getFilesAndFolders(Folder parent,
+			ResultListener<FolderContent> listener);
 }

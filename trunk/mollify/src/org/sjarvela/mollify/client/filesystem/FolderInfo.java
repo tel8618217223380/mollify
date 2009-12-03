@@ -4,14 +4,14 @@ import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class DirectoryInfo extends JavaScriptObject {
-	public static DirectoryInfo create(String id, String name, String path) {
-		DirectoryInfo result = JsDirectory.createObject().cast();
+public class FolderInfo extends JavaScriptObject {
+	public static FolderInfo create(String id, String name, String path) {
+		FolderInfo result = JsDirectory.createObject().cast();
 		result.putValues(id, name, path);
 		return result;
 	}
 
-	protected DirectoryInfo() {
+	protected FolderInfo() {
 	}
 
 	public final native String getId() /*-{

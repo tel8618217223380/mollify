@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.fileupload.flash;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -60,7 +60,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
-			String uploaderSrc, Directory directory,
+			String uploaderSrc, Folder directory,
 			FlashFileUploadDialog dialog, TextProvider textProvider) {
 		flashLoadTimer = new Timer() {
 			@Override
@@ -91,7 +91,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	private SWFUpload createUploader(SessionInfo session,
-			FileUploadService service, String uploaderSrc, Directory directory) {
+			FileUploadService service, String uploaderSrc, Folder directory) {
 		UploadBuilder builder = new UploadBuilder();
 		builder.setDebug(true);
 		builder.setUploadURL(service.getUploadUrl(directory));

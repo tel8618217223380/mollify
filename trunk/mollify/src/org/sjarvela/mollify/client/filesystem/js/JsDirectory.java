@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsDirectory extends JavaScriptObject {
-	public static JsDirectory create(Directory directory) {
+	public static JsDirectory create(Folder directory) {
 		return create(directory.getId(), directory.getName(), directory
 				.getParentId());
 	}

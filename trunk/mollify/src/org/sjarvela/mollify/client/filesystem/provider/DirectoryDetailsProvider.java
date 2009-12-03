@@ -10,13 +10,13 @@
 
 package org.sjarvela.mollify.client.filesystem.provider;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface DirectoryDetailsProvider {
 
-	void getDirectoryDetails(Directory directory,
-			ResultListener<DirectoryDetails> resultListener);
+	void getDirectoryDetails(Folder directory,
+			ResultListener<FolderDetails> resultListener);
 
 }

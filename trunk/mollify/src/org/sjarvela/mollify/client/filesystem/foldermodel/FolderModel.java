@@ -8,34 +8,34 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem.directorymodel;
+package org.sjarvela.mollify.client.filesystem.foldermodel;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
-public class DirectoryModel {
-	private Stack<Directory> folders;
+public class FolderModel {
+	private Stack<Folder> folders;
 
-	public DirectoryModel() {
-		folders = new Stack<Directory>();
-		setRootDirectory(Directory.Empty);
+	public FolderModel() {
+		folders = new Stack<Folder>();
+		setRootFolder(Folder.Empty);
 	}
 
-	public Directory getRootDirectory() {
+	public Folder getRootFolder() {
 		return folders.firstElement();
 	}
 
-	public void setRootDirectory(Directory directory) {
+	public void setRootFolder(Folder directory) {
 		this.folders.clear();
 		if (directory != null)
 			this.folders.add(directory);
 	}
 
-	public Directory getCurrentFolder() {
+	public Folder getCurrentFolder() {
 		if (folders.isEmpty())
 			return null;
 		return folders.lastElement();
@@ -45,19 +45,19 @@ public class DirectoryModel {
 		return folders.size();
 	}
 
-	public ListIterator<Directory> getDirectories() {
+	public ListIterator<Folder> getDirectories() {
 		return this.folders.listIterator();
 	}
 
-	public List<Directory> getDirectoryList() {
-		return Arrays.asList(this.folders.toArray(new Directory[0]));
+	public List<Folder> getDirectoryList() {
+		return Arrays.asList(this.folders.toArray(new Folder[0]));
 	}
 
-	public void descendIntoFolder(Directory folder) {
+	public void descendIntoFolder(Folder folder) {
 		this.folders.add(folder);
 	}
 
-	public Directory ascend() {
+	public Folder ascend() {
 		return this.folders.pop();
 	}
 
@@ -65,7 +65,7 @@ public class DirectoryModel {
 		return this.folders.size() > 1;
 	}
 
-	public void changeDirectory(int level, Directory directory) {
+	public void changeDirectory(int level, Folder directory) {
 		if (level < 1 || level > (getLevels() + 1))
 			throw new RuntimeException("Invalid directory ("
 					+ directory.getName() + ") at level " + level);

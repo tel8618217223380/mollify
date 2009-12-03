@@ -1,7 +1,9 @@
 <?php
 	class Request {
 		public static $METHOD_GET = 'get';
+		public static $METHOD_PUT = 'put';
 		public static $METHOD_POST = 'post';
+		public static $METHOD_DELETE = 'delete';
 		
 		private $method;
 		private $uri;
@@ -12,6 +14,8 @@
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = trim($_SERVER['PATH_INFO'], "/");
 			$this->parts = explode("/", $this->uri);
+			$this->params = array();
+			$this->data = NULL;
 			
 			switch($this->method) {
 				case self::$METHOD_GET:
@@ -19,16 +23,15 @@
 					break;
 				case self::$METHOD_POST:
 					$this->params = $_POST;
-					
+				case self::$METHOD_PUT:
 					$data = file_get_contents("php://input");
-					if ($data and strlen($data) > 0) {
-						$data = json_decode($data, TRUE);
-						$this->params = array_merge($this->params, $data);
-					}
-
+					if ($data and strlen($data) > 0)
+						$this->data = json_decode($data, TRUE);
+					break;
+				case self::$METHOD_DELETE:
 					break;
 				default:
-					throw new Exception("Unsupported method");
+					throw new Exception("Unsupported method: ".$this->method);
 			}
 		}
 		
@@ -57,7 +60,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", params=".Util::array2str($this->params));
+			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", params=".Util::array2str($this->params).", data=".Util::toString($this->data));
 		}
 	}
 	

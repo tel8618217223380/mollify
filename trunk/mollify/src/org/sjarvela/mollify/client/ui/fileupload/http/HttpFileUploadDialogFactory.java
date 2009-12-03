@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.http;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -38,7 +38,7 @@ public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 		this.dialogManager = dialogManager;
 	}
 
-	public void openFileUploadDialog(Directory directory, ResultListener listener) {
+	public void openFileUploadDialog(Folder directory, ResultListener listener) {
 		FileUploadListener fileUploadHandler = new HttpFileUploadHandler(env
 				.getFileUploadService(), sessionProvider.getSession()
 				.getFeatures().fileUploadProgress(), textProvider, listener,

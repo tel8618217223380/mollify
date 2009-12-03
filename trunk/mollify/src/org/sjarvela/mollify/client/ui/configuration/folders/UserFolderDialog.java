@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -41,10 +41,10 @@ public class UserFolderDialog extends CenteredDialog {
 	private final TextProvider textProvider;
 	private final UserFolderHandler handler;
 	private final Mode mode;
-	private final List<DirectoryInfo> availableDirectories;
+	private final List<FolderInfo> availableDirectories;
 
-	private UserDirectory edited = null;
-	private DirectoryInfo selected = null;
+	private UserFolder edited = null;
+	private FolderInfo selected = null;
 
 	private ListBox directories;
 	private CheckBox useDefaultName;
@@ -52,7 +52,7 @@ public class UserFolderDialog extends CenteredDialog {
 	private TextBox defaultName;
 
 	public UserFolderDialog(TextProvider textProvider,
-			UserFolderHandler handler, List<DirectoryInfo> availableDirectories) {
+			UserFolderHandler handler, List<FolderInfo> availableDirectories) {
 		super(textProvider.getStrings().userFolderDialogAddTitle(),
 				StyleConstants.USER_FOLDER_DIALOG);
 		this.availableDirectories = availableDirectories;
@@ -66,7 +66,7 @@ public class UserFolderDialog extends CenteredDialog {
 
 		directories.addItem(textProvider.getStrings()
 				.userFolderDialogSelectFolder(), null);
-		for (DirectoryInfo dir : availableDirectories)
+		for (FolderInfo dir : availableDirectories)
 			directories.addItem(dir.getName(), dir.getId());
 
 		useDefaultName.setValue(true);
@@ -74,7 +74,7 @@ public class UserFolderDialog extends CenteredDialog {
 	}
 
 	public UserFolderDialog(TextProvider textProvider,
-			UserFolderHandler handler, UserDirectory folder) {
+			UserFolderHandler handler, UserFolder folder) {
 		super(textProvider.getStrings().userFolderDialogEditTitle(),
 				StyleConstants.USER_FOLDER_DIALOG);
 		this.mode = Mode.Edit;

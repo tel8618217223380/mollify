@@ -1,15 +1,15 @@
 package org.sjarvela.mollify.client.filesystem;
 
-public class UserDirectory extends DirectoryInfo {
-	public static UserDirectory create(String id, String name,
+public class UserFolder extends FolderInfo {
+	public static UserFolder create(String id, String name,
 			String defaultName, String path) {
-		UserDirectory result = UserDirectory.createObject().cast();
+		UserFolder result = UserFolder.createObject().cast();
 		result.putValues(id, name, path);
 		result.putDefaultName(defaultName);
 		return result;
 	}
 
-	protected UserDirectory() {
+	protected UserFolder() {
 	}
 
 	public final native String getDefaultName() /*-{

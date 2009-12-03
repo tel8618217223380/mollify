@@ -27,13 +27,13 @@ public abstract class FileSystemItem {
 		return new File(file);
 	}
 
-	public static Directory createFrom(JsDirectory dir) {
-		return new Directory(dir);
+	public static Folder createFrom(JsDirectory dir) {
+		return new Folder(dir);
 	}
 
-	public static List<Directory> createFromDirectories(
+	public static List<Folder> createFromDirectories(
 			JsArray<JsDirectory> directories) {
-		List<Directory> result = new ArrayList();
+		List<Folder> result = new ArrayList();
 		for (int i = 0; i < directories.length(); i++)
 			result.add(createFrom(directories.get(i)));
 		return result;

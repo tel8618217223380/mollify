@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
@@ -27,7 +27,7 @@ public interface ConfigurationService {
 
 	void resetPassword(User user, String password, ResultListener resultListener);
 
-	void getFolders(ResultListener<List<DirectoryInfo>> resultListener);
+	void getFolders(ResultListener<List<FolderInfo>> resultListener);
 
 	void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener);
@@ -39,20 +39,20 @@ public interface ConfigurationService {
 
 	void addFolder(String name, String path, ResultListener resultListener);
 
-	void removeFolder(DirectoryInfo dir, ResultListener resultListener);
+	void removeFolder(FolderInfo dir, ResultListener resultListener);
 
-	void editFolder(DirectoryInfo dir, String name, String path,
+	void editFolder(FolderInfo dir, String name, String path,
 			ResultListener resultListener);
 
 	void getUserFolders(User user,
-			ResultListener<List<UserDirectory>> resultListener);
+			ResultListener<List<UserFolder>> resultListener);
 
-	void addUserFolder(User user, DirectoryInfo dir, String name,
+	void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener);
 
-	void editUserFolder(User user, UserDirectory dir, String name,
+	void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener);
 
-	void removeUserFolder(User user, UserDirectory dir,
+	void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener);
 }

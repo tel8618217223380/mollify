@@ -13,8 +13,8 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
@@ -42,10 +42,10 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getFolders(ResultListener<List<DirectoryInfo>> resultListener) {
-		DirectoryInfo dir1 = DirectoryInfo.create("1", "Example Folder",
+	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
+		FolderInfo dir1 = FolderInfo.create("1", "Example Folder",
 				"/foo/bar");
-		DirectoryInfo dir2 = DirectoryInfo.create("2", "Another Folder",
+		FolderInfo dir2 = FolderInfo.create("2", "Another Folder",
 				"/bar/foo");
 
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
@@ -70,35 +70,35 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(true);
 	}
 
-	public void editFolder(DirectoryInfo dir, String name, String path,
+	public void editFolder(FolderInfo dir, String name, String path,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
 	public void getUserFolders(User user, ResultListener resultListener) {
-		UserDirectory dir1 = UserDirectory.create("1", "Example Folder", "",
+		UserFolder dir1 = UserFolder.create("1", "Example Folder", "",
 				"/foo/bar");
-		UserDirectory dir2 = UserDirectory.create("2", null, "Another Folder",
+		UserFolder dir2 = UserFolder.create("2", null, "Another Folder",
 				"/bar/foo");
 
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
 	}
 
-	public void addUserFolder(User user, DirectoryInfo dir, String name,
+	public void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void editUserFolder(User user, UserDirectory dir, String name,
+	public void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void removeUserFolder(User user, UserDirectory dir,
+	public void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}

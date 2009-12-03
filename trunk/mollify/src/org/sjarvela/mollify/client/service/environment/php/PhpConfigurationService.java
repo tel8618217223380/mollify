@@ -12,12 +12,12 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
@@ -81,18 +81,18 @@ public class PhpConfigurationService extends ServiceBase implements
 	}
 
 	public void getFolders(
-			final ResultListener<List<DirectoryInfo>> resultListener) {
+			final ResultListener<List<FolderInfo>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		ResultListener<JsArray<DirectoryInfo>> listener = new ResultListener<JsArray<DirectoryInfo>>() {
+		ResultListener<JsArray<FolderInfo>> listener = new ResultListener<JsArray<FolderInfo>>() {
 			public void onFail(ServiceError error) {
 				resultListener.onFail(error);
 			}
 
-			public void onSuccess(JsArray<DirectoryInfo> result) {
+			public void onSuccess(JsArray<FolderInfo> result) {
 				resultListener.onSuccess(JsUtil.asList(result,
-						DirectoryInfo.class));
+						FolderInfo.class));
 			}
 		};
 
@@ -135,7 +135,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				data).post(resultListener);
 	}
 
-	public void editFolder(DirectoryInfo dir, String name, String path,
+	public void editFolder(FolderInfo dir, String name, String path,
 			ResultListener resultListener) {
 		String data = new JSONStringBuilder("name", name).add("path", path)
 				.toString();
@@ -145,25 +145,25 @@ public class PhpConfigurationService extends ServiceBase implements
 						dir.getId())).data(data).put(resultListener);
 	}
 
-	public void removeFolder(DirectoryInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.folders).item(
 						dir.getId())).delete(resultListener);
 	}
 
 	public void getUserFolders(User user,
-			final ResultListener<List<UserDirectory>> resultListener) {
+			final ResultListener<List<UserFolder>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		ResultListener<JsArray<UserDirectory>> listener = new ResultListener<JsArray<UserDirectory>>() {
+		ResultListener<JsArray<UserFolder>> listener = new ResultListener<JsArray<UserFolder>>() {
 			public void onFail(ServiceError error) {
 				resultListener.onFail(error);
 			}
 
-			public void onSuccess(JsArray<UserDirectory> result) {
+			public void onSuccess(JsArray<UserFolder> result) {
 				resultListener.onSuccess(JsUtil.asList(result,
-						UserDirectory.class));
+						UserFolder.class));
 			}
 		};
 		request().url(
@@ -171,7 +171,7 @@ public class PhpConfigurationService extends ServiceBase implements
 						user.getId())).get(listener);
 	}
 
-	public void addUserFolder(User user, DirectoryInfo dir, String name,
+	public void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener) {
 		String data = new JSONStringBuilder("user_id", user.getId()).add("id",
 				dir.getId()).add("name", name).toString();
@@ -180,7 +180,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				.data(data).post(resultListener);
 	}
 
-	public void editUserFolder(User user, UserDirectory dir, String name,
+	public void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener) {
 		String data = new JSONStringBuilder("user_id", user.getId()).add(
 				"name", name).toString();
@@ -190,7 +190,7 @@ public class PhpConfigurationService extends ServiceBase implements
 						dir.getId())).data(data).put(resultListener);
 	}
 
-	public void removeUserFolder(User user, UserDirectory dir,
+	public void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(

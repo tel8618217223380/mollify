@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
@@ -60,7 +60,7 @@ public class DirectoryContextGlue implements DirectoryContextPopup {
 		popup.hide();
 	}
 
-	public void update(Directory directory, Widget parent) {
+	public void update(Folder directory, Widget parent) {
 		popup.setParentWidget(parent);
 		presenter.setDirectory(directory);
 	}

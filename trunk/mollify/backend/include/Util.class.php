@@ -24,7 +24,14 @@
 			return base64_decode(strtr($input, '-_,', '+/='));
 		}
 		
+		static function toString($a) {
+			if (is_array($a)) return self::array2str($a);
+			return $a;
+		}
+		
 		static function array2str($a, $ignoredKeys = NULL) {
+			if ($a === NULL) return "NULL";
+			
 			$r = "{";
 			$first = TRUE;
 			foreach($a as $k=>$v) {

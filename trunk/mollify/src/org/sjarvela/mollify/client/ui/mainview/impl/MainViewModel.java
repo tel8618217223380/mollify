@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryModel;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -28,24 +28,24 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
-	private final List<Directory> rootDirectories;
+	private final List<Folder> rootDirectories;
 
-	private DirectoryModel directoryModel;
+	private FolderModel directoryModel;
 	private List<File> files = new ArrayList();
-	private List<Directory> directories = new ArrayList();
+	private List<Folder> directories = new ArrayList();
 	private List<FileSystemItem> all = new ArrayList();
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
-			DirectoryProvider directoryProvider) {
+			FolderProvider directoryProvider) {
 		this.fileServices = fileServices;
 		this.session = session;
-		this.rootDirectories = directoryProvider.getRootDirectories();
+		this.rootDirectories = directoryProvider.getRootFolders();
 
 		clear();
 	}
 
 	public void clear() {
-		directoryModel = new DirectoryModel();
+		directoryModel = new FolderModel();
 
 		directories.clear();
 		files.clear();
@@ -56,15 +56,15 @@ public class MainViewModel {
 		return session;
 	}
 
-	public DirectoryModel getDirectoryModel() {
+	public FolderModel getDirectoryModel() {
 		return directoryModel;
 	}
 
-	public List<Directory> getRootDirectories() {
+	public List<Folder> getRootDirectories() {
 		return rootDirectories;
 	}
 
-	public List<Directory> getSubDirectories() {
+	public List<Folder> getSubDirectories() {
 		return directories;
 	}
 
@@ -80,23 +80,23 @@ public class MainViewModel {
 		return directoryModel.getCurrentFolder() != null;
 	}
 
-	public Directory getCurrentFolder() {
+	public Folder getCurrentFolder() {
 		return directoryModel.getCurrentFolder();
 	}
 
-	public void changeToRootDirectory(Directory root,
+	public void changeToRootDirectory(Folder root,
 			ResultListener resultListener) {
-		directoryModel.setRootDirectory(root);
+		directoryModel.setRootFolder(root);
 		refreshData(resultListener);
 	}
 
-	public void changeToSubdirectory(Directory directory,
+	public void changeToSubdirectory(Folder directory,
 			ResultListener resultListener) {
 		directoryModel.descendIntoFolder(directory);
 		refreshData(resultListener);
 	}
 
-	public void changeToDirectory(int level, Directory directory,
+	public void changeToDirectory(int level, Folder directory,
 			ResultListener resultListener) {
 		directoryModel.changeDirectory(level, directory);
 		refreshData(resultListener);
@@ -107,21 +107,21 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void refreshData(ResultListener<DirectoryContent> resultListener) {
+	public void refreshData(ResultListener<FolderContent> resultListener) {
 		if (getCurrentFolder() == null) {
-			resultListener.onSuccess(new DirectoryContent());
+			resultListener.onSuccess(new FolderContent());
 			return;
 		}
 
 		fileServices.getDirectoryContents(getCurrentFolder(), createListener(
-				resultListener, new ResultCallback<DirectoryContent>() {
-					public void onCallback(DirectoryContent result) {
+				resultListener, new ResultCallback<FolderContent>() {
+					public void onCallback(FolderContent result) {
 						onUpdateData(result);
 					}
 				}));
 	}
 
-	private void onUpdateData(DirectoryContent data) {
+	private void onUpdateData(FolderContent data) {
 		this.directories = data.getDirectories();
 		this.files = data.getFiles();
 		this.all = new ArrayList(data.getDirectories());

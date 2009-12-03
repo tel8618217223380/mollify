@@ -16,20 +16,21 @@ import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class DirectoriesAndFiles extends JavaScriptObject {
-	protected DirectoriesAndFiles() {
+public class FoldersAndFiles extends JavaScriptObject {
+	protected FoldersAndFiles() {
 	}
 
-	public final native JsArray<JsDirectory> getDirectories() /*-{
-		return this.directories;
+	public final native JsArray<JsDirectory> getFolders() /*-{
+		return this.folders;
 	}-*/;
 
 	public final native JsArray<JsFile> getFiles() /*-{
 		return this.files;
 	}-*/;
 
-	public static DirectoriesAndFiles create(JsArray<JsDirectory> directories, JsArray<JsFile> files) {
-		DirectoriesAndFiles result = DirectoriesAndFiles.createObject().cast();
+	public static FoldersAndFiles create(JsArray<JsDirectory> directories,
+			JsArray<JsFile> files) {
+		FoldersAndFiles result = FoldersAndFiles.createObject().cast();
 		result.putValues(directories, files);
 		return result;
 	}

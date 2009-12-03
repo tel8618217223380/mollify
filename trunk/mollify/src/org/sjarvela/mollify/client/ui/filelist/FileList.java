@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -73,7 +73,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	public GridData getData(FileSystemItem item, GridColumn column) {
 		if (item.isFile())
 			return getFileData((File) item, column);
-		return getDirectoryData((Directory) item, column);
+		return getDirectoryData((Folder) item, column);
 	}
 
 	private GridData getFileData(File file, GridColumn column) {
@@ -86,7 +86,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	private GridData getDirectoryData(Directory directory, GridColumn column) {
+	private GridData getDirectoryData(Folder directory, GridColumn column) {
 		if (column.equals(COLUMN_NAME))
 			return new GridData.Widget(createDirectoryNameWidget(directory));
 		else if (column.equals(COLUMN_TYPE))
@@ -96,7 +96,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	private FlowPanel createDirectoryNameWidget(final Directory directory) {
+	private FlowPanel createDirectoryNameWidget(final Folder directory) {
 		FlowPanel panel = new FlowPanel();
 
 		Label icon = new Label();
@@ -142,7 +142,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	public List<String> getRowStyles(FileSystemItem t) {
 		if (t.isFile())
 			return getFileStyles((File) t);
-		return getDirectoryStyles((Directory) t);
+		return getDirectoryStyles((Folder) t);
 	}
 
 	private List<String> getFileStyles(File file) {
@@ -161,7 +161,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return styles;
 	}
 
-	private List<String> getDirectoryStyles(Directory directory) {
+	private List<String> getDirectoryStyles(Folder directory) {
 		ArrayList<String> styles = new ArrayList<String>();
 		int index = getRowIndex(directory);
 

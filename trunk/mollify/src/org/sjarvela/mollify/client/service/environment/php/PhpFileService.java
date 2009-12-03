@@ -12,17 +12,17 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.DirectoriesAndFiles;
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
-import org.sjarvela.mollify.client.filesystem.DirectoryDetails;
+import org.sjarvela.mollify.client.filesystem.FoldersAndFiles;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.data.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -42,8 +42,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		super(service, RequestType.filesystem);
 	}
 
-	public void getDirectories(Directory parent,
-			final ResultListener<List<Directory>> listener) {
+	public void getDirectories(Folder parent,
+			final ResultListener<List<Folder>> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
 
@@ -61,19 +61,19 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.get(resultListener);
 	}
 
-	public void getDirectoryContents(final Directory parent,
-			final ResultListener<DirectoryContent> listener) {
+	public void getDirectoryContents(final Folder parent,
+			final ResultListener<FolderContent> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directory contents: " + parent.getId());
 
-		ResultListener<DirectoriesAndFiles> resultListener = new ResultListener<DirectoriesAndFiles>() {
+		ResultListener<FoldersAndFiles> resultListener = new ResultListener<FoldersAndFiles>() {
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(DirectoriesAndFiles result) {
-				listener.onSuccess(new DirectoryContent(FileSystemItem
-						.createFromDirectories(result.getDirectories()),
+			public void onSuccess(FoldersAndFiles result) {
+				listener.onSuccess(new FolderContent(FileSystemItem
+						.createFromDirectories(result.getFolders()),
 						FileSystemItem.createFromFiles(result.getFiles())));
 			}
 		};
@@ -91,8 +91,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.get(resultListener);
 	}
 
-	public void getDirectoryDetails(Directory item,
-			ResultListener<DirectoryDetails> resultListener) {
+	public void getDirectoryDetails(Folder item,
+			ResultListener<FolderDetails> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
 
@@ -109,7 +109,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.data(newName).put(listener);
 	}
 
-	public void copy(File file, Directory directory,
+	public void copy(File file, Folder directory,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Copy " + file.getId() + " to [" + directory.getId()
@@ -119,7 +119,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.data(directory.getId()).post(listener);
 	}
 
-	public void move(FileSystemItem item, Directory directory,
+	public void move(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Move " + item.getId() + " to [" + directory.getId()
@@ -137,7 +137,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.delete(listener);
 	}
 
-	public void createDirectory(Directory parentFolder, String folderName,
+	public void createDirectory(Folder parentFolder, String folderName,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Create directory: [" + folderName + "]");

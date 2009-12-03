@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.DirectoryContent;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
@@ -151,10 +151,10 @@ public class SelectItemDialog extends CenteredDialog implements
 	}
 
 	private void onShow() {
-		onUpdateRoots(fileSystemItemProvider.getRootDirectories());
+		onUpdateRoots(fileSystemItemProvider.getRootFolders());
 	}
 
-	private void onUpdateRoots(List<Directory> roots) {
+	private void onUpdateRoots(List<Folder> roots) {
 		addSubItems(rootItem, roots);
 		rootItem.setState(true);
 		selectInitialDir();
@@ -179,10 +179,10 @@ public class SelectItemDialog extends CenteredDialog implements
 
 		for (FileSystemItem item : list)
 			parent.addItem(item.isFile() ? createFileItem((File) item)
-					: createDirItem((Directory) item));
+					: createDirItem((Folder) item));
 	}
 
-	protected TreeItem createDirItem(Directory dir) {
+	protected TreeItem createDirItem(Folder dir) {
 		TreeItem item = createItem(dir.getName(),
 				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM_LABEL_DIR,
 				StyleConstants.SELECT_ITEM_DIALOG_TREE_ITEM);
@@ -244,14 +244,14 @@ public class SelectItemDialog extends CenteredDialog implements
 		getLabel(selected).addStyleDependentName(StyleConstants.SELECTED);
 	}
 
-	private List<Directory> getDirectoryPath(TreeItem treeItem) {
-		List<Directory> list = new ArrayList();
+	private List<Folder> getDirectoryPath(TreeItem treeItem) {
+		List<Folder> list = new ArrayList();
 		TreeItem current = treeItem;
 
 		while (true) {
 			FileSystemItem item = items.get(current);
 			if (!item.isFile())
-				list.add((Directory) item);
+				list.add((Folder) item);
 			current = current.getParentItem();
 			if (current.equals(rootItem))
 				break;
@@ -275,13 +275,13 @@ public class SelectItemDialog extends CenteredDialog implements
 			return;
 
 		if (Mode.Folders.equals(this.mode)) {
-			fileSystemItemProvider.getDirectories((Directory) item,
-					new ResultListener<List<Directory>>() {
+			fileSystemItemProvider.getFolders((Folder) item,
+					new ResultListener<List<Folder>>() {
 						public void onFail(ServiceError error) {
 							onRequestError(error);
 						}
 
-						public void onSuccess(List<Directory> subDirs) {
+						public void onSuccess(List<Folder> subDirs) {
 							itemsInitialized.add(treeItem);
 							treeItem.removeItems();
 							SelectItemDialog.this
@@ -289,13 +289,13 @@ public class SelectItemDialog extends CenteredDialog implements
 						}
 					});
 		} else {
-			fileSystemItemProvider.getFilesAndFolders((Directory) item,
-					new ResultListener<DirectoryContent>() {
+			fileSystemItemProvider.getFilesAndFolders((Folder) item,
+					new ResultListener<FolderContent>() {
 						public void onFail(ServiceError error) {
 							onRequestError(error);
 						}
 
-						public void onSuccess(DirectoryContent result) {
+						public void onSuccess(FolderContent result) {
 							itemsInitialized.add(treeItem);
 							treeItem.removeItems();
 

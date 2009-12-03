@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.filesystem.DirectoryInfo;
-import org.sjarvela.mollify.client.filesystem.UserDirectory;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -32,12 +32,12 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 	private ConfigurationDialog parent;
 	private ConfigurationUserFoldersView view;
 
-	private List<DirectoryInfo> allDirectories = null;
+	private List<FolderInfo> allDirectories = null;
 	private List<User> users = null;
 
 	User selectedUser = null;
-	List<UserDirectory> userDirectories = null;
-	Map<String, DirectoryInfo> userDirectoryMap = new HashMap();
+	List<UserFolder> userDirectories = null;
+	Map<String, FolderInfo> userDirectoryMap = new HashMap();
 
 	public ConfigurationUserFoldersPresenter(ConfigurationService service,
 			TextProvider textProvider, ConfigurationDialog dialog,
@@ -79,8 +79,8 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 
 		service
 				.getFolders(parent
-						.createResultListener(new ResultCallback<List<DirectoryInfo>>() {
-							public void onCallback(List<DirectoryInfo> list) {
+						.createResultListener(new ResultCallback<List<FolderInfo>>() {
+							public void onCallback(List<FolderInfo> list) {
 								allDirectories = list;
 							}
 						}));
@@ -113,7 +113,7 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 
 	private void refreshUserDirectories() {
 		if (selectedUser == null) {
-			setUserDirectories(new ArrayList<UserDirectory>());
+			setUserDirectories(new ArrayList<UserFolder>());
 			return;
 		}
 
@@ -121,20 +121,20 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 				.getUserFolders(
 						selectedUser,
 						parent
-								.createResultListener(new ResultCallback<List<UserDirectory>>() {
+								.createResultListener(new ResultCallback<List<UserFolder>>() {
 									public void onCallback(
-											List<UserDirectory> list) {
+											List<UserFolder> list) {
 										setUserDirectories(list);
 									}
 
 								}));
 	}
 
-	private void setUserDirectories(List<UserDirectory> list) {
+	private void setUserDirectories(List<UserFolder> list) {
 		this.userDirectories = list;
 		this.userDirectoryMap.clear();
 
-		for (UserDirectory dir : list)
+		for (UserFolder dir : list)
 			this.userDirectoryMap.put(dir.getId(), dir);
 		this.view.directories().setContent(list);
 	}
@@ -143,7 +143,7 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 		if (allDirectories == null || selectedUser == null)
 			return;
 
-		List<DirectoryInfo> selectable = getSelectableDirectories();
+		List<FolderInfo> selectable = getSelectableDirectories();
 		if (selectable.size() == 0) {
 			parent
 					.getDialogManager()
@@ -159,9 +159,9 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 		new UserFolderDialog(textProvider, this, selectable);
 	}
 
-	private List<DirectoryInfo> getSelectableDirectories() {
-		List<DirectoryInfo> result = new ArrayList();
-		for (DirectoryInfo directory : allDirectories) {
+	private List<FolderInfo> getSelectableDirectories() {
+		List<FolderInfo> result = new ArrayList();
+		for (FolderInfo directory : allDirectories) {
 			if (!userDirectoryMap.containsKey(directory.getId()))
 				result.add(directory);
 		}
@@ -173,7 +173,7 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 				|| view.directories().getSelected().size() != 1)
 			return;
 
-		UserDirectory selected = view.directories().getSelected().get(0);
+		UserFolder selected = view.directories().getSelected().get(0);
 		new UserFolderDialog(textProvider, this, selected);
 	}
 
@@ -182,13 +182,13 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 				|| view.directories().getSelected().size() != 1)
 			return;
 
-		UserDirectory selected = view.directories().getSelected().get(0);
+		UserFolder selected = view.directories().getSelected().get(0);
 		service
 				.removeUserFolder(selectedUser, selected,
 						createReloadListener());
 	}
 
-	public void addUserFolder(DirectoryInfo directory, String name,
+	public void addUserFolder(FolderInfo directory, String name,
 			Callback successCallback) {
 		if (selectedUser == null)
 			return;
@@ -197,7 +197,7 @@ public class ConfigurationUserFoldersPresenter implements UserFolderHandler {
 				createReloadListener(successCallback));
 	}
 
-	public void editUserFolder(UserDirectory edited, String name,
+	public void editUserFolder(UserFolder edited, String name,
 			Callback successCallback) {
 		if (selectedUser == null)
 			return;

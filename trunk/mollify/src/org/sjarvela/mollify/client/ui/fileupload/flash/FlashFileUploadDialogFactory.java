@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
 import org.sjarvela.mollify.client.UrlResolver;
-import org.sjarvela.mollify.client.filesystem.Directory;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
@@ -53,7 +53,7 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		return urlProvider.getModuleUrl(FLASH_FILE_NAME, false);
 	}
 
-	public void openFileUploadDialog(Directory directory,
+	public void openFileUploadDialog(Folder directory,
 			ResultListener listener) {
 
 		SessionInfo session = sessionProvider.getSession();

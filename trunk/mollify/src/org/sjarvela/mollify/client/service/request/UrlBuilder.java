@@ -42,6 +42,24 @@ public class UrlBuilder {
 		return this;
 	}
 
+	// private void addParam(StringBuilder result, UrlParam param) {
+	// String name = param.getName();
+	// String value = param.getValue();
+	// Encoding encoding = param.getEncoding();
+	//
+	// if (UrlParam.Encoding.URL.equals(encoding)) {
+	// value = URL.encodeComponent(value);
+	// } else if (UrlParam.Encoding.URL_FULL.equals(encoding)) {
+	// value = Html.fullUrlEncode(value);
+	// } else if (UrlParam.Encoding.BASE64.equals(encoding)) {
+	// value = Base64.encode(value);
+	// } else if (UrlParam.Encoding.MD5.equals(encoding)) {
+	// value = MD5.generate(value);
+	// }
+	//
+	// result.append(name).append('=').append(value);
+	// }
+
 	public String build() {
 		StringBuilder result = new StringBuilder(baseUrl).append("/");
 		for (String item : items)

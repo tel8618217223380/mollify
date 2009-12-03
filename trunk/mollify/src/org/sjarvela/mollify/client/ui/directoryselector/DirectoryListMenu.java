@@ -16,8 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.Directory;
-import org.sjarvela.mollify.client.filesystem.directorymodel.DirectoryProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -29,19 +29,19 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
-		ResultListener<List<Directory>> {
+public class DirectoryListMenu extends DropdownPopupMenu<Folder> implements
+		ResultListener<List<Folder>> {
 	private final int level;
-	private final Directory currentDirectory;
-	private final DirectoryProvider directoryProvider;
+	private final Folder currentDirectory;
+	private final FolderProvider directoryProvider;
 	private final DirectoryListener listener;
 	private final TextProvider textProvider;
 
 	boolean initialized = false;
 	boolean dataRequested = false;
 
-	public DirectoryListMenu(String itemStyle, Directory currentDirectory,
-			int level, DirectoryProvider directoryProvider,
+	public DirectoryListMenu(String itemStyle, Folder currentDirectory,
+			int level, FolderProvider directoryProvider,
 			DirectoryListener listener, TextProvider textProvider, Widget parent) {
 		super(null, parent, null);
 
@@ -71,7 +71,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 	}
 
 	private void requestData() {
-		directoryProvider.getDirectories(currentDirectory, this);
+		directoryProvider.getFolders(currentDirectory, this);
 		dataRequested = true;
 	}
 
@@ -84,18 +84,18 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 		addItem(failedLabel);
 	}
 
-	public void onSuccess(List<Directory> list) {
+	public void onSuccess(List<Folder> list) {
 		initialized = true;
 		removeAllMenuItems();
 
-		List<Directory> directories = new ArrayList(list);
-		Collections.sort(directories, new Comparator<Directory>() {
-			public int compare(Directory d1, Directory d2) {
+		List<Folder> directories = new ArrayList(list);
+		Collections.sort(directories, new Comparator<Folder>() {
+			public int compare(Folder d1, Folder d2) {
 				return d1.getName().compareToIgnoreCase(d2.getName());
 			}
 		});
 		int count = 0;
-		for (Directory dir : directories) {
+		for (Folder dir : directories) {
 			if (dir.getId().equals(this.currentDirectory.getId()))
 				continue;
 			addMenuAction(null, dir);
@@ -115,7 +115,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Directory> implements
 
 	@Override
 	protected Label createMenuItemWidget(final ResourceId action,
-			final Directory item) {
+			final Folder item) {
 		Label label = createMenuItemWidget(item.getName());
 		label.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

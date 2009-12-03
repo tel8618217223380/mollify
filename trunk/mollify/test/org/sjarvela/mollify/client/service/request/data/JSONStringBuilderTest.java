@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.request.data;
 
 import org.junit.Test;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
