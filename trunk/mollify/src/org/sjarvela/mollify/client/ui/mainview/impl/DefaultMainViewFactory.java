@@ -104,11 +104,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
-				sessionManager, model, view, environment.getSessionService(),
-				fileSystemService, textProvider,
-				fileSystemActionHandlerFactory, permissionEditorViewFactory,
-				passwordDialogFactory, fileUploadDialogFactory, this,
-				configurationDialogFactory);
+				sessionManager, model, view, environment
+						.getConfigurationService(), fileSystemService,
+				textProvider, fileSystemActionHandlerFactory,
+				permissionEditorViewFactory, passwordDialogFactory,
+				fileUploadDialogFactory, this, configurationDialogFactory);
 		new MainViewGlue(view, presenter, actionDelegator);
 
 		return view;

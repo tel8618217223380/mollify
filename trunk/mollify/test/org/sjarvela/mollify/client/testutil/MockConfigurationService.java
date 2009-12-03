@@ -94,4 +94,16 @@ public class MockConfigurationService implements ConfigurationService {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
+
+	public void changePassword(String oldPassword, String newPassword,
+			ResultListener<Boolean> resultListener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resetPassword(User user, String password,
+			ResultListener resultListener) {
+		// TODO Auto-generated method stub
+		
+	}
 }

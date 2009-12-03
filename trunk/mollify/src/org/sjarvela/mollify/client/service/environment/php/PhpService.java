@@ -10,16 +10,9 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.sjarvela.mollify.client.UrlResolver;
-import org.sjarvela.mollify.client.service.request.HtmlRequestHandlerFactory;
+import org.sjarvela.mollify.client.service.request.RequestBuilder;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
-import org.sjarvela.mollify.client.service.request.UrlParam;
-import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
@@ -27,8 +20,8 @@ import com.google.gwt.core.client.GWT;
 public class PhpService {
 	private static final String SERVICE_FILE = "r.php";
 	private final String requestBaseUrl;
-	private final HtmlRequestHandlerFactory htmlRequestHandlerFactory;
 	private final UrlResolver urlResolver;
+	private final int requestTimeout;
 
 	enum RequestType {
 		filesystem, session, configuration
@@ -42,9 +35,8 @@ public class PhpService {
 
 	public PhpService(UrlResolver urlResolver, String path, int requestTimeout) {
 		this.urlResolver = urlResolver;
+		this.requestTimeout = requestTimeout;
 		this.requestBaseUrl = getPath(path);
-		this.htmlRequestHandlerFactory = new HtmlRequestHandlerFactory(
-				requestTimeout);
 		Log.info("Mollify service location: " + this.requestBaseUrl
 				+ ", timeout: " + requestTimeout + " sec");
 	}
@@ -58,40 +50,11 @@ public class PhpService {
 		return path + SERVICE_FILE;
 	}
 
-	String getUrl(String... path) {
-		return getUrl(Arrays.asList(path));
+	public RequestBuilder request() {
+		return new PhpRequestBuilder().timeout(requestTimeout);
 	}
 
-	String getUrl(List<String> path) {
-		return getUrl(path, Collections.EMPTY_LIST);
-	}
-
-	String getUrl(List<String> path, List<UrlParam> params) {
-		UrlBuilder b = new UrlBuilder(requestBaseUrl);
-		b.addPathItems(path);
-		b.add(params);
-		return b.getUrl();
-	}
-
-	void doGetRequest(String url, final ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Request GET: " + url);
-
-		htmlRequestHandlerFactory.createGET(url,
-				new JsonRequestListener(resultListener)).doRequest();
-	}
-
-	void doPostRequest(String url, final ResultListener resultListener) {
-		doPostRequest(url, null, resultListener);
-	}
-
-	void doPostRequest(String url, String data,
-			final ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Request POST: " + url);
-
-		JsonRequestListener listener = new JsonRequestListener(resultListener);
-		htmlRequestHandlerFactory.createPOST(url, listener).withData(data)
-				.doRequest();
+	public UrlBuilder url() {
+		return new UrlBuilder().baseUrl(requestBaseUrl);
 	}
 }

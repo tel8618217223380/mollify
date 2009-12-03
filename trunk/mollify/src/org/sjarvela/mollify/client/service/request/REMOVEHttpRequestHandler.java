@@ -23,7 +23,8 @@ import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.RequestBuilder.Method;
 
-public class HtmlRequestHandler implements RequestHandler {
+//TODO OLD
+public class REMOVEHttpRequestHandler implements RequestHandler {
 	private static final int HTTP_STATUS_OK = 200;
 	private static final int HTTP_STATUS_UNAUTHORIZED = 403;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
@@ -33,7 +34,7 @@ public class HtmlRequestHandler implements RequestHandler {
 	private String url;
 	private RequestBuilder requestBuilder;
 
-	public HtmlRequestHandler(Method method, String url,
+	public REMOVEHttpRequestHandler(Method method, String url,
 			final ResultListener<Response> listener, int timeout) {
 		this.listener = listener;
 		this.url = url;
@@ -45,10 +46,10 @@ public class HtmlRequestHandler implements RequestHandler {
 				Log.error("Request error", exception);
 
 				if (RequestTimeoutException.class.equals(exception.getClass()))
-					HtmlRequestHandler.this.onError(new ServiceError(
+					REMOVEHttpRequestHandler.this.onError(new ServiceError(
 							ServiceErrorType.NO_RESPONSE));
 				else
-					HtmlRequestHandler.this.onError(new ServiceError(
+					REMOVEHttpRequestHandler.this.onError(new ServiceError(
 							ServiceErrorType.REQUEST_FAILED));
 			}
 
@@ -64,27 +65,27 @@ public class HtmlRequestHandler implements RequestHandler {
 				}
 
 				if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-					HtmlRequestHandler.this.onError(new ServiceError(
+					REMOVEHttpRequestHandler.this.onError(new ServiceError(
 							ServiceErrorType.UNAUTHORIZED, response.getText()));
 					return;
 
 				}
 
 				if (statusCode == HTTP_STATUS_NOT_FOUND) {
-					HtmlRequestHandler.this.onError(new ServiceError(
+					REMOVEHttpRequestHandler.this.onError(new ServiceError(
 							ServiceErrorType.INVALID_CONFIGURATION,
 							"Service file not found: "
-									+ HtmlRequestHandler.this.url));
+									+ REMOVEHttpRequestHandler.this.url));
 					return;
 				}
 				if (statusCode == HTTP_STATUS_SERVER_ERROR) {
-					HtmlRequestHandler.this
+					REMOVEHttpRequestHandler.this
 							.onError(new ServiceError(
 									ServiceErrorType.UNKNOWN_ERROR, response
 											.getText()));
 					return;
 				}
-				HtmlRequestHandler.this.onError(new ServiceError(
+				REMOVEHttpRequestHandler.this.onError(new ServiceError(
 						ServiceErrorType.REQUEST_FAILED));
 			}
 		});
@@ -94,7 +95,7 @@ public class HtmlRequestHandler implements RequestHandler {
 		listener.onFail(error);
 	}
 
-	public HtmlRequestHandler withData(String data) {
+	public REMOVEHttpRequestHandler withData(String data) {
 		if (data == null)
 			return this;
 		requestBuilder.setRequestData(data);

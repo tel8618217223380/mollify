@@ -8,19 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.service.environment.php;
 
+import org.sjarvela.mollify.client.service.request.RequestBuilder;
+import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.SessionInfo;
 
-public interface SessionService {
-
-	void getSessionInfo(String protocolVersion,
-			ResultListener<SessionInfo> resultListener);
-
-	void authenticate(String userName, String password, String protocolVersion,
-			ResultListener<SessionInfo> resultListener);
-
-	void logout(ResultListener<Boolean> resultListener);
-
+public class PhpRequestBuilder extends RequestBuilder {
+	@Override
+	public void send(Method method, ResultListener listener) {
+		super.send(method, new JsonRequestListener(listener));
+	}
 }

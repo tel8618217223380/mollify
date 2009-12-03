@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.service.environment.demo;
 
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.user.User;
 
 public class DemoSessionService implements SessionService {
 	private static final String VISIBLE_USERNAME = "Mollify Demo";
@@ -28,11 +27,6 @@ public class DemoSessionService implements SessionService {
 		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
 	}
 
-	public void changePassword(String oldPassword, String newPassword,
-			ResultListener<Boolean> resultListener) {
-		resultListener.onSuccess(true);
-	}
-
 	public void getSessionInfo(String protocolVersion,
 			ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo());
@@ -40,11 +34,6 @@ public class DemoSessionService implements SessionService {
 
 	public void logout(ResultListener resultListener) {
 		resultListener.onSuccess(data.getSessionInfo());
-	}
-
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		resultListener.onSuccess(true);
 	}
 
 }

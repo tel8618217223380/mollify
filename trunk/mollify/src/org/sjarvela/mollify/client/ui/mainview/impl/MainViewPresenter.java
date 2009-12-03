@@ -23,10 +23,10 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
@@ -53,7 +53,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	private final SessionManager sessionManager;
 
 	private final FileSystemService fileSystemService;
-	private final SessionService sessionService;
+	private final ConfigurationService configurationService;
 	private final FileSystemActionHandler fileSystemActionHandler;
 	private final TextProvider textProvider;
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
@@ -64,7 +64,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	public MainViewPresenter(DialogManager dialogManager,
 			SessionManager sessionManager, MainViewModel model,
-			DefaultMainView view, SessionService sessionService,
+			DefaultMainView view, ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -74,7 +74,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 			ConfigurationDialogFactory configurationDialogFactory) {
 		this.dialogManager = dialogManager;
 		this.sessionManager = sessionManager;
-		this.sessionService = sessionService;
+		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
 
 		this.model = model;
@@ -252,7 +252,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void changePassword(String oldPassword, String newPassword) {
-		sessionService.changePassword(oldPassword, newPassword,
+		configurationService.changePassword(oldPassword, newPassword,
 				new ResultListener() {
 					public void onFail(ServiceError error) {
 						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
@@ -276,7 +276,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 	}
 
 	public void resetPassword(User user, String password) {
-		sessionService.resetPassword(user, password,
+		configurationService.resetPassword(user, password,
 				createListener(new Callback() {
 					public void onCallback() {
 						dialogManager.showInfo(textProvider.getStrings()

@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.session.user.User;
 
 public class SessionServiceAdapter implements SessionService {
 	private final SessionService sessionService;
@@ -37,20 +36,8 @@ public class SessionServiceAdapter implements SessionService {
 				resultListenerFactory.createListener(resultListener));
 	}
 
-	public void changePassword(String oldPassword, String newPassword,
-			ResultListener<Boolean> resultListener) {
-		sessionService.changePassword(oldPassword, newPassword,
-				resultListenerFactory.createListener(resultListener));
-	}
-
 	public void logout(ResultListener resultListener) {
 		sessionService.logout(resultListenerFactory
-				.createListener(resultListener));
-	}
-
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		sessionService.resetPassword(user, password, resultListenerFactory
 				.createListener(resultListener));
 	}
 

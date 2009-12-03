@@ -10,13 +10,9 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.UrlParam;
+import org.sjarvela.mollify.client.service.request.RequestBuilder;
+import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
 public class ServiceBase {
 	protected final PhpService service;
@@ -27,28 +23,11 @@ public class ServiceBase {
 		this.requestType = requestType;
 	}
 
-	protected String getUrl(ActionId action) {
-		return getUrl(action, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+	protected UrlBuilder serviceUrl() {
+		return service.url().item(requestType.name());
 	}
 
-	protected String getUrl(ActionId action, String... pathItems) {
-		return getUrl(action, Arrays.asList(pathItems), Collections.EMPTY_LIST);
-	}
-
-	protected String getUrl(ActionId action, UrlParam... params) {
-		return getUrl(action, Collections.EMPTY_LIST, Arrays.asList(params));
-	}
-
-	protected String getUrl(ActionId action, List<UrlParam> params) {
-		return getUrl(action, Collections.EMPTY_LIST, params);
-	}
-
-	protected String getUrl(ActionId action, List<String> pathItems,
-			List<UrlParam> params) {
-		List<String> path = new ArrayList();
-		path.add(requestType.name());
-		path.add(action.name());
-		path.addAll(pathItems);
-		return service.getUrl(path, params);
+	protected RequestBuilder request() {
+		return service.request();
 	}
 }
