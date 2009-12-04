@@ -1,5 +1,6 @@
 <?php
 	require_once("Features.class.php");
+	require_once("EventHandler.class.php");
 	
 	class ServiceEnvironment {
 		private $services = array();
@@ -8,6 +9,7 @@
 		private $responseHandler;
 		private $configurationProvider;
 		private $settings;
+		private $eventHandler;
 		private $filesystem;
 		
 		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
@@ -16,7 +18,8 @@
 			$this->configurationProvider = $configurationProvider;
 			$this->settings = $settings;
 			$this->features = new Features($configurationProvider, $settings);
-			$this->authentication = new Authentication($this); 
+			$this->authentication = new Authentication($this);
+			$this->eventHandler = new EventHandler();
 			$this->filesystem = new Filesystem($this);
 		}
 		
@@ -47,11 +50,16 @@
 		public function settings() {
 			return $this->settings;
 		}
-						
+
+		public function events() {
+			return $this->eventHandler;
+		}
+								
 		public function initialize($request) {
 			$this->session->initialize($request);
 			$this->filesystem->initialize($request);
 			$this->authentication->initialize($request);
+			$this->configurationProvider->initialize($request, $this);
 			$this->log();
 		}
 		

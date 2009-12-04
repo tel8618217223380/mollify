@@ -1,5 +1,7 @@
 <?php
 	class ConfigurationProvider {
+		function initialize($request, $env) {}
+		
 		function initializeSession($session, $userId) {
 			$session->setSessionParam('default_file_permission', $this->getDefaultUserPermissionMode($userId));
 			$session->setSessionParam('roots', $this->getUserRootDirectories($userId));

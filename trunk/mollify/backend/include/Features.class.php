@@ -25,6 +25,11 @@
 			}
 		}
 		
+		public function assertFeature($feature) {
+			if (!in_array($feature, $this->$features)) throw new ServiceException("INVALID_REQUEST", "Invalid feature requested: ".$feature);
+			if (!$this->$features[$feature]) throw new ServiceException("FEATURE_DISABLED", "Required feature not enabled: ".$feature);
+		}
+		
 		public function getFeatures() {
 			return $this->features;
 		}

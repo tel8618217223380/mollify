@@ -25,8 +25,8 @@
 			return $this->filesystem->description($this);
 		}
 				
-		public function permissions() {
-			return $this->filesystem->permissions($this);
+		public function permission() {
+			return $this->filesystem->permission($this);
 		}
 		
 		public function rootId() {
@@ -62,7 +62,7 @@
 				"last_modified" => date($datetime_format, filemtime($this->path)),
 				"last_accessed" => date($datetime_format, fileatime($this->path)),
 				"description" => $this->description(),
-				"permissions" => $this->permissions());
+				"permission" => $this->permission());
 		}
 		
 		public function download() {
