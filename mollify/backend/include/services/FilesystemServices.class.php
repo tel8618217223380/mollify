@@ -13,12 +13,21 @@
 			else $this->processGetFolder($item);
 		}
 
+		public function processPut() {
+			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
+			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
+			
+			if ($item->isFile()) $this->processPutFile($item);
+			else $this->processPutFolder($item);
+		}
+		
 		public function processPost() {
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
 			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
-			if ($item->isFile()) $this->processPostFile($item);
-			else $this->processPostFolder($item);
+			if ($item->isFile()) throw new ServiceException("INVALID_REQUEST", "Invalid file request: ".strtoupper($this->request->method())." ".$this->request->URI());
+
+			$this->processPostFolder($item);
 		}
 		
 		private function convertItemId($id) {
@@ -40,16 +49,13 @@
 			}
 		}
 		
-		private function processPostFile($item) {
+		private function processPutFile($item) {
 			if (count($this->path) < 2)
 				throw new ServiceException("INVALID_REQUEST", "Invalid file request: ".strtoupper($this->request->method())." ".$this->request->URI());
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
 					$this->response()->success($item->rename($this->request->data));
-					break;
-				case 'details':
-					$this->response()->success($item->setDetails($this->request->data));
 					break;
 				case 'description':
 					$this->response()->success($item->setDescription($this->request->data));
@@ -80,6 +86,11 @@
 			}
 		}
 		
-		private function processPostFolder($item) {}
+		private function processPostFolder($item) {
+			if (count($this->path) != 1) throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			
+			$this->env->features()->assertFeature("file_upload");
+			$this->env->filesystem()->uploadToFolder($item);
+		}
 	}
 ?>

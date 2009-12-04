@@ -63,7 +63,7 @@ public class FileDetails extends JavaScriptObject {
 	}-*/;
 
 	private final native String getFilePermissionString() /*-{
-		return this.permissions;
+		return this.permission;
 	}-*/;
 
 	public static FileDetails create(Date lastAccessed, Date lastChanged,

@@ -1,5 +1,7 @@
 <?php
 	class Filesystem {
+		const EVENT_TYPE_FILE = "event_file";
+		
 		private $env;
 		private $allowedUploadTypes;
 		
@@ -52,7 +54,7 @@
 		}
 		
 		public function assertRights($item, $required, $desc = "Unknown action") {
-			$this->env->authentication()->assertRights($item->permissions(), $required, "filesystemitem ".$item->path()."/".$desc);
+			$this->env->authentication()->assertRights($item->permission(), $required, "filesystemitem ".$item->path()."/".$desc);
 		}
 		
 		public function getRootDirectories() {
@@ -93,11 +95,7 @@
 			
 			if (!rename($old, $new)) return FALSE;
 			
-//			if ($_SESSION["features"]["description_update"])
-//				move_item_description($file, get_fileitem($file["root"], $new));
-//			if ($_SESSION["features"]["permission_update"])
-//				move_item_permissions($file, get_fileitem($file["root"], $new));
-	
+			$this->env->events()->onEvent(FileEvent.rename($item, $name));
 			return TRUE;
 		}
 		
@@ -113,8 +111,8 @@
 			return "TODO";
 		}
 		
-		public function permissions($item) {
-			return "ro";
+		public function permission($item) {
+			return $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
 		}
 		
 		public function getSessionInfo() {
@@ -164,6 +162,32 @@
 			$name = strrchr(rtrim($path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
 			if (!$name) return "";
 			return substr($name, 1);
+		}
+	}
+	
+	class FileEvent extends Event {
+		const RENAME = "rename";
+		const DELETE = "delete";
+		
+		private $item;
+		private $subType;
+		
+		static function rename($item, $name) {
+			return new FileEvent($item, self::RENAME, $name);
+		}
+		
+		function __construct($item, $type, $data) {
+			parent::_construct(FileSystem::EVENT_TYPE_FILE, $data);
+			$this->item = $item;
+			$this->subType = $type;
+		}
+
+		public function item() {
+			return $this->item;
+		}
+		
+		public function type() {
+			return $this->type;
 		}
 	}
 ?>

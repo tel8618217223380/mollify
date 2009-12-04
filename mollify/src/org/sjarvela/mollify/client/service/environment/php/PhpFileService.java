@@ -162,7 +162,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(
 				serviceUrl().fileItem(item).action(FileAction.description))
-				.data(description).post(listener);
+				.data(description).put(listener);
 	}
 
 	public void removeItemDescription(FileSystemItem item,
