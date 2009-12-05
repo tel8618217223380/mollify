@@ -219,6 +219,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private boolean verifyFileTypes() {
 		if (allowedFileTypes.isEmpty())
 			return true;
+
 		for (FileUpload fu : uploaders) {
 			String extension = FileUtil.getExtension(fu.getFilename());
 			if (!allowedFileTypes.contains(extension)) {
@@ -228,7 +229,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private FileUpload getLastUploader() {

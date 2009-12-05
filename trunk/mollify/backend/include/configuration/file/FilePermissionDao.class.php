@@ -3,7 +3,7 @@
 		private $uacName;
 		
 		public function __construct($uacName) {
-			$this->$uacName = $uacName;
+			$this->uacName = $uacName;
 		}
 		
 		public function getItemPermission($item, $userId) {
@@ -30,14 +30,14 @@
 					if ($id === "*") $permission_id = "0";
 					else $permission_id = "".$id;
 					
-					$result[] = array("item_id" => $item["id"], "user_id" => $permission_id, "permission" => $permission);
+					$result[] = array("item_id" => $item->id(), "user_id" => $permission_id, "permission" => $permission);
 				}
 			}
 			return $result;
 		}
 
 		public function moveItemPermissions($from, $to, $recursively = FALSE) {
-			if ($recursively) return TRUE;	// permission file is moved along the folder
+			if ($recursively) return;	// permission file is moved along the folder
 			
 			$fromPath = dirname($from->path());
 			$fromName = Filesystem::basename($from->path());
@@ -55,7 +55,7 @@
 			unset($fromPermissions[$fromId]);
 			
 			if ($toPath === $fromPath) $fromPermissions[$toId] = $itemPermissions;
-			if (!$this->writePermissionsToFile($fromUac, $fromPermissions)) return FALSE;
+			$this->writePermissionsToFile($fromUac, $fromPermissions);
 			
 			if ($toPath != $fromPath) {
 				$toUac = $this->getUacFilename($to);
@@ -63,9 +63,49 @@
 				if (!$toPermissions) $toPermissions = array();
 				
 				$toPermissions[$toId] = $itemPermissions;
-				return $this->writePermissionsToFile($toUac, $toPermissions);
+				$this->writePermissionsToFile($toUac, $toPermissions);
 			}
+			
 			return TRUE;
+		}
+		
+		public function updateItemPermissions($item, $new, $modified, $removed) {
+			$uacFile = $this->getUacFilename($item);
+			$permissions = $this->readPermissionsFromFile($uacFile);
+			if (!$permissions) $permissions = array();
+	
+			$id = $this->getPermissionId($item);
+			if (!array_key_exists($id, $permissions)) $permissions[$id] = array();
+			$list = $permissions[$id];
+			
+			foreach(array_merge($new, $modified) as $permission) {
+				$this->assertItemPermission($item, $permission);
+				$userId = "*";
+				if ($permission["user_id"] != NULL) $userId = $permission["user_id"];
+				
+				$list[$userId] = $permission["permission"];
+			}
+			
+			foreach($removed as $permission) {
+				$this->assertItemPermission($item, $permission);
+				$userId = "*";
+				if ($permission["user_id"] != NULL) $userId = $permission["user_id"];
+				
+				unset($list[$userId]);
+			}
+			
+			if (count($list) === 0) unset($permissions[$id]);
+			else $permissions[$id] = $list;
+			
+			if (Logging::isDebug())
+				Logging::logDebug("Permissions updated (".$item->id()."): ".Util::array2str($permissions));
+
+			$this->writePermissionsToFile($uacFile, $permissions);
+			return TRUE;
+		}
+		
+		private function assertItemPermission($item, $permission) {
+			if ($permission["item_id"] != $item->id()) throw new ServiceException("INVALID_REQUEST", "Permission update for multiple item ids is not allowed");
 		}
 		
 		private function getEffectivePermission($permissions, $userId) {
@@ -120,23 +160,17 @@
 		
 		private function writePermissionsToFile($uacFile, $permissionTable) {
 			if (file_exists($uacFile)) {
-				if (!is_writable($uacFile)) {
-					Logging::logError("Permission file (".$uacFile.") is not writable");
-					return FALSE;
-				}
+				if (!is_writable($uacFile))
+					throw new ServiceException("REQUEST_FAILED", "Permission file (".$uacFile.") is not writable");
 			} else {
 				$dir = dirname($uacFile);
-				if (!is_writable($dir)) {
-					Logging::logError("Directory for permission file (".$dir.") is not writable");
-					return FALSE;
-				}
+				if (!is_writable($dir))
+					throw new ServiceException("REQUEST_FAILED", "Directory for permission file (".$dir.") is not writable");
 			}
 		
 			$handle = @fopen($uacFile, "w");
-			if (!$handle) {
-				Logging::logError("Could not open permission file for writing: ".$dir);
-				return FALSE;
-			}
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open permission file for writing: ".$uacFile);
 			
 			foreach($permissionTable as $file => $permissions) {
 				$value = $this->formatPermissionString($permissions);
@@ -144,8 +178,6 @@
 			}
 	
 			fclose($handle);
-			
-			return TRUE;
 		}
 		
 		private function parsePermissionString($string) {

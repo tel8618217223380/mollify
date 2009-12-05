@@ -14,6 +14,12 @@
 		}
 
 		public function processPut() {
+			if ($this->path[0] === 'permissions') {
+				$this->env->authentication()->assertAdmin();
+				$this->response()->success($this->env->configuration()->updateItemPermissions($this->request->data));
+				return;
+			}
+			
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
 			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
