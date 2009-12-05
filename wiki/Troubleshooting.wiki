@@ -1,6 +1,24 @@
 #summary Troubleshooting errors
 #labels Phase-Deploy
 
+= Troubleshooting =
+
+	In case of errors, do following steps before reporting new issue:
+
+  # Enable server side logging by adding following setting in configuration.php:
+{{{
+	$SETTINGS = array(
+		...
+		"debug" => TRUE
+	);
+}}}
+  # Enable client side logging by adding following parameter in URL: "log_level=DEBUG". For example, "`http://YOUR_HOST/mollify/?log_level=DEBUG`"
+  # Recreate the error, and copy all the logging information into the issue report. If you have access to PHP error logs, include it as well.
+
+	If you don't want to post logs here in public, you can send them to me directly with the issue link.
+
+= FAQ =
+
 == 1. Client error "Failed to get response from server" ==
 
 	When this error occurs on the client, it is due to either of two things:
