@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,25 +29,25 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListMenu extends DropdownPopupMenu<Folder> implements
+public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 		ResultListener<List<Folder>> {
 	private final int level;
-	private final Folder currentDirectory;
-	private final FolderProvider directoryProvider;
-	private final DirectoryListener listener;
+	private final Folder current;
+	private final FolderProvider folderProvider;
+	private final FolderListener listener;
 	private final TextProvider textProvider;
 
 	boolean initialized = false;
 	boolean dataRequested = false;
 
-	public DirectoryListMenu(String itemStyle, Folder currentDirectory,
+	public FolderListMenu(String itemStyle, Folder currentDirectory,
 			int level, FolderProvider directoryProvider,
-			DirectoryListener listener, TextProvider textProvider, Widget parent) {
+			FolderListener listener, TextProvider textProvider, Widget parent) {
 		super(null, parent, null);
 
 		this.level = level;
-		this.directoryProvider = directoryProvider;
-		this.currentDirectory = currentDirectory;
+		this.folderProvider = directoryProvider;
+		this.current = currentDirectory;
 		this.listener = listener;
 		this.textProvider = textProvider;
 
@@ -71,7 +71,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Folder> implements
 	}
 
 	private void requestData() {
-		directoryProvider.getFolders(currentDirectory, this);
+		folderProvider.getFolders(current, this);
 		dataRequested = true;
 	}
 
@@ -88,25 +88,25 @@ public class DirectoryListMenu extends DropdownPopupMenu<Folder> implements
 		initialized = true;
 		removeAllMenuItems();
 
-		List<Folder> directories = new ArrayList(list);
-		Collections.sort(directories, new Comparator<Folder>() {
+		List<Folder> folders = new ArrayList(list);
+		Collections.sort(folders, new Comparator<Folder>() {
 			public int compare(Folder d1, Folder d2) {
 				return d1.getName().compareToIgnoreCase(d2.getName());
 			}
 		});
 		int count = 0;
-		for (Folder dir : directories) {
-			if (dir.getId().equals(this.currentDirectory.getId()))
+		for (Folder dir : folders) {
+			if (dir.getId().equals(this.current.getId()))
 				continue;
 			addMenuAction(null, dir);
 			count++;
 		}
 
 		if (count == 0)
-			addNoDirectoriesLabel();
+			addNoFoldersLabel();
 	}
 
-	private void addNoDirectoriesLabel() {
+	private void addNoFoldersLabel() {
 		Label label = new Label(textProvider.getStrings()
 				.directorySelectorMenuNoItemsText());
 		label.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ITEM_NONE);
@@ -119,7 +119,7 @@ public class DirectoryListMenu extends DropdownPopupMenu<Folder> implements
 		Label label = createMenuItemWidget(item.getName());
 		label.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				listener.onChangeToDirectory(level, item);
+				listener.onChangeToFolder(level, item);
 			}
 		});
 		return label;

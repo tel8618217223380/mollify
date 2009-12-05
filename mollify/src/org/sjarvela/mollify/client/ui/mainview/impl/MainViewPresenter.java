@@ -36,16 +36,16 @@ import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListener;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
 import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.util.Html;
 
-public class MainViewPresenter implements DirectoryListener, PasswordHandler,
+public class MainViewPresenter implements FolderListener, PasswordHandler,
 		FileItemDescriptionHandler, FileSystemPermissionHandler {
 	private final MainViewModel model;
 	private final DefaultMainView view;
@@ -93,7 +93,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 		this.view.getFileContext().setFileItemDescriptionHandler(this);
 		this.view.getFileContext().setFilePermissionHandler(this);
 
-		this.view.getDirectoryContext().setDirectoryActionHandler(
+		this.view.getDirectoryContext().setFolderActionHandler(
 				fileSystemActionHandler);
 		this.view.getDirectoryContext().setFileItemDescriptionHandler(this);
 		this.view.getDirectoryContext().setFilePermissionHandler(this);
@@ -122,7 +122,7 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 				Folder directory = (Folder) item;
 
 				if (directory == Folder.Parent)
-					onMoveToParentDirectory();
+					onMoveToParentFolder();
 				else
 					changeToDirectory(directory);
 			}
@@ -155,20 +155,20 @@ public class MainViewPresenter implements DirectoryListener, PasswordHandler,
 
 	private void refreshView() {
 		List<FileSystemItem> allFileItems = model.getAllItems();
-		if (model.getDirectoryModel().canAscend())
+		if (model.getFolderModel().canAscend())
 			allFileItems.add(0, Folder.Parent);
 
 		view.getList().setContent(allFileItems);
 		view.refresh();
 	}
 
-	public void onMoveToParentDirectory() {
-		if (!model.getDirectoryModel().canAscend())
+	public void onMoveToParentFolder() {
+		if (!model.getFolderModel().canAscend())
 			return;
 		model.moveToParentDirectory(createRefreshListener());
 	}
 
-	public void onChangeToDirectory(int level, Folder directory) {
+	public void onChangeToFolder(int level, Folder directory) {
 		model.changeToDirectory(level, directory, createRefreshListener());
 	}
 

@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
@@ -24,13 +24,13 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryContextGlue implements DirectoryContextPopup {
+public class FolderContextGlue implements FolderContextPopup {
 
-	private final DirectoryContextPresenter presenter;
+	private final FolderContextPresenter presenter;
 	private final FileItemContextComponent popup;
 
-	public DirectoryContextGlue(FileItemContextComponent popup,
-			DirectoryContextPresenter presenter,
+	public FolderContextGlue(FileItemContextComponent popup,
+			FolderContextPresenter presenter,
 			ActionListenerDelegator actionDelegator) {
 		this.popup = popup;
 		this.presenter = presenter;
@@ -38,7 +38,7 @@ public class DirectoryContextGlue implements DirectoryContextPopup {
 		actionDelegator.setActionListener(presenter);
 	}
 
-	public void setDirectoryActionHandler(FileSystemActionHandler actionHandler) {
+	public void setFolderActionHandler(FileSystemActionHandler actionHandler) {
 		presenter.setDirectoryActionHandler(actionHandler);
 	}
 
@@ -60,9 +60,9 @@ public class DirectoryContextGlue implements DirectoryContextPopup {
 		popup.hide();
 	}
 
-	public void update(Folder directory, Widget parent) {
+	public void update(Folder folder, Widget parent) {
 		popup.setParentWidget(parent);
-		presenter.setDirectory(directory);
+		presenter.setFolder(folder);
 	}
 
 	public void addPopupListener(final ContextPopupListener contextPopupListener) {

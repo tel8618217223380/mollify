@@ -1,6 +1,9 @@
 <?php
 	class ConfigurationProvider {
-		function initialize($request, $env) {}
+		protected $env;
+		function initialize($request, $env) {
+			$this->env = $env;
+		}
 		
 		function initializeSession($session, $userId) {
 			$session->setSessionParam('default_file_permission', $this->getDefaultUserPermissionMode($userId));

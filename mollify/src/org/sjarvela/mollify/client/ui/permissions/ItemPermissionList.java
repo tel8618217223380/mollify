@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -31,7 +31,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 	public static List<GridColumn> ALL_COLUMNS = null;
 
 	private final TextProvider textProvider;
-	private Formatter<FilePermissionMode> filePermissionFormatter;
+	private Formatter<FilePermission> filePermissionFormatter;
 
 	public ItemPermissionList(TextProvider textProvider, String style) {
 		super(StyleConstants.ITEM_PERMISSION_LIST_HEADER,
@@ -71,7 +71,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		if (column.equals(ItemPermissionList.COLUMN_USER))
 			text = userPermission.getUser().getName();
 		else if (column.equals(ItemPermissionList.COLUMN_PERMISSION)) {
-			FilePermissionMode permission = userPermission.getPermission();
+			FilePermission permission = userPermission.getPermission();
 
 			text = filePermissionFormatter != null ? filePermissionFormatter
 					.format(permission) : permission
@@ -88,7 +88,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 	}
 
 	public void setPermissionFormatter(
-			Formatter<FilePermissionMode> filePermissionFormatter) {
+			Formatter<FilePermission> filePermissionFormatter) {
 		this.filePermissionFormatter = filePermissionFormatter;
 	}
 

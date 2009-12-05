@@ -28,14 +28,14 @@ import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
-import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelector;
-import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupHandler;
-import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopup;
-import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopup;
+import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
+import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -52,13 +52,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	private final MainViewModel model;
 	private final Panel buttonPanel;
-	private final DirectorySelector directorySelector;
+	private final FolderSelector directorySelector;
 	private final FileList list;
 
 	private final FileContextPopup fileContextPopup;
 	private final ContextPopupHandler<File> fileContextHandler;
 
-	private final DirectoryContextPopup directoryContextPopup;
+	private final FolderContextPopup directoryContextPopup;
 	private final ContextPopupHandler<Folder> directoryContextHandler;
 
 	private DropdownButton addButton;
@@ -73,9 +73,9 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
 			ActionListener actionListener,
-			DirectorySelectorFactory directorySelectorFactory,
+			FolderSelectorFactory directorySelectorFactory,
 			FileContextPopupFactory fileContextPopupFactory,
-			DirectoryContextPopupFactory directoryContextPopupFactory) {
+			FolderContextPopupFactory directoryContextPopupFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
@@ -114,7 +114,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {
-		directoryContextPopup.setDirectoryActionHandler(actionHandler);
+		directoryContextPopup.setFolderActionHandler(actionHandler);
 	}
 
 	public FileList getList() {
@@ -254,7 +254,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return refreshButton;
 	}
 
-	public DirectorySelector getDirectorySelector() {
+	public FolderSelector getDirectorySelector() {
 		return directorySelector;
 	}
 
@@ -266,7 +266,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return fileContextPopup;
 	}
 
-	public DirectoryContextPopup getDirectoryContext() {
+	public FolderContextPopup getDirectoryContext() {
 		return directoryContextPopup;
 	}
 

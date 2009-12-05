@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModelProvider;
@@ -17,26 +17,26 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.mainview.impl.MainViewModel;
 
-public class DirectorySelectorFactory implements FolderModelProvider {
+public class FolderSelectorFactory implements FolderModelProvider {
 	private final MainViewModel model;
-	private final DirectoryListItemFactory listItemFactory;
+	private final FolderListItemFactory listItemFactory;
 	private final TextProvider textProvider;
 
-	public DirectorySelectorFactory(final MainViewModel model,
+	public FolderSelectorFactory(final MainViewModel model,
 			final FileSystemService fileServices, TextProvider textProvider,
-			FolderProvider directoryProvider) {
+			FolderProvider folderProvider) {
 		this.model = model;
 		this.textProvider = textProvider;
-		this.listItemFactory = new DirectoryListItemFactory(textProvider,
-				directoryProvider);
+		this.listItemFactory = new FolderListItemFactory(textProvider,
+				folderProvider);
 	}
 
-	public DirectorySelector createSelector() {
-		return new DirectorySelector(textProvider, this, listItemFactory);
+	public FolderSelector createSelector() {
+		return new FolderSelector(textProvider, this, listItemFactory);
 	}
 
 	public FolderModel getFolderModel() {
-		return model.getDirectoryModel();
+		return model.getFolderModel();
 	}
 
 }

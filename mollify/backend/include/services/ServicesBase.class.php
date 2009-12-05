@@ -9,7 +9,7 @@
 			$this->request = $request;
 			$this->path = $path;
 			
-			if (!$this->isValidPath($this->request->method(), $this->path)) throw new ServiceException("INVALID_REQUEST", "Invalid path: ".strtoupper($this->request->method())." ".$this->request->URI());
+			if (!$this->isValidPath($this->request->method(), $this->path)) throw $this->invalidRequestException();
 		}
 		
 		public function isAuthenticationRequired() {
@@ -17,7 +17,7 @@
 		}
 		
 		protected function isValidPath($method, $path) {
-			return count($path) == 0;
+			return FALSE;
 		}
 		
 		public function response() {
@@ -26,16 +26,16 @@
 		
 		public function processRequest() {
 			switch($this->request->method()) {
-				case Request::$METHOD_GET:
+				case Request::METHOD_GET:
 					$this->processGet();
 					break;
-				case Request::$METHOD_PUT:
+				case Request::METHOD_PUT:
 					$this->processPut();
 					break;
-				case Request::$METHOD_POST:
+				case Request::METHOD_POST:
 					$this->processPost();
 					break;
-				case Request::$METHOD_DELETE:
+				case Request::METHOD_DELETE:
 					$this->processDelete();
 					break;
 				default:
@@ -50,6 +50,10 @@
 		function processPost() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'post'"); }
 		
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
+		
+		protected function invalidRequestException() {
+			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->request->method())." ".$this->request->URI());
+		}
 		
 		function log() {
 			if (!Logging::isDebug()) return;

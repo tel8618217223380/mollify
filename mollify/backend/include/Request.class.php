@@ -1,9 +1,9 @@
 <?php
 	class Request {
-		public static $METHOD_GET = 'get';
-		public static $METHOD_PUT = 'put';
-		public static $METHOD_POST = 'post';
-		public static $METHOD_DELETE = 'delete';
+		const METHOD_GET = 'get';
+		const METHOD_PUT = 'put';
+		const METHOD_POST = 'post';
+		const METHOD_DELETE = 'delete';
 		
 		private $method;
 		private $uri;
@@ -18,17 +18,17 @@
 			$this->data = NULL;
 			
 			switch($this->method) {
-				case self::$METHOD_GET:
+				case self::METHOD_GET:
 					$this->params = $_GET;
 					break;
-				case self::$METHOD_POST:
+				case self::METHOD_POST:
 					$this->params = $_POST;
-				case self::$METHOD_PUT:
+				case self::METHOD_PUT:
 					$data = file_get_contents("php://input");
 					if ($data and strlen($data) > 0)
 						$this->data = json_decode($data, TRUE);
 					break;
-				case self::$METHOD_DELETE:
+				case self::METHOD_DELETE:
 					break;
 				default:
 					throw new Exception("Unsupported method: ".$this->method);
@@ -57,6 +57,16 @@
 		
 		public function param($param) {
 			return $this->params[$param];
+		}
+
+		public function hasData($key = NULL) {
+			if ($key === NULL) return ($this->data != NULL);
+			if (!is_array($this->data)) return FALSE;
+			return array_key_exists($key, $this->data);
+		}
+		
+		public function data($key) {
+			return $this->data[$key];
 		}
 		
 		public function log() {

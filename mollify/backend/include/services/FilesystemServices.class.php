@@ -25,8 +25,7 @@
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
 			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
-			if ($item->isFile()) throw new ServiceException("INVALID_REQUEST", "Invalid file request: ".strtoupper($this->request->method())." ".$this->request->URI());
-
+			if ($item->isFile()) throw $this->invalidRequestException();
 			$this->processPostFolder($item);
 		}
 		
@@ -44,14 +43,16 @@
 				case 'details':
 					$this->response()->success($item->details());
 					break;
+				case 'permissions':
+					$this->response()->success($item->allPermissions());
+					break;
 				default:
-					throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+					throw $this->invalidRequestException();
 			}
 		}
 		
 		private function processPutFile($item) {
-			if (count($this->path) < 2)
-				throw new ServiceException("INVALID_REQUEST", "Invalid file request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			if (count($this->path) < 2) throw invalidRequestException();
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
@@ -61,12 +62,12 @@
 					$this->response()->success($item->setDescription($this->request->data));
 					break;
 				default:
-					throw new ServiceException("INVALID_REQUEST", "Invalid file request: ".strtoupper($this->request->method())." ".$this->request->URI());
+					throw $this->invalidRequestException();
 			}
 		}
 		
 		private function processGetFolder($item) {
-			if (count($this->path) != 2) throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			if (count($this->path) != 2) throw invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
 				case 'items':
@@ -82,12 +83,12 @@
 					$this->response()->success($item->details());
 					break;
 				default:
-					throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+					throw $this->invalidRequestException();
 			}
 		}
 		
 		private function processPostFolder($item) {
-			if (count($this->path) != 1) throw new ServiceException("INVALID_REQUEST", "Invalid folder request: ".strtoupper($this->request->method())." ".$this->request->URI());
+			if (count($this->path) != 1) throw $this->invalidRequestException();
 			
 			$this->env->features()->assertFeature("file_upload");
 			$this->env->filesystem()->uploadToFolder($item);

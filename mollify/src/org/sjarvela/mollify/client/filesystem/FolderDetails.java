@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -13,8 +13,8 @@ public class FolderDetails extends JavaScriptObject {
 		return this.id;
 	}-*/;
 
-	public final FilePermissionMode getFilePermission() {
-		return FilePermissionMode.fromString(getFilePermissionString());
+	public final FilePermission getFilePermission() {
+		return FilePermission.fromString(getFilePermissionString());
 	}
 
 	public final native String getDescription() /*-{
@@ -25,7 +25,7 @@ public class FolderDetails extends JavaScriptObject {
 		return this.permissions;
 	}-*/;
 
-	public static FolderDetails create(FilePermissionMode permissions,
+	public static FolderDetails create(FilePermission permissions,
 			String description) {
 		FolderDetails result = FolderDetails.createObject().cast();
 		result.putValues(permissions.getStringValue(), description);

@@ -78,7 +78,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("AUTH: is_authenticated_required=".$this->isAuthenticationRequired().", is_authenticated=".$this->isAuthenticated());
+			Logging::logDebug("AUTH: is_authentication_required=".$this->isAuthenticationRequired().", is_authenticated=".$this->isAuthenticated());
 		}
 	}
 ?>

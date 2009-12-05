@@ -17,7 +17,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.ListBox;
@@ -47,7 +47,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 
 	private ListBox<User> user;
 	private TextBox userLabel;
-	private ListBox<FilePermissionMode> permission;
+	private ListBox<FilePermission> permission;
 
 	public FileItemUserPermissionDialog(TextProvider textProvider,
 			FileItemUserPermissionHandler handler, List<User> availableUsers) {
@@ -86,8 +86,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 		permission = new ListBox();
 		permission
 				.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_PERMISSION);
-		permission.setFormatter(new Formatter<FilePermissionMode>() {
-			public String format(FilePermissionMode mode) {
+		permission.setFormatter(new Formatter<FilePermission>() {
+			public String format(FilePermission mode) {
 				return mode.getLocalizedText(textProvider);
 			}
 		});
@@ -113,8 +113,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	protected void initialize() {
 		super.initialize();
 
-		permission.setContent(Arrays.asList(FilePermissionMode.ReadOnly,
-				FilePermissionMode.ReadWrite));
+		permission.setContent(Arrays.asList(FilePermission.ReadOnly,
+				FilePermission.ReadWrite));
 
 		if (Mode.Add.equals(this.mode)) {
 			user.setContent(availableUsers);
@@ -192,8 +192,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	}
 
 	protected void onEditPermission() {
-		FilePermissionMode permission = this.permission.getSelectedItem();
-		if (FilePermissionMode.None.equals(permission))
+		FilePermission permission = this.permission.getSelectedItem();
+		if (FilePermission.None.equals(permission))
 			return;
 
 		handler.editFileItemUserPermission(new FileItemUserPermission(original

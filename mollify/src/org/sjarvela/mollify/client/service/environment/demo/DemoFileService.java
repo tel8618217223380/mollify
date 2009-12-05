@@ -22,7 +22,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
@@ -99,11 +99,11 @@ public class DemoFileService implements FileSystemService {
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache itemCache) {
 		FileItemUserPermission defaultPermission = new FileItemUserPermission(
-				item, null, FilePermissionMode.ReadOnly);
+				item, null, FilePermission.ReadOnly);
 		FileItemUserPermission p1 = new FileItemUserPermission(item, data
-				.getUsers().get(0), FilePermissionMode.ReadOnly);
+				.getUsers().get(0), FilePermission.ReadOnly);
 		FileItemUserPermission p2 = new FileItemUserPermission(item, data
-				.getUsers().get(1), FilePermissionMode.ReadWrite);
+				.getUsers().get(1), FilePermission.ReadWrite);
 		resultListener.onSuccess(Arrays.asList(defaultPermission, p1, p2));
 	}
 

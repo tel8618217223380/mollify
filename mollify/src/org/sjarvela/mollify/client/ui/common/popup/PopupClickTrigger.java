@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.popup;
 
-import org.sjarvela.mollify.client.ui.directoryselector.DirectoryListMenu;
+import org.sjarvela.mollify.client.ui.folderselector.FolderListMenu;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,7 +24,7 @@ public class PopupClickTrigger {
 		button.addClickHandler(createClickHandler(menu));
 	}
 
-	public PopupClickTrigger(Label label, DirectoryListMenu menu) {
+	public PopupClickTrigger(Label label, FolderListMenu menu) {
 		label.addClickHandler(createClickHandler(menu));
 	}
 

@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.testutil.MockConfigurationService;
@@ -53,9 +53,9 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 
 		fileSystemService = new MockFileSystemService();
 		fileSystemService.setPermissions(Arrays.asList(createPermission(null,
-				FilePermissionMode.ReadOnly), createPermission(user1,
-				FilePermissionMode.ReadWrite), createPermission(user2,
-				FilePermissionMode.ReadOnly)));
+				FilePermission.ReadOnly), createPermission(user1,
+				FilePermission.ReadWrite), createPermission(user2,
+				FilePermission.ReadOnly)));
 		model = new PermissionEditorModel(item, configurationService,
 				fileSystemService);
 
@@ -74,11 +74,11 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		assertTrue(model.getUsers().contains(user2));
 		assertTrue(model.getUsers().contains(user3));
 
-		assertEquals(FilePermissionMode.ReadOnly, model.getDefaultPermission());
+		assertEquals(FilePermission.ReadOnly, model.getDefaultPermission());
 
 		assertEquals(2, model.getUserSpecificPermissions().size());
-		assertEquals(FilePermissionMode.ReadWrite, getPermission(user1));
-		assertEquals(FilePermissionMode.ReadOnly, getPermission(user2));
+		assertEquals(FilePermission.ReadWrite, getPermission(user1));
+		assertEquals(FilePermission.ReadOnly, getPermission(user2));
 	}
 
 	@Test
@@ -86,23 +86,23 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		fileSystemService.setPermissions(Collections.EMPTY_LIST);
 		model.refresh(this);
 
-		assertEquals(FilePermissionMode.None, model.getDefaultPermission());
+		assertEquals(FilePermission.None, model.getDefaultPermission());
 		assertEquals(0, model.getUserSpecificPermissions().size());
 	}
 
 	@Test
 	public void testUpdates() {
 		FileItemUserPermission permission = createPermission(user3,
-				FilePermissionMode.ReadOnly);
+				FilePermission.ReadOnly);
 
 		model.addPermission(permission);
 		assertEquals(3, model.getUserSpecificPermissions().size());
-		assertEquals(FilePermissionMode.ReadOnly, getPermission(user3));
+		assertEquals(FilePermission.ReadOnly, getPermission(user3));
 
-		permission = createPermission(user3, FilePermissionMode.ReadWrite);
+		permission = createPermission(user3, FilePermission.ReadWrite);
 		model.editPermission(permission);
 		assertEquals(3, model.getUserSpecificPermissions().size());
-		assertEquals(FilePermissionMode.ReadWrite, getPermission(user3));
+		assertEquals(FilePermission.ReadWrite, getPermission(user3));
 
 		model.removePermission(permission);
 		assertEquals(2, model.getUserSpecificPermissions().size());
@@ -114,7 +114,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		assertFalse(model.hasChanged());
 
 		FileItemUserPermission permission = createPermission(user3,
-				FilePermissionMode.ReadOnly);
+				FilePermission.ReadOnly);
 
 		model.addPermission(permission);
 		assertTrue(model.hasChanged());
@@ -141,20 +141,20 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	public void testHasChangedWithDefaultPermission() {
 		assertFalse(model.hasChanged());
 
-		model.setDefaultPermission(FilePermissionMode.ReadOnly);
+		model.setDefaultPermission(FilePermission.ReadOnly);
 		assertTrue(model.hasChanged());
 
-		model.setDefaultPermission(FilePermissionMode.ReadWrite);
+		model.setDefaultPermission(FilePermission.ReadWrite);
 		assertTrue(model.hasChanged());
 
-		model.setDefaultPermission(FilePermissionMode.None);
+		model.setDefaultPermission(FilePermission.None);
 		assertFalse(model.hasChanged());
 	}
 
 	@Test
 	public void testCommit() {
 		FileItemUserPermission newPermission = createPermission(user3,
-				FilePermissionMode.ReadOnly);
+				FilePermission.ReadOnly);
 		model.addPermission(newPermission);
 		model.editPermission(newPermission);
 
@@ -179,7 +179,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 				.getModifiedPermissions().get(0));
 	}
 
-	private FilePermissionMode getPermission(User user) {
+	private FilePermission getPermission(User user) {
 		FileItemUserPermission permission = getUserPermission(user);
 		if (permission == null)
 			return null;
@@ -195,7 +195,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	}
 
 	private FileItemUserPermission createPermission(User user,
-			FilePermissionMode permission) {
+			FilePermission permission) {
 		return new FileItemUserPermission(item, user, permission);
 	}
 

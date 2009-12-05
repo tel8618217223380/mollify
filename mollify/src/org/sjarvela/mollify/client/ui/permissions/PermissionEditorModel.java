@@ -23,7 +23,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserCache;
@@ -131,7 +131,7 @@ public class PermissionEditorModel {
 		modifiedPermissions.clear();
 		removedPermissions.clear();
 		defaultPermission = new FileItemUserPermission(item, null,
-				FilePermissionMode.None);
+				FilePermission.None);
 
 		for (FileItemUserPermission permission : permissions) {
 			if (permission.getUser() != null) {
@@ -167,11 +167,11 @@ public class PermissionEditorModel {
 				|| removedPermissions.size() > 0;
 	}
 
-	public FilePermissionMode getDefaultPermission() {
+	public FilePermission getDefaultPermission() {
 		return defaultPermission.getPermission();
 	}
 
-	public void setDefaultPermission(FilePermissionMode permission) {
+	public void setDefaultPermission(FilePermission permission) {
 		// remove old default permission from update lists
 		removedPermissions.remove(defaultPermission);
 		newPermissions.remove(defaultPermission);
@@ -180,7 +180,7 @@ public class PermissionEditorModel {
 		// create new default permission
 		defaultPermission = new FileItemUserPermission(item, null, permission);
 
-		if (FilePermissionMode.None.equals(permission))
+		if (FilePermission.None.equals(permission))
 			return;
 
 		if (originalDefaultPermissionExists)
@@ -193,7 +193,7 @@ public class PermissionEditorModel {
 		return effectivePermissions;
 	}
 
-	public void addPermission(User user, FilePermissionMode permission) {
+	public void addPermission(User user, FilePermission permission) {
 		addPermission(new FileItemUserPermission(item, user, permission));
 	}
 

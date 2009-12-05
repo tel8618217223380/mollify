@@ -23,7 +23,7 @@ import com.google.gwt.core.client.JsArray;
 public class FileItemUserPermission {
 	private final FileSystemItem item;
 	private final User user;
-	private final FilePermissionMode permission;
+	private final FilePermission permission;
 
 	public static List<FileItemUserPermission> convert(
 			List<JsFileItemUserPermission> permissions, UserCache userCache,
@@ -34,7 +34,7 @@ public class FileItemUserPermission {
 			User user = jsPermission.isDefault() ? null : userCache
 					.getUser(jsPermission.getUserId());
 			FileSystemItem item = itemCache.getItem(jsPermission.getItemId());
-			FilePermissionMode permission = jsPermission.getPermission();
+			FilePermission permission = jsPermission.getPermission();
 
 			result.add(new FileItemUserPermission(item, user, permission));
 		}
@@ -56,7 +56,7 @@ public class FileItemUserPermission {
 	}
 
 	public FileItemUserPermission(FileSystemItem item, User user,
-			FilePermissionMode permission) {
+			FilePermission permission) {
 		this.item = item;
 		this.user = user;
 		this.permission = permission;
@@ -70,7 +70,7 @@ public class FileItemUserPermission {
 		return user;
 	}
 
-	public FilePermissionMode getPermission() {
+	public FilePermission getPermission() {
 		return permission;
 	}
 

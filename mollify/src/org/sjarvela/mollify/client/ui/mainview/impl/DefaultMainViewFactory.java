@@ -26,10 +26,10 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.directoryselector.DirectorySelectorFactory;
-import org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext.DirectoryContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
@@ -88,11 +88,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		MainViewModel model = new MainViewModel(fileSystemService, session,
 				fileSystemItemProvider);
 
-		DirectorySelectorFactory directorySelectorFactory = new DirectorySelectorFactory(
+		FolderSelectorFactory directorySelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileSystemService, textProvider, session);
-		DirectoryContextPopupFactory directoryContextPopupFactory = new DirectoryContextPopupFactory(
+		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
 				textProvider, fileSystemService, session);
 		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
 				textProvider, windowManager, dialogManager,

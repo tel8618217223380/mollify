@@ -8,25 +8,25 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 
-public class DirectoryListItemFactory {
+public class FolderListItemFactory {
 	private FolderProvider provider;
 	private TextProvider textProvider;
 
-	public DirectoryListItemFactory(TextProvider textProvider,
+	public FolderListItemFactory(TextProvider textProvider,
 			FolderProvider provider) {
 		this.textProvider = textProvider;
 		this.provider = provider;
 	}
 
-	public DirectoryListItem createListItem(DirectoryListener listener,
+	public FolderListItem createListItem(FolderListener listener,
 			String style, Folder current, int level, Folder parent) {
-		return new DirectoryListItem(style, current, level, parent, provider,
+		return new FolderListItem(style, current, level, parent, provider,
 				listener, textProvider);
 	}
 
