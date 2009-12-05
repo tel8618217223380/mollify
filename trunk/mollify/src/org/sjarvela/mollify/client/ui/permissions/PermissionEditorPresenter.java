@@ -23,7 +23,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -46,7 +46,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 			DialogManager dialogManager,
 			DefaultPermissionEditorViewFactory permissionEditorViewFactory,
 			ItemSelectorFactory itemSelectorFactory,
-			Formatter<FilePermissionMode> filePermissionFormatter,
+			Formatter<FilePermission> filePermissionFormatter,
 			FileSystemItemProvider fileSystemItemProvider) {
 		this.textProvider = textProvider;
 		this.model = model;
@@ -75,7 +75,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 
 	public void initialize() {
 		view.getDefaultPermission().setContent(
-				Arrays.asList(FilePermissionMode.values()));
+				Arrays.asList(FilePermission.values()));
 
 		updateView();
 	}
@@ -165,7 +165,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void addFileItemUserPermission(User user,
-			FilePermissionMode permission) {
+			FilePermission permission) {
 		model.addPermission(user, permission);
 		refreshList();
 	}
@@ -175,7 +175,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		refreshList();
 	}
 
-	public void onDefaultPermissionChanged(FilePermissionMode defaultPermission) {
+	public void onDefaultPermissionChanged(FilePermission defaultPermission) {
 		model.setDefaultPermission(defaultPermission);
 	}
 

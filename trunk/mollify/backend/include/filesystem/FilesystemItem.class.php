@@ -28,6 +28,10 @@
 		public function permission() {
 			return $this->filesystem->permission($this);
 		}
+
+		public function allPermissions() {
+			return $this->filesystem->allPermissions($this);
+		}
 		
 		public function rootId() {
 			return $this->rootId;

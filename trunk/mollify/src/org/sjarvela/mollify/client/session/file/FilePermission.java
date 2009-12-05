@@ -2,12 +2,12 @@ package org.sjarvela.mollify.client.session.file;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 
-public enum FilePermissionMode {
+public enum FilePermission {
 	None(""), ReadWrite("rw"), ReadOnly("ro");
 
 	private String stringValue;
 
-	FilePermissionMode(String value) {
+	FilePermission(String value) {
 		this.stringValue = value;
 	}
 
@@ -25,10 +25,10 @@ public enum FilePermissionMode {
 		throw new RuntimeException("Unlocalized permission: " + this.name());
 	}
 
-	public static FilePermissionMode fromString(String value) {
+	public static FilePermission fromString(String value) {
 		String val = value.trim().toLowerCase();
 
-		for (FilePermissionMode permission : FilePermissionMode.values()) {
+		for (FilePermission permission : FilePermission.values()) {
 			if (permission.stringValue.equals(val))
 				return permission;
 		}

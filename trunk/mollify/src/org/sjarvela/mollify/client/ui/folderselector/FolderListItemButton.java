@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
@@ -28,33 +28,33 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
 
-public class DirectoryListItemButton extends FlowPanel {
+public class FolderListItemButton extends FlowPanel {
 	private final Label left;
 	private final Label center;
 	private final Label right;
 	private final Button dropDown;
-	private DirectoryListMenu menu = null;
+	private FolderListMenu menu = null;
 
-	public DirectoryListItemButton(String itemStyle) {
+	public FolderListItemButton(String itemStyle) {
 		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM_BUTTON);
 		if (itemStyle != null)
 			this.addStyleDependentName(itemStyle);
 
 		MouseOutHandler mouseOutHandler = new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
-				DirectoryListItemButton.this.onMouseUp();
+				FolderListItemButton.this.onMouseUp();
 			}
 		};
 
 		MouseDownHandler mouseDownHandler = new MouseDownHandler() {
 			public void onMouseDown(MouseDownEvent event) {
-				DirectoryListItemButton.this.onMouseDown();
+				FolderListItemButton.this.onMouseDown();
 			}
 		};
 
 		MouseUpHandler mouseUpHandler = new MouseUpHandler() {
 			public void onMouseUp(MouseUpEvent event) {
-				DirectoryListItemButton.this.onMouseUp();
+				FolderListItemButton.this.onMouseUp();
 			}
 		};
 
@@ -118,7 +118,7 @@ public class DirectoryListItemButton extends FlowPanel {
 		center.addClickHandler(clickHandler);
 	}
 
-	public void setDropdownMenu(DirectoryListMenu menu) {
+	public void setDropdownMenu(FolderListMenu menu) {
 		this.menu = menu;
 		new PopupClickTrigger(dropDown, menu);
 	}

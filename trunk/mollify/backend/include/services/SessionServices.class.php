@@ -7,8 +7,8 @@
 		protected function isValidPath($method, $path) {
 			if (count($path) < 1) return FALSE;
 			
-			if ($method === Request::$METHOD_GET and !in_array($path[0], self::$GET_ITEMS)) return FALSE;
-			if ($method === Request::$METHOD_POST and !in_array($path[0], self::$POST_ITEMS)) return FALSE;
+			if ($method === Request::METHOD_GET and !in_array($path[0], self::$GET_ITEMS)) return FALSE;
+			if ($method === Request::METHOD_POST and !in_array($path[0], self::$POST_ITEMS)) return FALSE;
 			if ($path[0] === 'info' and count($path) < 2) return FALSE;
 			
 			return TRUE;
@@ -33,15 +33,16 @@
 		}
 		
 		private function authenticate() {
-			if (!$this->request->hasParam("username") or !$this->request->hasParam("password") or !$this->request->hasParam("protocol_version"))
+			if (!$this->request->hasData("username") or !$this->request->hasData("password") or !$this->request->hasData("protocol_version"))
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
-			$this->env->authentication()->authenticate($this->request->param("username"), $this->request->param("password"));
-			$this->response()->success($this->getSessionInfo($this->request->param("protocol_version")));
+			$this->env->authentication()->authenticate($this->request->data("username"), $this->request->data("password"));
+			$this->response()->success($this->getSessionInfo($this->request->data("protocol_version")));
 		}
 		
 		private function getSessionInfo($protocolVersion) {
 			Logging::logDebug("Requesting session info for protocol version ".$protocolVersion);
+			
 			if ($protocolVersion != self::$PROTOCOL_VERSION)
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported protocol version [".$protocolVersion."], expected [".self::$PROTOCOL_VERSION."]");
 			$this->env->configuration()->checkProtocolVersion($protocolVersion);

@@ -24,7 +24,7 @@ import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.FeatureInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
@@ -134,13 +134,13 @@ public class DemoData {
 	}
 
 	public FolderDetails getDirectoryDetails(Folder directory) {
-		return FolderDetails.create(FilePermissionMode.ReadWrite,
+		return FolderDetails.create(FilePermission.ReadWrite,
 				DESCRIPTION);
 	}
 
 	public FileDetails getFileDetails(File file) {
 		Date now = DateTime.getInstance().currentTime();
 		return FileDetails.create(now, now, now, DESCRIPTION,
-				FilePermissionMode.ReadWrite);
+				FilePermission.ReadWrite);
 	}
 }

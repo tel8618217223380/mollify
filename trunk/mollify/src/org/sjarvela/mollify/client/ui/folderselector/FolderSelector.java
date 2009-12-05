@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,20 +27,20 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusWidget;
 
-public class DirectorySelector extends FlowPanel implements DirectoryListener {
-	private final FolderModelProvider directoryModelProvider;
-	private final DirectoryListItemFactory listItemFactory;
+public class FolderSelector extends FlowPanel implements FolderListener {
+	private final FolderModelProvider folderModelProvider;
+	private final FolderListItemFactory listItemFactory;
 	private final TextProvider textProvider;
-	private final List<DirectoryListener> listeners = new ArrayList();
+	private final List<FolderListener> listeners = new ArrayList();
 
-	private final DirectoryListItem homeItem;
+	private final FolderListItem homeItem;
 	private final Button upButton;
 
-	public DirectorySelector(TextProvider textProvider,
-			FolderModelProvider directoryModelProvider,
-			DirectoryListItemFactory listItemFactory) {
+	public FolderSelector(TextProvider textProvider,
+			FolderModelProvider folderModelProvider,
+			FolderListItemFactory listItemFactory) {
 		this.textProvider = textProvider;
-		this.directoryModelProvider = directoryModelProvider;
+		this.folderModelProvider = folderModelProvider;
 		this.listItemFactory = listItemFactory;
 		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
 
@@ -48,7 +48,7 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		this.homeItem = createHomeButton();
 	}
 
-	public void addListener(DirectoryListener listener) {
+	public void addListener(FolderListener listener) {
 		this.listeners.add(listener);
 	}
 
@@ -72,14 +72,14 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 
 		button.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				DirectorySelector.this.onMoveToParentDirectory();
+				FolderSelector.this.onMoveToParentFolder();
 			}
 		});
 		return button;
 	}
 
-	private DirectoryListItem createHomeButton() {
-		DirectoryListItem item = listItemFactory.createListItem(this,
+	private FolderListItem createHomeButton() {
+		FolderListItem item = listItemFactory.createListItem(this,
 				StyleConstants.DIRECTORY_LISTITEM_HOME, Folder.Empty, 0,
 				Folder.Empty);
 		item.addDropdownTooltip(new Tooltip(
@@ -97,18 +97,18 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		FlowPanel items = new FlowPanel();
 		items.setStyleName(StyleConstants.DIRECTORY_SELECTOR_ITEMS);
 
-		for (DirectoryListItem item : createItems())
+		for (FolderListItem item : createItems())
 			items.add(item);
 		this.add(items);
 	}
 
-	private List<DirectoryListItem> createItems() {
-		ListIterator<Folder> list = directoryModelProvider
+	private List<FolderListItem> createItems() {
+		ListIterator<Folder> list = folderModelProvider
 				.getFolderModel().getDirectories();
 		int level = 1;
 		Folder parent = Folder.Empty;
 
-		List<DirectoryListItem> items = new ArrayList();
+		List<FolderListItem> items = new ArrayList();
 		while (list.hasNext()) {
 			Folder current = list.next();
 
@@ -129,13 +129,13 @@ public class DirectorySelector extends FlowPanel implements DirectoryListener {
 		return items;
 	}
 
-	public void onChangeToDirectory(int level, Folder directory) {
-		for (DirectoryListener listener : listeners)
-			listener.onChangeToDirectory(level, directory);
+	public void onChangeToFolder(int level, Folder directory) {
+		for (FolderListener listener : listeners)
+			listener.onChangeToFolder(level, directory);
 	}
 
-	public void onMoveToParentDirectory() {
-		for (DirectoryListener listener : listeners)
-			listener.onMoveToParentDirectory();
+	public void onMoveToParentFolder() {
+		for (FolderListener listener : listeners)
+			listener.onMoveToParentFolder();
 	}
 }

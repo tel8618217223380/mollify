@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.ui.folderselector;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
@@ -22,22 +22,22 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DirectoryListItem extends FlowPanel {
-	private final DirectoryListener listener;
+public class FolderListItem extends FlowPanel {
+	private final FolderListener listener;
 	private final FolderProvider dataProvider;
 	private final TextProvider textProvider;
 
 	private final String itemStyle;
-	private final Folder currentDirectory;
+	private final Folder current;
 	private final int level;
 
-	private DirectoryListItemButton button;
+	private FolderListItemButton button;
 
-	public DirectoryListItem(String itemStyle, Folder currentDirectory,
+	public FolderListItem(String itemStyle, Folder currentDirectory,
 			int level, Folder parentDirectory, FolderProvider provider,
-			DirectoryListener listener, TextProvider textProvider) {
+			FolderListener listener, TextProvider textProvider) {
 		this.itemStyle = itemStyle;
-		this.currentDirectory = currentDirectory;
+		this.current = currentDirectory;
 		this.level = level;
 
 		this.dataProvider = provider;
@@ -52,19 +52,19 @@ public class DirectoryListItem extends FlowPanel {
 	}
 
 	private Widget createButton() {
-		button = new DirectoryListItemButton(itemStyle);
-		button.setText(currentDirectory.getName());
+		button = new FolderListItemButton(itemStyle);
+		button.setText(current.getName());
 		button.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				listener.onChangeToDirectory(level, currentDirectory);
+				listener.onChangeToFolder(level, current);
 			}
 		});
 		button.setDropdownMenu(createMenu(button.getElement()));
 		return button;
 	}
 
-	private DirectoryListMenu createMenu(Element popupElement) {
-		return new DirectoryListMenu(itemStyle, currentDirectory, level + 1,
+	private FolderListMenu createMenu(Element popupElement) {
+		return new FolderListMenu(itemStyle, current, level + 1,
 				dataProvider, listener, textProvider, this);
 	}
 

@@ -8,28 +8,28 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
-import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
-public class DirectoryContextPopupFactory {
+public class FolderContextPopupFactory {
 	private final TextProvider textProvider;
-	private final DirectoryDetailsProvider detailsProvider;
+	private final FolderDetailsProvider detailsProvider;
 	private final SessionInfo session;
 
-	public DirectoryContextPopupFactory(TextProvider textProvider,
-			DirectoryDetailsProvider detailsProvider, SessionInfo session) {
+	public FolderContextPopupFactory(TextProvider textProvider,
+			FolderDetailsProvider detailsProvider, SessionInfo session) {
 		this.textProvider = textProvider;
 		this.detailsProvider = detailsProvider;
 		this.session = session;
 	}
 
-	public DirectoryContextPopup createPopup() {
+	public FolderContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
 		boolean descriptionEditable = session.getDefaultPermissionMode()
@@ -44,8 +44,8 @@ public class DirectoryContextPopupFactory {
 						.getDefaultPermissionMode().hasWritePermission(),
 				descriptionEditable, permissionsEditable, session.getFeatures()
 						.zipDownload(), actionDelegator);
-		DirectoryContextPresenter presenter = new DirectoryContextPresenter(
+		FolderContextPresenter presenter = new FolderContextPresenter(
 				popup, session, detailsProvider, textProvider);
-		return new DirectoryContextGlue(popup, presenter, actionDelegator);
+		return new FolderContextGlue(popup, presenter, actionDelegator);
 	}
 }

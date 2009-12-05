@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.directorycontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
-import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -26,20 +26,20 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 
-public class DirectoryContextPresenter implements ActionListener {
+public class FolderContextPresenter implements ActionListener {
 	private final FileItemContextComponent popup;
-	private final DirectoryDetailsProvider detailsProvider;
+	private final FolderDetailsProvider detailsProvider;
 	private final TextProvider textProvider;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
 	private FileItemDescriptionHandler descriptionHandler;
 
-	private Folder directory;
+	private Folder folder;
 	private FolderDetails details;
 
-	public DirectoryContextPresenter(FileItemContextComponent popup,
-			SessionInfo session, DirectoryDetailsProvider detailsProvider,
+	public FolderContextPresenter(FileItemContextComponent popup,
+			SessionInfo session, FolderDetailsProvider detailsProvider,
 			TextProvider textProvider) {
 		this.popup = popup;
 		this.detailsProvider = detailsProvider;
@@ -60,14 +60,14 @@ public class DirectoryContextPresenter implements ActionListener {
 		this.permissionHandler = permissionHandler;
 	}
 
-	public void setDirectory(Folder directory) {
-		this.directory = directory;
+	public void setFolder(Folder folder) {
+		this.folder = folder;
 
 		popup.getDetails().setOpen(false);
-		popup.getName().setText(directory.getName());
+		popup.getName().setText(folder.getName());
 		updateDetails(null);
 
-		detailsProvider.getDirectoryDetails(directory,
+		detailsProvider.getDirectoryDetails(folder,
 				new ResultListener<FolderDetails>() {
 					public void onFail(ServiceError error) {
 						popup.getDescription().setText(
@@ -116,7 +116,7 @@ public class DirectoryContextPresenter implements ActionListener {
 
 		popup.setDescriptionEditable(false, true);
 
-		this.descriptionHandler.setItemDescription(directory, description,
+		this.descriptionHandler.setItemDescription(folder, description,
 				new Callback() {
 					public void onCallback() {
 						details.setDescription(description);
@@ -131,7 +131,7 @@ public class DirectoryContextPresenter implements ActionListener {
 	}
 
 	protected void onRemoveDescription() {
-		this.descriptionHandler.removeItemDescription(directory,
+		this.descriptionHandler.removeItemDescription(folder,
 				new Callback() {
 					public void onCallback() {
 						details.removeDescription();
@@ -142,7 +142,7 @@ public class DirectoryContextPresenter implements ActionListener {
 
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
-			fileSystemActionHandler.onAction(directory,
+			fileSystemActionHandler.onAction(folder,
 					(FileSystemAction) action);
 			popup.hide();
 			return;
@@ -163,7 +163,7 @@ public class DirectoryContextPresenter implements ActionListener {
 			onRemoveDescription();
 		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
 			popup.hide();
-			permissionHandler.onEditPermissions(directory);
+			permissionHandler.onEditPermissions(folder);
 		}
 	}
 

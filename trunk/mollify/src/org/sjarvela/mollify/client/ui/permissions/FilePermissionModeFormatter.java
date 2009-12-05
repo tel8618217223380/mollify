@@ -11,18 +11,18 @@
 package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.Formatter;
 
 public class FilePermissionModeFormatter implements
-		Formatter<FilePermissionMode> {
+		Formatter<FilePermission> {
 	private final TextProvider textProvider;
 
 	public FilePermissionModeFormatter(TextProvider textProvider) {
 		this.textProvider = textProvider;
 	}
 
-	public String format(FilePermissionMode mode) {
+	public String format(FilePermission mode) {
 		return mode.getLocalizedText(textProvider);
 	}
 

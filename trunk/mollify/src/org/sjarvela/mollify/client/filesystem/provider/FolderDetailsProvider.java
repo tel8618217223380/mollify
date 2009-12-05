@@ -8,12 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.directoryselector;
+package org.sjarvela.mollify.client.filesystem.provider;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public interface DirectoryListener {
-	public void onChangeToDirectory(int level, Folder directory);
+public interface FolderDetailsProvider {
 
-	public void onMoveToParentDirectory();
+	void getDirectoryDetails(Folder directory,
+			ResultListener<FolderDetails> resultListener);
+
 }

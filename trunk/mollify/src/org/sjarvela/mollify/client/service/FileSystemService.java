@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.provider.DirectoryDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -24,7 +24,7 @@ import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
 public interface FileSystemService extends FileDetailsProvider,
-		DirectoryDetailsProvider {
+		FolderDetailsProvider {
 
 	void getDirectories(Folder parent,
 			ResultListener<List<Folder>> listener);

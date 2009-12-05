@@ -88,14 +88,20 @@
 		
 		public function rename($item, $name) {
 			$old = $item->path();
-			$new = self::joinPath(dirname($old),$new_name);
+			$new = self::joinPath(dirname($old),$name);
 			
 			if (file_exists($new)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
-			Logging.logDebug('rename from ['.$old.'] to ['.$new.']');
+			Logging::logDebug('rename from ['.$old.'] to ['.$new.']');
 			
 			if (!rename($old, $new)) return FALSE;
 			
-			$this->env->events()->onEvent(FileEvent.rename($item, $name));
+			if ($this->env->features()->isFeatureEnabled("description_update"))
+				$this->env->configuration()->moveItemDescription($item, $this->getItemFromPath($item->root(), $new));
+				
+			if ($this->env->features()->isFeatureEnabled("permission_update"))
+				$this->env->configuration()->moveItemPermission($item, $this->getItemFromPath($item->root(), $new));
+			
+			$this->env->events()->onEvent(FileEvent::rename($item, $name));
 			return TRUE;
 		}
 		
@@ -112,7 +118,12 @@
 		}
 		
 		public function permission($item) {
+			if ($this->env->authentication()->isAdmin()) return Authentication::$PERMISSION_VALUE_READWRITE;
 			return $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+		}
+
+		public function allPermissions($item) {
+			return $this->env->configuration()->getItemPermissions($item);
 		}
 		
 		public function getSessionInfo() {
@@ -177,7 +188,7 @@
 		}
 		
 		function __construct($item, $type, $data) {
-			parent::_construct(FileSystem::EVENT_TYPE_FILE, $data);
+			parent::__construct(FileSystem::EVENT_TYPE_FILE, $data);
 			$this->item = $item;
 			$this->subType = $type;
 		}
@@ -186,8 +197,8 @@
 			return $this->item;
 		}
 		
-		public function type() {
-			return $this->type;
+		public function subType() {
+			return $this->subType;
 		}
 	}
 ?>

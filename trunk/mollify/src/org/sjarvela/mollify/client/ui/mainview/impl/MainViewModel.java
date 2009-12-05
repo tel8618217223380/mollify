@@ -56,7 +56,7 @@ public class MainViewModel {
 		return session;
 	}
 
-	public FolderModel getDirectoryModel() {
+	public FolderModel getFolderModel() {
 		return directoryModel;
 	}
 

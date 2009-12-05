@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.file.FilePermissionMode;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
@@ -31,7 +31,7 @@ public class PermissionEditorView extends CenteredDialog {
 
 	private final Mode mode;
 	private final Label itemName;
-	private final ListBox<FilePermissionMode> defaultPermission;
+	private final ListBox<FilePermission> defaultPermission;
 	private final ItemPermissionList list;
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
@@ -166,7 +166,7 @@ public class PermissionEditorView extends CenteredDialog {
 		return itemName;
 	}
 
-	public ListBox<FilePermissionMode> getDefaultPermission() {
+	public ListBox<FilePermission> getDefaultPermission() {
 		return defaultPermission;
 	}
 
