@@ -80,8 +80,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				listener);
 	}
 
-	public void getFolders(
-			final ResultListener<List<FolderInfo>> resultListener) {
+	public void getFolders(final ResultListener<List<FolderInfo>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
@@ -91,8 +90,8 @@ public class PhpConfigurationService extends ServiceBase implements
 			}
 
 			public void onSuccess(JsArray<FolderInfo> result) {
-				resultListener.onSuccess(JsUtil.asList(result,
-						FolderInfo.class));
+				resultListener.onSuccess(JsUtil
+						.asList(result, FolderInfo.class));
 			}
 		};
 
@@ -162,8 +161,8 @@ public class PhpConfigurationService extends ServiceBase implements
 			}
 
 			public void onSuccess(JsArray<UserFolder> result) {
-				resultListener.onSuccess(JsUtil.asList(result,
-						UserFolder.class));
+				resultListener.onSuccess(JsUtil
+						.asList(result, UserFolder.class));
 			}
 		};
 		request().url(
@@ -196,4 +195,5 @@ public class PhpConfigurationService extends ServiceBase implements
 				serviceUrl().action(ConfigurationAction.userfolders).item(
 						dir.getId())).delete(resultListener);
 	}
+
 }

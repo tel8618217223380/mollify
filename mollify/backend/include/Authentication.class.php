@@ -72,6 +72,10 @@
 			$base = $this->getDefaultPermission();
 			return ($base === self::$PERMISSION_VALUE_ADMIN || $base === self::$PERMISSION_VALUE_READWRITE);
 		}
+
+		function assertAdmin() {
+			if (!$this->isAdmin()) throw new ServiceException("NOT_AN_ADMIN");
+		}
 		
 		function isAdmin() {
 			return ($this->getDefaultPermission() === self::$PERMISSION_VALUE_ADMIN);

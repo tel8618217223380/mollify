@@ -72,7 +72,7 @@
 			return FALSE;
 		}
 			
-		function updateItemPermissions($new, $modified, $removed) {
+		function updateItemPermissions($updates) {
 			return FALSE;
 		}
 

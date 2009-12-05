@@ -99,6 +99,21 @@
 			return $this->permissionDao->moveItemPermissions($from, $to, $recursively);
 		}
 		
+		public function updateItemPermissions($updates) {
+			// find item id (assumes that all are for the same item)
+			$id = NULL;
+			$new = $updates['new'];
+			$modified = $updates['modified'];
+			$removed = $updates['removed'];
+			
+			if (count($new) > 0) $id = $new[0]["item_id"];
+			else if (count($modified) > 0) $id = $modified[0]["item_id"];
+			else if (count($removed) > 0) $id = $removed[0]["item_id"];
+			else return TRUE;
+
+			return $this->permissionDao->updateItemPermissions($this->env->filesystem()->getItemFromId($id), $new, $modified, $removed);
+		}
+		
 		public function moveItemDescription($from, $to, $recursively = FALSE) {
 			return FALSE;
 		}

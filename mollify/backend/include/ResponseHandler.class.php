@@ -7,6 +7,7 @@
 			"INVALID_CONFIGURATION" => array(105, "Invalid configuration", 200),
 			"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported", 200),
 			"AUTHENTICATION_FAILED" => array(107, "Authentication failed", 200),
+			"REQUEST_FAILED" => array(108, "Request failed", 200),
 		
 			"INVALID_PATH" => array(201, "Invalid path", 200), 
 			"FILE_DOES_NOT_EXIST" => array(202, "File does not exist", 200), 
