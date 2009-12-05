@@ -38,7 +38,7 @@ public class ReturnValue extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean isResultBoolean() /*-{
-		return (this.result == true || this.result == false);
+		return (this.result != null && (String(this.result) == 'true' || String(this.result) == 'false'));
 	}-*/;
 
 	public final native boolean getResultAsBoolean() /*-{
