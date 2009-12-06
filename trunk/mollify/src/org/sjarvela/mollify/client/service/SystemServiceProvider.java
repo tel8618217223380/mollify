@@ -30,17 +30,16 @@ public class SystemServiceProvider implements ServiceProvider,
 	}
 
 	public ConfigurationService getConfigurationService() {
-		return null;
+		return new ConfigurationServiceAdapter(env.getConfigurationService(),
+				this);
 	}
 
 	public FileSystemService getFileSystemService() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FileSystemServiceAdapter(env.getFileSystemService(), this);
 	}
 
 	public FileUploadService getFileUploadService() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FileUploadServiceAdapter(env.getFileUploadService(), this);
 	}
 
 	public SessionService getSessionService() {
