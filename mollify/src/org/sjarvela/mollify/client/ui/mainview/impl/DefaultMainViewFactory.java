@@ -10,15 +10,15 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
-import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
@@ -45,7 +45,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultMainViewFactory implements MainViewFactory,
 		RenameDialogFactory, CreateFolderDialogFactory {
-	private final ServiceEnvironment environment;
+	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 	private final ViewManager windowManager;
 	private final DialogManager dialogManager;
@@ -60,7 +60,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
-			ServiceEnvironment environment, SessionManager sessionManager,
+			ServiceProvider serviceProvider, SessionManager sessionManager,
 			FileSystemItemProvider fileSystemItemProvider,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -70,7 +70,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
-		this.environment = environment;
+		this.serviceProvider = serviceProvider;
 		this.sessionManager = sessionManager;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.itemSelectorFactory = itemSelectorFactory;
@@ -83,7 +83,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	public MainView createMainView() {
 		SessionInfo session = sessionManager.getSession();
 
-		FileSystemService fileSystemService = environment
+		FileSystemService fileSystemService = serviceProvider
 				.getFileSystemService();
 		MainViewModel model = new MainViewModel(fileSystemService, session,
 				fileSystemItemProvider);
@@ -104,7 +104,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
-				sessionManager, model, view, environment
+				sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,
 				textProvider, fileSystemActionHandlerFactory,
 				permissionEditorViewFactory, passwordDialogFactory,
