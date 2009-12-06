@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.service.request;
 
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-
 public class RequestBuilder {
 	public enum Method {
 		GET, PUT, POST, DELETE
@@ -20,6 +18,7 @@ public class RequestBuilder {
 	private String url = null;
 	private int timeout = 0;
 	private String data = null;
+	private HttpRequestResponseListener listener = null;
 
 	public RequestBuilder url(String url) {
 		this.url = url;
@@ -36,30 +35,35 @@ public class RequestBuilder {
 		return this;
 	}
 
+	public RequestBuilder listener(HttpRequestResponseListener listener) {
+		this.listener = listener;
+		return this;
+	}
+
 	public RequestBuilder data(String data) {
 		this.data = data;
 		return this;
 	}
 
-	public void send(Method method, ResultListener listener) {
+	public void send(Method method) {
 		new HttpRequestHandler(method.name(), url, timeout, data, listener)
 				.process();
 	}
 
-	public void get(ResultListener resultListener) {
-		this.send(Method.GET, resultListener);
+	public void get() {
+		this.send(Method.GET);
 	}
 
-	public void post(ResultListener resultListener) {
-		this.send(Method.POST, resultListener);
+	public void post() {
+		this.send(Method.POST);
 	}
 
-	public void put(ResultListener resultListener) {
-		this.send(Method.PUT, resultListener);
+	public void put() {
+		this.send(Method.PUT);
 	}
 
-	public void delete(ResultListener resultListener) {
-		this.send(Method.DELETE, resultListener);
+	public void delete() {
+		this.send(Method.DELETE);
 	}
 
 }

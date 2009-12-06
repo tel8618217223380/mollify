@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.RequestBuilder;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
 public class ServiceBase {
@@ -27,7 +26,7 @@ public class ServiceBase {
 		return service.url().item(requestType.name());
 	}
 
-	protected RequestBuilder request() {
+	protected PhpRequestBuilder request() {
 		return service.request();
 	}
 }

@@ -1,31 +1,31 @@
 <?php
 	class ResponseHandler {
 		private static $ERRORS = array(
-			"UNAUTHORIZED" => array(100, "Unauthorized request", 403), 
-			"INVALID_REQUEST" => array(101, "Invalid request", 200),
-			"FEATURE_DISABLED" => array(104, "Feature disabled", 200),
-			"INVALID_CONFIGURATION" => array(105, "Invalid configuration", 200),
-			"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported", 200),
-			"AUTHENTICATION_FAILED" => array(107, "Authentication failed", 200),
-			"REQUEST_FAILED" => array(108, "Request failed", 200),
+			"UNAUTHORIZED" => array(100, "Unauthorized request", 401), 
+			"INVALID_REQUEST" => array(101, "Invalid request", 403),
+			"FEATURE_DISABLED" => array(104, "Feature disabled", 403),
+			"INVALID_CONFIGURATION" => array(105, "Invalid configuration", 403),
+			"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported", 403),
+			"AUTHENTICATION_FAILED" => array(107, "Authentication failed", 403),
+			"REQUEST_FAILED" => array(108, "Request failed", 403),
 		
-			"INVALID_PATH" => array(201, "Invalid path", 200), 
-			"FILE_DOES_NOT_EXIST" => array(202, "File does not exist", 200), 
-			"DIR_DOES_NOT_EXIST" => array(203, "Directory does not exist", 200), 
-			"FILE_ALREADY_EXISTS" => array(204, "File already exists", 200), 
-			"DIR_ALREADY_EXISTS" => array(205, "Directory already exists", 200), 
-			"NOT_A_FILE" => array(206, "Target is not a file", 200), 
-			"NOT_A_DIR" => array(207, "Target is not a directory", 200), 
-			"DELETE_FAILED" => array(208, "Could not delete", 200), 
-			"NO_UPLOAD_DATA" => array(209, "No upload data available", 200), 
-			"UPLOAD_FAILED" => array(210, "File upload failed", 200), 
-			"SAVING_FAILED" => array(211, "Saving file failed", 200),
-			"INSUFFICIENT_RIGHTS" => array(212, "User does not have sufficient rights", 200),
-			"ZIP_FAILED" => array(213, "Creating a zip package failed", 200),
-			"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission", 200),
-			"NOT_AN_ADMIN" => array(215, "User is not an administrator", 200),
+			"INVALID_PATH" => array(201, "Invalid path", 403), 
+			"FILE_DOES_NOT_EXIST" => array(202, "File does not exist", 403),
+			"DIR_DOES_NOT_EXIST" => array(203, "Directory does not exist", 403),
+			"FILE_ALREADY_EXISTS" => array(204, "File already exists", 403),
+			"DIR_ALREADY_EXISTS" => array(205, "Directory already exists", 403),
+			"NOT_A_FILE" => array(206, "Target is not a file", 403),
+			"NOT_A_DIR" => array(207, "Target is not a directory", 403),
+			"DELETE_FAILED" => array(208, "Could not delete", 403),
+			"NO_UPLOAD_DATA" => array(209, "No upload data available", 403),
+			"UPLOAD_FAILED" => array(210, "File upload failed", 403),
+			"SAVING_FAILED" => array(211, "Saving file failed", 403),
+			"INSUFFICIENT_RIGHTS" => array(212, "User does not have sufficient rights", 403),
+			"ZIP_FAILED" => array(213, "Creating a zip package failed", 403),
+			"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission", 403),
+			"NOT_AN_ADMIN" => array(215, "User is not an administrator", 403),
 			
-			"UNEXPECTED_ERROR" => array(999, "Unexpected error occurred", 200),
+			"UNEXPECTED_ERROR" => array(999, "Unexpected server error", 500),
 		);
 		private $output;
 		
@@ -43,12 +43,12 @@
 		}
 		
 		public function unknownServerError($msg) {
-			$this->output->sendResponse(new Response(500, "plain", $msg));
+			$this->error("UNEXPECTED_ERROR", $msg);
 		}
 		
 		private function getSuccessResponse($data) {
-			if (Logging::isDebug()) return array("success" => TRUE, "result" => $data, "trace" => Logging::getTrace());
-			return array("success" => TRUE, "result" => $data);
+			if (Logging::isDebug()) return array("result" => $data, "trace" => Logging::getTrace());
+			return array("result" => $data);
 		}
 		
 		private function getError($error) {
@@ -60,8 +60,8 @@
 		}
 		
 		private function getErrorResponse($err, $details) {
-			if (Logging::isDebug()) return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details, "trace" => Logging::getTrace());
-			return array("success" => FALSE, "code" => $err[0], "error" => $err[1], "details" => $details);
+			if (Logging::isDebug()) return array("code" => $err[0], "error" => $err[1], "details" => $details, "trace" => Logging::getTrace());
+			return array("code" => $err[0], "error" => $err[1], "details" => $details);
 		}
 
 	}

@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.localization;
 
-import org.sjarvela.mollify.client.service.request.data.ErrorValue;
-
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Singleton;
 
@@ -31,12 +29,6 @@ public class DefaultTextProvider implements TextProvider {
 
 	public MessageConstants getMessages() {
 		return messageConstants;
-	}
-
-	public String getErrorMessage(ErrorValue errorResult) {
-		// TODO get localized
-		return errorResult.getCode() + ": " + errorResult.getError() + " ("
-				+ errorResult.getDetails() + ")";
 	}
 
 	public String getSizeText(long bytes) {

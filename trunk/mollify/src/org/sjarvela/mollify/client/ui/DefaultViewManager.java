@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.util.JsUtil;
 
@@ -32,13 +31,11 @@ public class DefaultViewManager implements ViewManager {
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private final RootPanel rootPanel;
-	private final TextProvider textProvider;
 
 	@Inject
-	public DefaultViewManager(TextProvider textProvider) {
+	public DefaultViewManager() {
 		if (RootPanel.get(MOLLIFY_PANEL_ID) == null)
 			throw new RuntimeException("No placeholder found for Mollify");
-		this.textProvider = textProvider;
 		this.rootPanel = RootPanel.get(MOLLIFY_PANEL_ID);
 	}
 
@@ -80,16 +77,18 @@ public class DefaultViewManager implements ViewManager {
 		rootPanel.add(new HTML(error));
 	}
 
-	public void showServiceError(String title, ServiceError error) {
+	public void showErrorInMainView(String title, ServiceError error) {
 		empty();
 
 		StringBuilder errorHtml = new StringBuilder();
 		errorHtml
-				.append("<span class='mollify-app-error'><p class='title'><b>")
-				.append(
-						error.getError() != null ? textProvider
-								.getErrorMessage(error.getError()) : title)
-				.append("</b></p>");
+				.append("<span class='mollify-app-error'><p class='title'><b>");
+		if (error.getError() != null) {
+			errorHtml.append(error.getError().getError());
+		} else {
+			errorHtml.append(title);
+		}
+		errorHtml.append("</b></p>");
 		errorHtml.append("<p class='details'>").append(error.getDetails())
 				.append("</p>");
 		if (error.getError() != null

@@ -26,6 +26,6 @@ public interface ViewManager {
 
 	void showPlainError(String error);
 
-	void showServiceError(String title, ServiceError error);
+	void showErrorInMainView(String title, ServiceError error);
 
 }

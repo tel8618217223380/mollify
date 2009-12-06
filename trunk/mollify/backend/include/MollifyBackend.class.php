@@ -10,7 +10,6 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("include/Logging.class.php");
 	require_once("include/Settings.class.php");
 	require_once("include/Session.class.php");
 	require_once("include/Authentication.class.php");

@@ -48,7 +48,7 @@ public class PhpFileUploadService extends PhpFileService implements
 			ResultListener<FileUploadStatus> resultListener) {
 		request().url(
 				serviceUrl().action(FileUploadAction.upload_status).item(id))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void handleResult(String resultString, FileUploadListener listener) {

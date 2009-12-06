@@ -47,8 +47,8 @@ public class PhpConfigurationService extends ServiceBase implements
 
 		request().url(
 				serviceUrl().item("users").item("current").action(
-						ConfigurationAction.password)).data(data).put(
-				resultListener);
+						ConfigurationAction.password)).data(data).listener(
+				resultListener).put();
 	}
 
 	public void resetPassword(User user, String password,
@@ -59,7 +59,7 @@ public class PhpConfigurationService extends ServiceBase implements
 		request().url(
 				serviceUrl().item("users").item(user.getId()).action(
 						ConfigurationAction.password)).data(
-				MD5.generate(password)).put(resultListener);
+				MD5.generate(password)).listener(resultListener).put();
 	}
 
 	public void getUsers(final ResultListener<List<User>> resultListener) {
@@ -76,8 +76,8 @@ public class PhpConfigurationService extends ServiceBase implements
 			}
 		};
 
-		request().url(serviceUrl().action(ConfigurationAction.users)).get(
-				listener);
+		request().url(serviceUrl().action(ConfigurationAction.users)).listener(
+				listener).get();
 	}
 
 	public void getFolders(final ResultListener<List<FolderInfo>> resultListener) {
@@ -95,8 +95,8 @@ public class PhpConfigurationService extends ServiceBase implements
 			}
 		};
 
-		request().url(serviceUrl().action(ConfigurationAction.folders)).get(
-				listener);
+		request().url(serviceUrl().action(ConfigurationAction.folders))
+				.listener(listener).get();
 	}
 
 	public void addUser(String name, String password, UserPermissionMode mode,
@@ -106,7 +106,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				mode.getStringValue()).toString();
 
 		request().url(serviceUrl().action(ConfigurationAction.users))
-				.data(data).post(resultListener);
+				.data(data).listener(resultListener).post();
 	}
 
 	public void editUser(User user, String name, UserPermissionMode mode,
@@ -116,13 +116,14 @@ public class PhpConfigurationService extends ServiceBase implements
 
 		request().url(
 				serviceUrl().action(ConfigurationAction.users).item(
-						user.getId())).data(data).put(resultListener);
+						user.getId())).data(data).listener(resultListener)
+				.put();
 	}
 
 	public void removeUser(User user, final ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.users).item(
-						user.getId())).delete(resultListener);
+						user.getId())).listener(resultListener).delete();
 	}
 
 	public void addFolder(String name, String path,
@@ -131,7 +132,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				.toString();
 
 		request().url(serviceUrl().action(ConfigurationAction.folders)).data(
-				data).post(resultListener);
+				data).listener(resultListener).post();
 	}
 
 	public void editFolder(FolderInfo dir, String name, String path,
@@ -141,13 +142,13 @@ public class PhpConfigurationService extends ServiceBase implements
 
 		request().url(
 				serviceUrl().action(ConfigurationAction.folders).item(
-						dir.getId())).data(data).put(resultListener);
+						dir.getId())).data(data).listener(resultListener).put();
 	}
 
 	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.folders).item(
-						dir.getId())).delete(resultListener);
+						dir.getId())).listener(resultListener).delete();
 	}
 
 	public void getUserFolders(User user,
@@ -167,7 +168,7 @@ public class PhpConfigurationService extends ServiceBase implements
 		};
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(
-						user.getId())).get(listener);
+						user.getId())).listener(listener).get();
 	}
 
 	public void addUserFolder(User user, FolderInfo dir, String name,
@@ -176,7 +177,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				dir.getId()).add("name", name).toString();
 
 		request().url(serviceUrl().action(ConfigurationAction.userfolders))
-				.data(data).post(resultListener);
+				.data(data).listener(resultListener).post();
 	}
 
 	public void editUserFolder(User user, UserFolder dir, String name,
@@ -186,14 +187,14 @@ public class PhpConfigurationService extends ServiceBase implements
 
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(
-						dir.getId())).data(data).put(resultListener);
+						dir.getId())).data(data).listener(resultListener).put();
 	}
 
 	public void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(
-						dir.getId())).delete(resultListener);
+						dir.getId())).listener(resultListener).delete();
 	}
 
 }

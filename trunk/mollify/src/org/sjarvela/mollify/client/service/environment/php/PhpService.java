@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.UrlResolver;
-import org.sjarvela.mollify.client.service.request.RequestBuilder;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -50,7 +49,7 @@ public class PhpService {
 		return path + SERVICE_FILE;
 	}
 
-	public RequestBuilder request() {
+	public PhpRequestBuilder request() {
 		return new PhpRequestBuilder().timeout(requestTimeout);
 	}
 
