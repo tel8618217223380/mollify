@@ -66,7 +66,7 @@ public class MollifyClient implements Client, SessionListener {
 		service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
-						viewManager.showServiceError(error.getError()
+						viewManager.showErrorInMainView(error.getError()
 								.getError(), error);
 					}
 

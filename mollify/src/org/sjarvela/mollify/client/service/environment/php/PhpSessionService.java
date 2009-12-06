@@ -35,7 +35,7 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 
 		request().url(
 				serviceUrl().action(SessionAction.info).item(protocolVersion))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void authenticate(String userName, String password,
@@ -48,15 +48,15 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 				protocolVersion).toString();
 
 		request().url(serviceUrl().action(SessionAction.authenticate)).data(
-				data).post(resultListener);
+				data).listener(resultListener).post();
 	}
 
 	public void logout(ResultListener resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Logout");
 
-		request().url(serviceUrl().action(SessionAction.logout)).post(
-				resultListener);
+		request().url(serviceUrl().action(SessionAction.logout)).listener(
+				resultListener).post();
 	}
 
 }

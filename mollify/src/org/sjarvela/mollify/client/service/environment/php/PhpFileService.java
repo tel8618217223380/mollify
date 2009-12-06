@@ -58,7 +58,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			}
 		};
 		request().url(serviceUrl().fileItem(parent).action(FileAction.folders))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void getDirectoryContents(final Folder parent,
@@ -79,7 +79,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		};
 
 		request().url(serviceUrl().fileItem(parent).action(FileAction.items))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void getFileDetails(File item,
@@ -88,7 +88,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			Log.debug("Get file details: " + item.getId());
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.details))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void getDirectoryDetails(Folder item,
@@ -97,7 +97,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			Log.debug("Get folder details: " + item.getId());
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.details))
-				.get(resultListener);
+				.listener(resultListener).get();
 	}
 
 	public void rename(FileSystemItem item, String newName,
@@ -106,7 +106,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.name))
-				.data(newName).put(listener);
+				.data(newName).listener(listener).put();
 	}
 
 	public void copy(File file, Folder directory,
@@ -116,7 +116,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 					+ "]");
 
 		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
-				.data(directory.getId()).post(listener);
+				.data(directory.getId()).listener(listener).post();
 	}
 
 	public void move(FileSystemItem item, Folder directory,
@@ -126,7 +126,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 					+ "]");
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.move))
-				.data(directory.getId()).post(listener);
+				.data(directory.getId()).listener(listener).post();
 	}
 
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
@@ -134,7 +134,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			Log.debug("Delete: " + item.getId());
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.items))
-				.delete(listener);
+				.listener(listener).delete();
 	}
 
 	public void createDirectory(Folder parentFolder, String folderName,
@@ -144,7 +144,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(
 				serviceUrl().fileItem(parentFolder).action(FileAction.folders))
-				.data(folderName).post(listener);
+				.data(folderName).listener(listener).post();
 	}
 
 	public String getDownloadUrl(File file) {
@@ -162,7 +162,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(
 				serviceUrl().fileItem(item).action(FileAction.description))
-				.data(description).put(listener);
+				.data(description).listener(listener).put();
 	}
 
 	public void removeItemDescription(FileSystemItem item,
@@ -172,7 +172,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(
 				serviceUrl().fileItem(item).action(FileAction.description))
-				.delete(listener);
+				.listener(listener).delete();
 	}
 
 	public void getItemPermissions(FileSystemItem item,
@@ -196,7 +196,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(
 				serviceUrl().fileItem(item).action(FileAction.permissions))
-				.get(listener);
+				.listener(listener).get();
 	}
 
 	public void updateItemPermissions(
@@ -215,6 +215,6 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.asJsArray(removedPermissions));
 
 		request().url(serviceUrl().action(FileAction.permissions)).data(
-				data.toString()).put(resultListener);
+				data.toString()).listener(resultListener).put();
 	}
 }

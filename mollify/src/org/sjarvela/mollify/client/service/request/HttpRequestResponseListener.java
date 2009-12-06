@@ -8,14 +8,20 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.localization;
+package org.sjarvela.mollify.client.service.request;
 
-public interface TextProvider {
+import com.google.gwt.http.client.Response;
 
-	String getSizeText(long bytes);
+public interface HttpRequestResponseListener {
 
-	LanguageConstants getStrings();
+	void onSuccess(Response response);
 
-	MessageConstants getMessages();
+	void onFail(Response response);
+
+	void onNoResponse();
+
+	void onRequestFailed(String reason);
+
+	void onResourceNotFound(String url);
 
 }

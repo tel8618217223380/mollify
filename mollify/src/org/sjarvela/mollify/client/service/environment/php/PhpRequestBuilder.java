@@ -11,12 +11,30 @@
 package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.service.request.RequestBuilder;
+import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class PhpRequestBuilder extends RequestBuilder {
-	@Override
-	public void send(Method method, ResultListener listener) {
-		super.send(method, new JsonRequestListener(listener));
+
+	public PhpRequestBuilder url(String url) {
+		return (PhpRequestBuilder) super.url(url);
 	}
+
+	public PhpRequestBuilder url(UrlBuilder urlBuilder) {
+		return (PhpRequestBuilder) super.url(urlBuilder);
+	}
+
+	public PhpRequestBuilder timeout(int timeout) {
+		return (PhpRequestBuilder) super.timeout(timeout);
+	}
+
+	public PhpRequestBuilder data(String data) {
+		return (PhpRequestBuilder) super.data(data);
+	}
+
+	public PhpRequestBuilder listener(ResultListener resultListener) {
+		return (PhpRequestBuilder) super.listener(new JsonRequestListener(resultListener));
+	}
+
 }

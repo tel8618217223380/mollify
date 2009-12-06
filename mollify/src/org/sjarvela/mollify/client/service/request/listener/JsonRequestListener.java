@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.service.request.listener;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.request.HttpRequestResponseListener;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 
@@ -20,7 +21,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-public class JsonRequestListener implements ResultListener<Response> {
+public class JsonRequestListener implements HttpRequestResponseListener {
 	private final ResultListener listener;
 
 	public JsonRequestListener(final ResultListener listener) {
@@ -36,34 +37,43 @@ public class JsonRequestListener implements ResultListener<Response> {
 			}
 			ReturnValue returnValue = (ReturnValue) o.getJavaScriptObject()
 					.cast();
-			onResponse(returnValue);
+			if (returnValue.isResultBoolean())
+				listener
+						.onSuccess(new Boolean(returnValue.getResultAsBoolean()));
+			else
+				listener.onSuccess(returnValue.getResult());
 		} catch (com.google.gwt.json.client.JSONException e) {
 			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
 					"Got malformed JSON response: " + response.getText()));
 		}
 	}
 
-	private void onResponse(ReturnValue result) {
-		if (!result.isSuccess()) {
-			ErrorValue error = result.cast();
-			onError(new ServiceError(ServiceErrorType.getFrom(error), error));
+	public void onFail(Response response) {
+		JSONObject o = JSONParser.parse(response.getText()).isObject();
+		if (o == null) {
+			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 			return;
 		}
-
-		if (result.isResultBoolean()) {
-			listener.onSuccess(new Boolean(result.getResultAsBoolean()));
-			return;
-		}
-
-		listener.onSuccess(result.getResult());
+		ErrorValue error = o.getJavaScriptObject().cast();
+		onError(new ServiceError(ServiceErrorType.getFrom(error), error));
 	}
 
-	public void onFail(ServiceError error) {
-		onError(error);
+	public void onNoResponse() {
+		onError(new ServiceError(ServiceErrorType.NO_RESPONSE));
+	}
+
+	public void onRequestFailed(String reason) {
+		onError(new ServiceError(ServiceErrorType.REQUEST_FAILED, reason));
+	}
+
+	public void onResourceNotFound(String url) {
+		onError(new ServiceError(ServiceErrorType.REQUEST_FAILED,
+				"Resource not found: " + url));
 	}
 
 	private void onError(ServiceError error) {
 		Log.error("Request failed: error=" + error.toString());
 		listener.onFail(error);
 	}
+
 }

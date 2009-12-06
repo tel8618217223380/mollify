@@ -10,10 +10,6 @@
 
 package org.sjarvela.mollify.client.service.request;
 
-import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -24,14 +20,12 @@ import com.google.gwt.http.client.Response;
 public class HttpRequestHandler extends
 		com.google.gwt.http.client.RequestBuilder {
 	private static final int HTTP_STATUS_OK = 200;
-	private static final int HTTP_STATUS_UNAUTHORIZED = 403;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
-	private static final int HTTP_STATUS_SERVER_ERROR = 500;
 
-	private final ResultListener listener;
+	private final HttpRequestResponseListener listener;
 
 	public HttpRequestHandler(String method, final String url, int timeout,
-			String data, final ResultListener listener) {
+			String data, final HttpRequestResponseListener listener) {
 		super(method, url);
 
 		this.listener = listener;
@@ -44,11 +38,9 @@ public class HttpRequestHandler extends
 				Log.error("Request error", exception);
 
 				if (RequestTimeoutException.class.equals(exception.getClass()))
-					HttpRequestHandler.this.onError(new ServiceError(
-							ServiceErrorType.NO_RESPONSE));
+					listener.onNoResponse();
 				else
-					HttpRequestHandler.this.onError(new ServiceError(
-							ServiceErrorType.REQUEST_FAILED));
+					listener.onRequestFailed(exception.getMessage());
 			}
 
 			public void onResponseReceived(Request request, Response response) {
@@ -62,34 +54,14 @@ public class HttpRequestHandler extends
 					return;
 				}
 
-				if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-					HttpRequestHandler.this.onError(new ServiceError(
-							ServiceErrorType.UNAUTHORIZED, response.getText()));
-					return;
-
-				}
-
 				if (statusCode == HTTP_STATUS_NOT_FOUND) {
-					HttpRequestHandler.this.onError(new ServiceError(
-							ServiceErrorType.INVALID_CONFIGURATION,
-							"Service file not found: " + url));
+					listener.onResourceNotFound(url);
 					return;
 				}
-				if (statusCode == HTTP_STATUS_SERVER_ERROR) {
-					HttpRequestHandler.this
-							.onError(new ServiceError(
-									ServiceErrorType.UNKNOWN_ERROR, response
-											.getText()));
-					return;
-				}
-				HttpRequestHandler.this.onError(new ServiceError(
-						ServiceErrorType.REQUEST_FAILED));
+
+				listener.onFail(response);
 			}
 		});
-	}
-
-	protected void onError(ServiceError error) {
-		listener.onFail(error);
 	}
 
 	public void process() {
@@ -99,7 +71,7 @@ public class HttpRequestHandler extends
 			send();
 		} catch (RequestException e) {
 			Log.error("Request failed", e);
-			onError(new ServiceError(ServiceErrorType.REQUEST_FAILED));
+			listener.onRequestFailed(e.getMessage());
 		}
 	}
 

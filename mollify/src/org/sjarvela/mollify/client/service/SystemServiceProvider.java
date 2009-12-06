@@ -69,11 +69,11 @@ public class SystemServiceProvider implements ServiceProvider,
 			return true;
 		}
 		if (error.getType().equals(ServiceErrorType.INVALID_CONFIGURATION)) {
-			viewManager.showServiceError("Configuration Error", error);
+			viewManager.showErrorInMainView("Configuration Error", error);
 			return true;
 		}
 		if (error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
-			viewManager.showServiceError("Protocol error", error);
+			viewManager.showErrorInMainView("Protocol error", error);
 			return true;
 		}
 		return false;
