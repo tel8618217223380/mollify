@@ -4,7 +4,10 @@
 		
 		public function __construct() {
 			require_once("file/FilePermissionDao.class.php");
+			require_once("file/FileDescriptionDao.class.php");
+			
 			$this->permissionDao = new FilePermissionDao("mollify.uac");
+			$this->descriptionDao = new FileDescriptionDao("mollify.dsc");
 		}
 		
 		function getSupportedFeatures() {
@@ -87,6 +90,22 @@
 			}
 		}
 		
+		public function getItemDescription($item) {
+			return $this->descriptionDao->getItemDescription($item);
+		}
+				
+		public function setItemDescription($item, $description) {
+			return $this->descriptionDao->setItemDescription($item, $description);
+		}
+	
+		public function removeItemDescription($item, $recursively = FALSE) {
+			return FALSE;
+		}
+		
+		public function moveItemDescription($from, $to, $recursively = FALSE) {
+			return FALSE;
+		}
+		
 		public function getItemPermission($item, $userId) {
 			return $this->permissionDao->getItemPermission($item, $userId);
 		}
@@ -112,10 +131,6 @@
 			else return TRUE;
 
 			return $this->permissionDao->updateItemPermissions($this->env->filesystem()->getItemFromId($id), $new, $modified, $removed);
-		}
-		
-		public function moveItemDescription($from, $to, $recursively = FALSE) {
-			return FALSE;
 		}
 
 	}
