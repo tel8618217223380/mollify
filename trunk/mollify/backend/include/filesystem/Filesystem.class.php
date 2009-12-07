@@ -106,7 +106,7 @@
 		}
 		
 		public function getIgnoredItems($folder) {
-			return array('descript.ion', 'mollify.uac');
+			return array('mollify.dsc', 'mollify.uac');
 		}
 		
 		public function getDatetimeFormat() {
@@ -114,7 +114,11 @@
 		}
 		
 		public function description($item) {
-			return "TODO";
+			return $this->env->configuration()->getItemDescription($item);
+		}
+
+		public function setDescription($item, $desc) {
+			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
 		
 		public function permission($item) {

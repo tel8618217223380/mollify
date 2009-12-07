@@ -20,9 +20,17 @@
 		public function id() {
 			return $this->id;
 		}
+		
+		public function name() {
+			return Filesystem::basename($this->path);
+		}
 
 		public function description() {
 			return $this->filesystem->description($this);
+		}
+
+		public function setDescription($desc) {
+			return $this->filesystem->setDescription($this, $desc);
 		}
 				
 		public function permission() {
@@ -40,6 +48,11 @@
 		public function path() {
 			return $this->path;
 		}
+		
+		public function dirName() {
+			return dirname($this->path);
+		}
+
 	}
 	
 	class File extends FilesystemItem {

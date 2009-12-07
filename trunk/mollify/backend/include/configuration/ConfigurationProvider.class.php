@@ -44,14 +44,10 @@
 			return array();
 		}
 		
-		function getFileDescription($file) {
+		function getItemDescription($item) {
 			return NULL;
 		}
-		
-		function getDirDescription($dir) {
-			return NULL;
-		}
-		
+				
 		function setItemDescription($item, $description) {
 			return FALSE;
 		}
