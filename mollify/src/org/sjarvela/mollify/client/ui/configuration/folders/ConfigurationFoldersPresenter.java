@@ -12,11 +12,11 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialog;

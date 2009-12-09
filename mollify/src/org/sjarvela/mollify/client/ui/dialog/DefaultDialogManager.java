@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 

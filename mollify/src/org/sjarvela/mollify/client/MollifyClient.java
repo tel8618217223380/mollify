@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.ServiceProvider;

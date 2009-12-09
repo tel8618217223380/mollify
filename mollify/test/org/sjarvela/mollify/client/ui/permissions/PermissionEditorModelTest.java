@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;

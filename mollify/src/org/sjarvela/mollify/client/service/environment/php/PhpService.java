@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import org.sjarvela.mollify.client.UrlResolver;
+import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
 import com.allen_sauer.gwt.log.client.Log;

@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.service;
 
 public class UrlResolver {
 	private final String hostPageUrl;

@@ -10,11 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.configuration;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;

@@ -10,11 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;

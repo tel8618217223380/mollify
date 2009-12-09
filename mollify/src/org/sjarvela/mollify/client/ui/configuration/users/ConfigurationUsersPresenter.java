@@ -12,10 +12,10 @@ package org.sjarvela.mollify.client.ui.configuration.users;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserHandler;

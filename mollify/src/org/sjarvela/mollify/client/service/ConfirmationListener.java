@@ -8,8 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client;
+package org.sjarvela.mollify.client.service;
 
-public interface ResultCallback<T> {
-	public void onCallback(T result);
+public interface ConfirmationListener {
+	public void onConfirm();
 }

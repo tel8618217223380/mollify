@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.sjarvela.mollify.client.service.UrlResolver;
 
 public class UrlResolverTest {
 

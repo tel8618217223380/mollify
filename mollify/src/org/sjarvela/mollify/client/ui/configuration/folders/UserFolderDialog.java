@@ -12,10 +12,10 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
