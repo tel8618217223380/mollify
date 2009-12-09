@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
+import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;

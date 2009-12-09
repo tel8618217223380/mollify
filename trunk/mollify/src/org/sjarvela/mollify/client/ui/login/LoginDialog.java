@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.login;
 
-import org.sjarvela.mollify.client.ConfirmationListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.user.UserNameValidator;
 import org.sjarvela.mollify.client.ui.StyleConstants;

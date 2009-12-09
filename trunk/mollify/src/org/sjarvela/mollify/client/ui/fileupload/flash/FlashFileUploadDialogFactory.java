@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-import org.sjarvela.mollify.client.UrlResolver;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;

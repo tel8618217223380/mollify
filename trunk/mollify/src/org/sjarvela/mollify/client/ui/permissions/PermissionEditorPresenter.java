@@ -13,13 +13,13 @@ package org.sjarvela.mollify.client.ui.permissions;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ConfirmationListener;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
+import org.sjarvela.mollify.client.service.ConfirmationListener;
+import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;

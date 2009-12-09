@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -21,6 +20,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;

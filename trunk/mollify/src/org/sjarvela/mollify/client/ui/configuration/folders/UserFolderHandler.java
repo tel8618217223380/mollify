@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.configuration.folders;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
+import org.sjarvela.mollify.client.service.Callback;
 
 public interface UserFolderHandler {
 
