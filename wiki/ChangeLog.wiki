@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.0.5.1 ==
+  * Fixed reset password bug
+  * Fixed file type restriction bug in upload
+
 === Version 1.0.5 ==
   * Added new languages: Espanol and Italiano
   * New custom theme: charcoal (by Lukas Upton)
