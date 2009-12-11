@@ -184,8 +184,9 @@ public class UserDialog extends CenteredDialog {
 		if (!new UserNameValidator().validate(userName.getText()))
 			return;
 
-		handler.addUser(userName.getText(), password.getText(), UserPermissionMode
-				.fromString(userType.getValue(userType.getSelectedIndex())));
+		handler.addUser(userName.getText(), password.getText(),
+				UserPermissionMode.fromString(userType.getValue(userType
+						.getSelectedIndex())));
 		this.hide();
 	}
 

@@ -93,16 +93,35 @@
 			if (file_exists($new)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
 			Logging::logDebug('rename from ['.$old.'] to ['.$new.']');
 			
-			if (!rename($old, $new)) return FALSE;
+			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
-				$this->env->configuration()->moveItemDescription($item, $this->getItemFromPath($item->root(), $new));
+				$this->env->configuration()->moveItemDescription($item, $this->getItemFromPath($item->rootId(), $new));
 				
 			if ($this->env->features()->isFeatureEnabled("permission_update"))
-				$this->env->configuration()->moveItemPermission($item, $this->getItemFromPath($item->root(), $new));
+				$this->env->configuration()->moveItemPermissions($item, $this->getItemFromPath($item->rootId(), $new));
 			
 			$this->env->events()->onEvent(FileEvent::rename($item, $name));
-			return TRUE;
+		}
+		
+		public function move($item, $to) {
+			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
+			Logging::logDebug('moving ['.$item->id().'] to ['.$to->dirName().']');
+			
+			$target = Filesystem::joinPath($to->path(), $item->name());
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists");
+			Logging::logDebug('move from ['.$item->path().'] to ['.$target.']');
+					
+			if (!rename($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");
+			$to = $this->getItemFromPath($item->rootId(), $target);
+			
+			if ($this->env->features()->isFeatureEnabled("description_update"))
+				$this->env->configuration()->moveItemDescription($item, $to);
+				
+			if ($this->env->features()->isFeatureEnabled("permission_update"))
+				$this->env->configuration()->moveItemPermissions($item, $to);
+			
+			$this->env->events()->onEvent(FileEvent::move($item, $to));			
 		}
 		
 		public function getIgnoredItems($folder) {
@@ -182,6 +201,7 @@
 	
 	class FileEvent extends Event {
 		const RENAME = "rename";
+		const MOVE = "move";
 		const DELETE = "delete";
 		
 		private $item;
@@ -189,6 +209,10 @@
 		
 		static function rename($item, $name) {
 			return new FileEvent($item, self::RENAME, $name);
+		}
+
+		static function move($item, $to) {
+			return new FileEvent($item, self::MOVE, $to);
 		}
 		
 		function __construct($item, $type, $data) {

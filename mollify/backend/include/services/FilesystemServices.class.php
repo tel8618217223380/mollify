@@ -31,8 +31,8 @@
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
 			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
-			if ($item->isFile()) throw $this->invalidRequestException();
-			$this->processPostFolder($item);
+			if ($item->isFile()) $this->processPostFile($item);
+			else $this->processPostFolder($item);
 		}
 		
 		private function convertItemId($id) {
@@ -62,14 +62,23 @@
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$this->response()->success($item->rename($this->request->data));
+					$item->rename($this->request->data);
+					$this->response()->success(TRUE);
 					break;
 				case 'description':
-					$this->response()->success($item->setDescription($this->request->data));
+					$item->setDescription($this->request->data);
+					$this->response()->success(TRUE);
 					break;
 				default:
 					throw $this->invalidRequestException();
 			}
+		}
+		
+		private function processPostFile($item) {
+			if (count($this->path) < 2 or $this->path[1] != 'move') throw $this->invalidRequestException();
+			
+			$item->move($this->env->filesystem()->getItemFromId($this->request->data));
+			$this->response()->success(TRUE);
 		}
 		
 		private function processGetFolder($item) {

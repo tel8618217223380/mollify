@@ -49,7 +49,7 @@
 	
 			$fromUac = $this->getUacFilename($from);
 			$fromPermissions = $this->readPermissionsFromFile($fromUac);
-			if (!$fromPermissions or !array_key_exists($fromId, $fromPermissions)) return TRUE;
+			if (!$fromPermissions or !array_key_exists($fromId, $fromPermissions)) return;
 			
 			$itemPermissions = $fromPermissions[$fromId];
 			unset($fromPermissions[$fromId]);
@@ -65,8 +65,6 @@
 				$toPermissions[$toId] = $itemPermissions;
 				$this->writePermissionsToFile($toUac, $toPermissions);
 			}
-			
-			return TRUE;
 		}
 		
 		public function updateItemPermissions($item, $new, $modified, $removed) {
@@ -101,7 +99,6 @@
 				Logging::logDebug("Permissions updated (".$item->id()."): ".Util::array2str($permissions));
 
 			$this->writePermissionsToFile($uacFile, $permissions);
-			return TRUE;
 		}
 		
 		private function assertItemPermission($item, $permission) {

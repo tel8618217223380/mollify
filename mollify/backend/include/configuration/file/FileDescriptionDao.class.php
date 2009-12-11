@@ -18,7 +18,41 @@
 			$descriptions = $this->readDescriptionsFromFile($file);
 			$descriptions[$item->name()] = $description;
 			$this->writeDescriptionsToFile($file, $descriptions);
-			return TRUE;
+		}
+
+		public function removeItemDescription($item, $recursively) {
+			# we can ignore recursive flag, file will be removed automatically when folder is removed
+			
+			$file = $this->getDescriptionFilename($item);
+			$descriptions = $this->readDescriptionsFromFile($file);
+			if (!isset($descriptions[$item->name()])) return;
+			
+			unset($descriptions[$item->name()]);
+			$this->writeDescriptionsToFile($file, $descriptions);
+		}
+		
+		public function moveItemDescription($from, $to, $recursively) {
+			$fromFile = $this->getDescriptionFilename($from);
+			$fromDescriptions = $this->readDescriptionsFromFile($fromFile);
+			if (!isset($fromDescriptions[$from->name()])) return;
+			
+			$description = $fromDescriptions[$from->name()];
+			unset($fromDescriptions[$from->name()]);
+			
+			$sameDir = FALSE;
+			if ($to->dirName() === $from->dirName()) {
+				$sameDir = TRUE;
+				$fromDescriptions[$to->name()] = $description;
+			}
+			$this->writeDescriptionsToFile($fromFile, $fromDescriptions);
+			
+			if (!$sameDir) {
+				$toFile = $this->getDescriptionFilename($to);
+				$toDescriptions = $this->readDescriptionsFromFile($toFile);
+
+				$toDescriptions[$to->name()] = $description;
+				$this->writeDescriptionsToFile($toFile, $toDescriptions);
+			}
 		}
 	
 		private function getDescriptionFilename($item) {

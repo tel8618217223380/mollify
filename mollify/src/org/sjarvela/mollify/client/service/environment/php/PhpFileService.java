@@ -12,13 +12,13 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FoldersAndFiles;
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.filesystem.FoldersAndFiles;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
@@ -133,8 +133,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Delete: " + item.getId());
 
-		request().url(serviceUrl().fileItem(item).action(FileAction.items))
-				.listener(listener).delete();
+		request().url(serviceUrl().fileItem(item)).listener(listener).delete();
 	}
 
 	public void createDirectory(Folder parentFolder, String folderName,

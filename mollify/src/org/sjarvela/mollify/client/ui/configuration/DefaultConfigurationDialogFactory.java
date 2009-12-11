@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 
 import com.google.inject.Inject;
 
@@ -26,22 +27,25 @@ public class DefaultConfigurationDialogFactory implements
 	private final SessionProvider sessionProvider;
 	private final ServiceEnvironment env;
 	private final PasswordGenerator passwordGenerator;
+	private final PasswordDialogFactory passwordDialogFactory;
 
 	@Inject
 	public DefaultConfigurationDialogFactory(TextProvider textProvider,
 			DialogManager dialogManager, SessionProvider sessionProvider,
-			ServiceEnvironment env, PasswordGenerator passwordGenerator) {
+			ServiceEnvironment env, PasswordGenerator passwordGenerator,
+			PasswordDialogFactory passwordDialogFactory) {
 		this.textProvider = textProvider;
 		this.dialogManager = dialogManager;
 		this.sessionProvider = sessionProvider;
 		this.env = env;
 		this.passwordGenerator = passwordGenerator;
+		this.passwordDialogFactory = passwordDialogFactory;
 	}
 
 	public void openConfigurationDialog(PasswordHandler passwordHandler) {
 		new ConfigurationDialog(textProvider, dialogManager, sessionProvider
 				.getSession(), env.getConfigurationService(), passwordHandler,
-				passwordGenerator);
+				passwordGenerator, passwordDialogFactory);
 	}
 
 }

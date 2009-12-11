@@ -99,11 +99,11 @@
 		}
 	
 		public function removeItemDescription($item, $recursively = FALSE) {
-			return FALSE;
+			return $this->descriptionDao->removeItemDescription($item, $recursively);
 		}
 		
 		public function moveItemDescription($from, $to, $recursively = FALSE) {
-			return FALSE;
+			return $this->descriptionDao->moveItemDescription($from, $to, $recursively);
 		}
 		
 		public function getItemPermission($item, $userId) {
