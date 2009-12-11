@@ -25,6 +25,14 @@
 			return Filesystem::basename($this->path);
 		}
 
+		public function rename($name) {
+			return $this->filesystem->rename($this, $name);
+		}
+
+		public function move($to) {
+			return $this->filesystem->move($this, $to);
+		}
+
 		public function description() {
 			return $this->filesystem->description($this);
 		}
@@ -65,11 +73,7 @@
 		}
 		
 		public function isFile() { return TRUE; }
-		
-		public function rename($name) {
-			return $this->filesystem->rename($this, $name);
-		}
-		
+				
 		public function details() {
 			$datetime_format = $this->filesystem->getDatetimeFormat();
 			

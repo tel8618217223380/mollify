@@ -24,6 +24,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -55,7 +56,8 @@ public class ConfigurationDialog extends CenteredDialog implements
 	public ConfigurationDialog(TextProvider textProvider,
 			DialogManager dialogManager, SessionInfo session,
 			ConfigurationService service, PasswordHandler passwordHandler,
-			PasswordGenerator passwordGenerator) {
+			PasswordGenerator passwordGenerator,
+			PasswordDialogFactory passwordDialogFactory) {
 		super(textProvider.getStrings().configurationDialogTitle(),
 				StyleConstants.CONFIGURATION_DIALOG);
 		this.textProvider = textProvider;
@@ -63,7 +65,7 @@ public class ConfigurationDialog extends CenteredDialog implements
 		this.session = session;
 		this.passwordHandler = passwordHandler;
 		this.viewManager = new ConfigurationViewManager(textProvider, service,
-				this, passwordGenerator);
+				this, passwordGenerator, passwordDialogFactory);
 
 		menu = new ConfigurationMenu(this);
 		menu.addItem(ConfigurationType.Users, textProvider.getStrings()

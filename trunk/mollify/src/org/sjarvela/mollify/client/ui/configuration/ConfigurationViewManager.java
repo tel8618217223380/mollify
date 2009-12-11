@@ -32,6 +32,7 @@ import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersPres
 import org.sjarvela.mollify.client.ui.configuration.users.ConfigurationUsersView;
 import org.sjarvela.mollify.client.ui.configuration.users.UserDialog;
 import org.sjarvela.mollify.client.ui.configuration.users.UserDialogFactory;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 
 public class ConfigurationViewManager implements UserDialogFactory {
 	private final ConfigurationService service;
@@ -39,13 +40,17 @@ public class ConfigurationViewManager implements UserDialogFactory {
 	private final ConfigurationDialog dialog;
 	private final Map<ResourceId, Configurator> cache = new HashMap();
 	private final PasswordGenerator passwordGenerator;
+	private final PasswordDialogFactory passwordDialogFactory;
 
 	public ConfigurationViewManager(TextProvider textProvider,
-			ConfigurationService service, ConfigurationDialog dialog, PasswordGenerator passwordGenerator) {
+			ConfigurationService service, ConfigurationDialog dialog,
+			PasswordGenerator passwordGenerator,
+			PasswordDialogFactory passwordDialogFactory) {
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dialog = dialog;
 		this.passwordGenerator = passwordGenerator;
+		this.passwordDialogFactory = passwordDialogFactory;
 	}
 
 	public Configurator getView(ResourceId id) {
@@ -69,7 +74,8 @@ public class ConfigurationViewManager implements UserDialogFactory {
 		ConfigurationUsersView view = new ConfigurationUsersView(textProvider,
 				actionDelegator);
 		ConfigurationUsersPresenter presenter = new ConfigurationUsersPresenter(
-				service, dialog, textProvider, view, this, null);
+				service, dialog, textProvider, view, this,
+				passwordDialogFactory);
 		return new ConfigurationUsersGlue(view, presenter, actionDelegator);
 	}
 
