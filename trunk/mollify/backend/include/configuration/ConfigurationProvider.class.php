@@ -52,11 +52,11 @@
 			return FALSE;
 		}
 	
-		function removeItemDescription($item, $recursively = FALSE) {
+		function removeItemDescription($item) {
 			return FALSE;
 		}
 		
-		function moveItemDescription($from, $to, $recursively = FALSE) {
+		function moveItemDescription($from, $to) {
 			return FALSE;
 		}
 					
@@ -72,11 +72,11 @@
 			return FALSE;
 		}
 
-		function removeAllItemPermissions($item, $recursively = FALSE) {
+		function removeItemPermissions($item) {
 			return FALSE;
 		}
 		
-		function moveItemPermissions($from, $to, $recursively = FALSE) {
+		function moveItemPermissions($from, $to) {
 			return FALSE;
 		}
 		

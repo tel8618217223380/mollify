@@ -60,8 +60,8 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
-			String uploaderSrc, Folder directory,
-			FlashFileUploadDialog dialog, TextProvider textProvider) {
+			String uploaderSrc, Folder directory, FlashFileUploadDialog dialog,
+			TextProvider textProvider) {
 		flashLoadTimer = new Timer() {
 			@Override
 			public void run() {
@@ -224,6 +224,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onUploadComplete(UploadCompleteEvent e) {
+		if (uploadModel == null)
+			return;
+
 		Log.debug("Upload completed " + e.getFile().getName());
 		uploadModel.uploadComplete(e.getFile());
 		dialog.onFileUploadCompleted(e.getFile());

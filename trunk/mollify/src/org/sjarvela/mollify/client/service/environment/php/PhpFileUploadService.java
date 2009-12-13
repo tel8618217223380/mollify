@@ -41,7 +41,7 @@ public class PhpFileUploadService extends PhpFileService implements
 	}
 
 	public String getUploadUrl(Folder directory) {
-		return serviceUrl().fileItem(directory).toString();
+		return serviceUrl().fileItem(directory).build();
 	}
 
 	public void getUploadProgress(String id,

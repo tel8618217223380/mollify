@@ -9,7 +9,7 @@
 		
 		public function initialize($request) {
 			session_name($this->name);
-			if ($request->hasParam("MOLLIFY_SESSION_ID")) session_id($request->getParam("MOLLIFY_SESSION_ID"));
+			if ($request->hasParam("MOLLIFY_SESSION_ID")) session_id($request->param("MOLLIFY_SESSION_ID"));
 			session_start();
 		}
 		

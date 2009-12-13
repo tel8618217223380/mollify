@@ -20,9 +20,7 @@
 			$this->writeDescriptionsToFile($file, $descriptions);
 		}
 
-		public function removeItemDescription($item, $recursively) {
-			# we can ignore recursive flag, file will be removed automatically when folder is removed
-			
+		public function removeItemDescription($item) {
 			$file = $this->getDescriptionFilename($item);
 			$descriptions = $this->readDescriptionsFromFile($file);
 			if (!isset($descriptions[$item->name()])) return;
@@ -31,7 +29,7 @@
 			$this->writeDescriptionsToFile($file, $descriptions);
 		}
 		
-		public function moveItemDescription($from, $to, $recursively) {
+		public function moveItemDescription($from, $to) {
 			$fromFile = $this->getDescriptionFilename($from);
 			$fromDescriptions = $this->readDescriptionsFromFile($fromFile);
 			if (!isset($fromDescriptions[$from->name()])) return;

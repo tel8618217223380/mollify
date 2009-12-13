@@ -1757,15 +1757,6 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	margin-bottom: 4px;
 }
 
-.mollify-file-upload-flash-selector-hidden {
-	border: none;
-	background: url(wait2.gif) no-repeat right;
-}
-
-.mollify-file-upload-flash-selector-hidden .mollify-file-upload-flash-selector-label {
-	visibility: hidden;
-}
-
 .mollify-file-upload-flash-selector-label {
 	width: 80px;
 	height: 15px;
@@ -1773,6 +1764,14 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	font-weight: normal;
 	font-style: normal;
 	margin-top: 1px;
+}
+
+.mollify-file-upload-flash-header-upload .mollify-file-upload-flash-selector {
+	border: none;
+	background: url(wait2.gif) no-repeat right;
+	font-size: 0;
+	color: white;
+	line-height: 0;
 }
 
 .swfupload {

@@ -98,12 +98,14 @@
 			return $this->descriptionDao->setItemDescription($item, $description);
 		}
 	
-		public function removeItemDescription($item, $recursively = FALSE) {
-			return $this->descriptionDao->removeItemDescription($item, $recursively);
+		public function removeItemDescription($item) {
+			if (!$item->isFile()) return;
+			return $this->descriptionDao->removeItemDescription($item);
 		}
 		
-		public function moveItemDescription($from, $to, $recursively = FALSE) {
-			return $this->descriptionDao->moveItemDescription($from, $to, $recursively);
+		public function moveItemDescription($from, $to) {
+			if (!$from->isFile()) return;
+			return $this->descriptionDao->moveItemDescription($from, $to);
 		}
 		
 		public function getItemPermission($item, $userId) {
@@ -114,8 +116,9 @@
 			return $this->permissionDao->getItemPermissions($item);
 		}
 
-		public function moveItemPermissions($from, $to, $recursively = FALSE) {
-			return $this->permissionDao->moveItemPermissions($from, $to, $recursively);
+		public function moveItemPermissions($from, $to) {
+			if (!$from->isFile()) return;
+			return $this->permissionDao->moveItemPermissions($from, $to);
 		}
 		
 		public function updateItemPermissions($updates) {
@@ -130,7 +133,12 @@
 			else if (count($removed) > 0) $id = $removed[0]["item_id"];
 			else return TRUE;
 
-			return $this->permissionDao->updateItemPermissions($this->env->filesystem()->getItemFromId($id), $new, $modified, $removed);
+			$this->permissionDao->updateItemPermissions($this->env->filesystem()->getItemFromId($id), $new, $modified, $removed);
+		}
+		
+		public function removeItemPermissions($item) {
+			if (!$item->isFile()) return;
+			return $this->permissionDao->removeItemPermissions($item);
 		}
 
 	}

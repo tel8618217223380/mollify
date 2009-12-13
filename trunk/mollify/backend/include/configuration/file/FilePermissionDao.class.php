@@ -36,9 +36,7 @@
 			return $result;
 		}
 
-		public function moveItemPermissions($from, $to, $recursively = FALSE) {
-			if ($recursively) return;	// permission file is moved along the folder
-			
+		public function moveItemPermissions($from, $to) {
 			$fromPath = dirname($from->path());
 			$fromName = Filesystem::basename($from->path());
 			$fromId = $this->getPermissionId($from);
@@ -98,6 +96,16 @@
 			if (Logging::isDebug())
 				Logging::logDebug("Permissions updated (".$item->id()."): ".Util::array2str($permissions));
 
+			$this->writePermissionsToFile($uacFile, $permissions);
+		}
+		
+		public function removeItemPermissions($item) {
+			$id = $this->getPermissionId($item);
+			$uacFile = $this->getUacFilename($item);
+			$permissions = $this->readPermissionsFromFile($uacFile);
+			
+			if (!$permissions or !array_key_exists($id, $permissions)) return;
+			unset($permissions[$id]);
 			$this->writePermissionsToFile($uacFile, $permissions);
 		}
 		

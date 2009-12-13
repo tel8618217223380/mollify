@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.ui.common;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.util.Html;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -65,12 +67,17 @@ public class EditableLabel extends Composite {
 		editor.setText(text);
 	}
 
-	public void setEditable(boolean isEditable) {
+	public void setEditable(final boolean isEditable) {
 		editor.setVisible(isEditable);
 		label.setVisible(!isEditable);
 
 		if (isEditable)
-			editor.setFocus(isEditable);
+			DeferredCommand.addCommand(new Command() {
+				@Override
+				public void execute() {
+					editor.setFocus(true);
+				}
+			});
 	}
 
 	public String getText() {

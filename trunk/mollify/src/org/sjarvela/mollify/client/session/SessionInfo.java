@@ -40,15 +40,6 @@ public class SessionInfo extends JavaScriptObject {
 
 	public final String asString() {
 		return JsUtil.asJsonString(this);
-		// StringBuilder s = new StringBuilder("[SessionInfo");
-		//
-		// if (isAuthenticationRequired())
-		// s.append(" auth=").append(isAuthenticated()).append(" user=")
-		// .append(getLoggedUser());
-		// s.append(" permission=").append(getDefaultPermissionModeString());
-		// s.append(" filesystem=").append(getFileSystemInfo().asString());
-		// s.append("]");
-		// return s.toString();
 	}
 
 	public final native boolean isAuthenticationRequired() /*-{
@@ -115,7 +106,7 @@ public class SessionInfo extends JavaScriptObject {
 		this.session_id = sessionId;
 		this.user_id = userId;
 		this.username = user;
-		this.default_permission_mode = permissionMode;
+		this.default_permission = permissionMode;
 		this.features = features;
 		this.filesystem = fileSystemInfo;
 		this.roots = roots;
