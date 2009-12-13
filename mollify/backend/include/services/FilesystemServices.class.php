@@ -7,7 +7,6 @@
 		
 		public function processGet() {
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
-			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, Util::array2str($this->path));
 			
 			if ($item->isFile()) $this->processGetFile($item);
 			else $this->processGetFolder($item);
@@ -21,7 +20,6 @@
 			}
 			
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
-			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
 			if ($item->isFile()) $this->processPutFile($item);
 			else $this->processPutFolder($item);
@@ -29,10 +27,17 @@
 		
 		public function processPost() {
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
-			$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_WRITE, Util::array2str($this->path));
 			
 			if ($item->isFile()) $this->processPostFile($item);
 			else $this->processPostFolder($item);
+		}
+		
+		public function processDelete() {
+			if (count($this->path) != 1) throw invalidRequestException();
+
+			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
+			$item->delete();
+			$this->response()->success(TRUE);
 		}
 		
 		private function convertItemId($id) {
@@ -75,12 +80,22 @@
 		}
 		
 		private function processPostFile($item) {
-			if (count($this->path) < 2 or $this->path[1] != 'move') throw $this->invalidRequestException();
+			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
-			$item->move($this->env->filesystem()->getItemFromId($this->request->data));
+			switch (strtolower($this->path[1])) {
+				case 'move':
+					$item->move($this->env->filesystem()->getItemFromId($this->request->data));
+					break;
+				case 'copy':
+					$item->copy($this->env->filesystem()->getItemFromId($this->request->data));
+					break;
+				default:
+					throw $this->invalidRequestException();
+			}
+			
 			$this->response()->success(TRUE);
 		}
-		
+				
 		private function processGetFolder($item) {
 			if (count($this->path) != 2) throw invalidRequestException();
 			
@@ -105,8 +120,8 @@
 		private function processPostFolder($item) {
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			
-			$this->env->features()->assertFeature("file_upload");
-			$this->env->filesystem()->uploadToFolder($item);
+			$item->uploadTo();
+			$this->response()->success(TRUE);
 		}
 	}
 ?>

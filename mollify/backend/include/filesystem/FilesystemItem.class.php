@@ -4,6 +4,7 @@
 		protected $id;
 		protected $rootId;
 		protected $path;
+		protected $storedPermission = NULL;
 		
 		function __construct($filesystem, $id, $rootId, $path) {
 			$this->filesystem = $filesystem;
@@ -26,11 +27,29 @@
 		}
 
 		public function rename($name) {
+			$this->assertRights(Authentication::RIGHTS_WRITE, "rename");
 			return $this->filesystem->rename($this, $name);
 		}
 
 		public function move($to) {
+			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
+			$this->assertRights(Authentication::RIGHTS_READ, "move");
+			$to->assertRights(Authentication::RIGHTS_WRITE, "move");
+
 			return $this->filesystem->move($this, $to);
+		}
+
+		public function copy($to) {
+			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
+			$this->assertRights(Authentication::RIGHTS_READ, "copy");
+			$to->assertRights(Authentication::RIGHTS_WRITE, "copy");
+
+			return $this->filesystem->copy($this, $to);
+		}
+		
+		public function delete() {
+			$this->assertRights(Authentication::RIGHTS_WRITE, "delete");
+			return $this->filesystem->delete($this);
 		}
 
 		public function description() {
@@ -38,11 +57,14 @@
 		}
 
 		public function setDescription($desc) {
+			$this->assertRights(Authentication::RIGHTS_WRITE, "set description");
 			return $this->filesystem->setDescription($this, $desc);
 		}
 				
 		public function permission() {
-			return $this->filesystem->permission($this);
+			if ($this->storedPermission != NULL) return $this->storedPermission;
+			$this->storedPermission = $this->filesystem->permission($this);
+			return $this->storedPermission;
 		}
 
 		public function allPermissions() {
@@ -60,6 +82,10 @@
 		public function dirName() {
 			return dirname($this->path);
 		}
+		
+		public function assertRights($rights, $action = "Unknown action") {
+			$this->filesystem->assertRights($this, $rights, $action);
+		}
 
 	}
 	
@@ -75,6 +101,7 @@
 		public function isFile() { return TRUE; }
 				
 		public function details() {
+			$this->assertRights(Authentication::RIGHTS_READ, "details");
 			$datetime_format = $this->filesystem->getDatetimeFormat();
 			
 			return array(
@@ -87,6 +114,7 @@
 		}
 		
 		public function download() {
+			$this->assertRights(Authentication::RIGHTS_READ, "download");
 			Logging::logDebug('Download ['.$this->path.']');
 			
 			header("Cache-Control: public, must-revalidate");
@@ -171,7 +199,7 @@
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = Filesystem::joinPath($this->path, $name);
+				$fullPath = Filesystem::joinPath($path, $name);
 				if (is_dir($fullPath)) {
 					if ($recursive) $result = array_merge($result, $this->getVisibleFiles($fullPath, TRUE));
 					continue;
@@ -180,6 +208,15 @@
 				$result[] = $fullPath;
 			}
 			return $result;
+		}
+		
+		public function uploadTo() {
+			$this->assertRights(Authentication::RIGHTS_WRITE, "upload");
+			$this->filesystem->uploadToFolder($this);
+		}
+		
+		public function pathFor($name) {
+			return Filesystem::joinPath($this->path, $name);
 		}
 	}
 ?>

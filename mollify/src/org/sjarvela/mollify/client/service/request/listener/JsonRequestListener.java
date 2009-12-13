@@ -49,7 +49,14 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	public void onFail(Response response) {
-		JSONObject o = JSONParser.parse(response.getText()).isObject();
+		String jsonString = response.getText();
+		if (jsonString.isEmpty()) {
+			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE,
+					"Empty response received (status " + response.getStatusCode()
+							+ ")"));
+			return;
+		}
+		JSONObject o = JSONParser.parse(jsonString).isObject();
 		if (o == null) {
 			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 			return;

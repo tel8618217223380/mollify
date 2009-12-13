@@ -46,8 +46,7 @@ public class ServiceError {
 	}
 
 	public String toString() {
-		return "Error '" + type.name() + "' (" + details + ") " + error != null ? error
-				.asString()
-				: "";
+		return "Error '" + type.name() + "' (" + details + ") "
+				+ (error != null ? error.asString() : "");
 	}
 }

@@ -71,7 +71,8 @@ public class SystemServiceProvider implements ServiceProvider,
 			viewManager.showErrorInMainView("Configuration Error", error);
 			return true;
 		}
-		if (error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
+		if (error.getType().equals(ServiceErrorType.INVALID_RESPONSE)
+				|| error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
 			viewManager.showErrorInMainView("Protocol error", error);
 			return true;
 		}

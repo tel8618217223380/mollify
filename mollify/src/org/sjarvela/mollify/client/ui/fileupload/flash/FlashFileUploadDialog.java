@@ -46,8 +46,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	private final Map<String, FileComponent> fileItems = new HashMap();
 	private final String uploaderStyle;
 
-	private Panel selectHeader;
-	private Label uploadHeader;
+	private Panel header;
 	private Panel uploadButtonContainer;
 	private ScrollPanel fileScrollPanel;
 	private Panel fileList;
@@ -60,6 +59,8 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	private Panel uploadButtonPanel;
 
 	private String totalSizeText;
+
+	private Label message;
 
 	public enum Actions implements ResourceId {
 		upload, cancel, cancelUpload, removeFile
@@ -91,8 +92,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_CONTENT);
-		panel.add(createSelectModeHeader());
-		panel.add(createUploadingMessage());
+		panel.add(createHeader());
 		panel.add(createFileList());
 		panel.add(createTotalPanel());
 		panel.add(createUploadButtons());
@@ -109,16 +109,14 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		return fileScrollPanel;
 	}
 
-	private Widget createSelectModeHeader() {
-		selectHeader = new FlowPanel();
-		selectHeader
+	private Widget createHeader() {
+		header = new FlowPanel();
+		header
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_HEADER);
 
-		Label message = new Label(textProvider.getStrings()
-				.fileUploadDialogMessage());
+		message = new Label(textProvider.getStrings().fileUploadDialogMessage());
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
-
-		selectHeader.add(message);
+		header.add(message);
 
 		uploadButtonContainer = new FlowPanel();
 		Label label = new Label(textProvider.getStrings()
@@ -131,8 +129,8 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		uploadButtonContainer.addStyleDependentName(StyleConstants.HIDDEN);
 		uploadButtonContainer.add(new HTML("<div id='" + UPLOADER_ELEMENT_ID
 				+ "'/>"));
-		selectHeader.add(uploadButtonContainer);
-		return selectHeader;
+		header.add(uploadButtonContainer);
+		return header;
 	}
 
 	public void showUploadButton() {
@@ -188,14 +186,6 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		return buttons;
 	}
 
-	private Widget createUploadingMessage() {
-		uploadHeader = new Label(textProvider.getStrings()
-				.fileUploadProgressPleaseWait());
-		uploadHeader.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
-		uploadHeader.addStyleDependentName(StyleConstants.ACTIVE);
-		return uploadHeader;
-	}
-
 	private Widget createUploadButtons() {
 		uploadButtonPanel = new FlowPanel();
 		uploadButtonPanel.add(createButton(textProvider.getStrings()
@@ -238,16 +228,16 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 	private void setMode(Mode mode) {
 		if (Mode.Upload.equals(mode)) {
-			selectHeader.addStyleDependentName(StyleConstants.HIDDEN);
+			header.addStyleDependentName(StyleConstants.UPLOAD);
+			message.setText(textProvider.getStrings()
+					.fileUploadProgressPleaseWait());
 			fileList.addStyleDependentName(StyleConstants.UPLOAD);
-			uploadHeader.setVisible(true);
 			totalPanel.setVisible(true);
 			buttons.setVisible(false);
 			uploadButtonPanel.setVisible(true);
 		} else {
-			selectHeader.removeStyleDependentName(StyleConstants.HIDDEN);
+			header.removeStyleDependentName(StyleConstants.UPLOAD);
 			fileList.removeStyleDependentName(StyleConstants.UPLOAD);
-			uploadHeader.setVisible(false);
 			totalPanel.setVisible(false);
 			uploadButtonPanel.setVisible(false);
 		}

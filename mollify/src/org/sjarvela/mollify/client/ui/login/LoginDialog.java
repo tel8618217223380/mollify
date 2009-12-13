@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -44,7 +46,11 @@ public class LoginDialog extends CenteredDialog {
 		this.setModal(false);
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
-				userName.setFocus(true);
+				DeferredCommand.addCommand(new Command() {
+					public void execute() {
+						userName.setFocus(true);
+					}
+				});
 			}
 		});
 

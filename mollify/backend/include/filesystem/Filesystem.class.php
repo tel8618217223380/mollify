@@ -90,7 +90,8 @@
 			$old = $item->path();
 			$new = self::joinPath(dirname($old),$name);
 			
-			if (file_exists($new)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
+			if (file_exists($new))
+				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
 			Logging::logDebug('rename from ['.$old.'] to ['.$new.']');
 			
 			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
@@ -103,14 +104,21 @@
 			
 			$this->env->events()->onEvent(FileEvent::rename($item, $name));
 		}
+
+		public function copy($item, $to) {			
+			$target = Filesystem::joinPath($to->path(), $item->name());
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");
+			Logging::logDebug('copying '.$item->id()."[".$item->path().'] to ['.$target.']');
+					
+			if (!copy($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()."]");
+						
+			$this->env->events()->onEvent(FileEvent::copy($item, $this->getItemFromPath($item->rootId(), $target)));			
+		}
 		
-		public function move($item, $to) {
-			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
-			Logging::logDebug('moving ['.$item->id().'] to ['.$to->dirName().']');
-			
+		public function move($item, $to) {			
 			$target = Filesystem::joinPath($to->path(), $item->name());
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists");
-			Logging::logDebug('move from ['.$item->path().'] to ['.$target.']');
+			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$target.']');
 					
 			if (!rename($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");
 			$to = $this->getItemFromPath($item->rootId(), $target);
@@ -124,6 +132,96 @@
 			$this->env->events()->onEvent(FileEvent::move($item, $to));			
 		}
 		
+		public function delete($item) {
+			Logging::logDebug('deleting ['.$item->id().']');
+			
+			if ($item->isFile()) {
+				if (!unlink($item->path()))
+					throw new ServiceException("REQUEST_FAILED", "Cannot delete [".$item->id()."]");				
+			} else {		
+				$this->env->features()->assertFeature("folder_actions");
+				$this->deleteFolderRecurse($path);
+				
+				if ($_SESSION["features"]["description_update"])
+					remove_item_description($dir, TRUE);
+				if ($_SESSION["features"]["permission_update"])
+					remove_all_item_permissions($dir, TRUE);
+			}
+			
+			if ($this->env->features()->isFeatureEnabled("description_update"))
+				$this->env->configuration()->removeItemDescription($item);
+				
+			if ($this->env->features()->isFeatureEnabled("permission_update"))
+				$this->env->configuration()->removeItemPermissions($item);
+			
+			$this->env->events()->onEvent(FileEvent::delete($item));
+		}
+		
+		private function deleteFolderRecursively($path) {
+			$path = self::dirPath($path);
+			$handle = opendir($path);
+			
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open directory for traversal (delete_directory_recurse): ".$path);
+		    
+		    while (false !== ($item = readdir($handle))) {
+				if ($item != "." and $item != ".." ) {
+					$fullpath = $path.$item;
+	
+					if (is_dir($fullpath)) {
+						$this->deleteFolderRecursively($fullpath);
+					} else {
+						if (!unlink($fullpath)) {
+							closedir($handle);
+							throw new ServiceException("REQUEST_FAILED", "Failed to remove file (delete_directory_recurse): ".$fullpath);
+						}
+					}
+				}
+			}
+			
+			closedir($handle);
+			
+			if (!rmdir($path))
+				throw new ServiceException("REQUEST_FAILED", "Failed to remove directory (delete_directory_recurse): ".$path);
+		}
+		
+		public function uploadToFolder($folder) {
+			$this->env->features()->assertFeature("file_upload");
+						
+			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
+				throw new ServiceException("NO_UPLOAD_DATA");
+			
+			if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
+			
+			// flash uploader (uploads one file at a time)
+			if (isset($_FILES['uploader-flash'])) {
+				$this->upload($folder, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
+				return;
+			}
+	
+			// http
+			if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK)
+				throw new ServiceException("UPLOAD_FAILED", $_FILES["file"]["error"]);
+					
+			foreach ($_FILES['uploader-http']['name'] as $key => $value) { 
+				$name = $_FILES['uploader-http']['name'][$key];
+				$origin = $_FILES['uploader-http']['tmp_name'][$key];
+				$this->upload($folder, $name, $origin);
+			}
+//			$_SESSION['upload_file'] = "";
+		}
+		
+		private function upload($folder, $name, $origin) {
+			$target = $folder->pathFor($name);
+			Logging::logDebug('uploading ['.$target.']');
+					
+			if (file_exists($target))
+				throw new ServiceException("FILE_ALREADY_EXISTS", Filesystem::basename($target));
+				
+			if (!move_uploaded_file($origin, $target))
+				throw new ServiceException("SAVING_FAILED", Filesystem::basename($target));
+		}
+
 		public function getIgnoredItems($folder) {
 			return array('mollify.dsc', 'mollify.uac');
 		}
@@ -200,6 +298,7 @@
 	}
 	
 	class FileEvent extends Event {
+		const COPY = "copy";
 		const RENAME = "rename";
 		const MOVE = "move";
 		const DELETE = "delete";
@@ -211,11 +310,19 @@
 			return new FileEvent($item, self::RENAME, $name);
 		}
 
+		static function copy($item, $to) {
+			return new FileEvent($item, self::COPY, $to);
+		}
+
 		static function move($item, $to) {
 			return new FileEvent($item, self::MOVE, $to);
 		}
+
+		static function delete($item) {
+			return new FileEvent($item, self::DELETE);
+		}
 		
-		function __construct($item, $type, $data) {
+		function __construct($item, $type, $data = NULL) {
 			parent::__construct(FileSystem::EVENT_TYPE_FILE, $data);
 			$this->item = $item;
 			$this->subType = $type;
