@@ -38,7 +38,7 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void createDirectory(Folder parentFolder, String folderName,
+	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		// TODO Auto-generated method stub
 
@@ -49,13 +49,13 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getDirectories(Folder parent,
+	public void getFolders(Folder parent,
 			ResultListener<List<Folder>> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void getDirectoryContents(Folder parent,
+	public void getItems(Folder parent,
 			ResultListener<FolderContent> listener) {
 		// TODO Auto-generated method stub
 
@@ -117,7 +117,7 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getDirectoryDetails(Folder directory,
+	public void getFolderDetails(Folder directory,
 			ResultListener<FolderDetails> resultListener) {
 		// TODO Auto-generated method stub
 

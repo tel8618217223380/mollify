@@ -197,7 +197,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				.getCurrentFolder(), new DirectoryHandler() {
 			public void createDirectory(Folder parentFolder,
 					String folderName) {
-				fileSystemService.createDirectory(parentFolder, folderName,
+				fileSystemService.createFolder(parentFolder, folderName,
 						createReloadListener());
 			}
 		});

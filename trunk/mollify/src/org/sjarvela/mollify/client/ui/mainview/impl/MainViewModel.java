@@ -113,7 +113,7 @@ public class MainViewModel {
 			return;
 		}
 
-		fileServices.getDirectoryContents(getCurrentFolder(), createListener(
+		fileServices.getItems(getCurrentFolder(), createListener(
 				resultListener, new ResultCallback<FolderContent>() {
 					public void onCallback(FolderContent result) {
 						onUpdateData(result);

@@ -26,10 +26,10 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 public interface FileSystemService extends FileDetailsProvider,
 		FolderDetailsProvider {
 
-	void getDirectories(Folder parent,
+	void getFolders(Folder parent,
 			ResultListener<List<Folder>> listener);
 
-	void getDirectoryContents(Folder parent,
+	void getItems(Folder parent,
 			ResultListener<FolderContent> listener);
 
 	void rename(FileSystemItem item, String newName,
@@ -42,7 +42,7 @@ public interface FileSystemService extends FileDetailsProvider,
 
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
 
-	void createDirectory(Folder parentFolder, String folderName,
+	void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener);
 
 	String getDownloadUrl(File file);

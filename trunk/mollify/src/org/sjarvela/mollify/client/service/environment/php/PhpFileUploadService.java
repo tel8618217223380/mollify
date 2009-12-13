@@ -12,17 +12,13 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
-import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.request.data.ReturnValue;
+import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.DateTime;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 public class PhpFileUploadService extends PhpFileService implements
 		FileUploadService {
@@ -41,37 +37,34 @@ public class PhpFileUploadService extends PhpFileService implements
 	}
 
 	public String getUploadUrl(Folder directory) {
-		return serviceUrl().fileItem(directory).build();
+		return serviceUrl().fileItem(directory).item("files").build();
 	}
 
 	public void getUploadProgress(String id,
 			ResultListener<FileUploadStatus> resultListener) {
-		request().url(
-				serviceUrl().action(FileUploadAction.upload_status).item(id))
+		request().url(serviceUrl().item("upload").item(id).item("status"))
 				.listener(resultListener).get();
 	}
 
-	public void handleResult(String resultString, FileUploadListener listener) {
-		if (Log.isDebugEnabled())
-			Log.debug("File upload result: " + resultString);
+	@Override
+	public SubmitCompleteHandler getUploadHandler(final ResultListener listener) {
+		final JsonRequestListener jsonHandler = new JsonRequestListener(
+				listener);
+		SubmitCompleteHandler handler = new SubmitCompleteHandler() {
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				String response = event.getResults();
 
-		if (resultString == null || resultString.length() < 1) {
-			listener.onUploadFailed(new ServiceError(
-					ServiceErrorType.NO_RESPONSE));
-		}
+				if (isError(response))
+					jsonHandler.onFail(0, response);
+				else
+					jsonHandler.onSuccess(response);
+			}
 
-		JSONObject object = JSONParser.parse(resultString).isObject();
-		if (object == null) {
-			listener.onUploadFailed(new ServiceError(
-					ServiceErrorType.INVALID_RESPONSE));
-		}
-		ReturnValue returnValue = object.getJavaScriptObject()
-				.<ReturnValue> cast();
-
-		if (!returnValue.isSuccess())
-			listener.onUploadFailed(new ServiceError(
-					ServiceErrorType.UPLOAD_FAILED));
-		else
-			listener.onUploadFinished(returnValue.getResult());
+			private boolean isError(String response) {
+				return response.indexOf("\"error\":") >= 0;
+			}
+		};
+		return handler;
 	}
 }

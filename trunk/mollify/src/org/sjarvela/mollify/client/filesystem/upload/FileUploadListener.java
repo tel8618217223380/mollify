@@ -14,13 +14,11 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 public interface FileUploadListener {
 
 	void onUploadStarted(String uploadId, List<String> filenames);
 
 	void onUploadFailed(ServiceError error);
 
-	void onUploadFinished(JavaScriptObject result);
+	void onUploadFinished();
 }

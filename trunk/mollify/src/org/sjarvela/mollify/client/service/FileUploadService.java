@@ -10,10 +10,11 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 public interface FileUploadService {
 
@@ -21,7 +22,7 @@ public interface FileUploadService {
 
 	String getFileUploadId();
 
-	String getUploadUrl(Folder directory);
+	String getUploadUrl(Folder folder);
 
-	void handleResult(String resultString, FileUploadListener listener);
+	SubmitCompleteHandler getUploadHandler(ResultListener listener);
 }

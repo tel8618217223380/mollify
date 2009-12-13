@@ -33,7 +33,7 @@ public class DemoFileService implements FileSystemService {
 		this.data = data;
 	}
 
-	public void createDirectory(Folder parentFolder, String folderName,
+	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		resultListener.onSuccess(true);
 	}
@@ -42,12 +42,12 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void getDirectories(Folder parent,
+	public void getFolders(Folder parent,
 			ResultListener<List<Folder>> listener) {
 		listener.onSuccess(data.getDirectories(parent));
 	}
 
-	public void getDirectoryContents(Folder parent,
+	public void getItems(Folder parent,
 			ResultListener<FolderContent> listener) {
 		listener.onSuccess(new FolderContent(data.getDirectories(parent),
 				data.getFiles(parent)));
@@ -76,7 +76,7 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(data.getFileDetails(file));
 	}
 
-	public void getDirectoryDetails(Folder directory,
+	public void getFolderDetails(Folder directory,
 			ResultListener<FolderDetails> resultListener) {
 		resultListener.onSuccess(data.getDirectoryDetails(directory));
 	}

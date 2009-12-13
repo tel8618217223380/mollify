@@ -12,9 +12,10 @@ package org.sjarvela.mollify.client.service;
 
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
+
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 public class FileUploadServiceAdapter implements FileUploadService {
 	private final FileUploadService service;
@@ -40,7 +41,9 @@ public class FileUploadServiceAdapter implements FileUploadService {
 		return service.getUploadUrl(folder);
 	}
 
-	public void handleResult(String resultString, FileUploadListener listener) {
-		service.handleResult(resultString, listener);
+	@Override
+	public SubmitCompleteHandler getUploadHandler(ResultListener listener) {
+		return service.getUploadHandler(resultListenerFactory
+				.createListener(listener));
 	}
 }

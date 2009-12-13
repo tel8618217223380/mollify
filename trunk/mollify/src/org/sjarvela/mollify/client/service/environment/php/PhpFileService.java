@@ -42,7 +42,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		super(service, RequestType.filesystem);
 	}
 
-	public void getDirectories(Folder parent,
+	public void getFolders(Folder parent,
 			final ResultListener<List<Folder>> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories: " + parent.getId());
@@ -61,10 +61,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(resultListener).get();
 	}
 
-	public void getDirectoryContents(final Folder parent,
+	public void getItems(final Folder parent,
 			final ResultListener<FolderContent> listener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Get directory contents: " + parent.getId());
+			Log.debug("Get folder items: " + parent.getId());
 
 		ResultListener<FoldersAndFiles> resultListener = new ResultListener<FoldersAndFiles>() {
 			public void onFail(ServiceError error) {
@@ -91,7 +91,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(resultListener).get();
 	}
 
-	public void getDirectoryDetails(Folder item,
+	public void getFolderDetails(Folder item,
 			ResultListener<FolderDetails> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder details: " + item.getId());
@@ -136,7 +136,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		request().url(serviceUrl().fileItem(item)).listener(listener).delete();
 	}
 
-	public void createDirectory(Folder parentFolder, String folderName,
+	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Create directory: [" + folderName + "]");
