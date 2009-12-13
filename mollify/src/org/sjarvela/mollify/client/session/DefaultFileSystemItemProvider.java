@@ -55,7 +55,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
 		else
-			fileSystemService.getDirectories(parent, listener);
+			fileSystemService.getFolders(parent, listener);
 	}
 
 	public List<Folder> getRootFolders() {
@@ -68,7 +68,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 			listener.onSuccess(new FolderContent(roots,
 					Collections.EMPTY_LIST));
 		else
-			fileSystemService.getDirectoryContents(parent, listener);
+			fileSystemService.getItems(parent, listener);
 	}
 
 }

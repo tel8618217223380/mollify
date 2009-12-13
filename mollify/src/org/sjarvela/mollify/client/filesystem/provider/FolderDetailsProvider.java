@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FolderDetailsProvider {
 
-	void getDirectoryDetails(Folder directory,
+	void getFolderDetails(Folder directory,
 			ResultListener<FolderDetails> resultListener);
 
 }

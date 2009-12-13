@@ -10,12 +10,14 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.service.FileUploadService;
-import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 public class DemoFileUploadHandler implements FileUploadService {
 
@@ -35,8 +37,14 @@ public class DemoFileUploadHandler implements FileUploadService {
 		return "";
 	}
 
-	public void handleResult(String results, FileUploadListener listener) {
-		listener.onUploadFinished(ReturnValue.success(null));
+	@Override
+	public SubmitCompleteHandler getUploadHandler(final ResultListener listener) {
+		return new SubmitCompleteHandler() {
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				listener.onSuccess(null);
+			}
+		};
 	}
 
 }

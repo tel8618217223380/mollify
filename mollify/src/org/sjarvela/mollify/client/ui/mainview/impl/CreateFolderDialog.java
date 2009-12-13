@@ -19,6 +19,8 @@ import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -31,8 +33,8 @@ public class CreateFolderDialog extends CenteredDialog {
 	private final DirectoryHandler handler;
 	private TextBox name;
 
-	public CreateFolderDialog(Folder parentFolder,
-			TextProvider textProvider, DirectoryHandler handler) {
+	public CreateFolderDialog(Folder parentFolder, TextProvider textProvider,
+			DirectoryHandler handler) {
 		super(textProvider.getStrings().createFolderDialogTitle(),
 				StyleConstants.CREATE_FOLDER_DIALOG);
 
@@ -42,11 +44,20 @@ public class CreateFolderDialog extends CenteredDialog {
 
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
-				name.setFocus(true);
+				focusName();
 			}
+
 		});
 
 		initialize();
+	}
+
+	private void focusName() {
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				name.setFocus(true);
+			}
+		});
 	}
 
 	@Override
@@ -95,7 +106,7 @@ public class CreateFolderDialog extends CenteredDialog {
 		String folderName = name.getText();
 
 		if (folderName.length() < 1) {
-			name.setFocus(true);
+			focusName();
 			return;
 		}
 

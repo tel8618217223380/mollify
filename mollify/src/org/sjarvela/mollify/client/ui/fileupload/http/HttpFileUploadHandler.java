@@ -23,8 +23,6 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.ProgressDisplayer;
 import org.sjarvela.mollify.client.ui.dialog.ProgressDialogFactory;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 public class HttpFileUploadHandler implements FileUploadListener {
 	private final TextProvider textProvider;
 	private final boolean isProgressEnabled;
@@ -77,9 +75,9 @@ public class HttpFileUploadHandler implements FileUploadListener {
 		uploadMonitor.start();
 	}
 
-	public void onUploadFinished(JavaScriptObject result) {
+	public void onUploadFinished() {
 		stopUploaders();
-		listener.onSuccess(result);
+		listener.onSuccess(null);
 	}
 
 	public void onUploadFailed(ServiceError error) {

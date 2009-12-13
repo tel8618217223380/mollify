@@ -47,14 +47,19 @@ public class RenameDialog extends CenteredDialog {
 			public void onShow() {
 				if (item.isFile())
 					hilightFilename();
-				DeferredCommand.addCommand(new Command() {
-					public void execute() {
-						name.setFocus(true);
-					}
-				});
+				focusName();
 			}
+
 		});
 		initialize();
+	}
+
+	private void focusName() {
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				name.setFocus(true);
+			}
+		});
 	}
 
 	@Override
@@ -122,7 +127,7 @@ public class RenameDialog extends CenteredDialog {
 		String newName = name.getText();
 
 		if (newName.length() < 1) {
-			name.setFocus(true);
+			focusName();
 			return;
 		}
 

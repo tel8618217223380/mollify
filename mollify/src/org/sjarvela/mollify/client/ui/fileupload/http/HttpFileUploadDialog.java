@@ -17,6 +17,8 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -36,13 +38,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 public class HttpFileUploadDialog extends CenteredDialog implements
-		SubmitHandler, SubmitCompleteHandler {
+		SubmitHandler {
 	private static final String UPLOADER_ID = "uploader-http[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
@@ -142,7 +142,20 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 		form = new FormPanel();
 		form.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FORM);
 		form.addSubmitHandler(this);
-		form.addSubmitCompleteHandler(this);
+		form.addSubmitCompleteHandler(service
+				.getUploadHandler(new ResultListener() {
+					@Override
+					public void onFail(ServiceError error) {
+						HttpFileUploadDialog.this.hide();
+						listener.onUploadFailed(error);
+					}
+
+					@Override
+					public void onSuccess(Object result) {
+						HttpFileUploadDialog.this.hide();
+						listener.onUploadFinished();
+					}
+				}));
 		form.setAction(this.service.getUploadUrl(directory));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
@@ -252,8 +265,4 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 		listener.onUploadStarted(uploadId, getFileNames());
 	}
 
-	public void onSubmitComplete(SubmitCompleteEvent event) {
-		this.hide();
-		service.handleResult(event.getResults(), listener);
-	}
 }

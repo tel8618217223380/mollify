@@ -40,9 +40,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				.createListener(listener));
 	}
 
-	public void createDirectory(Folder parentFolder, String folderName,
+	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
-		service.createDirectory(parentFolder, folderName, resultListenerFactory
+		service.createFolder(parentFolder, folderName, resultListenerFactory
 				.createListener(resultListener));
 	}
 
@@ -50,21 +50,21 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.delete(item, resultListenerFactory.createListener(listener));
 	}
 
-	public void getDirectories(Folder parent,
+	public void getFolders(Folder parent,
 			ResultListener<List<Folder>> listener) {
-		service.getDirectories(parent, resultListenerFactory
+		service.getFolders(parent, resultListenerFactory
 				.createListener(listener));
 	}
 
-	public void getDirectoryContents(Folder parent,
+	public void getItems(Folder parent,
 			ResultListener<FolderContent> listener) {
-		service.getDirectoryContents(parent, resultListenerFactory
+		service.getItems(parent, resultListenerFactory
 				.createListener(listener));
 	}
 
-	public void getDirectoryDetails(Folder directory,
+	public void getFolderDetails(Folder directory,
 			ResultListener<FolderDetails> resultListener) {
-		service.getDirectoryDetails(directory, resultListenerFactory
+		service.getFolderDetails(directory, resultListenerFactory
 				.createListener(resultListener));
 	}
 

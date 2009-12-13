@@ -19,7 +19,7 @@ import com.google.gwt.http.client.Response;
 
 public class HttpRequestHandler extends
 		com.google.gwt.http.client.RequestBuilder {
-	private static final int HTTP_STATUS_OK = 200;
+	public static final int HTTP_STATUS_OK = 200;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
 
 	private final HttpRequestResponseListener listener;

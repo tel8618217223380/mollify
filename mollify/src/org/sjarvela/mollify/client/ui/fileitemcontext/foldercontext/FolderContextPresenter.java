@@ -67,7 +67,7 @@ public class FolderContextPresenter implements ActionListener {
 		popup.getName().setText(folder.getName());
 		updateDetails(null);
 
-		detailsProvider.getDirectoryDetails(folder,
+		detailsProvider.getFolderDetails(folder,
 				new ResultListener<FolderDetails>() {
 					public void onFail(ServiceError error) {
 						popup.getDescription().setText(

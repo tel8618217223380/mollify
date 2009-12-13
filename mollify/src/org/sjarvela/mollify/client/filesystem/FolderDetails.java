@@ -22,18 +22,18 @@ public class FolderDetails extends JavaScriptObject {
 	}-*/;
 
 	private final native String getFilePermissionString() /*-{
-		return this.permissions;
+		return this.permission;
 	}-*/;
 
-	public static FolderDetails create(FilePermission permissions,
+	public static FolderDetails create(FilePermission permission,
 			String description) {
 		FolderDetails result = FolderDetails.createObject().cast();
-		result.putValues(permissions.getStringValue(), description);
+		result.putValues(permission.getStringValue(), description);
 		return result;
 	}
 
-	private final native void putValues(String permissions, String description) /*-{
-		this.permissions = permissions;
+	private final native void putValues(String permission, String description) /*-{
+		this.permission = permission;
 		this.description = description;
 	}-*/;
 

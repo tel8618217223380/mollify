@@ -29,8 +29,12 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	public void onSuccess(Response response) {
+		onSuccess(response.getText());
+	}
+
+	public void onSuccess(String response) {
 		try {
-			JSONObject o = JSONParser.parse(response.getText()).isObject();
+			JSONObject o = JSONParser.parse(response).isObject();
 			if (o == null) {
 				onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 				return;
@@ -44,16 +48,18 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 				listener.onSuccess(returnValue.getResult());
 		} catch (com.google.gwt.json.client.JSONException e) {
 			onError(new ServiceError(ServiceErrorType.DATA_TYPE_MISMATCH,
-					"Got malformed JSON response: " + response.getText()));
+					"Got malformed JSON response: " + response));
 		}
 	}
 
 	public void onFail(Response response) {
-		String jsonString = response.getText();
+		onFail(response.getStatusCode(), response.getText());
+	}
+
+	public void onFail(int code, String jsonString) {
 		if (jsonString.isEmpty()) {
 			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE,
-					"Empty response received (status " + response.getStatusCode()
-							+ ")"));
+					"Empty response received (status " + code + ")"));
 			return;
 		}
 		JSONObject o = JSONParser.parse(jsonString).isObject();
