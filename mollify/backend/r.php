@@ -16,8 +16,10 @@
 	require_once("include/OutputHandler.class.php");
 	
 	function globalErrorHandler($errno, $errstr, $errfile, $errline) {
+		$info = "PHP error #".$errno.", ".$errstr." (".$errfile.":".$errline.")";
+		Logging::logError($info);
 		$responseHandler = new ResponseHandler(new OutputHandler());
-		$responseHandler->unknownServerError("PHP error #".$errno.", ".$errstr." (".$errfile.":".$errline.")");
+		$responseHandler->unknownServerError($info);
 		die();
 	}
 	set_error_handler('globalErrorHandler');

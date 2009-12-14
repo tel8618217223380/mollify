@@ -147,11 +147,11 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	}
 
 	public String getDownloadUrl(File file) {
-		return serviceUrl().fileItem(file).toString();
+		return serviceUrl().fileItem(file).build();
 	}
 
 	public String getDownloadAsZipUrl(FileSystemItem item) {
-		return serviceUrl().fileItem(item).action(FileAction.zip).toString();
+		return serviceUrl().fileItem(item).action(FileAction.zip).build();
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,

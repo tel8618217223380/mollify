@@ -1,11 +1,26 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class FilesystemServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			if (count($path) < 1 or count($path) > 2) return FALSE;
+			if (count($path) < 1 or count($path) > 3) return FALSE;
 			return TRUE;
 		}
 		
 		public function processGet() {
+			if ($this->path[0] === 'upload') {
+				$this->processGetUpload();
+				return;
+			}
 			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
 			
 			if ($item->isFile()) $this->processGetFile($item);
@@ -51,6 +66,9 @@
 			}
 						
 			switch (strtolower($this->path[1])) {
+				case 'zip':
+					$item->downloadAsZip();
+					return;
 				case 'details':
 					$this->response()->success($item->details());
 					break;
@@ -63,7 +81,7 @@
 		}
 		
 		private function processPutFile($item) {
-			if (count($this->path) < 2) throw invalidRequestException();
+			if (count($this->path) != 2) throw invalidRequestException();
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
@@ -100,6 +118,9 @@
 			if (count($this->path) != 2) throw invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
+				case 'zip':
+					$item->downloadAsZip();
+					return;
 				case 'items':
 					$this->response()->success(array("folders" => $item->folders(), "files" => $item->files()));
 					break;
@@ -117,11 +138,48 @@
 			}
 		}
 		
+		private function processPutFolder($item) {
+			if (count($this->path) != 2) throw invalidRequestException();
+						
+			switch (strtolower($this->path[1])) {
+				case 'name':
+					$item->rename($this->request->data);
+					$this->response()->success(TRUE);
+					break;
+				case 'description':
+					$item->setDescription($this->request->data);
+					$this->response()->success(TRUE);
+					break;
+				default:
+					throw $this->invalidRequestException();
+			}
+		}
+		
 		private function processPostFolder($item) {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
+			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
-			$item->uploadTo();
-			$this->response()->success(TRUE);
+			switch (strtolower($this->path[1])) {
+				case 'files':
+					$item->uploadTo();
+					$this->response()->success(TRUE);
+					break;
+				case 'folders':
+					$item->createFolder($this->request->data);
+					$this->response()->success(TRUE);
+					break;
+				case 'move':
+					$item->move($this->env->filesystem()->getItemFromId($this->request->data));
+					break;
+				default:
+					throw $this->invalidRequestException();
+			}
+		}
+		
+		private function processGetUpload() {
+			if (count($this->path) != 3 or $this->path[2] != 'status') throw invalidRequestException();
+			$this->env->features()->assertFeature("file_upload_progress");
+			Logging::logDebug('upload status '.$this->path[1]);
+			$this->response()->success(apc_fetch('upload_'.$this->path[1]));
 		}
 	}
 ?>

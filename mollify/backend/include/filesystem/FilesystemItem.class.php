@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class FilesystemItem {
 		protected $filesystem;
 		protected $id;
@@ -115,7 +126,7 @@
 		
 		public function download() {
 			$this->assertRights(Authentication::RIGHTS_READ, "download");
-			Logging::logDebug('Download ['.$this->path.']');
+			Logging::logDebug('download ['.$this->path.']');
 			
 			header("Cache-Control: public, must-revalidate");
 			header("Content-Type: application/force-download");
@@ -126,7 +137,16 @@
 			header("Pragma: hack");
 			header("Content-Length: ".filesize($this->path));
 			
-			readfile($filename);
+			readfile($this->path);
+		}
+		
+		public function downloadAsZip() {
+			$this->assertRights(Authentication::RIGHTS_READ, "download zip");
+			Logging::logDebug('download zip ['.$this->path.']');
+			
+			$zip = $this->filesystem->zip($this->name().".zip");
+			$zip->add_file_from_path($this->name(), $this->path);
+			$zip->finish();
 		}
 	}
 	
@@ -140,6 +160,15 @@
 		}
 				
 		public function isFile() { return FALSE; }
+		
+		public function details() {
+			$this->assertRights(Authentication::RIGHTS_READ, "details");
+			
+			return array(
+				"id" => $this->id,
+				"description" => $this->description(),
+				"permission" => $this->permission());
+		}
 		
 		public function folders() {
 			$items = scandir($this->path);
@@ -209,6 +238,11 @@
 			}
 			return $result;
 		}
+
+		public function createFolder($name) {
+			$this->assertRights(Authentication::RIGHTS_WRITE, "create folder");
+			$this->filesystem->createFolder($this, $name);
+		}
 		
 		public function uploadTo() {
 			$this->assertRights(Authentication::RIGHTS_WRITE, "upload");
@@ -217,6 +251,17 @@
 		
 		public function pathFor($name) {
 			return Filesystem::joinPath($this->path, $name);
+		}
+		
+		public function downloadAsZip() {
+			$this->assertRights(Authentication::RIGHTS_READ, "download zip");
+			Logging::logDebug('download zip ['.$this->path.']');
+			
+			$offset = strlen($this->path());
+			$zip = $this->filesystem->zip($this->name().'.zip');
+			foreach($this->getVisibleFiles($this->path, TRUE) as $file)
+				$zip->add_file_from_path(substr($file, $offset), $file);
+			$zip->finish();
 		}
 	}
 ?>

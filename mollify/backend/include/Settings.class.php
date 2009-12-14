@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class Settings {
 		private $settings = array();
 		
@@ -13,6 +24,7 @@
 			"enable_permission_update" => FALSE,
 			"allowed_file_upload_types" => array(),
 			"firebug_logging" => FALSE,
+			"zip_options" => array(),
 			"debug" => FALSE
 		);
 		
@@ -23,7 +35,7 @@
 			}
 		}
 				
-		public function getSetting($setting) {
+		public function setting($setting) {
 			return $this->settings[$setting];
 		}
 		

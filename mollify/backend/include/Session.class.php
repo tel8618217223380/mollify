@@ -1,10 +1,21 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class Session {
 		private $name;
 		
 		public function __construct($settings) {
 			$this->name = "MOLLIFY_SESSION";			
-			if ($settings->getSetting("session_name") != NULL) $this->name .= "_".$settings->getSetting("session_name");
+			if ($settings->setting("session_name") != NULL) $this->name .= "_".$settings->setting("session_name");
 		}
 		
 		public function initialize($request) {
