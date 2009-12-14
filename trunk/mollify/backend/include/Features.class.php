@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class Features {
 		private $features = array(
 			"file_upload" => FALSE,
@@ -19,7 +30,7 @@
 			foreach ($this->features as $f=>$k) {
 				$enabled = FALSE;
 				if (!in_array($f, self::$featuresControlledByConfigurationProvider) or in_array($f, $configurationFeatures)) {
-					$enabled = $settings->getSetting("enable_".$f);
+					$enabled = $settings->setting("enable_".$f);
 				}
 				$this->features[$f] = $enabled;
 			}
