@@ -1,14 +1,12 @@
 <?php
 	class ConfigurationProvider {
 		protected $env;
+		
 		function initialize($request, $env) {
 			$this->env = $env;
 		}
 		
-		function initializeSession($session, $userId) {
-			$session->setSessionParam('default_file_permission', $this->getDefaultUserPermissionMode($userId));
-			$session->setSessionParam('roots', $this->getUserRootDirectories($userId));
-		}
+		function initializeSession($session, $userId) {}
 		
 		public function checkProtocolVersion($version) {}
 		
@@ -32,7 +30,7 @@
 			return FALSE;
 		}
 		
-		function getDefaultPermissionMode($userId = "") {
+		function getDefaultPermission($userId = "") {
 			return FALSE;
 		}
 	
@@ -40,7 +38,7 @@
 			return TRUE;
 		}
 		
-		public function getUserRootDirectories($userId) {
+		public function getUserFolders($userId) {
 			return array();
 		}
 		
