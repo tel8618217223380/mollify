@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.0.5.3 ==
+  * Added new language: Dutch
+  * Fixed zip folder name issue
+
 === Version 1.0.5.2 ==
   * Added new language: Serbian
   * Fixed flash uploader Firefox problem
