@@ -12,6 +12,7 @@
 
 	require_once("Features.class.php");
 	require_once("EventHandler.class.php");
+	require_once("filesystem/FilesystemController.class.php");
 	
 	class ServiceEnvironment {
 		private $services = array();
@@ -31,7 +32,7 @@
 			$this->features = new Features($configurationProvider, $settings);
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler();
-			$this->filesystem = new Filesystem($this);
+			$this->filesystem = new FilesystemController($this);
 		}
 		
 		public function session() {

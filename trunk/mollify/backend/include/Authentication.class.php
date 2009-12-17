@@ -30,6 +30,11 @@
 			if (!$this->env->authentication()->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) $this->authenticate("", "");
 		}
 		
+		public function assertPermissionValue($value) {
+			if ($value != self::$PERMISSION_VALUE_ADMIN and $value != self::$PERMISSION_VALUE_READWRITE and $value != self::$PERMISSION_VALUE_READONLY)
+				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
+		}
+		
 		public function authenticate($userId, $password) {
 			$user = $this->env->configuration()->findUser($userId, $password);
 			if (!$user)
@@ -37,7 +42,7 @@
 			
 			$this->env->session()->param('user_id', $user["id"]);
 			$this->env->session()->param('username', $user["name"]);
-			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermissionMode($user["id"]));
+			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
 			
 			$this->env->onSessionStarted();
 		}

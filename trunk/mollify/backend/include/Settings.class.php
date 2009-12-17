@@ -25,13 +25,17 @@
 			"allowed_file_upload_types" => array(),
 			"firebug_logging" => FALSE,
 			"zip_options" => array(),
+			"permission_file" => "mollify.uac",
+			"description_file" => "mollify.dsc",
 			"debug" => FALSE
 		);
 		
 		function __construct($settings) {
-			foreach(self::$VALUES as $s=>$v) {
-				if (!array_key_exists($s, $settings)) $this->settings[$s] = $v;
-				else $this->settings[$s] = $settings[$s];
+			if (isset($settings) and $settings != NULL) {
+				foreach(self::$VALUES as $s=>$v) {
+					if (!array_key_exists($s, $settings)) $this->settings[$s] = $v;
+					else $this->settings[$s] = $settings[$s];
+				}
 			}
 		}
 				

@@ -21,7 +21,7 @@
 				$this->processGetUpload();
 				return;
 			}
-			$item = $this->env->filesystem()->getItemFromId($this->convertItemID($this->path[0]));
+			$item = $this->env->filesystem()->item($this->convertItemID($this->path[0]));
 			
 			if ($item->isFile()) $this->processGetFile($item);
 			else $this->processGetFolder($item);

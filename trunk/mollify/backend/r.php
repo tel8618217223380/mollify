@@ -25,6 +25,7 @@
 	set_error_handler('globalErrorHandler');
 	
 	function globalExceptionHandler($e) {
+		Logging::logException($e);
 		$responseHandler = new ResponseHandler(new OutputHandler());
 		$responseHandler->unknownServerError($e->getMessage());
 		die();

@@ -15,7 +15,6 @@
 	require_once("include/Authentication.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
-	require_once("include/filesystem/Filesystem.class.php");
 
 	class MollifyBackend {
 		private $environment;
@@ -23,17 +22,20 @@
 		function __construct($settingsVar, $configurationProviderId, $responseHandler) {
 			$settings = new Settings($settingsVar);
 			$session = new Session($settings);
-			$configurationProvider = $this->createConfigurationProvider($configurationProviderId);
+			$configurationProvider = $this->createConfigurationProvider($configurationProviderId, $settings);
 			
 			$this->environment = new ServiceEnvironment($session, $responseHandler, $configurationProvider, $settings);
 			$this->setup();
 		}
 	
-		private function createConfigurationProvider($configurationProviderId) {
+		private function createConfigurationProvider($configurationProviderId, $settings) {
 			require_once("configuration/ConfigurationProvider.class.php");
 			if (!$configurationProviderId or strcasecmp($configurationProviderId, 'file') == 0) {
 				require_once("configuration/FileConfigurationProvider.class.php");
-				return new FileConfigurationProvider();
+				return new FileConfigurationProvider($settings);
+			} else if (!$configurationProviderId or strcasecmp($configurationProviderId, 'mysql') == 0) {
+				require_once("configuration/MySQLConfigurationProvider.class.php");
+				return new MySQLConfigurationProvider($settings);
 			} else {
 				Logging::logError("Unsupported data provider: [".$configurationProviderId."]");
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported data provider: [".$configurationProviderId."]");

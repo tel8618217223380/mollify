@@ -2,12 +2,12 @@
 	class FileConfigurationProvider extends ConfigurationProvider {
 		private $permissionDao;
 		
-		public function __construct() {
+		public function __construct($settings) {
 			require_once("file/FilePermissionDao.class.php");
 			require_once("file/FileDescriptionDao.class.php");
 			
-			$this->permissionDao = new FilePermissionDao("mollify.uac");
-			$this->descriptionDao = new FileDescriptionDao("mollify.dsc");
+			$this->permissionDao = new FilePermissionDao($settings->setting("permission_file"));
+			$this->descriptionDao = new FileDescriptionDao($settings->setting("description_file"));
 		}
 		
 		function getSupportedFeatures() {
@@ -54,7 +54,7 @@
 			return $USERS[$id];
 		}
 		
-		function getDefaultPermissionMode($userId = "") {
+		function getDefaultPermission($userId = "") {
 			global $USERS, $FILE_PERMISSION_MODE;
 			
 			if ($userId === "") {
@@ -64,11 +64,8 @@
 				if (!isset($USERS[$userId]["file_permission_mode"])) return Authentication::$PERMISSION_VALUE_READONLY;
 				$mode = strtoupper($USERS[$userId]["file_permission_mode"]);
 			}
-	
-			if ($mode != Authentication::$PERMISSION_VALUE_ADMIN and $mode != Authentication::$PERMISSION_VALUE_READWRITE and $mode != Authentication::$PERMISSION_VALUE_READONLY) {
-				if ($user_id === "") throw new ServiceException("INVALID_CONFIGURATION", "Invalid file permission mode [".$mode."]");
-				throw new ServiceException("INVALID_CONFIGURATION", "Invalid file permission mode ".$mode." for user [".$user_id."]");
-			}
+
+			$this->env->authentication()->assertPermissionValue($mode);	
 			return $mode;
 		}
 	
@@ -77,7 +74,7 @@
 			return ($USERS != FALSE and count($USERS) > 0);
 		}
 		
-		public function getUserRootDirectories($userId) {
+		public function getUserFolders($userId) {
 			global $USERS, $PUBLISHED_DIRECTORIES;
 	
 			if (!isset($PUBLISHED_DIRECTORIES)) return array();
