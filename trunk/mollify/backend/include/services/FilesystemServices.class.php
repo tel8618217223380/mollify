@@ -122,13 +122,13 @@
 					$item->downloadAsZip();
 					return;
 				case 'items':
-					$this->response()->success(array("folders" => $item->folders(), "files" => $item->files()));
+					$this->response()->success(array("folders" => $this->env->filesystem()->folders($item), "files" => $this->env->filesystem()->files($item)));
 					break;
 				case 'files':
-					$this->response()->success($item->files());
+					$this->response()->success($this->env->filesystem()->files($item));
 					break;
 				case 'folders':
-					$this->response()->success($item->folders());
+					$this->response()->success($this->env->filesystem()->folders($item));
 					break;
 				case 'details':
 					$this->response()->success($item->details());

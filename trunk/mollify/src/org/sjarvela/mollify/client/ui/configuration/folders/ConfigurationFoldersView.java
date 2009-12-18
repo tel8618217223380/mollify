@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfigurationFoldersView extends ConfigurationView {
-	private final DirectoryInfoList list;
+	private final FolderInfoList list;
 	private final ActionButton addFolderButton;
 	private final ActionButton editFolderButton;
 	private final ActionButton removeFolderButton;
@@ -35,7 +35,7 @@ public class ConfigurationFoldersView extends ConfigurationView {
 			ActionListener actionListener) {
 		super(textProvider, StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS);
 
-		list = new DirectoryInfoList(textProvider,
+		list = new FolderInfoList(textProvider,
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_FOLDERS_LIST);
 
 		addFolderButton = new ActionButton(textProvider.getStrings()
@@ -84,7 +84,7 @@ public class ConfigurationFoldersView extends ConfigurationView {
 				.configurationDialogSettingFoldersViewTitle();
 	}
 
-	public DirectoryInfoList list() {
+	public FolderInfoList list() {
 		return list;
 	}
 

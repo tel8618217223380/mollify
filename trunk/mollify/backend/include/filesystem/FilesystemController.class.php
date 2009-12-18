@@ -29,11 +29,10 @@
 		public function initialize($request) {}
 
 		public function onSessionStarted() {
-			$this->env->session()->param('filesystems', $this->createFilesystems());
+			$this->env->session()->param('roots', $this->getRootFolders());
 		}
 
-		private function createFilesystems() {
-			$filesystems = array();
+		private function getRootFolders() {
 			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			
 			foreach($folderDefs as $id => $folderDef) {
@@ -45,17 +44,15 @@
 					$this->env->session->reset();
 					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a path (".$root['id'].")");
 				}
-				
-				$filesystems[$id] = $this->createFilesystem($id, $folderDef);
 			}
 			
-			return $filesystems;
+			return $folderDefs;
 		}
 
 		private function createFilesystem($id, $folderDef) {
 			switch ($this->filesystemType($folderDef)) {
 				case self::TYPE_LOCAL:
-					return new LocalFilesystem($id, $folderDef);
+					return new LocalFilesystem($id, $folderDef, $this);
 				default:
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder definition (".$id.")");
 			}
@@ -76,23 +73,19 @@
 			
 			$result["roots"] = array();
 			
-			foreach($this->filesystems() as $id => $filesystem) {
+			foreach($this->env->session()->param('roots') as $id => $folderDef) {
 				$result["roots"][] = array(
-					"id" => $this->publicId($filesystem),
-					"name" => $filesystem->name()
+					"id" => $this->publicId($id),
+					"name" => $folderDef['name']
 				);
 			}
 
 			return $result;
 		}
 		
-		public function filesystems() {
-			return $this->env->session()->param('filesystems');
-		}
-		
 		public function filesystem($id) {
-			$filesystems = $this->filesystems();
-			return $filesystems[$id];
+			$folderDefs = $this->env->session()->param('roots');
+			return $this->createFilesystem($id, $folderDefs[$id]);
 		}
 		
 		public function item($id) {
@@ -103,44 +96,43 @@
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			return $this->filesystem($filesystemId)->createItem($path);			
+			return $this->filesystem($filesystemId)->createItem($id, $path);
 		}
 		
-		public function publicId($filesystem, $path = "") {
-			return base64_encode($filesystem->id().":".DIRECTORY_SEPARATOR.$path);
+		public function publicId($filesystemId, $path = "") {
+			return base64_encode($filesystemId.":".DIRECTORY_SEPARATOR.$path);
 		}
-		
-/*		public function getItemFromPath($rootId, $path) {
-			$isFile = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
-			
-			if ($isFile) return new File($this, $this->getId($rootId, $path), $rootId, $path);
-			return new Folder($this, $this->getId($rootId, $path), $rootId, $path);
-		}
-		
-				public function getId($rootId, $path = "") {
-			if (strlen($path) > 0)
-				$path = substr($path, strlen($this->getRootPath($rootId)));
-			return base64_encode($rootId.':'.DIRECTORY_SEPARATOR.$path);
-		}
-		*/
 
 		public function assertRights($item, $required, $desc = "Unknown action") {
-			$this->env->authentication()->assertRights($item->permission(), $required, "filesystemitem ".$item->path()."/".$desc);
+			$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->path()."/".$desc);
 		}
-				
-/*		private function getRootPath($rootId) {
-			$roots = $this->getRootDirectories();
-			if (!array_key_exists($rootId, $roots))
-				throw new ServiceException("INVALID_CONFIGURATION", "Invalid root directory requested: ".$rootId);
-			return $this->filesystem->folderPath($roots[$rootId]["path"]);
-		}*/
 
-		public function getIgnoredItems($folder) {
-			return array('mollify.dsc', 'mollify.uac');
+		public function ignoredItems($filesystem, $path) {
+			return array('mollify.dsc', 'mollify.uac');	//TODO settings etc
 		}
 		
-		public function getDatetimeFormat() {
-			return "YmdHis";
+		public function folders($parent) {
+			$this->assertRights($parent, Authentication::RIGHTS_READ, "folders");
+			
+			$result = array();
+			$folders = $parent->folders();
+			foreach($folders as $folder) {
+				$folder["id"] = $this->publicId($parent->filesystem()->id(), $folder["path"]);
+				$result[] = $folder;
+			}
+			return $result;
+		}
+		
+		public function files($parent) {
+			$this->assertRights($parent, Authentication::RIGHTS_READ, "files");
+			
+			$result = array();
+			$files = $parent->files();
+			foreach($files as $file) {
+				$file["id"] = $this->publicId($parent->filesystem()->id(), $file["path"]);
+				$result[] = $file;
+			}
+			return $result;
 		}
 
 		public function details($item) {
@@ -149,20 +141,24 @@
 			if (!$item->isFile())
 				return array(
 					"id" => $this->id,
-					"description" => $this->description(),
-					"permission" => $this->permission());
+					"description" => $this->description($item),
+					"permission" => $this->permission($item));
 
-			$datetime_format = $this->filesystem->getDatetimeFormat();
+			$datetime_format = $this->getDatetimeFormat();
 			
 			return array(
 				"id" => $this->id,
 				"last_changed" => date($datetime_format, filectime($this->path)),
 				"last_modified" => date($datetime_format, filemtime($this->path)),
 				"last_accessed" => date($datetime_format, fileatime($this->path)),
-				"description" => $this->description(),
-				"permission" => $this->permission());
+				"description" => $this->description($item),
+				"permission" => $this->permission($item));
 		}
-		
+
+		private function getDatetimeFormat() {
+			return "YmdHis";
+		}
+
 		public function description($item) {
 			return $this->env->configuration()->getItemDescription($item);
 		}

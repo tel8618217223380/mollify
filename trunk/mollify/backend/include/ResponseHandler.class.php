@@ -58,7 +58,11 @@
 		}
 		
 		private function getSuccessResponse($data) {
-			if (Logging::isDebug()) return array("result" => $data, "trace" => Logging::getTrace());
+			if (Logging::isDebug()) {
+				$trace = Logging::getTrace();
+				Logging::logDebug("RESPONSE success ".Util::toString($data));
+				return array("result" => $data, "trace" => $trace);
+			}
 			return array("result" => $data);
 		}
 		
@@ -71,7 +75,11 @@
 		}
 		
 		private function getErrorResponse($err, $details) {
-			if (Logging::isDebug()) return array("code" => $err[0], "error" => $err[1], "details" => $details, "trace" => Logging::getTrace());
+			if (Logging::isDebug()) {
+				$trace = Logging::getTrace();
+				Logging::logDebug("RESPONSE error ".Util::toString($err).$details);
+				return array("code" => $err[0], "error" => $err[1], "details" => $details, "trace" => $trace);
+			}
 			return array("code" => $err[0], "error" => $err[1], "details" => $details);
 		}
 

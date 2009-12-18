@@ -13,45 +13,67 @@
 	class LocalFilesystem extends MollifyFilesystem {
 		private $rootPath;
 		
-		function __construct($id, $def) {
-			parent::__construct($id, $def["name"]);
+		function __construct($id, $def, $filesystemInfo) {
+			parent::__construct($id, $def["name"], $filesystemInfo);
 			
 			if (!file_exists($def["path"]))
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder definition, path does not exist ".$id);
-			$this->rootPath = $def["path"];
+			$this->rootPath = self::folderPath($def["path"]);
 		}
 		
 		public function createItem($id, $path) {
-			$path = $rootPath;
-			$isFile = FALSE;
+			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
+				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
-			if (strlen($path) == 0) throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
-			if (strpos("..", $filePath) != FALSE) throw new ServiceException("INVALID_REQUEST", "Illegal path requested: ".$path);
+			$fullPath = self::joinPath($this->rootPath, $path);
+			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
-			$isFile = (strcasecmp(substr($path, -1), DIRECTORY_SEPARATOR) != 0);
-			if ($isFile) return new File($this, $path, self::basename($path));
-			return new Folder($this, $path, self::basename($path));
+			if ($isFile) {
+				if (!$this->exists($fullPath))
+					throw new ServiceException("FILE_DOES_NOT_EXIST", $id);
+				
+				if (!is_file($fullPath))
+					throw new ServiceException("NOT_A_FILE", $id);
+			} else {
+				if (!$this->exists($fullPath))
+					throw new ServiceException("DIR_DOES_NOT_EXIST", $id);
+
+				if (!is_dir($fullPath))
+					throw new ServiceException("NOT_A_DIR", $id);
+			}
+				
+			if ($isFile) return new File($id, $path, self::basename($path), $this);
+			return new Folder($id, $path, self::basename($path), $this);
 		}
 		
 		public function exists($path) {
 			return file_exists($path);
 		}
+
+		private function publicPath($path) {
+			return substr($path, strlen($this->rootPath));
+		}
+		
+		private function localPath($item) {
+			return self::joinPath($this->rootPath, $item->path());
+		}
 		
 		public function folders($parent) {
-			$items = scandir($parent->path());
+			$parentPath = $this->localPath($parent);
+			$items = scandir($parentPath);
 			if (!$items) throw new ServiceException("INVALID_PATH", $parent->id());
 				
 			$result = array();
 			foreach($items as $i => $name) {
 				if (substr($name, 0, 1) == '.') continue;
 	
-				$fullPath = self::dirPath(self::joinPath($this->path, $name));
-				if (!is_dir($fullPath)) continue;
+				$path = self::folderPath(self::joinPath($parentPath, $name));
+				if (!is_dir($path)) continue;
 		
 				$result[] = array(
-					"path" => $this->relativePath($fullPath),
-					"name" => $name,
-					"parent" => $this->id
+					"path" => $this->publicPath($path),
+					"parent_id" => $parent->id(),
+					"name" => $name
 				);
 			}
 			
@@ -61,8 +83,8 @@
 		public function files($parent) {
 			$result = array();
 			
-			foreach($this->getVisibleFiles($this->path) as $fullPath) {
-				$name = Filesystem::basename($fullPath);
+			foreach($this->visibleFiles($this->localPath($parent)) as $path) {
+				$name = self::basename($path);
 				$extPos = strrpos($name, '.');
 				
 				if ($extPos > 0) {
@@ -72,29 +94,29 @@
 				}
 				
 				$result[] = array(
-					"id" => $this->filesystem->getId($this->rootId, $fullPath),
-					"parent_id" => $this->id,
+					"path" => $this->publicPath($path),
+					"parent_id" => $parent->id(),
 					"name" => $name,
 					"extension" => $extension,
-					"size" => filesize($fullPath)
+					"size" => filesize($path)
 				);
 			}
 			
 			return $result;
 		}
 		
-		function getVisibleFiles($path, $recursive = FALSE) {			
+		private function visibleFiles($path, $recursive = FALSE) {			
 			$files = scandir($path);
 			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);
 			
-			$ignored = $this->filesystem->getIgnoredItems($this);
+			$ignored = $this->ignoredItems($this->publicPath($path));
 			$result = array();
 			
 			foreach($files as $i => $name) {
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = Filesystem::joinPath($path, $name);
+				$fullPath = self::joinPath($path, $name);
 				if (is_dir($fullPath)) {
 					if ($recursive) $result = array_merge($result, $this->getVisibleFiles($fullPath, TRUE));
 					continue;
@@ -216,10 +238,10 @@
 		}
 				
 		static function joinPath($item1, $item2) {
-			return self::dirPath($item1).$item2;
+			return self::folderPath($item1).$item2;
 		}
 		
-		public function folderPath($path) {
+		static function folderPath($path) {
 			return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 		}
 		
