@@ -12,7 +12,7 @@
 
 	class SessionServices extends ServicesBase {
 		private static $PROTOCOL_VERSION = "1_5_0";
-		private static $GET_ITEMS = array("info");
+		private static $GET_ITEMS = array("info", "logout");
 		private static $POST_ITEMS = array("authenticate", "logout");
 		
 		protected function isValidPath($method, $path) {
@@ -30,6 +30,11 @@
 		}
 
 		public function processGet() {
+			if ($this->path[0] === 'logout') {
+				$this->env->session()->reset();
+				$this->response()->success(TRUE);
+				return;
+			}
 			$this->response()->success($this->getSessionInfo($this->path[1]));
 		}
 

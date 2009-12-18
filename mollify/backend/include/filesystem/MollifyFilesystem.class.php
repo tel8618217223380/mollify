@@ -13,10 +13,12 @@
 	abstract class MollifyFilesystem {
 		private $id;
 		private $name;
+		private $filesystemInfo;
 		
-		function __construct($id, $name) {
+		function __construct($id, $name, $filesystemInfo) {
 			$this->id = $id;
 			$this->name = $name;
+			$this->filesystemInfo = $filesystemInfo;
 		}
 
 		public function id() {
@@ -48,5 +50,13 @@
 		public abstract function uploadToFolder($folder);
 				
 		//public function folderPath($path) {
+		
+		protected function ignoredItems($path) {
+			return $this->filesystemInfo->ignoredItems($this, $path);
+		}
+
+		public function __toString() {
+			return get_class($this)." (".$this->id.") ".$this->name;
+		}
 	}
 ?>

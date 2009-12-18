@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.configuration.folders;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -22,16 +22,19 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
-public class DirectoryInfoList extends Grid<FolderInfo> implements
-		GridDataProvider<FolderInfo> {
+public class UserFolderList extends Grid<UserFolder> implements
+		GridDataProvider<UserFolder> {
 	public static GridColumn COLUMN_NAME;
 	public static GridColumn COLUMN_LOCATION;
 	public static List<GridColumn> ALL_COLUMNS = null;
 
-	public DirectoryInfoList(TextProvider textProvider, String style) {
-		super(StyleConstants.FOLDER_LIST_HEADER, getColumns(textProvider));
+	private final TextProvider textProvider;
 
-		this.setStylePrimaryName(StyleConstants.FOLDER_LIST);
+	public UserFolderList(TextProvider textProvider, String style) {
+		super(StyleConstants.FOLDER_LIST_HEADER, getColumns(textProvider));
+		this.textProvider = textProvider;
+
+		this.setStylePrimaryName(StyleConstants.USER_FOLDER_LIST);
 		if (style != null)
 			this.addStyleDependentName(style);
 		this.setDataProvider(this);
@@ -55,10 +58,14 @@ public class DirectoryInfoList extends Grid<FolderInfo> implements
 		return StyleConstants.FOLDER_LIST_COLUMN_PREFIX + column.getId();
 	}
 
-	public GridData getData(FolderInfo directory, GridColumn column) {
-		if (column.equals(DirectoryInfoList.COLUMN_NAME))
+	public GridData getData(UserFolder directory, GridColumn column) {
+		if (column.equals(UserFolderList.COLUMN_NAME)) {
+			if (directory.getName() == null)
+				return new GridData.Text(textProvider.getMessages()
+						.userDirectoryListDefaultName(
+								directory.getDefaultName()));
 			return new GridData.Text(directory.getName());
-		else if (column.equals(DirectoryInfoList.COLUMN_LOCATION))
+		} else if (column.equals(UserFolderList.COLUMN_LOCATION))
 			return new GridData.Text(directory.getPath());
 		return new GridData.Text("");
 	}
@@ -66,7 +73,7 @@ public class DirectoryInfoList extends Grid<FolderInfo> implements
 	private static final List<String> ROW_STYLE = Arrays
 			.asList(StyleConstants.FOLDER_LIST_ROW);
 
-	public List<String> getRowStyles(FolderInfo t) {
+	public List<String> getRowStyles(UserFolder t) {
 		return ROW_STYLE;
 	}
 }

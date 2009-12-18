@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfigurationUserFoldersView extends ConfigurationView {
-	private final UserDirectoryList directoryList;
+	private final UserFolderList directoryList;
 	private final ListBox user;
 	private final ActionButton addButton;
 	private final ActionButton editButton;
@@ -42,7 +42,7 @@ public class ConfigurationUserFoldersView extends ConfigurationView {
 		user
 				.addStyleName(StyleConstants.CONFIGURATION_DIALOG_VIEW_USER_FOLDERS_USERS);
 
-		directoryList = new UserDirectoryList(textProvider,
+		directoryList = new UserFolderList(textProvider,
 				StyleConstants.CONFIGURATION_DIALOG_VIEW_USER_FOLDERS_LIST);
 
 		addButton = new ActionButton(
@@ -107,7 +107,7 @@ public class ConfigurationUserFoldersView extends ConfigurationView {
 		return user;
 	}
 
-	public UserDirectoryList directories() {
+	public UserFolderList directories() {
 		return directoryList;
 	}
 
