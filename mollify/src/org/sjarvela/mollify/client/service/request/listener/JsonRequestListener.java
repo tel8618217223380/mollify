@@ -80,8 +80,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	public void onResourceNotFound(String url) {
-		onError(new ServiceError(ServiceErrorType.REQUEST_FAILED,
-				"Resource not found: " + url));
+		onError(new ServiceError(ServiceErrorType.RESOURCE_NOT_FOUND, "Resource not found: " + url));
 	}
 
 	private void onError(ServiceError error) {
