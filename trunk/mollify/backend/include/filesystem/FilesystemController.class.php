@@ -91,7 +91,8 @@
 		}
 		
 		public function filesystem($id) {
-			return $this[$id];
+			$filesystems = $this->filesystems();
+			return $filesystems[$id];
 		}
 		
 		public function item($id) {
