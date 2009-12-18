@@ -18,6 +18,9 @@
 		
 		function findUser($username, $password) {
 			global $USERS, $PASSWORDS_HASHED;
+			
+			if (!isset($USERS) or !is_array($USERS))
+				throw new ServiceException("INVALID_CONFIGURATION", "Users not configured");
 				
 			foreach($USERS as $id => $user) {
 				if ($user["name"] != $username)
@@ -77,7 +80,8 @@
 		public function getUserFolders($userId) {
 			global $USERS, $PUBLISHED_DIRECTORIES;
 	
-			if (!isset($PUBLISHED_DIRECTORIES)) return array();
+			if (!isset($PUBLISHED_DIRECTORIES) or !is_array($PUBLISHED_DIRECTORIES))
+				throw new ServiceException("INVALID_CONFIGURATION", "Missing root directory configurations");
 			
 			if (count($USERS) === 0) {
 				return $PUBLISHED_DIRECTORIES;
