@@ -21,6 +21,10 @@
 			$this->rootPath = self::folderPath($def["path"]);
 		}
 		
+		public function type() {
+			return MollifyFilesystem::TYPE_LOCAL;
+		}
+		
 		public function createItem($id, $path) {
 			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
@@ -54,10 +58,23 @@
 			return substr($path, strlen($this->rootPath));
 		}
 		
-		private function localPath($item) {
+		public function localPath($item) {
 			return self::joinPath($this->rootPath, $item->path());
 		}
 		
+		public function details($item) {
+			$datetimeFormat = $this->filesystemInfo->datetimeFormat();
+			
+			$details = array("id" => $item->id());
+			if ($item->isFile()) {
+				$path = $this->localPath($item);
+				$details["last_changed"] = date($datetimeFormat, filectime($path));
+				$details["last_modified"] = date($datetimeFormat, filemtime($path));
+				$details["last_accessed"] = date($datetimeFormat, fileatime($path));
+			}
+			return $details;
+		}
+
 		public function folders($parent) {
 			$parentPath = $this->localPath($parent);
 			$items = scandir($parentPath);
@@ -130,7 +147,7 @@
 		public function rename($item, $name) {
 			$old = $item->path();
 			$new = self::joinPath(dirname($old),$name);
-			if (!$item->isFile()) $new = self::dirPath($new);
+			if (!$item->isFile()) $new = self::folderPath($new);
 
 			if (file_exists($new))
 				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
@@ -140,7 +157,7 @@
 		}
 
 		public function copy($item, $to) {			
-			$target = Filesystem::joinPath($to->path(), $item->name());
+			$target = self::joinPath($to->path(), $item->name());
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");	
 			if (!copy($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()."]");
 			
@@ -148,7 +165,7 @@
 		}
 		
 		public function move($item, $to) {			
-			$target = Filesystem::joinPath($to->path(), $item->name());
+			$target = self::joinPath($to->path(), $item->name());
 			if (!$item->isFile()) $target = self::dirPath($target);
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists");
 			if (!rename($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");

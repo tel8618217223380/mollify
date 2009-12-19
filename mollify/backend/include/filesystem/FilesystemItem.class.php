@@ -38,12 +38,20 @@
 			return $this->path;
 		}
 		
+		public function folderPath() {
+			return $this->filesystem->folderPath($this);
+		}
+		
+		public function details() {
+			return $this->filesystem->details($this);
+		}
+		
 		public function filesystem() {
 			return $this->filesystem;
 		}
 		
 		public function __toString() {
-			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->path;
+			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name."(".$this->path.")";
 		}
 	}
 	

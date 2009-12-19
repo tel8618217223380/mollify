@@ -70,10 +70,10 @@
 					$item->downloadAsZip();
 					return;
 				case 'details':
-					$this->response()->success($item->details());
+					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$this->response()->success($item->allPermissions());
+					$this->response()->success($this->env->filesystem()->allPermissions($item));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -85,11 +85,11 @@
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$item->rename($this->request->data);
+					$this->env->filesystem()->rename($item, $this->request->data);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
-					$item->setDescription($this->request->data);
+					$this->env->filesystem()->setDescription($item, $this->request->data);
 					$this->response()->success(TRUE);
 					break;
 				default:
@@ -119,7 +119,7 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'zip':
-					$item->downloadAsZip();
+					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'items':
 					$this->response()->success(array("folders" => $this->env->filesystem()->folders($item), "files" => $this->env->filesystem()->files($item)));
@@ -131,7 +131,7 @@
 					$this->response()->success($this->env->filesystem()->folders($item));
 					break;
 				case 'details':
-					$this->response()->success($item->details());
+					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -143,11 +143,11 @@
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$item->rename($this->request->data);
+					$this->env->filesystem()->rename($item, $this->request->data);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
-					$item->setDescription($this->request->data);
+					$this->env->filesystem()->setDescription($item, $this->request->data);
 					$this->response()->success(TRUE);
 					break;
 				default:
@@ -160,15 +160,15 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'files':
-					$item->uploadTo();
+					$this->env->filesystem()->uploadTo($item);
 					$this->response()->success(TRUE);
 					break;
 				case 'folders':
-					$item->createFolder($this->request->data);
+					$this->env->filesystem()->createFolder($item, $this->request->data);
 					$this->response()->success(TRUE);
 					break;
 				case 'move':
-					$item->move($this->env->filesystem()->getItemFromId($this->request->data));
+					$this->env->filesystem()->move($item, $this->env->filesystem()->item($this->request->data));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -178,6 +178,7 @@
 		private function processGetUpload() {
 			if (count($this->path) != 3 or $this->path[2] != 'status') throw invalidRequestException();
 			$this->env->features()->assertFeature("file_upload_progress");
+			
 			Logging::logDebug('upload status '.$this->path[1]);
 			$this->response()->success(apc_fetch('upload_'.$this->path[1]));
 		}

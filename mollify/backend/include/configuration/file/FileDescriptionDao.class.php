@@ -7,13 +7,17 @@
 		}
 		
 		public function getItemDescription($item) {
-			$descriptions = $this->readDescriptionsFromFile($this->getDescriptionFilename($item));
+			$this->assertLocalFilesystem($item);
+			$file = $this->getDescriptionFilename($item);
+			Logging::logDebug("Reading description for [".$item->name()."] from: ".$file);
+			$descriptions = $this->readDescriptionsFromFile($file);
 			
 			if (!isset($descriptions[$item->name()])) return NULL;
 			return $descriptions[$item->name()];
 		}
 
 		public function setItemDescription($item, $description) {
+			$this->assertLocalFilesystem($item);
 			$file = $this->getDescriptionFilename($item);
 			$descriptions = $this->readDescriptionsFromFile($file);
 			$descriptions[$item->name()] = $description;
@@ -21,6 +25,7 @@
 		}
 
 		public function removeItemDescription($item) {
+			$this->assertLocalFilesystem($item);
 			$file = $this->getDescriptionFilename($item);
 			$descriptions = $this->readDescriptionsFromFile($file);
 			if (!isset($descriptions[$item->name()])) return;
@@ -30,6 +35,7 @@
 		}
 		
 		public function moveItemDescription($from, $to) {
+			$this->assertLocalFilesystem($item);
 			$fromFile = $this->getDescriptionFilename($from);
 			$fromDescriptions = $this->readDescriptionsFromFile($fromFile);
 			if (!isset($fromDescriptions[$from->name()])) return;
@@ -38,7 +44,7 @@
 			unset($fromDescriptions[$from->name()]);
 			
 			$sameDir = FALSE;
-			if ($to->dirName() === $from->dirName()) {
+			if (dirname($to->filesystem()->localPath()) === dirname($from->filesystem()->localPath())) {
 				$sameDir = TRUE;
 				$fromDescriptions[$to->name()] = $description;
 			}
@@ -54,10 +60,10 @@
 		}
 	
 		private function getDescriptionFilename($item) {
-			return $item->dirName().DIRECTORY_SEPARATOR.$this->fileName;
+			return dirname($item->filesystem()->localPath($item)).DIRECTORY_SEPARATOR.$this->fileName;
 		}
 		
-		private function readDescriptionsFromFile($descriptionFile) {
+		private function readDescriptionsFromFile($descriptionFile) {			
 			$result = array();
 			if (!file_exists($descriptionFile)) return $result;
 		
@@ -86,7 +92,7 @@
 			return $result;
 		}
 		
-		function writeDescriptionsToFile($file, $descriptions) {
+		private function writeDescriptionsToFile($file, $descriptions) {
 			if (file_exists($file)) {
 				if (!is_writable($file))
 					throw new ServiceException("REQUEST_FAILED", "Could not open description file for writing: ".$file);
@@ -104,6 +110,10 @@
 				fwrite($handle, sprintf('"%s" %s', $name, str_replace("\n", '\n', $description))."\n");
 	
 			fclose($handle);
+		}
+		
+		private function assertLocalFilesystem($item) {
+			if ($item->filesystem()->type() != MollifyFilesystem::TYPE_LOCAL) throw new ServiceException("INVALID_CONFIGURATION", "Unsupported filesystem with file descriptions: ".get_class($item->filesystem()));
 		}
 	}
 ?>
