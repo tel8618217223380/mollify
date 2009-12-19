@@ -35,7 +35,9 @@
 		}
 		
 		public function moveItemDescription($from, $to) {
-			$this->assertLocalFilesystem($item);
+			$this->assertLocalFilesystem($from);
+			$this->assertLocalFilesystem($to);
+			
 			$fromFile = $this->getDescriptionFilename($from);
 			$fromDescriptions = $this->readDescriptionsFromFile($fromFile);
 			if (!isset($fromDescriptions[$from->name()])) return;

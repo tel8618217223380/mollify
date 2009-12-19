@@ -145,15 +145,15 @@
 		}
 
 		public function rename($item, $name) {
-			$old = $item->path();
+			$old = $this->localPath($item);
 			$new = self::joinPath(dirname($old),$name);
 			if (!$item->isFile()) $new = self::folderPath($new);
 
 			if (file_exists($new))
 				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
-			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
-			
-			return $this->getItemFromPath($item->rootId(), $new);
+
+			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");			
+			return $this->publicPath($new);
 		}
 
 		public function copy($item, $to) {			

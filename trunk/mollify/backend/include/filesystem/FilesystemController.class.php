@@ -67,7 +67,7 @@
 			$result['filesystem'] = array(
 				"max_upload_file_size" => Util::inBytes(ini_get("upload_max_filesize")),
 				"max_upload_total_size" => Util::inBytes(ini_get("post_max_size")),
-				"allowed_file_upload_types" => $this->getAllowedFileUploadTypes()
+				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
 			);
 			
 			$result["roots"] = array();
@@ -165,7 +165,7 @@
 			return $this->env->configuration()->getItemPermissions($item);
 		}
 		
-		private function getAllowedFileUploadTypes() {
+		private function allowedFileUploadTypes() {
 			$types = array();
 			foreach ($this->allowedUploadTypes as $type) {
 				$pos = strrpos($type, ".");
@@ -177,8 +177,9 @@
 		
 		public function rename($item, $name) {
 			Logging::logDebug('rename from ['.$item->path().'] to ['.$name.']');
-			$this->assertRights(Authentication::RIGHTS_WRITE, "rename");
-			$to = $this->filesystem($item)->rename($item, $name);
+			$this->assertRights($item, Authentication::RIGHTS_WRITE, "rename");
+			
+			$to = $this->item($this->publicId($item->filesystem()->id(), $item->rename($name)));
 
 			if ($this->env->features()->isFeatureEnabled("description_update"))
 				$this->env->configuration()->moveItemDescription($item, $to);
@@ -299,7 +300,7 @@
 		}
 		
 		function __construct($item, $type, $data = NULL) {
-			parent::__construct(FileSystem::EVENT_TYPE_FILE, $data);
+			parent::__construct(FileSystemController::EVENT_TYPE_FILE, $data);
 			$this->item = $item;
 			$this->subType = $type;
 		}
