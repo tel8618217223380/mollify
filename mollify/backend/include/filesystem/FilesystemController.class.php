@@ -303,10 +303,16 @@
 			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
 		
-		public function zip($name) {
+		public function downloadAsZip($item) {
 			$this->env->features()->assertFeature("zip_download");
-			require "zipstream.php";
-			return new ZipStream($name, $this->env->settings()->setting("zip_options"));
+			$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
+			
+			$item->downloadAsZip();			
+			$this->env->events()->onEvent(FileEvent::download($file));
+		}
+		
+		public function setting($setting) {
+			return $this->env->settings()->setting($setting);
 		}
 
 		public function log() {

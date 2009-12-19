@@ -56,6 +56,8 @@
 		public abstract function read($item);
 		
 		public abstract function write($item);
+		
+		public abstract function downloadAsZip($item);
 				
 		public abstract function createFolder($folder, $name);
 		
