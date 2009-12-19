@@ -10,8 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	 class FilesystemController {
-	 	const TYPE_LOCAL = "local";
+	 class FilesystemController {	 	
 	 	const EVENT_TYPE_FILE = "event_file";
 		
 		private $env;
@@ -51,7 +50,7 @@
 
 		private function createFilesystem($id, $folderDef) {
 			switch ($this->filesystemType($folderDef)) {
-				case self::TYPE_LOCAL:
+				case MollifyFilesystem::TYPE_LOCAL:
 					return new LocalFilesystem($id, $folderDef, $this);
 				default:
 					throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder definition (".$id.")");
@@ -59,7 +58,7 @@
 		}
 		
 		private function filesystemType($folderDef) {
-			return self::TYPE_LOCAL;
+			return MollifyFilesystem::TYPE_LOCAL;
 		}
 		
 		public function getSessionInfo() {
@@ -104,7 +103,7 @@
 		}
 
 		public function assertRights($item, $required, $desc = "Unknown action") {
-			$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->path()."/".$desc);
+			$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->id()."/".$desc);
 		}
 
 		public function ignoredItems($filesystem, $path) {
@@ -138,24 +137,13 @@
 		public function details($item) {
 			$this->assertRights($item, Authentication::RIGHTS_READ, "details");
 			
-			if (!$item->isFile())
-				return array(
-					"id" => $this->id,
-					"description" => $this->description($item),
-					"permission" => $this->permission($item));
-
-			$datetime_format = $this->getDatetimeFormat();
-			
-			return array(
-				"id" => $this->id,
-				"last_changed" => date($datetime_format, filectime($this->path)),
-				"last_modified" => date($datetime_format, filemtime($this->path)),
-				"last_accessed" => date($datetime_format, fileatime($this->path)),
-				"description" => $this->description($item),
-				"permission" => $this->permission($item));
+			$details = $item->details();
+			$details["description"] = $this->description($item);
+			$details["permission"] = $this->permission($item);
+			return $details;
 		}
 
-		private function getDatetimeFormat() {
+		public function datetimeFormat() {
 			return "YmdHis";
 		}
 
