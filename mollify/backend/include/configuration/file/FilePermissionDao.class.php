@@ -7,6 +7,7 @@
 		}
 		
 		public function getItemPermission($item, $userId) {
+			$this->assertLocalFilesystem($item);
 			$permissions = $this->readPermissionsFromFile($this->getUacFilename($item));
 			
 			$match = FALSE;
@@ -20,6 +21,8 @@
 		}
 		
 		public function getItemPermissions($item) {
+			$this->assertLocalFilesystem($item);
+			
 			$permissions = $this->readPermissionsFromFile($this->getUacFilename($item));
 			if ($permissions === FALSE) return FALSE;
 			$id = $this->getPermissionId($item);
@@ -37,12 +40,15 @@
 		}
 
 		public function moveItemPermissions($from, $to) {
-			$fromPath = dirname($from->path());
-			$fromName = Filesystem::basename($from->path());
+			$this->assertLocalFilesystem($from);
+			$this->assertLocalFilesystem($to);
+
+			$fromPath = dirname($from->filesystem()->localPath($from));
+			$fromName = $from->name();
 			$fromId = $this->getPermissionId($from);
 	
-			$toPath = dirname($to->path());
-			$toName = Filesystem::basename($to->path());
+			$toPath = dirname($to->filesystem()->localPath($to));
+			$toName = $to->name();
 			$toId = $this->getPermissionId($to);
 	
 			$fromUac = $this->getUacFilename($from);
@@ -66,6 +72,8 @@
 		}
 		
 		public function updateItemPermissions($item, $new, $modified, $removed) {
+			$this->assertLocalFilesystem($item);
+			
 			$uacFile = $this->getUacFilename($item);
 			$permissions = $this->readPermissionsFromFile($uacFile);
 			if (!$permissions) $permissions = array();
@@ -100,6 +108,8 @@
 		}
 		
 		public function removeItemPermissions($item) {
+			$this->assertLocalFilesystem($item);
+			
 			$id = $this->getPermissionId($item);
 			$uacFile = $this->getUacFilename($item);
 			$permissions = $this->readPermissionsFromFile($uacFile);
@@ -121,11 +131,11 @@
 		
 		private function getPermissionId($item) {
 			if (!$item->isFile()) return ".";
-			return Filesystem::basename($item->path());
+			return $item->name();
 		}
 		
 		private function getUacFilename($item) {
-			$path = $item->path();
+			$path = $item->filesystem()->localPath($item);
 			if (!is_dir($path))
 				$path = dirname($path);
 	
@@ -216,6 +226,10 @@
 				$first = FALSE;
 			}
 			return $result;
+		}
+		
+		private function assertLocalFilesystem($item) {
+			if ($item->filesystem()->type() != MollifyFilesystem::TYPE_LOCAL) throw new ServiceException("INVALID_CONFIGURATION", "Unsupported filesystem with file descriptions: ".get_class($item->filesystem()));
 		}
 	}
 ?>

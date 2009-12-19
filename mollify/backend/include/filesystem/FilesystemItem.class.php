@@ -50,6 +50,10 @@
 			return $this->filesystem;
 		}
 		
+		public function rename($name) {
+			return $this->filesystem->rename($this, $name);
+		}
+		
 		public function __toString() {
 			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name."(".$this->path.")";
 		}
