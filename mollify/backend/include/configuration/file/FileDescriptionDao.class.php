@@ -18,6 +18,7 @@
 
 		public function setItemDescription($item, $description) {
 			$this->assertLocalFilesystem($item);
+			
 			$file = $this->getDescriptionFilename($item);
 			$descriptions = $this->readDescriptionsFromFile($file);
 			$descriptions[$item->name()] = $description;
@@ -25,7 +26,9 @@
 		}
 
 		public function removeItemDescription($item) {
+			Logging::logDebug("Remove description for ".$item->name());
 			$this->assertLocalFilesystem($item);
+			
 			$file = $this->getDescriptionFilename($item);
 			$descriptions = $this->readDescriptionsFromFile($file);
 			if (!isset($descriptions[$item->name()])) return;
@@ -46,7 +49,7 @@
 			unset($fromDescriptions[$from->name()]);
 			
 			$sameDir = FALSE;
-			if (dirname($to->filesystem()->localPath()) === dirname($from->filesystem()->localPath())) {
+			if (dirname($to->filesystem()->localPath($to)) === dirname($from->filesystem()->localPath($from))) {
 				$sameDir = TRUE;
 				$fromDescriptions[$to->name()] = $description;
 			}
