@@ -124,8 +124,8 @@
 		}
 		
 		private function getEffectivePermission($permissions, $userId) {
-			if ($userId != "" and isset($permissions[$userId])) return $permissions[$userId];
-			if (isset($permissions["*"])) return $permissions["*"];
+			if ($userId != "" and isset($permissions[$userId])) return strtoupper($permissions[$userId]);
+			if (isset($permissions["*"])) return strtoupper($permissions["*"]);
 			return FALSE;
 		}
 		

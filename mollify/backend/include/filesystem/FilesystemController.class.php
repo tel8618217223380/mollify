@@ -157,8 +157,10 @@
 		}
 		
 		public function permission($item) {
-			if ($this->env->authentication()->isAdmin()) return Authentication::$PERMISSION_VALUE_READWRITE;
-			return $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+			if ($this->env->authentication()->isAdmin()) return Authentication::PERMISSION_VALUE_READWRITE;
+			$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+			if (!$permission) return $this->env->authentication()->getDefaultPermission();
+			return $permission;
 		}
 
 		public function allPermissions($item) {

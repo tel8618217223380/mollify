@@ -11,9 +11,9 @@
 	 */
 
 	class Authentication {
-		public static $PERMISSION_VALUE_ADMIN = "A";
-		public static $PERMISSION_VALUE_READWRITE = "RW";
-		public static $PERMISSION_VALUE_READONLY = "RO";
+		const PERMISSION_VALUE_ADMIN = "A";
+		const PERMISSION_VALUE_READWRITE = "RW";
+		const PERMISSION_VALUE_READONLY = "RO";
 		
 		const RIGHTS_NONE = "-";
 		const RIGHTS_READ = "R";
@@ -31,7 +31,7 @@
 		}
 		
 		public function assertPermissionValue($value) {
-			if ($value != self::$PERMISSION_VALUE_ADMIN and $value != self::$PERMISSION_VALUE_READWRITE and $value != self::$PERMISSION_VALUE_READONLY)
+			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READONLY)
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
 		}
 		
@@ -72,12 +72,12 @@
 		}
 		
 		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
-			if ($required === self::RIGHTS_NONE or $this->isAdmin()) return;
+			if ($this->isAdmin() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
 					
-			if ($permissions === self::$PERMISSION_VALUE_READWRITE) {
+			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
 				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;
 			}
-			if ($permissions === self::$PERMISSION_VALUE_READ) {
+			if (strcasecmp($permissions, self::PERMISSION_VALUE_READONLY) === 0) {
 				if ($required === self::RIGHTS_READ) return;
 			}
 			
@@ -86,7 +86,7 @@
 		
 		function hasModifyRights() {
 			$base = $this->getDefaultPermission();
-			return ($base === self::$PERMISSION_VALUE_ADMIN || $base === self::$PERMISSION_VALUE_READWRITE);
+			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE);
 		}
 
 		function assertAdmin() {
@@ -94,7 +94,7 @@
 		}
 		
 		function isAdmin() {
-			return ($this->getDefaultPermission() === self::$PERMISSION_VALUE_ADMIN);
+			return ($this->getDefaultPermission() === self::PERMISSION_VALUE_ADMIN);
 		}
 		
 		public function log() {

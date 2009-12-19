@@ -45,9 +45,9 @@ public class RenameDialog extends CenteredDialog {
 
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
+				focusName();
 				if (item.isFile())
 					hilightFilename();
-				focusName();
 			}
 
 		});
