@@ -152,7 +152,7 @@
 		}
 
 		public function setDescription($item, $desc) {
-			$this->assertRights(Authentication::RIGHTS_WRITE, "set description");
+			$this->assertRights($item, Authentication::RIGHTS_WRITE, "set description");
 			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
 		
@@ -193,8 +193,8 @@
 			Logging::logDebug('copying '.$item->id()."[".$item->path().'] to ['.$to.']');
 			
 			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
-			$this->assertRights(Authentication::RIGHTS_READ, "copy");
-			$to->assertRights(Authentication::RIGHTS_WRITE, "copy");
+			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
+			$this->assertRights($to, Authentication::RIGHTS_WRITE, "copy");
 
 			$to = $this->filesystem->copy($item, $to);
 			$this->env->events()->onEvent(FileEvent::copy($item, $this->getItemFromPath($item->rootId(), $target)));			
@@ -204,8 +204,8 @@
 			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$to.']');
 
 			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
-			$this->assertRights(Authentication::RIGHTS_READ, "move");
-			$to->assertRights(Authentication::RIGHTS_WRITE, "move");
+			$this->assertRights($item, Authentication::RIGHTS_READ, "move");
+			$this->assertRights($to, Authentication::RIGHTS_WRITE, "move");
 
 			$to = $this->filesystem->move($item, $to);
 			
@@ -222,7 +222,7 @@
 			Logging::logDebug('deleting ['.$item->id().']');
 			
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
-			$this->assertRights(Authentication::RIGHTS_WRITE, "delete");
+			$this->assertRights($item, Authentication::RIGHTS_WRITE, "delete");
 			$this->filesystem->delete($item);
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
@@ -235,13 +235,13 @@
 		}
 		
 		public function createFolder($parent, $name) {
-			$this->assertRights(Authentication::RIGHTS_WRITE, "create folder");
+			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
 			$this->filesystem->createFolder($parent, $name);
 		}
 
 		public function download($file) {
-			$this->assertRights(Authentication::RIGHTS_READ, "download");
 			Logging::logDebug('download ['.$this->path.']');
+			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
 			
 			header("Cache-Control: public, must-revalidate");
 			header("Content-Type: application/force-download");

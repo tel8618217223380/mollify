@@ -46,8 +46,8 @@
 					throw new ServiceException("NOT_A_DIR", $id);
 			}
 				
-			if ($isFile) return new File($id, $path, self::basename($path), $this);
-			return new Folder($id, $path, self::basename($path), $this);
+			if ($isFile) return new File($id, $path, self::basename($fullPath), $this);
+			return new Folder($id, $path, self::basename($fullPath), $this);
 		}
 		
 		public function exists($path) {
