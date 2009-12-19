@@ -25,7 +25,7 @@
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
 		
-		public function createItem($id, $path) {
+		public function createItem($id, $path, $create = FALSE) {
 			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
@@ -33,12 +33,17 @@
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
 			if ($isFile) {
-				if (!$this->exists($fullPath))
+				if (!$create and !$this->exists($fullPath))
 					throw new ServiceException("FILE_DOES_NOT_EXIST", $id);
+
+				if ($create and $this->exists($fullPath))
+					throw new ServiceException("FILE_ALREADY_EXISTS", $id);
 				
-				if (!is_file($fullPath))
+				if (!$create and !is_file($fullPath))
 					throw new ServiceException("NOT_A_FILE", $id);
 			} else {
+				if ($create) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
+				
 				if (!$this->exists($fullPath))
 					throw new ServiceException("DIR_DOES_NOT_EXIST", $id);
 
@@ -213,49 +218,32 @@
 		}
 		
 		public function createFolder($folder, $name) {
-			$this->env->features()->assertFeature("folder_actions");
-						
-			$path = self::folderPath(self::joinPath($folder->path(), $name));
-			Logging::logDebug('create folder ['.$path.']');
-			
+			$path = self::folderPath(self::joinPath($this->localPath($folder), $name));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
 			if (!mkdir($path, 0755)) throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
-			
 			return $this->itemWithPath($this->publicPath($path));
 		}
-	
-		public function uploadToFolder($folder) {
-			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
-				throw new ServiceException("NO_UPLOAD_DATA");
-			
-			if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
-			
-			// flash uploader (uploads one file at a time)
-			if (isset($_FILES['uploader-flash'])) {
-				$this->upload($folder, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
-				return;
-			}
-	
-			// http
-			if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK)
-				throw new ServiceException("UPLOAD_FAILED", $_FILES["file"]["error"]);
-					
-			foreach ($_FILES['uploader-http']['name'] as $key => $value) { 
-				$name = $_FILES['uploader-http']['name'][$key];
-				$origin = $_FILES['uploader-http']['tmp_name'][$key];
-				$this->upload($folder, $name, $origin);
-			}
+		
+		public function createEmptyItem($folder, $name) {
+			return $this->itemWithPath($this->publicPath(self::joinPath($this->localPath($folder), $name)), TRUE);
 		}
 		
-		private function upload($folder, $name, $origin) {
-			$target = $folder->pathFor($name);
-			Logging::logDebug('uploading ['.$target.']');
-					
-			if (file_exists($target))
-				throw new ServiceException("FILE_ALREADY_EXISTS", Filesystem::basename($target));
-				
-			if (!move_uploaded_file($origin, $target))
-				throw new ServiceException("SAVING_FAILED", Filesystem::basename($target));
+		public function size($file) {
+			return filesize($this->localPath($file));
+		}
+
+		public function read($item) {
+			$handle = @fopen($this->localPath($item), "r");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$item->id());
+			return $handle;
+		}
+		
+		public function write($item) {
+			$handle = @fopen($this->localPath($item), "wb");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
+			return $handle;
 		}
 				
 		static function joinPath($item1, $item2) {

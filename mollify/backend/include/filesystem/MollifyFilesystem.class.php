@@ -33,9 +33,7 @@
 			return $this->name;
 		}
 		
-		public abstract function createItem($id, $path);
-				
-		//public abstract function exists($path);
+		public abstract function createItem($id, $path, $create = FALSE);
 		
 		public function details($item) {
 			return array();
@@ -45,6 +43,8 @@
 		
 		public abstract function files($parent);
 		
+		public abstract function size($file);
+		
 		public abstract function rename($item, $name);
 		
 		public abstract function copy($item, $to);
@@ -52,10 +52,14 @@
 		public abstract function move($item, $to);
 		
 		public abstract function delete($item);
+		
+		public abstract function read($item);
+		
+		public abstract function write($item);
 				
 		public abstract function createFolder($folder, $name);
-	
-		public abstract function uploadToFolder($folder);
+		
+		public abstract function createEmptyItem($folder, $name);
 		
 		protected function ignoredItems($path) {
 			return $this->filesystemInfo->ignoredItems($this, $path);
@@ -65,8 +69,8 @@
 			return $this->filesystemInfo->publicId($this->id(), $path);
 		}
 		
-		protected function itemWithPath($path) {
-			return $this->createItem($this->itemPublicId($path), $path);
+		protected function itemWithPath($path, $create = FALSE) {
+			return $this->createItem($this->itemPublicId($path), $path, $create);
 		}
 
 		public function __toString() {

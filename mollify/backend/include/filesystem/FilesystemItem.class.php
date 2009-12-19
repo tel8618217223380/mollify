@@ -57,7 +57,6 @@
 		public function delete() {
 			return $this->filesystem->delete($this);
 		}
-
 		
 		public function __toString() {
 			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name." (".$this->path.")";
@@ -67,6 +66,10 @@
 	class File extends FilesystemItem {		
 		public function isFile() { return TRUE; }
 		
+		public function size() {
+			return $this->filesystem->size($this);
+		}
+		
 		public function copy($to) {
 			return $this->filesystem->copy($this, $to);
 		}
@@ -74,7 +77,14 @@
 		public function move($to) {
 			return $this->filesystem->move($this, $to);
 		}
-
+		
+		public function read() {
+			return $this->filesystem->read($this);
+		}
+		
+		public function write() {
+			return $this->filesystem->write($this);
+		}
 	}
 	
 	class Folder extends FilesystemItem {
@@ -86,6 +96,14 @@
 		
 		public function files() {			
 			return $this->filesystem->files($this);
+		}
+		
+		public function createFolder($name) {
+			return $this->filesystem->createFolder($this, $name);
+		}
+		
+		public function createEmptyItem($name) {
+			return $this->filesystem->createEmptyItem($this, $name);
 		}
 	}
 ?>
