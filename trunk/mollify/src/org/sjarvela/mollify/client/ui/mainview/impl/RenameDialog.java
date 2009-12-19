@@ -46,10 +46,7 @@ public class RenameDialog extends CenteredDialog {
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
 				focusName();
-				if (item.isFile())
-					hilightFilename();
 			}
-
 		});
 		initialize();
 	}
@@ -58,6 +55,8 @@ public class RenameDialog extends CenteredDialog {
 		DeferredCommand.addCommand(new Command() {
 			public void execute() {
 				name.setFocus(true);
+				if (item.isFile())
+					hilightFilename();
 			}
 		});
 	}

@@ -140,7 +140,7 @@
 	
 				$fullPath = self::joinPath($path, $name);
 				if (is_dir($fullPath)) {
-					if ($recursive) $result = array_merge($result, $this->getVisibleFiles($fullPath, TRUE));
+					if ($recursive) $result = array_merge($result, $this->visibleFiles($fullPath, TRUE));
 					continue;
 				}
 				
@@ -233,7 +233,7 @@
 		}
 
 		public function read($item) {
-			$handle = @fopen($this->localPath($item), "r");
+			$handle = @fopen($this->localPath($item), "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$item->id());
 			return $handle;
@@ -244,6 +244,21 @@
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
 			return $handle;
+		}
+		
+		public function downloadAsZip($item) {
+			require "zipstream.php";
+			$zip = new ZipStream($item->name().".zip", $this->filesystemInfo->setting("zip_options"));
+			
+			if ($item->isFile()) {
+				$zip->add_file_from_path($item->name(), $this->localPath($item));
+			} else {
+				$offset = strlen($this->localPath($item));
+				$files = $this->visibleFiles($this->localPath($item), TRUE);
+				foreach($files as $file)
+					$zip->add_file_from_path(substr($file, $offset), $file);
+			}
+			$zip->finish();
 		}
 				
 		static function joinPath($item1, $item2) {
