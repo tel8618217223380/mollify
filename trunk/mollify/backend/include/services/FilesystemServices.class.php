@@ -21,8 +21,7 @@
 				$this->processGetUpload();
 				return;
 			}
-			$item = $this->env->filesystem()->item($this->convertItemID($this->path[0]));
-			
+			$item = $this->item($this->path[0]);
 			if ($item->isFile()) $this->processGetFile($item);
 			else $this->processGetFolder($item);
 		}
@@ -34,25 +33,25 @@
 				return;
 			}
 			
-			$item = $this->env->filesystem()->item($this->convertItemID($this->path[0]));
-			
+			$item = $this->item($this->path[0]);
 			if ($item->isFile()) $this->processPutFile($item);
 			else $this->processPutFolder($item);
 		}
 		
 		public function processPost() {
-			$item = $this->env->filesystem()->item($this->convertItemID($this->path[0]));
-			
+			$item = $this->item($this->path[0]);
 			if ($item->isFile()) $this->processPostFile($item);
 			else $this->processPostFolder($item);
 		}
 		
 		public function processDelete() {
 			if (count($this->path) != 1) throw invalidRequestException();
-
-			$item = $this->env->filesystem()->item($this->convertItemID($this->path[0]));
-			$item->delete();
+			$this->env->filesystem()->delete($this->item($this->path[0]));
 			$this->response()->success(TRUE);
+		}
+		
+		private function item($id, $convert = TRUE) {
+			return $this->env->filesystem()->item(($convert ? $this->convertItemID($id) : $id));
 		}
 		
 		private function convertItemId($id) {
@@ -102,10 +101,10 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'move':
-					$item->move($this->env->filesystem()->item($this->request->data));
+					$this->env->filesystem()->move($item, $this->item($this->request->data, FALSE));
 					break;
 				case 'copy':
-					$item->copy($this->env->filesystem()->item($this->request->data));
+					$this->env->filesystem()->copy($item, $this->item($this->request->data, FALSE));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -122,7 +121,10 @@
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'items':
-					$this->response()->success(array("folders" => $this->env->filesystem()->folders($item), "files" => $this->env->filesystem()->files($item)));
+					$this->response()->success(array(
+						"folders" => $this->env->filesystem()->folders($item),
+						"files" => $this->env->filesystem()->files($item))
+					);
 					break;
 				case 'files':
 					$this->response()->success($this->env->filesystem()->files($item));
@@ -168,7 +170,7 @@
 					$this->response()->success(TRUE);
 					break;
 				case 'move':
-					$this->env->filesystem()->move($item, $this->env->filesystem()->item($this->request->data));
+					$this->env->filesystem()->move($item, $this->item($this->request->data, FALSE));
 					break;
 				default:
 					throw $this->invalidRequestException();

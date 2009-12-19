@@ -54,13 +54,27 @@
 			return $this->filesystem->rename($this, $name);
 		}
 		
+		public function delete() {
+			return $this->filesystem->delete($this);
+		}
+
+		
 		public function __toString() {
-			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name."(".$this->path.")";
+			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name." (".$this->path.")";
 		}
 	}
 	
 	class File extends FilesystemItem {		
 		public function isFile() { return TRUE; }
+		
+		public function copy($to) {
+			return $this->filesystem->copy($this, $to);
+		}
+
+		public function move($to) {
+			return $this->filesystem->move($this, $to);
+		}
+
 	}
 	
 	class Folder extends FilesystemItem {

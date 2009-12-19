@@ -108,6 +108,7 @@
 		}
 		
 		public function removeItemPermissions($item) {
+			Logging::logDebug("Remove permission for ".$item->name());
 			$this->assertLocalFilesystem($item);
 			
 			$id = $this->getPermissionId($item);

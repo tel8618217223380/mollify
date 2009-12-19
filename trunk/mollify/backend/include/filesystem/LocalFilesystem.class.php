@@ -152,42 +152,44 @@
 			if (file_exists($new))
 				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
 
-			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");			
-			return $this->publicPath($new);
+			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
+			
+			return $this->itemWithPath($this->publicPath($new));
 		}
 
 		public function copy($item, $to) {			
-			$target = self::joinPath($to->path(), $item->name());
-			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");	
-			if (!copy($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()."]");
+			$target = self::joinPath($this->localPath($to), $item->name());
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");
+			Logging::logDebug($target);
+			if (!copy($this->localPath($item), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()."]");
 			
-			return $this->getItemFromPath($item->rootId(), $target);
+			return $this->itemWithPath($this->publicPath($target));
 		}
 		
 		public function move($item, $to) {			
-			$target = self::joinPath($to->path(), $item->name());
-			if (!$item->isFile()) $target = self::dirPath($target);
+			$target = self::joinPath($this->localPath($to), $item->name());
+			if (!$item->isFile()) $target = self::folderPath($target);
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists");
-			if (!rename($item->path(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");
+			if (!rename($this->localPath($item), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");
 			
-			return $this->getItemFromPath($item->rootId(), $target);
+			return $this->itemWithPath($this->publicPath($target));
 		}
 		
 		public function delete($item) {
 			if ($item->isFile()) {
-				if (!unlink($item->path()))
+				if (!unlink($this->localPath($item)))
 					throw new ServiceException("REQUEST_FAILED", "Cannot delete [".$item->id()."]");				
 			} else {		
-				$this->deleteFolderRecursively($item->path());
+				$this->deleteFolderRecursively($this->localPath($item));
 			}
 		}
 		
 		private function deleteFolderRecursively($path) {
-			$path = self::dirPath($path);
+			$path = self::folderPath($path);
 			$handle = opendir($path);
 			
 			if (!$handle)
-				throw new ServiceException("REQUEST_FAILED", "Could not open directory for traversal (delete_directory_recurse): ".$path);
+				throw new ServiceException("REQUEST_FAILED", "Could not open directory for traversal (recurse): ".$path);
 		    
 		    while (false !== ($item = readdir($handle))) {
 				if ($item != "." and $item != ".." ) {
@@ -198,7 +200,7 @@
 					} else {
 						if (!unlink($fullpath)) {
 							closedir($handle);
-							throw new ServiceException("REQUEST_FAILED", "Failed to remove file (delete_directory_recurse): ".$fullpath);
+							throw new ServiceException("REQUEST_FAILED", "Failed to remove file (recurse): ".$fullpath);
 						}
 					}
 				}
@@ -213,11 +215,13 @@
 		public function createFolder($folder, $name) {
 			$this->env->features()->assertFeature("folder_actions");
 						
-			$path = self::dirPath(self::joinPath($folder->path(), $name));
+			$path = self::folderPath(self::joinPath($folder->path(), $name));
 			Logging::logDebug('create folder ['.$path.']');
 			
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
 			if (!mkdir($path, 0755)) throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
+			
+			return $this->itemWithPath($this->publicPath($path));
 		}
 	
 		public function uploadToFolder($folder) {

@@ -60,6 +60,14 @@
 		protected function ignoredItems($path) {
 			return $this->filesystemInfo->ignoredItems($this, $path);
 		}
+		
+		protected function itemPublicId($path) {
+			return $this->filesystemInfo->publicId($this->id(), $path);
+		}
+		
+		protected function itemWithPath($path) {
+			return $this->createItem($this->itemPublicId($path), $path);
+		}
 
 		public function __toString() {
 			return get_class($this)." (".$this->id.") ".$this->name;

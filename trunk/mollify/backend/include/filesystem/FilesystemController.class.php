@@ -179,8 +179,8 @@
 			Logging::logDebug('rename from ['.$item->path().'] to ['.$name.']');
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "rename");
 			
-			$to = $this->item($this->publicId($item->filesystem()->id(), $item->rename($name)));
-
+			$to = $item->rename($name);
+			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
 				$this->env->configuration()->moveItemDescription($item, $to);
 				
@@ -197,8 +197,8 @@
 			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
 			$this->assertRights($to, Authentication::RIGHTS_WRITE, "copy");
 
-			$to = $this->filesystem->copy($item, $to);
-			$this->env->events()->onEvent(FileEvent::copy($item, $this->getItemFromPath($item->rootId(), $target)));			
+			$to = $item->copy($to);
+			$this->env->events()->onEvent(FileEvent::copy($item, $to));
 		}
 		
 		public function move($item, $to) {
@@ -208,7 +208,7 @@
 			$this->assertRights($item, Authentication::RIGHTS_READ, "move");
 			$this->assertRights($to, Authentication::RIGHTS_WRITE, "move");
 
-			$to = $this->filesystem->move($item, $to);
+			$to = $item->move($to);
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
 				$this->env->configuration()->moveItemDescription($item, $to);
@@ -224,7 +224,8 @@
 			
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "delete");
-			$this->filesystem->delete($item);
+			
+			$item->delete();
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
 				$this->env->configuration()->removeItemDescription($item);
@@ -237,7 +238,9 @@
 		
 		public function createFolder($parent, $name) {
 			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
-			$this->filesystem->createFolder($parent, $name);
+
+			$new = $this->filesystem->createFolder($parent, $name);
+			$this->env->events()->onEvent(FileEvent::createFolder($new));
 		}
 
 		public function download($file) {
@@ -254,6 +257,7 @@
 			header("Content-Length: ".filesize($this->path));
 			
 			readfile($this->path);
+			$this->env->events()->onEvent(FileEvent::download($file));
 		}
 
 		public function uploadToFolder($folder) {
@@ -279,6 +283,8 @@
 		const RENAME = "rename";
 		const MOVE = "move";
 		const DELETE = "delete";
+		const CREATE_FOLDER = "create_folder";
+		const DOWNLOAD = "download";
 		
 		private $item;
 		private $subType;
@@ -297,6 +303,14 @@
 
 		static function delete($item) {
 			return new FileEvent($item, self::DELETE);
+		}
+
+		static function createFolder($folder) {
+			return new FileEvent($folder, self::CREATE_FOLDER);
+		}
+
+		static function download($item) {
+			return new FileEvent($item, self::DOWNLOAD);
 		}
 		
 		function __construct($item, $type, $data = NULL) {

@@ -134,7 +134,7 @@
 			else if (count($removed) > 0) $id = $removed[0]["item_id"];
 			else return TRUE;
 
-			$this->permissionDao->updateItemPermissions($this->env->filesystem()->getItemFromId($id), $new, $modified, $removed);
+			$this->permissionDao->updateItemPermissions($this->env->filesystem()->item($id), $new, $modified, $removed);
 		}
 		
 		public function removeItemPermissions($item) {
