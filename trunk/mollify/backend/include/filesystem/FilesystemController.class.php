@@ -37,11 +37,11 @@
 			foreach($folderDefs as $id => $folderDef) {
 				if (!isset($folderDef["name"])) {
 					$this->env->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a name (".$root['id'].")");
+					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a name (".$root['id'].")");
 				}
 				if (!isset($folderDef["path"])) {
 					$this->env->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a path (".$root['id'].")");
+					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a path (".$root['id'].")");
 				}
 			}
 			
@@ -53,12 +53,12 @@
 				case MollifyFilesystem::TYPE_LOCAL:
 					return new LocalFilesystem($id, $folderDef, $this);
 				default:
-					throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder definition (".$id.")");
+					throw new ServiceException("INVALID_CONFIGURATION", "Invalid root folder definition (".$id."), type unknown");
 			}
 		}
 		
 		private function filesystemType($folderDef) {
-			return MollifyFilesystem::TYPE_LOCAL;
+			return MollifyFilesystem::TYPE_LOCAL;	// include type in definition when more types are supported
 		}
 		
 		public function getSessionInfo() {
@@ -87,7 +87,7 @@
 			return $this->createFilesystem($id, $folderDefs[$id]);
 		}
 		
-		public function item($id) {
+		public function item($id, $create = FALSE) {
 			$plainId = base64_decode($id);
 			$parts = explode(":".DIRECTORY_SEPARATOR, $plainId);
 			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item id: ".$id);
@@ -95,7 +95,7 @@
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			return $this->filesystem($filesystemId)->createItem($id, $path);
+			return $this->filesystem($filesystemId)->createItem($id, $path, $create);
 		}
 		
 		public function publicId($filesystemId, $path = "") {
@@ -107,7 +107,7 @@
 		}
 
 		public function ignoredItems($filesystem, $path) {
-			return array('mollify.dsc', 'mollify.uac');	//TODO settings etc
+			return array('mollify.dsc', 'mollify.uac');	//TODO get from settings and/or configuration etc
 		}
 		
 		public function folders($parent) {
@@ -237,33 +237,68 @@
 		}
 		
 		public function createFolder($parent, $name) {
+			Logging::logDebug('creating folder ['.$parent->id().'/'.$name.']');
+			$this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($parent, Authentication::RIGHTS_WRITE, "create folder");
 
-			$new = $this->filesystem->createFolder($parent, $name);
+			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 		}
 
 		public function download($file) {
-			Logging::logDebug('download ['.$this->path.']');
+			Logging::logDebug('download ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
 			
-			header("Cache-Control: public, must-revalidate");
-			header("Content-Type: application/force-download");
-			header("Content-Type: application/octet-stream");
-			header("Content-Type: application/download");
-			header("Content-Disposition: attachment; filename=\"".Filesystem::basename($this->path)."\";");
-			header("Content-Transfer-Encoding: binary");
-			header("Pragma: hack");
-			header("Content-Length: ".filesize($this->path));
+			$name = $file->name();
+			$size = $file->size();
+			$this->env->response()->download($name, $file->read(), $size);
 			
-			readfile($this->path);
 			$this->env->events()->onEvent(FileEvent::download($file));
 		}
 
-		public function uploadToFolder($folder) {
+		public function uploadTo($folder) {
 			$this->env->features()->assertFeature("file_upload");
-			$this->assertRights(Authentication::RIGHTS_WRITE, "upload");
-			$this->filesystem->uploadToFolder($folder);
+			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
+
+			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
+				throw new ServiceException("NO_UPLOAD_DATA");
+			
+			if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
+			
+			// flash uploader (uploads one file at a time)
+			if (isset($_FILES['uploader-flash'])) {
+				$this->upload($folder, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
+				return;
+			}
+	
+			// http
+			if (isset($_FILES["file"]) && isset($_FILES["file"]["error"]) && $_FILES["file"]["error"] != UPLOAD_ERR_OK)
+				throw new ServiceException("UPLOAD_FAILED", $_FILES["file"]["error"]);
+					
+			foreach ($_FILES['uploader-http']['name'] as $key => $value) { 
+				$name = $_FILES['uploader-http']['name'][$key];
+				$origin = $_FILES['uploader-http']['tmp_name'][$key];
+				$this->upload($folder, $name, $origin);
+			}
+		}
+		
+		private function upload($folder, $name, $origin) {
+			$target = $folder->createEmptyItem($name);
+			Logging::logDebug('uploading to ['.$target.']');
+			
+			$src = @fopen($origin, "r");
+			if (!$src)
+				throw new ServiceException("SAVING_FAILED", "Failed to read uploaded data");			
+			$dst = $target->write();
+			
+			while (!feof($src))
+				fwrite($dst, fread($src, 4096));
+
+			fclose($dst);
+			fclose($src);
+			unlink($origin);
+			
+			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
 		
 		public function zip($name) {
@@ -285,6 +320,7 @@
 		const DELETE = "delete";
 		const CREATE_FOLDER = "create_folder";
 		const DOWNLOAD = "download";
+		const UPLOAD = "upload";
 		
 		private $item;
 		private $subType;
@@ -311,6 +347,10 @@
 
 		static function download($item) {
 			return new FileEvent($item, self::DOWNLOAD);
+		}
+
+		static function upload($item) {
+			return new FileEvent($item, self::UPLOAD);
 		}
 		
 		function __construct($item, $type, $data = NULL) {

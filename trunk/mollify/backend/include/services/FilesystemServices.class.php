@@ -60,13 +60,13 @@
 				
 		private function processGetFile($item) {
 			if (count($this->path) == 1) {
-				$item->download();
+				$this->env->filesystem()->download($item);
 				return;
 			}
 						
 			switch (strtolower($this->path[1])) {
 				case 'zip':
-					$item->downloadAsZip();
+					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));

@@ -123,7 +123,7 @@
 		}
 		
 		public function updateItemPermissions($updates) {
-			// find item id (assumes that all are for the same item)
+			// find item id (assumes that all updates are for the same item)
 			$id = NULL;
 			$new = $updates['new'];
 			$modified = $updates['modified'];

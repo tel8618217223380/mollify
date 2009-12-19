@@ -26,7 +26,6 @@
 		}
 
 		public function removeItemDescription($item) {
-			Logging::logDebug("Remove description for ".$item->name());
 			$this->assertLocalFilesystem($item);
 			
 			$file = $this->getDescriptionFilename($item);

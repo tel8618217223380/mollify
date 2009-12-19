@@ -71,6 +71,21 @@
 			}
 		}
 		
+		public function sendBinary($filename, $stream, $size = NULL) {
+			header("Cache-Control: public, must-revalidate");
+			header("Content-Type: application/force-download");
+			header("Content-Type: application/octet-stream");
+			header("Content-Type: application/download");
+			header("Content-Disposition: attachment; filename=\"".$filename."\";");
+			header("Content-Transfer-Encoding: binary");
+			header("Pragma: hack");
+			if ($size) header("Content-Length: ".$size);
+			
+			while (!feof($stream))
+				echo fread($stream, 4096);
+			fclose($stream);
+		}
+		
 		private function getStatus($response) {
 			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
 		}
