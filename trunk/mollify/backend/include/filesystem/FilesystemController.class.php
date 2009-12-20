@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -87,7 +87,7 @@
 			return $this->createFilesystem($id, $folderDefs[$id]);
 		}
 		
-		public function item($id, $create = FALSE) {
+		public function item($id, $nonexisting = FALSE) {
 			$plainId = base64_decode($id);
 			$parts = explode(":".DIRECTORY_SEPARATOR, $plainId);
 			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item id: ".$id);
@@ -95,7 +95,7 @@
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			return $this->filesystem($filesystemId)->createItem($id, $path, $create);
+			return $this->filesystem($filesystemId)->createItem($id, $path, $nonexisting);
 		}
 		
 		public function publicId($filesystemId, $path = "") {
@@ -308,7 +308,7 @@
 			$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
 			
 			$item->downloadAsZip();			
-			$this->env->events()->onEvent(FileEvent::download($file));
+			$this->env->events()->onEvent(FileEvent::download($item));
 		}
 		
 		public function setting($setting) {

@@ -15,12 +15,17 @@
 		private $user;
 		private $pw;
 		private $database;
+		private $tablePrefix;
 		
 		private $db = NULL;
 		
-		public __construct($host, $user, $pw, $database, $tablePrefix) {
+		public function __construct($host, $user, $pw, $database, $tablePrefix) {
 			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;
+			$this->user = $user;
+			$this->pw = $pw;
+			$this->database = $database;
+			$this->tablePrefix = $tablePrefix;
 		}
 		
 		public function isConnected() {
@@ -28,20 +33,26 @@
 		}
 		
 		public function connect() {
-			$db = @mysql_connect($host, $user, $pw);
+			$db = @mysql_connect($this->host, $this->user, $this->pw);
 			
-			if (!db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$host.", user=".$user.", password=".$DB_PASSWORD."), error: ".mysql_error());
+			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysql_error());
 
-			if (!mysql_select_db($database, $db)) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect select database (".$database.") error: ".mysql_error($db));
+			if (!mysql_select_db($this->database, $db)) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect select database (".$database.") error: ".mysql_error($db));
 			
 			$this->db = $db;
 		}
-		
+
+		public function table($name) {
+			return $this->tablePrefix.$name;
+		}
+
 		public function query($query) {
+			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
+			
 			$result = @mysql_query($query, $this->db);
-			if (!$result) throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysql_error($db));
-				log_error("Error executing query (".$query."): ".mysql_error($this->db));
-			return new Result($result);
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysql_error($db));
+			return new Result($this->db, $result);
 		}
 		
 		public function string($s) {
@@ -50,16 +61,22 @@
 	}
 	
 	class Result {
+		private $db;
 		private $result;
 		
-		public __construct($result) {
+		public function __construct($db, $result) {
+			$this->db = $db;
 			$this->result = $result;
 		}
 		
-		public function count() (
+		public function count() {
 			return mysql_num_rows($this->result);
-		)
-		
+		}
+
+		public function affected() {
+			return mysql_affected_rows($this->db);
+		}
+				
 		public function rows() {
 			$list = array();
 			while ($row = mysql_fetch_assoc($this->result)) {
@@ -79,6 +96,11 @@
 			$ret = mysql_result($this->result, $i);
 			mysql_free_result($this->result);
 			return $ret;
+		}
+		
+		public function free() {
+			if ($this->result === TRUE or $this->result === FALSE) return;
+			mysql_free_result($this->result);
 		}
 	}
 ?>

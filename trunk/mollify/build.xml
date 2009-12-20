@@ -204,7 +204,7 @@
 			<arg value="-startupUrl"/>
 			<arg value="${hosted.page.url}"/>
 			<arg value="${module.name}"/>
-    </java>
+		</java>
 	</target>
 	
 	<target name="compile.prod">
