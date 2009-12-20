@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -25,7 +25,7 @@
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
 		
-		public function createItem($id, $path, $create = FALSE) {
+		public function createItem($id, $path, $nonexisting = FALSE) {
 			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
@@ -33,16 +33,16 @@
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
 			if ($isFile) {
-				if (!$create and !$this->exists($fullPath))
+				if (!$nonexisting and !$this->exists($fullPath))
 					throw new ServiceException("FILE_DOES_NOT_EXIST", $id);
 
-				if ($create and $this->exists($fullPath))
+				if ($nonexisting and $this->exists($fullPath))
 					throw new ServiceException("FILE_ALREADY_EXISTS", $id);
 				
-				if (!$create and !is_file($fullPath))
+				if (!$nonexisting and !is_file($fullPath))
 					throw new ServiceException("NOT_A_FILE", $id);
 			} else {
-				if ($create) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
+				if ($nonexisting) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
 				
 				if (!$this->exists($fullPath))
 					throw new ServiceException("DIR_DOES_NOT_EXIST", $id);

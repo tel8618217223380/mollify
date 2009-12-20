@@ -38,9 +38,13 @@
 				}
 			}
 		}
-				
+
 		public function setting($setting) {
 			return $this->settings[$setting];
+		}
+		
+		public function hasSetting($setting) {
+			return array_key_exists($setting, $this->settings);
 		}
 		
 		function log() {

@@ -16,7 +16,7 @@
 			if (isset($DB_TABLE_PREFIX)) $tablePrefix = $DB_TABLE_PREFIX;
 			else $tablePrefix = "";
 			
-			require_once("../mysql/Database.class.php");
+			require_once("include/mysql/Database.class.php");
 			$this->db = new Database($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
 			$this->db->connect();
 		}
@@ -34,7 +34,7 @@
 		public function checkProtocolVersion($version) {}
 	
 		public function findUser($username, $password) {
-			$result = $this->db->query(sprintf("SELECT id, name FROM user WHERE name='%s' AND password='%s'", $this->db->string($username), $this->db->string($password)));
+			$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE name='%s' AND password='%s'", $this->db->string($username), $this->db->string($password)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -51,21 +51,21 @@
 		}
 		
 		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, permission_mode FROM user ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id) {
-			return $this->db->query(sprintf("SELECT id, name FROM user WHERE id='%s'", $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
 		public function getDefaultPermission($userId = "") {
-			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM user WHERE id='%s'", $this->db->string($userId)))->value(0));
+			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value(0));
 			$this->env->authentication()->assertPermissionValue($mode);
 			return $mode;
 		}
 			
 		public function getUserFolders($userId) {
-			$rows = $this->db->query(sprintf("SELECT folder.id, user_folder.name, folder.name as folder_name, folder.path FROM user_folder, folder WHERE user_id='%s' AND folder.id = user_folder.folder_id", $this->db->string($user_id)))->rows();
+			$rows = $this->db->query(sprintf("SELECT folder.id, user_folder.name, folder.name as folder_name, folder.path FROM ".$this->db->table("user_folder").", ".$this->db->table("folder")." WHERE user_id='%s' AND ".$this->db->table("folder").".id = ".$this->db->table("user_folder").".folder_id", $this->db->string($userId)))->rows();
 
 			$roots = array();
 			foreach ($rows as $row) {
@@ -78,11 +78,21 @@
 		}
 		
 		function getItemDescription($item) {
-			return NULL;
+			$result = $this->db->query(sprintf("SELECT description FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->db->string($this->itemId($item))));
+			if ($result->count() < 1) return NULL;
+			return $result->value(0);
 		}
 				
 		function setItemDescription($item, $description) {
-			return FALSE;
+			$id = $this->db->string($this->itemId($item));
+			$desc = $this->db->string($description);
+			$result = $this->db->query(sprintf("UPDATE ".$this->db->table("item_description")." SET description='%s' WHERE item_id='%s'", $desc, $id));
+			if ($result->affected() == 0) {
+				$result->free();
+				$result = $this->db->query(sprintf("INSERT INTO ".$this->db->table("item_description")." (item_id, description) VALUES ('%s','%s')", $id, $desc));
+			}
+			$result->free();
+			return TRUE;
 		}
 	
 		function removeItemDescription($item) {
@@ -112,6 +122,9 @@
 		function moveItemPermissions($from, $to) {
 			return FALSE;
 		}
-
+		
+		private function itemId($item) {
+			return base64_decode($item->id());
+		}
 	}
 ?>
