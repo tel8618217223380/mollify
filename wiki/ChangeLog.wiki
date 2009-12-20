@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.0.5.4 ==
+  * Corrected Dutch localization errors
+  * Fixed visual error with Dutch localization
+
 === Version 1.0.5.3 ==
   * Added new language: Dutch
   * Fixed zip folder name issue
