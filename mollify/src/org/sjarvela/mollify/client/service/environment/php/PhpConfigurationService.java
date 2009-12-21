@@ -196,7 +196,8 @@ public class PhpConfigurationService extends ServiceBase implements
 			ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(
-						dir.getId())).listener(resultListener).delete();
+						user.getId()).item(dir.getId())).listener(
+				resultListener).delete();
 	}
 
 }

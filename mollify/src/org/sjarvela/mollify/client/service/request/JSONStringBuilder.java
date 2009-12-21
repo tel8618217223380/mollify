@@ -26,7 +26,7 @@ public class JSONStringBuilder {
 	}
 
 	public JSONStringBuilder add(String name, String value) {
-		result.put(name, new JSONString(value));
+		result.put(name, value == null ? null : new JSONString(value));
 		return this;
 	}
 
@@ -36,7 +36,7 @@ public class JSONStringBuilder {
 	}
 
 	public JSONStringBuilder add(String name, JsArray a) {
-		result.put(name, new JSONObject(a));
+		result.put(name, a == null ? null : new JSONObject(a));
 		return this;
 	}
 
