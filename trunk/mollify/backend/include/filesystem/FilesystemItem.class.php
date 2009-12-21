@@ -54,6 +54,10 @@
 			return $this->filesystem;
 		}
 		
+		public function move($to) {
+			return $this->filesystem->move($this, $to);
+		}
+		
 		public function rename($name) {
 			return $this->filesystem->rename($this, $name);
 		}
@@ -80,10 +84,6 @@
 		
 		public function copy($to) {
 			return $this->filesystem->copy($this, $to);
-		}
-
-		public function move($to) {
-			return $this->filesystem->move($this, $to);
 		}
 		
 		public function read() {

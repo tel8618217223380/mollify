@@ -64,7 +64,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		if (item.isFile())
 			onFileAction((File) item, action);
 		else
-			onDirectoryAction((Folder) item, action);
+			onFolderAction((Folder) item, action);
 	}
 
 	private void onFileAction(final File file, FileSystemAction action) {
@@ -130,21 +130,21 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		}
 	}
 
-	private void onDirectoryAction(final Folder directory,
+	private void onFolderAction(final Folder folder,
 			FileSystemAction action) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
 			windowManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl(directory));
+					.getDownloadAsZipUrl(folder));
 		} else if (action.equals(FileSystemAction.rename)) {
-			renameDialogFactory.openRenameDialog(directory, this);
+			renameDialogFactory.openRenameDialog(folder, this);
 		} else if (action.equals(FileSystemAction.move)) {
 			itemSelectorFactory.openFolderSelector(textProvider.getStrings()
 					.moveDirectoryDialogTitle(), textProvider.getMessages()
-					.moveDirectoryMessage(directory.getName()), textProvider
+					.moveDirectoryMessage(folder.getName()), textProvider
 					.getStrings().moveDirectoryDialogAction(),
 					fileSystemItemProvider, new SelectItemHandler() {
 						public void onSelect(FileSystemItem selected) {
-							moveDirectory(directory, (Folder) selected);
+							moveFolder(folder, (Folder) selected);
 						}
 
 						public boolean isItemAllowed(FileSystemItem candidate,
@@ -152,21 +152,21 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							if (candidate.isFile())
 								return false;
 
-							return !directory.equals(candidate)
-									&& !directory.equals(candidate)
-									&& !path.contains(directory);
+							return !folder.equals(candidate)
+									&& !folder.equals(candidate)
+									&& !path.contains(folder);
 						}
 					});
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = textProvider.getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
 			String message = textProvider.getMessages()
-					.confirmDirectoryDeleteMessage(directory.getName());
+					.confirmDirectoryDeleteMessage(folder.getName());
 			dialogManager.showConfirmationDialog(title, message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
-							delete(directory);
+							delete(folder);
 						}
 					});
 		} else {
@@ -191,7 +191,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		fileSystemService.move(file, toDirectory, createListener());
 	}
 
-	protected void moveDirectory(Folder directory, Folder toDirectory) {
+	protected void moveFolder(Folder directory, Folder toDirectory) {
 		if (directory.equals(toDirectory))
 			return;
 		fileSystemService.move(directory, toDirectory, createListener());
