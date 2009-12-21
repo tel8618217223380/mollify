@@ -30,6 +30,10 @@
 			return $this->id;
 		}
 		
+		public function parent() {
+			return $this->filesystem->parent($this);
+		}
+		
 		public function name() {
 			return $this->name;
 		}

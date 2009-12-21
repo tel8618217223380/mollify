@@ -173,21 +173,23 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("user_id", user.getId()).add("id",
-				dir.getId()).add("name", name).toString();
+		String data = new JSONStringBuilder("id", dir.getId())
+				.add("name", name).toString();
 
-		request().url(serviceUrl().action(ConfigurationAction.userfolders))
-				.data(data).listener(resultListener).post();
+		request().url(
+				serviceUrl().action(ConfigurationAction.userfolders).item(
+						user.getId())).data(data).listener(resultListener)
+				.post();
 	}
 
 	public void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("user_id", user.getId()).add(
-				"name", name).toString();
+		String data = new JSONStringBuilder("name", name).toString();
 
 		request().url(
 				serviceUrl().action(ConfigurationAction.userfolders).item(
-						dir.getId())).data(data).listener(resultListener).put();
+						user.getId()).item(dir.getId())).data(data).listener(
+				resultListener).put();
 	}
 
 	public void removeUserFolder(User user, UserFolder dir,

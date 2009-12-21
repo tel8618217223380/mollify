@@ -43,6 +43,8 @@
 		
 		public abstract function files($parent);
 		
+		public abstract function parent($item);
+		
 		public abstract function size($file);
 		
 		public abstract function rename($item, $name);

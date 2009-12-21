@@ -13,10 +13,10 @@ public class UserFolder extends FolderInfo {
 	}
 
 	public final native String getDefaultName() /*-{
-		return this.folder_name;
+		return this.default_name;
 	}-*/;
 
 	private final native void putDefaultName(String defaultName) /*-{
-		this.folder_name = defaultName;
+		this.default_name = defaultName;
 	}-*/;
 }
