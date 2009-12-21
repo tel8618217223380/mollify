@@ -27,7 +27,7 @@ Although there are lots of files having "`cache`" in their name in the client fo
 
 These files represent the actual application, and each of these `*.cache` files are compiled to be optimal in certain environment, for example specific browser and language. There are lots of these files, but the entry point javascript will load only the one optimal for the current browser, language etc.
 
-This is all taken care of the GWT compiler, more information how it works can be found from the GWT Developer Guide: http://code.google.com/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html
+This is all taken care of the GWT compiler, more information how it works can be found from the GWT Developer Guide: http://code.google.com/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html (chapter "Understanding the GWT Compiler")
 
 == 2. Errors ==
 
