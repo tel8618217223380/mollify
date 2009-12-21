@@ -148,6 +148,13 @@
 			}
 			return $result;
 		}
+		
+		public function parent($item) {
+			if ($item->path() === '') return NULL;
+			
+			$path = $this->localPath($item);
+			return $this->itemWithPath($this->publicPath(dirname($path)));
+		}
 
 		public function rename($item, $name) {
 			$old = $this->localPath($item);

@@ -34,18 +34,22 @@
 		private function getRootFolders() {
 			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			
-			foreach($folderDefs as $id => $folderDef) {
-				if (!isset($folderDef["name"])) {
-					$this->env->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a name (".$root['id'].")");
+			$list = array();
+			
+			foreach($folderDefs as $folderDef) {
+				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
+					$this->env->session()->reset();
+					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a name (".$folderDef['id'].")");
 				}
 				if (!isset($folderDef["path"])) {
-					$this->env->session->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a path (".$root['id'].")");
+					$this->env->session()->reset();
+					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a path (".$folderDef['id'].")");
 				}
+				
+				$list[$folderDef['id']] = $folderDef;
 			}
 			
-			return $folderDefs;
+			return $list;
 		}
 
 		private function createFilesystem($id, $folderDef) {
@@ -75,7 +79,7 @@
 			foreach($this->env->session()->param('roots') as $id => $folderDef) {
 				$result["roots"][] = array(
 					"id" => $this->publicId($id),
-					"name" => $folderDef['name']
+					"name" => $folderDef['name'] != NULL ? $folderDef['name'] : $folderDef['default_name']
 				);
 			}
 

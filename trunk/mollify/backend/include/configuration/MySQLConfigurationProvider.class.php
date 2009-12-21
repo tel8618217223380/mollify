@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class MySQLConfigurationProvider extends ConfigurationProvider {
 		private $db;
 		
@@ -58,23 +69,116 @@
 			return $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
+		public function addUser($name, $pw, $permission) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode) VALUES ('%s', '%s', '%s')", $this->db->string($name), $this->db->string($pw), $this->db->string($permission)));
+			return TRUE;
+		}
+	
+		public function updateUser($id, $name, $permission) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', permission_mode='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($permission), $this->db->string($id)));			
+			if ($affected === 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid update user request, user ".$id." not found");	
+			return TRUE;
+		}
+		
+		public function removeUser($userId) {
+			$id = $this->db->string($id);
+
+			$this->db->startTransaction();			
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
+			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");	
+			$this->db->commit();					
+			return TRUE;
+		}
+			
+		private function getPassword($id) {
+			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->value(0);
+		}
+	
+		public function changePassword($id, $old, $new) {
+			if ($old != $this->getPassword($id)) throw new ServiceException("UNAUTHORIZED");
+			
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($new, $db), $this->db->string($id)));
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid change password request, user ".$id." not found");			
+			return TRUE;
+		}
+	
+		public function resetPassword($id, $pw) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($pw, $db), mysql_real_escape_string($id)));
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid reset password request, user ".$id." not found");
+			return TRUE;
+		}
+	
+		public function getFolders() {
+			return $this->db->query("SELECT id, name, path FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
+		}
+	
+		public function addFolder($name, $path) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("folder")." (name, path) VALUES ('%s', '%s')", $this->db->string($name), $this->db->string($path)));
+			return TRUE;
+		}
+	
+		public function updateFolder($id, $name, $path) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("folder")." SET name='%s', path='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($path), $this->db->string($id)));
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid update folder request, folder ".$id." not found");
+			return TRUE;
+		}
+		
+		public function removeFolder($id) {
+			$this->db->startTransaction();
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $this->db->string($id)));			
+			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $this->db->string($id)));
+	
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$id." not found");
+			$this->db->commit();
+			return TRUE;
+		}
+
+		public function getUserFolders($userId) {
+			$folderTable = $this->db->table("folder");
+			$userFolderTable = $this->db->table("user_folder");
+			
+			return $this->db->query(sprintf("SELECT ".$folderTable.".id, ".$userFolderTable.".name, ".$folderTable.".name as default_name, ".$folderTable.".path FROM ".$userFolderTable.", ".$folderTable." WHERE user_id='%s' AND ".$folderTable.".id = ".$userFolderTable.".folder_id", $this->db->string($userId)))->rows();
+		}
+		
+		public function addUserFolder($userId, $folderId, $name) {
+			if ($name != NULL) {
+				$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_folder")." (user_id, folder_id, name) VALUES ('%s', '%s', '%s')", $this->db->string($userId), $this->db->string($folderId), $this->db->string($name)));
+			} else {
+				$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_folder")." (user_id, folder_id, name) VALUES ('%s', '%s', NULL)", $this->db->string($userId), $this->db->string($folderId)));
+			}
+						
+			return TRUE;
+		}
+	
+		public function updateUserFolder($userId, $folderId, $name) {
+			if ($name != NULL) {
+				$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name='%s' WHERE user_id='%s' AND folder_id='%s'", $this->db->string($name), $this->db->string($userId), $this->db->string($folderId)));
+			} else {
+				$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name = NULL WHERE user_id='%s' AND folder_id='%s'", $this->db->string($userId), $this->db->string($folderId)));
+			}
+	
+			if ($affected == 0)
+				throw new ServiceException("INVALID_REQUEST", "Invalid update user folder request, folder ".$folder_id." not found for user ".$user_id);
+			return TRUE;
+		}
+		
+		public function removeUserFolder($userId, $folderId) {
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s' AND user_id='%s'", $this->db->string($folderId), $this->db->string($userId)));
+			return TRUE;
+		}
+		
 		public function getDefaultPermission($userId = "") {
 			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value(0));
 			$this->env->authentication()->assertPermissionValue($mode);
 			return $mode;
-		}
-			
-		public function getUserFolders($userId) {
-			$rows = $this->db->query(sprintf("SELECT folder.id, user_folder.name, folder.name as folder_name, folder.path FROM ".$this->db->table("user_folder").", ".$this->db->table("folder")." WHERE user_id='%s' AND ".$this->db->table("folder").".id = ".$this->db->table("user_folder").".folder_id", $this->db->string($userId)))->rows();
-
-			$roots = array();
-			foreach ($rows as $row) {
-				if ($row["name"] != NULL) $name = $row["name"];
-				else $name = $row["folder_name"];
-			
-				$roots[$row["id"]] = array("id" => $row["id"], "name" => $name, "path" => $row["path"]);
-			}
-			return $roots;
 		}
 		
 		function getItemDescription($item) {
@@ -88,7 +192,7 @@
 			$desc = $this->db->string($description);
 			
 			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET description='%s' WHERE item_id='%s'", $desc, $id));
-			if ($affected() == 0)
+			if ($affected === 0)
 				$this->db->update(sprintf("INSERT INTO ".$this->db->table("item_description")." (item_id, description) VALUES ('%s','%s')", $id, $desc));
 			return TRUE;
 		}

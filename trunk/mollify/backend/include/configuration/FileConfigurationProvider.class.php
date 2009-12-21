@@ -1,4 +1,15 @@
 <?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
 	class FileConfigurationProvider extends ConfigurationProvider {
 		private $permissionDao;
 		
@@ -83,12 +94,18 @@
 			if (!isset($PUBLISHED_DIRECTORIES) or !is_array($PUBLISHED_DIRECTORIES))
 				throw new ServiceException("INVALID_CONFIGURATION", "Missing root directory configurations");
 			
+			$list = NULL;
 			if (count($USERS) === 0) {
-				return $PUBLISHED_DIRECTORIES;
+				$list = $PUBLISHED_DIRECTORIES;
 			} else {
 				if (!array_key_exists($userId, $PUBLISHED_DIRECTORIES)) throw new ServiceException("INVALID_CONFIGURATION", "Missing root directory configuration for user ".$userId);
-				return $PUBLISHED_DIRECTORIES[$userId];
+				$list = $PUBLISHED_DIRECTORIES[$userId];
 			}
+			
+			$result = array();
+			foreach($list as $id => $folder)
+				$result[] = array("id" => $id, "name" => $folder['name'], "path" => $folder['path']);
+			return $result;
 		}
 		
 		public function getItemDescription($item) {
