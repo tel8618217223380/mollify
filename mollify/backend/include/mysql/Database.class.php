@@ -45,14 +45,33 @@
 		public function table($name) {
 			return $this->tablePrefix.$name;
 		}
+		
+		public function update($query) {
+			$result = $this->query($query);
+			$affected = $result->affected();
+			$result->free();
+			return $affected;
+		}
 
 		public function query($query) {
 			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
 			
 			$result = @mysql_query($query, $this->db);
 			if (!$result)
-				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysql_error($db));
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysql_error($this->db));
 			return new Result($this->db, $result);
+		}
+		
+		public function startTransaction() {
+			$result = @mysql_query("START TRANSACTION;", $this->db);
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysql_error($this->db));
+		}
+
+		public function commit() {
+			$result = @mysql_query("COMMIT;", $this->db);
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysql_error($this->db));
 		}
 		
 		public function string($s) {
