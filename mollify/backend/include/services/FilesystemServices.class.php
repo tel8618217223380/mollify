@@ -163,11 +163,9 @@
 			switch (strtolower($this->path[1])) {
 				case 'files':
 					$this->env->filesystem()->uploadTo($item);
-					$this->response()->success(TRUE);
 					break;
 				case 'folders':
 					$this->env->filesystem()->createFolder($item, $this->request->data);
-					$this->response()->success(TRUE);
 					break;
 				case 'move':
 					$this->env->filesystem()->move($item, $this->item($this->request->data, FALSE));
@@ -175,6 +173,7 @@
 				default:
 					throw $this->invalidRequestException();
 			}
+			$this->response()->success(TRUE);
 		}
 		
 		private function processGetUpload() {
