@@ -21,6 +21,14 @@ These values define that each file can be 10 M in size, whereas total upload (al
 
 Max execution time is the time server allows any script to run before it is killed, and with very large files this might need increasing. Sometimes it is also necessary to define setting "memory_limit", which controls the amount of memory script can allocate.
 
+=== 1.2. What are those cache files in installation package? ===
+
+Although there are lots of files having "`cache`" in their name in the client folder, it doesn't mean they are result of some caching mechanism and therefore to be removed. On the contrary, they are the most important files in the package, the name simply indicates that they _can_ be cached by the web server if required.
+
+These files represent the actual application, and each of these `*.cache` files are compiled to be optimal in certain environment, for example specific browser and language. There are lots of these files, but the entry point javascript will load only the one optimal for the current browser, language etc.
+
+This is all taken care of the GWT compiler, more information how it works can be found from the GWT Developer Guide: http://code.google.com/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html
+
 == 2. Errors ==
 
 === 2.1. Client error "Failed to get response from server" ===
