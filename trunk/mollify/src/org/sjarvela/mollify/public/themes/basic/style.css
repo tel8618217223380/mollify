@@ -1539,7 +1539,7 @@ table.mollify-permission-list > tbody {
 
 .mollify-permission-editor-permission-actions {
 	padding-bottom: 5px;
-	margin-left: 114px;
+	margin-left: 82px;
 	padding-top: 5px;
 }
 
@@ -1566,7 +1566,7 @@ th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th,
 }
 
 .mollify-permission-editor-button {
-	width: 60px;
+	width: 70px;
 	height: 23px;
 	margin-right: 6px;
 	font-weight: normal;
