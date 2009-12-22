@@ -153,7 +153,7 @@
 		
 		private function processDeleteFolders() {
 			if (count($this->path) != 2) throw $this->invalidRequestException();
-			
+
 			$id = $this->path[1];
 			$this->env->configuration()->removeFolder($id);
 			//TODO remove descriptions, permissions etc
@@ -171,7 +171,7 @@
 			$userId = $this->path[1];
 			$folder = $this->request->data;
 			
-			$this->env->configuration()->addUserFolder($userId, $folder['id'], $folder['name']);
+			$this->env->configuration()->addUserFolder($userId, $folder['id'], isset($folder['name']) ? $folder['name'] : NULL);
 			$this->response()->success(TRUE);	
 		}
 		
