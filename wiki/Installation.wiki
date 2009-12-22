@@ -3,38 +3,31 @@
 
 = 1. Installation =
 
-1) Unzip Mollify installation package (for example with command "`unzip mollify_[VER].zip`")
-
-2) Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
-
-3) Create configuration file called "configuration.php" under directory "mollify/backend", examples can be found in
-directory "backend/example". For further instructions see chapter 3.
-
-4) You are ready to go. Open address "http://your.host.name/mollify" (if installed into root) to access your files.
-
+	 #  Unzip Mollify installation package (for example with command "`unzip mollify_[VER].zip`")
+	 #  Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
+	 #  Create configuration file, see instructions in chapter 3.
+	 #  You are ready to go. Open address "http://your.host.name/mollify" (if installed into root) to enter Mollify.
+	 #  If you've chosen database configuration, remember to configure published folders in configuration (accessible to admin users in the menu under the user name in top right corner)
 
 = 2. Upgrading =
 
-Upgrading Mollify requires following steps:
+	Upgrading Mollify requires following steps:
 
-1) For backup, move or rename old installation directory "mollify" into different name or location
+	 #  For backup, move or rename old installation directory "mollify" into different name or location
+	 #  Copy directory "mollify" from the latest Mollify installation package
+	 #  From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
+	 #  Remove backup directory
 
-2) Copy directory "mollify" from the latest Mollify installation package
+	If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
 
-3) From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
-
-4) Remove backup directory
-
-If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
-
-With MySQL installations, also database may require an upgrade. Check this by opening installation script with at
+	With MySQL installations, also database may require an upgrade. Check this by opening installation script with at
 "http://your.host.name/mollify/backend/install", and it will start upgrade if required.
 
 = 3. Configuration =
 
 	Mollify supports different kind of configuration options.
 	
-	From technical point of view, Mollify supports file based configuration, and database (MySQL) based configuration. File based configuration is configured manually, and is static. Database configuration, on the other hand, can be configured from client.
+	From technical point of view, Mollify supports file based configuration, and database (MySQL) based configuration. File based configuration is configured manually and is static. Database configuration, on the other hand, can be configured from client.
 	
 	From functional point of view, Mollify supports single user configuration and multi user configuration. In single user configuration, no authentication is required and all access rules apply to everybody. In multi user configuration different user accounts are set up, where different users can have different published directories and different access permissions.
 	
@@ -52,7 +45,7 @@ With MySQL installations, also database may require an upgrade. Check this by op
 	 * [ConfigurationMultiUserMode Multi-user mode (File based)]
 	 * [ConfigurationMySql Multi-user mode (DB)]
 	
-	Example configuration files can be found from folder "example" in installation package.
+	Create configuration file called "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
 	
 	Also, see instructions on [ConfigurationAdditionalOptions additional configuration options].
 
