@@ -26,6 +26,8 @@ Start installation by opening following page into your browser: "`http://[URL_TO
 
 Installer will check configuration and system, and guide you through the installation.
 
+Note that in order to use installer, MYSQLI extension must be installed in the server. If this is not available, you have to install manually as described in chapter 3.
+
 = 3. Manual Installation =
 
 Database tables can be created manually by running script "`/install/mysql/sql/create_tables_[VERSION].sql`". For required parameters, run "`/install/mysql/sql/params_[VERSION].sql`" as well.
