@@ -131,10 +131,13 @@
 		}
 		
 		public function removeFolder($id) {
+			$plainId = $id.":";	//TODO
+			
 			$this->db->startTransaction();
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $this->db->string($id)));			
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $this->db->string($id)));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $plainId));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $plainId));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $this->db->string($id)));
-	
 			if ($affected == 0)
 				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$id." not found");
 			$this->db->commit();
@@ -201,7 +204,7 @@
 			if (!$item->isFile()) {
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $this->itemId($item)));
 			} else {
-				$this->db->update(sprintf("DELETE FROM item_description WHERE item_id='%s'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
 			}
 			return TRUE;
 		}
