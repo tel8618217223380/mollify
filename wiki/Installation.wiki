@@ -20,8 +20,7 @@
 
 	If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
 
-	With MySQL installations, also database may require an upgrade. Check this by opening installation script with at
-"http://your.host.name/mollify/backend/install", and it will start upgrade if required.
+	With MySQL installations, also database may require an upgrade. Check this by opening installation script with at "http://your.host.name/mollify/backend/install", and it will start upgrade if required.
 
 = 3. Configuration =
 
