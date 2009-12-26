@@ -25,7 +25,7 @@
 
 = 3. Configuration =
 
-	Mollify supports different kind of configuration options.
+== 3.1. Configuration Types ==
 	
 	From technical point of view, Mollify supports file based configuration, and database (MySQL) based configuration. File based configuration is configured manually and is static. Database configuration, on the other hand, can be configured from client.
 	
@@ -40,7 +40,7 @@
 	
 	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen.
 
-	Steps:
+== 3.2.	Steps ==
 
 	 # Create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
 	 # Follow instructions based on configuration type:
