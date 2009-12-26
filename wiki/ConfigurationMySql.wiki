@@ -1,9 +1,11 @@
 #summary Configuration for MySQL
 #labels Phase-Deploy
 
-= 1. Prerequisities =
+= 1. Preparations =
 
-1) First you have to create MySQL user and database for Mollify, and grant the new user for CREATE/INSERT/UPDATE/DELETE rights in the created database.
+Before installing Mollify, you have to make following preparations:
+
+1) Create MySQL user and database for Mollify, and grant the new user CREATE/INSERT/UPDATE/DELETE rights for the created database.
 
 2) Create configuration.php as in following example:
 
@@ -20,15 +22,16 @@
 
 Values $DB_HOST and $DB_DATABASE are optional. If these are not defined, it is assumed that MySQL server is running on localhost, and database is called "mollify".
 
-= 2. Installation with Installer =
+= 2. Installation =
 
+Installing Mollify to MySQL database can be done with installer script. It does, however, require MYSQLI extension installed in the server. If this is not available, you have to install manually as described in chapter 2.2.
+
+== 2.1. Installation with Installer ==
 Start installation by opening following page into your browser: "`http://[URL_TO_MOLLIFY_INSTALL_DIR]/install/`", where `[URL_TO_MOLLIFY_INSTALL_DIR]` is the mollify backend folder where, for example, configuration.php and service.php are located.
 
-Installer will check configuration and system, and guide you through the installation.
+Installer will check your configuration and system, and guide you through the installation.
 
-Note that in order to use installer, MYSQLI extension must be installed in the server. If this is not available, you have to install manually as described in chapter 3.
-
-= 3. Manual Installation =
+== 2.2. Manual Installation ==
 
 Database tables can be created manually by running script "`/install/mysql/sql/create_tables_[VERSION].sql`". For required parameters, run "`/install/mysql/sql/params_[VERSION].sql`" as well.
 
@@ -39,3 +42,9 @@ To be able to log into Mollify, you must create first admin user manually with f
 }}}
 
 where `[USER_NAME]` is freely selectable user name, and `[PASSWORD]` an MD5 hashed password.
+
+= 3. Finishing Installation =
+
+After Mollify installation is over, you have to finish configuration by defining users and published folders.
+
+To do this, log into Mollify as administrator user and open configuration utility from the user menu (top right corner).
