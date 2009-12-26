@@ -7,7 +7,8 @@
 	 #  Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
 	 #  Create configuration file, see instructions in chapter 3.
 	 #  You are ready to go. Open address "http://your.host.name/mollify" (if installed into root) to enter Mollify.
-	 #  If you've chosen database configuration, remember to configure users and published folders in configuration (accessible to admin users in the menu under the user name in top right corner)
+	 
+	If you've chosen database configuration, remember to configure users and published folders in configuration utility (accessible to admin users under the user menu in top right corner)
 
 = 2. Upgrading =
 
