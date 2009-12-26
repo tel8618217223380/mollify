@@ -40,14 +40,14 @@
 	
 	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen.
 
-	First, create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
+	*Steps:*
 
-	Then, follow instructions based on configuration type:
-	 * [ConfigurationSingleUserMode Single-user mode (File configuration)]
-	 * [ConfigurationMultiUserMode Multi-user mode (File configuration)]
-	 * [ConfigurationMySql Multi-user mode (Database configuration)]
-	
-	Also, see instructions on [ConfigurationAdditionalOptions additional configuration options].
+	 # Create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
+	 # Follow instructions based on configuration type:
+		 * [ConfigurationSingleUserMode Single-user mode (File configuration)]
+		 * [ConfigurationMultiUserMode Multi-user mode (File configuration)]
+		 * [ConfigurationMySql Multi-user mode (Database configuration)]
+	 # For additional options, see instructions on [ConfigurationAdditionalOptions additional configuration options].
 
 
 = 4. Modifying Installation =
