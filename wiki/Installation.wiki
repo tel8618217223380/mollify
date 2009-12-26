@@ -38,7 +38,9 @@
 	 * File based configuration is best for static environments, ie. where users or published directories don't change often.
 	 * Database configuration requires a bit more effort in installation, but allows configuration directly from Mollify client.
 	
-	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen. Create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
+	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen.
+
+	First, create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
 
 	Then, follow instructions based on configuration type:
 	 * [ConfigurationSingleUserMode Single-user mode (File configuration)]
