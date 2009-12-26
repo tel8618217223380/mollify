@@ -40,7 +40,7 @@
 	
 	Backend file "configuration.php" contains all configuration properties needed by Mollify, and contents depend on which type of configuration is chosen.
 
-	*Steps:*
+	Steps:
 
 	 # Create "configuration.php" under directory "mollify/backend", examples can be found in folder "example" in installation package.
 	 # Follow instructions based on configuration type:
