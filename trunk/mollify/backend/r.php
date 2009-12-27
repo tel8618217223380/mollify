@@ -38,10 +38,11 @@
 	Logging::initialize($SETTINGS);
 
 	require_once("include/MollifyBackend.class.php");
+	require_once("include/ConfigurationProviderFactory.class.php");
 	
 	$responseHandler = new ResponseHandler(new OutputHandler());
 	try {
-		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, $responseHandler);
+		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
 		$request = new Request();
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
