@@ -42,6 +42,10 @@
 			return $features;
 		}
 		
+		public function getInstalledVersion() {
+			return $this->db->query("SELECT value FROM parameter WHERE name='version'")->value(0);
+		}
+		
 		public function checkProtocolVersion($version) {}
 	
 		public function findUser($username, $password) {

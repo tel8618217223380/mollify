@@ -19,29 +19,15 @@
 	class MollifyBackend {
 		private $environment;
 		
-		function __construct($settingsVar, $configurationProviderId, $responseHandler) {
+		function __construct($settingsVar, $configurationProviderId, $configurationProviderFactory, $responseHandler) {
 			$settings = new Settings($settingsVar);
 			$session = new Session($settings);
-			$configurationProvider = $this->createConfigurationProvider($configurationProviderId, $settings);
+			$configurationProvider = $configurationProviderFactory->createConfigurationProvider($configurationProviderId, $settings);
 			
 			$this->environment = new ServiceEnvironment($session, $responseHandler, $configurationProvider, $settings);
 			$this->setup();
 		}
 	
-		private function createConfigurationProvider($configurationProviderId, $settings) {
-			require_once("configuration/ConfigurationProvider.class.php");
-			if (!$configurationProviderId or strcasecmp($configurationProviderId, 'file') == 0) {
-				require_once("configuration/FileConfigurationProvider.class.php");
-				return new FileConfigurationProvider($settings);
-			} else if (!$configurationProviderId or strcasecmp($configurationProviderId, 'mysql') == 0) {
-				require_once("configuration/MySQLConfigurationProvider.class.php");
-				return new MySQLConfigurationProvider($settings);
-			} else {
-				Logging::logError("Unsupported data provider: [".$configurationProviderId."]");
-				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported data provider: [".$configurationProviderId."]");
-			}
-		}
-
 		private function setup() {
 			$this->environment->addService("authentication", "AuthenticationServices");
 			$this->environment->addService("session", "SessionServices");

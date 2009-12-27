@@ -25,6 +25,8 @@
 			return array();
 		}
 		
+		public function getInstalledVersion() { return NULL; }
+		
 		public function onSessionStart($userId, $username) {
 			return TRUE;
 		}
