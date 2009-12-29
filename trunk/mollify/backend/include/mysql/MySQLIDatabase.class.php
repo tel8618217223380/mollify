@@ -92,12 +92,11 @@
 			if (Logging::isDebug()) Logging::logDebug("DB QUERY: ".$query);
 			
 			try {
-				$result = mysqli_query($this->db, $query);
+				$result = @mysqli_query($this->db, $query);
 			} catch (mysqli_sql_exception $e) {
 				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
 			}
-			if (Logging::isDebug()) Logging::logDebug("RESULT: ".$result);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
 
@@ -106,26 +105,32 @@
 		}
 		
 		public function queries($sql) {
-			try {
-				mysqli_multi_query($this->db, $sql);
+			$this->startTransaction();
+			
+			try {	
+				@mysqli_multi_query($this->db, $sql);
 			    do {
-			        if ($result = mysqli_store_result($this->db))
+			        if ($result = @mysqli_store_result($this->db))
 			        	mysqli_free_result($result);
-			    } while (mysqli_next_result($connection));
+			        else
+			        	throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".substr($sql, 0, 20)."...): ".mysqli_error($this->db));
+			    } while (mysqli_next_result($this->db));
 			} catch (mysqli_sql_exception $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".substr($sql, 0, 20)."...): ".mysqli_error($this->db));
 			}
+			$this->commit();
 		}
 		
 		public function execSqlFile($file) {
 			$sql = file_get_contents($file);
+			//TODO replace table prefix
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
 			$this->queries($sql);
 		}
 		
 		public function startTransaction() {
 			try {
-				$result = @mysqli_query("START TRANSACTION;", $this->db);
+				$result = @mysqli_query($this->db, "START TRANSACTION;");
 			} catch (mysqli_sql_exception $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysqli_error($this->db));
 			}
@@ -136,7 +141,7 @@
 
 		public function commit() {
 			try {
-				$result = @mysqli_query("COMMIT;", $this->db);
+				$result = @mysqli_query($this->db, "COMMIT;");
 			} catch (mysqli_sql_exception $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
 			}

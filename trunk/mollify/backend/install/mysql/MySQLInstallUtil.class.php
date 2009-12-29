@@ -39,5 +39,9 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Permission test failed, could not ".$phase." (".$e->details().")");
 			}
 		}
+		
+		public function execCreateTables() {
+			$this->db->execSqlFile("include/mysql/sql/create_tables.sql");
+		}
 	}
 ?>

@@ -61,10 +61,10 @@
 		<script type="text/javascript">
 			function init() {
 				$("button#button-refresh").click(function() {
-					phase("verify");
+					phase("db");
 				});
 				$("button#button-install").click(function() {
-					phase("db");
+					phase("install");
 				});
 			}
 		</script>
