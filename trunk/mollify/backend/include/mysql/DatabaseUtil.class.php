@@ -30,9 +30,7 @@
 		}
 		
 		public function createDatabase() {
-			mysqli_report(MYSQLI_REPORT_ALL);
-	
-			$this->db->query("CREATE DATABASE ".$this->db->database())->free();
+			$this->db->query("CREATE DATABASE ".$this->db->database(), FALSE);
 			$this->db->selectDb();
 		}
 		

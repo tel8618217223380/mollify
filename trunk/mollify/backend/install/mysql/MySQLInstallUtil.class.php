@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class InstallationUtil {
+	class MySQLInstallUtil {
 		private $db;
 		
 		public function __construct($db) {
@@ -21,7 +21,8 @@
 			return $this->db;
 		}
 		
-		public function checkPermissions($db) {
+		public function checkPermissions() {
+			mysqli_report(MYSQLI_REPORT_ERROR);
 			$table = $this->db->table("mollify_install_test");
 			try {						
 				$tests = array("create table" => 'CREATE TABLE '.$table.' (id int NULL)',
@@ -32,7 +33,7 @@
 					
 				foreach ($tests as $name => $query) {
 					$phase = $name;
-					$this->db->query($query)->free();
+					$this->db->query($query, FALSE);
 				}
 			} catch (ServiceException $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Permission test failed, could not ".$phase." (".$e->details().")");

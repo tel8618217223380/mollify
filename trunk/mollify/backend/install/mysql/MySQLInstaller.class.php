@@ -38,6 +38,7 @@
 		}
 		
 		private function util() {
+			require_once("install/mysql/MySQLInstallUtil.class.php");
 			return new MySQLInstallUtil($this->db);
 		}
 		
@@ -47,11 +48,10 @@
 			$this->checkConfiguration();
 
 			$phase = $this->phase();
-			if ($phase == NULL) $phase = '';
 			Logging::logDebug("Installer phase: [".$phase."]");
+			if ($phase == NULL) $phase = 'verify';
 						
 			switch ($phase) {
-				case '':
 				case 'verify':
 					$this->showPage("verify_database");
 				case 'db':
@@ -129,7 +129,12 @@
 				return FALSE;
 			}
 			
-			$ver = $this->dbUtil->installedVersion();
+			try {
+				$ver = $this->dbUtil->installedVersion();
+			} catch (ServiceException $e) {
+				return FALSE;
+			}
+
 			if ($ver != NULL)
 				Logging::logDebug('Mollify installed version: '.$ver);
 			else
