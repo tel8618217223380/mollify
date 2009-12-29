@@ -1,0 +1,193 @@
+<?php
+
+	/**
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 *
+	 * All rights reserved. This program and the accompanying materials
+	 * are made available under the terms of the Eclipse Public License v1.0
+	 * which accompanies this distribution, and is available at
+	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	 * this entire header must remain intact.
+	 */
+
+	class MySQLIDatabase {
+		private $host;
+		private $user;
+		private $pw;
+		private $database;
+		private $tablePrefix;
+		
+		private $db = NULL;
+		
+		public function __construct($host, $user, $pw, $database, $tablePrefix) {
+			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
+			$this->host = $host;
+			$this->user = $user;
+			$this->pw = $pw;
+			$this->database = $database;
+			$this->tablePrefix = $tablePrefix;
+		}
+		
+		public function host() {
+			return $this->host;
+		}
+		
+		public function user() {
+			return $this->user;
+		}
+
+		public function password() {
+			return $this->password;
+		}
+
+		public function database() {
+			return $this->database;
+		}
+
+		public function tablePrefix() {
+			return $this->tablePrefix;
+		}
+		
+		public function isConnected() {
+			return $this->db != NULL;
+		}
+		
+		public function connect($selectDb = TRUE) {
+			mysqli_report(MYSQLI_REPORT_ALL);
+			try {
+				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database);
+				else $db = @mysqli_connect($this->host, $this->user, $this->pw);
+			} catch (mysqli_sql_exception $e) {
+				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_error());
+			}
+			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_error());
+
+			$this->db = $db;
+		}
+		
+		public function databaseExists() {
+			try {
+				return mysqli_select_db($this->db, $this->database);
+			} catch (mysqli_sql_exception $e) {
+				return FALSE;
+			}
+		}
+
+		public function selectDb() {
+			if (!mysqli_select_db($this->db, $this->database)) throw new ServiceException("INVALID_CONFIGURATION", "Could not select database (".$this->database.") error: ".mysql_error($this->db));
+		}
+
+		public function table($name) {
+			return $this->tablePrefix.$name;
+		}
+		
+		public function update($query) {
+			$result = $this->query($query);
+			$affected = $result->affected();
+			$result->free();
+			return $affected;
+		}
+
+		public function query($query) {
+			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
+			
+			try {
+				$result = @mysqli_query($query, $this->db);
+			} catch (mysqli_sql_exception $e) {
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
+			}
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
+			return new Result($this->db, $result);
+		}
+		
+		public function queries($sql) {
+			try {
+				mysqli_multi_query($connection, $sql);
+			    do {
+			        if ($result = mysqli_store_result($this->db))
+			        	mysqli_free_result($result);
+			    } while (mysqli_next_result($connection));
+			} catch (mysqli_sql_exception $e) {
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".substr($sql, 0, 20)."...): ".mysqli_error($this->db));
+			}
+		}
+		
+		public function execSqlFile($file) {
+			$sql = file_get_contents($file);
+			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
+			
+			$this->queries($sql);
+		}
+		
+		public function startTransaction() {
+			try {
+				$result = @mysqli_query("START TRANSACTION;", $this->db);
+			} catch (mysqli_sql_exception $e) {
+				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysqli_error($this->db));
+			}
+
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysqli_error($this->db));
+		}
+
+		public function commit() {
+			try {
+				$result = @mysqli_query("COMMIT;", $this->db);
+			} catch (mysqli_sql_exception $e) {
+				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
+			}
+
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
+		}
+		
+		public function string($s) {
+			return mysqli_real_escape_string($s, $this->db);
+		}
+	}
+	
+	class Result {
+		private $db;
+		private $result;
+		
+		public function __construct($db, $result) {
+			$this->db = $db;
+			$this->result = $result;
+		}
+		
+		public function count() {
+			return mysqli_num_rows($this->result);
+		}
+
+		public function affected() {
+			return mysqli_affected_rows($this->db);
+		}
+				
+		public function rows() {
+			$list = array();
+			while ($row = mysqli_fetch_assoc($this->result)) {
+				$list[] = $row;
+			}
+			mysqli_free_result($this->result);
+			return $list;
+		}
+		
+		public function firstRow() {
+			$ret = mysqli_fetch_assoc($this->result);
+			mysqli_free_result($this->result);
+			return $ret;
+		}
+		
+		public function value($i) {
+			$ret = mysqli_result($this->result, $i);
+			mysqli_free_result($this->result);
+			return $ret;
+		}
+		
+		public function free() {
+			if ($this->result === TRUE or $this->result === FALSE) return;
+			mysqli_free_result($this->result);
+		}
+	}
+?>

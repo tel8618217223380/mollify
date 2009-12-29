@@ -10,13 +10,9 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	 global $MAIN_PAGE, $USERS, $PUBLISHED_DIRECTORIES;
-	 if (!isset($MAIN_PAGE)) die();
-	 include("../installation_page.php");
-	 
-	 $multiUser = (isset($USERS) and count($USERS) > 0);
-	 if (!$multiUser) die();	//never show installation information in single user mode since users cannot be identified
-
+	 include("install/installation_page.php");
+	 global $installer;
+	 	 
 	 function getPermissionMode($mode) {
 	 	switch (strtolower(trim($mode))) {
 	 		case "ro": return "Read-Only";
@@ -33,26 +29,37 @@
 	<?php pageHeader("Mollify Installation"); ?>
 	
 	<body class="content" id="install-instructions-type">
-		<h1>Installation Summary</h1>
+
+	<h1>Configuration Summary</h1>
+	<?php if ($installer->action() != 'retry-configure') {?>
 		<p>
-			<h2>Configured users:</h2>
+			Mollify has been configured with following users and published directories. To modify this configuration, edit the "configuration.php". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationMultiUserMode" target="_blank">instructions</a>.
+		</p>
+	<?php } else { ?>
+		<p>
+			Mollify has been configured with following users and published directories. To view this list later, log into Mollify as admin user and open this installer.
+		</p>
+	<?php } ?>
+		<p>
+			<h2>Configured users</h2>
 			<ol>
-			<?php foreach ($USERS as $id => $user) {
+			<?php foreach ($installer->users() as $id => $user) {
 				echo "<li>".$user['name']." (".getPermissionMode($user['file_permission_mode']).")</li>";
 			}?>
 			</ol>
 			
-			<h2>Published directories:</h2>
+			<h2>Published directories</h2>
 			<ol>
-			<?php foreach ($PUBLISHED_DIRECTORIES as $userId => $dirs) {
-				echo "<li>".$USERS[$userId]['name']."<ul>";
+			<?php foreach ($installer->publishedDirectories() as $userId => $dirs) {
+				$users = $installer->users();
+				
+				echo "<li>".$users[$userId]['name']."<ul>";
 				foreach ($dirs as $id => $dir) {
 					echo "<li>".$dir['name']." (".$dir['path'].")</li>";
 				}
 				echo "</ul></li>";
 			}?>
 			</ol>
-
 		</p>
 	</body>
 </html>
