@@ -88,22 +88,26 @@
 			return $affected;
 		}
 
-		public function query($query) {
-			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
+		public function query($query, $expectResult = TRUE) {
+			if (Logging::isDebug()) Logging::logDebug("DB QUERY: ".$query);
 			
 			try {
-				$result = @mysqli_query($query, $this->db);
+				$result = mysqli_query($this->db, $query);
 			} catch (mysqli_sql_exception $e) {
+				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
 			}
+			if (Logging::isDebug()) Logging::logDebug("RESULT: ".$result);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
+
+			if (!$expectResult) return TRUE;
 			return new Result($this->db, $result);
 		}
 		
 		public function queries($sql) {
 			try {
-				mysqli_multi_query($connection, $sql);
+				mysqli_multi_query($this->db, $sql);
 			    do {
 			        if ($result = mysqli_store_result($this->db))
 			        	mysqli_free_result($result);
@@ -116,7 +120,6 @@
 		public function execSqlFile($file) {
 			$sql = file_get_contents($file);
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
-			
 			$this->queries($sql);
 		}
 		
