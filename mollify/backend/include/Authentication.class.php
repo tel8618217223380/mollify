@@ -27,7 +27,7 @@
 		}
 		
 		public function initialize($request) {
-			if (!$this->env->authentication()->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) $this->authenticate("", "");
+			if (!$this->isAuthenticationRequired() and !$this->isAuthenticated()) $this->authenticate("", "");
 		}
 		
 		public function assertPermissionValue($value) {
@@ -94,7 +94,7 @@
 		}
 		
 		function isAdmin() {
-			return ($this->getDefaultPermission() === self::PERMISSION_VALUE_ADMIN);
+			return ($this->isAuthenticated() and ($this->getDefaultPermission() === self::PERMISSION_VALUE_ADMIN));
 		}
 		
 		public function log() {

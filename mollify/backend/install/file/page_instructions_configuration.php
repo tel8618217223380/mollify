@@ -10,9 +10,8 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	 global $MAIN_PAGE;
-	 if (!isset($MAIN_PAGE)) die();
-	 include("../installation_page.php");
+	 include("install/installation_page.php");
+	 global $installer;
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -21,23 +20,29 @@
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
 	<body class="content" id="install-instructions-file-configuration">
+		<?php pageData(); ?>
 		<h1>File Configuration</h1>
 		
-		<?php if (getAction() == 'continue') { ?>
-		<div class="error">Configuration was not found in "configuration.php"</div>
-		<?php }?>
-		
+	<?php if ($installer->action() == 'retry-configure') { ?>
+		<div class="error">
+			No configuration was found in "<code>configuration.php</code>". Modify configuration according to the instructions below.
+		</div>
+	<?php }?>
 		<p>
-			Mollify installer does not support file configuration, and therefore configuration must be done by manually editing the configuration file.
+			Mollify installer does not support modifying file configuration, and therefore configuration must be done by manually editing the configuration file "<code>configuration.php</code>".
 		</p>
 		<p>
-			File configuration supports both, single user and multi user configurations. In single user configuration, no authentication is required and all access rules apply to everybody. In multi user configuration different user accounts are set up, where different users can have different published directories and different access permissions.
+			File configuration supports both, single user and multi user configurations.
+			<ul>
+				<li>In single user mode, no authentication is required and all access rules apply to everybody.</li>
+				<li>In multi user mode, different user accounts can be set up with different published directories and access permissions.</li>
+			</ul>
 		</p>
-		<h2>Installation</h2>
+		<h2>Configuration</h2>
 		<p>
 			<ol>
-				<li>Choose the preferred operation mode (described above)</li>
-				<li>Modify "configuration.php" by following instructions based on the selected mode
+				<li>Choose the preferred operation mode (as described above)</li>
+				<li>Modify "<code>configuration.php</code>" by following instructions based on the selected mode
 				<ul>
 					<li><a href="http://code.google.com/p/mollify/wiki/ConfigurationSingleUserMode" target="_blank">Single user</a></li>
 					<li><a href="http://code.google.com/p/mollify/wiki/ConfigurationMultiUserMode" target="_blank">Multi user</a></li>
@@ -50,7 +55,9 @@
 		
 		<script type="text/javascript">
 			function init() {
-				createAction("continue", "#install-instructions-file-configuration", "button#button-continue");
+				$("button#button-continue").click(function() {
+					action("retry-configure");
+				});
 			}
 		</script>
 	</body>

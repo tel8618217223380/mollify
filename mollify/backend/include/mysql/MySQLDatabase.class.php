@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class Database {
+	class MySQLDatabase {
 		private $host;
 		private $user;
 		private $pw;
@@ -28,18 +28,44 @@
 			$this->tablePrefix = $tablePrefix;
 		}
 		
+		public function host() {
+			return $this->host;
+		}
+		
+		public function user() {
+			return $this->user;
+		}
+
+		public function password() {
+			return $this->password;
+		}
+
+		public function database() {
+			return $this->database;
+		}
+
+		public function tablePrefix() {
+			return $this->tablePrefix;
+		}
+		
 		public function isConnected() {
 			return $this->db != NULL;
 		}
 		
-		public function connect() {
+		public function connect($selectDb = TRUE) {
 			$db = @mysql_connect($this->host, $this->user, $this->pw);
-			
 			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysql_error());
 
-			if (!mysql_select_db($this->database, $db)) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect select database (".$database.") error: ".mysql_error($db));
-			
-			$this->db = $db;
+			$this->db = $db;			
+			if ($selectDb) $this->selectDb();
+		}
+		
+		public function databaseExists() {
+			return mysql_select_db($this->database, $this->db);
+		}
+
+		public function selectDb() {
+			if (!mysql_select_db($this->database, $this->db)) throw new ServiceException("INVALID_CONFIGURATION", "Could not select database (".$this->database.") error: ".mysql_error($this->db));
 		}
 
 		public function table($name) {

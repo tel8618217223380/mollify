@@ -9,7 +9,10 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-	 
+
+	global $MAIN_PAGE;
+	if (!isset($MAIN_PAGE)) die();
+	
 	function pageHeader($title, $onLoad = NULL) { ?>
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,6 +27,12 @@
 				 });
 			<?php }?>
 			</script>
-		</head>
-	<?php }
+		</head><?php
+	}
+	
+	function pageData() { ?>
+		<form id="page-data" method="post">
+		<?php if (isset($_POST)) foreach ($_POST as $key => $val) if ($key != 'action') echo '<input type="hidden" name="'.$key.'" value="'.$val.'">';?>
+		</form><?php
+ 	}
 ?>

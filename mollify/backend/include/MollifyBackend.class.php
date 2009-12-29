@@ -12,7 +12,6 @@
 
 	require_once("include/Settings.class.php");
 	require_once("include/Session.class.php");
-	require_once("include/Authentication.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
 

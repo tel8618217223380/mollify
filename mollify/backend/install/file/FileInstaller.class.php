@@ -12,14 +12,47 @@
 	
 	require_once("install/MollifyInstaller.class.php");
 	
-	class FileInstaller extends MollifyInstaller {			
-		public function start() {
-			global $USERS, $PUBLISHED_DIRECTORIES;
+	class FileInstaller extends MollifyInstaller {
+		private $users;
+		private $publishedDirectories;
+		
+		public function __construct($type, $settingsVar) {
+			parent::__construct($type, $settingsVar);
 			
-			if (!isset($PUBLISHED_DIRECTORIES))
+			global $USERS, $PUBLISHED_DIRECTORIES;
+			$this->users = $USERS;
+			$this->publishedDirectories = $PUBLISHED_DIRECTORIES;
+		}
+		
+		public function process($phase) {
+			if (!$this->isConfigured()) {
 				$this->showPage("file/instructions_configuration");
-			else
-				$this->showPage("file/instructions_installed");
+				return;
+			}
+			
+			$this->createEnvironment();
+			
+			//never show installation information in single user mode since users cannot be identified
+			if (!$this->authentication()->isAuthenticationRequired()) die();
+			
+			if ($this->action() != 'retry-configure') {
+				// don't show installation information unless admin user is logged in
+				if (!$this->authentication()->isAdmin()) die();
+			}
+			
+			$this->showPage("file/instructions_installed");
+		}
+		
+		public function isConfigured() {
+			return isset($this->publishedDirectories);
+		}
+		
+		public function users() {
+			return $this->users;
+		}
+
+		public function publishedDirectories() {
+			return $this->publishedDirectories;
 		}
 	}
 ?>

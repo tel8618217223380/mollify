@@ -8,10 +8,27 @@
 	this entire header must remain intact.
 */
 
-function createAction(action, parent, button) {
-	var formId = $(parent).attr('id') + '-' + action;
-	$(parent).append('<form id="'+formId+'" method="post"><input type="hidden" name="action" value="'+action+'"></form>');
-	$(button).click(function() {
-		$('#'+formId).submit();
-	});
+jQuery.fn.exists = function(){return ($(this).length > 0);}
+
+function action(action) {
+	addOrSetFormValue("action", action);
+	$('#page-data').submit();
+}
+
+function phase(phase) {
+	addOrSetFormValue("phase", phase);
+	$('#page-data').submit();
+}
+
+function addOrSetFormValue(name, value) {
+	var item = '#page-data > input[name="'+name+'"]';
+	if ($(item).exists()) {
+		$(item).val(value);
+	} else {
+		$("#page-data").append('<input type="hidden" name="'+name+'" value="'+value+'">');
+	}
+}
+
+function openUrl(url) {
+	window.location = url;
 }

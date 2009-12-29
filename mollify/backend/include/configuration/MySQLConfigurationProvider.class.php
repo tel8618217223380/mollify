@@ -14,7 +14,7 @@
 		private $db;
 		
 		public function __construct($settings) {
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE;
+			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX;
 			
 			if (!isset($DB_USER) or !isset($DB_PASSWORD)) throw new ServiceException("INVALID_CONFIGURATION", "No database information defined");
 			
@@ -27,8 +27,8 @@
 			if (isset($DB_TABLE_PREFIX)) $tablePrefix = $DB_TABLE_PREFIX;
 			else $tablePrefix = "";
 			
-			require_once("include/mysql/Database.class.php");
-			$this->db = new Database($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
+			require_once("include/mysql/MySQLDatabase.class.php");
+			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
 			$this->db->connect();
 		}
 		
@@ -43,7 +43,7 @@
 		}
 		
 		public function getInstalledVersion() {
-			return $this->db->query("SELECT value FROM parameter WHERE name='version'")->value(0);
+			return $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'")->value(0);
 		}
 		
 		public function checkProtocolVersion($version) {}
