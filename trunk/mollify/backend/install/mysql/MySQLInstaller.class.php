@@ -52,6 +52,7 @@
 						
 			switch ($phase) {
 				case '':
+				case 'verify':
 					$this->showPage("verify_database");
 				case 'db':
 					$this->onCreateDatabaseAndVerifyPermissions();
