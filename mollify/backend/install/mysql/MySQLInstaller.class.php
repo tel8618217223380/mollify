@@ -49,15 +49,15 @@
 
 			$phase = $this->phase();
 			Logging::logDebug("Installer phase: [".$phase."]");
-			if ($phase == NULL) $phase = 'verify';
+			if ($phase == NULL) $phase = 'db';
 						
 			switch ($phase) {
-				case 'verify':
-					$this->showPage("verify_database");
 				case 'db':
-					$this->onCreateDatabaseAndVerifyPermissions();
+					$this->showPage("database");
+				case 'install':
+					$this->onInstall();
 				case 'admin':
-					$this->showPage("create_admin");
+					$this->showPage("admin");
 				default:
 					Logging::logError("Invalid phase: ".$phase);
 					die();
@@ -96,14 +96,14 @@
 			}
 		}
 		
-		private function onCreateDatabaseAndVerifyPermissions() {
+		private function onInstall() {
 			try {
 				if (!$this->db->databaseExists()) $this->dbUtil->createDatabase();
 				$this->util()->checkPermissions();
+				$this->util()->execCreateTables();
 			} catch (ServiceException $e) {
-				$this->showPage("verify_database", $e->details());
+				$this->showPage("database", $e->details());
 			}
-			//$this->moveToPhase("admin");
 		}		
 		
 		public function isConfigured() {
