@@ -20,7 +20,7 @@
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
 	<body class="content" id="verify-mysql-configuration">
-		<?php pageData($installer->data()); ?>
+		<?php pageData(); ?>
 		
 		<h1>Database Configuration 2/3</h1>
 
@@ -33,22 +33,34 @@
 				<?php if ($installer->db()->tablePrefix() != '') { ?><li>Table prefix: <?php echo $installer->db()->tablePrefix(); ?></li><?php } ?>
 			</ul>
 
-			<?php if (!$installer->db()->databaseExists()) echo '<span class="note">Note! Database "'.$installer->db()->database().'" does not exist. If you continue installation, it will be created.</span>'; ?>
+		<?php if ($installer->hasError()) { ?>
+			<div class="error">
+				<p>Could not install to selected database, create database "<?php echo $installer->db()->database(); ?>" manually or check user "<?php echo $installer->db()->user(); ?>" permissions.</p>
+				<p><code><?php echo $installer->error();?></code></p>
+			</div>
 		</p>
-	
+		<p>
+			<button id="button-install">Retry</button>
+			<button id="button-refresh">Refresh configuration</button>
+		</p>
+		<?php } else if (!$installer->db()->databaseExists()) { ?>
+			<span class="note">
+				Note! Database "<?php echo $installer->db()->database(); ?>" does not exist. If you continue installation, installer will create it if user "<?php echo $installer->db()->user(); ?>" has sufficient permissions.
+			</span>
+		</p>
 		<p>
 			Are you sure you want to install Mollify to this database?
 		</p>
-		
 		<p>
 			<button id="button-install">Yes, Continue</button>
 			<button id="button-refresh">No, Refresh configuration</button>
 		</p>
+		<?php } ?>
 		
 		<script type="text/javascript">
 			function init() {
 				$("button#button-refresh").click(function() {
-					action("refresh-configuration");
+					phase("verify");
 				});
 				$("button#button-install").click(function() {
 					phase("db");
