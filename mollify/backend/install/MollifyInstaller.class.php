@@ -20,10 +20,12 @@
 		private $configuration;
 		
 		private $error = NULL;
+		private $data = array();
 		
 		public function __construct($type, $settingsVar) {
 			$this->type = $type;
 			$this->settingsVar = $settingsVar;
+			foreach($_POST as $key => $val) $this->data[$key] = $val;
 			
 			require_once("include/Logging.class.php");
 			Logging::initialize($this->settingsVar);
@@ -66,41 +68,38 @@
 			return $this->error != NULL;
 		}
 		
-		public function error() {
-			return $this->error;
+		public function error($err = NULL) {
+			if ($err == NULL) return $this->error;
+			$this->error = $err;
 		}
-
-//		public function phaseUrl($phase) {
-//			return $_SERVER["SCRIPT_NAME"].'?p='.$phase;
-//		}
 	
 		public function action() {
-			return $this->param("action");
+			return $this->data("action");
+		}
+
+		public function clearAction() {
+			unset($this->data["action"]);
 		}
 
 		public function phase() {
-			return $this->param("phase");
+			return $this->data("phase");
+		}
+				
+		public function setPhase($val) {
+			Logging::logDebug("New installer phase: [".$val."]");
+			$this->data['phase'] = $val;
 		}
 		
-		public function data() {
-			return $_POST;
+		public function data($name = NULL) {
+			if ($name == NULL) return $this->data;
+			return isset($this->data[$name]) ? $this->data[$name] : NULL;
 		}
 		
-		public function param($param) {
-			return isset($_POST[$param]) ? $_POST[$param] : NULL;
-		}
-		
-		protected function showPage($page, $error = NULL) {
+		protected function showPage($page) {
 			$page = $this->type."/"."page_".$page;
-			Logging::logDebug("Opening page: ".$page." ".($error != NULL ? "(error=".$error.")" : ""));
-			$this->error = $error;
+			Logging::logDebug("Opening page: ".$page." ".($this->error != NULL ? "(error=".$this->error.")" : ""));
 			require($page.".php");
 			die();
 		}
-		
-//		protected function moveToPhase($phase) {
-//			echo '<html><head><meta http-equiv="refresh" content="0,url='.$this->phaseUrl($phase).'"></meta></head></html>';
-//			die();
-//		}
 	}
 ?>

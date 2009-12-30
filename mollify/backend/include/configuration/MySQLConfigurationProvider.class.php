@@ -11,6 +11,8 @@
 	 */
 
 	class MySQLConfigurationProvider extends ConfigurationProvider {
+		const VERSION = "1_5_0";
+		
 		private $db;
 		
 		public function __construct($settings) {

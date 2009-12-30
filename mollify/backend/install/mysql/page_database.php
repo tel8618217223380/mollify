@@ -10,8 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	include("install/installation_page.php");	 
-	global $installer;
+	include("install/installation_page.php");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -19,8 +18,8 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
-	<body class="content" id="verify-mysql-configuration">
-		<?php pageData(); ?>
+	<body class="content" id="page-database">
+		<?php pageBody(); ?>
 		<h1>Database Configuration 2/3</h1>
 		<p>
 			Mollify will be installed in following database:
@@ -61,10 +60,10 @@
 		<script type="text/javascript">
 			function init() {
 				$("button#button-refresh").click(function() {
-					phase("db");
+					action("refresh");
 				});
 				$("button#button-install").click(function() {
-					phase("install");
+					action("install");
 				});
 			}
 		</script>

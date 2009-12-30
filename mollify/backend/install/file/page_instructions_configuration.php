@@ -11,7 +11,6 @@
 	 */
 	 
 	 include("install/installation_page.php");
-	 global $installer;
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -19,7 +18,7 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
-	<body class="content" id="install-instructions-file-configuration">
+	<body class="content" id="page-instructions-file-configuration">
 		<?php pageData(); ?>
 		<h1>File Configuration</h1>
 		

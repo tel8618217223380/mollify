@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	global $MAIN_PAGE;
+	global $MAIN_PAGE, $installer;
 	if (!isset($MAIN_PAGE)) die();
 	
 	function pageHeader($title, $onLoad = NULL) { ?>
@@ -20,6 +20,7 @@
 			<link rel="stylesheet" href="resources/style.css">
 			<script type="text/javascript" src="resources/jquery.js"></script>
 			<script type="text/javascript" src="install/common.js"></script>
+			<script type="text/javascript" src="resources/md5.js"></script>
 			<script type="text/javascript">
 			<?php if ($onLoad != NULL) {?>
 				$(document).ready(function() {
@@ -30,9 +31,10 @@
 		</head><?php
 	}
 	
-	function pageData() { ?>
+	function pageBody() {
+		global $installer; ?>
 		<form id="page-data" method="post">
-		<?php if (isset($_POST)) foreach ($_POST as $key => $val) if ($key != 'action') echo '<input type="hidden" name="'.$key.'" value="'.$val.'">';?>
+		<?php foreach ($installer->data() as $key => $val) if ($key != 'action') echo '<input type="hidden" name="'.$key.'" value="'.$val.'">';?>
 		</form><?php
  	}
 ?>
