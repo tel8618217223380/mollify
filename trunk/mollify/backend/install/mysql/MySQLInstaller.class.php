@@ -42,70 +42,6 @@
 			return new MySQLInstallUtil($this->db);
 		}
 		
-		public function process() {
-			$this->checkSystem();
-			$this->checkInstalled();
-			$this->checkConfiguration();
-
-			$phase = $this->phase();
-			Logging::logDebug("Installer phase: [".$phase."]");
-			if ($phase == NULL) $phase = 'db';
-						
-			switch ($phase) {
-				case 'db':
-					$this->showPage("database");
-				case 'install':
-					$this->onInstall();
-				case 'admin':
-					$this->showPage("admin");
-				default:
-					Logging::logError("Invalid phase: ".$phase);
-					die();
-			}
-		}
-		
-		private function checkSystem() {
-			if (!function_exists('mysql_connect'))
-				$this->showPage("mysql/install_error", "MySQL not installed");
-		
-			if (!function_exists('mysqli_multi_query'))
-				$this->showPage("mysql/install_error", "MySQLI not installed");
-		}
-		
-		private function checkInstalled() {
-			if (!$this->isInstalled()) return;
-			
-			$this->createEnvironment();
-			if (!$this->authentication()->isAdmin()) die();
-			
-			$this->showPage("instructions_installed");
-		}
-		
-		private function checkConfiguration() {
-			if (!$this->isConfigured())
-				$this->showPage("instructions_configuration");
-
-			try {
-				$this->db->connect(FALSE);
-			} catch (ServiceException $e) {
-				if ($e->type() === 'INVALID_CONFIGURATION') {
-					$this->showPage("instructions_configuration", $e->details());
-					die();
-				}
-				throw $e;
-			}
-		}
-		
-		private function onInstall() {
-			try {
-				if (!$this->db->databaseExists()) $this->dbUtil->createDatabase();
-				$this->util()->checkPermissions();
-				$this->util()->execCreateTables();
-			} catch (ServiceException $e) {
-				$this->showPage("database", $e->details());
-			}
-		}		
-		
 		public function isConfigured() {
 			return $this->configured;
 		}
@@ -143,8 +79,124 @@
 			return $ver != NULL;
 		}
 		
+		public function isCurrentVersionInstalled() {
+			return ($this->installedVersion() === $this->currentVersion());
+		}
+		
+		public function installedVersion() {
+			return $this->dbUtil->installedVersion();
+		}
+
+		public function currentVersion() {
+			return MySQLConfigurationProvider::VERSION;
+		}
+		
 		public function db() {
 			return $this->db;
 		}		
+
+		public function process() {
+			$this->checkSystem();
+			$this->checkInstalled();
+			$this->checkConfiguration();
+
+			$phase = $this->phase();
+			if ($phase == NULL) $phase = 'db';
+			Logging::logDebug("Installer phase: [".$phase."]");	
+			
+			$this->onPhase($phase);
+		}
+		
+		private function checkSystem() {
+			if (!function_exists('mysql_connect'))
+				$this->showPage("mysql/install_error", "MySQL not installed");
+		
+			if (!function_exists('mysqli_multi_query'))
+				$this->showPage("mysql/install_error", "MySQLI not installed");
+		}
+		
+		private function checkInstalled() {
+			if (!$this->isInstalled()) return;
+			
+			$this->createEnvironment();
+			if (!$this->authentication()->isAdmin()) die("Mollify Installer requires administrator user");
+			
+			$this->showPage("installed");
+		}
+		
+		private function checkConfiguration() {
+			if (!$this->isConfigured())
+				$this->showPage("configuration");
+
+			try {
+				$this->db->connect(FALSE);
+			} catch (ServiceException $e) {
+				if ($e->type() === 'INVALID_CONFIGURATION') {
+					$this->error($e->details());
+					$this->showPage("configuration");
+					die();
+				}
+				throw $e;
+			}
+		}
+		
+		private function onPhase($phase) {
+			$this->setPhase($phase);
+			
+			switch ($phase) {
+				case 'db':
+					$this->onPhaseDatabase();
+					break;
+				case 'install':
+					$this->onPhaseInstall();
+					break;
+				case 'admin':
+					$this->onPhaseAdmin();
+					break;
+				case 'success':
+					$this->showPage("success");
+					break;
+				default:
+					Logging::logError("Invalid installer phase: ".$phase);
+					die();
+			}
+		}
+		
+		// PHASES
+				
+		private function onPhaseDatabase() {
+			if ($this->action() === 'install') {
+				$this->clearAction();
+				$this->onPhase('install');
+			}
+			
+			$this->showPage("database");
+		}
+		
+		private function onPhaseInstall() {
+			try {
+				if (!$this->db->databaseExists()) $this->dbUtil->createDatabase();
+				$this->util()->checkPermissions();
+				$this->util()->execCreateTables();
+				$this->util()->execInsertParams();
+			} catch (ServiceException $e) {
+				$this->error($e->details());
+				$this->onPhase('db');
+			}
+			$this->onPhase('admin');
+		}
+		
+		private function onPhaseAdmin() {
+			if ($this->action() === 'create') {
+				try {
+					$this->db->selectDb();
+					$this->util()->createAdminUser($this->data("name"), $this->data("password"));
+				} catch (ServiceException $e) {
+					$this->error($e->details());
+				}
+				$this->onPhase('success');
+			}
+			$this->showPage("admin");
+		}
 	}
 ?>

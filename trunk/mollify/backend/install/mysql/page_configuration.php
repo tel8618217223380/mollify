@@ -11,7 +11,6 @@
 	 */
 	 
 	 include("install/installation_page.php");
-	 global $installer;
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -19,8 +18,8 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
-	<body class="content" id="install-instructions-mysql-configuration">
-		<?php pageData(); ?>
+	<body class="content" id="page-mysql-configuration">
+		<?php pageBody(); ?>
 		<h1>Database Configuration 1/3</h1>
 
 		<?php if ($installer->hasError()) { ?>

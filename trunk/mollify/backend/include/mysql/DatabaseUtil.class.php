@@ -25,7 +25,7 @@
 			$result = $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'");
 			if ($result->count() === 0) return NULL;
 			
-			$ver = trim($result->value(0));
+			$ver = trim($result->firstValue("value"));
 			return ($ver === "" ? NULL : $ver);
 		}
 		

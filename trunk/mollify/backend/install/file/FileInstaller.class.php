@@ -24,7 +24,7 @@
 			$this->publishedDirectories = $PUBLISHED_DIRECTORIES;
 		}
 		
-		public function process($phase) {
+		public function process() {
 			if (!$this->isConfigured()) {
 				$this->showPage("file/instructions_configuration");
 				return;

@@ -43,5 +43,14 @@
 		public function execCreateTables() {
 			$this->db->execSqlFile("include/mysql/sql/create_tables.sql");
 		}
+		
+		public function execInsertParams() {
+			$this->db->execSqlFile("include/mysql/sql/params.sql");
+		}
+		
+		public function createAdminUser($name, $pw) {
+			$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode) VALUES ('".$this->db->string($name)."','".$pw."','".Authentication::PERMISSION_VALUE_ADMIN."')", FALSE);
+		}
+
 	}
 ?>

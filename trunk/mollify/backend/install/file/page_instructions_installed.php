@@ -11,7 +11,6 @@
 	 */
 	 
 	 include("install/installation_page.php");
-	 global $installer;
 	 	 
 	 function getPermissionMode($mode) {
 	 	switch (strtolower(trim($mode))) {
@@ -28,7 +27,7 @@
 <html>
 	<?php pageHeader("Mollify Installation"); ?>
 	
-	<body class="content" id="install-instructions-type">
+	<body class="content" id="page-instructions-file-installed">
 
 	<h1>Configuration Summary</h1>
 	<?php if ($installer->action() != 'retry-configure') {?>

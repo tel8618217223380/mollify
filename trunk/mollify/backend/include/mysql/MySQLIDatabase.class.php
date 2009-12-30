@@ -101,7 +101,7 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".mysqli_error($this->db));
 
 			if (!$expectResult) return TRUE;
-			return new Result($this->db, $result);
+			return new MySQLIResult($this->db, $result);
 		}
 		
 		public function queries($sql) {
@@ -112,19 +112,22 @@
 			    do {
 			        if ($result = @mysqli_store_result($this->db))
 			        	mysqli_free_result($result);
-			        else
-			        	throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".substr($sql, 0, 20)."...): ".mysqli_error($this->db));
+			        
+			        if (mysqli_error($this->db))
+			        	throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."): ".mysqli_error($this->db));
 			    } while (mysqli_next_result($this->db));
 			} catch (mysqli_sql_exception $e) {
-				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".substr($sql, 0, 20)."...): ".mysqli_error($this->db));
+				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
+				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."...): ".mysqli_error($this->db));
 			}
 			$this->commit();
 		}
 		
 		public function execSqlFile($file) {
 			$sql = file_get_contents($file);
-			//TODO replace table prefix
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
+
+			$sql = str_replace('{TABLE_PREFIX}', (isset($this->tablePrefix) and $this->tablePrefix != '') ? $this->tablePrefix : '', $sql);
 			$this->queries($sql);
 		}
 		
@@ -132,6 +135,7 @@
 			try {
 				$result = @mysqli_query($this->db, "START TRANSACTION;");
 			} catch (mysqli_sql_exception $e) {
+				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error starting transaction: ".mysqli_error($this->db));
 			}
 
@@ -143,6 +147,7 @@
 			try {
 				$result = @mysqli_query($this->db, "COMMIT;");
 			} catch (mysqli_sql_exception $e) {
+				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
 			}
 
@@ -151,11 +156,11 @@
 		}
 		
 		public function string($s) {
-			return mysqli_real_escape_string($s, $this->db);
+			return mysqli_real_escape_string($this->db, $s);
 		}
 	}
 	
-	class Result {
+	class MySQLIResult {
 		private $db;
 		private $result;
 		
@@ -187,10 +192,14 @@
 			return $ret;
 		}
 		
+		public function firstValue($val) {
+			$ret = $this->firstRow();
+			return $ret[$val];
+		}
+		
 		public function value($i) {
-			$ret = mysqli_result($this->result, $i);
-			mysqli_free_result($this->result);
-			return $ret;
+			$ret = $this->rows();
+			return $ret[$i];
 		}
 		
 		public function free() {
