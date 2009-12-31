@@ -26,21 +26,18 @@
 		
 		public function process() {
 			if (!$this->isConfigured()) {
-				$this->showPage("file/instructions_configuration");
+				$this->showPage("configuration");
 				return;
 			}
 			
 			$this->createEnvironment();
 			
-			//never show installation information in single user mode since users cannot be identified
-			if (!$this->authentication()->isAuthenticationRequired()) die();
-			
-			if ($this->action() != 'retry-configure') {
-				// don't show installation information unless admin user is logged in
+			if ($this->action() != 'continue') {
+				// don't show installation information unless admin user is logged in (in single user mode, this is never)
 				if (!$this->authentication()->isAdmin()) die();
 			}
 			
-			$this->showPage("file/instructions_installed");
+			$this->showPage("installed");
 		}
 		
 		public function isConfigured() {

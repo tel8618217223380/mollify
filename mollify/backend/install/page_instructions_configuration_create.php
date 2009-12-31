@@ -18,32 +18,46 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 
-	<body class="content" id="install-instructions-create">
-	<?php pageData(); ?>
-	
-	<h1>Mollify Installation</h1>
+	<body id="install-instructions-create">
+		<?php pageBody("Installation", "Welcome to Mollify Installer"); ?>
 
-	<?php if ($installer->action() == 'retry-configuration-file') { ?>
-		<div class="error">
-			Configuration file cannot be found. Make sure that the file "<code>configuration.php</code>"
-			<ul>
-				<li>is located in the Mollify folder (where, for example, this install script is located)</li>
-				<li>is accessible to PHP</li>
-			</ul>
-		</div>
-	<?php }?>
-		<p>
-			To begin with installation process, first create configuration file called "<code>configuration.php</code>" in your Mollify directory, and click "Continue".
-		</p>
-
-		<button id="button-continue">Continue</button>
+		<?php if ($installer->action() == 'retry') { ?>
+			<div class="error">
+				<div class="title">
+				Configuration file cannot be found.
+				</div>
+				
+				<div class="details">
+					Make sure that the file "<code>configuration.php</code>"
+					<ul>
+						<li>is located in the Mollify folder (where, for example, this install script is located)</li>
+						<li>is accessible to PHP</li>
+					</ul>
+				</div>
+			</div>
+		<?php }?>
 		
-		<script type="text/javascript">
-			function init() {
-				$("button#button-continue").click(function() {
-					action("retry-configuration-file");
-				});
-			}
-		</script>
+		<div class="content">
+			<p>
+				To begin with installation process, first create empty configuration file called "<code>configuration.php</code>" in your Mollify backend directory. This is the directory where files "<code>r.php</code>" and "<code>install.php</code>" are located.
+			</p>
+			<p>
+				Then click "Continue", and installer will give further instructions.
+			</p>
+	
+			<p>
+				<a id="button-retry" href="#" class="btn">Continue</a>
+			</p>
+		</div>
+		
+		<?php pageFooter(); ?>
 	</body>
+	
+	<script type="text/javascript">
+		function init() {
+			$("#button-retry").click(function() {
+				action("retry");
+			});
+		}
+	</script>
 </html>

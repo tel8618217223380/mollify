@@ -132,7 +132,7 @@
 				$this->db->connect(FALSE);
 			} catch (ServiceException $e) {
 				if ($e->type() === 'INVALID_CONFIGURATION') {
-					$this->error($e->details());
+					$this->setError("Could not connect to database", $e->details());
 					$this->showPage("configuration");
 					die();
 				}
@@ -180,7 +180,7 @@
 				$this->util()->execCreateTables();
 				$this->util()->execInsertParams();
 			} catch (ServiceException $e) {
-				$this->error($e->details());
+				$this->setError("Could not install", $e->details());
 				$this->onPhase('db');
 			}
 			$this->onPhase('admin');
@@ -192,7 +192,7 @@
 					$this->db->selectDb();
 					$this->util()->createAdminUser($this->data("name"), $this->data("password"));
 				} catch (ServiceException $e) {
-					$this->error($e->details());
+					$this->setError("Could not create user", $e->details());
 				}
 				$this->onPhase('success');
 			}

@@ -19,53 +19,65 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
-	<body class="content" id="install-instructions-type">
-		<?php pageData(); ?>
-		<h1>Configuration Type</h1>
-
-		<?php if (!isset($CONFIGURATION_PROVIDER)) { ?>
-		<p>
-			To continue with Mollify installation, you have to choose the configuration type suitable for your installation.
-		</p>
-		<p>
-			Options are:
-			<ul>
-				<li>File based configuration</li>
-				<li>Database configuration (MySQL)</li>
-			</ul>
-			For more information about the alternatives, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
-		</p>
-		<?php } else { ?>
+	<body id="install-instructions-type">
+		<?php pageBody("Installation", "Welcome to Mollify Installer"); ?>
+		<?php if (isset($CONFIGURATION_PROVIDER)) { ?>
 		<div class="error">
-			Configuration type value ("<code><?php echo($CONFIGURATION_PROVIDER); ?></code>") is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+			<div class="title">	
+				Configuration type value is invalid.
+			</div>
+			<div class="details">
+				Configuration type "<code><?php echo($CONFIGURATION_PROVIDER); ?></code>" is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+			</div>
 		</div>
 		<?php } ?>
-
-		<p>
-			Edit the configuration file <code>configuration.php</code> by adding the configuration provider variable, for example:
-			<div class="example">
-				<code>
-					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = 'file';<br/>
-					?&gt;<br/>
-				</code>
-			</div>
-		</p>
-		<p>
-			Possible values are:
-			<ul>
-				<li>"<code>file</code>" for file based configuration</li>
-				<li>"<code>mysql</code>" for database configuration</li>
-			</ul>
-		</p>
-		<button id="button-continue">Continue</button>
 		
-		<script type="text/javascript">
-			function init() {
-				$("button#button-continue").click(function() {
-					action("button#button-continue", "retry-configuration-type");
-				});
-			}
-		</script>
+		<div class="content">
+			<?php if (!isset($CONFIGURATION_PROVIDER)) { ?>
+			<p>
+				To continue with Mollify installation, you have to choose the configuration type suitable for your installation.
+			</p>
+			<p>
+				Options are:
+				<ul>
+					<li>File based configuration</li>
+					<li>Database configuration (MySQL)</li>
+				</ul>
+				For more information about the alternatives, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+			</p>
+			<?php } ?>
+	
+			<p>
+				Edit the configuration file <code>configuration.php</code> by adding the configuration provider variable, for example:
+				<div class="example code">
+					&lt;?php<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">[ENTER VALUE HERE]</span>&quot;;<br/>
+					?&gt;<br/>
+				</div>
+			</p>
+			<p>
+				Possible values are:
+				<ul>
+					<li>"<code>file</code>" for file based configuration</li>
+					<li>"<code>mysql</code>" for database configuration</li>
+				</ul>
+				
+				When this is added, click "Continue".
+			</p>
+
+			<p>
+				<a id="button-continue" href="#" class="btn">Continue</a>
+			</p>
+		</div>
+				
+		<?php pageFooter(); ?>
 	</body>
+	
+	<script type="text/javascript">
+		function init() {
+			$("#button-continue").click(function() {
+				action("retry");
+			});
+		}
+	</script>
 </html>
