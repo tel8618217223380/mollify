@@ -11,7 +11,8 @@
 	 */
 
 	$MAIN_PAGE = "install";
-
+	$installer = NULL;
+	
 	if (!file_exists("configuration.php"))
 		showInstructions("configuration_create");
 	
@@ -34,6 +35,9 @@
 	}
 	
 	function showInstructions($page, $type = '') {
+		global $installer;
+		require_once("install/DefaultInstaller.class.php");
+		$installer = new DefaultInstaller();
 		require("install/".($type === '' ? '' : $type."/")."page_instructions_".$page.".php");
 		die();
 	}
@@ -47,7 +51,7 @@
 				require_once("install/mysql/MySQLInstaller.class.php");
 				return new MySQLInstaller($type, $settings);
 			default:
-				showInstructions("configuration_type");
+				die("Unsupported installer type: ".$type);
 		}
 	}
 ?>

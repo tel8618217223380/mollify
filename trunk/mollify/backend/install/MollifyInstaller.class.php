@@ -20,6 +20,7 @@
 		private $configuration;
 		
 		private $error = NULL;
+		private $errorDetails = NULL;
 		private $data = array();
 		
 		public function __construct($type, $settingsVar) {
@@ -67,10 +68,22 @@
 		public function hasError() {
 			return $this->error != NULL;
 		}
+
+		public function hasErrorDetails() {
+			return $this->errorDetails != NULL;
+		}
 		
-		public function error($err = NULL) {
-			if ($err == NULL) return $this->error;
-			$this->error = $err;
+		public function error() {
+			return $this->error;
+		}
+
+		public function errorDetails() {
+			return $this->errorDetails;
+		}
+
+		public function setError($title, $details = NULL) {
+			$this->error = $title;
+			$this->errorDetails = $details;
 		}
 	
 		public function action() {

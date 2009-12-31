@@ -18,54 +18,61 @@
 <html>
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
-	<body class="content" id="page-mysql-configuration">
-		<?php pageBody(); ?>
-		<h1>Database Configuration 1/3</h1>
-
-		<?php if ($installer->hasError()) { ?>
+	<body id="page-mysql-configuration">
+		<?php pageBody("Installation", "Database Configuration"); ?>
+		<?php if ($installer->action() === 'continue') { ?>
 		<div class="error">
-			<p>Could not connect to database.</p>
-			<p><code><?php echo $installer->error(); ?></code></p>
-		</div>	
+			<div class="title">	
+				No database configuration found.
+			</div>
+			<div class="details">
+				Database configuration is missing or it is not complete. Make sure that the configuration is done according to the instructions below. At minimum, database user and password must be defined.
+			</div>
+		</div>
 		<?php } ?>
 		
-		<p>
-			Installer needs the database connection information set in the configuration file "<code>configuration.php</code>":
-			<ul>
-				<li>Host name (optional)</li>
-				<li>Database name (optional)</li>
-				<li>User</li>
-				<li>Password</li>
-				<li>Table prefix (optional)</li>
-			</ul>
-			
-			For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.
-		</p>
-	
-		<p>	
-			An example configuration:
-			<div class="example">
-				&lt;php?<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">mysql</span>&quot;;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
-				?&gt;
-			</div>
-		</p>
-	
-		<p>
-			<button id="button-continue">Continue</button>
-		</p>
+		<div class="content">
+			<p>
+				Installer needs the database connection information defined in the configuration file "<code>configuration.php</code>":
+				<ul>
+					<li>Host name (optional, by default "localhost")</li>
+					<li>Database name (optional, by default "mollify")</li>
+					<li>User</li>
+					<li>Password</li>
+					<li>Table prefix (optional, by default none)</li>
+				</ul>
+				
+				For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.
+			</p>
+			<p>	
+				An example configuration:
+				<div class="example code">
+					&lt;php?<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">mysql</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
+					?&gt;
+				</div>
+			</p>
+			<p>
+				Edit the configuration and click "Continue".
+			</p>
+			<p>
+				<a id="button-continue" href="#" class="btn">Continue</a>
+			</p>			
+		</div>
 		
-		<script type="text/javascript">
-			function init() {
-				$("button#button-continue").click(function() {
-					action("retry-configure");
-				});
-			}
-		</script>
+		<?php pageFooter(); ?>
 	</body>
+	
+	<script type="text/javascript">
+		function init() {
+			$("#button-continue").click(function() {
+				action("continue");
+			});
+		}
+	</script>
 </html>
