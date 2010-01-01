@@ -57,7 +57,7 @@
 		<?php if (isset($installer) and $installer->hasError()) { ?>
 		<div class="error">
 			<div class="title"><?php echo $installer->error(); ?></div>
-			<?php if ($installer->hasErrorDetails()) { ?><div class="details"><code><?php echo $installer->errorDetails(); ?></code></div><?php } ?>
+			<?php if ($installer->hasErrorDetails()) { ?><div class="details"><?php echo $installer->errorDetails(); ?></div><?php } ?>
 		</div>	
 		<?php } ?>
 

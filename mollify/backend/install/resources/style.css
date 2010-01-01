@@ -123,6 +123,37 @@ b {
 	font-weight: bold;
 }
 
+.user-data {
+	clear: both;
+}
+
+.user-data .title {
+	margin-left: 1px;
+	padding-top: 8px;
+}
+
+.user-data input {
+	float: left;
+	background-color: #f3f3f3;
+	border: 1px solid #aaacac;
+	height: 16px;
+	margin-top: 4px;
+}
+
+.user-data .validation-hint {
+	height: 17px;
+	float: left;
+	width: 200px;
+	padding-top: 7px;
+	padding-left: 4px;
+	font-style: italic;
+	color: #fea691;
+}
+
+.user-data.invalid input {
+	background-color: #edf4bf;
+}
+
 .note {
 	margin-top: 2px;
 	margin-bottom: 2px;
@@ -143,6 +174,7 @@ b {
 	color: #fff;
 	text-decoration: none;
 	cursor: pointer;
+	margin-right: 5px;
 }
 
 .btn * {
