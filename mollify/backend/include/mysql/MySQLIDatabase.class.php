@@ -104,9 +104,7 @@
 			return new MySQLIResult($this->db, $result);
 		}
 		
-		public function queries($sql) {
-			$this->startTransaction();
-			
+		public function queries($sql) {			
 			try {	
 				@mysqli_multi_query($this->db, $sql);
 			    do {
@@ -120,7 +118,6 @@
 				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."...): ".mysqli_error($this->db));
 			}
-			$this->commit();
 		}
 		
 		public function execSqlFile($file) {
@@ -153,6 +150,18 @@
 
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysqli_error($this->db));
+		}
+
+		public function rollback() {
+			try {
+				$result = @mysqli_query($this->db, "ROLLBACK;");
+			} catch (mysqli_sql_exception $e) {
+				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
+				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".mysqli_error($this->db));
+			}
+
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".mysqli_error($this->db));
 		}
 		
 		public function string($s) {

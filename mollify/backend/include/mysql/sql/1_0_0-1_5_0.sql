@@ -1,8 +1,10 @@
-UPDATE `parameter` SET value = '1_5_0' WHERE name = 'version';
+UPDATE `{TABLE_PREFIX}parameter` SET value = '1_5_0' WHERE name = 'version';
 
-ALTER TABLE `user` ADD `is_group` TINYINT(1) NOT NULL;
+ALTER TABLE `{TABLE_PREFIX}user` ADD `is_group` TINYINT(1) NOT NULL;
 
-CREATE TABLE `user_group` (
+UPDATE `{TABLE_PREFIX}user` SET `is_group` = '0';
+
+CREATE TABLE `{TABLE_PREFIX}user_group` (
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`user_id`, `group_id`),

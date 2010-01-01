@@ -16,8 +16,8 @@
 		private $users;
 		private $publishedDirectories;
 		
-		public function __construct($type, $settingsVar) {
-			parent::__construct($type, $settingsVar);
+		public function __construct($type, $settingsVar, $pageRoot = "install") {
+			parent::__construct($pageRoot, $type, $settingsVar);
 			
 			global $USERS, $PUBLISHED_DIRECTORIES;
 			$this->users = $USERS;

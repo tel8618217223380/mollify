@@ -17,10 +17,10 @@
 	
 	class MySQLInstaller extends MollifyInstaller {
 		private $configured;
-		private $db;
+		protected $db;
 
-		public function __construct($type, $settingsVar) {
-			parent::__construct($type, $settingsVar);
+		public function __construct($type, $settingsVar, $pageRoot = "install") {
+			parent::__construct($pageRoot, $type, $settingsVar);
 			
 			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX;
 			$this->configured = isset($DB_USER, $DB_PASSWORD);
@@ -37,7 +37,7 @@
 			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix);
 		}
 		
-		private function util() {
+		protected function util() {
 			require_once("install/mysql/MySQLInstallUtil.class.php");
 			return new MySQLInstallUtil($this->db);
 		}
@@ -62,12 +62,14 @@
 			try {
 				$this->db->selectDb();
 			} catch (ServiceException $e) {
+				Logging::logDebug('Mollify not installed');
 				return FALSE;
 			}
 			
 			try {
 				$ver = $this->dbUtil->installedVersion();
 			} catch (ServiceException $e) {
+				Logging::logDebug('Mollify not installed');
 				return FALSE;
 			}
 
@@ -207,7 +209,9 @@
 				$this->setError("Could not select database", '<code>'.$e->details().'</code>');
 				$this->showPage("install_error");
 			}
-
+			
+			$this->db->startTransaction();
+			
 			try {
 				$this->util()->execCreateTables();
 				$this->util()->execInsertParams();
@@ -222,6 +226,14 @@
 				$this->setError("Could not create admin user", '<code>'.$e->details().'</code>');
 				$this->showPage("install_error");
 			}
+			
+			try {
+				$this->db->commit();
+			} catch (ServiceException $e) {
+				$this->setError("Could install", '<code>'.$e->details().'</code>');
+				$this->showPage("install_error");
+			}
+
 			$this->onPhase('success');
 		}
 	}
