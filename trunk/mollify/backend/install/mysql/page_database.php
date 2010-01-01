@@ -25,30 +25,25 @@
 			<p>
 				Mollify will be installed in following database:
 				<ul>
-					<li>Host name: <?php echo $installer->db()->host(); ?></li>
-					<li>Database name: <?php echo $installer->db()->database(); ?></li>
-					<li>User: <?php echo $installer->db()->user(); ?></li>
-					<?php if ($installer->db()->tablePrefix() != '') { ?><li>Table prefix: <?php echo $installer->db()->tablePrefix(); ?></li><?php } ?>
+					<li><b>Host name:</b> <code><?php echo $installer->db()->host(); ?></code></li>
+					<li><b>Database name:</b> <code><?php echo $installer->db()->database(); ?></code></li>
+					<li><b>User:</b> <code><?php echo $installer->db()->user(); ?></code></li>
+					<?php if ($installer->db()->tablePrefix() != '') { ?><li><b>Table prefix:</b> <code><?php echo $installer->db()->tablePrefix(); ?></code></li><?php } ?>
 				</ul>
-				<p>
-					If this configuration is not correct, edit the configuration and click "Refresh".
-				</p>
-				<p>
-					<a id="button-refresh" href="#" class="btn blue">Refresh</a>
-				</p>
 				<?php if (!$installer->db()->databaseExists()) { ?>
 							<div class="clear" />
 							<div class="note">
-								<p><b>Note!</b> Database "<?php echo $installer->db()->database(); ?>" does not exist. If you continue installation, installer will create it if user "<?php echo $installer->db()->user(); ?>" has sufficient permissions.</p>
-								<p>If you wish to create it manually instead, click "Refresh" when it exists.</p>
+								<p><b>Note!</b> Database "<code><?php echo $installer->db()->database(); ?></code>" does not exist. If you continue installation, installer will create it if user "<code><?php echo $installer->db()->user(); ?></code>" has sufficient permissions.</p>
+								<p>If you wish to create it manually instead, click "Refresh Configuration" when it exists.</p>
 							</div>
 				<?php } ?>				
 			</p>
 			<p>
-				<b>Are you sure you want to install Mollify to this database?</b>
+				If this configuration is correct, click "Continue Installation". Otherwise, modify the configuration file and click "Refresh Configuration".
 			</p>
 			<p>
-				<a id="button-install" href="#" class="btn green">Install</a>
+				<a id="button-continue" href="#" class="btn green">Continue Installation</a>
+				<a id="button-refresh" href="#" class="btn blue">Refresh Configuration</a>
 			</p>
 		</div>
 		<?php pageFooter(); ?>
@@ -59,8 +54,8 @@
 			$("#button-refresh").click(function() {
 				action("refresh");
 			});
-			$("#button-install").click(function() {
-				action("install");
+			$("#button-continue").click(function() {
+				action("continue");
 			});
 		}
 	</script>

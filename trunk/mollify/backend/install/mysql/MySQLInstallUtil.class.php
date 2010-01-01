@@ -24,6 +24,14 @@
 		public function checkPermissions() {
 			mysqli_report(MYSQLI_REPORT_ERROR);
 			$table = $this->db->table("mollify_install_test");
+
+			// first cleanup, if test table was left
+			try {
+				$this->db->query('DROP TABLE '.$table, FALSE);
+			} catch (ServiceException $e) {
+				// ignore
+			}
+			
 			try {						
 				$tests = array("create table" => 'CREATE TABLE '.$table.' (id int NULL)',
 					"insert data" => 'INSERT INTO '.$table.' (id) VALUES (1)',

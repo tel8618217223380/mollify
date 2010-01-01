@@ -20,22 +20,25 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
 <html>
-	<?php pageHeader("Mollify Installation", "init"); ?>
+	<?php pageHeader("Mollify Installation"); ?>
 	
-	<body class="content" id="page-mysql-configuration">
-		<h1>Mollify Already Installed</h1>
+	<body id="page-mysql-installed">
+		<?php pageBody("Installation", "Mollify Already Installed"); ?>
 
-	<?php if ($installer->isCurrentVersionInstalled()) { ?>
-		<p>
-			Mollify is already installed with the current version.
-		</p>	
-	<?php } else { ?>
-		<p>
-			Mollify is already installed, but needs updating. Installed Mollify version is <b><?php echo version($installer->installedVersion()) ?></b>, while the current version is <b><?php echo version($installer->currentVersion()) ?></b>.
-		</p>
-		<p>
-			Open <a href="update.php">Mollify updater</a> to update to the current version.
-		</p>
-	<?php } ?>		
+		<div class="content">
+		<?php if ($installer->isCurrentVersionInstalled()) { ?>
+			<p>
+				Mollify is already installed with the current version.
+			</p>	
+		<?php } else { ?>
+			<p>
+				Mollify is already installed, but needs updating. Installed Mollify version is <b><?php echo version($installer->installedVersion()) ?></b>, while the current version is <b><?php echo version($installer->currentVersion()) ?></b>.
+			</p>
+			<p>
+				Open <a href="update.php">Mollify updater</a> to update to the current version.
+			</p>
+		<?php } ?>
+		</div>
+		<?php pageFooter(); ?>
 	</body>
 </html>

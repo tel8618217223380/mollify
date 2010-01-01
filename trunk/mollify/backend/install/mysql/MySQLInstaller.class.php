@@ -108,11 +108,15 @@
 		}
 		
 		private function checkSystem() {
-			if (!function_exists('mysql_connect'))
-				$this->showPage("mysql/install_error", "MySQL not installed");
+			if (!function_exists('mysql_connect')) {
+				$this->setError("MySQL not detected", "Mollify cannot be installed to this system when MySQL is not available. Check your system configuration or choose different configuration type.");
+				$this->showPage("install_error");
+			}
 		
-			if (!function_exists('mysqli_multi_query'))
-				$this->showPage("mysql/install_error", "MySQLI not installed");
+			if (!function_exists('mysqli_multi_query')) {
+				$this->setError("MySQL Improved (mysqli) not detected", "Mollify installer cannot continue without <a href='http://www.php.net/manual/en/mysqli.overview.php' target='_blank'>MySQL Improved</a> installed. Either check your configuration to install or enable this, or install Mollify manually (see instructions <a href='http://code.google.com/p/mollify/wiki/ConfigurationMySql' target='_blank'>here</a>).");
+				$this->showPage("install_error");
+			}
 		}
 		
 		private function checkInstalled() {
@@ -132,7 +136,7 @@
 				$this->db->connect(FALSE);
 			} catch (ServiceException $e) {
 				if ($e->type() === 'INVALID_CONFIGURATION') {
-					$this->setError("Could not connect to database", $e->details());
+					$this->setError("Could not connect to database", '<code>'.$e->details().'</code>');
 					$this->showPage("configuration");
 					die();
 				}
@@ -146,9 +150,6 @@
 			switch ($phase) {
 				case 'db':
 					$this->onPhaseDatabase();
-					break;
-				case 'install':
-					$this->onPhaseInstall();
 					break;
 				case 'admin':
 					$this->onPhaseAdmin();
@@ -165,38 +166,63 @@
 		// PHASES
 				
 		private function onPhaseDatabase() {
-			if ($this->action() === 'install') {
+			if ($this->action() === 'continue') {
 				$this->clearAction();
-				$this->onPhase('install');
+				
+				if (!$this->db->databaseExists()) {
+					try {
+						$this->dbUtil->createDatabase();
+					} catch (ServiceException $e) {
+						$this->setError("Unable to create database", '<code>'.$e->details().'</code>');
+						$this->onPhase('db');
+					}
+				}
+
+				$this->checkDatabasePermissions();
 			}
 			
 			$this->showPage("database");
 		}
 		
-		private function onPhaseInstall() {
+		private function checkDatabasePermissions() {
 			try {
-				if (!$this->db->databaseExists()) $this->dbUtil->createDatabase();
 				$this->util()->checkPermissions();
-				$this->util()->execCreateTables();
-				$this->util()->execInsertParams();
 			} catch (ServiceException $e) {
-				$this->setError("Could not install", $e->details());
+				$this->setError("Insufficient database permissions", '<code>'.$e->details().'</code>');
 				$this->onPhase('db');
 			}
 			$this->onPhase('admin');
 		}
 		
 		private function onPhaseAdmin() {
-			if ($this->action() === 'create') {
-				try {
-					$this->db->selectDb();
-					$this->util()->createAdminUser($this->data("name"), $this->data("password"));
-				} catch (ServiceException $e) {
-					$this->setError("Could not create user", $e->details());
-				}
-				$this->onPhase('success');
-			}
+			if ($this->action() === 'install')
+				$this->install();
 			$this->showPage("admin");
+		}
+		
+		private function install() {
+			try {
+				$this->db->selectDb();
+			} catch (ServiceException $e) {
+				$this->setError("Could not select database", '<code>'.$e->details().'</code>');
+				$this->showPage("install_error");
+			}
+
+			try {
+				$this->util()->execCreateTables();
+				$this->util()->execInsertParams();
+			} catch (ServiceException $e) {
+				$this->setError("Could not install", '<code>'.$e->details().'</code>');
+				$this->showPage("install_error");
+			}
+
+			try {
+				$this->util()->createAdminUser($this->data("name"), $this->data("password"));
+			} catch (ServiceException $e) {
+				$this->setError("Could not create admin user", '<code>'.$e->details().'</code>');
+				$this->showPage("install_error");
+			}
+			$this->onPhase('success');
 		}
 	}
 ?>
