@@ -1,0 +1,50 @@
+/* @override http://localhost:8888/mollify/configure/resources/style.css */
+
+@import "../../resources/style.css";
+
+.content {
+	margin: 2px 0 0;
+	width: 1000px;
+}
+
+#main-menu {
+	width: 180px;
+	float: left;
+	padding-left: 0px;
+	margin-right: 5px;
+	margin-top: 2px;
+}
+
+#main-menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+#main-menu li {
+	margin: 0;
+	height: 22px;
+	padding-top: 9px;
+	border-bottom: 1px dotted #c2c4c4;
+	padding-left: 9px;
+}
+
+#main-menu li:first-child {
+	border-top: 1px dotted #c2c4c4;
+}
+
+#main-menu li:hover {
+	background-color: #e9e9e9;
+	cursor: pointer;
+}
+
+#main-menu li.active {
+	background-color: #badce8;
+	font-weight: bold;
+}
+
+#page {
+	float: right;
+	width: 815px;
+}
