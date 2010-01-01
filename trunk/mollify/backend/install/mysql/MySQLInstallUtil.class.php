@@ -32,7 +32,8 @@
 				// ignore
 			}
 			
-			try {						
+			$this->db->startTransaction();
+			try {
 				$tests = array("create table" => 'CREATE TABLE '.$table.' (id int NULL)',
 					"insert data" => 'INSERT INTO '.$table.' (id) VALUES (1)',
 					"update data" => 'UPDATE '.$table.' SET id = 2',
@@ -46,6 +47,7 @@
 			} catch (ServiceException $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Permission test failed, could not ".$phase." (".$e->details().")");
 			}
+			$this->db->commit();
 		}
 		
 		public function execCreateTables() {
@@ -59,6 +61,10 @@
 		public function createAdminUser($name, $pw) {
 			$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode) VALUES ('".$this->db->string($name)."','".$pw."','".Authentication::PERMISSION_VALUE_ADMIN."')", FALSE);
 		}
-
+		
+		public function updateVersionStep($from, $to) {
+			$file = "include/mysql/sql/".$from."-".$to.".sql";
+			$this->db->execSqlFile($file);
+		}
 	}
 ?>

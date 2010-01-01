@@ -11,7 +11,8 @@
 	 */
 	
 	abstract class MollifyInstaller {
-		private $type;
+		protected $type;
+		protected $pageRoot;
 		private $settingsVar;
 
 		private $settings;
@@ -23,7 +24,8 @@
 		private $errorDetails = NULL;
 		private $data = array();
 		
-		public function __construct($type, $settingsVar) {
+		public function __construct($pageRoot, $type, $settingsVar) {
+			$this->pageRoot = $pageRoot;
 			$this->type = $type;
 			$this->settingsVar = $settingsVar;
 			foreach($_POST as $key => $val) $this->data[$key] = $val;
@@ -108,10 +110,14 @@
 			return isset($this->data[$name]) ? $this->data[$name] : NULL;
 		}
 		
+		protected function getPagePath($page) {
+			return $this->pageRoot."/".$this->type."/"."page_".$page.".php";
+		}
+		
 		protected function showPage($page) {
-			$page = $this->type."/"."page_".$page;
-			Logging::logDebug("Opening page: ".$page." ".($this->error != NULL ? "(error=".$this->error.")" : ""));
-			require($page.".php");
+			$page = $this->getPagePath($page);
+			Logging::logDebug("Opening page: ".$page." ".($this->hasError() ? "(error=".$this->error.")" : ""));
+			require($page);
 			die();
 		}
 	}
