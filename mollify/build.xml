@@ -69,16 +69,21 @@
 		</delete>
 	</target>
 
+	<target name="init-prod">
+		<property name="gwt.style" value="OBF" />
+		<property name="gwt.module" value="org.sjarvela.mollify.Client" />
+	</target>
+
 	<target name="init-dev">
 		<property name="gwt.style" value="DETAILED" />
 		<property name="gwt.module" value="org.sjarvela.mollify.DevelopmentClient" />
 	</target>
 
-	<target name="init-deploy">
-		<property name="gwt.style" value="OBF" />
-		<property name="gwt.module" value="org.sjarvela.mollify.Client" />
+	<target name="init-demo">
+		<property name="gwt.style" value="DETAILED" />
+		<property name="gwt.module" value="org.sjarvela.mollify.DemoClient" />
 	</target>
-	
+
 	<target name="do-compile" depends="init, compile.prod">
 		<echo>Platform: ${os.name}</echo>
 		
@@ -96,7 +101,7 @@
 		</java>
 	</target>
 	
-	<target name="do-deploy" depends="init-deploy">
+	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 		
 		<delete dir="${deploy.dir}" />
@@ -155,46 +160,19 @@
 
 		<delete dir="${target.dir}" />
 	</target>
-		
-	<target name="do-update">
-		<property name="target.dir" location="${htdocs.root}/${public.module.name}" />
-		
-		<exec executable="rm" failonerror="false">
-			<arg value="${target.dir}/themes" />
-		</exec>
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<copy todir="${target.dir}">
-			<fileset dir="${build.dir}/${public.module.name}">
-			</fileset>
-		</copy>
-		
-		<delete dir="${target.dir}/themes/" />
-
-		<echo>Creating link from '${src.dir}/org/sjarvela/mollify/public/themes' to '${target.dir}'</echo>
-		<exec executable="ln" failonerror="true">
-			<arg value="-s" />
-			<arg value="${src.dir}/org/sjarvela/mollify/public/themes" />
-			<arg value="${target.dir}" />
-		</exec>
-	</target>
 
 	<target name="compile" depends="init-dev, do-compile">
 	</target>
-
-	<target name="update" depends="init-dev, do-compile, do-update">
-	</target>
-
-	<target name="update-full" depends="init-deploy, do-compile, do-update">
-	</target>
-	
-	<target name="update-only" depends="init-dev, do-update">
-	</target>
 		
-	<target name="deploy" depends="init-deploy, do-compile, do-deploy">
+	<target name="deploy" depends="init-prod, do-compile, do-deploy">
 	</target>
-	
+
+	<target name="deploy-dev" depends="init-dev, do-compile, do-deploy">
+	</target>
+
+	<target name="deploy-demo" depends="init-demo, do-compile, do-deploy">
+	</target>
+
 	<target name="run" depends="compile.prod">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode" classpathref="compile.classpath">
 			<jvmarg value="-Xmx256M"/>

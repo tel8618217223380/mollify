@@ -10,6 +10,10 @@
 
 function MollifyUsersConfigurationView() {
 	this.load = function(view) {
-		view.load("configure/users/users.html");
+		view.load("configure/users/users.html", "", this.init);
+	}
+	
+	this.init = function() {
+		$("#configuration-users").append("init");
 	}
 }
