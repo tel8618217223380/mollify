@@ -10,6 +10,5 @@
  
 <module rename-to="org.sjarvela.Mollify">
 	<inherits name='org.sjarvela.mollify.Client'/>
-	<extend-property name="log_level" values="DEBUG"/>
-	<set-property name="locale" value="en"/>
+	<set-property name="demo" value="true"/>
 </module>

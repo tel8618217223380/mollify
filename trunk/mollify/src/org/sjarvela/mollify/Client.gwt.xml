@@ -19,8 +19,6 @@
 
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
-	<extend-property name="log_level" values="DEBUG"/>
-	
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="es"/>
 	<extend-property name="locale" values="de"/>
@@ -29,9 +27,10 @@
 	<extend-property name="locale" values="nl"/>
 	<extend-property name="locale" values="fi"/>
 	<extend-property name="locale" values="pt"/>
+	<extend-property name="locale" values="pl"/>
 	<extend-property name="locale" values="sr"/>
 	
-	<define-property name="demo" values="true,false" /> 
+	<define-property name="demo" values="true,false" />
 	<property-provider name="demo">
 		<![CDATA[
 			var demo = __gwt_getMetaProperty("demo");
@@ -39,6 +38,7 @@
 			return demo; 
 		]]>
 	</property-provider>
+	<set-property name="demo" value="false"/>
 	
 	<replace-with class="org.sjarvela.mollify.client.service.environment.demo.DemoEnvironment">
 		<when-type-is class="org.sjarvela.mollify.client.service.environment.ServiceEnvironment"/>
