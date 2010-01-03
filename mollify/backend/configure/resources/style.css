@@ -4,15 +4,61 @@
 
 .content {
 	margin: 2px 0 0;
-	width: 1000px;
+}
+
+/*table#main {
+	width: 100%;
+	height: 100%;
+}
+
+table#main td#left {
+	width: 150px;
+}
+
+table#main td#right {
+}*/
+
+#page-area {
+	margin-left: 176px;
+	margin-top: 6px;
+	margin-right: 6px;
+}
+
+#page-header {
+	height: 25px;
+	padding-top: 7px;
+	padding-left: 6px;
+	background-color: #badce8;
+	margin-bottom: 4px;
+	border-bottom: 1px solid #b9b9b9;
+}
+
+#page-title {
+	font-weight: bold;
+	font-size: 15px;
+	float: left;
+}
+
+#request-indicator {
+	float: right;
+	width: 16px;
+	height: 16px;
+	margin-right: 7px;
+	margin-top: 2px;
+}
+
+#request-indicator.active {
+	background: url(../../resources/wait.gif) no-repeat;
 }
 
 #main-menu {
-	width: 180px;
-	float: left;
 	padding-left: 0px;
 	margin-right: 5px;
 	margin-top: 2px;
+	position: absolute;
+	top: 75px;
+	left: 0;
+	width: 170px;
 }
 
 #main-menu ul {
@@ -45,6 +91,50 @@
 }
 
 #page {
-	float: right;
-	width: 815px;
+	
+}
+
+.toolbar {
+	clear: none;
+	width: 100%;
+	height: 30px;
+}
+
+.toolbar button {
+	cursor: pointer;
+	line-height: 1.4em;
+	width: auto;
+	overflow: visible;
+	height: 25px;
+}
+
+#user-dialog {
+}
+
+.user-data {
+}
+
+.user-data .title {
+	margin-bottom: 3px;
+}
+
+.user-data input, .user-data select {
+	background-color: #f3f3f3;
+	border: 1px solid #aaacac;
+	height: 16px;
+	margin-top: 4px;
+	margin-bottom: 7px;
+	width: 250px;
+}
+
+.user-data select{
+	height: 22px;
+}
+
+.user-data.invalid input {
+	background-color: #edf4bf;
+}
+
+#user-password-generator {
+	margin-top: 4px;
 }

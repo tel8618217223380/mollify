@@ -88,7 +88,7 @@
 		}
 		
 		public function removeUser($userId) {
-			$id = $this->db->string($id);
+			$id = $this->db->string($userId);
 
 			$this->db->startTransaction();			
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));

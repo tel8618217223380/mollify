@@ -10,31 +10,53 @@
 
 jQuery.fn.exists = function() { return ($(this).length > 0); }
 
+var preRequestCallback = null;
+var postRequestCallback = null;
+
 function initializeButtons() {
-	$('.btn').each(function() {
-		var b = $(this);
-		var tt = b.text() || b.val();
-		
-		if ($(':submit,:button',this)) {
-			b = $('<a>').insertAfter(this).addClass(this.className).attr('id',this.id);
-			$(this).remove();
-		}
-		b.text('').css({cursor:'pointer'}).prepend('<i></i>').append($('<span>').
-		text(tt).append('<i></i><span></span>'));
+	$('button').each(function() {
+		$(this).hover(
+			function(){ 
+				$(this).addClass("ui-state-hover"); 
+			},
+			function(){ 
+				$(this).removeClass("ui-state-hover"); 
+			}
+		);
 	});
 }
 
 function getSessionInfo(success, fail) {
+	request("GET", 'r.php/session/info/1_5_0', success, fail);
+}
+
+function getUsers(success, fail) {
+	request("GET", 'r.php/configuration/users', success, fail);
+}
+
+function addUser(name, pw, permission, success, fail) {
+	var data = JSON.stringify({name:name, password:generate_md5(pw), "permission_mode":permission});
+	request("POST", 'r.php/configuration/users', success, fail, data);
+}
+
+function removeUser(id, success, fail) {
+	request("DELETE", 'r.php/configuration/users/'+id, success, fail);
+}
+
+function request(type, url, success, fail, data) {
+	if (preRequestCallback) preRequestCallback();
 	$.ajax({
-		type: "GET",
-		url: 'r.php/session/info/1_5_0',
+		type: type,
+		url: url,
+		data: data,
 		dataType: "json",
 		success: function(result) {
+			if (postRequestCallback) postRequestCallback();
 			success(result.result);
 		},
 		error: function (xhr, desc, exc) {
+			if (postRequestCallback) postRequestCallback();
 			fail(xhr.responseText);
 		}
 	});
-
 }
