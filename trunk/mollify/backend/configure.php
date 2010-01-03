@@ -18,20 +18,26 @@
 	<head>
 		<title>Mollify Configuration</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		
+		<link rel="stylesheet" href="resources/jquery-ui-1.7.2.custom.css">
+		<link rel="stylesheet" href="resources/ui.jqgrid.css">
 		<link rel="stylesheet" href="configure/resources/style.css">
-		<script type="text/javascript" src="resources/jquery.js"></script>
+		
+		<script type="text/javascript" src="resources/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="resources/md5.js"></script>
 		<script type="text/javascript" src="resources/json.js"></script>
-		<!--script type="text/javascript" src="resources/configure/flexigrid.pack.js"></script-->
+		<script type="text/javascript" src="resources/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="resources/jquery.jqGrid.min.js"></script>
 		<script type="text/javascript" src="configure/resources/common.js"></script>
 		<script type="text/javascript">
 			var session = null;
 			var loadedScripts = new Array();
-			var controllers = {"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "configure/users/users.js"}};
+			var controllers = {"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "configure/users/users.js", "title": "Users"}};
 			var controller = null;
 			
 			$(document).ready(function() {
-				initializeButtons();
+				preRequestCallback = function() { $("#request-indicator").addClass("active"); };
+				postRequestCallback = function() { $("#request-indicator").removeClass("active"); }
 				
 				$(".main-menu-item").click(function() {
 					$(".main-menu-item").removeClass("active");
@@ -48,7 +54,7 @@
 					return;
 				}
 				if (!session.features["configuration_update"]) {
-					$("body").html("Mollify configuration is read only");
+					$("body").html("Current configuration type cannot be modified with the Mollify configuration utility. For more information, see <a href='http://code.google.com/p/mollify/wiki/Installation'>Installation instructions</a>");
 					return;
 				}
 				this.session = session;
@@ -64,26 +70,37 @@
 				if (script && $.inArray(script, loadedScripts) < 0) {
 					$.getScript(script, function() {
 						loadedScripts.push(script);
-						initView(controllers[id]['class']);
+						initView(controllers[id]);
 					});
 				} else {
-					initView(controllers[id]['class']);
+					initView(controllers[id]);
 				}				
 			}
 			
-			function initView(cls) {
-				controller = eval("new "+cls+"()");
-				controller.load($("#page"));
+			function initView(controllerSpec) {
+				setTitle(controllerSpec.title);
+				
+				controller = eval("new "+controllerSpec['class']+"()");
+				if (controller.pageUrl) $("#page").load(controller.pageUrl, "", onLoadView);
+			}
+			
+			function onLoadView() {
+				initializeButtons();
+				controller.onLoadView();
 			}
 			
 			function onServerError(error) {
-				$("#page").html("<div class='error'><div class='title'>"+error+"</div></div>");
+				$("body").html("<div class='error'><div class='title'>"+error+"</div></div>");
 			}
 			
 			function onError(error) {
+				setTitle("Error");
 				$("#page").html("<div class='error'><div class='title'>"+error+"</div></div>");
 			}
-
+			
+			function setTitle(title) {
+				$("#page-title").html(title);
+			}
 		</script>
 	</head>	
 	
@@ -100,7 +117,12 @@
 					<li id="menu-published-folders" class="main-menu-item">Published Folders</li>
 				</ul>
 			</div>
-			<div id="page">
+			<div id="page-area">
+				<div id="page-header">
+					<div id="page-title"></div>
+					<div id="request-indicator"></div>
+				</div>
+				<div id="page"></div>
 			</div>
 		</div>
 	</body>

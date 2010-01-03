@@ -9,8 +9,33 @@
 -->
 
 <div id="configuration-users">
-	<h2>Users</h2>
-	
-	<table id="users-list">
+	<div class="toolbar">
+		<button id="button-add-user" class="ui-state-default ui-corner-all">Add User</button>
+		<button id="button-remove-user" class="ui-state-default ui-corner-all">Remove User(s)</button>
+		<button id="button-refresh-users" class="ui-state-default ui-corner-all">Refresh</button>
+	</div>
+	<table id="users-list" style="width:100%">
 	</table>
+</div>
+
+<div id="user-dialog" style="display:none">
+	<div class='user-data' id='user-username'>
+		<div class='title'>User name:</div>
+		<input id='username' class='value' type='text' name='user' value=''>
+	</div>
+	<div class='user-data' id='user-permission'>
+		<div class='title'>Permission:</div>
+		<select id='permission' class='value' name='permission'>
+			<option value="a">Administrator</option>
+			<option value="rw">Read and Write</option>
+			<option value="ro">Read Only</option>
+		</select>
+	</div>
+	<div class='user-data' id='user-password'>
+		<div class='title'>Password:</div>
+		<input id='password' class='value' type='text' name='password' value=''>
+	</div>
+	<div id="user-password-generator">
+		<button id="button-generate-user-password" class="ui-state-default ui-corner-all">Generate</button>
+	</div>
 </div>

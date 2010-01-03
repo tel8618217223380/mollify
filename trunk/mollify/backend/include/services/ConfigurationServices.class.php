@@ -104,15 +104,19 @@
 		}
 		
 		private function processPostUsers() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
-
+			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
+			
 			$user = $this->request->data;
+			if (!isset($user['name']) or !isset($user['password']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
+			$user['permission_mode'] = strtoupper($user['permission_mode']);
+			$this->env->authentication()->assertPermissionValue($user['permission_mode']);
+			
 			$this->env->configuration()->addUser($user['name'], $user['password'], $user['permission_mode']);
 			$this->response()->success(TRUE);			
 		}
 
 		private function processPutUsers() {
-			if (count($this->path) != 2) throw $this->invalidRequestException();
+			if (count($this->path) != 2 or !$this->request->hasData()) throw $this->invalidRequestException();
 
 			$id = $this->path[1];
 			$user = $this->request->data;
@@ -135,7 +139,7 @@
 		}
 		
 		private function processPostFolders() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
+			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
 			
 			$folder = $this->request->data;
 			$this->env->configuration()->addFolder($folder['name'], $folder['path']);
@@ -143,7 +147,7 @@
 		}
 		
 		private function processPutFolders() {
-			if (count($this->path) != 2) throw $this->invalidRequestException();
+			if (count($this->path) != 2 or !$this->request->hasData()) throw $this->invalidRequestException();
 			
 			$id = $this->path[1];
 			$folder = $this->request->data;
