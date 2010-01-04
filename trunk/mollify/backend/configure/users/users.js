@@ -20,13 +20,12 @@ function MollifyUsersConfigurationView() {
 		$("#button-add-user").click(openAddUser);
 		$("#button-remove-user").click(onRemoveUser);
 		$("#button-edit-user").click(onEditUser);
-		$("#button-refresh-users").click(refresh);
+		$("#button-refresh-users").click(that.refresh);
 		
-		refresh();
-		that.updateButtons();
+		that.refresh();
 	}
 	
-	function refresh() {
+	this.refresh = function() {
 		getUsers(refreshUsers, onServerError);
 	}
 	
@@ -57,6 +56,8 @@ function MollifyUsersConfigurationView() {
 		for(var i=0;i < that.users.length;i++) {
 			grid.jqGrid('addRowData', that.users[i].id, that.users[i]);
 		}
+		
+		that.updateButtons();
 	}
 	
 	this.getUser = function(id) {
@@ -81,30 +82,27 @@ function MollifyUsersConfigurationView() {
 			default: return "-";
 		}
 	}
-	
-	function onAddUser() {
-		var name = $("#username").val();
-		var pw = $("#password").val();
-		var permission = $("#permission").val();
 		
-		onSuccess = function() {
-			$("#add-user-dialog").dialog('close');
-			refresh();
-		}
-		addUser(name, pw, permission, onSuccess, onServerError);
-	}
-	
-	function validateUserData() {
-		$("#user-dialog > .user-data").removeClass("invalid");
+	function validateUserData(edit) {
+		if (edit) $("#edit-user-dialog > .user-data").removeClass("invalid");
+		else $("#user-dialog > .user-data").removeClass("invalid");
 	
 		var result = true;
-		if ($("#username").val().length == 0) {
-			$("#user-username").addClass("invalid");
-			result = false;
-		}
-		if ($("#password").val().length == 0) {
-			$("#user-password").addClass("invalid");
-			result = false;
+		
+		if (edit){
+			if ($("#edit-username").val().length == 0) {
+				$("#edit-user-username").addClass("invalid");
+				result = false;
+			}		
+		} else {
+			if ($("#username").val().length == 0) {
+				$("#user-username").addClass("invalid");
+				result = false;
+			}
+			if ($("#password").val().length == 0) {
+				$("#user-password").addClass("invalid");
+				result = false;
+			}
 		}
 		return result;
 	}
@@ -122,7 +120,17 @@ function MollifyUsersConfigurationView() {
 					$(this).dialog('close');
 				},
 				Add: function() {
-					if (validateUserData()) onAddUser();
+					if (!validateUserData(false)) return;
+					
+					var name = $("#username").val();
+					var pw = $("#password").val();
+					var permission = $("#permission").val();
+					
+					onSuccess = function() {
+						$("#add-user-dialog").dialog('close');
+						that.refresh();
+					}
+					addUser(name, pw, permission, onSuccess, onServerError);
 				}
 			}
 		});
@@ -151,7 +159,16 @@ function MollifyUsersConfigurationView() {
 					$(this).dialog('close');
 				},
 				Edit: function() {
-
+					if (!validateUserData(true)) return;
+					
+					var name = $("#edit-username").val();
+					var permission = $("#edit-permission").val();
+					
+					onSuccess = function() {
+						$("#edit-user-dialog").dialog('close');
+						that.refresh();
+					}
+					editUser(id, name, permission, onSuccess, onServerError);
 				}
 			}
 		});
