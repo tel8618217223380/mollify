@@ -26,6 +26,11 @@ function addUser(name, pw, permission, success, fail) {
 	request("POST", 'configuration/users', success, fail, data);
 }
 
+function editUser(id, name, permission, success, fail) {
+	var data = JSON.stringify({name:name, "permission_mode":permission});
+	request("PUT", 'configuration/users/'+id, success, fail, data);
+}
+
 function removeUser(id, success, fail) {
 	request("DELETE", 'configuration/users/'+id, success, fail);
 }
