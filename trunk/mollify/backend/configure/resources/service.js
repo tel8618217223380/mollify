@@ -13,41 +13,28 @@ jQuery.fn.exists = function() { return ($(this).length > 0); }
 var preRequestCallback = null;
 var postRequestCallback = null;
 
-function initializeButtons() {
-	$('button').each(function() {
-		$(this).hover(
-			function(){ 
-				$(this).addClass("ui-state-hover"); 
-			},
-			function(){ 
-				$(this).removeClass("ui-state-hover"); 
-			}
-		);
-	});
-}
-
 function getSessionInfo(success, fail) {
-	request("GET", 'r.php/session/info/1_5_0', success, fail);
+	request("GET", 'session/info/1_5_0', success, fail);
 }
 
 function getUsers(success, fail) {
-	request("GET", 'r.php/configuration/users', success, fail);
+	request("GET", 'configuration/users', success, fail);
 }
 
 function addUser(name, pw, permission, success, fail) {
 	var data = JSON.stringify({name:name, password:generate_md5(pw), "permission_mode":permission});
-	request("POST", 'r.php/configuration/users', success, fail, data);
+	request("POST", 'configuration/users', success, fail, data);
 }
 
 function removeUser(id, success, fail) {
-	request("DELETE", 'r.php/configuration/users/'+id, success, fail);
+	request("DELETE", 'configuration/users/'+id, success, fail);
 }
 
 function request(type, url, success, fail, data) {
 	if (preRequestCallback) preRequestCallback();
 	$.ajax({
 		type: type,
-		url: url,
+		url: "../r.php/"+url,
 		data: data,
 		dataType: "json",
 		success: function(result) {
