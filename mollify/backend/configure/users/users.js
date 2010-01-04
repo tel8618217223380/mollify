@@ -11,7 +11,7 @@
 function MollifyUsersConfigurationView() {
 	var that = this;
 	
-	this.pageUrl = "configure/users/users.html";
+	this.pageUrl = "users/users.html";
 	this.users = null;
 		
 	this.onLoadView = onLoadView;
@@ -19,9 +19,11 @@ function MollifyUsersConfigurationView() {
 	function onLoadView() {
 		$("#button-add-user").click(openAddUser);
 		$("#button-remove-user").click(onRemoveUser);
+		$("#button-edit-user").click(onEditUser);
 		$("#button-refresh-users").click(refresh);
 		
 		refresh();
+		that.updateButtons();
 	}
 	
 	function refresh() {
@@ -36,7 +38,7 @@ function MollifyUsersConfigurationView() {
 		
 		grid.jqGrid({        
 			datatype: "local",
-			multiselect: true,
+			multiselect: false,
 			autowidth: true,
 			height: '100%',
 		   	colNames:['ID', 'Name','Permission Mode'],
@@ -48,15 +50,29 @@ function MollifyUsersConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
+				that.updateButtons();
 			}
 		});
 		
-//		grid[0].addJSONData(that.users);
 		for(var i=0;i < that.users.length;i++) {
 			grid.jqGrid('addRowData', that.users[i].id, that.users[i]);
 		}
 	}
 	
+	this.getUser = function(id) {
+		for(var i=0;i < that.users.length;i++) {
+			if (that.users[i].id == id) return that.users[i];
+		}
+		return null;
+	}
+	
+	this.updateButtons = function() {
+		var selected = ($("#users-list").getGridParam("selrow") != null);
+		
+		enableButton("button-remove-user", selected);
+		enableButton("button-edit-user", selected);		
+	}
+		
 	function permissionModeFormatter(mode, options, rowObject) {
 		switch (mode.toLowerCase()) {
 			case 'a': return "Admin";
@@ -72,7 +88,7 @@ function MollifyUsersConfigurationView() {
 		var permission = $("#permission").val();
 		
 		onSuccess = function() {
-			$("#user-dialog").dialog('close');
+			$("#add-user-dialog").dialog('close');
 			refresh();
 		}
 		addUser(name, pw, permission, onSuccess, onServerError);
@@ -94,7 +110,7 @@ function MollifyUsersConfigurationView() {
 	}
 	
 	function openAddUser() {
-		$("#user-dialog").dialog({
+		$("#add-user-dialog").dialog({
 			bgiframe: true,
 			height: 300,
 			width: 270,
@@ -113,13 +129,48 @@ function MollifyUsersConfigurationView() {
 		$("#button-generate-user-password").click(function() {
 			$("#password").val(generatePassword());
 		});
-		$("#user-dialog").dialog('open');
+		
+		$("#username").val("");
+		$("#password").val("");
+		$("#permission").val("ro");
+		$("#add-user-dialog").dialog('open');
+	}
+
+	function openEditUser(id) {
+		var user = that.getUser(id);
+		
+		$("#edit-user-dialog").dialog({
+			bgiframe: true,
+			height: 300,
+			width: 270,
+			modal: true,
+			resizable: false,
+			title: "Edit User",
+			buttons: {
+				Cancel: function() {
+					$(this).dialog('close');
+				},
+				Edit: function() {
+
+				}
+			}
+		});
+		
+		$("#edit-username").val(user.name);
+		$("#edit-permission").val(user["permission_mode"]);
+		$("#edit-user-dialog").dialog('open');
 	}
 	
 	function onRemoveUser() {
-		var ids = $("#users-list").getGridParam("selarrrow");
-		if (!ids || ids.length != 1) return;
-		removeUser(ids[0], refresh, onServerError);
+		var id = $("#users-list").getGridParam("selrow");
+		if (id == null) return;
+		removeUser(id, refresh, onServerError);
+	}
+	
+	function onEditUser() {
+		var id = $("#users-list").getGridParam("selrow");
+		if (id == null) return;
+		openEditUser(id);
 	}
 }
 

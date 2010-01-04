@@ -12,13 +12,14 @@
 
 	$MAIN_PAGE = "install";
 	$installer = NULL;
-		
+	
+	set_include_path("..");
 	@include("configuration.php");
 	global $SETTINGS, $CONFIGURATION_PROVIDER;
 
 	$installer = createInstaller($CONFIGURATION_PROVIDER, $SETTINGS);
 	try {
-		if (!file_exists("configuration.php"))
+		if (!file_exists("../configuration.php"))
 			showInstructions("configuration_create");
 
 		if (!isset($CONFIGURATION_PROVIDER) or !isValidConfigurationType($CONFIGURATION_PROVIDER))

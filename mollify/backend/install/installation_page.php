@@ -17,11 +17,11 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<title><?php echo($title);?></title>
-			<link rel="stylesheet" href="install/resources/style.css">
+			<link rel="stylesheet" href="../install/resources/style.css">
 			
-			<script type="text/javascript" src="resources/jquery.js"></script>
-			<script type="text/javascript" src="resources/md5.js"></script>
-			<script type="text/javascript" src="install/resources/common.js"></script>
+			<script type="text/javascript" src="../resources/jquery-1.3.2.min.js"></script>
+			<script type="text/javascript" src="../resources/md5.js"></script>
+			<script type="text/javascript" src="../install/resources/common.js"></script>
 			<script type="text/javascript">
 			<?php if ($onLoad != NULL) {?>
 				$(document).ready(function() {
