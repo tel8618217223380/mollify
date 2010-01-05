@@ -17,6 +17,8 @@ function MollifyUsersConfigurationView() {
 	this.onLoadView = onLoadView;
 	
 	function onLoadView() {
+		loadScript("users/common.js");
+		
 		$("#button-add-user").click(openAddUser);
 		$("#button-remove-user").click(onRemoveUser);
 		$("#button-edit-user").click(onEditUser);
@@ -73,16 +75,7 @@ function MollifyUsersConfigurationView() {
 		enableButton("button-remove-user", selected);
 		enableButton("button-edit-user", selected);		
 	}
-		
-	function permissionModeFormatter(mode, options, rowObject) {
-		switch (mode.toLowerCase()) {
-			case 'a': return "Admin";
-			case 'rw': return "Read and Write";
-			case 'ro': return "Read Only";
-			default: return "-";
-		}
-	}
-		
+			
 	function validateUserData(edit) {
 		if (edit) $("#edit-user-dialog > .user-data").removeClass("invalid");
 		else $("#user-dialog > .user-data").removeClass("invalid");

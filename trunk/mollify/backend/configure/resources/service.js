@@ -17,6 +17,10 @@ function getSessionInfo(success, fail) {
 	request("GET", 'session/info/1_5_0', success, fail);
 }
 
+function getFolders(success, fail) {
+	request("GET", 'configuration/folders', success, fail);
+}
+
 function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
 }
@@ -33,6 +37,10 @@ function editUser(id, name, permission, success, fail) {
 
 function removeUser(id, success, fail) {
 	request("DELETE", 'configuration/users/'+id, success, fail);
+}
+
+function getUserGroups(success, fail) {
+	request("GET", 'configuration/usergroups', success, fail);
 }
 
 function request(type, url, success, fail, data) {

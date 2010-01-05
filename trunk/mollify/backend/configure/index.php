@@ -40,9 +40,9 @@
 		<div class="content">
 			<div id="main-menu">
 				<ul>
-					<li id="menu-users" class="main-menu-item">Users</li>
-					<li id="menu-groups" class="main-menu-item">Groups</li>
 					<li id="menu-published-folders" class="main-menu-item">Published Folders</li>
+					<li id="menu-users" class="main-menu-item">Users</li>
+					<li id="menu-usergroups" class="main-menu-item">Groups</li>
 				</ul>
 			</div>
 			<div id="page-area">

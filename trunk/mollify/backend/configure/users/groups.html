@@ -1,0 +1,32 @@
+<!--
+	Copyright (c) 2008- Samuli JŠrvelŠ
+
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Eclipse Public License v1.0
+	which accompanies this distribution, and is available at
+	http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+	this entire header must remain intact.
+-->
+
+<div id="configuration-user-groups">
+	<div class="toolbar">
+		<button id="button-add-group" class="ui-state-default ui-corner-all">Add Group</button>
+	</div>
+	<table id="groups-list">
+	</table>
+</div>
+
+<div id="group-dialog" style="display:none">
+	<div class='user-data' id='user-username'>
+		<div class='title'>Group name:</div>
+		<input id='groupname' class='user-data-value' type='text' name='group' value=''>
+	</div>
+	<div class='user-data' id='user-permission'>
+		<div class='title'>Permission:</div>
+		<select id='permission' class='user-data-value' name='permission'>
+			<option value="a">Administrator</option>
+			<option value="rw">Read and Write</option>
+			<option value="ro">Read Only</option>
+		</select>
+	</div>
+</div>

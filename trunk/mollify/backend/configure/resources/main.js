@@ -10,7 +10,11 @@
 
 var session = null;
 var loadedScripts = new Array();
-var controllers = {"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"}};
+var controllers = {
+	"menu-published-folders": {"class" : "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
+	"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
+	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"}
+};
 var controller = null;
 
 $(document).ready(function() {
@@ -44,15 +48,18 @@ function onSelectMenu(id) {
 		return;
 	}
 	
-	var script = controllers[id]['script'];
-	if (script && $.inArray(script, loadedScripts) < 0) {
-		$.getScript(script, function() {
-			loadedScripts.push(script);
-			initView(controllers[id]);
-		});
-	} else {
-		initView(controllers[id]);
-	}				
+	loadScript(controllers[id]['script'], function() { initView(controllers[id]); });
+}
+
+function loadScript(script, cb) {
+	if (!script || $.inArray(script, loadedScripts) >= 0) {
+		if (cb) cb();
+		return;
+	}
+	$.getScript(script, function() {
+		loadedScripts.push(script);
+		if (cb) cb();
+	});
 }
 
 function initView(controllerSpec) {
