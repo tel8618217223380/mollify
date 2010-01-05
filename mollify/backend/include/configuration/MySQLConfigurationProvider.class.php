@@ -68,7 +68,7 @@
 		}
 		
 		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id) {
@@ -76,7 +76,7 @@
 		}
 		
 		public function addUser($name, $pw, $permission) {
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode) VALUES ('%s', '%s', '%s')", $this->db->string($name), $this->db->string($pw), $this->db->string($permission)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode, is_group) VALUES ('%s', '%s', '%s', 0)", $this->db->string($name), $this->db->string($pw), $this->db->string($permission)));
 			return TRUE;
 		}
 	
@@ -99,7 +99,28 @@
 			$this->db->commit();					
 			return TRUE;
 		}
-			
+
+		public function getAllUserGroups() {
+			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." where is_group = 1 ORDER BY id ASC")->rows();
+		}
+
+		public function getUserGroup($id) {
+			return $this->getUser($id);
+		}
+		
+		public function addUserGroup($name, $permission) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, permission_mode, is_group) VALUES ('%s', '%s', 1)", $this->db->string($name), $this->db->string($permission)));
+			return TRUE;
+		}
+
+		public function updateUserGroup($id, $name, $permission) {
+			return $this->updateUser($id, $name, $permission);
+		}
+		
+		public function removeUserGroup($id) {
+			return $this->removeUser($id);
+		}
+
 		private function getPassword($id) {
 			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->value(0);
 		}

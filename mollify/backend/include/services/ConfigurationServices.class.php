@@ -11,7 +11,7 @@
 	 */
 
 	class ConfigurationServices extends ServicesBase {
-		private static $ITEMS = array("users", "folders", "userfolders");
+		private static $ITEMS = array("users", "usergroups", "folders", "userfolders");
 		
 		protected function isValidPath($method, $path) {
 			if (count($path) == 0) return FALSE;
@@ -25,6 +25,9 @@
 			switch($this->path[0]) {
 				case 'users':
 					$this->processGetUsers();
+					break;
+				case 'usergroups':
+					$this->processGetUserGroups();
 					break;
 				case 'folders':
 					$this->processGetFolders();
@@ -44,6 +47,9 @@
 				case 'users':
 					$this->processPostUsers();
 					break;
+				case 'usergroups':
+					$this->processPostUserGroups();
+					break;
 				case 'folders':
 					$this->processPostFolders();
 					break;
@@ -62,6 +68,9 @@
 				case 'users':
 					$this->processPutUsers();
 					break;
+				case 'usergroups':
+					$this->processPutUserGroups();
+					break;
 				case 'folders':
 					$this->processPutFolders();
 					break;
@@ -79,6 +88,9 @@
 			switch($this->path[0]) {
 				case 'users':
 					$this->processDeleteUsers();
+					break;
+				case 'usergroups':
+					$this->processDeleteUserGroups();
 					break;
 				case 'folders':
 					$this->processDeleteFolders();
@@ -120,6 +132,10 @@
 
 			$id = $this->path[1];
 			$user = $this->request->data;
+			if (!isset($user['name']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
+			$user['permission_mode'] = strtoupper($user['permission_mode']);
+			$this->env->authentication()->assertPermissionValue($user['permission_mode']);
+			
 			$this->env->configuration()->updateUser($id, $user['name'], $user['permission_mode']);
 			$this->response()->success(TRUE);			
 		}
@@ -131,7 +147,52 @@
 			$this->env->configuration()->removeUser($id);
 			$this->response()->success(TRUE);			
 		}
-				
+
+		private function processGetUserGroups() {
+			if (count($this->path) == 1) {
+				$this->response()->success($this->env->configuration()->getAllUserGroups());
+				return;
+			}
+			if (count($this->path) == 2) {
+				$this->response()->success($this->env->configuration()->getUserGroup($this->path[1]));
+				return;
+			}
+			throw $this->invalidRequestException();
+		}
+		
+		private function processPostUserGroups() {
+			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
+			
+			$group = $this->request->data;
+			if (!isset($group['name']) or !isset($group['permission_mode'])) throw $this->invalidRequestException();
+			$group['permission_mode'] = strtoupper($group['permission_mode']);
+			$this->env->authentication()->assertPermissionValue($group['permission_mode']);
+			
+			$this->env->configuration()->addUserGroup($group['name'], $group['permission_mode']);
+			$this->response()->success(TRUE);			
+		}
+
+		private function processPutUserGroups() {
+			if (count($this->path) != 2 or !$this->request->hasData()) throw $this->invalidRequestException();
+
+			$id = $this->path[1];
+			$group = $this->request->data;
+			if (!isset($group['name']) or !isset($group['permission_mode'])) throw $this->invalidRequestException();
+			$group['permission_mode'] = strtoupper($group['permission_mode']);
+			$this->env->authentication()->assertPermissionValue($group['permission_mode']);
+
+			$this->env->configuration()->updateUserGroup($id, $group['name'], $group['permission_mode']);
+			$this->response()->success(TRUE);			
+		}
+		
+		private function processDeleteUserGroups() {
+			if (count($this->path) != 2) throw $this->invalidRequestException();
+
+			$id = $this->path[1];
+			$this->env->configuration()->removeUserGroup($id);
+			$this->response()->success(TRUE);			
+		}
+
 		private function processGetFolders() {
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			

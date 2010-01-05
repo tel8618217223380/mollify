@@ -16,7 +16,7 @@ body {
 }
 
 header {
-	background: url(header_bg.gif) repeat-x 0 -40px;
+	background: url(images/header_bg.gif) repeat-x 0 -40px;
 	width: 100%;
 	height: 64px;
 	margin: 0;
@@ -25,7 +25,7 @@ header {
 }
 
 header h1 {
-	background: url(mollify.png) no-repeat 9px 0;
+	background: url(images/mollify.png) no-repeat 9px 0;
 	color: #949595;
 	font-size: 23px;
 	margin-top: 0;
@@ -85,7 +85,7 @@ footer {
 .error {
 	margin-top: 2px;
 	margin-bottom: 2px;
-	background: #ffedf8 url(stop.png) no-repeat 10px 10px;
+	background: #ffedf8 url(images/stop.png) no-repeat 10px 10px;
 	padding-left: 85px;
 	padding-top: 16px;
 	padding-bottom: 1px;
@@ -126,7 +126,7 @@ b {
 .note {
 	margin-top: 2px;
 	margin-bottom: 2px;
-	background: #ead0a6 url(warning.png) no-repeat 6px 10px;
+	background: #ead0a6 url(images/warning.png) no-repeat 6px 10px;
 	padding-left: 85px;
 	padding-top: 3px;
 	padding-bottom: 1px;
@@ -148,7 +148,7 @@ b {
 
 .btn * {
 	font-style: normal;
-	background-image: url(btn2.png);
+	background-image: url(images/btn2.png);
 	background-repeat: no-repeat;
 	display: block;
 	position: relative;
@@ -211,7 +211,7 @@ b {
 }
 
 .btn[class] {
-	background-image: url(shade.png);
+	background-image: url(images/shade.png);
 	background-position: bottom;
 }
 
