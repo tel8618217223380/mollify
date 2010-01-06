@@ -12,76 +12,316 @@ function MollifyUserGroupsConfigurationView() {
 	var that = this;
 	
 	this.pageUrl = "users/groups.html";
+	this.users = null;
 	this.groups = null;
+	this.groupUsers = null;
 		
 	this.onLoadView = onLoadView;
 	
 	function onLoadView() {
-		loadScript("users/common.js");
-		
+		loadScript("users/common.js", that.init);
+	}
+	
+	this.init = function() {		
 		$("#button-add-group").click(openAddGroup);
-		
-		that.refresh();
-	}
-	
-	this.refresh = function() {
-		getUserGroups(refreshGroups, onServerError);
-	}
-	
-	function refreshGroups(groups) {
-		that.groups = groups;
+		$("#button-remove-group").click(onRemoveGroup);
+		$("#button-edit-group").click(onEditGroup);
+		$("#button-refresh-groups").click(that.refresh);
 
-		var grid = $("#groups-list");
-		grid.jqGrid('clearGridData');
-		
-		grid.jqGrid({        
+		$("#groups-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
 		   	colNames:['ID', 'Name','Permission'],
 		   	colModel:[
-			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
+			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
-				{name:'permission_mode',index:'permission_mode',width:150, sortable:true},
+				{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.updateButtons();
+				that.updateControls();
 			}
 		});
+
+		$("#button-add-group-users").click(openAddGroupUsers);
+		$("#button-remove-group-users").click(onRemoveGroupUsers);
+		$("#button-refresh-group-users").click(that.refreshGroupUsers);
+
+		$("#group-users-list").jqGrid({        
+			datatype: "local",
+			multiselect: true,
+			autowidth: true,
+			height: '100%',
+		   	colNames:['ID', 'Name'],
+		   	colModel:[
+			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
+		   		{name:'name',index:'name', width:200, sortable:true}
+		   	],
+		   	sortname:'id',
+		   	sortorder:'asc',
+			onSelectRow: function(id){
+				that.updateGroupUserButtons();
+			}
+		});
+
+		$("#add-users-list").jqGrid({        
+			datatype: "local",
+			multiselect: false,
+			autowidth: true,
+			multiselect: true,
+		   	colNames:['ID', 'Name'],
+		   	colModel:[
+			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
+		   		{name:'name',index:'name', width:200, sortable:true}
+		   	],
+		   	sortname:'id',
+		   	sortorder:'asc'
+		});
 		
-		for(var i=0;i < that.groups.length;i++) {
-			grid.jqGrid('addRowData', that.groups[i].id, that.groups[i]);
-		}
-		
-		that.updateButtons();
-	}
-		
-	this.updateButtons = function() {
+		that.refresh();
 	}
 	
+	this.getUserGroup = function(id) {
+		return that.groups[id];
+	}
+
+	this.getGroupUser = function(id) {
+		return that.groupUsers[id];
+	}
+
+	this.getSelectedGroup = function() {
+		return $("#groups-list").getGridParam("selrow");
+	}
+
+	this.getSelectedGroupUsers = function() {
+		return $("#group-users-list").getGridParam("selarrrow");
+	}
+
+	this.refresh = function() {
+		getUserGroups(refreshGroups, onServerError);
+	}
+	
+	function refreshGroups(groups) {
+		that.groups = {};
+
+		var grid = $("#groups-list");
+		grid.jqGrid('clearGridData');
+		
+		for(var i=0;i < groups.length;i++) {
+			var group = groups[i];
+			that.groups[group.id] = group;
+			grid.jqGrid('addRowData', group.id, group);
+		}
+		
+		that.updateControls();
+		
+		getUsers(that.refreshUsers, onServerError);
+	}
+	
+	this.refreshUsers = function(users) {
+		that.users = {};
+		
+		for (var i=0; i < users.length; i++) {
+			user = users[i];
+			that.users[user.id] = user;
+		}
+	}
+	
+	this.refreshGroupUsers = function() {
+		var id = $("#groups-list").getGridParam("selrow");
+		if (!id) return;
+		
+		getGroupUsers(id, that.onRefreshGroupUsers, onServerError);
+	}
+	
+	this.onRefreshGroupUsers = function(groupUsers) {
+		that.groupUsers = {};
+		
+		var grid = $("#group-users-list");
+		grid.jqGrid('clearGridData');
+
+		for (var i=0; i < groupUsers.length; i++) {
+			var groupUser = groupUsers[i];
+			that.groupUsers[groupUser.id] = groupUser;
+			grid.jqGrid('addRowData', groupUser.id, groupUser);
+		}
+				
+		that.updateGroupUserButtons();
+	}
+		
+	this.updateControls = function() {
+		var selected = ($("#groups-list").getGridParam("selrow") != null);
+		
+		enableButton("button-remove-group", selected);
+		enableButton("button-edit-group", selected);
+		
+		if (that.groups.length == 0) {
+			that.userGroups = null;
+			
+			$("#group-details-info").html('Click "Add Group" to create a new user group');
+			$("#group-details-info").show();
+			$("#group-details-data").hide();
+		} else {
+			if (selected) {
+				$("#group-details-info").hide();
+				$("#group-details-data").show();
+
+				$("#group-users-list").jqGrid('setGridWidth', $("#group-details").width(), true);
+
+				that.refreshGroupUsers();
+			} else {
+				that.userGroups = null;
+				
+				$("#group-details-info").html('Select a group from the list to view details');
+				$("#group-details-info").show();
+				$("#group-details-data").hide();
+			}
+		}
+	}
+
+	this.updateGroupUserButtons = function() {
+		var selected = ($("#group-users-list").getGridParam("selarrrow").length > 0);
+		enableButton("button-remove-group-users", selected);		
+	}
+	
+	function validateGroupData() {
+		$("#group-dialog > .user-data").removeClass("invalid");
+	
+		var result = true;
+		if ($("#groupname").val().length == 0) {
+			$("#user-username").addClass("invalid");
+			result = false;
+		}
+		return result;
+	}
+
 	function openAddGroup() {
+		openAddEditGroup(null);
+	}
+	
+	function openAddEditGroup(id) {		
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+
+		var action = function() {
+			if (!validateGroupData()) return;
+			
+			var name = $("#groupname").val();
+			var permission = $("#permission").val();
+			
+			onSuccess = function() {
+				$("#group-dialog").dialog('close');
+				that.refresh();
+			}
+
+			if (id)
+				editUserGroup(id, name, permission, onSuccess, onServerError);
+			else
+				addUserGroup(name, permission, onSuccess, onServerError);
+		}
+		
+		if (id)
+			buttons["Edit"] = action;
+		else
+			buttons["Add"] = action;
+				
 		$("#group-dialog").dialog({
 			bgiframe: true,
 			height: 300,
 			width: 270,
 			modal: true,
 			resizable: false,
-			title: "Add Group",
-			buttons: {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Add: function() {
-				}
-			}
+			title: id ? "Edit Group" : "Add Group",
+			buttons: buttons
 		});
 		
-		$("#groupname").val("");
-		$("#permission").val("ro");
-		$("#add-group-dialog").dialog('open');
+		if (id) {
+			var group = that.getUserGroup(id);
+			$("#groupname").val(group.name);
+			$("#permission").val(group["permission_mode"].toLowerCase());
+		} else {
+			$("#groupname").val("");
+			$("#permission").val("ro");
+		}
+		$("#group-dialog").dialog('open');
 	}
+	
+	function onRemoveGroup() {
+		var id = that.getSelectedGroup();
+		if (id == null) return;
+		removeUserGroup(id, that.refresh, onServerError);
+	}
+	
+	function onEditGroup() {
+		var id = that.getSelectedGroup();
+		if (id == null) return;
+		openAddEditGroup(id);
+	}
+
+	function openAddGroupUsers() {
+		if (that.users == null) return;
 		
+		var availableUsers = that.getAvailableGroupUsers();
+		if (availableUsers.length == 0) {
+			alert("No more users available");
+			return;
+		}
+		
+		var grid = $("#add-users-list");
+		grid.jqGrid('clearGridData');
+		
+		for(var i=0;i < availableUsers.length;i++) {
+			grid.jqGrid('addRowData', availableUsers[i].id, availableUsers[i]);
+		}
+
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			},
+			Add: function() {
+				var sel = $("#add-users-list").getGridParam("selarrrow");
+				if (sel.length == 0) return;
+
+				var onSuccess = function() {
+					$("#add-group-users-dialog").dialog('close');
+					that.refreshGroupUsers();
+				}
+				
+				addGroupUsers(that.getSelectedGroup(), sel, onSuccess, onServerError);
+			}
+		}
+				
+		$("#add-group-users-dialog").dialog({
+			bgiframe: true,
+			height: 300,
+			width: 330,
+			modal: true,
+			resizable: true,
+			title: "Add Users to Group",
+			buttons: buttons
+		});
+		
+		$("#add-group-users-dialog").dialog('open');
+	}
+	
+	this.getAvailableGroupUsers = function() {
+		var result = [];
+		for (id in that.users) {
+			if (!that.groupUsers[id])
+				result.push(that.users[id]);
+		}
+		return result;
+	}
+
+	function onRemoveGroupUsers() {
+		var sel = that.getSelectedGroupUsers();
+		if (sel.length == 0) return;
+		removeGroupUsers(that.getSelectedGroup(), sel, that.refreshGroupUsers, onServerError);
+	}
 }

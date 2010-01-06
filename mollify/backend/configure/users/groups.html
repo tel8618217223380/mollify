@@ -11,9 +11,24 @@
 <div id="configuration-user-groups">
 	<div class="toolbar">
 		<button id="button-add-group" class="ui-state-default ui-corner-all">Add Group</button>
+		<button id="button-edit-group" class="ui-state-default ui-state-disabled ui-corner-all">Edit Group</button>
+		<button id="button-remove-group" class="ui-state-default ui-state-disabled ui-corner-all">Remove Group</button>
+		<button id="button-refresh-groups" class="ui-state-default ui-corner-all">Refresh</button>
 	</div>
 	<table id="groups-list">
 	</table>
+	<div id="group-details">
+		<div id="group-details-info" style="display:none"></div>
+		<div id="group-details-data" style="display:none">
+			<h1>Group Users</h1>
+			<div class="toolbar">
+				<button id="button-add-group-users" class="ui-state-default ui-corner-all">Add Users to Group</button>
+				<button id="button-remove-group-users" class="ui-state-default ui-state-disabled ui-corner-all">Remove Users from Group</button>
+				<button id="button-refresh-group-users" class="ui-state-default ui-corner-all">Refresh</button>
+			</div>
+			<table id="group-users-list"></table>
+		</div>
+	</div>
 </div>
 
 <div id="group-dialog" style="display:none">
@@ -29,4 +44,8 @@
 			<option value="ro">Read Only</option>
 		</select>
 	</div>
+</div>
+
+<div id="add-group-users-dialog" style="display:none">
+	<table id="add-users-list"></table>
 </div>

@@ -17,27 +17,16 @@ function MollifyUsersConfigurationView() {
 	this.onLoadView = onLoadView;
 	
 	function onLoadView() {
-		loadScript("users/common.js");
-		
+		loadScript("users/common.js", that.init);
+	}
+	
+	this.init = function() {
 		$("#button-add-user").click(openAddUser);
 		$("#button-remove-user").click(onRemoveUser);
 		$("#button-edit-user").click(onEditUser);
 		$("#button-refresh-users").click(that.refresh);
 		
-		that.refresh();
-	}
-	
-	this.refresh = function() {
-		getUsers(refreshUsers, onServerError);
-	}
-	
-	function refreshUsers(users) {
-		that.users = users;
-
-		var grid = $("#users-list");
-		grid.jqGrid('clearGridData');
-		
-		grid.jqGrid({        
+		$("#users-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
@@ -54,6 +43,19 @@ function MollifyUsersConfigurationView() {
 				that.updateButtons();
 			}
 		});
+		
+		that.refresh();
+	}
+	
+	this.refresh = function() {
+		getUsers(refreshUsers, onServerError);
+	}
+	
+	function refreshUsers(users) {
+		that.users = users;
+
+		var grid = $("#users-list");
+		grid.jqGrid('clearGridData');
 		
 		for(var i=0;i < that.users.length;i++) {
 			grid.jqGrid('addRowData', that.users[i].id, that.users[i]);
@@ -167,14 +169,14 @@ function MollifyUsersConfigurationView() {
 		});
 		
 		$("#edit-username").val(user.name);
-		$("#edit-permission").val(user["permission_mode"]);
+		$("#edit-permission").val(user["permission_mode"].toLowerCase());
 		$("#edit-user-dialog").dialog('open');
 	}
 	
 	function onRemoveUser() {
 		var id = $("#users-list").getGridParam("selrow");
 		if (id == null) return;
-		removeUser(id, refresh, onServerError);
+		removeUser(id, that.refresh, onServerError);
 	}
 	
 	function onEditUser() {

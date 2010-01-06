@@ -103,6 +103,18 @@
 		public function string($s) {
 			return mysql_real_escape_string($s, $this->db);
 		}
+		
+		public function arrayString($a, $quote = FALSE) {
+			$result = '';
+			$first = TRUE;
+			foreach($a as $s) {
+				if (!$first) $result .= ',';
+				if ($quote) $result .= "'".$s-"'";
+				else $result .= $s;
+				$first = FALSE;
+			}
+			return $result;
+		}
 	}
 	
 	class Result {
