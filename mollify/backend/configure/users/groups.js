@@ -42,7 +42,7 @@ function MollifyUserGroupsConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.updateControls();
+				that.onGroupSelectionChanged();
 			}
 		});
 
@@ -63,7 +63,7 @@ function MollifyUserGroupsConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.updateGroupUserButtons();
+				that.onGroupUserSelectionChanged();
 			}
 		});
 
@@ -116,7 +116,7 @@ function MollifyUserGroupsConfigurationView() {
 			grid.jqGrid('addRowData', group.id, group);
 		}
 		
-		that.updateControls();
+		that.onGroupSelectionChanged();
 		
 		getUsers(that.refreshUsers, onServerError);
 	}
@@ -149,41 +149,41 @@ function MollifyUserGroupsConfigurationView() {
 			grid.jqGrid('addRowData', groupUser.id, groupUser);
 		}
 				
-		that.updateGroupUserButtons();
+		that.onGroupUserSelectionChanged();
 	}
 		
-	this.updateControls = function() {
-		var selected = ($("#groups-list").getGridParam("selrow") != null);
+	this.onGroupSelectionChanged = function() {
+		var group = that.getSelectedGroup();
+		var selected = (group != null);
+		that.groupUsers = null;
 		
 		enableButton("button-remove-group", selected);
 		enableButton("button-edit-group", selected);
 		
 		if (that.groups.length == 0) {
-			that.userGroups = null;
-			
 			$("#group-details-info").html('Click "Add Group" to create a new user group');
+		} else {
+			if (selected) {
+				$("#group-users-list").jqGrid('setGridWidth', $("#group-details").width(), true);
+				$("#group-details-data-header").html("Group '" + that.getUserGroup(group).name + "' Users");
+				
+				that.refreshGroupUsers();
+			} else {
+				$("#group-details-info").html('Select a group from the list to view details');
+			}
+		}
+		
+		if (!selected || that.groups.length == 0) {
 			$("#group-details-info").show();
 			$("#group-details-data").hide();
 		} else {
-			if (selected) {
-				$("#group-details-info").hide();
-				$("#group-details-data").show();
-
-				$("#group-users-list").jqGrid('setGridWidth', $("#group-details").width(), true);
-
-				that.refreshGroupUsers();
-			} else {
-				that.userGroups = null;
-				
-				$("#group-details-info").html('Select a group from the list to view details');
-				$("#group-details-info").show();
-				$("#group-details-data").hide();
-			}
+			$("#group-details-info").hide();
+			$("#group-details-data").show();
 		}
 	}
 
-	this.updateGroupUserButtons = function() {
-		var selected = ($("#group-users-list").getGridParam("selarrrow").length > 0);
+	this.onGroupUserSelectionChanged = function() {
+		var selected = (that.getSelectedGroupUsers().length > 0);
 		enableButton("button-remove-group-users", selected);		
 	}
 	
