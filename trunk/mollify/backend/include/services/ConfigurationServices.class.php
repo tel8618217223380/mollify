@@ -157,19 +157,43 @@
 				$this->response()->success($this->env->configuration()->getUserGroup($this->path[1]));
 				return;
 			}
+			if (count($this->path) == 3) {
+				if ($this->path[2] != 'users') throw $this->invalidRequestException();
+				$this->response()->success($this->env->configuration()->getGroupUsers($this->path[1]));
+				return;
+			}
+			
 			throw $this->invalidRequestException();
 		}
 		
 		private function processPostUserGroups() {
-			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
+			if ((count($this->path) != 1 and count($this->path) != 3) or !$this->request->hasData()) throw $this->invalidRequestException();
 			
-			$group = $this->request->data;
-			if (!isset($group['name']) or !isset($group['permission_mode'])) throw $this->invalidRequestException();
-			$group['permission_mode'] = strtoupper($group['permission_mode']);
-			$this->env->authentication()->assertPermissionValue($group['permission_mode']);
-			
-			$this->env->configuration()->addUserGroup($group['name'], $group['permission_mode']);
-			$this->response()->success(TRUE);			
+			if (count($this->path) == 1) {
+				$group = $this->request->data;
+				if (!isset($group['name']) or !isset($group['permission_mode'])) throw $this->invalidRequestException();
+				$group['permission_mode'] = strtoupper($group['permission_mode']);
+				$this->env->authentication()->assertPermissionValue($group['permission_mode']);
+				
+				$this->env->configuration()->addUserGroup($group['name'], $group['permission_mode']);
+				$this->response()->success(TRUE);
+			} else {
+				$id = $this->path[1];		
+				$users = $this->request->data;
+				
+				switch ($this->path[2]) {
+					case 'users':
+						$this->env->configuration()->addGroupUsers($id, $users);
+						$this->response()->success(TRUE);
+						break;
+					case 'remove_users':
+						$this->env->configuration()->removeGroupUsers($id, $users);
+						$this->response()->success(TRUE);
+						break;
+					default:
+						throw $this->invalidRequestException();	
+				}
+			}
 		}
 
 		private function processPutUserGroups() {

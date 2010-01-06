@@ -96,8 +96,31 @@
 	height: 25px;
 }
 
-#button-refresh-users {
+#button-refresh-users, #button-refresh-groups, #button-refresh-group-users {
 	float: right;
+}
+
+#group-details {
+	margin-top: 10px;
+	border-top: 2px solid #b9b9b9;
+	padding-top: 4px;
+}
+
+#group-details-info {
+	padding-left: 3px;
+	padding-top: 7px;
+	font-size: 15px;
+	color: #bfbfbf;
+}
+
+#group-details-data h1 {
+	font-weight: bold;
+	font-size: 13px;
+	background-color: #ededed;
+	margin: 0 0 5px;
+	padding-top: 4px;
+	padding-bottom: 6px;
+	padding-left: 6px;
 }
 
 #user-dialog {

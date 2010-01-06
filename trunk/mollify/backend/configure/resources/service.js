@@ -43,6 +43,34 @@ function getUserGroups(success, fail) {
 	request("GET", 'configuration/usergroups', success, fail);
 }
 
+function getGroupUsers(id, success, fail) {
+	request("GET", 'configuration/usergroups/'+id+'/users', success, fail);
+}
+
+function addUserGroup(name, permission, success, fail) {
+	var data = JSON.stringify({name:name, "permission_mode":permission});
+	request("POST", 'configuration/usergroups', success, fail, data);
+}
+
+function editUserGroup(id, name, permission, success, fail) {
+	var data = JSON.stringify({name:name, "permission_mode":permission});
+	request("PUT", 'configuration/usergroups/'+id, success, fail, data);
+}
+
+function addGroupUsers(id, users, success, fail) {
+	var data = JSON.stringify(users);
+	request("POST", 'configuration/usergroups/'+id+'/users', success, fail, data);
+}
+
+function removeGroupUsers(id, users, success, fail) {
+	var data = JSON.stringify(users);
+	request("POST", 'configuration/usergroups/'+id+'/remove_users', success, fail, data);
+}
+
+function removeUserGroup(id, success, fail) {
+	request("DELETE", 'configuration/usergroups/'+id, success, fail);
+}
+
 function request(type, url, success, fail, data) {
 	if (preRequestCallback) preRequestCallback();
 	$.ajax({

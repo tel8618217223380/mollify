@@ -90,8 +90,9 @@
 		public function removeUser($userId) {
 			$id = $this->db->string($userId);
 
-			$this->db->startTransaction();			
+			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_group")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
 			if ($affected == 0)
@@ -107,6 +108,25 @@
 		public function getUserGroup($id) {
 			return $this->getUser($id);
 		}
+
+		public function getGroupUsers($id) {
+			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+		}
+
+		public function addGroupUsers($groupId, $userIds) {
+			$this->db->startTransaction();
+			foreach($userIds as $id) {
+				$this->db->update("INSERT INTO ".$this->db->table("user_group")." (group_id, user_id) VALUES (".$this->db->string($groupId).",".$this->db->string($id).")");
+			}
+			$this->db->commit();
+			return TRUE;
+		}
+
+		public function removeGroupUsers($groupId, $userIds = NULL) {
+			if ($userIds == NULL) $this->db->update("DELETE FROM ".$this->db->table("user_group")."  WHERE group_id = '".$this->db->string($groupId)."'");
+			else $this->db->update("DELETE FROM ".$this->db->table("user_group")." WHERE group_id = '".$this->db->string($groupId)."' and user_id in (".$this->db->arrayString($userIds).")");
+			return TRUE;
+		}
 		
 		public function addUserGroup($name, $permission) {
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, permission_mode, is_group) VALUES ('%s', '%s', 1)", $this->db->string($name), $this->db->string($permission)));
@@ -118,7 +138,11 @@
 		}
 		
 		public function removeUserGroup($id) {
-			return $this->removeUser($id);
+			$this->db->startTransaction();
+			$this->removeGroupUsers($id);
+			$this->removeUser($id);
+			$this->db->commit();
+			return TRUE;
 		}
 
 		private function getPassword($id) {
