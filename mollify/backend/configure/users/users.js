@@ -40,7 +40,7 @@ function MollifyUsersConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.updateButtons();
+				that.onUserSelectionChanged();
 			}
 		});
 		
@@ -52,30 +52,54 @@ function MollifyUsersConfigurationView() {
 	}
 	
 	function refreshUsers(users) {
-		that.users = users;
+		that.users = {};
 
 		var grid = $("#users-list");
 		grid.jqGrid('clearGridData');
 		
-		for(var i=0;i < that.users.length;i++) {
-			grid.jqGrid('addRowData', that.users[i].id, that.users[i]);
+		for(var i=0;i < users.length;i++) {
+			var user = users[i];
+			that.users[user.id] = user;
+			grid.jqGrid('addRowData', user.id, user);
 		}
 		
-		that.updateButtons();
+		that.onUserSelectionChanged();
+	}
+	
+	this.getSelectedUser = function() {
+		return $("#users-list").getGridParam("selrow");
 	}
 	
 	this.getUser = function(id) {
-		for(var i=0;i < that.users.length;i++) {
-			if (that.users[i].id == id) return that.users[i];
-		}
-		return null;
+		return that.users[id];
 	}
 	
-	this.updateButtons = function() {
-		var selected = ($("#users-list").getGridParam("selrow") != null);
+	this.onUserSelectionChanged = function() {
+		var user = that.getSelectedUser();
+		var selected = (user != null);
+		if (selected) user = that.getUser(user);
 		
 		enableButton("button-remove-user", selected);
-		enableButton("button-edit-user", selected);		
+		enableButton("button-edit-user", selected);
+		
+		if (that.users.length == 0) {
+			$("#user-details-info").html('Click "Add User" to create a new user');
+		} else {
+			if (selected) {
+				$("#user-details-data-left-header").html("User '" + user.name + "' Groups");
+				$("#user-details-data-right-header").html("User '" + user.name + "' Published Folders");
+			} else {
+				$("#user-details-info").html('Select a user from the list to view details');
+			}
+		}
+		
+		if (!selected || that.users.length == 0) {
+			$("#user-details-info").show();
+			$("#user-details-data").hide();
+		} else {
+			$("#user-details-info").hide();
+			$("#user-details-data").show();
+		}
 	}
 			
 	function validateUserData(edit) {

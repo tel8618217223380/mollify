@@ -84,7 +84,7 @@ function request(type, url, success, fail, data) {
 		},
 		error: function (xhr, desc, exc) {
 			if (postRequestCallback) postRequestCallback();
-			fail(xhr.responseText);
+			fail(JSON.parse(xhr.responseText));
 		}
 	});
 }
