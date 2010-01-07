@@ -32,7 +32,7 @@ $(document).ready(function() {
 
 function onSession(session) {
 	if (!session["authentication_required"] || !session["authenticated"] || session["default_permission"] != 'A') {
-		$("body").html("Mollify configuration utility requires admin user");
+		onUnauthorized();
 		return;
 	}
 	if (!session.features["configuration_update"]) {
@@ -74,8 +74,13 @@ function onLoadView() {
 	controller.onLoadView();
 }
 
+function onUnauthorized() {
+	$("body").html("<div class='error'><div class='title'>Unauthorized</div><div class='details'>Mollify configuration utility requires admin user</div></div>")
+}
+
 function onServerError(error) {
-	$("body").html("<div class='error'><div class='title'>"+error+"</div></div>");
+	if (error.code == 100) $("body").html("<div class='error'><div class='title'>Unauthorized</div></div>");
+	else $("body").html("<div class='error'><div class='title'>"+error+"</div></div>");
 }
 
 function onError(error) {

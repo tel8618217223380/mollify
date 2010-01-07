@@ -17,9 +17,9 @@
 	</div>
 	<table id="groups-list">
 	</table>
-	<div id="group-details">
-		<div id="group-details-info" style="display:none"></div>
-		<div id="group-details-data" style="display:none">
+	<div id="group-details" class="configuration-details">
+		<div id="group-details-info" class="details-info" style="display:none"></div>
+		<div id="group-details-data" class="details-data" style="display:none">
 			<h1 id="group-details-data-header">Group Users</h1>
 			<div class="toolbar">
 				<button id="button-add-group-users" class="ui-state-default ui-corner-all">Add Users to Group</button>
@@ -39,7 +39,6 @@
 	<div class='user-data' id='user-permission'>
 		<div class='title'>Permission:</div>
 		<select id='permission' class='user-data-value' name='permission'>
-			<option value="a">Administrator</option>
 			<option value="rw">Read and Write</option>
 			<option value="ro">Read Only</option>
 		</select>
