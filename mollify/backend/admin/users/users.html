@@ -11,8 +11,8 @@
 <div id="configuration-users">
 	<div class="toolbar">
 		<button id="button-add-user" class="ui-state-default ui-corner-all">Add User</button>
-		<button id="button-edit-user" class="ui-state-default ui-corner-all">Edit User</button>
-		<button id="button-remove-user" class="ui-state-default ui-corner-all">Remove User</button>
+		<button id="button-edit-user" class="ui-state-default ui-state-disabled ui-corner-all">Edit User</button>
+		<button id="button-remove-user" class="ui-state-default ui-state-disabled ui-corner-all">Remove User</button>
 		<button id="button-refresh-users" class="ui-state-default ui-corner-all">Refresh</button>
 	</div>
 	<table id="users-list">
@@ -20,17 +20,21 @@
 	<div id="user-details" class="configuration-details">
 		<div id="user-details-info" class="details-info"></div>
 		<div id="user-details-data" class="details-data" style="display:none">
-			<div id="user-details-data-left">
-				<h2 id="user-details-data-left-header">User Groups</h2>
+			<div id="user-groups-section" class="details-data-section left">
 				<div class="toolbar">
-					<button id="button-add-user-group" class="ui-state-default ui-corner-all">Add Group</button>
+					<h1>Groups</h1>
+					<button id="button-add-user-groups" class="ui-state-default ui-corner-all">Add to Group(s)</button>
+					<button id="button-remove-user-group" class="ui-state-default ui-state-disabled ui-corner-all">Remove from Group</button>
+					<button id="button-refresh-user-groups" class="ui-state-default ui-corner-all">Refresh</button>
 				</div>
 				<table id="user-groups-list"></table>
 			</div>
-			<div id="user-details-data-right">
-				<h2 id="user-details-data-right-header">User Published Folders</h2>
+			<div id="user-folders-section" class="details-data-section right">
 				<div class="toolbar">
-					<button id="button-add-user-folder" class="ui-state-default ui-corner-all">Add Folder</button>
+					<h1>Published Folders</h1>
+					<button id="button-add-user-folders" class="ui-state-default ui-corner-all">Add Folder(s)</button>
+					<button id="button-remove-user-folder" class="ui-state-default ui-state-disabled ui-corner-all">Remove Folder</button>
+					<button id="button-refresh-user-folders" class="ui-state-default ui-corner-all">Refresh</button>
 				</div>
 				<table id="user-folders-list"></table>
 			</div>
@@ -73,4 +77,8 @@
 			<option value="ro">Read Only</option>
 		</select>
 	</div>
+</div>
+
+<div id="add-user-groups-dialog" style="display:none">
+	<table id="add-groups-list"></table>
 </div>

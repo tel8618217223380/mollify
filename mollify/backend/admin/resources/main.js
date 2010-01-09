@@ -83,10 +83,15 @@ function onServerError(error) {
 		onUnauthorized();
 		return;
 	}
-	var errorHtml = $.template("<div class='error'><div class='title'>${title}</div><div class='details'>${details}</div><div id='error-info-title'>Details</div><div id='error-info'>${info}</div></div>");
-	$("body").html(errorHtml, {title: error.error, details: error.details, info:error.trace});
-	$('#error-info').hide();
-	$('#error-info-title').click(function(){ $('#error-info').slideToggle(); });
+	var errorHtml = $.template("<div class='error'><div class='title'>${title}</div><div class='details'>${details}</div><div id='error-info'><div id='error-info-title'>Details</div><div id='error-info-content'>${info}</div></div></div>");
+	$("body").html(errorHtml, {title: error.error, details: error.details, info: (error.trace ? error.trace : '' ) });
+	
+	if (!error.trace) {
+		$('#error-info').hide();
+	} else {
+		$('#error-info-content').hide();
+		$('#error-info-title').click(function(){ $('#error-info-title').toggleClass("open"); $('#error-info-content').slideToggle(); });
+	}
 }
 
 function onError(error) {

@@ -114,21 +114,31 @@
 			}
 			if (count($this->path) == 3 and $this->path[2] === 'groups') {
 				$this->response()->success($this->env->configuration()->getUsersGroups($this->path[1]));
-				return;				
+				return;
 			}
 			throw $this->invalidRequestException();
 		}
 		
 		private function processPostUsers() {
-			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
+			if (!$this->request->hasData()) throw $this->invalidRequestException();
 			
-			$user = $this->request->data;
-			if (!isset($user['name']) or !isset($user['password']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
-			$user['permission_mode'] = strtoupper($user['permission_mode']);
-			$this->env->authentication()->assertPermissionValue($user['permission_mode']);
-			
-			$this->env->configuration()->addUser($user['name'], $user['password'], $user['permission_mode']);
-			$this->response()->success(TRUE);			
+			if (count($this->path) == 1) {
+				$user = $this->request->data;
+				if (!isset($user['name']) or !isset($user['password']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
+				$user['permission_mode'] = strtoupper($user['permission_mode']);
+				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
+				
+				$this->env->configuration()->addUser($user['name'], $user['password'], $user['permission_mode']);
+				$this->response()->success(TRUE);
+				return;
+			}
+			if (count($this->path) == 3 and $this->path[2] === 'groups') {
+				$groups = $this->request->data;
+				$this->response()->success($this->env->configuration()->addUsersGroups($this->path[1], $groups));
+				return;
+			}
+			throw $this->invalidRequestException();
+
 		}
 
 		private function processPutUsers() {

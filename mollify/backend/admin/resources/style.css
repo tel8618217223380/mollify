@@ -17,7 +17,7 @@
 	padding-top: 7px;
 	padding-left: 6px;
 	background-color: #badce8;
-	margin-bottom: 4px;
+	margin-bottom: 0;
 	border-bottom: 1px solid #b9b9b9;
 }
 
@@ -79,13 +79,15 @@
 }
 
 #page {
-	
 }
 
 .toolbar {
 	clear: none;
 	width: 100%;
 	height: 30px;
+	background-color: #f1f3f3;
+	padding-top: 6px;
+	margin-bottom: 4px;
 }
 
 .toolbar button {
@@ -96,12 +98,12 @@
 	height: 25px;
 }
 
-#button-refresh-users, #button-refresh-groups, #button-refresh-group-users {
+#button-refresh-users, #button-refresh-groups, #button-refresh-group-users, #button-refresh-user-groups, #button-refresh-user-folders {
 	float: right;
 }
 
 .configuration-details {
-	margin-top: 10px;
+	margin-top: 5px;
 	border-top: 2px solid #b9b9b9;
 	padding-top: 4px;
 }
@@ -115,22 +117,64 @@
 
 .configuration-details h1 {
 	font-weight: bold;
-	font-size: 13px;
-	background-color: #ededed;
-	margin: 0 0 5px;
-	padding-top: 4px;
+	font-size: 14px;
+	background-color: #cdcfcf;
+	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
+	margin: 0;
+	height: 18px;
 }
 
-.configuration-details h2 {
+#error-info {
+	margin-bottom: 7px;
+	margin-right: 7px;
+}
+
+#error-info-title {
+	margin-top: 10px;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 11px;
+	color: #636363;
+	margin-left: 1px;
+}
+
+#error-info-title:hover {
+	color: #262626;
+}
+
+#error-info-content {
+	background-color: #ecdce2;
+	padding: 6px;
+	margin-top: 6px;
+	font: 12px "Courier New", Courier, mono;
+}
+
+.configuration-details .toolbar h1 {
 	font-weight: bold;
 	font-size: 13px;
-	background-color: #ededed;
-	margin: 0 0 5px;
+	margin: 0 10px 5px 0;
 	padding-top: 4px;
 	padding-bottom: 6px;
 	padding-left: 6px;
+	float: left;
+	background-color: transparent;
+}
+
+.details-data-section.left {
+	float: left;
+	width: 49%;
+	margin-right: 4px;
+}
+
+.details-data-section.right {
+	float: left;
+	width: 50%;
+}
+
+.details-data-section .toolbar {
+	display: inline-block;
 }
 
 #user-dialog {
@@ -169,3 +213,4 @@
 	background-color: #d6d8fc;
 	background-image: none;
 }
+
