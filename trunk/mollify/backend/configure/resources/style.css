@@ -106,14 +106,24 @@
 	padding-top: 4px;
 }
 
-.details-info {
+.details-info .message {
 	padding-left: 3px;
 	padding-top: 7px;
 	font-size: 15px;
 	color: #bfbfbf;
 }
 
-.details-data h1 {
+.configuration-details h1 {
+	font-weight: bold;
+	font-size: 13px;
+	background-color: #ededed;
+	margin: 0 0 5px;
+	padding-top: 4px;
+	padding-bottom: 6px;
+	padding-left: 6px;
+}
+
+.configuration-details h2 {
 	font-weight: bold;
 	font-size: 13px;
 	background-color: #ededed;

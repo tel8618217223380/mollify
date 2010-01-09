@@ -155,29 +155,29 @@ function MollifyUserGroupsConfigurationView() {
 	this.onGroupSelectionChanged = function() {
 		var group = that.getSelectedGroup();
 		var selected = (group != null);
+		if (selected) group = that.getUserGroup(group);
+		
 		that.groupUsers = null;
 		
 		enableButton("button-remove-group", selected);
 		enableButton("button-edit-group", selected);
 		
 		if (that.groups.length == 0) {
-			$("#group-details-info").html('Click "Add Group" to create a new user group');
+			$("#group-details-info").html('<div class="message">Click "Add Group" to create a new user group</div>');
 		} else {
 			if (selected) {
 				$("#group-users-list").jqGrid('setGridWidth', $("#group-details").width(), true);
-				$("#group-details-data-header").html("Group '" + that.getUserGroup(group).name + "' Users");
+				$("#group-details-info").html("<h1>Group '"+group.name+"'</h1>");
 				
 				that.refreshGroupUsers();
 			} else {
-				$("#group-details-info").html('Select a group from the list to view details');
+				$("#group-details-info").html('<div class="message">Select a group from the list to view details</div>');
 			}
 		}
 		
-		if (!selected || that.groups.length == 0) {
-			$("#group-details-info").show();
+		if (!selected) {
 			$("#group-details-data").hide();
 		} else {
-			$("#group-details-info").hide();
 			$("#group-details-data").show();
 		}
 	}

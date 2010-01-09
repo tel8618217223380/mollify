@@ -109,6 +109,10 @@
 			return $this->getUser($id);
 		}
 
+		public function getUsersGroups($userId) {
+			return $this->db->query("SELECT group.id, group.name, group.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."' ORDER BY group.id ASC")->rows();
+		}
+
 		public function getGroupUsers($id) {
 			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
