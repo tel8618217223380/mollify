@@ -66,6 +66,25 @@ function MollifyUsersConfigurationView() {
 		that.onUserSelectionChanged();
 	}
 	
+	this.refreshUserGroups = function() {
+		getUsersGroups(that.getSelectedUser(), onRefreshUserGroups, onServerError);
+	}
+	
+	function onRefreshUserGroups(groups) {
+		that.userGroups = {};
+		
+		var grid = $("#user-groups-list");
+		grid.jqGrid('clearGridData');
+
+		for (var i=0; i < groups.length; i++) {
+			var group = groups[i];
+			that.userGroups[group.id] = group;
+			grid.jqGrid('addRowData', group.id, group);
+		}
+				
+		//that.onGroupUserSelectionChanged();
+	}
+	
 	this.getSelectedUser = function() {
 		return $("#users-list").getGridParam("selrow");
 	}
@@ -83,21 +102,20 @@ function MollifyUsersConfigurationView() {
 		enableButton("button-edit-user", selected);
 		
 		if (that.users.length == 0) {
-			$("#user-details-info").html('Click "Add User" to create a new user');
+			$("#user-details-info").html('<div class="message">Click "Add User" to create a new user</div>');
 		} else {
 			if (selected) {
-				$("#user-details-data-left-header").html("User '" + user.name + "' Groups");
-				$("#user-details-data-right-header").html("User '" + user.name + "' Published Folders");
+				$("#user-details-info").html("<h1>User '"+user.name+"'</h1>");
+				
+				that.refreshUserGroups();
 			} else {
-				$("#user-details-info").html('Select a user from the list to view details');
+				$("#user-details-info").html('<div class="message">Select a user from the list to view details</div>');
 			}
 		}
 		
-		if (!selected || that.users.length == 0) {
-			$("#user-details-info").show();
+		if (!selected) {
 			$("#user-details-data").hide();
 		} else {
-			$("#user-details-info").hide();
 			$("#user-details-data").show();
 		}
 	}

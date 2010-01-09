@@ -112,6 +112,10 @@
 				$this->response()->success($this->env->configuration()->getUser($this->path[1]));
 				return;
 			}
+			if (count($this->path) == 3 and $this->path[2] === 'groups') {
+				$this->response()->success($this->env->configuration()->getUsersGroups($this->path[1]));
+				return;				
+			}
 			throw $this->invalidRequestException();
 		}
 		

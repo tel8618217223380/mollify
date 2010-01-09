@@ -79,8 +79,14 @@ function onUnauthorized() {
 }
 
 function onServerError(error) {
-	if (error.code == 100) $("body").html("<div class='error'><div class='title'>Unauthorized</div></div>");
-	else $("body").html("<div class='error'><div class='title'>"+error+"</div></div>");
+	if (error.code == 100) {
+		onUnauthorized();
+		return;
+	}
+	var errorHtml = $.template("<div class='error'><div class='title'>${title}</div><div class='details'>${details}</div><div id='error-info-title'>Details</div><div id='error-info'>${info}</div></div>");
+	$("body").html(errorHtml, {title: error.error, details: error.details, info:error.trace});
+	$('#error-info').hide();
+	$('#error-info-title').click(function(){ $('#error-info').slideToggle(); });
 }
 
 function onError(error) {

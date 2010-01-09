@@ -39,6 +39,10 @@ function removeUser(id, success, fail) {
 	request("DELETE", 'configuration/users/'+id, success, fail);
 }
 
+function getUsersGroups(user, success, fail) {
+	request("GET", 'configuration/users/'+user+'/groups', success, fail);
+}
+
 function getUserGroups(success, fail) {
 	request("GET", 'configuration/usergroups', success, fail);
 }
