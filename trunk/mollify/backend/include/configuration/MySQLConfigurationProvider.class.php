@@ -110,7 +110,16 @@
 		}
 
 		public function getUsersGroups($userId) {
-			return $this->db->query("SELECT group.id, group.name, group.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."' ORDER BY group.id ASC")->rows();
+			return $this->db->query("select id, name, permission_mode from ".$this->db->table("user")." where id in (SELECT user_group.group_id FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."') ORDER BY id ASC")->rows();
+		}
+		
+		public function addUsersGroups($userId, $groupIds) {
+			$this->db->startTransaction();
+			foreach($groupIds as $id) {
+				$this->db->update("INSERT INTO ".$this->db->table("user_group")." (group_id, user_id) VALUES (".$this->db->string($id).",".$this->db->string($userId).")");
+			}
+			$this->db->commit();
+			return TRUE;
 		}
 
 		public function getGroupUsers($id) {

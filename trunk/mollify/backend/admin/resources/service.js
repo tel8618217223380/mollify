@@ -21,6 +21,10 @@ function getFolders(success, fail) {
 	request("GET", 'configuration/folders', success, fail);
 }
 
+function getUserFolders(user, success, fail) {
+	request("GET", 'configuration/userfolders/'+user, success, fail);
+}
+
 function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
 }
@@ -41,6 +45,11 @@ function removeUser(id, success, fail) {
 
 function getUsersGroups(user, success, fail) {
 	request("GET", 'configuration/users/'+user+'/groups', success, fail);
+}
+
+function addUsersGroups(user, groups, success, fail) {
+	var data = JSON.stringify(groups);
+	request("POST", 'configuration/users/'+user+'/groups', success, fail, data);
 }
 
 function getUserGroups(success, fail) {

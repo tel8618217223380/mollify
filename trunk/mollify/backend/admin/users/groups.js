@@ -69,7 +69,6 @@ function MollifyUserGroupsConfigurationView() {
 
 		$("#add-users-list").jqGrid({        
 			datatype: "local",
-			multiselect: false,
 			autowidth: true,
 			multiselect: true,
 		   	colNames:['ID', 'Name'],

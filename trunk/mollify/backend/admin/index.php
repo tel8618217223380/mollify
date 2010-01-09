@@ -16,7 +16,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Mollify Configuration</title>
+		<title>Mollify Administration</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
 		<link rel="stylesheet" href="../resources/jquery-ui-1.7.2.custom.css">
@@ -33,9 +33,9 @@
 		<script type="text/javascript" src="resources/main.js"></script>
 	</head>	
 	
-	<body id="page-configure">
+	<body id="page-admin">
 		<header>
-			<h1>Configuration</h1>
+			<h1>Administration</h1>
 		</header>
 
 		<div class="content">
