@@ -285,7 +285,7 @@
 			$folderId = $this->path[2];
 			$folder = $this->request->data;
 			
-			$this->env->configuration()->updateFolder($userId, $folderId, $folder['name']);
+			$this->env->configuration()->updateUserFolder($userId, $folderId, $folder['name']);
 			$this->response()->success(TRUE);	
 		}
 		
