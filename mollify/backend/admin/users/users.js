@@ -14,6 +14,7 @@ function MollifyUsersConfigurationView() {
 	this.pageUrl = "users/users.html";
 	this.users = null;
 	this.groups = null;
+	this.folders = null;
 	this.userGroups = null;
 	this.userFolders = null;
 		
@@ -33,8 +34,9 @@ function MollifyUsersConfigurationView() {
 		$("#button-remove-user-group").click(that.onRemoveUserGroup);
 		$("#button-refresh-user-groups").click(that.refreshUserGroups);
 
-//		$("#button-add-user-folders").click(that.openAddUserGroup);
-//		$("#button-remove-user-folder").click(that.onRemoveUserGroup);
+		$("#button-add-user-folder").click(that.openAddUserFolder);
+		$("#button-edit-user-folder").click(that.onEditUserFolder);
+		$("#button-remove-user-folder").click(that.onRemoveUserFolder);
 		$("#button-refresh-user-folders").click(that.refreshUserFolders);
 		
 		$("#users-list").jqGrid({        
@@ -90,20 +92,6 @@ function MollifyUsersConfigurationView() {
 				that.onUserFolderSelectionChanged();
 			}
 		});
-		
-		$("#add-groups-list").jqGrid({        
-			datatype: "local",
-			autowidth: true,
-			multiselect: true,
-		   	colNames:['ID', 'Name', 'Permission Mode'],
-		   	colModel:[
-			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
-		   		{name:'name',index:'name', width:200, sortable:true},
-		   		{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
-		   	],
-		   	sortname:'id',
-		   	sortorder:'asc'
-		});
 
 		that.refresh();
 	}
@@ -131,7 +119,7 @@ function MollifyUsersConfigurationView() {
 		
 		that.onUserSelectionChanged();
 		
-		getUserGroups(that.refreshGroups, onServerError);
+		getUserGroups(function(groups) { that.refreshGroups(groups); getFolders(that.refreshFolders, onServerError) }, onServerError);
 	}
 	
 	this.refreshGroups = function(groups) {
@@ -142,7 +130,16 @@ function MollifyUsersConfigurationView() {
 			that.groups[group.id] = group;
 		}
 	}
-	
+
+	this.refreshFolders = function(folders) {
+		that.folders = {};
+		
+		for (var i=0; i < folders.length; i++) {
+			folder = folders[i];
+			that.folders[folder.id] = folder;
+		}
+	}
+		
 	this.refreshUserDetails = function() {
 		var user = that.getSelectedUser();
 		
@@ -243,11 +240,17 @@ function MollifyUsersConfigurationView() {
 		enableButton("button-remove-user-group", selected);
 	}
 	
-	this.onUserFolderSelectionChanged = function() {}
+	this.onUserFolderSelectionChanged = function() {
+		var folder = that.getSelectedUserFolder();
+		var selected = (folder != null);
+		
+		enableButton("button-edit-user-folder", selected);
+		enableButton("button-remove-user-folder", selected);
+	}
 			
 	this.validateUserData = function(edit) {
-		if (edit) $("#edit-user-dialog > .user-data").removeClass("invalid");
-		else $("#user-dialog > .user-data").removeClass("invalid");
+		if (edit) $("#edit-user-dialog > .form-data").removeClass("invalid");
+		else $("#user-dialog > .form-data").removeClass("invalid");
 	
 		var result = true;
 		
@@ -371,7 +374,24 @@ function MollifyUsersConfigurationView() {
 		}
 		
 		var grid = $("#add-groups-list");
-		grid.jqGrid('clearGridData');
+		
+		if (!that.addGroupsDialogInit) {
+			$("#add-groups-list").jqGrid({        
+				datatype: "local",
+				autowidth: true,
+				multiselect: true,
+			   	colNames:['ID', 'Name', 'Permission Mode'],
+			   	colModel:[
+				   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
+			   		{name:'name',index:'name', width:200, sortable:true},
+			   		{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
+			   	],
+			   	sortname:'id',
+			   	sortorder:'asc'
+			});
+		} else {
+			grid.jqGrid('clearGridData');
+		}
 		
 		for(var i=0;i < availableGroups.length;i++) {
 			grid.jqGrid('addRowData', availableGroups[i].id, availableGroups[i]);
@@ -379,7 +399,7 @@ function MollifyUsersConfigurationView() {
 
 		if (!that.addGroupsDialogInit) {
 			that.addGroupsDialogInit = true;
-						
+		
 			var buttons = {
 				Cancel: function() {
 					$(this).dialog('close');
@@ -425,6 +445,104 @@ function MollifyUsersConfigurationView() {
 		var id = that.getSelectedUserGroup();
 		if (id == null) return;
 		removeGroupUsers(id, [that.getSelectedUser()], that.refreshUserGroups, onServerError);
+	}
+
+	this.openAddUserFolder = function() {
+		if (that.folders == null) return;
+		
+		var availableFolders = that.getAvailableFolders();
+		if (availableFolders.length == 0) {
+			alert("No more folders available");
+			return;
+		}
+		
+		$("#published-folder-list").html('');
+		var item = $.template('<option value="${id}">${name} (${path})</option>');
+		
+		for(var i=0;i < availableFolders.length;i++) {
+			$("#published-folder-list").append(item, availableFolders[i]);
+		}
+				
+		var onFolderOrDefaultChanged = function() {
+			var useDefault = $("#use-default-folder-name").attr('checked');
+			
+			if (!useDefault) {
+				$("#published-folder-name").removeAttr("disabled");
+			} else {
+				$("#folder-name").removeClass("invalid");
+				var sel = $("#published-folder-list").val();
+				$("#published-folder-name").val(that.folders[sel].name);
+				$("#published-folder-name").attr("disabled", true);
+			}
+		}
+
+		if (!that.addFoldersDialogInit) {
+			that.addFoldersDialogInit = true;
+						
+			var buttons = {
+				Cancel: function() {
+					$(this).dialog('close');
+				},
+				Add: function() {
+					if (!that.validateFolder()) return;
+					
+					var useDefault = $("#use-default-folder-name").attr('checked');
+					var folder = $("#published-folder-list").val();
+					var name = useDefault ? null : $("#published-folder-name").val();
+					
+					var onSuccess = function() {
+						$("#add-user-folder-dialog").dialog('close');
+						that.refreshUserFolders();
+					}
+					
+					addUserFolder(that.getSelectedUser(), folder, name, onSuccess, onServerError);
+				}
+			}
+			
+			$("#add-user-folder-dialog").dialog({
+				bgiframe: true,
+				height: 300,
+				width: 270,
+				modal: true,
+				resizable: true,
+				autoshow: false,
+				title: "Add User Folder",
+				buttons: buttons
+			});
+			
+			$("#published-folder-list").change(onFolderOrDefaultChanged);
+			$("#use-default-folder-name").click(onFolderOrDefaultChanged);
+		}
+		
+		$("#use-default-folder-name").attr('checked', true);
+		onFolderOrDefaultChanged();
+		$("#add-user-folder-dialog").dialog('open');
+	}
+	
+	this.validateFolder = function() {
+		$("#folder-name").removeClass("invalid");
+		var useDefault = $("#use-default-folder-name").attr('checked');
+
+		if (!useDefault && $("#published-folder-name").val().length == 0) {
+			$("#folder-name").addClass("invalid");
+			return false;
+		}
+		return true;
+	}
+	
+	this.getAvailableFolders = function() {
+		var result = [];
+		for (id in that.folders) {
+			if (!that.userFolders[id])
+				result.push(that.folders[id]);
+		}
+		return result;
+	}
+	
+	this.onRemoveUserFolder = function() {
+		var id = that.getSelectedUserFolder();
+		if (id == null) return;
+		removeUserFolder(that.getSelectedUser(), id, that.refreshUserFolders, onServerError);
 	}
 
 }

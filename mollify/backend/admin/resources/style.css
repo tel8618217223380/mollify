@@ -1,4 +1,4 @@
-/* @override http://localhost:8888/mollify/configure/resources/style.css */
+/* @override http://localhost:8888/mollify/admin/resources/style.css */
 
 @import "../../resources/style.css";
 
@@ -177,17 +177,15 @@
 	display: inline-block;
 }
 
-#user-dialog {
+.form-data {
 }
 
-.user-data {
-}
-
-.user-data .title {
+.form-data .title {
 	margin-bottom: 3px;
+	font-weight: bold;
 }
 
-.user-data input, .user-data select {
+.form-data input, .form-data select {
 	background-color: #f3f3f3;
 	border: 1px solid #aaacac;
 	height: 16px;
@@ -196,11 +194,18 @@
 	width: 250px;
 }
 
-.user-data select{
+.form-data input[type=checkbox] {
+	width: 25px;
+	margin-top: 0;
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+.form-data select{
 	height: 22px;
 }
 
-.user-data.invalid input {
+.form-data.invalid input {
 	background-color: #edf4bf;
 }
 

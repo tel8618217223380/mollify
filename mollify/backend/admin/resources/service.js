@@ -25,6 +25,15 @@ function getUserFolders(user, success, fail) {
 	request("GET", 'configuration/userfolders/'+user, success, fail);
 }
 
+function addUserFolder(user, id, name, success, fail) {
+	var data = JSON.stringify({id:id, name:name});
+	request("POST", 'configuration/userfolders/'+user, success, fail, data);
+}
+
+function removeUserFolder(user, id, success, fail) {
+	request("DELETE", 'configuration/userfolders/'+user+'/'+id, success, fail);
+}
+
 function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
 }
