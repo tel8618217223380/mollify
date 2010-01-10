@@ -187,7 +187,7 @@ function MollifyUserGroupsConfigurationView() {
 	}
 	
 	function validateGroupData() {
-		$("#group-dialog > .user-data").removeClass("invalid");
+		$("#group-dialog > .form-data").removeClass("invalid");
 	
 		var result = true;
 		if ($("#groupname").val().length == 0) {

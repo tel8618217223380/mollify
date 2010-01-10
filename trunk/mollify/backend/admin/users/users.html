@@ -32,7 +32,8 @@
 			<div id="user-folders-section" class="details-data-section right">
 				<div class="toolbar">
 					<h1>Published Folders</h1>
-					<button id="button-add-user-folders" class="ui-state-default ui-corner-all">Add Folder(s)</button>
+					<button id="button-add-user-folder" class="ui-state-default ui-corner-all">Add Folder</button>
+					<button id="button-edit-user-folder" class="ui-state-default ui-state-disabled ui-corner-all">Edit Folder</button>
 					<button id="button-remove-user-folder" class="ui-state-default ui-state-disabled ui-corner-all">Remove Folder</button>
 					<button id="button-refresh-user-folders" class="ui-state-default ui-corner-all">Refresh</button>
 				</div>
@@ -43,21 +44,21 @@
 </div>
 
 <div id="add-user-dialog" style="display:none">
-	<div class='user-data' id='user-username'>
+	<div class='form-data' id='user-username'>
 		<div class='title'>User name:</div>
-		<input id='username' class='user-data-value' type='text' name='user' value=''>
+		<input id='username' class='form-data-value' type='text' name='user' value=''>
 	</div>
-	<div class='user-data' id='user-permission'>
+	<div class='form-data' id='user-permission'>
 		<div class='title'>Permission:</div>
-		<select id='permission' class='user-data-value' name='permission'>
+		<select id='permission' class='form-data-value' name='permission'>
 			<option value="a">Administrator</option>
 			<option value="rw">Read and Write</option>
 			<option value="ro">Read Only</option>
 		</select>
 	</div>
-	<div class='user-data' id='user-password'>
+	<div class='form-data' id='user-password'>
 		<div class='title'>Password:</div>
-		<input id='password' class='user-data-value' type='text' name='password' value=''>
+		<input id='password' class='form-data-value' type='text' name='password' value=''>
 	</div>
 	<div id="user-password-generator">
 		<button id="button-generate-user-password" class="ui-state-default ui-corner-all">Generate</button>
@@ -65,13 +66,13 @@
 </div>
 
 <div id="edit-user-dialog" style="display:none">
-	<div class='user-data' id='edit-user-username'>
+	<div class='form-data' id='edit-user-username'>
 		<div class='title'>User name:</div>
-		<input id='edit-username' class='user-data-value' type='text' name='user' value=''>
+		<input id='edit-username' class='form-data-value' type='text' name='user' value=''>
 	</div>
-	<div class='user-data' id='edit-user-permission'>
+	<div class='form-data' id='edit-user-permission'>
 		<div class='title'>Permission:</div>
-		<select id='edit-permission' class='user-data-value' name='permission'>
+		<select id='edit-permission' class='form-data-value' name='permission'>
 			<option value="a">Administrator</option>
 			<option value="rw">Read and Write</option>
 			<option value="ro">Read Only</option>
@@ -81,4 +82,17 @@
 
 <div id="add-user-groups-dialog" style="display:none">
 	<table id="add-groups-list"></table>
+</div>
+
+<div id="add-user-folder-dialog" style="display:none">
+	<div class='form-data' id='published-folder'>
+		<div class='title'>Folder:</div>
+		<select id='published-folder-list' class='form-data-value' name='folder'>
+		</select>
+	</div>
+	<div class='form-data' id='folder-name'>
+		<div class='title'>Name:</div>
+		<input id='use-default-folder-name' type="checkbox">Use default name</input>
+		<input id='published-folder-name' class='form-data-value' type='text' name='name' value=''>
+	</div>
 </div>
