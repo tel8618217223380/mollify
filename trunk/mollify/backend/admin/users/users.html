@@ -91,8 +91,24 @@
 		</select>
 	</div>
 	<div class='form-data' id='folder-name'>
-		<div class='title'>Name:</div>
-		<input id='use-default-folder-name' type="checkbox">Use default name</input>
+		<div id="name-title">
+			<div class='title'>Name:</div>
+			<div class='titled-checkbox'><input id='use-default-folder-name' type="checkbox"/>Use default name</div>
+		</div>
 		<input id='published-folder-name' class='form-data-value' type='text' name='name' value=''>
+	</div>
+</div>
+
+<div id="edit-user-folder-dialog" style="display:none">
+	<div class='form-data' id='edit-published-folder'>
+		<div class='title'>Path:</div>
+		<input id='published-folder-path' class='form-data-value' disabled="true" type='text' name='path' value=''>
+	</div>
+	<div class='form-data' id='edit-folder-name'>
+		<div id="edit-name-title">
+			<div class='title'>Name:</div>
+			<div class='titled-checkbox'><input id='edit-use-default-folder-name' type="checkbox"/>Use default name</div>
+		</div>
+		<input id='edit-published-folder-name' class='form-data-value' type='text' name='name' value=''>
 	</div>
 </div>

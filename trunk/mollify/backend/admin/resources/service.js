@@ -30,6 +30,11 @@ function addUserFolder(user, id, name, success, fail) {
 	request("POST", 'configuration/userfolders/'+user, success, fail, data);
 }
 
+function editUserFolder(user, id, name, success, fail) {
+	var data = JSON.stringify({name:name});
+	request("PUT", 'configuration/userfolders/'+user+'/'+id, success, fail, data);
+}
+
 function removeUserFolder(user, id, success, fail) {
 	request("DELETE", 'configuration/userfolders/'+user+'/'+id, success, fail);
 }

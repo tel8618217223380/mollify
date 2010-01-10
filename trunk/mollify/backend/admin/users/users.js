@@ -35,7 +35,7 @@ function MollifyUsersConfigurationView() {
 		$("#button-refresh-user-groups").click(that.refreshUserGroups);
 
 		$("#button-add-user-folder").click(that.openAddUserFolder);
-		$("#button-edit-user-folder").click(that.onEditUserFolder);
+		$("#button-edit-user-folder").click(that.openEditUserFolder);
 		$("#button-remove-user-folder").click(that.onRemoveUserFolder);
 		$("#button-refresh-user-folders").click(that.refreshUserFolders);
 		
@@ -484,7 +484,7 @@ function MollifyUsersConfigurationView() {
 					$(this).dialog('close');
 				},
 				Add: function() {
-					if (!that.validateFolder()) return;
+					if (!that.validateFolder(false)) return;
 					
 					var useDefault = $("#use-default-folder-name").attr('checked');
 					var folder = $("#published-folder-list").val();
@@ -501,7 +501,7 @@ function MollifyUsersConfigurationView() {
 			
 			$("#add-user-folder-dialog").dialog({
 				bgiframe: true,
-				height: 300,
+				height: 200,
 				width: 270,
 				modal: true,
 				resizable: true,
@@ -518,13 +518,79 @@ function MollifyUsersConfigurationView() {
 		onFolderOrDefaultChanged();
 		$("#add-user-folder-dialog").dialog('open');
 	}
-	
-	this.validateFolder = function() {
-		$("#folder-name").removeClass("invalid");
-		var useDefault = $("#use-default-folder-name").attr('checked');
 
-		if (!useDefault && $("#published-folder-name").val().length == 0) {
-			$("#folder-name").addClass("invalid");
+	this.openEditUserFolder = function() {
+		if (that.folders == null) return;
+		var selected = that.getSelectedUserFolder();
+		if (selected == null) return;
+		selected = that.userFolders[selected];
+			
+		var onFolderOrDefaultChanged = function() {
+			var useDefault = $("#edit-use-default-folder-name").attr('checked');
+			
+			if (!useDefault) {
+				$("#edit-published-folder-name").removeAttr("disabled");
+			} else {
+				$("#edit-folder-name").removeClass("invalid");
+				var sel = that.getSelectedUserFolder();
+				$("#edit-published-folder-name").val(that.folders[sel].name);
+				$("#edit-published-folder-name").attr("disabled", true);
+			}
+		}
+
+		if (!that.editFolderDialogInit) {
+			that.editFolderDialogInit = true;
+						
+			var buttons = {
+				Cancel: function() {
+					$(this).dialog('close');
+				},
+				Edit: function() {
+					if (!that.validateFolder(true)) return;
+					
+					var useDefault = $("#edit-use-default-folder-name").attr('checked');
+					var name = useDefault ? null : $("#edit-published-folder-name").val();
+					
+					var onSuccess = function() {
+						$("#edit-user-folder-dialog").dialog('close');
+						that.refreshUserFolders();
+					}
+					
+					editUserFolder(that.getSelectedUser(), that.getSelectedUserFolder(), name, onSuccess, onServerError);
+				}
+			}
+			
+			$("#edit-user-folder-dialog").dialog({
+				bgiframe: true,
+				height: 200,
+				width: 270,
+				modal: true,
+				resizable: true,
+				autoshow: false,
+				title: "Edit User Folder",
+				buttons: buttons
+			});
+		}
+		
+		$("#published-folder-path").val(selected.path);
+		$("#edit-use-default-folder-name").attr('checked', (selected.name == null));
+		
+		$("#edit-use-default-folder-name").click(onFolderOrDefaultChanged);
+		onFolderOrDefaultChanged();
+		if (selected.name) $("#edit-published-folder-name").val(selected.name);
+		
+		$("#edit-user-folder-dialog").dialog('open');
+	}
+	
+	this.validateFolder = function(edit) {
+		if (edit) $("#edit-folder-name").removeClass("invalid");
+		else $("#folder-name").removeClass("invalid");
+		
+		var useDefault = $(edit ? "#edit-use-default-folder-name" : "#use-default-folder-name").attr('checked');
+		var value = $(edit ? "#edit-published-folder-name" : "#published-folder-name").val();
+		
+		if (!useDefault && value.length == 0) {
+			$(edit ? "#edit-published-folder-name" : "#published-folder-name").addClass("invalid");
 			return false;
 		}
 		return true;
@@ -544,7 +610,6 @@ function MollifyUsersConfigurationView() {
 		if (id == null) return;
 		removeUserFolder(that.getSelectedUser(), id, that.refreshUserFolders, onServerError);
 	}
-
 }
 
 function generatePassword() {

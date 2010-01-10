@@ -209,6 +209,22 @@
 	background-color: #edf4bf;
 }
 
+#use-default-folder-name {
+	float: left;
+}
+
+.titled-checkbox {
+	display: inline-block;
+}
+
+#name-title div.titled-checkbox, #edit-name-title div.titled-checkbox {
+	float: right;
+}
+
+#name-title .title, #edit-name-title .title {
+	float: left;
+}
+
 #user-password-generator {
 	margin-top: 4px;
 }
