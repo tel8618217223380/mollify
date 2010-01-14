@@ -29,6 +29,7 @@
 	<extend-property name="locale" values="pt"/>
 	<extend-property name="locale" values="pl"/>
 	<extend-property name="locale" values="sr"/>
+	<extend-property name="locale" values="kr"/>
 	
 	<define-property name="demo" values="true,false" />
 	<property-provider name="demo">
