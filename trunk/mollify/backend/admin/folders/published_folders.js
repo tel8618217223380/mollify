@@ -186,17 +186,36 @@ function MollifyPublishedFoldersConfigurationView() {
 					$(this).dialog('close');
 				},
 				Add: function() {
-					if (!that.validateFolderData()) return;
+					$("#folder-dialog > .form-data").removeClass("invalid");
+				
+					var result = true;
+					if ($("#folder-name-field").val().length == 0) {
+						$("#folder-name").addClass("invalid");
+						result = false;
+					}
+					if ($("#folder-path-field").val().length == 0) {
+						$("#folder-path").addClass("invalid");
+						result = false;
+					}
+					if (!result) return;
 					
-//					var name = $("#group-name-field").val();
-//					var desc = $("#group-description-field").val();
+					var name = $("#folder-name-field").val();
+					var path = $("#folder-path-field").val();
 					
 					onSuccess = function() {
 						$("#folder-dialog").dialog('close');
 						that.refresh();
 					}
+					
+					onFail = function(err) {
+						if (err.code == 105) {
+							$("#folder-path").addClass("invalid");
+							return;
+						}
+						onServerError(err);
+					}
 		
-//					addFolder(name, desc, onSuccess, onServerError);
+					addFolder(name, path, onSuccess, onFail);
 				}
 			}
 			
@@ -214,8 +233,8 @@ function MollifyPublishedFoldersConfigurationView() {
 			});
 		}
 		
-//		$("#group-name-field").val("");
-//		$("#group-description-field").val("");
+		$("#folder-name-field").val("");
+		$("#folder-path-field").val("");
 		
 		$("#folder-dialog").dialog('open');
 	}

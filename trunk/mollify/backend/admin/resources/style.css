@@ -103,12 +103,18 @@
 }
 
 .toggle-panel-title {
+	background: url(../../resources/images/arrow.png) no-repeat 2px 1px;
 	font-weight: bold;
 	font-size: 10px;
 	color: #777;
 	cursor: pointer;
 	padding-bottom: 4px;
-	padding-left: 1px;
+	padding-left: 12px;
+	margin-left: 4px;
+}
+
+.toggle-panel-title.open {
+	background: url(../../resources/images/arrow_down.png) no-repeat 0 4px;
 }
 
 .toggle-panel-title:hover {
@@ -116,12 +122,31 @@
 } 
 
 .toggle-panel-content {
-	background-color: #e0e0e0;
+	background-color: #eef0f0;
 	padding: 6px;
+	border: 1px dotted #c6c6c6;
+}
+
+#folder-instructions {
+	height: 170px;
+	overflow: auto;
 }
 
 .toggle-panel-content p {
-	margin-top: 0;	
+	margin-top: 0;
+}
+
+.toggle-panel-content p:last-child {
+	margin-bottom: 0;
+}
+
+.toggle-panel-content * {
+	font-size: 11px;
+	padding-top: 4px;
+}
+
+.toggle-panel-content code {
+	font-size: 12px;
 }
 
 .configuration-details {
@@ -205,6 +230,14 @@
 .form-data .title {
 	margin-bottom: 3px;
 	font-weight: bold;
+	display: block;
+}
+
+.title-info {
+	display: inline;
+	margin-left: 6px;
+	font-size: 9px;
+	color: #7c7c7c;
 }
 
 .form-data input, .form-data select {
