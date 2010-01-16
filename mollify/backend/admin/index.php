@@ -31,6 +31,13 @@
 		<script type="text/javascript" src="../resources/jquery.jqGrid.min.js"></script>
 		<script type="text/javascript" src="resources/service.js"></script>
 		<script type="text/javascript" src="resources/main.js"></script>
+		<script type="text/javascript">
+			var scriptLocation = '<?php echo dirname($_SERVER['SCRIPT_FILENAME']);?>';
+			
+			function getScriptLocation() {
+				return scriptLocation;
+			}
+		</script>
 	</head>	
 	
 	<body id="page-admin">

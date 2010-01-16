@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli Järvelä
+	Copyright (c) 2008- Samuli J‰rvel‰
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -208,7 +208,7 @@ function MollifyUserGroupsConfigurationView() {
 			$("#group-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
-				height: 300,
+				height: 'auto',
 				width: 270,
 				modal: true,
 				resizable: false,
@@ -310,7 +310,7 @@ function MollifyUserGroupsConfigurationView() {
 					
 			$("#add-group-users-dialog").dialog({
 				bgiframe: true,
-				height: 300,
+				height: 'auto',
 				width: 330,
 				modal: true,
 				resizable: true,

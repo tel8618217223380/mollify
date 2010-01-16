@@ -119,4 +119,11 @@ function initWidgets() {
 			}
 		);
 	});
+	
+	$('.toggle-panel').each(function() {
+		$(this).children('.toggle-panel-content').hide();
+		$(this).children('.toggle-panel-title').click(function(){
+			$(this).toggleClass("open"); $(this).parent().children('.toggle-panel-content').slideToggle();
+		});
+	});
 }

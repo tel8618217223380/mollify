@@ -98,8 +98,30 @@
 	height: 25px;
 }
 
-#button-refresh-users, #button-refresh-groups, #button-refresh-group-users, #button-refresh-user-groups, #button-refresh-user-folders {
+#button-refresh-users, #button-refresh-groups, #button-refresh-group-users, #button-refresh-user-groups, #button-refresh-user-folders, #button-refresh-folders, #button-refresh-folder-users {
 	float: right;
+}
+
+.toggle-panel-title {
+	font-weight: bold;
+	font-size: 10px;
+	color: #777;
+	cursor: pointer;
+	padding-bottom: 4px;
+	padding-left: 1px;
+}
+
+.toggle-panel-title:hover {
+	color: #000;
+} 
+
+.toggle-panel-content {
+	background-color: #e0e0e0;
+	padding: 6px;
+}
+
+.toggle-panel-content p {
+	margin-top: 0;	
 }
 
 .configuration-details {

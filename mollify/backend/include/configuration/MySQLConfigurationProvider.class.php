@@ -181,7 +181,25 @@
 		public function getFolders() {
 			return $this->db->query("SELECT id, name, path FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
 		}
-	
+		
+		public function getFolderUsers($id) {
+			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+		}
+
+		public function addFolderUsers($folderId, $userIds) {
+			$this->db->startTransaction();
+			foreach($userIds as $id) {
+				$this->db->update("INSERT INTO ".$this->db->table("user_folder")." (folder_id, user_id) VALUES (".$this->db->string($folderId).",".$this->db->string($id).")");
+			}
+			$this->db->commit();
+			return TRUE;
+		}
+
+		public function removeFolderUsers($folderId, $userIds) {
+			$this->db->update("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id = '".$this->db->string($folderId)."' and user_id in (".$this->db->arrayString($userIds).")");
+			return TRUE;
+		}
+
 		public function addFolder($name, $path) {
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("folder")." (name, path) VALUES ('%s', '%s')", $this->db->string($name), $this->db->string($path)));
 			return TRUE;
