@@ -105,6 +105,10 @@
 		public function publicId($filesystemId, $path = "") {
 			return base64_encode($filesystemId.":".DIRECTORY_SEPARATOR.$path);
 		}
+		
+		public function assertFilesystem($folderDef) {
+			$this->createFilesystem('', $folderDef);	//create filesystem to see if it is valid
+		}
 
 		public function assertRights($item, $required, $desc = "Unknown action") {
 			$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->id()."/".$desc);

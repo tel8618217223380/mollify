@@ -286,6 +286,7 @@
 				$folder = $this->request->data;
 				if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
 				
+				$this->env->filesystem()->assertFilesystem($folder);
 				$this->env->configuration()->addFolder($folder['name'], $folder['path']);
 				$this->response()->success(TRUE);
 				return;

@@ -37,26 +37,23 @@
 		<input id='folder-name-field' class='form-data-value' type='text' name='name' value=''>
 	</div>
 	<div class='form-data' id='folder-path'>
-		<div class='title'>Folder path (see instructions below):</div>
+		<div class='title'>Folder path:<div class="title-info">(see instructions below)</div></div>
 		<input id='folder-path-field' class='form-data-value' type='text' name='path' value=''>
 	</div>
 	<div class='toggle-panel'>
 		<div class='toggle-panel-title' id='folder-instructions-toggle'>Instructions</div>
 		<div class='toggle-panel-content' id='folder-instructions'>
 			<p>
-				Folder path is the location of the folder in the server filesystem, and this is not visible to users.
+				Folder path is the location of the published folder in the server filesystem, and it can be given either as absolute or as relative.
 			</p>
 			<p>
-				Folder path can be given either as absolute or as relative.
+				<b>Absolute</b> path is a path that points to the same location on the file system regardless of the working directory, and is usually written in reference to a root directory.
 			</p>
 			<p>
-				<b>Absolute</b> path is a path that points to the same location on the file system regardless of the working directory, and is usually written in reference to a root directory. An example of a absolute path: <code>/var/www/files/images/</code> or <code>C:\files\images\</code>
+				<b>Relative</b> path is relative to the working directory, and in Mollify it is the backend folder.
 			</p>
 			<p>
-				<b>Relative</b> path in Mollify is relative to the Mollify backend folder. An example of a relative path: <code>../../files/images/</code>
-			</p>
-			<p>
-				Current Mollify installation folder absolute path is: <code id='script-location'></code>
+				Current Mollify backend folder absolute path is: <code id='script-location'></code>
 			</p>
 		</div>
 	</div>
