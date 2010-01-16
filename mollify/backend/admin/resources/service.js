@@ -22,21 +22,21 @@ function getFolders(success, fail) {
 }
 
 function getUserFolders(user, success, fail) {
-	request("GET", 'configuration/userfolders/'+user, success, fail);
+	request("GET", 'configuration/users/'+user+'/folders', success, fail);
 }
 
 function addUserFolder(user, id, name, success, fail) {
 	var data = JSON.stringify({id:id, name:name});
-	request("POST", 'configuration/userfolders/'+user, success, fail, data);
+	request("POST", 'configuration/users/'+user+'/folders', success, fail, data);
 }
 
 function editUserFolder(user, id, name, success, fail) {
 	var data = JSON.stringify({name:name});
-	request("PUT", 'configuration/userfolders/'+user+'/'+id, success, fail, data);
+	request("PUT", 'configuration/users/'+user+'/folders/'+id, success, fail, data);
 }
 
 function removeUserFolder(user, id, success, fail) {
-	request("DELETE", 'configuration/userfolders/'+user+'/'+id, success, fail);
+	request("DELETE", 'configuration/users/'+user+'/folders/'+id, success, fail);
 }
 
 function getUsers(success, fail) {
@@ -74,13 +74,13 @@ function getGroupUsers(id, success, fail) {
 	request("GET", 'configuration/usergroups/'+id+'/users', success, fail);
 }
 
-function addUserGroup(name, permission, success, fail) {
-	var data = JSON.stringify({name:name, "permission_mode":permission});
+function addUserGroup(name, desc, success, fail) {
+	var data = JSON.stringify({name:name, description:desc});
 	request("POST", 'configuration/usergroups', success, fail, data);
 }
 
-function editUserGroup(id, name, permission, success, fail) {
-	var data = JSON.stringify({name:name, "permission_mode":permission});
+function editUserGroup(id, name, desc, success, fail) {
+	var data = JSON.stringify({name:name, description:desc});
 	request("PUT", 'configuration/usergroups/'+id, success, fail, data);
 }
 

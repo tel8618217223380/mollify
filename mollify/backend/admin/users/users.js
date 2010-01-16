@@ -62,11 +62,11 @@ function MollifyUsersConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','Permission Mode'],
+		   	colNames:['ID', 'Name', 'Description'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
-				{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
+		   		{name:'description',index:'description', width:300, sortable:true},
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -277,6 +277,7 @@ function MollifyUsersConfigurationView() {
 			that.addUserDialogInit = true;
 
 			$("#add-user-dialog").dialog({
+				autoOpen: false,
 				bgiframe: true,
 				height: 300,
 				width: 270,
@@ -325,14 +326,14 @@ function MollifyUsersConfigurationView() {
 				width: 270,
 				modal: true,
 				resizable: false,
-				autoshow: false,
+				autoOpen: false,
 				title: "Edit User",
 				buttons: {
 					Cancel: function() {
 						$(this).dialog('close');
 					},
 					Edit: function() {
-						if (!validateUserData(true)) return;
+						if (!that.validateUserData(true)) return;
 						
 						var name = $("#edit-username").val();
 						var permission = $("#edit-permission").val();
@@ -423,7 +424,7 @@ function MollifyUsersConfigurationView() {
 				width: 480,
 				modal: true,
 				resizable: true,
-				autoshow: false,
+				autoOpen: false,
 				title: "Add Groups",
 				buttons: buttons
 			});
@@ -505,7 +506,7 @@ function MollifyUsersConfigurationView() {
 				width: 270,
 				modal: true,
 				resizable: true,
-				autoshow: false,
+				autoOpen: false,
 				title: "Add User Folder",
 				buttons: buttons
 			});
@@ -566,7 +567,7 @@ function MollifyUsersConfigurationView() {
 				width: 270,
 				modal: true,
 				resizable: true,
-				autoshow: false,
+				autoOpen: false,
 				title: "Edit User Folder",
 				buttons: buttons
 			});
@@ -610,30 +611,4 @@ function MollifyUsersConfigurationView() {
 		if (id == null) return;
 		removeUserFolder(that.getSelectedUser(), id, that.refreshUserFolders, onServerError);
 	}
-}
-
-function generatePassword() {
-	var length = 8;
-	var password = '';
-	
-    for (i = 0; i < length; i++) {
-    	while (true) {
-	        c = getRandomNumber();
-	        if (isValidPasswordChar(c)) break;
-		}
-        password += String.fromCharCode(c);
-    }
-    return password;
-}
-
-function isValidPasswordChar(c) {
-    if (c >= 33 && c<= 47) return false;
-    if (c >= 58 && c <= 64) return false;
-    if (c >= 91 && c <= 96) return false;
-    if (c >= 123 && c <=126) return false;
-    return true;
-}
-
-function getRandomNumber() {
-	return (parseInt(Math.random() * 1000) % 94) + 33;
 }

@@ -16,21 +16,13 @@ function MollifyPublishedFoldersConfigurationView() {
 		
 	this.onLoadView = onLoadView;
 	
-	function onLoadView() {		
-		that.refresh();
-	}
-	
-	this.refresh = function() {
-		getFolders(refreshFolders, onServerError);
-	}
-	
-	function refreshFolders(folders) {
-		that.folders = folders;
+	function onLoadView() {
+		$("#button-add-folder").click(that.openAddFolder);
+		$("#button-remove-folder").click(that.onRemoveFolder);
+		$("#button-edit-folder").click(that.onEditFolder);
+		$("#button-refresh-folders").click(that.refresh);
 
-		var grid = $("#folders-list");
-		grid.jqGrid('clearGridData');
-		
-		grid.jqGrid({        
+		$("#folders-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
@@ -44,17 +36,51 @@ function MollifyPublishedFoldersConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.updateButtons();
+				that.onFolderSelectionChanged();
 			}
 		});
+
+		that.refresh();
+	}
+	
+	this.getFolder = function(id) {
+		return that.folders[id];
+	}
+	
+	this.getSelectedFolder = function() {
+		return $("#folders-list").getGridParam("selrow");
+	}
+	
+	this.refresh = function() {
+		getFolders(that.onRefreshFolders, onServerError);
+	}
+	
+	this.onRefreshFolders = function(folders) {
+		that.folders = {};
+
+		var grid = $("#folders-list");
+		grid.jqGrid('clearGridData');
 		
-		for(var i=0;i < that.folders.length;i++) {
-			grid.jqGrid('addRowData', that.folders[i].id, that.folders[i]);
+		for(var i=0;i < folders.length;i++) {
+			var folder = folders[i];
+			that.folders[folder.id] = folder;
+
+			grid.jqGrid('addRowData', folder.id, folder);
 		}
 		
-		that.updateButtons();
+		this.onFolderSelectionChanged();
 	}
 		
-	this.updateButtons = function() {
-	}				
+	this.onFolderSelectionChanged = function() {
+		var folder = that.getSelectedFolder();
+		var selected = (folder != null);
+		if (selected) folder = that.getFolder(folder);
+		
+		enableButton("button-remove-folder", selected);
+		enableButton("button-edit-folder", selected);		
+	}
+	
+	this.openAddFolder = function() {}
+	this.openEditFolder = function() {}
+	this.onRemoveFolder = function() {}
 }

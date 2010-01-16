@@ -10,7 +10,22 @@
 
 <div id="configuration-published-folders">
 	<div class="toolbar">
+		<button id="button-add-folder" class="ui-state-default ui-corner-all">Add Folder</button>
+		<button id="button-edit-folder" class="ui-state-default ui-state-disabled ui-corner-all">Edit Folder</button>
+		<button id="button-remove-folder" class="ui-state-default ui-state-disabled ui-corner-all">Remove Folder</button>
+		<button id="button-refresh-folders" class="ui-state-default ui-corner-all">Refresh</button>
 	</div>
 	<table id="folders-list">
 	</table>
+</div>
+
+<div id="folder-dialog" style="display:none">
+	<div class='form-data' id='group-name'>
+		<div class='title'>Folder name:</div>
+		<input id='folder-name-field' class='form-data-value' type='text' name='name' value=''>
+	</div>
+	<div class='form-data' id='group-description'>
+		<div class='title'>Folder path:</div>
+		<input id='folder-path-field' class='form-data-value' type='text' name='path' value=''>
+	</div>
 </div>

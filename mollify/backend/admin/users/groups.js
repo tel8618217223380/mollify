@@ -23,9 +23,9 @@ function MollifyUserGroupsConfigurationView() {
 	}
 	
 	this.init = function() {		
-		$("#button-add-group").click(openAddGroup);
-		$("#button-remove-group").click(onRemoveGroup);
-		$("#button-edit-group").click(onEditGroup);
+		$("#button-add-group").click(that.openAddGroup);
+		$("#button-remove-group").click(that.onRemoveGroup);
+		$("#button-edit-group").click(that.onEditGroup);
 		$("#button-refresh-groups").click(that.refresh);
 
 		$("#groups-list").jqGrid({        
@@ -33,11 +33,11 @@ function MollifyUserGroupsConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','Permission'],
+		   	colNames:['ID', 'Name', 'Description'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
-				{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
+		   		{name:'description',index:'description', width:300, sortable:true},
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -46,8 +46,8 @@ function MollifyUserGroupsConfigurationView() {
 			}
 		});
 
-		$("#button-add-group-users").click(openAddGroupUsers);
-		$("#button-remove-group-users").click(onRemoveGroupUsers);
+		$("#button-add-group-users").click(that.openAddGroupUsers);
+		$("#button-remove-group-users").click(that.onRemoveGroupUsers);
 		$("#button-refresh-group-users").click(that.refreshGroupUsers);
 
 		$("#group-users-list").jqGrid({        
@@ -100,10 +100,10 @@ function MollifyUserGroupsConfigurationView() {
 	}
 
 	this.refresh = function() {
-		getUserGroups(refreshGroups, onServerError);
+		getUserGroups(that.refreshGroups, onServerError);
 	}
 	
-	function refreshGroups(groups) {
+	this.refreshGroups = function(groups) {
 		that.groups = {};
 
 		var grid = $("#groups-list");
@@ -186,89 +186,93 @@ function MollifyUserGroupsConfigurationView() {
 		enableButton("button-remove-group-users", selected);		
 	}
 	
-	function validateGroupData() {
+	this.validateGroupData = function() {
 		$("#group-dialog > .form-data").removeClass("invalid");
 	
 		var result = true;
-		if ($("#groupname").val().length == 0) {
-			$("#user-username").addClass("invalid");
+		if ($("#group-name-field").val().length == 0) {
+			$("#group-name").addClass("invalid");
 			result = false;
 		}
 		return result;
 	}
 
-	function openAddGroup() {
-		openAddEditGroup(null);
+	this.openAddGroup = function() {
+		that.openAddEditGroup(null);
 	}
 	
-	function openAddEditGroup(id) {
+	this.openAddEditGroup = function(id) {
 		if (!that.addEditGroupDialogInit) {
 			that.addEditGroupDialogInit = true;
-
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				}
-			}
-	
-			var action = function() {
-				if (!validateGroupData()) return;
-				
-				var name = $("#groupname").val();
-				var permission = $("#permission").val();
-				
-				onSuccess = function() {
-					$("#group-dialog").dialog('close');
-					that.refresh();
-				}
-	
-				if (id)
-					editUserGroup(id, name, permission, onSuccess, onServerError);
-				else
-					addUserGroup(name, permission, onSuccess, onServerError);
-			}
-			
-			if (id)
-				buttons["Edit"] = action;
-			else
-				buttons["Add"] = action;
 					
 			$("#group-dialog").dialog({
+				autoOpen: false,
 				bgiframe: true,
 				height: 300,
 				width: 270,
 				modal: true,
 				resizable: false,
-				buttons: buttons
+				buttons: {}
 			});
 		}
 		
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+
+		var action = function() {
+			if (!that.validateGroupData()) return;
+			
+			var name = $("#group-name-field").val();
+			var desc = $("#group-description-field").val();
+			
+			onSuccess = function() {
+				$("#group-dialog").dialog('close');
+				that.refresh();
+			}
+
+			if (id)
+				editUserGroup(id, name, desc, onSuccess, onServerError);
+			else
+				addUserGroup(name, desc, onSuccess, onServerError);
+		}
+		
+		if (id)
+			buttons["Edit"] = action;
+		else
+			buttons["Add"] = action;
+		
+		$("#group-dialog").dialog('option', 'buttons', buttons);
+		
 		if (id) {
 			var group = that.getUserGroup(id);
-			$("#groupname").val(group.name);
-			$("#permission").val(group["permission_mode"].toLowerCase());
+			$("#group-name-field").val(group.name);
+			$("#group-description-field").val(group.description);
 			$("#group-dialog").dialog('option', 'title', 'Edit Group');
 		} else {
-			$("#groupname").val("");
-			$("#permission").val("ro");
+			$("#group-name-field").val("");
+			$("#group-description-field").val("");
 			$("#group-dialog").dialog('option', 'title', 'Add Group');
 		}
+		
 		$("#group-dialog").dialog('open');
 	}
 	
-	function onRemoveGroup() {
+	this.onRemoveGroup = function() {
 		var id = that.getSelectedGroup();
 		if (id == null) return;
 		removeUserGroup(id, that.refresh, onServerError);
 	}
 	
-	function onEditGroup() {
+	this.onEditGroup = function() {
 		var id = that.getSelectedGroup();
 		if (id == null) return;
-		openAddEditGroup(id);
+		that.openAddEditGroup(id);
 	}
 
-	function openAddGroupUsers() {
+	this.openAddGroupUsers = function() {
 		if (that.users == null) return;
 		
 		var availableUsers = that.getAvailableGroupUsers();
@@ -310,7 +314,7 @@ function MollifyUserGroupsConfigurationView() {
 				width: 330,
 				modal: true,
 				resizable: true,
-				autoshow: false,
+				autoOpen: false,
 				title: "Add Users to Group",
 				buttons: buttons
 			});
@@ -328,7 +332,7 @@ function MollifyUserGroupsConfigurationView() {
 		return result;
 	}
 
-	function onRemoveGroupUsers() {
+	this.onRemoveGroupUsers = function() {
 		var sel = that.getSelectedGroupUsers();
 		if (sel.length == 0) return;
 		removeGroupUsers(that.getSelectedGroup(), sel, that.refreshGroupUsers, onServerError);

@@ -80,8 +80,8 @@
 			return TRUE;
 		}
 	
-		public function updateUser($id, $name, $permission) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', permission_mode='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($permission), $this->db->string($id)));			
+		public function updateUser($id, $name, $permission, $description = NULL) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', permission_mode='%s', description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($permission), $this->db->string($description), $this->db->string($id)));			
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST", "Invalid update user request, user ".$id." not found");	
 			return TRUE;
@@ -102,7 +102,7 @@
 		}
 
 		public function getAllUserGroups() {
-			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." where is_group = 1 ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, description FROM ".$this->db->table("user")." where is_group = 1 ORDER BY id ASC")->rows();
 		}
 
 		public function getUserGroup($id) {
@@ -110,7 +110,7 @@
 		}
 
 		public function getUsersGroups($userId) {
-			return $this->db->query("select id, name, permission_mode from ".$this->db->table("user")." where id in (SELECT user_group.group_id FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."') ORDER BY id ASC")->rows();
+			return $this->db->query("select id, name, description, permission_mode from ".$this->db->table("user")." where id in (SELECT user_group.group_id FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."') ORDER BY id ASC")->rows();
 		}
 		
 		public function addUsersGroups($userId, $groupIds) {
@@ -141,13 +141,13 @@
 			return TRUE;
 		}
 		
-		public function addUserGroup($name, $permission) {
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, permission_mode, is_group) VALUES ('%s', '%s', 1)", $this->db->string($name), $this->db->string($permission)));
+		public function addUserGroup($name, $description) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, permission_mode, is_group) VALUES ('%s', '%s', NULL, 1)", $this->db->string($name), $this->db->string($description)));
 			return TRUE;
 		}
 
-		public function updateUserGroup($id, $name, $permission) {
-			return $this->updateUser($id, $name, $permission);
+		public function updateUserGroup($id, $name, $description) {
+			return $this->updateUser($id, $name, NULL, $description);
 		}
 		
 		public function removeUserGroup($id) {
