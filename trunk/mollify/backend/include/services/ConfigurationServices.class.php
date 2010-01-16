@@ -136,7 +136,7 @@
 						return;
 					case 'folders':
 						$folder = $this->request->data;
-						if (!isset($folder['id']) or !isset($folder['name'])) throw $this->invalidRequestException();
+						if (!isset($folder['id'])) throw $this->invalidRequestException();
 						
 						$this->env->configuration()->addUserFolder($userId, $folder['id'], isset($folder['name']) ? $folder['name'] : NULL);
 						$this->response()->success(TRUE);
@@ -213,7 +213,7 @@
 		}
 		
 		private function processPostUserGroups() {
-			if ((count($this->path) != 1 and count($this->path) != 3) or !$this->request->hasData()) throw $this->invalidRequestException();
+			if (!$this->request->hasData()) throw $this->invalidRequestException();
 			
 			if (count($this->path) == 1) {
 				$group = $this->request->data;
@@ -221,7 +221,10 @@
 								
 				$this->env->configuration()->addUserGroup($group['name'], $group['description']);
 				$this->response()->success(TRUE);
-			} else {
+				return;
+			}
+			
+			if (count($this->path) == 3) {
 				$id = $this->path[1];		
 				$users = $this->request->data;
 				
@@ -229,15 +232,14 @@
 					case 'users':
 						$this->env->configuration()->addGroupUsers($id, $users);
 						$this->response()->success(TRUE);
-						break;
+						return;
 					case 'remove_users':
 						$this->env->configuration()->removeGroupUsers($id, $users);
 						$this->response()->success(TRUE);
-						break;
-					default:
-						throw $this->invalidRequestException();	
+					return;
 				}
 			}
+			throw $this->invalidRequestException();
 		}
 
 		private function processPutUserGroups() {
@@ -260,17 +262,52 @@
 		}
 
 		private function processGetFolders() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
+			if (count($this->path) == 1) {
+				$this->response()->success($this->env->configuration()->getFolders());
+				return;
+			}
+			$folderId = $this->path[1];
 			
-			$this->response()->success($this->env->configuration()->getFolders());
+			if (count($this->path) == 3) {
+				switch ($this->path[2]) {
+					case 'users':
+						$this->response()->success($this->env->configuration()->getFolderUsers($folderId));
+						return;
+				}
+			}
+
+			throw $this->invalidRequestException();
 		}
 		
 		private function processPostFolders() {
-			if (count($this->path) != 1 or !$this->request->hasData()) throw $this->invalidRequestException();
+			if (!$this->request->hasData()) throw $this->invalidRequestException();
 			
-			$folder = $this->request->data;
-			$this->env->configuration()->addFolder($folder['name'], $folder['path']);
-			$this->response()->success(TRUE);	
+			if (count($this->path) == 1) {
+				$folder = $this->request->data;
+				if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
+				
+				$this->env->configuration()->addFolder($folder['name'], $folder['path']);
+				$this->response()->success(TRUE);
+				return;
+			}
+			
+			if (count($this->path) == 3) {
+				$id = $this->path[1];		
+				$users = $this->request->data;
+				
+				switch ($this->path[2]) {
+					case 'users':
+						$this->env->configuration()->addFolderUsers($id, $users);
+						$this->response()->success(TRUE);
+						return;
+					case 'remove_users':
+						$this->env->configuration()->removeFolderUsers($id, $users);
+						$this->response()->success(TRUE);
+					return;
+				}
+			}
+			
+			throw $this->invalidRequestException();
 		}
 		
 		private function processPutFolders() {

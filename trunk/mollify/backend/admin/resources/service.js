@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli Järvelä
+	Copyright (c) 2008- Samuli J‰rvel‰
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -23,6 +23,20 @@ function getFolders(success, fail) {
 
 function getUserFolders(user, success, fail) {
 	request("GET", 'configuration/users/'+user+'/folders', success, fail);
+}
+
+function getFolderUsers(folder, success, fail) {
+	request("GET", 'configuration/folders/'+folder+'/users', success, fail);
+}
+
+function addFolderUsers(id, users, success, fail) {
+	var data = JSON.stringify(users);
+	request("POST", 'configuration/folders/'+id+'/users', success, fail, data);
+}
+
+function removeFolderUsers(id, users, success, fail) {
+	var data = JSON.stringify(users);
+	request("POST", 'configuration/folders/'+id+'/remove_users', success, fail, data);
 }
 
 function addUserFolder(user, id, name, success, fail) {

@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli Järvelä
+	Copyright (c) 2008- Samuli J‰rvel‰
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -279,7 +279,7 @@ function MollifyUsersConfigurationView() {
 			$("#add-user-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
-				height: 300,
+				height: 'auto',
 				width: 270,
 				modal: true,
 				resizable: false,
@@ -322,7 +322,7 @@ function MollifyUsersConfigurationView() {
 
 			$("#edit-user-dialog").dialog({
 				bgiframe: true,
-				height: 300,
+				height: 'auto',
 				width: 270,
 				modal: true,
 				resizable: false,
@@ -381,11 +381,11 @@ function MollifyUsersConfigurationView() {
 				datatype: "local",
 				autowidth: true,
 				multiselect: true,
-			   	colNames:['ID', 'Name', 'Permission Mode'],
+			   	colNames:['ID', 'Name', 'Description'],
 			   	colModel:[
 				   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 			   		{name:'name',index:'name', width:200, sortable:true},
-			   		{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
+			   		{name:'description',index:'description',width:300, sortable:true},
 			   	],
 			   	sortname:'id',
 			   	sortorder:'asc'
@@ -420,8 +420,8 @@ function MollifyUsersConfigurationView() {
 			
 			$("#add-user-groups-dialog").dialog({
 				bgiframe: true,
-				height: 300,
-				width: 480,
+				height: 'auto',
+				width: 630,
 				modal: true,
 				resizable: true,
 				autoOpen: false,
