@@ -74,6 +74,10 @@ function onLoadView() {
 	controller.onLoadView();
 }
 
+function notify(msg) {
+	alert(msg);	//TODO some other notification that doesn't require user dismissal
+}
+
 function onUnauthorized() {
 	$("body").html("<div class='error'><div class='title'>Unauthorized</div><div class='details'>Mollify configuration utility requires admin user</div></div>")
 }

@@ -68,7 +68,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, configure, editItemPermissions;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -169,16 +169,14 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			username.addAction(Action.editItemPermissions, textProvider
 					.getStrings().mainViewEditPermissionsTitle());
 
-			if (model.getSession().getFeatures().configurationUpdate()) {
-				username.addAction(Action.configure, textProvider.getStrings()
-						.mainViewConfigurationTitle());
+			if (model.getSession().getFeatures().administration()) {
+				username.addAction(Action.admin, textProvider.getStrings()
+						.mainViewAdministrationTitle());
 			}
 			username.addSeparator();
 		}
 
-		if (model.getSession().getFeatures().configurationUpdate()
-				&& (model.getSession().getDefaultPermissionMode().isAdmin() || model
-						.getSession().getFeatures().changePassword())) {
+		if (model.getSession().getFeatures().changePassword()) {
 			username.addAction(Action.changePassword, textProvider.getStrings()
 					.mainViewChangePasswordTitle());
 			username.addSeparator();

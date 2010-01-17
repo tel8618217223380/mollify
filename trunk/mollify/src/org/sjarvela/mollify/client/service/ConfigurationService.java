@@ -25,8 +25,6 @@ public interface ConfigurationService {
 	void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener);
 
-	void resetPassword(User user, String password, ResultListener resultListener);
-
 	void getFolders(ResultListener<List<FolderInfo>> resultListener);
 
 	void addUser(String name, String password, UserPermissionMode mode,

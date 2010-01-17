@@ -104,10 +104,4 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 				.createListener(resultListener));
 	}
 
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		service.resetPassword(user, password, resultListenerFactory
-				.createListener(resultListener));
-	}
-
 }

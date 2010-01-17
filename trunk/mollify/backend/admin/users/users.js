@@ -382,6 +382,7 @@ function MollifyUsersConfigurationView() {
 						}
 						onSuccess = function() {
 							$("#change-password-dialog").dialog('close');
+							notify("Password changed");
 						}
 						
 						var pw = $("#change-password-field").val();
@@ -394,7 +395,7 @@ function MollifyUsersConfigurationView() {
 			});
 		}
 		
-		$("#change-password").val("");
+		$("#change-password-field").val("");
 		$("#change-password-dialog").dialog('open');
 	}
 	

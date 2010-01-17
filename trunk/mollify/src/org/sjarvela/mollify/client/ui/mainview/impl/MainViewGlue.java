@@ -12,8 +12,8 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
@@ -86,12 +86,11 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 					}
 				});
 
-		actionDelegator.setActionHandler(Action.configure,
-				new VoidActionHandler() {
-					public void onAction() {
-						presenter.configure();
-					}
-				});
+		actionDelegator.setActionHandler(Action.admin, new VoidActionHandler() {
+			public void onAction() {
+				// TODO
+			}
+		});
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {
