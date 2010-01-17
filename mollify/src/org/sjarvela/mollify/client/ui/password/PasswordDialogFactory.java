@@ -11,12 +11,9 @@
 package org.sjarvela.mollify.client.ui.password;
 
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
-import org.sjarvela.mollify.client.session.user.User;
 
 public interface PasswordDialogFactory {
 
 	void openPasswordDialog(PasswordHandler handler);
-
-	void openResetPasswordDialog(User selected, PasswordHandler passwordHandler);
 
 }

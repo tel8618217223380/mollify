@@ -51,20 +51,6 @@ public class PhpConfigurationService extends ServiceBase implements
 				resultListener).put();
 	}
 
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Reset password for user " + user.getId());
-
-		String data = new JSONStringBuilder("new", MD5.generate(password))
-				.toString();
-
-		request().url(
-				serviceUrl().item("users").item(user.getId()).action(
-						ConfigurationAction.password)).data(data).listener(
-				resultListener).put();
-	}
-
 	public void getUsers(final ResultListener<List<User>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get users");

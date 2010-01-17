@@ -27,8 +27,6 @@ import org.sjarvela.mollify.client.session.user.DefaultPasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
-import org.sjarvela.mollify.client.ui.configuration.DefaultConfigurationDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -61,8 +59,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(MainViewFactory.class).to(DefaultMainViewFactory.class);
 		bind(DialogManager.class).to(DefaultDialogManager.class);
 		bind(ItemSelectorFactory.class).to(DefaultItemSelectorFactory.class);
-		bind(ConfigurationDialogFactory.class).to(
-				DefaultConfigurationDialogFactory.class);
 		bind(PasswordDialogFactory.class)
 				.to(DefaultPasswordDialogFactory.class);
 		bind(FileSystemItemProvider.class).to(

@@ -24,7 +24,6 @@ import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
-import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
@@ -54,7 +53,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
 	private final FileUploadDialogFactory fileUploadDialogFactory;
-	private final ConfigurationDialogFactory configurationDialogFactory;
 	private final PasswordDialogFactory passwordDialogFactory;
 
 	@Inject
@@ -65,7 +63,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
-			ConfigurationDialogFactory configurationDialogFactory,
 			PasswordDialogFactory passwordDialogFactory) {
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
@@ -76,7 +73,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
-		this.configurationDialogFactory = configurationDialogFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
 	}
 
@@ -108,7 +104,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 						.getConfigurationService(), fileSystemService,
 				textProvider, fileSystemActionHandlerFactory,
 				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this, configurationDialogFactory);
+				fileUploadDialogFactory, this);
 		new MainViewGlue(view, presenter, actionDelegator);
 
 		return view;

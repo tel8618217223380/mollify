@@ -11,31 +11,20 @@
 package org.sjarvela.mollify.client.ui.password;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
-import org.sjarvela.mollify.client.session.user.User;
 
 import com.google.inject.Inject;
 
 public class DefaultPasswordDialogFactory implements PasswordDialogFactory {
 	private final TextProvider textProvider;
-	private final PasswordGenerator passwordGenerator;
 
 	@Inject
-	public DefaultPasswordDialogFactory(TextProvider textProvider,
-			PasswordGenerator passwordGenerator) {
+	public DefaultPasswordDialogFactory(TextProvider textProvider) {
 		this.textProvider = textProvider;
-		this.passwordGenerator = passwordGenerator;
 	}
 
 	public void openPasswordDialog(PasswordHandler handler) {
 		new PasswordDialog(textProvider, handler);
-	}
-
-	public void openResetPasswordDialog(User user,
-			PasswordHandler passwordHandler) {
-		new ResetPasswordDialog(textProvider, passwordGenerator,
-				passwordHandler, user);
 	}
 
 }

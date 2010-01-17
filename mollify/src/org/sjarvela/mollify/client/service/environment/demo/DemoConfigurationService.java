@@ -37,16 +37,9 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(true);
 	}
 
-	public void resetPassword(User user, String password,
-			ResultListener resultListener) {
-		resultListener.onSuccess(true);
-	}
-
 	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
-		FolderInfo dir1 = FolderInfo.create("1", "Example Folder",
-				"/foo/bar");
-		FolderInfo dir2 = FolderInfo.create("2", "Another Folder",
-				"/bar/foo");
+		FolderInfo dir1 = FolderInfo.create("1", "Example Folder", "/foo/bar");
+		FolderInfo dir2 = FolderInfo.create("2", "Another Folder", "/bar/foo");
 
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
 	}

@@ -12,10 +12,10 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -30,11 +30,9 @@ import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
-import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
-import org.sjarvela.mollify.client.ui.configuration.ConfigurationDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -60,7 +58,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final PasswordDialogFactory passwordDialogFactory;
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final CreateFolderDialogFactory createFolderDialogFactory;
-	private final ConfigurationDialogFactory configurationDialogFactory;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			SessionManager sessionManager, MainViewModel model,
@@ -70,8 +67,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
-			CreateFolderDialogFactory createFolderDialogFactory,
-			ConfigurationDialogFactory configurationDialogFactory) {
+			CreateFolderDialogFactory createFolderDialogFactory) {
 		this.dialogManager = dialogManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
@@ -84,7 +80,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.createFolderDialogFactory = createFolderDialogFactory;
-		this.configurationDialogFactory = configurationDialogFactory;
 		this.fileSystemActionHandler = fileSystemActionHandlerFactory
 				.create(createReloadCallback());
 
@@ -195,8 +190,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		createFolderDialogFactory.openCreateFolderDialog(model
 				.getCurrentFolder(), new DirectoryHandler() {
-			public void createDirectory(Folder parentFolder,
-					String folderName) {
+			public void createDirectory(Folder parentFolder, String folderName) {
 				fileSystemService.createFolder(parentFolder, folderName,
 						createReloadListener());
 			}
@@ -275,18 +269,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				});
 	}
 
-	public void resetPassword(User user, String password) {
-		configurationService.resetPassword(user, password,
-				createListener(new Callback() {
-					public void onCallback() {
-						dialogManager.showInfo(textProvider.getStrings()
-								.resetPasswordDialogTitle(), textProvider
-								.getStrings()
-								.passwordDialogPasswordChangedSuccessfully());
-					}
-				}));
-	}
-
 	public void setListOrder(GridColumn column, Sort sort) {
 		view.getList().setComparator(createComparator(column, sort));
 	}
@@ -294,10 +276,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private GridComparator<FileSystemItem> createComparator(GridColumn column,
 			Sort sort) {
 		return new DefaultFileItemComparator(column, sort);
-	}
-
-	public void configure() {
-		configurationDialogFactory.openConfigurationDialog(this);
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,
