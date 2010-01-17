@@ -13,6 +13,7 @@
 		<button id="button-add-user" class="ui-state-default ui-corner-all">Add User</button>
 		<button id="button-edit-user" class="ui-state-default ui-state-disabled ui-corner-all">Edit User</button>
 		<button id="button-remove-user" class="ui-state-default ui-state-disabled ui-corner-all">Remove User</button>
+		<button id="button-change-password" class="ui-state-default ui-state-disabled ui-corner-all">Change Password</button>
 		<button id="button-refresh-users" class="ui-state-default ui-corner-all">Refresh</button>
 	</div>
 	<table id="users-list">
@@ -77,6 +78,16 @@
 			<option value="rw">Read and Write</option>
 			<option value="ro">Read Only</option>
 		</select>
+	</div>
+</div>
+
+<div id="change-password-dialog" style="display:none">
+	<div class='form-data' id='change-password'>
+		<div class='title'>Password:</div>
+		<input id='change-password-field' class='form-data-value' type='text' name='password' value=''>
+	</div>
+	<div id="user-change-password-generator">
+		<button id="button-generate-user-change-password" class="ui-state-default ui-corner-all">Generate</button>
 	</div>
 </div>
 

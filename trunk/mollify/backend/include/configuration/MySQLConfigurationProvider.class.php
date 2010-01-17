@@ -162,19 +162,10 @@
 			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->value(0);
 		}
 	
-		public function changePassword($id, $old, $new) {
-			if ($old != $this->getPassword($id)) throw new ServiceException("UNAUTHORIZED");
-			
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($new, $db), $this->db->string($id)));
+		public function changePassword($id, $new) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($new), $this->db->string($id)));
 			if ($affected == 0)
 				throw new ServiceException("INVALID_REQUEST", "Invalid change password request, user ".$id." not found");			
-			return TRUE;
-		}
-	
-		public function resetPassword($id, $pw) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($pw, $db), mysql_real_escape_string($id)));
-			if ($affected == 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid reset password request, user ".$id." not found");
 			return TRUE;
 		}
 	

@@ -28,6 +28,7 @@ function MollifyUsersConfigurationView() {
 		$("#button-add-user").click(that.openAddUser);
 		$("#button-remove-user").click(that.onRemoveUser);
 		$("#button-edit-user").click(that.onEditUser);
+		$("#button-change-password").click(that.onChangePassword);
 		$("#button-refresh-users").click(that.refresh);
 
 		$("#button-add-user-groups").click(that.openAddUserGroups);
@@ -210,6 +211,7 @@ function MollifyUsersConfigurationView() {
 		
 		enableButton("button-remove-user", selected);
 		enableButton("button-edit-user", selected);
+		enableButton("button-change-password", selected);
 		
 		$("#user-groups-list").jqGrid('clearGridData');
 		$("#user-folders-list").jqGrid('clearGridData');
@@ -351,6 +353,49 @@ function MollifyUsersConfigurationView() {
 		$("#edit-username").val(user.name);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
 		$("#edit-user-dialog").dialog('open');
+	}
+
+	this.onChangePassword = function() {
+		var id = that.getSelectedUser();
+		if (id == null) return;
+		
+		if (!that.changePasswordDialogInit) {
+			that.changePasswordDialogInit = true;
+
+			$("#change-password-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 270,
+				modal: true,
+				resizable: false,
+				title: "Change Password",
+				buttons: {
+					Cancel: function() {
+						$(this).dialog('close');
+					},
+					Reset: function() {
+						$("#change-password-dialog > .form-data").removeClass("invalid");
+						if ($("#change-password-field").val().length == 0) {
+							$("#change-password").addClass("invalid");
+							return;
+						}
+						onSuccess = function() {
+							$("#change-password-dialog").dialog('close');
+						}
+						
+						var pw = $("#change-password-field").val();
+						changePassword(id, pw, onSuccess, onServerError);
+					}
+				}
+			});
+			$("#button-generate-user-change-password").click(function() {
+				$("#change-password").val(generatePassword());
+			});
+		}
+		
+		$("#change-password").val("");
+		$("#change-password-dialog").dialog('open');
 	}
 	
 	this.onRemoveUser = function() {
