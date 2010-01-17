@@ -56,10 +56,13 @@ public class PhpConfigurationService extends ServiceBase implements
 		if (Log.isDebugEnabled())
 			Log.debug("Reset password for user " + user.getId());
 
+		String data = new JSONStringBuilder("new", MD5.generate(password))
+				.toString();
+
 		request().url(
 				serviceUrl().item("users").item(user.getId()).action(
-						ConfigurationAction.password)).data(
-				MD5.generate(password)).listener(resultListener).put();
+						ConfigurationAction.password)).data(data).listener(
+				resultListener).put();
 	}
 
 	public void getUsers(final ResultListener<List<User>> resultListener) {

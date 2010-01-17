@@ -20,7 +20,8 @@
 		}
 		
 		public function processGet() {
-			$this->env->authentication()->assertAdmin();
+			if (count(array_diff(array("users", "current", "password"), $this->path)) > 0)
+				$this->env->authentication()->assertAdmin();
 			
 			switch($this->path[0]) {
 				case 'users':
@@ -130,6 +131,15 @@
 				$userId = $this->path[1];
 				
 				switch ($this->path[2]) {
+					case 'password':
+						$pw = $this->request->data;
+						if (!isset($pw['new'])) throw $this->invalidRequestException();
+						if ($userId === 'current') {
+							if (!isset($pw['old'])) throw $this->invalidRequestException();
+							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
+						}
+						$this->response()->success($this->env->configuration()->changePassword($userId, $pw['new']));
+						return;
 					case 'groups':
 						$groups = $this->request->data;
 						$this->response()->success($this->env->configuration()->addUsersGroups($userId, $groups));
