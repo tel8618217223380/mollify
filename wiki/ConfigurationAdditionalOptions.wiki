@@ -145,7 +145,7 @@ $PASSWORDS_HASHED = TRUE;
 		);
 	}}}
 
-	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "MOLLIFY_STUDENTS", "MOLLIFY_TEACHERS" etc.
+	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "MOLLIFY_PUBLIC", "MOLLIFY_LOCAL" etc.
 
 = 7. Client Options =
 
