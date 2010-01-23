@@ -81,11 +81,12 @@ function MollifyUsersConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','Path'],
+		   	colNames:['ID', 'Name', 'Default Name', 'Path'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
-		   		{name:'name',index:'name', width:200, sortable:true, formatter:that.folderNameFormatter},
-				{name:'path',index:'path',width:150, sortable:true},
+		   		{name:'name',index:'name', width:150, sortable:true, formatter:that.folderNameFormatter},
+		   		{name:'default_name',index:'name', width:150, sortable:true, formatter:that.defaultFolderNameFormatter},
+				{name:'path',index:'path',width:200, sortable:true},
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -98,8 +99,13 @@ function MollifyUsersConfigurationView() {
 	}
 	
 	this.folderNameFormatter = function(name, options, folder) {
-		if (!folder.name) return folder['default_name'] + " (Default)";
+		if (!folder.name) return folder['default_name'];
 		return folder.name;
+	}
+
+	this.defaultFolderNameFormatter = function(name, options, folder) {
+		if (!folder.name) return "";
+		return folder['default_name'];
 	}
 	
 	this.refresh = function() {
@@ -511,13 +517,16 @@ function MollifyUsersConfigurationView() {
 		}
 				
 		var onFolderOrDefaultChanged = function() {
+			var sel = $("#published-folder-list").val();
+			$("#published-folder-default-name").val(that.folders[sel].name);
 			var useDefault = $("#use-default-folder-name").attr('checked');
 			
 			if (!useDefault) {
 				$("#published-folder-name").removeAttr("disabled");
+				$("#folder-name").show();
 			} else {
 				$("#folder-name").removeClass("invalid");
-				var sel = $("#published-folder-list").val();
+				$("#folder-name").hide();
 				$("#published-folder-name").val(that.folders[sel].name);
 				$("#published-folder-name").attr("disabled", true);
 			}
@@ -548,7 +557,7 @@ function MollifyUsersConfigurationView() {
 			
 			$("#add-user-folder-dialog").dialog({
 				bgiframe: true,
-				height: 200,
+				height: 'auto',
 				width: 270,
 				modal: true,
 				resizable: true,
@@ -573,13 +582,17 @@ function MollifyUsersConfigurationView() {
 		selected = that.userFolders[selected];
 			
 		var onFolderOrDefaultChanged = function() {
+			var sel = that.getSelectedUserFolder();
+			$("#edit-published-folder-default-name").val(that.folders[sel].name);
 			var useDefault = $("#edit-use-default-folder-name").attr('checked');
 			
 			if (!useDefault) {
 				$("#edit-published-folder-name").removeAttr("disabled");
+				$("#edit-folder-name").show();
 			} else {
 				$("#edit-folder-name").removeClass("invalid");
-				var sel = that.getSelectedUserFolder();
+				$("#edit-folder-name").hide();
+	
 				$("#edit-published-folder-name").val(that.folders[sel].name);
 				$("#edit-published-folder-name").attr("disabled", true);
 			}
@@ -610,7 +623,7 @@ function MollifyUsersConfigurationView() {
 			$("#edit-user-folder-dialog").dialog({
 				bgiframe: true,
 				height: 200,
-				width: 270,
+				height: 'auto',
 				modal: true,
 				resizable: true,
 				autoOpen: false,

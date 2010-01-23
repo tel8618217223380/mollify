@@ -16,9 +16,12 @@
 		function __construct($id, $def, $filesystemInfo) {
 			parent::__construct($id, $def["name"], $filesystemInfo);
 			
-			if (!file_exists($def["path"]))
-				throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder definition, path does not exist ".$id);
 			$this->rootPath = self::folderPath($def["path"]);
+		}
+		
+		public function assert() {
+			if (!file_exists($this->rootPath))
+				throw new NonExistingFolderException("INVALID_CONFIGURATION", "Invalid folder definition, path does not exist [".$this->id()."]");
 		}
 		
 		public function type() {
@@ -34,21 +37,21 @@
 			
 			if ($isFile) {
 				if (!$nonexisting and !$this->exists($fullPath))
-					throw new ServiceException("FILE_DOES_NOT_EXIST", $id);
+					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id);
 
 				if ($nonexisting and $this->exists($fullPath))
-					throw new ServiceException("FILE_ALREADY_EXISTS", $id);
+					throw new ServiceException("FILE_ALREADY_EXISTS", 'id:'.$id);
 				
 				if (!$nonexisting and !is_file($fullPath))
-					throw new ServiceException("NOT_A_FILE", $id);
+					throw new ServiceException("NOT_A_FILE", 'id:'.$id);
 			} else {
 				if ($nonexisting) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
 				
 				if (!$this->exists($fullPath))
-					throw new ServiceException("DIR_DOES_NOT_EXIST", $id);
+					throw new ServiceException("DIR_DOES_NOT_EXIST", 'id:'.$id);
 
 				if (!is_dir($fullPath))
-					throw new ServiceException("NOT_A_DIR", $id);
+					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
 			}
 				
 			if ($isFile) return new File($id, $path, self::basename($fullPath), $this);

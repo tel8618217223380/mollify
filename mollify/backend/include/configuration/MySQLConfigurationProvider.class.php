@@ -39,7 +39,7 @@
 		}
 
 		public function getSupportedFeatures() {
-			$features = array('description_update', 'configuration_update');
+			$features = array('description_update', 'administration');
 			if ($this->isAuthenticationRequired()) $features[] = 'permission_update';
 			return $features;
 		}
@@ -172,6 +172,10 @@
 		public function getFolders() {
 			return $this->db->query("SELECT id, name, path FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
 		}
+
+		public function getFolder($id) {
+			return $this->db->query(sprintf("SELECT id, name, path FROM ".$this->db->table("folder")." where id='%s'", $this->db->string($id)))->firstRow();
+		}
 		
 		public function getFolderUsers($id) {
 			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
@@ -204,15 +208,19 @@
 		}
 		
 		public function removeFolder($id) {
-			$plainId = $id.":";	//TODO
+			$rootItem = $this->env->filesystem()->filesystemFromId($id, FALSE)->root();
+			$rootId = $this->itemId($rootItem);
+			$folderId = $this->db->string($id);
+			
+			Logging::logDebug("Removing folder [".$id."]=[".$rootId."]");
 			
 			$this->db->startTransaction();
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $this->db->string($id)));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $plainId));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $plainId));
-			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $this->db->string($id)));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $folderId));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $rootId));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $rootId));
+			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $folderId));
 			if ($affected == 0)
-				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$id." not found");
+				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$rootId." not found");
 			$this->db->commit();
 			return TRUE;
 		}
@@ -405,7 +413,7 @@
 		}
 		
 		private function itemId($item) {
-			return $this->db->string(base64_decode($item->id()));
+			return $this->db->string($item->internalId());
 		}
 	}
 ?>

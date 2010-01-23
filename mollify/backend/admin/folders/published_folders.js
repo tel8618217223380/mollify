@@ -19,7 +19,7 @@ function MollifyPublishedFoldersConfigurationView() {
 	function onLoadView() {
 		$("#button-add-folder").click(that.openAddFolder);
 		$("#button-remove-folder").click(that.onRemoveFolder);
-		$("#button-edit-folder").click(that.onEditFolder);
+		$("#button-edit-folder").click(that.openEditFolder);
 		$("#button-refresh-folders").click(that.refresh);
 
 		$("#folders-list").jqGrid({        
@@ -178,46 +178,16 @@ function MollifyPublishedFoldersConfigurationView() {
 	}
 	
 	this.openAddFolder = function() {
-		if (!that.addFolderDialogInit) {
-			that.addFolderDialogInit = true;
+		that.addEditFolder(null);
+	}
 
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Add: function() {
-					$("#folder-dialog > .form-data").removeClass("invalid");
-				
-					var result = true;
-					if ($("#folder-name-field").val().length == 0) {
-						$("#folder-name").addClass("invalid");
-						result = false;
-					}
-					if ($("#folder-path-field").val().length == 0) {
-						$("#folder-path").addClass("invalid");
-						result = false;
-					}
-					if (!result) return;
-					
-					var name = $("#folder-name-field").val();
-					var path = $("#folder-path-field").val();
-					
-					onSuccess = function() {
-						$("#folder-dialog").dialog('close');
-						that.refresh();
-					}
-					
-					onFail = function(err) {
-						if (err.code == 105) {
-							$("#folder-path").addClass("invalid");
-							return;
-						}
-						onServerError(err);
-					}
-		
-					addFolder(name, path, onSuccess, onFail);
-				}
-			}
+	this.openEditFolder = function() {
+		that.addEditFolder(that.getSelectedFolder());
+	}
+	
+	this.addEditFolder = function(id) {
+		if (!that.addEditFolderDialogInit) {
+			that.addEditFolderDialogInit = true;
 			
 			$("#script-location").html(getScriptLocation());
 					
@@ -228,18 +198,76 @@ function MollifyPublishedFoldersConfigurationView() {
 				width: 500,
 				modal: true,
 				resizable: false,
-				buttons: buttons,
-				title: 'Add Folder'
+				buttons: {},
+				title: ''
 			});
 		}
 		
-		$("#folder-name-field").val("");
-		$("#folder-path-field").val("");
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		var action = function() {
+			$("#folder-dialog > .form-data").removeClass("invalid");
+			$("#folder-path-validation-info").html("");
+		
+			var result = true;
+			if ($("#folder-name-field").val().length == 0) {
+				$("#folder-name").addClass("invalid");
+				result = false;
+			}
+			if ($("#folder-path-field").val().length == 0) {
+				$("#folder-path").addClass("invalid");
+				result = false;
+			}
+			if (!result) return;
+			
+			var name = $("#folder-name-field").val();
+			var path = $("#folder-path-field").val();
+			
+			onSuccess = function() {
+				$("#folder-dialog").dialog('close');
+				that.refresh();
+			}
+			
+			onFail = function(err) {
+				if (err.code == 105) {
+					$("#folder-path").addClass("invalid");
+					$("#folder-path-validation-info").html("Folder does not exist");
+					return;
+				}
+				onServerError(err);
+			}
+
+			if (id)
+				editFolder(id, name, path, onSuccess, onFail);
+			else
+				addFolder(name, path, onSuccess, onFail);
+		}
+
+		if (id)
+			buttons["Edit"] = action;
+		else
+			buttons["Add"] = action;
+
+		$("#folder-dialog").dialog('option', 'buttons', buttons);
+		$("#folder-dialog > .form-data").removeClass("invalid");
+		$("#folder-path-validation-info").html("");
+
+		if (id) {
+			var folder = that.getFolder(id);
+			$("#folder-name-field").val(folder.name);
+			$("#folder-path-field").val(folder.path);
+			$("#folder-dialog").dialog('option', 'title', 'Edit Folder');
+		} else {
+			$("#folder-name-field").val("");
+			$("#folder-path-field").val("");
+			$("#folder-dialog").dialog('option', 'title', 'Add Folder');
+		}
 		
 		$("#folder-dialog").dialog('open');
-	}
-
-	this.openEditFolder = function() {
 	}
 
 	this.onRemoveFolder = function() {

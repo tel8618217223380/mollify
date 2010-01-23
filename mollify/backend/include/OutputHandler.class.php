@@ -80,9 +80,12 @@
 			header("Content-Transfer-Encoding: binary");
 			header("Pragma: hack");
 			if ($size) header("Content-Length: ".$size);
+			@ob_clean();
 			
-			while (!feof($stream))
+			while (!feof($stream)) {
 				echo fread($stream, 4096);
+				flush();
+			}
 			fclose($stream);
 		}
 		

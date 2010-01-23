@@ -28,12 +28,22 @@
 		public function id() {
 			return $this->id;
 		}
+
+		public function internalId($item) {
+			return $this->filesystemInfo->internalId($item->id());
+		}
 		
 		public function name() {
 			return $this->name;
 		}
 		
-		public abstract function createItem($id, $path, $create = FALSE);
+		public function root() {
+			$id = $this->filesystemInfo->publicId($this->id);
+			Logging::logDebug("Filesystem [".$this->id."] root [".$id."]");
+			return $this->createItem($id, '');
+		}
+		
+		public abstract function createItem($id, $path, $nonexisting = FALSE);
 		
 		public function details($item) {
 			return array();
@@ -81,4 +91,6 @@
 			return get_class($this)." (".$this->id.") ".$this->name;
 		}
 	}
+	
+	class NonExistingFolderException extends ServiceException {}
 ?>

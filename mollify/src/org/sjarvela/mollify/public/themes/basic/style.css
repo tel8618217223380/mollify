@@ -264,16 +264,6 @@
 	border-style: none;
 }
 
-#mollify-header-parent-dir-button.mollify-header-button {
-	background: url(b-up.png) no-repeat 0 0;
-	font-size: 0;
-	width: 36px;
-}
-
-#mollify-header-parent-dir-button.mollify-header-button:active {
-	background: url(b-up-d.png) no-repeat 0 0;
-}
-
 .mollify-dropdown-menu, .mollify-directory-list-menu {
 	background: #f9f9f9;
 	border-right: 1px outset #c0c0c0;

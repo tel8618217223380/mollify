@@ -19,10 +19,10 @@
 			"change_password" => FALSE,
 			"description_update" => FALSE,
 			"permission_update" => FALSE,
-			"configuration_update" => FALSE
+			"administration" => FALSE
 		);
 		
-		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "configuration_update");
+		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "administration");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
