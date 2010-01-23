@@ -176,7 +176,7 @@
 					case 'folders':
 						$folderId = $this->path[3];
 						$folder = $this->request->data;
-						if (!isset($folder['id']) or !isset($folder['name'])) throw $this->invalidRequestException();
+						if (!isset($folder['name'])) throw $this->invalidRequestException();
 						
 						$this->env->configuration()->updateUserFolder($userId, $folderId, $folder['name']);
 						$this->response()->success(TRUE);
@@ -326,6 +326,9 @@
 			
 			$id = $this->path[1];
 			$folder = $this->request->data;
+			if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
+			
+			$this->env->filesystem()->assertFilesystem($folder);
 			$this->env->configuration()->updateFolder($id, $folder['name'], $folder['path']);
 			$this->response()->success(TRUE);	
 		}
@@ -333,9 +336,7 @@
 		private function processDeleteFolders() {
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 
-			$id = $this->path[1];
-			$this->env->configuration()->removeFolder($id);
-			//TODO remove descriptions, permissions etc
+			$this->env->configuration()->removeFolder($this->path[1]);
 			$this->response()->success(TRUE);	
 		}
 	}

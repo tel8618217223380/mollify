@@ -28,22 +28,21 @@
 		public function initialize($request) {}
 
 		public function onSessionStarted() {
-			$this->env->session()->param('roots', $this->getRootFolders());
+			$this->env->session()->param('folders', $this->getUserFolders());
 		}
 
-		private function getRootFolders() {
-			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
-			
+		private function getUserFolders() {
+			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());		
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
 					$this->env->session()->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a name (".$folderDef['id'].")");
+					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a name (".$folderDef['id'].")");
 				}
 				if (!isset($folderDef["path"])) {
 					$this->env->session()->reset();
-					throw new ServiceException("INVALID_CONFIGURATION", "Root folder definition does not have a path (".$folderDef['id'].")");
+					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a path (".$folderDef['id'].")");
 				}
 				
 				$list[$folderDef['id']] = $folderDef;
@@ -51,8 +50,10 @@
 			
 			return $list;
 		}
-
-		private function createFilesystem($id, $folderDef) {
+		
+		private function createFilesystem($folderDef) {
+			$id = isset($folderDef['id']) ? $folderDef['id'] : '';
+			
 			switch ($this->filesystemType($folderDef)) {
 				case MollifyFilesystem::TYPE_LOCAL:
 					return new LocalFilesystem($id, $folderDef, $this);
@@ -74,10 +75,10 @@
 				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
 			);
 			
-			$result["roots"] = array();
+			$result["folders"] = array();
 			
-			foreach($this->env->session()->param('roots') as $id => $folderDef) {
-				$result["roots"][] = array(
+			foreach($this->env->session()->param('folders') as $id => $folderDef) {
+				$result["folders"][] = array(
 					"id" => $this->publicId($id),
 					"name" => $folderDef['name'] != NULL ? $folderDef['name'] : $folderDef['default_name']
 				);
@@ -85,29 +86,43 @@
 
 			return $result;
 		}
+
+		public function filesystemFromId($id, $assert=TRUE) {
+			return $this->filesystem($this->env->configuration()->getFolder($id), $assert);
+		}
 		
-		public function filesystem($id) {
-			$folderDefs = $this->env->session()->param('roots');
-			return $this->createFilesystem($id, $folderDefs[$id]);
+		public function filesystem($def, $assert=TRUE) {
+			$fs = $this->createFilesystem($def);
+			if ($assert) $fs->assert();
+			return $fs;
 		}
 		
 		public function item($id, $nonexisting = FALSE) {
-			$plainId = base64_decode($id);
-			$parts = explode(":".DIRECTORY_SEPARATOR, $plainId);
+			$internalId = $this->internalId($id);
+			$parts = explode(":".DIRECTORY_SEPARATOR, $internalId);
 			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item id: ".$id);
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			return $this->filesystem($filesystemId)->createItem($id, $path, $nonexisting);
+			$folderDefs = $this->env->session()->param('folders');
+			if (!array_key_exists($filesystemId, $folderDefs))
+				throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
+			
+			$folderDef = $folderDefs[$filesystemId];
+			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
 		}
 		
 		public function publicId($filesystemId, $path = "") {
 			return base64_encode($filesystemId.":".DIRECTORY_SEPARATOR.$path);
 		}
+
+		public function internalId($itemId) {
+			return base64_decode($itemId);
+		}
 		
 		public function assertFilesystem($folderDef) {
-			$this->createFilesystem('', $folderDef);	//create filesystem to see if it is valid
+			$this->filesystem($folderDef, TRUE);
 		}
 
 		public function assertRights($item, $required, $desc = "Unknown action") {

@@ -30,6 +30,10 @@
 			return $this->id;
 		}
 		
+		public function internalId() {
+			return $this->filesystem->internalId($this);
+		}
+		
 		public function parent() {
 			return $this->filesystem->parent($this);
 		}
@@ -71,7 +75,7 @@
 		}
 		
 		public function __toString() {
-			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): ".$this->id." = ".$this->name." (".$this->path.")";
+			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): [".$this->id."] = '".$this->name."' (".$this->path.")";
 		}
 	}
 	

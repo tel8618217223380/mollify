@@ -35,8 +35,8 @@ function onSession(session) {
 		onUnauthorized();
 		return;
 	}
-	if (!session.features["configuration_update"]) {
-		$("body").html("Current configuration type cannot be modified with the Mollify configuration utility. For more information, see <a href='http://code.google.com/p/mollify/wiki/Installation'>Installation instructions</a>");
+	if (!session.features["administration"]) {
+		$("body").html("Current configuration type is not supported by the Mollify administration utility. For more information, see <a href='http://code.google.com/p/mollify/wiki/Installation'>Installation instructions</a>");
 		return;
 	}
 	this.session = session;

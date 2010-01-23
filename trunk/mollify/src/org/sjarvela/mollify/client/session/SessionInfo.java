@@ -92,14 +92,14 @@ public class SessionInfo extends JavaScriptObject {
 	}
 
 	private final native JsArray getRootDirectoryList() /*-{
-		return this.roots;
+		return this.folders;
 	}-*/;
 
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String sessionName, String sessionId,
 			String userId, String user, String permissionMode,
 			FeatureInfo features, FileSystemInfo fileSystemInfo,
-			JsArray<JsDirectory> roots) /*-{
+			JsArray<JsDirectory> folders) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
 		this.session_name = sessionName;
@@ -109,6 +109,6 @@ public class SessionInfo extends JavaScriptObject {
 		this.default_permission = permissionMode;
 		this.features = features;
 		this.filesystem = fileSystemInfo;
-		this.roots = roots;
+		this.folders = folders;
 	}-*/;
 }
