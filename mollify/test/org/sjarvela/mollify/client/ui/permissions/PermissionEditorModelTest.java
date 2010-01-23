@@ -189,7 +189,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	private FileItemUserPermission getUserPermission(User user) {
 		for (FileItemUserPermission userPermission : model
 				.getUserSpecificPermissions())
-			if (user.equals(userPermission.getUser()))
+			if (user.equals(userPermission.getUserOrGroup()))
 				return userPermission;
 		return null;
 	}

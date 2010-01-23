@@ -331,7 +331,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String itemPermissionEditorDefaultPermissionTitle();
 
-	public String itemPermissionListColumnTitleUser();
+	public String itemPermissionListColumnTitleName();
 
 	public String itemPermissionListColumnTitlePermission();
 
@@ -339,7 +339,9 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String itemPermissionEditorButtonSelectItem();
 
-	public String itemPermissionEditorButtonAddPermission();
+	public String itemPermissionEditorButtonAddUserPermission();
+
+	public String itemPermissionEditorButtonAddUserGroupPermission();
 
 	public String itemPermissionEditorButtonEditPermission();
 
@@ -349,9 +351,13 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileItemUserPermissionDialogAddTitle();
 
+	public String fileItemUserPermissionDialogAddGroupTitle();
+
 	public String fileItemUserPermissionDialogEditTitle();
 
-	public String fileItemUserPermissionDialogUser();
+	public String fileItemUserPermissionDialogEditGroupTitle();
+
+	public String fileItemUserPermissionDialogName();
 
 	public String fileItemUserPermissionDialogPermission();
 

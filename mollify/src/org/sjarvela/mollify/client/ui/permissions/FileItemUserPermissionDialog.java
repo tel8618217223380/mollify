@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.file.FilePermission;
-import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -42,20 +43,25 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	private final Mode mode;
 	private final FileItemUserPermissionHandler handler;
 
-	private final List<User> availableUsers; // in Add mode
-	private final FileItemUserPermission original; // in Edit mode
+	// in Add mode
+	private final List<? extends UserBase> availableUsersOrGroups;
+	// in Edit mode
+	private final FileItemUserPermission original;
 
-	private ListBox<User> user;
+	private ListBox<UserBase> user;
 	private TextBox userLabel;
 	private ListBox<FilePermission> permission;
 
 	public FileItemUserPermissionDialog(TextProvider textProvider,
-			FileItemUserPermissionHandler handler, List<User> availableUsers) {
-		super(textProvider.getStrings().fileItemUserPermissionDialogAddTitle(),
+			FileItemUserPermissionHandler handler,
+			List<? extends UserBase> availableUsersOrGroups, boolean groups) {
+		super(groups ? textProvider.getStrings()
+				.fileItemUserPermissionDialogAddGroupTitle() : textProvider
+				.getStrings().fileItemUserPermissionDialogAddTitle(),
 				StyleConstants.FILEITEM_USER_PERMISSION_DIALOG);
 		this.mode = Mode.Add;
 
-		this.availableUsers = availableUsers;
+		this.availableUsersOrGroups = availableUsersOrGroups;
 		this.textProvider = textProvider;
 		this.handler = handler;
 		this.original = null;
@@ -66,17 +72,17 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 
 	public FileItemUserPermissionDialog(TextProvider textProvider,
 			FileItemUserPermissionHandler handler,
-			FileItemUserPermission fileItemUserPermission) {
-		super(
-				textProvider.getStrings()
-						.fileItemUserPermissionDialogEditTitle(),
+			FileItemUserPermission fileItemUserPermission, boolean group) {
+		super(group ? textProvider.getStrings()
+				.fileItemUserPermissionDialogEditGroupTitle() : textProvider
+				.getStrings().fileItemUserPermissionDialogEditTitle(),
 				StyleConstants.FILEITEM_USER_PERMISSION_DIALOG);
 		this.mode = Mode.Edit;
 
 		this.textProvider = textProvider;
 		this.handler = handler;
 		this.original = fileItemUserPermission;
-		this.availableUsers = Collections.EMPTY_LIST;
+		this.availableUsersOrGroups = Collections.EMPTY_LIST;
 
 		createControls();
 		initialize();
@@ -96,8 +102,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 			user = new ListBox();
 			user
 					.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER);
-			user.setFormatter(new Formatter<User>() {
-				public String format(User user) {
+			user.setFormatter(new Formatter<UserBase>() {
+				public String format(UserBase user) {
 					return user.getName();
 				}
 			});
@@ -117,9 +123,10 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 				FilePermission.ReadWrite));
 
 		if (Mode.Add.equals(this.mode)) {
-			user.setContent(availableUsers);
+			List<UserBase> list = new ArrayList(availableUsersOrGroups);
+			user.setContent(list);
 		} else {
-			userLabel.setText(original.getUser().getName());
+			userLabel.setText(original.getUserOrGroup().getName());
 			permission.setSelectedItem(original.getPermission());
 		}
 	}
@@ -131,7 +138,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 				.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_CONTENT);
 
 		Label userTitle = new Label(textProvider.getStrings()
-				.fileItemUserPermissionDialogUser());
+				.fileItemUserPermissionDialogName());
 		userTitle
 				.setStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER_TITLE);
 		panel.add(userTitle);
@@ -183,11 +190,12 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	}
 
 	protected void onAddPermission() {
-		User user = this.user.getSelectedItem();
-		if (user == null)
+		UserBase userOrGroup = this.user.getSelectedItem();
+		if (userOrGroup == null)
 			return;
 
-		handler.addFileItemUserPermission(user, permission.getSelectedItem());
+		handler.addFileItemUserPermission(userOrGroup, permission
+				.getSelectedItem());
 		this.hide();
 	}
 
@@ -197,7 +205,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 			return;
 
 		handler.editFileItemUserPermission(new FileItemUserPermission(original
-				.getFileSystemItem(), original.getUser(), permission));
+				.getFileSystemItem(), original.getUserOrGroup(), permission));
 		this.hide();
 	}
 }

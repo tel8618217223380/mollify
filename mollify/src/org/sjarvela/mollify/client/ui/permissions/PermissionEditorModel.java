@@ -26,14 +26,17 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.session.user.UserCache;
+import org.sjarvela.mollify.client.session.user.UserGroup;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public class PermissionEditorModel {
 	private final ConfigurationService configurationService;
 	private final FileSystemService fileSystemService;
 
 	private ResultCallback<ServiceError> errorCallback = null;
-	private List<User> users = null;
+	private UsersAndGroups usersAndGroups = null;
 	private UserCache userCache;
 
 	private FileSystemItem item;
@@ -83,22 +86,27 @@ public class PermissionEditorModel {
 	}
 
 	public List<User> getUsers() {
-		return users;
+		return usersAndGroups.getUsers();
+	}
+
+	public List<UserGroup> getUserGroups() {
+		return usersAndGroups.getUserGroups();
 	}
 
 	public void refresh(final Callback successCallback) {
-		if (users == null) {
-			configurationService.getUsers(new ResultListener<List<User>>() {
-				public void onFail(ServiceError error) {
-					onError(error);
-				}
+		if (usersAndGroups == null) {
+			configurationService
+					.getUsersAndGroups(new ResultListener<UsersAndGroups>() {
+						public void onFail(ServiceError error) {
+							onError(error);
+						}
 
-				public void onSuccess(List<User> result) {
-					users = result;
-					userCache = new UserCache(users);
-					refreshPermissions(successCallback);
-				}
-			});
+						public void onSuccess(UsersAndGroups result) {
+							usersAndGroups = result;
+							userCache = new UserCache(usersAndGroups);
+							refreshPermissions(successCallback);
+						}
+					});
 		} else {
 			refreshPermissions(successCallback);
 		}
@@ -134,7 +142,7 @@ public class PermissionEditorModel {
 				FilePermission.None);
 
 		for (FileItemUserPermission permission : permissions) {
-			if (permission.getUser() != null) {
+			if (permission.getUserOrGroup() != null) {
 				effectivePermissions.add(permission);
 			} else {
 				if (defaultPermissionFound) {
@@ -150,11 +158,21 @@ public class PermissionEditorModel {
 	}
 
 	public List<User> getUsersWithoutPermission() {
-		List<User> result = new ArrayList(users);
+		List<User> result = new ArrayList(usersAndGroups.getUsers());
 		for (FileItemUserPermission permission : effectivePermissions) {
-			if (permission.getUser() == null)
+			if (permission.getUserOrGroup() == null)
 				continue;
-			result.remove(permission.getUser());
+			result.remove(permission.getUserOrGroup());
+		}
+		return result;
+	}
+
+	public List<UserGroup> getGroupsWithoutPermission() {
+		List<UserGroup> result = new ArrayList(usersAndGroups.getUserGroups());
+		for (FileItemUserPermission permission : effectivePermissions) {
+			if (permission.getUserOrGroup() == null)
+				continue;
+			result.remove(permission.getUserOrGroup());
 		}
 		return result;
 	}
@@ -193,8 +211,8 @@ public class PermissionEditorModel {
 		return effectivePermissions;
 	}
 
-	public void addPermission(User user, FilePermission permission) {
-		addPermission(new FileItemUserPermission(item, user, permission));
+	public void addPermission(UserBase userOrGroup, FilePermission permission) {
+		addPermission(new FileItemUserPermission(item, userOrGroup, permission));
 	}
 
 	public void addPermission(FileItemUserPermission permission) {
@@ -212,7 +230,8 @@ public class PermissionEditorModel {
 
 	private void updateUserPermission(FileItemUserPermission permission) {
 		for (FileItemUserPermission userPermission : effectivePermissions)
-			if (userPermission.getUser().equals(permission.getUser())) {
+			if (userPermission.getUserOrGroup().equals(
+					permission.getUserOrGroup())) {
 				effectivePermissions.remove(userPermission);
 				effectivePermissions.add(permission);
 				return;

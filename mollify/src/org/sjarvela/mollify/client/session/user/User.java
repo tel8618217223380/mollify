@@ -10,9 +10,7 @@
 
 package org.sjarvela.mollify.client.session.user;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
-public class User extends JavaScriptObject {
+public class User extends UserBase {
 	public static User create(String id, String name,
 			UserPermissionMode permissionMode) {
 		User result = User.createObject().cast();
@@ -22,14 +20,6 @@ public class User extends JavaScriptObject {
 
 	protected User() {
 	}
-
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
-
-	public final native String getName() /*-{
-		return this.name;
-	}-*/;
 
 	private final native String getPermissionString() /*-{
 		return this.permission_mode;

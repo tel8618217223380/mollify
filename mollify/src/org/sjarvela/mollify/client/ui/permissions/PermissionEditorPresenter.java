@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.ui.permissions;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
@@ -25,6 +25,8 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
+import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
@@ -144,7 +146,15 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		if (availableUsers.size() == 0)
 			return;
 		permissionEditorViewFactory.openAddFileItemUserPermissionDialog(this,
-				availableUsers);
+				availableUsers, false);
+	}
+
+	public void onAddGroupPermission() {
+		List<UserGroup> availableGroups = model.getGroupsWithoutPermission();
+		if (availableGroups.size() == 0)
+			return;
+		permissionEditorViewFactory.openAddFileItemUserPermissionDialog(this,
+				availableGroups, true);
 	}
 
 	public void onEditPermission() {
@@ -152,8 +162,10 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		if (selected.size() != 1)
 			return;
 
+		FileItemUserPermission permission = selected.get(0);
+		boolean group = (permission.getUserOrGroup() instanceof UserGroup);
 		permissionEditorViewFactory.openEditFileItemUserPermissionDialog(this,
-				selected.get(0));
+				permission, group);
 	}
 
 	public void onRemovePermission() {
@@ -164,9 +176,9 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		refreshList();
 	}
 
-	public void addFileItemUserPermission(User user,
+	public void addFileItemUserPermission(UserBase userOrGroup,
 			FilePermission permission) {
-		model.addPermission(user, permission);
+		model.addPermission(userOrGroup, permission);
 		refreshList();
 	}
 

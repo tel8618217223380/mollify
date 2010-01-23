@@ -35,9 +35,10 @@ public class PermissionEditorView extends CenteredDialog {
 	private final ItemPermissionList list;
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
-	private ActionButton addButton;
-	private ActionButton editButton;
-	private ActionButton removeButton;
+	private final ActionButton addUserButton;
+	private final ActionButton addUserGroupButton;
+	private final ActionButton editButton;
+	private final ActionButton removeButton;
 	private ActionButton okButton;
 
 	public enum Mode {
@@ -45,7 +46,7 @@ public class PermissionEditorView extends CenteredDialog {
 	}
 
 	public enum Actions implements ResourceId {
-		ok, cancel, addPermission, editPermission, removePermission, defaultPermissionChanged, selectItem
+		ok, cancel, addUserPermission, addUserGroupPermission, editPermission, removePermission, defaultPermissionChanged, selectItem
 	}
 
 	public PermissionEditorView(TextProvider textProvider,
@@ -69,11 +70,17 @@ public class PermissionEditorView extends CenteredDialog {
 		defaultPermission.setAction(actionListener,
 				Actions.defaultPermissionChanged);
 
-		addButton = createButton(textProvider.getStrings()
-				.itemPermissionEditorButtonAddPermission(),
+		addUserButton = createButton(textProvider.getStrings()
+				.itemPermissionEditorButtonAddUserPermission(),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
-				Actions.addPermission);
+				Actions.addUserPermission);
+		addUserGroupButton = createButton(
+				textProvider.getStrings()
+						.itemPermissionEditorButtonAddUserGroupPermission(),
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_ADD_GROUP_PERMISSION,
+				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
+				Actions.addUserGroupPermission);
 		editButton = createButton(textProvider.getStrings()
 				.itemPermissionEditorButtonEditPermission(),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION,
@@ -127,7 +134,8 @@ public class PermissionEditorView extends CenteredDialog {
 		Panel actions = new FlowPanel();
 		actions
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS);
-		actions.add(addButton);
+		actions.add(addUserButton);
+		actions.add(addUserGroupButton);
 		actions.add(editButton);
 		actions.add(removeButton);
 		listPanel.add(actions);
@@ -174,10 +182,6 @@ public class PermissionEditorView extends CenteredDialog {
 		return list;
 	}
 
-	public ActionButton getAddPermissionButton() {
-		return addButton;
-	}
-
 	public ActionButton getEditPermissionButton() {
 		return editButton;
 	}
@@ -193,7 +197,7 @@ public class PermissionEditorView extends CenteredDialog {
 			itemName.removeStyleDependentName(UNDEFINED);
 
 		this.okButton.setEnabled(itemDefined);
-		this.addButton.setEnabled(itemDefined);
+		this.addUserButton.setEnabled(itemDefined);
 		this.editButton.setEnabled(false);
 		this.removeButton.setEnabled(false);
 		this.defaultPermission.setEnabled(itemDefined);

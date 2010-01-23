@@ -18,11 +18,14 @@ import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public class MockConfigurationService implements ConfigurationService {
 
 	private List<User> users = Collections.EMPTY_LIST;
+	private List<UserGroup> groups = Collections.EMPTY_LIST;
 
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
@@ -71,8 +74,8 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void getUsers(ResultListener<List<User>> resultListener) {
-		resultListener.onSuccess(users);
+	public void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener) {
+		resultListener.onSuccess(new UsersAndGroups(users, groups));
 	}
 
 	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
@@ -98,12 +101,12 @@ public class MockConfigurationService implements ConfigurationService {
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void resetPassword(User user, String password,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

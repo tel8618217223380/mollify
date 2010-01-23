@@ -1,10 +1,10 @@
 package org.sjarvela.mollify.client.session.file;
 
-import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 
 public interface FileItemUserPermissionHandler {
 
-	void addFileItemUserPermission(User user, FilePermission mode);
+	void addFileItemUserPermission(UserBase userOrGroup, FilePermission mode);
 
 	void editFileItemUserPermission(FileItemUserPermission permission);
 

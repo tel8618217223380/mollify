@@ -11,7 +11,7 @@
 	 */
 
 	class ConfigurationServices extends ServicesBase {
-		private static $ITEMS = array("users", "usergroups", "folders");
+		private static $ITEMS = array("users", "usergroups", "usersgroups", "folders");
 		
 		protected function isValidPath($method, $path) {
 			if (count($path) == 0) return FALSE;
@@ -29,6 +29,9 @@
 					break;
 				case 'usergroups':
 					$this->processGetUserGroups();
+					break;
+				case 'usersgroups':
+					$this->processGetUsersAndGroups();
 					break;
 				case 'folders':
 					$this->processGetFolders();
@@ -91,6 +94,17 @@
 					throw $this->invalidRequestException();
 			}
 		}
+
+		private function processGetUsersAndGroups() {
+			if (count($this->path) == 1) {
+				$this->response()->success(array(
+					"users" => $this->env->configuration()->getAllUsers(),
+					"groups" => $this->env->configuration()->getAllUserGroups()
+				));
+				return;
+			}
+			throw $this->invalidRequestException();
+		}		
 		
 		private function processGetUsers() {
 			if (count($this->path) == 1) {
@@ -158,7 +172,6 @@
 
 		private function processPutUsers() {
 			if (count($this->path) < 2 or !$this->request->hasData()) throw $this->invalidRequestException();
-
 			$userId = $this->path[1];
 			
 			if (count($this->path) == 2) {
@@ -176,9 +189,8 @@
 					case 'folders':
 						$folderId = $this->path[3];
 						$folder = $this->request->data;
-						if (!isset($folder['name'])) throw $this->invalidRequestException();
 						
-						$this->env->configuration()->updateUserFolder($userId, $folderId, $folder['name']);
+						$this->env->configuration()->updateUserFolder($userId, $folderId, isset($folder['name']) ? $folder['name'] : NULL);
 						$this->response()->success(TRUE);
 						return;
 				}

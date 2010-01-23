@@ -62,8 +62,8 @@
 		
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
 		
-		protected function invalidRequestException() {
-			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->request->method())." ".$this->request->URI());
+		protected function invalidRequestException($details = NULL) {
+			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->request->method())." ".$this->request->URI().($details != NULL ? (" ".$details): ""));
 		}
 		
 		function log() {

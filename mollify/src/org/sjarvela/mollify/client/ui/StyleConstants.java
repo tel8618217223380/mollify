@@ -358,6 +358,7 @@ public class StyleConstants {
 	public static final String ITEM_PERMISSION_LIST_HEADER = "mollify-permissionlist-column";
 	public static final String ITEM_PERMISSION_LIST_COLUMN_PREFIX = "mollify-permissionlist-column-";
 	public static final String ITEM_PERMISSION_LIST_ROW = "mollify-permissionlist-row";
+	public static final String ITEM_PERMISSION_LIST_ROW_GROUP = "mollify-permissionlist-row-group";
 
 	public static final String PERMISSION_EDITOR_VIEW = "mollify-permission-editor-dialog";
 	public static final String PERMISSION_EDITOR_VIEW_CONTENT = "mollify-permission-editor-content";
@@ -373,6 +374,7 @@ public class StyleConstants {
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_SELECT_ITEM = "mollify-permission-editor-button-select-item";
 	public static final String PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS = "mollify-permission-editor-permission-actions";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION = "mollify-permission-editor-button-add-permission";
+	public static final String PERMISSION_EDITOR_VIEW_BUTTON_ADD_GROUP_PERMISSION = "mollify-permission-editor-button-add-group-permission";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION = "mollify-permission-editor-button-edit-permission";
 	public static final String PERMISSION_EDITOR_VIEW_BUTTON_REMOVE_PERMISSION = "mollify-permission-editor-button-remove-permission";
 	public static final String PERMISSION_EDITOR_VIEW_OK = "mollify-permission-editor-button-ok";
