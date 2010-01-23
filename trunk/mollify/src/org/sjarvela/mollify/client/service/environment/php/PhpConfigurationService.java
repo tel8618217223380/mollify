@@ -20,17 +20,21 @@ import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestTyp
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 import org.sjarvela.mollify.client.util.JsUtil;
 import org.sjarvela.mollify.client.util.MD5;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.json.client.JSONObject;
 
 public class PhpConfigurationService extends ServiceBase implements
 		ConfigurationService {
 	enum ConfigurationAction implements ActionId {
-		users, password, folders, userfolders
+		users, usersgroups, password, folders, userfolders
 	}
 
 	public PhpConfigurationService(PhpService service) {
@@ -51,22 +55,30 @@ public class PhpConfigurationService extends ServiceBase implements
 				resultListener).put();
 	}
 
-	public void getUsers(final ResultListener<List<User>> resultListener) {
+	public void getUsersAndGroups(
+			final ResultListener<UsersAndGroups> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get users");
 
-		ResultListener<JsArray<User>> listener = new ResultListener<JsArray<User>>() {
+		ResultListener<JavaScriptObject> listener = new ResultListener<JavaScriptObject>() {
 			public void onFail(ServiceError error) {
 				resultListener.onFail(error);
 			}
 
-			public void onSuccess(JsArray<User> result) {
-				resultListener.onSuccess(JsUtil.asList(result, User.class));
+			public void onSuccess(JavaScriptObject result) {
+				JSONObject o = new JSONObject(result);
+				JsArray<User> users = (JsArray<User>) o.get("users").isArray()
+						.getJavaScriptObject();
+				JsArray<UserGroup> groups = (JsArray<UserGroup>) o
+						.get("groups").isArray().getJavaScriptObject();
+				resultListener.onSuccess(new UsersAndGroups(JsUtil.asList(
+						users, User.class), JsUtil.asList(groups,
+						UserGroup.class)));
 			}
 		};
 
-		request().url(serviceUrl().action(ConfigurationAction.users)).listener(
-				listener).get();
+		request().url(serviceUrl().action(ConfigurationAction.usersgroups))
+				.listener(listener).get();
 	}
 
 	public void getFolders(final ResultListener<List<FolderInfo>> resultListener) {

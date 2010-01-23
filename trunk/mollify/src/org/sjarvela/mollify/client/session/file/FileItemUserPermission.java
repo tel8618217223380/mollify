@@ -16,13 +16,14 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
 import com.google.gwt.core.client.JsArray;
 
 public class FileItemUserPermission {
 	private final FileSystemItem item;
-	private final User user;
+	private final UserBase userOrGroup;
 	private final FilePermission permission;
 
 	public static List<FileItemUserPermission> convert(
@@ -52,13 +53,13 @@ public class FileItemUserPermission {
 
 	public JsFileItemUserPermission asJsObj() {
 		return JsFileItemUserPermission.create(item.getId(),
-				user == null ? null : user.getId(), permission);
+				userOrGroup == null ? null : userOrGroup.getId(), permission);
 	}
 
-	public FileItemUserPermission(FileSystemItem item, User user,
+	public FileItemUserPermission(FileSystemItem item, UserBase userOrGroup,
 			FilePermission permission) {
 		this.item = item;
-		this.user = user;
+		this.userOrGroup = userOrGroup;
 		this.permission = permission;
 	}
 
@@ -66,8 +67,8 @@ public class FileItemUserPermission {
 		return item;
 	}
 
-	public User getUser() {
-		return user;
+	public UserBase getUserOrGroup() {
+		return userOrGroup;
 	}
 
 	public FilePermission getPermission() {

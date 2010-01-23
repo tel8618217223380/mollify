@@ -72,10 +72,18 @@ public class PermissionEditorGlue {
 				});
 
 		actionDelegator.setActionHandler(
-				PermissionEditorView.Actions.addPermission,
+				PermissionEditorView.Actions.addUserPermission,
 				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onAddPermission();
+					}
+				});
+
+		actionDelegator.setActionHandler(
+				PermissionEditorView.Actions.addUserGroupPermission,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.onAddGroupPermission();
 					}
 				});
 

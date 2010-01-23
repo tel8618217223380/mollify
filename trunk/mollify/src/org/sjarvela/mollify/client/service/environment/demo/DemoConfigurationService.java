@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public class DemoConfigurationService implements ConfigurationService {
 
@@ -28,8 +29,9 @@ public class DemoConfigurationService implements ConfigurationService {
 		this.data = data;
 	}
 
-	public void getUsers(ResultListener<List<User>> resultListener) {
-		resultListener.onSuccess(data.getUsers());
+	public void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener) {
+		resultListener.onSuccess(new UsersAndGroups(data.getUsers(), data
+				.getUserGroups()));
 	}
 
 	public void changePassword(String oldPassword, String newPassword,

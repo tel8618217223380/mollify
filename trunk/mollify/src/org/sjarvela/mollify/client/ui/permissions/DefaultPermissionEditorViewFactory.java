@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
@@ -61,16 +61,16 @@ public class DefaultPermissionEditorViewFactory implements
 
 	public void openAddFileItemUserPermissionDialog(
 			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			List<User> availableUsers) {
+			List<? extends UserBase> availableUsersOrGroups, boolean groups) {
 		new FileItemUserPermissionDialog(textProvider,
-				fileItemUserPermissionHandler, availableUsers);
+				fileItemUserPermissionHandler, availableUsersOrGroups, groups);
 	}
 
 	public void openEditFileItemUserPermissionDialog(
 			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			FileItemUserPermission fileItemUserPermission) {
+			FileItemUserPermission fileItemUserPermission, boolean groups) {
 		new FileItemUserPermissionDialog(textProvider,
-				fileItemUserPermissionHandler, fileItemUserPermission);
+				fileItemUserPermissionHandler, fileItemUserPermission, groups);
 	}
 
 }

@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public class ConfigurationServiceAdapter implements ConfigurationService {
 	private final ConfigurationService service;
@@ -84,8 +85,9 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 				.createListener(resultListener));
 	}
 
-	public void getUsers(ResultListener<List<User>> resultListener) {
-		service.getUsers(resultListenerFactory.createListener(resultListener));
+	public void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener) {
+		service.getUsersAndGroups(resultListenerFactory
+				.createListener(resultListener));
 	}
 
 	public void removeFolder(FolderInfo dir, ResultListener resultListener) {

@@ -17,10 +17,11 @@ import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
+import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public interface ConfigurationService {
 
-	void getUsers(ResultListener<List<User>> resultListener);
+	void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener);
 
 	void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener);

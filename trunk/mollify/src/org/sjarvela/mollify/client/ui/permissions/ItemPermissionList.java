@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
+import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -26,7 +27,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
 public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		GridDataProvider<FileItemUserPermission> {
-	public static GridColumn COLUMN_USER;
+	public static GridColumn COLUMN_NAME;
 	public static GridColumn COLUMN_PERMISSION;
 	public static List<GridColumn> ALL_COLUMNS = null;
 
@@ -46,13 +47,13 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 
 	private static List<GridColumn> getColumns(TextProvider textProvider) {
 		if (ALL_COLUMNS == null) {
-			COLUMN_USER = new DefaultGridColumn("user", textProvider
-					.getStrings().itemPermissionListColumnTitleUser(), false);
+			COLUMN_NAME = new DefaultGridColumn("name", textProvider
+					.getStrings().itemPermissionListColumnTitleName(), false);
 			COLUMN_PERMISSION = new DefaultGridColumn("permission",
 					textProvider.getStrings()
 							.itemPermissionListColumnTitlePermission(), false);
 
-			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_USER,
+			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
 					COLUMN_PERMISSION);
 		}
 
@@ -68,8 +69,8 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 			GridColumn column) {
 		String text = "";
 
-		if (column.equals(ItemPermissionList.COLUMN_USER))
-			text = userPermission.getUser().getName();
+		if (column.equals(ItemPermissionList.COLUMN_NAME))
+			text = userPermission.getUserOrGroup().getName();
 		else if (column.equals(ItemPermissionList.COLUMN_PERMISSION)) {
 			FilePermission permission = userPermission.getPermission();
 
@@ -82,8 +83,12 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 
 	private static final List<String> ROW_STYLE = Arrays
 			.asList(StyleConstants.ITEM_PERMISSION_LIST_ROW);
+	private static final List<String> GROUP_STYLE = Arrays
+			.asList(StyleConstants.ITEM_PERMISSION_LIST_ROW_GROUP);
 
 	public List<String> getRowStyles(FileItemUserPermission t) {
+		if (t.getUserOrGroup() instanceof UserGroup)
+			return GROUP_STYLE;
 		return ROW_STYLE;
 	}
 

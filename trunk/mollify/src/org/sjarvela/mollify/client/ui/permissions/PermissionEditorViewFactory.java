@@ -15,7 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserBase;
 
 public interface PermissionEditorViewFactory {
 
@@ -23,10 +23,10 @@ public interface PermissionEditorViewFactory {
 
 	void openAddFileItemUserPermissionDialog(
 			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			List<User> availableUsers);
+			List<? extends UserBase> availableUsersOrGroups, boolean groups);
 
 	void openEditFileItemUserPermissionDialog(
 			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			FileItemUserPermission fileItemUserPermission);
+			FileItemUserPermission fileItemUserPermission, boolean groups);
 
 }

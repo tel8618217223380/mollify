@@ -17,16 +17,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
 import org.sjarvela.mollify.client.session.FeatureInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.User;
+import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.DateTime;
 
@@ -38,6 +39,9 @@ public class DemoData {
 			"Test User", UserPermissionMode.Admin), User.create("2",
 			"Another Test User", UserPermissionMode.ReadWrite), User.create(
 			"3", "Third Test User", UserPermissionMode.ReadOnly));
+
+	private static final List<UserGroup> groups = Arrays.asList(UserGroup
+			.create("g1", "Group 1"), UserGroup.create("g2", "Group 2"));
 
 	private static final String ROOT_1 = "r1";
 	private static final String ROOT_2 = "r2";
@@ -76,6 +80,10 @@ public class DemoData {
 
 	public List<User> getUsers() {
 		return users;
+	}
+
+	public List<UserGroup> getUserGroups() {
+		return groups;
 	}
 
 	private void createDirectoriesAndFiles() {
@@ -134,8 +142,7 @@ public class DemoData {
 	}
 
 	public FolderDetails getDirectoryDetails(Folder directory) {
-		return FolderDetails.create(FilePermission.ReadWrite,
-				DESCRIPTION);
+		return FolderDetails.create(FilePermission.ReadWrite, DESCRIPTION);
 	}
 
 	public FileDetails getFileDetails(File file) {
@@ -143,4 +150,5 @@ public class DemoData {
 		return FileDetails.create(now, now, now, DESCRIPTION,
 				FilePermission.ReadWrite);
 	}
+
 }
