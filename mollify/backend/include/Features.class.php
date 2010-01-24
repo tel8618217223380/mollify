@@ -19,22 +19,24 @@
 			"change_password" => FALSE,
 			"description_update" => FALSE,
 			"permission_update" => FALSE,
-			"administration" => FALSE
+			"administration" => FALSE,
+			"user_groups" => FALSE
 		);
 		
-		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "administration");
+		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "administration", "user_groups");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
 			
 			foreach ($this->features as $f=>$k) {
 				$enabled = FALSE;
+				$configControlled = in_array($f, self::$featuresControlledByConfigurationProvider);
 				
-				if ($settings->hasSetting("enable_".$f)) {
-					$enabled = $settings->setting("enable_".$f);
-				} else {
-					if (in_array($f, self::$featuresControlledByConfigurationProvider))
-						$enabled = in_array($f, $configurationFeatures);
+				if (!$configControlled or in_array($f, $configurationFeatures)) {				
+					if ($settings->hasSetting("enable_".$f))
+						$enabled = $settings->setting("enable_".$f);
+					else
+						$enabled = $configControlled;
 				}
 				$this->features[$f] = $enabled;
 			}

@@ -16,11 +16,11 @@ public class FeatureInfo extends JavaScriptObject {
 	public static FeatureInfo create(boolean folderActions, boolean fileUpload,
 			boolean fileUploadProgress, boolean zipDownload,
 			boolean descriptionUpdate, boolean changePassword,
-			boolean permissionUpdate, boolean administration) {
+			boolean permissionUpdate, boolean administration, boolean userGroups) {
 		FeatureInfo result = FeatureInfo.createObject().cast();
 		result.putValues(folderActions, fileUpload, fileUploadProgress,
 				zipDownload, descriptionUpdate, changePassword,
-				permissionUpdate, administration);
+				permissionUpdate, administration, userGroups);
 		return result;
 	}
 
@@ -59,11 +59,15 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.administration;
 	}-*/;
 
+	public final native boolean userGroups() /*-{
+		return this.user_groups;
+	}-*/;
+
 	private final native void putValues(boolean folderActions,
 			boolean fileUpload, boolean fileUploadProgress,
 			boolean zipDownload, boolean descriptionUpdate,
 			boolean changePassword, boolean permissionUpdate,
-			boolean administration) /*-{
+			boolean administration, boolean userGroups) /*-{
 		this.folder_actions = folderActions;
 		this.file_upload = fileUpload;
 		this.file_upload_progress = fileUploadProgress;
@@ -72,5 +76,6 @@ public class FeatureInfo extends JavaScriptObject {
 		this.description_update = descriptionUpdate;
 		this.permission_update = permissionUpdate;
 		this.administration = administration;
+		this.user_groups = userGroups;
 	}-*/;
 }

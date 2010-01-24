@@ -77,8 +77,8 @@ function addUser(name, pw, permission, success, fail) {
 }
 
 function changePassword(id, pw, success, fail) {
-	var data = JSON.stringify({new:generate_md5(pw)});
-	request("POST", 'configuration/users/'+id+'/password', success, fail, data);
+	var data = JSON.stringify({"new":generate_md5(pw)});
+	request("PUT", 'configuration/users/'+id+'/password', success, fail, data);
 }
 
 function editUser(id, name, permission, success, fail) {

@@ -55,10 +55,12 @@
 			</div>
 			<div id="page-area">
 				<div id="page-header">
-					<div id="page-title"></div>
+					<div id="page-title">Administration</div>
 					<div id="request-indicator"></div>
 				</div>
-				<div id="page"></div>
+				<div id="page">
+					<p>Select an item to configure from the menu left</p>
+				</div>
 			</div>
 		</div>
 	</body>

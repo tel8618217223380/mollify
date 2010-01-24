@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -156,7 +156,7 @@
 			if ($item->path() === '') return NULL;
 			
 			$path = $this->localPath($item);
-			return $this->itemWithPath($this->publicPath(dirname($path)));
+			return $this->itemWithPath($this->publicPath(self::folderPath(dirname($path))));
 		}
 
 		public function rename($item, $name) {

@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.user.UserBase;
@@ -32,17 +33,20 @@ public class DefaultPermissionEditorViewFactory implements
 	private final ServiceEnvironment env;
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final FileSystemItemProvider fileSystemItemProvider;
+	private final SessionProvider sessionProvider;
 
 	@Inject
 	public DefaultPermissionEditorViewFactory(TextProvider textProvider,
 			ServiceEnvironment env,
 			FileSystemItemProvider fileSystemItemProvider,
-			ItemSelectorFactory itemSelectorFactory, DialogManager dialogManager) {
+			ItemSelectorFactory itemSelectorFactory,
+			DialogManager dialogManager, SessionProvider sessionProvider) {
 		this.textProvider = textProvider;
 		this.env = env;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.dialogManager = dialogManager;
+		this.sessionProvider = sessionProvider;
 	}
 
 	public void openPermissionEditor(FileSystemItem item) {
@@ -51,7 +55,8 @@ public class DefaultPermissionEditorViewFactory implements
 				.getConfigurationService(), env.getFileSystemService());
 		PermissionEditorView view = new PermissionEditorView(textProvider,
 				actionDelegator, item != null ? PermissionEditorView.Mode.Fixed
-						: PermissionEditorView.Mode.ItemSelectable);
+						: PermissionEditorView.Mode.ItemSelectable,
+				sessionProvider.getSession().getFeatures().userGroups());
 		PermissionEditorPresenter presenter = new PermissionEditorPresenter(
 				textProvider, model, view, dialogManager, this,
 				itemSelectorFactory, new FilePermissionModeFormatter(

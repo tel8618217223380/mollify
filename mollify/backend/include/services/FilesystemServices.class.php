@@ -12,7 +12,8 @@
 
 	class FilesystemServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			if (count($path) < 1 or count($path) > 3) return FALSE;
+			if (count($path) < 1 or count($path) > 3)
+				return FALSE;
 			return TRUE;
 		}
 		
@@ -22,8 +23,10 @@
 				return;
 			}
 			$item = $this->item($this->path[0]);
-			if ($item->isFile()) $this->processGetFile($item);
-			else $this->processGetFolder($item);
+			if ($item->isFile())
+				$this->processGetFile($item);
+			else
+				$this->processGetFolder($item);
 		}
 
 		public function processPut() {
@@ -34,20 +37,33 @@
 			}
 			
 			$item = $this->item($this->path[0]);
-			if ($item->isFile()) $this->processPutFile($item);
-			else $this->processPutFolder($item);
+			if ($item->isFile())
+				$this->processPutFile($item);
+			else
+				$this->processPutFolder($item);
 		}
 		
 		public function processPost() {
 			$item = $this->item($this->path[0]);
-			if ($item->isFile()) $this->processPostFile($item);
-			else $this->processPostFolder($item);
+			if ($item->isFile())
+				$this->processPostFile($item);
+			else
+				$this->processPostFolder($item);
 		}
 		
 		public function processDelete() {
-			if (count($this->path) != 1) throw invalidRequestException();
-			$this->env->filesystem()->delete($this->item($this->path[0]));
-			$this->response()->success(TRUE);
+			if (count($this->path) == 1) {
+				$this->env->filesystem()->delete($this->item($this->path[0]));
+				$this->response()->success(TRUE);
+				return;
+			}
+			if (count($this->path) == 2 and $this->path[1] === 'description') {
+				$this->env->filesystem()->removeDescription($this->item($this->path[0]));
+				$this->response()->success(TRUE);
+				return;
+			}
+			
+			throw $this->invalidRequestException();
 		}
 		
 		private function item($id, $convert = TRUE) {
@@ -134,6 +150,9 @@
 					break;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
+					break;
+				case 'permissions':
+					$this->response()->success($this->env->filesystem()->allPermissions($item));
 					break;
 				default:
 					throw $this->invalidRequestException();

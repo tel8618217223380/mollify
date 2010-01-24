@@ -1393,11 +1393,11 @@ tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover, .mollify-permiss
 }
 
 .mollify-permissionlist-row-group {
-	background-color: #ebebeb;
+	background-color: #e8f0f4;
 }
 
 .mollify-permissionlist-row-group-hover {
-	background-color: #e1e3e3;
+	background-color: #d7dfe5;
 }
 
 tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-permissionlist-row-selected, .mollify-permissionlist-row-group-selected {
@@ -1550,10 +1550,14 @@ table.mollify-permission-list > tbody {
 	overflow: auto;
 }
 
-.mollify-permission-editor-permission-actions {
+.mollify-permission-editor-permission-actions, .mollify-permission-editor-permission-actions-no-groups {
 	padding-bottom: 5px;
 	margin-left: 60px;
 	padding-top: 5px;
+}
+
+.mollify-permission-editor-permission-actions-no-groups {
+	margin-left: 147px;
 }
 
 th#mollify-permissionlist-column-th-name.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th

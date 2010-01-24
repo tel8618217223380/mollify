@@ -85,8 +85,6 @@
 	
 		public function updateUser($id, $name, $permission, $description = NULL) {
 			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', permission_mode='%s', description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($permission), $this->db->string($description), $this->db->string($id)));			
-			if ($affected === 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid update user request, user ".$id." not found");	
 			return TRUE;
 		}
 		
@@ -98,7 +96,7 @@
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_group")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
-			if ($affected == 0)
+			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");	
 			$this->db->commit();					
 			return TRUE;
@@ -161,14 +159,12 @@
 			return TRUE;
 		}
 
-		private function getPassword($id) {
-			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->value(0);
+		public function getPassword($userId) {
+			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id=%s", $this->db->string($userId)))->value(0);
 		}
 	
 		public function changePassword($id, $new) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id='%s'", $this->db->string($new), $this->db->string($id)));
-			if ($affected == 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid change password request, user ".$id." not found");			
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id=%s", $this->db->string($new), $this->db->string($id)));
 			return TRUE;
 		}
 	
@@ -204,9 +200,7 @@
 		}
 	
 		public function updateFolder($id, $name, $path) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("folder")." SET name='%s', path='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($path), $this->db->string($id)));
-			if ($affected == 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid update folder request, folder ".$id." not found");
+			$this->db->update(sprintf("UPDATE ".$this->db->table("folder")." SET name='%s', path='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($path), $this->db->string($id)));
 			return TRUE;
 		}
 		
@@ -215,14 +209,12 @@
 			$rootId = $this->itemId($rootItem);
 			$folderId = $this->db->string($id);
 			
-			Logging::logDebug("Removing folder [".$id."]=[".$rootId."]");
-			
 			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $folderId));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $rootId));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $rootId));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $folderId));
-			if ($affected == 0)
+			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$rootId." not found");
 			$this->db->commit();
 			return TRUE;
@@ -247,13 +239,11 @@
 	
 		public function updateUserFolder($userId, $folderId, $name) {
 			if ($name != NULL) {
-				$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name='%s' WHERE user_id='%s' AND folder_id='%s'", $this->db->string($name), $this->db->string($userId), $this->db->string($folderId)));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name='%s' WHERE user_id='%s' AND folder_id='%s'", $this->db->string($name), $this->db->string($userId), $this->db->string($folderId)));
 			} else {
-				$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name = NULL WHERE user_id='%s' AND folder_id='%s'", $this->db->string($userId), $this->db->string($folderId)));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name = NULL WHERE user_id='%s' AND folder_id='%s'", $this->db->string($userId), $this->db->string($folderId)));
 			}
 	
-			if ($affected == 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid update user folder request, folder ".$folder_id." not found for user ".$user_id);
 			return TRUE;
 		}
 		
@@ -277,9 +267,11 @@
 		function setItemDescription($item, $description) {
 			$id = $this->itemId($item);
 			$desc = $this->db->string($description);
+			$exists = $this->db->query(sprintf("SELECT COUNT(item_id) FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $id))->value(0) > 0;
 			
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET description='%s' WHERE item_id='%s'", $desc, $id));
-			if ($affected === 0)
+			if ($exists)
+				$this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET description='%s' WHERE item_id='%s'", $desc, $id));
+			else
 				$this->db->update(sprintf("INSERT INTO ".$this->db->table("item_description")." (item_id, description) VALUES ('%s','%s')", $id, $desc));
 			return TRUE;
 		}
@@ -306,27 +298,37 @@
 		}
 					
 		function getItemPermission($item, $userId) {
+			$table = $this->db->table("item_permission");
 			$id = $this->itemId($item);
-			$userIds = array('0', $this->db->string($userId));
+			$userIds = array($userId);
 			if ($this->env->session()->hasParam("groups")) {
-				foreach($this->env->session()->param("groups") as $g) {
+				foreach($this->env->authentication()->getUserGroups() as $g)
 					$userIds[] = $g['id'];
-				}
 			}
 			
-			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds, TRUE));
+			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 			$query = NULL;
 	
 			if ($item->isFile()) {
 				$parent = $item->parent();
 				
 				if ($parent != NULL) {
-					$parentId = $this->itemId($parent);
-					
-					$query = sprintf("SELECT permission FROM ((SELECT permission, user_id, 1 AS 'index' FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s' AND %s) UNION ALL (SELECT permission, user_id, 2 AS 'index' FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s' AND %s)) AS u ORDER BY u.user_id DESC, u.index ASC", $id, $userQuery, $parentId, $userQuery);
+					$parentId = $this->itemId($parent);					
+					$query = sprintf(
+						"(SELECT permission, user_id, 1 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
+						"(SELECT permission, user_id, 2 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0) UNION ALL ".
+						"(SELECT permission, user_id, 3 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
+						"(SELECT permission, user_id, 4 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0)", $id, $userQuery, $id, $parentId, $userQuery, $parentId);
 				}
 			}
-			if ($query === NULL) $query = sprintf("SELECT permission FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s' AND %s ORDER BY user_id DESC", $id, $userQuery);
+			
+			if ($query === NULL) {
+				$query = sprintf(
+					"(SELECT permission, user_id, 1 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
+					"(SELECT permission, user_id, 2 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0)", $id, $userQuery, $id);
+			}
+			
+			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.index ASC, u.permission DESC";
 			
 			$result = $this->db->query($query);			
 			if ($result->count() < 1) return NULL;
