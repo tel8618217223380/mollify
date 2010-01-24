@@ -59,7 +59,7 @@
 					<div id="request-indicator"></div>
 				</div>
 				<div id="page">
-					<p>Select an item to configure from the menu left</p>
+					<p>Select an item to configure from the menu on the left</p>
 				</div>
 			</div>
 		</div>
