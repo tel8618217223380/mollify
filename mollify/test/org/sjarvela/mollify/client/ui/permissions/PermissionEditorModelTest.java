@@ -76,7 +76,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 
 		assertEquals(FilePermission.ReadOnly, model.getDefaultPermission());
 
-		assertEquals(2, model.getUserSpecificPermissions().size());
+		assertEquals(2, model.getPermissions().size());
 		assertEquals(FilePermission.ReadWrite, getPermission(user1));
 		assertEquals(FilePermission.ReadOnly, getPermission(user2));
 	}
@@ -87,7 +87,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		model.refresh(this);
 
 		assertEquals(FilePermission.None, model.getDefaultPermission());
-		assertEquals(0, model.getUserSpecificPermissions().size());
+		assertEquals(0, model.getPermissions().size());
 	}
 
 	@Test
@@ -96,16 +96,16 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 				FilePermission.ReadOnly);
 
 		model.addPermission(permission);
-		assertEquals(3, model.getUserSpecificPermissions().size());
+		assertEquals(3, model.getPermissions().size());
 		assertEquals(FilePermission.ReadOnly, getPermission(user3));
 
 		permission = createPermission(user3, FilePermission.ReadWrite);
 		model.editPermission(permission);
-		assertEquals(3, model.getUserSpecificPermissions().size());
+		assertEquals(3, model.getPermissions().size());
 		assertEquals(FilePermission.ReadWrite, getPermission(user3));
 
 		model.removePermission(permission);
-		assertEquals(2, model.getUserSpecificPermissions().size());
+		assertEquals(2, model.getPermissions().size());
 		assertNull(getUserPermission(user3));
 	}
 
@@ -188,7 +188,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 
 	private FileItemUserPermission getUserPermission(User user) {
 		for (FileItemUserPermission userPermission : model
-				.getUserSpecificPermissions())
+				.getPermissions())
 			if (user.equals(userPermission.getUserOrGroup()))
 				return userPermission;
 		return null;

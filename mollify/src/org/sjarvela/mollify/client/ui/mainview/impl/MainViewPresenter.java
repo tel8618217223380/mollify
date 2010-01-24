@@ -30,6 +30,7 @@ import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
+import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -58,10 +59,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final PasswordDialogFactory passwordDialogFactory;
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final CreateFolderDialogFactory createFolderDialogFactory;
+	private final ViewManager viewManager;
 
 	public MainViewPresenter(DialogManager dialogManager,
-			SessionManager sessionManager, MainViewModel model,
-			DefaultMainView view, ConfigurationService configurationService,
+			ViewManager viewManager, SessionManager sessionManager,
+			MainViewModel model, DefaultMainView view,
+			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -69,6 +72,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory) {
 		this.dialogManager = dialogManager;
+		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
@@ -307,5 +311,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void onEditItemPermissions() {
 		permissionEditorViewFactory.openPermissionEditor(null);
+	}
+
+	public void onOpenAdministration() {
+		viewManager.openUrlInNewWindow(configurationService
+				.getAdministrationUrl());
 	}
 }

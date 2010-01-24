@@ -25,9 +25,15 @@ public abstract class UserBase extends JavaScriptObject {
 		return this.name;
 	}-*/;
 
-	protected final native void putValues(String id, String name) /*-{
+	public final native boolean isGroup() /*-{
+		if (this["is_group"] && this["is_group"] == 1) return true;
+		return false;
+	}-*/;
+
+	protected final native void putValues(String id, String name, boolean group) /*-{
 		this.id = id;
 		this.name = name;
+		this["is_group"] = group ? 1 : 0;
 	}-*/;
 
 }

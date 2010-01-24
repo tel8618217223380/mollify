@@ -1383,7 +1383,7 @@ td.mollify-userlist-column-type, td.mollify-folderlist-column-path, td.mollify-p
 	padding-left: 5px;
 }
 
-tr.mollify-userlist-row, tr.mollify-folderlist-row, .mollify-permissionlist-row {
+tr.mollify-userlist-row, tr.mollify-folderlist-row, .mollify-permissionlist-row, .mollify-permissionlist-row-group {
 	background-color: #f7f7f7;
 	border-bottom: 1px dotted #c9c9c9;
 }
@@ -1392,8 +1392,26 @@ tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover, .mollify-permiss
 	background-color: #efefef;
 }
 
-tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-permissionlist-row-selected {
+.mollify-permissionlist-row-group {
+	background-color: #ebebeb;
+}
+
+.mollify-permissionlist-row-group-hover {
+	background-color: #e1e3e3;
+}
+
+tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-permissionlist-row-selected, .mollify-permissionlist-row-group-selected {
 	background-color: #a3bad8;
+}
+
+tr.mollify-permissionlist-row-group td.mollify-permissionlist-column-name {
+	background: url(users.png) no-repeat 4px 2px;
+	padding-left: 25px;
+}
+
+tr.mollify-permissionlist-row td.mollify-permissionlist-column-name {
+	background: url(user.png) no-repeat 4px 4px;
+	padding-left: 25px;
 }
 
 .mollify-user-dialog-content, .mollify-folder-dialog-content, .mollify-user-folder-dialog-content, .mollify-reset-password-dialog-content {
@@ -1481,13 +1499,13 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-p
 	height: 15px;
 	border: 1px solid #8f8f8f;
 	padding: 2px;
-	width: 300px;
+	width: 395px;
 	white-space: nowrap;
 	overflow: hidden;
 }
 
 .mollify-permission-editor-item-name-itemselectable {
-	width: 258px;
+	width: 352px;
 }
 
 .mollify-permission-editor-item-name-undefined {
@@ -1496,11 +1514,11 @@ tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-p
 }
 
 .mollify-permission-editor-default-permission {
-	width: 305px;
+	width: 400px;
 }
 
 .mollify-permission-editor-list-panel {
-	width: 306px;
+	width: 400px;
 	margin-top: 6px;
 	margin-bottom: 3px;
 	border-bottom: 1px dotted #ddd;
@@ -1515,7 +1533,12 @@ div.mollify-permissionlist-column {
 	border-bottom: 2px solid #AAAAAA;
 	font-weight: bold;
 	padding-bottom: 3px;
-	padding-left: 5px;}
+	padding-left: 4px;
+}
+
+#mollify-permissionlist-column-permission.mollify-permissionlist-column {
+	padding-left: 13px;
+}
 
 table.mollify-permission-list > thead {
 	display: block;
@@ -1529,11 +1552,11 @@ table.mollify-permission-list > tbody {
 
 .mollify-permission-editor-permission-actions {
 	padding-bottom: 5px;
-	margin-left: 82px;
+	margin-left: 60px;
 	padding-top: 5px;
 }
 
-th#mollify-permissionlist-column-th-user.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th
+th#mollify-permissionlist-column-th-name.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th
 {
 	margin: 0;
 	padding: 0;
@@ -1542,8 +1565,12 @@ th#mollify-permissionlist-column-th-user.mollify-permissionlist-column-th, th#mo
 	border-spacing: 0;
 }
 
-th#mollify-permissionlist-column-th-user.mollify-permissionlist-column-th, td.mollify-permissionlist-column-user {
-	width: 135px;
+th#mollify-permissionlist-column-th-name.mollify-permissionlist-column-th, td.mollify-permissionlist-column-name {
+	width: 199px;
+}
+
+td.mollify-permissionlist-column-name {
+	padding-left: 4px;
 }
 
 th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th, td.mollify-permissionlist-column-permission {
@@ -1556,7 +1583,7 @@ th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th,
 }
 
 .mollify-permission-editor-button {
-	width: 70px;
+	width: 80px;
 	height: 23px;
 	margin-right: 6px;
 	font-weight: normal;

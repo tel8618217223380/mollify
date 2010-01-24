@@ -40,7 +40,10 @@
 
 		public function getSupportedFeatures() {
 			$features = array('description_update', 'administration');
-			if ($this->isAuthenticationRequired()) $features[] = 'permission_update';
+			if ($this->isAuthenticationRequired()) {
+				$features[] = 'permission_update';
+				$features[] = 'user_groups';
+			}
 			return $features;
 		}
 		
@@ -102,7 +105,7 @@
 		}
 
 		public function getAllUserGroups() {
-			return $this->db->query("SELECT id, name, description FROM ".$this->db->table("user")." where is_group = 1 ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, description, is_group FROM ".$this->db->table("user")." where is_group = 1 ORDER BY id ASC")->rows();
 		}
 
 		public function getUserGroup($id) {
@@ -110,7 +113,7 @@
 		}
 
 		public function getUsersGroups($userId) {
-			return $this->db->query("select id, name, description, permission_mode from ".$this->db->table("user")." where id in (SELECT user_group.group_id FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."') ORDER BY id ASC")->rows();
+			return $this->db->query("select id, name, description from ".$this->db->table("user")." where id in (SELECT user_group.group_id FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user.id = '".$this->db->string($userId)."') ORDER BY id ASC")->rows();
 		}
 		
 		public function addUsersGroups($userId, $groupIds) {
@@ -304,7 +307,14 @@
 					
 		function getItemPermission($item, $userId) {
 			$id = $this->itemId($item);
-			$userQuery = sprintf("(user_id = '%s' or user_id = '0')", $this->db->string($userId));
+			$userIds = array('0', $this->db->string($userId));
+			if ($this->env->session()->hasParam("groups")) {
+				foreach($this->env->session()->param("groups") as $g) {
+					$userIds[] = $g['id'];
+				}
+			}
+			
+			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds, TRUE));
 			$query = NULL;
 	
 			if ($item->isFile()) {
@@ -312,6 +322,7 @@
 				
 				if ($parent != NULL) {
 					$parentId = $this->itemId($parent);
+					
 					$query = sprintf("SELECT permission FROM ((SELECT permission, user_id, 1 AS 'index' FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s' AND %s) UNION ALL (SELECT permission, user_id, 2 AS 'index' FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s' AND %s)) AS u ORDER BY u.user_id DESC, u.index ASC", $id, $userQuery, $parentId, $userQuery);
 				}
 			}
@@ -324,11 +335,14 @@
 	
 		function getItemPermissions($item) {
 			$id = $this->itemId($item);
-			$rows = $this->db->query(sprintf("SELECT user_id, permission FROM `".$this->db->table("item_permission")."` WHERE item_id = '%s'", $id))->rows();
+			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, item_permission.permission as permission FROM `".$this->db->table("item_permission")."` as item_permission LEFT OUTER JOIN `".$this->db->table("user")."` as user ON user.id = item_permission.user_id WHERE item_permission.item_id = '%s'", $id))->rows();
 			
 			$list = array();
 			foreach ($rows as $row) {
-				$list[] = array("item_id" => $item->id(), "user_id" => $row["user_id"], "permission" => $row["permission"]);
+				if (!isset($row["user_id"]))
+					$list[] = array("item_id" => $item->id(), "user_id" => '0', "is_group" => 0, "permission" => $row["permission"]);
+				else
+					$list[] = array("item_id" => $item->id(), "user_id" => $row["user_id"], "is_group" => $row["is_group"], "permission" => $row["permission"]);
 			}
 			return $list;
 		}

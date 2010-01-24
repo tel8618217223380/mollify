@@ -16,7 +16,6 @@ import java.util.List;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
-import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -87,7 +86,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 			.asList(StyleConstants.ITEM_PERMISSION_LIST_ROW_GROUP);
 
 	public List<String> getRowStyles(FileItemUserPermission t) {
-		if (t.getUserOrGroup() instanceof UserGroup)
+		if (t.getUserOrGroup().isGroup())
 			return GROUP_STYLE;
 		return ROW_STYLE;
 	}

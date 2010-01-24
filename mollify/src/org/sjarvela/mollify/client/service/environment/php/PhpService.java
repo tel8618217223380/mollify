@@ -18,7 +18,9 @@ import com.google.gwt.core.client.GWT;
 
 public class PhpService {
 	private static final String SERVICE_FILE = "r.php";
+	private static final String ADMIN_PATH = "admin/";
 	private final String requestBaseUrl;
+	protected final String adminUrl;
 	private final UrlResolver urlResolver;
 	private final int requestTimeout;
 
@@ -35,18 +37,19 @@ public class PhpService {
 	public PhpService(UrlResolver urlResolver, String path, int requestTimeout) {
 		this.urlResolver = urlResolver;
 		this.requestTimeout = requestTimeout;
-		this.requestBaseUrl = getPath(path);
+		this.requestBaseUrl = getPath(path, SERVICE_FILE);
+		this.adminUrl = getPath(path, ADMIN_PATH);
 		Log.info("Mollify service location: " + this.requestBaseUrl
 				+ ", timeout: " + requestTimeout + " sec");
 	}
 
-	private String getPath(String path) {
+	private String getPath(String path, String p) {
 		if (GWT.isScript())
-			return urlResolver.getHostPageUrl(path, true) + SERVICE_FILE;
+			return urlResolver.getHostPageUrl(path, true) + p;
 
 		if (path == null || path.length() == 0)
 			throw new RuntimeException("Development service path not defined");
-		return path + SERVICE_FILE;
+		return path + p;
 	}
 
 	public PhpRequestBuilder request() {

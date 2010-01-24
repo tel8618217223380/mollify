@@ -198,6 +198,7 @@ public class PermissionEditorView extends CenteredDialog {
 
 		this.okButton.setEnabled(itemDefined);
 		this.addUserButton.setEnabled(itemDefined);
+		this.addUserGroupButton.setEnabled(itemDefined);
 		this.editButton.setEnabled(false);
 		this.removeButton.setEnabled(false);
 		this.defaultPermission.setEnabled(itemDefined);

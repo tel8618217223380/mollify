@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -198,8 +199,11 @@ public class PermissionEditorModel {
 		// create new default permission
 		defaultPermission = new FileItemUserPermission(item, null, permission);
 
-		if (FilePermission.None.equals(permission))
+		if (FilePermission.None.equals(permission)) {
+			if (originalDefaultPermissionExists)
+				removedPermissions.add(defaultPermission);
 			return;
+		}
 
 		if (originalDefaultPermissionExists)
 			modifiedPermissions.add(defaultPermission);
@@ -207,8 +211,10 @@ public class PermissionEditorModel {
 			newPermissions.add(defaultPermission);
 	}
 
-	public List<FileItemUserPermission> getUserSpecificPermissions() {
-		return effectivePermissions;
+	public List<FileItemUserPermission> getPermissions() {
+		List<FileItemUserPermission> list = new ArrayList(effectivePermissions);
+		Collections.sort(list, new PermissionComparator());
+		return list;
 	}
 
 	public void addPermission(UserBase userOrGroup, FilePermission permission) {

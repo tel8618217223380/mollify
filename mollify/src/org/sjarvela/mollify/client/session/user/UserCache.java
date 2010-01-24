@@ -14,29 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserCache {
-
-	private final Map<String, UserBase> allById = new HashMap();
-	private final Map<String, User> usersById = new HashMap();
-	private final Map<String, UserGroup> groupsById = new HashMap();
+	private final Map<String, UserBase> byId = new HashMap();
 
 	public UserCache(UsersAndGroups usersAndGroups) {
 		for (User user : usersAndGroups.getUsers()) {
-			usersById.put(user.getId(), user);
-			allById.put(user.getId(), user);
+			byId.put(user.getId(), user);
 		}
 		for (UserGroup userGroup : usersAndGroups.getUserGroups()) {
-			groupsById.put(userGroup.getId(), userGroup);
-			allById.put(userGroup.getId(), userGroup);
+			byId.put(userGroup.getId(), userGroup);
 		}
-
 	}
 
-	public User getUser(String id) {
-		return usersById.get(id);
-	}
-
-	public UserGroup getUserGroup(String id) {
-		return groupsById.get(id);
+	public UserBase getById(String id) {
+		return byId.get(id);
 	}
 
 }

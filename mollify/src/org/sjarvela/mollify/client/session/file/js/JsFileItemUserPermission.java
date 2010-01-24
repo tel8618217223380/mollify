@@ -38,8 +38,12 @@ public class JsFileItemUserPermission extends JavaScriptObject {
 		return this.item_id;
 	}-*/;
 
-	public final native String getUserId() /*-{
+	public final native String getUserOrGroupId() /*-{
 		return this.user_id;
+	}-*/;
+
+	public final native boolean isGroup() /*-{
+		return this.is_group == 1;
 	}-*/;
 
 	private final native String getPermissionString() /*-{
@@ -59,7 +63,7 @@ public class JsFileItemUserPermission extends JavaScriptObject {
 	}-*/;
 
 	public final boolean isDefault() {
-		return getUserId().equals("0");
+		return getUserOrGroupId().equals("0");
 	};
 
 }

@@ -97,4 +97,9 @@ public class DemoConfigurationService implements ConfigurationService {
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
+
+	@Override
+	public String getAdministrationUrl() {
+		return "http://www.mollify.org";
+	}
 }

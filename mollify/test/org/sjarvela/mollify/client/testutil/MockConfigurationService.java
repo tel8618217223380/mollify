@@ -109,4 +109,10 @@ public class MockConfigurationService implements ConfigurationService {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public String getAdministrationUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

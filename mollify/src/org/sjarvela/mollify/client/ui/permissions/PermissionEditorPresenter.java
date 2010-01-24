@@ -118,7 +118,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	private void refreshList() {
-		view.getList().setContent(model.getUserSpecificPermissions());
+		view.getList().setContent(model.getPermissions());
 	}
 
 	public void onOk() {
@@ -163,7 +163,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 			return;
 
 		FileItemUserPermission permission = selected.get(0);
-		boolean group = (permission.getUserOrGroup() instanceof UserGroup);
+		boolean group = (permission.getUserOrGroup().isGroup());
 		permissionEditorViewFactory.openEditFileItemUserPermissionDialog(this,
 				permission, group);
 	}

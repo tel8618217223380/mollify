@@ -88,7 +88,7 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 
 		actionDelegator.setActionHandler(Action.admin, new VoidActionHandler() {
 			public void onAction() {
-				// TODO
+				presenter.onOpenAdministration();
 			}
 		});
 	}
