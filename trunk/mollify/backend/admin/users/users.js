@@ -380,7 +380,7 @@ function MollifyUsersConfigurationView() {
 					Cancel: function() {
 						$(this).dialog('close');
 					},
-					Reset: function() {
+					Change: function() {
 						$("#change-password-dialog > .form-data").removeClass("invalid");
 						if ($("#change-password-field").val().length == 0) {
 							$("#change-password").addClass("invalid");

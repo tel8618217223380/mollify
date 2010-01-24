@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -20,8 +20,7 @@
 		}
 		
 		public function processGet() {
-			if (count(array_diff(array("users", "current", "password"), $this->path)) > 0)
-				$this->env->authentication()->assertAdmin();
+			$this->env->authentication()->assertAdmin();
 			
 			switch($this->path[0]) {
 				case 'users':
@@ -60,7 +59,8 @@
 		}
 		
 		public function processPut() {
-			$this->env->authentication()->assertAdmin();
+			if (count(array_diff(array("users", "current", "password"), $this->path)) > 0)
+				$this->env->authentication()->assertAdmin();
 			
 			switch($this->path[0]) {
 				case 'users':
@@ -99,7 +99,7 @@
 			if (count($this->path) == 1) {
 				$this->response()->success(array(
 					"users" => $this->env->configuration()->getAllUsers(),
-					"groups" => $this->env->configuration()->getAllUserGroups()
+					"groups" => $this->env->features()->isFeatureEnabled("user_groups") ? $this->env->configuration()->getAllUserGroups() : array()
 				));
 				return;
 			}
@@ -145,15 +145,6 @@
 				$userId = $this->path[1];
 				
 				switch ($this->path[2]) {
-					case 'password':
-						$pw = $this->request->data;
-						if (!isset($pw['new'])) throw $this->invalidRequestException();
-						if ($userId === 'current') {
-							if (!isset($pw['old'])) throw $this->invalidRequestException();
-							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
-						}
-						$this->response()->success($this->env->configuration()->changePassword($userId, $pw['new']));
-						return;
 					case 'groups':
 						$groups = $this->request->data;
 						$this->response()->success($this->env->configuration()->addUsersGroups($userId, $groups));
@@ -174,6 +165,7 @@
 			if (count($this->path) < 2 or !$this->request->hasData()) throw $this->invalidRequestException();
 			$userId = $this->path[1];
 			
+			// users/xx
 			if (count($this->path) == 2) {
 				$user = $this->request->data;
 				if (!isset($user['name']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
@@ -184,6 +176,29 @@
 				$this->response()->success(TRUE);
 				return;
 			}
+			
+			// users/xx/password
+			if (count($this->path) == 3) {
+				$userId = $this->path[1];
+				
+				switch ($this->path[2]) {
+					case 'password':
+						$pw = $this->request->data;
+						if (!isset($pw['new'])) throw $this->invalidRequestException();
+						
+						if ($userId === 'current') {
+							if (!isset($pw['old'])) throw $this->invalidRequestException();
+							$userId = $this->env->authentication()->getUserId();
+							
+							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
+						}
+						
+						$this->response()->success($this->env->configuration()->changePassword($userId, $pw['new']));
+						return;
+				}				
+			}
+
+			// users/xx/folders/xx
 			if (count($this->path) == 4) {
 				switch ($this->path[2]) {
 					case 'folders':

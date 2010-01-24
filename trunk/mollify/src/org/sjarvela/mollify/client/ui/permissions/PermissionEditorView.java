@@ -30,6 +30,8 @@ public class PermissionEditorView extends CenteredDialog {
 	private static final String UNDEFINED = "undefined";
 
 	private final Mode mode;
+	private final boolean allowUserGroups;
+
 	private final Label itemName;
 	private final ListBox<FilePermission> defaultPermission;
 	private final ItemPermissionList list;
@@ -50,12 +52,13 @@ public class PermissionEditorView extends CenteredDialog {
 	}
 
 	public PermissionEditorView(TextProvider textProvider,
-			ActionListener actionListener, Mode mode) {
+			ActionListener actionListener, Mode mode, boolean allowUserGroups) {
 		super(textProvider.getStrings().itemPermissionEditorDialogTitle(),
 				StyleConstants.PERMISSION_EDITOR_VIEW);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 		this.mode = mode;
+		this.allowUserGroups = allowUserGroups;
 
 		itemName = new Label();
 		itemName.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_NAME);
@@ -133,9 +136,11 @@ public class PermissionEditorView extends CenteredDialog {
 
 		Panel actions = new FlowPanel();
 		actions
-				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS);
+				.setStyleName(allowUserGroups ? StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS
+						: StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS_NO_GROUPS);
 		actions.add(addUserButton);
-		actions.add(addUserGroupButton);
+		if (allowUserGroups)
+			actions.add(addUserGroupButton);
 		actions.add(editButton);
 		actions.add(removeButton);
 		listPanel.add(actions);

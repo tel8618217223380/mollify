@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -15,6 +15,7 @@
 		
 		private $env;
 		private $allowedUploadTypes;
+		private $permissionCache = array();
 
 		function __construct($env) {
 			require_once("MollifyFilesystem.class.php");
@@ -178,11 +179,29 @@
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "set description");
 			return $this->env->configuration()->setItemDescription($item, $desc);
 		}
+
+		public function removeDescription($item) {
+			$this->assertRights($item, Authentication::RIGHTS_WRITE, "remove description");
+			return $this->env->configuration()->removeItemDescription($item);
+		}
 		
 		public function permission($item) {
 			if ($this->env->authentication()->isAdmin()) return Authentication::PERMISSION_VALUE_READWRITE;
-			$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+			
+			$permission = $this->getItemUserPermission($item);
 			if (!$permission) return $this->env->authentication()->getDefaultPermission();
+			return $permission;
+		}
+		
+		private function getItemUserPermission($item) {
+			if (array_key_exists($item->id(), $this->permissionCache)) {
+				$permission = $this->permissionCache[$item->id()];
+				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
+			} else {
+				$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+				$this->permissionCache[$item->id()] = $permission;
+				Logging::logDebug("Permission cache put [".$item->id()."]=".$permission);
+			}
 			return $permission;
 		}
 

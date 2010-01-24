@@ -41,6 +41,8 @@
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			
 			$this->env->session()->param('user_id', $user["id"]);
+			if ($this->env->features()->isFeatureEnabled('user_groups'))
+				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
 			$this->env->session()->param('username', $user["name"]);
 			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
 			
@@ -57,6 +59,10 @@
 
 		public function getUserId() {
 			return $this->env->session()->param('user_id');
+		}
+		
+		public function getUserGroups() {
+			return $this->env->session()->param('groups');
 		}
 		
 		public function getUserInfo() {
