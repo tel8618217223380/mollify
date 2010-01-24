@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
-import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
@@ -32,12 +31,14 @@ public class FileItemUserPermission {
 		List<FileItemUserPermission> result = new ArrayList();
 
 		for (JsFileItemUserPermission jsPermission : permissions) {
-			User user = jsPermission.isDefault() ? null : userCache
-					.getUser(jsPermission.getUserId());
+			UserBase userOrGroup = jsPermission.isDefault() ? null : userCache
+					.getById(jsPermission.getUserOrGroupId());
 			FileSystemItem item = itemCache.getItem(jsPermission.getItemId());
 			FilePermission permission = jsPermission.getPermission();
 
-			result.add(new FileItemUserPermission(item, user, permission));
+			result
+					.add(new FileItemUserPermission(item, userOrGroup,
+							permission));
 		}
 		return result;
 	}

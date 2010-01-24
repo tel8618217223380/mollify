@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.session.user;
 public class UserGroup extends UserBase {
 	public static UserGroup create(String id, String name) {
 		UserGroup result = UserGroup.createObject().cast();
-		result.putValues(id, name);
+		result.putValues(id, name, true);
 		return result;
 	}
 

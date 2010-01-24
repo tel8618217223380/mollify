@@ -46,7 +46,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		RenameDialogFactory, CreateFolderDialogFactory {
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
-	private final ViewManager windowManager;
+	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
 	private final FileSystemItemProvider fileSystemItemProvider;
@@ -57,7 +57,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
-			ViewManager windowManager, DialogManager dialogManager,
+			ViewManager viewManager, DialogManager dialogManager,
 			ServiceProvider serviceProvider, SessionManager sessionManager,
 			FileSystemItemProvider fileSystemItemProvider,
 			ItemSelectorFactory itemSelectorFactory,
@@ -65,7 +65,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory) {
 		this.textProvider = textProvider;
-		this.windowManager = windowManager;
+		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.serviceProvider = serviceProvider;
 		this.sessionManager = sessionManager;
@@ -91,16 +91,15 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
 				textProvider, fileSystemService, session);
 		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
-				textProvider, windowManager, dialogManager,
-				itemSelectorFactory, this, fileSystemService,
-				fileSystemItemProvider);
+				textProvider, viewManager, dialogManager, itemSelectorFactory,
+				this, fileSystemService, fileSystemItemProvider);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
-				sessionManager, model, view, serviceProvider
+				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,
 				textProvider, fileSystemActionHandlerFactory,
 				permissionEditorViewFactory, passwordDialogFactory,

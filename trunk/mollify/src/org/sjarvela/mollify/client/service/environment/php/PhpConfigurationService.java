@@ -201,4 +201,9 @@ public class PhpConfigurationService extends ServiceBase implements
 				resultListener).delete();
 	}
 
+	@Override
+	public String getAdministrationUrl() {
+		return service.adminUrl;
+	}
+
 }

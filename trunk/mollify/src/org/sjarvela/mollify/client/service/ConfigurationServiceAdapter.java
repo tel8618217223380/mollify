@@ -30,36 +30,47 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 		this.resultListenerFactory = resultListenerFactory;
 	}
 
+	@Override
+	public String getAdministrationUrl() {
+		return service.getAdministrationUrl();
+	}
+
+	@Override
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
 		service.addFolder(name, path, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener) {
 		service.addUser(name, password, mode, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void addUserFolder(User user, FolderInfo dir, String name,
 			ResultListener resultListener) {
 		service.addUserFolder(user, dir, name, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void changePassword(String oldPassword, String newPassword,
 			ResultListener<Boolean> resultListener) {
 		service.changePassword(oldPassword, newPassword, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void editFolder(FolderInfo dir, String name, String path,
 			ResultListener resultListener) {
 		service.editFolder(dir, name, path, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void editUser(User user, String name, UserPermissionMode mode,
 			ResultListener resultListener) {
 		service.editUser(user, name, mode, resultListenerFactory
@@ -73,33 +84,39 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
 		service
 				.getFolders(resultListenerFactory
 						.createListener(resultListener));
 	}
 
+	@Override
 	public void getUserFolders(User user,
 			ResultListener<List<UserFolder>> resultListener) {
 		service.getUserFolders(user, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener) {
 		service.getUsersAndGroups(resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
 		service.removeFolder(dir, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void removeUser(User user, ResultListener<Boolean> resultListener) {
 		service.removeUser(user, resultListenerFactory
 				.createListener(resultListener));
 	}
 
+	@Override
 	public void removeUserFolder(User user, UserFolder dir,
 			ResultListener resultListener) {
 		service.removeUserFolder(user, dir, resultListenerFactory

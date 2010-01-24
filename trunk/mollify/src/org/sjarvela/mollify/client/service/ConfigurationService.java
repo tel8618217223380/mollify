@@ -21,6 +21,8 @@ import org.sjarvela.mollify.client.session.user.UsersAndGroups;
 
 public interface ConfigurationService {
 
+	String getAdministrationUrl();
+
 	void getUsersAndGroups(ResultListener<UsersAndGroups> resultListener);
 
 	void changePassword(String oldPassword, String newPassword,

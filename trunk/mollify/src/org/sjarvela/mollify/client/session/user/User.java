@@ -14,7 +14,8 @@ public class User extends UserBase {
 	public static User create(String id, String name,
 			UserPermissionMode permissionMode) {
 		User result = User.createObject().cast();
-		result.putValues(id, name, permissionMode.getStringValue());
+		result.putValues(id, name, false);
+		result.putPermission(permissionMode.getStringValue());
 		return result;
 	}
 
@@ -29,10 +30,7 @@ public class User extends UserBase {
 		return UserPermissionMode.fromString(getPermissionString());
 	}
 
-	private final native void putValues(String id, String name,
-			String permissionMode) /*-{
-		this.id = id;
-		this.name = name;
+	private final native void putPermission(String permissionMode) /*-{
 		this.permission_mode = permissionMode;
 	}-*/;
 }
