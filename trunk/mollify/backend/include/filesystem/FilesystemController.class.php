@@ -23,7 +23,7 @@
 			require_once("FilesystemItem.class.php");
 			
 			$this->env = $env;
-			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types');
+			$this->allowedUploadTypes = $env->settings()->settingOrDefault('allowed_file_upload_types');
 		}
 		
 		public function initialize($request) {}
