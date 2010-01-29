@@ -37,15 +37,15 @@
 		
 		public function createEnvironment() {
 			require_once("include/Settings.class.php");
-			require_once("include/Session.class.php");
-			require_once("include/Authentication.class.php");
+			require_once("InstallerSession.class.php");
+			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationProviderFactory.class.php");
 			$configurationProviderFactory = new ConfigurationProviderFactory();
 			
 			$this->settings = new Settings($this->settingsVar);
-			$this->session = new Session($this->settings);
+			$this->session = new InstallerSession($this->settings);
 			$this->configuration = $configurationProviderFactory->createConfigurationProvider($this->type, $this->settings);
-			$this->authentication = new Authentication($this);
+			$this->authentication = new InstallerAuthentication($this);
 			$this->session->initialize(NULL);
 		}
 		

@@ -20,7 +20,7 @@
 		const RIGHTS_WRITE = "W";
 		const RIGHTS_ADMIN = "A";
 	
-		private $env;
+		protected $env;
 		
 		public function __construct($env) {
 			$this->env = $env;

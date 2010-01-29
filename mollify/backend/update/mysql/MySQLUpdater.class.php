@@ -65,6 +65,8 @@
 				$this->setError("Update failed", "<code>".$e->details()."</code>");
 				$this->showPage("update_error");
 			}
+			
+			$this->session()->reset();
 			$this->showPage("success");
 		}
 	}

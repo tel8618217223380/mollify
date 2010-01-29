@@ -11,11 +11,14 @@
 	 */
 
 	class Session {
-		private $name;
+		protected $name;
 		
 		public function __construct($settings) {
 			$this->name = "MOLLIFY-SESSION";			
-			if ($settings->hasSetting("session_name")) $this->name .= "-".$settings->setting("session_name");
+			if ($settings->hasSetting("session_name")) {
+				$n = $settings->setting("session_name");
+				if (strlen($n) > 0) $this->name .= "-".$n;
+			}
 		}
 		
 		public function initialize($request) {
@@ -28,7 +31,13 @@
 			$result = array();
 			$result['session_name'] = session_name();
 			$result['session_id'] = session_id();
+			$result['session_ver'] = "1_5";
 			return $result;
+		}
+		
+		public function getSessionVer() {
+			if (!$this->hasParam('session_ver')) return NULL;
+			return $this->param('session_ver');
 		}
 		
 		public function reset() {
