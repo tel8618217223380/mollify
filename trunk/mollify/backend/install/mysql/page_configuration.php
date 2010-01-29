@@ -39,7 +39,7 @@
 					<li>Database name (optional, by default "mollify")</li>
 					<li>User</li>
 					<li>Password</li>
-					<li>Table prefix (optional, by default none)</li>
+					<li>Table prefix (optional)</li>
 				</ul>
 				
 				For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.

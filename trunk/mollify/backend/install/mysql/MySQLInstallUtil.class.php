@@ -51,11 +51,11 @@
 		}
 		
 		public function execCreateTables() {
-			$this->db->execSqlFile("include/mysql/sql/create_tables.sql");
+			$this->db->execSqlFile("../include/mysql/sql/create_tables.sql");
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("include/mysql/sql/params.sql");
+			$this->db->execSqlFile("../include/mysql/sql/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {
