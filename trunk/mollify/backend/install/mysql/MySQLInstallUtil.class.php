@@ -63,7 +63,7 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "include/mysql/sql/".$from."-".$to.".sql";
+			$file = "../include/mysql/sql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 	}

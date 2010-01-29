@@ -35,7 +35,7 @@
 				Mollify is already installed, but needs updating. Installed Mollify version is <b><?php echo version($installer->installedVersion()) ?></b>, while the current version is <b><?php echo version($installer->currentVersion()) ?></b>.
 			</p>
 			<p>
-				Open <a href="update.php">Mollify updater</a> to update to the current version.
+				Open <a href="../update/">Mollify updater</a> to update to the current version.
 			</p>
 		<?php } ?>
 		</div>
