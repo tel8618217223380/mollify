@@ -34,12 +34,17 @@
 			$settingsExist = (isset($settings) and $settings != NULL);
 			
 			foreach(self::$VALUES as $s=>$v) {
-				if (!$settingsExist or !array_key_exists($s, $settings)) $this->settings[$s] = $v;
-				else $this->settings[$s] = $settings[$s];
+				if (!$settingsExist or !array_key_exists($s, $settings)) continue;
+				$this->settings[$s] = $settings[$s];
 			}
 		}
 
 		public function setting($setting) {
+			return $this->settings[$setting];
+		}
+
+		public function settingOrDefault($setting) {
+			if (!$this->hasSetting($setting)) return self::$VALUES[$setting];
 			return $this->settings[$setting];
 		}
 		

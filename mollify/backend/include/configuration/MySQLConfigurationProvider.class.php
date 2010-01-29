@@ -39,12 +39,7 @@
 		}
 
 		public function getSupportedFeatures() {
-			$features = array('description_update', 'administration');
-			if ($this->isAuthenticationRequired()) {
-				$features[] = 'permission_update';
-				$features[] = 'user_groups';
-			}
-			return $features;
+			return array('description_update', 'administration', 'permission_update', 'user_groups');
 		}
 		
 		public function getInstalledVersion() {

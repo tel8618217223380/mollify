@@ -32,11 +32,17 @@
 				$enabled = FALSE;
 				$configControlled = in_array($f, self::$featuresControlledByConfigurationProvider);
 				
-				if (!$configControlled or in_array($f, $configurationFeatures)) {				
-					if ($settings->hasSetting("enable_".$f))
+				if ($configControlled) {
+					$configSupported = in_array($f, $configurationFeatures);
+					
+					if (!$configSupported)
+						$enabled = FALSE;
+					else if ($settings->hasSetting("enable_".$f))
 						$enabled = $settings->setting("enable_".$f);
 					else
-						$enabled = $configControlled;
+						$enabled = TRUE;					
+				} else {
+					$enabled = $settings->settingOrDefault("enable_".$f);
 				}
 				$this->features[$f] = $enabled;
 			}
