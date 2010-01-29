@@ -168,7 +168,7 @@
 		// PHASES
 				
 		private function onPhaseDatabase() {
-			if ($this->action() === 'continue') {
+			if ($this->action() === 'continue_db') {
 				$this->clearAction();
 				
 				if (!$this->db->databaseExists()) {

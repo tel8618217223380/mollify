@@ -33,8 +33,9 @@
 				<?php if (!$installer->db()->databaseExists()) { ?>
 							<div class="clear" />
 							<div class="note">
-								<p><b>Note!</b> Database "<code><?php echo $installer->db()->database(); ?></code>" does not exist. If you continue installation, installer will create it if user "<code><?php echo $installer->db()->user(); ?></code>" has sufficient permissions.</p>
-								<p>If you wish to create it manually instead, click "Refresh Configuration" when it exists.</p>
+								<p><b>Note!</b> Database "<code><?php echo $installer->db()->database(); ?></code>" does not exist or user "<code><?php echo $installer->db()->user(); ?></code>" does not have access permissions.</p>
+								<p>If you continue installation, installer will try to create it.</p>
+								<p>If you wish to create the database and associate user permissions manually instead, click "Refresh Configuration" when ready.</p>
 							</div>
 				<?php } ?>				
 			</p>
@@ -55,7 +56,7 @@
 				action("refresh");
 			});
 			$("#button-continue").click(function() {
-				action("continue");
+				action("continue_db");
 			});
 		}
 	</script>
