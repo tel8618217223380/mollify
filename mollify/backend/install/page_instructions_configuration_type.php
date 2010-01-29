@@ -40,8 +40,14 @@
 			<p>
 				Options are:
 				<ul>
-					<li>File based configuration</li>
-					<li>Database configuration (MySQL)</li>
+					<li>
+						<b>File based configuration</b>
+						<p>In file based configuration all the configuration options are in the <code>configuration.php</code>. Options are read-only,  and all changes must be made by manually editing the file. This option does not support all features, and is best for non-changing environments.</p>
+					</li>
+					<li>
+						<b>Database configuration (MySQL)</b>
+						<p>In database configuration, all the options are stored in the database, and can be modified from the client.</p>
+					</li>
 				</ul>
 				For more information about the alternatives, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
 			</p>

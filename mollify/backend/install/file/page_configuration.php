@@ -33,7 +33,7 @@
 		
 		<div class="content">
 			<p>
-				Mollify installer does not support modifying the configuration file, and therefore file based configuration must be done by manually editing the configuration file "<code>configuration.php</code>".
+				File based configuration is always read-only, and therefore configuration must be done by manually editing the configuration file "<code>configuration.php</code>".
 			</p>
 			<h2>Operation Modes</h2>
 			<p>

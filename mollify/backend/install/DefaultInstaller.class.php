@@ -14,7 +14,7 @@
 	
 	class DefaultInstaller extends MollifyInstaller {
 		public function __construct() {
-			parent::__construct("", array());			
+			parent::__construct("", "", array());			
 		}
 		
 		public function isConfigured() { return FALSE; }
