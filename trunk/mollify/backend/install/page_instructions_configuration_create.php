@@ -30,7 +30,7 @@
 				<div class="details">
 					Make sure that the file "<code>configuration.php</code>"
 					<ul>
-						<li>is located in the Mollify folder (where, for example, this install script is located)</li>
+						<li>is located in the Mollify backend folder</li>
 						<li>is accessible to PHP</li>
 					</ul>
 				</div>
@@ -39,12 +39,8 @@
 		
 		<div class="content">
 			<p>
-				To begin with installation process, first create empty configuration file called "<code>configuration.php</code>" in your Mollify backend directory. This is the directory where files "<code>r.php</code>" and "<code>install.php</code>" are located.
-			</p>
-			<p>
-				Then click "Continue", and installer will give further instructions.
-			</p>
-	
+				To begin with the installation process, first create empty configuration file called "<code>configuration.php</code>" in the Mollify backend directory.
+			</p>	
 			<p>
 				<a id="button-retry" href="#" class="btn">Continue</a>
 			</p>

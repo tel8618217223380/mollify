@@ -13,6 +13,8 @@
 	 include("install/installation_page.php");
 	 	 
 	 function getPermissionMode($mode) {
+	 	if ($mode == NULL) return 'No permission level set, defaults to "Read-Only"';
+	 	
 	 	switch (strtolower(trim($mode))) {
 	 		case "ro": return "Read-Only";
 	 		case "rw": return "Read and Write";
@@ -29,7 +31,7 @@
 		Mollify has been configured with following users and published directories. To modify this configuration, edit the "<code>configuration.php</code>". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationMultiUserMode" target="_blank">instructions</a>.<?php
 	 }
 	 
-	 function instructionsInstalledMultiUserMode() { ?>
+	 function instructionsInstalledMultiUser() { ?>
 		Mollify has been configured with following users and published directories. To view this list later, log into Mollify as admin user and open this installer.<?php
 	 }
 	 
@@ -51,10 +53,10 @@
 			<p>
 			<?php
 				if ($installer->action() != 'continue') {
-					if ($this->authentication()->isAuthenticationRequired()) instructionsInstalledMultiUserMode();
+					if ($this->authentication()->isAuthenticationRequired()) instructionsInstalledMultiUser();
 					else instructionsSingleUser();
 				} else {
-					if ($this->authentication()->isAuthenticationRequired()) instructionsMultiUserMode();
+					if ($this->authentication()->isAuthenticationRequired()) instructionsMultiUser();
 					else instructionsSingleUser();
 				}
 			?>
@@ -64,7 +66,7 @@
 					<h2>Configured users</h2>
 					<ol>
 					<?php foreach ($installer->users() as $id => $user) {
-						echo "<li>".$user['name']." (".getPermissionMode($user['file_permission_mode']).")</li>";
+						echo "<li>".$user['name']." (".getPermissionMode(isset($user['file_permission_mode']) ? $user['file_permission_mode'] : NULL).")</li>";
 					}?>
 					</ol>
 				<?php } ?>

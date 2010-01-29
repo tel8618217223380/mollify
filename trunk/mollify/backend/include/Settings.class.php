@@ -31,11 +31,11 @@
 		);
 		
 		function __construct($settings) {
-			if (isset($settings) and $settings != NULL) {
-				foreach(self::$VALUES as $s=>$v) {
-					if (!array_key_exists($s, $settings)) $this->settings[$s] = $v;
-					else $this->settings[$s] = $settings[$s];
-				}
+			$settingsExist = (isset($settings) and $settings != NULL);
+			
+			foreach(self::$VALUES as $s=>$v) {
+				if (!$settingsExist or !array_key_exists($s, $settings)) $this->settings[$s] = $v;
+				else $this->settings[$s] = $settings[$s];
 			}
 		}
 

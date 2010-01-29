@@ -15,7 +15,7 @@
 		
 		public function __construct($settings) {
 			$this->name = "MOLLIFY-SESSION";			
-			if ($settings->setting("session_name") != NULL) $this->name .= "-".$settings->setting("session_name");
+			if ($settings->hasSetting("session_name")) $this->name .= "-".$settings->setting("session_name");
 		}
 		
 		public function initialize($request) {
