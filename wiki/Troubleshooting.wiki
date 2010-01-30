@@ -3,16 +3,27 @@
 
 = Troubleshooting =
 
-	In case of errors, do following steps before reporting new issue:
+In case of errors, do following steps before reporting new issue:
 
-  # Enable server side logging by adding following setting in configuration.php:
+1. Enable server side logging by adding following setting in configuration.php:
 {{{
 	$SETTINGS = array(
-		...
 		"debug" => TRUE
 	);
 }}}
-  # Enable client side logging by adding following parameter in URL: "log_level=DEBUG". For example, "`http://YOUR_HOST/mollify/?log_level=DEBUG`"
-  # Recreate the error, and copy all the logging information into the issue report. If you have access to PHP error logs, include it as well.
+	If you have other settings already, add this to the same list, for example:
+{{{
+	$SETTINGS = array(
+		"enable_file_upload" => TRUE,
+		"enable_zip_download" => TRUE,
+		"debug" => TRUE
+	);
+}}}
 
-	If you don't want to post logs here in public, you can send them to me directly with the issue link.
+2. Enable client side logging by adding following parameter in URL: "log_level=DEBUG". For example, "`http://YOUR_HOST/mollify/?log_level=DEBUG`"
+
+3. Recreate the error, and copy all the logging information into the issue report
+
+4. If you have access to PHP error logs, include it as well.
+
+If you don't want to post logs here in public, you can send them to me directly with the issue link.
