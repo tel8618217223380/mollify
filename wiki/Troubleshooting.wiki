@@ -11,7 +11,7 @@ In case of errors, do following steps before reporting new issue:
 		"debug" => TRUE
 	);
 }}}
-	If you have other settings already, add this to the same list, for example:
+If you have other settings already, add this to the same list, for example:
 {{{
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
