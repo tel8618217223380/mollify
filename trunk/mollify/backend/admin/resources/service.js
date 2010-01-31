@@ -12,9 +12,15 @@ jQuery.fn.exists = function() { return ($(this).length > 0); }
 
 var preRequestCallback = null;
 var postRequestCallback = null;
+var protocolVersion = "1_5_0";
 
 function getSessionInfo(success, fail) {
-	request("GET", 'session/info/1_5_0', success, fail);
+	request("GET", 'session/info/'+protocolVersion, success, fail);
+}
+
+function authenticate(username, pw, success, fail) {
+	var data = JSON.stringify({username:username, password:generate_md5(pw), protocol_version:protocolVersion});
+	request("POST", 'session/authenticate', success, fail, data);
 }
 
 function getFolders(success, fail) {
@@ -22,7 +28,7 @@ function getFolders(success, fail) {
 }
 
 function addFolder(name, path, success, fail) {
-	var data = JSON.stringify({name:name, path:path});
+	var data = JSON.stringify({username:name, path:path});
 	request("POST", 'configuration/folders', success, fail, data);
 }
 
