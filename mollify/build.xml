@@ -167,10 +167,30 @@
 	<target name="deploy" depends="init-prod, do-compile, do-deploy">
 	</target>
 
-	<target name="deploy-dev" depends="init-dev, do-compile, do-deploy">
+	<target name="deploy-dev" depends="init-dev, do-compile">
+		<property name="target.dir" location="${deploy.dir}/debug-client" />
+		
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
+		
+		<zip destfile="${deploy.dir}/${deploy.package.name}_debug.zip" basedir="${target.dir}" />
+
+		<delete dir="${target.dir}" />
 	</target>
 
-	<target name="deploy-demo" depends="init-demo, do-compile, do-deploy">
+	<target name="deploy-demo" depends="init-demo, do-compile">
+		<property name="target.dir" location="${deploy.dir}/demo" />
+		
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
 	</target>
 
 	<target name="run" depends="compile.prod">

@@ -79,7 +79,7 @@ function notify(msg) {
 }
 
 function onUnauthorized() {
-	$("body").html("<div class='error'><div class='title'>Unauthorized</div><div class='details'>Mollify configuration utility requires admin user</div></div>")
+	$("body").load("unauthorized.html", "", initWidgets);
 }
 
 function onServerError(error) {

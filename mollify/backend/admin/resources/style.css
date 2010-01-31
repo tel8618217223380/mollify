@@ -6,6 +6,15 @@
 	margin: 2px 0 0;
 }
 
+#login-panel {
+	width: 450px;
+	background-color: #eee8ec;
+}
+
+#login-panel .title {
+	font-size: 11px;
+}
+
 #page-area {
 	margin-left: 176px;
 	margin-top: 6px;

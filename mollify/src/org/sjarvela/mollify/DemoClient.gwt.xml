@@ -10,5 +10,6 @@
  
 <module rename-to="org.sjarvela.Mollify">
 	<inherits name='org.sjarvela.mollify.Client'/>
+	<inherits name="com.google.gwt.i18n.I18N"/>
 	<set-property name="demo" value="true"/>
 </module>

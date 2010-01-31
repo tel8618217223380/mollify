@@ -83,7 +83,7 @@ public class FileDetails extends JavaScriptObject {
 		this.last_changed = lastChanged;
 		this.last_modified = lastModified;
 		this.description = description;
-		this.permissions = permission;
+		this.permission = permission;
 	}-*/;
 
 	public final native void setDescription(String description) /*-{
