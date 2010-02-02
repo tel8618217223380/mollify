@@ -13,14 +13,23 @@ package org.sjarvela.mollify.client.session;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.event.EventDispatcher;
+
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultSessionManager implements SessionManager {
+	private final EventDispatcher eventDispatcher;
 	private final List<SessionListener> listeners = new ArrayList();
 
 	private SessionInfo session = null;
+
+	@Inject
+	public DefaultSessionManager(EventDispatcher eventDispatcher) {
+		this.eventDispatcher = eventDispatcher;
+	}
 
 	public void setSession(SessionInfo session) {
 		Log.debug("SESSION: " + session.asString());
@@ -28,6 +37,8 @@ public class DefaultSessionManager implements SessionManager {
 
 		for (SessionListener listener : listeners)
 			listener.onSessionStarted(session);
+
+		eventDispatcher.onEvent(SessionEvent.onSessionStart(session));
 	}
 
 	public void endSession() {
@@ -36,6 +47,8 @@ public class DefaultSessionManager implements SessionManager {
 
 		for (SessionListener listener : listeners)
 			listener.onSessionEnded();
+
+		eventDispatcher.onEvent(SessionEvent.onSessionEnd());
 	}
 
 	public void addSessionListener(SessionListener listener) {

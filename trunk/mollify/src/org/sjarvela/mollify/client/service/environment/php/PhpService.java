@@ -49,6 +49,8 @@ public class PhpService {
 
 		if (path == null || path.length() == 0)
 			throw new RuntimeException("Development service path not defined");
+		if (!path.startsWith("http"))
+			return urlResolver.getHostPageUrl(path, true) + p;
 		return path + p;
 	}
 
