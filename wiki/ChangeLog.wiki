@@ -5,7 +5,7 @@
   * Rewritten service RESTful API
   * Rewritten installer and updater
   * Rewritten administration
-  * Added support for user groups
+  * Added support for user groups (NOTE upgrade required from previous versions)
   * Added support for database table prefix
   * Added option for disabling default login
 
