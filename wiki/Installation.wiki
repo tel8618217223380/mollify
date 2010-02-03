@@ -5,10 +5,8 @@
 
 	 #  Unzip Mollify installation package (for example with command "`unzip mollify_[VER].zip`")
 	 #  Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
-	 #  Create configuration file, see instructions in chapter 3.
-	 #  You are ready to go. Open address "http://your.host.name/mollify" (if installed into root) to enter Mollify.
-	 
-	If you've chosen database configuration, remember to configure users and published folders in configuration utility (accessible to admin users under the user menu in top right corner)
+	 #  Open installer at address "http://your.host.name/mollify/backend/install/".
+	 #  For database installation, open administration utility to configure users and published folders at "http://your.host.name/mollify/backend/admin/".
 
 = 2. Upgrading =
 
@@ -18,10 +16,7 @@
 	 #  Copy directory "mollify" from the latest Mollify installation package
 	 #  From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
 	 #  Remove backup directory
-
-	If you are upgrading from Mollify version 0.9, remove also directory "org.sjarvela.mollify.App" (in 1.0, this is located at "mollify/client").
-
-	With MySQL installations, also database may require an upgrade. Check this by opening installation script with at "http://your.host.name/mollify/backend/install", and it will start upgrade if required.
+	 #  Open update utility at address "http://your.host.name/mollify/backend/update/" to check if further update actions are required.
 
 = 3. Configuration =
 
