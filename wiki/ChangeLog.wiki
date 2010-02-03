@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.5 ==
+  * Rewritten service RESTful API
+  * Rewritten installer and updater
+  * Rewritten administration
+  * Added support for user groups
+  * Added support for database table prefix
+  * Added option for disabling default login
+
 === Version 1.0.5.6 ==
   * Added new language: Korean
   * Fixed memory restriction issues when downloading large files
