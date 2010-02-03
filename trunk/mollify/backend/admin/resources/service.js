@@ -28,7 +28,7 @@ function getFolders(success, fail) {
 }
 
 function addFolder(name, path, success, fail) {
-	var data = JSON.stringify({username:name, path:path});
+	var data = JSON.stringify({name:name, path:path});
 	request("POST", 'configuration/folders', success, fail, data);
 }
 

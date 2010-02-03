@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -36,7 +36,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class MollifyClient implements Client, SessionListener {
 	public static final String PROTOCOL_VERSION = "1_5_0";
-	private static final String PARAM_ENABLE_LOGIN = "enable-login";
+	private static final String PARAM_SHOW_LOGIN = "show-login";
 
 	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
@@ -44,25 +44,23 @@ public class MollifyClient implements Client, SessionListener {
 	private final SessionManager sessionManager;
 	private final SessionService service;
 	private final TextProvider textProvider;
-	private final EventDispatcher eventDispatcher;
-
 	private final ClientSettings settings;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
 			ServiceProvider serviceProvider, TextProvider textProvider,
-			EventDispatcher eventDispatcher, ClientSettings settings) {
+			ClientSettings settings, PluginSystem pluginSystem) {
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
 		this.sessionManager = sessionManager;
 		this.textProvider = textProvider;
-		this.eventDispatcher = eventDispatcher;
 		this.settings = settings;
 		this.service = serviceProvider.getSessionService();
 
 		sessionManager.addSessionListener(this);
+		pluginSystem.setup();
 	}
 
 	public void start() {
@@ -70,8 +68,6 @@ public class MollifyClient implements Client, SessionListener {
 		Log.debug("Host page location: " + GWT.getHostPageBaseURL());
 		Log.debug("Module name: " + GWT.getModuleName());
 		Log.debug("Module location: " + GWT.getModuleBaseURL());
-
-		setupClientPlugins(eventDispatcher);
 
 		viewManager.empty();
 
@@ -87,15 +83,6 @@ public class MollifyClient implements Client, SessionListener {
 					}
 				});
 	}
-
-	private native void setupClientPlugins(EventDispatcher e) /*-{
-		if (!$wnd.onMollifyStarted) return;
-
-		$wnd.registerEventHandler = function(cb) {
-			e.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::registerEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
-		$wnd.onMollifyStarted();
-	}-*/;
 
 	public void onSessionStarted(SessionInfo session) {
 		if (!session.isAuthenticationRequired() || !session.isAuthenticated())
@@ -118,8 +105,10 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	private void openLogin() {
-		if (!settings.getBool(PARAM_ENABLE_LOGIN, true))
+		if (!settings.getBool(PARAM_SHOW_LOGIN, true)) {
+			viewManager.empty();
 			return;
+		}
 
 		new LoginDialog(textProvider, new LoginHandler() {
 			public void login(String userName, String password,
