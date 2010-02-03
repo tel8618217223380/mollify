@@ -15,6 +15,8 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.DefaultPluginSystem;
+import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
 import org.sjarvela.mollify.client.service.UrlResolver;
@@ -69,8 +71,9 @@ public class ContainerConfiguration extends AbstractGinModule {
 				DefaultPermissionEditorViewFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
-		bind(Client.class).to(MollifyClient.class);
 		bind(EventDispatcher.class).to(DefaultEventDispatcher.class);
+		bind(PluginSystem.class).to(DefaultPluginSystem.class);
+		bind(Client.class).to(MollifyClient.class);
 	}
 
 	@Provides

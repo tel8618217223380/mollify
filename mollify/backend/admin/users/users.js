@@ -571,6 +571,7 @@ function MollifyUsersConfigurationView() {
 		}
 		
 		$("#use-default-folder-name").attr('checked', true);
+		$("#use-default-folder-name").click(onFolderOrDefaultChanged);
 		onFolderOrDefaultChanged();
 		$("#add-user-folder-dialog").dialog('open');
 	}
