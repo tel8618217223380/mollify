@@ -35,7 +35,11 @@ If you have other settings already, add this to the same list, for example:
 }}}
 and then modify the client script location to use the debug client instead
 {{{
-<script type="text/javascript" language="javascript" src="*client-debug*/org.sjarvela.Mollify.nocache.js"></script>
+<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
+}}}
+into
+{{{
+<script type="text/javascript" language="javascript" src="debug-client/org.sjarvela.Mollify.nocache.js"></script>
 }}}
 
 == 3. Recreate the error ===
