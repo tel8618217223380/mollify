@@ -49,3 +49,5 @@ Once the debug client is installed, you should see the debug window. Recreate th
 If you have access to PHP error logs, include it as well.
 
 If you don't want to post logs here in public, you can send them to me directly with the issue link.
+
+NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
