@@ -177,18 +177,15 @@ $PASSWORDS_HASHED = TRUE;
 
 	Value given is timeout in seconds.
 
-== 7.3. Logging ==
+== 7.3. Default Login Screen ==
 
-	Mollify has support for client side logging, which makes it easier to troubleshoot any problems when backend log is not accessible or does not reveal anything.
-
-	Logging can be enabled with following property in host page head section:
+	Mollify has a default login screen which is shown when Mollify is accessed and no login has been done. To create a custom login screen etc., this can be disabled with following parameter in host page head section:
 
 {{{
-<meta name="gwt:property" content="log_level=DEBUG">
+<meta name="mollify:property" content="show-login=false">
 }}}
 
-	When Mollify is opened with logging enabled, a log panel is visible on the screen. It can be dragged and resized, and log level can also be changed by clicking log level buttons (DEBUG/ERROR/WARN/INFO/OFF).
-
+An example of creating a custom login page can be found in downloads section.
 
 
 = 8. Demo Mode =
