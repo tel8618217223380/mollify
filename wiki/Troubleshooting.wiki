@@ -5,7 +5,8 @@
 
 In case of errors, do following steps before reporting new issue:
 
-1. Enable server side logging by adding following setting in configuration.php:
+=== 1. Enable server side logging ===
+Enable server side logging by adding following setting in configuration.php:
 {{{
 	$SETTINGS = array(
 		"debug" => TRUE
@@ -20,10 +21,27 @@ If you have other settings already, add this to the same list, for example:
 	);
 }}}
 
-2. Enable client side logging by adding following parameter in URL: "log_level=DEBUG". For example, "`http://YOUR_HOST/mollify/?log_level=DEBUG`"
+=== 2. Enable client side logging ===
 
-3. Recreate the error, and copy all the logging information into the issue report
+1. Download debug client from http://code.google.com/p/mollify/downloads/list (select the debug client for the same version as installed)
 
-4. If you have access to PHP error logs, include it as well.
+2. In Mollify installation directory create a new folder called "debug-client"
+
+3. Unzip the package into created folder
+
+4. Modify host page and add this line
+{{{
+<meta name="gwt:property" content="log_level=DEBUG">
+}}}
+and then modify the client script location to use the debug client instead
+{{{
+<script type="text/javascript" language="javascript" src="*client-debug*/org.sjarvela.Mollify.nocache.js"></script>
+}}}
+
+== 3. Recreate the error ===
+Once the debug client is installed, you should see the debug window. Recreate the error, and copy all the logging information into the issue report
+
+== 4. Additional information ===
+If you have access to PHP error logs, include it as well.
 
 If you don't want to post logs here in public, you can send them to me directly with the issue link.
