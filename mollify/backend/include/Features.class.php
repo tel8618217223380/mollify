@@ -42,7 +42,7 @@
 					else
 						$enabled = TRUE;					
 				} else {
-					$enabled = $settings->settingOrDefault("enable_".$f);
+					$enabled = $settings->setting("enable_".$f, TRUE);
 				}
 				$this->features[$f] = $enabled;
 			}

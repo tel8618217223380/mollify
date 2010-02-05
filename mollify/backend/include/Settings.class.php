@@ -39,12 +39,11 @@
 			}
 		}
 
-		public function setting($setting) {
-			return $this->settings[$setting];
-		}
-
-		public function settingOrDefault($setting) {
-			if (!$this->hasSetting($setting)) return self::$VALUES[$setting];
+		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {
+			if (!$this->hasSetting($setting)) {
+				if (!$allowDefaultIfNotDefined) return NULL;
+				return self::$VALUES[$setting];
+			}
 			return $this->settings[$setting];
 		}
 		

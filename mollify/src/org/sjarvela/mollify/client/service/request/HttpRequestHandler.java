@@ -65,8 +65,6 @@ public class HttpRequestHandler extends
 	}
 
 	public void process() {
-		if (Log.isDebugEnabled())
-			Log.debug("Request " + this.getHTTPMethod() + ": " + this.getUrl());
 		try {
 			send();
 		} catch (RequestException e) {

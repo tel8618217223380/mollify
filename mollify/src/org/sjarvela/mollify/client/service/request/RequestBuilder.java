@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.service.request;
 
+import com.allen_sauer.gwt.log.client.Log;
+
 public class RequestBuilder {
 	public enum Method {
 		GET, PUT, POST, DELETE
@@ -46,6 +48,9 @@ public class RequestBuilder {
 	}
 
 	public void send(Method method) {
+		if (Log.isDebugEnabled())
+			Log.debug("REQUEST (" + method.name() + "): " + url
+					+ (data != null ? (" [" + data + "]") : ""));
 		new HttpRequestHandler(method.name(), url, timeout, data, listener)
 				.process();
 	}
