@@ -75,7 +75,7 @@
 		
 		private static function toStr($o) {
 			if (is_array($o)) return Util::array2str($o);
-			return $o;
+			return (string) $o;
 		}
 	}
 ?>

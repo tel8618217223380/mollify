@@ -17,8 +17,8 @@
 			require_once("file/FilePermissionDao.class.php");
 			require_once("file/FileDescriptionDao.class.php");
 			
-			$this->permissionDao = new FilePermissionDao($settings->setting("permission_file"));
-			$this->descriptionDao = new FileDescriptionDao($settings->setting("description_file"));
+			$this->permissionDao = new FilePermissionDao($settings->setting("permission_file", TRUE));
+			$this->descriptionDao = new FileDescriptionDao($settings->setting("description_file", TRUE));
 		}
 		
 		function getSupportedFeatures() {
