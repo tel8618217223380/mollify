@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.5.1 ==
+  * Fixed default value issue in file configuration
+  * Fixed download issue (http://code.google.com/p/mollify/issues/detail?id=44)
+
 === Version 1.5 ==
   * Rewritten service RESTful API
   * Rewritten installer and updater
