@@ -1,8 +1,8 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 1.5.1 ==
-  * Fixed default value issue in file configuration
+=== Version 1.5.2 ==
+  * Fixed default value issues in file configuration
   * Fixed download issue (http://code.google.com/p/mollify/issues/detail?id=44)
 
 === Version 1.5 ==
