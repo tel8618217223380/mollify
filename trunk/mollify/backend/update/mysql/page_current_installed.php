@@ -25,9 +25,7 @@
 	<body id="page-mysql-current-installed">
 		<?php pageBody("Update", "Current Version Already Installed"); ?>
 		<div class="content">
-			<p>
-				Mollify is already installed with the current version <b><?php echo version($installer->installedVersion()) ?></b>.
-			</p>	
+			<h2>No update is required.</h2>	
 		</div>
 		<?php pageFooter(); ?>
 	</body>

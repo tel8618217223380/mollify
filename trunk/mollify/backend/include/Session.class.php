@@ -56,6 +56,10 @@
 			return $_SESSION[$param] = $value;
 		}
 		
+		public function all() {
+			return $_SESSION;
+		}
+		
 		public function log() {
 			Logging::logDebug("SESSION: ".Util::array2str($_SESSION));
 		}

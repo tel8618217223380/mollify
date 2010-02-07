@@ -72,10 +72,10 @@
 			global $USERS, $FILE_PERMISSION_MODE;
 			
 			if ($userId === "") {
-				if (!isset($FILE_PERMISSION_MODE)) return Authentication::$PERMISSION_VALUE_READONLY;
+				if (!isset($FILE_PERMISSION_MODE)) return Authentication::PERMISSION_VALUE_READONLY;
 				$mode = strtoupper($FILE_PERMISSION_MODE);
 			} else {
-				if (!isset($USERS[$userId]["file_permission_mode"])) return Authentication::$PERMISSION_VALUE_READONLY;
+				if (!isset($USERS[$userId]["file_permission_mode"])) return Authentication::PERMISSION_VALUE_READONLY;
 				$mode = strtoupper($USERS[$userId]["file_permission_mode"]);
 			}
 
