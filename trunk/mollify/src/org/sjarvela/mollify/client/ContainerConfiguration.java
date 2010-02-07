@@ -36,6 +36,7 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.fileupload.pluploader.PluploaderDialogFactory;
 import org.sjarvela.mollify.client.ui.itemselector.DefaultItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -122,9 +123,9 @@ public class ContainerConfiguration extends AbstractGinModule {
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(param))
 			return new FlashFileUploadDialogFactory(textProvider, urlResolver,
 					env.getFileUploadService(), sessionProvider, settings);
-		// else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
-		// return new PluploaderDialogFactory(textProvider, urlResolver, env
-		// .getFileUploadService(), sessionProvider, settings);
+		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
+			return new PluploaderDialogFactory(textProvider, urlResolver, env
+					.getFileUploadService(), sessionProvider, settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);

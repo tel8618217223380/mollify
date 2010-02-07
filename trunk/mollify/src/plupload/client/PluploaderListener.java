@@ -10,8 +10,26 @@
 
 package plupload.client;
 
+import java.util.List;
+
 public interface PluploaderListener {
 
-	void onInit(InitParams p);
+	void onInit(Pluploader p, String runtime);
+
+	void postInit(Pluploader uploader);
+
+	void onFilesAdded(Pluploader p, List<File> files);
+
+	void onFilesRemoved(Pluploader uploader, List<File> files);
+
+	void onQueueChanged(Pluploader uploader);
+
+	void onRefresh(Pluploader uploader);
+
+	void onStateChanged(Pluploader uploader);
+
+	void onFileUpload(Pluploader uploader, File file);
+
+	void onFileUploadProgress(Pluploader uploader, File file);
 
 }

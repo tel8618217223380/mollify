@@ -39,4 +39,18 @@ public final class File extends JavaScriptObject {
 	public native int getStatus() /*-{
 		return this.status;
 	}-*/;
+
+	public static File create(String id, String name, int size, int loaded) {
+		File f = JavaScriptObject.createObject().cast();
+		f.set(id, name, size, loaded);
+		return f;
+	}
+
+	private native void set(String id, String name, int size, int loaded) /*-{
+		this.id = id;
+		this.name = name;
+		this.size = size;
+		this.loaded = loaded;
+		this.percent = (loaded / size) * 100;
+	}-*/;
 }

@@ -33,7 +33,8 @@
 					$this->params = $_GET;
 					break;
 				case self::METHOD_POST:
-					$this->params = $_POST;
+					$this->params = isset($_REQUEST['raw']) ? $_GET : array_merge($_POST, $_GET);
+					break;
 				case self::METHOD_PUT:
 					$data = file_get_contents("php://input");
 					if ($data and strlen($data) > 0)
