@@ -23,14 +23,14 @@ import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import plupload.client.File;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,6 +62,12 @@ public class PluploaderDialog extends CenteredDialog {
 
 	private Label message;
 
+	private static boolean open = false;
+
+	public static boolean isOpen() {
+		return open;
+	}
+
 	public enum Actions implements ResourceId {
 		upload, cancel, cancelUpload, removeFile
 	}
@@ -70,6 +76,15 @@ public class PluploaderDialog extends CenteredDialog {
 			ActionListener actionListener) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
 				StyleConstants.FILE_UPLOAD_DIALOG_FLASH);
+		open = true;
+
+		this.addCloseHandler(new CloseHandler<PopupPanel>() {
+			@Override
+			public void onClose(CloseEvent<PopupPanel> event) {
+				open = false;
+			}
+		});
+
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 		setModal(false);
@@ -112,17 +127,8 @@ public class PluploaderDialog extends CenteredDialog {
 		Button button = new Button(textProvider.getStrings()
 				.fileUploadDialogAddFilesButton());
 		button.getElement().setId(PLUPLOADER_BROWSE_BUTTON_ID);
-		// label
-		// .setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL);
-		Element a = DOM.createAnchor();
-		header.add(new HTML("<a id='" + PLUPLOADER_BROWSE_BUTTON_ID
-				+ "' title='Add' href='#' style='display: block;'>Add</a>"));
-		// uploadButtonContainer
-		// .setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER);
-		// uploadButtonContainer.addStyleDependentName(StyleConstants.HIDDEN);
-		// uploadButtonContainer.add(new HTML("<div id='" + UPLOADER_ELEMENT_ID
-		// + "'/>"));
-		// header.add(uploadButtonContainer);
+		header.add(button);
+
 		return header;
 	}
 

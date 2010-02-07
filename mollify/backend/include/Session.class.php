@@ -23,7 +23,7 @@
 		
 		public function initialize($request) {
 			session_name($this->name);
-			if ($request != NULL and $request->hasParam("MOLLIFY_SESSION_ID")) session_id($request->param("MOLLIFY_SESSION_ID"));
+			if ($request != NULL and $request->hasParam("session")) session_id($request->param("session"));
 			session_start();
 		}
 		

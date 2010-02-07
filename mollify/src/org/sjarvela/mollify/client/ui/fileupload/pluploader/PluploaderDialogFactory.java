@@ -38,6 +38,9 @@ public class PluploaderDialogFactory implements FileUploadDialogFactory {
 
 	@Override
 	public void openFileUploadDialog(Folder directory, ResultListener listener) {
+		if (PluploaderDialog.isOpen())
+			return;
+
 		ActionDelegator actionDelegator = new ActionDelegator();
 		PluploaderDialog dialog = new PluploaderDialog(textProvider,
 				actionDelegator);

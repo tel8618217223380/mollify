@@ -24,6 +24,7 @@
 		private $settings;
 		private $eventHandler;
 		private $filesystem;
+		private $request;
 		
 		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
 			$this->session = $session;
@@ -67,8 +68,13 @@
 		public function events() {
 			return $this->eventHandler;
 		}
-								
+
+		public function request() {
+			return $this->request;
+		}
+										
 		public function initialize($request) {
+			$this->request = $request;
 			$this->session->initialize($request);
 			$this->filesystem->initialize($request);
 			$this->authentication->initialize($request);

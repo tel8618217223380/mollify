@@ -303,6 +303,12 @@
 		public function uploadTo($folder) {
 			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
+			
+			if ($this->env->request()->hasParam('uploader') and $this->env->request()->param('uploader') === 'plupload') {
+				require_once("plupload.php");
+				plupload($folder);
+				return;
+			}
 
 			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
 				throw new ServiceException("NO_UPLOAD_DATA");

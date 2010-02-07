@@ -30,30 +30,17 @@ public class UploadModel {
 			totalSize += f.getSize();
 	}
 
-	public File nextFile() {
-		if (files.size() == 0)
-			return null;
-		int index = 0;
-		if (current != null)
-			index = files.indexOf(current) + 1;
-		if (index >= files.size())
-			return null;
-		if (current != null)
+	public void start(File file) {
+		if (current != null) {
+			completed.add(current);
 			completedBytes += current.getSize();
-		current = files.get(index);
-		return current;
+		}
+		current = file;
 	}
 
-	public boolean hasNext() {
-		if (current == null)
-			return !files.isEmpty();
-		return files.indexOf(current) < (files.size() - 1);
-	}
-
-	public void uploadComplete(File file) {
-		File f = getFile(file);
-		completed.add(f);
-		completedBytes += f.getSize();
+	public void complete(File file) {
+		completed.add(getFile(file));
+		completedBytes += file.getSize();
 	}
 
 	private File getFile(File file) {
