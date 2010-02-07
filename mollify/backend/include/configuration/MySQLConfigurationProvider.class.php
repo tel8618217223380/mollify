@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -39,7 +39,7 @@
 		}
 
 		public function getSupportedFeatures() {
-			return array('description_update', 'administration', 'permission_update', 'user_groups');
+			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups');
 		}
 		
 		public function getInstalledVersion() {

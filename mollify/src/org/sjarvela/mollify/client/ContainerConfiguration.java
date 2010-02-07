@@ -55,6 +55,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	static final String PARAM_FILE_UPLOADER = "file-uploader";
 	static final String VALUE_FILE_UPLOADER_FLASH = "flash";
+	static final String VALUE_FILE_UPLOADER_PLUPLOAD = "plupload";
 
 	@Override
 	protected void configure() {
@@ -116,10 +117,14 @@ public class ContainerConfiguration extends AbstractGinModule {
 			ClientSettings settings, TextProvider textProvider,
 			UrlResolver urlResolver, SessionProvider sessionProvider,
 			DialogManager dialogManager) {
-		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(settings
-				.getString(PARAM_FILE_UPLOADER)))
+		String param = settings.getString(PARAM_FILE_UPLOADER);
+
+		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(param))
 			return new FlashFileUploadDialogFactory(textProvider, urlResolver,
 					env.getFileUploadService(), sessionProvider, settings);
+		// else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
+		// return new PluploaderDialogFactory(textProvider, urlResolver, env
+		// .getFileUploadService(), sessionProvider, settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);

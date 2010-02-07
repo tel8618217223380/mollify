@@ -23,7 +23,7 @@
 			"user_groups" => FALSE
 		);
 		
-		private static $featuresControlledByConfigurationProvider = array("description_update", "permission_update", "administration", "user_groups");
+		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
