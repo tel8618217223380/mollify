@@ -85,7 +85,7 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	public void onSessionStarted(SessionInfo session) {
-		if (!session.isAuthenticationRequired() || !session.isAuthenticated())
+		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin();
 		else
 			viewManager.openView(mainViewFactory.createMainView()

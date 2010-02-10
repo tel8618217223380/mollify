@@ -37,7 +37,7 @@
 			
 			if ($isFile) {
 				if (!$nonexisting and !$this->exists($fullPath))
-					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id);
+					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id.' path:'.$fullPath);
 
 				if ($nonexisting and $this->exists($fullPath))
 					throw new ServiceException("FILE_ALREADY_EXISTS", 'id:'.$id);

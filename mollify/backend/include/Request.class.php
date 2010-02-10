@@ -23,7 +23,7 @@
 		
 		public function __construct() {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
-			$this->uri = trim($_SERVER['PATH_INFO'], "/");
+			$this->uri = trim(substr($_SERVER['REQUEST_URI'], strlen($_SERVER['SCRIPT_NAME'])), "/");
 			$this->parts = explode("/", $this->uri);
 			$this->params = array();
 			$this->data = NULL;
@@ -33,12 +33,13 @@
 					$this->params = $_GET;
 					break;
 				case self::METHOD_POST:
-					$this->params = isset($_REQUEST['raw']) ? $_GET : array_merge($_POST, $_GET);
-					break;
 				case self::METHOD_PUT:
-					$data = file_get_contents("php://input");
-					if ($data and strlen($data) > 0)
-						$this->data = json_decode($data, TRUE);
+					$this->params = $_REQUEST;
+					if (!isset($_REQUEST['raw'])) {
+						$data = file_get_contents("php://input");
+						if ($data and strlen($data) > 0)
+							$this->data = json_decode($data, TRUE);
+					}
 					break;
 				case self::METHOD_DELETE:
 					break;
@@ -83,6 +84,10 @@
 		
 		public function log() {
 			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", params=".Util::array2str($this->params).", data=".Util::toString($this->data));
+		}
+		
+		public function __toString() {
+			return "Request";
 		}
 	}
 	

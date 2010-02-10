@@ -30,10 +30,8 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.Timer;
 
 public class PluploaderPresenter implements PluploaderListener {
-	// private static final String SESSION_ID_PARAM = "MOLLIFY_SESSION_ID";
 	private static final String FLASH_FILE_NAME = "plupload.flash.swf";
 	private static final String SILVERLIGHT_FILE_NAME = "plupload.silverlight.xap";
-	// private static final String UPLOADER_ID = "uploader-flash";
 
 	private final ResultListener listener;
 	private final UrlResolver urlResolver;
@@ -54,7 +52,6 @@ public class PluploaderPresenter implements PluploaderListener {
 		this.urlResolver = urlResolver;
 		this.listener = listener;
 		this.dialog = dialog;
-		// this.textProvider = textProvider;
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, directory);
@@ -74,7 +71,7 @@ public class PluploaderPresenter implements PluploaderListener {
 				+ "?raw=1&uploader=plupload&session=" + session.getSessionId();
 
 		return new PluploaderBuilder().runtimes(
-				"gears,flash,html5,silverlight,browserplus").flashUrl(
+				"gears,html5,flash,silverlight,browserplus").flashUrl(
 				getUrl(FLASH_FILE_NAME)).silverlightUrl(
 				getUrl(SILVERLIGHT_FILE_NAME)).uploadUrl(uploadUrl)
 				.allowedFileTypes(getFileTypeList()).browseButton(
@@ -150,9 +147,6 @@ public class PluploaderPresenter implements PluploaderListener {
 			updateProgress(File.create(file.getId(), file.getName(), file
 					.getSize(), file.getSize() / 100 * 20));
 		}
-
-		// if (files.size() > 3)
-		// cancelFile(files.get(3));
 	}
 
 	private void updateProgress(File file) {
@@ -197,9 +191,16 @@ public class PluploaderPresenter implements PluploaderListener {
 		uploadModel = null;
 	}
 
-	private void finish(File file) {
+	private void complete(File file) {
 		uploadModel.complete(file);
 		dialog.onFileUploadCompleted(file);
+
+		if (uploadModel.allComplete()) {
+			dialog.hide();
+			stopUpload(false);
+			listener.onSuccess(null);
+			return;
+		}
 	}
 
 	public void onCancel() {
@@ -244,7 +245,7 @@ public class PluploaderPresenter implements PluploaderListener {
 				+ file.getLoaded() + "/" + file.getSize() + " "
 				+ file.getPercent());
 		if (file.getPercent() == 100)
-			finish(file);
+			complete(file);
 		if (!updateProgress)
 			return;
 		updateProgress = false;
