@@ -12,6 +12,7 @@
 
 	Upgrading Mollify requires following steps:
 
+	 #  Log into Mollify as admin user, and leave the session open for the upgrade process
 	 #  For backup, move or rename old installation directory "mollify" into different name or location
 	 #  Copy directory "mollify" from the latest Mollify installation package
 	 #  From backup, restore "configuration.php" into the new installation directory (as well as other customized files, such as "index.html")
