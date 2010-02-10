@@ -35,6 +35,8 @@
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler();
 			$this->filesystem = new FilesystemController($this);
+			
+			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
 		
 		public function session() {
@@ -79,6 +81,8 @@
 			$this->filesystem->initialize($request);
 			$this->authentication->initialize($request);
 			$this->configurationProvider->initialize($request, $this);
+			
+			$this->authentication->onPostInit();
 			$this->log();
 		}
 		

@@ -104,7 +104,7 @@
 	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 		
-		<delete dir="${deploy.dir}" />
+		<delete dir="${target.dir}" />
 		<mkdir dir="${deploy.dir}" />
 		<mkdir dir="${target.dir}" />
 		<mkdir dir="${target.dir}/mollify" />

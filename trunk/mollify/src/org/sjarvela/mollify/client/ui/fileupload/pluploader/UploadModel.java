@@ -43,6 +43,10 @@ public class UploadModel {
 		completedBytes += file.getSize();
 	}
 
+	public boolean allComplete() {
+		return completed.size() == files.size();
+	}
+
 	private File getFile(File file) {
 		for (File f : files)
 			if (f.getId().equals(file.getId()))

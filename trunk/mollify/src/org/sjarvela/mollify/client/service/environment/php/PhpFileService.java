@@ -104,9 +104,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Rename " + item.getId() + " to [" + newName + "]");
+		String data = new JSONStringBuilder("name", newName).toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.name))
-				.data(newName).listener(listener).put();
+				.data(data).listener(listener).put();
 	}
 
 	public void copy(File file, Folder directory,
@@ -114,9 +115,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Copy " + file.getId() + " to [" + directory.getId()
 					+ "]");
+		String data = new JSONStringBuilder("id", directory.getId()).toString();
 
 		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
-				.data(directory.getId()).listener(listener).post();
+				.data(data).listener(listener).post();
 	}
 
 	public void move(FileSystemItem item, Folder directory,
@@ -124,9 +126,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Move " + item.getId() + " to [" + directory.getId()
 					+ "]");
+		String data = new JSONStringBuilder("id", directory.getId()).toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.move))
-				.data(directory.getId()).listener(listener).post();
+				.data(data).listener(listener).post();
 	}
 
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
@@ -140,10 +143,11 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Create directory: [" + folderName + "]");
+		String data = new JSONStringBuilder("name", folderName).toString();
 
 		request().url(
 				serviceUrl().fileItem(parentFolder).action(FileAction.folders))
-				.data(folderName).listener(listener).post();
+				.data(data).listener(listener).post();
 	}
 
 	public String getDownloadUrl(File file) {

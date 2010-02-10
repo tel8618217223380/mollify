@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -28,6 +28,9 @@
 		}
 		
 		function findUser($username, $password) {
+			if (!$this->isAuthenticationRequired())
+				return array("id" => "", "name" => "");
+
 			global $USERS, $PASSWORDS_HASHED;
 			
 			if (!isset($USERS) or !is_array($USERS))

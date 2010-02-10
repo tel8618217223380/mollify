@@ -66,6 +66,7 @@
 				$msg = "Exception (".$c."): ".$e->getMessage();
 			}
 			self::logError($msg);
+			self::logError($e->getTrace());
 		}
 				
 		public static function logSystem() {

@@ -71,7 +71,7 @@
 		}
 		
 		private function convertItemId($id) {
-			return strtr($id, '-_,', '+/=');
+			return strtr(urldecode($id), '-_,', '+/=');
 		}
 				
 		private function processGetFile($item) {
@@ -100,7 +100,9 @@
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$this->env->filesystem()->rename($item, $this->request->data);
+					$data = $this->request->data;
+					if (!isset($data['name'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->rename($item, $data['name']);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
@@ -117,10 +119,14 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'move':
-					$this->env->filesystem()->move($item, $this->item($this->request->data, FALSE));
+					$data = $this->request->data;
+					if (!isset($data['id'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->move($item, $this->item($data['id'], FALSE));
 					break;
 				case 'copy':
-					$this->env->filesystem()->copy($item, $this->item($this->request->data, FALSE));
+					$data = $this->request->data;
+					if (!isset($data['id'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->copy($item, $this->item($data['id'], FALSE));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -164,7 +170,9 @@
 						
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$this->env->filesystem()->rename($item, $this->request->data);
+					$data = $this->request->data;
+					if (!isset($data['name'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->rename($item, $data['name']);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
@@ -184,10 +192,14 @@
 					$this->env->filesystem()->uploadTo($item);
 					break;
 				case 'folders':
-					$this->env->filesystem()->createFolder($item, $this->request->data);
+					$data = $this->request->data;
+					if (!isset($data['name'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->createFolder($item, $data['name']);
 					break;
 				case 'move':
-					$this->env->filesystem()->move($item, $this->item($this->request->data, FALSE));
+					$data = $this->request->data;
+					if (!isset($data['id'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->move($item, $this->item($data['id'], FALSE));
 					break;
 				default:
 					throw $this->invalidRequestException();
