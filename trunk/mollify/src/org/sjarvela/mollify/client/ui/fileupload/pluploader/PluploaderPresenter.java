@@ -19,7 +19,9 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.dialog.DialogMoveListener;
 import org.sjarvela.mollify.client.util.FileUtil;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import plupload.client.File;
 import plupload.client.Pluploader;
@@ -27,7 +29,7 @@ import plupload.client.PluploaderBuilder;
 import plupload.client.PluploaderListener;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.core.client.JavaScriptException;
 
 public class PluploaderPresenter implements PluploaderListener {
 	private static final String FLASH_FILE_NAME = "plupload.flash.swf";
@@ -43,9 +45,6 @@ public class PluploaderPresenter implements PluploaderListener {
 	private UploadModel uploadModel;
 	private boolean demo = false;
 
-	private Timer progressTimer = null;
-	private boolean updateProgress = true;
-
 	public PluploaderPresenter(SessionInfo session, FileUploadService service,
 			UrlResolver urlResolver, ResultListener listener, Folder directory,
 			PluploaderDialog dialog, TextProvider textProvider) {
@@ -55,6 +54,13 @@ public class PluploaderPresenter implements PluploaderListener {
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, directory);
+
+		dialog.addMoveListener(new DialogMoveListener() {
+			@Override
+			public void onDialogMoved() {
+				uploader.refresh();
+			}
+		});
 	}
 
 	public void setDemoMode() {
@@ -62,13 +68,18 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	public void init() {
-		uploader.init();
+		try {
+			uploader.init();
+		} catch (JavaScriptException e) {
+			Log.debug(e.getDescription());
+		}
 	}
 
 	private Pluploader createUploader(SessionInfo session,
 			FileUploadService service, Folder folder) {
 		String uploadUrl = service.getUploadUrl(folder)
-				+ "?raw=1&uploader=plupload&session=" + session.getSessionId();
+				+ "?format=binary&uploader=plupload&session="
+				+ session.getSessionId();
 
 		return new PluploaderBuilder().runtimes(
 				"gears,html5,flash,silverlight,browserplus").flashUrl(
@@ -80,7 +91,7 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	private String getUrl(String file) {
-		return urlResolver.getModuleUrl(file, false);
+		return urlResolver.getRelativeModuleUrl(file);
 	}
 
 	private String getFileTypeList() {
@@ -150,7 +161,8 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	private void updateProgress(File file) {
-		double percentage = file.getPercent();
+		double percentage = ((double) file.getLoaded() / (double) file
+				.getSize()) * 100d;
 		uploadModel.updateProgress(file.getLoaded());
 
 		if (Log.isDebugEnabled())
@@ -163,30 +175,12 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	public void startUpload() {
-		if (progressTimer != null) {
-			progressTimer.cancel();
-			progressTimer = null;
-		}
-
 		uploadModel = new UploadModel(files);
 		dialog.onUploadStarted(uploadModel.getTotalBytes());
-
-		progressTimer = new Timer() {
-			@Override
-			public void run() {
-				updateProgress = true;
-			}
-		};
-		progressTimer.scheduleRepeating(500);
 		uploader.start();
 	}
 
 	private void stopUpload(boolean cancelFiles) {
-		if (progressTimer != null) {
-			progressTimer.cancel();
-			progressTimer = null;
-		}
-
 		uploader.stop();
 		uploadModel = null;
 	}
@@ -237,19 +231,17 @@ public class PluploaderPresenter implements PluploaderListener {
 	public void onFileUpload(Pluploader uploader, File file) {
 		Log.debug("File upload started: " + file.getName());
 		uploadModel.start(file);
+		dialog.onActiveUploadFileChanged(file);
 	}
 
 	@Override
 	public void onFileUploadProgress(Pluploader uploader, File file) {
-		Log.debug("File upload progress: " + file.getName() + " "
-				+ file.getLoaded() + "/" + file.getSize() + " "
-				+ file.getPercent());
-		if (file.getPercent() == 100)
-			complete(file);
-		if (!updateProgress)
+		if (file == null)
 			return;
-		updateProgress = false;
+		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
 		updateProgress(file);
+		if (file.getSize() - file.getLoaded() <= 0)
+			complete(file);
 	}
 
 	@Override

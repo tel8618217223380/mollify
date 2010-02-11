@@ -47,7 +47,7 @@
 			<p>	
 				An example configuration:
 				<div class="example code">
-					&lt;php?<br/>
+					&lt;?php<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">mysql</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>

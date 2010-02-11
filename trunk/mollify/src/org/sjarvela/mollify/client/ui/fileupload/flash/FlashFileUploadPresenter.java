@@ -41,7 +41,7 @@ import com.google.gwt.user.client.Timer;
 public class FlashFileUploadPresenter implements UploadStartHandler,
 		UploadSuccessHandler, UploadCompleteHandler, UploadErrorHandler,
 		UploadProgressHandler, SWFUploadLoadedHandler, DebugHandler {
-	private static final String SESSION_ID_PARAM = "MOLLIFY_SESSION_ID";
+	private static final String SESSION_ID_PARAM = "session";
 	private static final String UPLOADER_ID = "uploader-flash";
 
 	private final TextProvider textProvider;

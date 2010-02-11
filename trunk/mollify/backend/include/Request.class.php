@@ -24,6 +24,10 @@
 		public function __construct() {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = trim(substr($_SERVER['REQUEST_URI'], strlen($_SERVER['SCRIPT_NAME'])), "/");
+			
+			$p = stripos($this->uri, "?");
+			if ($p) $this->uri = substr($this->uri, 0, $p-1);
+			
 			$this->parts = explode("/", $this->uri);
 			$this->params = array();
 			$this->data = NULL;
@@ -35,7 +39,8 @@
 				case self::METHOD_POST:
 				case self::METHOD_PUT:
 					$this->params = $_REQUEST;
-					if (!isset($_REQUEST['raw'])) {
+					if (!isset($this->params['format']) or $this->params['format'] != 'binary') {
+						Logging::logDebug("Reading data for request ".$this->method);
 						$data = file_get_contents("php://input");
 						if ($data and strlen($data) > 0)
 							$this->data = json_decode($data, TRUE);

@@ -35,7 +35,7 @@ function plupload($folder) {
 	// Clean the fileName for security reasons
 	$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
-	Logging::logDebug("Uploading to ".$targetDir.DIRECTORY_SEPARATOR.$fileName);
+	Logging::logDebug("Uploading to ".$targetDir.$fileName);
 	
 	// Create target dir
 	if (!file_exists($targetDir))
@@ -61,7 +61,7 @@ function plupload($folder) {
 		else
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
 	} else {
-		$file = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+		$file = $targetDir.$fileName;
 		Logging::logDebug("Writing to file ".$file);
 		
 		$out = fopen($file, $chunk == 0 ? "wb" : "ab");
