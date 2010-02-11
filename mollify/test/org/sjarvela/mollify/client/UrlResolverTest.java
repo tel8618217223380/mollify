@@ -85,6 +85,14 @@ public class UrlResolverTest {
 	}
 
 	@Test
+	public void testRelative() {
+		UrlResolver urlProvider = new UrlResolver("http://test.domain/folder/",
+				"http://test.domain/folder/module/");
+
+		assertEquals("module/file", urlProvider.getRelativeModuleUrl("file"));
+	}
+
+	@Test
 	public void testIllegal() {
 		UrlResolver urlProvider = new UrlResolver("http://test.domain/folder/",
 				"");

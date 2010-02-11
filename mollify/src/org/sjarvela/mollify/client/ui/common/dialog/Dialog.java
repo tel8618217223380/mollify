@@ -18,15 +18,18 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.dialog.DialogMoveListener;
 
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class Dialog extends DialogBox {
-	List<ViewListener> viewListeners = new ArrayList();
+	private final List<ViewListener> viewListeners = new ArrayList();
+	private final List<DialogMoveListener> dialogMoveListeners = new ArrayList();
 
 	public Dialog(String title, String style) {
 		super(false, true);
@@ -76,5 +79,16 @@ public abstract class Dialog extends DialogBox {
 		ActionButton actionButton = new ActionButton(title, id, style);
 		actionButton.setAction(actionListener, actionId);
 		return actionButton;
+	}
+
+	public void addMoveListener(DialogMoveListener l) {
+		this.dialogMoveListeners.add(l);
+	}
+
+	@Override
+	protected void endDragging(MouseUpEvent event) {
+		super.endDragging(event);
+		for (DialogMoveListener l : this.dialogMoveListeners)
+			l.onDialogMoved();
 	}
 }

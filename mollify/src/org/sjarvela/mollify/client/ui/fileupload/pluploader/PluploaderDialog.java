@@ -47,7 +47,6 @@ public class PluploaderDialog extends CenteredDialog {
 	private final Map<String, FileComponent> fileItems = new HashMap();
 
 	private Panel header;
-	private Panel uploadButtonContainer;
 	private ScrollPanel fileScrollPanel;
 	private Panel fileList;
 	private HorizontalPanel buttons;
@@ -59,8 +58,8 @@ public class PluploaderDialog extends CenteredDialog {
 	private Panel uploadButtonPanel;
 
 	private String totalSizeText;
-
 	private Label message;
+	private Button uploadButton;
 
 	private static boolean open = false;
 
@@ -75,7 +74,7 @@ public class PluploaderDialog extends CenteredDialog {
 	public PluploaderDialog(TextProvider textProvider,
 			ActionListener actionListener) {
 		super(textProvider.getStrings().fileUploadDialogTitle(),
-				StyleConstants.FILE_UPLOAD_DIALOG_FLASH);
+				StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD);
 		open = true;
 
 		this.addCloseHandler(new CloseHandler<PopupPanel>() {
@@ -117,23 +116,18 @@ public class PluploaderDialog extends CenteredDialog {
 	private Widget createHeader() {
 		header = new HorizontalPanel();
 		header
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_HEADER);
+				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD_HEADER);
 
 		message = new Label(textProvider.getStrings().fileUploadDialogMessage());
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 		header.add(message);
 
-		// uploadButtonContainer = new FlowPanel();
-		Button button = new Button(textProvider.getStrings()
+		uploadButton = new Button(textProvider.getStrings()
 				.fileUploadDialogAddFilesButton());
-		button.getElement().setId(PLUPLOADER_BROWSE_BUTTON_ID);
-		header.add(button);
+		uploadButton.getElement().setId(PLUPLOADER_BROWSE_BUTTON_ID);
+		header.add(uploadButton);
 
 		return header;
-	}
-
-	public void showUploadButton() {
-		uploadButtonContainer.removeStyleDependentName(StyleConstants.HIDDEN);
 	}
 
 	private Widget createTotalPanel() {
@@ -234,6 +228,7 @@ public class PluploaderDialog extends CenteredDialog {
 			totalPanel.setVisible(true);
 			buttons.setVisible(false);
 			uploadButtonPanel.setVisible(true);
+			uploadButton.setVisible(false);
 		} else {
 			header.removeStyleDependentName(StyleConstants.UPLOAD);
 			fileList.removeStyleDependentName(StyleConstants.UPLOAD);

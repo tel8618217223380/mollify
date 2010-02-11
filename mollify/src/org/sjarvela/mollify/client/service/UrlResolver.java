@@ -95,4 +95,17 @@ public class UrlResolver {
 		return result;
 	}
 
+	public String getRelativeModuleUrl(String path) {
+		String result = null;
+		if (moduleUrl.startsWith(hostPageUrl)) {
+			result = moduleUrl.substring(hostPageUrl.length());
+			if (result.length() > 0 && !result.endsWith("/"))
+				result += "/";
+		} else {
+			// not nested, return absolute
+			return getModuleUrl(path, false);
+		}
+		return result + path;
+	}
+
 }

@@ -1,5 +1,5 @@
 /* @override 
-	http://localhost:8888/org.sjarvela.Mollify/themes/basic/style.css
+	http://localhost:8888/mollify/dev/client/themes/basic/style.css
 */
 
 /**
@@ -1623,14 +1623,23 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	position: absolute;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-files-panel {
+.mollify-dialog-file-upload-flash .mollify-file-upload-files-panel, .mollify-dialog-file-upload-plupload .mollify-file-upload-files-panel {
 	background-color: #f7f6f8;
 	width: 300px;
 	height: 180px;
-	border: 1px solid #a3a3a3;	
+	border: 1px solid #a3a3a3;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-files {
+#pluploader-browse-button {
+	width: 103px;
+	height: 23px;
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+.mollify-file-upload-plupload-header {
+	width: 300px;
+	display: block;
 }
 
 .mollify-file-upload-file-remove-button {
@@ -1650,13 +1659,13 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	background: url(b-close-over.png) no-repeat;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message {
+.mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message, .mollify-dialog-file-upload-plupload .mollify-file-upload-dialog-message {
 	float: left;
 	margin-top: 5px;
 	margin-left: 3px;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message-active {
+.mollify-dialog-file-upload-flash .mollify-file-upload-dialog-message-active, .mollify-dialog-file-upload-plupload .mollify-file-upload-dialog-message-active {
 	float: left;
 	background: url(wait2.gif) no-repeat right;
 	width: 300px;
@@ -1664,7 +1673,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	padding-top: 1px;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-file {
+.mollify-dialog-file-upload-flash .mollify-file-upload-file, .mollify-dialog-file-upload-plupload .mollify-file-upload-file {
 	height: 40px;
 	padding: 2px;
 	border-bottom-style: dotted;
@@ -1672,7 +1681,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	background-color: #eaeaea;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-file-active {
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-active, .mollify-dialog-file-upload-plupload .mollify-file-upload-file-active {
 	background: #c9dbe5;
 	font-weight: bold;
 }
@@ -1725,16 +1734,16 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	margin-top: 11px;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-file-complete {
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-complete, .mollify-dialog-file-upload-plupload .mollify-file-upload-file-complete {
 	background-color: #d5fbe9;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel {
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel, .mollify-dialog-file-upload-plupload .mollify-file-upload-file-cancel {
 	background-color: #edd3d1;
 	color: #909191;
 }
 
-.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel .mollify-file-upload-file-info {
+.mollify-dialog-file-upload-flash .mollify-file-upload-file-cancel .mollify-file-upload-file-info, .mollify-dialog-file-upload-plupload .mollify-file-upload-file-cancel .mollify-file-upload-file-info {
 	color: #a8a9a9;
 }
 
