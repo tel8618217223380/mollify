@@ -126,7 +126,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public void onConfirm() {
 								delete(file);
 							}
-						});
+						}, source);
 			} else {
 				dialogManager.showInfo("ERROR", "Unsupported action:"
 						+ action.name());
@@ -172,7 +172,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						public void onConfirm() {
 							delete(folder);
 						}
-					});
+					}, source);
 		} else {
 			dialogManager.showInfo("ERROR", "Unsupported action:"
 					+ action.name());

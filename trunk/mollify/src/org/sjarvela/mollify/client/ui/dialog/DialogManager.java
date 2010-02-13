@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
+import com.google.gwt.user.client.ui.Widget;
+
 public interface DialogManager {
 
 	public abstract void showError(ServiceError error);
@@ -20,6 +22,6 @@ public interface DialogManager {
 	public abstract void showInfo(String title, String text);
 
 	public abstract void showConfirmationDialog(String title, String message,
-			String style, ConfirmationListener listener);
+			String style, ConfirmationListener listener, Widget source);
 
 }
