@@ -16,41 +16,56 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogMoveListener;
 import org.sjarvela.mollify.client.util.FileUtil;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import plupload.client.File;
-import plupload.client.Pluploader;
-import plupload.client.PluploaderBuilder;
-import plupload.client.PluploaderListener;
+import plupload.client.Plupload;
+import plupload.client.PluploadBuilder;
+import plupload.client.PluploadListener;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptException;
 
-public class PluploaderPresenter implements PluploaderListener {
+public class PluploaderPresenter implements PluploadListener {
+	private static final String PARAM_PLUPLOAD_RUNTIMES = "plupload-runtimes";
+	private static final String PARAM_PLUPLOAD_CHUNK_SIZE = "plupload-chunk-size";
+
 	private static final String FLASH_FILE_NAME = "plupload.flash.swf";
 	private static final String SILVERLIGHT_FILE_NAME = "plupload.silverlight.xap";
 
+	private final ClientSettings settings;
+	private final DialogManager dialogManager;
+	private final TextProvider textProvider;
 	private final ResultListener listener;
 	private final UrlResolver urlResolver;
-	private final Pluploader uploader;
 	private final PluploaderDialog dialog;
+
 	private final List<File> files = new ArrayList();
+	private final Plupload uploader;
+	private UploadModel uploadModel;
 	private final List<String> allowedTypes;
 
-	private UploadModel uploadModel;
 	private boolean demo = false;
 
 	public PluploaderPresenter(SessionInfo session, FileUploadService service,
 			UrlResolver urlResolver, ResultListener listener, Folder directory,
-			PluploaderDialog dialog, TextProvider textProvider) {
+			PluploaderDialog dialog, DialogManager dialogManager,
+			TextProvider textProvider, ClientSettings settings) {
 		this.urlResolver = urlResolver;
 		this.listener = listener;
 		this.dialog = dialog;
+		this.dialogManager = dialogManager;
+		this.textProvider = textProvider;
+		this.settings = settings;
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
 		this.uploader = createUploader(session, service, directory);
@@ -75,23 +90,61 @@ public class PluploaderPresenter implements PluploaderListener {
 		}
 	}
 
-	private Pluploader createUploader(SessionInfo session,
+	private Plupload createUploader(SessionInfo session,
 			FileUploadService service, Folder folder) {
 		String uploadUrl = service.getUploadUrl(folder)
 				+ "?format=binary&uploader=plupload&session="
 				+ session.getSessionId();
 
-		return new PluploaderBuilder().runtimes(
-				"gears,html5,flash,silverlight,browserplus").flashUrl(
-				getUrl(FLASH_FILE_NAME)).silverlightUrl(
-				getUrl(SILVERLIGHT_FILE_NAME)).uploadUrl(uploadUrl)
-				.allowedFileTypes(getFileTypeList()).browseButton(
-						dialog.getBrowseButtonId()).chunk("1mb").listener(this)
-				.create();
+		PluploadBuilder builder = new PluploadBuilder().uploadUrl(uploadUrl)
+				.filter(
+						textProvider.getStrings()
+								.fileUploadDialogSelectFileTypesDescription(),
+						getFileTypeList()).browseButton(
+						dialog.getBrowseButtonId()).listener(this);
+		addRuntimes(builder);
+
+		String chunk = settings.getString(PARAM_PLUPLOAD_CHUNK_SIZE);
+		if (chunk != null)
+			builder.chunk(chunk);
+
+		if (Log.isDebugEnabled())
+			Log.debug("Pluploader: "
+					+ JsUtil.asJsonString(builder.getSettings()));
+		return builder.create();
+	}
+
+	private void addRuntimes(PluploadBuilder builder) {
+		String runtimes = settings.getString(PARAM_PLUPLOAD_RUNTIMES);
+		if (runtimes == null)
+			dialogManager.showError(new ServiceError(
+					ServiceErrorType.INVALID_CONFIGURATION,
+					"No plupload runtimes defined"));
+
+		for (String runtime : runtimes.split(",")) {
+			runtime = runtime.toLowerCase().trim();
+
+			if (runtime == "gears" || runtime == "html5"
+					|| runtime == "browserplus") {
+				builder.runtime(runtime);
+			} else if (runtime == "flash") {
+				builder.runtime("flash").flashUrl(getUrl(FLASH_FILE_NAME));
+			} else if (runtime == "silverlight") {
+				builder.runtime("silverlight").silverlightUrl(
+						getUrl(SILVERLIGHT_FILE_NAME));
+			} else {
+				dialogManager.showError(new ServiceError(
+						ServiceErrorType.INVALID_CONFIGURATION,
+						"Invalid plupload runtime: " + runtime));
+			}
+		}
 	}
 
 	private String getUrl(String file) {
-		return urlResolver.getRelativeModuleUrl(file);
+		String url = urlResolver.getRelativeModuleUrl(file);
+		if (url == null)
+			return urlResolver.getModuleUrl(file, false);
+		return url;
 	}
 
 	private String getFileTypeList() {
@@ -123,8 +176,6 @@ public class PluploaderPresenter implements PluploaderListener {
 		if (!isUploading()) {
 			files.remove(f);
 			dialog.removeFile(f);
-		} else {
-			// cancelFile(f);
 		}
 	}
 
@@ -211,31 +262,31 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	@Override
-	public void onInit(Pluploader p, String runtime) {
+	public void onInit(Plupload p, String runtime) {
 		Log.debug("Plupload init, runtime=" + runtime);
 	}
 
 	@Override
-	public void onFilesAdded(Pluploader p, List<File> files) {
+	public void onFilesAdded(Plupload p, List<File> files) {
 		Log.debug("Files added: " + files.size());
 		for (File file : files)
 			onAddFile(file);
 	}
 
 	@Override
-	public void onFilesRemoved(Pluploader uploader, List<File> files) {
+	public void onFilesRemoved(Plupload uploader, List<File> files) {
 		Log.debug("Files removed: " + files.size());
 	}
 
 	@Override
-	public void onFileUpload(Pluploader uploader, File file) {
+	public void onFileUpload(Plupload uploader, File file) {
 		Log.debug("File upload started: " + file.getName());
 		uploadModel.start(file);
 		dialog.onActiveUploadFileChanged(file);
 	}
 
 	@Override
-	public void onFileUploadProgress(Pluploader uploader, File file) {
+	public void onFileUploadProgress(Plupload uploader, File file) {
 		if (file == null)
 			return;
 		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
@@ -245,22 +296,22 @@ public class PluploaderPresenter implements PluploaderListener {
 	}
 
 	@Override
-	public void onQueueChanged(Pluploader uploader) {
+	public void onQueueChanged(Plupload uploader) {
 		Log.debug("Queue changed");
 	}
 
 	@Override
-	public void onRefresh(Pluploader uploader) {
+	public void onRefresh(Plupload uploader) {
 		Log.debug("Refresh");
 	}
 
 	@Override
-	public void onStateChanged(Pluploader uploader) {
+	public void onStateChanged(Plupload uploader) {
 		Log.debug("State changed");
 	}
 
 	@Override
-	public void postInit(Pluploader uploader) {
+	public void postInit(Plupload uploader) {
 		Log.debug("Post init");
 	}
 }

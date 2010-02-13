@@ -38,6 +38,7 @@
 		<pathelement location="${lib.dir}/guice-2.0.jar" />
 		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
 		<pathelement location="${lib.dir}/junit-4.6.jar" />
+		<pathelement location="${lib.dir}/gwt-plupload.jar" />
 		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
 	</path>
 	

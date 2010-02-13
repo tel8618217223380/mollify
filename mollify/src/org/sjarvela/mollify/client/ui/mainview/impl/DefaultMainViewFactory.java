@@ -38,6 +38,7 @@ import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -109,8 +110,13 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		return view;
 	}
 
-	public void openRenameDialog(FileSystemItem item, RenameHandler handler) {
-		new RenameDialog(item, textProvider, handler);
+	public void openRenameDialog(FileSystemItem item, RenameHandler handler,
+			Widget parent) {
+		RenameDialog renameDialog = new RenameDialog(item, textProvider,
+				handler);
+		if (parent != null)
+			renameDialog.setPopupPosition(renameDialog.getAbsoluteLeft(),
+					parent.getAbsoluteTop());
 	}
 
 	public void openPasswordDialog(PasswordHandler handler) {

@@ -102,8 +102,8 @@ public class UrlResolver {
 			if (result.length() > 0 && !result.endsWith("/"))
 				result += "/";
 		} else {
-			// not nested, return absolute
-			return getModuleUrl(path, false);
+			// not nested
+			return null;
 		}
 		return result + path;
 	}
