@@ -12,11 +12,11 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -31,6 +31,8 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
+
+import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
@@ -60,14 +62,16 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.actionCallback = actionCallback;
 	}
 
-	public void onAction(FileSystemItem item, FileSystemAction action) {
+	public void onAction(FileSystemItem item, FileSystemAction action,
+			Widget source) {
 		if (item.isFile())
-			onFileAction((File) item, action);
+			onFileAction((File) item, action, source);
 		else
-			onFolderAction((Folder) item, action);
+			onFolderAction((Folder) item, action, source);
 	}
 
-	private void onFileAction(final File file, FileSystemAction action) {
+	private void onFileAction(final File file, FileSystemAction action,
+			Widget source) {
 		if (action.equals(FileSystemAction.download)) {
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadUrl(file));
@@ -75,7 +79,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
-			renameDialogFactory.openRenameDialog(file, this);
+			renameDialogFactory.openRenameDialog(file, this, source);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
 				itemSelectorFactory.openFolderSelector(textProvider
@@ -130,13 +134,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		}
 	}
 
-	private void onFolderAction(final Folder folder,
-			FileSystemAction action) {
+	private void onFolderAction(final Folder folder, FileSystemAction action,
+			Widget source) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(folder));
 		} else if (action.equals(FileSystemAction.rename)) {
-			renameDialogFactory.openRenameDialog(folder, this);
+			renameDialogFactory.openRenameDialog(folder, this, source);
 		} else if (action.equals(FileSystemAction.move)) {
 			itemSelectorFactory.openFolderSelector(textProvider.getStrings()
 					.moveDirectoryDialogTitle(), textProvider.getMessages()

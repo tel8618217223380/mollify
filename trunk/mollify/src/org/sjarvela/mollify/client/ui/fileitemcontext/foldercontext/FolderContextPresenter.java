@@ -131,19 +131,18 @@ public class FolderContextPresenter implements ActionListener {
 	}
 
 	protected void onRemoveDescription() {
-		this.descriptionHandler.removeItemDescription(folder,
-				new Callback() {
-					public void onCallback() {
-						details.removeDescription();
-						updateDescription();
-					}
-				});
+		this.descriptionHandler.removeItemDescription(folder, new Callback() {
+			public void onCallback() {
+				details.removeDescription();
+				updateDescription();
+			}
+		});
 	}
 
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
-			fileSystemActionHandler.onAction(folder,
-					(FileSystemAction) action);
+			fileSystemActionHandler.onAction(folder, (FileSystemAction) action,
+					popup);
 			popup.hide();
 			return;
 		}

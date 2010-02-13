@@ -13,8 +13,10 @@ package org.sjarvela.mollify.client.filesystem.handler;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
+import com.google.gwt.user.client.ui.Widget;
+
 public interface FileSystemActionHandler {
 
-	void onAction(FileSystemItem item, FileSystemAction action);
+	void onAction(FileSystemItem item, FileSystemAction action, Widget source);
 
 }

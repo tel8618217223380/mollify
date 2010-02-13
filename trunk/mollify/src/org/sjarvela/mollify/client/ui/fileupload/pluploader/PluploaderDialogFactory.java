@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class PluploaderDialogFactory implements FileUploadDialogFactory {
@@ -26,14 +27,19 @@ public class PluploaderDialogFactory implements FileUploadDialogFactory {
 	private final UrlResolver urlResolver;
 	private final SessionProvider sessionProvider;
 	private final FileUploadService service;
+	private final ClientSettings settings;
+	private final DialogManager dialogManager;
 
 	public PluploaderDialogFactory(TextProvider textProvider,
 			UrlResolver urlResolver, FileUploadService fileUploadService,
-			SessionProvider sessionProvider, ClientSettings settings) {
+			SessionProvider sessionProvider, DialogManager dialogManager,
+			ClientSettings settings) {
 		this.textProvider = textProvider;
 		this.urlResolver = urlResolver;
 		this.service = fileUploadService;
 		this.sessionProvider = sessionProvider;
+		this.dialogManager = dialogManager;
+		this.settings = settings;
 	}
 
 	@Override
@@ -46,7 +52,7 @@ public class PluploaderDialogFactory implements FileUploadDialogFactory {
 				actionDelegator);
 		PluploaderPresenter presenter = new PluploaderPresenter(sessionProvider
 				.getSession(), service, urlResolver, listener, directory,
-				dialog, textProvider);
+				dialog, dialogManager, textProvider, settings);
 		if (service instanceof DemoFileUploadHandler)
 			presenter.setDemoMode();
 		new PluploaderGlue(dialog, presenter, actionDelegator);

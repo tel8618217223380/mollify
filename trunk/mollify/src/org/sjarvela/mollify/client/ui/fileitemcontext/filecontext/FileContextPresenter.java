@@ -183,7 +183,8 @@ public class FileContextPresenter implements ActionListener {
 
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
-			fileSystemActionHandler.onAction(file, (FileSystemAction) action);
+			fileSystemActionHandler.onAction(file, (FileSystemAction) action,
+					popup);
 			popup.hide();
 			return;
 		}

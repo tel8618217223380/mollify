@@ -125,7 +125,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 					env.getFileUploadService(), sessionProvider, settings);
 		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
 			return new PluploaderDialogFactory(textProvider, urlResolver, env
-					.getFileUploadService(), sessionProvider, settings);
+					.getFileUploadService(), sessionProvider, dialogManager, settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);
