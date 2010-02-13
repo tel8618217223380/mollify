@@ -31,9 +31,12 @@ import plupload.client.File;
 import plupload.client.Plupload;
 import plupload.client.PluploadBuilder;
 import plupload.client.PluploadListener;
+import plupload.client.Status;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 
 public class PluploaderPresenter implements PluploadListener {
 	private static final String PARAM_PLUPLOAD_RUNTIMES = "plupload-runtimes";
@@ -116,26 +119,39 @@ public class PluploaderPresenter implements PluploadListener {
 
 	private void addRuntimes(PluploadBuilder builder) {
 		String runtimes = settings.getString(PARAM_PLUPLOAD_RUNTIMES);
-		if (runtimes == null)
-			dialogManager.showError(new ServiceError(
-					ServiceErrorType.INVALID_CONFIGURATION,
-					"No plupload runtimes defined"));
+		if (runtimes == null) {
+			DeferredCommand.addCommand(new Command() {
+				@Override
+				public void execute() {
+					dialogManager.showError(new ServiceError(
+							ServiceErrorType.INVALID_CONFIGURATION,
+							"No plupload runtimes defined"));
+				}
+			});
+			dialog.hide();
+			return;
+		}
 
-		for (String runtime : runtimes.split(",")) {
-			runtime = runtime.toLowerCase().trim();
+		for (String r : runtimes.split(",")) {
+			final String runtime = r.toLowerCase().trim();
 
-			if (runtime == "gears" || runtime == "html5"
-					|| runtime == "browserplus") {
+			if (runtime.equals("gears") || runtime.equals("html5")
+					|| runtime.equals("browserplus")) {
 				builder.runtime(runtime);
-			} else if (runtime == "flash") {
+			} else if (runtime.equals("flash")) {
 				builder.runtime("flash").flashUrl(getUrl(FLASH_FILE_NAME));
-			} else if (runtime == "silverlight") {
+			} else if (runtime.equals("silverlight")) {
 				builder.runtime("silverlight").silverlightUrl(
 						getUrl(SILVERLIGHT_FILE_NAME));
 			} else {
-				dialogManager.showError(new ServiceError(
-						ServiceErrorType.INVALID_CONFIGURATION,
-						"Invalid plupload runtime: " + runtime));
+				DeferredCommand.addCommand(new Command() {
+					@Override
+					public void execute() {
+						dialogManager.showError(new ServiceError(
+								ServiceErrorType.INVALID_CONFIGURATION,
+								"Invalid plupload runtime: " + runtime));
+					}
+				});
 			}
 		}
 	}
@@ -241,6 +257,7 @@ public class PluploaderPresenter implements PluploadListener {
 		dialog.onFileUploadCompleted(file);
 
 		if (uploadModel.allComplete()) {
+			Log.debug("Upload complete");
 			dialog.hide();
 			stopUpload(false);
 			listener.onSuccess(null);
@@ -291,7 +308,7 @@ public class PluploaderPresenter implements PluploadListener {
 			return;
 		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
 		updateProgress(file);
-		if (file.getSize() - file.getLoaded() <= 0)
+		if (file.getStatus().equals(Status.DONE))
 			complete(file);
 	}
 

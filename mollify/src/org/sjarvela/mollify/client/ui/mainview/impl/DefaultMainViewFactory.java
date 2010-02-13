@@ -115,8 +115,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		RenameDialog renameDialog = new RenameDialog(item, textProvider,
 				handler);
 		if (parent != null)
-			renameDialog.setPopupPosition(renameDialog.getAbsoluteLeft(),
-					parent.getAbsoluteTop());
+			renameDialog.alignWith(parent);
 	}
 
 	public void openPasswordDialog(PasswordHandler handler) {

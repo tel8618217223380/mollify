@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,8 +38,11 @@ public class DefaultDialogManager implements DialogManager {
 	}
 
 	public void showConfirmationDialog(String title, String message,
-			String style, ConfirmationListener listener) {
-		new ConfirmationDialog(textProvider, title, message, style, listener);
+			String style, ConfirmationListener listener, Widget p) {
+		ConfirmationDialog confirmationDialog = new ConfirmationDialog(
+				textProvider, title, message, style, listener);
+		if (p != null)
+			confirmationDialog.alignWith(p);
 	}
 
 }

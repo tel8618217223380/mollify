@@ -201,7 +201,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 						public void onConfirm() {
 							openSelectItemDialog();
 						}
-					});
+					}, null);
 		else
 			openSelectItemDialog();
 	}

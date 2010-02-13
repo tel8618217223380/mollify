@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.ui.fileupload.pluploader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mortbay.log.Log;
+
 import plupload.client.File;
 
 public class UploadModel {
@@ -39,6 +41,8 @@ public class UploadModel {
 	}
 
 	public void complete(File file) {
+		Log.debug("File complete: " + file.getName() + ", left="
+				+ (files.size() - completed.size()));
 		completed.add(getFile(file));
 		completedBytes += file.getSize();
 	}
