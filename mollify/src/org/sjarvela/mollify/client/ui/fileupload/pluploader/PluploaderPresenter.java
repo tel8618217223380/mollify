@@ -28,10 +28,10 @@ import org.sjarvela.mollify.client.util.FileUtil;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import plupload.client.File;
+import plupload.client.FileStatus;
 import plupload.client.Plupload;
 import plupload.client.PluploadBuilder;
 import plupload.client.PluploadListener;
-import plupload.client.Status;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptException;
@@ -100,11 +100,15 @@ public class PluploaderPresenter implements PluploadListener {
 				+ session.getSessionId();
 
 		PluploadBuilder builder = new PluploadBuilder().uploadUrl(uploadUrl)
-				.filter(
-						textProvider.getStrings()
-								.fileUploadDialogSelectFileTypesDescription(),
-						getFileTypeList()).browseButton(
-						dialog.getBrowseButtonId()).listener(this);
+				.browseButton(dialog.getBrowseButtonId()).listener(this);
+
+		if (allowedTypes.size() > 0)
+			builder.filter(textProvider.getStrings()
+					.fileUploadDialogSelectFileTypesDescription(),
+					getFileTypeList());
+		else
+			builder.filter("", "*.*");
+
 		addRuntimes(builder);
 
 		String chunk = settings.getString(PARAM_PLUPLOAD_CHUNK_SIZE);
@@ -119,18 +123,8 @@ public class PluploaderPresenter implements PluploadListener {
 
 	private void addRuntimes(PluploadBuilder builder) {
 		String runtimes = settings.getString(PARAM_PLUPLOAD_RUNTIMES);
-		if (runtimes == null) {
-			DeferredCommand.addCommand(new Command() {
-				@Override
-				public void execute() {
-					dialogManager.showError(new ServiceError(
-							ServiceErrorType.INVALID_CONFIGURATION,
-							"No plupload runtimes defined"));
-				}
-			});
-			dialog.hide();
-			return;
-		}
+		if (runtimes == null)
+			runtimes = "gears, html5, flash, silverlight, browserplus";
 
 		for (String r : runtimes.split(",")) {
 			final String runtime = r.toLowerCase().trim();
@@ -233,10 +227,9 @@ public class PluploaderPresenter implements PluploadListener {
 		uploadModel.updateProgress(file.getLoaded());
 
 		if (Log.isDebugEnabled())
-			Log.debug("Progress: file " + file.getLoaded() + "/"
-					+ file.getSize() + "=" + percentage + ", total "
+			Log.debug("Progress: file " + percentage + "%, total "
 					+ uploadModel.getTotalProgress() + "="
-					+ uploadModel.getTotalPercentage());
+					+ uploadModel.getTotalPercentage() + "%");
 		dialog.setProgress(file, percentage, file.getLoaded(), uploadModel
 				.getTotalPercentage(), uploadModel.getTotalProgress());
 	}
@@ -258,14 +251,15 @@ public class PluploaderPresenter implements PluploadListener {
 
 		if (uploadModel.allComplete()) {
 			Log.debug("Upload complete");
-			dialog.hide();
 			stopUpload(false);
+			dialog.hide();
 			listener.onSuccess(null);
 			return;
 		}
 	}
 
 	public void onCancel() {
+		Log.debug("Upload cancelled");
 		dialog.hide();
 	}
 
@@ -274,6 +268,7 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	public void onCancelUpload() {
+		Log.debug("Upload cancelled");
 		stopUpload(true);
 		dialog.hide();
 	}
@@ -308,7 +303,7 @@ public class PluploaderPresenter implements PluploadListener {
 			return;
 		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
 		updateProgress(file);
-		if (file.getStatus().equals(Status.DONE))
+		if (file.getStatus().equals(FileStatus.DONE))
 			complete(file);
 	}
 

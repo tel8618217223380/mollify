@@ -41,6 +41,7 @@ public class PluploaderDialog extends CenteredDialog {
 	}
 
 	private static final String PLUPLOADER_BROWSE_BUTTON_ID = "pluploader-browse-button";
+	private static final String PLUPLOADER_DRAGNDROP_TARGET_ID = "pluploader-dragndrop-target";
 
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
@@ -105,6 +106,7 @@ public class PluploaderDialog extends CenteredDialog {
 
 	private Widget createFileList() {
 		fileScrollPanel = new ScrollPanel();
+		fileScrollPanel.getElement().setId(PLUPLOADER_DRAGNDROP_TARGET_ID);
 		fileScrollPanel
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILES_PANEL);
 		fileList = new FlowPanel();
@@ -276,4 +278,7 @@ public class PluploaderDialog extends CenteredDialog {
 		return PLUPLOADER_BROWSE_BUTTON_ID;
 	}
 
+	public String getDragAndDropTargetId() {
+		return PLUPLOADER_DRAGNDROP_TARGET_ID;
+	}
 }

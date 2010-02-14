@@ -13,9 +13,9 @@ package org.sjarvela.mollify.client.ui.fileupload.pluploader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mortbay.log.Log;
-
 import plupload.client.File;
+
+import com.allen_sauer.gwt.log.client.Log;
 
 public class UploadModel {
 	private final List<File> files;
@@ -41,10 +41,10 @@ public class UploadModel {
 	}
 
 	public void complete(File file) {
-		Log.debug("File complete: " + file.getName() + ", left="
-				+ (files.size() - completed.size()));
 		completed.add(getFile(file));
 		completedBytes += file.getSize();
+		Log.debug("File complete: " + file.getName() + ", left="
+				+ (files.size() - completed.size()));
 	}
 
 	public boolean allComplete() {

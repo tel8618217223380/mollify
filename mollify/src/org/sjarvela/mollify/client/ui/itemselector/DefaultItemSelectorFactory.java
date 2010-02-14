@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class DefaultItemSelectorFactory implements ItemSelectorFactory {
@@ -29,9 +30,12 @@ public class DefaultItemSelectorFactory implements ItemSelectorFactory {
 
 	public void openFolderSelector(String title, String message,
 			String actionTitle, FileSystemItemProvider provider,
-			SelectItemHandler listener) {
-		new SelectItemDialog(SelectItemDialog.Mode.Folders, dialogManager,
-				textProvider, title, message, actionTitle, provider, listener);
+			SelectItemHandler listener, Widget p) {
+		SelectItemDialog selectItemDialog = new SelectItemDialog(
+				SelectItemDialog.Mode.Folders, dialogManager, textProvider,
+				title, message, actionTitle, provider, listener);
+		if (p != null)
+			selectItemDialog.alignWith(p);
 	}
 
 	public void openItemSelector(String title, String message,
