@@ -327,4 +327,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		viewManager.openUrlInNewWindow(configurationService
 				.getAdministrationUrl());
 	}
+
+	public void onToggleSelectMode() {
+		view.setSelectMode(view.selectModeButton().isDown());
+	}
+
+	public void onFileSystemItemSelectionChanged(List<FileSystemItem> selected) {
+		view.updateFileSelection(selected);
+	}
 }

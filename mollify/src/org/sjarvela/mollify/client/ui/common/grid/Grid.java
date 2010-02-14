@@ -48,6 +48,7 @@ public class Grid<T> extends FlexTable {
 	private List<T> content = new ArrayList();
 	private List<T> selected = new ArrayList();
 	private SelectionMode selectionMode = SelectionMode.None;
+	private boolean customSelection = false;
 	private GridDataProvider<T> dataProvider = null;
 	private GridComparator<T> comparator = null;
 	private Map<Element, Widget> eventWidgets = new HashMap();
@@ -163,7 +164,15 @@ public class Grid<T> extends FlexTable {
 
 	public void setSelectionMode(SelectionMode mode) {
 		selectionMode = mode;
+		removeAllSelectionModeStyles();
+		if (!SelectionMode.None.equals(mode))
+			this.addStyleDependentName(mode.name().toLowerCase());
 		removeAllSelections();
+	}
+
+	private void removeAllSelectionModeStyles() {
+		this.removeStyleDependentName("multi");
+		this.removeStyleDependentName("single");
 	}
 
 	public List<T> getSelected() {
@@ -344,7 +353,7 @@ public class Grid<T> extends FlexTable {
 
 		switch (DOM.eventGetType(event)) {
 		case Event.ONCLICK:
-			if (!selectionMode.equals(SelectionMode.None))
+			if (!customSelection && !selectionMode.equals(SelectionMode.None))
 				updateSelection(row);
 			break;
 
@@ -360,13 +369,32 @@ public class Grid<T> extends FlexTable {
 		}
 	}
 
-	private void updateSelection(int row) {
-		if (selectionMode.equals(SelectionMode.Single))
-			removeAllSelections();
+	protected void setCustomSelection(boolean b) {
+		this.customSelection = b;
+	}
 
+	protected void updateSelection(T t) {
+		int row = content.indexOf(t);
+		updateSelection(row);
+	}
+
+	protected void updateSelection(int row) {
 		T t = content.get(row);
-		selected.add(t);
-		addSelectedStyle(t);
+		boolean previouslySelected = selected.contains(t);
+
+		if (selectionMode.equals(SelectionMode.Single)) {
+			removeAllSelections();
+			selected.add(t);
+			addSelectedStyle(t);
+		} else if (selectionMode.equals(SelectionMode.Multi)) {
+			if (previouslySelected) {
+				selected.remove(t);
+				removeSelectedStyle(t);
+			} else {
+				selected.add(t);
+				addSelectedStyle(t);
+			}
+		}
 		notifySelectionChange();
 	}
 
