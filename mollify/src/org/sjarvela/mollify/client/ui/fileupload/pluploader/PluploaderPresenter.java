@@ -240,18 +240,19 @@ public class PluploaderPresenter implements PluploadListener {
 		uploader.start();
 	}
 
-	private void stopUpload(boolean cancelFiles) {
+	private void stopUpload() {
 		uploader.stop();
 		uploadModel = null;
 	}
 
 	private void complete(File file) {
-		uploadModel.complete(file);
+		if (!uploadModel.complete(file))
+			return;
 		dialog.onFileUploadCompleted(file);
 
 		if (uploadModel.allComplete()) {
 			Log.debug("Upload complete");
-			stopUpload(false);
+			stopUpload();
 			dialog.hide();
 			listener.onSuccess(null);
 			return;
@@ -269,7 +270,7 @@ public class PluploaderPresenter implements PluploadListener {
 
 	public void onCancelUpload() {
 		Log.debug("Upload cancelled");
-		stopUpload(true);
+		stopUpload();
 		dialog.hide();
 	}
 

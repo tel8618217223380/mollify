@@ -27,24 +27,26 @@ public class UploadModel {
 	private long lastTotal = 0l;
 
 	public UploadModel(List<File> files) {
-		this.files = files;
-		for (File f : files)
+		this.files = new ArrayList(files);
+		for (File f : this.files)
 			totalSize += f.getSize();
 	}
 
 	public void start(File file) {
-		if (current != null) {
-			completed.add(current);
-			completedBytes += current.getSize();
-		}
-		current = file;
+		current = getFile(file);
 	}
 
-	public void complete(File file) {
-		completed.add(getFile(file));
-		completedBytes += file.getSize();
-		Log.debug("File complete: " + file.getName() + ", left="
-				+ (files.size() - completed.size()));
+	public boolean complete(File file) {
+		File f = getFile(file);
+		if (completed.contains(f))
+			return false;
+
+		completed.add(f);
+		completedBytes += f.getSize();
+
+		Log.debug("File complete: " + file.getName() + ", all=" + files.size()
+				+ ", left=" + (files.size() - completed.size()));
+		return true;
 	}
 
 	public boolean allComplete() {
