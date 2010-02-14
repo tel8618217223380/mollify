@@ -44,6 +44,10 @@ import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.util.Html;
 
+import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+
 public class MainViewPresenter implements FolderListener, PasswordHandler,
 		FileItemDescriptionHandler, FileSystemPermissionHandler {
 	private final MainViewModel model;
@@ -185,7 +189,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			return;
 
 		fileUploadDialogFactory.openFileUploadDialog(model.getCurrentFolder(),
-				createReloadListener());
+				createReloadListener("Upload"));
 	}
 
 	public void openNewDirectoryDialog() {
@@ -196,15 +200,21 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				.getCurrentFolder(), new DirectoryHandler() {
 			public void createDirectory(Folder parentFolder, String folderName) {
 				fileSystemService.createFolder(parentFolder, folderName,
-						createReloadListener());
+						createReloadListener("Create folder"));
 			}
 		});
 	}
 
-	private ResultListener createReloadListener() {
+	private ResultListener createReloadListener(final String operation) {
 		return createListener(new Callback() {
 			public void onCallback() {
-				reload();
+				DeferredCommand.addCommand(new Command() {
+					@Override
+					public void execute() {
+						Log.debug(operation + " complete");
+						reload();
+					}
+				});
 			}
 		});
 	}

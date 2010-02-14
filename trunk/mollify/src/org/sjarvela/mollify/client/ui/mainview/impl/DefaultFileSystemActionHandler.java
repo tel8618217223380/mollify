@@ -97,7 +97,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									return false;
 								return !item.getId().equals(file.getParentId());
 							}
-						});
+						}, source);
 			} else if (action.equals(FileSystemAction.move)) {
 				itemSelectorFactory.openFolderSelector(textProvider
 						.getStrings().moveFileDialogTitle(), textProvider
@@ -114,7 +114,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									return false;
 								return !item.getId().equals(file.getParentId());
 							}
-						});
+						}, source);
 			} else if (action.equals(FileSystemAction.delete)) {
 				String title = textProvider.getStrings()
 						.deleteFileConfirmationDialogTitle();
@@ -160,7 +160,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									&& !folder.equals(candidate)
 									&& !path.contains(folder);
 						}
-					});
+					}, source);
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = textProvider.getStrings()
 					.deleteDirectoryConfirmationDialogTitle();
