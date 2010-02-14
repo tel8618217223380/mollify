@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
@@ -47,6 +47,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	public FileList(TextProvider textProvider) {
 		super(StyleConstants.FILE_LIST_HEADER, getColumns(textProvider));
 		setDataProvider(this);
+		setCustomSelection(true);
 
 		this.textProvider = textProvider;
 		this.addStyleName(StyleConstants.FILE_LIST);
@@ -78,7 +79,7 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	private GridData getFileData(File file, GridColumn column) {
 		if (column.equals(COLUMN_NAME))
-			return new GridData.Widget(createNameWidget(file));
+			return new GridData.Widget(createFileNameWidget(file));
 		else if (column.equals(COLUMN_TYPE))
 			return new GridData.Widget(createTypeWidget(file));
 		else if (column.equals(COLUMN_SIZE))
@@ -96,8 +97,10 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	private FlowPanel createDirectoryNameWidget(final Folder directory) {
+	private FlowPanel createDirectoryNameWidget(final Folder folder) {
 		FlowPanel panel = new FlowPanel();
+		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
+		panel.add(createSelector(folder));
 
 		Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
@@ -106,12 +109,36 @@ public class FileList extends Grid<FileSystemItem> implements
 
 		icon.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FileList.this.onIconClicked(directory);
+				FileList.this.onIconClicked(folder);
 			}
 		});
 
-		panel.add(createNameWidget(directory));
+		panel.add(createNameWidget(folder));
 		return panel;
+	}
+
+	private FlowPanel createFileNameWidget(final File file) {
+		FlowPanel panel = new FlowPanel();
+		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
+		panel.add(createSelector(file));
+		panel.add(createNameWidget(file));
+		return panel;
+	}
+
+	private Widget createSelector(final FileSystemItem item) {
+		Label selector = new Label();
+		selector.setStyleName(StyleConstants.FILE_LIST_ROW_SELECTOR);
+		selector.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				FileList.this.onRowSelectorClicked(item);
+			}
+		});
+		HoverDecorator.decorate(selector);
+		return selector;
+	}
+
+	protected void onRowSelectorClicked(FileSystemItem item) {
+		updateSelection(item);
 	}
 
 	private Widget createNameWidget(final FileSystemItem item) {

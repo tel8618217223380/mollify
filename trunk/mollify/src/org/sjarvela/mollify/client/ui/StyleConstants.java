@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui;
 public class StyleConstants {
 	public static final String MOLLIFY_LOG = "mollify-log";
 
+	public static final String OPEN = "open";
 	public static final String HOVER = "hover";
 	public static final String PRESSED = "pressed";
 	public static final String SELECTED = "selected";
@@ -60,7 +61,10 @@ public class StyleConstants {
 	public static final String SWITCH_PANEL = "mollify-switch-panel";
 
 	public static final String MAIN_VIEW = "mollify-main";
+	public static final String MAIN_VIEW_HEADER_CONTAINER = "mollify-header-container";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
+	public static final String MAIN_VIEW_SUBHEADER = "mollify-subheader";
+	public static final String MAIN_VIEW_HEADER_TOGGLE = "mollify-header-toggle";
 	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "mollify-header-padding-left";
 	public static final String MAIN_VIEW_HEADER_PADDING_MIDDLE = "mollify-header-padding-middle";
 	public static final String MAIN_VIEW_HEADER_PADDING_RIGHT = "mollify-header-padding-right";
@@ -74,6 +78,8 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_BUTTON_REFRESH = "mollify-header-refresh-button";
 	public static final String MAIN_VIEW_HEADER_BUTTON_PARENT_DIR = "mollify-header-parent-dir-button";
 	public static final String MAIN_VIEW_HEADER_BUTTON_TOOLTIP = "mainview";
+	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON = "mollify-header-toggle-button";
+	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT = "mollify-header-toggle-button-select";
 
 	public static final String FILE_CONTEXT = "mollify-file-context";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
@@ -114,7 +120,9 @@ public class StyleConstants {
 	public static final String FILE_LIST_ROW_DIRECTORY_EVEN = "mollify-filelist-row-directory-even";
 	public static final String FILE_LIST_ROW_DIRECTORY_ODD = "mollify-filelist-row-directory-odd";
 	public static final String FILE_LIST_ROW_DIRECTORY_ICON = "mollify-filelist-row-directory-icon";
+	public static final String FILE_LIST_ROW_SELECTOR = "mollify-filelist-row-selector";
 	public static final String FILE_LIST_ITEM_SELECT = "mollify-filelist-item-select";
+	public static final String FILE_LIST_ITEM_NAME_PANEL = "mollify-filelist-item-name-panel";
 	public static final String FILE_LIST_ITEM_NAME = "mollify-filelist-item-name";
 	public static final String FILE_LIST_ITEM_TYPE = "mollify-filelist-item-type";
 	public static final String FILE_LIST_ITEM_SIZE = "mollify-filelist-item-size";

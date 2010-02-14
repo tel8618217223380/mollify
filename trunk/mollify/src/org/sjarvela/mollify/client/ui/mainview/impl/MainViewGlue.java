@@ -86,6 +86,14 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 					}
 				});
 
+		actionDelegator.setActionHandler(Action.selectMode,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onToggleSelectMode();
+					}
+				});
+
 		actionDelegator.setActionHandler(Action.admin, new VoidActionHandler() {
 			public void onAction() {
 				presenter.onOpenAdministration();
@@ -108,5 +116,6 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	}
 
 	public void onSelectionChanged(List<FileSystemItem> selected) {
+		presenter.onFileSystemItemSelectionChanged(selected);
 	}
 }

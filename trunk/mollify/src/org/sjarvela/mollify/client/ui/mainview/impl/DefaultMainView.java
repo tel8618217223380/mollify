@@ -14,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -23,8 +24,10 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.common.ActionToggleButton;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
@@ -42,6 +45,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -64,11 +68,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
 	private DropdownButton username;
+	private ActionToggleButton selectButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
+	private MainViewHeader header;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -131,21 +137,33 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private Widget createHeader() {
 		createButtons();
 
-		Panel header = new HorizontalPanel();
-		header.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
+		header = new MainViewHeader();
+
+		Panel headerUpper = new HorizontalPanel();
+		header.setUpper(headerUpper);
+
+		headerUpper.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
+
+		Panel headerLower = new HorizontalPanel();
+		header.setLower(headerLower);
+		header.build();
+
+		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
+		headerLower.add(selectButton);
+		headerLower.setVisible(false);
 
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(directorySelector);
-		header.add(buttonPanel);
+		headerUpper.add(buttonPanel);
 
 		if (model.getSession().isAuthenticationRequired()) {
 			Panel loggedInPanel = new FlowPanel();
 			loggedInPanel
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
 			loggedInPanel.add(createUserName());
-			header.add(loggedInPanel);
+			headerUpper.add(loggedInPanel);
 		}
 
 		return header;
@@ -196,6 +214,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				textProvider.getStrings().mainViewRefreshButtonTooltip())
 				.attach(refreshButton);
 		refreshButton.setAction(actionListener, Action.refresh);
+
+		selectButton = new ActionToggleButton("Select",
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT,
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
+		selectButton.setAction(actionListener, Action.selectMode);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())
@@ -281,5 +304,19 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public Widget getViewWidget() {
 		return this;
+	}
+
+	public ToggleButton selectModeButton() {
+		return selectButton;
+	}
+
+	public void setSelectMode(boolean select) {
+		list
+				.setSelectionMode(select ? SelectionMode.Multi
+						: SelectionMode.None);
+	}
+
+	public void updateFileSelection(List<FileSystemItem> selected) {
+
 	}
 }

@@ -17,7 +17,7 @@
 	font-size: 8pt;	
 }
 
-#mollify, .mollify-header, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
+#mollify, .mollify-header, .mollify-header-container, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -160,6 +160,30 @@
 	border: 1px outset #ccc;
 }
 
+.gwt-ToggleButton {
+	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	margin: 0;
+	padding: 3px 5px;
+	text-decoration: none;
+	cursor: pointer;
+	border-style: dotted;
+	border-width: 1px;
+	text-align: center;
+}
+
+.gwt-ToggleButton:hover {
+	border: 1px solid #a0a1a1;
+}
+
+.gwt-ToggleButton-down:hover {
+	background-color: #a5a7a7;
+}
+
+.gwt-ToggleButton-down {
+	background-color: #a5a7a7;
+	border: 1px inset #ccc;
+}
+
 .mollify-header-button:active, .mollify-dropdown-button:active {
 	border-style: none;
 }
@@ -204,16 +228,31 @@
 	background: url(b-dropdown-arrow.png) no-repeat;
 }
 
-.mollify-main {
+.mollify-main, .mollify-header,.mollify-subheader, .mollify-header-container {
 	width: 100%;
 }
 
 .mollify-header {
 	background: url(header.png) repeat-x 0 0;
-	width: 100%;
 	height: 38px;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
+}
+
+.mollify-subheader {
+	height: 30px;
+	background-color: #8b8c8d;
+	padding-top: 3px;
+	padding-left: 5px;
+	border-bottom: 1px solid #6e6e6e;
+}
+
+.mollify-header-toggle {
+	width: 20px;
+	height: 20px;
+	background-color: #89898a;
+	cursor: pointer;
+	position: absolute;
 }
 
 .mollify-header-buttons {
@@ -519,6 +558,11 @@
 	margin-top: 17px;
 }
 
+#mollify-header-toggle-button-select {
+	height: 13px;
+	width: 40px;
+}
+
 .mollify-filelist {
 	margin: 8px 0 1em;
 	width: 100%;
@@ -686,6 +730,22 @@ td#mollify-filelist-column-size {
 
 .mollify-filelist-row-directory-icon-hover {
 	background: #c4c4c4 url(folder.png) no-repeat 3px 3px;
+}
+
+.mollify-filelist .mollify-filelist-row-selector {
+	width: 0;
+}
+
+.mollify-filelist-multi .mollify-filelist-row-selector {
+	width: 9px;
+	height: 17px;
+	background-color: #fdc9cb;
+	float: left;
+	cursor: pointer;
+}
+
+.mollify-filelist-row-directory-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-directory-even-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-even-selected .mollify-filelist-row-selector {
+	background-color: #ff6f86;	
 }
 
 .mollify-filelist td {
