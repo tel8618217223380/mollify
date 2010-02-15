@@ -335,4 +335,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	public void onFileSystemItemSelectionChanged(List<FileSystemItem> selected) {
 		view.updateFileSelection(selected);
 	}
+
+	public void onSelectAll() {
+		view.selectAll();
+	}
+
+	public void onSelectNone() {
+		view.selectNone();
+	}
+
 }

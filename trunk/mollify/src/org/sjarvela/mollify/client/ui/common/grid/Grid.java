@@ -179,6 +179,20 @@ public class Grid<T> extends FlexTable {
 		return selected;
 	}
 
+	public void selectAll() {
+		for (T t : content)
+			if (!selected.contains(t)) {
+				selected.add(t);
+				addSelectedStyle(t);
+			}
+		notifySelectionChange();
+	}
+
+	public void selectNone() {
+		removeAllSelections();
+		notifySelectionChange();
+	}
+
 	private Sort toggleSort(Sort sort) {
 		if (Sort.asc.equals(sort))
 			return Sort.desc;

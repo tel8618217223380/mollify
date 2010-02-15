@@ -74,7 +74,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private MainViewHeader header;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -224,7 +224,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		selectOptionsButton = new DropdownButton(actionListener, "",
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS,
 				selectButton);
-		selectOptionsButton.addAction(Action.addFile, "All"); // TODO
+		selectOptionsButton.addAction(Action.selectAll, "All"); // TODO
+		selectOptionsButton.addAction(Action.selectNone, "None"); // TODO
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())
@@ -324,5 +325,17 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void updateFileSelection(List<FileSystemItem> selected) {
 
+	}
+
+	public void selectAll() {
+		setSelectMode(true);
+		selectButton.setDown(true);
+		list.selectAll();
+	}
+
+	public void selectNone() {
+		setSelectMode(true);
+		selectButton.setDown(true);
+		list.selectNone();
 	}
 }
