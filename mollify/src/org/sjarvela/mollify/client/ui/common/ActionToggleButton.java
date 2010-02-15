@@ -58,4 +58,9 @@ public class ActionToggleButton extends Label {
 	public boolean isDown() {
 		return down;
 	}
+
+	public void setDown(boolean b) {
+		down = b;
+		updateStyle();
+	}
 }

@@ -240,8 +240,8 @@
 }
 
 .mollify-subheader {
-	height: 30px;
-	background-color: #8b8c8d;
+	height: 27px;
+	background-color: #8c9399;
 	padding-top: 3px;
 	padding-left: 0px;
 	border-bottom: 1px solid #6e6e6e;
@@ -259,13 +259,20 @@
 #mollify-header-select-options {
 	float: left;
 	background-image: none;
-	width: 13px;
+	width: 14px;
 	height: 24px;
-	border-style: none;
+	background-color: #9ea0a0;
+	margin-top: 0;
+	border: 1px solid #787878;
+	border-left-style: none;
 }
 
 #mollify-header-select-options:hover {
-	background: #bdbdbd url(sort-desc.png) no-repeat 3px 10px;
+	background: #a7a8a8 url(sort-desc.png) no-repeat 3px 10px;
+}
+
+#mollify-header-select-options-menu {
+	background-color: #eaeaea;
 }
 
 .mollify-header-buttons {
@@ -574,7 +581,7 @@
 #mollify-header-toggle-button-select {
 	width: 47px;
 	float: left;
-	margin-left: 9px;
+	margin-left: 4px;
 }
 
 .mollify-header-toggle-button {
@@ -582,16 +589,15 @@
 	text-align: center;
 	font-weight: bold;
 	padding-top: 4px;
-	border-style: outset;
-	border-width: 1px;
 	padding-bottom: 5px;
 	background-color: #afafaf;
 	cursor: pointer;
+	border: 1px solid #7b7b7b;
 }
 
 .mollify-header-toggle-button-down {
-	border-style: inset;
-	background-color: #a1abc0;
+	border-style: solid;
+	background-color: #c1c2ca;
 }
 
 .mollify-filelist {

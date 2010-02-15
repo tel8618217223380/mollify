@@ -94,6 +94,22 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 					}
 				});
 
+		actionDelegator.setActionHandler(Action.selectAll,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onSelectAll();
+					}
+				});
+
+		actionDelegator.setActionHandler(Action.selectNone,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onSelectNone();
+					}
+				});
+
 		actionDelegator.setActionHandler(Action.admin, new VoidActionHandler() {
 			public void onAction() {
 				presenter.onOpenAdministration();
