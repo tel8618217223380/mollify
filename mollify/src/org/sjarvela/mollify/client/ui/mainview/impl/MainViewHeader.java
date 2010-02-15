@@ -60,6 +60,15 @@ public class MainViewHeader extends VerticalPanel {
 	}
 
 	public void build() {
+		// showEffect = new NMorphStyle(new Rule("start{left: 0px; top: 0px;}"),
+		// new Rule("end{left: 0px; top: 30px;}"));
+		// showEffect.setEffectElement(lower.getElement());
+		//
+		// hideEffect = new NMorphStyle(new
+		// Rule("start{left: 0px; top: 30px;}"),
+		// new Rule("end{left: 0px; top: 0px;}"));
+		// hideEffect.setEffectElement(lower.getElement());
+
 		this.add(upper);
 		this.add(lower);
 		this.add(toggle);

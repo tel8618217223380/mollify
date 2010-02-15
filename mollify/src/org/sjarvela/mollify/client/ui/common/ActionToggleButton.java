@@ -15,23 +15,32 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Label;
 
-public class ActionToggleButton extends
-		com.google.gwt.user.client.ui.ToggleButton {
+public class ActionToggleButton extends Label {
+	boolean down = false;
+
 	public ActionToggleButton(String title, String id) {
 		this(title, id, null);
 	}
 
 	public ActionToggleButton(String title, String id, String styleClass) {
-		super();
+		super(title);
 
 		if (styleClass != null)
-			addStyleName(styleClass);
+			setStylePrimaryName(styleClass);
 
 		if (id != null)
 			getElement().setId(id);
 
-		this.getElement().setInnerHTML(title);
+		updateStyle();
+	}
+
+	private void updateStyle() {
+		if (down)
+			this.addStyleDependentName("down");
+		else
+			this.removeStyleDependentName("down");
 	}
 
 	public void setAction(final ActionListener actionListener,
@@ -39,8 +48,14 @@ public class ActionToggleButton extends
 
 		this.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				ActionToggleButton.this.down = !ActionToggleButton.this.down;
+				ActionToggleButton.this.updateStyle();
 				actionListener.onAction(actionId, null);
 			}
 		});
+	}
+
+	public boolean isDown() {
+		return down;
 	}
 }

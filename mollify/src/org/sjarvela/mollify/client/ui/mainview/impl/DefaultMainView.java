@@ -45,7 +45,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -69,6 +68,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private ActionButton refreshButton;
 	private DropdownButton username;
 	private ActionToggleButton selectButton;
+	private DropdownButton selectOptionsButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private MainViewHeader header;
@@ -144,12 +144,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		headerUpper.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 
-		Panel headerLower = new HorizontalPanel();
+		Panel headerLower = new FlowPanel();
 		header.setLower(headerLower);
 		header.build();
 
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
 		headerLower.add(selectButton);
+		headerLower.add(selectOptionsButton);
 		headerLower.setVisible(false);
 
 		if (addButton != null)
@@ -215,10 +216,15 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				.attach(refreshButton);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		selectButton = new ActionToggleButton("Select",
+		selectButton = new ActionToggleButton(
+				"Select", // TODO
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT,
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
 		selectButton.setAction(actionListener, Action.selectMode);
+		selectOptionsButton = new DropdownButton(actionListener, "",
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS,
+				selectButton);
+		selectOptionsButton.addAction(Action.addFile, "All"); // TODO
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())
@@ -306,7 +312,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return this;
 	}
 
-	public ToggleButton selectModeButton() {
+	public ActionToggleButton selectModeButton() {
 		return selectButton;
 	}
 

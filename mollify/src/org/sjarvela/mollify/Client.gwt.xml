@@ -17,7 +17,8 @@
 	<inherits name="org.swfupload.SWFUpload"/>
 	<inherits name="plupload.Plupload"/>
 	<inherits name="com.google.gwt.inject.Inject"/>
-
+	<inherits name="org.adamtacy.GWTEffects"/>
+	
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
 	<extend-property name="locale" values="en"/>
