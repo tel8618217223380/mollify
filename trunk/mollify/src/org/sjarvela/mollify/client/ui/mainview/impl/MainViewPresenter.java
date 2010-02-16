@@ -333,6 +333,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onFileSystemItemSelectionChanged(List<FileSystemItem> selected) {
+		model.setSelected(selected);
 		view.updateFileSelection(selected);
 	}
 
@@ -344,4 +345,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.selectNone();
 	}
 
+	public void onDeleteSelected() {
+		model.deleteSelected(createReloadListener("delete multiple"));
+	}
 }

@@ -280,6 +280,12 @@
 			$this->env->events()->onEvent(FileEvent::delete($item));
 		}
 		
+		public function deleteItems($items) {
+			Logging::logDebug('deleting '.count($items).' items');
+			foreach($items as $item)
+				$this->delete($item);
+		}
+		
 		public function createFolder($parent, $name) {
 			Logging::logDebug('creating folder ['.$parent->id().'/'.$name.']');
 			$this->env->features()->assertFeature("folder_actions");

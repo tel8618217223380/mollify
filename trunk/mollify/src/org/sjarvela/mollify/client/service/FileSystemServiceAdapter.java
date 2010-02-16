@@ -50,16 +50,21 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.delete(item, resultListenerFactory.createListener(listener));
 	}
 
-	public void getFolders(Folder parent,
-			ResultListener<List<Folder>> listener) {
+	@Override
+	public void delete(List<FileSystemItem> items,
+			ResultListener<Boolean> listener) {
+		service.delete(items, listener);
+	}
+
+	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
 		service.getFolders(parent, resultListenerFactory
 				.createListener(listener));
 	}
 
-	public void getItems(Folder parent,
-			ResultListener<FolderContent> listener) {
-		service.getItems(parent, resultListenerFactory
-				.createListener(listener));
+	public void getItems(Folder parent, ResultListener<FolderContent> listener) {
+		service
+				.getItems(parent, resultListenerFactory
+						.createListener(listener));
 	}
 
 	public void getFolderDetails(Folder directory,

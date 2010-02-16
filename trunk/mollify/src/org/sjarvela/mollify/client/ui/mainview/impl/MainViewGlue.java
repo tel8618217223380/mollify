@@ -115,6 +115,13 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 				presenter.onOpenAdministration();
 			}
 		});
+
+		actionDelegator.setActionHandler(Action.deleteMultiple,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.onDeleteSelected();
+					}
+				});
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {

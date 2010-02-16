@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.request;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -45,9 +46,34 @@ public class JSONStringBuilder {
 		return this;
 	}
 
+	public JSONArrayBuilder addArray(String name) {
+		JSONArray a = new JSONArray();
+		result.put(name, a);
+		return new JSONArrayBuilder(this, a);
+	}
+
 	@Override
 	public String toString() {
 		return result.toString();
 	}
 
+	public static class JSONArrayBuilder {
+		private final JSONStringBuilder parent;
+		private final JSONArray array;
+
+		public JSONArrayBuilder(JSONStringBuilder parent, JSONArray array) {
+			this.parent = parent;
+			this.array = array;
+		}
+
+		public JSONStringBuilder parent() {
+			return parent;
+		}
+
+		public JSONArrayBuilder add(String item) {
+			array.set(array.size(), new JSONString(item));
+			return this;
+		}
+
+	}
 }

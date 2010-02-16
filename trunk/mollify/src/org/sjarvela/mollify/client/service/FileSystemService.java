@@ -12,12 +12,12 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -26,11 +26,9 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 public interface FileSystemService extends FileDetailsProvider,
 		FolderDetailsProvider {
 
-	void getFolders(Folder parent,
-			ResultListener<List<Folder>> listener);
+	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
-	void getItems(Folder parent,
-			ResultListener<FolderContent> listener);
+	void getItems(Folder parent, ResultListener<FolderContent> listener);
 
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);
@@ -41,6 +39,8 @@ public interface FileSystemService extends FileDetailsProvider,
 			ResultListener<Boolean> listener);
 
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
+
+	void delete(List<FileSystemItem> items, ResultListener<Boolean> listener);
 
 	void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener);
