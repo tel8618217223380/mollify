@@ -44,6 +44,10 @@
 		}
 		
 		public function processPost() {
+			if ($this->path[0] === 'items') {
+				$this->processMultiItemAction();
+				return;
+			}
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
 				$this->processPostFile($item);
@@ -72,6 +76,26 @@
 		
 		private function convertItemId($id) {
 			return strtr(urldecode($id), '-_,', '+/=');
+		}
+		
+		private function processMultiItemAction() {
+			if (count($this->path) != 1) throw invalidRequestException();
+			$data = $this->request->data;
+			if (!isset($data['action']) or !isset($data['items']) or count($data['items']) < 1) throw $this->invalidRequestException();
+
+			$items = array();
+			foreach($data['items'] as $id)
+				$items[] = $this->item($id);
+			
+			switch($data['action']) {
+				case 'delete':
+					$this->env->filesystem()->deleteItems($items);
+					$this->response()->success(TRUE);
+					return;
+				default:
+					throw $this->invalidRequestException();
+			}
+
 		}
 				
 		private function processGetFile($item) {

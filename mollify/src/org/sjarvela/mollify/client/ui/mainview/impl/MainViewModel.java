@@ -13,10 +13,10 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -34,6 +34,7 @@ public class MainViewModel {
 	private List<File> files = new ArrayList();
 	private List<Folder> directories = new ArrayList();
 	private List<FileSystemItem> all = new ArrayList();
+	private List<FileSystemItem> selected = new ArrayList();
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
 			FolderProvider directoryProvider) {
@@ -84,8 +85,7 @@ public class MainViewModel {
 		return directoryModel.getCurrentFolder();
 	}
 
-	public void changeToRootDirectory(Folder root,
-			ResultListener resultListener) {
+	public void changeToRootDirectory(Folder root, ResultListener resultListener) {
 		directoryModel.setRootFolder(root);
 		refreshData(resultListener);
 	}
@@ -140,5 +140,13 @@ public class MainViewModel {
 				listener.onSuccess(result);
 			}
 		};
+	}
+
+	public void setSelected(List<FileSystemItem> selected) {
+		this.selected = selected;
+	}
+
+	public void deleteSelected(ResultListener resultListener) {
+		fileServices.delete(selected, resultListener);
 	}
 }

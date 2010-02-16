@@ -72,9 +72,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private MainViewHeader header;
+	private DropdownButton fileActions;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -151,6 +152,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
 		headerLower.add(selectButton);
 		headerLower.add(selectOptionsButton);
+		headerLower.add(fileActions);
 		headerLower.setVisible(false);
 
 		if (addButton != null)
@@ -226,6 +228,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				selectButton);
 		selectOptionsButton.addAction(Action.selectAll, "All"); // TODO
 		selectOptionsButton.addAction(Action.selectNone, "None"); // TODO
+
+		fileActions = new DropdownButton(actionListener, "Actions",
+				StyleConstants.MAIN_VIEW_HEADER_FILE_ACTIONS);
+		fileActions.addAction(Action.deleteMultiple, "Delete..."); 	//TODO
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())
@@ -324,7 +330,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void updateFileSelection(List<FileSystemItem> selected) {
-
+		fileActions.setEnabled(selected.size() > 0);
 	}
 
 	public void selectAll() {

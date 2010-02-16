@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder.JSONArrayBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -137,6 +138,21 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			Log.debug("Delete: " + item.getId());
 
 		request().url(serviceUrl().fileItem(item)).listener(listener).delete();
+	}
+
+	@Override
+	public void delete(List<FileSystemItem> items,
+			ResultListener<Boolean> listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Delete multiple items: " + items.size());
+
+		JSONStringBuilder data = new JSONStringBuilder("action", "delete");
+		JSONArrayBuilder itemArray = data.addArray("items");
+		for (FileSystemItem item : items)
+			itemArray.add(item.getId());
+
+		request().url(serviceUrl().item("items")).listener(listener).data(
+				data.toString()).post();
 	}
 
 	public void createFolder(Folder parentFolder, String folderName,

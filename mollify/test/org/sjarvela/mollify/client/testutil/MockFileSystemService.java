@@ -13,12 +13,12 @@ package org.sjarvela.mollify.client.testutil;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -49,14 +49,19 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getFolders(Folder parent,
-			ResultListener<List<Folder>> listener) {
+	@Override
+	public void delete(List<FileSystemItem> items,
+			ResultListener<Boolean> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void getItems(Folder parent,
-			ResultListener<FolderContent> listener) {
+	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void getItems(Folder parent, ResultListener<FolderContent> listener) {
 		// TODO Auto-generated method stub
 
 	}

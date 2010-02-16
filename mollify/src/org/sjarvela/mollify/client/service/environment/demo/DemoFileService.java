@@ -13,12 +13,12 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -42,15 +42,19 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void getFolders(Folder parent,
-			ResultListener<List<Folder>> listener) {
+	@Override
+	public void delete(List<FileSystemItem> item,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
+
+	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
 		listener.onSuccess(data.getDirectories(parent));
 	}
 
-	public void getItems(Folder parent,
-			ResultListener<FolderContent> listener) {
-		listener.onSuccess(new FolderContent(data.getDirectories(parent),
-				data.getFiles(parent)));
+	public void getItems(Folder parent, ResultListener<FolderContent> listener) {
+		listener.onSuccess(new FolderContent(data.getDirectories(parent), data
+				.getFiles(parent)));
 	}
 
 	public String getDownloadUrl(File file) {
