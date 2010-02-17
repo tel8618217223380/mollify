@@ -64,18 +64,19 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final FolderContextPopup directoryContextPopup;
 	private final ContextPopupHandler<Folder> directoryContextHandler;
 
+	private MainViewHeader header;
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
 	private DropdownButton username;
 	private ActionToggleButton selectButton;
 	private DropdownButton selectOptionsButton;
+	private DropdownButton fileActions;
+	private ActionToggleButton dropBoxButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
-	private MainViewHeader header;
-	private DropdownButton fileActions;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple, dropBox;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -153,6 +154,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		headerLower.add(selectButton);
 		headerLower.add(selectOptionsButton);
 		headerLower.add(fileActions);
+		headerLower.add(dropBoxButton);
 		headerLower.setVisible(false);
 
 		if (addButton != null)
@@ -231,7 +233,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		fileActions = new DropdownButton(actionListener, "Actions",
 				StyleConstants.MAIN_VIEW_HEADER_FILE_ACTIONS);
-		fileActions.addAction(Action.deleteMultiple, "Delete..."); 	//TODO
+		fileActions.addAction(Action.deleteMultiple, "Delete..."); // TODO
+
+		dropBoxButton = new ActionToggleButton(
+				"Drop Box", // TODO
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX,
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
+		dropBoxButton.setAction(actionListener, Action.dropBox);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())

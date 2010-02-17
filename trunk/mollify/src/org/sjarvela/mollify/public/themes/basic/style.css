@@ -149,7 +149,7 @@
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
 }
 
-.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector, .mollify-file-upload-dialog-button {
+.mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector, .mollify-file-upload-dialog-button, .mollify-header-toggle-button {
 	font: bold 8pt "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	margin: 0;
 	padding: 3px 5px;
@@ -241,11 +241,11 @@
 
 .mollify-subheader {
 	height: 27px;
-	background-color: #8c9399;
 	padding-top: 3px;
 	padding-left: 0px;
 	border-bottom: 1px solid #6e6e6e;
 	z-index: -1;
+	background: #c1cad2 url(subheader.png) repeat-x 0 0;
 }
 
 .mollify-header-toggle {
@@ -258,17 +258,16 @@
 
 #mollify-header-select-options {
 	float: left;
-	background-image: none;
 	width: 14px;
 	height: 24px;
-	background-color: #9ea0a0;
+	background-color: #a8acac;
 	margin-top: 0;
 	border: 1px solid #787878;
 	border-left-style: none;
 }
 
 #mollify-header-select-options:hover {
-	background: #a7a8a8 url(sort-desc.png) no-repeat 3px 10px;
+	background: #a8a9a9 url(sort-desc.png) no-repeat 3px 10px;
 }
 
 #mollify-header-select-options-menu {
@@ -405,6 +404,16 @@
 
 #mollify-header-logout.mollify-header-option:hover {
 	background: #969696 url(b-close-over.png) no-repeat 8px 13px;
+}
+
+#mollify-header-file-actions {
+	margin-left: 3px;
+	margin-top: 0;
+	border-style: solid;
+	border-color: #7d7d7d;
+	height: 24px;
+	width: 63px;
+	float: left;
 }
 
 .mollify-tooltip {
@@ -584,20 +593,25 @@
 	margin-left: 4px;
 }
 
+#mollify-header-toggle-button-dropbox {
+	width: 72px;
+	float: right;
+	margin-right: 5px;
+}
+
 .mollify-header-toggle-button {
 	width: 40px;
 	text-align: center;
 	font-weight: bold;
 	padding-top: 4px;
 	padding-bottom: 5px;
-	background-color: #afafaf;
 	cursor: pointer;
 	border: 1px solid #7b7b7b;
 }
 
 .mollify-header-toggle-button-down {
 	border-style: solid;
-	background-color: #c1c2ca;
+	background: #c8d0e2 0 0;
 }
 
 .mollify-filelist {
@@ -743,6 +757,20 @@ td#mollify-filelist-column-size {
 	background-color: #d8ccf0;
 }
 
+.mollify-filelist-row-file-odd-selected td, .mollify-filelist-row-file-even-selected td, .mollify-filelist-row-directory-odd-selected td, .mollify-filelist-row-directory-even-selected td, .mollify-filelist-row-file-odd-selected .mollify-filelist-column-type, .mollify-filelist-row-file-even-selected .mollify-filelist-column-type, .mollify-filelist-row-directory-odd-selected .mollify-filelist-column-type, .mollify-filelist-row-directory-even-selected .mollify-filelist-column-type {
+	background-color: #457da9;
+	color: white;
+}
+
+.mollify-filelist-row-directory-even-selected .mollify-filelist-item-type, .mollify-filelist-row-directory-odd-selected .mollify-filelist-item-type {
+	color: white;
+}
+
+.mollify-filelist-row-file-odd-selected-hover, .mollify-filelist-row-file-even-selected-hover {
+	background-color: #305c7e;
+	color: white;
+}
+
 .mollify-filelist .mollify-filelist-item-name {
 	height: 15px;
 	padding-left: 5px;
@@ -774,15 +802,20 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-multi .mollify-filelist-row-selector {
-	width: 9px;
-	height: 17px;
-	background-color: #fdc9cb;
+	width: 15px;
+	height: 15px;
 	float: left;
 	cursor: pointer;
+	margin-right: 4px;
+	margin-top: 1px;
+	border: 1px solid #cfcfcf;
+	background: #e7eaea;
 }
 
 .mollify-filelist-row-directory-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-directory-even-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-even-selected .mollify-filelist-row-selector {
-	background-color: #ff6f86;	
+	background-image: url(sel.png);
+	background-color: #474a62;
+	border: 1px solid #818283;
 }
 
 .mollify-filelist td {
