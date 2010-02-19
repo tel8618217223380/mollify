@@ -85,5 +85,8 @@
 			return array("code" => $err[0], "error" => $err[1], "details" => $details);
 		}
 
+		public function __toString() {
+			return "ResponseHandler";
+		}
 	}
 ?>

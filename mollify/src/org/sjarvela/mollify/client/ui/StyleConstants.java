@@ -405,4 +405,7 @@ public class StyleConstants {
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTONS = "mollify-fileitem-user-permission-dialog-buttons";
 	public static final String FILEITEM_USER_PERMISSION_DIALOG_BUTTON_ADD_EDIT = "mollify-fileitem-user-permission-dialog-add-edit";
 
+	public static final String DROPBOX_VIEW = "mollify-dropbox";
+	public static final String DROPBOX_VIEW_CONTENT = "mollify-dropbox-content";
+
 }

@@ -120,6 +120,10 @@
 			$this->session->log();
 			$this->authentication->log();
 		}
+		
+		public function __toString() {
+			return "ServiceEnvironment";
+		}
 	}
 
 	class ServiceException extends Exception {

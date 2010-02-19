@@ -55,5 +55,9 @@
 		function log() {
 			Logging::logDebug("SETTINGS: ".Util::array2str($this->settings));
 		}
+		
+		public function __toString() {
+			return "Settings";
+		}
 	}
 ?>

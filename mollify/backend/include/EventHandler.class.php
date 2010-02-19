@@ -29,6 +29,10 @@
 			foreach($this->listeners[$e->type()] as $listener)
 				$listener->onEvent($e);
 		}
+		
+		public function __toString() {
+			return "EventHandler";
+		}
 	}
 	
 	class Event {
@@ -46,6 +50,10 @@
 		
 		public function data() {
 			return $this->data;
+		}
+		
+		public function __toString() {
+			return "Event";
 		}
 	}
 ?>

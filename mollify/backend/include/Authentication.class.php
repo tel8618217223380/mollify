@@ -108,5 +108,9 @@
 		public function log() {
 			Logging::logDebug("AUTH: is_authentication_required=".$this->isAuthenticationRequired().", is_authenticated=".$this->isAuthenticated());
 		}
+		
+		public function __toString() {
+			return "Authentication";
+		}
 	}
 ?>

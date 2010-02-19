@@ -33,6 +33,8 @@ import org.sjarvela.mollify.client.ui.DefaultViewManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
+import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
@@ -71,6 +73,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 				DefaultFileSystemItemProvider.class);
 		bind(PermissionEditorViewFactory.class).to(
 				DefaultPermissionEditorViewFactory.class);
+		bind(DropBoxFactory.class).to(DefaultDropBoxFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
 		bind(EventDispatcher.class).to(DefaultEventDispatcher.class);
@@ -125,7 +128,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 					env.getFileUploadService(), sessionProvider, settings);
 		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
 			return new PluploaderDialogFactory(textProvider, urlResolver, env
-					.getFileUploadService(), sessionProvider, dialogManager, settings);
+					.getFileUploadService(), sessionProvider, dialogManager,
+					settings);
 
 		return new HttpFileUploadDialogFactory(env, textProvider, env
 				.getFileUploadService(), sessionProvider, dialogManager);

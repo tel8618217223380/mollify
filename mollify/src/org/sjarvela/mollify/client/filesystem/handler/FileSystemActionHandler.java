@@ -10,13 +10,21 @@
 
 package org.sjarvela.mollify.client.filesystem.handler;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.ui.mainview.impl.FileSystemActionListener;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public interface FileSystemActionHandler {
 
 	void onAction(FileSystemItem item, FileSystemAction action, Widget source);
+
+	void onAction(List<FileSystemItem> items, FileSystemAction action,
+			Widget source);
+
+	void addListener(FileSystemActionListener fileSystemActionListener);
 
 }
