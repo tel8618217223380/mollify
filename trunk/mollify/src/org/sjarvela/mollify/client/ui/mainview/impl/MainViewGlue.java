@@ -12,8 +12,10 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
@@ -28,11 +30,19 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	private final DefaultMainView view;
 
 	public MainViewGlue(DefaultMainView view,
-			final MainViewPresenter presenter, ActionDelegator actionDelegator) {
+			final MainViewPresenter presenter,
+			FileSystemActionHandler fileSystemActionHandler,
+			ActionDelegator actionDelegator) {
 		this.view = view;
 		this.presenter = presenter;
 		this.actionDelegator = actionDelegator;
 
+		fileSystemActionHandler.addListener(new FileSystemActionListener() {
+			@Override
+			public void onFileSystemAction(FileSystemAction action) {
+				presenter.reload();
+			}
+		});
 		view.addFileListListener(this);
 		view.addViewListener(new ViewListener() {
 			public void onShow() {
@@ -120,6 +130,14 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 				new VoidActionHandler() {
 					public void onAction() {
 						presenter.onDeleteSelected();
+					}
+				});
+
+		actionDelegator.setActionHandler(Action.dropBox,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onDropBox();
 					}
 				});
 	}

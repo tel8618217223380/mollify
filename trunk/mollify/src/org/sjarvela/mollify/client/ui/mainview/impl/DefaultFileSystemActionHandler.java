@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -20,7 +21,6 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -39,19 +39,19 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private final ViewManager windowManager;
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
-	private final Callback actionCallback;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final TextProvider textProvider;
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final RenameDialogFactory renameDialogFactory;
+
+	private final List<FileSystemActionListener> listeners = new ArrayList();
 
 	public DefaultFileSystemActionHandler(TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
 			FileSystemService fileSystemService,
-			FileSystemItemProvider fileSystemItemProvider,
-			Callback actionCallback) {
+			FileSystemItemProvider fileSystemItemProvider) {
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
@@ -59,7 +59,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.renameDialogFactory = renameDialogFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
-		this.actionCallback = actionCallback;
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action,
@@ -68,6 +67,24 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			onFileAction((File) item, action, source);
 		else
 			onFolderAction((Folder) item, action, source);
+	}
+
+	public void onAction(final List<FileSystemItem> items,
+			final FileSystemAction action, Widget source) {
+		if (FileSystemAction.delete.equals(action)) {
+			String title = textProvider.getStrings()
+					.deleteFileConfirmationDialogTitle();
+			String message = textProvider.getMessages()
+					.confirmFileDeleteMessage("TODO");
+			dialogManager.showConfirmationDialog(title, message,
+					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
+					new ConfirmationListener() {
+						public void onConfirm() {
+							fileSystemService.delete(items,
+									createListener(action));
+						}
+					}, source);
+		}
 	}
 
 	private void onFileAction(final File file, FileSystemAction action,
@@ -180,40 +197,54 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	public void rename(FileSystemItem item, String newName) {
-		fileSystemService.rename(item, newName, createListener());
+		fileSystemService.rename(item, newName,
+				createListener(FileSystemAction.rename));
 	}
 
 	protected void copyFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.copy(file, toDirectory, createListener());
+		fileSystemService.copy(file, toDirectory,
+				createListener(FileSystemAction.copy));
 	}
 
 	protected void moveFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.move(file, toDirectory, createListener());
+		fileSystemService.move(file, toDirectory,
+				createListener(FileSystemAction.move));
 	}
 
 	protected void moveFolder(Folder directory, Folder toDirectory) {
 		if (directory.equals(toDirectory))
 			return;
-		fileSystemService.move(directory, toDirectory, createListener());
+		fileSystemService.move(directory, toDirectory,
+				createListener(FileSystemAction.move));
 	}
 
 	private void delete(FileSystemItem item) {
-		fileSystemService.delete(item, createListener());
+		fileSystemService.delete(item, createListener(FileSystemAction.delete));
 	}
 
-	private ResultListener createListener() {
+	private ResultListener createListener(final FileSystemAction action) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {
-				actionCallback.onCallback();
+				onFileSystemEvent(action);
 			}
 		};
+	}
+
+	protected void onFileSystemEvent(FileSystemAction action) {
+		for (FileSystemActionListener listener : listeners)
+			listener.onFileSystemAction(action);
+	}
+
+	@Override
+	public void addListener(FileSystemActionListener listener) {
+		listeners.add(listener);
 	}
 }

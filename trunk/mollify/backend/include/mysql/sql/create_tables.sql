@@ -1,8 +1,8 @@
 CREATE TABLE `{TABLE_PREFIX}user` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(128) NULL,
   `permission_mode` char(2) NULL,
   `is_group` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`)

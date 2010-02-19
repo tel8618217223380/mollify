@@ -14,7 +14,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -46,10 +45,10 @@ public class DefaultFileSystemActionHandlerFactory implements
 		this.fileSystemItemProvider = fileSystemItemProvider;
 	}
 
-	public FileSystemActionHandler create(Callback actionCallback) {
+	public FileSystemActionHandler create() {
 		return new DefaultFileSystemActionHandler(textProvider, windowManager,
 				dialogManager, itemSelectorFactory, renameDialogFactory,
-				fileSystemService, fileSystemItemProvider, actionCallback);
+				fileSystemService, fileSystemItemProvider);
 	}
 
 }

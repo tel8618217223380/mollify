@@ -13,13 +13,13 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderContent;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.Callback;
@@ -35,6 +35,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -64,17 +65,18 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ViewManager viewManager;
+	private final DropBox dropBox;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
 			MainViewModel model, DefaultMainView view,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
-			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
+			FileSystemActionHandler fileSystemActionHandler,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
-			CreateFolderDialogFactory createFolderDialogFactory) {
+			CreateFolderDialogFactory createFolderDialogFactory, DropBox dropBox) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -84,12 +86,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.model = model;
 		this.view = view;
 		this.textProvider = textProvider;
+		this.fileSystemActionHandler = fileSystemActionHandler;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.createFolderDialogFactory = createFolderDialogFactory;
-		this.fileSystemActionHandler = fileSystemActionHandlerFactory
-				.create(createReloadCallback());
+		this.dropBox = dropBox;
 
 		this.view.getFileContext()
 				.setFileActionHandler(fileSystemActionHandler);
@@ -223,14 +225,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		return createListener(createRefreshCallback());
 	}
 
-	private Callback createReloadCallback() {
-		return new Callback() {
-			public void onCallback() {
-				reload();
-			}
-		};
-	}
-
 	private Callback createRefreshCallback() {
 		return new Callback() {
 			public void onCallback() {
@@ -346,6 +340,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onDeleteSelected() {
-		model.deleteSelected(createReloadListener("delete multiple"));
+		fileSystemActionHandler.onAction(model.getSelectedItems(),
+				FileSystemAction.delete, null);
+	}
+
+	public void onDropBox() {
+		dropBox.setVisible(!dropBox.isVisible());
 	}
 }

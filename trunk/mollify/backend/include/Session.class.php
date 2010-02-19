@@ -64,5 +64,8 @@
 			Logging::logDebug("SESSION: ".Util::array2str($_SESSION));
 		}
 
+		public function __toString() {
+			return "Session";
+		}
 	}
 ?>

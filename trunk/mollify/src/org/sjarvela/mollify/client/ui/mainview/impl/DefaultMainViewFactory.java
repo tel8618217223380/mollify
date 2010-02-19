@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -25,6 +25,8 @@ import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -55,6 +57,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final PasswordDialogFactory passwordDialogFactory;
+	private final DropBoxFactory dropBoxFactory;
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
@@ -64,7 +67,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
-			PasswordDialogFactory passwordDialogFactory) {
+			PasswordDialogFactory passwordDialogFactory,
+			DropBoxFactory dropBoxFactory) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
@@ -75,6 +79,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
+		this.dropBoxFactory = dropBoxFactory;
 	}
 
 	public MainView createMainView() {
@@ -91,10 +96,12 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				fileSystemService, textProvider, session);
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
 				textProvider, fileSystemService, session);
-		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
-				textProvider, viewManager, dialogManager, itemSelectorFactory,
-				this, fileSystemService, fileSystemItemProvider);
 		ActionDelegator actionDelegator = new ActionDelegator();
+
+		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
+				textProvider, viewManager, dialogManager, itemSelectorFactory,
+				this, fileSystemService, fileSystemItemProvider).create();
+		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler);
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,
@@ -102,10 +109,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,
-				textProvider, fileSystemActionHandlerFactory,
+				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this);
-		new MainViewGlue(view, presenter, actionDelegator);
+				fileUploadDialogFactory, this, dropBox);
+		new MainViewGlue(view, presenter, fileSystemActionHandler,
+				actionDelegator);
 
 		return view;
 	}

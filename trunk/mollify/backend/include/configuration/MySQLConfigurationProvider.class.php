@@ -138,7 +138,7 @@
 		}
 		
 		public function addUserGroup($name, $description) {
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, permission_mode, is_group) VALUES ('%s', '%s', NULL, 1)", $this->db->string($name), $this->db->string($description)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, password, permission_mode, is_group) VALUES ('%s', '%s', NULL, NULL, 1)", $this->db->string($name), $this->db->string($description)));
 			return TRUE;
 		}
 

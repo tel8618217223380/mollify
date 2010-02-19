@@ -65,5 +65,8 @@
 			Logging::logDebug("FEATURES: ".Util::array2str($this->features));
 		}
 
+		public function __toString() {
+			return "Features";
+		}
 	}
 ?>

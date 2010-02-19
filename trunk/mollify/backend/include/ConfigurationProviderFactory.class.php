@@ -24,5 +24,9 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported data provider: [".$configurationProviderId."]");
 			}
 		}
+		
+		public function __toString() {
+			return "ConfigurationProviderFactory";
+		}
 	}
 ?>

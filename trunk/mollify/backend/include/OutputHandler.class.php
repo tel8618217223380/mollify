@@ -91,5 +91,9 @@
 		private function getStatus($response) {
 			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
 		}
+		
+		public function __toString() {
+			return "OutputHandler";
+		}
 	}
 ?>

@@ -146,7 +146,7 @@ public class MainViewModel {
 		this.selected = selected;
 	}
 
-	public void deleteSelected(ResultListener resultListener) {
-		fileServices.delete(selected, resultListener);
+	public List<FileSystemItem> getSelectedItems() {
+		return this.selected;
 	}
 }

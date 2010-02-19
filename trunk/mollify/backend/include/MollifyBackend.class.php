@@ -45,5 +45,9 @@
 			
 			$service->processRequest();
 		}
+		
+		public function __toString() {
+			return "MollifyBackend";
+		}
 	}
 ?>
