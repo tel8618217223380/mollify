@@ -17,7 +17,7 @@ Localizing Mollify into new language requires following steps:
 
 4) Send files to me
 
-= How to Modify Existing Localizations =
+= How to modify existing localizations =
 
 1) Open latest English version for the texts, and find the ones requiring modifications
 
