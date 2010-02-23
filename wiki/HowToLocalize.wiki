@@ -1,5 +1,6 @@
 #summary Instructions for how to localize Mollify
 
+= How to localize into new languge =
 Localizing Mollify into new language requires following steps:
 
 1) Open latest English version for the texts
@@ -15,3 +16,16 @@ Localizing Mollify into new language requires following steps:
 3) Save the files in UTF-8 encoding with a locale identifier in the filename, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
 
 4) Send files to me
+
+= How to Modify Existing Localizations =
+
+1) Open latest English version for the texts, and find the ones requiring modifications
+
+  * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
+  * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
+
+2) Copy entire lines into a new text file, and make necessay modifications
+
+3) Save the files in UTF-8 encoding with a locale identifier in the filename, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
+
+4) Send file to me
