@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.ui.common.grid.Grid;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,7 +35,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FileList extends Grid<FileSystemItem> implements
 		GridDataProvider<FileSystemItem> {
-	private TextProvider textProvider;
+	private final TextProvider textProvider;
+	private final DragAndDropManager dragAndDropManager;
 
 	public static GridColumn COLUMN_NAME;
 	public static GridColumn COLUMN_TYPE;
@@ -44,12 +46,15 @@ public class FileList extends Grid<FileSystemItem> implements
 	private static String TYPE_DIR = "";
 	private static String SIZE_DIR = "";
 
-	public FileList(TextProvider textProvider) {
+	public FileList(TextProvider textProvider,
+			DragAndDropManager dragAndDropManager) {
 		super(StyleConstants.FILE_LIST_HEADER, getColumns(textProvider));
+
 		setDataProvider(this);
 		setCustomSelection(true);
 
 		this.textProvider = textProvider;
+		this.dragAndDropManager = dragAndDropManager;
 		this.addStyleName(StyleConstants.FILE_LIST);
 	}
 
@@ -121,6 +126,11 @@ public class FileList extends Grid<FileSystemItem> implements
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(file));
+
+		Label icon = new Label();
+		icon.setStyleName(StyleConstants.FILE_LIST_ROW_FILE_ICON);
+		HoverDecorator.decorate(icon);
+		panel.add(icon);
 		panel.add(createNameWidget(file));
 		return panel;
 	}
@@ -142,15 +152,15 @@ public class FileList extends Grid<FileSystemItem> implements
 	}
 
 	private Widget createNameWidget(final FileSystemItem item) {
-		Label name = new Label(item.getName());
-		name.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
-		name.addClickHandler(new ClickHandler() {
+		FileListDraggableItem itemWidget = new FileListDraggableItem(item);
+		itemWidget.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FileList.this.onClick(item, COLUMN_NAME);
 			}
 		});
-		HoverDecorator.decorate(name);
-		return name;
+		dragAndDropManager.getController(FileSystemItem.class).makeDraggable(
+				itemWidget);
+		return itemWidget;
 	}
 
 	private Widget createTypeWidget(FileSystemItem item) {

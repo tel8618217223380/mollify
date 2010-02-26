@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.service;
 
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;

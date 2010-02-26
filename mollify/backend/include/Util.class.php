@@ -11,8 +11,8 @@
 	 */
 
 	class Util {
-		public static function inBytes($amount) {
-		    $amount = trim($amount);
+		public static function inBytes($a) {
+		    $amount = trim($a);
 		    $last = strtolower($amount[strlen($amount)-1]);
 		    
 		    switch ($last) {
@@ -24,7 +24,8 @@
 		            $amount *= 1024;
 		    }
 		
-		    return (int)$amount;
+			Logging::logDebug("inBytes ".$a." -> ".$amount);
+		    return (float)$amount;
 		}
 		
 		function base64_url_encode($input) {

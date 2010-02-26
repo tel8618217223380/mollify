@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.filesystem.upload;
 
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.service.ServiceError;
 
 public interface FileUploadProgressListener {

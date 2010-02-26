@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 

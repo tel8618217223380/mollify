@@ -31,6 +31,7 @@ import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopup;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
@@ -83,7 +84,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			ActionListener actionListener,
 			FolderSelectorFactory directorySelectorFactory,
 			FileContextPopupFactory fileContextPopupFactory,
-			FolderContextPopupFactory directoryContextPopupFactory) {
+			FolderContextPopupFactory directoryContextPopupFactory,
+			DragAndDropManager dragAndDropManager) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
@@ -92,7 +94,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
 
 		this.directorySelector = directorySelectorFactory.createSelector();
-		this.list = new FileList(textProvider);
+		this.list = new FileList(textProvider, dragAndDropManager);
 
 		this.fileContextPopup = fileContextPopupFactory.createPopup();
 		this.fileContextPopup.setPopupPositioner(this);
@@ -207,6 +209,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		username.addAction(Action.logout, textProvider.getStrings()
 				.mainViewLogoutButtonTitle());
+
 		return username;
 	}
 

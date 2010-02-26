@@ -8,12 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dropbox;
+package org.sjarvela.mollify.client.filesystem.handler;
 
-public interface DropBox {
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 
-	public boolean isVisible();
+public interface FileSystemActionListener {
 
-	public void toggle();
+	void onFileSystemAction(FileSystemAction action);
 
 }

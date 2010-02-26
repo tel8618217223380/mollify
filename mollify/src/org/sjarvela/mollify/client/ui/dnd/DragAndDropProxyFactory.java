@@ -8,12 +8,14 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dropbox;
+package org.sjarvela.mollify.client.ui.dnd;
 
-public interface DropBox {
+import java.util.List;
 
-	public boolean isVisible();
+import com.google.gwt.user.client.ui.Widget;
 
-	public void toggle();
+public interface DragAndDropProxyFactory {
+
+	Widget createProxy(List<Widget> selectedWidgets);
 
 }

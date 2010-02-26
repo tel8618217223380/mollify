@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;

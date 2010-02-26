@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.ui.mainview.impl.FileSystemActionListener;
 
 import com.google.gwt.user.client.ui.Widget;
 

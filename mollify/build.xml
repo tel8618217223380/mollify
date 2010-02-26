@@ -40,6 +40,7 @@
 		<pathelement location="${lib.dir}/junit-4.6.jar" />
 		<pathelement location="${lib.dir}/gwt-plupload.jar" />
 		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
+		<pathelement location="${lib.dir}/gwt-dnd-3.0.0.jar" />
 	</path>
 	
 	<path id="test.src.path" path="${test.src.dir}"/>
