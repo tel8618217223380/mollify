@@ -33,6 +33,8 @@ import org.sjarvela.mollify.client.ui.DefaultViewManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dnd.DefaultDragAndDropManager;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -113,6 +115,12 @@ public class ContainerConfiguration extends AbstractGinModule {
 	ServiceProvider getServiceProvider(ServiceEnvironment env,
 			ViewManager viewManager, SessionManager sessionManager) {
 		return new SystemServiceProvider(env, viewManager, sessionManager);
+	}
+
+	@Provides
+	@Singleton
+	DragAndDropManager getDragAndDropManager(ViewManager viewManager) {
+		return new DefaultDragAndDropManager(viewManager.getRootPanel());
 	}
 
 	@Provides

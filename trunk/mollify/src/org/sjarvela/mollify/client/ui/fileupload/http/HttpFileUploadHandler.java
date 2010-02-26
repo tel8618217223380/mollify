@@ -12,10 +12,10 @@ package org.sjarvela.mollify.client.ui.fileupload.http;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FileUploadStatus;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadMonitor;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadProgressListener;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;

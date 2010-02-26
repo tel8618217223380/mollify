@@ -8,12 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview.impl;
+package org.sjarvela.mollify.client.ui.dnd;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import com.allen_sauer.gwt.dnd.client.DragContext;
+import com.google.gwt.user.client.ui.Widget;
 
-public interface FileSystemActionListener {
+public interface DragAndDropController {
 
-	void onFileSystemAction(FileSystemAction action);
+	boolean useProxy();
+
+	Widget createProxy(DragContext context);
 
 }

@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewManager {
@@ -27,5 +28,7 @@ public interface ViewManager {
 	void showPlainError(String error);
 
 	void showErrorInMainView(String title, ServiceError error);
+
+	RootPanel getRootPanel();
 
 }

@@ -25,6 +25,8 @@ import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropController;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
@@ -40,6 +42,8 @@ import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
+import com.allen_sauer.gwt.dnd.client.DragContext;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -58,6 +62,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final PasswordDialogFactory passwordDialogFactory;
 	private final DropBoxFactory dropBoxFactory;
+	private final DragAndDropManager dragAndDropManager;
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
@@ -68,7 +73,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory,
-			DropBoxFactory dropBoxFactory) {
+			DropBoxFactory dropBoxFactory, DragAndDropManager dragAndDropManager) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
@@ -80,6 +85,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.dropBoxFactory = dropBoxFactory;
+		this.dragAndDropManager = dragAndDropManager;
 	}
 
 	public MainView createMainView() {
@@ -98,6 +104,19 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemService, session);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
+		dragAndDropManager.addDragAndDropController(FileSystemItem.class,
+				new DragAndDropController() {
+					@Override
+					public boolean useProxy() {
+						return true;
+					}
+
+					@Override
+					public Widget createProxy(DragContext context) {
+						return new Label("TODO");
+					}
+				});
+
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
 				this, fileSystemService, fileSystemItemProvider).create();
@@ -105,7 +124,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,
-				fileContextPopupFactory, directoryContextPopupFactory);
+				fileContextPopupFactory, directoryContextPopupFactory,
+				dragAndDropManager);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,

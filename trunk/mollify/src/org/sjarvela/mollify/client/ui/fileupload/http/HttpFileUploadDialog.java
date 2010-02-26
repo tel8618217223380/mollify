@@ -123,8 +123,8 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 				StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);
 
 		HTML content = new HTML(textProvider.getMessages().uploadMaxSizeHtml(
-				textProvider.getSizeText(info.getUploadMaxFileSize()),
-				textProvider.getSizeText(info.getUploadMaxTotalSize())));
+				textProvider.getSizeText((long) info.getUploadMaxFileSize()),
+				textProvider.getSizeText((long) info.getUploadMaxTotalSize())));
 		content.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_CONTENT);
 
 		uploadInfo.setContent(content);
@@ -233,16 +233,29 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 		if (allowedFileTypes.isEmpty())
 			return true;
 
-		for (FileUpload fu : uploaders) {
-			String extension = FileUtil.getExtension(fu.getFilename());
-			if (!allowedFileTypes.contains(extension)) {
-				dialogManager.showInfo(textProvider.getStrings()
-						.fileUploadDialogTitle(), textProvider.getMessages()
-						.fileUploadDialogUnallowedFileType(extension));
+		for (FileUpload fu : uploaders)
+			if (!verifyFileTypes(fu))
 				return false;
-			}
+		return true;
+	}
+
+	private boolean verifyFileTypes(FileUpload fu) {
+		String extension = FileUtil.getExtension(fu.getFilename())
+				.toLowerCase();
+		if (!isAllowedExtension(extension)) {
+			dialogManager.showInfo(textProvider.getStrings()
+					.fileUploadDialogTitle(), textProvider.getMessages()
+					.fileUploadDialogUnallowedFileType(extension));
+			return false;
 		}
 		return true;
+	}
+
+	private boolean isAllowedExtension(String extension) {
+		for (String ext : allowedFileTypes)
+			if (ext.equalsIgnoreCase(extension))
+				return true;
+		return false;
 	}
 
 	private FileUpload getLastUploader() {

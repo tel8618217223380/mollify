@@ -344,7 +344,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				FileSystemAction.delete, null);
 	}
 
-	public void onDropBox() {
-		dropBox.setVisible(!dropBox.isVisible());
+	public void onToggleDropBox() {
+		dropBox.toggle();
 	}
 }

@@ -8,12 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dropbox;
+package org.sjarvela.mollify.client.ui.dnd;
 
-public interface DropBox {
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
 
-	public boolean isVisible();
+public interface DragAndDropManager {
 
-	public void toggle();
+	void addDragAndDropController(Class content,
+			DragAndDropController controller);
+
+	PickupDragController getController(Class c);
 
 }

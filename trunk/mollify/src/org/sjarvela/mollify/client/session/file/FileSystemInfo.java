@@ -11,11 +11,11 @@ public class FileSystemInfo extends JavaScriptObject {
 	protected FileSystemInfo() {
 	}
 
-	public final native int getUploadMaxFileSize() /*-{
+	public final native float getUploadMaxFileSize() /*-{
 		return this.max_upload_file_size;
 	}-*/;
 
-	public final native int getUploadMaxTotalSize() /*-{
+	public final native float getUploadMaxTotalSize() /*-{
 		return this.max_upload_total_size;
 	}-*/;
 

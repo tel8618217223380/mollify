@@ -11,20 +11,28 @@
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultDropBoxFactory implements DropBoxFactory {
+	private final DragAndDropManager dragAndDropManager;
+
+	@Inject
+	public DefaultDropBoxFactory(DragAndDropManager dragAndDropManager) {
+		this.dragAndDropManager = dragAndDropManager;
+	}
 
 	@Override
 	public DropBox createDropBox(FileSystemActionHandler fileSystemActionHandler) {
 		DropBoxView view = new DropBoxView();
 		DropBoxPresenter presenter = new DropBoxPresenter(view,
 				fileSystemActionHandler);
-		return new DropBoxGlue(view, presenter);
+		return new DropBoxGlue(view, presenter, dragAndDropManager);
 	}
 
 }

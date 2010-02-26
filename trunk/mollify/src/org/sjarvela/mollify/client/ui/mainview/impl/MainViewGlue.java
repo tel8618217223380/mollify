@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
@@ -137,7 +138,7 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 				new VoidActionHandler() {
 					@Override
 					public void onAction() {
-						presenter.onDropBox();
+						presenter.onToggleDropBox();
 					}
 				});
 	}

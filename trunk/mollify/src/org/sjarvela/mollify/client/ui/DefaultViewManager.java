@@ -34,9 +34,15 @@ public class DefaultViewManager implements ViewManager {
 
 	@Inject
 	public DefaultViewManager() {
-		if (RootPanel.get(MOLLIFY_PANEL_ID) == null)
-			throw new RuntimeException("No placeholder found for Mollify");
 		this.rootPanel = RootPanel.get(MOLLIFY_PANEL_ID);
+		if (this.rootPanel == null)
+			throw new RuntimeException("No placeholder found for Mollify");
+		this.rootPanel.getElement().getStyle().setProperty("position",
+				"relative");
+	}
+
+	public RootPanel getRootPanel() {
+		return rootPanel;
 	}
 
 	public void openView(Widget mainView) {
