@@ -10,15 +10,50 @@
 
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 
 public class DropBoxPresenter {
 	private final DropBoxView view;
-	private final FileSystemActionHandler actionHandler;
+	private final FileSystemActionHandler fileItemActionHandler;
+	private final List<FileSystemItem> items = new ArrayList();
 
-	public DropBoxPresenter(DropBoxView view, FileSystemActionHandler actionHandler) {
+	public DropBoxPresenter(DropBoxView view,
+			FileSystemActionHandler actionHandler) {
 		this.view = view;
-		this.actionHandler = actionHandler;
+		this.fileItemActionHandler = actionHandler;
+	}
+
+	public void onDropItems(List<FileSystemItem> items) {
+		for (FileSystemItem item : items)
+			if (!this.items.contains(item))
+				this.items.add(item);
+		refreshContent();
+	}
+
+	public void onRemove(FileSystemItem item) {
+		items.remove(item);
+		refreshContent();
+	}
+
+	private void refreshContent() {
+		view.setContent(this.items);
+	}
+
+	public void onDragEnter() {
+		view.onDragEnter();
+	}
+
+	public void onDragLeave() {
+		view.onDragLeave();
+	}
+
+	public void onClear() {
+		this.items.clear();
+		refreshContent();
 	}
 
 }

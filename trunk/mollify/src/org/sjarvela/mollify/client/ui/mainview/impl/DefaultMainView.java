@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.ActionToggleButton;
+import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
@@ -354,5 +355,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		setSelectMode(true);
 		selectButton.setDown(true);
 		list.selectNone();
+	}
+
+	public Coords getDropboxLocation() {
+		return new Coords(header.getAbsoluteTop() + header.getTotalHeight(),
+				dropBoxButton.getAbsoluteLeft());
 	}
 }

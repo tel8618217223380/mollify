@@ -35,6 +35,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -50,7 +51,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
-		FileItemDescriptionHandler, FileSystemPermissionHandler {
+		FileItemDescriptionHandler, FileSystemPermissionHandler,
+		DragDataProvider<FileSystemItem> {
 	private final MainViewModel model;
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
@@ -108,6 +110,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
+
+		dropBox.setPosition(view.getDropboxLocation());
 	}
 
 	public void initialize() {
@@ -346,5 +350,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void onToggleDropBox() {
 		dropBox.toggle();
+	}
+
+	@Override
+	public List<FileSystemItem> getSelectedItems() {
+		return model.getSelectedItems();
 	}
 }

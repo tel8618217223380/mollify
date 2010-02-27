@@ -13,8 +13,11 @@ package org.sjarvela.mollify.client.ui.common;
 public class Coords {
 	int x, y, width, height;
 
+	public Coords(int x, int y) {
+		this(x, y, 0, 0);
+	}
+
 	public Coords(int x, int y, int width, int height) {
-		super();
 		this.height = height;
 		this.width = width;
 		this.x = x;

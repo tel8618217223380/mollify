@@ -25,7 +25,6 @@ import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.dnd.DragAndDropController;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
@@ -42,8 +41,6 @@ import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
-import com.allen_sauer.gwt.dnd.client.DragContext;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -104,18 +101,9 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemService, session);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
-		dragAndDropManager.addDragAndDropController(FileSystemItem.class,
-				new DragAndDropController() {
-					@Override
-					public boolean useProxy() {
-						return true;
-					}
-
-					@Override
-					public Widget createProxy(DragContext context) {
-						return new Label("TODO");
-					}
-				});
+		FileItemDragController dragController = new FileItemDragController();
+		dragAndDropManager.addDragController(FileSystemItem.class,
+				dragController);
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
@@ -132,6 +120,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
 				fileUploadDialogFactory, this, dropBox);
+		dragController.setDataProvider(presenter);
 		new MainViewGlue(view, presenter, fileSystemActionHandler,
 				actionDelegator);
 

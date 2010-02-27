@@ -10,8 +10,17 @@
 
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
-import org.sjarvela.mollify.client.ui.StyleConstants;
+import java.util.List;
 
+import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -19,28 +28,46 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxView extends DialogBox {
-	boolean attached = true;
-	private FlowPanel dropTarget;
+	enum Actions implements ResourceId {
+		clear, remove
+	};
 
-	public DropBoxView() {
+	private Panel dropTarget;
+	private Panel contents;
+	private ActionButton clearButton;
+	private final ActionListener actionListener;
+
+	public DropBoxView(ActionListener actionListener) {
 		super(false, false);
+		this.actionListener = actionListener;
 		this.setText("TODO");
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
 		this.add(createContent());
 		this.show();
 		this.setVisible(false);
+		this.setAnimationEnabled(true);
 	}
 
 	private Widget createContent() {
 		Panel panel = new FlowPanel();
 		panel.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_CONTENT);
-		panel.add(new Label("TODO"));
+
 		dropTarget = new FlowPanel();
-		// dropTarget.getElement().setPropertyString("style",
-		// "background-color:red");
-		dropTarget.setWidth("100px");
-		dropTarget.setHeight("100px");
+		dropTarget.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_DROPZONE);
 		panel.add(dropTarget);
+
+		contents = new FlowPanel();
+		contents.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_CONTENTS);
+		dropTarget.add(contents);
+
+		Panel actions = new FlowPanel();
+		actions.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ACTIONS);
+		panel.add(actions);
+
+		clearButton = new ActionButton("Clear TODO");
+		clearButton.setAction(actionListener, Actions.clear);
+		actions.add(clearButton);
+
 		return panel;
 	}
 
@@ -48,23 +75,48 @@ public class DropBoxView extends DialogBox {
 		return dropTarget;
 	}
 
-	public boolean isShown() {
-		if (!attached)
-			return false;
-		return isVisible();
-	}
-
 	public void toggleShow() {
-		if (!isShown()) {
-			if (!attached) {
-				show();
-				attached = true;
-			} else {
-				setVisible(true);
-			}
-		} else {
-			setVisible(false);
-		}
+		setVisible(!isVisible());
 	}
 
+	public void onDragEnter() {
+		dropTarget.addStyleDependentName(StyleConstants.DRAG_OVER);
+	}
+
+	public void onDragLeave() {
+		dropTarget.removeStyleDependentName(StyleConstants.DRAG_OVER);
+	}
+
+	public void setContent(List<FileSystemItem> items) {
+		contents.clear();
+		for (FileSystemItem item : items)
+			contents.add(createItemWidget(item));
+	}
+
+	private Widget createItemWidget(final FileSystemItem item) {
+		Panel w = new FlowPanel();
+		w.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM);
+		if (item.isFile())
+			w.addStyleDependentName(StyleConstants.DROPBOX_VIEW_ITEM_FILE);
+		else
+			w.addStyleDependentName(StyleConstants.DROPBOX_VIEW_ITEM_FOLDER);
+
+		final Label name = new Label(item.getName());
+		name.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_NAME);
+		w.add(name);
+
+		Label remove = new Label();
+		remove.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_REMOVE);
+		HoverDecorator.decorate(remove);
+		w.add(remove);
+
+		remove.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				actionListener.onAction(Actions.remove, item);
+			}
+		});
+
+		return w;
+	}
 }

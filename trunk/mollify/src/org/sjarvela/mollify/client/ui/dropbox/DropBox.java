@@ -10,10 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.dropbox;
 
+import org.sjarvela.mollify.client.ui.common.Coords;
+
 public interface DropBox {
 
 	public boolean isVisible();
 
 	public void toggle();
+
+	public void setPosition(Coords position);
 
 }

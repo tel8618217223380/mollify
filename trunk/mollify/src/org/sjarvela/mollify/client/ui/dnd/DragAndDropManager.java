@@ -14,8 +14,7 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 
 public interface DragAndDropManager {
 
-	void addDragAndDropController(Class content,
-			DragAndDropController controller);
+	void addDragController(Class c, DragController controller);
 
 	PickupDragController getController(Class c);
 
