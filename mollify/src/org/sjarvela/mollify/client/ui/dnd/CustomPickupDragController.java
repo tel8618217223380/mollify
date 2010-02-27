@@ -16,10 +16,10 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CustomPickupDragController extends PickupDragController {
-	private final DragAndDropController controller;
+	private final DragController controller;
 
 	public CustomPickupDragController(AbsolutePanel boundaryPanel,
-			DragAndDropController controller) {
+			DragController controller) {
 		super(boundaryPanel, false);
 		this.controller = controller;
 	}

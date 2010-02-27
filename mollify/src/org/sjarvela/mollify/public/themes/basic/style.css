@@ -12,7 +12,7 @@
  * this entire header must remain intact.
  */
 
-#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip {
+#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip, .mollify-dropbox {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	font-size: 8pt;	
 }
@@ -258,16 +258,15 @@
 
 #mollify-header-select-options {
 	float: left;
-	width: 14px;
+	width: 9px;
 	height: 24px;
-	background-color: #a8acac;
 	margin-top: 0;
 	border: 1px solid #787878;
 	border-left-style: none;
+	background: url(b-dropdown-arrow.png) no-repeat 0 0;
 }
 
 #mollify-header-select-options:hover {
-	background: #a8a9a9 url(sort-desc.png) no-repeat 3px 10px;
 }
 
 #mollify-header-select-options-menu {
@@ -758,7 +757,7 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-row-file-odd-selected td, .mollify-filelist-row-file-even-selected td, .mollify-filelist-row-directory-odd-selected td, .mollify-filelist-row-directory-even-selected td, .mollify-filelist-row-file-odd-selected .mollify-filelist-column-type, .mollify-filelist-row-file-even-selected .mollify-filelist-column-type, .mollify-filelist-row-directory-odd-selected .mollify-filelist-column-type, .mollify-filelist-row-directory-even-selected .mollify-filelist-column-type {
-	background-color: #457da9;
+	background-color: #6b89a9;
 	color: white;
 }
 
@@ -802,20 +801,18 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-multi .mollify-filelist-row-selector {
-	width: 15px;
-	height: 15px;
+	width: 13px;
+	height: 13px;
 	float: left;
 	cursor: pointer;
-	margin-right: 4px;
-	margin-top: 1px;
-	border: 1px solid #cfcfcf;
-	background: #e7eaea;
+	margin-right: 6px;
+	margin-top: 3px;
+	background: url(cb.png) no-repeat;
+	margin-left: 3px;
 }
 
 .mollify-filelist-row-directory-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-directory-even-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-odd-selected .mollify-filelist-row-selector, .mollify-filelist-row-file-even-selected .mollify-filelist-row-selector {
-	background-image: url(sel.png);
-	background-color: #474a62;
-	border: 1px solid #818283;
+	background: url(cb-checked.png) no-repeat;
 }
 
 .mollify-filelist td {
@@ -1938,4 +1935,63 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	position: absolute;
 	top: 44px;
 	z-index: 10;
+}
+
+.mollify-dropbox {
+	background-color: rgba(0,0,0,0.58);
+}
+
+.mollify-dropbox .Caption {
+	color: #fffeff;
+	font-weight: bold;
+	text-align: center;
+	height: 17px;
+	background-color: #454646;
+	cursor: move;
+	padding-top: 4px;
+}
+
+.mollify-dropbox-content {
+	width: 196px;
+}
+
+.mollify-dropbox-dropzone {
+	width: 180px;
+	height: 180px;
+	border-style: solid;
+	border-width: 2px;
+	margin: 6px;
+}
+
+.mollify-dropbox-dropzone-drag-over {
+	border: 2px dashed #87c4fb;
+}
+
+.mollify-dropbox-contents {
+	overflow: auto;
+}
+
+.mollify-dropbox-item {
+	height: 18px;
+	overflow: hidden;
+	color: #fffeff;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.mollify-dropbox-item-name {
+	margin-left: 14px;
+	font-weight: bold;
+}
+
+.mollify-dropbox-item-remove {
+	width: 10px;
+	height: 10px;
+	position: relative;
+	top: -10px;
+	right: 0;
+}
+
+.mollify-dropbox-item-remove-hover {
+	background-color: #ff6266;
 }

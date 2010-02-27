@@ -29,8 +29,8 @@ public class DefaultDragAndDropManager implements DragAndDropManager {
 	}
 
 	@Override
-	public void addDragAndDropController(Class content,
-			final DragAndDropController controller) {
+	public void addDragController(Class content,
+			final DragController controller) {
 		PickupDragController dragController = new CustomPickupDragController(
 				boundaryPanel, controller);
 		dragController.setBehaviorDragStartSensitivity(3);

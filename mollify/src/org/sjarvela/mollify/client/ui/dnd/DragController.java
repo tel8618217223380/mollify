@@ -13,7 +13,8 @@ package org.sjarvela.mollify.client.ui.dnd;
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.google.gwt.user.client.ui.Widget;
 
-public interface DragAndDropController {
+public interface DragController {
+	void setDataProvider(DragDataProvider dataProvider);
 
 	boolean useProxy();
 

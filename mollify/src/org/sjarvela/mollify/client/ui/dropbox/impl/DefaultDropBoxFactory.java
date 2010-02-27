@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
@@ -29,10 +30,12 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 
 	@Override
 	public DropBox createDropBox(FileSystemActionHandler fileSystemActionHandler) {
-		DropBoxView view = new DropBoxView();
+		ActionDelegator actionDelegator = new ActionDelegator();
+		DropBoxView view = new DropBoxView(actionDelegator);
 		DropBoxPresenter presenter = new DropBoxPresenter(view,
 				fileSystemActionHandler);
-		return new DropBoxGlue(view, presenter, dragAndDropManager);
+		return new DropBoxGlue(actionDelegator, view, presenter,
+				dragAndDropManager);
 	}
 
 }

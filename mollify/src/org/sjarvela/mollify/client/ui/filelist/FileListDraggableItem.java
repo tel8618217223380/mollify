@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.Label;
 public class FileListDraggableItem extends Label {
 
 	private final FileSystemItem item;
+	private List<FileSystemItem> items;
 
 	public FileListDraggableItem(FileSystemItem item) {
 		super(item.getName());
@@ -27,8 +30,16 @@ public class FileListDraggableItem extends Label {
 		HoverDecorator.decorate(this);
 	}
 
-	public FileSystemItem getFileSystemItem() {
+	public FileSystemItem getOriginalFileSystemItem() {
 		return item;
+	}
+
+	public void setItems(List<FileSystemItem> items) {
+		this.items = items;
+	}
+
+	public List<FileSystemItem> getItems() {
+		return items;
 	}
 
 }

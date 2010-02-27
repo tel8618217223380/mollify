@@ -23,8 +23,7 @@
 		        case 'k':
 		            $amount *= 1024;
 		    }
-		
-			Logging::logDebug("inBytes ".$a." -> ".$amount);
+
 		    return (float)$amount;
 		}
 		

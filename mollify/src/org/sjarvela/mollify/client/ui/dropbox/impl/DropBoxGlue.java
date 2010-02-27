@@ -11,31 +11,58 @@
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.ui.action.ActionDelegator;
+import org.sjarvela.mollify.client.ui.action.ActionHandler;
+import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
+import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.dropbox.impl.DropBoxView.Actions;
+import org.sjarvela.mollify.client.ui.filelist.FileListDraggableItem;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxGlue implements DropBox, DropController {
 	private final DropBoxView view;
 	private final DropBoxPresenter presenter;
 
-	public DropBoxGlue(DropBoxView view, DropBoxPresenter presenter,
+	public DropBoxGlue(ActionDelegator actionDelegator, DropBoxView view,
+			final DropBoxPresenter presenter,
 			DragAndDropManager dragAndDropManager) {
 		this.view = view;
 		this.presenter = presenter;
-		
+
 		dragAndDropManager.getController(FileSystemItem.class)
 				.registerDropController(this);
+
+		actionDelegator.setActionHandler(Actions.clear,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onClear();
+					}
+				});
+
+		actionDelegator.setActionHandler(Actions.remove,
+				new ActionHandler<FileSystemItem>() {
+					@Override
+					public void onAction(FileSystemItem item) {
+						presenter.onRemove(item);
+					}
+				});
+	}
+
+	@Override
+	public void setPosition(Coords position) {
+		view.setPopupPosition(position.getX(), position.getY());
 	}
 
 	@Override
 	public boolean isVisible() {
-		return view.isShown();
+		return view.isVisible();
 	}
 
 	@Override
@@ -50,27 +77,28 @@ public class DropBoxGlue implements DropBox, DropController {
 
 	@Override
 	public void onDrop(DragContext context) {
-		Log.debug("onDrop");
+		presenter.onDropItems(((FileListDraggableItem) context.selectedWidgets
+				.get(0)).getItems());
+		((FileListDraggableItem) context.selectedWidgets.get(0)).getItems()
+				.clear();
 	}
 
 	@Override
 	public void onEnter(DragContext context) {
-		Log.debug("onEnter");
+		presenter.onDragEnter();
 	}
 
 	@Override
 	public void onLeave(DragContext context) {
-		Log.debug("onLeave");
+		presenter.onDragLeave();
 	}
 
 	@Override
 	public void onMove(DragContext context) {
-		Log.debug("onMove");
 	}
 
 	@Override
 	public void onPreviewDrop(DragContext context) throws VetoDragException {
-		Log.debug("onPreviewDrop");
 	}
 
 }

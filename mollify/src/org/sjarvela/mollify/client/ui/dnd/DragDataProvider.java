@@ -12,10 +12,8 @@ package org.sjarvela.mollify.client.ui.dnd;
 
 import java.util.List;
 
-import com.google.gwt.user.client.ui.Widget;
+public interface DragDataProvider<T> {
 
-public interface DragAndDropProxyFactory {
-
-	Widget createProxy(List<Widget> selectedWidgets);
+	List<T> getSelectedItems();
 
 }

@@ -127,7 +127,12 @@
 		}
 
 		public function assertRights($item, $required, $desc = "Unknown action") {
-			$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->id()."/".$desc);
+			if (is_array($item)) {
+				foreach($item as $i)
+					$this->env->authentication()->assertRights($this->permission($i), $required, "filesystemitem ".$i->id()."/".$desc);
+			} else {
+				$this->env->authentication()->assertRights($this->permission($item), $required, "filesystemitem ".$item->id()."/".$desc);
+			}
 		}
 
 		public function ignoredItems($filesystem, $path) {
@@ -282,6 +287,8 @@
 		
 		public function deleteItems($items) {
 			Logging::logDebug('deleting '.count($items).' items');
+			$this->assertRights($items, Authentication::RIGHTS_WRITE, "delete");
+			
 			foreach($items as $item)
 				$this->delete($item);
 		}

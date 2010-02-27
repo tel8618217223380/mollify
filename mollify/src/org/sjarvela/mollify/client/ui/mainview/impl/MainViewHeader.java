@@ -100,4 +100,8 @@ public class MainViewHeader extends VerticalPanel {
 		togglePanel.setVisible(false);
 		return togglePanel;
 	}
+
+	public int getTotalHeight() {
+		return upper.getOffsetHeight() + lower.getOffsetHeight();
+	}
 }
