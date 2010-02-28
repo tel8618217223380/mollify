@@ -20,10 +20,12 @@
 		private $uri;
 		private $parts;
 		private $params;
+		private $ip;
 		
 		public function __construct() {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = trim(substr((isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']), strlen($_SERVER['SCRIPT_NAME'])), "/");
+			$this->ip = $_SERVER['REMOTE_ADDR'];
 			
 			$p = stripos($this->uri, "?");
 			if ($p) $this->uri = substr($this->uri, 0, $p-1);
@@ -63,6 +65,10 @@
 		public function path() {
 			return $this->parts;
 		}
+
+		public function ip() {
+			return $this->parts;
+		}
 		
 		public function params() {
 			return $this->params;
@@ -87,7 +93,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", params=".Util::array2str($this->params).", data=".Util::toString($this->data));
+			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", ip=".$this->ip."params=".Util::array2str($this->params).", data=".Util::toString($this->data));
 		}
 		
 		public function __toString() {

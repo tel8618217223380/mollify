@@ -152,7 +152,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	}
 
 	private Widget createNameWidget(final FileSystemItem item) {
-		FileListDraggableItem itemWidget = new FileListDraggableItem(item);
+		DraggableFileSystemItem itemWidget = new DraggableFileSystemItem(item);
 		itemWidget.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FileList.this.onClick(item, COLUMN_NAME);

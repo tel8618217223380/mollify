@@ -1,25 +1,25 @@
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
 public class Folder extends FileSystemItem {
 	public static Folder Empty = new Folder();
 	public static FileSystemItem Parent = new Folder("..");
 
 	private Folder(String name) {
-		super("", name, "");
+		super("", name, "", "");
 	}
 
 	private Folder() {
-		super("", "", "");
+		super("", "", "", "");
 	}
 
-	protected Folder(JsDirectory dir) {
-		this(dir.getId(), dir.getName(), dir.getParentId());
+	protected Folder(JsFolder dir) {
+		this(dir.getId(), dir.getName(), dir.getPath(), dir.getParentId());
 	}
 
-	public Folder(String id, String name, String parentId) {
-		super(id, name, parentId);
+	public Folder(String id, String name, String path, String parentId) {
+		super(id, name, path, parentId);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.filesystem;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 
 import com.google.gwt.core.client.JsArray;
@@ -21,18 +21,19 @@ import com.google.gwt.core.client.JsArray;
 public abstract class FileSystemItem {
 	protected final String id;
 	protected final String name;
+	protected final String path;
 	protected final String parentId;
 
 	public static File createFrom(JsFile file) {
 		return new File(file);
 	}
 
-	public static Folder createFrom(JsDirectory dir) {
+	public static Folder createFrom(JsFolder dir) {
 		return new Folder(dir);
 	}
 
 	public static List<Folder> createFromDirectories(
-			JsArray<JsDirectory> directories) {
+			JsArray<JsFolder> directories) {
 		List<Folder> result = new ArrayList();
 		for (int i = 0; i < directories.length(); i++)
 			result.add(createFrom(directories.get(i)));
@@ -46,9 +47,11 @@ public abstract class FileSystemItem {
 		return result;
 	}
 
-	protected FileSystemItem(String id, String name, String parentId) {
+	protected FileSystemItem(String id, String name, String path,
+			String parentId) {
 		this.id = id;
 		this.name = name;
+		this.path = path;
 		this.parentId = parentId;
 	}
 
@@ -60,10 +63,14 @@ public abstract class FileSystemItem {
 		return name;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
 	public final String getParentId() {
 		return parentId;
 	}
-	
+
 	public abstract boolean isFile();
 
 	public abstract boolean isEmpty();

@@ -39,8 +39,10 @@
 		
 		public function authenticate($userId, $password) {
 			$user = $this->env->configuration()->findUser($userId, $password);
-			if (!$user)
+			if (!$user) {
+				syslog(LOG_NOTICE, "Failed Mollify login attempt from ".$this->env->request()-ip()." (user: ".$userId.")");
 				throw new ServiceException("AUTHENTICATION_FAILED");
+			}
 			
 			$this->env->session()->param('user_id', $user["id"]);
 			if ($this->env->features()->isFeatureEnabled('user_groups'))

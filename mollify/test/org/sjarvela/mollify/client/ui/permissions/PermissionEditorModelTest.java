@@ -31,7 +31,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	private MockFileSystemService fileSystemService;
 	private PermissionEditorModel model;
 
-	private FileSystemItem item = new File("A", "name", "B", "ext", 1024);
+	private FileSystemItem item = new File("A", "name", "", "B", "ext", 1024);
 	private User user1;
 	private User user2;
 	private User user3;
@@ -187,8 +187,7 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	}
 
 	private FileItemUserPermission getUserPermission(User user) {
-		for (FileItemUserPermission userPermission : model
-				.getPermissions())
+		for (FileItemUserPermission userPermission : model.getPermissions())
 			if (user.equals(userPermission.getUserOrGroup()))
 				return userPermission;
 		return null;

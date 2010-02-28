@@ -14,19 +14,19 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class JsDirectory extends JavaScriptObject {
-	public static JsDirectory create(Folder directory) {
+public class JsFolder extends JavaScriptObject {
+	public static JsFolder create(Folder directory) {
 		return create(directory.getId(), directory.getName(), directory
 				.getParentId());
 	}
 
-	public static JsDirectory create(String id, String name, String parentId) {
-		JsDirectory result = JsDirectory.createObject().cast();
+	public static JsFolder create(String id, String name, String parentId) {
+		JsFolder result = JsFolder.createObject().cast();
 		result.putValues(id, name, parentId);
 		return result;
 	}
 
-	protected JsDirectory() {
+	protected JsFolder() {
 	}
 
 	public final native String getId() /*-{
@@ -35,6 +35,10 @@ public class JsDirectory extends JavaScriptObject {
 
 	public final native String getName() /*-{
 		return this.name;
+	}-*/;
+
+	public final native String getPath() /*-{
+		return this.path;
 	}-*/;
 
 	public final native String getParentId() /*-{

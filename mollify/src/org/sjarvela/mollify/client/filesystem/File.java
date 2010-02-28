@@ -19,19 +19,19 @@ public class File extends FileSystemItem {
 	private final int size;
 
 	private File() {
-		super("", "", "");
+		super("", "", "", "");
 		extension = "";
 		size = 0;
 	}
 
 	protected File(JsFile file) {
-		this(file.getId(), file.getName(), file.getParentId(), file
-				.getExtension(), file.getSize());
+		this(file.getId(), file.getName(), file.getPath(), file.getParentId(),
+				file.getExtension(), file.getSize());
 	}
 
-	public File(String id, String name, String parentId, String extension,
-			int size) {
-		super(id, name, parentId);
+	public File(String id, String name, String path, String parentId,
+			String extension, int size) {
+		super(id, name, path, parentId);
 		this.extension = extension;
 		this.size = size;
 	}
