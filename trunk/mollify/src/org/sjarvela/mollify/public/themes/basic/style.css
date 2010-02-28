@@ -1958,9 +1958,8 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 .mollify-dropbox-dropzone {
 	width: 180px;
 	height: 180px;
-	border-style: solid;
-	border-width: 2px;
 	margin: 6px;
+	border: 2px solid #6b6b6b;
 }
 
 .mollify-dropbox-dropzone-drag-over {
@@ -1972,24 +1971,34 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dropbox-item {
-	height: 18px;
+	height: 27px;
 	overflow: hidden;
 	color: #fffeff;
-	margin-top: 5px;
-	margin-left: 5px;
+	border-bottom: 1px dotted #acacac;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .mollify-dropbox-item-name {
-	margin-left: 14px;
+	margin-left: 18px;
 	font-weight: bold;
+}
+
+.mollify-dropbox-item-path {
+	margin-left: 18px;
+	font-size: 9px;
+	font-style: italic;
+	margin-top: 3px;
+	color: #cecece;
 }
 
 .mollify-dropbox-item-remove {
 	width: 10px;
 	height: 10px;
 	position: relative;
-	top: -10px;
+	top: -17px;
 	right: 0;
+	left: 4px;
 }
 
 .mollify-dropbox-item-remove-hover {

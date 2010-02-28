@@ -412,10 +412,12 @@ public class StyleConstants {
 	public static final String DROPBOX_VIEW_CONTENTS = "mollify-dropbox-contents";
 	public static final String DROPBOX_VIEW_DROPZONE = "mollify-dropbox-dropzone";
 	public static final String DROPBOX_VIEW_ACTIONS = "mollify-dropbox-actions";
+	public static final String DROPBOX_VIEW_ACTIONS_BUTTON = "mollify-dropbox-actions-button";
 	public static final String DROPBOX_VIEW_ITEM = "mollify-dropbox-item";
 	public static final String DROPBOX_VIEW_ITEM_FILE = "file";
 	public static final String DROPBOX_VIEW_ITEM_FOLDER = "folder";
 	public static final String DROPBOX_VIEW_ITEM_NAME = "mollify-dropbox-item-name";
+	public static final String DROPBOX_VIEW_ITEM_PATH = "mollify-dropbox-item-path";
 	public static final String DROPBOX_VIEW_ITEM_REMOVE = "mollify-dropbox-item-remove";
 
 	public static final String FILE_ITEM_DRAG = "file-item-drag";

@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DropBoxView.Actions;
-import org.sjarvela.mollify.client.ui.filelist.FileListDraggableItem;
+import org.sjarvela.mollify.client.ui.filelist.DraggableFileSystemItem;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
@@ -77,9 +77,9 @@ public class DropBoxGlue implements DropBox, DropController {
 
 	@Override
 	public void onDrop(DragContext context) {
-		presenter.onDropItems(((FileListDraggableItem) context.selectedWidgets
+		presenter.onDropItems(((DraggableFileSystemItem) context.selectedWidgets
 				.get(0)).getItems());
-		((FileListDraggableItem) context.selectedWidgets.get(0)).getItems()
+		((DraggableFileSystemItem) context.selectedWidgets.get(0)).getItems()
 				.clear();
 	}
 

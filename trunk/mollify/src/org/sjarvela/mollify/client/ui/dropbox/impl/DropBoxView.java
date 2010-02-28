@@ -16,8 +16,8 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
-import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,7 +34,7 @@ public class DropBoxView extends DialogBox {
 
 	private Panel dropTarget;
 	private Panel contents;
-	private ActionButton clearButton;
+	private DropdownButton actionsButton;
 	private final ActionListener actionListener;
 
 	public DropBoxView(ActionListener actionListener) {
@@ -64,9 +64,11 @@ public class DropBoxView extends DialogBox {
 		actions.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ACTIONS);
 		panel.add(actions);
 
-		clearButton = new ActionButton("Clear TODO");
-		clearButton.setAction(actionListener, Actions.clear);
-		actions.add(clearButton);
+		actionsButton = new DropdownButton(actionListener, "Actions TODO",
+				StyleConstants.DROPBOX_VIEW_ACTIONS_BUTTON);
+		actionsButton.addAction(Actions.clear, "TODO clear");
+		actionsButton.addAction(Actions.clear, "TODO copy");
+		actions.add(actionsButton);
 
 		return panel;
 	}
@@ -105,6 +107,10 @@ public class DropBoxView extends DialogBox {
 		name.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_NAME);
 		w.add(name);
 
+		final Label path = new Label(getPath(item));
+		path.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_PATH);
+		w.add(path);
+
 		Label remove = new Label();
 		remove.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_REMOVE);
 		HoverDecorator.decorate(remove);
@@ -118,5 +124,10 @@ public class DropBoxView extends DialogBox {
 		});
 
 		return w;
+	}
+
+	private String getPath(FileSystemItem item) {
+		String path = item.getPath();
+		return path.substring(0, path.length() - item.getName().length());
 	}
 }

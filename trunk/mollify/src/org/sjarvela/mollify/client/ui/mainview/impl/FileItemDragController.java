@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.dnd.DragController;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
-import org.sjarvela.mollify.client.ui.filelist.FileListDraggableItem;
+import org.sjarvela.mollify.client.ui.filelist.DraggableFileSystemItem;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.google.gwt.user.client.ui.Label;
@@ -33,14 +33,14 @@ public class FileItemDragController implements DragController {
 
 	@Override
 	public Widget createProxy(DragContext context) {
-		FileSystemItem item = ((FileListDraggableItem) context.selectedWidgets
-				.get(0)).getOriginalFileSystemItem();
+		FileSystemItem item = ((DraggableFileSystemItem) context.selectedWidgets
+				.get(0)).getSourceItem();
 		List<FileSystemItem> items = new ArrayList(dataProvider
 				.getSelectedItems());
 		if (!items.contains(item))
 			items.add(item);
 
-		((FileListDraggableItem) context.selectedWidgets.get(0))
+		((DraggableFileSystemItem) context.selectedWidgets.get(0))
 				.setItems(items);
 
 		return createProxy(items);

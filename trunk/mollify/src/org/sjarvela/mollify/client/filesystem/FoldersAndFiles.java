@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -20,7 +20,7 @@ public class FoldersAndFiles extends JavaScriptObject {
 	protected FoldersAndFiles() {
 	}
 
-	public final native JsArray<JsDirectory> getFolders() /*-{
+	public final native JsArray<JsFolder> getFolders() /*-{
 		return this.folders;
 	}-*/;
 
@@ -28,14 +28,14 @@ public class FoldersAndFiles extends JavaScriptObject {
 		return this.files;
 	}-*/;
 
-	public static FoldersAndFiles create(JsArray<JsDirectory> directories,
+	public static FoldersAndFiles create(JsArray<JsFolder> directories,
 			JsArray<JsFile> files) {
 		FoldersAndFiles result = FoldersAndFiles.createObject().cast();
 		result.putValues(directories, files);
 		return result;
 	}
 
-	private final native void putValues(JsArray<JsDirectory> directories,
+	private final native void putValues(JsArray<JsFolder> directories,
 			JsArray<JsFile> files) /*-{
 		this.directories = directories;
 		this.files = files;

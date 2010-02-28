@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.js.JsDirectory;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -27,7 +27,7 @@ public class SessionInfo extends JavaScriptObject {
 			boolean authenticated, String sessionName, String sessionId,
 			String userId, String user, UserPermissionMode permissionMode,
 			FeatureInfo settings, FileSystemInfo fileInfo,
-			JsArray<JsDirectory> roots) {
+			JsArray<JsFolder> roots) {
 		SessionInfo result = SessionInfo.createObject().cast();
 		result.putValues(authenticationRequired, authenticated, sessionName,
 				sessionId, userId, user, permissionMode.getStringValue(),
@@ -99,7 +99,7 @@ public class SessionInfo extends JavaScriptObject {
 			boolean authenticated, String sessionName, String sessionId,
 			String userId, String user, String permissionMode,
 			FeatureInfo features, FileSystemInfo fileSystemInfo,
-			JsArray<JsDirectory> folders) /*-{
+			JsArray<JsFolder> folders) /*-{
 		this.authentication_required = authenticationRequired;
 		this.authenticated = authenticated;
 		this.session_name = sessionName;

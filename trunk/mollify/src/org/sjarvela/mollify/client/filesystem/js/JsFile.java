@@ -28,6 +28,10 @@ public class JsFile extends JavaScriptObject {
 		return this.name;
 	}-*/;
 
+	public final native String getPath() /*-{
+		return this.path;
+	}-*/;
+
 	public final native String getExtension() /*-{
 		return this.extension;
 	}-*/;

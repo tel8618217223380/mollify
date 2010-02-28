@@ -18,28 +18,28 @@ import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.user.client.ui.Label;
 
-public class FileListDraggableItem extends Label {
+public class DraggableFileSystemItem extends Label {
 
-	private final FileSystemItem item;
-	private List<FileSystemItem> items;
+	private final FileSystemItem source;
+	private List<FileSystemItem> allItems;
 
-	public FileListDraggableItem(FileSystemItem item) {
+	public DraggableFileSystemItem(FileSystemItem item) {
 		super(item.getName());
-		this.item = item;
+		this.source = item;
 		setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
 		HoverDecorator.decorate(this);
 	}
 
-	public FileSystemItem getOriginalFileSystemItem() {
-		return item;
+	public FileSystemItem getSourceItem() {
+		return source;
 	}
 
 	public void setItems(List<FileSystemItem> items) {
-		this.items = items;
+		this.allItems = items;
 	}
 
 	public List<FileSystemItem> getItems() {
-		return items;
+		return allItems;
 	}
 
 }
