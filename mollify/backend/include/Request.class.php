@@ -67,7 +67,7 @@
 		}
 
 		public function ip() {
-			return $this->parts;
+			return $this->ip;
 		}
 		
 		public function params() {
@@ -93,7 +93,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", ip=".$this->ip."params=".Util::array2str($this->params).", data=".Util::toString($this->data));
+			Logging::logDebug("REQUEST: method=".$this->method.", path=".Util::array2str($this->parts).", ip=".$this->ip.", params=".Util::array2str($this->params).", data=".Util::toString($this->data));
 		}
 		
 		public function __toString() {

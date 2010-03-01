@@ -34,8 +34,6 @@ function plupload($folder) {
 
 	// Clean the fileName for security reasons
 	$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
-
-	Logging::logDebug("Uploading to ".$targetDir.$fileName);
 	
 	// Create target dir
 	if (!file_exists($targetDir))
@@ -55,15 +53,27 @@ function plupload($folder) {
 	} else
 		throw new ServiceException("UPLOAD_FAILED", "Failed to open temp directory.");
 
-	if (isset($_REQUEST["multipart"])) {
-		if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name']))
-			rename($_FILES['file']['tmp_name'], $targetDir . DIRECTORY_SEPARATOR . $fileName);
-		else
+	$file = $targetDir.$fileName;
+	Logging::logDebug("Uploading to ".$file);
+
+	if (isset($_SERVER["CONTENT_TYPE"]) and strpos($_SERVER["CONTENT_TYPE"], "multipart") !== false) {
+		if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {		
+			$out = fopen($file, $chunk == 0 ? "wb" : "ab");
+			if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream");
+
+			$in = fopen($_FILES['file']['tmp_name'], "rb");
+			if (!$in) throw new ServiceException("UPLOAD_FAILED", "Failed to open input stream");
+			
+			while ($buff = fread($in, 4096))
+				fwrite($out, $buff);
+
+			fclose($out);
+			fclose($in);
+			unlink($_FILES['file']['tmp_name']);
+		} else {
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
+		}
 	} else {
-		$file = $targetDir.$fileName;
-		Logging::logDebug("Writing to file ".$file);
-		
 		$out = fopen($file, $chunk == 0 ? "wb" : "ab");
 		if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream.");
 		
