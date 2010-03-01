@@ -100,7 +100,8 @@ public class PluploaderPresenter implements PluploadListener {
 				+ session.getSessionId();
 
 		PluploadBuilder builder = new PluploadBuilder().uploadUrl(uploadUrl)
-				.browseButton(dialog.getBrowseButtonId()).listener(this);
+				.browseButton(dialog.getBrowseButtonId()).container(
+						dialog.getContainerId()).listener(this);
 
 		if (allowedTypes.size() > 0)
 			builder.filter(textProvider.getStrings()
