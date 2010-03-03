@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -40,7 +40,7 @@
 		public function authenticate($userId, $password) {
 			$user = $this->env->configuration()->findUser($userId, $password);
 			if (!$user) {
-				syslog(LOG_NOTICE, "Failed Mollify login attempt from ".$this->env->request()-ip()." (user: ".$userId.")");
+				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
 			

@@ -100,15 +100,14 @@ public class PluploaderPresenter implements PluploadListener {
 				+ session.getSessionId();
 
 		PluploadBuilder builder = new PluploadBuilder().uploadUrl(uploadUrl)
-				.browseButton(dialog.getBrowseButtonId()).container(
-						dialog.getContainerId()).listener(this);
+				.browseButton(dialog.getBrowseButtonId()).listener(this);
 
 		if (allowedTypes.size() > 0)
 			builder.filter(textProvider.getStrings()
 					.fileUploadDialogSelectFileTypesDescription(),
 					getFileTypeList());
 		else
-			builder.filter("", "*.*");
+			builder.filter("All", "*");
 
 		addRuntimes(builder);
 
@@ -125,7 +124,7 @@ public class PluploaderPresenter implements PluploadListener {
 	private void addRuntimes(PluploadBuilder builder) {
 		String runtimes = settings.getString(PARAM_PLUPLOAD_RUNTIMES);
 		if (runtimes == null)
-			runtimes = "gears, html5, flash, silverlight, browserplus";
+			runtimes = "gears, browserplus, flash, silverlight, html5";
 
 		for (String r : runtimes.split(",")) {
 			final String runtime = r.toLowerCase().trim();
