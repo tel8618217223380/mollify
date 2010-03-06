@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
@@ -29,13 +30,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxView extends DialogBox {
 	enum Actions implements ResourceId {
-		clear, remove
+		clear, remove, copy, move, delete, copyHere, moveHere
 	};
+
+	private final ActionListener actionListener;
+
+	private boolean shown = false;
+	private Coords initialPosition = null;
 
 	private Panel dropTarget;
 	private Panel contents;
 	private DropdownButton actionsButton;
-	private final ActionListener actionListener;
 
 	public DropBoxView(ActionListener actionListener) {
 		super(false, false);
@@ -67,7 +72,13 @@ public class DropBoxView extends DialogBox {
 		actionsButton = new DropdownButton(actionListener, "Actions TODO",
 				StyleConstants.DROPBOX_VIEW_ACTIONS_BUTTON);
 		actionsButton.addAction(Actions.clear, "TODO clear");
-		actionsButton.addAction(Actions.clear, "TODO copy");
+		actionsButton.addSeparator();
+		actionsButton.addAction(Actions.copy, "TODO copy...");
+		actionsButton.addAction(Actions.copyHere, "TODO copy here");
+		actionsButton.addAction(Actions.move, "TODO move...");
+		actionsButton.addAction(Actions.moveHere, "TODO move here");
+		actionsButton.addSeparator();
+		actionsButton.addAction(Actions.delete, "TODO delete");
 		actions.add(actionsButton);
 
 		return panel;
@@ -77,8 +88,25 @@ public class DropBoxView extends DialogBox {
 		return dropTarget;
 	}
 
+	public void setInitialPosition(Coords position) {
+		this.initialPosition = new Coords(position.getX()
+				- this.getOffsetWidth() - 5, position.getY());
+	}
+
 	public void toggleShow() {
-		setVisible(!isVisible());
+		if (!shown)
+			setPopupPositionAndShow(new PositionCallback() {
+				@Override
+				public void setPosition(int offsetWidth, int offsetHeight) {
+					if (initialPosition != null)
+						setPopupPosition(initialPosition.getX(),
+								initialPosition.getY());
+				}
+			});
+		else
+			setVisible(!isVisible());
+
+		shown = true;
 	}
 
 	public void onDragEnter() {

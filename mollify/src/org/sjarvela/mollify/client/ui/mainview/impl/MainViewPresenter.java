@@ -111,10 +111,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
 
-		dropBox.setPosition(view.getDropboxLocation());
 	}
 
 	public void initialize() {
+		dropBox.setPosition(view.getDropboxLocation());
+
 		if (model.getRootDirectories().size() == 0) {
 			changeToRootDirectory(null);
 			view.hideButtons();
@@ -348,6 +349,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				FileSystemAction.delete, null);
 	}
 
+	public void onAddSelectedToDropbox() {
+		dropBox.addItems(getSelectedItems());
+	}
+
 	public void onToggleDropBox() {
 		dropBox.toggle();
 	}
@@ -356,4 +361,5 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	public List<FileSystemItem> getSelectedItems() {
 		return model.getSelectedItems();
 	}
+
 }

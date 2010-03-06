@@ -141,6 +141,15 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 						presenter.onToggleDropBox();
 					}
 				});
+
+		actionDelegator.setActionHandler(Action.addToDropbox,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onAddSelectedToDropbox();
+					}
+				});
+
 	}
 
 	public void onColumnClicked(FileSystemItem item, GridColumn column) {

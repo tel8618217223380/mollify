@@ -76,7 +76,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			String title = textProvider.getStrings()
 					.deleteFileConfirmationDialogTitle();
 			String message = textProvider.getMessages()
-					.confirmFileDeleteMessage("TODO");
+					.confirmFileDeleteMessage("TODO"); // TODO
 			dialogManager.showConfirmationDialog(title, message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
