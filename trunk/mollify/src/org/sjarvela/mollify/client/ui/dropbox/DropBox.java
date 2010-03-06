@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.dropbox;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.common.Coords;
 
 public interface DropBox {
@@ -19,5 +22,7 @@ public interface DropBox {
 	public void toggle();
 
 	public void setPosition(Coords position);
+
+	public void addItems(List<FileSystemItem> selectedItems);
 
 }

@@ -248,12 +248,19 @@
 	background: #c1cad2 url(subheader.png) repeat-x 0 0;
 }
 
-.mollify-header-toggle {
-	width: 20px;
-	height: 20px;
-	background-color: #89898a;
+.mollify-header-toggle, .mollify-header-toggle-open {
 	cursor: pointer;
 	position: absolute;
+	height: 23px;
+	width: 26px;
+}
+
+.mollify-header-toggle {
+	background: url(drop-tab.png) no-repeat 0 0;
+}
+
+.mollify-header-toggle-open {
+	background: url(drop-tab.png) no-repeat 0 -23px;
 }
 
 #mollify-header-select-options {
@@ -590,12 +597,14 @@
 	width: 47px;
 	float: left;
 	margin-left: 4px;
+	height: 13px;
 }
 
 #mollify-header-toggle-button-dropbox {
 	width: 72px;
 	float: right;
 	margin-right: 5px;
+	height: 14px;
 }
 
 .mollify-header-toggle-button {

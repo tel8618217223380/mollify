@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.ActionHandler;
@@ -53,11 +55,20 @@ public class DropBoxGlue implements DropBox, DropController {
 						presenter.onRemove(item);
 					}
 				});
+
+		actionDelegator.setActionHandler(Actions.delete,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onDeleteItems();
+					}
+				});
+
 	}
 
 	@Override
 	public void setPosition(Coords position) {
-		view.setPopupPosition(position.getX(), position.getY());
+		view.setInitialPosition(position);
 	}
 
 	@Override
@@ -77,10 +88,16 @@ public class DropBoxGlue implements DropBox, DropController {
 
 	@Override
 	public void onDrop(DragContext context) {
-		presenter.onDropItems(((DraggableFileSystemItem) context.selectedWidgets
-				.get(0)).getItems());
+		presenter
+				.onDropItems(((DraggableFileSystemItem) context.selectedWidgets
+						.get(0)).getItems());
 		((DraggableFileSystemItem) context.selectedWidgets.get(0)).getItems()
 				.clear();
+	}
+
+	@Override
+	public void addItems(List<FileSystemItem> items) {
+		presenter.onDropItems(items);
 	}
 
 	@Override

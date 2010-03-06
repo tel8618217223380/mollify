@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dropbox.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 
@@ -54,6 +55,10 @@ public class DropBoxPresenter {
 	public void onClear() {
 		this.items.clear();
 		refreshContent();
+	}
+
+	public void onDeleteItems() {
+		fileItemActionHandler.onAction(items, FileSystemAction.delete, view);
 	}
 
 }

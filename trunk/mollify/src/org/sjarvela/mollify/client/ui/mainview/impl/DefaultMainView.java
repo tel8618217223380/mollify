@@ -78,7 +78,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple, dropBox;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple, dropBox, addToDropbox;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -237,6 +237,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		fileActions = new DropdownButton(actionListener, "Actions",
 				StyleConstants.MAIN_VIEW_HEADER_FILE_ACTIONS);
+		fileActions.addAction(Action.addToDropbox, "Add to Dropbox"); // TODO
+		fileActions.addSeparator();
 		fileActions.addAction(Action.deleteMultiple, "Delete..."); // TODO
 
 		dropBoxButton = new ActionToggleButton(
@@ -358,7 +360,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public Coords getDropboxLocation() {
-		return new Coords(header.getAbsoluteTop() + header.getTotalHeight(),
-				dropBoxButton.getAbsoluteLeft());
+		return new Coords(header.getOffsetWidth(), header.getAbsoluteTop()
+				+ (header.getOffsetHeight() * 2));
 	}
 }
