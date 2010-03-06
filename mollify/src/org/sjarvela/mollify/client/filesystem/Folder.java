@@ -7,19 +7,21 @@ public class Folder extends FileSystemItem {
 	public static FileSystemItem Parent = new Folder("..");
 
 	private Folder(String name) {
-		super("", name, "", "");
+		super("", "", name, "", "");
 	}
 
 	private Folder() {
-		super("", "", "", "");
+		super("", "", "", "", "");
 	}
 
 	protected Folder(JsFolder dir) {
-		this(dir.getId(), dir.getName(), dir.getPath(), dir.getParentId());
+		this(dir.getId(), dir.getRootId(), dir.getName(), dir.getPath(), dir
+				.getParentId());
 	}
 
-	public Folder(String id, String name, String path, String parentId) {
-		super(id, name, path, parentId);
+	public Folder(String id, String rootId, String name, String path,
+			String parentId) {
+		super(id, rootId, name, path, parentId);
 	}
 
 	@Override

@@ -31,7 +31,8 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 	private MockFileSystemService fileSystemService;
 	private PermissionEditorModel model;
 
-	private FileSystemItem item = new File("A", "name", "", "B", "ext", 1024);
+	private FileSystemItem item = new File("A", "", "name", "", "B", "ext",
+			1024);
 	private User user1;
 	private User user2;
 	private User user3;

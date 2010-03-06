@@ -25,4 +25,6 @@ public interface DropBox {
 
 	public void addItems(List<FileSystemItem> selectedItems);
 
+	public void close();
+
 }

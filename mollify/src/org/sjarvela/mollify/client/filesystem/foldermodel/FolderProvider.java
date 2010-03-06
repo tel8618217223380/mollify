@@ -18,6 +18,8 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 public interface FolderProvider {
 	List<Folder> getRootFolders();
 
+	Folder getRootFolder(String id);
+
 	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
 }

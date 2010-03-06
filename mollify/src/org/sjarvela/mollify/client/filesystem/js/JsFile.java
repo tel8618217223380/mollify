@@ -20,6 +20,10 @@ public class JsFile extends JavaScriptObject {
 		return this.id;
 	}-*/;
 
+	public final native String getRootId() /*-{
+		return this.root_id;
+	}-*/;
+
 	public final native String getParentId() /*-{
 		return this.parent_id;
 	}-*/;
@@ -40,16 +44,17 @@ public class JsFile extends JavaScriptObject {
 		return this.size;
 	}-*/;
 
-	public static JsFile create(String id, String name, String parentId,
-			String extension, int size) {
+	public static JsFile create(String id, String rootId, String name,
+			String parentId, String extension, int size) {
 		JsFile result = JsFile.createObject().cast();
-		result.putValues(id, name, parentId, extension, size);
+		result.putValues(id, rootId, name, parentId, extension, size);
 		return result;
 	}
 
-	private final native void putValues(String id, String name,
+	private final native void putValues(String id, String rootId, String name,
 			String parentId, String extension, int size) /*-{
 		this.id = id;
+		this.root_id = rootId;
 		this.name = name;
 		this.parent_id = parentId;
 		this.extension = extension;

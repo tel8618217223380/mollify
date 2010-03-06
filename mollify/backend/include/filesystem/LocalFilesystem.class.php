@@ -54,8 +54,8 @@
 					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
 			}
 				
-			if ($isFile) return new File($id, $path, self::basename($fullPath), $this);
-			return new Folder($id, $path, self::basename($fullPath), $this);
+			if ($isFile) return new File($id, $this->rootId(), $path, self::basename($fullPath), $this);
+			return new Folder($id, $this->rootId(), $path, self::basename($fullPath), $this);
 		}
 		
 		public function exists($path) {
@@ -95,9 +95,12 @@
 				$path = self::folderPath(self::joinPath($parentPath, $name));
 				if (!is_dir($path)) continue;
 		
+				$p = $this->publicPath($path);
 				$result[] = array(
-					"path" => $this->publicPath($path),
+					"id" => $this->itemId($p),
+					"root_id" => $this->rootId(),
 					"parent_id" => $parent->id(),
+					"path" => $p,
 					"name" => $name
 				);
 			}
@@ -118,9 +121,12 @@
 					$extension = "";
 				}
 				
+				$p = $this->publicPath($path);
 				$result[] = array(
-					"path" => $this->publicPath($path),
+					"id" => $this->itemId($p),
+					"root_id" => $this->rootId(),
 					"parent_id" => $parent->id(),
+					"path" => $p,
 					"name" => $name,
 					"extension" => $extension,
 					"size" => filesize($path)

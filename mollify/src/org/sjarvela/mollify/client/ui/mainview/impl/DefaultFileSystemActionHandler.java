@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -72,6 +73,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 
 	public void onAction(final List<FileSystemItem> items,
 			final FileSystemAction action, Widget source) {
+		onAction(items, action, source, null);
+	}
+
+	public void onAction(final List<FileSystemItem> items,
+			final FileSystemAction action, Widget source, final Callback cb) {
 		if (FileSystemAction.delete.equals(action)) {
 			String title = textProvider.getStrings()
 					.deleteFileConfirmationDialogTitle();
@@ -81,8 +87,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
-							fileSystemService.delete(items,
-									createListener(action));
+							fileSystemService.delete(items, createListener(
+									action, cb));
 						}
 					}, source);
 		}
@@ -198,42 +204,46 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	public void rename(FileSystemItem item, String newName) {
-		fileSystemService.rename(item, newName,
-				createListener(FileSystemAction.rename));
+		fileSystemService.rename(item, newName, createListener(
+				FileSystemAction.rename, null));
 	}
 
 	protected void copyFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.copy(file, toDirectory,
-				createListener(FileSystemAction.copy));
+		fileSystemService.copy(file, toDirectory, createListener(
+				FileSystemAction.copy, null));
 	}
 
 	protected void moveFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.move(file, toDirectory,
-				createListener(FileSystemAction.move));
+		fileSystemService.move(file, toDirectory, createListener(
+				FileSystemAction.move, null));
 	}
 
 	protected void moveFolder(Folder directory, Folder toDirectory) {
 		if (directory.equals(toDirectory))
 			return;
-		fileSystemService.move(directory, toDirectory,
-				createListener(FileSystemAction.move));
+		fileSystemService.move(directory, toDirectory, createListener(
+				FileSystemAction.move, null));
 	}
 
 	private void delete(FileSystemItem item) {
-		fileSystemService.delete(item, createListener(FileSystemAction.delete));
+		fileSystemService.delete(item, createListener(FileSystemAction.delete,
+				null));
 	}
 
-	private ResultListener createListener(final FileSystemAction action) {
+	private ResultListener createListener(final FileSystemAction action,
+			final Callback cb) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {
+				if (cb != null)
+					cb.onCallback();
 				onFileSystemEvent(action);
 			}
 		};
