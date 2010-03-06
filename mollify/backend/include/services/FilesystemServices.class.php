@@ -88,6 +88,16 @@
 				$items[] = $this->item($id);
 			
 			switch($data['action']) {
+				case 'copy':
+					if (!isset($data['to'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->copyItems($items, $this->item($data['to']));
+					$this->response()->success(TRUE);
+					return;
+				case 'move':
+					if (!isset($data['to'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->moveItems($items, $this->item($data['to']));
+					$this->response()->success(TRUE);
+					return;
 				case 'delete':
 					$this->env->filesystem()->deleteItems($items);
 					$this->response()->success(TRUE);

@@ -72,12 +72,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	public void onAction(final List<FileSystemItem> items,
-			final FileSystemAction action, Widget source) {
-		onAction(items, action, source, null);
-	}
-
-	public void onAction(final List<FileSystemItem> items,
-			final FileSystemAction action, Widget source, final Callback cb) {
+			final FileSystemAction action, Folder folder, Widget source,
+			final Callback cb) {
 		if (FileSystemAction.delete.equals(action)) {
 			String title = textProvider.getStrings()
 					.deleteFileConfirmationDialogTitle();
@@ -91,7 +87,96 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									action, cb));
 						}
 					}, source);
+		} else if (FileSystemAction.copy.equals(action)) {
+			if (folder == null) {
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getStrings().copyFileDialogTitle(), textProvider
+						.getMessages().copyFileMessage("TODO"), textProvider
+						.getStrings().copyFileDialogAction(),
+						fileSystemItemProvider, new SelectItemHandler() {
+							public void onSelect(FileSystemItem selected) {
+								fileSystemService.copy(items,
+										(Folder) selected, createListener(
+												action, cb));
+							}
+
+							public boolean isItemAllowed(FileSystemItem item,
+									List<Folder> path) {
+								if (item.isFile())
+									return false;
+								return canCopyTo(items, (Folder) item);
+							}
+						}, source);
+				return;
+			}
+
+			if (!canCopyTo(items, folder)) {
+				// TODO show error
+				return;
+			}
+
+			fileSystemService.copy(items, folder, createListener(action, cb));
+		} else if (FileSystemAction.move.equals(action)) {
+			if (folder == null) {
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getStrings().copyFileDialogTitle(), textProvider
+						.getMessages().copyFileMessage("TODO"), textProvider
+						.getStrings().copyFileDialogAction(),
+						fileSystemItemProvider, new SelectItemHandler() {
+							public void onSelect(FileSystemItem selected) {
+								fileSystemService.move(items,
+										(Folder) selected, createListener(
+												action, cb));
+							}
+
+							public boolean isItemAllowed(FileSystemItem item,
+									List<Folder> path) {
+								if (item.isFile())
+									return false;
+								return canMoveTo(items, (Folder) item);
+							}
+						}, source);
+				return;
+			}
+
+			if (!canMoveTo(items, folder)) {
+				// TODO show error
+				return;
+			}
+
+			fileSystemService.move(items, folder, createListener(action, cb));
 		}
+	}
+
+	private boolean canCopyTo(List<FileSystemItem> items, Folder target) {
+		for (FileSystemItem item : items) {
+			if (!canCopyTo(item, target))
+				return false;
+		}
+		return true;
+	}
+
+	private boolean canCopyTo(FileSystemItem item, Folder folder) {
+		if (item.getParentId().equals(folder.getId()))
+			return false;
+		return true;
+	}
+
+	private boolean canMoveTo(List<FileSystemItem> items, Folder target) {
+		for (FileSystemItem item : items) {
+			if (!canMoveTo(item, target))
+				return false;
+		}
+		return true;
+	}
+
+	private boolean canMoveTo(FileSystemItem item, Folder folder) {
+		if (item.getParentId().equals(folder.getId()))
+			return false;
+		if (!item.isFile()
+				&& folder.getParentPath().startsWith(item.getParentPath()))
+			return false;
+		return true;
 	}
 
 	private void onFileAction(final File file, FileSystemAction action,

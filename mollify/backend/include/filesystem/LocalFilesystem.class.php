@@ -180,12 +180,36 @@
 
 		public function copy($item, $to) {			
 			$target = self::joinPath($this->localPath($to), $item->name());
+			if (!$item->isFile()) $target = self::folderPath($target);
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");
-			Logging::logDebug($target);
-			if (!copy($this->localPath($item), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()."]");
+			
+			$result = FALSE;
+			if ($item->isFile()) {
+				$result = copy($this->localPath($item), $target);
+			} else {
+				$result = $this->copyFolderRecursively($this->localPath($item), $target);
+			}
+			if (!$result) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to .".$to->id()."]");
 			
 			return $this->itemWithPath($this->publicPath($target));
 		}
+		
+		private function copyFolderRecursively($from, $to) { 
+			$dir = opendir($from); 
+			@mkdir($to);
+		    
+		    while (false !== ($item = readdir($dir))) { 
+		        if (($item != '.') or ($item != '..')) continue;
+		        
+		        $source = $from.DIRECTORY_SEPARATOR.$item;
+		        $target = $to.DIRECTORY_SEPARATOR.$item;
+		        
+				if (is_dir($source)) $this->copyFolderRecursively($source, $target);
+				else copy($source, $to);
+		    } 
+		    closedir($dir);
+		    return TRUE; 
+		} 
 		
 		public function move($item, $to) {			
 			$target = self::joinPath($this->localPath($to), $item->name());

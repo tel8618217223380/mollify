@@ -30,7 +30,7 @@ public class MainViewModel {
 	private final FileSystemService fileServices;
 	private final List<Folder> rootDirectories;
 
-	private FolderModel directoryModel;
+	private FolderModel folderModel;
 	private List<File> files = new ArrayList();
 	private List<Folder> directories = new ArrayList();
 	private List<FileSystemItem> all = new ArrayList();
@@ -46,7 +46,7 @@ public class MainViewModel {
 	}
 
 	public void clear() {
-		directoryModel = new FolderModel();
+		folderModel = new FolderModel();
 
 		directories.clear();
 		files.clear();
@@ -58,7 +58,7 @@ public class MainViewModel {
 	}
 
 	public FolderModel getFolderModel() {
-		return directoryModel;
+		return folderModel;
 	}
 
 	public List<Folder> getRootDirectories() {
@@ -78,32 +78,32 @@ public class MainViewModel {
 	}
 
 	public boolean hasFolder() {
-		return directoryModel.getCurrentFolder() != null;
+		return folderModel.getCurrentFolder() != null;
 	}
 
 	public Folder getCurrentFolder() {
-		return directoryModel.getCurrentFolder();
+		return folderModel.getCurrentFolder();
 	}
 
 	public void changeToRootDirectory(Folder root, ResultListener resultListener) {
-		directoryModel.setRootFolder(root);
+		folderModel.setRootFolder(root);
 		refreshData(resultListener);
 	}
 
 	public void changeToSubdirectory(Folder directory,
 			ResultListener resultListener) {
-		directoryModel.descendIntoFolder(directory);
+		folderModel.descendIntoFolder(directory);
 		refreshData(resultListener);
 	}
 
 	public void changeToDirectory(int level, Folder directory,
 			ResultListener resultListener) {
-		directoryModel.changeDirectory(level, directory);
+		folderModel.changeDirectory(level, directory);
 		refreshData(resultListener);
 	}
 
 	public void moveToParentDirectory(ResultListener resultListener) {
-		directoryModel.ascend();
+		folderModel.ascend();
 		refreshData(resultListener);
 	}
 

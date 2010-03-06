@@ -62,7 +62,11 @@
 		public function filesystem() {
 			return $this->filesystem;
 		}
-		
+
+		public function copy($to) {
+			return $this->filesystem->copy($this, $to);
+		}
+
 		public function move($to) {
 			return $this->filesystem->move($this, $to);
 		}
@@ -90,11 +94,7 @@
 		public function size() {
 			return $this->filesystem->size($this);
 		}
-		
-		public function copy($to) {
-			return $this->filesystem->copy($this, $to);
-		}
-		
+				
 		public function read() {
 			return $this->filesystem->read($this);
 		}

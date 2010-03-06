@@ -122,6 +122,21 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.data(data).listener(listener).post();
 	}
 
+	public void copy(List<FileSystemItem> items, Folder folder,
+			ResultListener<Boolean> listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Copy " + items.size() + " items to [" + folder.getId()
+					+ "]");
+		JSONStringBuilder data = new JSONStringBuilder("action", "copy").add(
+				"to", folder.getId());
+		JSONArrayBuilder itemArray = data.addArray("items");
+		for (FileSystemItem item : items)
+			itemArray.add(item.getId());
+
+		request().url(serviceUrl().item("items")).listener(listener).data(
+				data.toString()).post();
+	}
+
 	public void move(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
@@ -131,6 +146,21 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.move))
 				.data(data).listener(listener).post();
+	}
+
+	public void move(List<FileSystemItem> items, Folder folder,
+			ResultListener<Boolean> listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Move " + items.size() + " items to [" + folder.getId()
+					+ "]");
+		JSONStringBuilder data = new JSONStringBuilder("action", "move").add(
+				"to", folder.getId());
+		JSONArrayBuilder itemArray = data.addArray("items");
+		for (FileSystemItem item : items)
+			itemArray.add(item.getId());
+
+		request().url(serviceUrl().item("items")).listener(listener).data(
+				data.toString()).post();
 	}
 
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
@@ -144,7 +174,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	public void delete(List<FileSystemItem> items,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Delete multiple items: " + items.size());
+			Log.debug("Delete " + items.size() + " items");
 
 		JSONStringBuilder data = new JSONStringBuilder("action", "delete");
 		JSONArrayBuilder itemArray = data.addArray("items");

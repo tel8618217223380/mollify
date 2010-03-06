@@ -96,4 +96,9 @@ public abstract class FileSystemItem {
 		FileSystemItem other = (FileSystemItem) obj;
 		return isFile() == other.isFile() && id.equals(other.id);
 	}
+
+	public String getParentPath() {
+		return path.substring(0, path.length() - getName().length()
+				- (isFile() ? 0 : 1));
+	}
 }

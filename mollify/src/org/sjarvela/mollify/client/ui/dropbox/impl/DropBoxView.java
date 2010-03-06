@@ -167,9 +167,11 @@ public class DropBoxView extends DialogBox {
 	}
 
 	private String getPath(FileSystemItem item) {
-		String path = item.getPath();
 		return fileSystemItemProvider.getRootFolder(item.getRootId()).getName()
-				+ folderSeparator
-				+ path.substring(0, path.length() - item.getName().length());
+				+ folderSeparator + item.getParentPath();
+	}
+
+	public Widget getActionButton() {
+		return actionsButton;
 	}
 }

@@ -8,14 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dropbox;
+package org.sjarvela.mollify.client.filesystem.foldermodel;
 
-import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
-public interface DropBoxFactory {
-
-	DropBox createDropBox(FileSystemActionHandler fileSystemActionHandler,
-			CurrentFolderProvider currentFolderProvider);
-
+public interface CurrentFolderProvider {
+	Folder getCurrentFolder();
 }

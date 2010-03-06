@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
@@ -38,14 +39,16 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 	}
 
 	@Override
-	public DropBox createDropBox(FileSystemActionHandler fileSystemActionHandler) {
+	public DropBox createDropBox(
+			FileSystemActionHandler fileSystemActionHandler,
+			CurrentFolderProvider currentFolderProvider) {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		DropBoxView view = new DropBoxView(actionDelegator,
 				fileSystemItemProvider, session.getFileSystemInfo()
 						.getFolderSeparator());
 		DropBoxPresenter presenter = new DropBoxPresenter(view, session,
-				fileSystemActionHandler);
+				fileSystemActionHandler, currentFolderProvider);
 		return new DropBoxGlue(actionDelegator, view, presenter,
 				dragAndDropManager);
 	}
