@@ -237,6 +237,14 @@
 			$this->env->events()->onEvent(FileEvent::copy($item, $to));
 		}
 		
+		public function copyItems($items, $to) {
+			Logging::logDebug('copying '.count($items).' items');
+			$this->assertRights($items, Authentication::RIGHTS_WRITE, "copy");
+			
+			foreach($items as $item)
+				$this->copy($item, $to);
+		}
+		
 		public function move($item, $to) {
 			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$to.']');
 
@@ -253,6 +261,14 @@
 				$this->env->configuration()->moveItemPermissions($item, $to);
 			
 			$this->env->events()->onEvent(FileEvent::move($item, $to));			
+		}
+		
+		public function moveItems($items, $to) {
+			Logging::logDebug('moving '.count($items).' items');
+			$this->assertRights($items, Authentication::RIGHTS_WRITE, "move");
+			
+			foreach($items as $item)
+				$this->move($item, $to);
 		}
 		
 		public function delete($item) {

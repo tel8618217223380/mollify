@@ -38,6 +38,13 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
+	@Override
+	public void copy(List<FileSystemItem> items, Folder directory,
+			ResultListener<Boolean> listener) {
+		// TODO Auto-generated method stub
+
+	}
+
 	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		// TODO Auto-generated method stub
@@ -83,6 +90,13 @@ public class MockFileSystemService implements FileSystemService {
 	}
 
 	public void move(FileSystemItem file, Folder toDirectory,
+			ResultListener<Boolean> listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void move(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener) {
 		// TODO Auto-generated method stub
 

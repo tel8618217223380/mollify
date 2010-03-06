@@ -17,7 +17,7 @@ import java.util.Stack;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 
-public class FolderModel {
+public class FolderModel implements CurrentFolderProvider {
 	private Stack<Folder> folders;
 
 	public FolderModel() {

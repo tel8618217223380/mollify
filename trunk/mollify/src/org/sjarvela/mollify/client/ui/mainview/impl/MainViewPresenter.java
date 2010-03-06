@@ -347,7 +347,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void onDeleteSelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.delete, null, null);
+				FileSystemAction.delete, null, null, null);
 	}
 
 	public void onAddSelectedToDropbox() {

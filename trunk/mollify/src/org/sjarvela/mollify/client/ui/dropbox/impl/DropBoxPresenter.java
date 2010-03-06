@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -24,12 +25,15 @@ public class DropBoxPresenter {
 	private final FileSystemActionHandler fileItemActionHandler;
 	private final List<FileSystemItem> items = new ArrayList();
 	private final SessionInfo session;
+	private final CurrentFolderProvider currentFolderProvider;
 
 	public DropBoxPresenter(DropBoxView view, SessionInfo session,
-			FileSystemActionHandler actionHandler) {
+			FileSystemActionHandler actionHandler,
+			CurrentFolderProvider currentFolderProvider) {
 		this.view = view;
 		this.session = session;
 		this.fileItemActionHandler = actionHandler;
+		this.currentFolderProvider = currentFolderProvider;
 	}
 
 	public void onDropItems(List<FileSystemItem> items) {
@@ -69,11 +73,38 @@ public class DropBoxPresenter {
 	}
 
 	public void onDeleteItems() {
-		fileItemActionHandler.onAction(items, FileSystemAction.delete, view, new Callback() {
+		fileItemActionHandler.onAction(items, FileSystemAction.delete, null,
+				view.getActionButton(), createSuccessCallback());
+	}
+
+	public void onCopyItems() {
+		fileItemActionHandler.onAction(items, FileSystemAction.copy, null, view
+				.getActionButton(), createSuccessCallback());
+	}
+
+	public void onCopyHereItems() {
+		fileItemActionHandler.onAction(items, FileSystemAction.copy,
+				currentFolderProvider.getCurrentFolder(), view
+						.getActionButton(), createSuccessCallback());
+	}
+
+	public void onMoveItems() {
+		fileItemActionHandler.onAction(items, FileSystemAction.move, null, view
+				.getActionButton(), createSuccessCallback());
+	}
+
+	public void onMoveHereItems() {
+		fileItemActionHandler.onAction(items, FileSystemAction.move,
+				currentFolderProvider.getCurrentFolder(), view
+						.getActionButton(), createSuccessCallback());
+	}
+
+	private Callback createSuccessCallback() {
+		return new Callback() {
 			@Override
 			public void onCallback() {
 				onClear();
-			}});
+			}
+		};
 	}
-
 }

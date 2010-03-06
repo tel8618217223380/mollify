@@ -40,6 +40,12 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				.createListener(listener));
 	}
 
+	public void copy(List<FileSystemItem> items, Folder folder,
+			ResultListener<Boolean> listener) {
+		service.copy(items, folder, resultListenerFactory
+				.createListener(listener));
+	}
+
 	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		service.createFolder(parentFolder, folderName, resultListenerFactory
@@ -98,6 +104,13 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	public void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener) {
 		service.move(file, toDirectory, resultListenerFactory
+				.createListener(listener));
+	}
+
+	@Override
+	public void move(List<FileSystemItem> items, Folder folder,
+			ResultListener<Boolean> listener) {
+		service.move(items, folder, resultListenerFactory
 				.createListener(listener));
 	}
 

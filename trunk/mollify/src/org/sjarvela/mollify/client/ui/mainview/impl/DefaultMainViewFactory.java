@@ -108,7 +108,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
 				this, fileSystemService, fileSystemItemProvider).create();
-		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler);
+		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
+				model.getFolderModel());
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,

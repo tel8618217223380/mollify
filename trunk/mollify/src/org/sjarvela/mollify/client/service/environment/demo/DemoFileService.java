@@ -71,7 +71,19 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void move(FileSystemItem item, Folder directory,
+	@Override
+	public void copy(List<FileSystemItem> items, Folder directory,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
+
+	public void move(FileSystemItem item, Folder folder,
+			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
+
+	@Override
+	public void move(List<FileSystemItem> items, Folder folder,
 			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);
 	}

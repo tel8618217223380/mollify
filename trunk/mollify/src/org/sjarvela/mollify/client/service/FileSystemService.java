@@ -35,7 +35,13 @@ public interface FileSystemService extends FileDetailsProvider,
 
 	void copy(File file, Folder directory, ResultListener<Boolean> listener);
 
+	void copy(List<FileSystemItem> items, Folder directory,
+			ResultListener<Boolean> listener);
+
 	void move(FileSystemItem file, Folder toDirectory,
+			ResultListener<Boolean> listener);
+
+	void move(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener);
 
 	void delete(FileSystemItem item, ResultListener<Boolean> listener);
