@@ -10,7 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
@@ -22,17 +25,26 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultDropBoxFactory implements DropBoxFactory {
 	private final DragAndDropManager dragAndDropManager;
+	private final SessionProvider sessionProvider;
+	private final FileSystemItemProvider fileSystemItemProvider;
 
 	@Inject
-	public DefaultDropBoxFactory(DragAndDropManager dragAndDropManager) {
+	public DefaultDropBoxFactory(DragAndDropManager dragAndDropManager,
+			SessionProvider sessionProvider,
+			FileSystemItemProvider fileSystemItemProvider) {
 		this.dragAndDropManager = dragAndDropManager;
+		this.sessionProvider = sessionProvider;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 	}
 
 	@Override
 	public DropBox createDropBox(FileSystemActionHandler fileSystemActionHandler) {
+		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
-		DropBoxView view = new DropBoxView(actionDelegator);
-		DropBoxPresenter presenter = new DropBoxPresenter(view,
+		DropBoxView view = new DropBoxView(actionDelegator,
+				fileSystemItemProvider, session.getFileSystemInfo()
+						.getFolderSeparator());
+		DropBoxPresenter presenter = new DropBoxPresenter(view, session,
 				fileSystemActionHandler);
 		return new DropBoxGlue(actionDelegator, view, presenter,
 				dragAndDropManager);

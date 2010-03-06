@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.Coords;
@@ -34,6 +35,8 @@ public class DropBoxView extends DialogBox {
 	};
 
 	private final ActionListener actionListener;
+	private final FileSystemItemProvider fileSystemItemProvider;
+	private final String folderSeparator;
 
 	private boolean shown = false;
 	private Coords initialPosition = null;
@@ -42,9 +45,14 @@ public class DropBoxView extends DialogBox {
 	private Panel contents;
 	private DropdownButton actionsButton;
 
-	public DropBoxView(ActionListener actionListener) {
+	public DropBoxView(ActionListener actionListener,
+			FileSystemItemProvider fileSystemItemProvider,
+			String folderSeparator) {
 		super(false, false);
 		this.actionListener = actionListener;
+		this.fileSystemItemProvider = fileSystemItemProvider;
+		this.folderSeparator = folderSeparator;
+
 		this.setText("TODO");
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
 		this.add(createContent());
@@ -124,7 +132,11 @@ public class DropBoxView extends DialogBox {
 	}
 
 	private Widget createItemWidget(final FileSystemItem item) {
+		String itemPath = getPath(item);
+
 		Panel w = new FlowPanel();
+		w.setTitle(itemPath + item.getName());
+
 		w.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM);
 		if (item.isFile())
 			w.addStyleDependentName(StyleConstants.DROPBOX_VIEW_ITEM_FILE);
@@ -135,7 +147,7 @@ public class DropBoxView extends DialogBox {
 		name.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_NAME);
 		w.add(name);
 
-		final Label path = new Label(getPath(item));
+		final Label path = new Label(itemPath);
 		path.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_PATH);
 		w.add(path);
 
@@ -156,6 +168,8 @@ public class DropBoxView extends DialogBox {
 
 	private String getPath(FileSystemItem item) {
 		String path = item.getPath();
-		return path.substring(0, path.length() - item.getName().length());
+		return fileSystemItemProvider.getRootFolder(item.getRootId()).getName()
+				+ folderSeparator
+				+ path.substring(0, path.length() - item.getName().length());
 	}
 }

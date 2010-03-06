@@ -26,10 +26,17 @@ public class FolderCache implements FolderProvider {
 		this.directoryProvider = directoryProvider;
 	}
 
+	@Override
 	public List<Folder> getRootFolders() {
 		return directoryProvider.getRootFolders();
 	}
 
+	@Override
+	public Folder getRootFolder(String id) {
+		return directoryProvider.getRootFolder(id);
+	}
+
+	@Override
 	public void getFolders(final Folder parent,
 			final ResultListener<List<Folder>> listener) {
 		if (cache.containsKey(parent)) {

@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.Callback;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -22,7 +23,7 @@ public interface FileSystemActionHandler {
 	void onAction(FileSystemItem item, FileSystemAction action, Widget source);
 
 	void onAction(List<FileSystemItem> items, FileSystemAction action,
-			Widget source);
+			Widget source, Callback actionCallback);
 
 	void addListener(FileSystemActionListener fileSystemActionListener);
 

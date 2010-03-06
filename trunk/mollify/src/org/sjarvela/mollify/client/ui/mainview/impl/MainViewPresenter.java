@@ -251,6 +251,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void logout() {
+		dropBox.close();
 		sessionManager.endSession();
 	}
 
@@ -346,7 +347,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void onDeleteSelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.delete, null);
+				FileSystemAction.delete, null, null);
 	}
 
 	public void onAddSelectedToDropbox() {

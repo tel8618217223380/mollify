@@ -16,23 +16,34 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.service.Callback;
+import org.sjarvela.mollify.client.session.SessionInfo;
 
 public class DropBoxPresenter {
 	private final DropBoxView view;
 	private final FileSystemActionHandler fileItemActionHandler;
 	private final List<FileSystemItem> items = new ArrayList();
+	private final SessionInfo session;
 
-	public DropBoxPresenter(DropBoxView view,
+	public DropBoxPresenter(DropBoxView view, SessionInfo session,
 			FileSystemActionHandler actionHandler) {
 		this.view = view;
+		this.session = session;
 		this.fileItemActionHandler = actionHandler;
 	}
 
 	public void onDropItems(List<FileSystemItem> items) {
 		for (FileSystemItem item : items)
-			if (!this.items.contains(item))
-				this.items.add(item);
+			addItem(item);
 		refreshContent();
+	}
+
+	private void addItem(FileSystemItem item) {
+		if (this.items.contains(item))
+			return;
+		if (!item.isFile() && !session.getFeatures().folderActions())
+			return;
+		this.items.add(item);
 	}
 
 	public void onRemove(FileSystemItem item) {
@@ -58,7 +69,11 @@ public class DropBoxPresenter {
 	}
 
 	public void onDeleteItems() {
-		fileItemActionHandler.onAction(items, FileSystemAction.delete, view);
+		fileItemActionHandler.onAction(items, FileSystemAction.delete, view, new Callback() {
+			@Override
+			public void onCallback() {
+				onClear();
+			}});
 	}
 
 }

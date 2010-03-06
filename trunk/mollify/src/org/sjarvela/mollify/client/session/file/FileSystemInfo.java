@@ -11,6 +11,10 @@ public class FileSystemInfo extends JavaScriptObject {
 	protected FileSystemInfo() {
 	}
 
+	public final native String getFolderSeparator() /*-{
+		return this.folder_separator;
+	}-*/;
+
 	public final native float getUploadMaxFileSize() /*-{
 		return this.max_upload_file_size;
 	}-*/;

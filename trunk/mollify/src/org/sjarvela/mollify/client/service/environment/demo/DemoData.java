@@ -88,29 +88,32 @@ public class DemoData {
 
 	private void createDirectoriesAndFiles() {
 		rootDirectories = JavaScriptObject.createArray().cast();
-		rootDirectories.set(0, JsFolder.create(ROOT_1, "Folder A", ""));
-		rootDirectories.set(1, JsFolder.create(ROOT_2, "Folder B", ""));
+		rootDirectories.set(0, JsFolder.create(ROOT_1, "", "Folder A", ""));
+		rootDirectories.set(1, JsFolder.create(ROOT_2, "", "Folder B", ""));
 
 		List<Folder> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
-		subDirs.add(new Folder(DIR_1A, "Sub folder A", "", ROOT_1));
-		subDirs.add(new Folder(DIR_1B, "Sub folder B", "", ROOT_1));
+		subDirs.add(new Folder(DIR_1A, ROOT_1, "Sub folder A", "", ROOT_1));
+		subDirs.add(new Folder(DIR_1B, ROOT_1, "Sub folder B", "", ROOT_1));
 
 		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
-		subDirs.add(new Folder(DIR_2A, "Sub folder A", "", ROOT_2));
+		subDirs.add(new Folder(DIR_2A, ROOT_2, "Sub folder A", "", ROOT_2));
 
 		files = new ArrayList();
-		files.add(new File(FILE_1A1, "Example.txt", "", "path", "txt", 128));
-		files.add(new File(FILE_1A2, "Picture.gif", "", "path", "gif", 2228));
-		files.add(new File(FILE_1A3, "Picture.png", "", "path", "png", 64434));
-		files.add(new File(FILE_1A4, "Portable Document Format.pdf", "",
-				"path", "pdf", 113428));
-		files.add(new File(FILE_1A5, "Word Document.doc", "", "path", "doc",
-				5634347));
-		files.add(new File(FILE_1A6, "Web page.html", "", "path", "html",
-				23433231));
+		files.add(new File(FILE_1A1, ROOT_1, "Example.txt", "", "path", "txt",
+				128));
+		files.add(new File(FILE_1A2, ROOT_1, "Picture.gif", "", "path", "gif",
+				2228));
+		files.add(new File(FILE_1A3, ROOT_1, "Picture.png", "", "path", "png",
+				64434));
+		files.add(new File(FILE_1A4, ROOT_1, "Portable Document Format.pdf",
+				"", "path", "pdf", 113428));
+		files.add(new File(FILE_1A5, ROOT_1, "Word Document.doc", "", "path",
+				"doc", 5634347));
+		files.add(new File(FILE_1A6, ROOT_1, "Web page.html", "", "path",
+				"html", 23433231));
 	}
 
 	public SessionInfo getSessionInfo() {

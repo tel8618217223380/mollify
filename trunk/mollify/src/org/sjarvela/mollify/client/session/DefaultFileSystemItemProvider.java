@@ -50,8 +50,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		this.roots = session.getRootDirectories();
 	}
 
-	public void getFolders(Folder parent,
-			ResultListener<List<Folder>> listener) {
+	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
 		else
@@ -62,11 +61,19 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		return roots;
 	}
 
+	@Override
+	public Folder getRootFolder(String id) {
+		for (Folder f : roots)
+			if (f.getId().equals(id))
+				return f;
+		return null;
+	}
+
 	public void getFilesAndFolders(Folder parent,
 			ResultListener<FolderContent> listener) {
 		if (parent.isEmpty())
-			listener.onSuccess(new FolderContent(roots,
-					Collections.EMPTY_LIST));
+			listener
+					.onSuccess(new FolderContent(roots, Collections.EMPTY_LIST));
 		else
 			fileSystemService.getItems(parent, listener);
 	}

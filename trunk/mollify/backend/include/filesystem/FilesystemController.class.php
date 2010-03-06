@@ -71,6 +71,7 @@
 			$result = array();
 			
 			$result['filesystem'] = array(
+				"folder_separator" => DIRECTORY_SEPARATOR,
 				"max_upload_file_size" => Util::inBytes(ini_get("upload_max_filesize")),
 				"max_upload_total_size" => Util::inBytes(ini_get("post_max_size")),
 				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
@@ -141,26 +142,12 @@
 		
 		public function folders($parent) {
 			$this->assertRights($parent, Authentication::RIGHTS_READ, "folders");
-			
-			$result = array();
-			$folders = $parent->folders();
-			foreach($folders as $folder) {
-				$folder["id"] = $this->publicId($parent->filesystem()->id(), $folder["path"]);
-				$result[] = $folder;
-			}
-			return $result;
+			return $parent->folders();
 		}
 		
 		public function files($parent) {
 			$this->assertRights($parent, Authentication::RIGHTS_READ, "files");
-			
-			$result = array();
-			$files = $parent->files();
-			foreach($files as $file) {
-				$file["id"] = $this->publicId($parent->filesystem()->id(), $file["path"]);
-				$result[] = $file;
-			}
-			return $result;
+			return $parent->files();
 		}
 
 		public function details($item) {

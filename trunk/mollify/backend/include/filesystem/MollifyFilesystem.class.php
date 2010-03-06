@@ -33,12 +33,20 @@
 			return $this->filesystemInfo->internalId($item->id());
 		}
 		
+		public function itemId($path) {
+			return $this->filesystemInfo->publicId($this->id(), $path);
+		}
+		
 		public function name() {
 			return $this->name;
 		}
 		
+		public function rootId() {
+			return $this->filesystemInfo->publicId($this->id);
+		}
+		
 		public function root() {
-			$id = $this->filesystemInfo->publicId($this->id);
+			$id = $this->rootId();
 			Logging::logDebug("Filesystem [".$this->id."] root [".$id."]");
 			return $this->createItem($id, '');
 		}

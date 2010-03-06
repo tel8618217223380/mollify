@@ -15,8 +15,9 @@
 		protected $path;
 		protected $filesystem;
 		
-		function __construct($id, $path, $name, $filesystem) {
+		function __construct($id, $rootId, $path, $name, $filesystem) {
 			$this->id = $id;
+			$this->rootId = $rootId;
 			$this->path = $path;
 			$this->name = $name;
 			$this->filesystem = $filesystem;
@@ -28,6 +29,10 @@
 		
 		public function id() {
 			return $this->id;
+		}
+
+		public function rootId() {
+			return $this->rootId;
 		}
 		
 		public function internalId() {

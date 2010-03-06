@@ -13,13 +13,14 @@ package org.sjarvela.mollify.client.filesystem;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
 import com.google.gwt.core.client.JsArray;
 
 public abstract class FileSystemItem {
 	protected final String id;
+	protected final String rootId;
 	protected final String name;
 	protected final String path;
 	protected final String parentId;
@@ -47,9 +48,10 @@ public abstract class FileSystemItem {
 		return result;
 	}
 
-	protected FileSystemItem(String id, String name, String path,
-			String parentId) {
+	protected FileSystemItem(String id, String rootId, String name,
+			String path, String parentId) {
 		this.id = id;
+		this.rootId = rootId;
 		this.name = name;
 		this.path = path;
 		this.parentId = parentId;
@@ -57,6 +59,10 @@ public abstract class FileSystemItem {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getRootId() {
+		return rootId;
 	}
 
 	public String getName() {
