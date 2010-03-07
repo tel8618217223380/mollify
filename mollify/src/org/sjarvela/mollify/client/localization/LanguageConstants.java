@@ -162,7 +162,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileUploadTotalProgressTitle();
 
 	public String fileUploadDialogSelectFileTypesDescription();
-	
+
 	public String createFolderDialogTitle();
 
 	public String createFolderDialogName();
@@ -319,6 +319,10 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileDetailsEditPermissions();
 
+	public String copyDirectoryDialogTitle();
+
+	public String copyDirectoryDialogAction();
+
 	public String moveDirectoryDialogTitle();
 
 	public String moveDirectoryDialogAction();
@@ -378,5 +382,13 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String mainViewParentDirButtonTooltip();
 
 	public String mainViewHomeButtonTooltip();
+
+	public String copyMultipleItemsTitle();
+
+	public String cannotCopyAllItemsMessage();
+
+	public String moveMultipleItemsTitle();
+
+	public String cannotMoveAllItemsMessage();
 
 }

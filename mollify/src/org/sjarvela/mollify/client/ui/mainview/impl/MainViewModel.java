@@ -149,4 +149,8 @@ public class MainViewModel {
 	public List<FileSystemItem> getSelectedItems() {
 		return this.selected;
 	}
+
+	public void clearSelected() {
+		this.selected.clear();
+	}
 }

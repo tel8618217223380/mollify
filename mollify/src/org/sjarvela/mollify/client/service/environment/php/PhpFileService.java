@@ -111,14 +111,14 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.data(data).listener(listener).put();
 	}
 
-	public void copy(File file, Folder directory,
+	public void copy(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Copy " + file.getId() + " to [" + directory.getId()
+			Log.debug("Copy " + item.getId() + " to [" + directory.getId()
 					+ "]");
 		String data = new JSONStringBuilder("id", directory.getId()).toString();
 
-		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
+		request().url(serviceUrl().fileItem(item).action(FileAction.copy))
 				.data(data).listener(listener).post();
 	}
 

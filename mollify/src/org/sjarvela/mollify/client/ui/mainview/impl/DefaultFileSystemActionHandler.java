@@ -78,7 +78,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			String title = textProvider.getStrings()
 					.deleteFileConfirmationDialogTitle();
 			String message = textProvider.getMessages()
-					.confirmFileDeleteMessage("TODO"); // TODO
+					.confirmMultipleItemDeleteMessage(items.size());
 			dialogManager.showConfirmationDialog(title, message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
@@ -90,9 +90,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (FileSystemAction.copy.equals(action)) {
 			if (folder == null) {
 				itemSelectorFactory.openFolderSelector(textProvider
-						.getStrings().copyFileDialogTitle(), textProvider
-						.getMessages().copyFileMessage("TODO"), textProvider
-						.getStrings().copyFileDialogAction(),
+						.getStrings().copyMultipleItemsTitle(), textProvider
+						.getMessages().copyMultipleItemsMessage(items.size()),
+						textProvider.getStrings().copyFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.copy(items,
@@ -111,7 +111,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			}
 
 			if (!canCopyTo(items, folder)) {
-				// TODO show error
+				dialogManager.showInfo(textProvider.getStrings()
+						.copyMultipleItemsTitle(), textProvider.getStrings()
+						.cannotCopyAllItemsMessage());
 				return;
 			}
 
@@ -119,9 +121,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (FileSystemAction.move.equals(action)) {
 			if (folder == null) {
 				itemSelectorFactory.openFolderSelector(textProvider
-						.getStrings().copyFileDialogTitle(), textProvider
-						.getMessages().copyFileMessage("TODO"), textProvider
-						.getStrings().copyFileDialogAction(),
+						.getStrings().moveMultipleItemsTitle(), textProvider
+						.getMessages().moveMultipleItemsMessage(items.size()),
+						textProvider.getStrings().moveFileDialogAction(),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.move(items,
@@ -140,7 +142,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			}
 
 			if (!canMoveTo(items, folder)) {
-				// TODO show error
+				dialogManager.showInfo(textProvider.getStrings()
+						.moveMultipleItemsTitle(), textProvider.getStrings()
+						.cannotMoveAllItemsMessage());
 				return;
 			}
 
@@ -155,6 +159,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 
 						@Override
 						public void onSuccess(String url) {
+							cb.onCallback();
 							windowManager.openDownloadUrl(url);
 						}
 					});
@@ -172,6 +177,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private boolean canCopyTo(FileSystemItem item, Folder folder) {
 		if (item.getParentId().equals(folder.getId()))
 			return false;
+		if (!item.isFile() && item.getRootId().equals(folder.getRootId())
+				&& folder.getPath().startsWith(item.getPath()))
+			return false;
 		return true;
 	}
 
@@ -186,7 +194,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private boolean canMoveTo(FileSystemItem item, Folder folder) {
 		if (item.getParentId().equals(folder.getId()))
 			return false;
-		if (!item.isFile()
+		if (!item.isFile() && folder.getRootId().equals(item.getRootId())
 				&& folder.getParentPath().startsWith(item.getParentPath()))
 			return false;
 		return true;
@@ -217,7 +225,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									List<Folder> path) {
 								if (item.isFile())
 									return false;
-								return !item.getId().equals(file.getParentId());
+								return canCopyTo(file, (Folder) item);
 							}
 						}, source);
 			} else if (action.equals(FileSystemAction.move)) {
@@ -234,7 +242,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 									List<Folder> path) {
 								if (item.isFile())
 									return false;
-								return !item.getId().equals(file.getParentId());
+								return canMoveTo(file, (Folder) item);
 							}
 						}, source);
 			} else if (action.equals(FileSystemAction.delete)) {
@@ -263,6 +271,24 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					.getDownloadAsZipUrl(folder));
 		} else if (action.equals(FileSystemAction.rename)) {
 			renameDialogFactory.openRenameDialog(folder, this, source);
+		} else if (action.equals(FileSystemAction.copy)) {
+			itemSelectorFactory.openFolderSelector(textProvider.getStrings()
+					.copyDirectoryDialogTitle(), textProvider.getMessages()
+					.copyDirectoryMessage(folder.getName()), textProvider
+					.getStrings().copyDirectoryDialogAction(),
+					fileSystemItemProvider, new SelectItemHandler() {
+						public void onSelect(FileSystemItem selected) {
+							copyFolder(folder, (Folder) selected);
+						}
+
+						public boolean isItemAllowed(FileSystemItem candidate,
+								List<Folder> path) {
+							if (candidate.isFile())
+								return false;
+							return canCopyTo(folder, (Folder) candidate);
+						}
+					}, source);
+
 		} else if (action.equals(FileSystemAction.move)) {
 			itemSelectorFactory.openFolderSelector(textProvider.getStrings()
 					.moveDirectoryDialogTitle(), textProvider.getMessages()
@@ -277,10 +303,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 								List<Folder> path) {
 							if (candidate.isFile())
 								return false;
-
-							return !folder.equals(candidate)
-									&& !folder.equals(candidate)
-									&& !path.contains(folder);
+							return canMoveTo(folder, (Folder) candidate);
 						}
 					}, source);
 		} else if (action.equals(FileSystemAction.delete)) {
@@ -318,6 +341,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			return;
 		fileSystemService.move(file, toDirectory, createListener(
 				FileSystemAction.move, null));
+	}
+
+	protected void copyFolder(Folder directory, Folder toDirectory) {
+		if (directory.equals(toDirectory))
+			return;
+		fileSystemService.copy(directory, toDirectory, createListener(
+				FileSystemAction.copy, null));
 	}
 
 	protected void moveFolder(Folder directory, Folder toDirectory) {

@@ -101,10 +101,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		initialize();
 	}
 
-	private boolean isFileMode() {
-		return Mode.File.equals(mode);
-	}
-
 	protected Widget createContent() {
 		Panel content = new VerticalPanel();
 		content.setStyleName(StyleConstants.FILE_CONTEXT_CONTENT);
@@ -211,7 +207,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		copyButton = createActionButton(textProvider.getStrings()
 				.fileActionCopyTitle(), actionListener, FileSystemAction.copy);
-		copyButton.setVisible(isFileMode() && hasGeneralWritePermissions);
+		copyButton.setVisible(false);
 
 		moveButton = createActionButton(textProvider.getStrings()
 				.fileActionMoveTitle(), actionListener, FileSystemAction.move);
@@ -361,6 +357,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public void updateButtons(boolean isWritable) {
 		renameButton.setVisible(isWritable);
 		deleteButton.setVisible(isWritable);
+		copyButton.setVisible(hasGeneralWritePermissions);
 		moveButton.setVisible(isWritable && hasGeneralWritePermissions);
 	}
 

@@ -298,7 +298,7 @@
 				$zip->add($item->name(), $item->size(), $this->hash($this->localPath($item)), $stream);
 				fclose($stream);
 			} else {
-				$offset = strlen($this->localPath($item));
+				$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
 				$files = $this->visibleFiles($this->localPath($item), TRUE);
 				
 				foreach($files as $file) {
