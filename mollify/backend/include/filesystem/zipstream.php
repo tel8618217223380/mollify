@@ -313,6 +313,17 @@ class ZipStream {
     $this->add_to_cdr($name, $opt, $meth, $crc, $zlen, $len, $cdr_len);
   }
 
+  public function add_file_stream($name, $size, $hash, $stream, $opt = array()) {
+    $block_size = 1048576; # process in 1 megabyte chunks
+    $zlen = $len = $size;
+    $meth = 0x00;
+    $crc  = unpack('V', $hash);
+    $crc = $crc[1];
+    $this->add_file_header($name, $opt, $meth, $crc, $zlen, $len);
+
+    while ($data = fgets($stream, $block_size)) $this->send($data);
+  }
+  
   #
   # Add a large file from the given path.
   #

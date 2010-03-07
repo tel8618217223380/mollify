@@ -367,12 +367,33 @@
 			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
 		
-		public function downloadAsZip($item) {
+		public function downloadAsZip($items) {
 			$this->env->features()->assertFeature("zip_download");
-			$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
 			
-			$item->downloadAsZip();			
-			$this->env->events()->onEvent(FileEvent::download($item));
+			if (is_array($items)) {
+				$this->assertRights($items, Authentication::RIGHTS_READ, "download as zip");
+				
+				$zip = $this->zipper("items.zip");
+				foreach($items as $item) {
+					$item->addToZip($zip);
+					$this->env->events()->onEvent(FileEvent::download($item));
+				}
+				$zip->finish();
+			} else {
+				$item = $items;
+				$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
+				
+				$zip = $this->zipper($item->name().".zip");
+				$item->addToZip($zip);
+				$zip->finish();
+				
+				$this->env->events()->onEvent(FileEvent::download($item));
+			}
+		}
+		
+		public function zipper($name) {
+			require_once('MollifyZipStream.class.php');
+			return new MollifyZipStream($this->env, $name, $this->setting("zip_options"));
 		}
 		
 		public function setting($setting) {

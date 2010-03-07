@@ -77,7 +77,7 @@
 		
 		public abstract function write($item);
 		
-		public abstract function downloadAsZip($item);
+		public abstract function addToZip($item, $zip);
 				
 		public abstract function createFolder($folder, $name);
 		

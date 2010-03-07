@@ -204,6 +204,32 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		return serviceUrl().fileItem(item).action(FileAction.zip).build();
 	}
 
+	@Override
+	public void getDownloadAsZipUrl(List<FileSystemItem> items,
+			final ResultListener<String> listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Download as zip " + items.size() + " items");
+
+		JSONStringBuilder data = new JSONStringBuilder("action", "zip");
+		JSONArrayBuilder itemArray = data.addArray("items");
+		for (FileSystemItem item : items)
+			itemArray.add(item.getId());
+
+		request().url(serviceUrl().item("items")).listener(
+				new ResultListener<Boolean>() {
+					@Override
+					public void onFail(ServiceError error) {
+						listener.onFail(error);
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						listener.onSuccess(serviceUrl().item("items").action(
+								FileAction.zip).build());
+					}
+				}).data(data.toString()).post();
+	}
+
 	public void setItemDescription(FileSystemItem item, String description,
 			ResultListener listener) {
 		if (Log.isDebugEnabled())

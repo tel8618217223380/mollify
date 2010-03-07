@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.Coords;
@@ -31,12 +32,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxView extends DialogBox {
 	enum Actions implements ResourceId {
-		clear, remove, copy, move, delete, copyHere, moveHere
+		clear, remove, copy, move, delete, copyHere, moveHere, downloadAsZip
 	};
 
 	private final ActionListener actionListener;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final String folderSeparator;
+	private final SessionInfo session;
 
 	private boolean shown = false;
 	private Coords initialPosition = null;
@@ -46,12 +48,12 @@ public class DropBoxView extends DialogBox {
 	private DropdownButton actionsButton;
 
 	public DropBoxView(ActionListener actionListener,
-			FileSystemItemProvider fileSystemItemProvider,
-			String folderSeparator) {
+			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		super(false, false);
 		this.actionListener = actionListener;
 		this.fileSystemItemProvider = fileSystemItemProvider;
-		this.folderSeparator = folderSeparator;
+		this.session = session;
+		this.folderSeparator = session.getFileSystemInfo().getFolderSeparator();
 
 		this.setText("TODO");
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
@@ -87,6 +89,12 @@ public class DropBoxView extends DialogBox {
 		actionsButton.addAction(Actions.moveHere, "TODO move here");
 		actionsButton.addSeparator();
 		actionsButton.addAction(Actions.delete, "TODO delete");
+
+		if (session.getFeatures().zipDownload()) {
+			actionsButton.addSeparator();
+			actionsButton.addAction(Actions.downloadAsZip,
+					"TODO download as zip");
+		}
 		actions.add(actionsButton);
 
 		return panel;
