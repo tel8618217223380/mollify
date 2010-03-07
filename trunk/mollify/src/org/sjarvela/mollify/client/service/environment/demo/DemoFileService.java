@@ -101,6 +101,12 @@ public class DemoFileService implements FileSystemService {
 		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
 	}
 
+	@Override
+	public void getDownloadAsZipUrl(List<FileSystemItem> items,
+			ResultListener<String> listener) {
+		listener.onSuccess(DemoEnvironment.MOLLIFY_PACKAGE_URL);
+	}
+
 	public void removeItemDescription(FileSystemItem item,
 			ResultListener listener) {
 		listener.onSuccess(true);

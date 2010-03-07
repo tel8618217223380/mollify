@@ -45,8 +45,7 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		DropBoxView view = new DropBoxView(actionDelegator,
-				fileSystemItemProvider, session.getFileSystemInfo()
-						.getFolderSeparator());
+				fileSystemItemProvider, session);
 		DropBoxPresenter presenter = new DropBoxPresenter(view, session,
 				fileSystemActionHandler, currentFolderProvider);
 		return new DropBoxGlue(actionDelegator, view, presenter,

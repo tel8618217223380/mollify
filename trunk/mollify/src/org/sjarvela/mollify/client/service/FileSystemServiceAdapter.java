@@ -87,6 +87,12 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		return service.getDownloadUrl(file);
 	}
 
+	@Override
+	public void getDownloadAsZipUrl(List<FileSystemItem> items,
+			ResultListener<String> listener) {
+		service.getDownloadAsZipUrl(items, listener);
+	}
+
 	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
 		service.getFileDetails(file, resultListenerFactory
 				.createListener(listener));

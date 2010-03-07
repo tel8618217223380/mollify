@@ -99,6 +99,11 @@ public class DropBoxPresenter {
 						.getActionButton(), createSuccessCallback());
 	}
 
+	public void onDownloadAsZip() {
+		fileItemActionHandler.onAction(items, FileSystemAction.download_as_zip,
+				null, view.getActionButton(), null);
+	}
+
 	private Callback createSuccessCallback() {
 		return new Callback() {
 			@Override
@@ -107,4 +112,5 @@ public class DropBoxPresenter {
 			}
 		};
 	}
+
 }

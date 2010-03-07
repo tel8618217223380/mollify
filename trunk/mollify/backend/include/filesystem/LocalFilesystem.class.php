@@ -199,13 +199,15 @@
 			@mkdir($to);
 		    
 		    while (false !== ($item = readdir($dir))) { 
-		        if (($item != '.') or ($item != '..')) continue;
+		        if (($item == '.') or ($item == '..')) continue;
 		        
 		        $source = $from.DIRECTORY_SEPARATOR.$item;
 		        $target = $to.DIRECTORY_SEPARATOR.$item;
 		        
-				if (is_dir($source)) $this->copyFolderRecursively($source, $target);
-				else copy($source, $to);
+				if (is_dir($source))
+					$this->copyFolderRecursively($source, $target);
+				else
+					copy($source, $target);
 		    } 
 		    closedir($dir);
 		    return TRUE; 
@@ -286,19 +288,26 @@
 			return $handle;
 		}
 		
-		public function downloadAsZip($item) {
-			require "zipstream.php";
-			$zip = new ZipStream($item->name().".zip", $this->filesystemInfo->setting("zip_options"));
-			
+		private function hash($filePath, $type = 'crc32b') {
+			return hash_file($type, $filePath, true);
+		}
+		
+		public function addToZip($item, $zip) {
 			if ($item->isFile()) {
-				$zip->add_file_from_path($item->name(), $this->localPath($item));
+				$stream = $item->read();
+				$zip->add($item->name(), $item->size(), $this->hash($this->localPath($item)), $stream);
+				fclose($stream);
 			} else {
 				$offset = strlen($this->localPath($item));
 				$files = $this->visibleFiles($this->localPath($item), TRUE);
-				foreach($files as $file)
-					$zip->add_file_from_path(substr($file, $offset), $file);
+				
+				foreach($files as $file) {
+					$stream = @fopen($file, "rb");
+					$st = stat($file);
+					$zip->add(substr($file, $offset), $st['size'], $this->hash($file), $stream);
+    				fclose($stream);
+				}
 			}
-			$zip->finish();
 		}
 				
 		static function joinPath($item1, $item2) {

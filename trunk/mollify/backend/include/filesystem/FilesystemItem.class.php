@@ -78,11 +78,11 @@
 		public function delete() {
 			return $this->filesystem->delete($this);
 		}
-		
-		public function downloadAsZip() {
-			return $this->filesystem->downloadAsZip($this);
+
+		public function addToZip($zip) {
+			return $this->filesystem->addToZip($this, $zip);
 		}
-		
+				
 		public function __toString() {
 			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): [".$this->id."] = '".$this->name."' (".$this->path.")";
 		}

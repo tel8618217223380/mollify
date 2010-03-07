@@ -78,6 +78,12 @@ public class MockFileSystemService implements FileSystemService {
 		return null;
 	}
 
+	@Override
+	public void getDownloadAsZipUrl(List<FileSystemItem> items,
+			ResultListener<String> listener) {
+		// TODO Auto-generated method stub
+	}
+
 	public String getDownloadUrl(File file) {
 		// TODO Auto-generated method stub
 		return null;

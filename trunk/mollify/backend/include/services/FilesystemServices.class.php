@@ -22,6 +22,20 @@
 				$this->processGetUpload();
 				return;
 			}
+			if ($this->path[0] === 'items' and count($this->path) == 2 and $this->path[1] === 'zip') {
+				if (!$this->env->session()->hasParam("zip_items")) throw $this->invalidRequestException();
+				$itemIds = $this->env->session()->param("zip_items");
+				$this->env->session()->removeParam("zip_items");
+				if (count($itemIds) < 1) throw $this->invalidRequestException();
+				
+				$items = array();
+				foreach($itemIds as $id)
+					$items[] = $this->item($id);
+
+				$this->env->filesystem()->downloadAsZip($items);
+				return;
+			}
+
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
 				$this->processGetFile($item);
@@ -100,6 +114,10 @@
 					return;
 				case 'delete':
 					$this->env->filesystem()->deleteItems($items);
+					$this->response()->success(TRUE);
+					return;
+				case 'zip':
+					$this->env->session()->param("zip_items", $data['items']);
 					$this->response()->success(TRUE);
 					return;
 				default:

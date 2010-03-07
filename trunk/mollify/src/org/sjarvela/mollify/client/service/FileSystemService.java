@@ -55,6 +55,9 @@ public interface FileSystemService extends FileDetailsProvider,
 
 	String getDownloadAsZipUrl(FileSystemItem item);
 
+	void getDownloadAsZipUrl(List<FileSystemItem> items,
+			ResultListener<String> listener);
+
 	void setItemDescription(FileSystemItem item, String description,
 			ResultListener listener);
 

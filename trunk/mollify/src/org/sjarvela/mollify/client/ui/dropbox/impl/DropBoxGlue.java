@@ -92,6 +92,14 @@ public class DropBoxGlue implements DropBox, DropController {
 						presenter.onMoveHereItems();
 					}
 				});
+
+		actionDelegator.setActionHandler(Actions.downloadAsZip,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						presenter.onDownloadAsZip();
+					}
+				});
 	}
 
 	@Override

@@ -145,6 +145,19 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			}
 
 			fileSystemService.move(items, folder, createListener(action, cb));
+		} else if (action.equals(FileSystemAction.download_as_zip)) {
+			fileSystemService.getDownloadAsZipUrl(items,
+					new ResultListener<String>() {
+						@Override
+						public void onFail(ServiceError error) {
+							dialogManager.showError(error);
+						}
+
+						@Override
+						public void onSuccess(String url) {
+							windowManager.openDownloadUrl(url);
+						}
+					});
 		}
 	}
 

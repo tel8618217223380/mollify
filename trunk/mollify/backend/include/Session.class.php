@@ -50,6 +50,10 @@
 		public function hasParam($param) {
 			return isset($_SESSION[$param]);
 		}
+
+		public function removeParam($param) {
+			unset($_SESSION[$param]);
+		}
 				
 		public function param($param, $value = NULL) {
 			if ($value === NULL) return $_SESSION[$param];
