@@ -32,7 +32,7 @@ public class MockFileSystemService implements FileSystemService {
 	private List<FileItemUserPermission> modifiedPermissions;
 	private List<FileItemUserPermission> removedPermissions;
 
-	public void copy(File file, Folder directory,
+	public void copy(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
 		// TODO Auto-generated method stub
 

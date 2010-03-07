@@ -34,9 +34,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		this.resultListenerFactory = resultListenerFactory;
 	}
 
-	public void copy(File file, Folder directory,
+	public void copy(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
-		service.copy(file, directory, resultListenerFactory
+		service.copy(item, directory, resultListenerFactory
 				.createListener(listener));
 	}
 

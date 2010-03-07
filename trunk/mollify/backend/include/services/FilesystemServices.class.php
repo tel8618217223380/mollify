@@ -248,6 +248,11 @@
 					if (!isset($data['name'])) throw $this->invalidRequestException();
 					$this->env->filesystem()->createFolder($item, $data['name']);
 					break;
+				case 'copy':
+					$data = $this->request->data;
+					if (!isset($data['id'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->copy($item, $this->item($data['id'], FALSE));
+					break;
 				case 'move':
 					$data = $this->request->data;
 					if (!isset($data['id'])) throw $this->invalidRequestException();

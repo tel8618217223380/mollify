@@ -35,10 +35,18 @@ public interface MessageConstants extends Messages {
 
 	String moveFileMessage(String name);
 
+	String copyDirectoryMessage(String name);
+
 	String moveDirectoryMessage(String name);
-	
+
 	String userDirectoryListDefaultName(String defaultName);
 
 	String fileUploadDialogUnallowedFileType(String extension);
+
+	String confirmMultipleItemDeleteMessage(int count);
+
+	String copyMultipleItemsMessage(int count);
+
+	String moveMultipleItemsMessage(int count);
 
 }

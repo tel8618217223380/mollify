@@ -101,7 +101,7 @@ public class DropBoxPresenter {
 
 	public void onDownloadAsZip() {
 		fileItemActionHandler.onAction(items, FileSystemAction.download_as_zip,
-				null, view.getActionButton(), null);
+				null, view.getActionButton(), createSuccessCallback());
 	}
 
 	private Callback createSuccessCallback() {

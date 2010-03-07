@@ -33,7 +33,8 @@ public interface FileSystemService extends FileDetailsProvider,
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);
 
-	void copy(File file, Folder directory, ResultListener<Boolean> listener);
+	void copy(FileSystemItem item, Folder directory,
+			ResultListener<Boolean> listener);
 
 	void copy(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener);
