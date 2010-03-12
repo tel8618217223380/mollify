@@ -52,9 +52,9 @@ This is all taken care of the GWT compiler, more information how it works can be
 	Common PHP errors and their reasons are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
 
-=== 2.2. No delete, rename, copy or move actions available in file popup ===
+=== 2.2. Errors in file popup ===
 
-	When user has permissions to write but no file actions are available, it might be due to missing timezone setting in PHP. When the file popup is opened, client asks for file information along with permissions, but without the timezone setting PHP will throw an error.
+	When user has permissions to write but no file actions are available or changing description fails, it might be due to missing timezone setting in PHP. When the file popup is opened, client asks for file information along with permissions, but without the timezone setting PHP will throw an error.
 
 	To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
 
