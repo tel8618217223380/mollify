@@ -32,7 +32,11 @@
 		public function internalId($item) {
 			return $this->filesystemInfo->internalId($item->id());
 		}
-		
+
+		public function internalPath($item) {
+			return $this->filesystemInfo->internalPath($item->id());
+		}
+				
 		public function itemId($path) {
 			return $this->filesystemInfo->publicId($this->id(), $path);
 		}
@@ -73,7 +77,7 @@
 		
 		public abstract function delete($item);
 		
-		public abstract function read($item);
+		public abstract function read($item, $range = NULL);
 		
 		public abstract function write($item);
 		

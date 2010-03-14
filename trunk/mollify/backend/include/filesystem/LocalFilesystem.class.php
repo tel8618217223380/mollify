@@ -66,6 +66,10 @@
 			return substr($path, strlen($this->rootPath));
 		}
 		
+		public function internalPath($item) {
+			return $this->localPath($item);
+		}
+		
 		public function localPath($item) {
 			return self::joinPath($this->rootPath, $item->path());
 		}
@@ -274,7 +278,7 @@
 			return filesize($this->localPath($file));
 		}
 
-		public function read($item) {
+		public function read($item, $range = NULL) {
 			$handle = @fopen($this->localPath($item), "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for reading: ".$item->id());
@@ -285,6 +289,7 @@
 			$handle = @fopen($this->localPath($item), "wb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
+			if ($range) fseek($handle, $range[0]);
 			return $handle;
 		}
 		

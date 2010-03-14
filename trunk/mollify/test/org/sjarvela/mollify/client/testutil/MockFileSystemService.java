@@ -89,6 +89,12 @@ public class MockFileSystemService implements FileSystemService {
 		return null;
 	}
 
+	@Override
+	public String getDownloadUrl(File file, String sessionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void getItemPermissions(FileSystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache fileSystemItemCache) {

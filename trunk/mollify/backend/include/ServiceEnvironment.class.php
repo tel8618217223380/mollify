@@ -12,7 +12,7 @@
 
 	require_once("Features.class.php");
 	require_once("Authentication.class.php");
-	require_once("EventHandler.class.php");
+	require_once("event/EventHandler.class.php");
 	require_once("filesystem/FilesystemController.class.php");
 	
 	class ServiceEnvironment {

@@ -20,10 +20,11 @@
 			"description_update" => FALSE,
 			"permission_update" => FALSE,
 			"administration" => FALSE,
-			"user_groups" => FALSE
+			"user_groups" => FALSE,
+			"event_logging" => FALSE
 		);
 		
-		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups");
+		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups", "event_logging");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();

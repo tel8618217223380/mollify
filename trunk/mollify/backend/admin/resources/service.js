@@ -150,7 +150,11 @@ function request(type, url, success, fail, data) {
 		},
 		error: function (xhr, desc, exc) {
 			if (postRequestCallback) postRequestCallback();
-			fail(JSON.parse(xhr.responseText));
+			
+			var e = xhr.responseText;
+			if (!e) fail({code:999, error:"Unknown error", details:"Request failed, but no response received"});
+			else if (!e.substr(0, 1) != "{") fail({code:999, error:"Unknown error", details:"Invalid response received: " + e});
+			else fail(JSON.parse(e));
 		}
 	});
 }

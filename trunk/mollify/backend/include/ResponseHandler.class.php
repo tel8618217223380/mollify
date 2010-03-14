@@ -44,8 +44,8 @@
 			$this->output = $output;
 		}
 		
-		public function download($filename, $stream, $size = NULL) {
-			$this->output->sendBinary($filename, $stream, $size);
+		public function download($filename, $stream, $size = NULL, $range = NULL) {
+			$this->output->sendBinary($filename, $stream, $size, $range);
 		}
 		
 		public function success($data) {

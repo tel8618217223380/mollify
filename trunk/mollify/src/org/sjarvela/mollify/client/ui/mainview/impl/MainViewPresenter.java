@@ -10,7 +10,9 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -68,6 +70,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ViewManager viewManager;
 	private final DropBox dropBox;
+	private boolean exposeFileUrls;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
@@ -78,7 +81,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
-			CreateFolderDialogFactory createFolderDialogFactory, DropBox dropBox) {
+			CreateFolderDialogFactory createFolderDialogFactory,
+			DropBox dropBox, boolean exposeFileUrls) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -94,6 +98,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.createFolderDialogFactory = createFolderDialogFactory;
 		this.dropBox = dropBox;
+		this.exposeFileUrls = exposeFileUrls;
 
 		this.view.getFileContext()
 				.setFileActionHandler(fileSystemActionHandler);
@@ -110,7 +115,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
-
 	}
 
 	public void initialize() {
@@ -170,6 +174,18 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		view.getList().setContent(allFileItems);
 		view.refresh();
+		if (exposeFileUrls)
+			refreshFileUrls(model.getFiles());
+	}
+
+	private void refreshFileUrls(List<File> files) {
+		String sessionId = sessionManager.getSession().getSessionId();
+		Map<String, String> urls = new HashMap();
+		for (File f : files)
+			urls.put(f.getName(), fileSystemService
+					.getDownloadUrl(f, sessionId)
+					+ "&partial=1");
+		view.refreshFileUrls(urls);
 	}
 
 	public void onMoveToParentFolder() {

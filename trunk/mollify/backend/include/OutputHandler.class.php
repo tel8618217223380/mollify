@@ -71,7 +71,22 @@
 			}
 		}
 		
-		public function sendBinary($filename, $stream, $size = NULL) {
+		public function sendBinary($filename, $stream, $size = NULL, $range = NULL) {
+			if ($range) {
+				$start = $range[0];
+				$end = $range[1];
+				$size = $range[2];
+				
+				if ($start > 0 || $end < ($size - 1))
+					header('HTTP/1.1 206 Partial Content');
+				header("Cache-Control:");
+				header("Cache-Control: public");
+				header('Accept-Ranges: bytes');
+				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
+				header('Content-Length: '.($end - $start + 1));
+			} else if ($size) {
+				header("Content-Length: ".$size);
+			}
 			header("Cache-Control: public, must-revalidate");
 			header("Content-Type: application/force-download");
 			header("Content-Type: application/octet-stream");
@@ -79,9 +94,9 @@
 			header("Content-Disposition: attachment; filename=\"".$filename."\";");
 			header("Content-Transfer-Encoding: binary");
 			header("Pragma: hack");
-			if ($size) header("Content-Length: ".$size);
 			
 			while (!feof($stream)) {
+				set_time_limit(0);
 				echo fread($stream, 4096);
 				flush();
 			}

@@ -11,7 +11,7 @@
 	 */
 
 	class MySQLConfigurationProvider extends ConfigurationProvider {
-		const VERSION = "1_5_0";
+		const VERSION = "1_5_4";
 		
 		private $db;
 		
@@ -34,12 +34,16 @@
 			$this->db->connect();
 		}
 		
+		public function db() {
+			return $this->db;
+		}
+		
 		public function isAuthenticationRequired() {
 			return TRUE;
 		}
 
 		public function getSupportedFeatures() {
-			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups');
+			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups', 'event_logging');
 		}
 		
 		public function getInstalledVersion() {

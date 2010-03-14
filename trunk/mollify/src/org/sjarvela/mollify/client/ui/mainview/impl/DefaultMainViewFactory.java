@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
+import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
@@ -48,6 +49,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultMainViewFactory implements MainViewFactory,
 		RenameDialogFactory, CreateFolderDialogFactory {
+	private static final String SETTING_EXPOSE_FILE_LINKS = "expose-file-links";
+
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
@@ -60,11 +63,13 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final PasswordDialogFactory passwordDialogFactory;
 	private final DropBoxFactory dropBoxFactory;
 	private final DragAndDropManager dragAndDropManager;
+	private final ClientSettings settings;
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
 			ViewManager viewManager, DialogManager dialogManager,
 			ServiceProvider serviceProvider, SessionManager sessionManager,
+			ClientSettings settings,
 			FileSystemItemProvider fileSystemItemProvider,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -76,6 +81,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.dialogManager = dialogManager;
 		this.serviceProvider = serviceProvider;
 		this.sessionManager = sessionManager;
+		this.settings = settings;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
@@ -101,7 +107,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemService, session);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
-		FileItemDragController dragController = new FileItemDragController();
+		FileItemDragController dragController = new FileItemDragController(
+				textProvider);
 		dragAndDropManager.addDragController(FileSystemItem.class,
 				dragController);
 
@@ -111,16 +118,21 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
 
+		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
+				false);
+
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory,
 				dragAndDropManager);
+		if (exposeFileUrls)
+			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,
 				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this, dropBox);
+				fileUploadDialogFactory, this, dropBox, exposeFileUrls);
 		dragController.setDataProvider(presenter);
 		new MainViewGlue(view, presenter, fileSystemActionHandler,
 				actionDelegator);

@@ -200,6 +200,11 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		return serviceUrl().fileItem(file).build();
 	}
 
+	@Override
+	public String getDownloadUrl(File file, String sessionId) {
+		return serviceUrl().fileItem(file).build() + "?session=" + sessionId;
+	}
+
 	public String getDownloadAsZipUrl(FileSystemItem item) {
 		return serviceUrl().fileItem(item).action(FileAction.zip).build();
 	}

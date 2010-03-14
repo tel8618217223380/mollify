@@ -14,7 +14,7 @@
 		private $listeners = array();
 				
 		public function register($type, $listener) {
-			if (Logging::isDebug()) Logging::logDebug("EVENT: registering '".$type."': ".get_class($listener));
+			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: registering '".$type."': ".get_class($listener));
 			
 			if (!array_key_exists($type, $this->listeners)) $this->listeners[$type] = array();
 			$list = $this->listeners[$type];
@@ -23,11 +23,14 @@
 		}
 		
 		public function onEvent($e) {
-			if (Logging::isDebug()) Logging::logDebug("EVENT: onEvent: '".$e->type()."'");
-			if (!array_key_exists($e->type(), $this->listeners)) return;
+			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: onEvent: '".$e->type()."'");
 			
-			foreach($this->listeners[$e->type()] as $listener)
-				$listener->onEvent($e);
+			foreach($this->listeners as $type => $listeners) {
+				if ($type == '*' or strpos($e->typeId(), $type) == 0) {
+					foreach($listeners as $listener)
+						$listener->onEvent($e);
+				}
+			}	
 		}
 		
 		public function __toString() {
@@ -35,25 +38,45 @@
 		}
 	}
 	
-	class Event {
+	abstract class Event {
+		private $time;
 		private $type;
+		private $subType;
 		private $data;
 		
-		public function __construct($type, $data) {
+		public function __construct($time, $type, $subType, $data) {
+			$this->time = $time;
 			$this->type = $type;
+			$this->subType = $subType;
 			$this->data = $data;
 		}
-		
+
+		public function time() {
+			return $this->time;
+		}
+				
 		public function type() {
 			return $this->type;
 		}
+
+		public function subType() {
+			return $this->subType;
+		}
 		
+		public function typeId() {
+			return $this->type."/".$this->subType;
+		}
+				
 		public function data() {
 			return $this->data;
 		}
 		
+		public abstract function itemToStr();
+		
+		public abstract function dataToStr();
+		
 		public function __toString() {
-			return "Event";
+			return "Event ".$this->type;
 		}
 	}
 ?>

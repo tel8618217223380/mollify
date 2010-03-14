@@ -16,9 +16,10 @@ import org.sjarvela.mollify.client.util.JsUtil;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -27,10 +28,11 @@ import com.google.inject.Singleton;
 public class DefaultViewManager implements ViewManager {
 	static final String MOLLIFY_PANEL_ID = "mollify";
 
-	private static final String FILEMANAGER_DOWNLOAD_PANEL_ID = "mollify-download-panel";
+	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private final RootPanel rootPanel;
+	private final Panel hiddenPanel;
 
 	@Inject
 	public DefaultViewManager() {
@@ -39,35 +41,43 @@ public class DefaultViewManager implements ViewManager {
 			throw new RuntimeException("No placeholder found for Mollify");
 		this.rootPanel.getElement().getStyle().setProperty("position",
 				"relative");
+		hiddenPanel = createHiddenFrame();
+		createDownloadFrame(hiddenPanel);
 	}
 
 	public RootPanel getRootPanel() {
 		return rootPanel;
 	}
 
+	public Panel getHiddenPanel() {
+		return hiddenPanel;
+	}
+
 	public void openView(Widget mainView) {
 		empty();
 		rootPanel.add(mainView);
-		rootPanel.add(createDownloadFrame());
+
+		rootPanel.add(hiddenPanel);
 	}
 
 	public void empty() {
 		rootPanel.clear();
 	}
 
-	private Widget createDownloadFrame() {
-		SimplePanel downloadPanel = new SimplePanel();
-		downloadPanel.getElement().setId(FILEMANAGER_DOWNLOAD_PANEL_ID);
-		downloadPanel.getElement().setAttribute("style",
+	private Panel createHiddenFrame() {
+		Panel panel = new FlowPanel();
+		panel.getElement().setId(MOLLIFY_HIDDEN_PANEL_ID);
+		panel.getElement().setAttribute("style",
 				"visibility:collapse; height: 0px;");
+		return panel;
+	}
 
+	private void createDownloadFrame(Widget panel) {
 		Element downloadFrame = DOM.createIFrame();
 		downloadFrame
 				.setAttribute("style", "visibility:collapse; height: 0px;");
 		downloadFrame.setId(FILEMANAGER_DOWNLOAD_FRAME_ID);
-		downloadPanel.getElement().appendChild(downloadFrame);
-
-		return downloadPanel;
+		panel.getElement().appendChild(downloadFrame);
 	}
 
 	public void openDownloadUrl(String url) {

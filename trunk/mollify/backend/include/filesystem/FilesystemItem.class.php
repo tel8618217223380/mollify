@@ -38,7 +38,11 @@
 		public function internalId() {
 			return $this->filesystem->internalId($this);
 		}
-		
+
+		public function internalPath() {
+			return $this->filesystem->internalPath($this);
+		}
+				
 		public function parent() {
 			return $this->filesystem->parent($this);
 		}

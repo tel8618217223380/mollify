@@ -49,4 +49,6 @@ public interface MessageConstants extends Messages {
 
 	String moveMultipleItemsMessage(int count);
 
+	String dragMultipleItems(int count);
+
 }
