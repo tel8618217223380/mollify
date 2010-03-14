@@ -391,4 +391,30 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String cannotMoveAllItemsMessage();
 
+	public String dropBoxTitle();
+
+	public String dropBoxActions();
+
+	public String dropBoxActionClear();
+
+	public String dropBoxActionCopy();
+
+	public String dropBoxActionCopyHere();
+
+	public String dropBoxActionMove();
+
+	public String dropBoxActionMoveHere();
+
+	public String mainViewSelectButton();
+
+	public String mainViewSelectAll();
+
+	public String mainViewSelectNone();
+
+	public String mainViewSelectActions();
+
+	public String mainViewSelectActionAddToDropbox();
+
+	public String mainViewDropBoxButton();
+
 }

@@ -86,6 +86,11 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	public String getDownloadUrl(File file) {
 		return service.getDownloadUrl(file);
 	}
+	
+	@Override
+	public String getDownloadUrl(File file, String sessionId) {
+		return service.getDownloadUrl(file, sessionId);
+	}
 
 	@Override
 	public void getDownloadAsZipUrl(List<FileSystemItem> items,

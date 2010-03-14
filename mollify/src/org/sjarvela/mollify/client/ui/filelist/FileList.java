@@ -118,7 +118,7 @@ public class FileList extends Grid<FileSystemItem> implements
 			}
 		});
 
-		panel.add(createNameWidget(folder));
+		panel.add(createNameWidget(folder, !folder.equals(Folder.Parent)));
 		return panel;
 	}
 
@@ -131,7 +131,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_FILE_ICON);
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
-		panel.add(createNameWidget(file));
+		panel.add(createNameWidget(file, true));
 		return panel;
 	}
 
@@ -151,15 +151,16 @@ public class FileList extends Grid<FileSystemItem> implements
 		updateSelection(item);
 	}
 
-	private Widget createNameWidget(final FileSystemItem item) {
+	private Widget createNameWidget(final FileSystemItem item, boolean draggable) {
 		DraggableFileSystemItem itemWidget = new DraggableFileSystemItem(item);
 		itemWidget.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FileList.this.onClick(item, COLUMN_NAME);
 			}
 		});
-		dragAndDropManager.getController(FileSystemItem.class).makeDraggable(
-				itemWidget);
+		if (draggable)
+			dragAndDropManager.getController(FileSystemItem.class)
+					.makeDraggable(itemWidget);
 		return itemWidget;
 	}
 

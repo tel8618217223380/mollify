@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -43,6 +45,8 @@ import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -76,6 +80,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private ActionToggleButton dropBoxButton;
 
 	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
+	private FlowPanel fileUrlContainer;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple, dropBox, addToDropbox;
@@ -137,6 +142,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		content.add(createHeader());
 		content.add(list);
 		return content;
+	}
+
+	public Widget createFileUrlContainer() {
+		fileUrlContainer = new FlowPanel();
+		fileUrlContainer.getElement().setAttribute("style",
+				"visibility:collapse; height: 0px;");
+		return fileUrlContainer;
 	}
 
 	private Widget createHeader() {
@@ -224,25 +236,30 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				.attach(refreshButton);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		selectButton = new ActionToggleButton(
-				"Select", // TODO
+		selectButton = new ActionToggleButton(textProvider.getStrings()
+				.mainViewSelectButton(),
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT,
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
 		selectButton.setAction(actionListener, Action.selectMode);
 		selectOptionsButton = new DropdownButton(actionListener, "",
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS,
 				selectButton);
-		selectOptionsButton.addAction(Action.selectAll, "All"); // TODO
-		selectOptionsButton.addAction(Action.selectNone, "None"); // TODO
+		selectOptionsButton.addAction(Action.selectAll, textProvider
+				.getStrings().mainViewSelectAll());
+		selectOptionsButton.addAction(Action.selectNone, textProvider
+				.getStrings().mainViewSelectNone());
 
-		fileActions = new DropdownButton(actionListener, "Actions",
+		fileActions = new DropdownButton(actionListener, textProvider
+				.getStrings().mainViewSelectActions(),
 				StyleConstants.MAIN_VIEW_HEADER_FILE_ACTIONS);
-		fileActions.addAction(Action.addToDropbox, "Add to Dropbox"); // TODO
+		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
+				.mainViewSelectActionAddToDropbox());
 		fileActions.addSeparator();
-		fileActions.addAction(Action.deleteMultiple, "Delete..."); // TODO
+		fileActions.addAction(Action.deleteMultiple, textProvider.getStrings()
+				.fileActionDeleteTitle());
 
-		dropBoxButton = new ActionToggleButton(
-				"Drop Box", // TODO
+		dropBoxButton = new ActionToggleButton(textProvider.getStrings()
+				.mainViewDropBoxButton(),
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX,
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
 		dropBoxButton.setAction(actionListener, Action.dropBox);
@@ -362,5 +379,16 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	public Coords getDropboxLocation() {
 		return new Coords(header.getOffsetWidth(), header.getAbsoluteTop()
 				+ (header.getOffsetHeight() * 2));
+	}
+
+	public void refreshFileUrls(Map<String, String> urls) {
+		fileUrlContainer.getElement().setInnerHTML("");
+
+		for (Entry<String, String> e : urls.entrySet()) {
+			Element a = DOM.createAnchor();
+			a.setPropertyString("href", e.getValue());
+			a.setInnerHTML(e.getKey());
+			fileUrlContainer.getElement().appendChild(a);
+		}
 	}
 }

@@ -11,7 +11,7 @@
 	 */
 	 
 	 class FilesystemController {	 	
-	 	const EVENT_TYPE_FILE = "event_file";
+	 	const EVENT_TYPE_FILE = "filesystem";
 		
 		private $env;
 		private $allowedUploadTypes;
@@ -305,15 +305,41 @@
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 		}
 
-		public function download($file) {
-			Logging::logDebug('download ['.$file->id().']');
+		public function download($file, $range = NULL) {
+			if (!$range)
+				Logging::logDebug('download ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
 			
 			$name = $file->name();
 			$size = $file->size();
-			$this->env->response()->download($name, $file->read(), $size);
 			
-			$this->env->events()->onEvent(FileEvent::download($file));
+			if ($range != NULL) {
+				list($unit, $range) = explode('=', $range, 2);
+				
+				if ($unit == 'bytes') {
+					$pos = strpos(",", $range);
+					if ($pos != false) {
+						if ($pos === 0) $range = NULL;
+						else if ($pos >= 0) $range = substr($range, 0, $pos);
+					}
+				} else {
+					$range = NULL;
+				}
+			}
+			
+			if ($range != NULL) {
+				list($start, $end) = explode('-', $range, 2);
+
+				$end = (empty($end)) ? ($size - 1) : min(abs(intval($end)),($size - 1));
+				$start = (empty($start) || $end < abs(intval($start))) ? 0 : max(abs(intval($start)),0);
+				$range = array($start, $end, $size);
+				Logging::logDebug("Download range ".$start."-".$end);
+			}
+
+			if (!$range)
+				$this->env->events()->onEvent(FileEvent::download($file));
+
+			$this->env->response()->download($name, $file->read($range), $size, $range);							
 		}
 
 		public function uploadTo($folder) {
@@ -416,7 +442,6 @@
 		const UPLOAD = "upload";
 		
 		private $item;
-		private $subType;
 		
 		static function rename($item, $name) {
 			return new FileEvent($item, self::RENAME, $name);
@@ -447,17 +472,20 @@
 		}
 		
 		function __construct($item, $type, $data = NULL) {
-			parent::__construct(FileSystemController::EVENT_TYPE_FILE, $data);
+			parent::__construct(time(), FileSystemController::EVENT_TYPE_FILE, $type, $data);
 			$this->item = $item;
-			$this->subType = $type;
 		}
 
 		public function item() {
 			return $this->item;
 		}
-		
-		public function subType() {
-			return $this->subType;
+
+		public function itemToStr() {
+			return $this->item->internalId();
+		}
+				
+		public function dataToStr() {
+			return $this->item->internalPath();
 		}
 	}
 

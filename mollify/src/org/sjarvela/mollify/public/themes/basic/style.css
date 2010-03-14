@@ -1947,7 +1947,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dropbox {
-	background-color: rgba(0,0,0,0.58);
+	background-color: #3a3a3a;
 }
 
 .mollify-dropbox .Caption {
@@ -1968,7 +1968,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	width: 180px;
 	height: 180px;
 	margin: 6px;
-	border: 2px solid #6b6b6b;
+	border: 2px solid #515252;
 }
 
 .mollify-dropbox-dropzone-drag-over {
@@ -1986,15 +1986,17 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	border-bottom: 1px dotted #acacac;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	background-color: #444545;
+	border-color: #5b5b5b;
 }
 
 .mollify-dropbox-item-name {
-	margin-left: 18px;
+	margin-left: 20px;
 	font-weight: bold;
 }
 
 .mollify-dropbox-item-path {
-	margin-left: 18px;
+	margin-left: 20px;
 	font-size: 9px;
 	font-style: italic;
 	margin-top: 3px;
@@ -2002,14 +2004,14 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dropbox-item-remove {
-	width: 10px;
-	height: 10px;
+	width: 16px;
+	height: 16px;
 	position: relative;
-	top: -17px;
+	top: -20px;
 	right: 0;
-	left: 4px;
+	left: 2px;
 }
 
 .mollify-dropbox-item-remove-hover {
-	background-color: #ff6266;
+	background: url(remove.png) no-repeat 0 0;
 }

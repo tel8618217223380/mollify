@@ -128,7 +128,11 @@
 				
 		private function processGetFile($item) {
 			if (count($this->path) == 1) {
-				$this->env->filesystem()->download($item);
+				if ($this->env->request()->hasParam("partial")) {
+					$this->env->filesystem()->download($item, isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : "bytes=0-");
+				} else {
+					$this->env->filesystem()->download($item);
+				}
 				return;
 			}
 						

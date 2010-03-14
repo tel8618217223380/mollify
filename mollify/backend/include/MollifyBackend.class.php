@@ -32,6 +32,13 @@
 			$this->environment->addService("session", "SessionServices");
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
+			
+			//TODO create plugin system
+			if ($this->environment->features()->isFeatureEnabled('event_logging')) {
+				require_once("event/EventLogger.class.php");
+				$this->environment->addService("events", "EventServices");
+				$this->environment->events()->register("*", new EventLogger($this->environment));
+			}
 		}
 		
 		public function processRequest($request) {

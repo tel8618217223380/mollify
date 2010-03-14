@@ -61,6 +61,11 @@ public class DemoFileService implements FileSystemService {
 		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
 	}
 
+	@Override
+	public String getDownloadUrl(File file, String sessionId) {
+		return DemoEnvironment.MOLLIFY_PACKAGE_URL;
+	}
+
 	public void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener) {
 		listener.onSuccess(true);

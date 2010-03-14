@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dropbox.impl;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
@@ -28,11 +29,13 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 	private final DragAndDropManager dragAndDropManager;
 	private final SessionProvider sessionProvider;
 	private final FileSystemItemProvider fileSystemItemProvider;
+	private final TextProvider textProvider;
 
 	@Inject
-	public DefaultDropBoxFactory(DragAndDropManager dragAndDropManager,
+	public DefaultDropBoxFactory(TextProvider textProvider, DragAndDropManager dragAndDropManager,
 			SessionProvider sessionProvider,
 			FileSystemItemProvider fileSystemItemProvider) {
+		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.sessionProvider = sessionProvider;
 		this.fileSystemItemProvider = fileSystemItemProvider;
@@ -44,7 +47,7 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 			CurrentFolderProvider currentFolderProvider) {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
-		DropBoxView view = new DropBoxView(actionDelegator,
+		DropBoxView view = new DropBoxView(textProvider, actionDelegator,
 				fileSystemItemProvider, session);
 		DropBoxPresenter presenter = new DropBoxPresenter(view, session,
 				fileSystemActionHandler, currentFolderProvider);
