@@ -15,6 +15,9 @@ function MollifyEventsView() {
 	
 	function onLoadView() {		
 		$("#button-search").click(that.onSearch);
+		$("#events-pager-prev").click(that.onSearchPrev);
+		$("#events-pager-next").click(that.onSearchNext);
+		
 		$("#event-range-start").datepicker();
 		$("#event-range-end").datepicker();
 		
@@ -93,27 +96,33 @@ function MollifyEventsView() {
 			that.events[event.id] = event;
 			grid.jqGrid('addRowData', event.id, event);
 		}
+
+		if (result.total > result.count)
+			$("#events-pager-controls").show();
+		else
+			$("#events-pager-controls").hide();
 		
 		var first = result.start + 1;
 		var last = result.start + result.count;
-		var msg = $.template("<div class='info'>Displaying ${first}-${last}/${count}</div>");
+
+		enableButton("events-pager-prev", first > 1);
+		enableButton("events-pager-next", result.total > last);
 		
-		if (result.total > result.count) {
-			if (first > 1) msg = msg + "<button id='events-pager-prev' class='ui-state-default ui-corner-all'>&lt;</button>";
-			if (result.total > last) msg = msg + "<button id='events-pager-next' class='ui-state-default ui-corner-all'>&gt;</button>";
-		}
-		
-		$("#events-pager").html(msg, {first: first, last: last, count: result.total});
-		$("#events-pager-prev").click(that.onSearchPrev);
-		$("#events-pager-next").click(that.onSearchNext);
+		$("#events-pager-info").html($.template("</div><div class='info'>Displaying ${first}-${last}/${count}</div>"), {first: first, last: last, count: result.total});
 	}
 	
 	this.onSearchPrev = function() {
+		if (!that.lastSearch || that.lastSearch.start <= 0) return;
 		that.onSearch(that.lastSearch.start - that.lastSearch.count);
 	}
 	
 	this.onSearchNext = function() {
-		that.onSearch(that.lastSearch.start + that.lastSearch.count);
+		if (!that.lastSearch) return;
+		
+		var last = that.lastSearch.start + that.lastSearch.count;
+		if (last >= that.lastSearch.total) return;
+		
+		that.onSearch(last);
 	}
 }
 
