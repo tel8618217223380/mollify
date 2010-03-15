@@ -38,6 +38,7 @@
 			if (isset($data['end_time'])) {
 				$query .= ' and time < '.$data['end_time'];
 			}
+			$query .= 'order by time asc';
 			
 			$count = $db->query("select count(id) ".$query)->value(0);
 			$rows = isset($data["rows"]) ? $data["rows"] : 50;

@@ -323,8 +323,32 @@
 
 #events-pager {
 	height: 20px;
-	padding-top: 3px;
-	font-weight: bold;
+	margin-top: 5px;
+}
+
+#events-pager .links {
+	width: 39px;
+	float: left;
+}
+
+#events-pager .info {
+	padding-top: 6px;
+	float: left;
+	color: #b3b3b3;
+	margin-left: 7px;
+	margin-right: 7px;
+}
+
+#events-pager-controls {
+	width: 60px;
+	float: left;
+}
+
+#events-pager-prev, #events-pager-next {
+	margin-right: 1px;
+	float: left;
+	width: 25px;
+	height: 25px;
 }
 
 
