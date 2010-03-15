@@ -1,4 +1,6 @@
-/* @override http://localhost:8888/mollify/admin/resources/style.css */
+/* @override
+	http://localhost:8888/mollify/dev/backend/admin/resources/style.css
+*/
 
 @import "../../resources/style.css";
 
@@ -25,7 +27,7 @@
 	height: 25px;
 	padding-top: 7px;
 	padding-left: 6px;
-	background-color: #badce8;
+	background-color: #c6d3e8;
 	margin-bottom: 0;
 	border-bottom: 1px solid #b9b9b9;
 }
@@ -65,25 +67,35 @@
 	border: none;
 }
 
-#main-menu li {
+#main-menu .main-menu-header {
+	font-weight: bold;
+	background-color: #eeeff1;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	border-bottom: 1px solid #dee0e0;
+	font-size: 14px;
+}
+
+#main-menu .main-menu-item {
 	margin: 0;
 	height: 22px;
 	padding-top: 9px;
 	border-bottom: 1px dotted #c2c4c4;
-	padding-left: 9px;
+	padding-left: 21px;
 }
 
-#main-menu li:first-child {
+#main-menu .main-menu-item:first-child {
 	border-top: 1px dotted #c2c4c4;
 }
 
-#main-menu li:hover {
+#main-menu .main-menu-item:hover {
 	background-color: #e9e9e9;
 	cursor: pointer;
 }
 
-#main-menu li.active {
-	background-color: #badce8;
+#main-menu .main-menu-item.active {
+	background-color: #c6d3e8;
 	font-weight: bold;
 }
 
@@ -298,4 +310,21 @@
 	background-color: #d6d8fc;
 	background-image: none;
 }
+
+.event-range {
+	width: 80px;
+}
+
+#event-range-criteria {
+	margin-left: 8px;
+	float: left;
+	margin-right: 8px;
+}
+
+#events-pager {
+	height: 20px;
+	padding-top: 3px;
+	font-weight: bold;
+}
+
 

@@ -7,8 +7,6 @@
 	http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	this entire header must remain intact.
 */
-var dateFormat = "dd.mm.yy";
-var dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
 
 var session = null;
 var loadedScripts = new Array();
@@ -19,11 +17,12 @@ var controllers = {
 	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events"}
 };
 var controller = null;
+var settings = createSettings();
 
 $(document).ready(function() {
 	preRequestCallback = function() { $("#request-indicator").addClass("active"); };
 	postRequestCallback = function() { $("#request-indicator").removeClass("active"); }
-	$.datepicker.setDefaults( { dateFormat: dateFormat } );
+	$.datepicker.setDefaults( { dateFormat: getDateFormat() } );
 	
 	$(".main-menu-item").click(function() {
 		$(".main-menu-item").removeClass("active");
@@ -119,19 +118,23 @@ function enableButton(id, enabled) {
 }
 
 function getDateFormat() {
-	return dateFormat;
+	return settings.dateFormat;
+}
+
+function getDateTimeFormat() {
+	return settings.dateTimeFormat;
 }
 
 function formatDate(d) {
-	return $.datepicker.formatDate(dateFormat, d);
+	return $.datepicker.formatDate(getDateFormat(), d);
 }
 
 function formatDateTime(time) {
-	return time.format(dateTimeFormat);
+	return time.format(getDateTimeFormat());
 }
 
 function parseDate(d) {
-	var t = $.datepicker.parseDate(dateFormat, d);
+	var t = $.datepicker.parseDate(getDateFormat(), d);
 	t.setHours("00");
 	t.setMinutes("00");
 	t.setSeconds("00");
@@ -150,7 +153,20 @@ function parseInternalTime(time) {
 }
 
 function formatInternalTime(time) {
-	return time.format('yyyyMMddHHmmss', time);
+	return time.format('yymmddHHMMss', time);
+}
+
+function createSettings() {
+	var settings = {
+		dateFormat : "mm/dd/yy",
+		dateTimeFormat : "mm/dd/yy hh.MM t"
+	};
+	if (window.customSettings) {
+		if (window.customSettings.dateFormat) settings.dateFormat = window.customSettings.dateFormat;
+		if (window.customSettings.dateTimeFormat) settings.dateTimeFormat = window.customSettings.dateTimeFormat;
+	}
+	
+	return settings;
 }
 
 function initWidgets() {
@@ -175,45 +191,54 @@ function initWidgets() {
 
 Date.prototype.format = function(format) {
 	var date = this;
-	if (!format) format="MM/dd/yyyy";               
+	if (!format) format="mm/dd/yy";               
  
 	var month = date.getMonth() + 1;
 	var year = date.getFullYear();    
- 
-	format = format.replace("MM",month.toString().padL(2,"0"));        
- 
-	if (format.indexOf("yyyy") > -1) format = format.replace("yyyy",year.toString());
-	else if (format.indexOf("yy") > -1) format = format.replace("yy",year.toString().substr(2,2));
+	var hours = date.getHours();
+	 
+	format = format.replace("mm", month.toString().padL(2,"0"));        
+
+	if (format.indexOf("yy") > -1)
+		format = format.replace("yy", year.toString());
  
     format = format.replace("dd",date.getDate().toString().padL(2,"0"));
- 
-	var hours = date.getHours();
+
 	if (format.indexOf("t") > -1) {
-		if (hours > 11) format = format.replace("t","pm")
-		else format = format.replace("t","am")
+		if (hours > 11)
+			format = format.replace("t","pm")
+		else
+			format = format.replace("t","am")
 	}
 	
-	if (format.indexOf("HH") > -1) format = format.replace("HH",hours.toString().padL(2,"0"));
+	if (format.indexOf("HH") > -1)
+		format = format.replace("HH", hours.toString().padL(2,"0"));
+		
 	if (format.indexOf("hh") > -1) {
-		if (hours > 12) hours - 12;
-		if (hours == 0) hours = 12;
-		format = format.replace("hh",hours.toString().padL(2,"0"));        
-    }
+		if (hours > 12)
+			hours = hours - 12;
+		if (hours == 0)
+			hours = 12;
+		format = format.replace("hh", hours.toString().padL(2,"0"));        
+	}
 
-    if (format.indexOf("mm") > -1) format = format.replace("mm",date.getMinutes().toString().padL(2,"0"));
-    if (format.indexOf("ss") > -1) format = format.replace("ss",date.getSeconds().toString().padL(2,"0"));
+	if (format.indexOf("MM") > -1)
+		format = format.replace("MM", date.getMinutes().toString().padL(2,"0"));
+
+	if (format.indexOf("ss") > -1)
+		format = format.replace("ss", date.getSeconds().toString().padL(2,"0"));
 
     return format;
 }
 
 String.repeat = function(chr,count) {    
     var str = ""; 
-    for(var x=0;x<count;x++) {str += chr}; 
+    for (var x=0; x<count; x++) str += chr;
     return str;
 }
 
-String.prototype.padL = function(width,pad) {
-	if (!width ||width < 1) return this;
+String.prototype.padL = function(width, pad) {
+	if (!width || width < 1) return this;
 	if (!pad) pad = " ";
     
 	var length = width - this.length
@@ -222,8 +247,8 @@ String.prototype.padL = function(width,pad) {
 	return (String.repeat(pad,length) + this).substr(0,width);    
 }
  
-String.prototype.padR = function(width,pad) {
-    if (!width || width<1) return this;
+String.prototype.padR = function(width, pad) {
+    if (!width || width < 1) return this;
 	if (!pad) pad = " ";
 
 	var length = width - this.length

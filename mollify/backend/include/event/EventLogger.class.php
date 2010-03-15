@@ -18,6 +18,7 @@
 		}
 		
 		public function onEvent($e) {
+			//TODO configuration
 			if ($e->typeId() != 'filesystem/download') return;
 			
 			$time = date('YmdHis', $e->time());
@@ -25,8 +26,8 @@
 			$item = $e->itemToStr();
 			$description = $e->dataToStr();
 			$type = $e->typeId();
-			$db = $this->env->configuration()->db();
 			
+			$db = $this->env->configuration()->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, description) VALUES (%s, '%s', '%s', '%s', '%s')", $time, $db->string($user['username']), $db->string($type), $db->string($item), $db->string($description)));
 		}
 		
