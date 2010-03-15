@@ -30,6 +30,7 @@
 		<script type="text/javascript" src="../resources/jquery-ui-1.7.2.custom.min.js"></script>
 		<script type="text/javascript" src="../resources/jquery.jqGrid.min.js"></script>
 		<script type="text/javascript" src="resources/service.js"></script>
+		<?php if (file_exists("settings.js")) { ?><script type="text/javascript" src="settings.js"></script><?php } ?>
 		<script type="text/javascript" src="resources/main.js"></script>
 		<script type="text/javascript">
 			var scriptLocation = '<?php echo dirname(dirname($_SERVER['SCRIPT_FILENAME']));?>';

@@ -46,7 +46,7 @@ function MollifyEventsView() {
 		return "Unknown ("+type+")";
 	}
 		
-	this.onSearch = function() {
+	this.onSearch = function(startRow) {
 		var start = $("#event-range-start").val();
 		if (start.length > 0) {
 			try {
@@ -76,28 +76,52 @@ function MollifyEventsView() {
 			return;
 		}
 
-		getEvents(start, end, that.onRefreshEvents, onServerError);
+		getEvents(start, end, startRow, null, that.onRefreshEvents, onServerError);
 	}
 	
-	this.onRefreshEvents = function(events) {
+	this.onRefreshEvents = function(result) {
+		that.lastSearch = result;
 		that.events = {};
 
 		var grid = $("#events-list");
 		grid.jqGrid('clearGridData');
 		
-		for(var i=0;i < events.length;i++) {
-			var event = events[i];			
+		for(var i=0;i < result.events.length;i++) {
+			var event = result.events[i];			
 			event.time = parseInternalTime(event.time);
 			
 			that.events[event.id] = event;
 			grid.jqGrid('addRowData', event.id, event);
 		}
+		
+		var first = result.start + 1;
+		var last = result.start + result.count;
+		var msg = $.template("<div class='info'>Displaying ${first}-${last}/${count}</div>");
+		
+		if (result.total > result.count) {
+			if (first > 1) msg = msg + "<button id='events-pager-prev' class='ui-state-default ui-corner-all'>&lt;</button>";
+			if (result.total > last) msg = msg + "<button id='events-pager-next' class='ui-state-default ui-corner-all'>&gt;</button>";
+		}
+		
+		$("#events-pager").html(msg, {first: first, last: last, count: result.total});
+		$("#events-pager-prev").click(that.onSearchPrev);
+		$("#events-pager-next").click(that.onSearchNext);
+	}
+	
+	this.onSearchPrev = function() {
+		that.onSearch(that.lastSearch.start - that.lastSearch.count);
+	}
+	
+	this.onSearchNext = function() {
+		that.onSearch(that.lastSearch.start + that.lastSearch.count);
 	}
 }
 
-function getEvents(rangeStart, rangeEnd, success, fail) {
+function getEvents(rangeStart, rangeEnd, start, maxRows, success, fail) {
 	var data = {}
-	if (rangeStart) data["start"] = formatInternalTime(rangeStart);
-	if (rangeEnd) data["end"] = formatInternalTime(rangeEnd);
+	if (rangeStart) data["start_time"] = formatInternalTime(rangeStart);
+	if (rangeEnd) data["end_time"] = formatInternalTime(rangeEnd);
+	if (start && start >= 0) data["start"] = start;
+	if (maxRows) data["max_rows"] = maxRows;
 	request("POST", 'events/query', success, fail, JSON.stringify(data));
 }

@@ -31,16 +31,20 @@
 			if (!isset($data)) throw $this->invalidRequestException();
 			
 			$db = $this->env->configuration()->db();
-			$query = "select id, time, user, type, item, description from ".$db->table("event_log")." where type='filesystem/download'";
-			
-			if (isset($data['start'])) {
-				$query .= ' and time >= '.$data['start'];
+			$query = "from ".$db->table("event_log")." where type='filesystem/download'";
+			if (isset($data['start_time'])) {
+				$query .= ' and time >= '.$data['start_time'];
 			}
-			if (isset($data['end'])) {
-				$query .= ' and time < '.$data['end'];
+			if (isset($data['end_time'])) {
+				$query .= ' and time < '.$data['end_time'];
 			}
 			
-			return $db->query($query)->rows();
+			$count = $db->query("select count(id) ".$query)->value(0);
+			$rows = isset($data["rows"]) ? $data["rows"] : 50;
+			$start = isset($data["start"]) ? $data["start"] : 0;
+			$result = $db->query("select id, time, user, type, item, description ".$query." limit ".$rows." offset ".$start)->rows();
+			
+			return array("start" => $start, "count" => count($result), "total" => $count, "events" => $result);
 		}
 		
 		public function __toString() {
