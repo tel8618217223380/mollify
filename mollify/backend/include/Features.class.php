@@ -24,6 +24,8 @@
 			"event_logging" => FALSE
 		);
 		
+		private $defaultValues = array();
+		
 		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups", "event_logging");
 		
 		function __construct($configuration, $settings) {
@@ -41,7 +43,7 @@
 					else if ($settings->hasSetting("enable_".$f))
 						$enabled = $settings->setting("enable_".$f);
 					else
-						$enabled = TRUE;					
+						$enabled = $configuration->featureEnabledByDefault($f, FALSE);					
 				} else {
 					$enabled = $settings->setting("enable_".$f, TRUE);
 				}

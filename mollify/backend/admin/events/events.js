@@ -12,9 +12,19 @@ function MollifyEventsView() {
 	var that = this;
 	this.pageUrl = "events/events.html";
 	this.onLoadView = onLoadView;
+	this.users = null;
 	
-	function onLoadView() {		
+	function onLoadView() {
+		if (!getSession().features["event_logging"]) {
+			onError("Feature not available");
+			return;
+		}
+		$("#event-user-text").hide();
+		$("#events-pager-controls").hide();
+		
 		$("#button-search").click(that.onSearch);
+		$("#event-user").change(that.onUserChanged);
+		
 		$("#events-pager-prev").click(that.onSearchPrev);
 		$("#events-pager-next").click(that.onSearchNext);
 		
@@ -38,6 +48,43 @@ function MollifyEventsView() {
 		   	sortname:'time',
 		   	sortorder:'asc',
 		});
+		
+		getUsers(that.refreshUsers, onServerError);
+	}
+	
+	this.refreshUsers = function(users) {
+		that.users = users;
+		that.usersById = {}
+		
+		for (var i=0; i < users.length; i++) {
+			user = users[i];
+			that.usersById[user.id] = user;
+		}
+		
+		that.refreshUserOptions();
+	}
+	
+	this.refreshUserOptions = function() {
+		var options = '<option value="_all">All</option>';
+		options += '<option value="_custom">Custom</option>';
+		options += '<option value="-">----------</option>';
+
+		for (var i=0; i < that.users.length; i++) {
+			options += '<option value="' + that.users[i].id +'">' + that.users[i].name + '</option>';
+		}
+		
+		$("#event-user").html(options);
+	}
+	
+	this.onUserChanged = function() {
+		var sel = $("#event-user").val();
+		
+		if (sel == '_custom') {
+			$("#event-user-text").show();
+			$("#event-user-text").text("");
+		} else {
+			$("#event-user-text").hide();
+		}
 	}
 	
 	function timeFormatter(time, options, obj) {
@@ -78,8 +125,22 @@ function MollifyEventsView() {
 			alert("Start date cannot be after end date");
 			return;
 		}
+		
+		var user = $("#event-user").val();
+		if (user == '_custom') {
+			user = $("#event-user-text").val();
+			if (!user || user.length == 0)
+				user = null;
+		} else if (user != '_all' && user != '-') {
+			user = that.usersById[user].name;
+		} else {
+			user = null;
+		}
+		
+		var item = $("#event-item-text").val();
+		if (!item || item.length == 0) item = null
 
-		getEvents(start, end, startRow, null, that.onRefreshEvents, onServerError);
+		getEvents(start, end, user, item, startRow, null, that.onRefreshEvents, onServerError);
 	}
 	
 	this.onRefreshEvents = function(result) {
@@ -102,13 +163,16 @@ function MollifyEventsView() {
 		else
 			$("#events-pager-controls").hide();
 		
-		var first = result.start + 1;
-		var last = result.start + result.count;
+		if (result.count > 0) {
+			var first = result.start + 1;
+			var last = result.start + result.count;
+			$("#events-pager-info").html($.template("</div><div class='info'>Displaying ${first}-${last}/${count}</div>"), {first: first, last: last, count: result.total});
+		} else {
+			$("#events-pager-info").html("");
+		}
 
 		enableButton("events-pager-prev", first > 1);
 		enableButton("events-pager-next", result.total > last);
-		
-		$("#events-pager-info").html($.template("</div><div class='info'>Displaying ${first}-${last}/${count}</div>"), {first: first, last: last, count: result.total});
 	}
 	
 	this.onSearchPrev = function() {
@@ -126,11 +190,14 @@ function MollifyEventsView() {
 	}
 }
 
-function getEvents(rangeStart, rangeEnd, start, maxRows, success, fail) {
+function getEvents(rangeStart, rangeEnd, user, item, start, maxRows, success, fail) {
 	var data = {}
 	if (rangeStart) data["start_time"] = formatInternalTime(rangeStart);
 	if (rangeEnd) data["end_time"] = formatInternalTime(rangeEnd);
 	if (start && start >= 0) data["start"] = start;
 	if (maxRows) data["max_rows"] = maxRows;
+	if (user) data["user"] = user;
+	if (item) data["item"] = item;
+	
 	request("POST", 'events/query', success, fail, JSON.stringify(data));
 }

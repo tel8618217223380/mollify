@@ -25,6 +25,10 @@
 			return array();
 		}
 		
+		public function featureEnabledByDefault($name, $default) {
+			return $default;
+		}
+		
 		public function getInstalledVersion() { return NULL; }
 		
 		public function onSessionStart($userId, $username) {
