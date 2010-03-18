@@ -79,6 +79,10 @@ function onLoadView() {
 	controller.onLoadView();
 }
 
+function getSession() {
+	return session;
+}
+
 function notify(msg) {
 	alert(msg);	//TODO some other notification that doesn't require user dismissal
 }

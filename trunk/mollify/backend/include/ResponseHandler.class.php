@@ -73,7 +73,7 @@
 			if (array_key_exists($error, self::$ERRORS)) {
 				return self::$ERRORS[$error];
 			} else {
-				return array(0, "Unknown error: ".$error);
+				return array(0, "Unknown error: ".$error, 403);
 			}			
 		}
 		

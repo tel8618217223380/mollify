@@ -311,12 +311,47 @@
 	background-image: none;
 }
 
+#mollify-events-view div.toolbar {
+	height: 80px;
+}
+
+.event-criteria {
+	margin-left: 8px;
+	float: left;
+	clear: left;
+	height: 25px;
+}
+
+.event-criteria-title {
+	float: left;
+	width: 42px;
+	margin-top: 3px;
+}
+
+.event-criteria-field {
+	float: left;
+}
+
+select#event-user {
+	margin-top: 2px;
+	margin-right: 4px;
+	width: 186px;
+}
+
+#event-item-text {
+	width: 180px;
+}
+
+#button-search {
+	float: right;
+	margin-right: 7px;
+}
+
 .event-range {
 	width: 80px;
 }
 
 #event-range-criteria {
-	margin-left: 8px;
 	float: left;
 	margin-right: 8px;
 }

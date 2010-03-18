@@ -46,6 +46,11 @@
 			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups', 'event_logging');
 		}
 		
+		public function featureEnabledByDefault($name, $default) {
+			if ($name === 'event_logging') return FALSE;
+			return TRUE;
+		}
+		
 		public function getInstalledVersion() {
 			return $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'")->value(0);
 		}

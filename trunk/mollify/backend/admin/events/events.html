@@ -10,7 +10,25 @@
 
 <div id="mollify-events-view">
 	<div class="toolbar">
-		<div id="event-range-criteria">Time:&nbsp;<input type="text" id="event-range-start" class="event-range">&nbsp;-&nbsp;<input type="text" id="event-range-end" class="event-range"></div>
+		<div id="event-range-criteria" class="event-criteria">
+			<div class="event-criteria-title">Time:</div>
+			<div class="event-criteria-field">
+				<input type="text" id="event-range-start" class="event-range">&nbsp;-&nbsp;<input type="text" id="event-range-end" class="event-range">
+			</div>
+		</div>
+		<div id="event-user-criteria" class="event-criteria">
+			<div class="event-criteria-title">User:</div>
+			<div class="event-criteria-field">
+				<select id='event-user' name='user'></select>
+				<input type="text" id="event-user-text">
+			</div>
+		</div>
+		<div id="event-item-criteria" class="event-criteria">
+			<div class="event-criteria-title">Item:</div>
+			<div class="event-criteria-field">
+				<input type="text" id="event-item-text">
+			</div>
+		</div>
 		<button id="button-search" class="ui-state-default ui-corner-all">Search</button>
 	</div>
 	<table id="events-list">
