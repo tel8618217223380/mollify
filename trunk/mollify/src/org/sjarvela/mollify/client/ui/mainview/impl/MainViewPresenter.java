@@ -118,6 +118,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void initialize() {
+		if (exposeFileUrls)
+			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
+
 		if (model.getRootDirectories().size() == 0) {
 			changeToRootDirectory(null);
 			view.hideButtons();
@@ -181,8 +184,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Map<String, String> urls = new HashMap();
 		for (File f : files)
 			urls.put(f.getName(), fileSystemService
-					.getDownloadUrl(f, sessionId)
-					+ "&partial=1");
+					.getDownloadUrl(f, sessionId));
 		view.refreshFileUrls(urls);
 	}
 

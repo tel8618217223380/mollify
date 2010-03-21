@@ -33,7 +33,7 @@ public class DefaultViewManager implements ViewManager {
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private final RootPanel rootPanel;
-	private Panel hiddenPanel;
+	private final Panel hiddenPanel;
 
 	@Inject
 	public DefaultViewManager() {
@@ -42,6 +42,7 @@ public class DefaultViewManager implements ViewManager {
 			throw new RuntimeException("No placeholder found for Mollify");
 		this.rootPanel.getElement().getStyle().setProperty("position",
 				"relative");
+		this.hiddenPanel = createHiddenFrame();
 	}
 
 	public RootPanel getRootPanel() {
@@ -52,13 +53,13 @@ public class DefaultViewManager implements ViewManager {
 		return hiddenPanel;
 	}
 
-	public void openView(Widget mainView) {
+	public void openView(Widget view) {
 		empty();
-		rootPanel.add(mainView);
+		hiddenPanel.clear();
 
-		hiddenPanel = createHiddenFrame();
 		createDownloadFrame(hiddenPanel);
 		rootPanel.add(hiddenPanel);
+		rootPanel.insert(view, 0);
 	}
 
 	public void empty() {
@@ -68,8 +69,10 @@ public class DefaultViewManager implements ViewManager {
 	private Panel createHiddenFrame() {
 		Panel panel = new FlowPanel();
 		panel.getElement().setId(MOLLIFY_HIDDEN_PANEL_ID);
-		panel.getElement().setAttribute("style",
-				"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
+		panel
+				.getElement()
+				.setAttribute("style",
+						"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
 		return panel;
 	}
 

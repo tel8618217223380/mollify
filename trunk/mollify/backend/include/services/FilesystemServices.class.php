@@ -123,13 +123,12 @@
 				default:
 					throw $this->invalidRequestException();
 			}
-
 		}
 				
 		private function processGetFile($item) {
 			if (count($this->path) == 1) {
-				if ($this->env->request()->hasParam("partial")) {
-					$this->env->filesystem()->download($item, isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : "bytes=0-");
+				if (isset($_SERVER['HTTP_RANGE'])) {
+					$this->env->filesystem()->download($item, $_SERVER['HTTP_RANGE']);
 				} else {
 					$this->env->filesystem()->download($item);
 				}

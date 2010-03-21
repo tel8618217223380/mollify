@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -45,6 +46,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private final TextProvider textProvider;
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final RenameDialogFactory renameDialogFactory;
+	private final SessionInfo session;
 
 	private final List<FileSystemActionListener> listeners = new ArrayList();
 
@@ -53,7 +55,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
 			FileSystemService fileSystemService,
-			FileSystemItemProvider fileSystemItemProvider) {
+			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
@@ -61,6 +63,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.renameDialogFactory = renameDialogFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
+		this.session = session;
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action,
@@ -203,8 +206,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private void onFileAction(final File file, FileSystemAction action,
 			Widget source) {
 		if (action.equals(FileSystemAction.download)) {
-			windowManager.openDownloadUrl(fileSystemService
-					.getDownloadUrl(file));
+			windowManager.openDownloadUrl(fileSystemService.getDownloadUrl(
+					file, session.getSessionId()));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
 			windowManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(file));

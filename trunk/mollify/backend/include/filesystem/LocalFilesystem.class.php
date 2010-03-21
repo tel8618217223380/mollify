@@ -289,7 +289,6 @@
 			$handle = @fopen($this->localPath($item), "wb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
-			if ($range) fseek($handle, $range[0]);
 			return $handle;
 		}
 		

@@ -114,7 +114,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
-				this, fileSystemService, fileSystemItemProvider).create();
+				this, fileSystemService, fileSystemItemProvider, sessionManager)
+				.create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
 
@@ -125,8 +126,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				actionDelegator, directorySelectorFactory,
 				fileContextPopupFactory, directoryContextPopupFactory,
 				dragAndDropManager);
-		if (exposeFileUrls)
-			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,

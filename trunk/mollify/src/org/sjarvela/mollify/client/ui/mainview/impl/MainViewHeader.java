@@ -109,8 +109,8 @@ public class MainViewHeader extends FlowPanel {
 		var s = open ? h + "px" : "0px";
 		$wnd.$("#header-lower-panel").stop().animate({'height':s}, 200);
 
-		var m = open ? "0" : "-" + h + "-px";
-		$wnd.$("#header-lower").stop().animate({'top':m}, 200);
+		var m = open ? "0" : "-" + h + "px";
+		$wnd.$("#header-lower").stop().animate({'marginTop':m}, 200);
 
 		var t = open ? (t + h) + "px" : t + "px";
 		$wnd.$("#header-lower-toggle").stop().animate({'top':t}, 200);
