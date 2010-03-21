@@ -86,18 +86,19 @@
 				header('Content-Length: '.($end - $start + 1));
 			} else if ($size) {
 				header("Content-Length: ".$size);
+				header("Cache-Control: public, must-revalidate");
+				header("Content-Type: application/force-download");
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+				header("Content-Disposition: attachment; filename=\"".$filename."\";");
+				header("Content-Transfer-Encoding: binary");
+				header("Pragma: hack");
 			}
-			header("Cache-Control: public, must-revalidate");
-			header("Content-Type: application/force-download");
-			header("Content-Type: application/octet-stream");
-			header("Content-Type: application/download");
-			header("Content-Disposition: attachment; filename=\"".$filename."\";");
-			header("Content-Transfer-Encoding: binary");
-			header("Pragma: hack");
 			
+			if ($range) fseek($handle, $range[0]);
 			while (!feof($stream)) {
 				set_time_limit(0);
-				echo fread($stream, 4096);
+				echo fread($stream, 1024);
 				flush();
 			}
 			fclose($stream);

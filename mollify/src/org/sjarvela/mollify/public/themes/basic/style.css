@@ -227,7 +227,7 @@
 	float: left;
 	padding-top: 4px;
 	position: relative;
-	top: -30px;
+	margin-top: -30px;
 }
 
 .mollify-filelist-panel {
