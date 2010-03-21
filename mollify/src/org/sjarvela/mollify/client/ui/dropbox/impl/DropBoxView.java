@@ -42,7 +42,6 @@ public class DropBoxView extends DialogBox {
 	private final SessionInfo session;
 
 	private boolean shown = false;
-	private Coords initialPosition = null;
 
 	private Panel dropTarget;
 	private Panel contents;
@@ -64,7 +63,6 @@ public class DropBoxView extends DialogBox {
 		this.add(createContent());
 		this.show();
 		this.setVisible(false);
-		this.setAnimationEnabled(true);
 	}
 
 	private Widget createContent() {
@@ -115,19 +113,14 @@ public class DropBoxView extends DialogBox {
 		return dropTarget;
 	}
 
-	public void setInitialPosition(Coords position) {
-		this.initialPosition = new Coords(position.getX()
-				- this.getOffsetWidth() - 5, position.getY());
-	}
-
-	public void toggleShow() {
+	public void toggleShow(final Coords position) {
 		if (!shown)
 			setPopupPositionAndShow(new PositionCallback() {
 				@Override
 				public void setPosition(int offsetWidth, int offsetHeight) {
-					if (initialPosition != null)
-						setPopupPosition(initialPosition.getX(),
-								initialPosition.getY());
+					setPopupPosition(position.getX()
+							- DropBoxView.this.getOffsetWidth() - 5, position
+							.getY() + 10);
 				}
 			});
 		else

@@ -118,8 +118,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void initialize() {
-		dropBox.setPosition(view.getDropboxLocation());
-
 		if (model.getRootDirectories().size() == 0) {
 			changeToRootDirectory(null);
 			view.hideButtons();
@@ -397,7 +395,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onToggleDropBox() {
-		dropBox.toggle();
+		dropBox.toggle(view.getDropboxLocation());
 	}
 
 	@Override

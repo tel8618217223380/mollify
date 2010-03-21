@@ -23,11 +23,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class MainViewHeader extends FlowPanel {
 	private Widget upper;
 	private Widget lower;
+	private Widget lowerContainer;
 	private Widget toggle;
 
 	private Timer toggleTimer;
 	private boolean visible = false;
-	private Widget lowerContainer;
 
 	public MainViewHeader() {
 		setStyleName(StyleConstants.MAIN_VIEW_HEADER_CONTAINER);
@@ -110,7 +110,7 @@ public class MainViewHeader extends FlowPanel {
 		$wnd.$("#header-lower-panel").stop().animate({'height':s}, 200);
 
 		var m = open ? "0" : "-" + h + "-px";
-		$wnd.$("#header-lower").stop().animate({'marginTop':m}, 200);
+		$wnd.$("#header-lower").stop().animate({'top':m}, 200);
 
 		var t = open ? (t + h) + "px" : t + "px";
 		$wnd.$("#header-lower-toggle").stop().animate({'top':t}, 200);

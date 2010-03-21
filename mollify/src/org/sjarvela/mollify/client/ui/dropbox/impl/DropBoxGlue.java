@@ -103,11 +103,6 @@ public class DropBoxGlue implements DropBox, DropController {
 	}
 
 	@Override
-	public void setPosition(Coords position) {
-		view.setInitialPosition(position);
-	}
-
-	@Override
 	public void close() {
 		view.hide();
 	}
@@ -118,8 +113,8 @@ public class DropBoxGlue implements DropBox, DropController {
 	}
 
 	@Override
-	public void toggle() {
-		view.toggleShow();
+	public void toggle(Coords position) {
+		view.toggleShow(position);
 	}
 
 	@Override
