@@ -127,6 +127,20 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 			}
 		});
 
+		actionDelegator.setActionHandler(Action.copyMultiple,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.onCopySelected();
+					}
+				});
+
+		actionDelegator.setActionHandler(Action.moveMultiple,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.onMoveSelected();
+					}
+				});
+
 		actionDelegator.setActionHandler(Action.deleteMultiple,
 				new VoidActionHandler() {
 					public void onAction() {

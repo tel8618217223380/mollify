@@ -52,11 +52,6 @@ public abstract class Dialog extends DialogBox {
 		return null;
 	}
 
-	public void alignWith(Widget w) {
-		setPopupPosition(getAbsoluteLeft(), w.getAbsoluteTop()
-				- (w.getOffsetHeight() / 2) + (this.getOffsetHeight() / 2));
-	}
-
 	protected abstract Widget createContent();
 
 	public void addViewListener(ViewListener listener) {

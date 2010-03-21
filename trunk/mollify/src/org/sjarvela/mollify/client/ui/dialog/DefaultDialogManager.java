@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewManager;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -22,10 +23,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultDialogManager implements DialogManager {
 	private final TextProvider textProvider;
+	private final ViewManager viewManager;
 
 	@Inject
-	public DefaultDialogManager(TextProvider textProvider) {
+	public DefaultDialogManager(TextProvider textProvider,
+			ViewManager viewManager) {
 		this.textProvider = textProvider;
+		this.viewManager = viewManager;
 	}
 
 	public void showError(ServiceError error) {
@@ -42,7 +46,7 @@ public class DefaultDialogManager implements DialogManager {
 		ConfirmationDialog confirmationDialog = new ConfirmationDialog(
 				textProvider, title, message, style, listener);
 		if (p != null)
-			confirmationDialog.alignWith(p);
+			viewManager.align(confirmationDialog, p);
 	}
 
 }

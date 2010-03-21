@@ -14,7 +14,7 @@
 
 #mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip, .mollify-dropbox {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
-	font-size: 8pt;	
+	font-size: 8pt;
 }
 
 #mollify, .mollify-header, .mollify-header-container, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
@@ -66,20 +66,12 @@
 	background: url(hborder.png) repeat-x 0px -4px;
 }
 
-* html .mollify-dialog .dialogBottomCenter {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/hborder_blue_shadow.png',sizingMethod='scale');
-}
-
 .dialogMiddleLeft {
 	background: url(vborder.png) repeat-y;
 }
 
 .dialogMiddleRight {
 	background: url(vborder.png) repeat-y -4px 0px;
-}
-
-* html .mollify-dialog .dialogMiddleRight {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/vborder_blue_shadow.png',sizingMethod='scale');
 }
 
 .mollify-dialog .dialogTopLeftInner {
@@ -118,35 +110,6 @@
 
 .dialogBottomRight {
 	background: url(corner.png) no-repeat -5px -15px;
-}
-
-* html .mollify-dialog .dialogTopLeft {
-	width: 5px;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/corner_dialog_topleft.png',sizingMethod='crop');
-}
-
-* html .mollify-dialog .dialogTopRight {
-	width: 8px;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='ie6/corner_dialog_topright.png',sizingMethod='crop');
-}
-
-* html .mollify-dialog .dialogBottomLeftInner {
-	width: 5px;
-	height: 23px;
-	margin-top: -15px;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
-}
-
-* html .mollify-dialog .dialogBottomRightInner {
-	width: 13px;
-	height: 23px;
-	margin-left: -5px;
-	margin-top: -15px;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='corner.png',sizingMethod='crop');
 }
 
 .mollify-dialog-button, .gwt-Button, .mollify-multiaction-button-dropdown, .mollify-file-upload-flash-selector, .mollify-file-upload-dialog-button, .mollify-header-toggle-button {
@@ -228,31 +191,52 @@
 	background: url(b-dropdown-arrow.png) no-repeat;
 }
 
-.mollify-main, .mollify-header,.mollify-subheader, .mollify-header-container {
+.mollify-main, .mollify-header-panel, .mollify-header, .mollify-subheader, .mollify-header-container, .mollify-header-lower-panel {
 	width: 100%;
+}
+
+.mollify-header-container {
+}
+
+.mollify-header-panel {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	float: left;
 }
 
 .mollify-header {
 	background: url(header.png) repeat-x 0 0;
 	height: 38px;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
+	float: left;
+}
+
+.mollify-header-lower-panel {
+	overflow: hidden;
+	height: 0px;
+	float: left;
 }
 
 .mollify-subheader {
-	height: 27px;
-	padding-top: 3px;
-	padding-left: 0px;
-	border-bottom: 1px solid #6e6e6e;
-	z-index: -1;
-	background: #c1cad2 url(subheader.png) repeat-x 0 0;
+	height: 30px;
+	background: #c1cad2 url(subheader.png) repeat-x 0 -1px;
+	float: left;
+	margin-top: -30px;
+}
+
+.mollify-filelist-panel {
+	float: left;
+	width: 100%;
 }
 
 .mollify-header-toggle, .mollify-header-toggle-open {
 	cursor: pointer;
+	top: 38px;
 	position: absolute;
 	height: 23px;
 	width: 26px;
+	z-index: 2;
+	float: left;
+	clear: left;
 }
 
 .mollify-header-toggle {
@@ -274,6 +258,7 @@
 }
 
 #mollify-header-select-options:hover {
+	
 }
 
 #mollify-header-select-options-menu {
@@ -307,10 +292,6 @@
 	margin-left: 1px;
 }
 
-#mollify-header-add-button-menu.ie-crap.mollify-dropdown-menu {
-	width: 150px;
-}
-
 #mollify-header-add-button.mollify-dropdown-button:active {
 	background: url(button-add.png) no-repeat 0 -23px;
 }
@@ -338,10 +319,6 @@
 
 #username-menu.mollify-dropdown-menu {
 	margin-left: -4px;
-}
-
-#username-menu.ie-crap.mollify-dropdown-menu {
-	width:  200px;
 }
 
 .mollify-dropdown-menu-item, .mollify-directory-list-menu-item-none {
@@ -428,6 +405,7 @@
 	margin-top: -4px;
 	border: 1px solid #d5d5d5;
 	color: #727272;
+	z-index: 10;
 }
 
 .mollify-directory-list-item {
@@ -435,23 +413,11 @@
 	color: #000;
 }
 
-.ie-crap.mollify-directory-list-item {
-	float: left;
-}
-
 .mollify-directory-selector {
 	float: left;
 	margin-top: 8px;
 	margin-left: 0;
 	margin-right: 0px;
-}
-
-.ie-crap.mollify-directory-selector {
-	float: left;
-	margin-top: 8px;
-	margin-left: 0;
-	margin-right: 0px;
-	height: 22px;
 }
 
 .mollify-directory-selector-items {
@@ -491,11 +457,6 @@
 	float: left;
 	background: url(dir-item-body.png) repeat-x;
 	padding-top: 4px;
-}
-
-.ie-crap.mollify-directory-list-item-button-center {
-	padding-top: 3px;
-	height: 23px;
 }
 
 .mollify-directory-list-item-button-right {
@@ -574,11 +535,6 @@
 
 .mollify-directory-list-menu {
 	margin-left: -11px;
-}
-
-.ie-crap.mollify-directory-list-menu {
-	margin-left: -11px;
-	width: 200px;
 }
 
 .mollify-directory-list-menu-home {
@@ -1022,10 +978,6 @@ td#mollify-filelist-column-size {
 	background-color: #ececec;
 }
 
-#download-dropdown-menu.ie-crap.mollify-dropdown-menu {
-	width: 150px;
-}
-
 .mollify-directory-context-content {
 	background: #fff url(folder.png) no-repeat 0 0;
 	width: 250px;
@@ -1135,10 +1087,6 @@ input.mollify-rename-dialog-new-name-value {
 	font-style: italic;
 	text-align: center;
 	width: 100%;
-}
-
-.ie-crap.mollify-file-selector {
-	width: 200px;
 }
 
 .mollify-file-upload-info {
@@ -1301,7 +1249,6 @@ input.mollify-create-folder-dialog-name-value {
 span.mollify-copy-file-message-file, span.mollify-move-file-message-file {
 	font-weight: bold;
 }
-
 
 .mollify-select-item-dialog-items-root-item-label-dir, .mollify-select-item-dialog-items-item-label-file, .mollify-select-item-dialog-items-item-label-dir {
 	cursor: hand;
@@ -1696,8 +1643,7 @@ table.mollify-permission-list > tbody {
 	margin-left: 147px;
 }
 
-th#mollify-permissionlist-column-th-name.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th
-{
+th#mollify-permissionlist-column-th-name.mollify-permissionlist-column-th, th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -1738,7 +1684,6 @@ th#mollify-permissionlist-column-th-permission.mollify-permissionlist-column-th,
 	width: 70px;
 	font-weight: bold;
 }
-
 
 select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-user-permission-dialog-permission {
 	width: 165px;

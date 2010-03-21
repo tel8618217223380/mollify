@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -33,5 +34,7 @@ public interface ViewManager {
 	RootPanel getRootPanel();
 
 	Panel getHiddenPanel();
+
+	void align(Dialog confirmationDialog, Widget p);
 
 }

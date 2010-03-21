@@ -64,6 +64,8 @@ public class StyleConstants {
 	public static final String MAIN_VIEW = "mollify-main";
 	public static final String MAIN_VIEW_HEADER_CONTAINER = "mollify-header-container";
 	public static final String MAIN_VIEW_HEADER = "mollify-header";
+	public static final String MAIN_VIEW_HEADER_PANEL = "mollify-header-panel";
+	public static final String MAIN_VIEW_HEADER_LOWER_PANEL = "mollify-header-lower-panel";
 	public static final String MAIN_VIEW_SUBHEADER = "mollify-subheader";
 	public static final String MAIN_VIEW_HEADER_TOGGLE = "mollify-header-toggle";
 	public static final String MAIN_VIEW_HEADER_PADDING_LEFT = "mollify-header-padding-left";
@@ -116,6 +118,7 @@ public class StyleConstants {
 	public static final String DIR_CONTEXT_BUTTONS = "mollify-directory-context-buttons";
 
 	public static final String FILE_LIST = "mollify-filelist";
+	public static final String FILE_LIST_PANEL = "mollify-filelist-panel";
 	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
 	public static final String FILE_LIST_COLUMN_PREFIX = "mollify-filelist-column-";
 	public static final String FILE_LIST_ROW_PARENT_DIRECTORY = "mollify-filelist-row-directory-up";

@@ -361,10 +361,34 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.selectNone();
 	}
 
+	public void onCopySelected() {
+		fileSystemActionHandler.onAction(model.getSelectedItems(),
+				FileSystemAction.copy, null, null, new Callback() {
+					@Override
+					public void onCallback() {
+						view.selectNone();
+					}
+				});
+	}
+
+	public void onMoveSelected() {
+		fileSystemActionHandler.onAction(model.getSelectedItems(),
+				FileSystemAction.move, null, null, new Callback() {
+					@Override
+					public void onCallback() {
+						view.selectNone();
+					}
+				});
+	}
+
 	public void onDeleteSelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.delete, null, null, null);
-		view.selectNone();
+				FileSystemAction.delete, null, null, new Callback() {
+					@Override
+					public void onCallback() {
+						view.selectNone();
+					}
+				});
 	}
 
 	public void onAddSelectedToDropbox() {
