@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui;
 
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.user.client.DOM;
@@ -117,6 +118,21 @@ public class DefaultViewManager implements ViewManager {
 		errorHtml.append("</span>");
 
 		rootPanel.add(new HTML(errorHtml.toString()));
+	}
+
+	@Override
+	public void align(Dialog dialog, Widget p) {
+		int top = (p.getAbsoluteTop() + p.getOffsetHeight() / 2)
+				- (int) (dialog.getOffsetHeight() * 0.75d);
+		top = Math.max(40, top);
+
+		int maxBottom = rootPanel.getAbsoluteTop()
+				+ rootPanel.getElement().getClientHeight() - 40;
+		if (maxBottom > 0 && top + dialog.getOffsetHeight() > maxBottom) {
+			top = maxBottom - dialog.getOffsetHeight();
+		}
+		dialog.setPopupPosition(dialog.getAbsoluteLeft(), top);
+
 	}
 
 	/* UTILITIES */

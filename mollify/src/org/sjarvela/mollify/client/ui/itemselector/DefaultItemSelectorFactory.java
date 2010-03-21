@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.itemselector;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -20,12 +21,14 @@ import com.google.inject.Inject;
 public class DefaultItemSelectorFactory implements ItemSelectorFactory {
 	private final TextProvider textProvider;
 	private final DialogManager dialogManager;
+	private final ViewManager viewManager;
 
 	@Inject
 	public DefaultItemSelectorFactory(TextProvider textProvider,
-			DialogManager dialogManager) {
+			DialogManager dialogManager, ViewManager viewManager) {
 		this.textProvider = textProvider;
 		this.dialogManager = dialogManager;
+		this.viewManager = viewManager;
 	}
 
 	public void openFolderSelector(String title, String message,
@@ -35,7 +38,7 @@ public class DefaultItemSelectorFactory implements ItemSelectorFactory {
 				SelectItemDialog.Mode.Folders, dialogManager, textProvider,
 				title, message, actionTitle, provider, listener);
 		if (p != null)
-			selectItemDialog.alignWith(p);
+			viewManager.align(selectItemDialog, p);
 	}
 
 	public void openItemSelector(String title, String message,

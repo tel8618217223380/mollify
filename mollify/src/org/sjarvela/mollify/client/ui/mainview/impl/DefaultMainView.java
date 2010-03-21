@@ -51,7 +51,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultMainView extends Composite implements PopupPositioner,
@@ -83,7 +82,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FlowPanel fileUrlContainer;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, deleteMultiple, dropBox, addToDropbox;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -138,9 +137,14 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	private Widget createControls() {
-		VerticalPanel content = new VerticalPanel();
-		content.add(createHeader());
-		content.add(list);
+		FlowPanel listPanel = new FlowPanel();
+
+		FlowPanel content = new FlowPanel();
+		content.add(createHeader(listPanel));
+
+		listPanel.setStylePrimaryName(StyleConstants.FILE_LIST_PANEL);
+		listPanel.add(list);
+		content.add(listPanel);
 		return content;
 	}
 
@@ -151,26 +155,25 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return fileUrlContainer;
 	}
 
-	private Widget createHeader() {
+	private Widget createHeader(Panel contentPanel) {
 		createButtons();
 
 		header = new MainViewHeader();
 
-		Panel headerUpper = new HorizontalPanel();
-		header.setUpper(headerUpper);
+		Panel headerUpperPanel = new HorizontalPanel();
+		headerUpperPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PANEL);
 
+		Panel headerUpper = new HorizontalPanel();
 		headerUpper.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
+		headerUpperPanel.add(headerUpper);
 
 		Panel headerLower = new FlowPanel();
-		header.setLower(headerLower);
-		header.build();
-
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
+
 		headerLower.add(selectButton);
 		headerLower.add(selectOptionsButton);
 		headerLower.add(fileActions);
 		headerLower.add(dropBoxButton);
-		headerLower.setVisible(false);
 
 		if (addButton != null)
 			buttonPanel.add(addButton);
@@ -186,6 +189,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			headerUpper.add(loggedInPanel);
 		}
 
+		Panel headerLowerPanel = new FlowPanel();
+		headerLowerPanel
+				.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOWER_PANEL);
+		headerLowerPanel.add(headerLower);
+		header.build(headerUpperPanel, headerLower, headerLowerPanel);
 		return header;
 	}
 
@@ -255,6 +263,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
 				.mainViewSelectActionAddToDropbox());
 		fileActions.addSeparator();
+		fileActions.addAction(Action.copyMultiple, textProvider.getStrings()
+				.fileActionCopyTitle());
+		fileActions.addAction(Action.moveMultiple, textProvider.getStrings()
+				.fileActionMoveTitle());
 		fileActions.addAction(Action.deleteMultiple, textProvider.getStrings()
 				.fileActionDeleteTitle());
 

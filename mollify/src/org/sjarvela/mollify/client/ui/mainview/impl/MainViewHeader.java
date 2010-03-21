@@ -16,15 +16,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MainViewHeader extends VerticalPanel {
-	private Widget lower;
+public class MainViewHeader extends FlowPanel {
 	private Widget upper;
+	private Widget lower;
 	private Widget toggle;
+
 	private Timer toggleTimer;
+	private boolean visible = false;
+	private Widget lowerContainer;
 
 	public MainViewHeader() {
 		setStyleName(StyleConstants.MAIN_VIEW_HEADER_CONTAINER);
@@ -51,26 +54,17 @@ public class MainViewHeader extends VerticalPanel {
 		}
 	}
 
-	public void setUpper(Widget upper) {
+	public void build(Widget upper, Widget lower, Widget lowerContainer) {
 		this.upper = upper;
-	}
-
-	public void setLower(Widget lower) {
 		this.lower = lower;
-	}
+		this.lowerContainer = lowerContainer;
 
-	public void build() {
-		// showEffect = new NMorphStyle(new Rule("start{left: 0px; top: 0px;}"),
-		// new Rule("end{left: 0px; top: 30px;}"));
-		// showEffect.setEffectElement(lower.getElement());
-		//
-		// hideEffect = new NMorphStyle(new
-		// Rule("start{left: 0px; top: 30px;}"),
-		// new Rule("end{left: 0px; top: 0px;}"));
-		// hideEffect.setEffectElement(lower.getElement());
+		lower.getElement().setId("header-lower");
+		lowerContainer.getElement().setId("header-lower-panel");
+		toggle.getElement().setId("header-lower-toggle");
 
 		this.add(upper);
-		this.add(lower);
+		this.add(lowerContainer);
 		this.add(toggle);
 	}
 
@@ -86,20 +80,41 @@ public class MainViewHeader extends VerticalPanel {
 		togglePanel.sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
 		togglePanel.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_TOGGLE);
 		togglePanel.addClickHandler(new ClickHandler() {
+			int h = -1;
+			int t = -1;
+
 			@Override
 			public void onClick(ClickEvent event) {
-				if (lower.isVisible()) {
-					lower.setVisible(false);
+				if (h < 0)
+					h = lower.getElement().getOffsetHeight();
+				if (t < 0)
+					t = lowerContainer.getElement().getOffsetTop();
+
+				if (visible) {
+					toggle(false, h, t);
 					toggle.removeStyleDependentName(StyleConstants.OPEN);
+					visible = false;
 				} else {
-					lower.setVisible(true);
+					toggle(true, h, t);
 					toggle.addStyleDependentName(StyleConstants.OPEN);
+					visible = true;
 				}
 			}
 		});
 		togglePanel.setVisible(false);
 		return togglePanel;
 	}
+
+	protected native void toggle(boolean open, int h, int t) /*-{
+		var s = open ? h + "px" : "0px";
+		$wnd.$("#header-lower-panel").stop().animate({'height':s}, 200);
+
+		var m = open ? "0" : "-" + h + "-px";
+		$wnd.$("#header-lower").stop().animate({'marginTop':m}, 200);
+
+		var t = open ? (t + h) + "px" : t + "px";
+		$wnd.$("#header-lower-toggle").stop().animate({'top':t}, 200);
+	}-*/;
 
 	public int getTotalHeight() {
 		return upper.getOffsetHeight() + lower.getOffsetHeight();

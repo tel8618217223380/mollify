@@ -65,7 +65,7 @@ function MollifyEventsView() {
 	}
 	
 	this.refreshUserOptions = function() {
-		var options = '<option value="_all">All</option>';
+		var options = '<option value="_any">Any</option>';
 		options += '<option value="_custom">Custom</option>';
 		options += '<option value="-">----------</option>';
 
@@ -131,7 +131,7 @@ function MollifyEventsView() {
 			user = $("#event-user-text").val();
 			if (!user || user.length == 0)
 				user = null;
-		} else if (user != '_all' && user != '-') {
+		} else if (user != '_any' && user != '-') {
 			user = that.usersById[user].name;
 		} else {
 			user = null;
@@ -166,9 +166,9 @@ function MollifyEventsView() {
 		if (result.count > 0) {
 			var first = result.start + 1;
 			var last = result.start + result.count;
-			$("#events-pager-info").html($.template("</div><div class='info'>Displaying ${first}-${last}/${count}</div>"), {first: first, last: last, count: result.total});
+			$("#events-pager-info").html($.template("<div class='info'>Displaying ${first}-${last}/${count}</div>"), {first: first, last: last, count: result.total});
 		} else {
-			$("#events-pager-info").html("");
+			$("#events-pager-info").html("<div class='info'>No events</div>");
 		}
 
 		enableButton("events-pager-prev", first > 1);
