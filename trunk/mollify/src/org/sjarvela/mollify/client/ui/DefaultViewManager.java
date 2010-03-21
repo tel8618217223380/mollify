@@ -69,7 +69,7 @@ public class DefaultViewManager implements ViewManager {
 		Panel panel = new FlowPanel();
 		panel.getElement().setId(MOLLIFY_HIDDEN_PANEL_ID);
 		panel.getElement().setAttribute("style",
-				"visibility:collapse; height: 0px;");
+				"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
 		return panel;
 	}
 

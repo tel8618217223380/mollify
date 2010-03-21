@@ -51,6 +51,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultMainView extends Composite implements PopupPositioner,
@@ -62,6 +63,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final Panel buttonPanel;
 	private final FolderSelector directorySelector;
 	private final FileList list;
+	private final FlowPanel listPanel;
 
 	private final FileContextPopup fileContextPopup;
 	private final ContextPopupHandler<File> fileContextHandler;
@@ -97,6 +99,9 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		this.buttonPanel = new FlowPanel();
 		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
+
+		this.listPanel = new FlowPanel();
+		this.listPanel.setStylePrimaryName(StyleConstants.FILE_LIST_PANEL);
 
 		this.directorySelector = directorySelectorFactory.createSelector();
 		this.list = new FileList(textProvider, dragAndDropManager);
@@ -137,12 +142,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	private Widget createControls() {
-		FlowPanel listPanel = new FlowPanel();
-
-		FlowPanel content = new FlowPanel();
+		Panel content = new VerticalPanel();
+		content.getElement().setId("mollify-main-content");
 		content.add(createHeader(listPanel));
 
-		listPanel.setStylePrimaryName(StyleConstants.FILE_LIST_PANEL);
 		listPanel.add(list);
 		content.add(listPanel);
 		return content;
@@ -389,8 +392,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public Coords getDropboxLocation() {
-		return new Coords(header.getOffsetWidth(), header.getAbsoluteTop()
-				+ (header.getOffsetHeight() * 2));
+		return new Coords(header.getOffsetWidth(), listPanel.getElement()
+				.getAbsoluteTop());
 	}
 
 	public void refreshFileUrls(Map<String, String> urls) {

@@ -19,9 +19,7 @@ public interface DropBox {
 
 	public boolean isVisible();
 
-	public void toggle();
-
-	public void setPosition(Coords position);
+	public void toggle(Coords position);
 
 	public void addItems(List<FileSystemItem> selectedItems);
 
