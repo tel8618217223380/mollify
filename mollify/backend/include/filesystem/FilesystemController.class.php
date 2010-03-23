@@ -481,11 +481,11 @@
 		}
 
 		public function itemToStr() {
-			return $this->item->internalId();
+			return $this->item->internalPath();
 		}
 				
-		public function dataToStr() {
-			return $this->item->internalPath();
+		public function description() {
+			return $this->item->internalId()." (".$this->item->filesystem()->name().")";
 		}
 	}
 

@@ -24,7 +24,7 @@
 			$time = date('YmdHis', $e->time());
 			$user = $this->env->authentication()->getUserInfo();
 			$item = $e->itemToStr();
-			$description = $e->dataToStr();
+			$description = $e->description();
 			$type = $e->typeId();
 			
 			$db = $this->env->configuration()->db();

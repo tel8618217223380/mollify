@@ -31,7 +31,7 @@
 			if (!isset($data)) throw $this->invalidRequestException();
 			
 			$db = $this->env->configuration()->db();
-			$query = "from ".$db->table("event_log")." where type='filesystem/download'";
+			$query = "from ".$db->table("event_log")." where 1=1";
 			
 			if (isset($data['start_time'])) {
 				$query .= ' and time >= '.$db->string($data['start_time']);
@@ -44,6 +44,9 @@
 			}
 			if (isset($data['item'])) {
 				$query .= " and item like '".str_replace("*", "%", $db->string($data['item']))."'";
+			}
+			if (isset($data['type'])) {
+				$query .= " and type like '".str_replace("*", "%", $db->string($data['type']))."'";
 			}
 
 			$query .= ' order by time asc';

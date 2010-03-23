@@ -14,24 +14,69 @@ var controllers = {
 	"menu-published-folders": {"class" : "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
 	"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
 	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"},
-	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events"}
+	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"}
 };
 var controller = null;
 var settings = createSettings();
+
+var views = [
+	{header:"System", id:'menu-header-system', views: [
+		{title:"Published Folder", id:'menu-published-folders'},
+		{title:"Users", id:'menu-users'},
+		{title:"User Groups", id:'menu-usergroups'}
+	]},
+	{header:"Other", id:'menu-header-other', views: [
+		{title:"Events", id:'menu-events'}
+	]}
+];
 
 $(document).ready(function() {
 	preRequestCallback = function() { $("#request-indicator").addClass("active"); };
 	postRequestCallback = function() { $("#request-indicator").removeClass("active"); }
 	$.datepicker.setDefaults( { dateFormat: getDateFormat() } );
 	
+	getSessionInfo(onSession, onServerError);				
+});
+
+function buildMenu() {
+	var html = '<ul>';
+	for (var i=0; i < views.length; i++) {
+		var h = views[i];
+		var t = '';
+		var found = false;
+		
+		for (var j=0; j < h.views.length; j++) {
+			var v = h.views[j];
+			var featureRequired = controllers[v.id].feature;
+			if (featureRequired) {
+				var s = getSession();
+				if (!s.features[featureRequired]) continue;
+			}
+			
+			found = true;
+			t += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
+		}
+		
+		if (found)
+			html += '<li id="' + h.id + '" class="main-menu-header">' + h.header + '</li>' + t;
+	}
+	if (settings.customViews) {
+		html += '<li id="menu-header-custom" class="main-menu-header">Custom</li>';
+		for (var i=0; i < settings.customViews.length; i++) {
+			var v = settings.customViews[i];
+			html += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
+			controllers[v.id] = v;
+		}
+	}
+	html += '</ul>';
+	$("#main-menu").html(html);
+	
 	$(".main-menu-item").click(function() {
 		$(".main-menu-item").removeClass("active");
 		$(this).addClass("active");
 		onSelectMenu($(this).attr("id"));
 	});
-
-	getSessionInfo(onSession, onServerError);				
-});
+}
 
 function onSession(session) {
 	if (!session["authentication_required"] || !session["authenticated"] || session["default_permission"] != 'A') {
@@ -44,6 +89,7 @@ function onSession(session) {
 	}
 	this.session = session;
 	
+	buildMenu();
 	$("#content").show();
 }
 			
@@ -168,6 +214,7 @@ function createSettings() {
 	if (window.customSettings) {
 		if (window.customSettings.dateFormat) settings.dateFormat = window.customSettings.dateFormat;
 		if (window.customSettings.dateTimeFormat) settings.dateTimeFormat = window.customSettings.dateTimeFormat;
+		if (window.customSettings.views) settings.customViews = window.customSettings.views;
 	}
 	
 	return settings;
