@@ -14,7 +14,7 @@
 		private $rootPath;
 		
 		function __construct($id, $def, $filesystemInfo) {
-			parent::__construct($id, $def["name"], $filesystemInfo);
+			parent::__construct($id, $def['name'] != NULL ? $def['name'] : $def['default_name'], $filesystemInfo);
 			
 			$this->rootPath = self::folderPath($def["path"]);
 		}

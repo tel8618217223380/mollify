@@ -73,7 +73,7 @@
 		
 		public abstract function itemToStr();
 		
-		public abstract function dataToStr();
+		public abstract function description();
 		
 		public function __toString() {
 			return "Event ".$this->type;

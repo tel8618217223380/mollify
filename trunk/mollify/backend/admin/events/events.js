@@ -57,7 +57,7 @@ function MollifyEventsView() {
 		that.usersById = {}
 		
 		for (var i=0; i < users.length; i++) {
-			user = users[i];
+			var user = users[i];
 			that.usersById[user.id] = user;
 		}
 		

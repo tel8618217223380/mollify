@@ -311,7 +311,7 @@
 	background-image: none;
 }
 
-#mollify-events-view div.toolbar {
+#mollify-events-view .toolbar {
 	height: 80px;
 }
 
@@ -386,4 +386,15 @@ select#event-user {
 	height: 25px;
 }
 
+#downloads-view .toolbar {
+	height: 56px;
+}
 
+#users-downloaded-section .toolbar, #users-not-downloaded-section .toolbar {
+	height: 26px;
+}
+
+#downloads-range-criteria {
+	float: left;
+	margin-right: 8px;
+}
