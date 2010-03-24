@@ -11,6 +11,8 @@
 	 */
 
 	class Session {
+		const EVENT_TYPE_SESSION = "session";
+		
 		protected $name;
 		
 		public function __construct($settings) {
@@ -21,7 +23,9 @@
 			}
 		}
 		
-		public function initialize($request) {
+		public function initialize($request, $env) {
+			SessionEvent::register($env->events());
+			
 			session_name($this->name);
 			if ($request != NULL and $request->hasParam("session")) session_id($request->param("session"));
 			session_start();
@@ -70,6 +74,45 @@
 
 		public function __toString() {
 			return "Session";
+		}
+	}
+	
+	 class SessionEvent extends Event {
+		const LOGIN = "login";
+		const LOGOUT = "logout";
+		const FAILED_LOGIN = "failed_login";
+		
+		private $info;
+		
+		static function register($eventHandler) {
+			$eventHandler->registerEventType(Session::EVENT_TYPE_SESSION, self::LOGIN, "Login");
+			$eventHandler->registerEventType(Session::EVENT_TYPE_SESSION, self::LOGOUT, "Logout");
+			$eventHandler->registerEventType(Session::EVENT_TYPE_SESSION, self::FAILED_LOGIN, "Failed login");
+		}
+		
+		static function login($ip) {
+			return new SessionEvent(self::LOGIN, "ip=".$ip);
+		}
+
+		static function logout() {
+			return new SessionEvent(self::LOGOUT);
+		}
+
+		static function failedLogin($userId, $ip) {
+			return new SessionEvent(self::FAILED_LOGIN, 'user='.$userId.",ip=".$ip);
+		}
+		
+		function __construct($type, $info = '') {
+			parent::__construct(time(), Session::EVENT_TYPE_SESSION, $type);
+			$this->info = $info;
+		}
+
+		public function itemToStr() {
+			return '';
+		}
+				
+		public function description() {
+			return $this->info;
 		}
 	}
 ?>

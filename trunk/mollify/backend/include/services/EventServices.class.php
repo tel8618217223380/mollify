@@ -22,6 +22,10 @@
 				$this->env->authentication()->assertAdmin();
 				$this->response()->success($this->processQuery());
 				return;
+			} else if ($this->path[0] === 'types') {
+				$this->env->authentication()->assertAdmin();
+				$this->response()->success($this->env->events()->getTypes());
+				return;
 			}
 			throw $this->invalidRequestException();
 		}
@@ -49,7 +53,7 @@
 				$query .= " and type like '".str_replace("*", "%", $db->string($data['type']))."'";
 			}
 
-			$query .= ' order by time asc';
+			$query .= ' order by time desc';
 			
 			$count = $db->query("select count(id) ".$query)->value(0);
 			$rows = isset($data["rows"]) ? $data["rows"] : 50;

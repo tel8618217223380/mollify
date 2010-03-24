@@ -11,6 +11,7 @@
 	 */
 
 	require_once("include/Settings.class.php");
+	require_once("include/event/EventHandler.class.php");
 	require_once("include/Session.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
@@ -35,9 +36,15 @@
 			
 			//TODO create plugin system
 			if ($this->environment->features()->isFeatureEnabled('event_logging')) {
+				$logged = $this->environment->settings()->setting("logged_events", TRUE);
+				if (!$logged or count($logged) == 0) $logged = array("*");
+				
 				require_once("event/EventLogger.class.php");
 				$this->environment->addService("events", "EventServices");
-				$this->environment->events()->register("*", new EventLogger($this->environment));
+				$e = new EventLogger($this->environment);
+				
+				foreach($logged as $l)
+					$this->environment->events()->register($l, $e);
 			}
 		}
 		

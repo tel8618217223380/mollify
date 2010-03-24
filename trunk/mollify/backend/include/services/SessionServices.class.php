@@ -40,6 +40,7 @@
 
 		public function processPost() {
 			if ($this->path[0] === 'logout') {
+				$this->env->events()->onEvent(SessionEvent::logout());
 				$this->env->session()->reset();
 				$this->response()->success(TRUE);
 				return;
@@ -53,6 +54,7 @@
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
 			$this->env->authentication()->authenticate($this->request->data("username"), $this->request->data("password"));
+			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
 			$this->response()->success($this->getSessionInfo($this->request->data("protocol_version")));
 		}
 		

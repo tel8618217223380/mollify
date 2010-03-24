@@ -41,6 +41,7 @@
 			$user = $this->env->configuration()->findUser($userId, $password);
 			if (!$user) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
+				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
 			

@@ -18,17 +18,16 @@
 		}
 		
 		public function onEvent($e) {
-			//TODO configuration
-			if ($e->typeId() != 'filesystem/download') return;
+			$user = $this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL;
 			
 			$time = date('YmdHis', $e->time());
-			$user = $this->env->authentication()->getUserInfo();
+			$username = $user != NULL ? $user['username'] : NULL;
 			$item = $e->itemToStr();
 			$description = $e->description();
 			$type = $e->typeId();
 			
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, description) VALUES (%s, '%s', '%s', '%s', '%s')", $time, $db->string($user['username']), $db->string($type), $db->string($item), $db->string($description)));
+			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, description) VALUES (%s, %s, '%s', %s, %s)", $time, $db->string($username, TRUE), $db->string($type), $db->string($item, TRUE), $db->string($description, TRUE)));
 		}
 		
 		public function __toString() {

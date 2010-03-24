@@ -20,10 +20,12 @@ function MollifyEventsView() {
 			return;
 		}
 		$("#event-user-text").hide();
+		$("#event-type-text").hide();
 		$("#events-pager-controls").hide();
 		
 		$("#button-search").click(that.onSearch);
 		$("#event-user").change(that.onUserChanged);
+		$("#event-type").change(that.onTypeChanged);
 		
 		$("#events-pager-prev").click(that.onSearchPrev);
 		$("#events-pager-next").click(that.onSearchNext);
@@ -40,13 +42,13 @@ function MollifyEventsView() {
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'time',index:'time', width:100, sortable:true, formatter:timeFormatter},
-				{name:'user',index:'user',width:100, sortable:true},
+				{name:'user',index:'user',width:100, sortable:true, formatter:notNullFormatter},
 				{name:'type',index:'type',width:100, sortable:true, formatter:typeFormatter},
-				{name:'item',index:'item',width:150, sortable:true},
+				{name:'item',index:'item',width:150, sortable:true, formatter:notNullFormatter},
 				{name:'description',index:'description',width:150, sortable:true},
 		   	],
 		   	sortname:'time',
-		   	sortorder:'asc',
+		   	sortorder:'desc',
 		});
 		
 		getUsers(that.refreshUsers, onServerError);
@@ -62,6 +64,12 @@ function MollifyEventsView() {
 		}
 		
 		that.refreshUserOptions();
+		getEventTypes(that.refreshTypes, onServerError);
+	}
+
+	this.refreshTypes = function(types) {
+		that.types = types;
+		that.refreshTypeOptions();
 	}
 	
 	this.refreshUserOptions = function() {
@@ -76,6 +84,17 @@ function MollifyEventsView() {
 		$("#event-user").html(options);
 	}
 	
+	this.refreshTypeOptions = function() {
+		var options = '<option value="_any">Any</option>';
+		options += '<option value="_custom">Custom</option>';
+		options += '<option value="-">----------</option>';
+
+		for (var t in that.types)
+			options += '<option value="' + t +'">' + that.types[t] + ' (' + t + ')</option>';
+		
+		$("#event-type").html(options);
+	}
+	
 	this.onUserChanged = function() {
 		var sel = $("#event-user").val();
 		
@@ -86,14 +105,31 @@ function MollifyEventsView() {
 			$("#event-user-text").hide();
 		}
 	}
-	
+
+	this.onTypeChanged = function() {
+		var sel = $("#event-type").val();
+		
+		if (sel == '_custom') {
+			$("#event-type-text").show();
+			$("#event-type-text").text("");
+		} else {
+			$("#event-type-text").hide();
+		}
+	}
+		
 	function timeFormatter(time, options, obj) {
 		return formatDateTime(time);
 	}
+	
+	function notNullFormatter(o, options, obj) {
+		if (o == null) return '';
+		return o;
+	}
 
 	function typeFormatter(type, options, obj) {
-		if (type == 'filesystem/download') return "Download";
-		return "Unknown ("+type+")";
+		var t = that.types[type];
+		if (!t) return "Unknown ("+type+")";
+		return t;
 	}
 		
 	this.onSearch = function(startRow) {
@@ -136,11 +172,20 @@ function MollifyEventsView() {
 		} else {
 			user = null;
 		}
-		
+	
+		var type = $("#event-type").val();
+		if (type == '_custom') {
+			type = $("#event-type-text").val();
+			if (!type || type.length == 0)
+				type = null;
+		} else if (type == '_any' || type == '-') {
+			type = null;
+		}
+			
 		var item = $("#event-item-text").val();
 		if (!item || item.length == 0) item = null
 
-		getEvents(start, end, user, item, startRow, null, that.onRefreshEvents, onServerError);
+		getEvents(start, end, user, item, type, startRow, null, that.onRefreshEvents, onServerError);
 	}
 	
 	this.onRefreshEvents = function(result) {
@@ -190,7 +235,11 @@ function MollifyEventsView() {
 	}
 }
 
-function getEvents(rangeStart, rangeEnd, user, item, start, maxRows, success, fail) {
+function getEventTypes(success, fail) {
+	request("POST", 'events/types', success, fail);
+}
+
+function getEvents(rangeStart, rangeEnd, user, item, type, start, maxRows, success, fail) {
 	var data = {}
 	if (rangeStart) data["start_time"] = formatInternalTime(rangeStart);
 	if (rangeEnd) data["end_time"] = formatInternalTime(rangeEnd);
@@ -198,6 +247,7 @@ function getEvents(rangeStart, rangeEnd, user, item, start, maxRows, success, fa
 	if (maxRows) data["max_rows"] = maxRows;
 	if (user) data["user"] = user;
 	if (item) data["item"] = item;
+	if (type) data["type"] = type;
 	
 	request("POST", 'events/query', success, fail, JSON.stringify(data));
 }
