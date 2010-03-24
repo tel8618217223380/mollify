@@ -12,6 +12,7 @@
 
 	class EventHandler {
 		private $listeners = array();
+		private $types = array();
 				
 		public function register($type, $listener) {
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: registering '".$type."': ".get_class($listener));
@@ -20,6 +21,10 @@
 			$list = $this->listeners[$type];
 			$list[] = $listener;
 			$this->listeners[$type] = $list;
+		}
+		
+		public function registerEventType($type, $subType, $name) {
+			$this->types[$type."/".$subType] = $name;
 		}
 		
 		public function onEvent($e) {
@@ -33,6 +38,10 @@
 			}	
 		}
 		
+		public function getTypes() {
+			return $this->types;
+		}
+		
 		public function __toString() {
 			return "EventHandler";
 		}
@@ -42,13 +51,11 @@
 		private $time;
 		private $type;
 		private $subType;
-		private $data;
 		
-		public function __construct($time, $type, $subType, $data) {
+		public function __construct($time, $type, $subType) {
 			$this->time = $time;
 			$this->type = $type;
 			$this->subType = $subType;
-			$this->data = $data;
 		}
 
 		public function time() {
@@ -67,10 +74,6 @@
 			return $this->type."/".$this->subType;
 		}
 				
-		public function data() {
-			return $this->data;
-		}
-		
 		public abstract function itemToStr();
 		
 		public abstract function description();

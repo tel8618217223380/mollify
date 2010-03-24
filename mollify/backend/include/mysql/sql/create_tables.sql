@@ -53,7 +53,7 @@ CREATE TABLE `{TABLE_PREFIX}parameter` (
 CREATE TABLE `{TABLE_PREFIX}event_log` (
   `id` int(11) NOT NULL auto_increment,
   `time` bigint(11) NOT NULL,
-  `user` varchar(128) NOT NULL,
+  `user` varchar(128) NULL,
   `type` varchar(128) NOT NULL,
   `item` varchar(255) NULL,
   `description` varchar(512) NULL,

@@ -100,8 +100,11 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".mysql_error($this->db));
 		}
 		
-		public function string($s) {
-			return mysql_real_escape_string($s, $this->db);
+		public function string($s, $quote = FALSE) {
+			if ($s == NULL) return 'NULL';
+			$r = mysql_real_escape_string($s, $this->db);
+			if ($quote) return "'".$r."'";
+			return $r;
 		}
 		
 		public function arrayString($a, $quote = FALSE) {

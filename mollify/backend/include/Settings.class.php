@@ -29,6 +29,7 @@
 			"permission_file" => "mollify.uac",
 			"description_file" => "mollify.dsc",
 			"enable_event_logging" => FALSE,
+			"logged_events" => array(),
 			"debug" => FALSE
 		);
 		

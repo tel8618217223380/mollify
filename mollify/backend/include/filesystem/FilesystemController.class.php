@@ -24,6 +24,8 @@
 			
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
+			
+			FileEvent::register($this->env->events());
 		}
 		
 		public function initialize($request) {}
@@ -442,6 +444,17 @@
 		const UPLOAD = "upload";
 		
 		private $item;
+		private $info;
+		
+		static function register($eventHandler) {
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::COPY, "Copy file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::RENAME, "Rename file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::MOVE, "Move file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::DELETE, "Delete file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::CREATE_FOLDER, "Create folder");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::DOWNLOAD, "Download file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::UPLOAD, "Upload file");
+		}
 		
 		static function rename($item, $name) {
 			return new FileEvent($item, self::RENAME, $name);
@@ -471,9 +484,10 @@
 			return new FileEvent($item, self::UPLOAD);
 		}
 		
-		function __construct($item, $type, $data = NULL) {
-			parent::__construct(time(), FileSystemController::EVENT_TYPE_FILE, $type, $data);
+		function __construct($item, $type, $info = NULL) {
+			parent::__construct(time(), FileSystemController::EVENT_TYPE_FILE, $type);
 			$this->item = $item;
+			$this->info = $info;
 		}
 
 		public function item() {
@@ -485,7 +499,12 @@
 		}
 				
 		public function description() {
-			return $this->item->internalId()." (".$this->item->filesystem()->name().")";
+			$f = $this->item->internalId()." (".$this->item->filesystem()->name().")";
+			if ($this->subType() === self::RENAME)
+				return $f.' -> '.$this->info;
+			if ($this->subType() === self::COPY or $this->subType() === self::MOVE)
+				return $f.' -> '.$this->info->internalId();
+			return $f;
 		}
 	}
 
