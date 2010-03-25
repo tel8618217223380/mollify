@@ -1,0 +1,6 @@
+#summary Items in next release
+
+Items included in release 1.5.5
+
+* Preview support
+* View support
