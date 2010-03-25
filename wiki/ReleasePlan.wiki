@@ -2,5 +2,6 @@
 
 Items included in release 1.5.5
 
-* Preview support
-* View support
+ * Preview support
+ * View support
+ * Forbidden upload types
