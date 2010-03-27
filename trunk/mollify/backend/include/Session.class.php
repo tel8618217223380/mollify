@@ -111,7 +111,7 @@
 			return '';
 		}
 				
-		public function description() {
+		public function details() {
 			return $this->info;
 		}
 	}

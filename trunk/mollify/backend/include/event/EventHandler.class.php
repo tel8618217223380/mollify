@@ -76,7 +76,7 @@
 				
 		public abstract function itemToStr();
 		
-		public abstract function description();
+		public abstract function details();
 		
 		public function __toString() {
 			return "Event ".$this->type;

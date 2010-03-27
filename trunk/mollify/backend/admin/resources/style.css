@@ -386,12 +386,51 @@ select#event-user, select#event-type {
 	height: 25px;
 }
 
+.event-info {
+	margin: 4px;
+	padding-top: 7px;
+	padding-bottom: 30px;
+}
+
+.event-info-row {
+	float: left;
+	clear: left;
+	background-color: #f5f5f5;
+	padding: 4px;
+	width: 500px;
+}
+
+.event-info-title {
+	font-weight: bold;
+	float: left;
+	width: 83px;
+}
+
+.event-info-value {
+	float: left;
+}
+
+.event-info-details {
+	clear: left;
+	margin: 4px;
+	padding-top: 7px;
+}
+
 #downloads-view .toolbar {
 	height: 56px;
 }
 
 #users-downloaded-section .toolbar, #users-not-downloaded-section .toolbar {
 	height: 26px;
+}
+
+#users-downloaded-section .empty-toolbar {
+	background-color: #ffffff;
+	height: 0px;
+}
+
+#downloads-item-text {
+	width: 181px;
 }
 
 #downloads-range-criteria {

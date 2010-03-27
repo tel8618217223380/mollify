@@ -498,12 +498,13 @@
 			return $this->item->internalPath();
 		}
 				
-		public function description() {
+		public function details() {
 			$f = $this->item->internalId()." (".$this->item->filesystem()->name().")";
+			
 			if ($this->subType() === self::RENAME)
 				return $f.' -> '.$this->info;
 			if ($this->subType() === self::COPY or $this->subType() === self::MOVE)
-				return $f.' -> '.$this->info->internalId();
+				return $f.' -> '.$this->info->internalId()." (".$this->info->filesystem()->name().")";
 			return $f;
 		}
 	}
