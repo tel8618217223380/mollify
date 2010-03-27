@@ -8,9 +8,9 @@
  * this entire header must remain intact.
  */
 
-function DownloadsView() {
+function MollifyDownloadsView() {
 	var that = this;
-	this.pageUrl = "custom/downloads.html";
+	this.pageUrl = "events/downloads.html";
 	this.onLoadView = onLoadView;
 	this.users = null;
 	this.usersById = {}
@@ -58,19 +58,31 @@ function DownloadsView() {
 		   	sortorder:'asc',
 		});
 		
-		$("#users-not-downloaded-list").jqGrid({        
-			datatype: "local",
-			multiselect: false,
-			autowidth: true,
-			height: '100%',
-		   	colNames:['User'],
-		   	colModel:[
-				{name:'name',index:'name',width:300, sortable:true},
-		   	],
-		   	sortname:'user',
-		   	sortorder:'asc',
-		});
+		var s = getSettings();
+		that.showNotDownloaded = (!s || !s.downloads) ? false : s.downloads['show-not-downloaded'];
 		
+		if (that.showNotDownloaded) {
+			$("#users-not-downloaded-section").show();
+			
+			$("#users-not-downloaded-list").jqGrid({        
+				datatype: "local",
+				multiselect: false,
+				autowidth: true,
+				height: '100%',
+			   	colNames:['User'],
+			   	colModel:[
+					{name:'name',index:'name',width:300, sortable:true},
+			   	],
+			   	sortname:'user',
+			   	sortorder:'asc',
+			});
+		} else {
+			$("#users-not-downloaded-section").hide();
+			$("#users-downloaded-section > .toolbar").html('').addClass("empty-toolbar")
+			$("#users-downloaded-section").width("100%");
+		}
+		
+		that.onFileSelectionChanged();
 		getUsers(that.refreshUsers, onServerError);
 	}
 	
@@ -121,27 +133,21 @@ function DownloadsView() {
 		var item = $("#downloads-item-text").val();
 		if (!item || item.length == 0) item = null
 
-		getDownloadEvents(start, end, item, that.onRefreshEvents, onServerError);
+		that.lastSearch = {start:start, end:end};
+		getDownloads(start, end, item, that.onRefreshDownloads, onServerError);
 	}
 	
-	this.onRefreshEvents = function(result) {
-		that.lastSearch = result;
-		that.events = [];
-		that.eventsById = {};
-		that.files = [];
+	this.onRefreshDownloads = function(files) {
+		that.files = files;
 		
-		for(var i=0;i < result.events.length;i++) {
-			var event = result.events[i];			
-			event.time = parseInternalTime(event.time);
-			
-			that.eventsById[event.id] = event;
-			that.events.push(event);
-			
-			if (!that.inArray(that.files, event.item))
-				that.files.push(event.item);
+		var grid = $("#downloaded-files-list");
+		grid.jqGrid('clearGridData');
+
+		for(var i=0;i < files.length;i++) {
+			var file = files[i];			
+			grid.jqGrid('addRowData', i, file);
 		}
 
-		that.refreshFiles();
 		that.onFileSelectionChanged();
 	}
 	
@@ -151,68 +157,69 @@ function DownloadsView() {
 		return false;
 	}
 	
-	this.refreshFiles = function() {
-		var grid = $("#downloaded-files-list");
-		grid.jqGrid('clearGridData');
-		
-		for(var i=0;i < that.files.length;i++) {
-			var file = that.files[i];			
-			grid.jqGrid('addRowData', i, {item:file});
-		}
-	}
-	
 	this.getSelectedFile = function() {
 		return $("#downloaded-files-list").getGridParam("selrow");
 	}
 	
 	this.onFileSelectionChanged = function() {
-		var fileNr = that.getSelectedFile();
-		var selected = (fileNr != null);
-		var file = selected ? that.files[fileNr] : null;
+		var file = that.getSelectedFile();
+		var selected = (file != null);
+		file = selected ? that.files[file].item : null;
 				
 		$("#downloads-list").jqGrid('clearGridData');
 		$("#users-not-downloaded-list").jqGrid('clearGridData');
 		
-		if (selected) {
-			$("#download-details-info").html("<h1>"+file+"</h1>");
-			that.refreshDetails(file);
-		}
-		
 		if (!selected) {
 			$("#download-details-data").hide();
+			
+			if (!that.files || that.files.length == 0)
+				$("#download-details-info").html('<div class="message">Enter search criteria and click "Search"</div>');
+			else
+				$("#download-details-info").html('<div class="message">Select file from the list to view details</div>');
 		} else {
-			$("#download-details-data").show();
+			$("#download-details-info").html("<h1>"+file+"</h1>");
+			getDownloadEvents(that.lastSearch.start, that.lastSearch.end, file, that.onRefreshDetails, onServerError);
 		}
 	}
 	
-	this.refreshDetails = function(file) {
+	this.onRefreshDetails = function(events) {
 		var grid = $("#downloads-list");
 		var downloaded = [];
 		
-		for(var i=0;i < that.events.length;i++) {
-			var event = that.events[i];
-			if (event.item != file) continue;
-			downloaded.push(event.user);
+		for(var i=0;i < events.length;i++) {
+			var event = events[i];
+			event.time = parseInternalTime(event.time);
+			if (!that.inArray(downloaded, event.user)) downloaded.push(event.user);
 			grid.jqGrid('addRowData', event.id, event);
 		}
 		
-		var grid = $("#users-not-downloaded-list");
-		for(var i=0;i < that.users.length;i++) {
-			var user = that.users[i];
-			if (that.inArray(downloaded, user.name)) continue;
-			
-			grid.jqGrid('addRowData', user.id, user);
+		if (that.showNotDownloaded) {
+			var grid = $("#users-not-downloaded-list");
+			for(var i=0;i < that.users.length;i++) {
+				var user = that.users[i];
+				if (!that.inArray(downloaded, user.name))
+					grid.jqGrid('addRowData', user.id, user);
+			}
 		}
+		
+		$("#download-details-data").show();
 	}
 }
 
-function getDownloadEvents(rangeStart, rangeEnd, item, success, fail) {
+function getDownloads(start, end, file, success, fail) {
 	var data = {}
-	if (rangeStart) data["start_time"] = formatInternalTime(rangeStart);
-	if (rangeEnd) data["end_time"] = formatInternalTime(rangeEnd);
-	if (item) data["item"] = item;
-	data["max_rows"] = 5000;
-	data['type'] = 'filesystem/download';
+	if (start) data["start_time"] = formatInternalTime(start);
+	if (end) data["end_time"] = formatInternalTime(end);
+	if (file) data["file"] = item;
 	
-	request("POST", 'events/query', success, fail, JSON.stringify(data));
+	request("POST", 'events/downloads', success, fail, JSON.stringify(data));
+}
+
+function getDownloadEvents(start, end, file, success, fail) {
+	var data = {}
+	if (start) data["start_time"] = formatInternalTime(start);
+	if (end) data["end_time"] = formatInternalTime(end);
+	data["file"] = file;
+	
+	request("POST", 'events/downloads/events', success, fail, JSON.stringify(data));
 }

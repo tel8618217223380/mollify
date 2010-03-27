@@ -23,11 +23,11 @@
 			$time = date('YmdHis', $e->time());
 			$username = $user != NULL ? $user['username'] : NULL;
 			$item = $e->itemToStr();
-			$description = $e->description();
+			$details = $e->details();
 			$type = $e->typeId();
 			
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, description) VALUES (%s, %s, '%s', %s, %s)", $time, $db->string($username, TRUE), $db->string($type), $db->string($item, TRUE), $db->string($description, TRUE)));
+			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, details) VALUES (%s, %s, '%s', %s, %s)", $time, $db->string($username, TRUE), $db->string($type), $db->string($item, TRUE), $db->string($details, TRUE)));
 		}
 		
 		public function __toString() {

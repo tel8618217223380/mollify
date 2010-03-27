@@ -5,7 +5,7 @@ CREATE TABLE `{TABLE_PREFIX}event_log` (
   `time` bigint(11) NOT NULL,
   `user` varchar(128) NULL,
   `type` varchar(128) NOT NULL,
-  `item` varchar(255) NULL,
-  `description` varchar(512) NULL,
+  `item` varchar(512) NULL,
+  `details` varchar(1024) NULL,
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify event log';

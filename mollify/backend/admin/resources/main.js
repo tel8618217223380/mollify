@@ -14,7 +14,8 @@ var controllers = {
 	"menu-published-folders": {"class" : "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
 	"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
 	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"},
-	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"}
+	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"},
+	"menu-downloads": {"class" : "MollifyDownloadsView", "script" : "events/downloads.js", "title": "Downloads", "feature" : "event_logging"}
 };
 var controller = null;
 var settings = createSettings();
@@ -26,7 +27,8 @@ var views = [
 		{title:"User Groups", id:'menu-usergroups'}
 	]},
 	{header:"Other", id:'menu-header-other', views: [
-		{title:"Events", id:'menu-events'}
+		{title:"Events", id:'menu-events'},
+		{title:"Downloads", id:'menu-downloads'}
 	]}
 ];
 
@@ -60,10 +62,10 @@ function buildMenu() {
 		if (found)
 			html += '<li id="' + h.id + '" class="main-menu-header">' + h.header + '</li>' + t;
 	}
-	if (settings.customViews) {
+	if (settings.views) {
 		html += '<li id="menu-header-custom" class="main-menu-header">Custom</li>';
-		for (var i=0; i < settings.customViews.length; i++) {
-			var v = settings.customViews[i];
+		for (var i=0; i < settings.views.length; i++) {
+			var v = settings.views[i];
 			html += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
 			controllers[v.id] = v;
 		}
@@ -127,6 +129,10 @@ function onLoadView() {
 
 function getSession() {
 	return session;
+}
+
+function getSettings() {
+	return settings;
 }
 
 function notify(msg) {
@@ -207,15 +213,11 @@ function formatInternalTime(time) {
 }
 
 function createSettings() {
-	var settings = {
-		dateFormat : "mm/dd/yy",
-		dateTimeFormat : "mm/dd/yy hh.MM t"
-	};
-	if (window.customSettings) {
-		if (window.customSettings.dateFormat) settings.dateFormat = window.customSettings.dateFormat;
-		if (window.customSettings.dateTimeFormat) settings.dateTimeFormat = window.customSettings.dateTimeFormat;
-		if (window.customSettings.views) settings.customViews = window.customSettings.views;
-	}
+	var settings = {};
+	
+	if (window.customSettings) settings = window.customSettings;
+	if (!settings.dateFormat) settings.dateFormat = "mm/dd/yy";
+	if (!settings.dateTimeFormat) settings.dateFormat = "mm/dd/yy hh.MM t";
 	
 	return settings;
 }

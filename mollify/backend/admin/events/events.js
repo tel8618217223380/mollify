@@ -22,6 +22,7 @@ function MollifyEventsView() {
 		$("#event-user-text").hide();
 		$("#event-type-text").hide();
 		$("#events-pager-controls").hide();
+		$("#event-details-data").hide();
 		
 		$("#button-search").click(that.onSearch);
 		$("#event-user").change(that.onUserChanged);
@@ -38,19 +39,22 @@ function MollifyEventsView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Time', 'User', 'Type', 'Item', 'Description'],
+		   	colNames:['ID', 'Time', 'User', 'Type', 'Item'],
 		   	colModel:[
-			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
-		   		{name:'time',index:'time', width:100, sortable:true, formatter:timeFormatter},
-				{name:'user',index:'user',width:100, sortable:true, formatter:notNullFormatter},
-				{name:'type',index:'type',width:100, sortable:true, formatter:typeFormatter},
-				{name:'item',index:'item',width:150, sortable:true, formatter:notNullFormatter},
-				{name:'description',index:'description',width:150, sortable:true},
+			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
+		   		{name:'time',index:'time', width:150, sortable:true, formatter:timeFormatter},
+				{name:'user',index:'user',width:150, sortable:true, formatter:notNullFormatter},
+				{name:'type',index:'type',width:150, sortable:true, formatter:typeFormatter},
+				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
 		   	sortname:'time',
 		   	sortorder:'desc',
+			onSelectRow: function(id){
+				that.onEventSelectionChanged();
+			}
 		});
 		
+		that.onEventSelectionChanged();
 		getUsers(that.refreshUsers, onServerError);
 	}
 	
@@ -115,6 +119,48 @@ function MollifyEventsView() {
 		} else {
 			$("#event-type-text").hide();
 		}
+	}
+	
+	this.getSelectedEvent = function() {
+		return $("#events-list").getGridParam("selrow");
+	}
+	
+	this.onEventSelectionChanged = function() {
+		var event = that.getSelectedEvent();
+		var selected = (event != null);
+		if (selected) event = that.events[event];
+						
+		if (!selected) {
+			if (!that.events || that.events.length == 0)
+				$("#event-details-info").html('<div class="message">Enter search criteria and click "Search"</div>');
+			else
+				$("#event-details-info").html('<div class="message">Select an event from the list to view details</div>');
+		} else {
+			$("#event-details-info").html("<h1>Event '"+event.id+"'</h1>");				
+			$("#event-details-data").html(that.getEventDetails(event));
+		}
+		
+		if (!selected) {
+			$("#event-details-data").hide();
+		} else {
+			$("#event-details-data").show();
+		}
+	}
+	
+	that.getEventDetails = function(event) {
+		if (event.details == null) return '<div class="event-info"><i>No details</i></div>';
+		
+		var html = '<div class="event-info">';
+		html += that.getEventDetailsRow("Type:",typeFormatter(event.type));
+		html += that.getEventDetailsRow("Time:",timeFormatter(event.time));
+		html += that.getEventDetailsRow("User:",event.user);
+		html += '<div class="event-info-details">' + event.details + '</div>';
+		html += '</div>';
+		return html;
+	}
+	
+	that.getEventDetailsRow = function(title, value) {
+		return "<div class='event-info-row'><div class='event-info-title'>" + title + "</div><div class='event-info-value'>" + value + "</div></div>";
 	}
 		
 	function timeFormatter(time, options, obj) {
@@ -218,6 +264,7 @@ function MollifyEventsView() {
 
 		enableButton("events-pager-prev", first > 1);
 		enableButton("events-pager-next", result.total > last);
+		that.onEventSelectionChanged();
 	}
 	
 	this.onSearchPrev = function() {

@@ -118,6 +118,8 @@
 			<fileset dir="${root.dir}/backend">
 				<exclude name="configuration.php" />
 				<exclude name="index.html" />
+				<exclude name="admin/settings.js" />
+				<exclude name="admin/custom/**" />
 			</fileset>
 		</copy>
 		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />
