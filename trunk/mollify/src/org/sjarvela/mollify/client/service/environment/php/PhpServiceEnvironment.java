@@ -19,9 +19,10 @@ import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
 public class PhpServiceEnvironment implements ServiceEnvironment {
+	private static final String SERVER_LIMITED_HTTP_METHODS = "limited-http-methods";
 	private static final String PARAM_SERVICE_PATH = "service-path";
 	private static final String PARAM_TIMEOUT = "request-timeout";
-	private static final int DEFAULT_REQUEST_TIMEOUT = 5;
+	private static final int DEFAULT_REQUEST_TIMEOUT = 30;
 
 	private PhpService service;
 	private PhpFileService fileSystemService;
@@ -30,8 +31,10 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpConfigurationService settingsHandler;
 
 	public void initialize(UrlResolver urlResolver, ClientSettings settings) {
-		service = new PhpService(urlResolver, settings.getString(PARAM_SERVICE_PATH),
-				settings.getInt(PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT));
+		service = new PhpService(urlResolver, settings
+				.getString(PARAM_SERVICE_PATH), settings.getInt(PARAM_TIMEOUT,
+				DEFAULT_REQUEST_TIMEOUT), settings.getBool(
+				SERVER_LIMITED_HTTP_METHODS, false));
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);

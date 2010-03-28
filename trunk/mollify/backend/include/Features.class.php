@@ -12,6 +12,7 @@
 
 	class Features {
 		private $features = array(
+			"limited_http_methods" => FALSE,
 			"file_upload" => FALSE,
 			"folder_actions" => FALSE,
 			"file_upload_progress" => FALSE,

@@ -33,6 +33,7 @@ function MollifyDownloadsView() {
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
+			height: '100%',
 		   	colNames:['File'],
 		   	colModel:[
 				{name:'item',index:'item',width:150, sortable:true}

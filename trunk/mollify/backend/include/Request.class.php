@@ -22,10 +22,12 @@
 		private $params;
 		private $ip;
 		
-		public function __construct() {
+		public function __construct($limitedHttpMethods) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = trim(substr((isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']), strlen($_SERVER['SCRIPT_NAME'])), "/");
 			$this->ip = $_SERVER['REMOTE_ADDR'];
+			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
+				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
 			
 			$p = stripos($this->uri, "?");
 			if ($p) $this->uri = substr($this->uri, 0, $p-1);

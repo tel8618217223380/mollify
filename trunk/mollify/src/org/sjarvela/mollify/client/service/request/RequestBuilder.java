@@ -17,10 +17,15 @@ public class RequestBuilder {
 		GET, PUT, POST, DELETE
 	}
 
+	private final boolean limitedHttpMethods;
 	private String url = null;
 	private int timeout = 0;
 	private String data = null;
 	private HttpRequestResponseListener listener = null;
+
+	public RequestBuilder(boolean limitedHttpMethods) {
+		this.limitedHttpMethods = limitedHttpMethods;
+	}
 
 	public RequestBuilder url(String url) {
 		this.url = url;
@@ -47,12 +52,13 @@ public class RequestBuilder {
 		return this;
 	}
 
-	public void send(Method method) {
+	public void send(
+			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method) {
 		if (Log.isDebugEnabled())
 			Log.debug("REQUEST (" + method.name() + "): " + url
 					+ (data != null ? (" [" + data + "]") : ""));
-		new HttpRequestHandler(method.name(), url, timeout, data, listener)
-				.process();
+		new HttpRequestHandler(limitedHttpMethods, method, url, timeout, data,
+				listener).process();
 	}
 
 	public void get() {

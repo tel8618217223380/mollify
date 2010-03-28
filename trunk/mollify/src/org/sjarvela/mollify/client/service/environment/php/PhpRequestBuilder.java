@@ -17,6 +17,10 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class PhpRequestBuilder extends RequestBuilder {
 
+	public PhpRequestBuilder(boolean limitedHttpMethods) {
+		super(limitedHttpMethods);
+	}
+
 	public PhpRequestBuilder url(String url) {
 		return (PhpRequestBuilder) super.url(url);
 	}
@@ -34,7 +38,8 @@ public class PhpRequestBuilder extends RequestBuilder {
 	}
 
 	public PhpRequestBuilder listener(ResultListener resultListener) {
-		return (PhpRequestBuilder) super.listener(new JsonRequestListener(resultListener));
+		return (PhpRequestBuilder) super.listener(new JsonRequestListener(
+				resultListener));
 	}
 
 }

@@ -186,4 +186,8 @@ public class DropBoxView extends DialogBox {
 	public Widget getActionButton() {
 		return actionsButton;
 	}
+
+	public void setActionsEnabled(boolean enabled) {
+		actionsButton.setEnabled(enabled);
+	}
 }

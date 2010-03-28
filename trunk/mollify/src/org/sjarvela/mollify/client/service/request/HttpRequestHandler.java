@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.service.request;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.RequestTimeoutException;
@@ -24,14 +25,20 @@ public class HttpRequestHandler extends
 
 	private final HttpRequestResponseListener listener;
 
-	public HttpRequestHandler(String method, final String url, int timeout,
-			String data, final HttpRequestResponseListener listener) {
-		super(method, url);
+	public HttpRequestHandler(
+			boolean limitedHttpMethods,
+			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method,
+			final String url, int timeout, String data,
+			final HttpRequestResponseListener listener) {
+		super(getMethod(limitedHttpMethods, method), url);
 
 		this.listener = listener;
 		setTimeoutMillis(timeout * 1000);
 		if (data != null)
 			setRequestData(data);
+
+		if (limitedHttpMethods)
+			this.setHeader("mollify-http-method", method.name());
 
 		setCallback(new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
@@ -62,6 +69,34 @@ public class HttpRequestHandler extends
 				listener.onFail(response);
 			}
 		});
+	}
+
+	private static com.google.gwt.http.client.RequestBuilder.Method getMethod(
+			boolean limitedHttpMethods,
+			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method) {
+		if (!limitedHttpMethods)
+			return convert(method);
+		if (org.sjarvela.mollify.client.service.request.RequestBuilder.Method.GET
+				.equals(method))
+			return RequestBuilder.GET;
+		return RequestBuilder.POST;
+	}
+
+	private static com.google.gwt.http.client.RequestBuilder.Method convert(
+			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method) {
+		if (org.sjarvela.mollify.client.service.request.RequestBuilder.Method.GET
+				.equals(method))
+			return RequestBuilder.GET;
+		if (org.sjarvela.mollify.client.service.request.RequestBuilder.Method.POST
+				.equals(method))
+			return RequestBuilder.POST;
+		if (org.sjarvela.mollify.client.service.request.RequestBuilder.Method.DELETE
+				.equals(method))
+			return RequestBuilder.DELETE;
+		if (org.sjarvela.mollify.client.service.request.RequestBuilder.Method.PUT
+				.equals(method))
+			return RequestBuilder.PUT;
+		throw new RuntimeException("Invalid http method: " + method.name());
 	}
 
 	public void process() {
