@@ -43,7 +43,7 @@
 	$responseHandler = new ResponseHandler(new OutputHandler());
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
-		$request = new Request();
+		$request = new Request(isset($SETTINGS) and isset($SETTINGS['enable_limited_http_methods']) and $SETTINGS['enable_limited_http_methods'] == TRUE);
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
 		Logging::logException($e);

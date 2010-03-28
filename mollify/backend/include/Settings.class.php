@@ -16,6 +16,7 @@
 		private static $VALUES = array(
 			"session_name" => NULL,
 			"timezone" => NULL,
+			"enable_limited_http_methods" => FALSE,
 			"enable_file_upload" => TRUE,
 			"enable_folder_actions" => TRUE,
 			"enable_file_upload_progress" => FALSE,

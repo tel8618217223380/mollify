@@ -34,6 +34,8 @@ public class DropBoxPresenter {
 		this.session = session;
 		this.fileItemActionHandler = actionHandler;
 		this.currentFolderProvider = currentFolderProvider;
+		
+		refreshContent();
 	}
 
 	public void onDropItems(List<FileSystemItem> items) {
@@ -57,6 +59,7 @@ public class DropBoxPresenter {
 
 	private void refreshContent() {
 		view.setContent(this.items);
+		view.setActionsEnabled(items.size() > 0);
 	}
 
 	public void onDragEnter() {

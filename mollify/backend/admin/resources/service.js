@@ -139,8 +139,14 @@ function removeUserGroup(id, success, fail) {
 
 function request(type, url, success, fail, data) {
 	if (preRequestCallback) preRequestCallback();
+	
+	var t = type;
+	if (getSession() != null && getSession().features["limited_http_methods"]) {
+		if (t == 'PUT' || t == 'DELETE') t = 'POST';
+	}
+
 	$.ajax({
-		type: type,
+		type: t,
 		url: "../r.php/"+url,
 		data: data,
 		dataType: "json",
@@ -155,6 +161,9 @@ function request(type, url, success, fail, data) {
 			if (!e) fail({code:999, error:"Unknown error", details:"Request failed, but no response received"});
 			else if (!e.substr(0, 1) != "{") fail({code:999, error:"Unknown error", details:"Invalid response received: " + e});
 			else fail(JSON.parse(e));
+		},
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader("mollify-http-method", type);
 		}
 	});
 }

@@ -23,6 +23,7 @@ public class PhpService {
 	protected final String adminUrl;
 	private final UrlResolver urlResolver;
 	private final int requestTimeout;
+	private final boolean limitedHttpMethods;
 
 	enum RequestType {
 		filesystem, session, configuration
@@ -34,9 +35,11 @@ public class PhpService {
 	// For a production version, it is assumed that backend facade
 	// (r.php) is in the same site.
 
-	public PhpService(UrlResolver urlResolver, String path, int requestTimeout) {
+	public PhpService(UrlResolver urlResolver, String path, int requestTimeout,
+			boolean limitedHttpMethods) {
 		this.urlResolver = urlResolver;
 		this.requestTimeout = requestTimeout;
+		this.limitedHttpMethods = limitedHttpMethods;
 		this.requestBaseUrl = getPath(path, SERVICE_FILE);
 		this.adminUrl = getPath(path, ADMIN_PATH);
 		Log.info("Mollify service location: " + this.requestBaseUrl
@@ -55,7 +58,8 @@ public class PhpService {
 	}
 
 	public PhpRequestBuilder request() {
-		return new PhpRequestBuilder().timeout(requestTimeout);
+		return new PhpRequestBuilder(limitedHttpMethods)
+				.timeout(requestTimeout);
 	}
 
 	public UrlBuilder url() {
