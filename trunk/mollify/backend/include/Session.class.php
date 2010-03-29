@@ -24,7 +24,7 @@
 		}
 		
 		public function initialize($request, $env) {
-			SessionEvent::register($env->events());
+			if ($env != NULL) SessionEvent::register($env->events());
 			
 			session_name($this->name);
 			if ($request != NULL and $request->hasParam("session")) session_id($request->param("session"));
@@ -94,12 +94,12 @@
 			return new SessionEvent(self::LOGIN, "ip=".$ip);
 		}
 
-		static function logout() {
-			return new SessionEvent(self::LOGOUT);
+		static function logout($ip) {
+			return new SessionEvent(self::LOGOUT, "ip=".$ip);
 		}
 
 		static function failedLogin($userId, $ip) {
-			return new SessionEvent(self::FAILED_LOGIN, 'user='.$userId.",ip=".$ip);
+			return new SessionEvent(self::FAILED_LOGIN, 'user='.$userId.";ip=".$ip);
 		}
 		
 		function __construct($type, $info = '') {

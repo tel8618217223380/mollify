@@ -217,7 +217,7 @@ function createSettings() {
 	
 	if (window.customSettings) settings = window.customSettings;
 	if (!settings.dateFormat) settings.dateFormat = "mm/dd/yy";
-	if (!settings.dateTimeFormat) settings.dateFormat = "mm/dd/yy hh.MM t";
+	if (!settings.dateTimeFormat) settings.dateTimeFormat = "mm/dd/yy hh.MM t";
 	
 	return settings;
 }

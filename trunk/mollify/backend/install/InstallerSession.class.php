@@ -29,7 +29,7 @@
 				$n = $this->settings->setting("session_name");
 				if (strlen($n) > 0) $this->name .= "_".$n;
 			}
-			parent::initialize(NULL);
+			parent::initialize(NULL,NULL);
 		}
 				
 		public function init1_5() {
@@ -39,10 +39,10 @@
 				$n = $this->settings->setting("session_name");
 				if (strlen($n) > 0) $this->name .= "_".$n;
 			}
-			parent::initialize(NULL);
+			parent::initialize(NULL,NULL);
 		}
 		
-		public function initialize($env) {
+		public function initialize($request, $env) {
 			foreach($this->sessionVersions as $ver) {
 				eval("\$this->init$ver();");
 

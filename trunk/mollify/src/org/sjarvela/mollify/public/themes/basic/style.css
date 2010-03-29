@@ -1990,6 +1990,11 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	border: 1px solid #8f9090;
 }
 
+#mollify-dropbox-actions-button[disabled], #mollify-dropbox-actions-button[disabled]:hover {
+	color: #3f4040;
+	border: 1px solid #575858;
+}
+
 .mollify-dropbox-item-remove {
 	width: 16px;
 	height: 16px;

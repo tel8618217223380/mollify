@@ -46,6 +46,12 @@
 				foreach($logged as $l)
 					$this->environment->events()->register($l, $e);
 			}
+			if ($this->environment->features()->isFeatureEnabled('file_preview')) {
+				require_once("view/FilePreview.class.php");
+				$this->environment->addService("preview", "FilePreviewServices");
+				$p = new FilePreview($this->environment);
+				$this->environment->filesystem()->registerProvider($p);
+			}
 		}
 		
 		public function processRequest($request) {

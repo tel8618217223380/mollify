@@ -148,19 +148,27 @@ function MollifyEventsView() {
 	}
 	
 	that.getEventDetails = function(event) {
-		if (event.details == null) return '<div class="event-info"><i>No details</i></div>';
-		
 		var html = '<div class="event-info">';
 		html += that.getEventDetailsRow("Type:",typeFormatter(event.type));
 		html += that.getEventDetailsRow("Time:",timeFormatter(event.time));
-		html += that.getEventDetailsRow("User:",event.user);
-		html += '<div class="event-info-details">' + event.details + '</div>';
+		if (event.user != null && event.user.length > 0) html += that.getEventDetailsRow("User:",event.user);
+		if (event.item != null && event.item.length > 0) html += that.getEventDetailsRow("Item:",event.item);
+		if (event.details == null) {
+			html += '<div class="event-info-details"><i>No details</i></div>';
+		} else {
+			var s = event.details.split(";");
+			for (var i=0; i < s.length; i++) {
+				var r = s[i].split("=");
+				var title = r[0].substr(0, 1).toUpperCase() + r[0].substr(1) + ":";
+				html += that.getEventDetailsRow(title,r[1],true);
+			}
+		}
 		html += '</div>';
 		return html;
 	}
 	
-	that.getEventDetailsRow = function(title, value) {
-		return "<div class='event-info-row'><div class='event-info-title'>" + title + "</div><div class='event-info-value'>" + value + "</div></div>";
+	that.getEventDetailsRow = function(title, value, detail) {
+		return "<div class='" + (detail ? "event-info-detail-row" : "event-info-row") + "'><div class='event-info-title'>" + title + "</div><div class='event-info-value'>" + value + "</div></div>";
 	}
 		
 	function timeFormatter(time, options, obj) {
