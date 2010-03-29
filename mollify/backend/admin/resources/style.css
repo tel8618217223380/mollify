@@ -392,12 +392,16 @@ select#event-user, select#event-type {
 	padding-bottom: 30px;
 }
 
-.event-info-row {
+.event-info-row, .event-info-detail-row {
 	float: left;
 	clear: left;
 	background-color: #f5f5f5;
 	padding: 4px;
 	width: 500px;
+}
+
+.event-info-detail-row {
+	background-color: #edf2f8;
 }
 
 .event-info-title {

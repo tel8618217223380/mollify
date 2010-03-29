@@ -47,7 +47,7 @@
 			$this->configuration = $configurationProviderFactory->createConfigurationProvider($this->type, $this->settings);
 			$this->authentication = new InstallerAuthentication($this);
 			
-			$this->session->initialize($this);
+			$this->session->initialize(NULL, $this);
 		}
 		
 		public abstract function isConfigured();

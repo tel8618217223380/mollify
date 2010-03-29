@@ -10,12 +10,15 @@
 	 * this entire header must remain intact.
 	 */
 	 
+	 require_once("include/event/EventHandler.class.php");
+	 			
 	 class FilesystemController {	 	
 	 	const EVENT_TYPE_FILE = "filesystem";
 		
 		private $env;
 		private $allowedUploadTypes;
 		private $permissionCache = array();
+		private $providers = array();
 
 		function __construct($env) {
 			require_once("MollifyFilesystem.class.php");
@@ -29,6 +32,10 @@
 		}
 		
 		public function initialize($request) {}
+
+		public function registerProvider($provider) {
+			$this->providers[] = $provider;
+		}
 
 		public function onSessionStarted() {
 			$this->env->session()->param('folders', $this->getUserFolders());
@@ -158,6 +165,8 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
+			foreach($this->providers as $p)
+				$p->getItemDetails($item, $details);
 			return $details;
 		}
 
@@ -502,10 +511,10 @@
 			$f = $this->item->internalId()." (".$this->item->filesystem()->name().")";
 			
 			if ($this->subType() === self::RENAME)
-				return $f.' -> '.$this->info;
+				return 'item id='.$f.';to='.$this->info;
 			if ($this->subType() === self::COPY or $this->subType() === self::MOVE)
-				return $f.' -> '.$this->info->internalId()." (".$this->info->filesystem()->name().")";
-			return $f;
+				return 'item id='.$f.';to='.$this->info->internalId()." (".$this->info->filesystem()->name().")";
+			return 'item id='.$f;
 		}
 	}
 

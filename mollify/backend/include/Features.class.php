@@ -22,7 +22,8 @@
 			"permission_update" => FALSE,
 			"administration" => FALSE,
 			"user_groups" => FALSE,
-			"event_logging" => FALSE
+			"event_logging" => FALSE,
+			"file_preview" => FALSE
 		);
 		
 		private $defaultValues = array();

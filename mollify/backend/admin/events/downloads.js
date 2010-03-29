@@ -173,8 +173,10 @@ function MollifyDownloadsView() {
 		if (!selected) {
 			$("#download-details-data").hide();
 			
-			if (!that.files || that.files.length == 0)
+			if (!that.files)
 				$("#download-details-info").html('<div class="message">Enter search criteria and click "Search"</div>');
+			else if (that.files.length == 0)
+				$("#download-details-info").html('<div class="message">No downloads</div>');
 			else
 				$("#download-details-info").html('<div class="message">Select file from the list to view details</div>');
 		} else {

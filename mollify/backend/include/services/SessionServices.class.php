@@ -31,6 +31,7 @@
 
 		public function processGet() {
 			if ($this->path[0] === 'logout') {
+				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->reset();
 				$this->response()->success(TRUE);
 				return;
@@ -40,7 +41,7 @@
 
 		public function processPost() {
 			if ($this->path[0] === 'logout') {
-				$this->env->events()->onEvent(SessionEvent::logout());
+				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->reset();
 				$this->response()->success(TRUE);
 				return;

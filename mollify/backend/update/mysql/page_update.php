@@ -22,10 +22,10 @@
 		<?php pageBody("Update", "Database Update"); ?>
 		<div class="content">
 			<p>
-				Installed Mollify version is <b><?php echo $installer->versionString($installer->installedVersion()) ?></b>, and the current version is <b><?php echo $installer->versionString($installer->currentVersion()) ?></b>.
+				Installed Mollify version requires an update to version <b><?php echo $installer->versionString($installer->currentVersion()) ?></b>.
 			</p>
 			<p>
-				To update Mollify to current version, click "Update".
+				Click "Update" to start update.
 			</p>
 			<p>
 				<a id="button-update" href="#" class="btn green">Update</a>
