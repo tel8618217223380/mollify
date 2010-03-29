@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.5.4 ==
+  * Drop box
+  * Event logging
+  * Support for Plupload uploader
+
 === Version 1.5.3 ==
   * Various bug fixes
 
