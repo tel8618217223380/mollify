@@ -2,12 +2,13 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.5.4 ==
-  * Drop box
+  * Drop box for collecting files/folders
   * Multiple file actions
-  * Copy folders
+  * Copy folders action
   * Event logging (requires db update)
-  * Support for Plupload uploader [http://www.plupload.com]
+  * Support for Plupload uploader (see [http://www.plupload.com])
   * Support for limited http methods (when service provider does not support http PUT and/or DELETE)
+  * Support for download managers (resumable downloads and collecting files to download)
 
 === Version 1.5.3 ==
   * Various bug fixes
