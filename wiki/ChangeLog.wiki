@@ -3,8 +3,10 @@
 
 === Version 1.5.4 ==
   * Drop box
-  * Event logging
-  * Support for Plupload uploader
+  * Multiple file actions
+  * Copy folders
+  * Event logging (requires db update)
+  * Support for Plupload uploader [http://www.plupload.com]
 
 === Version 1.5.3 ==
   * Various bug fixes
