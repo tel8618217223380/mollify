@@ -147,6 +147,27 @@ $PASSWORDS_HASHED = TRUE;
 
 	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "MOLLIFY_PUBLIC", "MOLLIFY_LOCAL" etc.
 
+=== 6.4. Event logging ===
+
+	To enable event logging, add with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"enable_event_logging" => "TRUE"
+		);
+	}}}
+
+	By default, all events are logged. To control what events are logged, use following setting:
+	{{{
+		$SETTINGS = array(
+			"logged_events" => array("filesystem/", "session/")
+		);
+	}}}
+
+	All events that has matching id will be logged (wildcard match is done automatically).
+
+	Events can be viewed in administration utility.
+
 = 7. Client Options =
 
 == 7.1. File uploader ==
