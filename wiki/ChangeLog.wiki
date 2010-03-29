@@ -7,6 +7,7 @@
   * Copy folders
   * Event logging (requires db update)
   * Support for Plupload uploader [http://www.plupload.com]
+  * Support for limited http methods (when service provider does not support http PUT and/or DELETE)
 
 === Version 1.5.3 ==
   * Various bug fixes
