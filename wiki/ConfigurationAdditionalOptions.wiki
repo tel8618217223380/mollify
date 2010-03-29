@@ -151,7 +151,9 @@ $PASSWORDS_HASHED = TRUE;
 
 == 7.1. File uploader ==
 
-	By default, Mollify uses basic HTTP file uploader. It is guaranteed to work on all browsers, but for displaying upload progress, server side support is required. Alternatively, a flash uploader can be used. It has more features, for example selecting multiple files at once, showing individual file upload progress, but requires Flash support from the browser.
+	By default, Mollify uses basic HTTP file uploader. It is guaranteed to work on all browsers, but for displaying upload progress, server side support is required. Alternatively, a flash uploader or Plupload uploader can be used. They have more features, for example selecting multiple files at once, showing individual file upload progress, but requires more from the browser.
+
+== 7.1.1. Flash uploader ===
 
 	If flash uploader is preferred, add following setting in host page:
 
@@ -166,6 +168,34 @@ $PASSWORDS_HASHED = TRUE;
 }}}
 
 	The path used is the same than what is used for loading the Mollify app javascript (org.sjarvela.Mollify.nocache.js).
+
+== 7.1.2. Plupload uploader ===
+
+	Plupload is external upload component, see [http://www.plupload.com]
+
+	If Plupload uploader is preferred, add following setting in host page:
+
+{{{
+<meta name="mollify:property" content="file-uploader=plupload">
+}}}
+
+	Also the javascript library needs to be loaded with following line:
+
+{{{
+<script type="text/javascript" language="javascript" src="[PATH_TO_CLIENT_FILES]/plupload.full.min.js"></script>
+}}}
+
+	By default, all runtimes (see Plupload site for more information) are enabled. To customize enabled runtimes or their preferred order, use following parameter:
+
+{{{
+<meta name="mollify:property" content="plupload-runtimes=flash,browserplus,html5">
+}}}
+
+	Plupload supports chunked uploads, ie files are upload in small chunks, and allows uploading files larger than max upload size set by server. To set chunk size, use following parameter:
+
+{{{
+<meta name="mollify:property" content="plupload-chunk-size=1mb">
+}}}
 
 == 7.2. Request timeout ==
 
