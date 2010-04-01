@@ -80,5 +80,9 @@
 			}
 			return $info;
 		}
+		
+		public function __toString() {
+			return "SessionServices";
+		}
 	}
 ?>

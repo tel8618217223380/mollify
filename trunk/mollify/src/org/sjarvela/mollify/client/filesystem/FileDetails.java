@@ -15,7 +15,6 @@ import java.util.Date;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.util.DateTime;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
@@ -45,6 +44,10 @@ public class FileDetails extends JavaScriptObject {
 	public final FilePermission getFilePermission() {
 		return FilePermission.fromString(getFilePermissionString());
 	}
+
+	public final native JsObj getFilePreview() /*-{
+		return this.preview;
+	}-*/;
 
 	private final native String getLastAccessedString() /*-{
 		return this.last_accessed;
@@ -90,7 +93,7 @@ public class FileDetails extends JavaScriptObject {
 		this.description = description;
 	}-*/;
 
-	public final native void removeDescription()  /*-{
+	public final native void removeDescription() /*-{
 		this.description = null;
 	}-*/;
 }

@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -125,6 +126,16 @@ public class DefaultViewManager implements ViewManager {
 
 	@Override
 	public void align(Dialog dialog, Widget p) {
+		if (Log.isDebugEnabled())
+			Log.debug("Align: p=[" + p.getAbsoluteTop() + ","
+					+ p.getAbsoluteLeft() + "/" + p.getOffsetWidth() + "x"
+					+ p.getOffsetHeight() + "] root=["
+					+ rootPanel.getAbsoluteTop() + ","
+					+ rootPanel.getAbsoluteLeft() + "/"
+					+ rootPanel.getOffsetWidth() + "x"
+					+ rootPanel.getOffsetHeight() + "/"
+					+ rootPanel.getElement().getClientWidth() + "x"
+					+ rootPanel.getElement().getClientHeight() + "]");
 		int top = (p.getAbsoluteTop() + p.getOffsetHeight() / 2)
 				- (int) (dialog.getOffsetHeight() * 0.75d);
 		top = Math.max(40, top);
@@ -132,10 +143,9 @@ public class DefaultViewManager implements ViewManager {
 		int maxBottom = rootPanel.getAbsoluteTop()
 				+ rootPanel.getElement().getClientHeight() - 40;
 		if (maxBottom > 0 && top + dialog.getOffsetHeight() > maxBottom) {
-			top = maxBottom - dialog.getOffsetHeight();
+			top = Math.max(40, maxBottom - dialog.getOffsetHeight());
 		}
 		dialog.setPopupPosition(dialog.getAbsoluteLeft(), top);
-
 	}
 
 	/* UTILITIES */

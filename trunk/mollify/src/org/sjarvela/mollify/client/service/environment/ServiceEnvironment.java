@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.environment;
 
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -28,5 +29,7 @@ public interface ServiceEnvironment {
 	FileSystemService getFileSystemService();
 
 	FileUploadService getFileUploadService();
+
+	ExternalService getExternalService();
 
 }

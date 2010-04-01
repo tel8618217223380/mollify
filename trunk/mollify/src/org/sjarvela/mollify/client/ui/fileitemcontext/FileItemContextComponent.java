@@ -28,6 +28,8 @@ import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -45,6 +47,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final boolean descriptionEditingEnabled;
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
+	private final boolean filePreview;
 
 	private final Mode mode;
 
@@ -64,11 +67,15 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private Panel detailRows;
 	private Map<ResourceId, Label> detailRowValues = new HashMap();
 
+	private DisclosurePanel preview;
+	private Panel previewContent;
+
 	private Button renameButton;
 	private Button copyButton;
 	private Button moveButton;
 	private Button deleteButton;
 	private ActionLink editPermissions;
+	private String previewHtml;
 
 	public enum Mode {
 		File, Directory
@@ -85,7 +92,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
 			boolean generalWritePermissions, boolean descriptionEditingEnabled,
 			boolean permissionsEditable, boolean zipDownloadEnabled,
-			ActionListener actionListener) {
+			boolean filePreview, ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
@@ -96,6 +103,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		this.zipDownloadEnabled = zipDownloadEnabled;
 
 		this.textProvider = textProvider;
+		this.filePreview = filePreview;
 		this.actionListener = actionListener;
 
 		initialize();
@@ -119,6 +127,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		if (descriptionEditingEnabled)
 			content.add(createDescriptionActions());
+
+		if (filePreview)
+			content.add(createFilePreview());
 
 		content.add(createDetails());
 
@@ -271,6 +282,28 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return null;
 	}
 
+	private Widget createFilePreview() {
+		preview = new DisclosurePanel("TODO");
+		preview.setOpen(false);
+		preview.addStyleName(StyleConstants.FILE_CONTEXT_PREVIEW);
+		preview.getHeader().getElement().getParentElement().setClassName(
+				StyleConstants.FILE_CONTEXT_PREVIEW_HEADER);
+
+		previewContent = new FlowPanel();
+		previewContent
+				.setStyleName(StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT);
+
+		preview.add(previewContent);
+		preview.setVisible(false);
+		preview.addOpenHandler(new OpenHandler<DisclosurePanel>() {
+			@Override
+			public void onOpen(OpenEvent<DisclosurePanel> event) {
+				previewContent.getElement().setInnerHTML(previewHtml);
+			}
+		});
+		return preview;
+	}
+
 	private Widget createDetails() {
 		details = new DisclosurePanel(textProvider.getStrings()
 				.fileActionDetailsTitle());
@@ -345,6 +378,12 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		for (Label detailsValue : detailRowValues.values())
 			detailsValue.setText("");
 
+		if (preview != null) {
+			preview.setOpen(false);
+			previewContent.getElement().setInnerHTML("");
+			preview.setVisible(false);
+		}
+
 		renameButton.setVisible(false);
 		deleteButton.setVisible(false);
 		moveButton.setVisible(false);
@@ -383,6 +422,12 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			descriptionActionsSwitch.switchTo(DescriptionActionGroup.edit);
 		else
 			descriptionActionsSwitch.switchTo(DescriptionActionGroup.view);
+	}
+
+	public void setFilePreview(String previewHtml) {
+		this.previewHtml = previewHtml;
+		previewContent.getElement().setInnerHTML("");
+		preview.setVisible(true);
 	}
 
 	public DisclosurePanel getDetails() {

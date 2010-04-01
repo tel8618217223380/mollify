@@ -13,11 +13,13 @@
 	class ServicesBase {
 		protected $env;
 		protected $request;
+		protected $id;
 		protected $path;
 		
-		public function __construct($serviceEnvironment, $request, $path) {
+		public function __construct($serviceEnvironment, $request, $id, $path) {
 			$this->env = $serviceEnvironment;
 			$this->request = $request;
+			$this->id = $id;
 			$this->path = $path;
 			
 			if (!$this->isValidPath($this->request->method(), $this->path)) throw $this->invalidRequestException();
@@ -61,6 +63,14 @@
 		function processPost() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'post'"); }
 		
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
+		
+		protected function item($id, $convert = TRUE) {
+			return $this->env->filesystem()->item(($convert ? $this->convertItemID($id) : $id));
+		}
+		
+		protected function convertItemId($id) {
+			return strtr(urldecode($id), '-_,', '+/=');
+		}
 		
 		protected function invalidRequestException($details = NULL) {
 			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->request->method())." ".$this->request->URI().($details != NULL ? (" ".$details): ""));

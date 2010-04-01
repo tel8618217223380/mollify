@@ -109,6 +109,9 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_DETAILS_ROW = "mollify-file-context-details-row";
 	public static final String FILE_CONTEXT_DETAILS_ROW_LABEL = "mollify-file-context-details-row-label";
 	public static final String FILE_CONTEXT_DETAILS_ROW_VALUE = "mollify-file-context-details-row-value";
+	public static final String FILE_CONTEXT_PREVIEW = "mollify-file-context-preview";
+	public static final String FILE_CONTEXT_PREVIEW_HEADER = "mollify-file-context-preview-header";
+	public static final String FILE_CONTEXT_PREVIEW_CONTENT = "mollify-file-context-preview-content";
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
 
 	public static final String DIR_CONTEXT = "mollify-directory-context";

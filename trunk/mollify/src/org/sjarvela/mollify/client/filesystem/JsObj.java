@@ -8,16 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.filesystem;
 
-public interface ServiceProvider {
-	SessionService getSessionService();
+import com.google.gwt.core.client.JavaScriptObject;
 
-	ConfigurationService getConfigurationService();
+public class JsObj extends JavaScriptObject {
+	protected JsObj() {
+	}
 
-	FileSystemService getFileSystemService();
-
-	FileUploadService getFileUploadService();
-
-	ExternalService getExternalService();
+	public final native String getString(String name) /*-{
+		return this[name];
+	}-*/;
 }

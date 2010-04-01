@@ -87,6 +87,15 @@
 			return $details;
 		}
 
+		public function extension($item) {
+			if (!$item->isFile()) return NULL;
+			
+			$extPos = strrpos($item->name(), '.');
+			if ($extPos > 0)
+				return substr($item->name(), $extPos + 1);
+			return "";
+		}
+
 		public function folders($parent) {
 			$parentPath = $this->localPath($parent);
 			$items = scandir($parentPath);

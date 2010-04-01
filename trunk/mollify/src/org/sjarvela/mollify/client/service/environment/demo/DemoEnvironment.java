@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.environment.demo;
 
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -40,20 +41,29 @@ public class DemoEnvironment implements ServiceEnvironment {
 		this.settingsHandler = new DemoConfigurationService(data);
 	}
 
+	@Override
 	public SessionService getSessionService() {
 		return sessionService;
 	}
 
+	@Override
 	public FileSystemService getFileSystemService() {
 		return fileSystemService;
 	}
 
+	@Override
 	public FileUploadService getFileUploadService() {
 		return demoFileUploadHandler;
 	}
 
+	@Override
 	public ConfigurationService getConfigurationService() {
 		return settingsHandler;
+	}
+
+	@Override
+	public ExternalService getExternalService() {
+		return null;
 	}
 
 }

@@ -165,8 +165,13 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
-			foreach($this->providers as $p)
-				$p->getItemDetails($item, $details);
+			foreach($this->providers as $p) {
+				$l = $p->getItemDetails($item, $details);
+				if (!$l) continue;
+				
+				foreach($l as $k=>$v)
+					$details[$k] = $v;
+			}
 			return $details;
 		}
 

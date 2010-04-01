@@ -102,7 +102,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		FolderSelectorFactory directorySelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, textProvider, session);
+				fileSystemService, textProvider, session, serviceProvider
+						.getExternalService());
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
 				textProvider, fileSystemService, session);
 		ActionDelegator actionDelegator = new ActionDelegator();

@@ -83,15 +83,7 @@
 			
 			throw $this->invalidRequestException();
 		}
-		
-		private function item($id, $convert = TRUE) {
-			return $this->env->filesystem()->item(($convert ? $this->convertItemID($id) : $id));
-		}
-		
-		private function convertItemId($id) {
-			return strtr(urldecode($id), '-_,', '+/=');
-		}
-		
+				
 		private function processMultiItemAction() {
 			if (count($this->path) != 1) throw invalidRequestException();
 			$data = $this->request->data;
@@ -152,16 +144,17 @@
 		
 		private function processPutFile($item) {
 			if (count($this->path) != 2) throw invalidRequestException();
-						
+			$data = $this->request->data;
+			
 			switch (strtolower($this->path[1])) {
 				case 'name':
-					$data = $this->request->data;
 					if (!isset($data['name'])) throw $this->invalidRequestException();
 					$this->env->filesystem()->rename($item, $data['name']);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
-					$this->env->filesystem()->setDescription($item, $this->request->data);
+					if (!isset($data['description'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->setDescription($item, $data["description"]);
 					$this->response()->success(TRUE);
 					break;
 				default:
@@ -222,16 +215,17 @@
 		
 		private function processPutFolder($item) {
 			if (count($this->path) != 2) throw invalidRequestException();
-						
+			$data = $this->request->data;
+				
 			switch (strtolower($this->path[1])) {
-				case 'name':
-					$data = $this->request->data;
+				case 'name':		
 					if (!isset($data['name'])) throw $this->invalidRequestException();
 					$this->env->filesystem()->rename($item, $data['name']);
 					$this->response()->success(TRUE);
 					break;
 				case 'description':
-					$this->env->filesystem()->setDescription($item, $this->request->data);
+					if (!isset($data['description'])) throw $this->invalidRequestException();
+					$this->env->filesystem()->setDescription($item, $data['description']);
 					$this->response()->success(TRUE);
 					break;
 				default:
@@ -273,6 +267,10 @@
 			
 			Logging::logDebug('upload status '.$this->path[1]);
 			$this->response()->success(apc_fetch('upload_'.$this->path[1]));
+		}
+		
+		public function __toString() {
+			return "FileSystemServices";
 		}
 	}
 ?>
