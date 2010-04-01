@@ -19,5 +19,9 @@
 			$state = (!$this->env->authentication()->isAuthenticationRequired() or $this->env->authentication()->isAuthenticated());
 			$this->response()->success($state);
 		}
+		
+		public function __toString() {
+			return "AuthenticationServices";
+		}
 	}
 ?>

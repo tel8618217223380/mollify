@@ -98,6 +98,10 @@
 		public function size() {
 			return $this->filesystem->size($this);
 		}
+
+		public function extension() {
+			return $this->filesystem->extension($this);
+		}
 				
 		public function read() {
 			return $this->filesystem->read($this);

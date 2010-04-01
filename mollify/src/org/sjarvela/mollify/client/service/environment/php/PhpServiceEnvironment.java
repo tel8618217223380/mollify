@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.service.ConfigurationService;
+import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -29,6 +30,7 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpFileUploadService uploadHandler;
 	private PhpSessionService sessionService;
 	private PhpConfigurationService settingsHandler;
+	private PhpExternalService externalService;
 
 	public void initialize(UrlResolver urlResolver, ClientSettings settings) {
 		service = new PhpService(urlResolver, settings
@@ -39,22 +41,32 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);
 		settingsHandler = new PhpConfigurationService(service);
+		externalService = new PhpExternalService(service);
 	}
 
+	@Override
 	public SessionService getSessionService() {
 		return sessionService;
 	}
 
+	@Override
 	public FileSystemService getFileSystemService() {
 		return fileSystemService;
 	}
 
+	@Override
 	public FileUploadService getFileUploadService() {
 		return uploadHandler;
 	}
 
+	@Override
 	public ConfigurationService getConfigurationService() {
 		return settingsHandler;
+	}
+
+	@Override
+	public ExternalService getExternalService() {
+		return externalService;
 	}
 
 }

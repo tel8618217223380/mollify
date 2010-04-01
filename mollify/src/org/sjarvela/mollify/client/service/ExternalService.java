@@ -10,14 +10,9 @@
 
 package org.sjarvela.mollify.client.service;
 
-public interface ServiceProvider {
-	SessionService getSessionService();
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-	ConfigurationService getConfigurationService();
+public interface ExternalService {
 
-	FileSystemService getFileSystemService();
-
-	FileUploadService getFileUploadService();
-
-	ExternalService getExternalService();
+	void get(String path, ResultListener listener);
 }

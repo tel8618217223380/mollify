@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandle
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.Callback;
+import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -38,6 +39,7 @@ public class FileContextPresenter implements ActionListener {
 	private final FileDetailsProvider fileDetailsProvider;
 	private final TextProvider textProvider;
 	private final DateTimeFormat dateTimeFormat;
+	private final SessionInfo session;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -52,8 +54,9 @@ public class FileContextPresenter implements ActionListener {
 
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider) {
+			TextProvider textProvider, ExternalService service) {
 		this.popup = popup;
+		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
@@ -127,6 +130,11 @@ public class FileContextPresenter implements ActionListener {
 					.format(details.getLastModified()));
 			this.popup.setDetailValue(Details.Changed, dateTimeFormat
 					.format(details.getLastChanged()));
+		}
+
+		if (session.getFeatures().filePreview()
+				&& details.getFilePreview() != null) {
+			popup.setFilePreview(details.getFilePreview().getString("html"));
 		}
 
 		boolean writable = (details == null ? false : details

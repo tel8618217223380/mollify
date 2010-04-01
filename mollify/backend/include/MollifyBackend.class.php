@@ -46,11 +46,17 @@
 				foreach($logged as $l)
 					$this->environment->events()->register($l, $e);
 			}
-			if ($this->environment->features()->isFeatureEnabled('file_preview')) {
+			
+			$preview = $this->environment->features()->isFeatureEnabled('file_preview');
+			$view = $this->environment->features()->isFeatureEnabled('view');
+			
+			if ($preview or $view) {
+				if ($view)
+					$this->environment->addService("view", "FilePreviewServices");
+				if ($preview)
+					$this->environment->addService("preview", "FilePreviewServices");
 				require_once("view/FilePreview.class.php");
-				$this->environment->addService("preview", "FilePreviewServices");
-				$p = new FilePreview($this->environment);
-				$this->environment->filesystem()->registerProvider($p);
+				$this->environment->filesystem()->registerProvider(new FilePreview($this->environment, $view, $preview));
 			}
 		}
 		

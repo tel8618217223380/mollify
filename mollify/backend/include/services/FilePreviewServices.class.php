@@ -12,11 +12,16 @@
 
 	class FilePreviewServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return TRUE;
+			return count($path) > 0;
 		}
 		
 		public function processGet() {
-			$this->response()->success(TRUE);
+			$item = $this->item($this->path[0]);
+			$this->env->filesystem()->download($item);
+		}
+		
+		public function __toString() {
+			return "FilePreviewServices";
 		}
 	}
 ?>

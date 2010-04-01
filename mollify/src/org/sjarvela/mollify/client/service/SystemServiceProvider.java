@@ -29,21 +29,30 @@ public class SystemServiceProvider implements ServiceProvider,
 		this.sessionManager = sessionManager;
 	}
 
+	@Override
 	public ConfigurationService getConfigurationService() {
 		return new ConfigurationServiceAdapter(env.getConfigurationService(),
 				this);
 	}
 
+	@Override
 	public FileSystemService getFileSystemService() {
 		return new FileSystemServiceAdapter(env.getFileSystemService(), this);
 	}
 
+	@Override
 	public FileUploadService getFileUploadService() {
 		return new FileUploadServiceAdapter(env.getFileUploadService(), this);
 	}
 
+	@Override
 	public SessionService getSessionService() {
 		return new SessionServiceAdapter(env.getSessionService(), this);
+	}
+
+	@Override
+	public ExternalService getExternalService() {
+		return new ExternalServiceAdapter(env.getExternalService(), this);
 	}
 
 	public <T> ResultListener createListener(

@@ -97,15 +97,15 @@
 			$path = $request->path();
 			$id = $path[0];
 			if (!array_key_exists($id, $this->services)) throw new ServiceException("Unknown service '".$id."'");
-			$service = $this->createService($this->services[$id], $request, array_slice($path, 1));
+			$service = $this->createService($this->services[$id], $request, $id, array_slice($path, 1));
 			if (Logging::isDebug()) $service->log();
 			return $service;
 		}
 		
-		private function createService($controller, $request, $path) {
+		private function createService($controller, $request, $id, $path) {
 			require_once("services/ServicesBase.class.php");
 			require_once("services/".$controller.".class.php");
-			return new $controller($this, $request, $path);
+			return new $controller($this, $request, $id, $path);
 		}
 		
 		public function log() {

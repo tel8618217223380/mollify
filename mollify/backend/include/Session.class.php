@@ -9,6 +9,7 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	require_once("include/event/EventHandler.class.php");
 
 	class Session {
 		const EVENT_TYPE_SESSION = "session";

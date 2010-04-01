@@ -31,7 +31,7 @@
 		}
 		
 		public function __toString() {
-			return "EventHandler";
+			return "EventLogger";
 		}
 	}
 ?>

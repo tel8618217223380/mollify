@@ -23,6 +23,8 @@ public class ServiceBase {
 	}
 
 	protected UrlBuilder serviceUrl() {
+		if (requestType == null)
+			return service.url();
 		return service.url().item(requestType.name());
 	}
 

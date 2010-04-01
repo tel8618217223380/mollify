@@ -366,5 +366,9 @@
 			$this->env->configuration()->removeFolder($this->path[1]);
 			$this->response()->success(TRUE);	
 		}
+		
+		public function __toString() {
+			return "ConfigurationServices";
+		}
 	}
 ?>
