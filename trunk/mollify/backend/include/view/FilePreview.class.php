@@ -12,6 +12,7 @@
 
 	class FilePreview {
 		static $previewTypes = array("gif", "png", "jpg");
+		static $viewTypes = array("gif", "png", "jpg");
 		
 		private $view;
 		private $preview;
@@ -22,18 +23,34 @@
 			$this->preview = $preview;
 		}
 		
-		public function getItemDetails($item, $details) {
+		public function getItemDetails($item) {
 			if (!$item->isFile()) return FALSE;
-			
 			$type = strtolower($item->extension());
-			if (!in_array($type, self::$previewTypes)) return FALSE;
 			
-			$html = '<div id="preview-container" style="overflow:auto; max-height:300px"><img src="'.$_SERVER['SCRIPT_NAME']."/preview/".$item->id().'" style="max-width:400px"></div>';
+			$result = array();
+			if ($this->preview and in_array($type, self::$previewTypes)) {
+				$result["preview"] = array(
+					"url" => $this->env->getServiceUrl("preview", array($item->id(), "html"))
+				);
+			}
+			if ($this->preview and in_array($type, self::$previewTypes)) {
+				$result["view"] = array(
+					"url" => $this->env->getServiceUrl("view", array($item->id(), "html"))
+				);
+			}
 			
+			return $result;
+		}
+		
+		public function getPreview($item) {
+			$dataUrl = $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
+			return array("html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>');
+		}
+		
+		public function getView($item) {
+			$dataUrl = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
 			return array(
-				"preview" => array(
-					"html" => $html
-				)
+				"html" => '<div id="file-view-container" style="overflow:auto;"><img src="'.$dataUrl.'"></div>'
 			);
 		}
 		
