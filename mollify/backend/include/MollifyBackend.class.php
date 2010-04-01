@@ -48,7 +48,7 @@
 			}
 			
 			$preview = $this->environment->features()->isFeatureEnabled('file_preview');
-			$view = $this->environment->features()->isFeatureEnabled('view');
+			$view = $this->environment->features()->isFeatureEnabled('file_view');
 			
 			if ($preview or $view) {
 				if ($view)
@@ -56,7 +56,10 @@
 				if ($preview)
 					$this->environment->addService("preview", "FilePreviewServices");
 				require_once("view/FilePreview.class.php");
-				$this->environment->filesystem()->registerProvider(new FilePreview($this->environment, $view, $preview));
+				
+				$preview = new FilePreview($this->environment, $view, $preview);
+				$this->environment->registerObject("preview", $preview);
+				$this->environment->filesystem()->registerProvider($preview);
 			}
 		}
 		

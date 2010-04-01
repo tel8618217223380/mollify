@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileItemContextComponent extends ContextPopupComponent {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
+	private List<FilePreviewListener> previewListeners = new ArrayList();
 
 	private final boolean hasGeneralWritePermissions;
 	private final boolean descriptionEditingEnabled;
@@ -75,7 +77,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private Button moveButton;
 	private Button deleteButton;
 	private ActionLink editPermissions;
-	private String previewHtml;
 
 	public enum Mode {
 		File, Directory
@@ -107,6 +108,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		this.actionListener = actionListener;
 
 		initialize();
+	}
+
+	public void addPreviewListener(FilePreviewListener filePreviewListener) {
+		this.previewListeners.add(filePreviewListener);
 	}
 
 	protected Widget createContent() {
@@ -298,7 +303,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		preview.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override
 			public void onOpen(OpenEvent<DisclosurePanel> event) {
-				previewContent.getElement().setInnerHTML(previewHtml);
+				for (FilePreviewListener l : previewListeners)
+					l.onPreview();
 			}
 		});
 		return preview;
@@ -380,7 +386,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		if (preview != null) {
 			preview.setOpen(false);
-			previewContent.getElement().setInnerHTML("");
+			previewContent.getElement().setInnerHTML(
+					"<div class='"
+							+ StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT_WAIT
+							+ "'/>");
 			preview.setVisible(false);
 		}
 
@@ -424,10 +433,12 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			descriptionActionsSwitch.switchTo(DescriptionActionGroup.view);
 	}
 
+	public void setFilePreviewVisible(boolean b) {
+		preview.setVisible(b);
+	}
+
 	public void setFilePreview(String previewHtml) {
-		this.previewHtml = previewHtml;
-		previewContent.getElement().setInnerHTML("");
-		preview.setVisible(true);
+		previewContent.getElement().setInnerHTML(previewHtml);
 	}
 
 	public DisclosurePanel getDetails() {

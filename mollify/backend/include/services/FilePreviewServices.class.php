@@ -12,12 +12,32 @@
 
 	class FilePreviewServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) > 0;
+			return count($path) == 2;
 		}
 		
 		public function processGet() {
 			$item = $this->item($this->path[0]);
-			$this->env->filesystem()->download($item);
+			
+			if ($this->id === 'preview') {
+				if ($this->path[1] === 'html') {
+					$this->response()->success($this->env->getObject("preview")->getPreview($item));
+					return;
+				}
+				if ($this->path[1] === 'content') {
+					$this->env->filesystem()->download($item);
+					return;
+				}
+			} else if ($this->id === 'view') {
+				if ($this->path[1] === 'html') {
+					$this->response()->success($this->env->getObject("preview")->getView($item));
+					return;
+				}
+				if ($this->path[1] === 'content') {
+					$this->env->filesystem()->download($item);
+					return;
+				}
+			}
+			throw $this->invalidRequestException();
 		}
 		
 		public function __toString() {

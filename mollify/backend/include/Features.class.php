@@ -23,7 +23,8 @@
 			"administration" => FALSE,
 			"user_groups" => FALSE,
 			"event_logging" => FALSE,
-			"file_preview" => FALSE
+			"file_preview" => FALSE,
+			"file_view" => FALSE
 		);
 		
 		private $defaultValues = array();

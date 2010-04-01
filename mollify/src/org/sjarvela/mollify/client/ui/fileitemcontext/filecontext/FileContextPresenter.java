@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
@@ -31,15 +32,18 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FilePreviewListener;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-public class FileContextPresenter implements ActionListener {
+public class FileContextPresenter implements ActionListener,
+		FilePreviewListener {
 	private final FileItemContextComponent popup;
 	private final FileDetailsProvider fileDetailsProvider;
 	private final TextProvider textProvider;
 	private final DateTimeFormat dateTimeFormat;
 	private final SessionInfo session;
+	private final ExternalService service;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -59,9 +63,11 @@ public class FileContextPresenter implements ActionListener {
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
+		this.service = service;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
+		popup.addPreviewListener(this);
 		initializeDetails();
 	}
 
@@ -123,6 +129,9 @@ public class FileContextPresenter implements ActionListener {
 		this.details = details;
 		this.updateDescription();
 
+		popup.setFilePreviewVisible(session.getFeatures().filePreview()
+				&& details.getFilePreview() != null);
+
 		if (details != null) {
 			this.popup.setDetailValue(Details.Accessed, dateTimeFormat
 					.format(details.getLastAccessed()));
@@ -130,11 +139,6 @@ public class FileContextPresenter implements ActionListener {
 					.format(details.getLastModified()));
 			this.popup.setDetailValue(Details.Changed, dateTimeFormat
 					.format(details.getLastChanged()));
-		}
-
-		if (session.getFeatures().filePreview()
-				&& details.getFilePreview() != null) {
-			popup.setFilePreview(details.getFilePreview().getString("html"));
 		}
 
 		boolean writable = (details == null ? false : details
@@ -216,4 +220,26 @@ public class FileContextPresenter implements ActionListener {
 		}
 	}
 
+	@Override
+	public void onPreview() {
+		if (!session.getFeatures().filePreview()
+				|| details.getFilePreview() == null)
+			return;
+
+		String url = details.getFilePreview().getString("url");
+		if (url == null)
+			return;
+
+		service.get(url, new ResultListener<JsObj>() {
+			@Override
+			public void onFail(ServiceError error) {
+				popup.setFilePreview("ERROR: " + error.getDetails()); // TODO
+			}
+
+			@Override
+			public void onSuccess(JsObj result) {
+				popup.setFilePreview(result.getString("html"));
+			}
+		});
+	}
 }
