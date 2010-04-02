@@ -49,6 +49,10 @@ public class FileDetails extends JavaScriptObject {
 		return this.preview;
 	}-*/;
 
+	public final native JsObj getFileView() /*-{
+		return this.view;
+	}-*/;
+
 	private final native String getLastAccessedString() /*-{
 		return this.last_accessed;
 	}-*/;

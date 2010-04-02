@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
@@ -34,6 +35,7 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
+import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -46,6 +48,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private final TextProvider textProvider;
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final RenameDialogFactory renameDialogFactory;
+	private final FileViewerFactory fileViewerFactory;
 	private final SessionInfo session;
 
 	private final List<FileSystemActionListener> listeners = new ArrayList();
@@ -54,6 +57,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			ViewManager windowManager, DialogManager dialogManager,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
+			FileViewerFactory fileViewerFactory,
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.textProvider = textProvider;
@@ -61,15 +65,16 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.dialogManager = dialogManager;
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.renameDialogFactory = renameDialogFactory;
+		this.fileViewerFactory = fileViewerFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action,
-			Widget source) {
+			Widget source, Object param) {
 		if (item.isFile())
-			onFileAction((File) item, action, source);
+			onFileAction((File) item, action, source, param);
 		else
 			onFolderAction((Folder) item, action, source);
 	}
@@ -204,8 +209,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	private void onFileAction(final File file, FileSystemAction action,
-			Widget source) {
-		if (action.equals(FileSystemAction.download)) {
+			Widget source, Object param) {
+		if (action.equals(FileSystemAction.view)) {
+			JsObj viewParams = (JsObj) param;
+			fileViewerFactory.openFileViewer(file, viewParams);
+		} else if (action.equals(FileSystemAction.download)) {
 			windowManager.openDownloadUrl(fileSystemService.getDownloadUrl(
 					file, session.getSessionId()));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {

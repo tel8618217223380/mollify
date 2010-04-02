@@ -28,6 +28,7 @@ import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
@@ -50,6 +51,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
 	private final boolean filePreview;
+	private final boolean fileView;
 
 	private final Mode mode;
 
@@ -63,6 +65,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private ActionLink applyDescription;
 	private ActionLink cancelEditDescription;
 	private ActionLink removeDescription;
+	private ActionLink editPermissions;
 
 	private DisclosurePanel details;
 	private Panel detailContent;
@@ -72,11 +75,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private DisclosurePanel preview;
 	private Panel previewContent;
 
-	private Button renameButton;
-	private Button copyButton;
-	private Button moveButton;
-	private Button deleteButton;
-	private ActionLink editPermissions;
+	private DropdownButton actionsButton;
+	private Button viewButton;
 
 	public enum Mode {
 		File, Directory
@@ -93,7 +93,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
 			boolean generalWritePermissions, boolean descriptionEditingEnabled,
 			boolean permissionsEditable, boolean zipDownloadEnabled,
-			boolean filePreview, ActionListener actionListener) {
+			boolean filePreview, boolean fileView, ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
@@ -105,6 +105,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		this.textProvider = textProvider;
 		this.filePreview = filePreview;
+		this.fileView = fileView;
 		this.actionListener = actionListener;
 
 		initialize();
@@ -213,37 +214,40 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	private Widget createButtons() {
-		Panel buttons = new HorizontalPanel();
+		Panel buttons = new FlowPanel();
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
-		renameButton = createActionButton(textProvider.getStrings()
-				.fileActionRenameTitle(), actionListener,
-				FileSystemAction.rename);
-		renameButton.setVisible(false);
-
-		copyButton = createActionButton(textProvider.getStrings()
-				.fileActionCopyTitle(), actionListener, FileSystemAction.copy);
-		copyButton.setVisible(false);
-
-		moveButton = createActionButton(textProvider.getStrings()
-				.fileActionMoveTitle(), actionListener, FileSystemAction.move);
-		moveButton.setVisible(false);
-
-		deleteButton = createActionButton(textProvider.getStrings()
-				.fileActionDeleteTitle(), actionListener,
-				FileSystemAction.delete);
-		deleteButton.setVisible(false);
+		actionsButton = new DropdownButton(actionListener, textProvider
+				.getStrings().fileDetailsActionsTitle(),
+				StyleConstants.FILE_CONTEXT_ACTIONS);
+		actionsButton.addAction(FileSystemAction.rename, textProvider
+				.getStrings().fileActionRenameTitle());
+		actionsButton.addAction(FileSystemAction.copy, textProvider
+				.getStrings().fileActionCopyTitle());
+		actionsButton.addAction(FileSystemAction.move, textProvider
+				.getStrings().fileActionMoveTitle());
+		actionsButton.addAction(FileSystemAction.delete, textProvider
+				.getStrings().fileActionDeleteTitle());
 
 		Widget downloadButton = getDownloadButton();
 		if (downloadButton != null)
 			buttons.add(downloadButton);
 
-		buttons.add(renameButton);
-		buttons.add(copyButton);
-		buttons.add(moveButton);
-		buttons.add(deleteButton);
+		viewButton = createViewButton();
+		if (viewButton != null)
+			buttons.add(viewButton);
+
+		buttons.add(actionsButton);
 
 		return buttons;
+	}
+
+	private Button createViewButton() {
+		if (!fileView)
+			return null;
+		Button button = createActionButton(textProvider.getStrings()
+				.fileActionViewTitle(), actionListener, FileSystemAction.view);
+		return button;
 	}
 
 	private Widget getDownloadButton() {
@@ -288,7 +292,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	private Widget createFilePreview() {
-		preview = new DisclosurePanel("TODO");
+		preview = new DisclosurePanel(textProvider.getStrings()
+				.filePreviewTitle());
 		preview.setOpen(false);
 		preview.addStyleName(StyleConstants.FILE_CONTEXT_PREVIEW);
 		preview.getHeader().getElement().getParentElement().setClassName(
@@ -393,20 +398,28 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			preview.setVisible(false);
 		}
 
-		renameButton.setVisible(false);
-		deleteButton.setVisible(false);
-		moveButton.setVisible(false);
+		viewButton.setVisible(false);
+
+		actionsButton.setActionEnabled(FileSystemAction.rename, false);
+		actionsButton.setActionEnabled(FileSystemAction.copy, false);
+		actionsButton.setActionEnabled(FileSystemAction.move, false);
+		actionsButton.setActionEnabled(FileSystemAction.delete, false);
 	}
 
 	public void setDetailValue(ResourceId id, String value) {
 		detailRowValues.get(id).setText(value);
 	}
 
-	public void updateButtons(boolean isWritable) {
-		renameButton.setVisible(isWritable);
-		deleteButton.setVisible(isWritable);
-		copyButton.setVisible(hasGeneralWritePermissions);
-		moveButton.setVisible(isWritable && hasGeneralWritePermissions);
+	public void update(boolean isWritable, boolean isPreview, boolean isView) {
+		actionsButton.setActionEnabled(FileSystemAction.rename, isWritable);
+		actionsButton.setActionEnabled(FileSystemAction.copy,
+				hasGeneralWritePermissions);
+		actionsButton.setActionEnabled(FileSystemAction.move, isWritable
+				&& hasGeneralWritePermissions);
+		actionsButton.setActionEnabled(FileSystemAction.delete, isWritable);
+
+		preview.setVisible(isPreview);
+		viewButton.setVisible(isView);
 	}
 
 	public void setDescription(String description) {
@@ -431,10 +444,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			descriptionActionsSwitch.switchTo(DescriptionActionGroup.edit);
 		else
 			descriptionActionsSwitch.switchTo(DescriptionActionGroup.view);
-	}
-
-	public void setFilePreviewVisible(boolean b) {
-		preview.setVisible(b);
 	}
 
 	public void setFilePreview(String previewHtml) {

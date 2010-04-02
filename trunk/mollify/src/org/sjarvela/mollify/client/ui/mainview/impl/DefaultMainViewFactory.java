@@ -41,6 +41,7 @@ import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -65,6 +66,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final DragAndDropManager dragAndDropManager;
 	private final ClientSettings settings;
 
+	private final FileViewerFactory fileViewerFactory;
+
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
 			ViewManager viewManager, DialogManager dialogManager,
@@ -75,6 +78,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory,
+			FileViewerFactory fileViewerFactory,
 			DropBoxFactory dropBoxFactory, DragAndDropManager dragAndDropManager) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
@@ -87,6 +91,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
+		this.fileViewerFactory = fileViewerFactory;
 		this.dropBoxFactory = dropBoxFactory;
 		this.dragAndDropManager = dragAndDropManager;
 	}
@@ -115,7 +120,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
-				this, fileSystemService, fileSystemItemProvider, sessionManager)
+				this, fileViewerFactory, fileSystemService, fileSystemItemProvider, sessionManager)
 				.create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());

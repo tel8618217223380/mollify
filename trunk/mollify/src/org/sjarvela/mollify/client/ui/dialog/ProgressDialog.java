@@ -25,10 +25,10 @@ public class ProgressDialog extends CenteredDialog implements ProgressDisplayer 
 	private Label info;
 	private Label details;
 
-	public ProgressDialog(String title, boolean progressInitiallyBarVisible) {
+	public ProgressDialog(String title, boolean progressBarInitiallyVisible) {
 		super(title, StyleConstants.PROGRESS_DIALOG);
 		initialize();
-		if (!progressInitiallyBarVisible)
+		if (!progressBarInitiallyVisible)
 			progressBar.setVisible(false);
 	}
 

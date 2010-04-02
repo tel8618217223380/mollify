@@ -33,9 +33,9 @@
 					"url" => $this->env->getServiceUrl("preview", array($item->id(), "html"))
 				);
 			}
-			if ($this->preview and in_array($type, self::$previewTypes)) {
+			if ($this->preview and in_array($type, self::$viewTypes)) {
 				$result["view"] = array(
-					"url" => $this->env->getServiceUrl("view", array($item->id(), "html"))
+					"url" => $this->env->getServiceUrl("view", array($item->id(), "html"), TRUE)
 				);
 			}
 			
@@ -49,9 +49,7 @@
 		
 		public function getView($item) {
 			$dataUrl = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
-			return array(
-				"html" => '<div id="file-view-container" style="overflow:auto;"><img src="'.$dataUrl.'"></div>'
-			);
+			return '<html><img src="'.$dataUrl.'"></html>';
 		}
 		
 		public function __toString() {

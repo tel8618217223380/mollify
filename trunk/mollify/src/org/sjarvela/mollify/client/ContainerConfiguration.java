@@ -49,6 +49,8 @@ import org.sjarvela.mollify.client.ui.password.DefaultPasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.DefaultPermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
+import org.sjarvela.mollify.client.ui.viewer.impl.DefaultFileViewerFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -75,6 +77,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 				DefaultFileSystemItemProvider.class);
 		bind(PermissionEditorViewFactory.class).to(
 				DefaultPermissionEditorViewFactory.class);
+		bind(FileViewerFactory.class).to(DefaultFileViewerFactory.class);
 		bind(DropBoxFactory.class).to(DefaultDropBoxFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);

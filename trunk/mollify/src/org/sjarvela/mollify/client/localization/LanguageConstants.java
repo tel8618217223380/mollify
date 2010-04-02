@@ -69,6 +69,12 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileActionDeleteTitle();
 
+	public String fileActionViewTitle();
+
+	public String filePreviewTitle();
+
+	public String fileDetailsActionsTitle();
+
 	public String dirActionDownloadTitle();
 
 	public String dirActionRenameTitle();

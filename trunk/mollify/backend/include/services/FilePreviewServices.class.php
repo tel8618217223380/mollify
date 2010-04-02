@@ -29,7 +29,7 @@
 				}
 			} else if ($this->id === 'view') {
 				if ($this->path[1] === 'html') {
-					$this->response()->success($this->env->getObject("preview")->getView($item));
+					$this->response()->html($this->env->getObject("preview")->getView($item));
 					return;
 				}
 				if ($this->path[1] === 'content') {

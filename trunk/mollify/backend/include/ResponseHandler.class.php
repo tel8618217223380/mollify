@@ -47,6 +47,10 @@
 		public function download($filename, $stream, $size = NULL, $range = NULL) {
 			$this->output->sendBinary($filename, $stream, $size, $range);
 		}
+
+		public function html($html) {
+			$this->output->sendResponse(new Response(200, "html", $html));
+		}
 		
 		public function success($data) {
 			$this->output->sendResponse(new Response(200, "json", $this->getSuccessResponse($data)));

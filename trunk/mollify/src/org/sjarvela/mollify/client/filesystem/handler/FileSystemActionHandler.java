@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface FileSystemActionHandler {
 
-	void onAction(FileSystemItem item, FileSystemAction action, Widget source);
+	void onAction(FileSystemItem item, FileSystemAction action, Widget source, Object param);
 
 	void onAction(List<FileSystemItem> items, FileSystemAction action,
 			Folder folder, Widget source, Callback actionCallback);
