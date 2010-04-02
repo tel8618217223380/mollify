@@ -25,7 +25,8 @@ public class FileContextPopupFactory {
 	private final ExternalService service;
 
 	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, SessionInfo session, ExternalService service) {
+			TextProvider textProvider, SessionInfo session,
+			ExternalService service) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;
@@ -46,7 +47,8 @@ public class FileContextPopupFactory {
 				Mode.File, textProvider, session.getDefaultPermissionMode()
 						.hasWritePermission(), descriptionEditable,
 				permissionsEditable, session.getFeatures().zipDownload(),
-				session.getFeatures().filePreview(), actionDelegator);
+				session.getFeatures().filePreview(), session.getFeatures()
+						.fileView(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider, service);
 		return new FileContextGlue(popup, presenter, actionDelegator);

@@ -813,12 +813,17 @@ td#mollify-filelist-column-size {
 	height: 15px;
 }
 
-.mollify-file-context-action, .mollify-directory-context-action {
+.mollify-file-context-action, .mollify-directory-context-action, #mollify-file-context-actions {
 	height: 25px;
 	margin-right: 6px;
 	margin-top: 6px;
 	padding: 3px;
 	font-weight: bold;
+	float: left;
+}
+
+#mollify-file-context-actions {
+	float: right;
 }
 
 .mollify-file-context-border, .mollify-directory-context-border {
@@ -999,6 +1004,7 @@ td#mollify-filelist-column-size {
 
 .mollify-file-context-buttons, .mollify-directory-context-buttons {
 	margin-top: 7px;
+	width: 100%;
 }
 
 #download-dropdown-menu.mollify-dropdown-menu {
@@ -1027,6 +1033,30 @@ td#mollify-filelist-column-size {
 
 .mollify-dialog-button-info {
 	width: 80px;
+}
+
+.mollify-dialog-title-close {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	top: 8px;
+	right: 12px;
+	background: url(b-close.png) no-repeat 1px 1px;
+	cursor: pointer;
+}
+
+.mollify-dialog-title-close-hover {
+	background: url(b-close-over.png) no-repeat 1px 1px;
+}
+
+.mollify-dialog-resizer {
+	width: 14px;
+	height: 14px;
+	position: absolute;
+	right: 8px;
+	bottom: 8px;
+	cursor: se-resize;
+	background-image: url(resize.png);
 }
 
 .mollify-confirm-dialog-content {
@@ -2011,4 +2041,18 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 
 .mollify-dropbox .dialogMiddleLeft, .mollify-dropbox .dialogMiddleRight, .mollify-dropbox .dialogTopLeft, .mollify-dropbox .dialogTopRight {
 	background-image: none;
+}
+
+.mollify-file-viewer-buttons {
+	width: 100%;
+	margin-top: 4px;
+}
+
+#mollify-fileviewer-frame {
+	background-color: #f6f6f6;
+	margin: 4px;
+}
+
+.mollify-file-viewer-buttons .mollify-dialog-button {
+	margin-left: 5px;
 }

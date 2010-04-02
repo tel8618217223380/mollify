@@ -17,11 +17,12 @@ public class FeatureInfo extends JavaScriptObject {
 			boolean fileUploadProgress, boolean zipDownload,
 			boolean descriptionUpdate, boolean changePassword,
 			boolean permissionUpdate, boolean administration,
-			boolean userGroups, boolean filePreview) {
+			boolean userGroups, boolean filePreview, boolean fileView) {
 		FeatureInfo result = FeatureInfo.createObject().cast();
 		result.putValues(folderActions, fileUpload, fileUploadProgress,
 				zipDownload, descriptionUpdate, changePassword,
-				permissionUpdate, administration, userGroups, filePreview);
+				permissionUpdate, administration, userGroups, filePreview,
+				fileView);
 		return result;
 	}
 
@@ -68,11 +69,16 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.file_preview;
 	}-*/;
 
+	public final native boolean fileView() /*-{
+		return this.file_view;
+	}-*/;
+
 	private final native void putValues(boolean folderActions,
 			boolean fileUpload, boolean fileUploadProgress,
 			boolean zipDownload, boolean descriptionUpdate,
 			boolean changePassword, boolean permissionUpdate,
-			boolean administration, boolean userGroups, boolean filePreview) /*-{
+			boolean administration, boolean userGroups, boolean filePreview,
+			boolean fileView) /*-{
 		this.folder_actions = folderActions;
 		this.file_upload = fileUpload;
 		this.file_upload_progress = fileUploadProgress;
@@ -83,5 +89,6 @@ public class FeatureInfo extends JavaScriptObject {
 		this.administration = administration;
 		this.user_groups = userGroups;
 		this.file_preview = filePreview;
+		this.file_view = fileView;
 	}-*/;
 }

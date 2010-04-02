@@ -11,9 +11,9 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
 import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
-import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
@@ -88,7 +88,7 @@ public class FolderContextPresenter implements ActionListener {
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 
-		this.popup.updateButtons(writable);
+		this.popup.update(writable, false, false);
 		this.popup.initializeDetailsSection();
 	}
 
@@ -142,7 +142,7 @@ public class FolderContextPresenter implements ActionListener {
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
 			fileSystemActionHandler.onAction(folder, (FileSystemAction) action,
-					popup);
+					popup, null);
 			popup.hide();
 			return;
 		}

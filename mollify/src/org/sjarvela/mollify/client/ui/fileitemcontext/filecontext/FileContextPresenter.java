@@ -129,9 +129,6 @@ public class FileContextPresenter implements ActionListener,
 		this.details = details;
 		this.updateDescription();
 
-		popup.setFilePreviewVisible(session.getFeatures().filePreview()
-				&& details.getFilePreview() != null);
-
 		if (details != null) {
 			this.popup.setDetailValue(Details.Accessed, dateTimeFormat
 					.format(details.getLastAccessed()));
@@ -143,7 +140,12 @@ public class FileContextPresenter implements ActionListener,
 
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
-		popup.updateButtons(writable);
+		boolean isPreview = session.getFeatures().filePreview()
+				&& details.getFilePreview() != null;
+		boolean isView = session.getFeatures().fileView()
+				&& details.getFileView() != null;
+
+		popup.update(writable, isPreview, isView);
 	}
 
 	private void updateDescription() {
@@ -195,8 +197,11 @@ public class FileContextPresenter implements ActionListener,
 
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
+			Object param = null;
+			if (action.equals(FileSystemAction.view))
+				param = details.getFileView();
 			fileSystemActionHandler.onAction(file, (FileSystemAction) action,
-					popup);
+					popup, param);
 			popup.hide();
 			return;
 		}
@@ -233,7 +238,7 @@ public class FileContextPresenter implements ActionListener,
 		service.get(url, new ResultListener<JsObj>() {
 			@Override
 			public void onFail(ServiceError error) {
-				popup.setFilePreview("ERROR: " + error.getDetails()); // TODO
+				popup.setFilePreview(error.getType().getMessage(textProvider));
 			}
 
 			@Override

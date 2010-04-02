@@ -27,6 +27,7 @@ public class StyleConstants {
 	public static final String DRAG_OVER = "drag-over";
 
 	public static final String DIALOG = "mollify-dialog";
+	public static final String DIALOG_TITLE_CLOSE = "mollify-dialog-title-close";
 
 	public static final String BORDERED_CONTROL_PADDING_NW = "nw";
 	public static final String BORDERED_CONTROL_PADDING_N = "n";
@@ -114,6 +115,7 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_PREVIEW_CONTENT = "mollify-file-context-preview-content";
 	public static final String FILE_CONTEXT_PREVIEW_CONTENT_WAIT = "mollify-file-context-preview-content-wait";
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
+	public static final String FILE_CONTEXT_ACTIONS = "mollify-file-context-actions";
 
 	public static final String DIR_CONTEXT = "mollify-directory-context";
 	public static final String DIR_CONTEXT_CONTENT = "mollify-directory-context-content";
@@ -184,6 +186,7 @@ public class StyleConstants {
 	public static final String CONFIRMATION_DIALOG_TYPE_OVERRIDE = "confirm-override";
 
 	public static final String DIALOG_BUTTON_CANCEL = "cancel";
+	public static final String DIALOG_RESIZER = "mollify-dialog-resizer";
 
 	public static final String RENAME_DIALOG = "rename";
 	public static final String RENAME_DIALOG_CONTENT = "mollify-rename-dialog-content";
@@ -283,74 +286,6 @@ public class StyleConstants {
 	public static final String USER_LIST = "mollify-userlist";
 	public static final String USER_LIST_ROW = "mollify-userlist-row";
 
-	// public static final String USER_DIALOG = "user-dialog";
-	// public static final String USER_DIALOG_CONTENT =
-	// "mollify-user-dialog-content";
-	// public static final String USER_DIALOG_BUTTONS =
-	// "mollify-user-dialog-buttons";
-	// public static final String USER_DIALOG_BUTTON_ADD_EDIT =
-	// "user-dialog-add-edit";
-	// public static final String USER_DIALOG_NAME_TITLE =
-	// "mollify-user-dialog-name-title";
-	// public static final String USER_DIALOG_NAME_VALUE =
-	// "mollify-user-dialog-name-value";
-	// public static final String USER_DIALOG_TYPE_TITLE =
-	// "mollify-user-dialog-type-title";
-	// public static final String USER_DIALOG_TYPE_VALUE =
-	// "mollify-user-dialog-type-value";
-	// public static final String USER_DIALOG_PASSWORD_TITLE =
-	// "mollify-user-dialog-password-title";
-	// public static final String USER_DIALOG_PASSWORD_VALUE =
-	// "mollify-user-dialog-password-value";
-	// public static final String USER_DIALOG_GENERATE_PASSWORD =
-	// "user-generate-password";
-	//
-	// public static final String FOLDER_LIST_HEADER =
-	// "mollify-folderlist-column";
-	// public static final String FOLDER_LIST = "mollify-folderlist";
-	// public static final String FOLDER_LIST_COLUMN_PREFIX =
-	// "mollify-folderlist-column-";
-	// public static final String FOLDER_LIST_ROW = "mollify-folderlist-row";
-	// public static final String USER_FOLDER_LIST = "mollify-userfolderlist";
-	//
-	// public static final String FOLDER_DIALOG = "folder-dialog";
-	// public static final String FOLDER_DIALOG_CONTENT =
-	// "mollify-folder-dialog-content";
-	// public static final String FOLDER_DIALOG_NAME_TITLE =
-	// "mollify-folder-dialog-name-title";
-	// public static final String FOLDER_DIALOG_NAME_VALUE =
-	// "mollify-folder-dialog-name-value";
-	// public static final String FOLDER_DIALOG_PATH_TITLE =
-	// "mollify-folder-dialog-path-title";
-	// public static final String FOLDER_DIALOG_PATH_VALUE =
-	// "mollify-folder-dialog-path-value";
-	// public static final String FOLDER_DIALOG_BUTTONS =
-	// "mollify-folder-dialog-buttons";
-	// public static final String FOLDER_DIALOG_BUTTON_ADD_EDIT =
-	// "folder-dialog-add-edit";
-	//
-	// public static final String USER_FOLDER_DIALOG = "user-folder-dialog";
-	// public static final String USER_FOLDER_DIALOG_CONTENT =
-	// "mollify-user-folder-dialog-content";
-	// public static final String USER_FOLDER_DIALOG_FOLDERS_TITLE =
-	// "mollify-user-folder-dialog-folders-title";
-	// public static final String USER_FOLDER_DIALOG_USE_DEFAULT_NAME =
-	// "mollify-user-folder-dialog-use-default-name";
-	// public static final String USER_FOLDER_DIALOG_NAME_TITLE =
-	// "mollify-user-folder-dialog-name-title";
-	// public static final String USER_FOLDER_DIALOG_NAME_VALUE =
-	// "mollify-user-folder-dialog-name-value";
-	// public static final String USER_FOLDER_DIALOG_DEFAULT_NAME =
-	// "mollify-user-folder-dialog-default-name";
-	// public static final String USER_FOLDER_DIALOG_DEFAULT_NAME_VALUE =
-	// "mollify-user-folder-dialog-default-name-value";
-	// public static final String USER_FOLDER_DIALOG_BUTTONS =
-	// "mollify-user-folder-dialog-buttons";
-	// public static final String USER_FOLDER_DIALOG_BUTTON_ADD_EDIT =
-	// "user-folder-dialog-add-edit";
-	// public static final String USER_FOLDER_DIALOG_FOLDERS =
-	// "mollify-user-folder-dialog-folders";
-
 	public static final String RESET_PASSWORD_DIALOG = "reset-password-dialog";
 	public static final String RESET_PASSWORD_DIALOG_CONTENT = "mollify-reset-password-dialog-content";
 	public static final String RESET_PASSWORD_DIALOG_PASSWORD_TITLE = "mollify-reset-password-dialog-password-title";
@@ -412,5 +347,10 @@ public class StyleConstants {
 	public static final String FILE_ITEM_DRAG = "file-item-drag";
 	public static final String FILE_ITEM_DRAG_FILE = "file";
 	public static final String FILE_ITEM_DRAG_FOLDER = "folder";
+
+	public static final String FILE_VIEWER = "mollify-file-viewer";
+	public static final String FILE_VIEWER_CONTENT = "mollify-file-viewer-content";
+	public static final String FILE_VIEWER_HEADER = "mollify-file-viewer-header";
+	public static final String FILE_VIEWER_BUTTONS = "mollify-file-viewer-buttons";
 
 }
