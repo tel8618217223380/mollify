@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -31,6 +32,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FilePreviewListener;
 
@@ -44,6 +46,7 @@ public class FileContextPresenter implements ActionListener,
 	private final DateTimeFormat dateTimeFormat;
 	private final SessionInfo session;
 	private final ExternalService service;
+	private final DropBox dropBox;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -51,6 +54,7 @@ public class FileContextPresenter implements ActionListener,
 
 	private File file = File.Empty;
 	private FileDetails details;
+	private boolean previewInitalized = false;
 
 	private enum Details implements ResourceId {
 		Accessed, Modified, Changed
@@ -58,12 +62,13 @@ public class FileContextPresenter implements ActionListener,
 
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, ExternalService service) {
+			TextProvider textProvider, ExternalService service, DropBox dropBox) {
 		this.popup = popup;
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.service = service;
+		this.dropBox = dropBox;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
@@ -206,7 +211,9 @@ public class FileContextPresenter implements ActionListener,
 			return;
 		}
 
-		if (FileItemContextComponent.Action.addDescription.equals(action))
+		if (FileItemContextComponent.Action.addToDropbox.equals(action))
+			onAddToDropbox();
+		else if (FileItemContextComponent.Action.addDescription.equals(action))
 			onStartEditDescription();
 		else if (FileItemContextComponent.Action.editDescription.equals(action))
 			onStartEditDescription();
@@ -225,12 +232,17 @@ public class FileContextPresenter implements ActionListener,
 		}
 	}
 
+	private void onAddToDropbox() {
+		dropBox.addItems(Arrays.asList((FileSystemItem) file));
+	}
+
 	@Override
 	public void onPreview() {
 		if (!session.getFeatures().filePreview()
-				|| details.getFilePreview() == null)
+				|| details.getFilePreview() == null || previewInitalized)
 			return;
 
+		previewInitalized = true;
 		String url = details.getFilePreview().getString("url");
 		if (url == null)
 			return;

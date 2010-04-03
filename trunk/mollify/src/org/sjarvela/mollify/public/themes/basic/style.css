@@ -957,12 +957,12 @@ td#mollify-filelist-column-size {
 	text-decoration: underline;
 }
 
-.mollify-file-context-details {
+.mollify-file-context-details, .mollify-file-context-preview {
 	width: 100%;
 	margin-top: 4px;
 }
 
-.mollify-file-context-details-header, .mollify-file-upload-info-header {
+.mollify-file-context-details-header, .mollify-file-context-preview-header, .mollify-file-upload-info-header {
 	background-color: #ebebeb;
 	color: #000;
 	padding-top: 2px;
@@ -970,7 +970,7 @@ td#mollify-filelist-column-size {
 	width: 100%;
 }
 
-.mollify-file-context-details-content {
+.mollify-file-context-details-content, .mollify-file-context-preview-content {
 	width: 100%;
 	border-left: 1px;
 	background-color: #f5f5f5;
@@ -2043,16 +2043,22 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	background-image: none;
 }
 
-.mollify-file-viewer-buttons {
+.mollify-file-viewer-header {
 	width: 100%;
-	margin-top: 4px;
+	height: 30px;
+	background-color: #f6f6f6;
+	padding-top: 8px;
+	padding-bottom: 4px;
 }
 
 #mollify-fileviewer-frame {
-	background-color: #f6f6f6;
 	margin: 4px;
 }
-
-.mollify-file-viewer-buttons .mollify-dialog-button {
-	margin-left: 5px;
+.mollify-file-viewer-header .mollify-dialog-button {
+	margin-left: 4px;
+	margin-top: 2px;
+}
+.mollify-dialog-button-file-viewer-close {
+	float: right;
+	margin-right: 15px;
 }

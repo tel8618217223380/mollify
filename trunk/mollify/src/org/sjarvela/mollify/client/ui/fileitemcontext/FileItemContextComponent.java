@@ -83,7 +83,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public enum Action implements ResourceId {
-		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions
+		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox
 	}
 
 	public enum DescriptionActionGroup implements ResourceId {
@@ -134,7 +134,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		if (descriptionEditingEnabled)
 			content.add(createDescriptionActions());
 
-		if (filePreview)
+		if (Mode.File.equals(this.mode) && filePreview)
 			content.add(createFilePreview());
 
 		content.add(createDetails());
@@ -220,6 +220,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		actionsButton = new DropdownButton(actionListener, textProvider
 				.getStrings().fileDetailsActionsTitle(),
 				StyleConstants.FILE_CONTEXT_ACTIONS);
+		actionsButton.addAction(Action.addToDropbox, textProvider.getStrings()
+				.mainViewSelectActionAddToDropbox());
+		actionsButton.addSeparator();
 		actionsButton.addAction(FileSystemAction.rename, textProvider
 				.getStrings().fileActionRenameTitle());
 		actionsButton.addAction(FileSystemAction.copy, textProvider
@@ -398,7 +401,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			preview.setVisible(false);
 		}
 
-		viewButton.setVisible(false);
+		if (viewButton != null)
+			viewButton.setVisible(false);
 
 		actionsButton.setActionEnabled(FileSystemAction.rename, false);
 		actionsButton.setActionEnabled(FileSystemAction.copy, false);
@@ -418,8 +422,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				&& hasGeneralWritePermissions);
 		actionsButton.setActionEnabled(FileSystemAction.delete, isWritable);
 
-		preview.setVisible(isPreview);
-		viewButton.setVisible(isView);
+		if (preview != null)
+			preview.setVisible(isPreview);
+		if (viewButton != null)
+			viewButton.setVisible(isView);
 	}
 
 	public void setDescription(String description) {

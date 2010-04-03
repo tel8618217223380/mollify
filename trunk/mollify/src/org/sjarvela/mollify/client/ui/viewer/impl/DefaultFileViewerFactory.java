@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.viewer.impl;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
 import com.google.inject.Inject;
@@ -21,16 +22,25 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileViewerFactory implements FileViewerFactory {
 	private final TextProvider textProvider;
+	private final ViewManager viewManager;
 
 	@Inject
-	public DefaultFileViewerFactory(TextProvider textProvider) {
+	public DefaultFileViewerFactory(TextProvider textProvider,
+			ViewManager viewManager) {
 		this.textProvider = textProvider;
+		this.viewManager = viewManager;
 	}
 
 	@Override
 	public void openFileViewer(File file, JsObj viewParams) {
-		new FileViewer(textProvider, file.getName(), viewParams
-				.getString("url")).center();
-	}
+		String embeddedUrl = viewParams.getString("embedded");
+		String fullUrl = viewParams.getString("full");
 
+		if (embeddedUrl != null)
+			new FileViewer(textProvider, viewManager, file.getName(),
+					embeddedUrl, fullUrl).center();
+		else if (fullUrl != null)
+			viewManager.openUrlInNewWindow(fullUrl);
+
+	}
 }

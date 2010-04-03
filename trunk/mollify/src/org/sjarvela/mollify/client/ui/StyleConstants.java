@@ -352,5 +352,6 @@ public class StyleConstants {
 	public static final String FILE_VIEWER_CONTENT = "mollify-file-viewer-content";
 	public static final String FILE_VIEWER_HEADER = "mollify-file-viewer-header";
 	public static final String FILE_VIEWER_BUTTONS = "mollify-file-viewer-buttons";
-
+	public static final String FILE_VIEWER_BUTTON_OPEN = "file-viewer-open";
+	public static final String FILE_VIEWER_BUTTON_CLOSE = "file-viewer-close";
 }

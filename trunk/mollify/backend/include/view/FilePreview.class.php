@@ -30,12 +30,13 @@
 			$result = array();
 			if ($this->preview and in_array($type, self::$previewTypes)) {
 				$result["preview"] = array(
-					"url" => $this->env->getServiceUrl("preview", array($item->id(), "html"))
+					"url" => $this->env->getServiceUrl("preview", array($item->id(), "embedded"))
 				);
 			}
 			if ($this->preview and in_array($type, self::$viewTypes)) {
 				$result["view"] = array(
-					"url" => $this->env->getServiceUrl("view", array($item->id(), "html"), TRUE)
+					"embedded" => $this->env->getServiceUrl("view", array($item->id(), "embedded"), TRUE),
+					"full" => $this->env->getServiceUrl("view", array($item->id(), "full"), TRUE)
 				);
 			}
 			
@@ -47,9 +48,13 @@
 			return array("html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>');
 		}
 		
-		public function getView($item) {
+		public function getView($item, $full) {
 			$dataUrl = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
-			return '<html><img src="'.$dataUrl.'"></html>';
+			
+			$html = $full ? "<html>" : "";
+			$html .= '<img src="'.$dataUrl.'">';
+			if ($full) $html .= "</html>";
+			return $html;
 		}
 		
 		public function __toString() {

@@ -10,8 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
+import java.util.Arrays;
+
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
@@ -24,12 +27,14 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 
 public class FolderContextPresenter implements ActionListener {
 	private final FileItemContextComponent popup;
 	private final FolderDetailsProvider detailsProvider;
 	private final TextProvider textProvider;
+	private final DropBox dropBox;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -40,10 +45,11 @@ public class FolderContextPresenter implements ActionListener {
 
 	public FolderContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FolderDetailsProvider detailsProvider,
-			TextProvider textProvider) {
+			TextProvider textProvider, DropBox dropBox) {
 		this.popup = popup;
 		this.detailsProvider = detailsProvider;
 		this.textProvider = textProvider;
+		this.dropBox = dropBox;
 	}
 
 	public void setDirectoryActionHandler(FileSystemActionHandler actionHandler) {
@@ -147,7 +153,9 @@ public class FolderContextPresenter implements ActionListener {
 			return;
 		}
 
-		if (FileItemContextComponent.Action.addDescription.equals(action))
+		if (FileItemContextComponent.Action.addToDropbox.equals(action))
+			onAddToDropbox();
+		else if (FileItemContextComponent.Action.addDescription.equals(action))
 			onStartEditDescription();
 		else if (FileItemContextComponent.Action.editDescription.equals(action))
 			onStartEditDescription();
@@ -164,6 +172,10 @@ public class FolderContextPresenter implements ActionListener {
 			popup.hide();
 			permissionHandler.onEditPermissions(folder);
 		}
+	}
+
+	private void onAddToDropbox() {
+		dropBox.addItems(Arrays.asList((FileSystemItem) folder));
 	}
 
 }
