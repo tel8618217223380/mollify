@@ -17,6 +17,8 @@ import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -27,26 +29,30 @@ public class FileViewer extends ResizableDialog {
 	private final ViewManager viewManager;
 	private final String url;
 	private final String fullUrl;
+	private final String elementId;
 
 	private FlowPanel viewerPanel;
 
 	public FileViewer(TextProvider textProvider, ViewManager viewManager,
-			String title, String url, String fullUrl) {
+			String title, String embeddedUrl, String resizedElementId, int w,
+			int h, String fullUrl) {
 		super(title, StyleConstants.FILE_VIEWER);
 
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 
-		this.url = url;
+		this.url = embeddedUrl;
+		this.elementId = resizedElementId == null ? "mollify-fileviewer-frame"
+				: resizedElementId;
 		this.fullUrl = fullUrl;
 
 		viewerPanel = new FlowPanel();
 		viewerPanel.getElement().setId("mollify-fileviewer-frame");
-		viewerPanel.getElement().setAttribute("style", "overflow:auto");
+		if (resizedElementId == null)
+			viewerPanel.getElement().setAttribute("style", "overflow:auto");
 
 		initialize();
-
-		getSizedWidget().setPixelSize(600, 400);
+		setElementSize(w, h);
 	}
 
 	@Override
@@ -60,8 +66,8 @@ public class FileViewer extends ResizableDialog {
 	}-*/;
 
 	@Override
-	protected Widget getSizedWidget() {
-		return viewerPanel;
+	protected Element getSizedElement() {
+		return DOM.getElementById(elementId);
 	}
 
 	@Override
@@ -69,11 +75,11 @@ public class FileViewer extends ResizableDialog {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_CONTENT);
 		p.add(viewerPanel);
-		p.add(createHeader());
+		p.add(createTools());
 		return p;
 	}
 
-	private Widget createHeader() {
+	private Widget createTools() {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_HEADER);
 

@@ -33,14 +33,25 @@ public class DefaultFileViewerFactory implements FileViewerFactory {
 
 	@Override
 	public void openFileViewer(File file, JsObj viewParams) {
-		String embeddedUrl = viewParams.getString("embedded");
+		JsObj embedded = viewParams.getJsObj("embedded");
 		String fullUrl = viewParams.getString("full");
 
-		if (embeddedUrl != null)
-			new FileViewer(textProvider, viewManager, file.getName(),
-					embeddedUrl, fullUrl).center();
-		else if (fullUrl != null)
+		if (embedded != null) {
+			String elementId = viewParams.getString("element_id");
+			String size = viewParams.getString("size");
+
+			int w = 600;
+			int h = 400;
+			if (size != null) {
+				String[] s = size.split(";");
+				w = Integer.parseInt(s[0]);
+				h = Integer.parseInt(s[1]);
+			}
+			new FileViewer(textProvider, viewManager, file.getName(), embedded
+					.getString("url"), elementId, w, h, fullUrl).center();
+		} else if (fullUrl != null) {
 			viewManager.openUrlInNewWindow(fullUrl);
+		}
 
 	}
 }

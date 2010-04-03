@@ -32,6 +32,8 @@
 			"enable_event_logging" => FALSE,
 			"enable_file_preview" => FALSE,
 			"enable_file_view" => FALSE,
+			"file_view_options" => array(),
+			"file_preview_options" => array(),
 			"logged_events" => array(),
 			"debug" => FALSE
 		);

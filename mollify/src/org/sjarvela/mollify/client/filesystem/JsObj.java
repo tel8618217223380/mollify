@@ -19,4 +19,8 @@ public class JsObj extends JavaScriptObject {
 	public final native String getString(String name) /*-{
 		return this[name];
 	}-*/;
+
+	public final native JsObj getJsObj(String name) /*-{
+		return this[name];
+	}-*/;
 }
