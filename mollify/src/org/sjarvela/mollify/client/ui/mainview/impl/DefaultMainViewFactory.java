@@ -65,7 +65,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final DropBoxFactory dropBoxFactory;
 	private final DragAndDropManager dragAndDropManager;
 	private final ClientSettings settings;
-
 	private final FileViewerFactory fileViewerFactory;
 
 	@Inject
@@ -78,8 +77,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory,
-			FileViewerFactory fileViewerFactory,
-			DropBoxFactory dropBoxFactory, DragAndDropManager dragAndDropManager) {
+			FileViewerFactory fileViewerFactory, DropBoxFactory dropBoxFactory,
+			DragAndDropManager dragAndDropManager) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
@@ -106,11 +105,6 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FolderSelectorFactory directorySelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
-		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, textProvider, session, serviceProvider
-						.getExternalService());
-		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
-				textProvider, fileSystemService, session);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
 		FileItemDragController dragController = new FileItemDragController(
@@ -120,10 +114,15 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
 				textProvider, viewManager, dialogManager, itemSelectorFactory,
-				this, fileViewerFactory, fileSystemService, fileSystemItemProvider, sessionManager)
-				.create();
+				this, fileViewerFactory, fileSystemService,
+				fileSystemItemProvider, sessionManager).create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
+		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
+				fileSystemService, textProvider, session, serviceProvider
+						.getExternalService(), dropBox);
+		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
+				textProvider, fileSystemService, session, dropBox);
 
 		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
 				false);

@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
@@ -23,14 +24,16 @@ public class FileContextPopupFactory {
 	private final FileDetailsProvider fileDetailsProvider;
 	private final SessionInfo session;
 	private final ExternalService service;
+	private final DropBox dropBox;
 
 	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, SessionInfo session,
-			ExternalService service) {
+			ExternalService service, DropBox dropBox) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;
 		this.service = service;
+		this.dropBox = dropBox;
 	}
 
 	public FileContextPopup createPopup() {
@@ -50,7 +53,7 @@ public class FileContextPopupFactory {
 				session.getFeatures().filePreview(), session.getFeatures()
 						.fileView(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
-				session, fileDetailsProvider, textProvider, service);
+				session, fileDetailsProvider, textProvider, service, dropBox);
 		return new FileContextGlue(popup, presenter, actionDelegator);
 	}
 }

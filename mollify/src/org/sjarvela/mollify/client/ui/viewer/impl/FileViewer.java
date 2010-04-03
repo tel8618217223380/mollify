@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.viewer.impl;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,15 +24,21 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FileViewer extends ResizableDialog {
 	private final TextProvider textProvider;
+	private final ViewManager viewManager;
 	private final String url;
+	private final String fullUrl;
 
 	private FlowPanel viewerPanel;
 
-	public FileViewer(TextProvider textProvider, String title, String url) {
+	public FileViewer(TextProvider textProvider, ViewManager viewManager,
+			String title, String url, String fullUrl) {
 		super(title, StyleConstants.FILE_VIEWER);
 
 		this.textProvider = textProvider;
+		this.viewManager = viewManager;
+
 		this.url = url;
+		this.fullUrl = fullUrl;
 
 		viewerPanel = new FlowPanel();
 		viewerPanel.getElement().setId("mollify-fileviewer-frame");
@@ -61,8 +68,8 @@ public class FileViewer extends ResizableDialog {
 	protected Widget createContent() {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_CONTENT);
-		p.add(createHeader());
 		p.add(viewerPanel);
+		p.add(createHeader());
 		return p;
 	}
 
@@ -70,12 +77,24 @@ public class FileViewer extends ResizableDialog {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_HEADER);
 
+		if (fullUrl != null) {
+			Button openInNewWindowButton = createButton(textProvider
+					.getStrings().fileViewerOpenInNewWindowTitle(),
+					new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							viewManager.openUrlInNewWindow(fullUrl);
+							FileViewer.this.hide();
+						}
+					}, StyleConstants.FILE_VIEWER_BUTTON_OPEN);
+			p.add(openInNewWindowButton);
+		}
+
 		Button closeButton = createButton(textProvider.getStrings()
 				.dialogCloseButton(), new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				FileViewer.this.hide();
 			}
-		}, StyleConstants.DIALOG_BUTTON_CLOSE);
+		}, StyleConstants.FILE_VIEWER_BUTTON_CLOSE);
 		p.add(closeButton);
 
 		return p;
