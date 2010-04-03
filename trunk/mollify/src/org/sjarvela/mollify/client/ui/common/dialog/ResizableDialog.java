@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.common.dialog;
 
 import org.sjarvela.mollify.client.ui.StyleConstants;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -47,13 +49,13 @@ public abstract class ResizableDialog extends Dialog implements
 		this.add(content);
 	}
 
-	protected Widget getSizedWidget() {
-		return content;
+	protected Element getSizedElement() {
+		return content.getElement();
 	}
 
 	private void resetSize() {
-		contentWidth = getSizedWidget().getElement().getClientWidth();
-		contentHeight = getSizedWidget().getElement().getClientHeight();
+		contentWidth = getSizedElement().getClientWidth();
+		contentHeight = getSizedElement().getClientHeight();
 	}
 
 	private Widget createResizeWidget() {
@@ -82,7 +84,16 @@ public abstract class ResizableDialog extends Dialog implements
 		int offsetX = mouseDownX - x;
 		int offsetY = mouseDownY - y;
 
-		getSizedWidget().setPixelSize(contentWidth - offsetX,
-				contentHeight - offsetY);
+		setElementSize(contentWidth - offsetX, contentHeight - offsetY);
+	}
+
+	protected void setElementSize(int w, int h) {
+		setElementSize(getSizedElement(), w, h);
+	}
+
+	protected void setElementSize(Element e, int w, int h) {
+		DOM.setStyleAttribute(e, "width", w + "px");
+		DOM.setStyleAttribute(e, "height", h + "px");
+		// e.setPropertyString("style", "width:" + w + "px;height:" + h + "px");
 	}
 }
