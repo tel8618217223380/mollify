@@ -45,7 +45,7 @@ public class FileDetails extends JavaScriptObject {
 		return FilePermission.fromString(getFilePermissionString());
 	}
 
-	public final native JsObj getFilePreview() /*-{
+	public final native String getFilePreview() /*-{
 		return this.preview;
 	}-*/;
 

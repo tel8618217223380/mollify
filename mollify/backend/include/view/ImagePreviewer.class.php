@@ -10,28 +10,21 @@
 	 * this entire header must remain intact.
 	 */
 
-	class ImageViewer {
+	class ImagePreviewer {
 		private $env;
 		
 		public function __construct($env) {
 			$this->env = $env;
 		}
 		
-		public function getInfo($item) {
-			return array(
-				"embedded" => $this->env->getServiceUrl("view", array($item->id(), "embedded"), FALSE),
-				"full" => $this->env->getServiceUrl("view", array($item->id(), "full"), TRUE)
-			);
+		public function getUrl($item) {
+			return $this->env->getServiceUrl("preview", array($item->id(), "info"));
 		}
 		
-		public function getView($item, $full) {
-			$html = '<img src="'.$this->env->getDataUrl($item).'">';
-
-			if ($full)
-				return "<html><head><title>".$item->name()."</title></head><body>".$html."</body></html>";
-				
+		public function getPreview($item) {
+			$dataUrl = $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
 			return array(
-				"html" => $html
+				"html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>'
 			);
 		}
 	}

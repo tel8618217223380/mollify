@@ -14,6 +14,7 @@
 		private $settings = array();
 		
 		private static $VALUES = array(
+			"host_public_address" => NULL,
 			"session_name" => NULL,
 			"timezone" => NULL,
 			"enable_limited_http_methods" => FALSE,
