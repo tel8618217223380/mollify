@@ -61,7 +61,10 @@
 		}
 				
 		public function param($param, $value = NULL) {
-			if ($value === NULL) return $_SESSION[$param];
+			if ($value === NULL) {
+				if (!array_key_exists($param, $_SESSION)) throw new ServiceException("Invalid session param requested: ".$param);
+				return $_SESSION[$param];
+			}
 			return $_SESSION[$param] = $value;
 		}
 		

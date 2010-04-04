@@ -37,7 +37,12 @@ public class DefaultDialogManager implements DialogManager {
 	}
 
 	public void showInfo(String title, String text) {
-		new InfoDialog(textProvider, title, text,
+		showInfo(title, text, null);
+	}
+
+	@Override
+	public void showInfo(String title, String text, String info) {
+		new InfoDialog(textProvider, title, text, info,
 				StyleConstants.INFO_DIALOG_TYPE_INFO);
 	}
 

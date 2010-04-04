@@ -14,6 +14,7 @@
 		const PERMISSION_VALUE_ADMIN = "A";
 		const PERMISSION_VALUE_READWRITE = "RW";
 		const PERMISSION_VALUE_READONLY = "RO";
+		const PERMISSION_VALUE_NO_ACCESS = '-';
 		
 		const RIGHTS_NONE = "-";
 		const RIGHTS_READ = "R";
@@ -63,6 +64,7 @@
 		}
 
 		public function getUserId() {
+			if (!$this->isAuthenticated()) return NULL;
 			return $this->env->session()->param('user_id');
 		}
 		

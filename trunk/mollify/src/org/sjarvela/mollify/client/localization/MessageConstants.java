@@ -51,4 +51,6 @@ public interface MessageConstants extends Messages {
 
 	String dragMultipleItems(int count);
 
+	String publicLinkMessage(String name);
+
 }

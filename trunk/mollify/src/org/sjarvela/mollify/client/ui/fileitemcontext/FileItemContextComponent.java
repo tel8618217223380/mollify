@@ -52,6 +52,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final boolean permissionsEditable;
 	private final boolean filePreview;
 	private final boolean fileView;
+	private final boolean publicLinks;
 
 	private final Mode mode;
 
@@ -93,7 +94,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
 			boolean generalWritePermissions, boolean descriptionEditingEnabled,
 			boolean permissionsEditable, boolean zipDownloadEnabled,
-			boolean filePreview, boolean fileView, ActionListener actionListener) {
+			boolean filePreview, boolean fileView, boolean publicLinks,
+			ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
@@ -102,10 +104,11 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		this.descriptionEditingEnabled = descriptionEditingEnabled;
 		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
-
-		this.textProvider = textProvider;
 		this.filePreview = filePreview;
 		this.fileView = fileView;
+		this.publicLinks = publicLinks;
+
+		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 
 		initialize();
@@ -222,6 +225,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				StyleConstants.FILE_CONTEXT_ACTIONS);
 		actionsButton.addAction(Action.addToDropbox, textProvider.getStrings()
 				.mainViewSelectActionAddToDropbox());
+		if (Mode.File.equals(this.mode) && this.publicLinks)
+			actionsButton.addAction(FileSystemAction.publicLink, textProvider
+					.getStrings().fileActionPublicLinkTitle());
 		actionsButton.addSeparator();
 		actionsButton.addAction(FileSystemAction.rename, textProvider
 				.getStrings().fileActionRenameTitle());

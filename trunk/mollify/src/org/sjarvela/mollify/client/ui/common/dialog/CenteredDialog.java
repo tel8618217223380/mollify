@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.common.dialog;
 
-import com.google.gwt.user.client.Window;
-
 public abstract class CenteredDialog extends Dialog {
 
 	public CenteredDialog(String title, String style) {
@@ -20,13 +18,6 @@ public abstract class CenteredDialog extends Dialog {
 
 	protected void initialize() {
 		super.initialize();
-
-		this.setPopupPositionAndShow(new PositionCallback() {
-			public void setPosition(int offsetWidth, int offsetHeight) {
-				int left = ((Window.getClientWidth() - offsetWidth) / 2) >> 0;
-				int top = ((Window.getClientHeight() - offsetHeight) / 2) >> 0;
-				setPopupPosition(left, top);
-			}
-		});
+		this.center();
 	}
 }

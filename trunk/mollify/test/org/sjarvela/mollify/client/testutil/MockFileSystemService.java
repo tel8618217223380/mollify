@@ -169,4 +169,10 @@ public class MockFileSystemService implements FileSystemService {
 	public List<FileItemUserPermission> getRemovedPermissions() {
 		return removedPermissions;
 	}
+
+	@Override
+	public String getPublicLink(File file) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

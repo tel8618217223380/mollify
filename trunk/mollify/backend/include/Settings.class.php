@@ -35,6 +35,7 @@
 			"enable_file_view" => FALSE,
 			"file_view_options" => array(),
 			"file_preview_options" => array(),
+			"enable_public_links" => FALSE,
 			"logged_events" => array(),
 			"debug" => FALSE
 		);

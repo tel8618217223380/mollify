@@ -21,6 +21,8 @@ public interface DialogManager {
 
 	public abstract void showInfo(String title, String text);
 
+	public abstract void showInfo(String title, String text, String info);
+
 	public abstract void showConfirmationDialog(String title, String message,
 			String style, ConfirmationListener listener, Widget source);
 

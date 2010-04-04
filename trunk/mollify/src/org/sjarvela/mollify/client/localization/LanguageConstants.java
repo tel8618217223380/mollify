@@ -70,6 +70,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileActionDeleteTitle();
 
 	public String fileActionViewTitle();
+	
+	public String fileActionPublicLinkTitle();
 
 	public String filePreviewTitle();
 
@@ -424,5 +426,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String mainViewDropBoxButton();
 
 	public String fileViewerOpenInNewWindowTitle();
+
+	public String filePublicLinkTitle();
 
 }

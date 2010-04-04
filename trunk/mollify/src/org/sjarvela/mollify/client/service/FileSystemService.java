@@ -74,4 +74,6 @@ public interface FileSystemService extends FileDetailsProvider,
 			List<FileItemUserPermission> modifiedPermissions,
 			List<FileItemUserPermission> removedPermissions,
 			ResultListener resultListener);
+
+	String getPublicLink(File file);
 }

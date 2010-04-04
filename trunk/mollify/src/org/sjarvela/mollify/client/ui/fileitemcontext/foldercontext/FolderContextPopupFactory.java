@@ -47,7 +47,7 @@ public class FolderContextPopupFactory {
 				Mode.Directory, textProvider, session
 						.getDefaultPermissionMode().hasWritePermission(),
 				descriptionEditable, permissionsEditable, session.getFeatures()
-						.zipDownload(), false, false, actionDelegator);
+						.zipDownload(), false, false, false, actionDelegator);
 		FolderContextPresenter presenter = new FolderContextPresenter(popup,
 				session, detailsProvider, textProvider, dropBox);
 		return new FolderContextGlue(popup, presenter, actionDelegator);

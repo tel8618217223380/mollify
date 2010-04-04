@@ -299,4 +299,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		request().url(serviceUrl().action(FileAction.permissions)).data(
 				data.toString()).listener(resultListener).put();
 	}
+
+	@Override
+	public String getPublicLink(File file) {
+		return service.url().item("public").item("items").fileItem(file)
+				.build();
+	}
 }

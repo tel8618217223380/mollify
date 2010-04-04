@@ -17,6 +17,7 @@
 		
 		private $env;
 		private $allowedUploadTypes;
+		private $unauthenticatedItemPermission = Authentication::PERMISSION_VALUE_NO_ACCESS;
 		private $permissionCache = array();
 		private $providers = array();
 
@@ -32,6 +33,10 @@
 		}
 		
 		public function initialize($request) {}
+		
+		public function setUnauthenticatedItemPermission($permission) {
+			$this->unauthenticatedItemPermission = $permission;
+		}
 
 		public function registerProvider($provider) {
 			$this->providers[] = $provider;
@@ -42,7 +47,7 @@
 		}
 
 		private function getUserFolders() {
-			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());		
+			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
@@ -116,11 +121,17 @@
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			$folderDefs = $this->env->session()->param('folders');
-			if (!array_key_exists($filesystemId, $folderDefs))
-				throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
-			
-			$folderDef = $folderDefs[$filesystemId];
+			if ($this->env->authentication()->isAuthenticated()) { 
+				$folderDefs = $this->env->session()->param('folders');
+				if (!array_key_exists($filesystemId, $folderDefs))
+					throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
+				
+				$folderDef = $folderDefs[$filesystemId];
+			} else {
+				$folderDef = $this->env->configuration()->getFolder($filesystemId);
+				if (!$folderDef)
+					throw new ServiceException("INVALID_CONFIGURATION", "Invalid item: ".$id);
+			}
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
 		}
 		
@@ -202,6 +213,10 @@
 		}
 		
 		private function getItemUserPermission($item) {
+			if (!$this->env->authentication()->isAuthenticated()) {
+				return $this->unauthenticatedItemPermission;
+			}
+			
 			if (array_key_exists($item->id(), $this->permissionCache)) {
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
