@@ -26,6 +26,9 @@ public abstract class ResizableDialog extends Dialog implements
 	private int mouseDownX = -1;
 	private int mouseDownY = -1;
 
+	private int minWidth = 0;
+	private int minHeight = 0;
+
 	private int contentWidth = -1;
 	private int contentHeight = -1;
 
@@ -47,6 +50,11 @@ public abstract class ResizableDialog extends Dialog implements
 		content.add(lower);
 
 		this.add(content);
+	}
+
+	protected void setMinimumSize(int minWidth, int minHeight) {
+		this.minWidth = minWidth;
+		this.minHeight = minHeight;
 	}
 
 	protected Element getSizedElement() {
@@ -92,8 +100,7 @@ public abstract class ResizableDialog extends Dialog implements
 	}
 
 	protected void setElementSize(Element e, int w, int h) {
-		DOM.setStyleAttribute(e, "width", w + "px");
-		DOM.setStyleAttribute(e, "height", h + "px");
-		// e.setPropertyString("style", "width:" + w + "px;height:" + h + "px");
+		DOM.setStyleAttribute(e, "width", Math.max(w, this.minWidth) + "px");
+		DOM.setStyleAttribute(e, "height", Math.max(h, this.minHeight) + "px");
 	}
 }

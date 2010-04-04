@@ -14,9 +14,7 @@
 		static $defaultPreviewTypes = array("gif", "png", "jpg");
 		static $defaultViewTypes = array("gif", "png", "jpg");
 		
-		static $googleViewerTypes = array("pdf", "doc", "xls");
-		static $imageTypes = array("gif", "png", "jpg");
-		
+		private $viewers = array();		
 		private $view;
 		private $preview;
 		
@@ -24,6 +22,17 @@
 			$this->env = $serviceEnvironment;
 			$this->view = $view;
 			$this->preview = $preview;
+			
+			if ($this->view) {
+				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
+				if ($this->isGoogleViewerEnabled())
+					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
+			}
+		}
+		
+		private function registerViewer($types, $cls) {
+			foreach($types as $t)
+				$this->viewers[$t] = $cls;
 		}
 		
 		public function getItemDetails($item) {
@@ -33,17 +42,45 @@
 			$result = array();
 			if ($this->preview and in_array($type, $this->getPreviewTypes())) {
 				$result["preview"] = array(
-					"url" => $this->env->getServiceUrl("preview", array($item->id(), "embedded"))
+					"url" => $this->env->getServiceUrl("preview", array($item->id(), "info"))
 				);
 			}
-			if ($this->view and in_array($type, $this->getViewTypes())) {
-				if (in_array($type, self::$imageTypes))
-					$result["view"] = $this->getImageViewData($item);
-				else if (in_array($type, self::$googleViewerTypes) and $this->isGoogleViewerEnabled())
-					$result["view"] = $this->getGoogleViewData($item);
+			if ($this->view and array_key_exists($type, $this->viewers) and in_array($type, $this->getViewTypes())) {
+				$viewer = $this->getViewer($type);
+				$result["view"] = $viewer->getInfo($item);
 			}
 			
 			return $result;
+		}
+		
+		private function getViewer($type) {
+			$viewer = $this->viewers[$type];
+			require_once($viewer.".class.php");
+			return new $viewer($this);
+		}
+		
+		public function getPreview($item) {
+			$dataUrl = $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
+			return array("html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>');
+		}
+		
+		public function getView($item, $full) {
+			$type = strtolower($item->extension());
+			$viewer = $this->getViewer($type);
+			return $viewer->getView($item, $full);
+		}
+		
+		public function getDataUrl($item, $session = FALSE) {
+			$url = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
+			if ($session) {
+				$s = $this->env->session()->getSessionInfo();
+				$url .= '&session='.$s["session_id"];
+			}
+			return $url;
+		}
+		
+		public function getServiceUrl($id, $path, $full = FALSE) {
+			return $this->env->getServiceUrl($id, $path, $full);
 		}
 
 		private function getPreviewTypes() {
@@ -51,7 +88,7 @@
 			if (isset($s["types"])) return $s["types"];
 			return self::$defaultPreviewTypes;
 		}
-		
+
 		private function getViewTypes() {
 			$s = $this->env->settings()->setting("file_view_options", TRUE);
 			if (!isset($s["types"]) or count($s["types"]) == 0) return self::$defaultViewTypes;
@@ -66,70 +103,7 @@
 			$s = $this->env->settings()->setting("file_view_options", TRUE);
 			return (isset($s["use_google_viewer"]) and $s["use_google_viewer"] === TRUE);
 		}
-		
-		public function getPreview($item) {
-			$dataUrl = $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
-			return array("html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>');
-		}
-		
-		public function getView($item, $full) {
-			$type = strtolower($item->extension());
-			
-			if (in_array($type, self::$imageTypes))
-				return $this->getImageView($item, $full);
-			else if (in_array($type, self::$googleViewerTypes) and $this->isGoogleViewerEnabled())
-				return $this->getGoogleView($item, $full);
-		}
 
-		private function getImageViewData($item) {
-			return array(
-				"embedded" => array(
-					"url" => $this->env->getServiceUrl("view", array($item->id(), "embedded"), TRUE)
-				),
-				"full" => $this->env->getServiceUrl("view", array($item->id(), "full"), TRUE)
-			);
-		}
-				
-		private function getImageView($item, $full) {
-			$html = $full ? "<html>" : "";
-			$html .= '<img src="'.$this->getDataUrl($item).'">';
-			if ($full) $html .= "</html>";
-			return $html;
-		}
-
-		private function getGoogleView($item, $full) {
-			$html = $full ? "<html>" : "";
-			$html .= '<iframe id="google-viewer" src="'.$this->getGoogleViewerUrl($item, FALSE).'" width="600" height="780" style="border: none;"></iframe>';
-			if ($full) $html .= "</html>";
-			return $html;
-		}
-
-		private function getGoogleViewData($item) {
-			return array(
-				"embedded" => array(
-					"url" => $this->env->getServiceUrl("view", array($item->id(), "embedded"), TRUE),
-					"element_id" => "google-viewer",
-					"size" => "600;780"
-				),
-				"full" => $this->getGoogleViewerUrl($item, TRUE)
-			);
-		}
-		
-		private function getGoogleViewerUrl($item, $full) {
-			$url = 'http://docs.google.com/viewer?url='.urlencode($this->getDataUrl($item, TRUE));
-			if (!$full) $url .= '&embedded=true';
-			return $url;
-		}
-		
-		private function getDataUrl($item, $session = FALSE) {
-			$url = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
-			if ($session) {
-				$s = $this->env->session()->getSessionInfo();
-				$url .= '&session='.$s["session_id"];
-			}
-			return $url;
-		}
-		
 		public function __toString() {
 			return "FilePreview";
 		}

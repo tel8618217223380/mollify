@@ -19,7 +19,7 @@
 			$item = $this->item($this->path[0]);
 			
 			if ($this->id === 'preview') {
-				if ($this->path[1] === 'embedded') {
+				if ($this->path[1] === 'info') {
 					$this->response()->success($this->env->getObject("preview")->getPreview($item));
 					return;
 				}
@@ -30,7 +30,11 @@
 			} else if ($this->id === 'view') {
 				if ($this->path[1] === 'embedded' or $this->path[1] === 'full') {
 					$full = ($this->path[1] === 'full');
-					$this->response()->html($this->env->getObject("preview")->getView($item, $full));
+					
+					if ($full)
+						$this->response()->html($this->env->getObject("preview")->getView($item, TRUE));
+					else
+						$this->response()->success($this->env->getObject("preview")->getView($item, FALSE));
 					return;
 				}
 				if ($this->path[1] === 'content') {

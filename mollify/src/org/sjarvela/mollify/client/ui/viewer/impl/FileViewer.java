@@ -10,7 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.viewer.impl;
 
+import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ExternalService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
@@ -27,47 +31,79 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileViewer extends ResizableDialog {
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
+	private final ExternalService service;
 	private final String url;
 	private final String fullUrl;
-	private final String elementId;
+	private String resizedElementId;
 
 	private FlowPanel viewerPanel;
 
 	public FileViewer(TextProvider textProvider, ViewManager viewManager,
-			String title, String embeddedUrl, String resizedElementId, int w,
-			int h, String fullUrl) {
+			ExternalService service, String title, String embeddedUrl,
+			String fullUrl) {
 		super(title, StyleConstants.FILE_VIEWER);
 
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
+		this.service = service;
 
 		this.url = embeddedUrl;
-		this.elementId = resizedElementId == null ? "mollify-fileviewer-frame"
-				: resizedElementId;
+		this.resizedElementId = "mollify-fileviewer-frame";
 		this.fullUrl = fullUrl;
 
 		viewerPanel = new FlowPanel();
 		viewerPanel.getElement().setId("mollify-fileviewer-frame");
-		if (resizedElementId == null)
-			viewerPanel.getElement().setAttribute("style", "overflow:auto");
+		viewerPanel.getElement().setAttribute("style", "overflow:auto");
+
+		viewerPanel
+				.setStylePrimaryName(StyleConstants.FILE_VIEWER_CONTENT_PANEL);
+		viewerPanel.addStyleDependentName(StyleConstants.LOADING);
 
 		initialize();
-		setElementSize(w, h);
 	}
 
 	@Override
 	protected void onLoad() {
 		super.onLoad();
-		loadContent(url);
+
+		setMinimumSize(viewerPanel.getElement().getClientWidth(), viewerPanel
+				.getElement().getClientHeight());
+		service.get(url, new ResultListener<JsObj>() {
+			@Override
+			public void onFail(ServiceError error) {
+				viewerPanel.getElement().setInnerHTML(error.getDetails());
+			}
+
+			@Override
+			public void onSuccess(JsObj result) {
+				setContent(result);
+			}
+		});
 	}
 
-	private native void loadContent(String url) /*-{
-		$wnd.$("#mollify-fileviewer-frame").load(url);
-	}-*/;
+	private void setContent(JsObj result) {
+		viewerPanel.removeStyleDependentName(StyleConstants.LOADING);
+		viewerPanel.getElement().setInnerHTML(result.getString("html"));
+
+		String resizedElementId = result.getString("resized_element_id");
+		if (resizedElementId != null)
+			this.resizedElementId = resizedElementId;
+
+		String size = result.getString("size");
+		if (size != null) {
+			String[] s = size.split(";");
+			int w = Integer.parseInt(s[0]);
+			int h = Integer.parseInt(s[1]);
+			setElementSize(w, h);
+		} else {
+			setElementSize(600, 400);
+		}
+		this.center();
+	}
 
 	@Override
 	protected Element getSizedElement() {
-		return DOM.getElementById(elementId);
+		return DOM.getElementById(resizedElementId);
 	}
 
 	@Override
