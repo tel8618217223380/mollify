@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.viewer.impl;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
@@ -23,35 +24,27 @@ import com.google.inject.Singleton;
 public class DefaultFileViewerFactory implements FileViewerFactory {
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
+	private final ServiceProvider serviceProvider;
 
 	@Inject
 	public DefaultFileViewerFactory(TextProvider textProvider,
-			ViewManager viewManager) {
+			ViewManager viewManager, ServiceProvider serviceProvider) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
+		this.serviceProvider = serviceProvider;
 	}
 
 	@Override
 	public void openFileViewer(File file, JsObj viewParams) {
-		JsObj embedded = viewParams.getJsObj("embedded");
+		String embeddedUrl = viewParams.getString("embedded");
 		String fullUrl = viewParams.getString("full");
 
-		if (embedded != null) {
-			String elementId = viewParams.getString("element_id");
-			String size = viewParams.getString("size");
-
-			int w = 600;
-			int h = 400;
-			if (size != null) {
-				String[] s = size.split(";");
-				w = Integer.parseInt(s[0]);
-				h = Integer.parseInt(s[1]);
-			}
-			new FileViewer(textProvider, viewManager, file.getName(), embedded
-					.getString("url"), elementId, w, h, fullUrl).center();
+		if (embeddedUrl != null) {
+			new FileViewer(textProvider, viewManager, serviceProvider
+					.getExternalService(), file.getName(), embeddedUrl, fullUrl)
+					.center();
 		} else if (fullUrl != null) {
 			viewManager.openUrlInNewWindow(fullUrl);
 		}
-
 	}
 }
