@@ -130,6 +130,7 @@ public class FileContextPresenter implements ActionListener,
 	}
 
 	private void updateDetails(FileDetails details) {
+		this.previewInitalized = false;
 		this.popup.reset();
 		this.details = details;
 		this.updateDescription();
@@ -238,16 +239,11 @@ public class FileContextPresenter implements ActionListener,
 
 	@Override
 	public void onPreview() {
-		if (!session.getFeatures().filePreview()
-				|| details.getFilePreview() == null || previewInitalized)
+		if (!session.getFeatures().filePreview() || previewInitalized)
 			return;
 
 		previewInitalized = true;
-		String url = details.getFilePreview().getString("url");
-		if (url == null)
-			return;
-
-		service.get(url, new ResultListener<JsObj>() {
+		service.get(details.getFilePreview(), new ResultListener<JsObj>() {
 			@Override
 			public void onFail(ServiceError error) {
 				popup.setFilePreview(error.getType().getMessage(textProvider));

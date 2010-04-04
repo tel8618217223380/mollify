@@ -14,22 +14,32 @@
 		static $defaultPreviewTypes = array("gif", "png", "jpg");
 		static $defaultViewTypes = array("gif", "png", "jpg");
 		
-		private $viewers = array();		
-		private $view;
-		private $preview;
+		private $previewers = array();
+		private $viewers = array();
+		
+		private $viewEnabled;
+		private $previewEnabled;
 		
 		public function __construct($serviceEnvironment, $view, $preview) {
 			$this->env = $serviceEnvironment;
-			$this->view = $view;
-			$this->preview = $preview;
+			$this->viewEnabled = $view;
+			$this->previewEnabled = $preview;
 			
-			if ($this->view) {
+			if ($this->viewEnabled) {
 				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
 				if ($this->isGoogleViewerEnabled())
 					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
 			}
+			if ($this->previewEnabled) {
+				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
+			}
 		}
-		
+
+		private function registerPreviewer($types, $cls) {
+			foreach($types as $t)
+				$this->previewers[$t] = $cls;
+		}
+				
 		private function registerViewer($types, $cls) {
 			foreach($types as $t)
 				$this->viewers[$t] = $cls;
@@ -40,19 +50,37 @@
 			$type = strtolower($item->extension());
 			
 			$result = array();
-			if ($this->preview and in_array($type, $this->getPreviewTypes())) {
-				$result["preview"] = array(
-					"url" => $this->env->getServiceUrl("preview", array($item->id(), "info"))
-				);
+			if ($this->previewEnabled and $this->isPreviewAllowed($type)) {
+				$previewer = $this->getPreviewer($type);
+				$result["preview"] = $previewer->getUrl($item);
 			}
-			if ($this->view and array_key_exists($type, $this->viewers) and in_array($type, $this->getViewTypes())) {
+			if ($this->viewEnabled and $this->isViewAllowed($type)) {
 				$viewer = $this->getViewer($type);
 				$result["view"] = $viewer->getInfo($item);
 			}
-			
 			return $result;
 		}
-		
+
+		private function isPreviewAllowed($type) {
+			if (!array_key_exists($type, $this->previewers)) return false;
+			$s = $this->env->settings()->setting("file_preview_options", TRUE);
+			if (!isset($s["types"]) or count($s["types"]) == 0) return TRUE;
+			return in_array($type, $this->getPreviewTypes());
+		}
+				
+		private function isViewAllowed($type) {
+			if (!array_key_exists($type, $this->viewers)) return false;
+			$s = $this->env->settings()->setting("file_view_options", TRUE);
+			if (!isset($s["types"]) or count($s["types"]) == 0) return TRUE;
+			return in_array($type, $this->getViewTypes());
+		}
+
+		private function getPreviewer($type) {
+			$previewer = $this->previewers[$type];
+			require_once($previewer.".class.php");
+			return new $previewer($this);
+		}
+				
 		private function getViewer($type) {
 			$viewer = $this->viewers[$type];
 			require_once($viewer.".class.php");
@@ -60,8 +88,9 @@
 		}
 		
 		public function getPreview($item) {
-			$dataUrl = $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
-			return array("html" => '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$dataUrl.'" style="max-width:400px"></div>');
+			$type = strtolower($item->extension());
+			$previewer = $this->getPreviewer($type);
+			return $previewer->getPreview($item);
 		}
 		
 		public function getView($item, $full) {
@@ -85,8 +114,12 @@
 
 		private function getPreviewTypes() {
 			$s = $this->env->settings()->setting("file_preview_options", TRUE);
-			if (isset($s["types"])) return $s["types"];
-			return self::$defaultPreviewTypes;
+			if (!isset($s["types"]) or count($s['types']) == 0) return self::$defaultPreviewTypes;
+			
+			$result = array();
+			foreach (explode(",", $s["types"]) as $t)
+				$result[] = strtolower(trim($t));
+			return $result;
 		}
 
 		private function getViewTypes() {

@@ -119,7 +119,8 @@
 		}
 		
 		public function getServiceUrl($id, $path, $full = FALSE) {
-			$url = ($full ? $_SERVER['SCRIPT_NAME']."/" : "").$id;
+			if ($full and !$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
+			$url = ($full ? $this->settings->setting("host_public_address").$_SERVER['SCRIPT_NAME']."/" : "").$id;
 			foreach($path as $p) $url .= "/".$p;
 			return $url;
 		}
