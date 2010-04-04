@@ -33,6 +33,7 @@
 			$this->environment->addService("session", "SessionServices");
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
+			$this->environment->addService("public", "PublicServices");
 			
 			//TODO create plugin system
 			if ($this->environment->features()->isFeatureEnabled('event_logging')) {
@@ -55,9 +56,9 @@
 					$this->environment->addService("view", "FilePreviewServices");
 				if ($preview)
 					$this->environment->addService("preview", "FilePreviewServices");
-				require_once("view/FilePreview.class.php");
+				require_once("view/FilePreviewController.class.php");
 				
-				$preview = new FilePreview($this->environment, $view, $preview);
+				$preview = new FilePreviewController($this->environment, $view, $preview);
 				$this->environment->registerObject("preview", $preview);
 				$this->environment->filesystem()->registerProvider($preview);
 			}

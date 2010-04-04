@@ -86,7 +86,7 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	public String getDownloadUrl(File file) {
 		return service.getDownloadUrl(file);
 	}
-	
+
 	@Override
 	public String getDownloadUrl(File file, String sessionId) {
 		return service.getDownloadUrl(file, sessionId);
@@ -150,6 +150,11 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.updateItemPermissions(newPermissions, modifiedPermissions,
 				removedPermissions, resultListenerFactory
 						.createListener(resultListener));
+	}
+
+	@Override
+	public String getPublicLink(File file) {
+		return service.getPublicLink(file);
 	}
 
 }

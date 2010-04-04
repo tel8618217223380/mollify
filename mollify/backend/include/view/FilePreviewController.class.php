@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class FilePreview {
+	class FilePreviewController {
 		static $defaultPreviewTypes = array("gif", "png", "jpg");
 		static $defaultViewTypes = array("gif", "png", "jpg");
 		

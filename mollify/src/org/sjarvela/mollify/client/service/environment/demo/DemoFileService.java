@@ -141,4 +141,9 @@ public class DemoFileService implements FileSystemService {
 			ResultListener listener) {
 		listener.onSuccess(true);
 	}
+
+	@Override
+	public String getPublicLink(File file) {
+		return "http://www.mollify.org/images/mollify_logo.png";
+	}
 }

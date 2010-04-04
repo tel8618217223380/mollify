@@ -51,7 +51,8 @@ public class FileContextPopupFactory {
 						.hasWritePermission(), descriptionEditable,
 				permissionsEditable, session.getFeatures().zipDownload(),
 				session.getFeatures().filePreview(), session.getFeatures()
-						.fileView(), actionDelegator);
+						.fileView(), session.getFeatures().publicLinks(),
+				actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider, service, dropBox);
 		return new FileContextGlue(popup, presenter, actionDelegator);

@@ -16,20 +16,25 @@ import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class InfoDialog extends CenteredDialog {
-	private TextProvider textProvider;
-	private String text;
-	private String type;
+	private final TextProvider textProvider;
+	private final String text;
+	private final String type;
+	private final String info;
 
 	public InfoDialog(TextProvider textProvider, String title, String text,
-			String type) {
+			String info, String type) {
 		super(title, type);
 		this.textProvider = textProvider;
 		this.text = text;
+		this.info = info;
 		this.type = type;
 
 		initialize();
@@ -37,18 +42,29 @@ public class InfoDialog extends CenteredDialog {
 
 	@Override
 	protected Widget createContent() {
-		HorizontalPanel content = new HorizontalPanel();
-		content.addStyleName(StyleConstants.INFO_DIALOG_CONTENT);
+		Panel content = new FlowPanel();
+		content.setStylePrimaryName(StyleConstants.INFO_DIALOG_CONTENT);
 
 		Label icon = new Label();
-		icon.addStyleName(StyleConstants.INFO_DIALOG_ICON);
-		icon.addStyleName(type);
+		icon.setStylePrimaryName(StyleConstants.INFO_DIALOG_ICON);
+		icon.addStyleDependentName(type);
 		content.add(icon);
 
 		Label message = new Label(text);
-		message.addStyleName(StyleConstants.INFO_DIALOG_MESSAGE);
-		message.addStyleName(type);
+		message.setStylePrimaryName(StyleConstants.INFO_DIALOG_MESSAGE);
+		message.addStyleDependentName(type);
 		content.add(message);
+
+		if (info != null) {
+			TextBox infoBox = new TextBox();
+			infoBox.setStylePrimaryName(StyleConstants.INFO_DIALOG_INFO);
+			infoBox.addStyleDependentName(type);
+
+			infoBox.setReadOnly(true);
+			infoBox.setText(info);
+			infoBox.setTitle(info);
+			content.add(infoBox);
+		}
 
 		return content;
 	}
@@ -56,7 +72,7 @@ public class InfoDialog extends CenteredDialog {
 	@Override
 	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.INFO_DIALOG_BUTTONS);
+		buttons.setStylePrimaryName(StyleConstants.INFO_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),

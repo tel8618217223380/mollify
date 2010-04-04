@@ -201,6 +201,7 @@
 }
 
 .mollify-header-container {
+	
 }
 
 .mollify-header-panel {
@@ -595,7 +596,6 @@
 
 #mollify-header-file-actions[disabled] {
 	color: #747474;
-	background: #919191 none no-repeat 1px 10px;
 }
 
 #mollify-header-toggle-button-dropbox {
@@ -822,6 +822,10 @@ td#mollify-filelist-column-size {
 	float: left;
 }
 
+.mollify-file-context-multiaction {
+	float: left;
+}
+
 #mollify-file-context-actions {
 	float: right;
 }
@@ -1023,6 +1027,11 @@ td#mollify-filelist-column-size {
 
 .mollify-info-dialog-content {
 	margin: 10px 4px 4px;
+}
+
+.mollify-info-dialog-info-info {
+	width: 300px;
+	margin-top: 6px;
 }
 
 .mollify-info-dialog-buttons {
@@ -2009,8 +2018,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 #mollify-dropbox-actions-button {
 	margin-left: 70px;
 	width: 80px;
-	background-color: #4e4f4f;
-	background-image: none;
+	background: #4e4f4f url(sort-desc.png) no-repeat 67px 10px;
 	margin-bottom: 5px;
 	color: #9e9e9e;
 	border: 1px solid #6e6e6e;
@@ -2054,10 +2062,12 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 #mollify-fileviewer-frame {
 	margin: 4px;
 }
+
 .mollify-file-viewer-header .mollify-dialog-button {
 	margin-left: 4px;
 	margin-top: 2px;
 }
+
 .mollify-dialog-button-file-viewer-close {
 	float: right;
 	margin-right: 15px;

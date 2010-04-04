@@ -173,6 +173,7 @@ public class StyleConstants {
 	public static final String INFO_DIALOG_CONTENT = "mollify-info-dialog-content";
 	public static final String INFO_DIALOG_ICON = "mollify-info-dialog-icon";
 	public static final String INFO_DIALOG_MESSAGE = "mollify-info-dialog-message";
+	public static final String INFO_DIALOG_INFO = "mollify-info-dialog-info";
 	public static final String INFO_DIALOG_BUTTONS = "mollify-info-dialog-buttons";
 
 	public static final String INFO_DIALOG_TYPE_INFO = "info";

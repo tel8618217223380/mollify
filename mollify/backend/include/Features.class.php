@@ -24,7 +24,8 @@
 			"user_groups" => FALSE,
 			"event_logging" => FALSE,
 			"file_preview" => FALSE,
-			"file_view" => FALSE
+			"file_view" => FALSE,
+			"public_links" => FALSE
 		);
 		
 		private $defaultValues = array();

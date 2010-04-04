@@ -213,6 +213,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		if (action.equals(FileSystemAction.view)) {
 			JsObj viewParams = (JsObj) param;
 			fileViewerFactory.openFileViewer(file, viewParams);
+		} else if (action.equals(FileSystemAction.publicLink)) {
+			dialogManager.showInfo(textProvider.getStrings()
+					.filePublicLinkTitle(), textProvider.getMessages()
+					.publicLinkMessage(file.getName()), fileSystemService
+					.getPublicLink(file));
 		} else if (action.equals(FileSystemAction.download)) {
 			windowManager.openDownloadUrl(fileSystemService.getDownloadUrl(
 					file, session.getSessionId()));

@@ -14,9 +14,7 @@ function MollifyPublishedFoldersConfigurationView() {
 	this.pageUrl = "folders/published_folders.html";
 	this.folders = null;
 		
-	this.onLoadView = onLoadView;
-	
-	function onLoadView() {
+	this.onLoadView = function() {
 		$("#button-add-folder").click(that.openAddFolder);
 		$("#button-remove-folder").click(that.onRemoveFolder);
 		$("#button-edit-folder").click(that.openEditFolder);
