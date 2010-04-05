@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.5.5 ==
+  * Support for file preview
+  * Support for file view
+
 === Version 1.5.4 ==
   * Drop box for collecting files/folders
   * Multiple file actions
