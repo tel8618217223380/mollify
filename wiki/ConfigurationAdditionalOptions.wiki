@@ -196,6 +196,8 @@ $PASSWORDS_HASHED = TRUE;
 		);
 	}}}
 
+	*NOTE!* Using Google Viewer requires that files can be accessed from internet (as the service needs to download the file). When Mollify is used in a closed network (ie. intranet), this service cannot be used).
+
 === 6.7. Public links ===
 
 	To enable public file links, add with following setting in "configuration.php":
