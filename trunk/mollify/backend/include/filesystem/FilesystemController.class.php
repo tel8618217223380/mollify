@@ -17,7 +17,6 @@
 		
 		private $env;
 		private $allowedUploadTypes;
-		private $unauthenticatedItemPermission = Authentication::PERMISSION_VALUE_NO_ACCESS;
 		private $permissionCache = array();
 		private $providers = array();
 
@@ -33,10 +32,6 @@
 		}
 		
 		public function initialize($request) {}
-		
-		public function setUnauthenticatedItemPermission($permission) {
-			$this->unauthenticatedItemPermission = $permission;
-		}
 
 		public function registerProvider($provider) {
 			$this->providers[] = $provider;
@@ -212,11 +207,11 @@
 			return $permission;
 		}
 		
+		public function temporaryItemPermission($item, $permission) {
+			$this->permissionCache[$item->id()] = $permission;
+		}
+		
 		private function getItemUserPermission($item) {
-			if (!$this->env->authentication()->isAuthenticated()) {
-				return $this->unauthenticatedItemPermission;
-			}
-			
 			if (array_key_exists($item->id(), $this->permissionCache)) {
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);

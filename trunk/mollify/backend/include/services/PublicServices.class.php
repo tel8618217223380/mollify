@@ -22,7 +22,7 @@
 		public function processGet() {
 			if ($this->path[0] === 'items' and $this->env->features->isFeatureEnabled("public_links")) {
 				$item = $this->item($this->path[1]);
-				$this->env->filesystem()->setUnauthenticatedItemPermission(Authentication::PERMISSION_VALUE_READONLY);
+				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
 				$this->env->filesystem()->download($item);
 				return;
 			}
