@@ -1,9 +1,9 @@
 #summary Items in next release
 
-Items included in release 1.5.5
+Items included in release 1.6
 
- * Preview support
- * View support
+ * Preview support (DONE)
+ * View support (DONE)
  * Forbidden upload types
  * User registration
  * Folder creation when published folders are added (admin util)
