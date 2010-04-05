@@ -2,15 +2,15 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.5.5 ==
-  * Support for file preview
-  * Support for file view
-  * Support for public links
+  * Support for file preview (see ConfigurationAdditionalOptions chapter 6.5)
+  * Support for file view (see ConfigurationAdditionalOptions chapter  6.6)
+  * Support for public links (see ConfigurationAdditionalOptions chapter  6.7)
 
 === Version 1.5.4 ==
   * Drop box for collecting files/folders
   * Multiple file actions
   * Copy folders action
-  * Event logging (requires db update)
+  * Event logging (requires db update) (see ConfigurationAdditionalOptions chapter  6.8)
   * Support for Plupload uploader (see [http://www.plupload.com])
   * Support for limited http methods (when service provider does not support http PUT and/or DELETE)
   * Support for download managers (resumable downloads and collecting files to download)
