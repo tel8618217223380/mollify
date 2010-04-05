@@ -4,6 +4,7 @@
 === Version 1.5.5 ==
   * Support for file preview
   * Support for file view
+  * Support for public links
 
 === Version 1.5.4 ==
   * Drop box for collecting files/folders
