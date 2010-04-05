@@ -147,7 +147,68 @@ $PASSWORDS_HASHED = TRUE;
 
 	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "MOLLIFY_PUBLIC", "MOLLIFY_LOCAL" etc.
 
-=== 6.4. Event logging ===
+=== 6.5. File preview ===
+
+	To enable file preview, add with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"enable_file_preview" => TRUE
+		);
+	}}}
+
+	By default all supported types are allowed for preview, but to control it, add following setting:
+	{{{
+		$SETTINGS = array(
+			"file_preview_options" => array("types" => "gif,png")
+		);
+	}}}
+
+	Use comma separated list of extensions (without dots).
+
+=== 6.6. File view ===
+
+	To enable file preview, add with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"host_public_address" => "http://YOUR_HOST_IP",
+			"enable_file_view" => TRUE
+		);
+	}}}
+
+	Host ip the address of the host without any paths, just the address, this is needed for file view urls.
+
+	By default all supported types are allowed for viewing, but to control it, add following setting:
+	{{{
+		$SETTINGS = array(
+			"file_view_options" => array("types" => "gif,png")
+		);
+	}}}
+
+	Use comma separated list of extensions (without dots).
+
+	To enable file viewing for PDF, DOC and XLS, Google Viewer must be enabled. This is not enabled by default, because all sites using this service must agree to the [https://docs.google.com/viewer/TOS?hl=en Google Viewer Terms of Service]
+
+	{{{
+		$SETTINGS = array(
+			"file_view_options" => array("use_google_viewer" => TRUE),
+		);
+	}}}
+
+=== 6.7. Public links ===
+
+	To enable public file links, add with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"enable_public_links" => TRUE
+		);
+	}}}
+
+	With this setting, client can provide links that can be used for downloading files without Mollify account.
+
+=== 6.8. Event logging ===
 
 	To enable event logging, add with following setting in "configuration.php":
 
