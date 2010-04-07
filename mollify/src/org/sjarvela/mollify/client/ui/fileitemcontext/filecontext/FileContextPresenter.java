@@ -20,11 +20,11 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.JsObj;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ExternalService;
@@ -147,9 +147,9 @@ public class FileContextPresenter implements ActionListener,
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 		boolean isPreview = session.getFeatures().filePreview()
-				&& details.getFilePreview() != null;
+				&& details != null && details.getFilePreview() != null;
 		boolean isView = session.getFeatures().fileView()
-				&& details.getFileView() != null;
+				&& details != null && details.getFileView() != null;
 
 		popup.update(writable, isPreview, isView);
 	}

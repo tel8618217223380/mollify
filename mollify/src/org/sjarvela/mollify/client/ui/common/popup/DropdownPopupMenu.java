@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
@@ -55,6 +56,10 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		else
 			itemWidget.addStyleDependentName(DISABLED);
 		itemsEnabled.put(action, enabled);
+	}
+
+	public void setActionVisible(FileSystemAction action, boolean visible) {
+		items.get(action).setVisible(visible);
 	}
 
 	protected Label createMenuItemWidget(final ResourceId action, T item) {
