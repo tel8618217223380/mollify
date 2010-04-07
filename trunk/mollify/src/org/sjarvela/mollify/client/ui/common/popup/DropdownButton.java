@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.common.popup;
 
 import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
@@ -53,6 +54,10 @@ public class DropdownButton extends ActionButton {
 		menu.setActionEnabled(action, enabled);
 	}
 
+	public void setActionVisible(FileSystemAction action, boolean visible) {
+		menu.setActionVisible(action, visible);
+	}
+
 	public void addSeparator() {
 		menu.addSeparator();
 	}
@@ -61,4 +66,5 @@ public class DropdownButton extends ActionButton {
 	public boolean showTooltip() {
 		return !menu.isShowing();
 	}
+
 }

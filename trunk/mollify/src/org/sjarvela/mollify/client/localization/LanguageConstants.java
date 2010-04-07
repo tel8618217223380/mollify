@@ -182,6 +182,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String errorMessageDirectoryAlreadyExists();
 
 	public String errorMessageDirectoryDoesNotExist();
+	
+	public String errorMessageInsufficientRights();
 
 	public String selectFolderDialogSelectButton();
 

@@ -103,7 +103,7 @@
 			$url = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
 			if ($session) {
 				$s = $this->env->session()->getSessionInfo();
-				$url .= '&session='.$s["session_id"];
+				$url .= '/?session='.$s["session_id"];
 			}
 			return $url;
 		}

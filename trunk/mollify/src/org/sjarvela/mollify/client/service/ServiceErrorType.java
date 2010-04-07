@@ -44,6 +44,8 @@ public enum ServiceErrorType {
 		case DIR_DOES_NOT_EXIST:
 			return textProvider.getStrings()
 					.errorMessageDirectoryDoesNotExist();
+		case INSUFFICIENT_RIGHTS:
+			return textProvider.getStrings().errorMessageInsufficientRights();
 		default:
 			if (!this.equals(UNKNOWN_ERROR))
 				return this.name();

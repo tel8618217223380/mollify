@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.viewer;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.JsObj;
+import org.sjarvela.mollify.client.js.JsObj;
 
 public interface FileViewerFactory {
 

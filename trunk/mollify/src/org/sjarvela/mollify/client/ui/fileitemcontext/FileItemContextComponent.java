@@ -410,10 +410,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		if (viewButton != null)
 			viewButton.setVisible(false);
 
-		actionsButton.setActionEnabled(FileSystemAction.rename, false);
-		actionsButton.setActionEnabled(FileSystemAction.copy, false);
-		actionsButton.setActionEnabled(FileSystemAction.move, false);
-		actionsButton.setActionEnabled(FileSystemAction.delete, false);
+		actionsButton.setActionVisible(FileSystemAction.rename, false);
+		actionsButton.setActionVisible(FileSystemAction.copy, false);
+		actionsButton.setActionVisible(FileSystemAction.move, false);
+		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}
 
 	public void setDetailValue(ResourceId id, String value) {
@@ -421,12 +421,12 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public void update(boolean isWritable, boolean isPreview, boolean isView) {
-		actionsButton.setActionEnabled(FileSystemAction.rename, isWritable);
-		actionsButton.setActionEnabled(FileSystemAction.copy,
+		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
+		actionsButton.setActionVisible(FileSystemAction.copy,
 				hasGeneralWritePermissions);
-		actionsButton.setActionEnabled(FileSystemAction.move, isWritable
+		actionsButton.setActionVisible(FileSystemAction.move, isWritable
 				&& hasGeneralWritePermissions);
-		actionsButton.setActionEnabled(FileSystemAction.delete, isWritable);
+		actionsButton.setActionVisible(FileSystemAction.delete, isWritable);
 
 		if (preview != null)
 			preview.setVisible(isPreview);
