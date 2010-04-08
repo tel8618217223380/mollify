@@ -21,7 +21,9 @@ import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -68,15 +70,22 @@ public class FileViewer extends ResizableDialog {
 
 		setMinimumSize(viewerPanel.getElement().getClientWidth(), viewerPanel
 				.getElement().getClientHeight());
-		service.get(url, new ResultListener<JsObj>() {
+		DeferredCommand.addCommand(new Command() {
 			@Override
-			public void onFail(ServiceError error) {
-				viewerPanel.getElement().setInnerHTML(error.getDetails());
-			}
+			public void execute() {
+				service.get(url, new ResultListener<JsObj>() {
+					@Override
+					public void onFail(ServiceError error) {
+						viewerPanel.getElement().setInnerHTML(
+								error.getDetails());
+					}
 
-			@Override
-			public void onSuccess(JsObj result) {
-				setContent(result);
+					@Override
+					public void onSuccess(JsObj result) {
+						setContent(result);
+					}
+				});
+
 			}
 		});
 	}
