@@ -36,16 +36,19 @@ public class FileSystemInfo extends JavaScriptObject {
 				+ ", max_upload_total_size=" + getUploadMaxTotalSize() + "]";
 	}
 
-	public static FileSystemInfo create(int maxFileSize, int maxTotalSize,
+	public static FileSystemInfo create(String folderSeparator,
+			int maxFileSize, int maxTotalSize,
 			List<String> allowedFileUploadTypes) {
 		FileSystemInfo result = FileSystemInfo.createObject().cast();
-		result.putValues(maxFileSize, maxTotalSize, JsUtil
+		result.putValues(folderSeparator, maxFileSize, maxTotalSize, JsUtil
 				.asArray(allowedFileUploadTypes));
 		return result;
 	}
 
-	private final native void putValues(int maxFileSize, int maxTotalSize,
+	private final native void putValues(String folderSeparator,
+			int maxFileSize, int maxTotalSize,
 			JsArrayString allowedFileUploadTypes) /*-{
+		this.folder_separator = folderSeparator;
 		this.max_upload_file_size = maxFileSize;
 		this.max_upload_total_size = maxTotalSize;
 		this.allowed_file_upload_types = allowedFileUploadTypes;
