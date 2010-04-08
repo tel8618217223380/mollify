@@ -22,6 +22,7 @@ import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.FeatureInfo;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
@@ -72,8 +73,8 @@ public class DemoData {
 		this.multiUser = multiUser;
 		this.settings = FeatureInfo.create(true, true, true, true, true, true,
 				true, true, true, true, true, true);
-		this.fileSystemInfo = FileSystemInfo.create(1024, 1024, Arrays.asList(
-				"txt", "gif"));
+		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024, Arrays
+				.asList("txt", "gif"));
 
 		createDirectoriesAndFiles();
 	}
@@ -94,26 +95,29 @@ public class DemoData {
 		List<Folder> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
-		subDirs.add(new Folder(DIR_1A, ROOT_1, "Sub folder A", "", ROOT_1));
-		subDirs.add(new Folder(DIR_1B, ROOT_1, "Sub folder B", "", ROOT_1));
+		subDirs.add(new Folder(DIR_1A, ROOT_1, "Sub folder A", "Sub folder A/",
+				ROOT_1));
+		subDirs.add(new Folder(DIR_1B, ROOT_1, "Sub folder B", "Sub folder B/",
+				ROOT_1));
 
 		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
-		subDirs.add(new Folder(DIR_2A, ROOT_2, "Sub folder A", "", ROOT_2));
+		subDirs.add(new Folder(DIR_2A, ROOT_2, "Sub folder A", "Sub folder A/",
+				ROOT_2));
 
 		files = new ArrayList();
-		files.add(new File(FILE_1A1, ROOT_1, "Example.txt", "", "path", "txt",
-				128));
-		files.add(new File(FILE_1A2, ROOT_1, "Picture.gif", "", "path", "gif",
-				2228));
-		files.add(new File(FILE_1A3, ROOT_1, "Picture.png", "", "path", "png",
-				64434));
+		files.add(new File(FILE_1A1, ROOT_1, "Example.txt", "Example.txt",
+				"path", "txt", 128));
+		files.add(new File(FILE_1A2, ROOT_1, "Picture.gif", "Picture.gif",
+				"path", "gif", 2228));
+		files.add(new File(FILE_1A3, ROOT_1, "Picture.png", "Picture.png",
+				"path", "png", 64434));
 		files.add(new File(FILE_1A4, ROOT_1, "Portable Document Format.pdf",
-				"", "path", "pdf", 113428));
-		files.add(new File(FILE_1A5, ROOT_1, "Word Document.doc", "", "path",
-				"doc", 5634347));
-		files.add(new File(FILE_1A6, ROOT_1, "Web page.html", "", "path",
-				"html", 23433231));
+				"Portable Document Format.pdf", "path", "pdf", 113428));
+		files.add(new File(FILE_1A5, ROOT_1, "Word Document.doc",
+				"Word Document.doc", "path", "doc", 5634347));
+		files.add(new File(FILE_1A6, ROOT_1, "Web page.html", "Web page.html",
+				"path", "html", 23433231));
 	}
 
 	public SessionInfo getSessionInfo() {
@@ -148,9 +152,11 @@ public class DemoData {
 	}
 
 	public FileDetails getFileDetails(File file) {
+		String preview = "preview";
+		JsObj view = null;
 		Date now = DateTime.getInstance().currentTime();
 		return FileDetails.create(now, now, now, DESCRIPTION,
-				FilePermission.ReadWrite);
+				FilePermission.ReadWrite, preview, view);
 	}
 
 }

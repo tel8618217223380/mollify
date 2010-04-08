@@ -30,6 +30,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private FileSystemService fileSystemService;
 	private FileUploadService demoFileUploadHandler;
 	private ConfigurationService settingsHandler;
+	private ExternalService externalServiceHandler;
 
 	public void initialize(UrlResolver urlProvider, ClientSettings settings) {
 		Log.info("Mollify Demo");
@@ -39,6 +40,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 		this.fileSystemService = new DemoFileService(data);
 		this.demoFileUploadHandler = new DemoFileUploadHandler();
 		this.settingsHandler = new DemoConfigurationService(data);
+		this.externalServiceHandler = new DemoExternalService();
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 
 	@Override
 	public ExternalService getExternalService() {
-		return null;
+		return externalServiceHandler;
 	}
 
 }

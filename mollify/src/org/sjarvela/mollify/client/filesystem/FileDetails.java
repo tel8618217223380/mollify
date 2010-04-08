@@ -75,23 +75,26 @@ public class FileDetails extends JavaScriptObject {
 	}-*/;
 
 	public static FileDetails create(Date lastAccessed, Date lastChanged,
-			Date lastModified, String description, FilePermission permission) {
+			Date lastModified, String description, FilePermission permission,
+			String preview, JsObj view) {
 		FileDetails result = FileDetails.createObject().cast();
 		DateTimeFormat fmt = DateTime.getInstance().getInternalFormat();
-		result
-				.putData(fmt.format(lastAccessed), fmt.format(lastChanged), fmt
-						.format(lastModified), description, permission
-						.getStringValue());
+		result.putData(fmt.format(lastAccessed), fmt.format(lastChanged), fmt
+				.format(lastModified), description,
+				permission.getStringValue(), preview, view);
 		return result;
 	}
 
 	private final native void putData(String lastAccessed, String lastChanged,
-			String lastModified, String description, String permission) /*-{
+			String lastModified, String description, String permission,
+			String preview, JsObj view) /*-{
 		this.last_accessed = lastAccessed;
 		this.last_changed = lastChanged;
 		this.last_modified = lastModified;
 		this.description = description;
 		this.permission = permission;
+		this.preview = preview;
+		this.view = view;
 	}-*/;
 
 	public final native void setDescription(String description) /*-{
