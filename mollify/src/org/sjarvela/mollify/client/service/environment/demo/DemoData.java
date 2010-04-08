@@ -153,7 +153,9 @@ public class DemoData {
 
 	public FileDetails getFileDetails(File file) {
 		String preview = "preview";
-		JsObj view = null;
+		JsObj view = new JsObjBuilder().string("embedded", "embedded-view")
+				.string("full", "http://www.mollify.org").create();
+		
 		Date now = DateTime.getInstance().currentTime();
 		return FileDetails.create(now, now, now, DESCRIPTION,
 				FilePermission.ReadWrite, preview, view);

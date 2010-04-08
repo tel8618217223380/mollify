@@ -18,11 +18,15 @@ public class DemoExternalService implements ExternalService {
 	@Override
 	public void get(String path, ResultListener listener) {
 		if (path.equals("preview")) {
-			listener.onSuccess(new JsObjBuilder().string("html", "<img src='file_preview.png'/>")
-					.create());
-		} else if (path.equals("view")) {
-			listener.onSuccess(new JsObjBuilder().string("html", "<img src='file_view.png'/>")
-					.create());
+			listener
+					.onSuccess(new JsObjBuilder()
+							.string(
+									"html",
+									"<div id='file-preview-container' style='overflow:auto; max-height:300px'><img src='file_preview.png' style='max-width:400px'></div>")
+							.create());
+		} else if (path.equals("embedded-view")) {
+			listener.onSuccess(new JsObjBuilder().string("html",
+					"<img src='file_view.png'/>").create());
 		}
 	}
 
