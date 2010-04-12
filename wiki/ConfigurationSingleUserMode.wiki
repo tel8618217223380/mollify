@@ -13,12 +13,21 @@
 
 	Mollify supports freely selectable published directories, which need not to have any relation with each other.
 
+
 	Use following format to define published directories:
 
 {{{
 $PUBLISHED_DIRECTORIES = array(
 	[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
 	...
+);
+}}}
+
+	For example:
+{{{
+$PUBLISHED_DIRECTORIES = array(
+	"1" => array("name" => "Images", "path" => "/files/images"),
+	"2" => array("name" => "Music", "path" => "/files/music")
 );
 }}}
 
