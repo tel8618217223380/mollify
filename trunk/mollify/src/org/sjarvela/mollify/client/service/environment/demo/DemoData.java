@@ -154,7 +154,7 @@ public class DemoData {
 	public FileDetails getFileDetails(File file) {
 		String preview = "preview";
 		JsObj view = new JsObjBuilder().string("embedded", "embedded-view")
-				.string("full", "file-preview.html").create();
+				.string("full", "file-view.html").create();
 
 		Date now = DateTime.getInstance().currentTime();
 		return FileDetails.create(now, now, now, DESCRIPTION,
