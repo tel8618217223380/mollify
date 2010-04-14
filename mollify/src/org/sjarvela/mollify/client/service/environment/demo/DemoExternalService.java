@@ -22,14 +22,14 @@ public class DemoExternalService implements ExternalService {
 					.onSuccess(new JsObjBuilder()
 							.string(
 									"html",
-									"<div id='demo-preview-container' style='overflow:auto; max-height:300px'><img src='file_preview.png' style='max-width:400px'></div>")
+									"<div id='demo-preview-container' style='overflow:auto; max-height:300px'><img src='file-preview.png' style='max-width:400px'></div>")
 							.create());
 		} else if (path.equals("embedded-view")) {
 			listener
 					.onSuccess(new JsObjBuilder()
 							.string(
 									"html",
-									"<iframe id='demo-viewer' src='file-preview.html' style='border: none;'></iframe>")
+									"<iframe id='demo-viewer' src='file-view.html' style='border: none;'></iframe>")
 							.string("size", "600;400").string(
 									"resized_element_id", "demo-viewer")
 							.create());
