@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -15,6 +15,7 @@
 		const EVENT_TYPE_SESSION = "session";
 		
 		protected $name;
+		protected $env;
 		
 		public function __construct($settings) {
 			$this->name = "MOLLIFY-SESSION";			
@@ -25,7 +26,11 @@
 		}
 		
 		public function initialize($request, $env) {
-			if ($env != NULL) SessionEvent::register($env->events());
+			$this->env = $env;
+			if ($env != NULL) {
+				SessionEvent::register($env->events());
+				if (!$env->configuration()->isAuthenticationRequired()) return;
+			}
 			
 			session_name($this->name);
 			if ($request != NULL and $request->hasParam("session")) session_id($request->param("session"));
@@ -34,8 +39,10 @@
 		
 		public function getSessionInfo() {
 			$result = array();
-			$result['session_name'] = session_name();
-			$result['session_id'] = session_id();
+			if ($this->env->configuration()->isAuthenticationRequired()) {
+				$result['session_name'] = session_name();
+				$result['session_id'] = session_id();
+			}
 			$result['session_ver'] = "1_5";
 			return $result;
 		}
@@ -53,14 +60,18 @@
 		}
 
 		public function hasParam($param) {
+			if (!$this->env->configuration()->isAuthenticationRequired()) return FALSE;
 			return isset($_SESSION[$param]);
 		}
 
 		public function removeParam($param) {
+			if (!$this->env->configuration()->isAuthenticationRequired()) return;
 			unset($_SESSION[$param]);
 		}
 				
 		public function param($param, $value = NULL) {
+			if (!$this->env->configuration()->isAuthenticationRequired()) return NULL;
+			
 			if ($value === NULL) {
 				if (!array_key_exists($param, $_SESSION)) throw new ServiceException("Invalid session param requested: ".$param);
 				return $_SESSION[$param];
@@ -69,11 +80,12 @@
 		}
 		
 		public function all() {
+			if (!$this->env->configuration()->isAuthenticationRequired()) return array();
 			return $_SESSION;
 		}
 		
 		public function log() {
-			Logging::logDebug("SESSION: ".Util::array2str($_SESSION));
+			Logging::logDebug("SESSION: ".Util::array2str($this->all()));
 		}
 
 		public function __toString() {

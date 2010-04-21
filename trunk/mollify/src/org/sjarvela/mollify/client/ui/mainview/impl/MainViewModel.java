@@ -16,7 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -24,6 +24,7 @@ import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
 public class MainViewModel {
 	private final SessionInfo session;
@@ -32,9 +33,10 @@ public class MainViewModel {
 
 	private FolderModel folderModel;
 	private List<File> files = new ArrayList();
-	private List<Folder> directories = new ArrayList();
+	private List<Folder> folders = new ArrayList();
 	private List<FileSystemItem> all = new ArrayList();
 	private List<FileSystemItem> selected = new ArrayList();
+	private FilePermission folderPermission = FilePermission.None;
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
 			FolderProvider directoryProvider) {
@@ -48,7 +50,7 @@ public class MainViewModel {
 	public void clear() {
 		folderModel = new FolderModel();
 
-		directories.clear();
+		folders.clear();
 		files.clear();
 		all.clear();
 	}
@@ -66,7 +68,11 @@ public class MainViewModel {
 	}
 
 	public List<Folder> getSubDirectories() {
-		return directories;
+		return folders;
+	}
+
+	public FilePermission getFolderPermission() {
+		return folderPermission;
 	}
 
 	public List<File> getFiles() {
@@ -107,24 +113,25 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void refreshData(ResultListener<FolderContent> resultListener) {
+	public void refreshData(ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
-			resultListener.onSuccess(new FolderContent());
+			resultListener.onSuccess(new FolderInfo());
 			return;
 		}
 
-		fileServices.getItems(getCurrentFolder(), createListener(
-				resultListener, new ResultCallback<FolderContent>() {
-					public void onCallback(FolderContent result) {
+		fileServices.getInfo(getCurrentFolder(), createListener(resultListener,
+				new ResultCallback<FolderInfo>() {
+					public void onCallback(FolderInfo result) {
 						onUpdateData(result);
 					}
 				}));
 	}
 
-	private void onUpdateData(FolderContent data) {
-		this.directories = data.getDirectories();
+	private void onUpdateData(FolderInfo data) {
+		this.folders = data.getFolders();
 		this.files = data.getFiles();
-		this.all = new ArrayList(data.getDirectories());
+		this.folderPermission = data.getPermission();
+		this.all = new ArrayList(data.getFolders());
 		this.all.addAll(files);
 	}
 

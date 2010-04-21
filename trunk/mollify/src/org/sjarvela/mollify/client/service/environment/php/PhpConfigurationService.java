@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.FolderDef;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -81,18 +81,18 @@ public class PhpConfigurationService extends ServiceBase implements
 				.listener(listener).get();
 	}
 
-	public void getFolders(final ResultListener<List<FolderInfo>> resultListener) {
+	public void getFolders(final ResultListener<List<FolderDef>> resultListener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get directories");
 
-		ResultListener<JsArray<FolderInfo>> listener = new ResultListener<JsArray<FolderInfo>>() {
+		ResultListener<JsArray<FolderDef>> listener = new ResultListener<JsArray<FolderDef>>() {
 			public void onFail(ServiceError error) {
 				resultListener.onFail(error);
 			}
 
-			public void onSuccess(JsArray<FolderInfo> result) {
+			public void onSuccess(JsArray<FolderDef> result) {
 				resultListener.onSuccess(JsUtil
-						.asList(result, FolderInfo.class));
+						.asList(result, FolderDef.class));
 			}
 		};
 
@@ -136,7 +136,7 @@ public class PhpConfigurationService extends ServiceBase implements
 				data).listener(resultListener).post();
 	}
 
-	public void editFolder(FolderInfo dir, String name, String path,
+	public void editFolder(FolderDef dir, String name, String path,
 			ResultListener resultListener) {
 		String data = new JSONStringBuilder("name", name).add("path", path)
 				.toString();
@@ -146,7 +146,7 @@ public class PhpConfigurationService extends ServiceBase implements
 						dir.getId())).data(data).listener(resultListener).put();
 	}
 
-	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderDef dir, ResultListener resultListener) {
 		request().url(
 				serviceUrl().action(ConfigurationAction.folders).item(
 						dir.getId())).listener(resultListener).delete();
@@ -172,7 +172,7 @@ public class PhpConfigurationService extends ServiceBase implements
 						user.getId())).listener(listener).get();
 	}
 
-	public void addUserFolder(User user, FolderInfo dir, String name,
+	public void addUserFolder(User user, FolderDef dir, String name,
 			ResultListener resultListener) {
 		String data = new JSONStringBuilder("id", dir.getId())
 				.add("name", name).toString();

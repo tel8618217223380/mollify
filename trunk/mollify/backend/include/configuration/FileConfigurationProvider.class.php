@@ -71,10 +71,10 @@
 			return $USERS[$id];
 		}
 		
-		function getDefaultPermission($userId = "") {
+		function getDefaultPermission($userId = NULL) {
 			global $USERS, $FILE_PERMISSION_MODE;
 			
-			if ($userId === "") {
+			if (!$this->isAuthenticationRequired()) {
 				if (!isset($FILE_PERMISSION_MODE)) return Authentication::PERMISSION_VALUE_READONLY;
 				$mode = strtoupper($FILE_PERMISSION_MODE);
 			} else {
@@ -109,6 +109,14 @@
 			foreach($list as $id => $folder)
 				$result[] = array("id" => $id, "name" => $folder['name'], "path" => $folder['path']);
 			return $result;
+		}
+		
+		public function getFolder($id) {
+			if ($this->isAuthenticationRequired()) throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder request in multi-user mode");
+			global $PUBLISHED_DIRECTORIES;
+			$def = $PUBLISHED_DIRECTORIES[$id];
+			$def["id"] = $id;
+			return $def;
 		}
 		
 		public function getItemDescription($item) {

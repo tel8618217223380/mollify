@@ -3,7 +3,7 @@ package org.sjarvela.mollify.client.session.user;
 import org.sjarvela.mollify.client.localization.TextProvider;
 
 public enum UserPermissionMode {
-	Admin("a"), ReadWrite("rw"), ReadOnly("ro");
+	Admin("a"), ReadWrite("rw"), ReadOnly("ro"), None("-");
 
 	private final String value;
 

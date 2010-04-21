@@ -16,9 +16,9 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
-import org.sjarvela.mollify.client.filesystem.FoldersAndFiles;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
@@ -36,7 +36,7 @@ import com.google.gwt.core.client.JsArray;
 
 public class PhpFileService extends ServiceBase implements FileSystemService {
 	enum FileAction implements ActionId {
-		files, folders, items, details, name, copy, move, delete, download, upload, zip, description, permissions
+		files, folders, info, details, name, copy, move, delete, download, upload, zip, description, permissions
 	};
 
 	public PhpFileService(PhpService service) {
@@ -62,24 +62,25 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(resultListener).get();
 	}
 
-	public void getItems(final Folder parent,
-			final ResultListener<FolderContent> listener) {
+	public void getInfo(final Folder parent,
+			final ResultListener<FolderInfo> listener) {
 		if (Log.isDebugEnabled())
 			Log.debug("Get folder items: " + parent.getId());
 
-		ResultListener<FoldersAndFiles> resultListener = new ResultListener<FoldersAndFiles>() {
+		ResultListener<JsFolderInfo> resultListener = new ResultListener<JsFolderInfo>() {
 			public void onFail(ServiceError error) {
 				listener.onFail(error);
 			}
 
-			public void onSuccess(FoldersAndFiles result) {
-				listener.onSuccess(new FolderContent(FileSystemItem
-						.createFromDirectories(result.getFolders()),
-						FileSystemItem.createFromFiles(result.getFiles())));
+			public void onSuccess(JsFolderInfo result) {
+				listener.onSuccess(new FolderInfo(result.getPermission(),
+						FileSystemItem.createFromDirectories(result
+								.getFolders()), FileSystemItem
+								.createFromFiles(result.getFiles())));
 			}
 		};
 
-		request().url(serviceUrl().fileItem(parent).action(FileAction.items))
+		request().url(serviceUrl().fileItem(parent).action(FileAction.info))
 				.listener(resultListener).get();
 	}
 

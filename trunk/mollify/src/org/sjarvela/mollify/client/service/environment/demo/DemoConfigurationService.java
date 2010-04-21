@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service.environment.demo;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.FolderDef;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -39,9 +39,9 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
-		FolderInfo dir1 = FolderInfo.create("1", "Example Folder", "/foo/bar");
-		FolderInfo dir2 = FolderInfo.create("2", "Another Folder", "/bar/foo");
+	public void getFolders(ResultListener<List<FolderDef>> resultListener) {
+		FolderDef dir1 = FolderDef.create("1", "Example Folder", "/foo/bar");
+		FolderDef dir2 = FolderDef.create("2", "Another Folder", "/bar/foo");
 
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
 	}
@@ -65,12 +65,12 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(true);
 	}
 
-	public void editFolder(FolderInfo dir, String name, String path,
+	public void editFolder(FolderDef dir, String name, String path,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
-	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderDef dir, ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}
 
@@ -83,7 +83,7 @@ public class DemoConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(Arrays.asList(dir1, dir2));
 	}
 
-	public void addUserFolder(User user, FolderInfo dir, String name,
+	public void addUserFolder(User user, FolderDef dir, String name,
 			ResultListener resultListener) {
 		resultListener.onSuccess(true);
 	}

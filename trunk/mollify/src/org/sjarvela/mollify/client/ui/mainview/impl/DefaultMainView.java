@@ -280,9 +280,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		dropBoxButton.setAction(actionListener, Action.dropBox);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
-				.getSession().getFeatures().folderActions())
-				&& model.getSession().getDefaultPermissionMode()
-						.hasWritePermission()) {
+				.getSession().getFeatures().folderActions())) {
 			addButton = new DropdownButton(actionListener, textProvider
 					.getStrings().mainViewAddButtonTitle(),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
@@ -297,6 +295,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				addButton.addAction(Action.addDirectory, textProvider
 						.getStrings().mainViewAddDirectoryMenuItem());
 		}
+	}
+
+	public void setAddButtonVisible(boolean visible) {
+		if (addButton != null)
+			addButton.setVisible(visible);
 	}
 
 	public void addFileListListener(GridListener listener) {

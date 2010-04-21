@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -68,7 +68,7 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getItems(Folder parent, ResultListener<FolderContent> listener) {
+	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
 		// TODO Auto-generated method stub
 
 	}

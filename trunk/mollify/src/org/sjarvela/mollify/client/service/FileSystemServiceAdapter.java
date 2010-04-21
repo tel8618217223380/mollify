@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
@@ -67,9 +67,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				.createListener(listener));
 	}
 
-	public void getItems(Folder parent, ResultListener<FolderContent> listener) {
+	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
 		service
-				.getItems(parent, resultListenerFactory
+				.getInfo(parent, resultListenerFactory
 						.createListener(listener));
 	}
 

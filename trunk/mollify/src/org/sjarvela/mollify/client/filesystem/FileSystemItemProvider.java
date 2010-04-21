@@ -15,5 +15,5 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileSystemItemProvider extends FolderProvider {
 	void getFilesAndFolders(Folder parent,
-			ResultListener<FolderContent> listener);
+			ResultListener<FolderInfo> listener);
 }

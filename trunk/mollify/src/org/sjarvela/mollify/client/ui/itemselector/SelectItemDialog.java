@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -290,17 +290,17 @@ public class SelectItemDialog extends CenteredDialog implements
 					});
 		} else {
 			fileSystemItemProvider.getFilesAndFolders((Folder) item,
-					new ResultListener<FolderContent>() {
+					new ResultListener<FolderInfo>() {
 						public void onFail(ServiceError error) {
 							onRequestError(error);
 						}
 
-						public void onSuccess(FolderContent result) {
+						public void onSuccess(FolderInfo result) {
 							itemsInitialized.add(treeItem);
 							treeItem.removeItems();
 
 							List<FileSystemItem> list = new ArrayList(result
-									.getDirectories());
+									.getFolders());
 							list.addAll(result.getFiles());
 							addSubItems(treeItem, list);
 						}

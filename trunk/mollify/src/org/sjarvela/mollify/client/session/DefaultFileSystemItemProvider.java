@@ -15,11 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -27,7 +28,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
-
 	private List<Folder> roots = new ArrayList();
 
 	@Inject
@@ -50,6 +50,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		this.roots = session.getRootDirectories();
 	}
 
+	@Override
 	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
@@ -57,6 +58,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 			fileSystemService.getFolders(parent, listener);
 	}
 
+	@Override
 	public List<Folder> getRootFolders() {
 		return roots;
 	}
@@ -69,13 +71,14 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		return null;
 	}
 
+	@Override
 	public void getFilesAndFolders(Folder parent,
-			ResultListener<FolderContent> listener) {
+			ResultListener<FolderInfo> listener) {
 		if (parent.isEmpty())
-			listener
-					.onSuccess(new FolderContent(roots, Collections.EMPTY_LIST));
+			listener.onSuccess(new FolderInfo(FilePermission.None, roots,
+					Collections.EMPTY_LIST));
 		else
-			fileSystemService.getItems(parent, listener);
+			fileSystemService.getInfo(parent, listener);
 	}
 
 }

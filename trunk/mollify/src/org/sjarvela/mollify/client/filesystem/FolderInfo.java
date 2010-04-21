@@ -1,34 +1,35 @@
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
-public class FolderInfo extends JavaScriptObject {
-	public static FolderInfo create(String id, String name, String path) {
-		FolderInfo result = JsFolder.createObject().cast();
-		result.putValues(id, name, path);
-		return result;
+public class FolderInfo {
+	private final List<Folder> folders;
+	private final List<File> files;
+	private final FilePermission permission;
+
+	public FolderInfo() {
+		this(FilePermission.None, new ArrayList(), new ArrayList());
 	}
 
-	protected FolderInfo() {
+	public FolderInfo(FilePermission permission, List<Folder> folders,
+			List<File> files) {
+		this.permission = permission;
+		this.folders = folders;
+		this.files = files;
 	}
 
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
+	public FilePermission getPermission() {
+		return permission;
+	}
 
-	public final native String getName() /*-{
-		return this.name;
-	}-*/;
+	public List<Folder> getFolders() {
+		return folders;
+	}
 
-	public final native String getPath() /*-{
-		return this.path;
-	}-*/;
-
-	protected final native void putValues(String id, String name, String path) /*-{
-		this.id = id;
-		this.name = name;
-		this.path = path
-	}-*/;
+	public List<File> getFiles() {
+		return files;
+	}
 }

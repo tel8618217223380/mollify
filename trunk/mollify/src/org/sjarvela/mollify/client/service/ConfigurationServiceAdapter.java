@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.FolderDef;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
@@ -50,7 +50,7 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 	}
 
 	@Override
-	public void addUserFolder(User user, FolderInfo dir, String name,
+	public void addUserFolder(User user, FolderDef dir, String name,
 			ResultListener resultListener) {
 		service.addUserFolder(user, dir, name, resultListenerFactory
 				.createListener(resultListener));
@@ -64,7 +64,7 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 	}
 
 	@Override
-	public void editFolder(FolderInfo dir, String name, String path,
+	public void editFolder(FolderDef dir, String name, String path,
 			ResultListener resultListener) {
 		service.editFolder(dir, name, path, resultListenerFactory
 				.createListener(resultListener));
@@ -85,7 +85,7 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 	}
 
 	@Override
-	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
+	public void getFolders(ResultListener<List<FolderDef>> resultListener) {
 		service
 				.getFolders(resultListenerFactory
 						.createListener(resultListener));
@@ -105,7 +105,7 @@ public class ConfigurationServiceAdapter implements ConfigurationService {
 	}
 
 	@Override
-	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderDef dir, ResultListener resultListener) {
 		service.removeFolder(dir, resultListenerFactory
 				.createListener(resultListener));
 	}

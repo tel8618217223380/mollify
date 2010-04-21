@@ -18,7 +18,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderContent;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -157,12 +157,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void reload() {
-		model.refreshData(new ResultListener<FolderContent>() {
+		model.refreshData(new ResultListener<FolderInfo>() {
 			public void onFail(ServiceError error) {
 				onError(error, false);
 			}
 
-			public void onSuccess(FolderContent result) {
+			public void onSuccess(FolderInfo result) {
 				refreshView();
 			}
 		});
@@ -174,6 +174,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			allFileItems.add(0, Folder.Parent);
 
 		view.getList().setContent(allFileItems);
+		view.setAddButtonVisible(model.getFolderPermission().canWrite());
 		view.refresh();
 		if (exposeFileUrls)
 			refreshFileUrls(model.getFiles());
