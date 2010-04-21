@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -13,9 +13,12 @@
 	require_once("Features.class.php");
 	require_once("Authentication.class.php");
 	require_once("filesystem/FilesystemController.class.php");
+	require_once("plugin/PluginController.class.php");
+	require_once("services/ServicesBase.class.php");
 	
 	class ServiceEnvironment {
 		private $services = array();
+		private $serviceControllerPaths = array();
 		private $objects = array();
 		
 		private $session;
@@ -36,6 +39,7 @@
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler();
 			$this->filesystem = new FilesystemController($this);
+			$this->plugins = new PluginController($this);
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -64,6 +68,10 @@
 			return $this->filesystem;
 		}
 
+		public function plugins() {
+			return $this->plugins;
+		}
+		
 		public function settings() {
 			return $this->settings;
 		}
@@ -82,6 +90,7 @@
 			$this->filesystem->initialize($request);
 			$this->authentication->initialize($request);
 			$this->configurationProvider->initialize($request, $this);
+			$this->plugins->initialize($request);
 			
 			$this->authentication->onPostInit();
 			$this->log();
@@ -91,22 +100,26 @@
 			$this->filesystem->onSessionStarted();
 		}
 						
-		public function addService($path, $controller) {
-			$this->services[$path] = $controller;
+		public function addService($id, $controller, $controllerPath = NULL) {
+			$this->services[$id] = $controller;
+			if ($controllerPath != NULL) $this->serviceControllerPaths[$id] = $controllerPath;
 		}
 		
 		public function getService($request) {
 			$path = $request->path();
 			$id = $path[0];
 			if (!array_key_exists($id, $this->services)) throw new ServiceException("Unknown service '".$id."'");
+			
 			$service = $this->createService($this->services[$id], $request, $id, array_slice($path, 1));
 			if (Logging::isDebug()) $service->log();
 			return $service;
 		}
 		
 		private function createService($controller, $request, $id, $path) {
-			require_once("services/ServicesBase.class.php");
-			require_once("services/".$controller.".class.php");
+			$controllerPath = "services/";
+			if (array_key_exists($id, $this->serviceControllerPaths)) $controllerPath = $this->serviceControllerPaths[$id];
+			
+			require_once($controllerPath.$controller.".class.php");
 			return new $controller($this, $request, $id, $path);
 		}
 		
