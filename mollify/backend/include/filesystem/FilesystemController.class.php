@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -38,7 +38,6 @@
 		}
 
 		public function onSessionStarted() {
-			$this->env->session()->param('folders', $this->getUserFolders());
 		}
 
 		private function getUserFolders() {
@@ -87,8 +86,7 @@
 			);
 			
 			$result["folders"] = array();
-			
-			foreach($this->env->session()->param('folders') as $id => $folderDef) {
+			foreach($this->getUserFolders() as $id => $folderDef) {
 				$result["folders"][] = array(
 					"id" => $this->publicId($id),
 					"name" => $folderDef['name'] != NULL ? $folderDef['name'] : $folderDef['default_name']
@@ -116,18 +114,12 @@
 			$filesystemId = $parts[0];
 			$path = $parts[1];
 			
-			if ($this->env->authentication()->isAuthenticated()) { 
-				$folderDefs = $this->env->session()->param('folders');
-				if (!array_key_exists($filesystemId, $folderDefs))
-					throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
-				
-				$folderDef = $folderDefs[$filesystemId];
-			} else {
-				$folderDef = $this->env->configuration()->getFolder($filesystemId);
-				if (!$folderDef)
-					throw new ServiceException("INVALID_CONFIGURATION", "Invalid item: ".$id);
-			}
-			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
+			 
+			$folderDefs = $this->getUserFolders();
+			if (!array_key_exists($filesystemId, $folderDefs))
+				throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
+			
+			return $this->filesystem($folderDefs[$filesystemId])->createItem($id, $path, $nonexisting);
 		}
 		
 		public function publicId($filesystemId, $path = "") {

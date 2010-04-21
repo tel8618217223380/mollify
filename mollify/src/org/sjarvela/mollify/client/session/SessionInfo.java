@@ -72,7 +72,7 @@ public class SessionInfo extends JavaScriptObject {
 
 	public final UserPermissionMode getDefaultPermissionMode() {
 		if (getDefaultPermissionModeString() == null)
-			return null;
+			return UserPermissionMode.None;
 		return UserPermissionMode.fromString(getDefaultPermissionModeString()
 				.trim().toLowerCase());
 	}

@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -67,6 +67,11 @@
 			if (!$this->isAuthenticated()) return NULL;
 			return $this->env->session()->param('user_id');
 		}
+
+		public function getUsername() {
+			if (!$this->isAuthenticated()) return NULL;
+			return $this->env->session()->param('username');
+		}
 		
 		public function getUserGroups() {
 			return $this->env->session()->param('groups');
@@ -74,13 +79,14 @@
 		
 		public function getUserInfo() {
 			return array(
-				'user_id' => $this->env->session()->param('user_id'),
-				'username' => $this->env->session()->param('username'),
-				'default_permission' => $this->env->session()->param('default_permission')
+				'user_id' => $this->getUserId(),
+				'username' => $this->getUsername(),
+				'default_permission' => $this->getDefaultPermission()
 			);
 		}
 		
 		public function getDefaultPermission() {
+			if (!$this->isAuthenticated()) return $this->env->configuration()->getDefaultPermission();
 			return $this->env->session()->param('default_permission');
 		}
 		

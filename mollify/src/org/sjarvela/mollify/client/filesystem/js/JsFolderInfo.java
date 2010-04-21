@@ -8,16 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.filesystem;
+package org.sjarvela.mollify.client.filesystem.js;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class FoldersAndFiles extends JavaScriptObject {
-	protected FoldersAndFiles() {
+public class JsFolderInfo extends JavaScriptObject {
+	protected JsFolderInfo() {
 	}
 
 	public final native JsArray<JsFolder> getFolders() /*-{
@@ -28,9 +27,17 @@ public class FoldersAndFiles extends JavaScriptObject {
 		return this.files;
 	}-*/;
 
-	public static FoldersAndFiles create(JsArray<JsFolder> directories,
+	public final FilePermission getPermission() {
+		return FilePermission.fromString(getPermissionString());
+	}
+
+	private final native String getPermissionString() /*-{
+		return this.permission;
+	}-*/;
+
+	public static JsFolderInfo create(JsArray<JsFolder> directories,
 			JsArray<JsFile> files) {
-		FoldersAndFiles result = FoldersAndFiles.createObject().cast();
+		JsFolderInfo result = JsFolderInfo.createObject().cast();
 		result.putValues(directories, files);
 		return result;
 	}

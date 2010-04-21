@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.filesystem;
 
-public class UserFolder extends FolderInfo {
+public class UserFolder extends FolderDef {
 	public static UserFolder create(String id, String name,
 			String defaultName, String path) {
 		UserFolder result = UserFolder.createObject().cast();

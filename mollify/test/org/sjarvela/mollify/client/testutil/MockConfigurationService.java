@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.testutil;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.FolderDef;
 import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -39,13 +39,13 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void addUserFolder(User user, FolderInfo dir, String name,
+	public void addUserFolder(User user, FolderDef dir, String name,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void editFolder(FolderInfo dir, String name, String path,
+	public void editFolder(FolderDef dir, String name, String path,
 			ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
@@ -63,7 +63,7 @@ public class MockConfigurationService implements ConfigurationService {
 
 	}
 
-	public void getFolders(ResultListener<List<FolderInfo>> resultListener) {
+	public void getFolders(ResultListener<List<FolderDef>> resultListener) {
 		// TODO Auto-generated method stub
 
 	}
@@ -78,7 +78,7 @@ public class MockConfigurationService implements ConfigurationService {
 		resultListener.onSuccess(new UsersAndGroups(users, groups));
 	}
 
-	public void removeFolder(FolderInfo dir, ResultListener resultListener) {
+	public void removeFolder(FolderDef dir, ResultListener resultListener) {
 		// TODO Auto-generated method stub
 
 	}

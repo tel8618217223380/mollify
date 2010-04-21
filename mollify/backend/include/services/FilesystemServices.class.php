@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -190,8 +190,9 @@
 				case 'zip':
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
-				case 'items':
+				case 'info':
 					$this->response()->success(array(
+						"permission" => $this->env->filesystem()->permission($item),
 						"folders" => $this->env->filesystem()->folders($item),
 						"files" => $this->env->filesystem()->files($item))
 					);
