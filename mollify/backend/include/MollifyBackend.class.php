@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -35,33 +35,7 @@
 			$this->environment->addService("filesystem", "FilesystemServices");
 			$this->environment->addService("public", "PublicServices");
 			
-			//TODO create plugin system
-			if ($this->environment->features()->isFeatureEnabled('event_logging')) {
-				$logged = $this->environment->settings()->setting("logged_events", TRUE);
-				if (!$logged or count($logged) == 0) $logged = array("*");
-				
-				require_once("event/EventLogger.class.php");
-				$this->environment->addService("events", "EventServices");
-				$e = new EventLogger($this->environment);
-				
-				foreach($logged as $l)
-					$this->environment->events()->register($l, $e);
-			}
-			
-			$preview = $this->environment->features()->isFeatureEnabled('file_preview');
-			$view = $this->environment->features()->isFeatureEnabled('file_view');
-			
-			if ($preview or $view) {
-				if ($view)
-					$this->environment->addService("view", "FilePreviewServices");
-				if ($preview)
-					$this->environment->addService("preview", "FilePreviewServices");
-				require_once("view/FilePreviewController.class.php");
-				
-				$preview = new FilePreviewController($this->environment, $view, $preview);
-				$this->environment->registerObject("preview", $preview);
-				$this->environment->filesystem()->registerProvider($preview);
-			}
+			$this->environment->plugins()->setup();
 		}
 		
 		public function processRequest($request) {
