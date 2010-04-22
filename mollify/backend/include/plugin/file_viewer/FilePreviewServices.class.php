@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -28,13 +28,8 @@
 					return;
 				}
 			} else if ($this->id === 'view') {
-				if ($this->path[1] === 'embedded' or $this->path[1] === 'full') {
-					$full = ($this->path[1] === 'full');
-					
-					if ($full)
-						$this->response()->html($this->env->getObject("preview")->getView($item, TRUE));
-					else
-						$this->response()->success($this->env->getObject("preview")->getView($item, FALSE));
+				if ($this->path[1] === 'data') {
+					$this->env->getObject("preview")->processDataRequest($item, array_slice($this->path, 2))
 					return;
 				}
 				if ($this->path[1] === 'content') {

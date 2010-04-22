@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -10,13 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class GoogleViewer {
-		private $env;
-		
-		public function __construct($env) {
-			$this->env = $env;
-		}
-		
+	class GoogleViewer extends ViewerBase {		
 		public function getInfo($item) {
 			return array(
 				"embedded" => $this->env->getServiceUrl("view", array($item->id(), "embedded"), FALSE),
