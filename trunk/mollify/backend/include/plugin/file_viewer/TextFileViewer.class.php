@@ -10,24 +10,31 @@
 	 * this entire header must remain intact.
 	 */
 
-	class ImageViewer extends ViewerBase {		
+	class TextFileViewer extends ViewerBase {
+		private $env;
+		
+		public function __construct($env) {
+			$this->env = $env;
+		}
+		
 		public function getInfo($item) {
 			return array(
 				"embedded" => $this->env->getViewUrl($item, array("embedded")),
-				"full" => $this->env->getServiceUrl($item, array("full"))
+				"full" => $this->env->getViewUrl($item, array("full"))
 			);
 		}
 		
 		public function processDataRequest($item, $path) {
-			if (count($path) != 1)) throw $this->invalidRequestException();
-			$html = '<img src="'.$this->env->getDataUrl($item).'">';
-
-			if ($path[0] === 'full')
-				$this->response()->html("<html><head><title>".$item->name()."</title></head><body>".$html."</body></html>");
-			else if ($path[0] === 'embedded')
-				$this->response()->success(array("html" => $html));
-			else
-				throw $this->invalidRequestException();
+			$html = '<iframe id="text-file-viewer" src="'.$this->getContentUrl($item).'" style="border: none;"></iframe>';
+			return array(
+				"html" => $html,
+				"resized_element_id" => "text-file-viewer",
+				"size" => "600;400"
+			);
+		}
+		
+		private function getContentUrl($item) {
+			return $this->env->getServiceUrl("view", array($item->id(),"content"), TRUE);
 		}
 	}
 ?>

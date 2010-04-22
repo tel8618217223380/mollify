@@ -10,28 +10,19 @@
 	 * this entire header must remain intact.
 	 */
 
-	abstract class PluginBase {
+	abstract class ViewerBase {
 		protected $env;
-		protected $id;
 		
-		public function __construct($env, $id) {
+		public function __construct($env) {
 			$this->env = $env;
-			$this->id = $id;
 		}
 		
-		public abstract function setup();
-		
-		public function id() {
-			return $this->id;
+		protected function response() {
+			return $this->env->response();
 		}
 		
-		public function addService($path, $controller) {
-			$this->env->addService($path, $controller, "plugin/".$this->id."/");
-		}
-		
-		function log() {
-			if (!Logging::isDebug()) return;
-			Logging::logDebug("PLUGIN (".get_class($this).")");
+		protected function invalidRequestException($details = NULL) {
+			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->env->request()->method())." ".$this->env->request()->URI().($details != NULL ? (" ".$details): ""));
 		}
 	}
 ?>

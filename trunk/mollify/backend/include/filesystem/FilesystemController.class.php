@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -18,7 +18,7 @@
 		private $env;
 		private $allowedUploadTypes;
 		private $permissionCache = array();
-		private $providers = array();
+		private $detailsPlugins = array();
 
 		function __construct($env) {
 			require_once("MollifyFilesystem.class.php");
@@ -33,8 +33,8 @@
 		
 		public function initialize($request) {}
 
-		public function registerProvider($provider) {
-			$this->providers[] = $provider;
+		public function registerDetailsPlugin($plugin) {
+			$this->detailsPlugins[] = $plugin;
 		}
 
 		public function onSessionStarted() {
@@ -163,7 +163,8 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
-			foreach($this->providers as $p) {
+			
+			foreach($this->detailsPlugins as $p) {
 				$l = $p->getItemDetails($item, $details);
 				if (!$l) continue;
 				

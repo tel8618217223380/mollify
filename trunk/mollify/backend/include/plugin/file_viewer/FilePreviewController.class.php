@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -29,10 +29,10 @@
 				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
 				if ($this->isGoogleViewerEnabled())
 					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
+				$this->registerViewer(array("txt", "js"), "TextFileViewer");
 			}
-			if ($this->previewEnabled) {
+			if ($this->previewEnabled)
 				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
-			}
 		}
 
 		private function registerPreviewer($types, $cls) {
@@ -83,6 +83,7 @@
 				
 		private function getViewer($type) {
 			$viewer = $this->viewers[$type];
+			require_once("ViewerBase.class.php");
 			require_once($viewer.".class.php");
 			return new $viewer($this);
 		}
@@ -93,10 +94,10 @@
 			return $previewer->getPreview($item);
 		}
 		
-		public function getView($item, $full) {
+		public function processDataRequest($item, $path) {
 			$type = strtolower($item->extension());
 			$viewer = $this->getViewer($type);
-			return $viewer->getView($item, $full);
+			$viewer->processDataRequest($item, $path);
 		}
 		
 		public function getDataUrl($item, $session = FALSE) {
@@ -107,7 +108,13 @@
 			}
 			return $url;
 		}
-		
+
+		public function getViewUrl($item, $p = NULL) {
+			$path = array($item->id());
+			if ($p != NULL) $path = array_merge($path, $p);
+			return $this->getServiceUrl("view", $path, TRUE);
+		}
+				
 		public function getServiceUrl($id, $path, $full = FALSE) {
 			return $this->env->getServiceUrl($id, $path, $full);
 		}
