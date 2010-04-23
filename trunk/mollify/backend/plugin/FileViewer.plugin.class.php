@@ -24,14 +24,14 @@
 			if (!$preview and !$view) return;
 			
 			if ($view)
-				$this->addService("view", "FilePreviewServices");
+				$this->addService("view", "FileViewerServices");
 			if ($preview)
-				$this->addService("preview", "FilePreviewServices");
+				$this->addService("preview", "FileViewerServices");
 			
-			require_once("file_viewer/FilePreviewController.class.php");
+			require_once("file_viewer/FileViewerController.class.php");
 			
-			$controller = new FilePreviewController($this->env, $view, $preview);
-			$this->env->registerObject("preview", $controller);
+			$controller = new FileViewerController($this->env, $view, $preview);
+			$this->env->registerObject("file_viewer", $controller);
 			$this->env->filesystem()->registerDetailsPlugin($controller);
 		}
 		

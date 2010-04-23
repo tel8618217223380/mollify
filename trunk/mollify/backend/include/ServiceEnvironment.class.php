@@ -102,7 +102,7 @@
 		public function onSessionStarted() {
 			$this->filesystem->onSessionStarted();
 		}
-						
+		
 		public function addService($id, $controller, $controllerPath = NULL) {
 			$this->services[$id] = $controller;
 			if ($controllerPath != NULL) $this->serviceControllerPaths[$id] = $controllerPath;
