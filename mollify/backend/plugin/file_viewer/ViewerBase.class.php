@@ -22,11 +22,7 @@
 		}
 
 		protected function getDataUrl($item, $p, $fullUrl = FALSE) {
-			return $this->env->getViewUrl($item, array("data", $p), $fullUrl);
-		}
-				
-		protected function getViewUrl($item, $p, $fullUrl = FALSE) {
-			return $this->env->getViewUrl($item, $p, $fullUrl);
+			return $this->env->getViewServiceUrl($item, array("data", $p), $fullUrl);
 		}
 				
 		public function getServiceUrl($id, $path, $fullUrl = FALSE) {

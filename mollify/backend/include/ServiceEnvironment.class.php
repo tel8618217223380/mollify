@@ -146,10 +146,18 @@
 		}
 		
 		public function getResourceUrl($path) {
+			return $this->getRootUrl().$path;
+		}
+
+		public function getCommonResourcesUrl() {
+			return $this->getRootUrl().'resources/';
+		}
+		
+		private function getRootUrl() {
 			if (!$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
 			
 			$root = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - strlen(self::ENTRY_SCRIPT));
-			return $this->settings->setting("host_public_address").$root.$path;
+			return $this->settings->setting("host_public_address").$root;
 		}
 		
 		public function log() {

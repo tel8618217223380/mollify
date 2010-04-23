@@ -26,7 +26,12 @@
 				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
 				if ($this->isGoogleViewerEnabled())
 					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
-				$this->registerViewer(array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql", "php"), "TextFileViewer");
+				
+				$customViewers = $this->getSetting(TRUE, "custom-viewers");
+				if ($customViewers != NULL and is_array($customViewers)) {
+					foreach($customViewers as $t => $list)
+						$this->registerViewer($list, $t);
+				}
 			}
 			if ($this->previewEnabled)
 				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
@@ -60,18 +65,18 @@
 
 		private function isPreviewAllowed($type) {
 			if (!array_key_exists($type, $this->previewers)) return false;
-			$s = $this->env->settings()->setting("file_preview_options", TRUE);
-			if (!isset($s["types"]) or count($s["types"]) == 0) return TRUE;
-			return in_array($type, $this->getPreviewTypes());
+			$types = $this->getSetting(FALSE, "types");
+			if ($types == NULL or count($types) == 0) return TRUE;
+			return in_array($type, $this->splitTypes($types));
 		}
 				
 		private function isViewAllowed($type) {
 			if (!array_key_exists($type, $this->viewers)) return false;
-			$s = $this->env->settings()->setting("file_view_options", TRUE);
-			if (!isset($s["types"]) or count($s["types"]) == 0) return TRUE;
-			return in_array($type, $this->getViewTypes());
+			$types = $this->getSetting(TRUE, "types");
+			if ($types == NULL or count($types) == 0) return TRUE;
+			return in_array($type, $this->splitTypes($types));
 		}
-
+		
 		private function getPreviewer($type) {
 			$previewer = $this->previewers[$type];
 			require_once($previewer.".class.php");
@@ -109,8 +114,12 @@
 		public function response() {
 			return $this->env->response();
 		}
+
+		public function request() {
+			return $this->env->request();
+		}
 		
-		public function getViewUrl($item, $p, $fullUrl = FALSE) {
+		public function getViewServiceUrl($item, $p, $fullUrl = FALSE) {
 			$path = array($item->id());
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("view", $path, $fullUrl);
@@ -123,30 +132,27 @@
 		public function getResourceUrl($id) {
 			return $this->env->getPluginResourceUrl(FileViewer::ID, $id);
 		}
-		
-		private function getPreviewTypes() {
-			$s = $this->env->settings()->setting("file_preview_options", TRUE);
-			if (!isset($s["types"]) or count($s['types']) == 0) return array();
-			
-			$result = array();
-			foreach (explode(",", $s["types"]) as $t)
-				$result[] = strtolower(trim($t));
-			return $result;
-		}
 
-		private function getViewTypes() {
-			$s = $this->env->settings()->setting("file_view_options", TRUE);
-			if (!isset($s["types"]) or count($s["types"]) == 0) return array();
-			
+		public function getCommonResourcesUrl() {
+			return $this->env->getCommonResourcesUrl();
+		}
+		
+		private function splitTypes($list) {
 			$result = array();
-			foreach (explode(",", $s["types"]) as $t)
+			foreach (explode(",", $list) as $t)
 				$result[] = strtolower(trim($t));
 			return $result;
 		}
 		
 		private function isGoogleViewerEnabled() {
-			$s = $this->env->settings()->setting("file_view_options", TRUE);
-			return (isset($s["use_google_viewer"]) and $s["use_google_viewer"] === TRUE);
+			$s = $this->getSetting(TRUE, "use_google_viewer");
+			return ($s === TRUE);
+		}
+
+		private function getSetting($view, $name) {
+			$s = $this->env->settings()->setting($view ? "file_view_options" : "file_preview_options", TRUE);
+			if (!isset($s[$name])) return NULL;
+			return $s[$name];
 		}
 
 		public function __toString() {
