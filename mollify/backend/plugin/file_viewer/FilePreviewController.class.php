@@ -10,10 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class FilePreviewController {
-		static $defaultPreviewTypes = array("gif", "png", "jpg");
-		static $defaultViewTypes = array("gif", "png", "jpg");
-		
+	class FilePreviewController {	
 		private $previewers = array();
 		private $viewers = array();
 		
@@ -29,7 +26,7 @@
 				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
 				if ($this->isGoogleViewerEnabled())
 					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
-				$this->registerViewer(array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql"), "TextFileViewer");
+				$this->registerViewer(array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql", "php"), "TextFileViewer");
 			}
 			if ($this->previewEnabled)
 				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
@@ -129,7 +126,7 @@
 		
 		private function getPreviewTypes() {
 			$s = $this->env->settings()->setting("file_preview_options", TRUE);
-			if (!isset($s["types"]) or count($s['types']) == 0) return self::$defaultPreviewTypes;
+			if (!isset($s["types"]) or count($s['types']) == 0) return array();
 			
 			$result = array();
 			foreach (explode(",", $s["types"]) as $t)
@@ -139,7 +136,7 @@
 
 		private function getViewTypes() {
 			$s = $this->env->settings()->setting("file_view_options", TRUE);
-			if (!isset($s["types"]) or count($s["types"]) == 0) return self::$defaultViewTypes;
+			if (!isset($s["types"]) or count($s["types"]) == 0) return array();
 			
 			$result = array();
 			foreach (explode(",", $s["types"]) as $t)
