@@ -142,14 +142,14 @@
 		}
 		
 		public function getPluginResourceUrl($pluginId, $path) {
-			return $this->getResourceUrl("plugin/".$pluginId."/".$path."/");
+			return $this->getResourceUrl("plugin/".$pluginId."/resources/".$path."/");
 		}
 		
 		public function getResourceUrl($path) {
 			if (!$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
 			
 			$root = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - strlen(self::ENTRY_SCRIPT));
-			return $this->settings->setting("host_public_address").$root.self::RESOURCE_LOCATION.$path;
+			return $this->settings->setting("host_public_address").$root.$path;
 		}
 		
 		public function log() {
