@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -13,14 +13,14 @@
 	class ImageViewer extends ViewerBase {		
 		public function getInfo($item) {
 			return array(
-				"embedded" => $this->env->getViewUrl($item, array("embedded")),
-				"full" => $this->env->getServiceUrl($item, array("full"))
+				"embedded" => $this->getDataUrl($item, "embedded"),
+				"full" => $this->getDataUrl($item, "full", TRUE)
 			);
 		}
 		
 		public function processDataRequest($item, $path) {
-			if (count($path) != 1)) throw $this->invalidRequestException();
-			$html = '<img src="'.$this->env->getDataUrl($item).'">';
+			if (count($path) != 1) throw $this->invalidRequestException();
+			$html = '<img src="'.$this->getContentUrl($item).'">';
 
 			if ($path[0] === 'full')
 				$this->response()->html("<html><head><title>".$item->name()."</title></head><body>".$html."</body></html>");

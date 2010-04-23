@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -12,7 +12,7 @@
 
 	class FilePreviewServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) == 2;
+			return count($path) > 1;
 		}
 		
 		public function processGet() {
@@ -29,7 +29,7 @@
 				}
 			} else if ($this->id === 'view') {
 				if ($this->path[1] === 'data') {
-					$this->env->getObject("preview")->processDataRequest($item, array_slice($this->path, 2))
+					$this->env->getObject("preview")->processDataRequest($item, array_slice($this->path, 2));
 					return;
 				}
 				if ($this->path[1] === 'content') {

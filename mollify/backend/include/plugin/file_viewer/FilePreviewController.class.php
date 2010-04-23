@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -29,7 +29,7 @@
 				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
 				if ($this->isGoogleViewerEnabled())
 					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
-				$this->registerViewer(array("txt", "js"), "TextFileViewer");
+				$this->registerViewer(array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql"), "TextFileViewer");
 			}
 			if ($this->previewEnabled)
 				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
@@ -100,25 +100,33 @@
 			$viewer->processDataRequest($item, $path);
 		}
 		
-		public function getDataUrl($item, $session = FALSE) {
+		public function getContentUrl($item, $session = FALSE) {
 			$url = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
-			if ($session) {
+			if ($session and $this->env->session()->isActive()) {
 				$s = $this->env->session()->getSessionInfo();
 				$url .= '/?session='.$s["session_id"];
 			}
 			return $url;
 		}
 
-		public function getViewUrl($item, $p = NULL) {
+		public function response() {
+			return $this->env->response();
+		}
+		
+		public function getViewUrl($item, $p, $fullUrl = FALSE) {
 			$path = array($item->id());
 			if ($p != NULL) $path = array_merge($path, $p);
-			return $this->getServiceUrl("view", $path, TRUE);
+			return $this->getServiceUrl("view", $path, $fullUrl);
 		}
 				
-		public function getServiceUrl($id, $path, $full = FALSE) {
-			return $this->env->getServiceUrl($id, $path, $full);
+		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
+			return $this->env->getServiceUrl($id, $path, $fullUrl);
 		}
 
+		public function getResourceUrl($id) {
+			return $this->env->getPluginResourceUrl(FileViewer::ID, $id);
+		}
+		
 		private function getPreviewTypes() {
 			$s = $this->env->settings()->setting("file_preview_options", TRUE);
 			if (!isset($s["types"]) or count($s['types']) == 0) return self::$defaultPreviewTypes;

@@ -17,6 +17,9 @@
 	require_once("services/ServicesBase.class.php");
 	
 	class ServiceEnvironment {
+		const ENTRY_SCRIPT = 'r.php';
+		const RESOURCE_LOCATION = 'resources/';
+		
 		private $services = array();
 		private $serviceControllerPaths = array();
 		private $objects = array();
@@ -136,6 +139,17 @@
 			$url = ($full ? $this->settings->setting("host_public_address").$_SERVER['SCRIPT_NAME']."/" : "").$id;
 			foreach($path as $p) $url .= "/".$p;
 			return $url;
+		}
+		
+		public function getPluginResourceUrl($pluginId, $path) {
+			return $this->getResourceUrl("plugin/".$pluginId."/".$path."/");
+		}
+		
+		public function getResourceUrl($path) {
+			if (!$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
+			
+			$root = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - strlen(self::ENTRY_SCRIPT));
+			return $this->settings->setting("host_public_address").$root.self::RESOURCE_LOCATION.$path;
 		}
 		
 		public function log() {

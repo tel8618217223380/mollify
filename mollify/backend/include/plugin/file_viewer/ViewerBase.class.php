@@ -20,6 +20,26 @@
 		protected function response() {
 			return $this->env->response();
 		}
+
+		protected function getDataUrl($item, $p, $fullUrl = FALSE) {
+			return $this->env->getViewUrl($item, array("data", $p), $fullUrl);
+		}
+				
+		protected function getViewUrl($item, $p, $fullUrl = FALSE) {
+			return $this->env->getViewUrl($item, $p, $fullUrl);
+		}
+				
+		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
+			return $this->env->getServiceUrl($id, $path, $fullUrl);
+		}
+		
+		public function getContentUrl($item, $session = FALSE) {
+			return $this->env->getContentUrl($item, $session);
+		}
+
+		public function getResourceUrl($path) {
+			return $this->env->getResourceUrl($path);
+		}
 		
 		protected function invalidRequestException($details = NULL) {
 			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->env->request()->method())." ".$this->env->request()->URI().($details != NULL ? (" ".$details): ""));
