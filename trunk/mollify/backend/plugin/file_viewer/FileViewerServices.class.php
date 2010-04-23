@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -24,7 +24,7 @@
 					return;
 				}
 				if ($this->path[1] === 'content') {
-					$this->env->filesystem()->download($item);
+					$this->env->filesystem()->load($item);
 					return;
 				}
 			} else if ($this->id === 'view') {
@@ -33,7 +33,7 @@
 					return;
 				}
 				if ($this->path[1] === 'content') {
-					$this->env->filesystem()->download($item);
+					$this->env->filesystem()->load($item);
 					return;
 				}
 			}

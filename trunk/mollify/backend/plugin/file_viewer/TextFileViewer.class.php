@@ -1,17 +1,31 @@
 <?php
-
-	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
-	 *
-	 * All rights reserved. This program and the accompanying materials
-	 * are made available under the terms of the Eclipse Public License v1.0
-	 * which accompanies this distribution, and is available at
-	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
-	 * this entire header must remain intact.
-	 */
-
 	class TextFileViewer extends ViewerBase {
-	
+		static $scripts = array(
+			"as3" => "shBrushAS3.js",
+			"bash" => "shBrushBash.js",
+			"cf" => "shBrushColdFusion.js",
+			"csharp" =>	"shBrushCSharp.js",
+			"c" => "shBrushCpp.js",
+			"css" => "shBrushCss.js",
+			"pascal" => "shBrushDelphi.js",
+			"diff" => "shBrushDiff.js",
+			"erl" => "shBrushErlang.js",
+			"groovy" => "shBrushGroovy.js",
+			"js" => "shBrushJScript.js",
+			"java" => "shBrushJava.js",
+			"jfx" => "shBrushJavaFX.js",
+			"perl" => "shBrushPerl.js",
+			"php" => "shBrushPhp.js",
+			"plain" => "shBrushPlain.js",
+			"ps" => "shBrushPowerShell.js",
+			"py" =>	"shBrushPython.js",
+			"rails" => "shBrushRuby.js",
+			"scala" => "shBrushScala.js",
+			"sql" => "shBrushSql.js",
+			"vb" => "shBrushVb.js",
+			"xml" => "shBrushXml.js"
+		);
+		
 		public function getInfo($item) {
 			return array(
 				"embedded" => $this->getDataUrl($item, "embedded"),
@@ -45,7 +59,7 @@
 			$syntax = $this->getSyntax($item);
 			
 			$head = '<script type="text/javascript" src="'.$resourceUrl.'shCore.js"></script>'.
-					'<script type="text/javascript" src="'.$resourceUrl.$this->getScript($syntax).'"></script>'.
+					'<script type="text/javascript" src="'.$resourceUrl.self::$scripts[$syntax].'"></script>'.
 					'<link href="'.$resourceUrl.'/styles/shCore.css" rel="stylesheet" type="text/css" />'.
 					'<link type="text/css" rel="Stylesheet" href="'.$resourceUrl.'/styles/shThemeDefault.css"/>';
 					
@@ -56,9 +70,9 @@
 			while (!feof($stream))
 				$html .= fread($stream, 1024);
 			fclose($stream);
-			
+
 			$html .= ']]></script><script type="text/javascript">SyntaxHighlighter.all()</script>';
-;			
+			
 			$this->response()->html("<html><head><title>".$item->name()."</title>".$head."</head><body>".$html."</body></html>");
 		}
 		
@@ -76,36 +90,8 @@
 			if ($ext === 'xml' or $ext === 'xhtml' or $ext === 'xslt' or $ext === 'html') return "xml";
 			if ($ext === 'py') return "py";
 			
+			// fallback to plain format
 			return "plain";
 		}
-		
-		private function getScript($syntax) {
-			$scripts = array(
-				"as3" => "shBrushAS3.js",
-				"bash" => "shBrushBash.js",
-				"cf" => "shBrushColdFusion.js",
-				"csharp" =>	"shBrushCSharp.js",
-				"c" => "shBrushCpp.js",
-				"css" => "shBrushCss.js",
-				"pascal" => "shBrushDelphi.js",
-				"diff" => "shBrushDiff.js",
-				"erl" => "shBrushErlang.js",
-				"groovy" => "shBrushGroovy.js",
-				"js" => "shBrushJScript.js",
-				"java" => "shBrushJava.js",
-				"jfx" => "shBrushJavaFX.js",
-				"perl" => "shBrushPerl.js",
-				"php" => "shBrushPhp.js",
-				"plain" => "shBrushPlain.js",
-				"ps" => "shBrushPowerShell.js",
-				"py" =>	"shBrushPython.js",
-				"rails" => "shBrushRuby.js",
-				"scala" => "shBrushScala.js",
-				"sql" => "shBrushSql.js",
-				"vb" => "shBrushVb.js",
-				"xml" => "shBrushXml.js"
-			);
-			return $scripts[$syntax];
-		}	
 	}
 ?>

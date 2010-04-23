@@ -45,7 +45,11 @@
 		}
 		
 		public function download($filename, $stream, $size = NULL, $range = NULL) {
-			$this->output->sendBinary($filename, $stream, $size, $range);
+			$this->output->downloadBinary($filename, $stream, $size, $range);
+		}
+		
+		public function load($type, $stream) {
+			$this->output->sendBinary($type, $stream);
 		}
 
 		public function html($html) {

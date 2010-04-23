@@ -71,7 +71,7 @@
 			}
 		}
 		
-		public function sendBinary($filename, $stream, $size = NULL, $range = NULL) {
+		public function downloadBinary($filename, $stream, $size = NULL, $range = NULL) {
 			if ($range) {
 				$start = $range[0];
 				$end = $range[1];
@@ -104,8 +104,24 @@
 			fclose($stream);
 		}
 		
+		public function sendBinary($type, $stream) {
+			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+			
+			while (!feof($stream)) {
+				set_time_limit(0);
+				echo fread($stream, 1024);
+				flush();
+			}
+			fclose($stream);
+		}
+		
 		private function getStatus($response) {
 			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
+		}
+		
+		private function getMime($type) {
+			if ($type === 'ogg') return 'application/ogg';
+			return 'application/octet-stream';
 		}
 		
 		public function __toString() {
