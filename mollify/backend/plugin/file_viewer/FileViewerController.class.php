@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class FilePreviewController {	
+	class FileViewerController {	
 		private $previewers = array();
 		private $viewers = array();
 		
@@ -150,7 +150,7 @@
 		}
 
 		public function __toString() {
-			return "FilePreview";
+			return "FileViewerController";
 		}
 	}
 ?>

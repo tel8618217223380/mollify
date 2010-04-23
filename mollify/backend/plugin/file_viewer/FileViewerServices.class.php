@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class FilePreviewServices extends ServicesBase {
+	class FileViewerServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
 			return count($path) > 1;
 		}
@@ -20,7 +20,7 @@
 			
 			if ($this->id === 'preview') {
 				if ($this->path[1] === 'info') {
-					$this->response()->success($this->env->getObject("preview")->getPreview($item));
+					$this->response()->success($this->env->getObject("file_viewer")->getPreview($item));
 					return;
 				}
 				if ($this->path[1] === 'content') {
@@ -29,7 +29,7 @@
 				}
 			} else if ($this->id === 'view') {
 				if ($this->path[1] === 'data') {
-					$this->env->getObject("preview")->processDataRequest($item, array_slice($this->path, 2));
+					$this->env->getObject("file_viewer")->processDataRequest($item, array_slice($this->path, 2));
 					return;
 				}
 				if ($this->path[1] === 'content') {
@@ -41,7 +41,7 @@
 		}
 		
 		public function __toString() {
-			return "FilePreviewServices";
+			return "FileViewerServices";
 		}
 	}
 ?>
