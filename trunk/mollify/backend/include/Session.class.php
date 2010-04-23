@@ -37,6 +37,10 @@
 			session_start();
 		}
 		
+		public function isActive() {
+			return $this->env->configuration()->isAuthenticationRequired();
+		}
+		
 		public function getSessionInfo() {
 			$result = array();
 			if ($this->env->configuration()->isAuthenticationRequired()) {
