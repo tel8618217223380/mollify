@@ -12,9 +12,11 @@
 
 	abstract class ViewerBase {
 		protected $env;
+		protected $id;
 		
-		public function __construct($env) {
+		public function __construct($env, $id) {
 			$this->env = $env;
+			$this->id = $id;
 		}
 		
 		protected function response() {
@@ -33,8 +35,8 @@
 			return $this->env->getContentUrl($item, $session);
 		}
 
-		public function getResourceUrl($path) {
-			return $this->env->getResourceUrl($path);
+		public function getResourceUrl() {
+			return $this->env->getResourceUrl($this->id);
 		}
 		
 		protected function invalidRequestException($details = NULL) {

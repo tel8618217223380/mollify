@@ -23,18 +23,14 @@
 			$this->previewEnabled = $preview;
 			
 			if ($this->viewEnabled) {
-				$this->registerViewer(array("gif", "png", "jpg"), "ImageViewer");
-				if ($this->isGoogleViewerEnabled())
-					$this->registerViewer(array("pdf", "doc", "xls"), "GoogleViewer");
-				
-				$customViewers = $this->getSetting(TRUE, "custom-viewers");
-				if ($customViewers != NULL and is_array($customViewers)) {
-					foreach($customViewers as $t => $list)
+				$viewers = $this->getSetting(TRUE, "viewers");
+				if ($viewers != NULL and is_array($viewers)) {
+					foreach($viewers as $t => $list)
 						$this->registerViewer($list, $t);
 				}
 			}
 			if ($this->previewEnabled)
-				$this->registerPreviewer(array("gif", "png", "jpg"), "ImagePreviewer");
+				$this->registerPreviewer(array("gif", "png", "jpg"), "image_previewer/ImagePreviewer");
 		}
 
 		private function registerPreviewer($types, $cls) {
@@ -79,15 +75,19 @@
 		
 		private function getPreviewer($type) {
 			$previewer = $this->previewers[$type];
-			require_once($previewer.".class.php");
-			return new $previewer($this);
+			list($id, $cls) = split("/", $previewer, 2);
+			
+			require_once("previewers/".$id."/".$cls.".class.php");
+			return new $cls($this);
 		}
 				
 		private function getViewer($type) {
 			$viewer = $this->viewers[$type];
+			list($id, $cls) = split("/", $viewer, 2);
+			
 			require_once("ViewerBase.class.php");
-			require_once($viewer.".class.php");
-			return new $viewer($this);
+			require_once("viewers/".$id."/".$cls.".class.php");
+			return new $cls($this, $id);
 		}
 		
 		public function getPreview($item) {
@@ -129,8 +129,8 @@
 			return $this->env->getServiceUrl($id, $path, $fullUrl);
 		}
 
-		public function getResourceUrl($id) {
-			return $this->env->getPluginResourceUrl(FileViewer::ID, $id);
+		public function getResourceUrl($viewerId) {
+			return $this->env->getPluginUrl(FileViewer::ID, "viewers/".$viewerId."/resources");
 		}
 
 		public function getCommonResourcesUrl() {
@@ -144,10 +144,10 @@
 			return $result;
 		}
 		
-		private function isGoogleViewerEnabled() {
+		/*private function isGoogleViewerEnabled() {
 			$s = $this->getSetting(TRUE, "use_google_viewer");
 			return ($s === TRUE);
-		}
+		}*/
 
 		private function getSetting($view, $name) {
 			$s = $this->env->settings()->setting($view ? "file_view_options" : "file_preview_options", TRUE);
