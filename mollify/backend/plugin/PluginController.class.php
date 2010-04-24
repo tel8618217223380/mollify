@@ -25,17 +25,18 @@
 			global $PLUGINS;
 			if (!isset($PLUGINS) or !is_array($PLUGINS)) return;
 			
-			foreach($PLUGINS as $p)
-				$this->addPlugin($p);
+			foreach($PLUGINS as $p => $settings)
+				$this->addPlugin($p, $settings);
 			
 			foreach($this->plugins as $id => $p)
 				$p->setup();
 		}
 		
-		private function addPlugin($plugin) {
-			require_once($plugin.".plugin.class.php");
-			$p = new $plugin($this->env);
-			$this->plugins[$p->id()] = $p;
+		private function addPlugin($pluginDef, $settings) {
+			list($id, $cls) = split("/", $pluginDef, 2);
+			require_once($id."/".$cls.".plugin.php");
+			$p = new $cls($this->env, $id, $settings);
+			$this->plugins[$id] = $p;
 		}
 		
 		public function initialize($request) {}

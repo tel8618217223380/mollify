@@ -22,15 +22,12 @@
 			"permission_update" => FALSE,
 			"administration" => FALSE,
 			"user_groups" => FALSE,
-			"event_logging" => FALSE,
-			"file_preview" => FALSE,
-			"file_view" => FALSE,
 			"public_links" => FALSE
 		);
 		
 		private $defaultValues = array();
 		
-		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups", "event_logging");
+		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
@@ -53,6 +50,10 @@
 				}
 				$this->features[$f] = $enabled;
 			}
+		}
+		
+		public function addFeature($name) {
+			$this->features[$name] = TRUE;
 		}
 		
 		public function isFeatureEnabled($feature) {

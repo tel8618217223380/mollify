@@ -10,23 +10,15 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("event_logging/EventLogger.class.php");
+	require_once("EventLogger.class.php");
 	
-	class EventLogging extends PluginBase {
-		const ID = "event_logging";
-		
-		public function __construct($env) {
-			parent::__construct($env, self::ID);
-		}
-		
+	class EventLogging extends PluginBase {		
 		public function setup() {
-			if (!$this->env->features()->isFeatureEnabled('event_logging'))
-				return;
-			
-			$logged = $this->env->settings()->setting("logged_events", TRUE);
+			$logged = $this->getSetting("logged_events", NULL);
 			if (!$logged or count($logged) == 0) $logged = array("*");
 			
 			$this->addService("events", "EventServices");
+			$this->env->features()->addFeature("event_logging");
 			$e = new EventLogger($this->env);
 			
 			foreach($logged as $l)

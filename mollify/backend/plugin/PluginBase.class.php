@@ -13,16 +13,31 @@
 	abstract class PluginBase {
 		protected $env;
 		protected $id;
+		protected $settings;
 		
-		public function __construct($env, $id) {
+		public function __construct($env, $id, $settings) {
 			$this->env = $env;
 			$this->id = $id;
+			$this->settings = $settings;
 		}
 		
 		public abstract function setup();
 		
 		public function id() {
 			return $this->id;
+		}
+		
+		public function env() {
+			return $this->env;
+		}
+		
+		public function getSettings() {
+			return $this->settings;
+		}
+		
+		public function getSetting($name, $default = NULL) {
+			if (!$this->settings or !isset($this->settings[$name])) return $default;
+			return $this->settings[$name];
 		}
 		
 		public function addService($path, $controller) {

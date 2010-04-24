@@ -12,15 +12,9 @@
 
 
 	class FileViewer extends PluginBase {
-		const ID = "file_viewer";
-		
-		public function __construct($env) {
-			parent::__construct($env, self::ID);
-		}
-		
 		public function setup() {
-			$preview = $this->env->features()->isFeatureEnabled('file_preview');
-			$view = $this->env->features()->isFeatureEnabled('file_view');
+			$preview = $this->getSetting('enable_file_preview', TRUE);
+			$view = $this->getSetting('enable_file_view', TRUE);
 			if (!$preview and !$view) return;
 			
 			if ($view)
@@ -28,9 +22,9 @@
 			if ($preview)
 				$this->addService("preview", "FileViewerServices");
 			
-			require_once("file_viewer/FileViewerController.class.php");
+			require_once("FileViewerController.class.php");
 			
-			$controller = new FileViewerController($this->env, $view, $preview);
+			$controller = new FileViewerController($this, $view, $preview);
 			$this->env->registerObject("file_viewer", $controller);
 			$this->env->filesystem()->registerDetailsPlugin($controller);
 		}

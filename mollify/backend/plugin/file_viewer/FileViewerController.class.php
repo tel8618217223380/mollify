@@ -10,15 +10,16 @@
 	 * this entire header must remain intact.
 	 */
 
-	class FileViewerController {	
+	class FileViewerController {
+		private $plugin;
 		private $previewers = array();
 		private $viewers = array();
 		
 		private $viewEnabled;
 		private $previewEnabled;
 		
-		public function __construct($serviceEnvironment, $view, $preview) {
-			$this->env = $serviceEnvironment;
+		public function __construct($plugin, $view, $preview) {
+			$this->plugin = $plugin;
 			$this->viewEnabled = $view;
 			$this->previewEnabled = $preview;
 			
@@ -28,6 +29,7 @@
 					foreach($viewers as $t => $list)
 						$this->registerViewer($list, $t);
 				}
+				$this->plugin->env()->features()->addFeature("file_view");
 			}
 			if ($this->previewEnabled) {
 				$previewers = $this->getSetting(FALSE, "previewers");
@@ -35,6 +37,7 @@
 					foreach($previewers as $t => $list)
 						$this->registerPreviewer($list, $t);
 				}
+				$this->plugin->env()->features()->addFeature("file_preview");
 			}
 		}
 
@@ -82,8 +85,8 @@
 			$previewer = $this->previewers[$type];
 			list($id, $cls) = split("/", $previewer, 2);
 			
-			require_once("PreviewerBase.class.php");
-			require_once("previewers/".$id."/".$cls.".class.php");
+			require_once("previewers/PreviewerBase.class.php");
+			require_once("previewers/".$id."/".$cls.".previewer.php");
 			return new $cls($this, $id);
 		}
 				
@@ -91,10 +94,10 @@
 			$viewer = $this->viewers[$type];
 			list($id, $cls) = split("/", $viewer, 2);
 			
-			require_once("ViewerBase.class.php");
-			require_once("FullDocumentViewer.class.php");
-			require_once("EmbeddedContentViewer.class.php");
-			require_once("viewers/".$id."/".$cls.".class.php");
+			require_once("viewers/ViewerBase.class.php");
+			require_once("viewers/FullDocumentViewer.class.php");
+			require_once("viewers/EmbeddedContentViewer.class.php");
+			require_once("viewers/".$id."/".$cls.".viewer.php");
 			return new $cls($this, $id);
 		}
 		
@@ -111,20 +114,20 @@
 		}
 		
 		public function getContentUrl($item, $session = FALSE) {
-			$url = $this->env->getServiceUrl("view", array($item->id(), "content"), TRUE);
-			if ($session and $this->env->session()->isActive()) {
-				$s = $this->env->session()->getSessionInfo();
+			$url = $this->plugin->env()->getServiceUrl("view", array($item->id(), "content"), TRUE);
+			if ($session and $this->plugin->env()->session()->isActive()) {
+				$s = $this->plugin->env()->session()->getSessionInfo();
 				$url .= '/?session='.$s["session_id"];
 			}
 			return $url;
 		}
 
 		public function response() {
-			return $this->env->response();
+			return $this->plugin->env()->response();
 		}
 
 		public function request() {
-			return $this->env->request();
+			return $this->plugin->env()->request();
 		}
 		
 		public function getViewServiceUrl($item, $p, $fullUrl = FALSE) {
@@ -134,15 +137,15 @@
 		}
 				
 		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
-			return $this->env->getServiceUrl($id, $path, $fullUrl);
+			return $this->plugin->env()->getServiceUrl($id, $path, $fullUrl);
 		}
 
 		public function getResourceUrl($viewerId) {
-			return $this->env->getPluginUrl(FileViewer::ID, "viewers/".$viewerId."/resources");
+			return $this->plugin->env()->getPluginUrl($this->plugin->id(), "viewers/".$viewerId."/resources");
 		}
 
 		public function getCommonResourcesUrl() {
-			return $this->env->getCommonResourcesUrl();
+			return $this->plugin->env()->getCommonResourcesUrl();
 		}
 		
 		private function splitTypes($list) {
@@ -151,15 +154,15 @@
 				$result[] = strtolower(trim($t));
 			return $result;
 		}
-		
+
 		public function getViewerSettings($viewerId) {
-			$s = $this->env->settings()->setting("file_view_options", TRUE);
+			$s = $this->plugin->getSettings();
 			if (!isset($s[$viewerId])) return array();
 			return $s[$viewerId];
 		}
-		
+
 		private function getSetting($view, $name) {
-			$s = $this->env->settings()->setting($view ? "file_view_options" : "file_preview_options", TRUE);
+			$s = $this->plugin->getSetting($view ? "view_options" : "preview_options", array());
 			if (!isset($s[$name])) return NULL;
 			return $s[$name];
 		}
