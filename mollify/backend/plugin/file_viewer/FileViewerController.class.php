@@ -92,7 +92,8 @@
 			list($id, $cls) = split("/", $viewer, 2);
 			
 			require_once("ViewerBase.class.php");
-			require_once("FullPageViewer.class.php");
+			require_once("FullDocumentViewer.class.php");
+			require_once("EmbeddedContentViewer.class.php");
 			require_once("viewers/".$id."/".$cls.".class.php");
 			return new $cls($this, $id);
 		}

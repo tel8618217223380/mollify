@@ -1,5 +1,5 @@
 <?php
-	class JPlayerViewer extends FullPageViewer {
+	class JPlayerViewer extends FullDocumentViewer {
 		protected function getEmbeddedSize() {
 			return array("450", "150");
 		}
