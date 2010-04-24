@@ -30,13 +30,7 @@
 			"zip_options" => array(),
 			"permission_file" => "mollify.uac",
 			"description_file" => "mollify.dsc",
-			"enable_event_logging" => FALSE,
-			"enable_file_preview" => FALSE,
-			"enable_file_view" => FALSE,
-			"file_view_options" => array(),
-			"file_preview_options" => array(),
 			"enable_public_links" => FALSE,
-			"logged_events" => array(),
 			"debug" => FALSE
 		);
 		
@@ -52,6 +46,7 @@
 		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {
 			if (!$this->hasSetting($setting)) {
 				if (!$allowDefaultIfNotDefined) return NULL;
+				if (!isset(self::$VALUES[$setting])) throw new ServiceException("Invalid setting: ".$setting);
 				return self::$VALUES[$setting];
 			}
 			return $this->settings[$setting];

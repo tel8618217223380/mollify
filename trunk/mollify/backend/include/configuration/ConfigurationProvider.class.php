@@ -98,5 +98,9 @@
 		function log() {
 			Logging::logDebug("CONFIGURATION PROVIDER (".get_class($this)."): supported features=".Util::array2str($this->getSupportedFeatures())." auth=".$this->isAuthenticationRequired());
 		}
+		
+		public function __toString() {
+			return "ConfigurationProvider (".get_class($this).")";
+		}
 	}
 ?>
