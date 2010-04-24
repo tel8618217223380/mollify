@@ -1,5 +1,5 @@
 <?php
-	class FlowPlayerViewer extends FullPageViewer {		
+	class FlowPlayerViewer extends FullDocumentViewer {		
 		protected function getHtml($item, $full) {
 			$resourceUrl = $this->getResourceUrl();
 			

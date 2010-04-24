@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	abstract class FullPageViewer extends ViewerBase {
+	abstract class FullDocumentViewer extends ViewerBase {
 		public function getInfo($item) {
 			return array(
 				"embedded" => $this->getDataUrl($item, "embedded"),
@@ -29,7 +29,7 @@
 				throw $this->invalidRequestException();
 		}
 
-		private function processEmbeddedViewRequest($item) {
+		protected function processEmbeddedViewRequest($item) {
 			$html = '<iframe id="viewer-frame" src="'.$this->getDataUrl($item, "view", TRUE).'?embedded=true" style="border: none;"></iframe>';
 			$size = $this->getEmbeddedSize();
 			 
@@ -50,6 +50,21 @@
 			$full = $this->request()->hasParam("embedded") and (strcasecmp("true", $this->request()->param("embedded")) == 0);
 			$this->response()->html($this->getHtml($item, $full));
 		}
-
+	}
+	
+	abstract class FullPageOnlyViewer extends FullDocumentViewer {
+		public function getInfo($item) {
+			return array(
+				"full" => $this->getDataUrl($item, "view", TRUE)
+			);
+		}
+	}
+	
+	abstract class FullDocumentEmbeddedOnlyViewer extends FullDocumentViewer {
+		public function getInfo($item) {
+			return array(
+				"embedded" => $this->getDataUrl($item, "embedded")
+			);
+		}
 	}
 ?>

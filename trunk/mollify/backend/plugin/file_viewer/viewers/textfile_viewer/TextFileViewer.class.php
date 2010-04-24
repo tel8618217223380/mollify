@@ -1,5 +1,5 @@
 <?php
-	class TextFileViewer extends FullPageViewer {
+	class TextFileViewer extends FullDocumentViewer {
 		static $scripts = array(
 			"as3" => "shBrushAS3.js",
 			"bash" => "shBrushBash.js",
