@@ -24,6 +24,10 @@
 		}
 		
 		abstract function type();
+		
+		abstract function exists();
+		
+		abstract function create();
 
 		public function id() {
 			return $this->id;

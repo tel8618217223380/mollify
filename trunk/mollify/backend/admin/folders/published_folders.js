@@ -241,8 +241,10 @@ function MollifyPublishedFoldersConfigurationView() {
 
 			if (id)
 				editFolder(id, name, path, onSuccess, onFail);
-			else
-				addFolder(name, path, onSuccess, onFail);
+			else {
+				var createNonExisting = $("#create-nonexisting").attr('checked');
+				addFolder(name, path, createNonExisting, onSuccess, onFail);
+			}
 		}
 
 		if (id)
@@ -259,10 +261,13 @@ function MollifyPublishedFoldersConfigurationView() {
 			$("#folder-name-field").val(folder.name);
 			$("#folder-path-field").val(folder.path);
 			$("#folder-dialog").dialog('option', 'title', 'Edit Folder');
+			$("#create-nonexisting-panel").hide();
 		} else {
 			$("#folder-name-field").val("");
 			$("#folder-path-field").val("");
 			$("#folder-dialog").dialog('option', 'title', 'Add Folder');
+			$("#create-nonexisting").attr('checked', false);
+			$("#create-nonexisting-panel").show();
 		}
 		
 		$("#folder-dialog").dialog('open');
