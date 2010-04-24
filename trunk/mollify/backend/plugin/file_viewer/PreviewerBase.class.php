@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	abstract class ViewerBase {
+	abstract class PreviewerBase {
 		protected $env;
 		protected $id;
 		
@@ -19,28 +19,22 @@
 			$this->id = $id;
 		}
 		
+		public function getPreview($item) {
+			return array("html" => $this->getPreviewHtml($item));
+		}
+		
+		protected abstract function getPreviewHtml($item);
+		
 		protected function response() {
 			return $this->env->response();
 		}
-
-		protected function request() {
-			return $this->env->request();
-		}
-
-		protected function getDataUrl($item, $p, $fullUrl = FALSE) {
-			return $this->env->getViewServiceUrl($item, array("data", $p), $fullUrl);
+		
+		public function getUrl($item) {
+			return $this->env->getServiceUrl("preview", array($item->id(), "info"));
 		}
 				
-		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
-			return $this->env->getServiceUrl($id, $path, $fullUrl);
-		}
-		
 		public function getContentUrl($item, $session = FALSE) {
-			return $this->env->getContentUrl($item, $session);
-		}
-
-		public function getResourceUrl() {
-			return $this->env->getResourceUrl($this->id);
+			return $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
 		}
 		
 		public function getSettings() {
