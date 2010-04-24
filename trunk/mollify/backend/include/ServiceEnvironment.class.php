@@ -141,8 +141,8 @@
 			return $url;
 		}
 		
-		public function getPluginResourceUrl($pluginId, $path) {
-			return $this->getResourceUrl("plugin/".$pluginId."/resources/".$path."/");
+		public function getPluginUrl($pluginId, $path) {
+			return $this->getResourceUrl("plugin/".$pluginId."/".$path."/");
 		}
 		
 		public function getResourceUrl($path) {

@@ -365,7 +365,7 @@
 			Logging::logDebug('load ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "load");
 			$this->env->events()->onEvent(FileEvent::download($file));
-			$this->env->response()->load($file->extension(), $file->read());
+			$this->env->response()->load($file->extension(), $file->read(), $file->size());
 		}
 		
 		public function uploadTo($folder) {

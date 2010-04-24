@@ -95,7 +95,7 @@
 				header("Pragma: hack");
 			}
 			
-			if ($range) fseek($handle, $range[0]);
+			if ($range) fseek($stream, $range[0]);
 			while (!feof($stream)) {
 				set_time_limit(0);
 				echo fread($stream, 1024);
@@ -104,9 +104,14 @@
 			fclose($stream);
 		}
 		
-		public function sendBinary($type, $stream) {
+		public function sendBinary($type, $stream, $size = NULL) {
+			header("Cache-Control: public, must-revalidate");
+			header("Content-Transfer-Encoding: binary");
+			header("Content-Disposition: attachment");
 			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
-			
+			if ($size)
+				header("Content-Length: ".$size);
+
 			while (!feof($stream)) {
 				set_time_limit(0);
 				echo fread($stream, 1024);

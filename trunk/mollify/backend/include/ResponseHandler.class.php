@@ -48,7 +48,7 @@
 			$this->output->downloadBinary($filename, $stream, $size, $range);
 		}
 		
-		public function load($type, $stream) {
+		public function load($type, $stream, $size = NULL) {
 			$this->output->sendBinary($type, $stream);
 		}
 
