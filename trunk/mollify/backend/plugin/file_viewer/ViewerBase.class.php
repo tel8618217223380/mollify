@@ -39,6 +39,10 @@
 			return $this->env->getResourceUrl($this->id);
 		}
 		
+		public function getSettings() {
+			return $this->env->getViewerSettings($this->id);
+		}
+		
 		protected function invalidRequestException($details = NULL) {
 			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->env->request()->method())." ".$this->env->request()->URI().($details != NULL ? (" ".$details): ""));
 		}

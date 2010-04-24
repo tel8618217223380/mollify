@@ -57,11 +57,15 @@
 		private function processViewRequest($item) {
 			$resourceUrl = $this->getResourceUrl();
 			$syntax = $this->getSyntax($item);
+			$settings = $this->getSettings();
+			
+			$theme = "shThemeDefault.css";
+			if (isset($settings["style"])) $theme = $settings["style"];
 			
 			$head = '<script type="text/javascript" src="'.$resourceUrl.'shCore.js"></script>'.
 					'<script type="text/javascript" src="'.$resourceUrl.self::$scripts[$syntax].'"></script>'.
-					'<link href="'.$resourceUrl.'/styles/shCore.css" rel="stylesheet" type="text/css" />'.
-					'<link type="text/css" rel="Stylesheet" href="'.$resourceUrl.'/styles/shThemeDefault.css"/>';
+					'<link type="text/css" rel="stylesheet" href="'.$resourceUrl.'/styles/shCore.css" />'.
+					'<link type="text/css" rel="stylesheet" href="'.$resourceUrl.'/styles/'.$theme.'"/>';
 					
 			$html = '<script type="syntaxhighlighter" class="brush: '.$syntax.'"><![CDATA[';
 

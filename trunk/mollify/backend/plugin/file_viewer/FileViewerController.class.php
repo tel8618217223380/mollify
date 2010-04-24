@@ -144,11 +144,12 @@
 			return $result;
 		}
 		
-		/*private function isGoogleViewerEnabled() {
-			$s = $this->getSetting(TRUE, "use_google_viewer");
-			return ($s === TRUE);
-		}*/
-
+		public function getViewerSettings($viewerId) {
+			$s = $this->env->settings()->setting("file_view_options", TRUE);
+			if (!isset($s[$viewerId])) return array();
+			return $s[$viewerId];
+		}
+		
 		private function getSetting($view, $name) {
 			$s = $this->env->settings()->setting($view ? "file_view_options" : "file_preview_options", TRUE);
 			if (!isset($s[$name])) return NULL;
