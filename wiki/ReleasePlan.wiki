@@ -6,5 +6,5 @@ Items included in release 1.6
  * View support (DONE)
  * Forbidden upload types
  * User registration
- * Folder creation when published folders are added (admin util)
+ * Folder creation when published folders are added (admin util) (DONE)
  * Folder creation when users are added (admin util)
