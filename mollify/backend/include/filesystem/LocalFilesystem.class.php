@@ -19,8 +19,16 @@
 		}
 		
 		public function assert() {
-			if (!file_exists($this->rootPath))
+			if (!$this->exists())
 				throw new NonExistingFolderException("INVALID_CONFIGURATION", "Invalid folder definition, path does not exist [".$this->id()."]");
+		}
+		
+		public function exists() {
+			return file_exists($this->rootPath);
+		}
+		
+		public function create() {
+			mkdir($this->rootPath, 0755);
 		}
 		
 		public function type() {
@@ -35,10 +43,10 @@
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
 			if ($isFile) {
-				if (!$nonexisting and !$this->exists($fullPath))
+				if (!$nonexisting and !$this->pathExists($fullPath))
 					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id.' path:'.$fullPath);
 
-				if ($nonexisting and $this->exists($fullPath))
+				if ($nonexisting and $this->pathExists($fullPath))
 					throw new ServiceException("FILE_ALREADY_EXISTS", 'id:'.$id);
 				
 				if (!$nonexisting and !is_file($fullPath))
@@ -46,7 +54,7 @@
 			} else {
 				if ($nonexisting) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
 				
-				if (!$this->exists($fullPath))
+				if (!$this->pathExists($fullPath))
 					throw new ServiceException("DIR_DOES_NOT_EXIST", 'id:'.$id);
 
 				if (!is_dir($fullPath))
@@ -57,7 +65,7 @@
 			return new Folder($id, $this->rootId(), $path, self::basename($fullPath), $this);
 		}
 		
-		public function exists($path) {
+		public function pathExists($path) {
 			return file_exists($path);
 		}
 

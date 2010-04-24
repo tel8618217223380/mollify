@@ -322,8 +322,18 @@
 			if (count($this->path) == 1) {
 				$folder = $this->request->data;
 				if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
+				$createNonExisting = (isset($folder['create']) and strcasecmp("true", $folder['create']) == 0);
 				
-				$this->env->filesystem()->assertFilesystem($folder);
+				if (!$createNonExisting) {
+					$this->env->filesystem()->assertFilesystem($folder);
+				} else {
+					$fs = $this->env->filesystem()->filesystem($folder, FALSE);
+					if (!$fs->exists()) {
+						Logging::logDebug("Added folder does not exist, creating: ".$folder['path']);
+						$fs->create();
+					}
+				}
+				
 				$this->env->configuration()->addFolder($folder['name'], $folder['path']);
 				$this->response()->success(TRUE);
 				return;

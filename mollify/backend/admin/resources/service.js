@@ -27,8 +27,8 @@ function getFolders(success, fail) {
 	request("GET", 'configuration/folders', success, fail);
 }
 
-function addFolder(name, path, success, fail) {
-	var data = JSON.stringify({name:name, path:path});
+function addFolder(name, path, createNonExisting, success, fail) {
+	var data = JSON.stringify({name:name, path:path, create:createNonExisting ? "true" : "false"});
 	request("POST", 'configuration/folders', success, fail, data);
 }
 
@@ -159,7 +159,7 @@ function request(type, url, success, fail, data) {
 			
 			var e = xhr.responseText;
 			if (!e) fail({code:999, error:"Unknown error", details:"Request failed, no response received"});
-			else if (!e.substr(0, 1) != "{") fail({code:999, error:"Unknown error", details:"Invalid response received: " + e});
+			else if (e.substr(0, 1) != "{") fail({code:999, error:"Unknown error", details:"Invalid response received: " + e});
 			else fail(JSON.parse(e));
 		},
 		beforeSend: function (xhr) {

@@ -12,7 +12,10 @@
 
 	class ImagePreviewer extends PreviewerBase {
 		public function getPreviewHtml($item) {
-			return '<div id="file-preview-container" style="overflow:auto; max-height:300px"><img src="'.$this->getContentUrl($item).'" style="max-width:400px"></div>';
+			return
+				'<div id="file-preview-container" style="overflow:auto; max-height:300px">'.
+					'<img src="'.$this->getContentUrl($item).'" style="max-width:400px">'.
+				'</div>';
 		}
 	}
 ?>

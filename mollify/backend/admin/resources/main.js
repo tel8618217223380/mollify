@@ -22,7 +22,7 @@ var settings = createSettings();
 
 var views = [
 	{header:"System", id:'menu-header-system', views: [
-		{title:"Published Folder", id:'menu-published-folders'},
+		{title:"Published Folders", id:'menu-published-folders'},
 		{title:"Users", id:'menu-users'},
 		{title:"User Groups", id:'menu-usergroups'}
 	]},
