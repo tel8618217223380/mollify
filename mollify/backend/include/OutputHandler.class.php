@@ -71,7 +71,7 @@
 			}
 		}
 		
-		public function downloadBinary($filename, $stream, $size = NULL, $range = NULL) {
+		public function sendBinary($filename, $type, $stream, $size = NULL, $range = NULL) {
 			if ($range) {
 				$start = $range[0];
 				$end = $range[1];
@@ -88,7 +88,7 @@
 				header("Content-Length: ".$size);
 				header("Cache-Control: public, must-revalidate");
 				header("Content-Type: application/force-download");
-				header("Content-Type: application/octet-stream");
+				header("Content-Type: ".$this->getMime(trim(strtolower($type))));
 				header("Content-Type: application/download");
 				header("Content-Disposition: attachment; filename=\"".$filename."\";");
 				header("Content-Transfer-Encoding: binary");
@@ -96,22 +96,6 @@
 			}
 			
 			if ($range) fseek($stream, $range[0]);
-			while (!feof($stream)) {
-				set_time_limit(0);
-				echo fread($stream, 1024);
-				flush();
-			}
-			fclose($stream);
-		}
-		
-		public function sendBinary($type, $stream, $size = NULL) {
-			header("Cache-Control: public, must-revalidate");
-			header("Content-Transfer-Encoding: binary");
-			header("Content-Disposition: attachment");
-			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
-			if ($size)
-				header("Content-Length: ".$size);
-
 			while (!feof($stream)) {
 				set_time_limit(0);
 				echo fread($stream, 1024);

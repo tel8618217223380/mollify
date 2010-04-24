@@ -44,14 +44,10 @@
 			$this->output = $output;
 		}
 		
-		public function download($filename, $stream, $size = NULL, $range = NULL) {
-			$this->output->downloadBinary($filename, $stream, $size, $range);
+		public function download($filename, $type, $stream, $size = NULL, $range = NULL) {
+			$this->output->sendBinary($filename, $type, $stream, $size, $range);
 		}
 		
-		public function load($type, $stream, $size = NULL) {
-			$this->output->sendBinary($type, $stream);
-		}
-
 		public function html($html) {
 			$this->output->sendResponse(new Response(200, "html", $html));
 		}

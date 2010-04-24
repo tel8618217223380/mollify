@@ -1,34 +1,10 @@
 <?php
-	class JPlayerViewer extends ViewerBase {
-		public function getInfo($item) {
-			return array(
-				"embedded" => $this->getDataUrl($item, "embedded"),
-				"full" => $this->getDataUrl($item, "view", TRUE)
-			);
+	class JPlayerViewer extends FullPageViewer {
+		protected function getEmbeddedSize() {
+			return array("450", "150");
 		}
 		
-		public function processDataRequest($item, $path) {
-			if (count($path) != 1) throw $this->invalidRequestException();
-			
-			if ($path[0] === 'view')
-				$this->processViewRequest($item);
-			else if ($path[0] === 'embedded')
-				$this->processEmbeddedViewRequest($item);
-			else
-				throw $this->invalidRequestException();
-		}
-		
-		private function processEmbeddedViewRequest($item) {
-			$html = '<iframe id="jplayer-viewer" src="'.$this->getDataUrl($item, "view", TRUE).'" style="border: none;"></iframe>';
-			
-			$this->response()->success(array(
-				"html" => $html,
-				"resized_element_id" => "jplayer-viewer",
-				"size" => "450;150"
-			));
-		}
-		
-		private function processViewRequest($item) {
+		protected function getHtml($item, $full) {
 			$resourceUrl = $this->getResourceUrl();
 			
 			$head =
@@ -73,7 +49,7 @@
 				</div>
 				<div id="player"></div>';
 
-			$this->response()->html("<html><head><title>".$item->name()."</title>".$head."</head><body>".$html."</body></html>");
+			return "<html><head><title>".$item->name()."</title>".$head."</head><body>".$html."</body></html>";
 		}
 	}
 ?>

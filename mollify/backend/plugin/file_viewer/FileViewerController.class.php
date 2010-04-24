@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -29,8 +29,13 @@
 						$this->registerViewer($list, $t);
 				}
 			}
-			if ($this->previewEnabled)
-				$this->registerPreviewer(array("gif", "png", "jpg"), "image_previewer/ImagePreviewer");
+			if ($this->previewEnabled) {
+				$previewers = $this->getSetting(FALSE, "previewers");
+				if ($previewers != NULL and is_array($previewers)) {
+					foreach($previewers as $t => $list)
+						$this->registerPreviewer($list, $t);
+				}
+			}
 		}
 
 		private function registerPreviewer($types, $cls) {
@@ -77,8 +82,9 @@
 			$previewer = $this->previewers[$type];
 			list($id, $cls) = split("/", $previewer, 2);
 			
+			require_once("PreviewerBase.class.php");
 			require_once("previewers/".$id."/".$cls.".class.php");
-			return new $cls($this);
+			return new $cls($this, $id);
 		}
 				
 		private function getViewer($type) {
@@ -86,6 +92,7 @@
 			list($id, $cls) = split("/", $viewer, 2);
 			
 			require_once("ViewerBase.class.php");
+			require_once("FullPageViewer.class.php");
 			require_once("viewers/".$id."/".$cls.".class.php");
 			return new $cls($this, $id);
 		}

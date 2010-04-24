@@ -358,14 +358,7 @@
 			if (!$range)
 				$this->env->events()->onEvent(FileEvent::download($file));
 
-			$this->env->response()->download($name, $file->read($range), $size, $range);							
-		}
-
-		public function load($file) {
-			Logging::logDebug('load ['.$file->id().']');
-			$this->assertRights($file, Authentication::RIGHTS_READ, "load");
-			$this->env->events()->onEvent(FileEvent::download($file));
-			$this->env->response()->load($file->extension(), $file->read(), $file->size());
+			$this->env->response()->download($name, $file->extension(), $file->read($range), $size, $range);							
 		}
 		
 		public function uploadTo($folder) {
