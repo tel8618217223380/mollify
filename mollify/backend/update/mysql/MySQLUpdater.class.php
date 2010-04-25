@@ -13,7 +13,7 @@
 	require_once("install/mysql/MySQLInstaller.class.php");
 	
 	class MySQLUpdater extends MySQLInstaller {
-		private static $versionHistory = array("0_9_5", "1_0_0", "1_5_0", "1_5_4");
+		private static $versionHistory = array("0_9_5", "1_0_0", "1_5_0", "1_5_4", "1_6_0");
 		
 		public function __construct($type, $settingsVar) {
 			parent::__construct($type, $settingsVar, "update");
@@ -68,6 +68,10 @@
 			
 			$this->session()->reset();
 			$this->showPage("success");
+		}
+		
+		public function __toString() {
+			return "MySQLUpdater";
 		}
 	}
 ?>

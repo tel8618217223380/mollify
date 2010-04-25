@@ -64,6 +64,7 @@
 		}
 
 		public function hasParam($param) {
+			if ($this->env == NULL) throw new ServiceException("env null");
 			if (!$this->env->configuration()->isAuthenticationRequired()) return FALSE;
 			return isset($_SESSION[$param]);
 		}
@@ -74,7 +75,7 @@
 		}
 				
 		public function param($param, $value = NULL) {
-			if (!$this->env->configuration()->isAuthenticationRequired()) return NULL;
+			if ($this->env != NULL and !$this->env->configuration()->isAuthenticationRequired()) return NULL;
 			
 			if ($value === NULL) {
 				if (!array_key_exists($param, $_SESSION)) throw new ServiceException("Invalid session param requested: ".$param);

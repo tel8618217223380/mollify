@@ -11,7 +11,7 @@
 	 */
 
 	class MySQLConfigurationProvider extends ConfigurationProvider {
-		const VERSION = "1_5_4";
+		const VERSION = "1_6_0";
 		
 		private $db;
 		
