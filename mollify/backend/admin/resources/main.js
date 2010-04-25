@@ -13,9 +13,9 @@ var loadedScripts = new Array();
 var controllers = {
 	"menu-published-folders": {"class" : "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
 	"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
-	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"},
-	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"},
-	"menu-downloads": {"class" : "MollifyDownloadsView", "script" : "events/downloads.js", "title": "Downloads", "feature" : "event_logging"}
+	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"}
+//	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"},
+//	"menu-downloads": {"class" : "MollifyDownloadsView", "script" : "events/downloads.js", "title": "Downloads", "feature" : "event_logging"}
 };
 var controller = null;
 var settings = createSettings();

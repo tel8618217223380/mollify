@@ -74,7 +74,8 @@
 					$info,
 					$this->env->session()->getSessionInfo(),
 					$this->env->authentication()->getUserInfo(),
-					$this->env->filesystem()->getSessionInfo()
+					$this->env->filesystem()->getSessionInfo(),
+					$this->env->plugins()->getSessionInfo()
 				);
 				
 			}
