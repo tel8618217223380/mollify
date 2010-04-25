@@ -21,6 +21,10 @@
 			$this->descriptionDao = new FileDescriptionDao($settings->setting("description_file", TRUE));
 		}
 		
+		public function getType() {
+			return ConfigurationProvider::TYPE_FILE;
+		}
+		
 		function getSupportedFeatures() {
 			$features = array('description_update');
 			if ($this->isAuthenticationRequired()) $features[] = 'permission_update';

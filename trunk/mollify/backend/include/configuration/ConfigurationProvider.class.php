@@ -10,12 +10,17 @@
 	 * this entire header must remain intact.
 	 */
 
-	class ConfigurationProvider {
+	abstract class ConfigurationProvider {
+		const TYPE_DATABASE = "db";
+		const TYPE_FILE = "file";
+		
 		protected $env;
 		
 		function initialize($request, $env) {
 			$this->env = $env;
 		}
+		
+		public abstract function getType();
 		
 		function initializeSession($session, $userId) {}
 		

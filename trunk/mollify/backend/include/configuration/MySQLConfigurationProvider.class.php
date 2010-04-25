@@ -34,6 +34,10 @@
 			$this->db->connect();
 		}
 		
+		public function getType() {
+			return ConfigurationProvider::TYPE_DATABASE;
+		}
+		
 		public function db() {
 			return $this->db;
 		}
@@ -43,7 +47,7 @@
 		}
 
 		public function getSupportedFeatures() {
-			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups', 'event_logging');
+			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups');
 		}
 		
 		public function featureEnabledByDefault($name, $default) {
