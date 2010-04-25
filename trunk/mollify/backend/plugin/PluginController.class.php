@@ -32,15 +32,24 @@
 				$p->setup();
 		}
 		
-		private function addPlugin($pluginDef, $settings) {
-			list($id, $cls) = split("/", $pluginDef, 2);
-			require_once($id."/".$cls.".plugin.php");
-			$p = new $cls($this->env, $id, $settings);
+		private function addPlugin($id, $settings) {
+			require_once($id."/".$id.".plugin.class.php");
+			$p = new $id($this->env, $id, $settings);
+			if (!$p->isConfigurationSupported($this->env->configuration()->getType()))
+				return;
 			$this->plugins[$id] = $p;
 		}
 		
 		public function getPlugins() {
 			return $this->plugins;
+		}
+		
+		public function getSessionInfo() {
+			$result = array();
+			foreach($this->plugins as $id => $p) {
+				$result[$id] = $p->getSessionInfo();
+			}
+			return $result;
 		}
 		
 		public function initialize($request) {}

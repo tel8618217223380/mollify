@@ -13,6 +13,10 @@
 	require_once("EventLogger.class.php");
 	
 	class EventLogging extends PluginBase {		
+		public function hasAdminView() {
+			return TRUE;
+		}
+
 		public function setup() {
 			$logged = $this->getSetting("logged_events", NULL);
 			if (!$logged or count($logged) == 0) $logged = array("*");

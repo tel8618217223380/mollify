@@ -30,6 +30,14 @@
 		public function versionHistory() {
 			return array();
 		}
+		
+		public function hasAdminView() {
+			return FALSE;
+		}
+		
+		public function isConfigurationSupported($type) {
+			return TRUE;
+		}
 				
 		public function id() {
 			return $this->id;
@@ -50,6 +58,12 @@
 		
 		public function addService($path, $controller) {
 			$this->env->addService($path, $controller, "plugin/".$this->id."/");
+		}
+		
+		public function getSessionInfo() {
+			$result = array();
+			if ($this->hasAdminView()) $result["admin"] = TRUE;
+			return $result;
 		}
 		
 		function log() {
