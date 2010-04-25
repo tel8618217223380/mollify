@@ -39,6 +39,10 @@
 			$this->plugins[$id] = $p;
 		}
 		
+		public function getPlugins() {
+			return $this->plugins;
+		}
+		
 		public function initialize($request) {}
 		
 		public function __toString() {

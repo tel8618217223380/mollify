@@ -18,11 +18,11 @@
 <html>
 	<?php pageHeader("Mollify Update", "init"); ?>
 	
-	<body id="page-mysql-current-installed">
+	<body id="page-mysql-update-needed">
 		<?php pageBody("Update", "Database Update"); ?>
 		<div class="content">
 			<p>
-				Installed Mollify version requires an update to version <b><?php echo $installer->versionString($installer->currentVersion()) ?></b>.
+				<?php echo $installer->updateSummary(); ?>
 			</p>
 			<p>
 				Click "Update" to start update.

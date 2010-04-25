@@ -23,6 +23,14 @@
 		
 		public abstract function setup();
 		
+		public function version() {
+			return NULL;
+		}
+
+		public function versionHistory() {
+			return array();
+		}
+				
 		public function id() {
 			return $this->id;
 		}

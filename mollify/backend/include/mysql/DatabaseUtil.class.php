@@ -28,6 +28,14 @@
 			$ver = trim($result->firstValue("value"));
 			return ($ver === "" ? NULL : $ver);
 		}
+
+		public function pluginInstalledVersion($id) {
+			$result = $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='plugin_".$id."_version'");
+			if ($result->count() === 0) return NULL;
+			
+			$ver = trim($result->firstValue("value"));
+			return ($ver === "" ? NULL : $ver);
+		}
 		
 		public function createDatabase() {
 			$this->db->query("CREATE DATABASE ".$this->db->database(), FALSE);

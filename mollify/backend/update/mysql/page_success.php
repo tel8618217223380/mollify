@@ -22,11 +22,16 @@
 <html>
 	<?php pageHeader("Mollify Update"); ?>
 	
-	<body id="page-mysql-current-installed">
+	<body id="page-mysql-update_success">
 		<?php pageBody("Update", "Update Complete"); ?>
 		<div class="content">
 			<p>
-				Mollify was successfully updated to the current version <b><?php echo version($installer->currentVersion()) ?></b>.
+				Mollify was successfully updated with following updates:
+				<ul><?php
+					$updates = $installer->data("updates");
+					foreach($updates as $update)
+						echo "<li>".$update."</li>";
+				?></ul>
 			</p>	
 		</div>
 		<?php pageFooter(); ?>
