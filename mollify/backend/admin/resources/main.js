@@ -25,11 +25,11 @@ var views = [
 		{title:"Published Folders", id:'menu-published-folders'},
 		{title:"Users", id:'menu-users'},
 		{title:"User Groups", id:'menu-usergroups'}
-	]},
-	{header:"Other", id:'menu-header-other', views: [
-		{title:"Events", id:'menu-events'},
-		{title:"Downloads", id:'menu-downloads'}
 	]}
+//	{header:"Other", id:'menu-header-other', views: [
+//		{title:"Events", id:'menu-events'},
+//		{title:"Downloads", id:'menu-downloads'}
+//	]}
 ];
 
 $(document).ready(function() {
