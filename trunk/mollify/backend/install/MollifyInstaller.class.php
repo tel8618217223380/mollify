@@ -37,6 +37,7 @@
 		
 		public function createEnvironment() {
 			require_once("include/Settings.class.php");
+			require_once("include/Util.class.php");
 			require_once("InstallerSession.class.php");
 			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationProviderFactory.class.php");
@@ -66,6 +67,10 @@
 		
 		public function configuration() {
 			return $this->configuration;
+		}
+
+		public function events() {
+			return $this;
 		}
 		
 		public function hasError() {
@@ -120,6 +125,12 @@
 			Logging::logDebug("Opening page: ".$page." ".($this->hasError() ? "(error=".$this->error.")" : ""));
 			require($page);
 			die();
+		}
+		
+		public function registerEventType($e, $d) {}
+		
+		public function __toString() {
+			return "MollifyInstaller";
 		}
 	}
 ?>

@@ -67,7 +67,7 @@
 			$this->env->configuration()->checkProtocolVersion($protocolVersion);
 			
 			$auth = $this->env->authentication();
-			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated());
+			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures());
 			
 			if (!$auth->isAuthenticationRequired() or $auth->isAuthenticated()) {
 				$info = array_merge(
@@ -76,7 +76,7 @@
 					$this->env->authentication()->getUserInfo(),
 					$this->env->filesystem()->getSessionInfo()
 				);
-				$info["features"] = $this->env->features()->getFeatures();
+				
 			}
 			return $info;
 		}

@@ -14,12 +14,13 @@
 	
 	class InstallerSession extends Session {
 		private $settings;
+		private $e;
 		
 		private $sessionVersions = array("Pre1_5", "1_5");
 		private $version;
 		
 		public function __construct($settings) {
-			$this->settings = $settings;	
+			$this->settings = $settings;
 		}
 
 		public function initPre1_5() {
@@ -29,7 +30,7 @@
 				$n = $this->settings->setting("session_name");
 				if (strlen($n) > 0) $this->name .= "_".$n;
 			}
-			parent::initialize(NULL,NULL);
+			parent::initialize(NULL, $this->e);
 		}
 				
 		public function init1_5() {
@@ -39,14 +40,16 @@
 				$n = $this->settings->setting("session_name");
 				if (strlen($n) > 0) $this->name .= "_".$n;
 			}
-			parent::initialize(NULL,NULL);
+			parent::initialize(NULL, $this->e);
 		}
 		
 		public function initialize($request, $env) {
+			$this->e = $env;
+			
 			foreach($this->sessionVersions as $ver) {
 				eval("\$this->init$ver();");
 
-				if ($env->authentication()->isAdmin()) {
+				if ($this->env->authentication()->isAdmin()) {
 					$this->version = $ver;
 					return;
 				}
