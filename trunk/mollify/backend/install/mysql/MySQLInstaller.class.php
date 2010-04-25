@@ -88,6 +88,10 @@
 		public function installedVersion() {
 			return $this->dbUtil->installedVersion();
 		}
+		
+		public function pluginInstalledVersion($id) {
+			return $this->dbUtil->pluginInstalledVersion($id);
+		}
 
 		public function currentVersion() {
 			return MySQLConfigurationProvider::VERSION;

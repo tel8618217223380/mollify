@@ -19,6 +19,7 @@
 		private $session;
 		private $authentication;
 		private $configuration;
+		private $plugins;
 		
 		private $error = NULL;
 		private $errorDetails = NULL;
@@ -41,13 +42,16 @@
 			require_once("InstallerSession.class.php");
 			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationProviderFactory.class.php");
+			require_once("plugin/PluginController.class.php");
 			$configurationProviderFactory = new ConfigurationProviderFactory();
 			
 			$this->settings = new Settings($this->settingsVar);
 			$this->session = new InstallerSession($this->settings);
 			$this->configuration = $configurationProviderFactory->createConfigurationProvider($this->type, $this->settings);
 			$this->authentication = new InstallerAuthentication($this);
+			$this->plugins = new PluginController($this);
 			
+			$this->plugins->setup();
 			$this->session->initialize(NULL, $this);
 		}
 		
@@ -70,6 +74,18 @@
 		}
 
 		public function events() {
+			return $this;
+		}
+
+		public function features() {
+			return $this;
+		}
+
+		public function plugins() {
+			return $this->plugins;
+		}
+
+		public function filesystem() {
 			return $this;
 		}
 		
@@ -116,6 +132,10 @@
 			return isset($this->data[$name]) ? $this->data[$name] : NULL;
 		}
 		
+		public function setData($name, $value) {
+			$this->data[$name] = $value;
+		}
+		
 		protected function getPagePath($page) {
 			return $this->pageRoot."/".$this->type."/"."page_".$page.".php";
 		}
@@ -127,7 +147,17 @@
 			die();
 		}
 		
+		public function addFeature($f) {}
+		
+		public function addService($p, $s) {}
+		
 		public function registerEventType($e, $d) {}
+		
+		public function register($e, $d) {}
+		
+		public function registerObject($e, $d) {}
+		
+		public function registerDetailsPlugin($p) {}
 		
 		public function __toString() {
 			return "MollifyInstaller";

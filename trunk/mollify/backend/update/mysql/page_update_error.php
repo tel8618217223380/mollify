@@ -18,7 +18,7 @@
 <html>
 	<?php pageHeader("Mollify Update"); ?>
 	
-	<body id="page-mysql-install-error">
+	<body id="page-mysql-update-error">
 		<?php pageBody("Update", "Error"); ?>
 		<?php pageFooter(); ?>
 	</body>

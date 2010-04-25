@@ -66,5 +66,14 @@
 			$file = "../include/mysql/sql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
+
+		public function execPluginCreateTables($id) {
+			$this->db->execSqlFile("../plugin/".$id."/mysql/install.sql");
+		}
+		
+		public function updatePluginVersionStep($id, $from, $to) {
+			$file = "../plugin/".$id."/mysql/".$from."-".$to.".sql";
+			$this->db->execSqlFile($file);
+		}
 	}
 ?>
