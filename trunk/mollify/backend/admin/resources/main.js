@@ -34,17 +34,17 @@ $(document).ready(function() {
 function buildMenu() {
 	var html = '<ul>';
 	
-	// built-in
+	// built-in views
 	html += createMenuItems(views, '');
 	
-	//plugins
+	//plugin views
 	for (id in plugins) {
 		var p = plugins[id];
 		if (!p.views) continue;
 		html += createMenuItems(p.views, "../plugin/"+id+"/admin/");
 	}
 	
-	// custom
+	// custom views
 	if (settings.views) {
 		var customViews = [{header:"Custom", id:'menu-header-custom', views: settings.views}];
 		html += createMenuItems(customViews, 'custom/');
@@ -64,6 +64,7 @@ function buildMenu() {
 
 function createMenuItems(views, pathPrefix) {
 	var html = '';
+	
 	for (var i=0; i < views.length; i++) {
 		var h = views[i];
 		var t = '';
@@ -100,11 +101,10 @@ function onSession(session) {
 		return;
 	}
 	this.session = session;
-	var list = session.plugins;
+
 	var pluginsToInit = [];
-	
-	for (id in list) {
-		var plugin = list[id];
+	for (id in session.plugins) {
+		var plugin = session.plugins[id];
 		if (!plugin["admin"]) continue;
 		pluginsToInit.push(id);
 	}
