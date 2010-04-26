@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -10,7 +10,7 @@
 
 function MollifyEventsView() {
 	var that = this;
-	this.pageUrl = "events/events.html";
+	this.pageUrl = "events.html";
 	this.onLoadView = onLoadView;
 	this.users = null;
 	
