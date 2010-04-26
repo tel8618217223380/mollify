@@ -49,7 +49,7 @@
 			foreach($this->plugins as $id => $p) {
 				$result[$id] = $p->getSessionInfo();
 			}
-			return $result;
+			return array("plugins" => $result);
 		}
 		
 		public function initialize($request) {}

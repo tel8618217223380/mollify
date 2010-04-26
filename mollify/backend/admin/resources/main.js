@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli JŠrvelŠ
+	Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -10,26 +10,17 @@
 
 var session = null;
 var loadedScripts = new Array();
-var controllers = {
-	"menu-published-folders": {"class" : "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
-	"menu-users": {"class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
-	"menu-usergroups": {"class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"}
-//	"menu-events": {"class" : "MollifyEventsView", "script" : "events/events.js", "title": "Events", "feature" : "event_logging"},
-//	"menu-downloads": {"class" : "MollifyDownloadsView", "script" : "events/downloads.js", "title": "Downloads", "feature" : "event_logging"}
-};
 var controller = null;
+var controllers = {};
 var settings = createSettings();
+var plugins = {};
 
 var views = [
 	{header:"System", id:'menu-header-system', views: [
-		{title:"Published Folders", id:'menu-published-folders'},
-		{title:"Users", id:'menu-users'},
-		{title:"User Groups", id:'menu-usergroups'}
+		{title:"Published Folders", id: "menu-published-folders", "class": "MollifyPublishedFoldersConfigurationView", "script" : "folders/published_folders.js", "title": "Published Folders"},
+		{title:"Users", id:'menu-users', "class" : "MollifyUsersConfigurationView", "script" : "users/users.js", "title": "Users"},
+		{title:"User Groups", id:'menu-usergroups', "class" : "MollifyUserGroupsConfigurationView", "script" : "users/groups.js", "title": "Groups"}
 	]}
-//	{header:"Other", id:'menu-header-other', views: [
-//		{title:"Events", id:'menu-events'},
-//		{title:"Downloads", id:'menu-downloads'}
-//	]}
 ];
 
 $(document).ready(function() {
@@ -42,34 +33,23 @@ $(document).ready(function() {
 
 function buildMenu() {
 	var html = '<ul>';
-	for (var i=0; i < views.length; i++) {
-		var h = views[i];
-		var t = '';
-		var found = false;
-		
-		for (var j=0; j < h.views.length; j++) {
-			var v = h.views[j];
-			var featureRequired = controllers[v.id].feature;
-			if (featureRequired) {
-				var s = getSession();
-				if (!s.features[featureRequired]) continue;
-			}
-			
-			found = true;
-			t += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
-		}
-		
-		if (found)
-			html += '<li id="' + h.id + '" class="main-menu-header">' + h.header + '</li>' + t;
+	
+	// built-in
+	html += createMenuItems(views, '');
+	
+	//plugins
+	for (id in plugins) {
+		var p = plugins[id];
+		if (!p.views) continue;
+		html += createMenuItems(p.views, "../plugin/"+id+"/admin/");
 	}
+	
+	// custom
 	if (settings.views) {
-		html += '<li id="menu-header-custom" class="main-menu-header">Custom</li>';
-		for (var i=0; i < settings.views.length; i++) {
-			var v = settings.views[i];
-			html += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
-			controllers[v.id] = v;
-		}
+		var customViews = [{header:"Custom", id:'menu-header-custom', views: settings.views}];
+		html += createMenuItems(customViews, 'custom/');
 	}
+	
 	html += '</ul>';
 	$("#main-menu").html(html);
 	
@@ -78,6 +58,36 @@ function buildMenu() {
 		$(this).addClass("active");
 		onSelectMenu($(this).attr("id"));
 	});
+	
+	$("#content").show();
+}
+
+function createMenuItems(views, pathPrefix) {
+	var html = '';
+	for (var i=0; i < views.length; i++) {
+		var h = views[i];
+		var t = '';
+		var found = false;
+		
+		for (var j=0; j < h.views.length; j++) {
+			var v = h.views[j];
+			var featureRequired = v.feature;
+			if (featureRequired) {
+				var s = getSession();
+				if (!s.features[featureRequired]) continue;
+			}
+			
+			found = true;
+			t += '<li id="' + v.id + '" class="main-menu-item">' + v.title + '</li>';
+			
+			v["path_prefix"] = pathPrefix;
+			controllers[v.id] = v;
+		}
+		
+		if (found)
+			html += '<li id="' + h.id + '" class="main-menu-header">' + h.header + '</li>' + t;
+	}
+	return html;
 }
 
 function onSession(session) {
@@ -90,18 +100,40 @@ function onSession(session) {
 		return;
 	}
 	this.session = session;
+	var list = session.plugins;
+	var pluginsToInit = [];
 	
-	buildMenu();
-	$("#content").show();
+	for (id in list) {
+		var plugin = list[id];
+		if (!plugin["admin"]) continue;
+		pluginsToInit.push(id);
+	}
+	
+	if (pluginsToInit.length == 0) buildMenu();
+	else loadPlugin(pluginsToInit, 0);
 }
-			
+
+function loadPlugin(list, i) {
+	var id = list[i];
+	var cb = function() {
+		plugins[id] = eval("init"+id+"();");
+		
+		i++;
+		if (i == list.length)
+			buildMenu();
+		else
+			loadPlugin(list, i++);
+	};
+	loadScript("../plugin/"+id+"/admin/init.js", cb);
+}
+		
 function onSelectMenu(id) {
 	if (!controllers[id]) {
 		onError("Configuration view not defined: "+id);
 		return;
 	}
 	
-	loadScript(controllers[id]['script'], function() { initView(controllers[id]); });
+	loadScript(controllers[id]['path_prefix']+controllers[id]['script'], function() { initView(controllers[id]); });
 }
 
 function loadScript(script, cb) {
@@ -119,7 +151,7 @@ function initView(controllerSpec) {
 	setTitle(controllerSpec.title);
 	
 	controller = eval("new "+controllerSpec['class']+"()");
-	if (controller.pageUrl) $("#page").load(controller.pageUrl, "", onLoadView);
+	if (controller.pageUrl) $("#page").load(controllerSpec['path_prefix'] + controller.pageUrl, "", onLoadView);
 }
 
 function onLoadView() {

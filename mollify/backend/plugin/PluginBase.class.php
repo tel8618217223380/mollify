@@ -61,9 +61,7 @@
 		}
 		
 		public function getSessionInfo() {
-			$result = array();
-			if ($this->hasAdminView()) $result["admin"] = TRUE;
-			return $result;
+			return array("admin" => $this->hasAdminView());
 		}
 		
 		function log() {
