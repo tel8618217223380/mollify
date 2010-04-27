@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -18,16 +18,22 @@
 		}
 		
 		public function onEvent($e) {
-			$user = $this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL;
-			
 			$time = date('YmdHis', $e->time());
-			$username = $user != NULL ? $user['username'] : NULL;
+			
 			$item = $e->itemToStr();
 			$details = $e->details();
 			$type = $e->typeId();
-			
+			$username = $this->getUser($e);
+						
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, type, item, details) VALUES (%s, %s, '%s', %s, %s)", $time, $db->string($username, TRUE), $db->string($type), $db->string($item, TRUE), $db->string($details, TRUE)));
+		}
+		
+		private function getUser($e) {
+			if ($e->user() != NULL) return $e->user();
+			
+			$user = $this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL;
+			return $user != NULL ? $user['username'] : NULL;
 		}
 		
 		public function __toString() {

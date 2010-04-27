@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -31,10 +31,27 @@
 			$registration = $this->request->data;
 			if (!isset($registration['name']) or !isset($registration['password']) or !isset($registration['email'])) throw $this->invalidRequestException();
 			
-			//TODO check name & email
-			//TODO store pending account (create uuid)
-			//TODO send confirm email with link (uuid)
-			//TODO handle confirm link
+			$this->assertUniqueNameAndEmail($registration['name'], $registration['email']);
+			
+			$db = $this->env->configuration()->db();
+			$name = $registration['name'];
+			$password = $registration['password'];
+			$email = $registration['email'];
+			$time = date('YmdHis', time());
+			$key = str_replace(".", "", uniqid("", TRUE));
+			
+			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
+			
+			//TODO send confirm email with link
+			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
+			$this->response()->success(array());
+		}
+		
+		private function assertUniqueNameAndEmail($name, $email) {
+			$db = $this->env->configuration()->db();
+			$query = "select count(id) from ".$db->table("pending_registrations")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
+			$count = $db->query($query)->value(0);
+			if ($count > 0) throw new ServiceException("User already registered with same name or email"); 
 		}
 		
 		public function __toString() {

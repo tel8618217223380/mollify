@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <?php
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0

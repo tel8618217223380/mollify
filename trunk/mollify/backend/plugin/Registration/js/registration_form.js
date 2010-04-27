@@ -10,11 +10,18 @@
 
 function init(path) {
 	servicePath = path;
-	getSessionInfo(onSession, onServerError);				
+	getSessionInfo(onSession, onError);				
 };
 
 function onSession(session) {
-	if (!session.features["registration"] || !session["authentication_required"]) return;
+	if (!session["authentication_required"]) {
+		onError({error:"Configuration Error", details:"Current Mollify configuration does not require authentication, and registration is disabled"});
+		return;
+	}
+	if (!session.features["registration"]) {
+		onError({error:"Configuration Error", details:"Registration plugin not installed"});
+		return;
+	}
 	$("#register-button").click(onRegister);
 	$("#registration-form").show();
 }
@@ -38,5 +45,13 @@ function onRegister() {
 		return;
 	}
 	
-	alert(name);
+	register($("#username-field").val(), $("#password-field").val(), $("#email-field").val(), $("#username-field").val(), onRegistered, onError);
+}
+
+function onRegistered(response) {
+	if (response.error) {
+		onError(response);
+		return;
+	}
+	$("body").html("Registration successful");
 }
