@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -49,6 +49,7 @@
 	
 	abstract class Event {
 		private $time;
+		private $user = NULL;
 		private $type;
 		private $subType;
 		
@@ -60,6 +61,10 @@
 
 		public function time() {
 			return $this->time;
+		}
+
+		public function user() {
+			return $this->user;
 		}
 				
 		public function type() {
@@ -74,9 +79,13 @@
 			return $this->type."/".$this->subType;
 		}
 				
-		public abstract function itemToStr();
+		public function itemToStr() { return ""; }
 		
-		public abstract function details();
+		public function details() { return ""; }
+		
+		protected function setUser($user) {
+			$this->user = $user;
+		}
 		
 		public function __toString() {
 			return "Event ".$this->type;

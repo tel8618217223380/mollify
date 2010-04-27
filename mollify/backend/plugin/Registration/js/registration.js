@@ -14,7 +14,7 @@ var preRequestCallback = null;
 var postRequestCallback = null;
 var protocolVersion = "1_5_0";
 
-function onServerError(error) {
+function onError(error) {
 	var errorHtml = $.template("<div class='error'><div class='title'>${title}</div><div class='details'>${details}</div><div id='error-info'><div id='error-info-title'>Details</div><div id='error-info-content'>${info}</div></div></div>");
 	$("body").html(errorHtml, {title: error.error, details: error.details, info: (error.trace ? error.trace : '' ) });
 	
@@ -36,10 +36,10 @@ function getSessionInfo(success, fail) {
 
 function register(name, pw, email, success, fail) {
 	var data = JSON.stringify({name:name, password:generate_md5(pw), email:email});
-	request("POST", 'registration', success, fail, data);
+	request("POST", 'registration/create', success, fail, data);
 }
 
-function request(type, url, success, fail, data) {
+function request(type, url, cb, fail, data) {
 	if (preRequestCallback) preRequestCallback();
 	
 	var t = type;
@@ -54,7 +54,7 @@ function request(type, url, success, fail, data) {
 		dataType: "json",
 		success: function(result) {
 			if (postRequestCallback) postRequestCallback();
-			success(result.result);
+			cb(result.result);
 		},
 		error: function (xhr, desc, exc) {
 			if (postRequestCallback) postRequestCallback();
