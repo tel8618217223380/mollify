@@ -9,49 +9,42 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 if (!isset($PATH)) die();
+	 $EMAIL = urldecode($_GET["confirm"]);
+	 $KEY = isset($_GET["key"]) ? $_GET["key"] : "";
 ?>
 <html>
 	<head>
-		<title>User registration</title>
+		<title>Confirmation</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
 		<link rel="stylesheet" href="<?php echo $PATH ?>resources/jquery-ui-1.7.2.custom.css">
-		<link rel="stylesheet" href="<?php echo $PATH ?>plugin/registration/resources/style.css">
+		<link rel="stylesheet" href="pages/style.css">
 
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/json.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/md5.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/template.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-ui-1.7.2.custom.min.js"></script>
-		<script type="text/javascript" src="<?php echo $PATH ?>plugin/registration/resources/registration.js"></script>
-		<script type="text/javascript" src="<?php echo $PATH ?>plugin/registration/resources/registration_confirm.js"></script>
+		<script type="text/javascript" src="js/registration.js"></script>
+		<script type="text/javascript" src="js/registration_confirm.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-				init('<?php echo $PATH ?>', '<?php echo $_GET("confirm") ?>', '<?php echo isset($_GET("key")) ? $_GET("key") : "" ?>');
+				init('<?php echo $PATH ?>', '<?php echo $EMAIL ?>', '<?php echo $KEY ?>');
 			});
 		</script>
 	</head>
 
 	<body>
-		<div id="registration-form" style="display:none">
-			<div class="registration-form-field">
-				<div class="registration-field-title">Name:</div>
-				<input type="text" id="username-field" class="registration-field"></input>
+		<div id="confirmation-form" style="display:none">
+			<div class="registration-form-instructions">
+				Please enter the confirmation key for <?php echo $EMAIL ?> and click "Confirm".
 			</div>
 			<div class="registration-form-field">
-				<div class="registration-field-title">Password:</div>
-				<input type="password" id="password-field" class="registration-field"></input>
-			</div>
-			<div class="registration-form-field">
-				<div class="registration-field-title">Confirm password:</div>
-				<input type="password" id="confirm-password-field" class="registration-field"></input>
-			</div>
-			<div class="registration-form-field">
-				<div class="registration-field-title">E-mail:</div>
-				<input type="text" id="email-field" class="registration-field"></input>
-			</div>
-			
-			<button id="register-button">Register</button>
+				<div class="registration-field-title">Key:</div>
+				<input type="text" id="key-field" class="registration-field"></input>
+			</div>			
+			<button id="confirm-button">Confirm</button>
 		</div>
 	</body>
 </html>

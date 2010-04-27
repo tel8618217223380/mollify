@@ -8,7 +8,50 @@
 	this entire header must remain intact.
 */
 
-function init(path, email, key) {
+var email = null;
+var key = null;
+
+function init(path, emailParam, keyParam) {
 	servicePath = path;
-	// TODO confirm
+	email = emailParam;
+	key = keyParam;
+	
+	getSessionInfo(onSession, onError);
 };
+
+function onSession(session) {
+	if (!session["authentication_required"]) {
+		onError({error:"Configuration Error", details:"Current Mollify configuration does not require authentication, and registration is disabled"});
+		return;
+	}
+	if (!session.features["registration"]) {
+		onError({error:"Configuration Error", details:"Registration plugin not installed"});
+		return;
+	}
+	
+	if (!key) {
+		$("#confirm-button").click(onDoConfirm);
+		$("#confirmation-form").show();
+	} else {
+		confirm(email, key, onConfirmed, onError);
+	}
+}
+
+function onDoConfirm() {
+	$(".registration-field").removeClass("invalid");
+	var keyValue = $("#key-field").val();
+	if (!keyValue || keyValue.length == 0) {
+		$("#key-field").addClass("invalid");
+		return;
+	}
+	confirm(email, keyValue, onConfirmed, onError);
+}
+
+function onConfirmed(response) {
+	if (response.error) {
+		onError(response);
+		return;
+	}
+	$("body").html("Confirmation successful");
+}
+

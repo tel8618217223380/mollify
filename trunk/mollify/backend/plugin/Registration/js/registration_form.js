@@ -10,7 +10,7 @@
 
 function init(path) {
 	servicePath = path;
-	getSessionInfo(onSession, onError);				
+	getSessionInfo(onSession, onError);
 };
 
 function onSession(session) {
@@ -45,7 +45,7 @@ function onRegister() {
 		return;
 	}
 	
-	register($("#username-field").val(), $("#password-field").val(), $("#email-field").val(), $("#username-field").val(), onRegistered, onError);
+	register(name, pw, email, onRegistered, onError);
 }
 
 function onRegistered(response) {

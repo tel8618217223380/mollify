@@ -45,10 +45,11 @@ function MollifyUsersConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','Permission Mode'],
+		   	colNames:['ID', 'Name','E-mail','Permission Mode'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
+		   		{name:'email',index:'email', width:200, sortable:true},
 				{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
 		   	],
 		   	sortname:'id',
@@ -300,6 +301,7 @@ function MollifyUsersConfigurationView() {
 						if (!that.validateUserData(false)) return;
 						
 						var name = $("#username").val();
+						var email = $("#email").val();
 						var pw = $("#password").val();
 						var permission = $("#permission").val();
 						
@@ -307,7 +309,7 @@ function MollifyUsersConfigurationView() {
 							$("#add-user-dialog").dialog('close');
 							that.refresh();
 						}
-						addUser(name, pw, permission, onSuccess, onServerError);
+						addUser(name, pw, email, permission, onSuccess, onServerError);
 					}
 				}
 			});
@@ -317,6 +319,7 @@ function MollifyUsersConfigurationView() {
 		}
 		
 		$("#username").val("");
+		$("#email").val("");
 		$("#password").val("");
 		$("#permission").val("ro");
 		$("#add-user-dialog").dialog('open');
@@ -344,19 +347,21 @@ function MollifyUsersConfigurationView() {
 						if (!that.validateUserData(true)) return;
 						
 						var name = $("#edit-username").val();
+						var email = $("#edit-email").val();
 						var permission = $("#edit-permission").val();
 						
 						onSuccess = function() {
 							$("#edit-user-dialog").dialog('close');
 							that.refresh();
 						}
-						editUser(id, name, permission, onSuccess, onServerError);
+						editUser(id, name, email, permission, onSuccess, onServerError);
 					}
 				}
 			});
 		}
 		
 		$("#edit-username").val(user.name);
+		$("#edit-email").val(user.email);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
 		$("#edit-user-dialog").dialog('open');
 	}

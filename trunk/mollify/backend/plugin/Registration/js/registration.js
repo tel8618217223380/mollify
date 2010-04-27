@@ -39,6 +39,11 @@ function register(name, pw, email, success, fail) {
 	request("POST", 'registration/create', success, fail, data);
 }
 
+function confirm(email, key, success, fail) {
+	var data = JSON.stringify({email:email, key:key});
+	request("POST", 'registration/confirm', success, fail, data);
+}
+
 function request(type, url, cb, fail, data) {
 	if (preRequestCallback) preRequestCallback();
 	
