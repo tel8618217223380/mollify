@@ -9,6 +9,7 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 if (!isset($PATH)) die();
 ?>
 <html>
 	<head>
@@ -16,7 +17,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
 		<link rel="stylesheet" href="<?php echo $PATH ?>resources/jquery-ui-1.7.2.custom.css">
-		<link rel="stylesheet" href="resources/style.css">
+		<link rel="stylesheet" href="pages/style.css">
 
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/json.js"></script>

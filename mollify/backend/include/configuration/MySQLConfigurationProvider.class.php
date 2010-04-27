@@ -79,20 +79,20 @@
 		}
 		
 		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, email, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id) {
-			return $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
-		public function addUser($name, $pw, $permission) {
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode, is_group) VALUES ('%s', '%s', '%s', 0)", $this->db->string($name), $this->db->string($pw), $this->db->string($permission)));
+		public function addUser($name, $pw, $email, $permission) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, email, permission_mode, is_group) VALUES ('%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($pw), $this->db->string($email, TRUE), $this->db->string($permission)));
 			return TRUE;
 		}
 	
-		public function updateUser($id, $name, $permission, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', permission_mode='%s', description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($permission), $this->db->string($description), $this->db->string($id)));			
+		public function updateUser($id, $name, $email, $permission, $description = NULL) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($description), $this->db->string($id)));			
 			return TRUE;
 		}
 		

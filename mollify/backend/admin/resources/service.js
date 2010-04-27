@@ -77,8 +77,8 @@ function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
 }
 
-function addUser(name, pw, permission, success, fail) {
-	var data = JSON.stringify({name:name, password:generate_md5(pw), "permission_mode":permission});
+function addUser(name, pw, email, permission, success, fail) {
+	var data = JSON.stringify({name:name, password:generate_md5(pw), email:email, "permission_mode":permission});
 	request("POST", 'configuration/users', success, fail, data);
 }
 
@@ -87,8 +87,8 @@ function changePassword(id, pw, success, fail) {
 	request("PUT", 'configuration/users/'+id+'/password', success, fail, data);
 }
 
-function editUser(id, name, permission, success, fail) {
-	var data = JSON.stringify({name:name, "permission_mode":permission});
+function editUser(id, name, email, permission, success, fail) {
+	var data = JSON.stringify({name:name, email:email, "permission_mode":permission});
 	request("PUT", 'configuration/users/'+id, success, fail, data);
 }
 
