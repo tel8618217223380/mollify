@@ -35,14 +35,16 @@
 			$id = $this->path[1];
 			$db = $this->env->configuration()->db();
 			$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
-			$this->response()->success(TRUE);
+			$this->response()->success(array());
 		}
 		
 		public function processPost() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
-			
-			if ($this->path[0] === 'create') $this->processRegister();
-			else if ($this->path[0] === 'confirm') $this->processConfirm();
+			if (count($this->path) == 1 and $this->path[0] === 'create') {
+				$this->processRegister();
+			} else if (count($this->path) >= 1 and $this->path[0] === 'confirm') {
+				if (count($this->path) == 1) $this->processConfirm();
+				else $this->processConfirmById($this->path[1]);
+			}
 			else throw $this->invalidRequestException();
 		}
 		
@@ -65,7 +67,7 @@
 			$this->notify($email, "Mollify registration confirmation", $msg);
 			
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
-			$this->response()->success(TRUE);
+			$this->response()->success(array());
 		}
 
 		private function assertUniqueNameAndEmail($name, $email) {
@@ -82,14 +84,29 @@
 			$db = $this->env->configuration()->db();
 			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `email`=".$db->string($confirmation['email'],TRUE)." and `key`=".$db->string($confirmation['key'],TRUE);
 			$result = $db->query($query);
+			
 			if ($result->count() != 1) throw new ServiceException("Email and confirmation key don't match");
-
-			$values = $result->firstRow();
-			$this->env->configuration()->addUser($values['name'], $values['password'], $values['email'], Authentication::PERMISSION_VALUE_READONLY);
+			$this->confirm($result->firstRow());
+		}
+		
+		private function processConfirmById($id) {
+			$this->env->authentication()->assertAdmin();
 			
-			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($values['id'],TRUE));
+			$db = $this->env->configuration()->db();
+			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `id`=".$db->string($id,TRUE);
+			$result = $db->query($query);
 			
-			$this->env->events()->onEvent(RegistrationEvent::confirmed($values['name']));
+			if ($result->count() != 1) throw new ServiceException("Registration not found");
+			$this->confirm($result->firstRow());
+		}
+		
+		private function confirm($registration) {
+			$db = $this->env->configuration()->db();
+			
+			$this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], Authentication::PERMISSION_VALUE_READONLY);
+			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
+			
+			$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name']));
 			$this->response()->success(array());
 		}
 		

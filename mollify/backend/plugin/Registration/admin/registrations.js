@@ -14,8 +14,8 @@ function PendingRegistrationsView() {
 	this.list = null;
 	
 	this.onLoadView = function onLoadView() {
-		$("#button-remove-registration").click(that.onRemove);
-		$("#button-confirm-registration").click(that.onConfirm);
+		$("#button-remove-registration").click(that.onRemoveRegistration);
+		$("#button-confirm-registration").click(that.onConfirmRegistration);
 		$("#button-refresh").click(that.onRefresh);
 
 		$("#registrations-list").jqGrid({        
@@ -79,18 +79,17 @@ function PendingRegistrationsView() {
 		enableButton("button-confirm-registration", selected);
 	}
 	
-	this.onRemove = function() {
+	this.onRemoveRegistration = function() {
 		var id = that.getSelectedRegistration();
 		if (id == null) return;
-		removeRegistration(id, that.refresh, onServerError);
+		removeRegistration(id, that.onRefresh, onServerError);
 	}
 
-	this.onConfirm = function() {
+	this.onConfirmRegistration = function() {
 		var id = that.getSelectedRegistration();
 		if (id == null) return;
-		registration = that.getRegistration(id);
 		
-		confirmRegistration(registration.email, registration.key, that.refresh, onServerError);
+		confirmRegistration(id, that.onRefresh, onServerError);
 	}
 	
 	function timeFormatter(time, options, obj) {
@@ -111,6 +110,6 @@ function removeRegistration(id, success, fail) {
 	request("DELETE", 'registration/list/'+id, success, fail);
 }
 
-function confirmRegistrations(email, key, success, fail) {
-	request("POST", 'registration/confirm/', success, fail);
+function confirmRegistration(id, success, fail) {
+	request("POST", 'registration/confirm/'+id, success, fail);
 }
