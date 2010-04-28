@@ -19,6 +19,10 @@
 			RegistrationEvent::register($this->env->events());
 		}
 		
+		public function hasAdminView() {
+			return TRUE;
+		}
+		
 		public function isConfigurationSupported($type) {
 			return $type === ConfigurationProvider::TYPE_DATABASE;
 		}

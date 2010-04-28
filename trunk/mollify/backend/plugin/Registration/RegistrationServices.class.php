@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -12,14 +12,35 @@
 
 	class RegistrationServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) == 1;
+			return count($path) >= 1;
 		}
 		
 		public function isAuthenticationRequired() {
 			return FALSE;
 		}
-				
+		
+		public function processGet() {
+			if (count($this->path) != 1 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			$this->env->authentication()->assertAdmin();
+			
+			$db = $this->env->configuration()->db();
+			$result = $db->query("select `id`, `name`, `email`, `key`, `time` from ".$db->table("pending_registrations")." order by id asc")->rows();
+			$this->response()->success($result);
+		}
+
+		public function processDelete() {
+			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			$this->env->authentication()->assertAdmin();
+			
+			$id = $this->path[1];
+			$db = $this->env->configuration()->db();
+			$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
+			$this->response()->success(TRUE);
+		}
+		
 		public function processPost() {
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			
 			if ($this->path[0] === 'create') $this->processRegister();
 			else if ($this->path[0] === 'confirm') $this->processConfirm();
 			else throw $this->invalidRequestException();
@@ -40,11 +61,11 @@
 			
 			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
 			
-			$msg = $_SERVER["PHP_SELF"]."?confirm=".urlencode($email)."&key=".$key;
+			$msg = $_SERVER["REQUEST_URI"]."?confirm=".urlencode($email)."&key=".$key;
 			$this->notify($email, "Mollify registration confirmation", $msg);
 			
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
-			$this->response()->success(array());
+			$this->response()->success(TRUE);
 		}
 
 		private function assertUniqueNameAndEmail($name, $email) {
