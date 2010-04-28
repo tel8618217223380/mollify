@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -24,7 +24,7 @@
 		
 		public function __construct($limitedHttpMethods) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
-			$this->uri = trim(substr((isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']), strlen($_SERVER['SCRIPT_NAME'])), "/");
+			$this->uri = $this->getUri();
 			$this->ip = $_SERVER['REMOTE_ADDR'];
 			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
@@ -54,6 +54,12 @@
 				default:
 					throw new Exception("Unsupported method: ".$this->method);
 			}
+		}
+		
+		private function getUri() {
+			$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+			$pos = strpos($uri, "/r.php/");
+			return trim(substr($uri, $pos + 7), "/");
 		}
 		
 		public function method() {
