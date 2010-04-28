@@ -18,7 +18,7 @@
 		<title>Confirmation</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
-		<link rel="stylesheet" href="<?php echo $PATH ?>resources/jquery-ui-1.7.2.custom.css">
+		<link rel="stylesheet" href="<?php echo $PATH ?>resources/style.css">
 		<link rel="stylesheet" href="pages/style.css">
 
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.3.2.min.js"></script>
@@ -37,14 +37,16 @@
 
 	<body>
 		<div id="confirmation-form" style="display:none">
-			<div class="registration-form-instructions">
-				Please enter the confirmation key for <?php echo $EMAIL ?> and click "Confirm".
+			<div class="title">
+				Please enter the confirmation key for <span class="email"><?php echo $EMAIL ?></span> and click "Confirm".
 			</div>
 			<div class="registration-form-field">
-				<div class="registration-field-title">Key:</div>
 				<input type="text" id="key-field" class="registration-field"></input>
-			</div>			
-			<button id="confirm-button">Confirm</button>
+				<div id="key-hint" class="registration-field-hint"></div>
+			</div>
+			<div class="buttons">
+				<a id="confirm-button" href="#" class="btn">Confirm</a>
+			</div>
 		</div>
 	</body>
 </html>

@@ -28,20 +28,35 @@ function onSession(session) {
 
 function onRegister() {
 	$(".registration-field").removeClass("invalid");
+	$(".registration-field-hint").html("");
+	
 	var name = $("#username-field").val();
 	var pw = $("#password-field").val();
 	var confirmPw = $("#confirm-password-field").val();
 	var email = $("#email-field").val();
 	
-	if (name.length == 0) $("#username-field").addClass("invalid");
-	if (pw.length == 0) $("#password-field").addClass("invalid");
-	if (confirmPw.length == 0) $("#confirm-password-field").addClass("invalid");
-	if (email.length == 0) $("#email-field").addClass("invalid");
+	if (name.length == 0) {
+		$("#username-field").addClass("invalid");
+		$("#username-hint").html("Enter the username");
+	}
+	if (pw.length == 0) {
+		$("#password-field").addClass("invalid");
+		$("#password-hint").html("Enter the password");
+	}
+	if (confirmPw.length == 0) {
+		$("#confirm-password-field").addClass("invalid");
+		$("#confirm-password-hint").html("Re-enter the password");
+	}
+	if (email.length == 0) {
+		$("#email-field").addClass("invalid");
+		$("#email-hint").html("Enter your email");
+	}
 	if (name.length == 0 || pw.length == 0 || confirmPw.length == 0 || email.length == 0) return;
 	
 	if (pw != confirmPw) {
 		$("#password-field").addClass("invalid");
 		$("#confirm-password-field").addClass("invalid");
+		$("#password-hint").html("The passwords don't match");
 		return;
 	}
 	
@@ -53,5 +68,5 @@ function onRegistered(response) {
 		onError(response);
 		return;
 	}
-	$("body").html("Registration successful");
+	$("body").html("<div class='result'>Registration successful</div>");
 }

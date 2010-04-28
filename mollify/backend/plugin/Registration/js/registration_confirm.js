@@ -39,9 +39,12 @@ function onSession(session) {
 
 function onDoConfirm() {
 	$(".registration-field").removeClass("invalid");
+	$(".registration-hint").html("");
+	
 	var keyValue = $("#key-field").val();
 	if (!keyValue || keyValue.length == 0) {
 		$("#key-field").addClass("invalid");
+		$("#key-hint").html("Enter the confirmation key");
 		return;
 	}
 	confirm(email, keyValue, onConfirmed, onError);

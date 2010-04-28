@@ -74,7 +74,7 @@
 			$db = $this->env->configuration()->db();
 			$query = "select count(id) from ".$db->table("pending_registrations")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
-			if ($count > 0) throw new ServiceException("User already registered with same name or email"); 
+			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered with same name or email"); 
 		}
 
 		private function processConfirm() {
@@ -85,7 +85,7 @@
 			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `email`=".$db->string($confirmation['email'],TRUE)." and `key`=".$db->string($confirmation['key'],TRUE);
 			$result = $db->query($query);
 			
-			if ($result->count() != 1) throw new ServiceException("Email and confirmation key don't match");
+			if ($result->count() != 1) throw new ServiceException("REQUEST_FAILED", "Email and confirmation key don't match");
 			$this->confirm($result->firstRow());
 		}
 		

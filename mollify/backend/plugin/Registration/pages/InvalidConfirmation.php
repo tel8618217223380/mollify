@@ -15,6 +15,7 @@
 	<head>
 		<title>Confirmation</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="<?php echo $PATH ?>resources/style.css">
 		<link rel="stylesheet" href="pages/style.css">
 	</head>
 
