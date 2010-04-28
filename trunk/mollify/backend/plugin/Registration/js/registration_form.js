@@ -68,5 +68,5 @@ function onRegistered(response) {
 		onError(response);
 		return;
 	}
-	$("body").html("<div class='result'>Registration successful</div>");
+	window.location = 'pages/registration_success.html';
 }

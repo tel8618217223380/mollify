@@ -15,6 +15,7 @@
 	require_once("filesystem/FilesystemController.class.php");
 	require_once("plugin/PluginController.class.php");
 	require_once("services/ServicesBase.class.php");
+	require_once("MailNotification.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -32,6 +33,7 @@
 		private $eventHandler;
 		private $filesystem;
 		private $request;
+		private $notification;
 		
 		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
 			$this->session = $session;
@@ -43,6 +45,7 @@
 			$this->eventHandler = new EventHandler();
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
+			$this->notification = new MailNotification($this);
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -85,6 +88,10 @@
 
 		public function request() {
 			return $this->request;
+		}
+
+		public function notification() {
+			return $this->notification;
 		}
 										
 		public function initialize($request) {
@@ -141,8 +148,8 @@
 			return $url."/";
 		}
 		
-		public function getPluginUrl($pluginId, $path) {
-			return $this->getResourceUrl("plugin/".$pluginId."/".$path."/");
+		public function getPluginUrl($pluginId, $path = NULL) {
+			return $this->getResourceUrl("plugin/".$pluginId."/".($path != NULL ? $path."/" : ""));
 		}
 		
 		public function getResourceUrl($path) {

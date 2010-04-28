@@ -63,9 +63,7 @@
 			
 			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
 			
-			$msg = $_SERVER["REQUEST_URI"]."?confirm=".urlencode($email)."&key=".$key;
-			$this->notify($email, "Mollify registration confirmation", $msg);
-			
+			$this->notify($name, $email, $key);
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
 			$this->response()->success(array());
 		}
@@ -110,11 +108,12 @@
 			$this->response()->success(array());
 		}
 		
-		private function notify($email, $subject, $msg) {
-			if (Logging::isDebug())
-				Logging::logDebug("Registration confirmation to ".$email.": [".$msg."]");
-			else
-				mail($email, $subject, $msg);
+		private function notify($name, $email, $key) {
+			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
+			
+			$subject = "Mollify registration confirmation";
+			$msg = "Open following link to complete registration: ".$link;
+			$this->env->notification()->send($email, $subject, $msg);
 		}
 				
 		public function __toString() {

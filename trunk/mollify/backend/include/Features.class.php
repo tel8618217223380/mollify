@@ -22,7 +22,8 @@
 			"permission_update" => FALSE,
 			"administration" => FALSE,
 			"user_groups" => FALSE,
-			"public_links" => FALSE
+			"public_links" => FALSE,
+			"mail_notification" => FALSE
 		);
 		
 		private $defaultValues = array();
