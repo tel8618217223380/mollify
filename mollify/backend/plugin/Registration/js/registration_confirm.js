@@ -55,6 +55,6 @@ function onConfirmed(response) {
 		onError(response);
 		return;
 	}
-	$("body").html("Confirmation successful");
+	window.location = 'pages/registration_confirmed.html';
 }
 

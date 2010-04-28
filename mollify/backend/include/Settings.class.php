@@ -31,6 +31,7 @@
 			"permission_file" => "mollify.uac",
 			"description_file" => "mollify.dsc",
 			"enable_public_links" => FALSE,
+			"enable_mail_notification" => FALSE,
 			"debug" => FALSE
 		);
 		
