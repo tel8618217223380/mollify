@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -117,6 +117,10 @@
 				$first = FALSE;
 			}
 			return $result;
+		}
+		
+		public function lastId() {
+			return mysql_insert_id($this->db);
 		}
 	}
 	

@@ -100,20 +100,55 @@
 		
 		private function confirm($registration) {
 			$db = $this->env->configuration()->db();
+			$plugin = $this->env->plugins()->getPlugin("Registration");
+			$permission = $plugin->getSetting("permission", Authentication::PERMISSION_VALUE_READONLY);
 			
-			$this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], Authentication::PERMISSION_VALUE_READONLY);
+			$id = $this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], $permission);
 			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
+			
+			$this->addUserProperties($id, $plugin);
 			
 			$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name']));
 			$this->response()->success(array());
 		}
 		
-		private function notify($name, $email, $key) {
-			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
+		private function addUserProperties($id, $plugin) {
+			$groups = $plugin->getSetting("groups", array());
+			if (count($groups) > 0) {
+				$existing = array();
+				foreach ($this->env->configuration()->getAllUserGroups() as $group) {
+					if (in_array($group['id'], $groups)) $existing[] = $group['id'];
+				}
+				
+				$this->env->configuration()->addUsersGroups($id, $existing);
+			}
 			
-			$subject = "Mollify registration confirmation";
-			$msg = "Open following link to complete registration: ".$link;
+			$folders = $plugin->getSetting("folders", array());
+			if (count($folders) > 0) {
+				$existing = array();
+				foreach ($this->env->configuration()->getFolders() as $folder) {
+					if (in_array($folder['id'], $folders)) $existing[] = $folder['id'];
+				}
+				
+				$this->env->configuration()->addUserFolders($id, $existing);
+			}
+		}
+		
+		private function notify($name, $email, $key) {
+			require_once("Messages.php");
+			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
+			$values = array("name" => $name, "email" => $email, "link" => $link);
+			
+			$subject = $this->replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
+			$msg = $this->replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
+			
 			$this->env->notification()->send($email, $subject, $msg);
+		}
+		
+		private function replaceParams($text, $values) {
+			foreach($values as $k => $v)
+				$text = str_replace('%'.$k.'%', $v, $text);
+			return $text;
 		}
 				
 		public function __toString() {
