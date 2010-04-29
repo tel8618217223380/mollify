@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -88,7 +88,7 @@
 		
 		public function addUser($name, $pw, $email, $permission) {
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, email, permission_mode, is_group) VALUES ('%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($pw), $this->db->string($email, TRUE), $this->db->string($permission)));
-			return TRUE;
+			return $this->db->lastId();
 		}
 	
 		public function updateUser($id, $name, $email, $permission, $description = NULL) {
@@ -233,6 +233,10 @@
 			$userFolderTable = $this->db->table("user_folder");
 			
 			return $this->db->query(sprintf("SELECT ".$folderTable.".id, ".$userFolderTable.".name, ".$folderTable.".name as default_name, ".$folderTable.".path FROM ".$userFolderTable.", ".$folderTable." WHERE user_id='%s' AND ".$folderTable.".id = ".$userFolderTable.".folder_id", $this->db->string($userId)))->rows();
+		}
+		
+		public function addUserFolders($userId, $folderIds) {
+			foreach($folderIds as $id) $this->addUserFolder($userId, $id, NULL);
 		}
 		
 		public function addUserFolder($userId, $folderId, $name) {

@@ -43,6 +43,10 @@
 		public function getPlugins() {
 			return $this->plugins;
 		}
+
+		public function getPlugin($id) {
+			return $this->plugins[$id];
+		}
 		
 		public function getSessionInfo() {
 			$result = array();
