@@ -76,14 +76,14 @@
 		}
 		
 		function getDefaultPermission($userId = NULL) {
-			global $USERS, $FILE_PERMISSION_MODE;
+			global $USERS, $DEFAULT_PERMISSION;
 			
 			if (!$this->isAuthenticationRequired()) {
-				if (!isset($FILE_PERMISSION_MODE)) return Authentication::PERMISSION_VALUE_READONLY;
-				$mode = strtoupper($FILE_PERMISSION_MODE);
+				if (!isset($DEFAULT_PERMISSION)) return Authentication::PERMISSION_VALUE_READONLY;
+				$mode = strtoupper($DEFAULT_PERMISSION);
 			} else {
-				if (!isset($USERS[$userId]["file_permission_mode"])) return Authentication::PERMISSION_VALUE_READONLY;
-				$mode = strtoupper($USERS[$userId]["file_permission_mode"]);
+				if (!isset($USERS[$userId]["default_permission"])) return Authentication::PERMISSION_VALUE_READONLY;
+				$mode = strtoupper($USERS[$userId]["default_permission"]);
 			}
 
 			$this->env->authentication()->assertPermissionValue($mode);	
@@ -95,30 +95,45 @@
 			return ($USERS != FALSE and count($USERS) > 0);
 		}
 		
+		public function getFolders() {
+			global $PUBLISHED_FOLDERS;
+			$result = array();
+			foreach($PUBLISHED_FOLDERS as $id => $folder)
+				$result[] = array("id" => $id, "name" => $folder['name'], "path" => $folder['path']);
+			return $result;
+		}
+
 		public function getUserFolders($userId) {
-			global $USERS, $PUBLISHED_DIRECTORIES;
+			global $USERS, $PUBLISHED_FOLDERS;
 	
-			if (!isset($PUBLISHED_DIRECTORIES) or !is_array($PUBLISHED_DIRECTORIES))
-				throw new ServiceException("INVALID_CONFIGURATION", "Missing root directory configurations");
-			
-			$list = NULL;
-			if (count($USERS) === 0) {
-				$list = $PUBLISHED_DIRECTORIES;
+			if (!isset($PUBLISHED_FOLDERS) or !is_array($PUBLISHED_FOLDERS))
+				throw new ServiceException("INVALID_CONFIGURATION", "Missing published folder configuration");
+
+			$result = array();
+
+			if (!$this->isAuthenticationRequired()) {
+				foreach($PUBLISHED_FOLDERS as $id => $folder)
+					$result[] = array("id" => $id, "name" => $folder['name'], "path" => $folder['path']);
 			} else {
-				if (!array_key_exists($userId, $PUBLISHED_DIRECTORIES)) throw new ServiceException("INVALID_CONFIGURATION", "Missing root directory configuration for user ".$userId);
-				$list = $PUBLISHED_DIRECTORIES[$userId];
+				$user = $USERS[$userId];
+				if (!array_key_exists("folders", $user) or !is_array($user["folders"])) throw new ServiceException("INVALID_CONFIGURATION", "Missing published folder configuration for user ".$userId);
+				
+				foreach($user["folders"] as $id => $n) {
+					if (!array_key_exists($id, $PUBLISHED_FOLDERS)) throw new ServiceException("INVALID_CONFIGURATION", "Invalid published folder configuration for user ".$userId.", folder not defined ".$id);
+					$folder = $PUBLISHED_FOLDERS[$id];
+					$name = $n;
+					if (!$name) $name = $folder["name"];
+					$result[] = array("id" => $id, "name" => $name, "path" => $folder['path']);
+				}
 			}
 			
-			$result = array();
-			foreach($list as $id => $folder)
-				$result[] = array("id" => $id, "name" => $folder['name'], "path" => $folder['path']);
+			
 			return $result;
 		}
 		
 		public function getFolder($id) {
-			if ($this->isAuthenticationRequired()) throw new ServiceException("INVALID_CONFIGURATION", "Invalid folder request in multi-user mode");
-			global $PUBLISHED_DIRECTORIES;
-			$def = $PUBLISHED_DIRECTORIES[$id];
+			global $PUBLISHED_FOLDERS;
+			$def = $PUBLISHED_FOLDERS[$id];
 			$def["id"] = $id;
 			return $def;
 		}
