@@ -39,9 +39,13 @@
 
 		public function onSessionStarted() {
 		}
+		
+		private function getFolders() {
+			if ($this->env->configuration()->isAuthenticationRequired())
+				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
+			else
+				$folderDefs = $this->env->configuration()->getFolders();
 
-		private function getUserFolders() {
-			$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
@@ -86,7 +90,7 @@
 			);
 			
 			$result["folders"] = array();
-			foreach($this->getUserFolders() as $id => $folderDef) {
+			foreach($this->getFolders() as $id => $folderDef) {
 				$result["folders"][] = array(
 					"id" => $this->publicId($id),
 					"name" => $folderDef['name'] != NULL ? $folderDef['name'] : $folderDef['default_name']
@@ -113,13 +117,9 @@
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
+			$folderDef = $this->env->configuration()->getFolder($filesystemId);
 			
-			 
-			$folderDefs = $this->getUserFolders();
-			if (!array_key_exists($filesystemId, $folderDefs))
-				throw new ServiceException("INVALID_CONFIGURATION", "Invalid item folder: ".$id);
-			
-			return $this->filesystem($folderDefs[$filesystemId])->createItem($id, $path, $nonexisting);
+			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
 		}
 		
 		public function publicId($filesystemId, $path = "") {

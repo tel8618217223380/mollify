@@ -16,6 +16,10 @@
 		public function hasAdminView() {
 			return TRUE;
 		}
+		
+		public function isConfigurationSupported($type) {
+			return $type === ConfigurationProvider::TYPE_DATABASE;
+		}
 
 		public function setup() {
 			$logged = $this->getSetting("logged_events", NULL);
