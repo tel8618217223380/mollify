@@ -24,15 +24,16 @@
 			$this->previewEnabled = $preview;
 			
 			if ($this->viewEnabled) {
-				$viewers = $this->getSetting(TRUE, "viewers");
+				$viewers = $this->getSetting("viewers");
 				if ($viewers != NULL and is_array($viewers)) {
 					foreach($viewers as $t => $list)
 						$this->registerViewer($list, $t);
 				}
 				$this->plugin->env()->features()->addFeature("file_view");
 			}
+			
 			if ($this->previewEnabled) {
-				$previewers = $this->getSetting(FALSE, "previewers");
+				$previewers = $this->getSetting("previewers");
 				if ($previewers != NULL and is_array($previewers)) {
 					foreach($previewers as $t => $list)
 						$this->registerPreviewer($list, $t);
@@ -157,10 +158,8 @@
 			return $s[$viewerId];
 		}
 
-		private function getSetting($view, $name) {
-			$s = $this->plugin->getSetting($view ? "view_options" : "preview_options", array());
-			if (!isset($s[$name])) return NULL;
-			return $s[$name];
+		private function getSetting($name) {
+			return $this->plugin->getSetting($name, NULL);
 		}
 
 		public function __toString() {
