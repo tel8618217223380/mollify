@@ -24,8 +24,8 @@
 				Logging::logDebug("Sending mail to ".$to.": [".$message."]");
 			
 			if ($this->enabled) {
-				$f = $from != NULL ? $from : $this->env->settings()->getSetting("mail_notification_from");
-				mail($email, $subject, $msg, 'From: '.$f);
+				$f = $from != NULL ? $from : $this->env->settings()->setting("mail_notification_from");
+				mail($to, $subject, $msg, 'From: '.$f);
 			}
 		}
 				
