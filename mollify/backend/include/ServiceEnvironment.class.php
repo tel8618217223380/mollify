@@ -23,7 +23,6 @@
 		
 		private $services = array();
 		private $serviceControllerPaths = array();
-		private $objects = array();
 		
 		private $session;
 		private $authentication; 
@@ -131,14 +130,6 @@
 			
 			require_once($controllerPath.$controller.".class.php");
 			return new $controller($this, $request, $id, $path);
-		}
-		
-		public function registerObject($name, $obj) {
-			$this->objects[$name] = $obj;
-		}
-		
-		public function getObject($name) {
-			return $this->objects[$name];
 		}
 		
 		public function getServiceUrl($id, $path, $full = FALSE) {

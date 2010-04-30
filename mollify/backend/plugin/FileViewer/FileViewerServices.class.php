@@ -20,7 +20,7 @@
 			
 			if ($this->id === 'preview') {
 				if ($this->path[1] === 'info') {
-					$this->response()->success($this->env->getObject("file_viewer")->getPreview($item));
+					$this->response()->success($this->env->plugins()->getPlugin("FileViewer")->getController()->getPreview($item));
 					return;
 				}
 				if ($this->path[1] === 'content') {
@@ -29,7 +29,7 @@
 				}
 			} else if ($this->id === 'view') {
 				if ($this->path[1] === 'data') {
-					$this->env->getObject("file_viewer")->processDataRequest($item, array_slice($this->path, 2));
+					$this->env->plugins()->getPlugin("FileViewer")->getController()->processDataRequest($item, array_slice($this->path, 2));
 					return;
 				}
 				if ($this->path[1] === 'content') {

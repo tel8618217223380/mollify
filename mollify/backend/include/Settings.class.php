@@ -32,7 +32,7 @@
 			"description_file" => "mollify.dsc",
 			"enable_public_links" => FALSE,
 			"enable_mail_notification" => FALSE,
-			"mail_notification_from" => NULL
+			"mail_notification_from" => NULL,
 			"debug" => FALSE
 		);
 		
