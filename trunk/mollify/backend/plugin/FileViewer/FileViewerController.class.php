@@ -68,36 +68,32 @@
 		}
 
 		private function isPreviewAllowed($type) {
-			if (!array_key_exists($type, $this->previewers)) return false;
-			$types = $this->getSetting(FALSE, "types");
-			if ($types == NULL or count($types) == 0) return TRUE;
-			return in_array($type, $this->splitTypes($types));
+			return array_key_exists($type, $this->previewers);
 		}
 				
 		private function isViewAllowed($type) {
-			if (!array_key_exists($type, $this->viewers)) return false;
-			$types = $this->getSetting(TRUE, "types");
-			if ($types == NULL or count($types) == 0) return TRUE;
-			return in_array($type, $this->splitTypes($types));
+			return array_key_exists($type, $this->viewers);
 		}
 		
 		private function getPreviewer($type) {
-			$previewer = $this->previewers[$type];
-			list($id, $cls) = split("/", $previewer, 2);
+			$id = $this->previewers[$type];
 			
 			require_once("previewers/PreviewerBase.class.php");
-			require_once("previewers/".$id."/".$cls.".previewer.php");
+			require_once("previewers/".$id."/".$id.".previewer.php");
+			
+			$cls = $id."Previewer";
 			return new $cls($this, $id);
 		}
 				
 		private function getViewer($type) {
-			$viewer = $this->viewers[$type];
-			list($id, $cls) = split("/", $viewer, 2);
+			$id = $this->viewers[$type];
 			
 			require_once("viewers/ViewerBase.class.php");
 			require_once("viewers/FullDocumentViewer.class.php");
 			require_once("viewers/EmbeddedContentViewer.class.php");
-			require_once("viewers/".$id."/".$cls.".viewer.php");
+			require_once("viewers/".$id."/".$id.".viewer.php");
+			
+			$cls = $id."Viewer";
 			return new $cls($this, $id);
 		}
 		

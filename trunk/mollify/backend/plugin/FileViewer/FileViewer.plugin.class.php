@@ -11,6 +11,8 @@
 	 */
 
 	class FileViewer extends PluginBase {
+		private $controller;
+		
 		public function setup() {
 			$preview = $this->getSetting('enable_file_preview', TRUE);
 			$view = $this->getSetting('enable_file_view', TRUE);
@@ -23,9 +25,12 @@
 			
 			require_once("FileViewerController.class.php");
 			
-			$controller = new FileViewerController($this, $view, $preview);
-			$this->env->registerObject("file_viewer", $controller);
-			$this->env->filesystem()->registerDetailsPlugin($controller);
+			$this->controller = new FileViewerController($this, $view, $preview);
+			$this->env->filesystem()->registerDetailsPlugin($this->controller);
+		}
+		
+		public function getController() {
+			return $this->controller;
 		}
 		
 		public function __toString() {
