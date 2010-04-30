@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -19,12 +19,14 @@
 			$this->enabled = $env->features()->isFeatureEnabled("mail_notification");
 		}
 		
-		public function send($to, $subject, $message) {
+		public function send($to, $subject, $message, $from = NULL) {
 			if (Logging::isDebug())
 				Logging::logDebug("Sending mail to ".$to.": [".$message."]");
 			
-			if ($this->enabled)
-				mail($email, $subject, $msg);
+			if ($this->enabled) {
+				$f = $from != NULL ? $from : $this->env->settings()->getSetting("mail_notification_from");
+				mail($email, $subject, $msg, 'From: '.$f);
+			}
 		}
 				
 		public function __toString() {
