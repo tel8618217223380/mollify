@@ -25,7 +25,7 @@
 			
 			if ($this->enabled) {
 				$f = $from != NULL ? $from : $this->env->settings()->setting("mail_notification_from");
-				mail($to, $subject, $msg, 'From: '.$f);
+				mail($to, $subject, $message, 'From: '.$f);
 			}
 		}
 				
