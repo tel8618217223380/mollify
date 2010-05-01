@@ -30,48 +30,57 @@ $USERS = array(
 	  * User names `[USER NAME]` can be freely chosen, but they must be unique (as user is identified with user name when logged in)
 
 
-= 2. Published Directories =
+= 2. Published Folders =
 
-	Mollify supports freely selectable published directories, which need not to have any relation with each other. Each user can have different set of directories available.
+	Mollify supports freely selectable published folders, which need not to have any relation with each other. Each user can have different set of directories available.
 
-	Use following format to define published directories:
+	Use following format to define published folders:
 
 {{{
-$PUBLISHED_DIRECTORIES = array(
-	[USER_ID] => array(
-		[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
-		...
-	),
+$PUBLISHED_FOLDERS = array(
+	[FOLDER_ID] => array("name" => [FOLDER_NAME], "path" => [FOLDER_PATH]),
 	...
 );
 }}}
 
+	Then extend the user configuration by assigning them the folders:
+
+{{{
+	$USERS = array(
+		[USER_ID] => array("name" => [USER_NAME], ... , "folders" => array(
+			[FOLDER_ID] => [USER_SPECIFIC_FOLDER_NAME or NULL],
+			...
+		),
+		...
+	);
+}}}
+
+	User published folders are listed with folder id and the user specific folder name. If the name is NULL, the default name is used.
+
 	For example:
 
 {{{
-$PUBLISHED_DIRECTORIES = array(
-	"1" => array(
-		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
-		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-	),
-	"2" => array(
-		"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
-		"r2" => array("name" => "Folder C", "path" => "/foo/baz")
-	)
+$PUBLISHED_FOLDERS = array(
+	"1" => array("name" => "Folder A", "path" => "/foo/bar"),
+	"2" => array("name" => "Folder B", "path" => "/foo/bay"),
+	"3" => array("name" => "Folder C", "path" => "/foo/baz")
+);
+
+$USERS = array(
+	"1" => array("name" => "User 1", "folders" => array(
+		"1" => "User 1 Folder A",
+		"2" => NULL
+	)),
+	"2" => array("name" => "User 2", "folders" => array(
+		"1" => NULL,
+		"3" => NULL
+	))
 );
 }}}
 
 	With this configuration
-	  * User with id "1" (defined in user configuration) has two visible directories: "Folder A" and "Folder B"
-	  * User with id "2" (defined in user configuration) has two visible directories: "Folder A" and "Folder C"
-	  * Although "Folder A" exists in both users, they may point to different physical folder
-
-	Rules are:
-	  * User id `[USER_ID]` must exist in user configuration (see chapter 2.1)
-	  * Directory id's `[DIR_ID]` can be freely chosen, but they must be unique within user (two users can have same id's)
-	  * Path `[DIR_PATH]` must be absolute path in local file system
-	  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
-
+	  * User with id "1" (defined in user configuration) has two visible folders: "Folder A" (with name "User 1 Folder A) and "Folder B"
+	  * User with id "2" (defined in user configuration) has two visible folders: "Folder A" and "Folder C"
 
 	NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
 
