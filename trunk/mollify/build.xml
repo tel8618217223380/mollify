@@ -118,6 +118,9 @@
 		
 		<zip destfile="${deploy.dir}/viewer_flowplayer.zip" basedir="${target.dir}" includes="FlowPlayer/**" />
 		<zip destfile="${deploy.dir}/viewer_jplayer.zip" basedir="${target.dir}" includes="JPlayer/**" />
+		<zip destfile="${deploy.dir}/viewer_textfile.zip" basedir="${target.dir}" includes="TextFile/**" />
+		
+		<delete dir="${target.dir}" />
 	</target>
 	
 	<target name="do-deploy">
