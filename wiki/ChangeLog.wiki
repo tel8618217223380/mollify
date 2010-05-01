@@ -1,12 +1,24 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 1.5.5 ==
+=== Version 1.6 ===
+  * Backend plugin system
+  * Registration plugin: allow users to register themselves
+  * Features "event logging" and "file preview/view" now plugins
+  * More file viewers: flow player (for flash videos), JPlayer (for mp3 files) and text file with syntax hilighting (for most known text based formats, for example js, c, xml, html)
+  * Possibility to publish nonexisting folders in admin tool
+
+BREAKING CHANGES:
+  * In host page, client folder "include" has moved from "client/themes/include" to "client/include".
+  * File based configuration syntax has changed to support public links, published folders are now defined as one set, and assigned to users by their id. See configuration wiki for instructions.
+  * Previous configuration for file viewers and file previewers has changed. See configuration wiki for instructions.
+
+=== Version 1.5.5 ===
   * Support for file preview (see ConfigurationAdditionalOptions chapter 6.5)
   * Support for file view (see ConfigurationAdditionalOptions chapter 6.6)
   * Support for public links (see ConfigurationAdditionalOptions chapter 6.7)
 
-=== Version 1.5.4 ==
+=== Version 1.5.4 ===
   * Drop box for collecting files/folders
   * Multiple file actions
   * Copy folders action
@@ -15,14 +27,14 @@
   * Support for limited http methods (when service provider does not support http PUT and/or DELETE)
   * Support for download managers (resumable downloads and collecting files to download)
 
-=== Version 1.5.3 ==
+=== Version 1.5.3 ===
   * Various bug fixes
 
-=== Version 1.5.2 ==
+=== Version 1.5.2 ===
   * Fixed default value issues in file configuration
   * Fixed download issue (http://code.google.com/p/mollify/issues/detail?id=44)
 
-=== Version 1.5 ==
+=== Version 1.5 ===
   * Rewritten service RESTful API
   * Rewritten installer and updater
   * Rewritten administration
@@ -30,30 +42,30 @@
   * Added support for database table prefix
   * Added option for disabling default login
 
-=== Version 1.0.5.6 ==
+=== Version 1.0.5.6 ===
   * Added new language: Korean
   * Fixed memory restriction issues when downloading large files
 
-=== Version 1.0.5.5 ==
+=== Version 1.0.5.5 ===
   * Added new language: Polski
 
-=== Version 1.0.5.4 ==
+=== Version 1.0.5.4 ===
   * Corrected Dutch localization errors
   * Fixed visual error with Dutch localization
 
-=== Version 1.0.5.3 ==
+=== Version 1.0.5.3 ===
   * Added new language: Dutch
   * Fixed zip folder name issue
 
-=== Version 1.0.5.2 ==
+=== Version 1.0.5.2 ===
   * Added new language: Serbian
   * Fixed flash uploader Firefox problem
 
-=== Version 1.0.5.1 ==
+=== Version 1.0.5.1 ===
   * Fixed reset password bug
   * Fixed file type restriction bug in upload
 
-=== Version 1.0.5 ==
+=== Version 1.0.5 ===
   * Added new languages: Espanol and Italiano
   * New custom theme: charcoal (by Lukas Upton)
   * Support for flash uploader (SWFUpload) (see chapter 7 in ConfigurationAdditionalOptions)
@@ -61,11 +73,11 @@
   * Support for multiple Mollify installations in one site (see chapter 6 in ConfigurationAdditionalOptions)
   * New setting for disabling change password option (see chapter 6 in ConfigurationAdditionalOptions)
 
-=== Version 1.0.1 ==
+=== Version 1.0.1 ===
   * Added new language: Português
   * Toolbar button tooltips
 
-=== Version 1.0.0 ==
+=== Version 1.0.0 ===
   * Added support for editable user permissions, both in folder and file level (see chapter 5 in ConfigurationAdditionalOptions)
   * Finalized theme, better support for IE and old Firefox versions
   * Reorganized installation package structure into single folder
@@ -74,43 +86,43 @@
   * Updated GWT version to 1.7
   * Updated Zipstream-PHP version to 0.2.2
 
-=== Version 0.9.6.4 ==
+=== Version 0.9.6.4 ===
   * Removed pointless "Download" action from folder actions (folders can be downloaded only as zip, if enabled)
   * Corrected errors in German translation
 
-=== Version 0.9.6.3 ==
+=== Version 0.9.6.3 ===
   * Fixed issues with special characters when creating folders or renaming files/folders
 
-=== Version 0.9.6.2 ==
+=== Version 0.9.6.2 ===
   * Fixed malformed 0.9.6.1 package
 
-=== Version 0.9.6.1 ==
+=== Version 0.9.6.1 ===
   * Fixed path ID issue #12 causing "Failed to get response from server" (http://code.google.com/p/mollify/issues/detail?id=12)
   * Fixed MySQL issues
 
-=== Version 0.9.6 ==
+=== Version 0.9.6 ===
   * Localizations for German and French
   * Support for editable and system managed descriptions
   * Support for "safe" HTML formatted descriptions
   * Support for folders descriptions
   * Added move directory feature
 
-=== Version 0.9.5 ==
+=== Version 0.9.5 ===
   * Added support for MySQL database configuration, along with client side configuration options for users and published folders
   * Backend configuration option for password hashing
   * Client configuration option for request timeout setting
 
-=== Version 0.9 ==
+=== Version 0.9 ===
   * Added move and copy file features
   * Finalized basic theme
 
-=== Version 0.8 ==
+=== Version 0.8 ===
   * Added support for sorting columns
   * Added display for maximum upload sizes
   * Added user environment option for demo mode
   * Minor UI changes: moved "Up to parent folder" button before path bar, added type column for directories
 
-=== Version 0.7.2 ==
+=== Version 0.7.2 ===
   * Added support for multiple file uploads
   * In multi-user environment, logged in user is shown in the header
   * Fixed most IE CSS issues
