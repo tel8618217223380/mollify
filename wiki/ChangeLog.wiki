@@ -8,10 +8,10 @@
   * More file viewers: flow player (for flash videos), JPlayer (for mp3 files) and text file with syntax hilighting (for most known text based formats, for example js, c, xml, html)
   * Possibility to publish nonexisting folders in admin tool
 
-BREAKING CHANGES:
+*BREAKING CHANGES:*
   * In host page, client folder "include" has moved from "client/themes/include" to "client/include".
   * File based configuration syntax has changed to support public links, published folders are now defined as one set, and assigned to users by their id. See configuration wiki for instructions.
-  * Previous configuration for file viewers and file previewers has changed. See configuration wiki for instructions.
+  * Previous configuration for file viewers and file previewers has been deprecated. All previous settings (for example "enable_file_view", "enable_file_preview", "file_preview_options" has been removed, see configuration wiki for instructions.
 
 === Version 1.5.5 ===
   * Support for file preview (see ConfigurationAdditionalOptions chapter 6.5)
