@@ -24,7 +24,7 @@ $PLUGINS = array(
 
 Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
 
-= Plugins =
+= Built-in Plugins =
 
 == Event Logging ==
 
@@ -36,6 +36,8 @@ Provides event logging feature.
 	$PLUGINS = array(
 		"EventLogging" => array("logged_events" => array("filesystem/", "session/"))
 }}}
+
+Note! Setting "logged_events" is optional, by default all events are logged.
 
 == User Registration ==
 
@@ -53,6 +55,8 @@ Provides user self registration.
 Provides file view and preview.
 
 === Configuration ===
+
+Two settings, "viewers" and "previewers". Both list viewer/previewer plugins and file extensions they handle. File viewer/previewer plugins are installed by unzipping installation package to "backend/plugin/FileViewer/viewers" or "backend/plugin/FileViewer/previewers".
 
 {{{
 	$PLUGINS = array(
