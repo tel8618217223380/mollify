@@ -4,8 +4,6 @@
 
 Plugins are installed simply by downloading the plugin package and unzipping them into "backend/plugin" folder.
 
-= Configuring plugins =
-
 Plugins are registered with a variable PLUGINS in configuration.php:
 
 {{{
@@ -24,6 +22,50 @@ $PLUGINS = array(
 	"MollifyPluginBar" => array()
 }}}
 
-= Update =
-
 Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
+
+= Plugins =
+
+== Event Logging ==
+
+Provides event logging feature.
+
+=== Configuration ===
+
+{{{
+	$PLUGINS = array(
+		"EventLogging" => array("logged_events" => array("filesystem/", "session/"))
+}}}
+
+== User Registration ==
+
+Provides user self registration.
+
+=== Configuration ===
+
+{{{
+	$PLUGINS = array(
+		"Registration" => array()
+}}}
+
+== File Viewer ==
+
+Provides file view and preview.
+
+=== Configuration ===
+
+{{{
+	$PLUGINS = array(
+		"FileViewer" => array(
+			"viewers" => array(
+				"Image" => array("gif", "png", "jpg"),
+				"Google" => array("pdf", "doc", "xls"),
+				"TextFile" => array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql", "php"),
+				"FlowPlayer" => array("f4v"),
+				"JPlayer" => array("mp3")
+			),
+			"previewers" => array(
+				"Image" => array("gif", "png", "jpg")
+			)
+		)
+	);
