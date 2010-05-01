@@ -79,7 +79,7 @@ $USERS = array(
 }}}
 
 	With this configuration
-	  * User with id "1" (defined in user configuration) has two visible folders: "Folder A" (with name "User 1 Folder A) and "Folder B"
+	  * User with id "1" (defined in user configuration) has two visible folders: "Folder A" (with name "User 1 Folder A") and "Folder B"
 	  * User with id "2" (defined in user configuration) has two visible folders: "Folder A" and "Folder C"
 
 	NOTE! Currently all files and directories are recursively exposed, so carefully select your configuration.
@@ -99,14 +99,14 @@ $USERS = array(
 
 == 3.1. User Default File Permission ==
 
-	Default file permission is defined in user account configuration with attribute `file_permission_mode`.
+	Default file permission is defined in user account configuration with attribute `default_permission`.
 
 	For example:
 
 {{{
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "RW"),
-		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+		"1" => array("name" => "User 1", "password" => "foo", "default_permission" => "RW"),
+		"2" => array("name" => "User 2", "password" => "bar", "default_permission" => "RO")
 	);
 }}}
 
@@ -118,8 +118,8 @@ $USERS = array(
 
 {{{
 	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "A"),
-		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "RO")
+		"1" => array("name" => "User 1", "password" => "foo", "default_permission" => "A"),
+		"2" => array("name" => "User 2", "password" => "bar", "default_permission" => "RO")
 	);
 }}}
 
