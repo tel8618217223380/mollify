@@ -147,7 +147,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	The value for the session name is freely selectable, different instances just need to have unique value. It could be, a running number ("1", "2" etc), or perhaps something that describes the purpose of the instance, like "MOLLIFY_PUBLIC", "MOLLIFY_LOCAL" etc.
 
-=== 6.5. File preview ===
+=== 6.5. File preview (deprecated) ===
 
 	To enable file preview, add with following setting in "configuration.php":
 
@@ -166,7 +166,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	Use comma separated list of extensions (without dots).
 
-=== 6.6. File view ===
+=== 6.6. File view (deprecated) ===
 
 	To enable file preview, add with following setting in "configuration.php":
 
@@ -210,7 +210,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	With this setting, client can provide links that can be used for downloading files without Mollify account.
 
-=== 6.8. Event logging ===
+=== 6.8. Event logging (deprecated) ===
 
 	To enable event logging, add with following setting in "configuration.php":
 
