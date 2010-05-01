@@ -9,32 +9,32 @@
 
 	{{{ $USERS = array();}}}
 
-= 2. Published Directories =
+= 2. Published Folders =
 
-	Mollify supports freely selectable published directories, which need not to have any relation with each other.
+	Mollify supports freely selectable published folders, which need not to have any relation with each other.
 
 
-	Use following format to define published directories:
+	Use following format to define published folders:
 
 {{{
-$PUBLISHED_DIRECTORIES = array(
-	[DIR_ID] => array("name" => [DIR_NAME], "path" => [DIR_PATH]),
+$PUBLISHED_FOLDERS = array(
+	[FOLDER_ID] => array("name" => [FOLDER_NAME], "path" => [FOLDER_PATH]),
 	...
 );
 }}}
 
 	For example:
 {{{
-$PUBLISHED_DIRECTORIES = array(
+$PUBLISHED_FOLDERS = array(
 	"1" => array("name" => "Images", "path" => "/files/images"),
 	"2" => array("name" => "Music", "path" => "/files/music")
 );
 }}}
 
 	Rules are:
-	  * Directory id's `[DIR_ID]` can be freely chosen, but they must be unique
-	  * Path `[DIR_PATH]` must be absolute path in local file system
-	  * Actual file system folder name is not shown to user, but instead the name `[DIR_NAME]` defined in the configuration
+	  * Folder id's `[FOLDER_ID]` can be freely chosen, but they must be unique
+	  * Path `[FOLDER_PATH]` must be absolute path in local file system
+	  * Actual file system folder name is not shown to user, but instead the name `[FOLDER_NAME]` defined in the configuration
 
 
 = 3. User Access Control ==
@@ -51,12 +51,12 @@ $PUBLISHED_DIRECTORIES = array(
 
 == 3.1. User Default File Permission ==
 
-	Default file permission applies to everybody, and it is defined with configuration variable `$FILE_PERMISSION_MODE`.
+	Default file permission applies to everybody, and it is defined with configuration variable `$DEFAULT_PERMISSION `.
 
 	For example:
 
 {{{
-    $FILE_PERMISSION_MODE = "RW";
+    $DEFAULT_PERMISSION = "RW";
 }}}
 
 	This will give all users read/write permissions, unless file specific permissions override this.
