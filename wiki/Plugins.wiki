@@ -1,0 +1,29 @@
+#summary Mollify plugins
+
+= Installing plugins =
+
+Plugins are installed simply by downloading the plugin package and unzipping them into "backend/plugin" folder.
+
+= Configuring plugins =
+
+Plugins are registered with a variable PLUGINS in configuration.php:
+
+{{{
+$PLUGINS = array(
+	[PLUGIN_NAME] => [SETTINGS],
+	...
+}}}
+
+Plugin name is the same as the folder name in the installation package. Settings are plugin specific options, or empty array.
+
+For example:
+
+{{{
+$PLUGINS = array(
+	"MollifyPluginFoo" => array("foo_options" => "foo"),
+	"MollifyPluginBar" => array()
+}}}
+
+= Update =
+
+Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
