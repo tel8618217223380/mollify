@@ -103,6 +103,23 @@
 		</java>
 	</target>
 
+	<target name="deploy-viewers">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${root.dir}/backend/plugin/FileViewer/viewers/">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/viewer_flowplayer.zip" basedir="${target.dir}" includes="FlowPlayer/**" />
+		<zip destfile="${deploy.dir}/viewer_jplayer.zip" basedir="${target.dir}" includes="JPlayer/**" />
+	</target>
+	
 	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 
@@ -116,12 +133,13 @@
 		<!-- backend -->
 		<copy todir="${target.dir}/mollify/backend">
 			<fileset dir="${root.dir}/backend">
+				<exclude name="**/.svn" />
 				<exclude name="configuration.php" />
 				<exclude name="index.html" />
 				<exclude name="admin/settings.js" />
 				<exclude name="admin/custom/**" />
-				<exclude name="plugin/FileViewer/viewers/flowplayer_viewer" />
-				<exclude name="plugin/FileViewer/viewers/jplayer_viewer" />
+				<exclude name="plugin/FileViewer/viewers/FlowPlayer/" />
+				<exclude name="plugin/FileViewer/viewers/JPlayer/" />
 			</fileset>
 		</copy>
 		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />
