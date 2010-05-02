@@ -6,7 +6,7 @@ File viewer plugin is built-in plugin that provides file view and preview. Diffe
 
 = Configuration =
 
-Plugin is registered with name "FileViewer" as instructed in plugins wiki page.
+Plugin is registered with name "`FileViewer`" as instructed in plugins wiki page.
 
 File viewer has following settings:
   * "viewers"
