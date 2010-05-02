@@ -1,1 +1,98 @@
 #summary File viewer plugin
+
+= Introduction =
+
+File viewer plugin is built-in plugin that provides file view and preview. Different file types are handled by viewers, which can be downloaded separately.
+
+= Configuration =
+
+File viewer has following settings:
+  * "viewers"
+  * "previewers"
+
+Both list viewer/previewer plugins and file extensions they handle.
+
+For example:
+
+{{{
+	$PLUGINS = array(
+		"FileViewer" => array(
+			"viewers" => array(
+				"Image" => array("gif", "png", "jpg"),
+				...
+			),
+			"previewers" => array(
+				"Image" => array("gif", "png", "jpg"),
+				...
+			)
+		)
+	);
+}}}
+
+For file viewer to work, add following setting:
+
+{{{
+	$SETTINGS = array(
+		"host_public_address" => "http://YOUR_HOST_IP"
+	);
+}}}
+
+Host ip is the address of the host without any paths, just the address. This is needed for file view urls.
+
+= Viewers =
+
+== Built-in viewers ==
+
+=== Image ===
+
+Provides image viewer for gif, png and jpg files.
+
+{{{ "Image" => array("gif", "png", "jpg") }}}
+
+=== Google ===
+
+Provides file viewer for PDF, DOC and XLS.
+
+NOTE! All sites using this service must agree to the [https://docs.google.com/viewer/TOS?hl=en Google Viewer Terms of Service]
+	
+{{{ "Google" => array("pdf", "xls", "doc") }}}
+
+Using Google Viewer requires that files can be accessed from internet (as the Google service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
+
+== Additional viewers ==
+
+File viewer plugins are installed by unzipping installation package to "backend/plugin/FileViewer/viewers".
+Additional viewers can be found from Downloads section with label "Viewer" [http://code.google.com/p/mollify/downloads/list?can=2&q=Viewer&colspec=Filename+Summary+Uploaded+Size+DownloadCount]
+
+=== TextFile ===
+
+Provides text file viewer with syntax hilighting. Viewer uses [http://alexgorbatchev.com/wiki/SyntaxHighlighter SyntaxHighlighter] from Alex Gorbatchev. See ReadMe.txt in the package.
+
+{{{ "TextFile" => array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql", "php") }}}
+
+=== JPlayer ===
+
+Provides music player for mp3 and ogg files, and uses [http://www.happyworm.com/jquery/jplayer/ JPlayer] by Happyworm. See ReadMe.txt in the package.
+
+{{{ "JPlayer" => array("mp3") }}}
+
+=== FlowPlayer ===
+
+Provides video player for flv and f4v files, and uses [http://flowplayer.org/ FlowPlayer] by Flowplayer Ltd. See ReadMe.txt in the package.
+
+{{{ "FlowPlayer" => array("f4v") }}}
+
+= Previewers =
+
+== Built-in previewers ==
+
+=== Image ===
+
+Provides image previewer for gif, png and jpg files.
+
+{{{ "Image" => array("gif", "png", "jpg") }}}
+
+== Additional previewers ==
+
+File previewer plugins are installed by unzipping installation package to "backend/plugin/FileViewer/previewers".
+Additional previewers can be found from Downloads section with label "Previewer" [http://code.google.com/p/mollify/downloads/list?can=2&q=Previewer&colspec=Filename+Summary+Uploaded+Size+DownloadCount]
