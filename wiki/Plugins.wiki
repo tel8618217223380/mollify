@@ -32,14 +32,7 @@ See [EventLoggingPlugin]
 
 == User Registration ==
 
-Provides user self registration.
-
-=== Configuration ===
-
-{{{
-	$PLUGINS = array(
-		"Registration" => array()
-}}}
+See [RegistrationPlugin]
 
 == File Viewer ==
 

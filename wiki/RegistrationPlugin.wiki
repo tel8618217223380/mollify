@@ -1,0 +1,45 @@
+#summary Registration plugin
+
+= Introduction =
+
+Registration plugin is built-in plugin that provides functionality for user self registration and confirmation.
+
+= Configuration =
+
+Registration has following settings:
+  * permission
+  * groups
+  * folders
+
+Permission is the permission mode for the created user, possible values "ro" (read only), "rw" (read and write) and "a" (admin). If not given, users are added with read only permission.
+Groups is a list of user group ids for the created user. If not set, user is not assigned to any groups.
+Folders is a list of folder ids for the created user. If not set, user is not assigned to any folders.
+
+For example:
+
+{{{
+	$PLUGINS = array(
+		"Registration" => array(
+			"permission" => "rw",
+			"folders" => array("1", "3")
+		)
+	);
+}}}
+
+Registration plugin requires installation via Mollify update util.
+
+To enable mail notifications, add following settings:
+{{{
+	$SETTINGS = array(
+		"enable_mail_notification" => TRUE,
+		"mail_notification_from" => "admin@your.host"
+	);
+}}}
+
+The setting "mail_notification_from" defines the address which the mail is sent from.
+
+= Registration =
+
+Once registration plugin is installed, registration page is at "http://host/backend/plugin/Registration". Users can fill out the form presented, and they will receive a notification mail. Mail provides a link that will confirm the registration.
+
+Optionally confirmation can be done at "http://host/backend/plugin/Registration?confirm=[EMAIL]", where [EMAIL] is the email address (in url encoded format) given in registration. This opens a form where the registration key is required.
