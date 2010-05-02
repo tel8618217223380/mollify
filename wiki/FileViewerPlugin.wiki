@@ -12,7 +12,7 @@ File viewer has following settings:
   * "viewers"
   * "previewers"
 
-Both list plugins and file extensions they handle, in format of '[PLUGIN_NAME] => [FILE_TYPE_LIST]'.
+Both list plugins and file extensions they handle, in format of `[PLUGIN_NAME] => [FILE_TYPE_LIST]`.
 
 For example:
 
@@ -30,7 +30,7 @@ For example:
 	);
 }}}
 
-For file viewer to work, add following setting:
+Also, file viewer requires following setting:
 
 {{{
 	$SETTINGS = array(
@@ -38,7 +38,7 @@ For file viewer to work, add following setting:
 	);
 }}}
 
-Host ip is the address of the host without any paths, just the address. This is needed for file view urls.
+Host ip is the address of the host without any paths, this is needed to construct file view urls.
 
 = Viewers =
 
