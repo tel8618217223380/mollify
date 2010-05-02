@@ -143,6 +143,7 @@
 				<exclude name="admin/custom/**" />
 				<exclude name="plugin/FileViewer/viewers/FlowPlayer/" />
 				<exclude name="plugin/FileViewer/viewers/JPlayer/" />
+				<exclude name="plugin/FileViewer/viewers/TextFile/" />
 			</fileset>
 		</copy>
 		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />
