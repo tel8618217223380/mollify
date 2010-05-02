@@ -6,11 +6,13 @@ File viewer plugin is built-in plugin that provides file view and preview. Diffe
 
 = Configuration =
 
+Plugin is registered with name "FileViewer" as instructed in plugins wiki page.
+
 File viewer has following settings:
   * "viewers"
   * "previewers"
 
-Both list viewer/previewer plugins and file extensions they handle.
+Both list plugins and file extensions they handle, in format of '[PLUGIN_NAME] => [FILE_TYPE_LIST]'.
 
 For example:
 
@@ -19,11 +21,10 @@ For example:
 		"FileViewer" => array(
 			"viewers" => array(
 				"Image" => array("gif", "png", "jpg"),
-				...
+				"TextFile" => array("txt", "php", "html")
 			),
 			"previewers" => array(
-				"Image" => array("gif", "png", "jpg"),
-				...
+				"Image" => array("gif", "png", "jpg")
 			)
 		)
 	);
@@ -47,6 +48,7 @@ Host ip is the address of the host without any paths, just the address. This is 
 
 Provides image viewer for gif, png and jpg files.
 
+Configuration:
 {{{ "Image" => array("gif", "png", "jpg") }}}
 
 === Google ===
@@ -54,7 +56,8 @@ Provides image viewer for gif, png and jpg files.
 Provides file viewer for PDF, DOC and XLS.
 
 NOTE! All sites using this service must agree to the [https://docs.google.com/viewer/TOS?hl=en Google Viewer Terms of Service]
-	
+
+Configuration:
 {{{ "Google" => array("pdf", "xls", "doc") }}}
 
 Using Google Viewer requires that files can be accessed from internet (as the Google service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
@@ -68,18 +71,21 @@ Additional viewers can be found from Downloads section with label "Viewer" [http
 
 Provides text file viewer with syntax hilighting. Viewer uses [http://alexgorbatchev.com/wiki/SyntaxHighlighter SyntaxHighlighter] from Alex Gorbatchev. See ReadMe.txt in the package.
 
+Configuration:
 {{{ "TextFile" => array("txt", "js", "css", "xml", "html", "xhtml", "py", "c", "cpp", "as3", "sh", "java", "sql", "php") }}}
 
 === JPlayer ===
 
 Provides music player for mp3 and ogg files, and uses [http://www.happyworm.com/jquery/jplayer/ JPlayer] by Happyworm. See ReadMe.txt in the package.
 
+Configuration:
 {{{ "JPlayer" => array("mp3") }}}
 
 === FlowPlayer ===
 
 Provides video player for flv and f4v files, and uses [http://flowplayer.org/ FlowPlayer] by Flowplayer Ltd. See ReadMe.txt in the package.
 
+Configuration:
 {{{ "FlowPlayer" => array("f4v") }}}
 
 = Previewers =
@@ -90,6 +96,7 @@ Provides video player for flv and f4v files, and uses [http://flowplayer.org/ Fl
 
 Provides image previewer for gif, png and jpg files.
 
+Configuration:
 {{{ "Image" => array("gif", "png", "jpg") }}}
 
 == Additional previewers ==
