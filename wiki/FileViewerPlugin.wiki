@@ -12,7 +12,7 @@ File viewer has following settings:
   * "viewers"
   * "previewers"
 
-Both list plugins and file extensions they handle, in format of `[PLUGIN_NAME] => [FILE_TYPE_LIST]`.
+Both list viewer/previewer plugins and file extensions they handle, in format of `[NAME] => [FILE_TYPE_LIST]`.
 
 For example:
 
@@ -30,7 +30,7 @@ For example:
 	);
 }}}
 
-Also, file viewer requires following setting:
+Also, file viewer plugin requires following setting:
 
 {{{
 	$SETTINGS = array(
