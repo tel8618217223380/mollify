@@ -67,10 +67,12 @@ public class FeatureInfo extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean filePreview() /*-{
-		return this.file_preview;
+		if (!this.file_preview) return false;
+		return true;
 	}-*/;
 
 	public final native boolean fileView() /*-{
+		if (!this.file_view) return false;
 		return this.file_view;
 	}-*/;
 
