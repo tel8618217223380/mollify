@@ -119,8 +119,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	protected void initialize() {
 		super.initialize();
 
-		permission.setContent(Arrays.asList(FilePermission.ReadOnly,
-				FilePermission.ReadWrite));
+		permission.setContent(Arrays.asList(FilePermission.None,
+				FilePermission.ReadOnly, FilePermission.ReadWrite));
 
 		if (Mode.Add.equals(this.mode)) {
 			List<UserBase> list = new ArrayList(availableUsersOrGroups);
@@ -201,8 +201,6 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 
 	protected void onEditPermission() {
 		FilePermission permission = this.permission.getSelectedItem();
-		if (FilePermission.None.equals(permission))
-			return;
 
 		handler.editFileItemUserPermission(new FileItemUserPermission(original
 				.getFileSystemItem(), original.getUserOrGroup(), permission));

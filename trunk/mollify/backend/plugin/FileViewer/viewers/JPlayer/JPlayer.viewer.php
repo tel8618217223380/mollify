@@ -15,6 +15,7 @@
 					$(document).ready( function() {
 						$("#player").jPlayer( {
 							swfPath: "'.$resourceUrl.'",
+							nativeSupport: false,
 							ready: function () { this.element.jPlayer("setFile", "'.$this->getContentUrl($item).'").jPlayer("play"); }
 						});
 					});

@@ -191,17 +191,7 @@
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'info':
-					$this->response()->success(array(
-						"permission" => $this->env->filesystem()->permission($item),
-						"folders" => $this->env->filesystem()->folders($item),
-						"files" => $this->env->filesystem()->files($item))
-					);
-					break;
-				case 'files':
-					$this->response()->success($this->env->filesystem()->files($item));
-					break;
-				case 'folders':
-					$this->response()->success($this->env->filesystem()->folders($item));
+					$this->response()->success($this->env->filesystem()->info($item));
 					break;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));

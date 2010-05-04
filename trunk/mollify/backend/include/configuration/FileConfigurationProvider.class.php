@@ -163,6 +163,10 @@
 		public function getItemPermissions($item) {
 			return $this->permissionDao->getItemPermissions($item);
 		}
+		
+		public function getAllItemPermissions($parent) {
+			return NULL;
+		}
 
 		public function moveItemPermissions($from, $to) {
 			if (!$from->isFile()) return;

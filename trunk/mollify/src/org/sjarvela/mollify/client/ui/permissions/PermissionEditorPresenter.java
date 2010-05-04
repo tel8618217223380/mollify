@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,9 +77,11 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void initialize() {
-		view.getDefaultPermission().setContent(
-				Arrays.asList(FilePermission.values()));
+		List<FilePermission> values = new ArrayList(Arrays
+				.asList(FilePermission.values()));
+		values.add(0, null);
 
+		view.getDefaultPermission().setContent(values);
 		updateView();
 	}
 

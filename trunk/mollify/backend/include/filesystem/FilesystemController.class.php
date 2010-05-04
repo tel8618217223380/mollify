@@ -147,14 +147,78 @@
 			return array('mollify.dsc', 'mollify.uac');	//TODO get from settings and/or configuration etc
 		}
 		
-		public function folders($parent) {
-			$this->assertRights($parent, Authentication::RIGHTS_READ, "folders");
-			return $parent->folders();
+		public function info($folder) {
+			$this->assertRights($folder, Authentication::RIGHTS_READ, "info");
+			
+			$folders = $folder->folders();
+			$files = $folder->files();
+
+			if ($this->env->authentication()->isAdmin()) {
+				return array(
+					"permission" => Authentication::PERMISSION_VALUE_READWRITE,
+					"files" => $files,
+					"folders" => $folders
+				);
+			}
+			
+			$defaultPermission = $this->env->authentication()->getDefaultPermission();
+			$allPermissions = $this->env->configuration()->getAllItemPermissions($folder);
+			if ($allPermissions === NULL) {
+				return array(
+					"permission" => $this->permission($folder),
+					"files" => $files,
+					"folders" => $folders
+				);
+			}
+			
+			$k = array();
+			$prev = NULL;
+			foreach($allPermissions as $p) {
+				$id = $p["item_id"];
+				if ($id != $prev) $k[$id] = strtoupper($p["permission"]);
+				$prev = $id;
+			}
+			
+			$allowIfNotDefined = (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $defaultPermission) != 0);
+			
+			// filter out hidden files
+			$visibleFiles = array();			
+			foreach($files as $f) {
+				$id = $this->internalId($f["id"]);
+				$found = array_key_exists($id, $k);
+				
+				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $k[$id]) != 0))
+					$visibleFiles[] = $f;
+			}
+
+			// filter out hidden folders
+			$visibleFolders = array();			
+			foreach($folders as $f) {
+				$id = $this->internalId($f["id"]);
+				$found = array_key_exists($id, $k);
+				
+				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $k[$id]) != 0))
+					$visibleFolders[] = $f;
+			}
+			
+			$folderId = $this->internalId($folder->id());
+			$permission = array_key_exists($folderId, $k) ? $k[$folderId] : $defaultPermission;
+			
+			return array(
+				"permission" => $permission,
+				"files" => $visibleFiles,
+				"folders" => $visibleFolders
+			);
 		}
-		
-		public function files($parent) {
-			$this->assertRights($parent, Authentication::RIGHTS_READ, "files");
-			return $parent->files();
+
+		private function removeHiddenItems($list, $parent, $file = TRUE) {
+			$hiddenItems = $this->env->configuration()->getHiddenItems($parent, $file);
+			$result = array();
+			foreach($list as $i) {
+				if (!in_array($this->internalId($i["id"]), $hiddenItems))
+					$result[] = $i;
+			}
+			return $result;
 		}
 
 		public function details($item) {
