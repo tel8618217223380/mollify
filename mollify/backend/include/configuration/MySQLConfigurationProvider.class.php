@@ -342,9 +342,15 @@
 			
 			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.index ASC, u.permission DESC";
 			
-			$result = $this->db->query($query);			
+			$result = $this->db->query($query);
 			if ($result->count() < 1) return NULL;
 			return $result->value(0);
+		}
+		
+		public function getAllItemPermissions($parent) {
+			$itemFilter = "SELECT item_id from item_permission where item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
+			$query = sprintf('SELECT item_id, permission from item_permission where item_id in ('.$itemFilter.') order by item_id asc, permission desc, user_id desc');
+			return $this->db->query($query)->rows();
 		}
 	
 		function getItemPermissions($item) {

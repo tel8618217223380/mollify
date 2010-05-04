@@ -14,8 +14,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.Formatter;
 
-public class FilePermissionModeFormatter implements
-		Formatter<FilePermission> {
+public class FilePermissionModeFormatter implements Formatter<FilePermission> {
 	private final TextProvider textProvider;
 
 	public FilePermissionModeFormatter(TextProvider textProvider) {
@@ -23,6 +22,8 @@ public class FilePermissionModeFormatter implements
 	}
 
 	public String format(FilePermission mode) {
+		if (mode == null)
+			return textProvider.getStrings().itemPermissionEditorNoPermission();
 		return mode.getLocalizedText(textProvider);
 	}
 

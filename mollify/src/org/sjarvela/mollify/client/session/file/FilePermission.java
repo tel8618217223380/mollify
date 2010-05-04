@@ -3,7 +3,7 @@ package org.sjarvela.mollify.client.session.file;
 import org.sjarvela.mollify.client.localization.TextProvider;
 
 public enum FilePermission {
-	None(""), ReadWrite("rw"), ReadOnly("ro");
+	None("no"), ReadWrite("rw"), ReadOnly("ro");
 
 	private String stringValue;
 

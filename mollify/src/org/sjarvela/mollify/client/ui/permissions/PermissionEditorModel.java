@@ -139,8 +139,7 @@ public class PermissionEditorModel {
 		newPermissions.clear();
 		modifiedPermissions.clear();
 		removedPermissions.clear();
-		defaultPermission = new FileItemUserPermission(item, null,
-				FilePermission.None);
+		defaultPermission = null;
 
 		for (FileItemUserPermission permission : permissions) {
 			if (permission.getUserOrGroup() != null) {
@@ -187,7 +186,8 @@ public class PermissionEditorModel {
 	}
 
 	public FilePermission getDefaultPermission() {
-		return defaultPermission.getPermission();
+		return defaultPermission == null ? null : defaultPermission
+				.getPermission();
 	}
 
 	public void setDefaultPermission(FilePermission permission) {
@@ -196,14 +196,15 @@ public class PermissionEditorModel {
 		newPermissions.remove(defaultPermission);
 		modifiedPermissions.remove(defaultPermission);
 
-		// create new default permission
-		defaultPermission = new FileItemUserPermission(item, null, permission);
-
-		if (FilePermission.None.equals(permission)) {
+		if (permission == null) {
 			if (originalDefaultPermissionExists)
 				removedPermissions.add(defaultPermission);
+			defaultPermission = null;
 			return;
 		}
+
+		// create new default permission
+		defaultPermission = new FileItemUserPermission(item, null, permission);
 
 		if (originalDefaultPermissionExists)
 			modifiedPermissions.add(defaultPermission);
