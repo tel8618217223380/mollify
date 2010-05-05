@@ -313,7 +313,7 @@
 			$table = $this->db->table("item_permission");
 			$id = $this->itemId($item);
 			$userIds = array($userId);
-			if ($this->env->session()->hasParam("groups")) {
+			if ($this->env->authentication()->hasUserGroups()) {
 				foreach($this->env->authentication()->getUserGroups() as $g)
 					$userIds[] = $g['id'];
 			}
@@ -347,9 +347,18 @@
 			return $result->value(0);
 		}
 		
-		public function getAllItemPermissions($parent) {
-			$itemFilter = "SELECT item_id from item_permission where item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
-			$query = sprintf('SELECT item_id, permission from item_permission where item_id in ('.$itemFilter.') order by item_id asc, permission desc, user_id desc');
+		public function getAllItemPermissions($parent, $userId) {
+			$table = $this->db->table("item_permission");
+			$userIds = array($userId);
+			if ($this->env->authentication()->hasUserGroups()) {
+				foreach($this->env->authentication()->getUserGroups() as $g)
+					$userIds[] = $g['id'];
+			}
+			$userIds[] = "0";
+			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
+
+			$itemFilter = "SELECT item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
+			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
 			return $this->db->query($query)->rows();
 		}
 	
