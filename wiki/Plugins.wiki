@@ -18,8 +18,8 @@ For example:
 
 {{{
 $PLUGINS = array(
-	"MollifyPluginFoo" => array("foo_options" => "foo"),
-	"MollifyPluginBar" => array()
+	"PluginA" => array("some_options" => "foo"),
+	"PluginB" => array()
 }}}
 
 Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
