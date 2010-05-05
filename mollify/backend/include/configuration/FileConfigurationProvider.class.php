@@ -164,7 +164,7 @@
 			return $this->permissionDao->getItemPermissions($item);
 		}
 		
-		public function getAllItemPermissions($parent) {
+		public function getAllItemPermissions($parent, $userId) {
 			return NULL;
 		}
 

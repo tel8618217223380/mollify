@@ -49,6 +49,9 @@
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
+				$root = $this->filesystem($folderDef)->root();
+				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
+				
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
 					$this->env->session()->reset();
 					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a name (".$folderDef['id'].")");
@@ -162,7 +165,7 @@
 			}
 			
 			$defaultPermission = $this->env->authentication()->getDefaultPermission();
-			$allPermissions = $this->env->configuration()->getAllItemPermissions($folder);
+			$allPermissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->authentication()->getUserId());
 			if ($allPermissions === NULL) {
 				return array(
 					"permission" => $this->permission($folder),
