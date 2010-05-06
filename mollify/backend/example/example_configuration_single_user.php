@@ -13,9 +13,9 @@
 	
 	/* File permission mode: "RW" = Read/write, "RO" = Read-only (default if omitted) */
 	
-	$FILE_PERMISSION_MODE = "RO";
+	$DEFAULT_PERMISSION = "RO";
 	
-	$PUBLISHED_DIRECTORIES = array(
+	$PUBLISHED_FOLDERS = array(
 		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
 	);
