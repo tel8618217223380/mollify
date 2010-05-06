@@ -13,20 +13,22 @@
 	
 	/* File permission mode: "A" = Admin, "RW" = Read/write, "RO" = Read-only (default if omitted) */
 	
-	$USERS = array(
-		"1" => array("name" => "User 1", "password" => "foo", "file_permission_mode" => "rw"),
-		"2" => array("name" => "User 2", "password" => "bar", "file_permission_mode" => "ro")
+	$PUBLISHED_FOLDERS = array(
+		"1" => array("name" => "Folder A", "path" => "/foo/bar"),
+		"2" => array("name" => "Folder B", "path" => "/foo/bay"),
+		"3" => array("name" => "Folder C", "path" => "/foo/bat")
 	);
 	
-	$PUBLISHED_DIRECTORIES = array(
-		"1" => array(
-			"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
-			"r2" => array("name" => "Folder B", "path" => "/foo/bay")
-		),
-		"2" => array(
-			"r1" => array("name" => "Folder A", "path" => "/foo/bat"),
-			"r2" => array("name" => "Folder C", "path" => "/foo/baz")
-		)
+	$USERS = array(
+		"1" => array("name" => "User 1", "password" => "foo", "default_permission" => "rw", "folders" => array(
+			"1" => NULL,
+			"2" => NULL,
+			"3" => NULL
+		)),
+		"2" => array("name" => "User 2", "password" => "bar", "default_permission" => "ro", "folders" => array(
+			"1" => "Custom name for Folder A",
+			"2" => NULL
+		))
 	);
 	
 ?>
