@@ -71,7 +71,7 @@
 			}
 		}
 		
-		public function sendBinary($filename, $type, $stream, $size = NULL, $range = NULL) {
+		public function downloadBinary($filename, $type, $stream, $size = NULL, $range = NULL) {
 			if ($range) {
 				$start = $range[0];
 				$end = $range[1];
@@ -84,11 +84,11 @@
 				header('Accept-Ranges: bytes');
 				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
 				header('Content-Length: '.($end - $start + 1));
-			} else if ($size) {
-				header("Content-Length: ".$size);
+			} else {
+				if ($size) header("Content-Length: ".$size);
 				header("Cache-Control: public, must-revalidate");
 				header("Content-Type: application/force-download");
-				header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
 				header("Content-Disposition: attachment; filename=\"".$filename."\";");
 				header("Content-Transfer-Encoding: binary");
@@ -103,6 +103,18 @@
 			}
 			fclose($stream);
 		}
+
+		public function sendBinary($filename, $type, $stream, $size = NULL) {
+			if ($size) header("Content-Length: ".$size);
+			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+			
+			while (!feof($stream)) {
+				set_time_limit(0);
+				echo fread($stream, 1024);
+				flush();
+			}
+			fclose($stream);
+		}
 		
 		private function getStatus($response) {
 			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
@@ -110,6 +122,8 @@
 		
 		private function getMime($type) {
 			if ($type === 'ogg') return 'application/ogg';
+			if ($type === 'mov') return 'video/quicktime';
+			if ($type === 'mp4') return 'video/mp4';
 			return 'application/octet-stream';
 		}
 		

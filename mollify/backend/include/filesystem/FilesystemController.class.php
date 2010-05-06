@@ -427,6 +427,13 @@
 
 			$this->env->response()->download($name, $file->extension(), $file->read($range), $size, $range);							
 		}
+
+		public function view($file) {
+			Logging::logDebug('view ['.$file->id().']');
+			$this->assertRights($file, Authentication::RIGHTS_READ, "view");
+			$this->env->events()->onEvent(FileEvent::download($file));
+			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
+		}
 		
 		public function uploadTo($folder) {
 			$this->env->features()->assertFeature("file_upload");

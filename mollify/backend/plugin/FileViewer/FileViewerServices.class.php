@@ -24,7 +24,7 @@
 					return;
 				}
 				if ($this->path[1] === 'content') {
-					$this->env->filesystem()->download($item);
+					$this->env->filesystem()->view($item);
 					return;
 				}
 			} else if ($this->id === 'view') {
@@ -33,7 +33,7 @@
 					return;
 				}
 				if ($this->path[1] === 'content') {
-					$this->env->filesystem()->download($item);
+					$this->env->filesystem()->view($item);
 					return;
 				}
 			}
