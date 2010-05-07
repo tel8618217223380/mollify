@@ -25,7 +25,7 @@
 			}
 		}
 		
-		public function initialize($request, $env) {
+		public function initialize($env, $id = NULL) {
 			$this->env = $env;
 			if ($env != NULL) {
 				SessionEvent::register($env->events());
@@ -33,7 +33,7 @@
 			}
 			
 			session_name($this->name);
-			if ($request != NULL and $request->hasParam("session")) session_id($request->param("session"));
+			if ($id) session_id($id);
 			session_start();
 		}
 		

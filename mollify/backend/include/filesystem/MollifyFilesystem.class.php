@@ -65,6 +65,10 @@
 			return array();
 		}
 		
+		public function items($folder) {
+			return $this->filesystemInfo->items($folder);
+		}
+		
 		public abstract function folders($parent);
 		
 		public abstract function files($parent);

@@ -77,6 +77,23 @@
 			
 			return $result->firstRow();
 		}
+
+		public function getUserByName($username) {
+			$result = $this->db->query(sprintf("SELECT id, name, password FROM ".$this->db->table("user")." WHERE name='%s'", $this->db->string($username)));
+			$matches = $result->count();
+			
+			if ($matches === 0) {
+				Logging::logError("No user found with name [".$username."]");
+				return NULL;
+			}
+			
+			if ($matches > 1) {
+				Logging::logError("Duplicate user found with name [".$username."]");
+				return FALSE;
+			}
+			
+			return $result->firstRow();
+		}
 		
 		public function getAllUsers() {
 			return $this->db->query("SELECT id, name, email, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();

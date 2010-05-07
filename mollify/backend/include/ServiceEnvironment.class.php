@@ -94,21 +94,19 @@
 		}
 										
 		public function initialize($request = NULL) {
+			$sessionId = NULL;
+			if ($request != NULL and $request->hasParam("session")) $sessionId = $request->param("session");
 			$this->request = $request;
-			$this->session->initialize($request, $this);
-			$this->filesystem->initialize($request);
-			$this->authentication->initialize($request);
-			$this->configurationProvider->initialize($request, $this);
-			$this->plugins->initialize($request);
 			
-			$this->authentication->onPostInit();
+			$this->session->initialize($this, $sessionId);
+			$this->configurationProvider->initialize($this);
+			$this->filesystem->initialize();
+			$this->authentication->initialize();
+			$this->plugins->initialize($this);
+
 			$this->log();
 		}
-		
-		public function onSessionStarted() {
-			$this->filesystem->onSessionStarted();
-		}
-		
+				
 		public function addService($id, $controller, $controllerPath = NULL) {
 			$this->services[$id] = $controller;
 			if ($controllerPath != NULL) $this->serviceControllerPaths[$id] = $controllerPath;

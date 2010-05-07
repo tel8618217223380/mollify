@@ -56,7 +56,7 @@
 			return array("plugins" => $result);
 		}
 		
-		public function initialize($request) {}
+		public function initialize() {}
 		
 		public function __toString() {
 			return "PluginController";
