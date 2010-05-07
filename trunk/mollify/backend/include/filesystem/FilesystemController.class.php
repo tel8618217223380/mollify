@@ -225,15 +225,20 @@
 				"folders" => $visibleFolders
 			);
 		}
+		
 
-		private function removeHiddenItems($list, $parent, $file = TRUE) {
-			$hiddenItems = $this->env->configuration()->getHiddenItems($parent, $file);
-			$result = array();
-			foreach($list as $i) {
-				if (!in_array($this->internalId($i["id"]), $hiddenItems))
-					$result[] = $i;
+		public function items($folder) {
+			$this->assertRights($item, Authentication::RIGHTS_READ, "items");
+			$info = $this->info($folder);
+			$list = array();
+			
+			foreach($info["folders"] as $f) {
+				$list[] = $this->item($f["id"]);
 			}
-			return $result;
+			foreach($info["files"] as $f) {
+				$list[] = $this->item($f["id"]);
+			}
+			return $list;
 		}
 
 		public function details($item) {

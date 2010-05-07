@@ -93,7 +93,7 @@
 			return $this->notification;
 		}
 										
-		public function initialize($request) {
+		public function initialize($request = NULL) {
 			$this->request = $request;
 			$this->session->initialize($request, $this);
 			$this->filesystem->initialize($request);

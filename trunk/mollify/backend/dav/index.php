@@ -22,7 +22,7 @@
 	require_once("include/ConfigurationProviderFactory.class.php");
 	require_once("Sabre/autoload.php");
 	
-	$baseUri = "mollify/backend/dav/index.php/";
+	$baseUri = "/mollify/dev/backend/dav/index.php/";
 	
 	class VoidResponseHandler {}
 	
@@ -41,7 +41,7 @@
 		}
 		
 		function getName() {
-			return "";
+			return "Mollify";
 		}
 	}
 	
@@ -54,8 +54,14 @@
  		
 		function getChildren() {
 			$children = array();
-
+			foreach($this->folder->items() as $i)
+				$children[] = $this->createItem($i);
 			return $children;
+		}
+		
+		function createItem($item) {
+			if ($item->isFile()) return new MollifyFile($item);
+			return new MollifyFolder($item);
 		}
 
 		function getName() {
@@ -85,13 +91,15 @@
 	
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), new VoidResponseHandler());
+		
 		$env = $backend->env();
+		$env->initialize();
 		$root = new MollifyRootFolder($env->filesystem()->getRootFolders());
 		
 		$dav = new Sabre_DAV_Server($root);
 		$dav->setBaseUri($baseUri);
 		$dav->exec();
-	} catch (Exception $e) {
+	} catch (ServiceException $e) {
 		Logging::logException($e);
 	}
 ?>
