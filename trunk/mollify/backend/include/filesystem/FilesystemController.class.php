@@ -31,13 +31,10 @@
 			FileEvent::register($this->env->events());
 		}
 		
-		public function initialize($request) {}
+		public function initialize() {}
 
 		public function registerDetailsPlugin($plugin) {
 			$this->detailsPlugins[] = $plugin;
-		}
-
-		public function onSessionStarted() {
 		}
 		
 		public function getRootFolders() {
@@ -225,10 +222,9 @@
 				"folders" => $visibleFolders
 			);
 		}
-		
 
 		public function items($folder) {
-			$this->assertRights($item, Authentication::RIGHTS_READ, "items");
+			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
 			$info = $this->info($folder);
 			$list = array();
 			

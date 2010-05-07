@@ -5,11 +5,11 @@
 		}
 		
 		protected function getResizedElementId() {
-			return "movie";
+			return "quicktime-player";
 		}
 		
 		protected function getHtml($item, $full) {
-			return '<embed id="movie" width="400" height="240" src="'.$this->getContentUrl($item).'" autoplay="true" pluginspace="http://www.apple.com/quicktime/">';
+			return '<embed id="quicktime-player" width="400" height="240" src="'.$this->getContentUrl($item).'" autoplay="true" controller="true" pluginspace="/quicktime/download/">';
 		}		
 	}
 ?>

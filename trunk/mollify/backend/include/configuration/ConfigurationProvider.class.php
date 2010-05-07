@@ -16,7 +16,7 @@
 		
 		protected $env;
 		
-		function initialize($request, $env) {
+		function initialize($env) {
 			$this->env = $env;
 		}
 		

@@ -77,15 +77,15 @@
 		}
 
 		function getName() {
-			return $this->folder->name();
+			return $this->file->name();
 		}
 
 		function get() {
-			return $this->folder->read();
+			return $this->file->read();
 		}
 
 		function getSize() {
-			return $this->folder->size();
+			return $this->file->size();
 		}
 	}
 	
@@ -94,8 +94,27 @@
 		
 		$env = $backend->env();
 		$env->initialize();
-		$root = new MollifyRootFolder($env->filesystem()->getRootFolders());
 		
+		$auth = new Sabre_HTTP_DigestAuth();
+		$auth->init();
+		
+		if (!$auth->getUsername()) {
+			Logging::logDebug("DAV authentication missing");
+			$auth->requireLogin();
+			echo "Authentication required\n";
+			die();
+		}
+		
+		$user = $env->configuration()->getUserByName($auth->getUsername());
+		if (!$user) {
+			Logging::logDebug("DAV authentication failure");
+			$auth->requireLogin();
+			echo "Authentication required\n";
+			die();
+		}
+		$env->authentication()->doAuth($user);
+
+		$root = new MollifyRootFolder($env->filesystem()->getRootFolders());
 		$dav = new Sabre_DAV_Server($root);
 		$dav->setBaseUri($baseUri);
 		$dav->exec();

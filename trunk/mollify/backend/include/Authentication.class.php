@@ -27,11 +27,7 @@
 			$this->env = $env;
 		}
 		
-		public function initialize($request) {}
-
-		public function onPostInit() {
-			if (!$this->isAuthenticationRequired() and !$this->isAuthenticated()) $this->authenticate("", "");
-		}
+		public function initialize() {}
 		
 		public function assertPermissionValue($value) {
 			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
@@ -45,14 +41,15 @@
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
-			
+			$this->doAuth($user);
+		}
+
+		public function doAuth($user) {
 			$this->env->session()->param('user_id', $user["id"]);
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
 			$this->env->session()->param('username', $user["name"]);
 			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
-			
-			$this->env->onSessionStarted();
 		}
 		
 		public function isAuthenticated() {
