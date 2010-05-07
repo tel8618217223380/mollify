@@ -40,7 +40,19 @@
 		public function onSessionStarted() {
 		}
 		
-		private function getFolders() {
+		public function getRootFolders() {
+			$list = array();
+			
+			foreach($this->getFolderDefs() as $folderDef) {				
+				$root = $this->filesystem($folderDef)->root();
+				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
+				$list[] = $root;
+			}
+			
+			return $list;
+		}
+		
+		private function getFolderDefs() {
 			if ($this->env->configuration()->isAuthenticationRequired())
 				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			else
@@ -93,10 +105,10 @@
 			);
 			
 			$result["folders"] = array();
-			foreach($this->getFolders() as $id => $folderDef) {
+			foreach($this->getRootFolders() as $folder) {
 				$result["folders"][] = array(
-					"id" => $this->publicId($id),
-					"name" => $folderDef['name'] != NULL ? $folderDef['name'] : $folderDef['default_name']
+					"id" => $folder->id(),
+					"name" => $folder->name()
 				);
 			}
 
