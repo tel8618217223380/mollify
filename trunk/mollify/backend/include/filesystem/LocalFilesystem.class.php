@@ -60,7 +60,7 @@
 				if (!is_dir($fullPath))
 					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
 			}
-				
+			
 			if ($isFile) return new File($id, $this->rootId(), $path, self::basename($fullPath), $this);
 			return new Folder($id, $this->rootId(), $path, self::basename($fullPath), $this);
 		}
@@ -84,7 +84,7 @@
 		public function details($item) {
 			$datetimeFormat = $this->filesystemInfo->datetimeFormat();
 			
-			$details = array("id" => $item->id());
+			$details = array("id" => $item->publicId());
 			if ($item->isFile()) {
 				$path = $this->localPath($item);
 				$details["last_changed"] = date($datetimeFormat, filectime($path));
@@ -103,60 +103,32 @@
 			return "";
 		}
 
-		public function folders($parent) {
+		public function items($parent) {
 			$parentPath = $this->localPath($parent);
+			
 			$items = scandir($parentPath);
 			if (!$items) throw new ServiceException("INVALID_PATH", $parent->id());
+			$ignored = $this->ignoredItems($this->publicPath($parentPath));
 				
 			$result = array();
 			foreach($items as $i => $name) {
 				if (substr($name, 0, 1) == '.') continue;
-	
-				$path = self::folderPath(self::joinPath($parentPath, $name));
-				if (!is_dir($path)) continue;
-		
-				$p = $this->publicPath($path);
-				$result[] = array(
-					"id" => $this->itemId($p),
-					"root_id" => $this->rootId(),
-					"parent_id" => $parent->id(),
-					"path" => $p,
-					"name" => $name
-				);
-			}
-			
-			return $result;
-		}
-		
-		public function files($parent) {
-			$result = array();
-			
-			foreach($this->visibleFiles($this->localPath($parent)) as $path) {
-				$name = self::basename($path);
-				$extPos = strrpos($name, '.');
+				if (in_array(strtolower($name), $ignored)) continue;
+				$path = self::joinPath($parentPath, $name);
 				
-				if ($extPos > 0) {
-					$extension = substr($name, $extPos + 1);
+				if (!is_dir($path)) {	
+					$p = $this->publicPath($path);
+					$result[] = new File($this->itemId($p), $this->rootId(), $p, $name, $this);
 				} else {
-					$extension = "";
+					$p = $this->publicPath(self::folderPath($path));
+					$result[] = new Folder($this->itemId($p), $this->rootId(), $p, $name, $this);
 				}
-				
-				$p = $this->publicPath($path);
-				$result[] = array(
-					"id" => $this->itemId($p),
-					"root_id" => $this->rootId(),
-					"parent_id" => $parent->id(),
-					"path" => $p,
-					"name" => $name,
-					"extension" => $extension,
-					"size" => filesize($path)
-				);
 			}
 			
 			return $result;
 		}
 		
-		private function visibleFiles($path, $recursive = FALSE) {			
+		private function allFilesRecursively($path) {
 			$files = scandir($path);
 			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);
 			
@@ -169,7 +141,7 @@
 	
 				$fullPath = self::joinPath($path, $name);
 				if (is_dir($fullPath)) {
-					if ($recursive) $result = array_merge($result, $this->visibleFiles($fullPath, TRUE));
+					if ($recursive) $result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;
 				}
 				
@@ -319,7 +291,7 @@
 				fclose($stream);
 			} else {
 				$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
-				$files = $this->visibleFiles($this->localPath($item), TRUE);
+				$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
 				
 				foreach($files as $file) {
 					$stream = @fopen($file, "rb");

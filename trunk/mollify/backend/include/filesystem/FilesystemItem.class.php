@@ -21,8 +21,6 @@
 			$this->path = $path;
 			$this->name = $name;
 			$this->filesystem = $filesystem;
-			
-			Logging::logDebug($this);
 		}
 		
 		abstract function isFile();
@@ -30,15 +28,19 @@
 		public function id() {
 			return $this->id;
 		}
+		
+		public function publicId() {
+			return base64_encode($this->id());
+		}
 
 		public function rootId() {
 			return $this->rootId;
 		}
-		
-		public function internalId() {
-			return $this->filesystem->internalId($this);
-		}
 
+		public function publicRootId() {
+			return base64_encode($this->rootId());
+		}
+		
 		public function internalPath() {
 			return $this->filesystem->internalPath($this);
 		}
@@ -86,6 +88,10 @@
 		public function addToZip($zip) {
 			return $this->filesystem->addToZip($this, $zip);
 		}
+		
+		public function data() {
+			return array("id" => $this->publicId(), "root_id" => $this->publicRootId(), "parent_id" => $this->parent()->publicId(), "name" => $this->name);
+		}
 				
 		public function __toString() {
 			return "FILESYSTEMITEM ".get_class($this)." (".get_class($this->filesystem)."): [".$this->id."] = '".$this->name."' (".$this->path.")";
@@ -110,6 +116,14 @@
 		public function write() {
 			return $this->filesystem->write($this);
 		}
+		
+		public function data() {
+			$result = FilesystemItem::data();
+			$result["size"] = $this->size();
+			$result["extension"] = $this->extension();	
+			return $result;
+		}
+
 	}
 	
 	class Folder extends FilesystemItem {
@@ -117,14 +131,6 @@
 
 		public function items() {
 			return $this->filesystem->items($this);
-		}
-				
-		public function folders() {
-			return $this->filesystem->folders($this);
-		}
-		
-		public function files() {			
-			return $this->filesystem->files($this);
 		}
 		
 		public function createFolder($name) {

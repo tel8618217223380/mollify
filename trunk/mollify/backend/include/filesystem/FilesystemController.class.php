@@ -18,6 +18,7 @@
 		private $env;
 		private $allowedUploadTypes;
 		private $permissionCache = array();
+		private $folderCache = array();
 		private $detailsPlugins = array();
 
 		function __construct($env) {
@@ -104,7 +105,7 @@
 			$result["folders"] = array();
 			foreach($this->getRootFolders() as $folder) {
 				$result["folders"][] = array(
-					"id" => $folder->id(),
+					"id" => $folder->publicId(),
 					"name" => $folder->name()
 				);
 			}
@@ -123,23 +124,20 @@
 		}
 		
 		public function item($id, $nonexisting = FALSE) {
-			$internalId = $this->internalId($id);
-			$parts = explode(":".DIRECTORY_SEPARATOR, $internalId);
+			$parts = explode(":".DIRECTORY_SEPARATOR, $id);
 			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item id: ".$id);
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
-			$folderDef = $this->env->configuration()->getFolder($filesystemId);
+			
+			if (array_key_exists($filesystemId, $this->folderCache)) {
+				$folderDef = $this->folderCache[$filesystemId];
+			} else {
+				$folderDef = $this->env->configuration()->getFolder($filesystemId);
+				$this->folderCache[$filesystemId] = $folderDef;
+			}
 			
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
-		}
-		
-		public function publicId($filesystemId, $path = "") {
-			return base64_encode($filesystemId.":".DIRECTORY_SEPARATOR.$path);
-		}
-
-		public function internalId($itemId) {
-			return base64_decode($itemId);
 		}
 		
 		public function assertFilesystem($folderDef) {
@@ -159,7 +157,7 @@
 			return array('mollify.dsc', 'mollify.uac');	//TODO get from settings and/or configuration etc
 		}
 		
-		public function info($folder) {
+		/*public function info($folder) {
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "info");
 			
 			$folders = $folder->folders();
@@ -183,23 +181,15 @@
 				);
 			}
 			
-			$k = array();
-			$prev = NULL;
-			foreach($allPermissions as $p) {
-				$id = $p["item_id"];
-				if ($id != $prev) $k[$id] = strtoupper($p["permission"]);
-				$prev = $id;
-			}
-			
 			$allowIfNotDefined = (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $defaultPermission) != 0);
 			
 			// filter out hidden files
 			$visibleFiles = array();			
 			foreach($files as $f) {
 				$id = $this->internalId($f["id"]);
-				$found = array_key_exists($id, $k);
+				$found = array_key_exists($id, $allPermissions);
 				
-				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $k[$id]) != 0))
+				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $allPermissions[$id]) != 0))
 					$visibleFiles[] = $f;
 			}
 
@@ -207,34 +197,44 @@
 			$visibleFolders = array();			
 			foreach($folders as $f) {
 				$id = $this->internalId($f["id"]);
-				$found = array_key_exists($id, $k);
+				$found = array_key_exists($id, $allPermissions);
 				
-				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $k[$id]) != 0))
+				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $allPermissions[$id]) != 0))
 					$visibleFolders[] = $f;
 			}
 			
 			$folderId = $this->internalId($folder->id());
-			$permission = array_key_exists($folderId, $k) ? $k[$folderId] : $defaultPermission;
+			$permission = array_key_exists($folderId, $allPermissions) ? $k[$folderId] : $defaultPermission;
 			
 			return array(
 				"permission" => $permission,
 				"files" => $visibleFiles,
 				"folders" => $visibleFolders
 			);
-		}
+		}*/
 
 		public function items($folder) {
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
-			$info = $this->info($folder);
+
 			$list = array();
-			
-			foreach($info["folders"] as $f) {
-				$list[] = $this->item($f["id"]);
-			}
-			foreach($info["files"] as $f) {
-				$list[] = $this->item($f["id"]);
+			foreach($folder->items() as $i) {
+				if (!$this->isItemVisible($i)) continue;
+				$list[] = $i;
 			}
 			return $list;
+		}
+		
+		private function isItemVisible($item) {
+			if ($this->env->authentication()->isAdmin()) return TRUE;
+			
+			$permission = $this->getItemUserPermission($item, FALSE);
+			$found = ($permission != NULL);
+			$defaultPermission = $this->env->authentication()->getDefaultPermission();
+			$allowIfNotDefined = (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $defaultPermission) != 0);
+
+			if (!$found and $allowIfNotDefined) return TRUE;
+			if ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $permission) != 0) return TRUE;
+			return FALSE;
 		}
 
 		public function details($item) {
@@ -280,15 +280,25 @@
 			return $permission;
 		}
 		
+		public function fetchPermissions($folder) {
+			if ($this->env->authentication()->isAdmin()) return;
+			$permissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->authentication()->getUserId());
+			
+			$this->permissionCacheFolders[] = $folder->id();
+			foreach($permissions as $id => $p)
+				$this->permissionCache[$id] = $p;
+		}
+		
 		public function temporaryItemPermission($item, $permission) {
 			$this->permissionCache[$item->id()] = $permission;
 		}
 		
-		private function getItemUserPermission($item) {
+		private function getItemUserPermission($item, $fetchIfNotFound = TRUE) {
 			if (array_key_exists($item->id(), $this->permissionCache)) {
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
+				if (!$fetchIfNotFound) return NULL;
 				$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
 				$this->permissionCache[$item->id()] = $permission;
 				Logging::logDebug("Permission cache put [".$item->id()."]=".$permission);
@@ -603,12 +613,12 @@
 		}
 				
 		public function details() {
-			$f = $this->item->internalId()." (".$this->item->filesystem()->name().")";
+			$f = $this->item->id()." (".$this->item->filesystem()->name().")";
 			
 			if ($this->subType() === self::RENAME)
 				return 'item id='.$f.';to='.$this->info;
 			if ($this->subType() === self::COPY or $this->subType() === self::MOVE)
-				return 'item id='.$f.';to='.$this->info->internalId()." (".$this->info->filesystem()->name().")";
+				return 'item id='.$f.';to='.$this->info->id()." (".$this->info->filesystem()->name().")";
 			return 'item id='.$f;
 		}
 	}
