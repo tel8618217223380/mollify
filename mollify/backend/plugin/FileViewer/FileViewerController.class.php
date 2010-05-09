@@ -111,7 +111,7 @@
 		}
 		
 		public function getContentUrl($item, $session = FALSE) {
-			$url = $this->plugin->env()->getServiceUrl("view", array($item->id(), "content"), TRUE);
+			$url = $this->plugin->env()->getServiceUrl("view", array($item->publicId(), "content"), TRUE);
 			if ($session and $this->plugin->env()->session()->isActive()) {
 				$s = $this->plugin->env()->session()->getSessionInfo();
 				$url .= '/?session='.$s["session_id"];
@@ -128,7 +128,7 @@
 		}
 		
 		public function getViewServiceUrl($item, $p, $fullUrl = FALSE) {
-			$path = array($item->id());
+			$path = array($item->publicId());
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("view", $path, $fullUrl);
 		}

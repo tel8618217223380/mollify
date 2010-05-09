@@ -376,7 +376,16 @@
 
 			$itemFilter = "SELECT item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
 			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
-			return $this->db->query($query)->rows();
+			
+			$all = $this->db->query($query)->rows();
+			$k = array();
+			$prev = NULL;
+			foreach($all as $p) {
+				$id = $p["item_id"];
+				if ($id != $prev) $k[$id] = strtoupper($p["permission"]);
+				$prev = $id;
+			}
+			return $k;
 		}
 	
 		function getItemPermissions($item) {
@@ -473,7 +482,7 @@
 		}
 		
 		private function itemId($item) {
-			return $this->db->string($item->internalId());
+			return $this->db->string($item->id());
 		}
 	}
 ?>

@@ -182,7 +182,7 @@
 			
 			$this->response()->success(TRUE);
 		}
-				
+
 		private function processGetFolder($item) {
 			if (count($this->path) != 2) throw invalidRequestException();
 			
@@ -191,7 +191,21 @@
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'info':
-					$this->response()->success($this->env->filesystem()->info($item));
+					$this->env->filesystem()->fetchPermissions($item);
+					
+					$permission = $this->env->filesystem()->permission($item);
+					$items = $this->env->filesystem()->items($item);
+					
+					$result = array("permission" => $permission);
+					$files = array();
+					$folders = array();
+					foreach($items as $i) {
+						if ($i->isFile()) $files[] = $i->data();
+						else $folders[] = $i->data();
+					}
+					$result["files"] = $files;
+					$result["folders"] = $folders;
+					$this->response()->success($result);
 					break;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));

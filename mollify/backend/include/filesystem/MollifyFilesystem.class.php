@@ -29,49 +29,9 @@
 		
 		abstract function create();
 
-		public function id() {
-			return $this->id;
-		}
-
-		public function internalId($item) {
-			return $this->filesystemInfo->internalId($item->id());
-		}
-
-		public function internalPath($item) {
-			return $this->filesystemInfo->internalPath($item->id());
-		}
-				
-		public function itemId($path) {
-			return $this->filesystemInfo->publicId($this->id(), $path);
-		}
-		
-		public function name() {
-			return $this->name;
-		}
-		
-		public function rootId() {
-			return $this->filesystemInfo->publicId($this->id);
-		}
-		
-		public function root() {
-			$id = $this->rootId();
-			Logging::logDebug("Filesystem [".$this->id."] root [".$id."]");
-			return $this->createItem($id, '');
-		}
-		
 		public abstract function createItem($id, $path, $nonexisting = FALSE);
-		
-		public function details($item) {
-			return array();
-		}
-		
-		public function items($folder) {
-			return $this->filesystemInfo->items($folder);
-		}
-		
-		public abstract function folders($parent);
-		
-		public abstract function files($parent);
+				
+		public abstract function items($parent);
 		
 		public abstract function parent($item);
 		
@@ -94,17 +54,37 @@
 		public abstract function createFolder($folder, $name);
 		
 		public abstract function createEmptyItem($folder, $name);
+
+		public function id() {
+			return $this->id;
+		}
+
+		protected function rootId() {
+			return $this->itemId('');
+		}
+
+		public function itemId($path) {
+			return $this->id().":".DIRECTORY_SEPARATOR.$path;
+		}
 		
+		public function name() {
+			return $this->name;
+		}
+				
+		public function root() {
+			return $this->createItem($this->itemId(''), '');
+		}
+		
+		public function details($item) {
+			return array();
+		}
+				
 		protected function ignoredItems($path) {
 			return $this->filesystemInfo->ignoredItems($this, $path);
 		}
 		
-		protected function itemPublicId($path) {
-			return $this->filesystemInfo->publicId($this->id(), $path);
-		}
-		
 		protected function itemWithPath($path, $create = FALSE) {
-			return $this->createItem($this->itemPublicId($path), $path, $create);
+			return $this->createItem($this->itemId($path), $path, $create);
 		}
 
 		public function __toString() {
