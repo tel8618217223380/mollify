@@ -434,6 +434,16 @@
 			$this->db->update($query);							
 			return TRUE;
 		}
+		
+		public function addItemPermission($id, $permission, $userId) {
+			$permission = $this->db->string(strtolower($permission));
+			$id = $this->db->string($id);
+			$user = $this->db->string($userId);
+
+			$query = sprintf("INSERT INTO `".$this->db->table("item_permission")."` (item_id, user_id, permission) VALUES ('%s', '%s', '%s')", $id, $user, $permission);
+			$this->db->update($query);							
+			return TRUE;
+		}
 	
 		private function updateItemPermissionValues($list) {
 			foreach($list as $item) {

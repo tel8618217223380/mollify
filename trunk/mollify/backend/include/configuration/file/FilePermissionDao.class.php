@@ -82,6 +82,10 @@
 			}
 		}
 		
+		public function addItemPermission($item, $permission, $userId) {
+			$this->updateItemPermissions($item, array(array("user_id" => $userId, "permission" => $permission), array(), array());
+		}
+		
 		public function updateItemPermissions($item, $new, $modified, $removed) {
 			$this->assertLocalFilesystem($item);
 			
