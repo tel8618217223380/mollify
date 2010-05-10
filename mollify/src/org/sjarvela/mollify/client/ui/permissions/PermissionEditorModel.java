@@ -42,7 +42,7 @@ public class PermissionEditorModel {
 
 	private FileSystemItem item;
 	private FileItemUserPermission defaultPermission = null;
-	private boolean originalDefaultPermissionExists = false;
+	private FileItemUserPermission originalDefaultPermission = null;
 
 	private List<FileItemUserPermission> effectivePermissions = new ArrayList();
 	private List<FileItemUserPermission> newPermissions = new ArrayList();
@@ -68,7 +68,7 @@ public class PermissionEditorModel {
 
 	public void setItem(FileSystemItem item) {
 		this.defaultPermission = null;
-		this.originalDefaultPermissionExists = false;
+		this.originalDefaultPermission = null;
 
 		this.effectivePermissions = new ArrayList();
 		this.newPermissions = new ArrayList();
@@ -133,8 +133,6 @@ public class PermissionEditorModel {
 	}
 
 	protected void updatePermissions(List<FileItemUserPermission> permissions) {
-		boolean defaultPermissionFound = false;
-
 		effectivePermissions.clear();
 		newPermissions.clear();
 		modifiedPermissions.clear();
@@ -145,16 +143,15 @@ public class PermissionEditorModel {
 			if (permission.getUserOrGroup() != null) {
 				effectivePermissions.add(permission);
 			} else {
-				if (defaultPermissionFound) {
+				if (defaultPermission != null) {
 					errorCallback.onCallback(new ServiceError(
 							ServiceErrorType.INVALID_RESPONSE));
 					return;
 				}
-				defaultPermissionFound = true;
 				defaultPermission = permission;
 			}
 		}
-		originalDefaultPermissionExists = defaultPermissionFound;
+		originalDefaultPermission = defaultPermission;
 	}
 
 	public List<User> getUsersWithoutPermission() {
@@ -192,13 +189,21 @@ public class PermissionEditorModel {
 
 	public void setDefaultPermission(FilePermission permission) {
 		// remove old default permission from update lists
-		removedPermissions.remove(defaultPermission);
-		newPermissions.remove(defaultPermission);
-		modifiedPermissions.remove(defaultPermission);
+		if (defaultPermission != null) {
+			removedPermissions.remove(defaultPermission);
+			newPermissions.remove(defaultPermission);
+			modifiedPermissions.remove(defaultPermission);
+		}
 
+		if (originalDefaultPermission != null) {
+			removedPermissions.remove(originalDefaultPermission);
+			newPermissions.remove(originalDefaultPermission);
+			modifiedPermissions.remove(originalDefaultPermission);
+		}
+		
 		if (permission == null) {
-			if (originalDefaultPermissionExists)
-				removedPermissions.add(defaultPermission);
+			if (originalDefaultPermission != null)
+				removedPermissions.add(originalDefaultPermission);
 			defaultPermission = null;
 			return;
 		}
@@ -206,7 +211,7 @@ public class PermissionEditorModel {
 		// create new default permission
 		defaultPermission = new FileItemUserPermission(item, null, permission);
 
-		if (originalDefaultPermissionExists)
+		if (originalDefaultPermission != null)
 			modifiedPermissions.add(defaultPermission);
 		else
 			newPermissions.add(defaultPermission);
