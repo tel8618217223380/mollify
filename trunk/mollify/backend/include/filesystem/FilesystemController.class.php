@@ -307,7 +307,11 @@
 		}
 
 		public function allPermissions($item) {
-			return $this->env->configuration()->getItemPermissions($item);
+			$all = $this->env->configuration()->getItemPermissions($item);
+			$list = array();
+			foreach($all as $p)
+				$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
+			return $list;
 		}
 		
 		private function allowedFileUploadTypes() {
