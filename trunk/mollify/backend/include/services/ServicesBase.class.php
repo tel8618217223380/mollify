@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -65,11 +65,12 @@
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
 		
 		protected function item($id, $convert = TRUE) {
-			return $this->env->filesystem()->item(($convert ? $this->fromPublicItemID($id) : $id));
+			$i = $convert ? $this->convertItemId($id) : $id;
+			return $this->env->filesystem()->item(base64_decode($i));
 		}
 		
-		protected function fromPublicItemId($id) {
-			return base64_decode(strtr(urldecode($id), '-_,', '+/='));
+		protected function convertItemId($id) {
+			return strtr(urldecode($id), '-_,', '+/=');
 		}
 		
 		protected function invalidRequestException($details = NULL) {
