@@ -90,7 +90,7 @@
 		}
 		
 		public function data() {
-			return array("id" => $this->publicId(), "root_id" => $this->publicRootId(), "parent_id" => $this->parent()->publicId(), "name" => $this->name);
+			return array("id" => $this->publicId(), "root_id" => $this->publicRootId(), "parent_id" => $this->parent()->publicId(), "name" => $this->name, "path" => $this->path);
 		}
 				
 		public function __toString() {

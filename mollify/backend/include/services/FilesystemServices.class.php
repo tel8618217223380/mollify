@@ -207,6 +207,22 @@
 					$result["folders"] = $folders;
 					$this->response()->success($result);
 					break;
+				case 'files':
+					$this->env->filesystem()->fetchPermissions($item);
+					$items = $this->env->filesystem()->items($item);
+					$files = array();
+					foreach($items as $i)
+						if ($i->isFile()) $files[] = $i->data();
+					$this->response()->success($files);
+					break;
+				case 'folders':
+					$this->env->filesystem()->fetchPermissions($item);
+					$items = $this->env->filesystem()->items($item);
+					$folders = array();
+					foreach($items as $i)
+						if (!$i->isFile()) $folders[] = $i->data();
+					$this->response()->success($folders);
+					break;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
