@@ -158,9 +158,8 @@
 		}
 		
 		public function items($folder) {
+			//make sure folder permissions are fetched into cache
 			$this->fetchPermissions($folder);
-			$this->permission($folder);	//make sure folder permissions are fetched into cache
-			
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
 
 			$list = array();
