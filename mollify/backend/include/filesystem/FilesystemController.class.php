@@ -157,63 +157,10 @@
 			return array('mollify.dsc', 'mollify.uac');	//TODO get from settings and/or configuration etc
 		}
 		
-		/*public function info($folder) {
-			$this->assertRights($folder, Authentication::RIGHTS_READ, "info");
-			
-			$folders = $folder->folders();
-			$files = $folder->files();
-
-			if ($this->env->authentication()->isAdmin()) {
-				return array(
-					"permission" => Authentication::PERMISSION_VALUE_READWRITE,
-					"files" => $files,
-					"folders" => $folders
-				);
-			}
-			
-			$defaultPermission = $this->env->authentication()->getDefaultPermission();
-			$allPermissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->authentication()->getUserId());
-			if ($allPermissions === NULL) {
-				return array(
-					"permission" => $this->permission($folder),
-					"files" => $files,
-					"folders" => $folders
-				);
-			}
-			
-			$allowIfNotDefined = (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $defaultPermission) != 0);
-			
-			// filter out hidden files
-			$visibleFiles = array();			
-			foreach($files as $f) {
-				$id = $this->internalId($f["id"]);
-				$found = array_key_exists($id, $allPermissions);
-				
-				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $allPermissions[$id]) != 0))
-					$visibleFiles[] = $f;
-			}
-
-			// filter out hidden folders
-			$visibleFolders = array();			
-			foreach($folders as $f) {
-				$id = $this->internalId($f["id"]);
-				$found = array_key_exists($id, $allPermissions);
-				
-				if ((!$found and $allowIfNotDefined) or ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $allPermissions[$id]) != 0))
-					$visibleFolders[] = $f;
-			}
-			
-			$folderId = $this->internalId($folder->id());
-			$permission = array_key_exists($folderId, $allPermissions) ? $k[$folderId] : $defaultPermission;
-			
-			return array(
-				"permission" => $permission,
-				"files" => $visibleFiles,
-				"folders" => $visibleFolders
-			);
-		}*/
-
 		public function items($folder) {
+			$this->fetchPermissions($folder);
+			$this->permission($folder);	//make sure folder permissions are fetched into cache
+			
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
 
 			$list = array();
@@ -226,14 +173,8 @@
 		
 		private function isItemVisible($item) {
 			if ($this->env->authentication()->isAdmin()) return TRUE;
-			
-			$permission = $this->getItemUserPermission($item, FALSE);
-			$found = ($permission != NULL);
-			$defaultPermission = $this->env->authentication()->getDefaultPermission();
-			$allowIfNotDefined = (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $defaultPermission) != 0);
-
-			if (!$found and $allowIfNotDefined) return TRUE;
-			if ($found and strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $permission) != 0) return TRUE;
+			$permission = $this->getItemUserPermissionFromCache($item);
+			if (strcmp(Authentication::PERMISSION_VALUE_NO_RIGHTS, $permission) != 0) return TRUE;
 			return FALSE;
 		}
 
@@ -293,25 +234,38 @@
 			$this->permissionCache[$item->id()] = $permission;
 		}
 		
-		private function getItemUserPermission($item, $fetchIfNotFound = TRUE) {
+		private function getItemUserPermission($item) {
 			if (array_key_exists($item->id(), $this->permissionCache)) {
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
-				if (!$fetchIfNotFound) return NULL;
 				$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+				if (!$permission) return $this->env->authentication()->getDefaultPermission();
+				
 				$this->permissionCache[$item->id()] = $permission;
 				Logging::logDebug("Permission cache put [".$item->id()."]=".$permission);
 			}
 			return $permission;
 		}
 
+		private function getItemUserPermissionFromCache($item) {
+			if (array_key_exists($item->id(), $this->permissionCache)) {
+				$permission = $this->permissionCache[$item->id()];
+				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
+			} else {
+				$parentId = $item->parent()->id();
+				if ($item->isFile() and array_key_exists($parentId, $this->permissionCache)) {
+					$permission = $this->permissionCache[$parentId];
+					Logging::logDebug("Permission cache get [".$item->id()."->".$parentId."]=".$permission);
+				} else {
+					return $this->env->authentication()->getDefaultPermission();
+				}
+			}
+			return $permission;
+		}
+		
 		public function allPermissions($item) {
-			$all = $this->env->configuration()->getItemPermissions($item);
-			$list = array();
-			foreach($all as $p)
-				$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
-			return $list;
+			return $this->env->configuration()->getItemPermissions($item);
 		}
 		
 		private function allowedFileUploadTypes() {
@@ -416,6 +370,9 @@
 
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
+			
+			if ($this->env->features()->isFeatureEnabled("permission_update"))
+				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
 		}
 
 		public function download($file, $range = NULL) {

@@ -72,7 +72,7 @@
 		}
 				
 		public function root() {
-			return $this->createItem($this->itemId(''), '');
+			return new Folder($this->itemId(''), $this->rootId(), '', $this->name, $this);
 		}
 		
 		public function details($item) {

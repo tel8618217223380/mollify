@@ -13,6 +13,7 @@ function permissionModeFormatter(mode, options, obj) {
 		case 'a': return "Admin";
 		case 'rw': return "Read and Write";
 		case 'ro': return "Read Only";
+		case 'no': return "No Rights";
 		default: return "-";
 	}
 }

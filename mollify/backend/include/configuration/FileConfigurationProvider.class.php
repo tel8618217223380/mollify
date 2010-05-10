@@ -188,6 +188,10 @@
 			$this->permissionDao->updateItemPermissions($this->env->filesystem()->item($id), $new, $modified, $removed);
 		}
 		
+		public function addItemPermission($id, $permission, $userId) {
+			return $this->permissionDao->addItemPermission($this->env->filesystem()->item($id), $permission, $userId);
+		}
+		
 		public function removeItemPermissions($item) {
 			if (!$item->isFile()) return;
 			return $this->permissionDao->removeItemPermissions($item);

@@ -135,7 +135,11 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$this->response()->success($this->env->filesystem()->allPermissions($item));
+					$all = $this->env->filesystem()->allPermissions($item);
+					$list = array();
+					foreach($all as $p)
+						$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
+					$this->response()->success($list);
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -191,12 +195,7 @@
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'info':
-					$this->env->filesystem()->fetchPermissions($item);
-					
-					$permission = $this->env->filesystem()->permission($item);
 					$items = $this->env->filesystem()->items($item);
-					
-					$result = array("permission" => $permission);
 					$files = array();
 					$folders = array();
 					foreach($items as $i) {
@@ -205,10 +204,9 @@
 					}
 					$result["files"] = $files;
 					$result["folders"] = $folders;
-					$this->response()->success($result);
+					$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders));
 					break;
 				case 'files':
-					$this->env->filesystem()->fetchPermissions($item);
 					$items = $this->env->filesystem()->items($item);
 					$files = array();
 					foreach($items as $i)
@@ -216,7 +214,6 @@
 					$this->response()->success($files);
 					break;
 				case 'folders':
-					$this->env->filesystem()->fetchPermissions($item);
 					$items = $this->env->filesystem()->items($item);
 					$folders = array();
 					foreach($items as $i)
@@ -227,7 +224,11 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$this->response()->success($this->env->filesystem()->allPermissions($item));
+					$all = $this->env->filesystem()->allPermissions($item);
+					$list = array();
+					foreach($all as $p)
+						$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
+					$this->response()->success($list);
 					break;
 				default:
 					throw $this->invalidRequestException();
