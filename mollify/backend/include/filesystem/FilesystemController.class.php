@@ -370,7 +370,7 @@
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 			
-			if ($this->env->features()->isFeatureEnabled("permission_update"))
+			if ($this->env->features()->isFeatureEnabled("permission_update") and !$this->env->authentication()->isAdmin())
 				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
 		}
 

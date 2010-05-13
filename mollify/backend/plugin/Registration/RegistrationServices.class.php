@@ -106,13 +106,13 @@
 			$id = $this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], $permission);
 			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
 			
-			$this->addUserProperties($id, $plugin);
+			$this->addUserProperties($id, $registration['name'], $plugin);
 			
 			$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name']));
 			$this->response()->success(array());
 		}
 		
-		private function addUserProperties($id, $plugin) {
+		private function addUserProperties($id, $name, $plugin) {
 			$groups = $plugin->getSetting("groups", array());
 			if (count($groups) > 0) {
 				$existing = array();
@@ -120,7 +120,8 @@
 					if (in_array($group['id'], $groups)) $existing[] = $group['id'];
 				}
 				
-				$this->env->configuration()->addUsersGroups($id, $existing);
+				if (count($existing) > 0)
+					$this->env->configuration()->addUsersGroups($id, $existing);
 			}
 			
 			$folders = $plugin->getSetting("folders", array());
@@ -128,7 +129,49 @@
 				$existing = array();
 				foreach ($this->env->configuration()->getFolders() as $folder)
 					if (in_array($folder['id'], $folders)) $existing[] = $folder['id'];
-				$this->env->configuration()->addUserFolders($id, $existing);
+
+				if (count($existing) > 0)
+					$this->env->configuration()->addUserFolders($id, $existing);
+			}
+			
+			$userFolder = $plugin->getSetting("automatic_user_folder", NULL);
+			if ($userFolder == NULL) return;
+			
+			// automatic user folder
+			if (!isset($userFolder["path"])) {
+				Logging::logError("Registration: missing configuration for automatic user folder");
+				return;
+			}
+			$basePath = $userFolder["path"];
+			$folderName = $name;
+			if (isset($userFolder["folder_name"])) $folderName = $userFolder["folder_name"];
+			$folderPath = $basePath.DIRECTORY_SEPARATOR.$name;
+			
+			$fs = $this->env->filesystem()->filesystem(array("path" => $folderPath, "name" => $folderName), FALSE);
+			if ($fs->exists()) {
+				Logging::logError("Registration: user folder [".$folderPath."] already exists, not added");
+				return;
+			}
+			if (!$fs->create()) {
+				Logging::logError("Registration: user folder [".$folderPath."] could not be created, not added");
+				return;
+			}
+			
+			$folderId = $this->env->configuration()->addFolder($name, $folderPath);
+			$this->env->configuration()->addUserFolder($id, $folderId, $folderName);
+			
+			$fs = $this->env->filesystem()->filesystem(array("id" => $folderId, "path" => $folderPath, "name" => $folderName), FALSE);
+			$this->env->configuration()->addItemPermission($fs->root()->id(), Authentication::PERMISSION_VALUE_READWRITE, $id);
+			
+			if (isset($userFolder["add_to_users"]) and count($userFolder["add_to_users"]) > 0) {
+				$users = $userFolder["add_to_users"];
+				$existing = array();
+				foreach ($this->env->configuration()->getAllUsers() as $user) {
+					if (in_array($user['id'], $users)) $existing[] = $user['id'];
+				}
+				
+				if (count($existing) > 0)
+					$this->env->configuration()->addFolderUsers($folderId, $existing);
 			}
 		}
 		
