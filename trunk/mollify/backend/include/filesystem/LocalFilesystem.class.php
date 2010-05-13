@@ -28,7 +28,7 @@
 		}
 		
 		public function create() {
-			mkdir($this->rootPath, 0755);
+			return mkdir($this->rootPath, 0755);
 		}
 		
 		public function type() {

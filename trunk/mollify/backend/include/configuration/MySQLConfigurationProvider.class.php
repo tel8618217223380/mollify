@@ -221,7 +221,7 @@
 
 		public function addFolder($name, $path) {
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("folder")." (name, path) VALUES ('%s', '%s')", $this->db->string($name), $this->db->string($path)));
-			return TRUE;
+			return $this->db->lastId();
 		}
 	
 		public function updateFolder($id, $name, $path) {

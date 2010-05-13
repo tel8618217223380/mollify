@@ -46,7 +46,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final ActionListener actionListener;
 	private List<FilePreviewListener> previewListeners = new ArrayList();
 
-	private final boolean hasGeneralWritePermissions;
 	private final boolean descriptionEditingEnabled;
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
@@ -100,7 +99,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
 
-		this.hasGeneralWritePermissions = generalWritePermissions;
 		this.descriptionEditingEnabled = descriptionEditingEnabled;
 		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
@@ -411,7 +409,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			viewButton.setVisible(false);
 
 		actionsButton.setActionVisible(FileSystemAction.rename, false);
-		actionsButton.setActionVisible(FileSystemAction.copy, false);
+		actionsButton.setActionVisible(FileSystemAction.copy, true);
 		actionsButton.setActionVisible(FileSystemAction.move, false);
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}
@@ -422,10 +420,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	public void update(boolean isWritable, boolean isPreview, boolean isView) {
 		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
-		actionsButton.setActionVisible(FileSystemAction.copy,
-				hasGeneralWritePermissions);
-		actionsButton.setActionVisible(FileSystemAction.move, isWritable
-				&& hasGeneralWritePermissions);
+		actionsButton.setActionVisible(FileSystemAction.move, isWritable);
 		actionsButton.setActionVisible(FileSystemAction.delete, isWritable);
 
 		if (preview != null)
