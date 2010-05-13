@@ -52,12 +52,16 @@ This is all taken care of the GWT compiler, more information how it works can be
 	Common PHP errors and their reasons are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
 
-=== 2.2. Errors in file popup ===
+=== 2.2. Timezone error in log, or file popup does not work properly ===
 
-	When user has permissions to write but no file actions are available or changing description fails, it might be due to missing timezone setting in PHP. When the file popup is opened, client asks for file information along with permissions, but without the timezone setting PHP will throw an error.
+	Mollify uses PHP date function to get file modification timestamp, but if PHP timezone has not been set, this function will cause an error.
 
 	To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
 
-=== 2.3. Nothing happens on zip download, or downloaded zip is unreadable ===
+=== 2.3. Downloaded files are corrupted ===
+
+	Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
+
+=== 2.4. Nothing happens on zip download, or downloaded zip is unreadable ===
 
 	When a file or a folder is downloaded as zip package and nothing happens or downloaded zip cannot be read, zip package processing fails. Check your PHP error log, and see [http://code.google.com/p/mollify/wiki/Installation Installation wiki] for more information about zip options.
