@@ -134,12 +134,12 @@
 					$this->env->configuration()->addUserFolders($id, $existing);
 			}
 			
-			$userFolder = $plugin->getSetting("automatic_user_folder", NULL);
+			$userFolder = $plugin->getSetting("user_folder", NULL);
 			if ($userFolder == NULL) return;
 			
 			// automatic user folder
 			if (!isset($userFolder["path"])) {
-				Logging::logError("Registration: missing configuration for automatic user folder");
+				Logging::logError("Registration: missing configuration for user folder");
 				return;
 			}
 			$basePath = $userFolder["path"];
