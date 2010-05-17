@@ -14,6 +14,7 @@ function NotificatorListView() {
 	this.list = null;
 	
 	this.onLoadView = function onLoadView() {
+		$("#button-add-notification").click(that.openAddNotification);
 		$("#button-refresh").click(that.onRefresh);
 
 		$("#notifications-list").jqGrid({        
@@ -70,8 +71,8 @@ function NotificatorListView() {
 		var selected = (n != null);
 		if (selected) notification = that.getNotification(n);
 		
-//		enableButton("button-remove-registration", selected);
-//		enableButton("button-confirm-registration", selected);
+//		enableButton("button-remove-notification", selected);
+//		enableButton("button-edit-notification", selected);
 	}
 	
 	function timeFormatter(time, options, obj) {
@@ -81,6 +82,32 @@ function NotificatorListView() {
 	function notNullFormatter(o, options, obj) {
 		if (o == null) return '';
 		return o;
+	}
+	
+	this.openAddNotification = function() {
+		if (!that.addNotificationDialogInit) {
+			that.addNotificationDialogInit = true;
+
+			$("#add-notification-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 270,
+				modal: true,
+				resizable: false,
+				title: "Add Notification",
+				buttons: {
+					Cancel: function() {
+						$(this).dialog('close');
+					},
+					Add: function() {
+					}
+				}
+			});
+		}
+		
+		$("#name").val("");
+		$("#add-notification-dialog").dialog('open');
 	}
 }
 

@@ -8,4 +8,4 @@ CREATE TABLE `{TABLE_PREFIX}pending_registrations` (
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Pending user registrations';
 
-INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('plugin_registration_version', '1_0');
+INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('plugin_Registration_version', '1_0');
