@@ -66,6 +66,15 @@ Configuration:
 
 Using Google Viewer requires that files can be accessed from internet (as the Google service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
 
+=== Quicktime ===
+
+Provides video viewer for mov and mp4 video files.
+
+Configuration:
+{{{
+"Quicktime" => array("mov", "mp4")
+}}}
+
 == Additional viewers ==
 
 File viewer plugins are installed by unzipping installation package to "`backend/plugin/FileViewer/viewers`".
