@@ -23,6 +23,8 @@
 		
 		public abstract function setup();
 		
+		public function initialize() {}
+		
 		public function version() {
 			return NULL;
 		}
@@ -61,7 +63,7 @@
 		}
 		
 		public function getSessionInfo() {
-			return array("admin" => $this->hasAdminView());
+			return array();
 		}
 		
 		function log() {
