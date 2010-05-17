@@ -15,12 +15,27 @@
 			return TRUE;
 		}
 
+		public function isConfigurationSupported($type) {
+			return $type === ConfigurationProvider::TYPE_DATABASE;
+		}
+
+		public function version() {
+			return "1_0";
+		}
+
+		public function versionHistory() {
+			return array("1_0");
+		}				
+
 		public function setup() {
-			if (!$this->env->features()->isFeatureEnabled("mail_notification")) return;
+			if (!$this->env->features()->isFeatureEnabled("mail_notification")) {
+				Logging::logError("Mail notification not enabled, notificator plugin disabled");
+				return;
+			}
 			$this->addService("notificator", "NotificatorServices");
 			
 			require_once("NotificatorHandler.class.php");
-			$this->env->events()->register("*", new Notificator($this->env));
+			$this->env->events()->register("*", new NotificatorHandler($this->env));
 		}
 		
 		public function __toString() {

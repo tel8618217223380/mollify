@@ -16,7 +16,7 @@
 		}
 		
 		public function __toString() {
-			return "Notificator";
+			return "NotificatorHandler";
 		}
 	}
 ?>

@@ -110,6 +110,8 @@
 			$installed = $this->pluginInstalledVersion($id);
 			$current = $plugin->version();
 			$versionHistory = $plugin->versionHistory();
+			
+			if (strcmp($installed, $current) == 0) return;
 
 			if ($installed != NULL and !in_array($installed, $versionHistory)) {
 				$this->setError("Unknown version", "Plugin ".$id." installed version (".$this->versionString($installed).") is unknown, and updater cannot continue.");

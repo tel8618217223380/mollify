@@ -18,7 +18,7 @@
 		}
 		
 		public function getDefaultPermission() {
-			if ($this->env->session()->hasParam('default_file_permission')) return $this->env->session()->param('default_file_permission');
+			if ($this->env->session()->hasParam('default_permission')) return $this->env->session()->param('default_permission');
 			return parent::getDefaultPermission();
 		}
 	}

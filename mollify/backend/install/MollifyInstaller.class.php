@@ -20,6 +20,7 @@
 		private $authentication;
 		private $configuration;
 		private $plugins;
+		private $features;
 		
 		private $error = NULL;
 		private $errorDetails = NULL;
@@ -38,21 +39,23 @@
 		
 		public function createEnvironment() {
 			require_once("include/Settings.class.php");
+			require_once("include/Features.class.php");
 			require_once("include/Util.class.php");
-			require_once("InstallerSession.class.php");
+			require_once("include/Session.class.php");
 			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationProviderFactory.class.php");
 			require_once("plugin/PluginController.class.php");
 			$configurationProviderFactory = new ConfigurationProviderFactory();
 			
 			$this->settings = new Settings($this->settingsVar);
-			$this->session = new InstallerSession($this->settings);
+			$this->session = new Session($this->settings);
 			$this->configuration = $configurationProviderFactory->createConfigurationProvider($this->type, $this->settings);
 			$this->authentication = new InstallerAuthentication($this);
+			$this->features = new Features($this->configuration, $this->settings);
 			$this->plugins = new PluginController($this);
 			
 			$this->plugins->setup();
-			$this->session->initialize(NULL, $this);
+			$this->session->initialize($this);
 		}
 		
 		public abstract function isConfigured();
@@ -78,7 +81,7 @@
 		}
 
 		public function features() {
-			return $this;
+			return $this->features;
 		}
 
 		public function plugins() {

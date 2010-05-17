@@ -20,7 +20,7 @@
 			$this->env->authentication()->assertAdmin();
 			
 			$db = $this->env->configuration()->db();
-			$result = $db->query("select `id`, `name` from ".$db->table("notificator_notifications")." order by id asc")->rows();
+			$result = $db->query("select `id`, `name` from ".$db->table("notificator_notification")." order by id asc")->rows();
 			$this->response()->success($result);
 		}
 				
