@@ -51,12 +51,18 @@
 		public function getSessionInfo() {
 			$result = array();
 			foreach($this->plugins as $id => $p) {
-				$result[$id] = $p->getSessionInfo();
+				$info = $p->getSessionInfo();
+				$info["admin"] = $p->hasAdminView();
+				
+				$result[$id] = $info;
 			}
 			return array("plugins" => $result);
 		}
 		
-		public function initialize() {}
+		public function initialize() {
+			foreach($this->plugins as $id => $p)
+				$p->initialize();
+		}
 		
 		public function __toString() {
 			return "PluginController";
