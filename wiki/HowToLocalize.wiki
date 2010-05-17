@@ -3,7 +3,7 @@
 = How to localize into new languge =
 Localizing Mollify into new language requires following steps:
 
-1) Open latest English version for the texts
+1) Open latest English version for the texts by following the link
 
   * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
   * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
@@ -19,7 +19,7 @@ Localizing Mollify into new language requires following steps:
 
 = How to modify existing localizations =
 
-1) Open latest English version for the texts, and find the ones requiring modifications
+1) Open latest English version for the texts by following the link, and find the ones requiring modifications
 
   * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
   * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
