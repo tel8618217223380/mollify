@@ -5,7 +5,8 @@
   * New user permission level: no rights. Makes it possible to prevent users seeing folders or files.
   * New language: Indonesian (Bahasa Indonesia)
   * Registration plugin: automatically create user folders for registered users
-  * 
+  * File viewer plugin: new viewer for Quicktime movies (.mov) and mp4 videos
+
 === Version 1.6 ===
   * Backend plugin system
   * Registration plugin: allow users to register themselves
