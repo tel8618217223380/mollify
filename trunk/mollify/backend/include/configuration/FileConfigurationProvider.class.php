@@ -165,7 +165,8 @@
 		}
 		
 		public function getAllItemPermissions($parent, $userId) {
-			return NULL;
+			return array();
+//TODO			return $this->permissionDao->getAllItemPermissions($parent, $userId);
 		}
 
 		public function moveItemPermissions($from, $to) {

@@ -223,7 +223,7 @@
 		public function fetchPermissions($folder) {
 			if ($this->env->authentication()->isAdmin()) return;
 			$permissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->authentication()->getUserId());
-			
+
 			$this->permissionCacheFolders[] = $folder->id();
 			foreach($permissions as $id => $p)
 				$this->permissionCache[$id] = $p;
