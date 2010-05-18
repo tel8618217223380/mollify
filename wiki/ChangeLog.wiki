@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.6.5.1 ===
+  * Bug fixes
+
 === Version 1.6.5 ===
   * New user permission level: no rights. Makes it possible to prevent users seeing folders or files.
   * New language: Indonesian (Bahasa Indonesia)
