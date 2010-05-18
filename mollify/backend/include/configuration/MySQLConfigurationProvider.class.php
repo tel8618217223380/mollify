@@ -374,8 +374,8 @@
 			$userIds[] = "0";
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
-			$itemFilter = "SELECT item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
-			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
+			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
+			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where '.$userQuery.' and item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
 			
 			$all = $this->db->query($query)->rows();
 			$k = array();
