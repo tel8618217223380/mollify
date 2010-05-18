@@ -50,6 +50,21 @@
 			return $result;
 		}
 
+		public function getAllItemPermissions($parent, $userId) {
+			$this->assertLocalFilesystem($parent);
+			
+			$permissions = $this->readPermissionsFromFile($this->getUacFilename($parent));
+			if ($permissions === FALSE) return array();
+			
+			$result = array();
+			foreach ($permissions as $item => $itemPermissions) {
+				$itemId = $parent->id().DIRECTORY_SEPARATOR.$item;
+				if (array_key_exists($userId, $itemPermissions)) $result[$itemId] = $itemPermissions[$userId];
+				else if (array_key_exists("*", $itemPermissions)) $result[$itemId] = $itemPermissions["*"];
+			}
+			return $result;
+		}
+
 		public function moveItemPermissions($from, $to) {
 			$this->assertLocalFilesystem($from);
 			$this->assertLocalFilesystem($to);
@@ -83,7 +98,7 @@
 		}
 		
 		public function addItemPermission($item, $permission, $userId) {
-			$this->updateItemPermissions($item, array(array("user_id" => $userId, "permission" => $permission), array(), array());
+			$this->updateItemPermissions($item, array(array("user_id" => $userId, "permission" => $permission), array(), array()));
 		}
 		
 		public function updateItemPermissions($item, $new, $modified, $removed) {

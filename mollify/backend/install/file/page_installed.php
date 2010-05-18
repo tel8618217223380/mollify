@@ -24,19 +24,19 @@
 	 }
 	 
 	 function instructionsSingleUser() { ?>
-		Mollify has been configured with following published directories. To modify this configuration, edit the "<code>configuration.php</code>". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationSingleUserMode" target="_blank">instructions</a>.<?php
+		Mollify has been configured with following published folders. To modify this configuration, edit the "<code>configuration.php</code>". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationSingleUserMode" target="_blank">instructions</a>.<?php
 	 }
 	 
 	 function instructionsMultiUser() { ?>
-		Mollify has been configured with following users and published directories. To modify this configuration, edit the "<code>configuration.php</code>". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationMultiUserMode" target="_blank">instructions</a>.<?php
+		Mollify has been configured with following users and published folders. To modify this configuration, edit the "<code>configuration.php</code>". For more information about the configuration, see <a href="http://code.google.com/p/mollify/wiki/ConfigurationMultiUserMode" target="_blank">instructions</a>.<?php
 	 }
 	 
 	 function instructionsInstalledMultiUser() { ?>
-		Mollify has been configured with following users and published directories. To view this list later, log into Mollify as admin user and open this installer.<?php
+		Mollify has been configured with following users and published folders.<?php
 	 }
 	 
-	 function dirItem($dir) {
-		 echo "<li>".$dir['name']." (<code>".$dir['path']."</code>)</li>";
+	 function dirItem($dir, $name) {
+		 echo "<li>".($name != NULL ? $name : $dir['name'])." (<code>".$dir['path']."</code>)</li>";
 	 }
 
 ?>
@@ -66,22 +66,32 @@
 					<h2>Configured users</h2>
 					<ol>
 					<?php foreach ($installer->users() as $id => $user) {
-						echo "<li>".$user['name']." (".getPermissionMode(isset($user['file_permission_mode']) ? $user['file_permission_mode'] : NULL).")</li>";
+						echo "<li>".$user['name']." (".getPermissionMode(isset($user['default_permission']) ? $user['default_permission'] : NULL).")</li>";
 					}?>
 					</ol>
 				<?php } ?>
 				
-				<h2>Published directories</h2>
+				<h2>Published folders</h2>
 				<ol>
 				<?php
 					if ($this->authentication()->isAuthenticationRequired()) {
-						foreach ($installer->publishedDirectories() as $userId => $dirs) {
+						$folders = $installer->publishedDirectories();
+						
+						foreach ($installer->users() as $id => $user) {
+							echo "<li>".$user['name']."<ul>";
+							foreach($user["folders"] as $folder_id => $name) {
+								$f = $folders[$folder_id];
+								dirItem($f, $name);
+							}
+							echo "</ul></li>";
+						}
+/*						foreach ($installer->publishedDirectories() as $userId => $dirs) {
 							$users = $installer->users();
 							
 							echo "<li>".$users[$userId]['name']."<ul>";
 							foreach ($dirs as $id => $dir) dirItem($dir);
 							echo "</ul></li>";
-						}
+						}*/
 					} else {
 						foreach ($installer->publishedDirectories() as $id => $dir)
 							dirItem($dir);

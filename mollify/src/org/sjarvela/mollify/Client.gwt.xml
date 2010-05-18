@@ -25,6 +25,7 @@
 	<extend-property name="locale" values="es"/>
 	<extend-property name="locale" values="de"/>
 	<extend-property name="locale" values="dk"/>
+	<extend-property name="locale" values="id"/>
 	<extend-property name="locale" values="it"/>
 	<extend-property name="locale" values="fr"/>
 	<extend-property name="locale" values="nl"/>

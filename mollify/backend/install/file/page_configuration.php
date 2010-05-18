@@ -40,7 +40,7 @@
 				File based configuration supports single user and multi user configurations:
 				<ul>
 					<li>In single user mode, no authentication is required and all access rules apply to everybody.</li>
-					<li>In multi user mode, different user accounts can be set up with different published directories and access permissions.</li>
+					<li>In multi user mode, different user accounts can be set up with different published folders and access permissions.</li>
 				</ul>
 			</p>
 			<h2>Configuration</h2>

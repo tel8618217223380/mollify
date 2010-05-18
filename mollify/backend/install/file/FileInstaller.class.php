@@ -19,9 +19,9 @@
 		public function __construct($type, $settingsVar, $pageRoot = "install") {
 			parent::__construct($pageRoot, $type, $settingsVar);
 			
-			global $USERS, $PUBLISHED_DIRECTORIES;
+			global $USERS, $PUBLISHED_FOLDERS;
 			$this->users = $USERS;
-			$this->publishedDirectories = $PUBLISHED_DIRECTORIES;
+			$this->publishedDirectories = $PUBLISHED_FOLDERS;
 		}
 		
 		public function process() {
