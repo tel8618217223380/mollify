@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -35,7 +35,7 @@
 		Mollify has been configured with following users and published folders.<?php
 	 }
 	 
-	 function dirItem($dir, $name) {
+	 function dirItem($dir, $name = NULL) {
 		 echo "<li>".($name != NULL ? $name : $dir['name'])." (<code>".$dir['path']."</code>)</li>";
 	 }
 
@@ -85,13 +85,6 @@
 							}
 							echo "</ul></li>";
 						}
-/*						foreach ($installer->publishedDirectories() as $userId => $dirs) {
-							$users = $installer->users();
-							
-							echo "<li>".$users[$userId]['name']."<ul>";
-							foreach ($dirs as $id => $dir) dirItem($dir);
-							echo "</ul></li>";
-						}*/
 					} else {
 						foreach ($installer->publishedDirectories() as $id => $dir)
 							dirItem($dir);
