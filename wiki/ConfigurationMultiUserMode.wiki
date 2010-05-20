@@ -9,7 +9,7 @@
 
 	{{{
 $USERS = array(
-	[USER_ID] => array("name" => [USER NAME], "password" => [PASSWORD]),
+	[USER_ID] => array("name" => [USER NAME], "password" => [PASSWORD], "folders" => [PUBLISHED_FOLDERS]),
 	...
 );
 	}}}
@@ -18,8 +18,8 @@ $USERS = array(
 
 {{{
 $USERS = array(
-	"1" => array("name" => "User 1", "password" => "foo"),
-	"2" => array("name" => "User 2", "password" => "bar")
+	"1" => array("name" => "User 1", "password" => "foo", "folders" => array()),
+	"2" => array("name" => "User 2", "password" => "bar", "folders" => array())
 );
 }}}
 
@@ -28,7 +28,7 @@ $USERS = array(
 	Rules for user configuration:
 	  * User id's `[USER_ID]` can be freely chosen, but they must be unique (as all user related data is linked with user id)
 	  * User names `[USER NAME]` can be freely chosen, but they must be unique (as user is identified with user name when logged in)
-
+	  * Published folders define what folders are visible to user, and with what name. See chapter 2 for details.
 
 = 2. Published Folders =
 
@@ -47,7 +47,7 @@ $PUBLISHED_FOLDERS = array(
 
 {{{
 	$USERS = array(
-		[USER_ID] => array("name" => [USER_NAME], ... , "folders" => array(
+		[USER_ID] => array("name" => [USER_NAME], "password" => [PASSWORD], "folders" => array(
 			[FOLDER_ID] => [USER_SPECIFIC_FOLDER_NAME or NULL],
 			...
 		),
@@ -67,11 +67,11 @@ $PUBLISHED_FOLDERS = array(
 );
 
 $USERS = array(
-	"1" => array("name" => "User 1", "folders" => array(
+	"1" => array("name" => "User 1", "password" => "foo", "folders" => array(
 		"1" => "User 1 Folder A",
 		"2" => NULL
 	)),
-	"2" => array("name" => "User 2", "folders" => array(
+	"2" => array("name" => "User 2", "password" => "bar", "folders" => array(
 		"1" => NULL,
 		"3" => NULL
 	))
