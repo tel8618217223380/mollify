@@ -14,6 +14,7 @@ function PendingRegistrationsView() {
 	this.list = null;
 	
 	this.onLoadView = function onLoadView() {
+		$("#button-add-registration").click(that.onAddRegistration);
 		$("#button-remove-registration").click(that.onRemoveRegistration);
 		$("#button-confirm-registration").click(that.onConfirmRegistration);
 		$("#button-refresh").click(that.onRefresh);
@@ -78,6 +79,71 @@ function PendingRegistrationsView() {
 		enableButton("button-remove-registration", selected);
 		enableButton("button-confirm-registration", selected);
 	}
+
+	this.validateData = function(edit) {
+		$("#register-dialog > .form-data").removeClass("invalid");
+		var result = true;
+		
+		if ($("#register-username").val().length == 0) {
+			$("#register-username-field").addClass("invalid");
+			result = false;
+		}
+		if ($("#register-email").val().length == 0) {
+			$("#register-email-field").addClass("invalid");
+			result = false;
+		}
+		if ($("#register-password").val().length == 0) {
+			$("#register-password-field").addClass("invalid");
+			result = false;
+		}
+		return result;
+	}
+
+	this.onAddRegistration = function() {
+		if (!that.addRegisterDialogInit) {
+			that.addRegisterDialogInit = true;
+
+			$("#register-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 270,
+				modal: true,
+				resizable: false,
+				title: "Register New",
+				buttons: {
+					Cancel: function() {
+						$(this).dialog('close');
+					},
+					Add: function() {
+						if (!that.validateData(false)) return;
+						
+						var name = $("#register-username").val();
+						var email = $("#register-email").val();
+						var pw = $("#register-password").val();
+						
+						onSuccess = function() {
+							$("#register-dialog").dialog('close');
+							that.onRefresh();
+						}
+						onRegisterError = function(error) {
+							if (error.code == 108) notify("Username or email already registered");
+							else onServerError(code);
+						}
+						register(name, email, pw, onSuccess, onRegisterError);
+					}
+				}
+			});
+			$("#button-generate-register-password").click(function() {
+				$("#register-password").val(generatePassword());
+			});
+		}
+		
+		$("#register-username").val("");
+		$("#register-email").val("");
+		$("#register-password").val("");
+		$("#register-dialog").dialog('open');
+	}
 	
 	this.onRemoveRegistration = function() {
 		var id = that.getSelectedRegistration();
@@ -100,6 +166,11 @@ function PendingRegistrationsView() {
 		if (o == null) return '';
 		return o;
 	}
+}
+
+function register(username, email, password, success, fail) {
+	var data = JSON.stringify({name:username, password:generate_md5(password), email:email});
+	request("POST", 'registration/create', success, fail, data);
 }
 
 function getRegistrations(success, fail) {

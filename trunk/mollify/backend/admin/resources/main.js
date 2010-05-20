@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli J�rvel�
+	Copyright (c) 2008- Samuli Järvelä
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -272,6 +272,32 @@ function initWidgets() {
 			$(this).toggleClass("open"); $(this).parent().children('.toggle-panel-content').slideToggle();
 		});
 	});
+}
+
+function generatePassword() {
+	var length = 8;
+	var password = '';
+	
+    for (i = 0; i < length; i++) {
+    	while (true) {
+	        c = getRandomNumber();
+	        if (isValidPasswordChar(c)) break;
+		}
+        password += String.fromCharCode(c);
+    }
+    return password;
+}
+
+function isValidPasswordChar(c) {
+    if (c >= 33 && c <= 47) return false;
+    if (c >= 58 && c <= 64) return false;
+    if (c >= 91 && c <= 96) return false;
+    if (c >= 123 && c <=126) return false;
+    return true;
+}
+
+function getRandomNumber() {
+	return (parseInt(Math.random() * 1000) % 94) + 33;
 }
 
 Date.prototype.format = function(format) {
