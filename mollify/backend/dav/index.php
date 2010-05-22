@@ -27,16 +27,18 @@
 	class VoidResponseHandler {}
 	
 	class MollifyRootFolder extends Sabre_DAV_Directory {
+		private $filesystem;
 		private $roots;
 		
-		function __construct($roots) {
-			$this->roots = $roots;
+		function __construct($filesystem) {
+			$this->filesystem = $filesystem;
+			$this->roots = $filesystem->getRootFolders();
  		}
  		
 		function getChildren() {
 			$children = array();
 			foreach($this->roots as $root)
-				$children[] = new MollifyFolder($root);
+				$children[] = new MollifyFolder($this->filesystem, $root);
 			return $children;
 		}
 		
@@ -46,22 +48,24 @@
 	}
 	
 	class MollifyFolder extends Sabre_DAV_Directory {
+		private $filesystem;
 		private $folder;
 
-		function __construct($folder) {
+		function __construct($filesystem, $folder) {
+			$this->filesystem = $filesystem;
 			$this->folder = $folder;
  		}
  		
 		function getChildren() {
 			$children = array();
-			foreach($this->folder->items() as $i)
+			foreach($this->filesystem->items($this->folder) as $i)
 				$children[] = $this->createItem($i);
 			return $children;
 		}
 		
 		function createItem($item) {
 			if ($item->isFile()) return new MollifyFile($item);
-			return new MollifyFolder($item);
+			return new MollifyFolder($this->filesystem, $item);
 		}
 
 		function getName() {
@@ -95,26 +99,27 @@
 		$env = $backend->env();
 		$env->initialize();
 		
-		$auth = new Sabre_HTTP_DigestAuth();
-		$auth->init();
+		$auth = new Sabre_HTTP_BasicAuth();
+		$result = $auth->getUserPass();
 		
-		if (!$auth->getUsername()) {
+		if (!$result) {
 			Logging::logDebug("DAV authentication missing");
 			$auth->requireLogin();
 			echo "Authentication required\n";
 			die();
 		}
 		
-		$user = $env->configuration()->getUserByName($auth->getUsername());
-		if (!$user) {
+		$user = $env->configuration()->getUserByName($result[0]);
+		if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
 			Logging::logDebug("DAV authentication failure");
 			$auth->requireLogin();
 			echo "Authentication required\n";
 			die();
 		}
+
 		$env->authentication()->doAuth($user);
 
-		$root = new MollifyRootFolder($env->filesystem()->getRootFolders());
+		$root = new MollifyRootFolder($env->filesystem());
 		$dav = new Sabre_DAV_Server($root);
 		$dav->setBaseUri($baseUri);
 		$dav->exec();
