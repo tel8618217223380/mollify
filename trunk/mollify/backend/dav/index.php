@@ -10,9 +10,17 @@
 	 * this entire header must remain intact.
 	 */
 
-	set_include_path('lib/' . PATH_SEPARATOR . '../' . PATH_SEPARATOR . get_include_path());
+	// NOTE! Modify these according to the location of the script
 	
-	require_once("../configuration.php"); 
+	$MOLLIFY_BACKEND_ROOT = "../";
+	$BASE_URI = "/mollify/dev/backend/dav/";
+	$ENABLE_LOCKING = TRUE;
+	
+	// DON'T MODIFY ANYTHING AFTER THIS LINE
+	
+	set_include_path('lib/'.PATH_SEPARATOR.$MOLLIFY_BACKEND_ROOT.PATH_SEPARATOR.get_include_path());
+	
+	require_once("configuration.php"); 
 	require_once("include/Logging.class.php");
 		
 	global $SETTINGS, $CONFIGURATION_PROVIDER;
@@ -22,23 +30,21 @@
 	require_once("include/ConfigurationProviderFactory.class.php");
 	require_once("Sabre/autoload.php");
 	
-	$baseUri = "/mollify/dev/backend/dav/index.php/";
-	
 	class VoidResponseHandler {}
 	
 	class MollifyRootFolder extends Sabre_DAV_Directory {
-		private $filesystem;
+		private $controller;
 		private $roots;
 		
-		function __construct($filesystem) {
-			$this->filesystem = $filesystem;
-			$this->roots = $filesystem->getRootFolders();
+		function __construct($controller) {
+			$this->controller = $controller;
+			$this->roots = $this->controller->getRootFolders();
  		}
  		
 		function getChildren() {
 			$children = array();
 			foreach($this->roots as $root)
-				$children[] = new MollifyFolder($this->filesystem, $root);
+				$children[] = new MollifyFolder($this->controller, $root);
 			return $children;
 		}
 		
@@ -48,54 +54,87 @@
 	}
 	
 	class MollifyFolder extends Sabre_DAV_Directory {
-		private $filesystem;
+		private $controller;
 		private $folder;
 
-		function __construct($filesystem, $folder) {
-			$this->filesystem = $filesystem;
+		function __construct($controller, $folder) {
+			$this->controller = $controller;
 			$this->folder = $folder;
  		}
  		
-		function getChildren() {
+		public function getChildren() {
 			$children = array();
-			foreach($this->filesystem->items($this->folder) as $i)
+			foreach($this->controller->items($this->folder) as $i)
 				$children[] = $this->createItem($i);
 			return $children;
 		}
 		
-		function createItem($item) {
-			if ($item->isFile()) return new MollifyFile($item);
-			return new MollifyFolder($this->filesystem, $item);
+		private function createItem($item) {
+			if ($item->isFile()) return new MollifyFile($this->controller, $item);
+			return new MollifyFolder($this->controller, $item);
 		}
 
-		function getName() {
+		public function createFile($name, $data = null) {
+			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create file");
+			$file = $this->folder->createFile($name);
+			if ($data != NULL) $file->put($data);
+			return $file;
+		}
+
+		public function createDirectory($name) {
+			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create folder");
+			return $this->folder->createFolder($name);
+		}
+
+		public function delete() {
+			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "delete");
+	        $this->folder->delete();
+		}
+
+		public function getName() {
 			return $this->folder->name();
 		}
 	}
 
 	class MollifyFile extends Sabre_DAV_File {
+		private $controller;
 		private $file;
 
-		function __construct($file) {
+		function __construct($controller, $file) {
+			$this->controller = $controller;
 			$this->file = $file;
 		}
 
-		function getName() {
+		public function getName() {
 			return $this->file->name();
 		}
 
-		function get() {
+		public function get() {
+			$this->controller->assertRights($this->file, Authentication::RIGHTS_READ, "get");
 			return $this->file->read();
 		}
+		
+		public function put($data) {
+			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "put");
+	        $this->file->put($data);
+		}
+		
+		public function delete() {
+			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "delete");
+	        $this->file->delete();
+		}
 
-		function getSize() {
+		public function getSize() {
 			return $this->file->size();
+		}
+		
+		public function getETag() {
+			return null;
 		}
 	}
 	
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), new VoidResponseHandler());
-		
 		$env = $backend->env();
 		$env->initialize();
 		
@@ -119,11 +158,14 @@
 
 		$env->authentication()->doAuth($user);
 
-		$root = new MollifyRootFolder($env->filesystem());
-		$dav = new Sabre_DAV_Server($root);
-		$dav->setBaseUri($baseUri);
+		$dav = new Sabre_DAV_Server(new MollifyRootFolder($env->filesystem()));
+		$dav->setBaseUri($BASE_URI);
+		if ($ENABLE_LOCKING) $dav->addPlugin(new Sabre_DAV_Locks_Plugin(new Sabre_DAV_Locks_Backend_FS('data')));
 		$dav->exec();
 	} catch (ServiceException $e) {
 		Logging::logException($e);
+	} catch (Exception $e) {
+		Logging::logException($e);
+		throw $e;
 	}
 ?>
