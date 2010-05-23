@@ -451,7 +451,7 @@
 		}
 		
 		private function upload($folder, $name, $origin) {
-			$target = $folder->createEmptyItem($name);
+			$target = $folder->createFile($name);
 			Logging::logDebug('uploading to ['.$target.']');
 			
 			$src = @fopen($origin, "r");

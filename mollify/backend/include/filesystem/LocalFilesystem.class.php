@@ -258,8 +258,13 @@
 			return $this->itemWithPath($this->publicPath($path));
 		}
 		
-		public function createEmptyItem($folder, $name) {
+		public function createFile($folder, $name) {
 			return $this->itemWithPath($this->publicPath(self::joinPath($this->localPath($folder), $name)), TRUE);
+		}
+
+		public function itemWithName($folder, $name) {
+			$path = self::joinPath($this->localPath($folder), $name);
+			return $this->itemWithPath($this->publicPath($path), FALSE);
 		}
 		
 		public function size($file) {
@@ -278,6 +283,10 @@
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
 			return $handle;
+		}
+		
+		public function put($item, $content) {
+			file_put_contents($this->localPath($item), $content);
 		}
 		
 		private function hash($filePath, $type = 'crc32b') {

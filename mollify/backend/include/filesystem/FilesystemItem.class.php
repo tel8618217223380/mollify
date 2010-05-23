@@ -116,6 +116,10 @@
 		public function write() {
 			return $this->filesystem->write($this);
 		}
+
+		public function put($content) {
+			return $this->filesystem->put($this, $content);
+		}
 		
 		public function data() {
 			$result = FilesystemItem::data();
@@ -123,7 +127,6 @@
 			$result["extension"] = $this->extension();	
 			return $result;
 		}
-
 	}
 	
 	class Folder extends FilesystemItem {
@@ -132,13 +135,17 @@
 		public function items() {
 			return $this->filesystem->items($this);
 		}
+
+		public function itemWithName($name) {
+			return $this->filesystem->itemWithName($this, $name);
+		}
+
+		public function createFile($name) {
+			return $this->filesystem->createFile($this, $name);
+		}
 		
 		public function createFolder($name) {
 			return $this->filesystem->createFolder($this, $name);
-		}
-		
-		public function createEmptyItem($name) {
-			return $this->filesystem->createEmptyItem($this, $name);
-		}
+		}		
 	}
 ?>
