@@ -49,11 +49,15 @@
 		
 		public abstract function write($item);
 		
+		public abstract function put($item, $content);
+		
 		public abstract function addToZip($item, $zip);
 				
 		public abstract function createFolder($folder, $name);
 		
-		public abstract function createEmptyItem($folder, $name);
+		public abstract function createFile($folder, $name);
+		
+		public abstract function itemWithName($folder, $name);
 
 		public function id() {
 			return $this->id;
@@ -83,8 +87,8 @@
 			return $this->filesystemInfo->ignoredItems($this, $path);
 		}
 		
-		protected function itemWithPath($path, $create = FALSE) {
-			return $this->createItem($this->itemId($path), $path, $create);
+		protected function itemWithPath($path, $nonExisting = FALSE) {
+			return $this->createItem($this->itemId($path), $path, $nonExisting);
 		}
 
 		public function __toString() {
