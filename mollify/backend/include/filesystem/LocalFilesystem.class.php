@@ -270,6 +270,10 @@
 		public function size($file) {
 			return filesize($this->localPath($file));
 		}
+		
+		public function lastModified($item) {
+			return filemtime($this->localPath($item));
+		}
 
 		public function read($item, $range = NULL) {
 			$handle = @fopen($this->localPath($item), "rb");

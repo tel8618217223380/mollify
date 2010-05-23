@@ -56,6 +56,10 @@
 		public function path() {
 			return $this->path;
 		}
+
+		public function lastModified() {
+			return $this->filesystem->lastModified($this);
+		}
 		
 		public function folderPath() {
 			return $this->filesystem->folderPath($this);

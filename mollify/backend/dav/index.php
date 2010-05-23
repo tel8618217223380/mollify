@@ -32,7 +32,7 @@
 	
 	class VoidResponseHandler {}
 	
-	class MollifyRootFolder extends Sabre_DAV_Directory {
+	class Mollify_DAV_Root extends Sabre_DAV_Directory {
 		private $controller;
 		private $roots;
 		
@@ -44,7 +44,7 @@
 		function getChildren() {
 			$children = array();
 			foreach($this->roots as $root)
-				$children[] = new MollifyFolder($this->controller, $root);
+				$children[] = new Mollify_DAV_Folder($this->controller, $root);
 			return $children;
 		}
 		
@@ -53,7 +53,7 @@
 		}
 	}
 	
-	class MollifyFolder extends Sabre_DAV_Directory {
+	class Mollify_DAV_Folder extends Sabre_DAV_Directory {
 		private $controller;
 		private $folder;
 
@@ -70,8 +70,8 @@
 		}
 		
 		private function createItem($item) {
-			if ($item->isFile()) return new MollifyFile($this->controller, $item);
-			return new MollifyFolder($this->controller, $item);
+			if ($item->isFile()) return new Mollify_DAV_File($this->controller, $item);
+			return new Mollify_DAV_Folder($this->controller, $item);
 		}
 
 		public function createFile($name, $data = null) {
@@ -94,9 +94,13 @@
 		public function getName() {
 			return $this->folder->name();
 		}
+		
+		public function getLastModified() {
+			return $this->folder->lastModified();
+		}
 	}
 
-	class MollifyFile extends Sabre_DAV_File {
+	class Mollify_DAV_File extends Sabre_DAV_File {
 		private $controller;
 		private $file;
 
@@ -107,6 +111,11 @@
 
 		public function getName() {
 			return $this->file->name();
+		}
+		
+		public function setName($name) {
+			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "rename");
+			$this->file->rename($name);
 		}
 
 		public function get() {
@@ -126,6 +135,10 @@
 
 		public function getSize() {
 			return $this->file->size();
+		}
+		
+		public function getLastModified() {
+			return $this->file->lastModified();
 		}
 		
 		public function getETag() {
@@ -158,7 +171,7 @@
 
 		$env->authentication()->doAuth($user);
 
-		$dav = new Sabre_DAV_Server(new MollifyRootFolder($env->filesystem()));
+		$dav = new Sabre_DAV_Server(new Mollify_DAV_Root($env->filesystem()));
 		$dav->setBaseUri($BASE_URI);
 		if ($ENABLE_LOCKING) $dav->addPlugin(new Sabre_DAV_Locks_Plugin(new Sabre_DAV_Locks_Backend_FS('data')));
 		$dav->exec();
