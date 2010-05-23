@@ -37,6 +37,8 @@
 		
 		public abstract function size($file);
 		
+		public abstract function lastModified($item);
+		
 		public abstract function rename($item, $name);
 		
 		public abstract function copy($item, $to);
