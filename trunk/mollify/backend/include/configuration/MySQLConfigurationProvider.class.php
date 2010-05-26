@@ -173,7 +173,7 @@
 		}
 
 		public function updateUserGroup($id, $name, $description) {
-			return $this->updateUser($id, $name, NULL, $description);
+			return $this->updateUser($id, $name, NULL, NULL, $description);
 		}
 		
 		public function removeUserGroup($id) {
