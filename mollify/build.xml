@@ -123,6 +123,26 @@
 		<delete dir="${target.dir}" />
 	</target>
 	
+	<target name="deploy-dav">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/dav/" />
+		
+		<copy todir="${target.dir}/dav/">
+			<fileset dir="${root.dir}/backend/dav/">
+				<exclude name="**/.svn" />
+				<exclude name="data/**" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/dav_1.0.zip" basedir="${target.dir}" includes="dav/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+	
 	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 
