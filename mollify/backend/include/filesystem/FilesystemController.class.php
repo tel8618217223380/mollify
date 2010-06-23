@@ -506,6 +506,10 @@
 			Logging::logDebug("FILESYSTEM: allowed_file_upload_types=".Util::array2str($this->allowedUploadTypes));
 		}
 
+		public function __toString() {
+			return "FILESYSTEMCONTROLLER";
+		}
+
 	 }
 	 
 	 class FileEvent extends Event {
@@ -581,6 +585,11 @@
 				return 'item id='.$f.';to='.$this->info->id()." (".$this->info->filesystem()->name().")";
 			return 'item id='.$f;
 		}
+		
+		public function __toString() {
+			return "FILESYSTEMEVENT ".get_class($this);
+		}
+
 	}
 
 ?>
