@@ -3,7 +3,7 @@
 
 === Version 1.6.5.3 ===
   * Updated localizations: Español and Deutsch
-  * Fixed issue #90 (http://code.google.com/p/mollify/issues/detail?id=90)
+  * Fixed issue #90
 
 === Version 1.6.5.1 and 1.6.5.2 ===
   * Bug fixes
