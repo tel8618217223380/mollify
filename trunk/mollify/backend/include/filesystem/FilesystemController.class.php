@@ -133,11 +133,18 @@
 			if (array_key_exists($filesystemId, $this->folderCache)) {
 				$folderDef = $this->folderCache[$filesystemId];
 			} else {
+				if (!$this->isFolderValid($filesystemId)) throw new ServiceException("UNAUTHORIZED");
 				$folderDef = $this->env->configuration()->getFolder($filesystemId);
 				$this->folderCache[$filesystemId] = $folderDef;
 			}
 			
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
+		}
+		
+		private function isFolderValid($id) {
+			if (!$this->env->configuration()->isAuthenticationRequired()) return TRUE;
+			$folders = $this->getFolderDefs();
+			return array_key_exists($id, $folders);
 		}
 		
 		public function assertFilesystem($folderDef) {
