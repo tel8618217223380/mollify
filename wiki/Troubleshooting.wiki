@@ -3,7 +3,7 @@
 
 = Troubleshooting =
 
-In case of errors, do following steps before reporting new issue:
+In case of errors, first check most common errors below. If none of those help with your problem, do following steps before reporting new issue:
 
 === 1. Enable server side logging ===
 Enable server side logging by adding following setting in configuration.php:
@@ -51,3 +51,40 @@ If you have access to PHP error logs, include it as well.
 If you don't want to post logs here in public, you can send them to me directly with the issue link.
 
 NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
+
+---
+
+= Common Errors =
+
+== Timezone error in log, or file popup does not work properly ==
+
+Mollify uses PHP date function to get file modification timestamp, but if PHP timezone has not been set, this function will cause an error.
+
+To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
+
+== Downloaded files are corrupted ==
+
+Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
+
+== Error "Failed to get response from server" ==
+
+When response failure error occurs, it is due to either of two things:
+
+a) *Client cannot connect to the server*
+
+b) *Client can connect to server, but server never responds*
+
+In both cases, it is always best to first check PHP error log, usually the reason can be found there.
+
+If there are no PHP error log entries, it is case of client cannot connect to server (ie. it tries to access backend interface files in a wrong place). If possible, you should check your web server access logs to see what resource it tries to access. Also check your backend interface file locations (see [http://code.google.com/p/mollify/wiki/Installation Installation wiki]), that it is set up properly.
+
+In such error cases, it may be useful to see client logs, see [http://code.google.com/p/mollify/wiki/ConfigurationAdditionalOptions configuration wiki] (chapter 6.2, Client Logging) for more information. [http://getfirebug.com/ Firebug] plugin for Firefox browser is also very good tool for investigating what resources a page tries to access.
+
+If, on the other hand, PHP log reveals errors, it is a case of invalid system setup or configuration.
+
+Common PHP errors and their reasons are:
+  * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
+
+== Nothing happens on zip download, or downloaded zip is unreadable ==
+
+When a file or a folder is downloaded as zip package and nothing happens or downloaded zip cannot be read, zip package processing fails. Check your PHP error log, and see [http://code.google.com/p/mollify/wiki/Installation Installation wiki] for more information about zip options.
