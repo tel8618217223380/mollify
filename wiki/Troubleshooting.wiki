@@ -52,9 +52,11 @@ If you don't want to post logs here in public, you can send them to me directly 
 
 NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
 
+
 ----
 
-= Common Errors =
+
+= Most Common Errors =
 
 == Timezone error in log, or file popup does not work properly ==
 
@@ -62,9 +64,11 @@ Mollify uses PHP date function to get file modification timestamp, but if PHP ti
 
 To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
 
+
 == Downloaded files are corrupted ==
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
+
 
 == Error "Failed to get response from server" ==
 
@@ -84,6 +88,7 @@ If, on the other hand, PHP log reveals errors, it is a case of invalid system se
 
 Common PHP errors and their reasons are:
   * `Call to undefined function:  json_encode()`: PHP version is lower than 5.2, and is not supported
+
 
 == Nothing happens on zip download, or downloaded zip is unreadable ==
 
