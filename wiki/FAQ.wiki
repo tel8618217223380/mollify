@@ -3,7 +3,7 @@
 
 = Frequently Asked Questions =
 
-=== 1.1. How can I increase maximum file upload size? ===
+=== How can I increase maximum file upload size? ===
 
 Maximum file uload size is controlled by PHP, and can be changed in "php.ini" or ".htaccess" files. Settings involved are "`upload_max_filesize`", "`post_max_size`" and "`max_execution_time`". 
 
@@ -20,7 +20,11 @@ These values define that each file can be 10 M in size, whereas total upload (al
 
 Max execution time is the time server allows any script to run before it is killed, and with very large files this might need increasing. Sometimes it is also necessary to define setting "memory_limit", which controls the amount of memory script can allocate.
 
-=== 1.2. What are those cache files in installation package? ===
+=== How can I translate Mollify into new language, or make corrections to existing translations? ===
+
+See HowToLocalize
+
+=== What are those cache files in installation package? ===
 
 Although there are lots of files having "`cache`" in their name in the client folder, it doesn't mean they are result of some caching mechanism and therefore to be removed. On the contrary, they are the most important files in the package, the name simply indicates that they _can_ be cached by the web server if required.
 
