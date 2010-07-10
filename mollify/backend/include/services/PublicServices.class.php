@@ -21,6 +21,7 @@
 		
 		public function processGet() {
 			if ($this->path[0] === 'items' and $this->env->features->isFeatureEnabled("public_links")) {
+				$this->env->filesystem()->allowFilesystems = TRUE;
 				$item = $this->item($this->path[1]);
 				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
 				$this->env->filesystem()->download($item);

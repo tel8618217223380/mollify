@@ -30,7 +30,7 @@
 		}
 
 		protected function processEmbeddedViewRequest($item) {
-			$html = '<iframe id="viewer-frame" src="'.$this->getDataUrl($item, "view", TRUE).'?embedded=true" style="border: none;"></iframe>';
+			$html = '<iframe id="viewer-frame" src="'.$this->getDataUrl($item, "view", TRUE).'&embedded=true" style="border: none;"></iframe>';
 			$size = $this->getEmbeddedSize();
 			 
 			$this->response()->success(array(

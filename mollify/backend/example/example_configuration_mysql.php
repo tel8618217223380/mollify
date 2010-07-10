@@ -17,5 +17,9 @@
 	$DB_DATABASE = "mollify";	/* optional, default is "mollify" */
 	$DB_USER = "mollify";
 	$DB_PASSWORD = "mollify";
-	
+
+	$SETTINGS = array(
+		"timezone" => "Europe/Helsinki"	// change this to match your timezone
+	);
+
 ?>

@@ -131,9 +131,11 @@
 		}
 		
 		public function getServiceUrl($id, $path, $full = FALSE) {
-			if ($full and !$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
-			$url = ($full ? $this->settings->setting("host_public_address").$_SERVER['SCRIPT_NAME']."/" : "").$id;
-			foreach($path as $p) $url .= "/".$p;
+			$url = '';
+			if ($full) $url = $this->getHost().$_SERVER['SCRIPT_NAME'];
+			$url .= "/".$id;
+			foreach($path as $p)
+				$url .= "/".$p;
 			return $url."/";
 		}
 		
@@ -149,11 +151,24 @@
 			return $this->getRootUrl().'resources/';
 		}
 		
-		private function getRootUrl() {
-			if (!$this->settings->hasSetting("host_public_address")) throw new ServiceException("No host public address defined in configuration");
-			
+		private function getHost() {
+			if (!$this->settings->hasSetting("host_public_address")) {
+				$protocol = substr($_SERVER['HTTP_REFERER'], 0, strpos($_SERVER['HTTP_REFERER'], ":"));
+				$start = strlen($protocol) + 3;
+				$end = strpos($_SERVER['HTTP_REFERER'], "/", $start);
+				if ($end > 0)
+					$host = substr($_SERVER['HTTP_REFERER'], $start, $end - $start);
+				else
+					$host = substr($_SERVER['HTTP_REFERER'], $start);
+				return $protocol."://".$host;
+			}
+
+			return $this->settings->setting("host_public_address");
+		}
+		
+		private function getRootUrl() {			
 			$root = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - strlen(self::ENTRY_SCRIPT));
-			return $this->settings->setting("host_public_address").$root;
+			return $this->getHost().$root;
 		}
 		
 		public function log() {

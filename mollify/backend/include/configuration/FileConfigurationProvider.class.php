@@ -61,6 +61,28 @@
 			return NULL;
 		}
 		
+		public function getUserByName($username) {
+			if (!$this->isAuthenticationRequired())
+				return NULL;
+
+			global $USERS, $PASSWORDS_HASHED;
+			$found = NULL;
+			
+			foreach($USERS as $id => $user) {
+				if (strcasecmp($user["name"], $username) == 0) {
+					$found = $user;
+					break;
+				}
+			}
+			
+			if ($found == NULL) {
+				Logging::logError("No user found with name [".$username."]");
+				return NULL;
+			}
+						
+			return $found;
+		}
+		
 		function getAllUsers() {
 			global $USERS;
 			$result = array();

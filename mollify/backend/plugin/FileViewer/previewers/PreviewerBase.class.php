@@ -33,7 +33,7 @@
 			return $this->env->getServiceUrl("preview", array($item->publicId(), "info"));
 		}
 				
-		public function getContentUrl($item, $session = FALSE) {
+		public function getContentUrl($item) {
 			return $this->env->getServiceUrl("preview", array($item->publicId(), "content"), TRUE);
 		}
 		
