@@ -200,11 +200,22 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	private boolean canMoveTo(FileSystemItem item, Folder folder) {
-		if (item.getParentId().equals(folder.getId()))
-			return false;
-		if (!item.isFile() && folder.getRootId().equals(item.getRootId())
-				&& folder.getParentPath().startsWith(item.getParentPath()))
-			return false;
+		if (item.isFile()) {
+			// cannot move to its current location
+			if (item.getParentId().equals(folder.getId()))
+				return false;
+		} else {
+			// cannot move to itself
+			if (item.getId().equals(folder.getId()))
+				return false;
+
+			if (item.getRootId().equals(folder.getRootId())) {
+				String targetPath = folder.getPath();
+				String itemPath = item.getPath();
+				return (!targetPath.startsWith(itemPath));
+			}
+		}
+
 		return true;
 	}
 

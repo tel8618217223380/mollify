@@ -31,4 +31,8 @@
 		))
 	);
 	
+	$SETTINGS = array(
+		"timezone" => "Europe/Helsinki"	// change this to match your timezone
+	);
+	
 ?>

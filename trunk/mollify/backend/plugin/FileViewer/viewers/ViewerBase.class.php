@@ -35,8 +35,8 @@
 			return $this->env->getServiceUrl($id, $path, $fullUrl);
 		}
 		
-		public function getContentUrl($item, $session = FALSE) {
-			return $this->env->getContentUrl($item, $session);
+		public function getContentUrl($item) {
+			return $this->env->getContentUrl($item);
 		}
 
 		public function getResourceUrl() {

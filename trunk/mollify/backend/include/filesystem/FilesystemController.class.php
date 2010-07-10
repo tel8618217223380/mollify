@@ -20,6 +20,8 @@
 		private $permissionCache = array();
 		private $folderCache = array();
 		private $detailsPlugins = array();
+		
+		public $allowFilesystems = TRUE;
 
 		function __construct($env) {
 			require_once("MollifyFilesystem.class.php");
@@ -142,7 +144,7 @@
 		}
 		
 		private function isFolderValid($id) {
-			if (!$this->env->configuration()->isAuthenticationRequired()) return TRUE;
+			if ($this->allowFilesystems or !$this->env->configuration()->isAuthenticationRequired()) return TRUE;
 			$folders = $this->getFolderDefs();
 			return array_key_exists($id, $folders);
 		}

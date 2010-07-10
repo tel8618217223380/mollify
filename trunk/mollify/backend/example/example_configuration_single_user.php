@@ -11,13 +11,17 @@
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 	
-	/* File permission mode: "RW" = Read/write, "RO" = Read-only (default if omitted) */
+	/* Default permission: "RW" = Read/write, "RO" = Read-only (default if omitted) */
 	
 	$DEFAULT_PERMISSION = "RO";
 	
 	$PUBLISHED_FOLDERS = array(
 		"r1" => array("name" => "Folder A", "path" => "/foo/bar"),
 		"r2" => array("name" => "Folder B", "path" => "/foo/bay")
+	);
+	
+	$SETTINGS = array(
+		"timezone" => "Europe/Helsinki"	// change this to match your timezone
 	);
 	
 ?>
