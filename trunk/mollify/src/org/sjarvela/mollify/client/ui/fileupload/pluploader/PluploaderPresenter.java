@@ -28,13 +28,13 @@ import org.sjarvela.mollify.client.util.FileUtil;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import plupload.client.File;
-import plupload.client.FileStatus;
 import plupload.client.Plupload;
 import plupload.client.PluploadBuilder;
 import plupload.client.PluploadListener;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
@@ -299,13 +299,22 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	@Override
+	public void onFileUploaded(Plupload p, File file, JavaScriptObject response) {
+		Log.debug("File uploaded: " + file.getName());
+		complete(file);
+	}
+
+	@Override
 	public void onFileUploadProgress(Plupload uploader, File file) {
 		if (file == null)
 			return;
 		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
 		updateProgress(file);
-		if (file.getStatus().equals(FileStatus.DONE))
-			complete(file);
+	}
+
+	@Override
+	public void onChunkUploaded(Plupload p, File file, JavaScriptObject response) {
+		Log.debug("Chunk uploaded: " + file.getName());
 	}
 
 	@Override
@@ -326,5 +335,10 @@ public class PluploaderPresenter implements PluploadListener {
 	@Override
 	public void postInit(Plupload uploader) {
 		Log.debug("Post init");
+	}
+
+	@Override
+	public void onError(Plupload p, JavaScriptObject error) {
+		Log.debug("Error: " + JsUtil.asJsonString(error));
 	}
 }

@@ -43,6 +43,10 @@ public interface MessageConstants extends Messages {
 
 	String fileUploadDialogUnallowedFileType(String extension);
 
+	String fileUploadSizeTooBig(String file, String fileSize, String maxSize);
+
+	String fileUploadTotalSizeTooBig(String maxSize);
+
 	String confirmMultipleItemDeleteMessage(int count);
 
 	String copyMultipleItemsMessage(int count);

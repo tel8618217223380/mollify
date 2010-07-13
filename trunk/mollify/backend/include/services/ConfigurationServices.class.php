@@ -372,8 +372,16 @@
 		
 		private function processDeleteFolders() {
 			if (count($this->path) != 2) throw $this->invalidRequestException();
+			$id = $this->path[1];
+			
+			$roots = $this->env->filesystem()->getRootFolders(TRUE);
+			if (!array_key_exists($id, $roots)) throw $this->invalidRequestException("Invalid root ".$id);
+			$folder = $roots[$id];
+			
+			if ($this->request->hasParam("delete") and strcasecmp("true", $this->request->param("delete")) == 0)
+				$this->env->filesystem()->delete($folder);
 
-			$this->env->configuration()->removeFolder($this->path[1]);
+			$this->env->configuration()->removeFolder($id);
 			$this->response()->success(TRUE);	
 		}
 		
