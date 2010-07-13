@@ -30,7 +30,7 @@
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
 			
 			$p = stripos($this->uri, "?");
-			if ($p) $this->uri = substr($this->uri, 0, $p-1);
+			if ($p) $this->uri = trim(substr($this->uri, 0, $p), "/");
 			
 			$this->parts = explode("/", $this->uri);
 			$this->params = array();
@@ -50,6 +50,7 @@
 					}
 					break;
 				case self::METHOD_DELETE:
+					$this->params = $_REQUEST;
 					break;
 				default:
 					throw new Exception("Unsupported method: ".$this->method);

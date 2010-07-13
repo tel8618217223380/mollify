@@ -276,7 +276,43 @@ function MollifyPublishedFoldersConfigurationView() {
 	this.onRemoveFolder = function() {
 		var id = that.getSelectedFolder();
 		if (id == null) return;
-		removeFolder(id, that.refresh, onServerError);
+		folder = that.getFolder(id);
+		
+		if (!that.removeFolderDialogInit) {
+			that.removeFolderDialogInit = true;
+					
+			$("#remove-folder-confirmation-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 500,
+				modal: true,
+				resizable: false,
+				buttons: {},
+				title: 'Remove folder'
+			});
+		}
+		
+		onSuccess = function() {
+			$("#remove-folder-confirmation-dialog").dialog('close');
+			that.refresh();
+		}
+		
+		var buttons = {
+			No: function() {
+				$(this).dialog('close');
+			},
+			Yes: function() {
+				var deleteFolderContents = $("#delete-folder-contents").attr('checked');
+				removeFolder(id, deleteFolderContents, onSuccess, onServerError);
+			}
+		}
+
+		$("#removed-folder-info").html('<span id="removed-folder-name">"'+folder.name+'"</span>&nbsp;<span id="removed-folder-id">('+folder.id+')</span>');
+		
+		$("#remove-folder-confirmation-dialog").dialog('option', 'buttons', buttons);
+		$("#delete-folder-contents").attr('checked', false);
+		$("#remove-folder-confirmation-dialog").dialog('open');
 	}
 	
 	this.openAddFolderUsers = function() {

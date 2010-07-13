@@ -60,6 +60,7 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private Button uploadButton;
 	private List<FileUpload> uploaders = new ArrayList();
 	private DisclosurePanel uploadInfo;
+	private int uploaderIndex = 0;
 
 	public HttpFileUploadDialog(Folder directory, TextProvider textProvider,
 			FileUploadService service, FileSystemInfo info,
@@ -214,12 +215,15 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 	private Widget createUploader() {
 		FileUpload uploader = new FileUpload();
 		uploader.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_FILE_SELECTOR);
+		uploader.getElement().setId("file-uploader-" + (uploaderIndex++));
 		uploader.setName(UPLOADER_ID);
 		uploaders.add(uploader);
 		return uploader;
 	}
 
 	private boolean onStartUpload() {
+		if (!checkMaxSize())
+			return false;
 		if (getLastUploader().getFilename().length() < 1)
 			return false;
 		if (!verifyFileTypes())
@@ -228,6 +232,43 @@ public class HttpFileUploadDialog extends CenteredDialog implements
 		this.setVisible(false);
 		return true;
 	}
+
+	private boolean checkMaxSize() {
+		float maxFileSize = info.getUploadMaxFileSize();
+		float maxTotalSize = info.getUploadMaxTotalSize();
+		float total = 0f;
+
+		for (FileUpload uploader : this.uploaders) {
+			float size = getFilesize(uploader.getElement().getId());
+			if (size < 0)
+				return true;
+
+			if (maxFileSize > 0 && size > maxFileSize) {
+				dialogManager.showInfo(textProvider.getStrings()
+						.infoDialogErrorTitle(), textProvider.getMessages()
+						.fileUploadSizeTooBig(uploader.getFilename(),
+								textProvider.getSizeText((long) size),
+								textProvider.getSizeText((long) maxFileSize)));
+				return false;
+			}
+
+			total += size;
+			if (maxTotalSize > 0 && total > maxTotalSize) {
+				dialogManager.showInfo(textProvider.getStrings()
+						.infoDialogErrorTitle(), textProvider.getMessages()
+						.fileUploadTotalSizeTooBig(
+								textProvider.getSizeText((long) maxTotalSize)));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private native float getFilesize(String id) /*-{
+		var e = $doc.getElementById(id);
+		if (!e || !e.files[0]) return -1;
+		return e.files[0].fileSize;
+	}-*/;
 
 	private boolean verifyFileTypes() {
 		if (allowedFileTypes.isEmpty())

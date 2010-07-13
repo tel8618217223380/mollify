@@ -37,8 +37,9 @@ function editFolder(id, name, path, success, fail) {
 	request("PUT", 'configuration/folders/'+id, success, fail, data);
 }
 
-function removeFolder(id, success, fail) {
-	request("DELETE", 'configuration/folders/'+id, success, fail);
+function removeFolder(id, deleteContents, success, fail) {
+	var params = deleteContents ? "?delete=true" : "";
+	request("DELETE", 'configuration/folders/'+id+params, success, fail);
 }
 
 function getUserFolders(user, success, fail) {

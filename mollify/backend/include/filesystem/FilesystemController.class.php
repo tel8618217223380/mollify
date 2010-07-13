@@ -40,20 +40,20 @@
 			$this->detailsPlugins[] = $plugin;
 		}
 		
-		public function getRootFolders() {
+		public function getRootFolders($all = FALSE) {
 			$list = array();
 			
-			foreach($this->getFolderDefs() as $folderDef) {				
+			foreach($this->getFolderDefs($all) as $folderDef) {				
 				$root = $this->filesystem($folderDef)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
-				$list[] = $root;
+				$list[$folderDef['id']] = $root;
 			}
 			
 			return $list;
 		}
 		
-		private function getFolderDefs() {
-			if ($this->env->configuration()->isAuthenticationRequired())
+		private function getFolderDefs($all = FALSE) {
+			if ($this->env->configuration()->isAuthenticationRequired() and !$all)
 				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 			else
 				$folderDefs = $this->env->configuration()->getFolders();
@@ -105,7 +105,7 @@
 			);
 			
 			$result["folders"] = array();
-			foreach($this->getRootFolders() as $folder) {
+			foreach($this->getRootFolders() as $id => $folder) {
 				$result["folders"][] = array(
 					"id" => $folder->publicId(),
 					"name" => $folder->name()
