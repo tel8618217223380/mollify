@@ -64,6 +64,11 @@ Mollify uses PHP date function to get file modification timestamp, but if PHP ti
 
 To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
 
+{{{
+	$SETTINGS = array(
+		"timezone" => "Europe/Helsinki"
+	);
+}}}
 
 == Downloaded files are corrupted ==
 
