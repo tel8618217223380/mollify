@@ -23,7 +23,7 @@ This page describes how to set up Mollify development environment
 	
 		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
 		
-		Install components "Google Plugin for Eclipse [YOUR_ECLIPSE_VERSION]" and "Google Web Toolkit SDK [LATEST_GWT_VERSION]"
+		Install components "Google Plugin for Eclipse `[YOUR_ECLIPSE_VERSION]`" and "Google Web Toolkit SDK `[LATEST_GWT_VERSION]`"
 	
 === 3. Subversive ===
 
