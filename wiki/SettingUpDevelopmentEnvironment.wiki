@@ -23,17 +23,15 @@ This page describes how to set up Mollify development environment
 	
 		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
 		
-		Install components "Google Plugin for Eclipse 3.4" and "Google Web Toolkit SDK 1.6.4"
+		Install components "Google Plugin for Eclipse [YOUR_ECLIPSE_VERSION]" and "Google Web Toolkit SDK [LATEST_GWT_VERSION]"
 	
 === 3. Subversive ===
 
-  	# Launch Eclipse, and open "Software Updates". Select "Available Software" and click "Add Site".
-  	# Add Subversive update site: "http://download.eclipse.org/technology/subversive/0.7/update-site/"
-  	# Add SVN Connectors update site: "http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site/"
-  	# From the Subversive tree added to Available Software list, select "Subversive SVN Team Provider"
-  	# From the SVN connector tree added to Available Software list, select "Subversive SVN Connectors" and "SVNKit 1.3.0 Implementation"
+  	# Launch Eclipse, and open "Software Updates". Select "Install New Software"
+  	# From the Eclipse update site, select "Collaboration/Subversive SVN Team Provider"
   	# Click "Install..."
-  	# Open Eclipse preferences and select Team -> SVN -> SVN Connector, make sure there is a connector selected (if not, wrong combination of Subversive and SVN Connector was installed)
+  	# After installation and restart, Subversive will prompt for connector, install "SVNKit 1.3.0 Implementation"
+  	# Open Eclipse preferences and select Team -> SVN -> SVN Connector, make sure there is a SVNKit 1.3.0 connector selected (if not, wrong combination of Subversive and SVN Connector was installed)
 
 === 4. Web server ===
 	
