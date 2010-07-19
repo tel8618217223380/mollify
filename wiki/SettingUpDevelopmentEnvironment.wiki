@@ -8,9 +8,8 @@ This page describes how to set up Mollify development environment
 = 1. Requirements =
 
 	Mollify development environment requires following components:
-  	* Eclipse IDE for Java EE (http://www.eclipse.org/downloads/)
-  	* Google Eclipse Plugin (http://code.google.com/appengine/docs/java/tools/eclipse.html)
-  	* Subversive plugin for Eclipse
+  	* Eclipse IDE for Java EE 3.5 (http://www.eclipse.org/downloads/)
+  	* Google Web Toolkit 2.0.4 and Google Eclipse Plugin 3.5 (http://code.google.com/appengine/docs/java/tools/eclipse.html)
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
 = 2. Component Installation =
@@ -23,7 +22,7 @@ This page describes how to set up Mollify development environment
 	
 		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
 		
-		Install components "Google Plugin for Eclipse `[YOUR_ECLIPSE_VERSION]`" and "Google Web Toolkit SDK `[LATEST_GWT_VERSION]`"
+		Install components "Google Plugin for Eclipse `[ECLIPSE_VERSION]`" and "Google Web Toolkit SDK `[GWT_VERSION]`"
 	
 === 3. Subversive ===
 
@@ -81,9 +80,7 @@ This page describes how to set up Mollify development environment
 	
 == 3.5 Running/Debugging Mollify in Eclipse ==
 
-	First make sure your web server configuration is working by installing a Mollify release version as you would in a real web server host. Once you get the Mollify client running in browser, the backend can be used in development as well.
-	
-	GWT has a built-in web server for running servlet based projects, but it does not support PHP. On the other hand, same origin policy (SOP) prevents Mollify client from referring into PHP service located in different server. This is why Mollify development version must be configured to run on the same server where PHP files are located.
+	First make sure your web server configuration is working by installing a Mollify release version as you would in a real web server host.
 
 === Step 1: Setup Web Server ===
   	# Under your web server root, create a Mollify folder "mollify/dev"
@@ -97,7 +94,7 @@ This page describes how to set up Mollify development environment
 	# Select project "mollify" via "Browse..."
 	# In the tab "Server", uncheck "Run built-in server"
 	# In the tab "GWT", enter URL into Mollify folder created in step 1 (for example "http://localhost/mollify/dev")
-	# In the tab "GWT", add/remove modules so there are only "DevelopmentClient" and "Client"
+	# In the tab "GWT", add/remove modules so there are only "`DevelopmentClient`" and "`Client`"
 	# Apply changes, and run it once. Mollify will not start yet, but this forces Eclipse to build needed files under "war/org.sjarvela.mollify.App"
 
 === Step 2: Setup Client in Web Server ===
