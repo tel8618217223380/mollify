@@ -86,12 +86,11 @@ This page describes how to set up Mollify development environment
 	GWT has a built-in web server for running servlet based projects, but it does not support PHP. On the other hand, same origin policy (SOP) prevents Mollify client from referring into PHP service located in different server. This is why Mollify development version must be configured to run on the same server where PHP files are located.
 
 === Step 1: Create Run Configuration ==
-  	# Under folder "src/org.sjarvela.mollify" in Eclipse, copy "Dev.xml" to "App.gwt.xml" in same folder (if you already have "App.gwt.xml", skip this)
 	# Open run Configuration management by selecting Run -> Run Configurations...
 	# Select "Web Application" and click "New"
 	# Enter name for configuration
 	# Select project "mollify" via "Browse..."
-	# Apply changes, and run it once. Mollify will not start yet, but this force Eclipse to build needed files under "war/org.sjarvela.mollify.App"
+	# In the tab "Server", uncheck "Run built-in server"
 
 === Step 2: Create Development Version of Backend ==
   	# Under your web server root, create a folder "mollify-dev"
