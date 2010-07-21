@@ -117,7 +117,9 @@ For developing themes, folders "include" and "themes" in web server client folde
 
 = 4 Build script =
 
-	Source root contains Ant build script (build.xml), which needs configuration specific properties file. Example properties file is located under folder "script" in source root. Copy this to the root folder of your Mollify project ("`/Projects/Mollify`"), and modify it as instructed.
+	Source root contains Ant build script (build.xml), which needs configuration specific properties file.
+
+	Example properties file is located under folder "script" in source root. Copy this to the root folder of your svn copy (right next to build.xml), and modify it as instructed in the file.
 
 	Script contains following targets:
 	
