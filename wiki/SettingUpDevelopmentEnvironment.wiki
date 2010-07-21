@@ -98,18 +98,12 @@ This page describes how to set up Mollify development environment
 	# Apply changes, and run it once. Mollify will not start yet, but this forces Eclipse to build needed files under "war/org.sjarvela.mollify.App"
 
 === Step 2: Setup Client in Web Server ===
-	# From the Eclipse build folder ("war/org.sjarvela.mollify.App"), copy everything into web server client folder
-
-	Open host page for editing
-		# Make sure it refers to the "org.sjarvela.mollify.App.nocache.js" in the client folder
-		# Add/edit service location meta parameter
-		
-		{{{
-		<meta name="mollify:property" content="service-path=backend/">
-		}}}
+	From the Eclipse build folder ("war/org.sjarvela.mollify.App"), copy everything into web server client folder.
 
 === Step 4: Setup Backend in Web Server ===
-	Either copy all backend files from svn copy into web server backend folder, or create a symbolic link replacing the created backend folder. Latter should be used if backend is developed, this way all the changes made reflect directly to the svn copy.
+	Either copy all backend files from svn copy into web server backend folder, or create a symbolic link replacing the created backend folder.
+
+	Latter should be used if backend is being developed, this way all the changes made reflect directly to the svn copy, and when new changes are updated from svn, there is no need to update manually.
 
 == 3.4 Theme Development ==
 
