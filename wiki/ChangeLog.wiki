@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.6.5.4 ===
+  * Adds maximum file upload size check on basic http uploader
+  * Adds possibility to delete published folder and its contents when it is removed in admin utility
+  * Fixed issue #91
+
 === Version 1.6.5.3 ===
   * Updated localizations: Español and Deutsch
   * Fixed issue #90
