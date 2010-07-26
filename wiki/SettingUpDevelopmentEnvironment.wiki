@@ -8,6 +8,7 @@ This page describes how to set up Mollify development environment
 = 1. Requirements =
 
 	Mollify development environment requires following components:
+  	* JDK 1.6
   	* Eclipse IDE for Java EE 3.5 (http://www.eclipse.org/downloads/)
   	* Google Web Toolkit 2.0.4 and Google Eclipse Plugin 3.5 (http://code.google.com/appengine/docs/java/tools/eclipse.html)
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
@@ -69,6 +70,11 @@ This page describes how to set up Mollify development environment
   	# Launch Eclipse
   	# If Eclipse prompts for the workspace, select the the workspace folder created in step 3.1 ("/Projects/Mollify/ws"). If workspace is not prompted, select "File -> Switch Workspace", and choose the correct workspace folder.
   	# Import Mollify project with "File" -> "Import..." -> "General / Existing Projects into Workspace", and click "Next". As a root directory, select folder "/Projects/Mollify/svn/trunk/mollify" created in step 3.1. Mollify project should be listed, select it (NOTE! Don't click "Copy to workspace") and click "Finish" to import. Project is now listed in Project Explorer.
+
+  	Open Project Properties, and
+  	# in Google -> Web Toolkit, make sure  "Use Google Web Toolkit" is checked, and that the SDK version is the one listed above
+  	# in Java Build Path -> Libraries, make sure JRE version is 1.6 (and if not, add it from "Add Library -> JRE System Library"
+  	# in Java Build Path -> Libraries, make sure following jars are listed: `aopalliance.jar, gin.jar, guice-2.0.jar, gwt-dnd-r1015.jar, gwt-log-2.6.2.jar, gwt-plupload.jar, junit-4.6.jar`. If these are not listed, add them by clicking "Add JARs" and browse to "mollify/lib"
 
 	Project is now configured.
 
