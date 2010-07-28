@@ -23,7 +23,7 @@ This page describes how to set up Mollify development environment
 	
 		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
 		
-		Install components "Google Plugin for Eclipse `[ECLIPSE_VERSION]`" and "Google Web Toolkit SDK `[GWT_VERSION]`"
+		Install components "Google Plugin for Eclipse" and "Google Web Toolkit SDK"
 	
 === 3. Subversive ===
 
@@ -75,8 +75,12 @@ This page describes how to set up Mollify development environment
   	# in Google -> Web Toolkit, make sure  "Use Google Web Toolkit" is checked, and that the SDK version is the one listed above
   	# in Java Build Path -> Libraries, make sure JRE version is 1.6 (and if not, add it from "Add Library -> JRE System Library"
   	# in Java Build Path -> Libraries, make sure following jars are listed: `aopalliance.jar, gin.jar, guice-2.0.jar, gwt-dnd-r1015.jar, gwt-log-2.6.2.jar, gwt-plupload.jar, junit-4.6.jar`. If these are not listed, add them by clicking "Add JARs" and browse to "mollify/lib"
+  	# in Java Build Path -> Source, make sure you have two source folders: "mollify/src" and "mollify/test"
+  	# in Java Compiler -> Errors/Warnings, and mark "Unchecked generic type operations" and "Usage of raw type" as ignored
 
 	Project is now configured.
+
+	If you see warnings "The following classpath entry xxx.jar will not be available on the server's classpath" in problems view, you can safely remove them using the quick fix option.
 
 == 3.4 Setting up version control in Eclipse ==
   	# Open Eclipse perspective "Team Synchronize", and click "Synchronize..." toolbar button.
