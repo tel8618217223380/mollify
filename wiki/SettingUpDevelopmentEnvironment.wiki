@@ -124,18 +124,18 @@ For developing themes, folders "include" and "themes" in web server client folde
 	Source root contains Ant build script (build.xml), which needs configuration specific properties file.
 
 	Example properties file is located under folder "examples" in source root. Copy this to the root folder of your svn copy (right next to build.xml), and edit the variables:
-	# *`gwt.sdk.location`* This is the absolute path to the GWT SDK. If you installed it via Eclipse, it is found under Eclipse plugins. For example `/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301254/gwt-2.0.4`
-	# *`root.dir`* This is the source root dir, where build.xml is located
-	# *`deploy.dir`* This is the deploy dir, where the deployment package is created
-	# *`mollify.version`* This is the version used for deployment package
+	* *`gwt.sdk.location`* This is the absolute path to the GWT SDK. If you installed it via Eclipse, it is found under Eclipse plugins. For example `/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301254/gwt-2.0.4`
+	* *`root.dir`* This is the source root dir, where build.xml is located
+	* *`deploy.dir`* This is the deploy dir, where the deployment package is created
+	* *`mollify.version`* This is the version used for deployment package
 
-	Script contains following targets:
+== 4.1. Targets ==
 	
-== build ==
+=== build ===
 
 	Simply compiles the sources into the build folder under the root.
 
-== deploy ==
+=== deploy ===
 
 	Compiles sources and creates deploy packages, both installation and source packages.
 	
