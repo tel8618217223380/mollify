@@ -20,6 +20,8 @@ These values define that each file can be 10 M in size, whereas total upload (al
 
 Max execution time is the time server allows any script to run before it is killed, and with very large files this might need increasing. Sometimes it is also necessary to define setting "memory_limit", which controls the amount of memory script can allocate.
 
+For changing settings for Mollify with htaccess, create this file in the backend folder (where configuration.php is located).
+
 === How can I translate Mollify into new language, or make corrections to existing translations? ===
 
 See HowToLocalize
