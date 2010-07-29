@@ -115,6 +115,13 @@ This page describes how to set up Mollify development environment
 
 	Latter should be used if backend is being developed, this way all the changes made reflect directly to the svn copy, and when new changes are updated from svn, there is no need to update manually.
 
+	Also, create a configuration.php just like in a regular installation.
+
+=== Step 5: Run the Application ===
+	To run Mollify, start up the run configuration created in step 2. This will open the development mode tool, copy the url it provides into your browser.
+
+	When run for the first time, browser needs to install the GWT plugin, just follow the instructions.
+
 == 3.4 Theme Development ==
 
 For developing themes, folders "include" and "themes" in web server client folder should be replaced with a symbolic link from the svn copy.
