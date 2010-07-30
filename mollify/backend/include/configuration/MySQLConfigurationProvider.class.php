@@ -329,35 +329,46 @@
 		function getItemPermission($item, $userId) {
 			$table = $this->db->table("item_permission");
 			$id = $this->itemId($item);
-			$userIds = array($userId);
+			
+			$userQuery = sprintf("(user_id = '%s')", $userId);
+			$userIds = array(0, $userId);
 			if ($this->env->authentication()->hasUserGroups()) {
 				foreach($this->env->authentication()->getUserGroups() as $g)
 					$userIds[] = $g['id'];
 			}
-			
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
-			$query = NULL;
-	
-			if ($item->isFile()) {
-				$parent = $item->parent();
+			
+			// order within category into 1) user specific 2) group 3) item default
+			$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
+
+			// item permissions
+			$query = sprintf("(SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s)", $subcategoryQuery, $id, $userQuery);
+					
+			if ($item->isFile() or !$item->isRoot()) {
+				$parentId = $this->itemId($item->parent());
+							
+				$query .= sprintf(
+						" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s)", $subcategoryQuery, $parentId, $userQuery);
 				
-				if ($parent != NULL) {
-					$parentId = $this->itemId($parent);					
-					$query = sprintf(
-						"(SELECT permission, user_id, 1 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
-						"(SELECT permission, user_id, 2 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0) UNION ALL ".
-						"(SELECT permission, user_id, 3 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
-						"(SELECT permission, user_id, 4 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0)", $id, $userQuery, $id, $parentId, $userQuery, $parentId);
-				}
+				//$rootId = $this->itemId($item->root());
+				//$hierarchyQuery = "(item_id REGEXP '^".$rootId;
+				
+				//$parts = split("/", substr($itemId, strlen($rootId)));
+				//foreach($parts as $part)
+				//	if (strlen($part) > 0)
+				//		$hierarchyQuery .= "(".$part;
+				//foreach($parts as $part)
+				//	if (strlen($part) > 0)
+				// 		$hierarchyQuery .= ")*";
+				//$hierarchyQuery .= "$')";
+				
+				//$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($itemId), $userId);
+				
+				//$query .= sprintf(
+				//	" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE %s AND %s) ", $subcategoryQuery, $hierarchyQuery, $userQuery);
 			}
 			
-			if ($query === NULL) {
-				$query = sprintf(
-					"(SELECT permission, user_id, 1 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND %s) UNION ALL ".
-					"(SELECT permission, user_id, 2 AS 'index' FROM `".$table."` WHERE item_id = '%s' AND user_id = 0)", $id, $userQuery, $id);
-			}
-			
-			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.index ASC, u.permission DESC";
+			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.category ASC, u.subcategory ASC, u.permission DESC";
 			
 			$result = $this->db->query($query);
 			if ($result->count() < 1) return NULL;
