@@ -346,26 +346,20 @@
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentId = $this->itemId($item->parent());
-							
+				$rootId = $this->itemId($item->root());
+				
+				$hierarchyQuery = "(item_id REGEXP '^".$rootId;
+				$hierarchyQueryEnd = "";
+				$parts = split("/", substr($parentId, strlen($rootId)));
+				for($i = 0; $i < (count($parts) - 1); $i++) {
+					$hierarchyQuery .= "(".$parts[$i];
+					$hierarchyQueryEnd .= ")*";
+				}
+				$hierarchyQuery .= $hierarchyQueryEnd."$')";
+			
+				$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
 				$query .= sprintf(
-						" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s)", $subcategoryQuery, $parentId, $userQuery);
-				
-				//$rootId = $this->itemId($item->root());
-				//$hierarchyQuery = "(item_id REGEXP '^".$rootId;
-				
-				//$parts = split("/", substr($itemId, strlen($rootId)));
-				//foreach($parts as $part)
-				//	if (strlen($part) > 0)
-				//		$hierarchyQuery .= "(".$part;
-				//foreach($parts as $part)
-				//	if (strlen($part) > 0)
-				// 		$hierarchyQuery .= ")*";
-				//$hierarchyQuery .= "$')";
-				
-				//$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($itemId), $userId);
-				
-				//$query .= sprintf(
-				//	" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE %s AND %s) ", $subcategoryQuery, $hierarchyQuery, $userQuery);
+					" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE %s AND %s) ", $subcategoryQuery, $hierarchyQuery, $userQuery);
 			}
 			
 			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.category ASC, u.subcategory ASC, u.permission DESC";
@@ -376,6 +370,7 @@
 		}
 		
 		public function getAllItemPermissions($parent, $userId) {
+			$parentId = $this->itemId($parent);
 			$table = $this->db->table("item_permission");
 			$userIds = array($userId);
 			if ($this->env->authentication()->hasUserGroups()) {
@@ -385,10 +380,14 @@
 			$userIds[] = "0";
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
-			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$this->itemId($parent)."[^/]*[/]?$'";
+			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]*$'";
 			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where '.$userQuery.' and item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
 			
 			$all = $this->db->query($query)->rows();
+			$all[] = array(
+				"item_id" => $parentId,
+				"permission" => $this->getItemPermission($parent, $userId)
+			);
 			$k = array();
 			$prev = NULL;
 			foreach($all as $p) {
