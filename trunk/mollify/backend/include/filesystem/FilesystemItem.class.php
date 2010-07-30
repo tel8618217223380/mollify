@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -43,6 +43,10 @@
 		
 		public function internalPath() {
 			return $this->filesystem->internalPath($this);
+		}
+		
+		public function root() {
+			return $this->filesystem->root();
 		}
 				
 		public function parent() {
@@ -146,6 +150,10 @@
 
 		public function createFile($name) {
 			return $this->filesystem->createFile($this, $name);
+		}
+		
+		public function isRoot() {
+			return strcmp($this->id, $this->rootId) === 0;
 		}
 		
 		public function createFolder($name) {
