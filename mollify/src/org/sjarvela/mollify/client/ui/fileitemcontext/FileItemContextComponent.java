@@ -231,6 +231,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				.getStrings().fileActionRenameTitle());
 		actionsButton.addAction(FileSystemAction.copy, textProvider
 				.getStrings().fileActionCopyTitle());
+		actionsButton.addAction(FileSystemAction.copyHere, textProvider
+				.getStrings().fileActionCopyHereTitle());
 		actionsButton.addAction(FileSystemAction.move, textProvider
 				.getStrings().fileActionMoveTitle());
 		actionsButton.addAction(FileSystemAction.delete, textProvider
@@ -410,6 +412,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		actionsButton.setActionVisible(FileSystemAction.rename, false);
 		actionsButton.setActionVisible(FileSystemAction.copy, true);
+		// actionsButton.setActionVisible(FileSystemAction.copyHere, true);
 		actionsButton.setActionVisible(FileSystemAction.move, false);
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}

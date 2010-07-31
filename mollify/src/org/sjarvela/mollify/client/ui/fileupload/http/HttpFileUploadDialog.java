@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
+import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.util.FileUtil;
 
@@ -41,8 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
-public class HttpFileUploadDialog extends CenteredDialog implements
-		SubmitHandler {
+public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	private static final String UPLOADER_ID = "uploader-http[]";
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 

@@ -32,10 +32,12 @@ public class DefaultDialogManager implements DialogManager {
 		this.viewManager = viewManager;
 	}
 
+	@Override
 	public void showError(ServiceError error) {
 		new ErrorDialog(textProvider, error);
 	}
 
+	@Override
 	public void showInfo(String title, String text) {
 		showInfo(title, text, null);
 	}
@@ -46,6 +48,7 @@ public class DefaultDialogManager implements DialogManager {
 				StyleConstants.INFO_DIALOG_TYPE_INFO);
 	}
 
+	@Override
 	public void showConfirmationDialog(String title, String message,
 			String style, ConfirmationListener listener, Widget p) {
 		ConfirmationDialog confirmationDialog = new ConfirmationDialog(
@@ -54,4 +57,9 @@ public class DefaultDialogManager implements DialogManager {
 			viewManager.align(confirmationDialog, p);
 	}
 
+	@Override
+	public void showInputDialog(String title, String message,
+			String defaultValue) {
+		new InputDialog(title, "");
+	}
 }

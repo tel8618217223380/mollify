@@ -65,12 +65,14 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String fileActionCopyTitle();
 
+	public String fileActionCopyHereTitle();
+
 	public String fileActionMoveTitle();
 
 	public String fileActionDeleteTitle();
 
 	public String fileActionViewTitle();
-	
+
 	public String fileActionPublicLinkTitle();
 
 	public String filePreviewTitle();
@@ -182,7 +184,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String errorMessageDirectoryAlreadyExists();
 
 	public String errorMessageDirectoryDoesNotExist();
-	
+
 	public String errorMessageInsufficientRights();
 
 	public String selectFolderDialogSelectButton();
@@ -344,7 +346,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String itemPermissionEditorItemTitle();
 
 	public String itemPermissionEditorDefaultPermissionTitle();
-	
+
 	public String itemPermissionEditorNoPermission();
 
 	public String itemPermissionListColumnTitleName();
