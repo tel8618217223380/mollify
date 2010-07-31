@@ -17,13 +17,15 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface DialogManager {
 
-	public abstract void showError(ServiceError error);
+	void showError(ServiceError error);
 
-	public abstract void showInfo(String title, String text);
+	void showInfo(String title, String text);
 
-	public abstract void showInfo(String title, String text, String info);
+	void showInfo(String title, String text, String info);
 
-	public abstract void showConfirmationDialog(String title, String message,
-			String style, ConfirmationListener listener, Widget source);
+	void showConfirmationDialog(String title, String message, String style,
+			ConfirmationListener listener, Widget source);
+
+	void showInputDialog(String title, String message, String defaultValue);
 
 }

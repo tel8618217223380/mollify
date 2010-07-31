@@ -45,7 +45,7 @@ public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 				new ProgressDialogFactory());
 		new HttpFileUploadDialog(directory, textProvider, service,
 				sessionProvider.getSession().getFileSystemInfo(),
-				fileUploadHandler, dialogManager);
+				fileUploadHandler, dialogManager).center();
 	}
 
 }

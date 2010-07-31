@@ -131,6 +131,7 @@
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
+			if (strpos($path, "..") >= 0) throw new ServiceException("INVALID_REQUEST");
 			
 			if (array_key_exists($filesystemId, $this->folderCache)) {
 				$folderDef = $this->folderCache[$filesystemId];

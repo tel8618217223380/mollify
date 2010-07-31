@@ -255,6 +255,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 								return canCopyTo(file, (Folder) item);
 							}
 						}, source);
+			} else if (FileSystemAction.copyHere.equals(action)) {
+				dialogManager.showInputDialog("TEST", "test", file.getName()); // TODO
 			} else if (action.equals(FileSystemAction.move)) {
 				itemSelectorFactory.openFolderSelector(textProvider
 						.getStrings().moveFileDialogTitle(), textProvider
