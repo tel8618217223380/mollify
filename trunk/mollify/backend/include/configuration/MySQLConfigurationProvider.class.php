@@ -352,7 +352,7 @@
 				$hierarchyQueryEnd = "";
 				$parts = split("/", substr($parentId, strlen($rootId)));
 				for($i = 0; $i < (count($parts) - 1); $i++) {
-					$hierarchyQuery .= "(".$parts[$i];
+					$hierarchyQuery .= "(".$parts[$i]."/";
 					$hierarchyQueryEnd .= ")*";
 				}
 				$hierarchyQuery .= $hierarchyQueryEnd."$')";
@@ -380,7 +380,7 @@
 			$userIds[] = "0";
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
-			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]*$'";
+			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
 			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where '.$userQuery.' and item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
 			
 			$all = $this->db->query($query)->rows();
