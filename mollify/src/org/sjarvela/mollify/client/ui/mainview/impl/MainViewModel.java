@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -29,7 +30,7 @@ import org.sjarvela.mollify.client.session.file.FilePermission;
 public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
-	private final List<Folder> rootDirectories;
+	private final List<Folder> rootFolders;
 
 	private FolderModel folderModel;
 	private List<File> files = new ArrayList();
@@ -39,10 +40,10 @@ public class MainViewModel {
 	private FilePermission folderPermission = FilePermission.None;
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
-			FolderProvider directoryProvider) {
+			FolderProvider folderProvider) {
 		this.fileServices = fileServices;
 		this.session = session;
-		this.rootDirectories = directoryProvider.getRootFolders();
+		this.rootFolders = folderProvider.getRootFolders();
 
 		clear();
 	}
@@ -63,11 +64,11 @@ public class MainViewModel {
 		return folderModel;
 	}
 
-	public List<Folder> getRootDirectories() {
-		return rootDirectories;
+	public List<Folder> getRootFolders() {
+		return rootFolders;
 	}
 
-	public List<Folder> getSubDirectories() {
+	public List<Folder> getSubFolders() {
 		return folders;
 	}
 
@@ -115,7 +116,10 @@ public class MainViewModel {
 
 	public void refreshData(ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
-			resultListener.onSuccess(new FolderInfo());
+			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
+					rootFolders, Collections.EMPTY_LIST);
+			onUpdateData(result);
+			resultListener.onSuccess(result);
 			return;
 		}
 

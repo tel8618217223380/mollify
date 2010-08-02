@@ -79,9 +79,10 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	}
 
 	private FolderListItem createHomeButton() {
-		FolderListItem item = listItemFactory.createListItem(this,
-				StyleConstants.DIRECTORY_LISTITEM_HOME, Folder.Empty, 0,
-				Folder.Empty);
+		String style = folderModelProvider.getFolderModel().isRoot() ? StyleConstants.DIRECTORY_LISTITEM_HOME_EMPTY
+				: StyleConstants.DIRECTORY_LISTITEM_HOME;
+		FolderListItem item = listItemFactory.createListItem(this, style,
+				Folder.Empty, 0, Folder.Empty);
 		item.addDropdownTooltip(new Tooltip(
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
 						.getStrings().mainViewHomeButtonTooltip()));
@@ -103,8 +104,8 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	}
 
 	private List<FolderListItem> createItems() {
-		ListIterator<Folder> list = folderModelProvider
-				.getFolderModel().getDirectories();
+		ListIterator<Folder> list = folderModelProvider.getFolderModel()
+				.getFolders();
 		int level = 1;
 		Folder parent = Folder.Empty;
 
