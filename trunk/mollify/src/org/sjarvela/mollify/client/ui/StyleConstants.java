@@ -156,6 +156,7 @@ public class StyleConstants {
 	public static final String DIRECTORY_LISTITEM_DROPDOWN = "mollify-directory-list-item-dropdown";
 
 	public static final String DIRECTORY_LISTITEM_HOME = "home";
+	public static final String DIRECTORY_LISTITEM_HOME_EMPTY = "home-empty";
 	public static final String DIRECTORY_LISTITEM_ROOT_LEVEL = "root";
 	public static final String DIRECTORY_LISTITEM_ROOT_LAST = "root-last";
 	public static final String DIRECTORY_LISTITEM_LAST = "last";

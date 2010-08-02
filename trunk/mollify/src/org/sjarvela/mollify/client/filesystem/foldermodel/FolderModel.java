@@ -29,10 +29,10 @@ public class FolderModel implements CurrentFolderProvider {
 		return folders.firstElement();
 	}
 
-	public void setRootFolder(Folder directory) {
+	public void setRootFolder(Folder folder) {
 		this.folders.clear();
-		if (directory != null)
-			this.folders.add(directory);
+		if (folder != null)
+			this.folders.add(folder);
 	}
 
 	public Folder getCurrentFolder() {
@@ -45,11 +45,11 @@ public class FolderModel implements CurrentFolderProvider {
 		return folders.size();
 	}
 
-	public ListIterator<Folder> getDirectories() {
+	public ListIterator<Folder> getFolders() {
 		return this.folders.listIterator();
 	}
 
-	public List<Folder> getDirectoryList() {
+	public List<Folder> getFolderList() {
 		return Arrays.asList(this.folders.toArray(new Folder[0]));
 	}
 
@@ -62,19 +62,24 @@ public class FolderModel implements CurrentFolderProvider {
 	}
 
 	public boolean canAscend() {
-		return this.folders.size() > 1;
+		return this.folders.size() > 0;
 	}
 
-	public void changeDirectory(int level, Folder directory) {
+	public boolean isRoot() {
+		return this.folders.size() == 0;
+	}
+
+	public void changeDirectory(int level, Folder folder) {
 		if (level < 1 || level > (getLevels() + 1))
-			throw new RuntimeException("Invalid directory ("
-					+ directory.getName() + ") at level " + level);
+			throw new RuntimeException("Invalid folder (" + folder.getName()
+					+ ") at level " + level);
 
 		// first back up until target level is reached
 		while (level <= getLevels())
 			ascend();
 
 		// then descend into the selected folder
-		descendIntoFolder(directory);
+		descendIntoFolder(folder);
 	}
+
 }
