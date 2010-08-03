@@ -504,11 +504,11 @@
 	float: left;
 }
 
-.mollify-directory-list-item-dropdown-home:active {
-	background: url(button-home-combined.png) no-repeat -1px -23px;
+.mollify-directory-list-item-button-home-last .mollify-directory-list-item-dropdown-home {
+	background: url(button-home.png) no-repeat -1px 0;
 }
 
-.mollify-directory-list-item-button-home .mollify-directory-list-item-button-left, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-center, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-right {
+.mollify-directory-list-item-button-home .mollify-directory-list-item-button-left, .mollify-directory-list-item-button-home-last .mollify-directory-list-item-button-left, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-center, .mollify-directory-list-item-button-home-last .mollify-directory-list-item-button-center, .mollify-directory-list-item-button-home .mollify-directory-list-item-button-right, .mollify-directory-list-item-button-home-last .mollify-directory-list-item-button-right {
 	margin: 0;
 	padding: 0;
 	width: 0;
