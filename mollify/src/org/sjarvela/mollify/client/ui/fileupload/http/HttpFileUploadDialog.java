@@ -265,7 +265,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 	private native float getFilesize(String id) /*-{
 		var e = $doc.getElementById(id);
-		if (!e || !e.files[0]) return -1;
+		if (!e || !e.files || !e.files[0]) return -1;
 		return e.files[0].fileSize;
 	}-*/;
 
