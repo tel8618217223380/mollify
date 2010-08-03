@@ -22,7 +22,6 @@ public class FolderModel implements CurrentFolderProvider {
 
 	public FolderModel() {
 		folders = new Stack<Folder>();
-		setRootFolder(Folder.Empty);
 	}
 
 	public Folder getRootFolder() {
