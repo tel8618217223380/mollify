@@ -36,9 +36,7 @@ public class FolderListItemButton extends FlowPanel {
 	private FolderListMenu menu = null;
 
 	public FolderListItemButton(String itemStyle) {
-		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM_BUTTON);
-		if (itemStyle != null)
-			this.addStyleDependentName(itemStyle);
+		setStyle(itemStyle);
 
 		MouseOutHandler mouseOutHandler = new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
@@ -70,6 +68,12 @@ public class FolderListItemButton extends FlowPanel {
 		this.add(center);
 		this.add(dropDown);
 		this.add(right);
+	}
+
+	public void setStyle(String itemStyle) {
+		this.setStyleName(StyleConstants.DIRECTORY_LISTITEM_BUTTON);
+		if (itemStyle != null)
+			this.addStyleDependentName(itemStyle);
 	}
 
 	private Button createDropdownButton(String itemStyle) {

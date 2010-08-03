@@ -27,16 +27,15 @@ public class FolderListItem extends FlowPanel {
 	private final FolderProvider dataProvider;
 	private final TextProvider textProvider;
 
-	private final String itemStyle;
 	private final Folder current;
 	private final int level;
 
-	private FolderListItemButton button;
+	private String itemStyle;
+	private FolderListItemButton button = null;
 
-	public FolderListItem(String itemStyle, Folder currentDirectory,
-			int level, Folder parentDirectory, FolderProvider provider,
+	public FolderListItem(String itemStyle, Folder currentDirectory, int level,
+			Folder parentDirectory, FolderProvider provider,
 			FolderListener listener, TextProvider textProvider) {
-		this.itemStyle = itemStyle;
 		this.current = currentDirectory;
 		this.level = level;
 
@@ -44,11 +43,17 @@ public class FolderListItem extends FlowPanel {
 		this.listener = listener;
 		this.textProvider = textProvider;
 
-		this.setStylePrimaryName(StyleConstants.DIRECTORY_LISTITEM);
+		setStyle(itemStyle);
+		this.add(createButton());
+	}
+
+	public void setStyle(String itemStyle) {
+		this.itemStyle = itemStyle;
+		this.setStyleName(StyleConstants.DIRECTORY_LISTITEM);
 		if (itemStyle != null)
 			this.addStyleDependentName(itemStyle);
-
-		this.add(createButton());
+		if (button != null)
+			button.setStyle(itemStyle);
 	}
 
 	private Widget createButton() {
@@ -64,8 +69,8 @@ public class FolderListItem extends FlowPanel {
 	}
 
 	private FolderListMenu createMenu(Element popupElement) {
-		return new FolderListMenu(itemStyle, current, level + 1,
-				dataProvider, listener, textProvider, this);
+		return new FolderListMenu(itemStyle, current, level + 1, dataProvider,
+				listener, textProvider, this);
 	}
 
 	public void addDropdownTooltip(Tooltip tooltip) {
