@@ -350,9 +350,9 @@
 				
 				$hierarchyQuery = "(item_id REGEXP '^".$rootId;
 				$hierarchyQueryEnd = "";
-				$parts = split("/", substr($parentId, strlen($rootId)));
-				for($i = 0; $i < (count($parts) - 1); $i++) {
-					$hierarchyQuery .= "(".$parts[$i]."/";
+				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
+				foreach($parts as $part) {
+					$hierarchyQuery .= "(".$part."/";
 					$hierarchyQueryEnd .= ")*";
 				}
 				$hierarchyQuery .= $hierarchyQueryEnd."$')";
