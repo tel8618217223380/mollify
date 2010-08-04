@@ -15,7 +15,7 @@ var postRequestCallback = null;
 var protocolVersion = "1_5_0";
 
 function getSessionInfo(success, fail) {
-	request("GET", 'session/info/'+protocolVersion, success, fail);
+	request("GET", 'session/info/'+protocolVersion+'?type=admin', success, fail);
 }
 
 function authenticate(username, pw, success, fail) {

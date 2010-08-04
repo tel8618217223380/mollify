@@ -121,7 +121,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (exposeFileUrls)
 			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
-		changeToRootDirectory(null);
+		changeToRootDirectory(model.getRootFolders().size() == 1 ? model
+				.getRootFolders().get(0) : null);
 		if (model.getRootFolders().size() == 0)
 			view.hideButtons();
 	}
