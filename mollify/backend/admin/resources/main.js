@@ -159,6 +159,10 @@ function onLoadView() {
 	controller.onLoadView();
 }
 
+function getScriptLocation() {
+	return session['script_location'];
+}
+			
 function getSession() {
 	return session;
 }

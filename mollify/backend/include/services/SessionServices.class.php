@@ -77,7 +77,11 @@
 					$this->env->filesystem()->getSessionInfo(),
 					$this->env->plugins()->getSessionInfo()
 				);
-				
+			}
+			if ($this->env->request()->hasParam("type")) {
+				if (strcasecmp($this->env->request()->param("type"), "admin") === 0 and $this->env->authentication()->isAdmin()) {
+					$info["script_location"] = dirname($_SERVER['SCRIPT_FILENAME']);
+				}
 			}
 			return $info;
 		}

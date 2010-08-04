@@ -51,6 +51,12 @@
 	
 		<div class="content">
 			<p>
+				<div class="note">
+					<br/><b>Important!</b><br/><br/>
+					After verifying this configuration information, remove the folder "<code>install</code>" folder security reasons.
+				</div>
+			</p>
+			<p>
 			<?php
 				if ($installer->action() != 'continue') {
 					if ($this->authentication()->isAuthenticationRequired()) instructionsInstalledMultiUser();
