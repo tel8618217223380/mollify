@@ -351,6 +351,7 @@
 				$hierarchyQuery = "(item_id REGEXP '^".$rootId;
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
+				Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
 					$hierarchyQuery .= "(".$part."/";
 					$hierarchyQueryEnd .= ")*";
@@ -381,7 +382,7 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
 			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
-			$query = sprintf('SELECT item_id, permission, if(`user_id` = "0", 0, 1) as ind from `'.$table.'` where '.$userQuery.' and item_id in ('.$itemFilter.') order by item_id asc, ind desc, permission desc');
+			$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			
 			$all = $this->db->query($query)->rows();
 			$all[] = array(
