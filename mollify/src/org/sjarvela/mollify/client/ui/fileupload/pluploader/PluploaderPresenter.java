@@ -106,8 +106,6 @@ public class PluploaderPresenter implements PluploadListener {
 			builder.filter(textProvider.getStrings()
 					.fileUploadDialogSelectFileTypesDescription(),
 					getFileTypeList());
-		else
-			builder.filter("All", "*");
 
 		addRuntimes(builder);
 
