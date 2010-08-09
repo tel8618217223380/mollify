@@ -58,6 +58,14 @@ NOTE! Once the logs are reported, remember to remove server side logging option 
 
 = Most Common Errors =
 
+== Server error "Cannot modify header information" ==
+
+Server error "Cannot modify header information, headers already sent" means PHP output is started prematurely before the Mollify session is initialized.
+
+Usually this is due to following content in `configuration.php` file:
+  * there are extra characters outside php tags: spaces, line feeds, tabs etc.
+  * the file has been saved in UTF-8 without BOM information
+
 == Timezone error in log, or file popup does not work properly ==
 
 Mollify uses PHP date function to get file modification timestamp, but if PHP timezone has not been set, this function will cause an error.
