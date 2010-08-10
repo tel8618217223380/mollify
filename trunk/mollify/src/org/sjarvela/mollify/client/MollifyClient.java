@@ -93,15 +93,7 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	public void onSessionEnded() {
-		service.logout(new ResultListener<Boolean>() {
-			public void onFail(ServiceError error) {
-				start();
-			}
-
-			public void onSuccess(Boolean b) {
-				start();
-			}
-		});
+		start();
 	}
 
 	private void openLogin() {
