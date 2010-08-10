@@ -33,4 +33,8 @@ public class Folder extends FileSystemItem {
 	public boolean isEmpty() {
 		return this == Empty;
 	}
+
+	public boolean isRoot() {
+		return this.id.equals(this.rootId);
+	}
 }

@@ -36,6 +36,7 @@ import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
+import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
@@ -115,6 +116,17 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.view.getDirectoryContext().setFilePermissionHandler(this);
 		this.view.getDirectorySelector().addListener(this);
 
+		this.view
+				.setListSelectController(new SelectController<FileSystemItem>() {
+					@Override
+					public boolean isSelectable(FileSystemItem t) {
+						if (t.isFile())
+							return true;
+						return !Folder.Parent.equals(t)
+								&& !((Folder) t).isRoot();
+					}
+
+				});
 		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
 
 		if (model.getSession().isAuthenticationRequired())

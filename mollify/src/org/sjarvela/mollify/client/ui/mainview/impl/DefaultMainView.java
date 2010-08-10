@@ -30,6 +30,7 @@ import org.sjarvela.mollify.client.ui.common.ActionToggleButton;
 import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
@@ -378,6 +379,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 						: SelectionMode.None);
 	}
 
+	public void setListSelectController(SelectController controller) {
+		list.setSelectController(controller);
+	}
+
 	public void updateFileSelection(List<FileSystemItem> selected) {
 		fileActions.setEnabled(selected.size() > 0);
 	}
@@ -409,4 +414,5 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			fileUrlContainer.getElement().appendChild(a);
 		}
 	}
+
 }

@@ -53,6 +53,7 @@ public class Grid<T> extends FlexTable {
 	private GridComparator<T> comparator = null;
 	private Map<Element, Widget> eventWidgets = new HashMap();
 	private Map<Class, String> widgetBaseClasses = new HashMap();
+	private SelectController selectController;
 
 	public Grid(String headerCss, List<GridColumn> columns) {
 		super();
@@ -170,6 +171,10 @@ public class Grid<T> extends FlexTable {
 		removeAllSelections();
 	}
 
+	public void setSelectController(SelectController controller) {
+		this.selectController = controller;
+	}
+
 	private void removeAllSelectionModeStyles() {
 		this.removeStyleDependentName("multi");
 		this.removeStyleDependentName("single");
@@ -181,11 +186,15 @@ public class Grid<T> extends FlexTable {
 
 	public void selectAll() {
 		for (T t : content)
-			if (!selected.contains(t)) {
+			if (isSelectable(t) && !selected.contains(t)) {
 				selected.add(t);
 				addSelectedStyle(t);
 			}
 		notifySelectionChange();
+	}
+
+	protected boolean isSelectable(T t) {
+		return selectController == null || selectController.isSelectable(t);
 	}
 
 	public void selectNone() {

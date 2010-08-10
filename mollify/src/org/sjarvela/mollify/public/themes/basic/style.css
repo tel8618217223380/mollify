@@ -792,6 +792,12 @@ td#mollify-filelist-column-size {
 	width: 0;
 }
 
+.mollify-filelist-multi .mollify-filelist-row-empty-selector {
+	width: 22px;
+	height: 1px;
+	float: left;
+}
+
 .mollify-filelist-multi .mollify-filelist-row-selector {
 	width: 13px;
 	height: 13px;
