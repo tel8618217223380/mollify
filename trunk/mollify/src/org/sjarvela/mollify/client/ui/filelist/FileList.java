@@ -79,7 +79,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	public GridData getData(FileSystemItem item, GridColumn column) {
 		if (item.isFile())
 			return getFileData((File) item, column);
-		return getDirectoryData((Folder) item, column);
+		return getFolderData((Folder) item, column);
 	}
 
 	private GridData getFileData(File file, GridColumn column) {
@@ -92,17 +92,17 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	private GridData getDirectoryData(Folder directory, GridColumn column) {
+	private GridData getFolderData(Folder folder, GridColumn column) {
 		if (column.equals(COLUMN_NAME))
-			return new GridData.Widget(createDirectoryNameWidget(directory));
+			return new GridData.Widget(createFolderNameWidget(folder));
 		else if (column.equals(COLUMN_TYPE))
-			return new GridData.Widget(createTypeWidget(directory));
+			return new GridData.Widget(createTypeWidget(folder));
 		else if (column.equals(COLUMN_SIZE))
 			return new GridData.Text(SIZE_DIR);
 		return new GridData.Text("");
 	}
 
-	private FlowPanel createDirectoryNameWidget(final Folder folder) {
+	private FlowPanel createFolderNameWidget(final Folder folder) {
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(folder));
@@ -137,18 +137,25 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	private Widget createSelector(final FileSystemItem item) {
 		Label selector = new Label();
-		selector.setStyleName(StyleConstants.FILE_LIST_ROW_SELECTOR);
-		selector.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				FileList.this.onRowSelectorClicked(item);
-			}
-		});
-		HoverDecorator.decorate(selector);
+		if (Folder.Parent.equals(item)
+				|| (!item.isFile() && ((Folder) item).isRoot())) {
+			selector.setStyleName(StyleConstants.FILE_LIST_ROW_EMPTY_SELECTOR);
+		} else {
+			selector.setStyleName(StyleConstants.FILE_LIST_ROW_SELECTOR);
+
+			selector.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					FileList.this.onRowSelectorClicked(item);
+				}
+			});
+			HoverDecorator.decorate(selector);
+		}
 		return selector;
 	}
 
 	protected void onRowSelectorClicked(FileSystemItem item) {
-		updateSelection(item);
+		if (isSelectable(item))
+			updateSelection(item);
 	}
 
 	private Widget createNameWidget(final FileSystemItem item, boolean draggable) {

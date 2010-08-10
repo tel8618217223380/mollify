@@ -108,7 +108,9 @@
 			foreach($this->getRootFolders() as $id => $folder) {
 				$result["folders"][] = array(
 					"id" => $folder->publicId(),
-					"name" => $folder->name()
+					"name" => $folder->name(),
+					"parent_id" => NULL,
+					"root_id" => $folder->publicId()
 				);
 			}
 

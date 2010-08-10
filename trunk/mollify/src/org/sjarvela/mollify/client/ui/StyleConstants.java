@@ -135,6 +135,7 @@ public class StyleConstants {
 	public static final String FILE_LIST_ROW_DIRECTORY_ICON = "mollify-filelist-row-directory-icon";
 	public static final String FILE_LIST_ROW_FILE_ICON = "mollify-filelist-row-file-icon";
 	public static final String FILE_LIST_ROW_SELECTOR = "mollify-filelist-row-selector";
+	public static final String FILE_LIST_ROW_EMPTY_SELECTOR = "mollify-filelist-row-empty-selector";
 	public static final String FILE_LIST_ITEM_SELECT = "mollify-filelist-item-select";
 	public static final String FILE_LIST_ITEM_NAME_PANEL = "mollify-filelist-item-name-panel";
 	public static final String FILE_LIST_ITEM_NAME = "mollify-filelist-item-name";
