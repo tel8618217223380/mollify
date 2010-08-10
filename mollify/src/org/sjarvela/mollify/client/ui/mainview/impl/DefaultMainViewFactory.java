@@ -136,7 +136,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 						.getConfigurationService(), fileSystemService,
 				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this, dropBox, exposeFileUrls);
+				fileUploadDialogFactory, this, dropBox, exposeFileUrls,
+				serviceProvider.getSessionService());
 		dragController.setDataProvider(presenter);
 		new MainViewGlue(view, presenter, fileSystemActionHandler,
 				actionDelegator);

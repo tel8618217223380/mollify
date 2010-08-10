@@ -29,6 +29,7 @@ import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
@@ -59,6 +60,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
+	private final SessionService sessionService;
 
 	private final FileSystemService fileSystemService;
 	private final ConfigurationService configurationService;
@@ -82,12 +84,14 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory,
-			DropBox dropBox, boolean exposeFileUrls) {
+			DropBox dropBox, boolean exposeFileUrls,
+			SessionService sessionService) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
+		this.sessionService = sessionService;
 
 		this.model = model;
 		this.view = view;
@@ -266,8 +270,18 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void logout() {
-		dropBox.close();
-		sessionManager.endSession();
+		sessionService.logout(new ResultListener<Boolean>() {
+			@Override
+			public void onSuccess(Boolean result) {
+				dropBox.close();
+				sessionManager.endSession();
+			}
+
+			@Override
+			public void onFail(ServiceError error) {
+				onError(error, false);
+			}
+		});
 	}
 
 	public void changePassword() {
