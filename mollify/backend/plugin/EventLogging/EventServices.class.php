@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -18,20 +18,21 @@
 		}
 		
 		public function processPost() {
+			$this->env->authentication()->assertAdmin();
 			if (count($this->path) == 1 and $this->path[0] === 'query') {
-				$this->env->authentication()->assertAdmin();
 				$this->response()->success($this->processQuery());
 				return;
 			} else if (count($this->path) == 1 and $this->path[0] === 'types') {
-				$this->env->authentication()->assertAdmin();
 				$this->response()->success($this->env->events()->getTypes());
 				return;
 			} else if ($this->path[0] === 'downloads') {
-				$this->env->authentication()->assertAdmin();
 				if (count($this->path) == 2 and $this->path[1] === 'events')
-					$this->response()->success($this->processDownloadQuery($this->path[1]));
+					$this->response()->success($this->processTypeQuery('filesystem/download', $this->path[1]));
 				else
-					$this->response()->success($this->processDownloadQuery());
+					$this->response()->success($this->processTypeQuery('filesystem/download'));
+				return;
+			} else if (count($this->path) == 1 and $this->path[0] === 'uploads') {
+				$this->response()->success($this->processTypeQuery('filesystem/upload'));
 				return;
 			}
 			throw $this->invalidRequestException();
@@ -70,7 +71,7 @@
 			return array("start" => $start, "count" => count($result), "total" => $count, "events" => $result);
 		}
 
-		private function processDownloadQuery($events = FALSE) {
+		private function processTypeQuery($type, $events = FALSE) {
 			$data = $this->request->data;
 			if (!isset($data)) throw $this->invalidRequestException();
 			
@@ -81,7 +82,7 @@
 			} else {
 				$query = "select id, time, user ";
 			}
-			$query .= "from ".$db->table("event_log")." where type='filesystem/download'";
+			$query .= "from ".$db->table("event_log")." where type='".$type."'";
 			
 			if (isset($data['start_time'])) {
 				$query .= ' and time >= '.$db->string($data['start_time']);
