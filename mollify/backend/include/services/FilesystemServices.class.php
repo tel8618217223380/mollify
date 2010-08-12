@@ -177,8 +177,16 @@
 					break;
 				case 'copy':
 					$data = $this->request->data;
-					if (!isset($data['id'])) throw $this->invalidRequestException();
-					$this->env->filesystem()->copy($item, $this->item($data['id'], FALSE));
+					if (!isset($data['folder']) and !isset($data['name'])) throw $this->invalidRequestException();
+					if (isset($data['folder']) and isset($data['name'])) throw $this->invalidRequestException();
+					
+					if (isset($data['folder'])) {
+						$folder = $this->item($data['folder'], FALSE);
+						$to = $folder->fileWithName($item->name(), TRUE);
+					} else {
+						$to = $item->parent()->fileWithName($data['name'], TRUE);
+					}
+					$this->env->filesystem()->copy($item, $to);
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -269,8 +277,11 @@
 					break;
 				case 'copy':
 					$data = $this->request->data;
-					if (!isset($data['id'])) throw $this->invalidRequestException();
-					$this->env->filesystem()->copy($item, $this->item($data['id'], FALSE));
+					if (!isset($data['folder'])) throw $this->invalidRequestException();
+					
+					$folder = $this->item($data['folder'], FALSE);
+					$to = $folder->folderWithName($item->name(), TRUE);
+					$this->env->filesystem()->copy($item, $to);
 					break;
 				case 'move':
 					$data = $this->request->data;

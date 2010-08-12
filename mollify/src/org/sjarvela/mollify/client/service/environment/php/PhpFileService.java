@@ -16,8 +16,8 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -117,9 +117,19 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Copy " + item.getId() + " to [" + directory.getId()
 					+ "]");
-		String data = new JSONStringBuilder("id", directory.getId()).toString();
+		String data = new JSONStringBuilder("folder", directory.getId()).toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.copy))
+				.data(data).listener(listener).post();
+	}
+
+	@Override
+	public void copyWithName(File file, String name, ResultListener listener) {
+		if (Log.isDebugEnabled())
+			Log.debug("Copy " + file.getId() + " with name [" + name + "]");
+		String data = new JSONStringBuilder("name", name).toString();
+
+		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
 				.data(data).listener(listener).post();
 	}
 

@@ -11,11 +11,8 @@
 function MollifyUploadsView() {
 	var that = this;
 	this.pageUrl = "uploads.html";
-	this.onLoadView = onLoadView;
-	this.users = null;
-	this.usersById = {}
 	
-	function onLoadView() {
+	this.onLoadView = function() {
 		if (!getSession().features["event_logging"]) {
 			onError("Event logging not enabled");
 			return;
@@ -25,27 +22,26 @@ function MollifyUploadsView() {
 		$("#uploads-range-start").datepicker();
 		$("#uploads-range-end").datepicker();
 		
-		$("#uploaded-files-list").jqGrid({        
+		$("#uploads-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['File'],
+		   	colNames:['ID', 'Time', 'User', 'File'],
 		   	colModel:[
-				{name:'item',index:'item',width:150, sortable:true}
+			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
+		   		{name:'time',index:'time', width:150, sortable:true, formatter:timeFormatter},
+				{name:'user',index:'user',width:150, sortable:true, formatter:notNullFormatter},
+				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
 		   	sortname:'item',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				that.onFileSelectionChanged();
+				that.onEventSelectionChanged();
 			}
 		});
 		
-		that.onFileSelectionChanged();
-	}
-	
-	function timeFormatter(time, options, obj) {
-		return formatDateTime(time);
+		that.onEventSelectionChanged();
 	}
 		
 	this.onSearch = function() {
@@ -78,22 +74,26 @@ function MollifyUploadsView() {
 			return;
 		}
 
+		var item = $("#uploads-item-text").val();
+		if (!item || item.length == 0) item = null
+
 		that.lastSearch = {start:start, end:end};
-		getUploads(start, end, null, that.onRefreshUploads, onServerError);
+		getUploads(start, end, item, that.onRefreshUploads, onServerError);
 	}
 	
-	this.onRefreshUploads = function(files) {
-		that.files = files;
+	this.onRefreshUploads = function(result) {
+		that.events = result.events;
 		
-		var grid = $("#uploaded-files-list");
+		var grid = $("#uploads-list");
 		grid.jqGrid('clearGridData');
 
-		for(var i=0;i < files.length;i++) {
-			var file = files[i];			
-			grid.jqGrid('addRowData', i, file);
+		for(var i=0;i < that.events.length;i++) {
+			var event = that.events[i];
+			event.time = parseInternalTime(event.time);
+			grid.jqGrid('addRowData', i, event);
 		}
 
-		that.onFileSelectionChanged();
+		that.onEventSelectionChanged();
 	}
 	
 	this.inArray = function(a, o) {
@@ -102,16 +102,14 @@ function MollifyUploadsView() {
 		return false;
 	}
 	
-	this.getSelectedFile = function() {
-		return $("#uploaded-files-list").getGridParam("selrow");
+	this.getSelectedEvent = function() {
+		return $("#uploads-list").getGridParam("selrow");
 	}
 	
-	this.onFileSelectionChanged = function() {
-		var file = that.getSelectedFile();
-		var selected = (file != null);
-		file = selected ? that.files[file].item : null;
-				
-		$("#uploads-list").jqGrid('clearGridData');
+	this.onEventSelectionChanged = function() {
+		var event = that.getSelectedEvent();
+		var selected = (event != null);
+		event = selected ? that.events[event] : null;
 		
 		if (!selected) {
 			$("#upload-details-data").hide();
@@ -123,7 +121,7 @@ function MollifyUploadsView() {
 			else
 				$("#upload-details-info").html('<div class="message">Select file from the list to view details</div>');
 		} else {
-			$("#upload-details-info").html("<h1>"+file+"</h1>");
+			$("#upload-details-info").html("");
 		}
 	}
 }
@@ -132,7 +130,8 @@ function getUploads(start, end, file, success, fail) {
 	var data = {}
 	if (start) data["start_time"] = formatInternalTime(start);
 	if (end) data["end_time"] = formatInternalTime(end);
-	if (file) data["file"] = item;
+	if (file) data["item"] = file;
+	data["type"] = "filesystem/upload";
 	
-	request("POST", 'events/uploads', success, fail, JSON.stringify(data));
+	request("POST", 'events/query', success, fail, JSON.stringify(data));
 }

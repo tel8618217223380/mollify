@@ -31,9 +31,6 @@
 				else
 					$this->response()->success($this->processTypeQuery('filesystem/download'));
 				return;
-			} else if (count($this->path) == 1 and $this->path[0] === 'uploads') {
-				$this->response()->success($this->processTypeQuery('filesystem/upload'));
-				return;
 			}
 			throw $this->invalidRequestException();
 		}

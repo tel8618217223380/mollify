@@ -96,10 +96,6 @@ function MollifyDownloadsView() {
 			that.usersById[user.id] = user;
 		}
 	}
-	
-	function timeFormatter(time, options, obj) {
-		return formatDateTime(time);
-	}
 		
 	this.onSearch = function() {
 		var start = $("#downloads-range-start").val();

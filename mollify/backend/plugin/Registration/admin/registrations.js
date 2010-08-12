@@ -157,15 +157,6 @@ function PendingRegistrationsView() {
 		
 		confirmRegistration(id, that.onRefresh, onServerError);
 	}
-	
-	function timeFormatter(time, options, obj) {
-		return formatDateTime(time);
-	}
-	
-	function notNullFormatter(o, options, obj) {
-		if (o == null) return '';
-		return o;
-	}
 }
 
 function register(username, email, password, success, fail) {

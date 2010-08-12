@@ -170,15 +170,6 @@ function MollifyEventsView() {
 	that.getEventDetailsRow = function(title, value, detail) {
 		return "<div class='" + (detail ? "event-info-detail-row" : "event-info-row") + "'><div class='event-info-title'>" + title + "</div><div class='event-info-value'>" + value + "</div></div>";
 	}
-		
-	function timeFormatter(time, options, obj) {
-		return formatDateTime(time);
-	}
-	
-	function notNullFormatter(o, options, obj) {
-		if (o == null) return '';
-		return o;
-	}
 
 	function typeFormatter(type, options, obj) {
 		var t = that.types[type];

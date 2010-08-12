@@ -65,6 +65,10 @@
 			$this->db = $db;
 		}
 		
+		public function setCharset($charset) {
+			mysqli_set_charset($this->db, $charset);
+		}
+		
 		public function databaseExists() {
 			try {
 				return mysqli_select_db($this->db, $this->database);

@@ -16,8 +16,8 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -46,6 +46,12 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				.createListener(listener));
 	}
 
+	@Override
+	public void copyWithName(File file, String name, ResultListener listener) {
+		service.copyWithName(file, name, resultListenerFactory
+				.createListener(listener));
+	}
+
 	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		service.createFolder(parentFolder, folderName, resultListenerFactory
@@ -68,9 +74,7 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	}
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
-		service
-				.getInfo(parent, resultListenerFactory
-						.createListener(listener));
+		service.getInfo(parent, resultListenerFactory.createListener(listener));
 	}
 
 	public void getFolderDetails(Folder directory,

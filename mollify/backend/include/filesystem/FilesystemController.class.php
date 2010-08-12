@@ -44,7 +44,7 @@
 			$list = array();
 			
 			foreach($this->getFolderDefs($all) as $folderDef) {				
-				$root = $this->filesystem($folderDef)->root();
+				$root = $this->filesystem($folderDef, !$all)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
 				$list[$folderDef['id']] = $root;
 			}
@@ -61,7 +61,7 @@
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
-				$root = $this->filesystem($folderDef)->root();
+				$root = $this->filesystem($folderDef, !$all)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
 				
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
@@ -110,7 +110,8 @@
 					"id" => $folder->publicId(),
 					"name" => $folder->name(),
 					"parent_id" => NULL,
-					"root_id" => $folder->publicId()
+					"root_id" => $folder->publicId(),
+					"path" => ""
 				);
 			}
 
@@ -307,20 +308,26 @@
 		public function copy($item, $to) {
 			Logging::logDebug('copying '.$item->id()."[".$item->path().'] to ['.$to.']');
 			
-			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
+			if (!$item->isFile() and $to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
+			if ($item->isFile() and !$to->isFile()) throw new ServiceException("NOT_A_FILE", $to->path());
+			
 			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
-			$this->assertRights($to, Authentication::RIGHTS_WRITE, "copy");
+			$this->assertRights($to->parent(), Authentication::RIGHTS_WRITE, "copy");
 
 			$to = $item->copy($to);
 			$this->env->events()->onEvent(FileEvent::copy($item, $to));
 		}
 		
-		public function copyItems($items, $to) {
-			Logging::logDebug('copying '.count($items).' items');
-			$this->assertRights($items, Authentication::RIGHTS_WRITE, "copy");
+		public function copyItems($items, $folder) {
+			Logging::logDebug('copying '.count($items).' items to ['.$to.']');
+			$this->assertRights($items, Authentication::RIGHTS_READ, "copy");
 			
-			foreach($items as $item)
-				$this->copy($item, $to);
+			foreach($items as $item) {
+				if ($item->isFile)
+					$this->copy($item, $folder->fileWithName($item->name(), TRUE));
+				else
+					$this->copy($item, $folder->folderWithName($item->name(), TRUE));
+			}
 		}
 		
 		public function move($item, $to) {

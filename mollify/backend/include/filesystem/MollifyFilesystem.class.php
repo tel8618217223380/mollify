@@ -59,8 +59,10 @@
 		
 		public abstract function createFile($folder, $name);
 		
-		public abstract function itemWithName($folder, $name);
+		public abstract function fileWithName($folder, $name, $nonExisting = FALSE);
 
+		public abstract function folderWithName($folder, $name, $nonExisting = FALSE);
+		
 		public function id() {
 			return $this->id;
 		}

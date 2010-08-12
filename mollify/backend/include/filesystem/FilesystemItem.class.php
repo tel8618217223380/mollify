@@ -144,16 +144,20 @@
 			return $this->filesystem->items($this);
 		}
 
-		public function itemWithName($name) {
-			return $this->filesystem->itemWithName($this, $name);
+		public function fileWithName($name, $nonExisting = FALSE) {
+			return $this->filesystem->fileWithName($this, $name, $nonExisting);
 		}
 
-		public function createFile($name) {
-			return $this->filesystem->createFile($this, $name);
+		public function folderWithName($name, $nonExisting = FALSE) {
+			return $this->filesystem->folderWithName($this, $name, $nonExisting);
 		}
 		
 		public function isRoot() {
 			return strcmp($this->id, $this->rootId) === 0;
+		}
+
+		public function createFile($name) {
+			return $this->filesystem->createFile($this, $name);
 		}
 		
 		public function createFolder($name) {
