@@ -231,8 +231,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				.getStrings().fileActionRenameTitle());
 		actionsButton.addAction(FileSystemAction.copy, textProvider
 				.getStrings().fileActionCopyTitle());
-		actionsButton.addAction(FileSystemAction.copyHere, textProvider
-				.getStrings().fileActionCopyHereTitle());
+		if (Mode.File.equals(this.mode))
+			actionsButton.addAction(FileSystemAction.copyHere, textProvider
+					.getStrings().fileActionCopyHereTitle());
 		actionsButton.addAction(FileSystemAction.move, textProvider
 				.getStrings().fileActionMoveTitle());
 		actionsButton.addAction(FileSystemAction.delete, textProvider

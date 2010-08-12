@@ -32,6 +32,7 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
@@ -256,7 +257,21 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						}, source);
 			} else if (FileSystemAction.copyHere.equals(action)) {
-				dialogManager.showInputDialog("TEST", "test", file.getName()); // TODO
+				dialogManager.showInputDialog("TEST", "test", file.getName(),
+						new InputListener() {
+							@Override
+							public boolean isInputAcceptable(String input) {
+								return !input.isEmpty()
+										&& !file.getName().equals(input);
+							}
+
+							@Override
+							public void onInput(String name) {
+								fileSystemService.copyWithName(file, name,
+										createListener(FileSystemAction.copy,
+												null));
+							}
+						});
 			} else if (action.equals(FileSystemAction.move)) {
 				itemSelectorFactory.openFolderSelector(textProvider
 						.getStrings().moveFileDialogTitle(), textProvider

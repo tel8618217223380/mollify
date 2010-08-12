@@ -60,6 +60,10 @@
 			if ($selectDb) $this->selectDb();
 		}
 		
+		public function setCharset($charset) {
+			mysql_set_charset($charset, $this->db);
+		}
+		
 		public function databaseExists() {
 			return mysql_select_db($this->database, $this->db);
 		}

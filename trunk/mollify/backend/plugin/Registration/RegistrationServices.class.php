@@ -51,12 +51,7 @@
 		private function processRegister() {
 			$registration = $this->request->data;
 			if (!isset($registration['name']) or !isset($registration['password']) or !isset($registration['email'])) throw $this->invalidRequestException();
-			
 			$this->assertUniqueNameAndEmail($registration['name'], $registration['email']);
-			
-			$plugin = $this->env->plugins()->getPlugin("Registration");
-			if ($plugin->getSetting("user_assert_global_uniqueness", FALSE))
-				$this->assertUniqueNameAndEmailGlobal($registration['name'], $registration['email']);
 
 			$db = $this->env->configuration()->db();
 			$name = $registration['name'];
@@ -76,11 +71,8 @@
 			$db = $this->env->configuration()->db();
 			$query = "select count(id) from ".$db->table("pending_registrations")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
-			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered with same name or email"); 
-		}
-
-		private function assertUniqueNameAndEmailGlobal($name, $email) {
-			$db = $this->env->configuration()->db();
+			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered with same name or email");
+			
 			$query = "select count(id) from ".$db->table("user")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
 			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already exists with same name or email");

@@ -17,8 +17,8 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -79,6 +79,11 @@ public class DemoFileService implements FileSystemService {
 	@Override
 	public void copy(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener) {
+		listener.onSuccess(true);
+	}
+
+	@Override
+	public void copyWithName(File file, String name, ResultListener listener) {
 		listener.onSuccess(true);
 	}
 

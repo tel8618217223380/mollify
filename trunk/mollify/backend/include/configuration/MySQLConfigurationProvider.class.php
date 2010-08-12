@@ -16,7 +16,7 @@
 		private $db;
 		
 		public function __construct($settings) {
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX;
+			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET;
 			
 			if (!isset($DB_USER) or !isset($DB_PASSWORD)) throw new ServiceException("INVALID_CONFIGURATION", "No database information defined");
 			
@@ -31,7 +31,9 @@
 			
 			require_once("include/mysql/MySQLDatabase.class.php");
 			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
+			
 			$this->db->connect();
+			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);
 		}
 		
 		public function getType() {

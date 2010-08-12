@@ -52,12 +52,13 @@
 				if (!$nonexisting and !is_file($fullPath))
 					throw new ServiceException("NOT_A_FILE", 'id:'.$id);
 			} else {
-				if ($nonexisting) throw new ServiceException("REQUEST_FAILED", "Invalid folder request");
-				
-				if (!$this->pathExists($fullPath))
+				if (!$nonexisting and !$this->pathExists($fullPath))
 					throw new ServiceException("DIR_DOES_NOT_EXIST", 'id:'.$id);
 
-				if (!is_dir($fullPath))
+				if ($nonexisting and $this->pathExists($fullPath))
+					throw new ServiceException("DIR_ALREADY_EXISTS", 'id:'.$id);
+
+				if (!$nonexisting and !is_dir($fullPath))
 					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
 			}
 			
@@ -171,8 +172,8 @@
 		}
 
 		public function copy($item, $to) {			
-			$target = self::joinPath($this->localPath($to), $item->name());
-			if (!$item->isFile()) $target = self::folderPath($target);
+			$target = $this->localPath($to);
+
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");
 			
 			$result = FALSE;
@@ -262,9 +263,14 @@
 			return $this->itemWithPath($this->publicPath(self::joinPath($this->localPath($folder), $name)), TRUE);
 		}
 
-		public function itemWithName($folder, $name) {
+		public function fileWithName($folder, $name, $nonExisting = FALSE) {
 			$path = self::joinPath($this->localPath($folder), $name);
-			return $this->itemWithPath($this->publicPath($path), FALSE);
+			return $this->itemWithPath($this->publicPath($path), $nonExisting);
+		}
+
+		public function folderWithName($folder, $name, $nonExisting = FALSE) {
+			$path = self::joinPath($this->localPath($folder), $name.DIRECTORY_SEPARATOR);
+			return $this->itemWithPath($this->publicPath($path), $nonExisting);
 		}
 		
 		public function size($file) {

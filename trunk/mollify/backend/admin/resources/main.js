@@ -247,7 +247,7 @@ function parseInternalTime(time) {
 function formatInternalTime(time) {
 	return time.format('yymmddHHMMss', time);
 }
-
+	
 function createSettings() {
 	var settings = {};
 	
@@ -369,4 +369,15 @@ String.prototype.padR = function(width, pad) {
 	var length = width - this.length
 	if (length < 1) this.substr(0, width);
 	return (this + String.repeat(pad,length)).substr(0,width);
+}
+
+// jqGrid formatters
+
+function timeFormatter(time, options, obj) {
+	return formatDateTime(time);
+}
+	
+function notNullFormatter(o, options, obj) {
+	if (o == null) return '';
+	return o;
 }

@@ -59,7 +59,8 @@ public class DefaultDialogManager implements DialogManager {
 
 	@Override
 	public void showInputDialog(String title, String message,
-			String defaultValue) {
-		new InputDialog(title, "");
+			String defaultValue, InputListener listener) {
+		new InputDialog(textProvider, title, "", message, defaultValue,
+				listener);
 	}
 }

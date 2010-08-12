@@ -39,6 +39,8 @@ public interface FileSystemService extends FileDetailsProvider,
 	void copy(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener);
 
+	void copyWithName(File file, String name, ResultListener listener);
+
 	void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener);
 
@@ -76,4 +78,5 @@ public interface FileSystemService extends FileDetailsProvider,
 			ResultListener resultListener);
 
 	String getPublicLink(File file);
+
 }

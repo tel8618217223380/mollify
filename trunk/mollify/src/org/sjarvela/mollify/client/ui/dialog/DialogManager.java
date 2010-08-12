@@ -26,6 +26,7 @@ public interface DialogManager {
 	void showConfirmationDialog(String title, String message, String style,
 			ConfirmationListener listener, Widget source);
 
-	void showInputDialog(String title, String message, String defaultValue);
+	void showInputDialog(String title, String message, String defaultValue,
+			InputListener listener);
 
 }
