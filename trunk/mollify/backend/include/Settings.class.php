@@ -33,6 +33,7 @@
 			"enable_public_links" => FALSE,
 			"enable_mail_notification" => FALSE,
 			"mail_notification_from" => NULL,
+			"new_folder_permission_mask" => 0755,
 			"debug" => FALSE
 		);
 		

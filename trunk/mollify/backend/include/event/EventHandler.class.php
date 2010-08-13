@@ -13,7 +13,12 @@
 	class EventHandler {
 		private $listeners = array();
 		private $types = array();
-				
+		private $env;
+
+		public function __construct($env) {
+			$this->env = $env;
+		}
+		
 		public function register($type, $listener) {
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: registering '".$type."': ".get_class($listener));
 			
@@ -28,6 +33,8 @@
 		}
 		
 		public function onEvent($e) {
+			$e->setUser($this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL);
+			
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: onEvent: '".$e->type()."'");
 			
 			foreach($this->listeners as $type => $listeners) {
@@ -49,7 +56,7 @@
 	
 	abstract class Event {
 		private $time;
-		private $user = NULL;
+		protected $user = NULL;
 		private $type;
 		private $subType;
 		
@@ -83,7 +90,7 @@
 		
 		public function details() { return ""; }
 		
-		protected function setUser($user) {
+		public function setUser($user) {
 			$this->user = $user;
 		}
 		

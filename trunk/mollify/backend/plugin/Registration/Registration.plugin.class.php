@@ -50,18 +50,20 @@
 		}
 		
 		static function registered($name, $email) {
-			return new RegistrationEvent($name, self::REGISTER, "email=".$email);
+			return new RegistrationEvent(NULL, $name, self::REGISTER, "email=".$email);
 		}
 
-		static function confirmed($name) {
-			return new RegistrationEvent($name, self::CONFIRM);
+		static function confirmed($id, $name) {
+			return new RegistrationEvent($id, $name, self::CONFIRM);
 		}
 		
-		function __construct($name, $type, $info = "") {
+		function __construct($id, $name, $type, $info = "") {
 			parent::__construct(time(), Registration::EVENT_TYPE_REGISTRATION, $type);
-			$this->setUser($name);
+			$this->user = array("user_id" => $id, "username" => $name);
 			$this->info = $info;
 		}
+		
+		public function setUser($user) {}
 			
 		public function details() {
 			return $this->info;

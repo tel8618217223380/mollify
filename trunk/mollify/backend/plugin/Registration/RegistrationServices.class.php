@@ -111,7 +111,7 @@
 			
 			$this->addUserProperties($id, $registration['name'], $plugin);
 			
-			$this->env->events()->onEvent(RegistrationEvent::confirmed($registration['name']));
+			$this->env->events()->onEvent(RegistrationEvent::confirmed($id, $registration['name']));
 			$this->response()->success(array());
 		}
 		
