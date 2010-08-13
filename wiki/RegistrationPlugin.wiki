@@ -10,6 +10,7 @@ Registration has following settings:
   * permission
   * groups
   * folders
+  * user_folder
 
 Permission is the permission mode for the created user, possible values "ro" (read only), "rw" (read and write) and "a" (admin). If not given, users are added with read only permission.
 Groups is a list of user group ids for the created user. If not set, user is not assigned to any groups.
@@ -25,6 +26,22 @@ For example:
 		)
 	);
 }}}
+
+Setting "user_folder" is an option that creates user folders automatically after registration, for example:
+
+{{{
+	$PLUGINS = array(
+		"Registration" => array(
+			"user_folder" => array("path" => "/foo/users", "folder_name" => "User Folder", "add_to_users" 
+=> array("1", "2")),
+		)
+	);
+}}}
+
+Parameter "`path`" is the place where user folders are created, use a folder that is not published.
+Parameter "`folder_name`" is a name for the folder. Leave it out if you want to name it after the user.
+Parameter "`add_to_users`" is a list of user ids that also see this folder. Useful for listing admins who need to 
+control these folders.
 
 Registration plugin requires installation via Mollify update util.
 
