@@ -14,14 +14,15 @@
 		protected function isValidPath($method, $path) {
 			return count($path) == 1;
 		}
-				
+
 		public function processGet() {
 			if (count($this->path) != 1 or $this->path[0] != 'list') throw $this->invalidRequestException();
 			$this->env->authentication()->assertAdmin();
 			
-			$db = $this->env->configuration()->db();
-			$result = $db->query("select `id`, `name` from ".$db->table("notificator_notification")." order by id asc")->rows();
-			$this->response()->success($result);
+			require_once("dao/NotificatorDao.class.php");
+			
+			$dao = new NotificatorDao($this->env);
+			$this->response()->success($dao->getAllNotifications());
 		}
 				
 		public function __toString() {

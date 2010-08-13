@@ -41,7 +41,7 @@
 			$this->settings = $settings;
 			$this->features = new Features($configurationProvider, $settings);
 			$this->authentication = new Authentication($this);
-			$this->eventHandler = new EventHandler();
+			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
 			$this->notification = new MailNotification($this);

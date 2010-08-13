@@ -30,10 +30,9 @@
 		}
 		
 		private function getUser($e) {
-			if ($e->user() != NULL) return $e->user();
-			
-			$user = $this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL;
-			return $user != NULL ? $user['username'] : NULL;
+			$user = $e->user();
+			if (!$user) return NULL;
+			return $user["username"];
 		}
 		
 		public function __toString() {
