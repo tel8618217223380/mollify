@@ -57,4 +57,6 @@ public interface MessageConstants extends Messages {
 
 	String publicLinkMessage(String name);
 
+	String copyHereDialogMessage(String name);
+
 }

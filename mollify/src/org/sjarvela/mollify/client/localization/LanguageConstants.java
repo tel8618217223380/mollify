@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
+
 	public String shortDateTimeFormat();
 
 	public String permissionModeNone();
@@ -434,5 +435,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileViewerOpenInNewWindowTitle();
 
 	public String filePublicLinkTitle();
+	
+	public String copyHereDialogTitle();
 
 }

@@ -257,7 +257,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							}
 						}, source);
 			} else if (FileSystemAction.copyHere.equals(action)) {
-				dialogManager.showInputDialog("TEST", "test", file.getName(),
+				dialogManager.showInputDialog(textProvider.getStrings()
+						.copyHereDialogTitle(), textProvider.getMessages()
+						.copyHereDialogMessage(file.getName()), file.getName(),
 						new InputListener() {
 							@Override
 							public boolean isInputAcceptable(String input) {
