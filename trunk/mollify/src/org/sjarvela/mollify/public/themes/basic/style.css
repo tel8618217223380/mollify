@@ -1031,7 +1031,7 @@ td#mollify-filelist-column-size {
 	padding-left: 20px;
 }
 
-.mollify-info-dialog-content {
+.mollify-info-dialog-content, .mollify-input-dialog-content {
 	margin: 10px 4px 4px;
 }
 
@@ -1040,10 +1040,23 @@ td#mollify-filelist-column-size {
 	margin-top: 6px;
 }
 
-.mollify-info-dialog-buttons {
+.mollify-info-dialog-buttons, .mollify-input-dialog-buttons {
 	width: 100%;
 	margin-top: 11px;
 	margin-bottom: 3px;
+}
+
+.mollify-input-dialog-input {
+	width: 250px;
+}
+
+.mollify-input-dialog-message {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.mollify-dialog-button-input-ok {
+	width: 85px;
 }
 
 .mollify-dialog-button-info {
@@ -1134,12 +1147,12 @@ input.mollify-rename-dialog-new-name-value {
 	width: 80px;
 }
 
-.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select, .mollify-dialog-button-password-change, #upload.mollify-file-upload-dialog-button {
+.mollify-dialog-button-confirm-delete-yes, .mollify-dialog-button-rename, .mollify-dialog-button-upload, .mollify-dialog-button-create-folder, .mollify-dialog-button-select, .mollify-dialog-button-password-change, .mollify-dialog-button-input-ok, #upload.mollify-file-upload-dialog-button {
 	float: right;
 	margin-right: 6px;
 }
 
-.mollify-dialog-button-confirm-delete-no, .mollify-dialog-button-cancel, #cancel.mollify-file-upload-dialog-button {
+.mollify-dialog-button-confirm-delete-no, .mollify-dialog-button-cancel, #cancel.mollify-file-upload-dialog-button, .mollify-dialog-button-input-cancel {
 	float: left;
 	margin-left: 6px;
 	width: 80px;

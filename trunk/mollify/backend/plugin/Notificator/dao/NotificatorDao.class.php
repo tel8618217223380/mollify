@@ -31,7 +31,22 @@
 			$query .= " and (ntf_usr.`user_id` = 0 or ntf_usr.`user_id` ".($userId == NULL ? "is null" : " = '$userId'").")";
 			$query .= " and (evt.`event_type` is null or evt.`event_type` = '$typeId')";
 			$query .= " order by ntf.`id` asc";
-			$result = $db->query($query)->rows();
+			$rows = $db->query($query)->rows();
+			
+			$result = array();
+			$recipients = array();
+			$prev = NULL;
+			
+			foreach($result as $row) {
+				if ($prev == NULL) $prev = $row;
+
+				if ($prev["id"] != $row["id"]) {
+					$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients);
+					$recipients = array();
+				}
+				$recipients[] = array("id" => $row["user_id"], "email" => $row["email"]);				
+			}
+			
 			return $result;
 		}
 		

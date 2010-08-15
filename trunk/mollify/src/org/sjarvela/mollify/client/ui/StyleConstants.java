@@ -180,7 +180,7 @@ public class StyleConstants {
 
 	public static final String INPUT_DIALOG_CONTENT = "mollify-input-dialog-content";
 	public static final String INPUT_DIALOG_MESSAGE = "mollify-input-dialog-message";
-	public static final String INPUT_DIALOG_INPUT = "mollify-input-dialog-info";
+	public static final String INPUT_DIALOG_INPUT = "mollify-input-dialog-input";
 	public static final String INPUT_DIALOG_BUTTONS = "mollify-input-dialog-buttons";
 
 	public static final String INFO_DIALOG_TYPE_INFO = "info";

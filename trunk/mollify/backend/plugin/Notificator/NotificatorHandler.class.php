@@ -26,6 +26,7 @@
 		}
 		
 		private function findNotifications($type, $userId) {
+			require_once("Notification.class.php");
 			require_once("dao/NotificatorDao.class.php");
 			
 			$dao = new NotificatorDao($this->env);
