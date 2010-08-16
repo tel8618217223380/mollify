@@ -1,6 +1,17 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.6.5.5 ===
+  * Added "copy here" functionality
+  * Added uploads section into event logger admin tool
+  * Fixed issue 103
+  * Fixed issue 105
+  * Fixed issue 106
+  * Fixed issue 110
+  * Fixed issue 112
+  * Fixed issue 113
+  * Fixed issue 114
+
 === Version 1.6.5.4 ===
   * Adds maximum file upload size check on basic http uploader
   * Adds possibility to delete published folder and its contents when it is removed in admin utility
