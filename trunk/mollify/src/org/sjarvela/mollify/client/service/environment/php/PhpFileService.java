@@ -55,7 +55,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 			public void onSuccess(JsArray result) {
 				listener
-						.onSuccess(FileSystemItem.createFromDirectories(result));
+						.onSuccess(FileSystemItem.createFromFolders(result));
 			}
 		};
 		request().url(serviceUrl().fileItem(parent).action(FileAction.folders))
@@ -74,7 +74,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 			public void onSuccess(JsFolderInfo result) {
 				listener.onSuccess(new FolderInfo(result.getPermission(),
-						FileSystemItem.createFromDirectories(result
+						FileSystemItem.createFromFolders(result
 								.getFolders()), FileSystemItem
 								.createFromFiles(result.getFiles())));
 			}

@@ -88,7 +88,7 @@ public class SessionInfo extends JavaScriptObject {
 	public final List<Folder> getRootDirectories() {
 		if (getRootDirectoryList() == null)
 			return Collections.EMPTY_LIST;
-		return Folder.createFromDirectories(getRootDirectoryList());
+		return Folder.createFromFolders(getRootDirectoryList());
 	}
 
 	private final native JsArray getRootDirectoryList() /*-{

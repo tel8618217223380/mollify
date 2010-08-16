@@ -1032,7 +1032,7 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-info-dialog-content, .mollify-input-dialog-content {
-	margin: 10px 4px 4px;
+	margin: 10px 8px 4px 4px;
 }
 
 .mollify-info-dialog-info-info {
@@ -1047,11 +1047,11 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-input-dialog-input {
-	width: 250px;
+	width: 100%;
+	min-width: 250px;
 }
 
 .mollify-input-dialog-message {
-	font-weight: bold;
 	margin-bottom: 5px;
 }
 
@@ -1947,14 +1947,15 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-file-upload-flash-selector {
-	width: 80px;
+	width: 90px;
 	height: 15px;
 	float: right;
 	margin-bottom: 4px;
+	padding: 4px 0;
 }
 
 .mollify-file-upload-flash-selector-label {
-	width: 80px;
+	width: 100%;
 	height: 15px;
 	text-align: center;
 	font-weight: normal;

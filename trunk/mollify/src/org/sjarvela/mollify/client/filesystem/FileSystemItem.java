@@ -33,18 +33,25 @@ public abstract class FileSystemItem {
 		return new Folder(dir);
 	}
 
-	public static List<Folder> createFromDirectories(
-			JsArray<JsFolder> directories) {
+	public static List<Folder> createFromFolders(JsArray<JsFolder> folders) {
 		List<Folder> result = new ArrayList();
-		for (int i = 0; i < directories.length(); i++)
-			result.add(createFrom(directories.get(i)));
+		for (int i = 0; i < folders.length(); i++) {
+			JsFolder folder = folders.get(i);
+			if (folder.getName() == null)
+				continue;
+			result.add(createFrom(folder));
+		}
 		return result;
 	}
 
 	public static List<File> createFromFiles(JsArray<JsFile> files) {
 		List<File> result = new ArrayList();
-		for (int i = 0; i < files.length(); i++)
-			result.add(createFrom(files.get(i)));
+		for (int i = 0; i < files.length(); i++) {
+			JsFile file = files.get(i);
+			if (file.getName() == null)
+				continue;
+			result.add(createFrom(file));
+		}
 		return result;
 	}
 

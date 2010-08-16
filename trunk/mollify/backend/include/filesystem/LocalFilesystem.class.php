@@ -142,7 +142,7 @@
 	
 				$fullPath = self::joinPath($path, $name);
 				if (is_dir($fullPath)) {
-					if ($recursive) $result = array_merge($result, $this->allFilesRecursively($fullPath));
+					$result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;
 				}
 				
