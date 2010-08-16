@@ -11,6 +11,7 @@
   * Fixed issue 112
   * Fixed issue 113
   * Fixed issue 114
+  * Various security improvements
 
 === Version 1.6.5.4 ===
   * Adds maximum file upload size check on basic http uploader
