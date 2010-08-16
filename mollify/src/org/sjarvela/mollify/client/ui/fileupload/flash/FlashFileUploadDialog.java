@@ -80,8 +80,8 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 	public void setVisualProperties(UploadBuilder builder) {
 		builder.setButtonPlaceholderID(UPLOADER_ELEMENT_ID);
-		builder.setButtonWidth(80);
-		builder.setButtonHeight(15);
+		builder.setButtonWidth(90);
+		builder.setButtonHeight(20);
 		builder.setButtonCursor(ButtonCursor.HAND);
 		if (uploaderStyle != null && uploaderStyle.length() > 0)
 			builder.setButtonTextStyle(uploaderStyle);
