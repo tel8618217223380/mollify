@@ -389,7 +389,7 @@
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 			
-			if ($this->env->features()->isFeatureEnabled("permission_update") and !$this->env->authentication()->isAdmin())
+			if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()) and $this->env->features()->isFeatureEnabled("permission_update"))
 				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
 		}
 
@@ -517,8 +517,8 @@
 			return new MollifyZipStream($this->env, $name, $this->setting("zip_options"));
 		}
 		
-		public function setting($setting) {
-			return $this->env->settings()->setting($setting);
+		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {
+			return $this->env->settings()->setting($setting, $allowDefaultIfNotDefined);
 		}
 
 		public function log() {

@@ -49,7 +49,7 @@
 		}
 
 		public function getSupportedFeatures() {
-			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups');
+			return array('change_password', 'description_update', 'administration', 'permission_update', 'user_groups', 'permission_inheritance');
 		}
 		
 		public function featureEnabledByDefault($name, $default) {

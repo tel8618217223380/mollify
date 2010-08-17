@@ -23,7 +23,7 @@
 	<?php pageHeader("Mollify Update"); ?>
 	
 	<body id="page-mysql-current-installed">
-		<?php pageBody("Update", "Current Version Already Installed"); ?>
+		<?php pageBody("Update"); ?>
 		<div class="content">
 			<h2>No update is required.</h2>	
 		</div>
