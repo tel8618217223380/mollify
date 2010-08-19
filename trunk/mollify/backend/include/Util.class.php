@@ -58,5 +58,10 @@
 			}
 			return $r."}";
 		}
+		
+		static function utf8($v) {
+			if (mb_detect_encoding($v) === 'UTF-8') return $v;
+			return utf8_encode($v);
+		}
 	}
 ?>

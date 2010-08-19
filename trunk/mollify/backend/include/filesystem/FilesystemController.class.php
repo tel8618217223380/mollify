@@ -427,7 +427,7 @@
 			if (!$range)
 				$this->env->events()->onEvent(FileEvent::download($file));
 
-			$this->env->response()->download($name, $file->extension(), $file->read($range), $size, $range);							
+			$this->env->response()->download($name, $file->extension(), $file->read($range), $size, $range);						
 		}
 
 		public function view($file) {
@@ -494,7 +494,8 @@
 			if (is_array($items)) {
 				$this->assertRights($items, Authentication::RIGHTS_READ, "download as zip");
 				
-				$zip = $this->zipper("items.zip");
+				$name = "items.zip";
+				$zip = $this->zipper();
 				foreach($items as $item) {
 					$item->addToZip($zip);
 					$this->env->events()->onEvent(FileEvent::download($item));
@@ -504,17 +505,20 @@
 				$item = $items;
 				$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
 				
-				$zip = $this->zipper($item->name().".zip");
+				$name = $item->name().".zip";
+				$zip = $this->zipper();
 				$item->addToZip($zip);
 				$zip->finish();
 				
 				$this->env->events()->onEvent(FileEvent::download($item));
 			}
+			
+			$this->env->response()->download($name, "zip", $zip->stream());	
 		}
 		
-		public function zipper($name) {
+		public function zipper() {
 			require_once('MollifyZipStream.class.php');
-			return new MollifyZipStream($this->env, $name, $this->setting("zip_options"));
+			return new MollifyZipStream($this->env);
 		}
 		
 		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {

@@ -115,14 +115,16 @@
 			foreach($items as $i => $name) {
 				if (substr($name, 0, 1) == '.') continue;
 				if (in_array(strtolower($name), $ignored)) continue;
-				$path = self::joinPath($parentPath, $name);
+				
+				$itemName = Util::utf8($name);
+				$path = self::joinPath($parentPath, $itemName);
 				
 				if (!is_dir($path)) {	
 					$p = $this->publicPath($path);
-					$result[] = new File($this->itemId($p), $this->rootId(), $p, $name, $this);
+					$result[] = new File($this->itemId($p), $this->rootId(), $p, $itemName, $this);
 				} else {
 					$p = $this->publicPath(self::folderPath($path));
-					$result[] = new Folder($this->itemId($p), $this->rootId(), $p, $name, $this);
+					$result[] = new Folder($this->itemId($p), $this->rootId(), $p, $itemName, $this);
 				}
 			}
 			
@@ -140,7 +142,7 @@
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = self::joinPath($path, $name);
+				$fullPath = self::joinPath($path, Util::utf8($name));
 				if (is_dir($fullPath)) {
 					$result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;
@@ -299,23 +301,17 @@
 			file_put_contents($this->localPath($item), $content);
 		}
 		
-		private function hash($filePath, $type = 'crc32b') {
-			return hash_file($type, $filePath, true);
-		}
-		
 		public function addToZip($item, $zip) {
 			if ($item->isFile()) {
-				$stream = $item->read();
-				$zip->add($item->name(), $item->size(), $this->hash($this->localPath($item)), $stream);
+				$zip->add($item->name(), $item->size(), $this->localPath($item));
 				fclose($stream);
 			} else {
 				$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
 				$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
 				
 				foreach($files as $file) {
-					$stream = @fopen($file, "rb");
 					$st = stat($file);
-					$zip->add(substr($file, $offset), $st['size'], $this->hash($file), $stream);
+					$zip->add(substr($file, $offset), $st['size'], $file);
     				fclose($stream);
 				}
 			}

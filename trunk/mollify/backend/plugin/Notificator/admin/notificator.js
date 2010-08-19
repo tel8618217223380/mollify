@@ -34,11 +34,46 @@ function NotificatorListView() {
 			}
 		});
 		
+		$("#types-list").jqGrid({        
+			datatype: "local",
+			multiselect: false,
+			autowidth: true,
+			height: '100%',
+		   	colNames:['Name'],
+		   	colModel:[
+			   	{name:'name',index:'name',width:150, sortable:true},
+		   	],
+		   	sortname:'name',
+		   	sortorder:'desc'
+		});
+
+		$("#available-types-list").jqGrid({        
+			datatype: "local",
+			multiselect: false,
+			autowidth: true,
+			height: '100%',
+		   	colNames:['Name'],
+		   	colModel:[
+			   	{name:'name',index:'name',width:150, sortable:true},
+		   	],
+		   	sortname:'name',
+		   	sortorder:'desc'
+		});
+				
+		getEventTypes(that.refreshTypes, onServerError);
+	}
+	
+	this.refreshTypes = function(types) {
+		that.types = types;
 		that.onRefresh();
 	}
 	
 	this.onRefresh = function() {
 		getNotifications(that.refreshList, onServerError);
+	}
+
+	function getEventTypes(success, fail) {
+		request("POST", 'events/types', success, fail);
 	}
 	
 	this.refreshList = function(list) {
@@ -94,7 +129,7 @@ function NotificatorListView() {
 				height: 'auto',
 				width: 270,
 				modal: true,
-				resizable: false,
+				resizable: true,
 				title: "Add Notification",
 				buttons: {
 					Cancel: function() {
@@ -107,6 +142,17 @@ function NotificatorListView() {
 		}
 		
 		$("#name").val("");
+		
+		var typesList = $("#types-list");
+		typesList.jqGrid('clearGridData');
+		
+		var availableTypesList = $("#available-types-list");
+		availableTypesList.jqGrid('clearGridData');
+		
+		for (var t in that.types) {
+			availableTypesList.jqGrid('addRowData', t, {id: t, name: that.types[t]});
+		}
+		
 		$("#add-notification-dialog").dialog('open');
 	}
 }
