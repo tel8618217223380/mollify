@@ -12,20 +12,30 @@
 
 	class MollifyZipStream {
 		private $env;
+		private $name;
 		private $zip;
 		
-		function __construct($env, $name, $options) {
-			require_once("zipstream.php");
-			
+		function __construct($env) {
 			$this->env = $env;
-			$this->zip = new ZipStream($name, $options);
+			$this->name = sys_get_temp_dir().uniqid('Mollify', true).'zip';
+			$this->zip = new ZipArchive();
+			if ($this->zip->open($this->name, ZIPARCHIVE::CREATE) !== TRUE)
+				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->name);
 		}
 		
-		public function add($name, $size, $hash, $stream) {
-			$this->zip->add_file_stream($name, $size, $hash, $stream);
+		public function add($name, $size, $path) {
+			$this->zip->addFile($path, $name);
 		}
 		
 		public function finish() {
-			$this->zip->finish();
+			$this->zip->close();
+		}
+		
+		public function stream() {
+			$handle = @fopen($this->name, "rb");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
+			return $handle;
 		}
 	}
+?>
