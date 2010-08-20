@@ -13,7 +13,7 @@ function NotificatorListView() {
 	this.pageUrl = "notificator.html";
 	this.list = null;
 	
-	this.onLoadView = function onLoadView() {
+	this.onLoadView = function() {
 		$("#button-add-notification").click(that.openAddNotification);
 		$("#button-refresh").click(that.onRefresh);
 

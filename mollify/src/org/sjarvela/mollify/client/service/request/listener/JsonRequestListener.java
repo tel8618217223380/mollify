@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.service.request.listener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.HttpRequestResponseListener;
+import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 
@@ -23,8 +24,11 @@ import com.google.gwt.json.client.JSONParser;
 
 public class JsonRequestListener implements HttpRequestResponseListener {
 	private final ResultListener listener;
+	private final HttpResponseProcessor httpResponseProcessor;
 
-	public JsonRequestListener(final ResultListener listener) {
+	public JsonRequestListener(HttpResponseProcessor httpResponseProcessor,
+			final ResultListener listener) {
+		this.httpResponseProcessor = httpResponseProcessor;
 		this.listener = listener;
 	}
 
@@ -32,7 +36,8 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 		onSuccess(response.getText());
 	}
 
-	public void onSuccess(String response) {
+	public void onSuccess(String r) {
+		String response = httpResponseProcessor.processHttpResult(r);
 		try {
 			JSONObject o = JSONParser.parse(response).isObject();
 			if (o == null) {
@@ -80,7 +85,8 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	public void onResourceNotFound(String url) {
-		onError(new ServiceError(ServiceErrorType.RESOURCE_NOT_FOUND, "Resource not found: " + url));
+		onError(new ServiceError(ServiceErrorType.RESOURCE_NOT_FOUND,
+				"Resource not found: " + url));
 	}
 
 	private void onError(ServiceError error) {
