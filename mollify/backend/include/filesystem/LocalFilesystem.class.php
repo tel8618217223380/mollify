@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -304,7 +304,6 @@
 		public function addToZip($item, $zip) {
 			if ($item->isFile()) {
 				$zip->add($item->name(), $item->size(), $this->localPath($item));
-				fclose($stream);
 			} else {
 				$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
 				$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
@@ -312,7 +311,6 @@
 				foreach($files as $file) {
 					$st = stat($file);
 					$zip->add(substr($file, $offset), $st['size'], $file);
-    				fclose($stream);
 				}
 			}
 		}
