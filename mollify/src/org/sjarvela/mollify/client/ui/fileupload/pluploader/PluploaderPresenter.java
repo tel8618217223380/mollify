@@ -122,13 +122,13 @@ public class PluploaderPresenter implements PluploadListener {
 	private void addRuntimes(PluploadBuilder builder) {
 		String runtimes = settings.getString(PARAM_PLUPLOAD_RUNTIMES);
 		if (runtimes == null)
-			runtimes = "gears, browserplus, flash, silverlight, html5";
+			runtimes = "gears, browserplus, flash, silverlight, html5, html4";
 
 		for (String r : runtimes.split(",")) {
 			final String runtime = r.toLowerCase().trim();
 
 			if (runtime.equals("gears") || runtime.equals("html5")
-					|| runtime.equals("browserplus")) {
+					|| runtime.equals("html4") || runtime.equals("browserplus")) {
 				builder.runtime(runtime);
 			} else if (runtime.equals("flash")) {
 				builder.runtime("flash").flashUrl(getUrl(FLASH_FILE_NAME));

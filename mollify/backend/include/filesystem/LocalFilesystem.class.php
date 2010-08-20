@@ -300,7 +300,7 @@
 		public function put($item, $content) {
 			file_put_contents($this->localPath($item), $content);
 		}
-		
+
 		public function addToZip($item, $zip) {
 			if ($item->isFile()) {
 				$zip->add($item->name(), $item->size(), $this->localPath($item));

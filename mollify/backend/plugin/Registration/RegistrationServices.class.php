@@ -81,6 +81,7 @@
 		private function processConfirm() {
 			$confirmation = $this->request->data;
 			if (!isset($confirmation['email']) or !isset($confirmation['key'])) throw $this->invalidRequestException();
+			$this->assertEmailNotRegistered($confirmation['email']);
 			
 			$db = $this->env->configuration()->db();
 			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `email`=".$db->string($confirmation['email'],TRUE)." and `key`=".$db->string($confirmation['key'],TRUE);
@@ -88,6 +89,14 @@
 			
 			if ($result->count() != 1) throw new ServiceException("REQUEST_FAILED", "Email and confirmation key don't match");
 			$this->confirm($result->firstRow());
+		}
+		
+		private function assertEmailNotRegistered($email) {
+			$db = $this->env->configuration()->db();
+			
+			$query = "select count(id) from ".$db->table("user")." where email=".$db->string($email,TRUE);
+			$count = $db->query($query)->value(0);
+			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered");
 		}
 		
 		private function processConfirmById($id) {
