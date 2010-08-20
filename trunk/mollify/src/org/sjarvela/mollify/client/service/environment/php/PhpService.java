@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.service.environment.php;
 
 import org.sjarvela.mollify.client.service.UrlResolver;
+import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -24,6 +25,7 @@ public class PhpService {
 	private final UrlResolver urlResolver;
 	private final int requestTimeout;
 	private final boolean limitedHttpMethods;
+	protected final HttpResponseProcessor httpResponseProcessor;
 
 	enum RequestType {
 		filesystem, session, configuration
@@ -36,10 +38,12 @@ public class PhpService {
 	// (r.php) is in the same site.
 
 	public PhpService(UrlResolver urlResolver, String path, int requestTimeout,
-			boolean limitedHttpMethods) {
+			boolean limitedHttpMethods,
+			HttpResponseProcessor httpResponseProcessor) {
 		this.urlResolver = urlResolver;
 		this.requestTimeout = requestTimeout;
 		this.limitedHttpMethods = limitedHttpMethods;
+		this.httpResponseProcessor = httpResponseProcessor;
 		this.requestBaseUrl = getPath(path, SERVICE_FILE);
 		this.adminUrl = getPath(path, ADMIN_PATH);
 		Log.info("Mollify service location: " + this.requestBaseUrl
@@ -57,8 +61,12 @@ public class PhpService {
 		return path + p;
 	}
 
+	public HttpResponseProcessor getHttpResponseProcessor() {
+		return httpResponseProcessor;
+	}
+
 	public PhpRequestBuilder request() {
-		return new PhpRequestBuilder(limitedHttpMethods)
+		return new PhpRequestBuilder(limitedHttpMethods, httpResponseProcessor)
 				.timeout(requestTimeout);
 	}
 

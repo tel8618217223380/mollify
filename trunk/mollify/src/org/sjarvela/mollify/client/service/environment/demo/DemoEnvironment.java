@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
+import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -32,7 +33,8 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private ConfigurationService settingsHandler;
 	private ExternalService externalServiceHandler;
 
-	public void initialize(UrlResolver urlProvider, ClientSettings settings) {
+	public void initialize(UrlResolver urlProvider, ClientSettings settings,
+			HttpResponseProcessor httpResultProcessor) {
 		Log.info("Mollify Demo");
 
 		this.data = new DemoData(settings.getBool(PARAM_MULTI_USER, true));
