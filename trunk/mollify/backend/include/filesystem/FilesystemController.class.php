@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -612,7 +612,5 @@
 		public function __toString() {
 			return "FILESYSTEMEVENT ".get_class($this);
 		}
-
 	}
-
 ?>
