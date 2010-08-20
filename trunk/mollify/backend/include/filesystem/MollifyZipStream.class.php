@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -17,7 +17,7 @@
 		
 		function __construct($env) {
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().uniqid('Mollify', true).'zip';
+			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
 			$this->zip = new ZipArchive();
 			if ($this->zip->open($this->name, ZIPARCHIVE::CREATE) !== TRUE)
 				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->name);
