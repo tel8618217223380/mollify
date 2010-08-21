@@ -8,10 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.plugin;
 
-public interface HttpResponseProcessor {
+import com.google.gwt.core.client.JavaScriptObject;
 
-	String processHttpResult(String response);
+public interface PluginEnvironment {
+
+	JavaScriptObject getJsEnv();
 
 }

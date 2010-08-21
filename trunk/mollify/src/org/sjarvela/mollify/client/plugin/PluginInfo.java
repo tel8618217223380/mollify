@@ -8,8 +8,11 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.request;
+package org.sjarvela.mollify.client.plugin;
 
-public interface HttpResponseProcessorProxy extends HttpResponseProcessor {
-	void addProcessor(HttpResponseProcessor processor);
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class PluginInfo extends JavaScriptObject {
+	protected PluginInfo() {}
+	
 }

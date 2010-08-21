@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service.request.listener;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.HttpRequestResponseListener;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
+import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 
@@ -24,11 +24,11 @@ import com.google.gwt.json.client.JSONParser;
 
 public class JsonRequestListener implements HttpRequestResponseListener {
 	private final ResultListener listener;
-	private final HttpResponseProcessor httpResponseProcessor;
+	private final ResponseProcessor responseProcessor;
 
-	public JsonRequestListener(HttpResponseProcessor httpResponseProcessor,
+	public JsonRequestListener(ResponseProcessor responseProcessor,
 			final ResultListener listener) {
-		this.httpResponseProcessor = httpResponseProcessor;
+		this.responseProcessor = responseProcessor;
 		this.listener = listener;
 	}
 
@@ -37,7 +37,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	public void onSuccess(String r) {
-		String response = httpResponseProcessor.processHttpResult(r);
+		String response = responseProcessor.processResponse(r);
 		try {
 			JSONObject o = JSONParser.parse(response).isObject();
 			if (o == null) {

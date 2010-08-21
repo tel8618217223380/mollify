@@ -49,7 +49,7 @@ public class PhpFileUploadService extends PhpFileService implements
 	@Override
 	public SubmitCompleteHandler getUploadHandler(final ResultListener listener) {
 		final JsonRequestListener jsonHandler = new JsonRequestListener(service
-				.getHttpResponseProcessor(), listener);
+				.getResponseProcessor(), listener);
 		SubmitCompleteHandler handler = new SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {

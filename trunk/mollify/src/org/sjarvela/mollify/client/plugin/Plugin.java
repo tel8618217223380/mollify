@@ -16,9 +16,14 @@ public class Plugin extends JavaScriptObject {
 	protected Plugin() {
 	}
 
-	public final native String getType() /*-{
-		t = this.getType();
-		if (!t) return null;
-		return t;
+	public final native PluginInfo getPluginInfo() /*-{
+		if (!this.getPluginInfo) return null;
+		var i = this.getPluginInfo();
+		if (!i || i == null) return null;
+		return i;
+	}-*/;
+
+	public final native void initialize(JavaScriptObject env) /*-{
+		this.initialize(env);
 	}-*/;
 }

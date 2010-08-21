@@ -16,20 +16,19 @@ import java.util.List;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DefaultHttpResponseProcessorProxy implements
-		HttpResponseProcessorProxy {
-	private List<HttpResponseProcessor> processors = new ArrayList();
+public class DefaultResponseInterceptor implements ResponseInterceptor {
+	private List<ResponseProcessor> processors = new ArrayList();
 
 	@Override
-	public String processHttpResult(String response) {
+	public String processResponse(String response) {
 		String r = response;
-		for (HttpResponseProcessor p : processors)
-			r = p.processHttpResult(r);
+		for (ResponseProcessor p : processors)
+			r = p.processResponse(r);
 		return r;
 	}
 
 	@Override
-	public void addProcessor(HttpResponseProcessor processor) {
+	public void addProcessor(ResponseProcessor processor) {
 		processors.add(processor);
 	}
 

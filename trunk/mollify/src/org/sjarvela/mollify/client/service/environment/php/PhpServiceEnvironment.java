@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
+import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
 public class PhpServiceEnvironment implements ServiceEnvironment {
@@ -34,11 +34,11 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpExternalService externalService;
 
 	public void initialize(UrlResolver urlResolver, ClientSettings settings,
-			HttpResponseProcessor httpResultProcessor) {
+			ResponseProcessor responseProcessor) {
 		service = new PhpService(urlResolver, settings
 				.getString(PARAM_SERVICE_PATH), settings.getInt(PARAM_TIMEOUT,
 				DEFAULT_REQUEST_TIMEOUT), settings.getBool(
-				SERVER_LIMITED_HTTP_METHODS, false), httpResultProcessor);
+				SERVER_LIMITED_HTTP_METHODS, false), responseProcessor);
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);

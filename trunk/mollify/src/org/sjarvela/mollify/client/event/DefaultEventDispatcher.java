@@ -28,7 +28,7 @@ public class DefaultEventDispatcher implements EventDispatcher {
 		handleEvent(event);
 	}
 
-	public native void registerEventHandler(JavaScriptObject cb) /*-{
+	public native void addEventHandler(JavaScriptObject cb) /*-{
 		this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks.push(cb);
 	}-*/;
 

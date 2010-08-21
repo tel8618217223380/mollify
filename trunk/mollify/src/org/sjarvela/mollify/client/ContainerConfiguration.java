@@ -15,15 +15,17 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment;
 import org.sjarvela.mollify.client.plugin.DefaultPluginSystem;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
-import org.sjarvela.mollify.client.service.request.DefaultHttpResponseProcessorProxy;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessorProxy;
+import org.sjarvela.mollify.client.service.request.DefaultResponseInterceptor;
+import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
+import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.DefaultSessionManager;
@@ -87,15 +89,15 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(EventDispatcher.class).to(DefaultEventDispatcher.class);
 		bind(PluginSystem.class).to(DefaultPluginSystem.class);
 		bind(Client.class).to(MollifyClient.class);
-		bind(HttpResponseProcessorProxy.class).to(
-				DefaultHttpResponseProcessorProxy.class);
+		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
+		bind(PluginEnvironment.class).to(DefaultPluginEnvironment.class);
 	}
 
 	@Provides
 	@Singleton
-	HttpResponseProcessor getHttpResponseProcessor(
-			HttpResponseProcessorProxy httpResponseProcessorProxy) {
-		return httpResponseProcessorProxy;
+	ResponseProcessor getResponseProcessor(
+			ResponseInterceptor responseInterceptor) {
+		return responseInterceptor;
 	}
 
 	@Provides
@@ -119,8 +121,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Provides
 	@Singleton
 	ServiceEnvironment getEnvironment(UrlResolver urlResolver,
-			ClientSettings clientSettings,
-			HttpResponseProcessor httpResultProcessor) {
+			ClientSettings clientSettings, ResponseProcessor httpResultProcessor) {
 		ServiceEnvironment env = GWT.create(ServiceEnvironment.class);
 		env.initialize(urlResolver, clientSettings, httpResultProcessor);
 		return env;
