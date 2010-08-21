@@ -10,20 +10,20 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
 import org.sjarvela.mollify.client.service.request.RequestBuilder;
+import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.listener.JsonRequestListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class PhpRequestBuilder extends RequestBuilder {
 
-	private final HttpResponseProcessor httpResponseProcessor;
+	private final ResponseProcessor responseProcessor;
 
 	public PhpRequestBuilder(boolean limitedHttpMethods,
-			HttpResponseProcessor httpResponseProcessor) {
+			ResponseProcessor responseProcessor) {
 		super(limitedHttpMethods);
-		this.httpResponseProcessor = httpResponseProcessor;
+		this.responseProcessor = responseProcessor;
 	}
 
 	public PhpRequestBuilder url(String url) {
@@ -44,7 +44,7 @@ public class PhpRequestBuilder extends RequestBuilder {
 
 	public PhpRequestBuilder listener(ResultListener resultListener) {
 		return (PhpRequestBuilder) super.listener(new JsonRequestListener(
-				httpResponseProcessor, resultListener));
+				responseProcessor, resultListener));
 	}
 
 }

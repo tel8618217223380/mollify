@@ -10,37 +10,38 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import org.sjarvela.mollify.client.event.EventDispatcher;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessor;
-import org.sjarvela.mollify.client.service.request.HttpResponseProcessorProxy;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultPluginSystem implements PluginSystem {
-	private final EventDispatcher eventDispatcher;
-	private final HttpResponseProcessorProxy httpResponseProcessorProxy;
+	private final List<Plugin> plugins = new ArrayList();
+	private final PluginEnvironment pluginEnv;
 
 	@Inject
-	public DefaultPluginSystem(EventDispatcher eventDispatcher,
-			HttpResponseProcessorProxy httpResponseProcessorProxy) {
-		this.eventDispatcher = eventDispatcher;
-		this.httpResponseProcessorProxy = httpResponseProcessorProxy;
+	public DefaultPluginSystem(PluginEnvironment pluginEnv) {
+		this.pluginEnv = pluginEnv;
 	}
 
 	@Override
 	public void setup() {
-		this.setupClientPlugins(eventDispatcher, this);
+		doSetup(this);
+		initializePlugins();
 	}
 
-	private native void setupClientPlugins(EventDispatcher e, PluginSystem p) /*-{
-		if (!$wnd.onMollifyStarted) return;
+	private void initializePlugins() {
+		JavaScriptObject env = pluginEnv.getJsEnv();
+		for (Plugin p : plugins)
+			p.initialize(env);
+	}
 
-		$wnd.registerEventHandler = function(cb) {
-			e.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::registerEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+	private native void doSetup(DefaultPluginSystem p) /*-{
+		if (!$wnd.onMollifyStarted) return;
 
 		$wnd.registerPlugin = function(plugin) {
 			p.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::onRegisterPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
@@ -52,18 +53,11 @@ public class DefaultPluginSystem implements PluginSystem {
 		if (p == null)
 			return;
 		Plugin plugin = p.cast();
-		if (plugin.getType() == null)
+		PluginInfo info = plugin.getPluginInfo();
+		if (info == null) {
+			Log.debug("Plugin ignored, does not provide info");
 			return;
-
-		if (plugin.getType().equalsIgnoreCase("response")) {
-			final ResponsePlugin responsePlugin = p.cast();
-			httpResponseProcessorProxy
-					.addProcessor(new HttpResponseProcessor() {
-						@Override
-						public String processHttpResult(String response) {
-							return responsePlugin.processResponse(response);
-						}
-					});
 		}
+		plugins.add(plugin);
 	};
 }
