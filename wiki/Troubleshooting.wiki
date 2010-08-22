@@ -78,6 +78,22 @@ To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mol
 	);
 }}}
 
+== Some operations, like rename or editing descriptions, don't work ==
+
+Mollify uses REST HTTP protocol for the requests, which means all HTTP methods (ie. GET, PUT, POST and DELETE) must be supported by the web server. If these are not supported, many operations will fail (error in the server log indicate protocol error or missing resource).
+
+To fix this, Mollify can be set to operate on limited HTTP methods mode by adding following server setting: 
+{{{
+	$SETTINGS = array(
+		"enable_limited_http_methods" => TRUE
+	);
+}}}
+
+and following client setting into the host page:
+{{{
+	<meta name="mollify:property" content="limited-http-methods=true">
+}}}
+
 == Downloaded files are corrupted ==
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
