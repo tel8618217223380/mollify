@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import org.sjarvela.mollify.client.filesystem.File;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class JsFile extends JavaScriptObject {
@@ -60,5 +62,10 @@ public class JsFile extends JavaScriptObject {
 		this.extension = extension;
 		this.size = size;
 	}-*/;
+
+	public static JavaScriptObject create(File file) {
+		return create(file.getId(), file.getRootId(), file.getName(), file
+				.getParentId(), file.getExtension(), file.getSize());
+	}
 
 }

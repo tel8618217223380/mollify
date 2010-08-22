@@ -77,6 +77,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private DropdownButton actionsButton;
 	private Button viewButton;
+	private VerticalPanel externalSections;
 
 	public enum Mode {
 		File, Directory
@@ -138,10 +139,41 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		if (Mode.File.equals(this.mode) && filePreview)
 			content.add(createFilePreview());
 
+		content.add(createExternalSections());
 		content.add(createDetails());
 
 		content.add(createButtons());
 		return content;
+	}
+
+	public void addDetails(ItemDetails itemDetails) {
+		int index = 0;
+		for (ItemDetailsSection section : itemDetails.getSections()) {
+			externalSections.add(addExternalSection(section, index++));
+		}
+	}
+
+	private Widget addExternalSection(final ItemDetailsSection section,
+			int index) {
+		DisclosurePanel s = new DisclosurePanel(section.getTitle());
+		s.setOpen(false);
+		s.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
+		s.getHeader().getElement().getParentElement().setClassName(
+				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
+
+		final Panel content = new FlowPanel();
+		content.getElement().setId("item-section-" + index);
+		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+
+		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
+			@Override
+			public void onOpen(OpenEvent<DisclosurePanel> event) {
+				section.onOpen(content);
+			}
+		});
+
+		s.add(content);
+		return s;
 	}
 
 	private Widget createPermissionActions() {
@@ -325,6 +357,11 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return preview;
 	}
 
+	private Widget createExternalSections() {
+		externalSections = new VerticalPanel();
+		return externalSections;
+	}
+
 	private Widget createDetails() {
 		details = new DisclosurePanel(textProvider.getStrings()
 				.fileActionDetailsTitle());
@@ -394,6 +431,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public void reset() {
+		externalSections.clear();
 		description.setText("");
 
 		for (Label detailsValue : detailRowValues.values())

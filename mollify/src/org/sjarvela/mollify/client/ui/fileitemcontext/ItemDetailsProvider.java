@@ -8,16 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin;
+package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
-public class PluginInfo extends JavaScriptObject {
-	protected PluginInfo() {
-	}
+public interface ItemDetailsProvider {
 
-	public native final String getId() /*-{
-		return this.id;
-	}-*/;
+	ItemDetails getItemDetails(FileSystemItem item);
 
 }

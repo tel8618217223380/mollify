@@ -2,6 +2,8 @@ package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class Folder extends FileSystemItem {
 	public static Folder Empty = new Folder();
 	public static FileSystemItem Parent = new Folder("..");
@@ -36,5 +38,10 @@ public class Folder extends FileSystemItem {
 
 	public boolean isRoot() {
 		return this.id.equals(this.rootId);
+	}
+
+	@Override
+	public JavaScriptObject asJs() {
+		return JsFolder.create(this);
 	}
 }

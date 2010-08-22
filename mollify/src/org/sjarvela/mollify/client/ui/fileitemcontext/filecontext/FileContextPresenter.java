@@ -35,6 +35,8 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FilePreviewListener;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetails;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 
@@ -47,6 +49,7 @@ public class FileContextPresenter implements ActionListener,
 	private final SessionInfo session;
 	private final ExternalService service;
 	private final DropBox dropBox;
+	private final ItemDetailsProvider itemDetailsProvider;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -62,13 +65,15 @@ public class FileContextPresenter implements ActionListener,
 
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, ExternalService service, DropBox dropBox) {
+			TextProvider textProvider, ExternalService service,
+			DropBox dropBox, ItemDetailsProvider itemDetailsProvider) {
 		this.popup = popup;
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dropBox = dropBox;
+		this.itemDetailsProvider = itemDetailsProvider;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
@@ -132,6 +137,10 @@ public class FileContextPresenter implements ActionListener,
 	private void updateDetails(FileDetails details) {
 		this.previewInitalized = false;
 		this.popup.reset();
+
+		ItemDetails itemDetails = itemDetailsProvider.getItemDetails(file);
+		popup.addDetails(itemDetails);
+
 		this.details = details;
 		this.updateDescription();
 
@@ -148,8 +157,8 @@ public class FileContextPresenter implements ActionListener,
 				.getFilePermission().canWrite());
 		boolean isPreview = session.getFeatures().filePreview()
 				&& details != null && details.getFilePreview() != null;
-		boolean isView = session.getFeatures().fileView()
-				&& details != null && details.getFileView() != null;
+		boolean isView = session.getFeatures().fileView() && details != null
+				&& details.getFileView() != null;
 
 		popup.update(writable, isPreview, isView);
 	}

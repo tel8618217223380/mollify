@@ -29,6 +29,7 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -66,6 +67,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final DragAndDropManager dragAndDropManager;
 	private final ClientSettings settings;
 	private final FileViewerFactory fileViewerFactory;
+	private final ItemDetailsProvider itemDetailsProvider;
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
@@ -78,7 +80,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileViewerFactory fileViewerFactory, DropBoxFactory dropBoxFactory,
-			DragAndDropManager dragAndDropManager) {
+			DragAndDropManager dragAndDropManager,
+			ItemDetailsProvider itemDetailsProvider) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
@@ -93,6 +96,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.fileViewerFactory = fileViewerFactory;
 		this.dropBoxFactory = dropBoxFactory;
 		this.dragAndDropManager = dragAndDropManager;
+		this.itemDetailsProvider = itemDetailsProvider;
 	}
 
 	public MainView createMainView() {
@@ -120,7 +124,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				model.getFolderModel());
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
 				fileSystemService, textProvider, session, serviceProvider
-						.getExternalService(), dropBox);
+						.getExternalService(), dropBox, itemDetailsProvider);
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
 				textProvider, fileSystemService, session, dropBox);
 

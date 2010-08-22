@@ -319,11 +319,11 @@
 		}
 		
 		public function copyItems($items, $folder) {
-			Logging::logDebug('copying '.count($items).' items to ['.$to.']');
+			Logging::logDebug('copying '.count($items).' items to ['.$folder.']');
 			$this->assertRights($items, Authentication::RIGHTS_READ, "copy");
 			
 			foreach($items as $item) {
-				if ($item->isFile)
+				if ($item->isFile())
 					$this->copy($item, $folder->fileWithName($item->name(), TRUE));
 				else
 					$this->copy($item, $folder->folderWithName($item->name(), TRUE));

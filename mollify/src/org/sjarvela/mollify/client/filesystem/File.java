@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class File extends FileSystemItem {
 	public static File Empty = new File();
 
@@ -58,4 +60,8 @@ public class File extends FileSystemItem {
 		return this == Empty;
 	}
 
+	@Override
+	public JavaScriptObject asJs() {
+		return JsFile.create(this);
+	}
 }

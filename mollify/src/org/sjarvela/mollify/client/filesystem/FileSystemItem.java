@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public abstract class FileSystemItem {
@@ -108,4 +109,6 @@ public abstract class FileSystemItem {
 		return path.substring(0, path.length() - getName().length()
 				- (isFile() ? 0 : 1));
 	}
+	
+	public abstract JavaScriptObject asJs();
 }
