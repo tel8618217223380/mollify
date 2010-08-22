@@ -8,13 +8,8 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin;
+package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-public class ResponsePlugin extends Plugin {
-	protected ResponsePlugin() {
-	}
-
-	public final native String processResponse(String r) /*-{
-		return this.processResponse(r);
-	}-*/;
+public interface ItemDetailsHandler extends ItemDetailsProvider {
+	void addItemDetailsProvider(ItemDetailsProvider itemDetailsProvider);
 }

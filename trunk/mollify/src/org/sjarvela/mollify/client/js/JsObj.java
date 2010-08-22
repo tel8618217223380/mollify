@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.js;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 public class JsObj extends JavaScriptObject {
 	protected JsObj() {
@@ -21,6 +22,14 @@ public class JsObj extends JavaScriptObject {
 	}-*/;
 
 	public final native JsObj getJsObj(String name) /*-{
+		return this[name];
+	}-*/;
+
+	public final native JsArray getArray(String name) /*-{
+		return this[name];
+	}-*/;
+
+	public final native JavaScriptObject getObject(String name) /*-{
 		return this[name];
 	}-*/;
 }

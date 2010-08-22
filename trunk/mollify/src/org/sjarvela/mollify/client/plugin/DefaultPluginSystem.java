@@ -11,7 +11,9 @@
 package org.sjarvela.mollify.client.plugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -21,6 +23,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultPluginSystem implements PluginSystem {
 	private final List<Plugin> plugins = new ArrayList();
+	private final Map<String, Plugin> pluginsById = new HashMap();
 	private final PluginEnvironment pluginEnv;
 
 	@Inject
@@ -59,5 +62,9 @@ public class DefaultPluginSystem implements PluginSystem {
 			return;
 		}
 		plugins.add(plugin);
+
+		String id = info.getId();
+		Log.debug("Plugin registered: " + id);
+		pluginsById.put(id, plugin);
 	};
 }
