@@ -171,6 +171,11 @@
 			return $this->getHost().$root;
 		}
 		
+		public function utf8($s) {
+			if (!$this->settings->setting("convert_utf8", TRUE)) return $s;
+			return Util::utf8($s);
+		}
+		
 		public function log() {
 			if (!Logging::isDebug()) return;
 			Logging::logSystem();

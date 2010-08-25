@@ -30,6 +30,8 @@ import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -66,6 +68,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private ActionLink cancelEditDescription;
 	private ActionLink removeDescription;
 	private ActionLink editPermissions;
+	private Map<ItemDetailsComponent, Widget> externalComponents = new HashMap();
 
 	private DisclosurePanel details;
 	private Panel detailContent;
@@ -77,7 +80,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private DropdownButton actionsButton;
 	private Button viewButton;
-	private VerticalPanel externalSections;
+	private VerticalPanel externalComponentsPanel;
 
 	public enum Mode {
 		File, Directory
@@ -139,22 +142,40 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		if (Mode.File.equals(this.mode) && filePreview)
 			content.add(createFilePreview());
 
-		content.add(createExternalSections());
+		content.add(createExternalComponentsPanel());
 		content.add(createDetails());
 
 		content.add(createButtons());
 		return content;
 	}
 
-	public void addDetails(ItemDetails itemDetails) {
-		int index = 0;
-		for (ItemDetailsSection section : itemDetails.getSections()) {
-			externalSections.add(addExternalSection(section, index++));
-		}
+	public void initDetails(ItemDetails itemDetails) {
+		this.externalComponents.clear();
+		this.externalComponentsPanel.clear();
+
+		for (ItemDetailsComponent c : itemDetails.getComponents())
+			addComponent(c);
 	}
 
-	private Widget addExternalSection(final ItemDetailsSection section,
-			int index) {
+	private void addComponent(ItemDetailsComponent c) {
+		Widget w;
+		if (c instanceof ItemDetailsSection)
+			w = addExternalSection((ItemDetailsSection) c);
+		else
+			w = addExternalComponent(c);
+
+		externalComponentsPanel.add(w);
+		this.externalComponents.put(c, w);
+	}
+
+	private Widget addExternalComponent(ItemDetailsComponent c) {
+		FlowPanel p = new FlowPanel();
+		p.getElement().setId("item-component-" + externalComponents.size());
+		p.getElement().setInnerHTML(c.getHtml());
+		return p;
+	}
+
+	private Widget addExternalSection(final ItemDetailsSection section) {
 		DisclosurePanel s = new DisclosurePanel(section.getTitle());
 		s.setOpen(false);
 		s.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
@@ -162,13 +183,20 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
 
 		final Panel content = new FlowPanel();
-		content.getElement().setId("item-section-" + index);
+		content.getElement().setId("item-section-" + externalComponents.size());
 		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+		content.getElement().setInnerHTML(section.getHtml());
 
 		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override
 			public void onOpen(OpenEvent<DisclosurePanel> event) {
 				section.onOpen(content);
+			}
+		});
+		s.addCloseHandler(new CloseHandler<DisclosurePanel>() {
+			@Override
+			public void onClose(CloseEvent<DisclosurePanel> event) {
+				section.onClose(content);
 			}
 		});
 
@@ -357,9 +385,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return preview;
 	}
 
-	private Widget createExternalSections() {
-		externalSections = new VerticalPanel();
-		return externalSections;
+	private Widget createExternalComponentsPanel() {
+		externalComponentsPanel = new VerticalPanel();
+		return externalComponentsPanel;
 	}
 
 	private Widget createDetails() {
@@ -431,7 +459,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public void reset() {
-		externalSections.clear();
+		externalComponentsPanel.clear();
 		description.setText("");
 
 		for (Label detailsValue : detailRowValues.values())
@@ -451,13 +479,32 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		actionsButton.setActionVisible(FileSystemAction.rename, false);
 		actionsButton.setActionVisible(FileSystemAction.copy, true);
-		// actionsButton.setActionVisible(FileSystemAction.copyHere, true);
+		actionsButton.setActionVisible(FileSystemAction.copyHere, true);
 		actionsButton.setActionVisible(FileSystemAction.move, false);
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}
 
 	public void setDetailValue(ResourceId id, String value) {
 		detailRowValues.get(id).setText(value);
+	}
+
+	// @Override
+	// public void showMenu() {
+	// super.showMenu();
+	//
+	// // DeferredCommand.addCommand(new Command() {
+	// // @Override
+	// // public void execute() {
+	// // initComponents();
+	// // }
+	// //
+	// // });
+	// }
+
+	public void initComponents() {
+		for (Entry<ItemDetailsComponent, Widget> e : this.externalComponents
+				.entrySet())
+			e.getKey().onInit(e.getValue());
 	}
 
 	public void update(boolean isWritable, boolean isPreview, boolean isView) {
@@ -469,6 +516,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			preview.setVisible(isPreview);
 		if (viewButton != null)
 			viewButton.setVisible(isView);
+
+		initComponents();
 	}
 
 	public void setDescription(String description) {

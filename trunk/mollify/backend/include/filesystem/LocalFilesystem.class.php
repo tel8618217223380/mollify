@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -116,7 +116,7 @@
 				if (substr($name, 0, 1) == '.') continue;
 				if (in_array(strtolower($name), $ignored)) continue;
 				
-				$itemName = Util::utf8($name);
+				$itemName = $this->filesystemInfo->env()->utf8($name);
 				$path = self::joinPath($parentPath, $itemName);
 				
 				if (!is_dir($path)) {	
@@ -142,7 +142,7 @@
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = self::joinPath($path, Util::utf8($name));
+				$fullPath = self::joinPath($path, $this->filesystemInfo->env()->utf8($name));
 				if (is_dir($fullPath)) {
 					$result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;

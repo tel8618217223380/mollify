@@ -8,18 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.session.user;
+package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-public class UserNameValidator {
+import com.google.gwt.user.client.ui.Widget;
 
-	private static char[] ILLEGAL_CHARS = new char[] { '"', '<', '>', '%', '/',
-			'\\' };
+public interface ItemDetailsComponent {
+	void onInit(Widget content);
 
-	public boolean validate(String userName) {
-		for (char c : ILLEGAL_CHARS)
-			if (userName.indexOf(c) >= 0)
-				return false;
-		return true;
-	}
-
+	String getHtml();
 }
