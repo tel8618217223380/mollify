@@ -16,23 +16,23 @@ import java.util.List;
 
 public class ItemDetails {
 	public static ItemDetails Empty = null;
-	private final List<ItemDetailsSection> sections;
+	private final List<ItemDetailsComponent> components;
 
 	static {
 		Empty = new ItemDetails(Collections.EMPTY_LIST);
 	}
 
-	public ItemDetails(List<ItemDetailsSection> sections) {
-		this.sections = new ArrayList(sections);
+	public ItemDetails(List<ItemDetailsComponent> components) {
+		this.components = new ArrayList(components);
 	}
 
-	public List<ItemDetailsSection> getSections() {
-		return sections;
+	public List<ItemDetailsComponent> getComponents() {
+		return components;
 	}
 
 	public ItemDetails merge(ItemDetails other) {
-		List<ItemDetailsSection> newSections = new ArrayList(sections);
-		newSections.addAll(other.getSections());
-		return new ItemDetails(newSections);
+		List<ItemDetailsComponent> newComponents = new ArrayList(components);
+		newComponents.addAll(other.getComponents());
+		return new ItemDetails(newComponents);
 	}
 }

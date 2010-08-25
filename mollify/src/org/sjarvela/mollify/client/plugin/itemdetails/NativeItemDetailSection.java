@@ -10,19 +10,33 @@
 
 package org.sjarvela.mollify.client.plugin.itemdetails;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsSection;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NativeItemDetailSection implements ItemDetailsSection {
+	private final FileSystemItem item;
 	private final String title;
-	@SuppressWarnings("unused")
-	private final JavaScriptObject cb;
+	private final String html;
 
-	public NativeItemDetailSection(String title, JavaScriptObject callback) {
+	@SuppressWarnings("unused")
+	private final JavaScriptObject onInit;
+	@SuppressWarnings("unused")
+	private final JavaScriptObject onOpen;
+	@SuppressWarnings("unused")
+	private final JavaScriptObject onClose;
+
+	public NativeItemDetailSection(FileSystemItem item, String title,
+			String html, JavaScriptObject init, JavaScriptObject open,
+			JavaScriptObject close) {
+		this.item = item;
 		this.title = title;
-		this.cb = callback;
+		this.html = html;
+		onInit = init;
+		onOpen = open;
+		onClose = close;
 	}
 
 	@Override
@@ -31,12 +45,44 @@ public class NativeItemDetailSection implements ItemDetailsSection {
 	}
 
 	@Override
-	public void onOpen(Widget content) {
-		invokeNativeHandler(content.getElement().getId());
+	public String getHtml() {
+		return html;
 	}
 
-	private final native JavaScriptObject invokeNativeHandler(String elementId) /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemDetailSection::cb;
-		cb(elementId);
+	@Override
+	public void onInit(Widget content) {
+		invokeInit(content.getElement().getId(), item.asJs());
+	}
+
+	@Override
+	public void onOpen(Widget content) {
+		invokeOpen(content.getElement().getId(), item.asJs());
+	}
+
+	@Override
+	public void onClose(Widget content) {
+		invokeClose(content.getElement().getId(), item.asJs());
+	}
+
+	private final native JavaScriptObject invokeInit(String elementId,
+			JavaScriptObject item) /*-{
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemDetailSection::onInit;
+		if (!cb) return;
+		cb(elementId, item);
 	}-*/;
+
+	private final native JavaScriptObject invokeOpen(String elementId,
+			JavaScriptObject item) /*-{
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemDetailSection::onOpen;
+		if (!cb) return;
+		cb(elementId, item);
+	}-*/;
+
+	private final native JavaScriptObject invokeClose(String elementId,
+			JavaScriptObject item) /*-{
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemDetailSection::onClose;
+		if (!cb) return;
+		cb(elementId, item);
+	}-*/;
+
 }

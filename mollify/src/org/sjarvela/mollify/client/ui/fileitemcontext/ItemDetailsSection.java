@@ -12,8 +12,10 @@ package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface ItemDetailsSection {
+public interface ItemDetailsSection extends ItemDetailsComponent {
 	String getTitle();
 
 	void onOpen(Widget content);
+
+	void onClose(Widget content);
 }

@@ -139,7 +139,7 @@ public class FileContextPresenter implements ActionListener,
 		this.popup.reset();
 
 		ItemDetails itemDetails = itemDetailsProvider.getItemDetails(file);
-		popup.addDetails(itemDetails);
+		popup.initDetails(itemDetails);
 
 		this.details = details;
 		this.updateDescription();
