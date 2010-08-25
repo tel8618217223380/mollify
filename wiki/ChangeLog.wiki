@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.6.5.6 ===
+  * Added support for non-UTF8 filesystems
+  * Fixed issue 115
+  * Fixed issue 117
+
 === Version 1.6.5.5 ===
   * Added "copy here" functionality
   * Added uploads section into event logger admin tool
