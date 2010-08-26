@@ -10,6 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-public interface ItemDetailsHandler extends ItemDetailsProvider {
-	void addItemDetailsProvider(ItemDetailsProvider itemDetailsProvider);
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+
+public interface ItemContextProvider {
+
+	ItemContext getItemContext(FileSystemItem item);
+
 }

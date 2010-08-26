@@ -10,10 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import com.google.gwt.user.client.ui.Widget;
-
-public interface ItemDetailsComponent {
-	void onInit(Widget content);
-
-	String getHtml();
+public interface ItemContextHandler extends ItemContextProvider {
+	void addItemDetailsProvider(ItemContextProvider itemDetailsProvider);
 }

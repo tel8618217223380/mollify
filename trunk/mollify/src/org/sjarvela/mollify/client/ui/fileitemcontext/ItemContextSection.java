@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+public interface ItemContextSection extends ItemContextComponent {
+	String getTitle();
 
-public interface ItemDetailsProvider {
+	void onOpen();
 
-	ItemDetails getItemDetails(FileSystemItem item);
-
+	void onClose();
 }

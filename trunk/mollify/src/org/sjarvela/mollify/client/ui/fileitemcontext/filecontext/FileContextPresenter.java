@@ -11,9 +11,11 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -35,10 +37,14 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FilePreviewListener;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetails;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class FileContextPresenter implements ActionListener,
 		FilePreviewListener {
@@ -49,7 +55,7 @@ public class FileContextPresenter implements ActionListener,
 	private final SessionInfo session;
 	private final ExternalService service;
 	private final DropBox dropBox;
-	private final ItemDetailsProvider itemDetailsProvider;
+	private final ItemContextProvider itemContextProvider;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
@@ -57,6 +63,7 @@ public class FileContextPresenter implements ActionListener,
 
 	private File file = File.Empty;
 	private FileDetails details;
+	private Map<ItemContextComponent, Widget> components;
 	private boolean previewInitalized = false;
 
 	private enum Details implements ResourceId {
@@ -66,18 +73,26 @@ public class FileContextPresenter implements ActionListener,
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, ExternalService service,
-			DropBox dropBox, ItemDetailsProvider itemDetailsProvider) {
+			DropBox dropBox, ItemContextProvider itemDetailsProvider) {
 		this.popup = popup;
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dropBox = dropBox;
-		this.itemDetailsProvider = itemDetailsProvider;
+		this.itemContextProvider = itemDetailsProvider;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
 		popup.addPreviewListener(this);
+		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+			@Override
+			public void onClose(CloseEvent<PopupPanel> event) {
+				for (Entry<ItemContextComponent, Widget> e : components
+						.entrySet())
+					e.getKey().onDispose();
+			}
+		});
 		initializeDetails();
 	}
 
@@ -138,8 +153,11 @@ public class FileContextPresenter implements ActionListener,
 		this.previewInitalized = false;
 		this.popup.reset();
 
-		ItemDetails itemDetails = itemDetailsProvider.getItemDetails(file);
-		popup.initDetails(itemDetails);
+		this.components = Collections.EMPTY_MAP;
+		if (details != null) {
+			components = popup.createComponents(itemContextProvider
+					.getItemContext(file));
+		}
 
 		this.details = details;
 		this.updateDescription();
@@ -161,6 +179,9 @@ public class FileContextPresenter implements ActionListener,
 				&& details.getFileView() != null;
 
 		popup.update(writable, isPreview, isView);
+
+		for (Entry<ItemContextComponent, Widget> e : components.entrySet())
+			e.getKey().onInit(e.getValue(), details);
 	}
 
 	private void updateDescription() {

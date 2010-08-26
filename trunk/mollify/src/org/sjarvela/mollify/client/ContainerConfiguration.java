@@ -42,8 +42,8 @@ import org.sjarvela.mollify.client.ui.dnd.DefaultDragAndDropManager;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
-import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemDetailsProvider;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
@@ -93,7 +93,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(Client.class).to(MollifyClient.class);
 		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
 		bind(PluginEnvironment.class).to(DefaultPluginEnvironment.class);
-		bind(ItemDetailsProvider.class).to(DefaultItemDetailsProvider.class);
+		bind(ItemContextProvider.class).to(DefaultItemContextProvider.class);
 	}
 
 	@Provides

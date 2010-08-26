@@ -68,7 +68,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private ActionLink cancelEditDescription;
 	private ActionLink removeDescription;
 	private ActionLink editPermissions;
-	private Map<ItemDetailsComponent, Widget> externalComponents = new HashMap();
 
 	private DisclosurePanel details;
 	private Panel detailContent;
@@ -149,59 +148,68 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return content;
 	}
 
-	public void initDetails(ItemDetails itemDetails) {
-		this.externalComponents.clear();
+	public Map<ItemContextComponent, Widget> createComponents(
+			ItemContext itemContext) {
+		Map<ItemContextComponent, Widget> contextComponents = new HashMap();
 		this.externalComponentsPanel.clear();
 
-		for (ItemDetailsComponent c : itemDetails.getComponents())
-			addComponent(c);
+		for (ItemContextComponent c : itemContext.getComponents())
+			addComponent(contextComponents, c);
+
+		return contextComponents;
 	}
 
-	private void addComponent(ItemDetailsComponent c) {
+	private void addComponent(
+			Map<ItemContextComponent, Widget> contextComponents,
+			ItemContextComponent c) {
 		Widget w;
-		if (c instanceof ItemDetailsSection)
-			w = addExternalSection((ItemDetailsSection) c);
-		else
-			w = addExternalComponent(c);
+		int index = contextComponents.size();
 
-		externalComponentsPanel.add(w);
-		this.externalComponents.put(c, w);
+		if (c instanceof ItemContextSection)
+			w = createSection((ItemContextSection) c, index);
+		else
+			w = createComponent(c, index);
+
+		contextComponents.put(c, w);
 	}
 
-	private Widget addExternalComponent(ItemDetailsComponent c) {
+	private Widget createComponent(ItemContextComponent c, int index) {
 		FlowPanel p = new FlowPanel();
-		p.getElement().setId("item-component-" + externalComponents.size());
+		p.setStyleName(StyleConstants.ITEM_CONTEXT_COMPONENT);
+		p.getElement().setId("item-component-" + index);
 		p.getElement().setInnerHTML(c.getHtml());
+		externalComponentsPanel.add(p);
 		return p;
 	}
 
-	private Widget addExternalSection(final ItemDetailsSection section) {
+	private Widget createSection(final ItemContextSection section, int index) {
 		DisclosurePanel s = new DisclosurePanel(section.getTitle());
 		s.setOpen(false);
-		s.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
+		s.addStyleName(StyleConstants.ITEM_CONTEXT_SECTION);
 		s.getHeader().getElement().getParentElement().setClassName(
-				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
+				StyleConstants.ITEM_CONTEXT_SECTION_HEADER);
 
 		final Panel content = new FlowPanel();
-		content.getElement().setId("item-section-" + externalComponents.size());
-		content.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
+		content.getElement().setId("item-section-" + index);
+		content.setStyleName(StyleConstants.ITEM_CONTEXT_SECTION_CONTENT);
 		content.getElement().setInnerHTML(section.getHtml());
 
 		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override
 			public void onOpen(OpenEvent<DisclosurePanel> event) {
-				section.onOpen(content);
+				section.onOpen();
 			}
 		});
 		s.addCloseHandler(new CloseHandler<DisclosurePanel>() {
 			@Override
 			public void onClose(CloseEvent<DisclosurePanel> event) {
-				section.onClose(content);
+				section.onClose();
 			}
 		});
 
 		s.add(content);
-		return s;
+		externalComponentsPanel.add(s);
+		return content;
 	}
 
 	private Widget createPermissionActions() {
@@ -488,25 +496,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		detailRowValues.get(id).setText(value);
 	}
 
-	// @Override
-	// public void showMenu() {
-	// super.showMenu();
-	//
-	// // DeferredCommand.addCommand(new Command() {
-	// // @Override
-	// // public void execute() {
-	// // initComponents();
-	// // }
-	// //
-	// // });
-	// }
-
-	public void initComponents() {
-		for (Entry<ItemDetailsComponent, Widget> e : this.externalComponents
-				.entrySet())
-			e.getKey().onInit(e.getValue());
-	}
-
 	public void update(boolean isWritable, boolean isPreview, boolean isView) {
 		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
 		actionsButton.setActionVisible(FileSystemAction.move, isWritable);
@@ -516,8 +505,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			preview.setVisible(isPreview);
 		if (viewButton != null)
 			viewButton.setVisible(isView);
-
-		initComponents();
 	}
 
 	public void setDescription(String description) {

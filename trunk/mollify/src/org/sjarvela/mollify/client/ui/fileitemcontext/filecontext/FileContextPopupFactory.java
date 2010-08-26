@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
 public class FileContextPopupFactory {
@@ -26,12 +26,12 @@ public class FileContextPopupFactory {
 	private final SessionInfo session;
 	private final ExternalService service;
 	private final DropBox dropBox;
-	private final ItemDetailsProvider itemDetailsProvider;
+	private final ItemContextProvider itemDetailsProvider;
 
 	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, SessionInfo session,
 			ExternalService service, DropBox dropBox,
-			ItemDetailsProvider itemDetailsProvider) {
+			ItemContextProvider itemDetailsProvider) {
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;

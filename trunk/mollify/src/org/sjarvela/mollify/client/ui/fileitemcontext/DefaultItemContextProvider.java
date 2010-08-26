@@ -18,19 +18,19 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DefaultItemDetailsProvider implements ItemDetailsHandler {
-	private final List<ItemDetailsProvider> providers = new ArrayList();
+public class DefaultItemContextProvider implements ItemContextHandler {
+	private final List<ItemContextProvider> providers = new ArrayList();
 
 	@Override
-	public ItemDetails getItemDetails(FileSystemItem item) {
-		ItemDetails details = ItemDetails.Empty;
-		for (ItemDetailsProvider provider : providers)
-			details = details.merge(provider.getItemDetails(item));
+	public ItemContext getItemContext(FileSystemItem item) {
+		ItemContext details = ItemContext.Empty;
+		for (ItemContextProvider provider : providers)
+			details = details.merge(provider.getItemContext(item));
 		return details;
 	}
 
 	@Override
-	public void addItemDetailsProvider(ItemDetailsProvider itemDetailsProvider) {
+	public void addItemDetailsProvider(ItemContextProvider itemDetailsProvider) {
 		providers.add(itemDetailsProvider);
 	}
 
