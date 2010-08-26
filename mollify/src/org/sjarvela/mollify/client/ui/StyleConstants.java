@@ -123,6 +123,12 @@ public class StyleConstants {
 	public static final String DIR_CONTEXT_DESCRIPTION = "directory-context-description";
 	public static final String DIR_CONTEXT_BUTTONS = "mollify-directory-context-buttons";
 
+	public static final String ITEM_CONTEXT_SECTION = "mollify-item-context-section";
+	public static final String ITEM_CONTEXT_SECTION_HEADER = "mollify-item-context-section-header";
+	public static final String ITEM_CONTEXT_SECTION_CONTENT = "mollify-item-context-section-content";
+
+	public static final String ITEM_CONTEXT_COMPONENT = "mollify-item-context-component";
+
 	public static final String FILE_LIST = "mollify-filelist";
 	public static final String FILE_LIST_PANEL = "mollify-filelist-panel";
 	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
@@ -363,5 +369,4 @@ public class StyleConstants {
 	public static final String FILE_VIEWER_BUTTONS = "mollify-file-viewer-buttons";
 	public static final String FILE_VIEWER_BUTTON_OPEN = "file-viewer-open";
 	public static final String FILE_VIEWER_BUTTON_CLOSE = "file-viewer-close";
-
 }

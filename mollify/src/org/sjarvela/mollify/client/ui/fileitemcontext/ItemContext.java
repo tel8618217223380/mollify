@@ -14,25 +14,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemDetails {
-	public static ItemDetails Empty = null;
-	private final List<ItemDetailsComponent> components;
+public class ItemContext {
+	public static ItemContext Empty = null;
+	private final List<ItemContextComponent> components;
 
 	static {
-		Empty = new ItemDetails(Collections.EMPTY_LIST);
+		Empty = new ItemContext(Collections.EMPTY_LIST);
 	}
 
-	public ItemDetails(List<ItemDetailsComponent> components) {
+	public ItemContext(List<ItemContextComponent> components) {
 		this.components = new ArrayList(components);
 	}
 
-	public List<ItemDetailsComponent> getComponents() {
+	public List<ItemContextComponent> getComponents() {
 		return components;
 	}
 
-	public ItemDetails merge(ItemDetails other) {
-		List<ItemDetailsComponent> newComponents = new ArrayList(components);
+	public ItemContext merge(ItemContext other) {
+		List<ItemContextComponent> newComponents = new ArrayList(components);
 		newComponents.addAll(other.getComponents());
-		return new ItemDetails(newComponents);
+		return new ItemContext(newComponents);
 	}
 }

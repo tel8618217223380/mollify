@@ -53,5 +53,5 @@
 	<replace-with class="org.sjarvela.mollify.client.service.environment.php.PhpServiceEnvironment">
 		<when-type-is class="org.sjarvela.mollify.client.service.environment.ServiceEnvironment"/>
 		<when-property-is name="demo" value="false"/>
-	</replace-with> 
+	</replace-with>	
 </module>

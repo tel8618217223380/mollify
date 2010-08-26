@@ -12,11 +12,11 @@ package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
-import org.sjarvela.mollify.client.plugin.itemdetails.NativeItemDetailsProvider;
+import org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsHandler;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemDetailsProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
@@ -26,12 +26,12 @@ import com.google.inject.Singleton;
 public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
-	private final ItemDetailsProvider itemDetailsProvider;
+	private final ItemContextProvider itemDetailsProvider;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
-			ItemDetailsProvider itemDetailsProvider) {
+			ItemContextProvider itemDetailsProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		this.itemDetailsProvider = itemDetailsProvider;
@@ -47,8 +47,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	}
 
 	public void addItemDetailsProvider(JavaScriptObject dp) {
-		((ItemDetailsHandler) itemDetailsProvider)
-				.addItemDetailsProvider(new NativeItemDetailsProvider(dp));
+		((ItemContextHandler) itemDetailsProvider)
+				.addItemDetailsProvider(new NativeItemContextProvider(dp));
 	}
 
 	public JavaScriptObject getJsEnv() {
