@@ -15,10 +15,13 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
+import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -27,14 +30,20 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
 	private final ItemContextProvider itemDetailsProvider;
+	private final SessionProvider sessionProvider;
+	@SuppressWarnings("unused")
+	private final String locale;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
-			ItemContextProvider itemDetailsProvider) {
+			ItemContextProvider itemDetailsProvider,
+			SessionProvider sessionProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		this.itemDetailsProvider = itemDetailsProvider;
+		this.sessionProvider = sessionProvider;
+		this.locale = LocaleInfo.getCurrentLocale().getLocaleName();
 	}
 
 	public void addResponseProcessor(JavaScriptObject rp) {
@@ -51,6 +60,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 				.addItemDetailsProvider(new NativeItemContextProvider(dp));
 	}
 
+	protected SessionInfo getSession() {
+		return sessionProvider.getSession();
+	}
+
 	public JavaScriptObject getJsEnv() {
 		return createNativeEnv(this);
 	}
@@ -65,6 +78,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		}
 		env.addItemDetailsProvider = function (cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemDetailsProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
+		env.getSession = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
+		}
+		env.getLocale = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::locale;
 		}
 		return env;
 	}-*/;
