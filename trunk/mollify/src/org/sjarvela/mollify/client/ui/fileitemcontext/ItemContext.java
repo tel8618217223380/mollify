@@ -30,7 +30,7 @@ public class ItemContext {
 		return components;
 	}
 
-	public ItemContext merge(ItemContext other) {
+	public ItemContext add(ItemContext other) {
 		List<ItemContextComponent> newComponents = new ArrayList(components);
 		newComponents.addAll(other.getComponents());
 		return new ItemContext(newComponents);

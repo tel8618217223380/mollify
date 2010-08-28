@@ -148,51 +148,30 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return content;
 	}
 
-	public Map<ItemContextComponent, Widget> createComponents(
-			ItemContext itemContext) {
-		Map<ItemContextComponent, Widget> contextComponents = new HashMap();
+	public List<ItemContextComponent> createComponents(ItemContext itemContext) {
+		List<ItemContextComponent> contextComponents = new ArrayList(
+				itemContext.getComponents());
 		this.externalComponentsPanel.clear();
 
-		for (ItemContextComponent c : itemContext.getComponents())
-			addComponent(contextComponents, c);
+		for (ItemContextComponent c : contextComponents)
+			addComponent(c);
 
 		return contextComponents;
 	}
 
-	private void addComponent(
-			Map<ItemContextComponent, Widget> contextComponents,
-			ItemContextComponent c) {
-		Widget w;
-		int index = contextComponents.size();
-
+	private void addComponent(ItemContextComponent c) {
 		if (c instanceof ItemContextSection)
-			w = createSection((ItemContextSection) c, index);
+			externalComponentsPanel.add(createSection((ItemContextSection) c));
 		else
-			w = createComponent(c, index);
-
-		contextComponents.put(c, w);
+			externalComponentsPanel.add(c.getComponent());
 	}
 
-	private Widget createComponent(ItemContextComponent c, int index) {
-		FlowPanel p = new FlowPanel();
-		p.setStyleName(StyleConstants.ITEM_CONTEXT_COMPONENT);
-		p.getElement().setId("item-component-" + index);
-		p.getElement().setInnerHTML(c.getHtml());
-		externalComponentsPanel.add(p);
-		return p;
-	}
-
-	private Widget createSection(final ItemContextSection section, int index) {
+	private Widget createSection(final ItemContextSection section) {
 		DisclosurePanel s = new DisclosurePanel(section.getTitle());
 		s.setOpen(false);
 		s.addStyleName(StyleConstants.ITEM_CONTEXT_SECTION);
 		s.getHeader().getElement().getParentElement().setClassName(
 				StyleConstants.ITEM_CONTEXT_SECTION_HEADER);
-
-		final Panel content = new FlowPanel();
-		content.getElement().setId("item-section-" + index);
-		content.setStyleName(StyleConstants.ITEM_CONTEXT_SECTION_CONTENT);
-		content.getElement().setInnerHTML(section.getHtml());
 
 		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override
@@ -207,9 +186,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			}
 		});
 
-		s.add(content);
-		externalComponentsPanel.add(s);
-		return content;
+		s.add(section.getComponent());
+		return s;
 	}
 
 	private Widget createPermissionActions() {
@@ -395,6 +373,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private Widget createExternalComponentsPanel() {
 		externalComponentsPanel = new VerticalPanel();
+		externalComponentsPanel
+				.setStylePrimaryName(StyleConstants.ITEM_CONTEXT_COMPONENTS_PANEL);
 		return externalComponentsPanel;
 	}
 
@@ -487,7 +467,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		actionsButton.setActionVisible(FileSystemAction.rename, false);
 		actionsButton.setActionVisible(FileSystemAction.copy, true);
-		actionsButton.setActionVisible(FileSystemAction.copyHere, true);
+		if (this.mode.equals(Mode.File))
+			actionsButton.setActionVisible(FileSystemAction.copyHere, true);
 		actionsButton.setActionVisible(FileSystemAction.move, false);
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}

@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -44,7 +43,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class FileContextPresenter implements ActionListener,
 		FilePreviewListener {
@@ -63,7 +61,7 @@ public class FileContextPresenter implements ActionListener,
 
 	private File file = File.Empty;
 	private FileDetails details;
-	private Map<ItemContextComponent, Widget> components;
+	private List<ItemContextComponent> components;
 	private boolean previewInitalized = false;
 
 	private enum Details implements ResourceId {
@@ -88,9 +86,8 @@ public class FileContextPresenter implements ActionListener,
 		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 			@Override
 			public void onClose(CloseEvent<PopupPanel> event) {
-				for (Entry<ItemContextComponent, Widget> e : components
-						.entrySet())
-					e.getKey().onDispose();
+				for (ItemContextComponent c : components)
+					c.onDispose();
 			}
 		});
 		initializeDetails();
@@ -153,7 +150,7 @@ public class FileContextPresenter implements ActionListener,
 		this.previewInitalized = false;
 		this.popup.reset();
 
-		this.components = Collections.EMPTY_MAP;
+		this.components = Collections.EMPTY_LIST;
 		if (details != null) {
 			components = popup.createComponents(itemContextProvider
 					.getItemContext(file));
@@ -180,8 +177,8 @@ public class FileContextPresenter implements ActionListener,
 
 		popup.update(writable, isPreview, isView);
 
-		for (Entry<ItemContextComponent, Widget> e : components.entrySet())
-			e.getKey().onInit(e.getValue(), details);
+		for (ItemContextComponent c : components)
+			c.onInit(file, details);
 	}
 
 	private void updateDescription() {

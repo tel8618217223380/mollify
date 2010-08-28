@@ -11,13 +11,14 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import org.sjarvela.mollify.client.filesystem.FileDetails;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ItemContextComponent {
-	String getHtml();
+	Widget getComponent();
 
-	void onInit(Widget content, FileDetails details);
+	void onInit(FileSystemItem item, FileDetails details);
 
 	void onDispose();
 }

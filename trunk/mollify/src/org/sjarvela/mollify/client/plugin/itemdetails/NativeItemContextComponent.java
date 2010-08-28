@@ -12,13 +12,16 @@ package org.sjarvela.mollify.client.plugin.itemdetails;
 
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NativeItemContextComponent implements ItemContextComponent {
-	protected final FileSystemItem item;
+	static int index = 0;
+
 	private final String html;
 
 	@SuppressWarnings("unused")
@@ -26,22 +29,33 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	@SuppressWarnings("unused")
 	private final JavaScriptObject onDispose;
 
-	public NativeItemContextComponent(FileSystemItem item,
-			JavaScriptObject init, JavaScriptObject dispose, String html) {
-		this.item = item;
+	private Widget component = null;
+
+	public NativeItemContextComponent(JavaScriptObject init,
+			JavaScriptObject dispose, String html) {
 		this.onInit = init;
 		this.onDispose = dispose;
 		this.html = html;
 	}
 
 	@Override
-	public String getHtml() {
-		return html == null ? "" : html;
+	public Widget getComponent() {
+		if (component == null)
+			component = createComponent();
+		return component;
+	}
+
+	private Widget createComponent() {
+		FlowPanel p = new FlowPanel();
+		p.setStyleName(StyleConstants.ITEM_CONTEXT_COMPONENT);
+		p.getElement().setId("item-component-" + index++);
+		p.getElement().setInnerHTML(html);
+		return p;
 	}
 
 	@Override
-	public void onInit(Widget content, FileDetails details) {
-		invokeInit(content.getElement().getId(), item.asJs(), details);
+	public void onInit(FileSystemItem item, FileDetails details) {
+		invokeInit(component.getElement().getId(), item.asJs(), details);
 	}
 
 	@Override

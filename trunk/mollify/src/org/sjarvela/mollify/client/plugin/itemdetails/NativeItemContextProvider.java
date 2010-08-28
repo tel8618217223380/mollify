@@ -45,12 +45,12 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			String type = c.getString("type").trim().toLowerCase();
 
 			if ("section".equals(type))
-				components.add(new NativeItemContextSection(item, c
+				components.add(new NativeItemContextSection(c
 						.getString("title"), c.getString("html"), c
 						.getObject("onInit"), c.getObject("onDispose"), c
 						.getObject("onOpen"), c.getObject("onClose")));
 			else if ("custom".equals(type))
-				components.add(new NativeItemContextComponent(item, c
+				components.add(new NativeItemContextComponent(c
 						.getObject("onInit"), c.getObject("onDispose"), c
 						.getString("html")));
 			else
