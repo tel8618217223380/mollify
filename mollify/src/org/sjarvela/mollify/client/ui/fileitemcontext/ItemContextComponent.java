@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 public interface ItemContextComponent {
 	Widget getComponent();
 
-	void onInit(FileSystemItem item, ItemDetails details);
+	boolean onInit(FileSystemItem item, ItemDetails details);
 
-	void onDispose();
+	void onContextClose();
 }

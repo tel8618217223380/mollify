@@ -27,14 +27,14 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	@SuppressWarnings("unused")
 	private final JavaScriptObject onInit;
 	@SuppressWarnings("unused")
-	private final JavaScriptObject onDispose;
+	private final JavaScriptObject onContextClose;
 
 	private Widget component = null;
 
 	public NativeItemContextComponent(JavaScriptObject init,
-			JavaScriptObject dispose, String html) {
+			JavaScriptObject contextClose, String html) {
 		this.onInit = init;
-		this.onDispose = dispose;
+		this.onContextClose = contextClose;
 		this.html = html;
 	}
 
@@ -54,24 +54,25 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	}
 
 	@Override
-	public void onInit(FileSystemItem item, ItemDetails details) {
-		invokeInit(component.getElement().getId(), item.asJs(), details);
+	public boolean onInit(FileSystemItem item, ItemDetails details) {
+		return invokeInit(component.getElement().getId(), item.asJs(), details);
 	}
 
 	@Override
-	public void onDispose() {
-		invokeDispose();
+	public void onContextClose() {
+		invokeContextClose();
 	}
 
-	private final native JavaScriptObject invokeInit(String elementId,
+	private final native boolean invokeInit(String elementId,
 			JavaScriptObject item, JavaScriptObject details) /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextComponent::onInit;
 		if (!cb) return;
-		cb(elementId, item, details);
+		var ret = cb(elementId, item, details);
+		return ret == true;
 	}-*/;
 
-	private final native JavaScriptObject invokeDispose() /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextComponent::onDispose;
+	private final native JavaScriptObject invokeContextClose() /*-{
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextComponent::onContextClose;
 		if (!cb) return;
 		cb();
 	}-*/;

@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -25,20 +24,18 @@ public class FileContextPopupFactory {
 	private final TextProvider textProvider;
 	private final FileDetailsProvider fileDetailsProvider;
 	private final SessionInfo session;
-	private final ExternalService service;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemDetailsProvider;
 	private final DialogManager dialogManager;
 
-	public FileContextPopupFactory(DialogManager dialogManager, FileDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, SessionInfo session,
-			ExternalService service, DropBox dropBox,
+	public FileContextPopupFactory(DialogManager dialogManager,
+			FileDetailsProvider fileDetailsProvider, TextProvider textProvider,
+			SessionInfo session, DropBox dropBox,
 			ItemContextProvider itemDetailsProvider) {
 		this.dialogManager = dialogManager;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;
-		this.service = service;
 		this.dropBox = dropBox;
 		this.itemDetailsProvider = itemDetailsProvider;
 	}
@@ -57,7 +54,7 @@ public class FileContextPopupFactory {
 						.filePreview(), session.getFeatures().fileView(),
 				session.getFeatures().publicLinks(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
-				session, fileDetailsProvider, textProvider, service, dropBox,
+				session, fileDetailsProvider, textProvider, dropBox,
 				itemDetailsProvider, dialogManager);
 		return new FileContextGlue(popup, presenter, actionDelegator);
 	}

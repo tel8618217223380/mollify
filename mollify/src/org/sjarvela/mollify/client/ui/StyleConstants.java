@@ -113,7 +113,6 @@ public class StyleConstants {
 	public static final String FILE_CONTEXT_PREVIEW = "mollify-file-context-preview";
 	public static final String FILE_CONTEXT_PREVIEW_HEADER = "mollify-file-context-preview-header";
 	public static final String FILE_CONTEXT_PREVIEW_CONTENT = "mollify-file-context-preview-content";
-	public static final String FILE_CONTEXT_PREVIEW_CONTENT_WAIT = "mollify-file-context-preview-content-wait";
 	public static final String FILE_CONTEXT_BUTTONS = "mollify-file-context-buttons";
 	public static final String FILE_CONTEXT_ACTIONS = "mollify-file-context-actions";
 

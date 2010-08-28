@@ -51,14 +51,26 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 
 	private ItemContext createContext(FileSystemItem item) {
 		List<ItemContextComponent> components = new ArrayList();
-		components.add(new DescriptionComponent(textProvider, serviceProvider
-				.getFileSystemService(), sessionProvider.getSession(),
-				dialogManager));
+		components.add(createDescriptionComponent());
+		if (item.isFile()
+				&& sessionProvider.getSession().getFeatures().filePreview())
+			components.add(createPreviewComponent());
 		return new ItemContext(components);
 	}
 
+	private ItemContextComponent createDescriptionComponent() {
+		return new DescriptionComponent(textProvider, serviceProvider
+				.getFileSystemService(), sessionProvider.getSession(),
+				dialogManager);
+	}
+
+	private ItemContextComponent createPreviewComponent() {
+		return new PreviewComponent(textProvider, serviceProvider
+				.getExternalService());
+	}
+
 	@Override
-	public void addItemDetailsProvider(ItemContextProvider itemDetailsProvider) {
-		providers.add(itemDetailsProvider);
+	public void addItemContextProvider(ItemContextProvider itemContextProvider) {
+		providers.add(itemContextProvider);
 	}
 }

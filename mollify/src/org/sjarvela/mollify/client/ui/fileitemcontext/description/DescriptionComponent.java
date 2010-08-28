@@ -140,10 +140,11 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
-	public void onInit(FileSystemItem item, ItemDetails details) {
+	public boolean onInit(FileSystemItem item, ItemDetails details) {
 		this.item = item;
 		this.details = details;
 		updateDescription();
+		return true;
 	}
 
 	private void updateDescription() {
@@ -156,7 +157,7 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
-	public void onDispose() {
+	public void onContextClose() {
 		item = null;
 		details = null;
 	}
