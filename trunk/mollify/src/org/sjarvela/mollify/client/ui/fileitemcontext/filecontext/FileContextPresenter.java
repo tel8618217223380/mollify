@@ -21,18 +21,17 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FilePreviewListener;
@@ -54,10 +53,10 @@ public class FileContextPresenter implements ActionListener,
 	private final ExternalService service;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemContextProvider;
+	private final DialogManager dialogManager;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
-	private FileItemDescriptionHandler descriptionHandler;
 
 	private File file = File.Empty;
 	private FileDetails details;
@@ -71,14 +70,16 @@ public class FileContextPresenter implements ActionListener,
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, ExternalService service,
-			DropBox dropBox, ItemContextProvider itemDetailsProvider) {
+			DropBox dropBox, ItemContextProvider itemContextProvider,
+			DialogManager dialogManager) {
 		this.popup = popup;
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.service = service;
 		this.dropBox = dropBox;
-		this.itemContextProvider = itemDetailsProvider;
+		this.itemContextProvider = itemContextProvider;
+		this.dialogManager = dialogManager;
 		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
 				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
@@ -112,11 +113,6 @@ public class FileContextPresenter implements ActionListener,
 		this.fileSystemActionHandler = actionHandler;
 	}
 
-	public void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler) {
-		this.descriptionHandler = descriptionHandler;
-	}
-
 	public void setPermissionHandler(
 			FileSystemPermissionHandler permissionHandler) {
 		this.permissionHandler = permissionHandler;
@@ -136,8 +132,7 @@ public class FileContextPresenter implements ActionListener,
 		fileDetailsProvider.getFileDetails(file,
 				new ResultListener<FileDetails>() {
 					public void onFail(ServiceError error) {
-						popup.getDescription().setText(
-								error.getType().getMessage(textProvider));
+						dialogManager.showError(error);
 					}
 
 					public void onSuccess(FileDetails details) {
@@ -157,7 +152,6 @@ public class FileContextPresenter implements ActionListener,
 		}
 
 		this.details = details;
-		this.updateDescription();
 
 		if (details != null) {
 			this.popup.setDetailValue(Details.Accessed, dateTimeFormat
@@ -181,53 +175,6 @@ public class FileContextPresenter implements ActionListener,
 			c.onInit(file, details);
 	}
 
-	private void updateDescription() {
-		boolean descriptionDefined = isDescriptionDefined();
-		String visibleDescription = descriptionDefined ? details
-				.getDescription() : "";
-
-		popup.setDescription(visibleDescription);
-		popup.setDescriptionEditable(false, descriptionDefined);
-	}
-
-	private boolean isDescriptionDefined() {
-		return (details != null && details.getDescription() != null);
-	}
-
-	protected void onStartEditDescription() {
-		popup.setDescriptionEditable(true, isDescriptionDefined());
-	}
-
-	protected void onApplyDescription() {
-		final String description = popup.getDescription().getText();
-		if (!this.descriptionHandler.validateDescription(description))
-			return;
-
-		popup.setDescriptionEditable(false, isDescriptionDefined());
-
-		this.descriptionHandler.setItemDescription(file, description,
-				new Callback() {
-					public void onCallback() {
-						details.setDescription(description);
-						updateDescription();
-					}
-				});
-	}
-
-	protected void onCancelEditDescription() {
-		popup.setDescriptionEditable(false, isDescriptionDefined());
-		updateDescription();
-	}
-
-	protected void onRemoveDescription() {
-		this.descriptionHandler.removeItemDescription(file, new Callback() {
-			public void onCallback() {
-				details.removeDescription();
-				updateDescription();
-			}
-		});
-	}
-
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
 			Object param = null;
@@ -241,19 +188,6 @@ public class FileContextPresenter implements ActionListener,
 
 		if (FileItemContextComponent.Action.addToDropbox.equals(action))
 			onAddToDropbox();
-		else if (FileItemContextComponent.Action.addDescription.equals(action))
-			onStartEditDescription();
-		else if (FileItemContextComponent.Action.editDescription.equals(action))
-			onStartEditDescription();
-		else if (FileItemContextComponent.Action.cancelEditDescription
-				.equals(action))
-			onCancelEditDescription();
-		else if (FileItemContextComponent.Action.applyDescription
-				.equals(action))
-			onApplyDescription();
-		else if (FileItemContextComponent.Action.removeDescription
-				.equals(action))
-			onRemoveDescription();
 		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
 			popup.hide();
 			permissionHandler.onEditPermissions(file);

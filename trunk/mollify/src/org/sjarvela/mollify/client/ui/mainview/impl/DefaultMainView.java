@@ -19,7 +19,6 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -127,11 +126,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void setFileContextHandler(FileSystemActionHandler actionHandler) {
 		fileContextPopup.setFileActionHandler(actionHandler);
-	}
-
-	public void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler) {
-		fileContextPopup.setFileItemDescriptionHandler(descriptionHandler);
 	}
 
 	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {

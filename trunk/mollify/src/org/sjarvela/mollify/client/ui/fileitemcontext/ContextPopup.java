@@ -10,15 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ContextPopup<T> {
-	void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler);
-
 	void showPopup();
 
 	void hidePopup();

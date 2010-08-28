@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
@@ -27,11 +28,13 @@ public class FileContextPopupFactory {
 	private final ExternalService service;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemDetailsProvider;
+	private final DialogManager dialogManager;
 
-	public FileContextPopupFactory(FileDetailsProvider fileDetailsProvider,
+	public FileContextPopupFactory(DialogManager dialogManager, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, SessionInfo session,
 			ExternalService service, DropBox dropBox,
 			ItemContextProvider itemDetailsProvider) {
+		this.dialogManager = dialogManager;
 		this.fileDetailsProvider = fileDetailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;
@@ -43,23 +46,19 @@ public class FileContextPopupFactory {
 	public FileContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
-		boolean descriptionEditable = session.getDefaultPermissionMode()
-				.isAdmin()
-				&& session.getFeatures().descriptionUpdate();
 		boolean permissionsEditable = session.getDefaultPermissionMode()
 				.isAdmin()
 				&& session.getFeatures().permissionUpdate();
 
 		FileItemContextComponent popup = new FileItemContextComponent(
 				Mode.File, textProvider, session.getDefaultPermissionMode()
-						.hasWritePermission(), descriptionEditable,
-				permissionsEditable, session.getFeatures().zipDownload(),
-				session.getFeatures().filePreview(), session.getFeatures()
-						.fileView(), session.getFeatures().publicLinks(),
-				actionDelegator);
+						.hasWritePermission(), permissionsEditable, session
+						.getFeatures().zipDownload(), session.getFeatures()
+						.filePreview(), session.getFeatures().fileView(),
+				session.getFeatures().publicLinks(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider, service, dropBox,
-				itemDetailsProvider);
+				itemDetailsProvider, dialogManager);
 		return new FileContextGlue(popup, presenter, actionDelegator);
 	}
 }

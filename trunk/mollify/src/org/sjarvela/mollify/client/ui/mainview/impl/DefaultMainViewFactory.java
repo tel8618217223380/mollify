@@ -67,7 +67,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final DragAndDropManager dragAndDropManager;
 	private final ClientSettings settings;
 	private final FileViewerFactory fileViewerFactory;
-	private final ItemContextProvider itemDetailsProvider;
+	private final ItemContextProvider itemContextProvider;
 
 	@Inject
 	public DefaultMainViewFactory(TextProvider textProvider,
@@ -96,7 +96,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.fileViewerFactory = fileViewerFactory;
 		this.dropBoxFactory = dropBoxFactory;
 		this.dragAndDropManager = dragAndDropManager;
-		this.itemDetailsProvider = itemDetailsProvider;
+		this.itemContextProvider = itemDetailsProvider;
 	}
 
 	public MainView createMainView() {
@@ -123,10 +123,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				fileSystemService, textProvider, session, serviceProvider
-						.getExternalService(), dropBox, itemDetailsProvider);
+				dialogManager, fileSystemService, textProvider, session, serviceProvider
+						.getExternalService(), dropBox, itemContextProvider);
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
-				textProvider, fileSystemService, session, dropBox);
+				dialogManager, textProvider, fileSystemService, session, dropBox,
+				itemContextProvider);
 
 		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
 				false);

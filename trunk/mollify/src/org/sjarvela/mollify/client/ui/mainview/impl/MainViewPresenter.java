@@ -20,7 +20,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -48,15 +47,13 @@ import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
 import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
-import org.sjarvela.mollify.client.util.Html;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
-		FileItemDescriptionHandler, FileSystemPermissionHandler,
-		DragDataProvider<FileSystemItem> {
+		FileSystemPermissionHandler, DragDataProvider<FileSystemItem> {
 	private final MainViewModel model;
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
@@ -107,12 +104,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		this.view.getFileContext()
 				.setFileActionHandler(fileSystemActionHandler);
-		this.view.getFileContext().setFileItemDescriptionHandler(this);
 		this.view.getFileContext().setFilePermissionHandler(this);
 
 		this.view.getDirectoryContext().setFolderActionHandler(
 				fileSystemActionHandler);
-		this.view.getDirectoryContext().setFileItemDescriptionHandler(this);
 		this.view.getDirectoryContext().setFilePermissionHandler(this);
 		this.view.getDirectorySelector().addListener(this);
 
@@ -331,29 +326,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private GridComparator<FileSystemItem> createComparator(GridColumn column,
 			Sort sort) {
 		return new DefaultFileItemComparator(column, sort);
-	}
-
-	public void setItemDescription(FileSystemItem item, String description,
-			Callback successCallback) {
-		fileSystemService.setItemDescription(item, description,
-				createListener(successCallback));
-	}
-
-	public void removeItemDescription(FileSystemItem item,
-			Callback successCallback) {
-		fileSystemService.removeItemDescription(item,
-				createListener(successCallback));
-	}
-
-	public boolean validateDescription(String description) {
-		List<String> unsafeTags = Html.findUnsafeHtmlTags(description);
-		if (unsafeTags.size() > 0) {
-			dialogManager.showInfo(textProvider.getStrings()
-					.infoDialogErrorTitle(), textProvider.getStrings()
-					.invalidDescriptionUnsafeTags());
-			return false;
-		}
-		return true;
 	}
 
 	public void onEditPermissions(FileSystemItem item) {

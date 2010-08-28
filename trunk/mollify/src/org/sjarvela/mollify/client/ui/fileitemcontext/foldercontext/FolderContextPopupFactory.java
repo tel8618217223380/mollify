@@ -14,8 +14,10 @@ import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
 
 public class FolderContextPopupFactory {
@@ -23,14 +25,19 @@ public class FolderContextPopupFactory {
 	private final FolderDetailsProvider detailsProvider;
 	private final SessionInfo session;
 	private final DropBox dropBox;
+	private final ItemContextProvider itemContextProvider;
+	private final DialogManager dialogManager;
 
-	public FolderContextPopupFactory(TextProvider textProvider,
-			FolderDetailsProvider detailsProvider, SessionInfo session,
-			DropBox dropBox) {
+	public FolderContextPopupFactory(DialogManager dialogManager,
+			TextProvider textProvider, FolderDetailsProvider detailsProvider,
+			SessionInfo session, DropBox dropBox,
+			ItemContextProvider itemContextProvider) {
+		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.detailsProvider = detailsProvider;
 		this.session = session;
 		this.dropBox = dropBox;
+		this.itemContextProvider = itemContextProvider;
 	}
 
 	public FolderContextPopup createPopup() {
@@ -47,9 +54,10 @@ public class FolderContextPopupFactory {
 				Mode.Directory, textProvider, session
 						.getDefaultPermissionMode().hasWritePermission(),
 				descriptionEditable, permissionsEditable, session.getFeatures()
-						.zipDownload(), false, false, false, actionDelegator);
+						.zipDownload(), false, false, actionDelegator);
 		FolderContextPresenter presenter = new FolderContextPresenter(popup,
-				session, detailsProvider, textProvider, dropBox);
+				session, detailsProvider, textProvider, dropBox,
+				itemContextProvider, dialogManager);
 		return new FolderContextGlue(popup, presenter, actionDelegator);
 	}
 }
