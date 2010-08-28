@@ -123,6 +123,8 @@ public class StyleConstants {
 	public static final String DIR_CONTEXT_DESCRIPTION = "directory-context-description";
 	public static final String DIR_CONTEXT_BUTTONS = "mollify-directory-context-buttons";
 
+	public static final String ITEM_CONTEXT_COMPONENTS_PANEL = "mollify-item-context-components";
+
 	public static final String ITEM_CONTEXT_SECTION = "mollify-item-context-section";
 	public static final String ITEM_CONTEXT_SECTION_HEADER = "mollify-item-context-section-header";
 	public static final String ITEM_CONTEXT_SECTION_CONTENT = "mollify-item-context-section-content";

@@ -967,12 +967,16 @@ td#mollify-filelist-column-size {
 	text-decoration: underline;
 }
 
-.mollify-file-context-details, .mollify-file-context-preview {
+.mollify-file-context-details, .mollify-file-context-preview, .mollify-item-context-section {
 	width: 100%;
 	margin-top: 4px;
 }
 
-.mollify-file-context-details-header, .mollify-file-context-preview-header, .mollify-file-upload-info-header {
+.mollify-item-context-components {
+	width: 100%;
+}
+
+.mollify-file-context-details-header, .mollify-file-context-preview-header, .mollify-file-upload-info-header, .mollify-item-context-section-header {
 	background-color: #ebebeb;
 	color: #000;
 	padding-top: 2px;
@@ -980,7 +984,7 @@ td#mollify-filelist-column-size {
 	width: 100%;
 }
 
-.mollify-file-context-details-content, .mollify-file-context-preview-content {
+.mollify-file-context-details-content, .mollify-file-context-preview-content, .mollify-item-context-section-content {
 	width: 100%;
 	border-left: 1px;
 	background-color: #f5f5f5;
