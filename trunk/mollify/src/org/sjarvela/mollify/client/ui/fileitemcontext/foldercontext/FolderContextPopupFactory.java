@@ -51,7 +51,7 @@ public class FolderContextPopupFactory {
 				&& session.getFeatures().permissionUpdate();
 
 		FileItemContextComponent popup = new FileItemContextComponent(
-				Mode.Directory, textProvider, session
+				Mode.Folder, textProvider, session
 						.getDefaultPermissionMode().hasWritePermission(),
 				descriptionEditable, permissionsEditable, session.getFeatures()
 						.zipDownload(), false, false, actionDelegator);

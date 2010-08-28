@@ -44,11 +44,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileItemContextComponent extends ContextPopupComponent {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
-	private List<FilePreviewListener> previewListeners = new ArrayList();
 
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
-	private final boolean filePreview;
 	private final boolean fileView;
 	private final boolean publicLinks;
 
@@ -62,15 +60,14 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private Panel detailRows;
 	private Map<ResourceId, Label> detailRowValues = new HashMap();
 
-	private DisclosurePanel preview;
-	private Panel previewContent;
-
 	private DropdownButton actionsButton;
 	private Button viewButton;
+
 	private VerticalPanel componentsPanel;
+	private Map<ItemContextComponent, Widget> components = new HashMap();
 
 	public enum Mode {
-		File, Directory
+		File, Folder
 	}
 
 	public enum Action implements ResourceId {
@@ -91,7 +88,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
-		this.filePreview = filePreview;
 		this.fileView = fileView;
 		this.publicLinks = publicLinks;
 
@@ -99,10 +95,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		this.actionListener = actionListener;
 
 		initialize();
-	}
-
-	public void addPreviewListener(FilePreviewListener filePreviewListener) {
-		this.previewListeners.add(filePreviewListener);
 	}
 
 	protected Widget createContent() {
@@ -118,12 +110,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		content.add(name);
 
 		content.add(createComponentsPanel());
-
-		if (Mode.File.equals(this.mode) && filePreview)
-			content.add(createFilePreview());
-
 		content.add(createDetails());
-
 		content.add(createButtons());
 		return content;
 	}
@@ -131,6 +118,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public List<ItemContextComponent> createComponents(ItemContext itemContext) {
 		List<ItemContextComponent> contextComponents = new ArrayList(
 				itemContext.getComponents());
+		this.components.clear();
 		this.componentsPanel.clear();
 
 		for (ItemContextComponent c : contextComponents)
@@ -140,10 +128,13 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	private void addComponent(ItemContextComponent c) {
-		if (c instanceof ItemContextSection)
-			componentsPanel.add(createSection((ItemContextSection) c));
-		else
+		if (c instanceof ItemContextSection) {
+			Widget section = createSection((ItemContextSection) c);
+			components.put(c, section);
+			componentsPanel.add(section);
+		} else {
 			componentsPanel.add(c.getComponent());
+		}
 	}
 
 	private Widget createSection(final ItemContextSection section) {
@@ -272,30 +263,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return null;
 	}
 
-	private Widget createFilePreview() {
-		preview = new DisclosurePanel(textProvider.getStrings()
-				.filePreviewTitle());
-		preview.setOpen(false);
-		preview.addStyleName(StyleConstants.FILE_CONTEXT_PREVIEW);
-		preview.getHeader().getElement().getParentElement().setClassName(
-				StyleConstants.FILE_CONTEXT_PREVIEW_HEADER);
-
-		previewContent = new FlowPanel();
-		previewContent
-				.setStyleName(StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT);
-
-		preview.add(previewContent);
-		preview.setVisible(false);
-		preview.addOpenHandler(new OpenHandler<DisclosurePanel>() {
-			@Override
-			public void onOpen(OpenEvent<DisclosurePanel> event) {
-				for (FilePreviewListener l : previewListeners)
-					l.onPreview();
-			}
-		});
-		return preview;
-	}
-
 	private Widget createComponentsPanel() {
 		componentsPanel = new VerticalPanel();
 		componentsPanel
@@ -377,15 +344,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		for (Label detailsValue : detailRowValues.values())
 			detailsValue.setText("");
 
-		if (preview != null) {
-			preview.setOpen(false);
-			previewContent.getElement().setInnerHTML(
-					"<div class='"
-							+ StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT_WAIT
-							+ "'/>");
-			preview.setVisible(false);
-		}
-
 		if (viewButton != null)
 			viewButton.setVisible(false);
 
@@ -401,19 +359,13 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		detailRowValues.get(id).setText(value);
 	}
 
-	public void update(boolean isWritable, boolean isPreview, boolean isView) {
+	public void update(boolean isWritable, boolean isView) {
 		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
 		actionsButton.setActionVisible(FileSystemAction.move, isWritable);
 		actionsButton.setActionVisible(FileSystemAction.delete, isWritable);
 
-		if (preview != null)
-			preview.setVisible(isPreview);
 		if (viewButton != null)
 			viewButton.setVisible(isView);
-	}
-
-	public void setFilePreview(String previewHtml) {
-		previewContent.getElement().setInnerHTML(previewHtml);
 	}
 
 	public DisclosurePanel getDetails() {
@@ -422,5 +374,17 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	public Label getName() {
 		return name;
+	}
+
+	public void removeComponent(ItemContextComponent c) {
+		Widget w = components.get(c);
+		if (w == null)
+			w = c.getComponent();
+		componentsPanel.remove(w);
+	}
+
+	public void removeComponents(List<ItemContextComponent> list) {
+		for (ItemContextComponent c : list)
+			removeComponent(c);
 	}
 }

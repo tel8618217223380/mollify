@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -97,11 +98,15 @@ public class FolderContextPresenter implements ActionListener {
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 
-		this.popup.update(writable, false, false);
+		this.popup.update(writable, false);
 		this.popup.initializeDetailsSection();
 
+		List<ItemContextComponent> rejected = new ArrayList();
 		for (ItemContextComponent c : components)
-			c.onInit(folder, details);
+			if (!c.onInit(folder, details))
+				rejected.add(c);
+		components.removeAll(rejected);
+		popup.removeComponents(rejected);
 	}
 
 	public void onAction(ResourceId action, Object o) {

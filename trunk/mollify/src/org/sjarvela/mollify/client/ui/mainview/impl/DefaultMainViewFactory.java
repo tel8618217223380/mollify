@@ -123,11 +123,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
 		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
-				dialogManager, fileSystemService, textProvider, session, serviceProvider
-						.getExternalService(), dropBox, itemContextProvider);
+				dialogManager, fileSystemService, textProvider, session,
+				dropBox, itemContextProvider);
 		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
-				dialogManager, textProvider, fileSystemService, session, dropBox,
-				itemContextProvider);
+				dialogManager, textProvider, fileSystemService, session,
+				dropBox, itemContextProvider);
 
 		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
 				false);

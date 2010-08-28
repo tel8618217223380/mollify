@@ -57,7 +57,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	public void addItemDetailsProvider(JavaScriptObject dp) {
 		((ItemContextHandler) itemDetailsProvider)
-				.addItemDetailsProvider(new NativeItemContextProvider(dp));
+				.addItemContextProvider(new NativeItemContextProvider(dp));
 	}
 
 	protected SessionInfo getSession() {

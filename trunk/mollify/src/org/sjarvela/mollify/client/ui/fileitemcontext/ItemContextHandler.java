@@ -11,5 +11,5 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 public interface ItemContextHandler extends ItemContextProvider {
-	void addItemDetailsProvider(ItemContextProvider itemDetailsProvider);
+	void addItemContextProvider(ItemContextProvider itemDetailsProvider);
 }

@@ -51,7 +51,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 						.getObject("onOpen"), c.getObject("onClose")));
 			else if ("custom".equals(type))
 				components.add(new NativeItemContextComponent(c
-						.getObject("onInit"), c.getObject("onDispose"), c
+						.getObject("onInit"), c.getObject("onContextClose"), c
 						.getString("html")));
 			else
 				throw new RuntimeException("Invalid component type: " + type);
