@@ -43,17 +43,9 @@ public class FolderContextPopupFactory {
 	public FolderContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
-		boolean descriptionEditable = session.getDefaultPermissionMode()
-				.isAdmin()
-				&& session.getFeatures().descriptionUpdate();
-		boolean permissionsEditable = session.getDefaultPermissionMode()
-				.isAdmin()
-				&& session.getFeatures().permissionUpdate();
-
 		FileItemContextComponent popup = new FileItemContextComponent(
-				Mode.Folder, textProvider, session
-						.getDefaultPermissionMode().hasWritePermission(),
-				descriptionEditable, permissionsEditable, session.getFeatures()
+				Mode.Folder, textProvider, session.getDefaultPermissionMode()
+						.hasWritePermission(), session.getFeatures()
 						.zipDownload(), false, false, actionDelegator);
 		FolderContextPresenter presenter = new FolderContextPresenter(popup,
 				session, detailsProvider, textProvider, dropBox,

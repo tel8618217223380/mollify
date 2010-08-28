@@ -13,9 +13,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
@@ -38,14 +36,11 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.PopupPanel;
 
 public class FileContextPresenter implements ActionListener {
 	private final FileItemContextComponent popup;
 	private final FileDetailsProvider fileDetailsProvider;
-	private final TextProvider textProvider;
-	private final DateTimeFormat dateTimeFormat;
 	private final SessionInfo session;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemContextProvider;
@@ -58,10 +53,6 @@ public class FileContextPresenter implements ActionListener {
 	private FileDetails details;
 	private List<ItemContextComponent> components;
 
-	private enum Details implements ResourceId {
-		Accessed, Modified, Changed
-	}
-
 	public FileContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FileDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, DropBox dropBox,
@@ -69,12 +60,9 @@ public class FileContextPresenter implements ActionListener {
 		this.popup = popup;
 		this.session = session;
 		this.fileDetailsProvider = fileDetailsProvider;
-		this.textProvider = textProvider;
 		this.dropBox = dropBox;
 		this.itemContextProvider = itemContextProvider;
 		this.dialogManager = dialogManager;
-		this.dateTimeFormat = com.google.gwt.i18n.client.DateTimeFormat
-				.getFormat(textProvider.getStrings().shortDateTimeFormat());
 
 		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 			@Override
@@ -83,22 +71,6 @@ public class FileContextPresenter implements ActionListener {
 					c.onContextClose();
 			}
 		});
-		initializeDetails();
-	}
-
-	private void initializeDetails() {
-		List<ResourceId> order = (List<ResourceId>) Arrays.asList(
-				(ResourceId) Details.Modified, (ResourceId) Details.Changed,
-				(ResourceId) Details.Accessed);
-		Map<ResourceId, String> headers = new HashMap();
-		headers.put(Details.Accessed, textProvider.getStrings()
-				.fileDetailsLabelLastAccessed());
-		headers.put(Details.Changed, textProvider.getStrings()
-				.fileDetailsLabelLastChanged());
-		headers.put(Details.Modified, textProvider.getStrings()
-				.fileDetailsLabelLastModified());
-
-		this.popup.initializeDetailsSection(order, headers);
 	}
 
 	public void setFileActionHandler(FileSystemActionHandler actionHandler) {
@@ -117,7 +89,6 @@ public class FileContextPresenter implements ActionListener {
 	public void setFile(File file) {
 		this.file = file;
 
-		popup.getDetails().setOpen(false);
 		popup.getName().setText(file.getName());
 		updateDetails(null);
 
@@ -143,15 +114,6 @@ public class FileContextPresenter implements ActionListener {
 		}
 
 		this.details = details;
-
-		if (details != null) {
-			this.popup.setDetailValue(Details.Accessed, dateTimeFormat
-					.format(details.getLastAccessed()));
-			this.popup.setDetailValue(Details.Modified, dateTimeFormat
-					.format(details.getLastModified()));
-			this.popup.setDetailValue(Details.Changed, dateTimeFormat
-					.format(details.getLastChanged()));
-		}
 
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());

@@ -70,7 +70,6 @@ public class FolderContextPresenter implements ActionListener {
 	public void setFolder(Folder folder) {
 		this.folder = folder;
 
-		popup.getDetails().setOpen(false);
 		popup.getName().setText(folder.getName());
 		updateDetails(null);
 
@@ -99,7 +98,6 @@ public class FolderContextPresenter implements ActionListener {
 				.getFilePermission().canWrite());
 
 		this.popup.update(writable, false);
-		this.popup.initializeDetailsSection();
 
 		List<ItemContextComponent> rejected = new ArrayList();
 		for (ItemContextComponent c : components)
