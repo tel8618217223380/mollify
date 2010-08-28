@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.plugin.itemdetails;
 
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 
@@ -54,7 +54,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	}
 
 	@Override
-	public void onInit(FileSystemItem item, FileDetails details) {
+	public void onInit(FileSystemItem item, ItemDetails details) {
 		invokeInit(component.getElement().getId(), item.asJs(), details);
 	}
 

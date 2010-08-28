@@ -10,15 +10,15 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ItemContextComponent {
 	Widget getComponent();
 
-	void onInit(FileSystemItem item, FileDetails details);
+	void onInit(FileSystemItem item, ItemDetails details);
 
 	void onDispose();
 }

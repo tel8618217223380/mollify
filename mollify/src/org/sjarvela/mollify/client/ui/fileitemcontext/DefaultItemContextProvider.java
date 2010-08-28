@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.fileitemcontext.description.DescriptionComponent;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,8 +52,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private ItemContext createContext(FileSystemItem item) {
 		List<ItemContextComponent> components = new ArrayList();
 		components.add(new DescriptionComponent(textProvider, serviceProvider
-				.getFileSystemService(), sessionProvider.getSession()
-				.getFeatures().descriptionUpdate(), dialogManager));
+				.getFileSystemService(), sessionProvider.getSession(),
+				dialogManager));
 		return new ItemContext(components);
 	}
 

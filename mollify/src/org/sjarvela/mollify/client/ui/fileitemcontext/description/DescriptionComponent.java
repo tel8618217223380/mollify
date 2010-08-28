@@ -8,25 +8,28 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.description;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Action;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.DescriptionActionGroup;
 import org.sjarvela.mollify.client.util.Html;
@@ -51,15 +54,16 @@ public class DescriptionComponent implements ItemContextComponent,
 	private ActionLink cancelEditDescription;
 	private SwitchPanel descriptionActionsSwitch;
 
-	private FileDetails details;
+	private ItemDetails details;
 	private FileSystemItem item;
 
 	public DescriptionComponent(TextProvider textProvider,
-			FileSystemService fileSystemService, boolean descriptionUpdate,
+			FileSystemService fileSystemService, SessionInfo session,
 			DialogManager dialogManager) {
 		this.textProvider = textProvider;
 		this.fileSystemService = fileSystemService;
-		this.descriptionUpdate = descriptionUpdate;
+		this.descriptionUpdate = session.getDefaultPermissionMode().isAdmin()
+				&& session.getFeatures().descriptionUpdate();
 		this.dialogManager = dialogManager;
 	}
 
@@ -136,7 +140,7 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
-	public void onInit(FileSystemItem item, FileDetails details) {
+	public void onInit(FileSystemItem item, ItemDetails details) {
 		this.item = item;
 		this.details = details;
 		updateDescription();

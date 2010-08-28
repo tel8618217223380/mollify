@@ -11,54 +11,54 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
-import org.sjarvela.mollify.client.filesystem.handler.FileItemDescriptionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
 public class FolderContextPresenter implements ActionListener {
 	private final FileItemContextComponent popup;
 	private final FolderDetailsProvider detailsProvider;
-	private final TextProvider textProvider;
 	private final DropBox dropBox;
+	private final ItemContextProvider itemContextProvider;
+	private final DialogManager dialogManager;
 
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
-	private FileItemDescriptionHandler descriptionHandler;
 
 	private Folder folder;
-	private FolderDetails details;
+	private List<ItemContextComponent> components;
 
 	public FolderContextPresenter(FileItemContextComponent popup,
 			SessionInfo session, FolderDetailsProvider detailsProvider,
-			TextProvider textProvider, DropBox dropBox) {
+			TextProvider textProvider, DropBox dropBox,
+			ItemContextProvider itemContextProvider, DialogManager dialogManager) {
 		this.popup = popup;
 		this.detailsProvider = detailsProvider;
-		this.textProvider = textProvider;
 		this.dropBox = dropBox;
+		this.itemContextProvider = itemContextProvider;
+		this.dialogManager = dialogManager;
 	}
 
 	public void setDirectoryActionHandler(FileSystemActionHandler actionHandler) {
 		this.fileSystemActionHandler = actionHandler;
-	}
-
-	public void setFileItemDescriptionHandler(
-			FileItemDescriptionHandler descriptionHandler) {
-		this.descriptionHandler = descriptionHandler;
 	}
 
 	public void setPermissionHandler(
@@ -76,8 +76,7 @@ public class FolderContextPresenter implements ActionListener {
 		detailsProvider.getFolderDetails(folder,
 				new ResultListener<FolderDetails>() {
 					public void onFail(ServiceError error) {
-						popup.getDescription().setText(
-								error.getType().getMessage(textProvider));
+						dialogManager.showError(error);
 					}
 
 					public void onSuccess(FolderDetails details) {
@@ -88,61 +87,21 @@ public class FolderContextPresenter implements ActionListener {
 
 	protected void updateDetails(FolderDetails details) {
 		this.popup.reset();
-		this.details = details;
 
-		this.updateDescription();
+		this.components = Collections.EMPTY_LIST;
+		if (details != null) {
+			components = popup.createComponents(itemContextProvider
+					.getItemContext(folder));
+		}
+
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 
 		this.popup.update(writable, false, false);
 		this.popup.initializeDetailsSection();
-	}
 
-	private boolean isDescriptionDefined() {
-		return (details != null && details.getDescription() != null);
-	}
-
-	private void updateDescription() {
-		boolean descriptionDefined = isDescriptionDefined();
-		String visibleDescription = descriptionDefined ? details
-				.getDescription() : "";
-
-		popup.setDescription(visibleDescription);
-		popup.setDescriptionEditable(false, descriptionDefined);
-	}
-
-	protected void onStartEditDescription() {
-		popup.setDescriptionEditable(true, isDescriptionDefined());
-	}
-
-	protected void onApplyDescription() {
-		final String description = popup.getDescription().getText();
-		if (!this.descriptionHandler.validateDescription(description))
-			return;
-
-		popup.setDescriptionEditable(false, true);
-
-		this.descriptionHandler.setItemDescription(folder, description,
-				new Callback() {
-					public void onCallback() {
-						details.setDescription(description);
-						updateDescription();
-					}
-				});
-	}
-
-	protected void onCancelEditDescription() {
-		popup.setDescriptionEditable(false, isDescriptionDefined());
-		updateDescription();
-	}
-
-	protected void onRemoveDescription() {
-		this.descriptionHandler.removeItemDescription(folder, new Callback() {
-			public void onCallback() {
-				details.removeDescription();
-				updateDescription();
-			}
-		});
+		for (ItemContextComponent c : components)
+			c.onInit(folder, details);
 	}
 
 	public void onAction(ResourceId action, Object o) {
@@ -155,19 +114,6 @@ public class FolderContextPresenter implements ActionListener {
 
 		if (FileItemContextComponent.Action.addToDropbox.equals(action))
 			onAddToDropbox();
-		else if (FileItemContextComponent.Action.addDescription.equals(action))
-			onStartEditDescription();
-		else if (FileItemContextComponent.Action.editDescription.equals(action))
-			onStartEditDescription();
-		else if (FileItemContextComponent.Action.cancelEditDescription
-				.equals(action))
-			onCancelEditDescription();
-		else if (FileItemContextComponent.Action.applyDescription
-				.equals(action))
-			onApplyDescription();
-		else if (FileItemContextComponent.Action.removeDescription
-				.equals(action))
-			onRemoveDescription();
 		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
 			popup.hide();
 			permissionHandler.onEditPermissions(folder);

@@ -25,9 +25,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionLink;
-import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
-import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -48,7 +46,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final ActionListener actionListener;
 	private List<FilePreviewListener> previewListeners = new ArrayList();
 
-	private final boolean descriptionEditingEnabled;
 	private final boolean zipDownloadEnabled;
 	private final boolean permissionsEditable;
 	private final boolean filePreview;
@@ -58,15 +55,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final Mode mode;
 
 	private Label name;
-
-	private EditableLabel description;
-	private SwitchPanel<DescriptionActionGroup> descriptionActionsSwitch;
-
-	private ActionLink editDescription;
-	private ActionLink addDescription;
-	private ActionLink applyDescription;
-	private ActionLink cancelEditDescription;
-	private ActionLink removeDescription;
 	private ActionLink editPermissions;
 
 	private DisclosurePanel details;
@@ -79,7 +67,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private DropdownButton actionsButton;
 	private Button viewButton;
-	private VerticalPanel externalComponentsPanel;
+	private VerticalPanel componentsPanel;
 
 	public enum Mode {
 		File, Directory
@@ -94,15 +82,13 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
-			boolean generalWritePermissions, boolean descriptionEditingEnabled,
-			boolean permissionsEditable, boolean zipDownloadEnabled,
-			boolean filePreview, boolean fileView, boolean publicLinks,
-			ActionListener actionListener) {
+			boolean generalWritePermissions, boolean permissionsEditable,
+			boolean zipDownloadEnabled, boolean filePreview, boolean fileView,
+			boolean publicLinks, ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
 
-		this.descriptionEditingEnabled = descriptionEditingEnabled;
 		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
 		this.filePreview = filePreview;
@@ -131,17 +117,11 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		name.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(name);
 
-		description = new EditableLabel(
-				StyleConstants.FILE_CONTEXT_DESCRIPTION, true);
-		content.add(description);
-
-		if (descriptionEditingEnabled)
-			content.add(createDescriptionActions());
+		content.add(createComponentsPanel());
 
 		if (Mode.File.equals(this.mode) && filePreview)
 			content.add(createFilePreview());
 
-		content.add(createExternalComponentsPanel());
 		content.add(createDetails());
 
 		content.add(createButtons());
@@ -151,7 +131,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	public List<ItemContextComponent> createComponents(ItemContext itemContext) {
 		List<ItemContextComponent> contextComponents = new ArrayList(
 				itemContext.getComponents());
-		this.externalComponentsPanel.clear();
+		this.componentsPanel.clear();
 
 		for (ItemContextComponent c : contextComponents)
 			addComponent(c);
@@ -161,9 +141,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private void addComponent(ItemContextComponent c) {
 		if (c instanceof ItemContextSection)
-			externalComponentsPanel.add(createSection((ItemContextSection) c));
+			componentsPanel.add(createSection((ItemContextSection) c));
 		else
-			externalComponentsPanel.add(c.getComponent());
+			componentsPanel.add(c.getComponent());
 	}
 
 	private Widget createSection(final ItemContextSection section) {
@@ -203,61 +183,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		permissionActionsEdit.add(editPermissions);
 
 		return permissionActionsEdit;
-	}
-
-	private Widget createDescriptionActions() {
-		addDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsAddDescription(),
-				StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-		addDescription.setAction(actionListener, Action.addDescription);
-
-		removeDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsRemoveDescription(),
-				StyleConstants.FILE_CONTEXT_REMOVE_DESCRIPTION,
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-		removeDescription.setAction(actionListener, Action.removeDescription);
-
-		editDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsEditDescription(),
-				StyleConstants.FILE_CONTEXT_EDIT_DESCRIPTION,
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-		editDescription.setAction(actionListener, Action.editDescription);
-
-		applyDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsApplyDescription(),
-				StyleConstants.FILE_CONTEXT_APPLY_DESCRIPTION,
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-		applyDescription.setAction(actionListener, Action.applyDescription);
-
-		cancelEditDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsCancelEditDescription(),
-				StyleConstants.FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION,
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
-		cancelEditDescription.setAction(actionListener,
-				Action.cancelEditDescription);
-
-		Map<DescriptionActionGroup, Widget> groups = new HashMap();
-		Panel descriptionActionsView = new FlowPanel();
-		descriptionActionsView
-				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
-		descriptionActionsView.add(addDescription);
-		descriptionActionsView.add(editDescription);
-		descriptionActionsView.add(removeDescription);
-		groups.put(DescriptionActionGroup.view, descriptionActionsView);
-
-		Panel descriptionActionsEdit = new FlowPanel();
-		descriptionActionsEdit
-				.setStyleName(StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS);
-
-		descriptionActionsEdit.add(applyDescription);
-		descriptionActionsEdit.add(cancelEditDescription);
-		groups.put(DescriptionActionGroup.edit, descriptionActionsEdit);
-
-		descriptionActionsSwitch = new SwitchPanel(
-				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTIONS_SWITCH, groups);
-
-		return descriptionActionsSwitch;
 	}
 
 	private Widget createButtons() {
@@ -371,11 +296,11 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return preview;
 	}
 
-	private Widget createExternalComponentsPanel() {
-		externalComponentsPanel = new VerticalPanel();
-		externalComponentsPanel
+	private Widget createComponentsPanel() {
+		componentsPanel = new VerticalPanel();
+		componentsPanel
 				.setStylePrimaryName(StyleConstants.ITEM_CONTEXT_COMPONENTS_PANEL);
-		return externalComponentsPanel;
+		return componentsPanel;
 	}
 
 	private Widget createDetails() {
@@ -447,8 +372,7 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public void reset() {
-		externalComponentsPanel.clear();
-		description.setText("");
+		componentsPanel.clear();
 
 		for (Label detailsValue : detailRowValues.values())
 			detailsValue.setText("");
@@ -488,30 +412,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 			viewButton.setVisible(isView);
 	}
 
-	public void setDescription(String description) {
-		this.description.setText(description);
-	}
-
-	public void setDescriptionEditable(boolean isEditable,
-			boolean descriptionDefined) {
-		description.setEditable(isEditable);
-		description.setVisible(isEditable || descriptionDefined);
-
-		if (!descriptionEditingEnabled)
-			return;
-
-		addDescription.setVisible(!isEditable && !descriptionDefined);
-		editDescription.setVisible(!isEditable && descriptionDefined);
-		removeDescription.setVisible(!isEditable && descriptionDefined);
-		applyDescription.setVisible(isEditable);
-		cancelEditDescription.setVisible(isEditable);
-
-		if (isEditable)
-			descriptionActionsSwitch.switchTo(DescriptionActionGroup.edit);
-		else
-			descriptionActionsSwitch.switchTo(DescriptionActionGroup.view);
-	}
-
 	public void setFilePreview(String previewHtml) {
 		previewContent.getElement().setInnerHTML(previewHtml);
 	}
@@ -522,29 +422,5 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	public Label getName() {
 		return name;
-	}
-
-	public EditableLabel getDescription() {
-		return description;
-	}
-
-	public ActionLink getEditDescription() {
-		return editDescription;
-	}
-
-	public ActionLink getAddDescription() {
-		return addDescription;
-	}
-
-	public ActionLink getApplyDescription() {
-		return applyDescription;
-	}
-
-	public ActionLink getCancelEditDescription() {
-		return cancelEditDescription;
-	}
-
-	public ActionLink getRemoveDescription() {
-		return removeDescription;
 	}
 }

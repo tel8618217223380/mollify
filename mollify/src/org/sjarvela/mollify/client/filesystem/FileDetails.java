@@ -16,16 +16,11 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.util.DateTime;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-public class FileDetails extends JavaScriptObject {
+public class FileDetails extends ItemDetails {
 	protected FileDetails() {
 	}
-
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
 
 	public final Date getLastAccessed() {
 		return DateTime.getInstance().getInternalFormat().parse(
@@ -40,10 +35,6 @@ public class FileDetails extends JavaScriptObject {
 	public final Date getLastModified() {
 		return DateTime.getInstance().getInternalFormat().parse(
 				getLastModifiedString());
-	}
-
-	public final FilePermission getFilePermission() {
-		return FilePermission.fromString(getFilePermissionString());
 	}
 
 	public final native String getFilePreview() /*-{
@@ -64,14 +55,6 @@ public class FileDetails extends JavaScriptObject {
 
 	private final native String getLastModifiedString() /*-{
 		return this.last_modified;
-	}-*/;
-
-	public final native String getDescription() /*-{
-		return this.description;
-	}-*/;
-
-	private final native String getFilePermissionString() /*-{
-		return this.permission;
 	}-*/;
 
 	public static FileDetails create(Date lastAccessed, Date lastChanged,
@@ -95,13 +78,5 @@ public class FileDetails extends JavaScriptObject {
 		this.permission = permission;
 		this.preview = preview;
 		this.view = view;
-	}-*/;
-
-	public final native void setDescription(String description) /*-{
-		this.description = description;
-	}-*/;
-
-	public final native void removeDescription() /*-{
-		this.description = null;
 	}-*/;
 }
