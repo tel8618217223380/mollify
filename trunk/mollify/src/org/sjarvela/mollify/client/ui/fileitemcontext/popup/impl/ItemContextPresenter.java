@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,13 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
-import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -30,17 +30,17 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class FileContextPresenter implements ActionListener {
-	private final FileItemContextComponent popup;
-	private final FileDetailsProvider fileDetailsProvider;
+public class ItemContextPresenter implements ActionListener {
+	private final ItemContextPopupComponent popup;
+	private final ItemDetailsProvider fileDetailsProvider;
 	private final SessionInfo session;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemContextProvider;
@@ -49,12 +49,12 @@ public class FileContextPresenter implements ActionListener {
 	private FileSystemActionHandler fileSystemActionHandler;
 	private FileSystemPermissionHandler permissionHandler;
 
-	private File file = File.Empty;
-	private FileDetails details;
+	private FileSystemItem item = null;
+	private ItemDetails details;
 	private List<ItemContextComponent> components;
 
-	public FileContextPresenter(FileItemContextComponent popup,
-			SessionInfo session, FileDetailsProvider fileDetailsProvider,
+	public ItemContextPresenter(ItemContextPopupComponent popup,
+			SessionInfo session, ItemDetailsProvider fileDetailsProvider,
 			TextProvider textProvider, DropBox dropBox,
 			ItemContextProvider itemContextProvider, DialogManager dialogManager) {
 		this.popup = popup;
@@ -82,49 +82,50 @@ public class FileContextPresenter implements ActionListener {
 		this.permissionHandler = permissionHandler;
 	}
 
-	public File getFile() {
-		return file;
+	public FileSystemItem getItem() {
+		return item;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public void setItem(FileSystemItem item) {
+		this.item = item;
 
-		popup.getName().setText(file.getName());
+		popup.getName().setText(item.getName());
 		updateDetails(null);
 
-		fileDetailsProvider.getFileDetails(file,
-				new ResultListener<FileDetails>() {
+		fileDetailsProvider.getItemDetails(item,
+				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
 						dialogManager.showError(error);
 					}
 
-					public void onSuccess(FileDetails details) {
+					public void onSuccess(ItemDetails details) {
 						updateDetails(details);
 					}
 				});
 	}
 
-	private void updateDetails(FileDetails details) {
+	private void updateDetails(ItemDetails details) {
 		this.popup.reset();
 
 		this.components = Collections.EMPTY_LIST;
 		if (details != null) {
 			components = popup.createComponents(itemContextProvider
-					.getItemContext(file));
+					.getItemContext(item));
 		}
 
 		this.details = details;
 
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
-		boolean isView = session.getFeatures().fileView() && details != null
-				&& details.getFileView() != null;
+		boolean isView = item.isFile() && session.getFeatures().fileView()
+				&& details != null
+				&& ((FileDetails) details).getFileView() != null;
 
 		popup.update(writable, isView);
 
 		List<ItemContextComponent> rejected = new ArrayList();
 		for (ItemContextComponent c : components)
-			if (!c.onInit(file, details))
+			if (!c.onInit(item, details))
 				rejected.add(c);
 		components.removeAll(rejected);
 		popup.removeComponents(rejected);
@@ -134,22 +135,22 @@ public class FileContextPresenter implements ActionListener {
 		if (FileSystemAction.class.equals(action.getClass())) {
 			Object param = null;
 			if (action.equals(FileSystemAction.view))
-				param = details.getFileView();
-			fileSystemActionHandler.onAction(file, (FileSystemAction) action,
+				param = ((FileDetails) details).getFileView();
+			fileSystemActionHandler.onAction(item, (FileSystemAction) action,
 					popup, param);
 			popup.hide();
 			return;
 		}
 
-		if (FileItemContextComponent.Action.addToDropbox.equals(action))
+		if (ItemContextPopupComponent.Action.addToDropbox.equals(action))
 			onAddToDropbox();
-		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
+		else if (ItemContextPopupComponent.Action.editPermissions.equals(action)) {
 			popup.hide();
-			permissionHandler.onEditPermissions(file);
+			permissionHandler.onEditPermissions(item);
 		}
 	}
 
 	private void onAddToDropbox() {
-		dropBox.addItems(Arrays.asList((FileSystemItem) file));
+		dropBox.addItems(Arrays.asList((FileSystemItem) item));
 	}
 }

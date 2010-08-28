@@ -30,12 +30,12 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
 
 public class FolderContextPresenter implements ActionListener {
-	private final FileItemContextComponent popup;
+	private final ItemContextPopupComponent popup;
 	private final FolderDetailsProvider detailsProvider;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemContextProvider;
@@ -47,7 +47,7 @@ public class FolderContextPresenter implements ActionListener {
 	private Folder folder;
 	private List<ItemContextComponent> components;
 
-	public FolderContextPresenter(FileItemContextComponent popup,
+	public FolderContextPresenter(ItemContextPopupComponent popup,
 			SessionInfo session, FolderDetailsProvider detailsProvider,
 			TextProvider textProvider, DropBox dropBox,
 			ItemContextProvider itemContextProvider, DialogManager dialogManager) {
@@ -115,9 +115,10 @@ public class FolderContextPresenter implements ActionListener {
 			return;
 		}
 
-		if (FileItemContextComponent.Action.addToDropbox.equals(action))
+		if (ItemContextPopupComponent.Action.addToDropbox.equals(action))
 			onAddToDropbox();
-		else if (FileItemContextComponent.Action.editPermissions.equals(action)) {
+		else if (ItemContextPopupComponent.Action.editPermissions
+				.equals(action)) {
 			popup.hide();
 			permissionHandler.onEditPermissions(folder);
 		}

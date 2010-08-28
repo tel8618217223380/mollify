@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -149,7 +149,8 @@ public class MockFileSystemService implements FileSystemService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
+	public void getItemDetails(FileSystemItem item,
+			ResultListener<ItemDetails> listener) {
 		// TODO Auto-generated method stub
 
 	}

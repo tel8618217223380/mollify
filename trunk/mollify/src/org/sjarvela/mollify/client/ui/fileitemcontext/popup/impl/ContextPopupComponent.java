@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.action.ActionListener;

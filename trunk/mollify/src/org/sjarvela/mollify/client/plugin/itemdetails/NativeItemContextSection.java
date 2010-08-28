@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin.itemdetails;
 
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextSection;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

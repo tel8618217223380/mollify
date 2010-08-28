@@ -30,8 +30,7 @@ import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
-import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
-import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
@@ -122,11 +121,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				fileSystemItemProvider, sessionManager).create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
-		FileContextPopupFactory fileContextPopupFactory = new FileContextPopupFactory(
+		ItemContextPopupFactory fileContextPopupFactory = new ItemContextPopupFactory(
 				dialogManager, fileSystemService, textProvider, session,
-				dropBox, itemContextProvider);
-		FolderContextPopupFactory directoryContextPopupFactory = new FolderContextPopupFactory(
-				dialogManager, textProvider, fileSystemService, session,
 				dropBox, itemContextProvider);
 
 		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
@@ -134,8 +130,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, directorySelectorFactory,
-				fileContextPopupFactory, directoryContextPopupFactory,
-				dragAndDropManager);
+				fileContextPopupFactory, dragAndDropManager);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider
 						.getConfigurationService(), fileSystemService,

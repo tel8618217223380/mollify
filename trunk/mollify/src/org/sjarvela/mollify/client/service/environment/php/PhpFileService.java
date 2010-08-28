@@ -13,11 +13,10 @@ package org.sjarvela.mollify.client.service.environment.php;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -54,8 +53,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			}
 
 			public void onSuccess(JsArray result) {
-				listener
-						.onSuccess(FileSystemItem.createFromFolders(result));
+				listener.onSuccess(FileSystemItem.createFromFolders(result));
 			}
 		};
 		request().url(serviceUrl().fileItem(parent).action(FileAction.folders))
@@ -74,9 +72,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 			public void onSuccess(JsFolderInfo result) {
 				listener.onSuccess(new FolderInfo(result.getPermission(),
-						FileSystemItem.createFromFolders(result
-								.getFolders()), FileSystemItem
-								.createFromFiles(result.getFiles())));
+						FileSystemItem.createFromFolders(result.getFolders()),
+						FileSystemItem.createFromFiles(result.getFiles())));
 			}
 		};
 
@@ -84,19 +81,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(resultListener).get();
 	}
 
-	public void getFileDetails(File item,
-			ResultListener<FileDetails> resultListener) {
+	public void getItemDetails(FileSystemItem item,
+			ResultListener<ItemDetails> resultListener) {
 		if (Log.isDebugEnabled())
-			Log.debug("Get file details: " + item.getId());
-
-		request().url(serviceUrl().fileItem(item).action(FileAction.details))
-				.listener(resultListener).get();
-	}
-
-	public void getFolderDetails(Folder item,
-			ResultListener<FolderDetails> resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Get folder details: " + item.getId());
+			Log.debug("Get details: " + item.getId());
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.details))
 				.listener(resultListener).get();
@@ -117,7 +105,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (Log.isDebugEnabled())
 			Log.debug("Copy " + item.getId() + " to [" + directory.getId()
 					+ "]");
-		String data = new JSONStringBuilder("folder", directory.getId()).toString();
+		String data = new JSONStringBuilder("folder", directory.getId())
+				.toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.copy))
 				.data(data).listener(listener).post();

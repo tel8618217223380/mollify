@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+
 public class ItemContext {
 	public static ItemContext Empty = null;
 	private final List<ItemContextComponent> components;

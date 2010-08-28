@@ -8,53 +8,54 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.filecontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Mode;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextGlue;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPresenter;
 
-public class FileContextPopupFactory {
+public class ItemContextPopupFactory {
 	private final TextProvider textProvider;
-	private final FileDetailsProvider fileDetailsProvider;
+	private final ItemDetailsProvider detailsProvider;
 	private final SessionInfo session;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemDetailsProvider;
 	private final DialogManager dialogManager;
 
-	public FileContextPopupFactory(DialogManager dialogManager,
-			FileDetailsProvider fileDetailsProvider, TextProvider textProvider,
+	public ItemContextPopupFactory(DialogManager dialogManager,
+			ItemDetailsProvider detailsProvider, TextProvider textProvider,
 			SessionInfo session, DropBox dropBox,
 			ItemContextProvider itemDetailsProvider) {
 		this.dialogManager = dialogManager;
-		this.fileDetailsProvider = fileDetailsProvider;
+		this.detailsProvider = detailsProvider;
 		this.textProvider = textProvider;
 		this.session = session;
 		this.dropBox = dropBox;
 		this.itemDetailsProvider = itemDetailsProvider;
 	}
 
-	public FileContextPopup createPopup() {
+	public ItemContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
 		// boolean permissionsEditable = session.getDefaultPermissionMode()
 		// .isAdmin()
 		// && session.getFeatures().permissionUpdate();
 
-		FileItemContextComponent popup = new FileItemContextComponent(
-				Mode.File, textProvider, session.getDefaultPermissionMode()
+		ItemContextPopupComponent popup = new ItemContextPopupComponent(
+				textProvider, session.getDefaultPermissionMode()
 						.hasWritePermission(), session.getFeatures()
 						.zipDownload(), session.getFeatures().fileView(),
 				session.getFeatures().publicLinks(), actionDelegator);
-		FileContextPresenter presenter = new FileContextPresenter(popup,
-				session, fileDetailsProvider, textProvider, dropBox,
+		ItemContextPresenter presenter = new ItemContextPresenter(popup,
+				session, detailsProvider, textProvider, dropBox,
 				itemDetailsProvider, dialogManager);
-		return new FileContextGlue(popup, presenter, actionDelegator);
+		return new ItemContextGlue(popup, presenter, actionDelegator);
 	}
 }

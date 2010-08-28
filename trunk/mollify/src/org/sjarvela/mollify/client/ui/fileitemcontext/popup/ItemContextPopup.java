@@ -8,16 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopup;
 
-public interface FolderContextPopup extends ContextPopup<Folder> {
+public interface ItemContextPopup extends ContextPopup<FileSystemItem> {
 
-	void setFolderActionHandler(FileSystemActionHandler actionHandler);
+	void setActionHandler(FileSystemActionHandler actionHandler);
 
 	void setFilePermissionHandler(FileSystemPermissionHandler permissionHandler);
 

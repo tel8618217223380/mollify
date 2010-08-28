@@ -147,7 +147,7 @@ public class DemoData {
 		return files;
 	}
 
-	public FolderDetails getDirectoryDetails(Folder directory) {
+	public FolderDetails getFolderDetails(Folder directory) {
 		return FolderDetails.create(FilePermission.ReadWrite, DESCRIPTION);
 	}
 

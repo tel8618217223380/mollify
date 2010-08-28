@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.plugin.itemdetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.FlowPanel;

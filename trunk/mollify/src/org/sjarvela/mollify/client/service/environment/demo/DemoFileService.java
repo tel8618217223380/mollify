@@ -14,11 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -98,13 +97,12 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
-		listener.onSuccess(data.getFileDetails(file));
-	}
-
-	public void getFolderDetails(Folder directory,
-			ResultListener<FolderDetails> resultListener) {
-		resultListener.onSuccess(data.getDirectoryDetails(directory));
+	public void getItemDetails(FileSystemItem item,
+			ResultListener<ItemDetails> listener) {
+		if (item.isFile())
+			listener.onSuccess(data.getFileDetails((File) item));
+		else
+			listener.onSuccess(data.getFolderDetails((Folder) item));
 	}
 
 	public String getDownloadAsZipUrl(FileSystemItem item) {

@@ -16,8 +16,8 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
