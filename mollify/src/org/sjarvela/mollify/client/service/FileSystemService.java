@@ -16,15 +16,13 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
-import org.sjarvela.mollify.client.filesystem.provider.FileDetailsProvider;
-import org.sjarvela.mollify.client.filesystem.provider.FolderDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
-public interface FileSystemService extends FileDetailsProvider,
-		FolderDetailsProvider {
+public interface FileSystemService extends ItemDetailsProvider {
 
 	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 

@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.description;
+package org.sjarvela.mollify.client.ui.fileitemcontext.component.description;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +28,10 @@ import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.Action;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent.DescriptionActionGroup;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.DescriptionActionGroup;
 import org.sjarvela.mollify.client.util.Html;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -164,17 +164,17 @@ public class DescriptionComponent implements ItemContextComponent,
 
 	@Override
 	public void onAction(ResourceId action, Object o) {
-		if (FileItemContextComponent.Action.addDescription.equals(action))
+		if (ItemContextPopupComponent.Action.addDescription.equals(action))
 			onStartEditDescription();
-		else if (FileItemContextComponent.Action.editDescription.equals(action))
+		else if (ItemContextPopupComponent.Action.editDescription.equals(action))
 			onStartEditDescription();
-		else if (FileItemContextComponent.Action.cancelEditDescription
+		else if (ItemContextPopupComponent.Action.cancelEditDescription
 				.equals(action))
 			onCancelEditDescription();
-		else if (FileItemContextComponent.Action.applyDescription
+		else if (ItemContextPopupComponent.Action.applyDescription
 				.equals(action))
 			onApplyDescription();
-		else if (FileItemContextComponent.Action.removeDescription
+		else if (ItemContextPopupComponent.Action.removeDescription
 				.equals(action))
 			onRemoveDescription();
 	}

@@ -10,10 +10,11 @@
 
 package org.sjarvela.mollify.client.filesystem.provider;
 
-import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
-public interface FileDetailsProvider {
-	public void getFileDetails(File file, ResultListener<FileDetails> listener);
+public interface ItemDetailsProvider {
+	public void getItemDetails(FileSystemItem item,
+			ResultListener<ItemDetails> listener);
 }

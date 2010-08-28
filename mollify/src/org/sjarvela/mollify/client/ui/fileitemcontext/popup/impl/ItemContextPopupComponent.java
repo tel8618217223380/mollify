@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +25,9 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -38,15 +41,13 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FileItemContextComponent extends ContextPopupComponent {
+public class ItemContextPopupComponent extends ContextPopupComponent {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
 	private final boolean zipDownloadEnabled;
 	private final boolean fileView;
 	private final boolean publicLinks;
-
-	private final Mode mode;
 
 	private Label name;
 	// private ActionLink editPermissions;
@@ -57,10 +58,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private VerticalPanel componentsPanel;
 	private Map<ItemContextComponent, Widget> components = new HashMap();
 
-	public enum Mode {
-		File, Folder
-	}
-
 	public enum Action implements ResourceId {
 		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox
 	}
@@ -69,12 +66,10 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		view, edit
 	}
 
-	public FileItemContextComponent(Mode mode, TextProvider textProvider,
+	public ItemContextPopupComponent(TextProvider textProvider,
 			boolean generalWritePermissions, boolean zipDownloadEnabled,
 			boolean fileView, boolean publicLinks, ActionListener actionListener) {
-		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
-				: StyleConstants.DIR_CONTEXT, null);
-		this.mode = mode;
+		super(StyleConstants.FILE_CONTEXT, null);
 
 		this.zipDownloadEnabled = zipDownloadEnabled;
 		this.fileView = fileView;
@@ -173,17 +168,17 @@ public class FileItemContextComponent extends ContextPopupComponent {
 				StyleConstants.FILE_CONTEXT_ACTIONS);
 		actionsButton.addAction(Action.addToDropbox, textProvider.getStrings()
 				.mainViewSelectActionAddToDropbox());
-		if (Mode.File.equals(this.mode) && this.publicLinks)
-			actionsButton.addAction(FileSystemAction.publicLink, textProvider
-					.getStrings().fileActionPublicLinkTitle());
+//		if (Mode.File.equals(this.mode) && this.publicLinks)
+//			actionsButton.addAction(FileSystemAction.publicLink, textProvider
+//					.getStrings().fileActionPublicLinkTitle());
 		actionsButton.addSeparator();
 		actionsButton.addAction(FileSystemAction.rename, textProvider
 				.getStrings().fileActionRenameTitle());
 		actionsButton.addAction(FileSystemAction.copy, textProvider
 				.getStrings().fileActionCopyTitle());
-		if (Mode.File.equals(this.mode))
-			actionsButton.addAction(FileSystemAction.copyHere, textProvider
-					.getStrings().fileActionCopyHereTitle());
+//		if (Mode.File.equals(this.mode))
+//			actionsButton.addAction(FileSystemAction.copyHere, textProvider
+//					.getStrings().fileActionCopyHereTitle());
 		actionsButton.addAction(FileSystemAction.move, textProvider
 				.getStrings().fileActionMoveTitle());
 		actionsButton.addAction(FileSystemAction.delete, textProvider
@@ -212,9 +207,9 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 	private Widget getDownloadButton() {
 		Map<FileSystemAction, String> downloadActions = new TreeMap();
-		if (Mode.File.equals(this.mode))
-			downloadActions.put(FileSystemAction.download, textProvider
-					.getStrings().fileActionDownloadTitle());
+//		if (Mode.File.equals(this.mode))
+//			downloadActions.put(FileSystemAction.download, textProvider
+//					.getStrings().fileActionDownloadTitle());
 		if (this.zipDownloadEnabled)
 			downloadActions.put(FileSystemAction.download_as_zip, textProvider
 					.getStrings().fileActionDownloadZippedTitle());
@@ -266,8 +261,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		actionsButton.setActionVisible(FileSystemAction.rename, false);
 		actionsButton.setActionVisible(FileSystemAction.copy, true);
-		if (this.mode.equals(Mode.File))
-			actionsButton.setActionVisible(FileSystemAction.copyHere, true);
+		// if (this.mode.equals(Mode.File))
+		// actionsButton.setActionVisible(FileSystemAction.copyHere, true);
 		actionsButton.setActionVisible(FileSystemAction.move, false);
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}

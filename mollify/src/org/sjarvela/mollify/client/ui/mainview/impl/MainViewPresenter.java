@@ -103,13 +103,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.exposeFileUrls = exposeFileUrls;
 
 		this.view.getFileContext()
-				.setFileActionHandler(fileSystemActionHandler);
+				.setActionHandler(fileSystemActionHandler);
 		this.view.getFileContext().setFilePermissionHandler(this);
-
-		this.view.getDirectoryContext().setFolderActionHandler(
-				fileSystemActionHandler);
-		this.view.getDirectoryContext().setFilePermissionHandler(this);
-		this.view.getDirectorySelector().addListener(this);
 
 		this.view
 				.setListSelectController(new SelectController<FileSystemItem>() {

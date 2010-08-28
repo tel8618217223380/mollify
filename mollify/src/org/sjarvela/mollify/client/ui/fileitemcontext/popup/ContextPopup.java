@@ -8,17 +8,20 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface ItemContextComponent {
-	Widget getComponent();
+public interface ContextPopup<T> {
+	void showPopup();
 
-	boolean onInit(FileSystemItem item, ItemDetails details);
+	void hidePopup();
 
-	void onContextClose();
+	void addPopupListener(ContextPopupListener contextPopupListener);
+
+	void setPopupPositioner(PopupPositioner positioner);
+
+	void update(T t, Widget parent);
 }

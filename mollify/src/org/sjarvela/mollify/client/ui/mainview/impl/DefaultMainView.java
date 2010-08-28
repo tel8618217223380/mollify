@@ -35,11 +35,9 @@ import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupHandler;
-import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopup;
-import org.sjarvela.mollify.client.ui.fileitemcontext.filecontext.FileContextPopupFactory;
-import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopup;
-import org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext.FolderContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
@@ -61,15 +59,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	private final MainViewModel model;
 	private final Panel buttonPanel;
-	private final FolderSelector directorySelector;
+	private final FolderSelector folderSelector;
 	private final FileList list;
 	private final FlowPanel listPanel;
 
-	private final FileContextPopup fileContextPopup;
-	private final ContextPopupHandler<File> fileContextHandler;
-
-	private final FolderContextPopup directoryContextPopup;
-	private final ContextPopupHandler<Folder> directoryContextHandler;
+	private final ItemContextPopup itemContextPopup;
+	private final ContextPopupHandler<FileSystemItem> itemContextHandler;
 
 	private MainViewHeader header;
 	private DropdownButton addButton;
@@ -89,9 +84,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
 			ActionListener actionListener,
-			FolderSelectorFactory directorySelectorFactory,
-			FileContextPopupFactory fileContextPopupFactory,
-			FolderContextPopupFactory directoryContextPopupFactory,
+			FolderSelectorFactory folderSelectorFactory,
+			ItemContextPopupFactory itemContextPopupFactory,
 			DragAndDropManager dragAndDropManager) {
 		this.model = model;
 		this.textProvider = textProvider;
@@ -103,18 +97,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.listPanel = new FlowPanel();
 		this.listPanel.setStylePrimaryName(StyleConstants.FILE_LIST_PANEL);
 
-		this.directorySelector = directorySelectorFactory.createSelector();
+		this.folderSelector = folderSelectorFactory.createSelector();
 		this.list = new FileList(textProvider, dragAndDropManager);
 
-		this.fileContextPopup = fileContextPopupFactory.createPopup();
-		this.fileContextPopup.setPopupPositioner(this);
-		this.fileContextHandler = new ContextPopupHandler<File>(
-				fileContextPopup);
-
-		this.directoryContextPopup = directoryContextPopupFactory.createPopup();
-		this.fileContextPopup.setPopupPositioner(this);
-		this.directoryContextHandler = new ContextPopupHandler<Folder>(
-				directoryContextPopup);
+		this.itemContextPopup = itemContextPopupFactory.createPopup();
+		this.itemContextPopup.setPopupPositioner(this);
+		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
+				itemContextPopup);
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
@@ -124,12 +113,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		viewListeners.add(listener);
 	}
 
-	public void setFileContextHandler(FileSystemActionHandler actionHandler) {
-		fileContextPopup.setFileActionHandler(actionHandler);
-	}
-
-	public void setDirectoryContextHandler(FileSystemActionHandler actionHandler) {
-		directoryContextPopup.setFolderActionHandler(actionHandler);
+	public void setContextHandler(FileSystemActionHandler actionHandler) {
+		itemContextPopup.setActionHandler(actionHandler);
 	}
 
 	public FileList getList() {
@@ -176,7 +161,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
-		buttonPanel.add(directorySelector);
+		buttonPanel.add(folderSelector);
 		headerUpper.add(buttonPanel);
 
 		if (model.getSession().isAuthenticationRequired()) {
@@ -309,7 +294,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void refresh() {
-		directorySelector.refresh();
+		folderSelector.refresh();
 		list.refresh();
 	}
 
@@ -319,13 +304,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void showFileContext(File file) {
-		fileContextHandler.onItemSelected(file, list.getWidget(file,
+		itemContextHandler.onItemSelected(file, list.getWidget(file,
 				FileList.COLUMN_NAME));
 	}
 
 	public void showDirectoryContext(Folder directory) {
-		directoryContextHandler.onItemSelected(directory, list.getWidget(
-				directory, FileList.COLUMN_NAME));
+		itemContextHandler.onItemSelected(directory, list.getWidget(directory,
+				FileList.COLUMN_NAME));
 	}
 
 	public ActionButton getRefreshButton() {
@@ -333,19 +318,15 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public FolderSelector getDirectorySelector() {
-		return directorySelector;
+		return folderSelector;
 	}
 
 	public DropdownButton getUsername() {
 		return username;
 	}
 
-	public FileContextPopup getFileContext() {
-		return fileContextPopup;
-	}
-
-	public FolderContextPopup getDirectoryContext() {
-		return directoryContextPopup;
+	public ItemContextPopup getFileContext() {
+		return itemContextPopup;
 	}
 
 	public void setPositionOnShow(DropdownPopup popup, Widget parent,

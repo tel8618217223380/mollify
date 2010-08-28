@@ -13,11 +13,10 @@ package org.sjarvela.mollify.client.service;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -77,12 +76,6 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.getInfo(parent, resultListenerFactory.createListener(listener));
 	}
 
-	public void getFolderDetails(Folder directory,
-			ResultListener<FolderDetails> resultListener) {
-		service.getFolderDetails(directory, resultListenerFactory
-				.createListener(resultListener));
-	}
-
 	public String getDownloadAsZipUrl(FileSystemItem item) {
 		return service.getDownloadAsZipUrl(item);
 	}
@@ -102,8 +95,10 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.getDownloadAsZipUrl(items, listener);
 	}
 
-	public void getFileDetails(File file, ResultListener<FileDetails> listener) {
-		service.getFileDetails(file, resultListenerFactory
+	@Override
+	public void getItemDetails(FileSystemItem item,
+			ResultListener<ItemDetails> listener) {
+		service.getItemDetails(item, resultListenerFactory
 				.createListener(listener));
 	}
 

@@ -18,8 +18,10 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.fileitemcontext.description.DescriptionComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.preview.PreviewComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.description.DescriptionComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.details.DetailsComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.component.preview.PreviewComponent;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

@@ -8,28 +8,28 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.fileitemcontext.foldercontext;
+package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ContextPopupListener;
-import org.sjarvela.mollify.client.ui.fileitemcontext.FileItemContextComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupListener;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FolderContextGlue implements FolderContextPopup {
+public class ItemContextGlue implements ItemContextPopup {
 
-	private final FolderContextPresenter presenter;
-	private final FileItemContextComponent popup;
+	private final ItemContextPresenter presenter;
+	private final ItemContextPopupComponent popup;
 
-	public FolderContextGlue(FileItemContextComponent popup,
-			FolderContextPresenter presenter,
+	public ItemContextGlue(ItemContextPopupComponent popup,
+			ItemContextPresenter presenter,
 			ActionListenerDelegator actionDelegator) {
 		this.popup = popup;
 		this.presenter = presenter;
@@ -37,8 +37,8 @@ public class FolderContextGlue implements FolderContextPopup {
 		actionDelegator.setActionListener(presenter);
 	}
 
-	public void setFolderActionHandler(FileSystemActionHandler actionHandler) {
-		presenter.setDirectoryActionHandler(actionHandler);
+	public void setActionHandler(FileSystemActionHandler actionHandler) {
+		presenter.setFileActionHandler(actionHandler);
 	}
 
 	public void setFilePermissionHandler(
@@ -54,9 +54,9 @@ public class FolderContextGlue implements FolderContextPopup {
 		popup.hide();
 	}
 
-	public void update(Folder folder, Widget parent) {
+	public void update(FileSystemItem item, Widget parent) {
 		popup.setParentWidget(parent);
-		presenter.setFolder(folder);
+		presenter.setItem(item);
 	}
 
 	public void addPopupListener(final ContextPopupListener contextPopupListener) {
