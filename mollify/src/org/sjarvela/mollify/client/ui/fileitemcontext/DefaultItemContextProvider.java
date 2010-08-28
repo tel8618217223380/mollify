@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.description.DescriptionComponent;
+import org.sjarvela.mollify.client.ui.fileitemcontext.preview.PreviewComponent;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -55,6 +56,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().filePreview())
 			components.add(createPreviewComponent());
+		if (item.isFile())
+			components.add(createDetailsComponent());
 		return new ItemContext(components);
 	}
 
@@ -67,6 +70,10 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private ItemContextComponent createPreviewComponent() {
 		return new PreviewComponent(textProvider, serviceProvider
 				.getExternalService());
+	}
+
+	private ItemContextComponent createDetailsComponent() {
+		return new DetailsComponent(textProvider);
 	}
 
 	@Override

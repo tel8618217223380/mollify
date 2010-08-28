@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
-import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 
@@ -35,7 +33,6 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,19 +43,13 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	private final ActionListener actionListener;
 
 	private final boolean zipDownloadEnabled;
-	private final boolean permissionsEditable;
 	private final boolean fileView;
 	private final boolean publicLinks;
 
 	private final Mode mode;
 
 	private Label name;
-	private ActionLink editPermissions;
-
-	private DisclosurePanel details;
-	private Panel detailContent;
-	private Panel detailRows;
-	private Map<ResourceId, Label> detailRowValues = new HashMap();
+	// private ActionLink editPermissions;
 
 	private DropdownButton actionsButton;
 	private Button viewButton;
@@ -79,14 +70,12 @@ public class FileItemContextComponent extends ContextPopupComponent {
 	}
 
 	public FileItemContextComponent(Mode mode, TextProvider textProvider,
-			boolean generalWritePermissions, boolean permissionsEditable,
-			boolean zipDownloadEnabled, boolean filePreview, boolean fileView,
-			boolean publicLinks, ActionListener actionListener) {
+			boolean generalWritePermissions, boolean zipDownloadEnabled,
+			boolean fileView, boolean publicLinks, ActionListener actionListener) {
 		super(Mode.File.equals(mode) ? StyleConstants.FILE_CONTEXT
 				: StyleConstants.DIR_CONTEXT, null);
 		this.mode = mode;
 
-		this.permissionsEditable = permissionsEditable;
 		this.zipDownloadEnabled = zipDownloadEnabled;
 		this.fileView = fileView;
 		this.publicLinks = publicLinks;
@@ -110,7 +99,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		content.add(name);
 
 		content.add(createComponentsPanel());
-		content.add(createDetails());
 		content.add(createButtons());
 		return content;
 	}
@@ -161,20 +149,20 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return s;
 	}
 
-	private Widget createPermissionActions() {
-		editPermissions = new ActionLink(textProvider.getStrings()
-				.fileDetailsEditPermissions(),
-				StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
-				StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
-		editPermissions.setAction(actionListener, Action.editPermissions);
-
-		Panel permissionActionsEdit = new FlowPanel();
-		permissionActionsEdit
-				.setStyleName(StyleConstants.FILE_CONTEXT_PERMISSION_ACTIONS);
-		permissionActionsEdit.add(editPermissions);
-
-		return permissionActionsEdit;
-	}
+	// private Widget createPermissionActions() {
+	// editPermissions = new ActionLink(textProvider.getStrings()
+	// .fileDetailsEditPermissions(),
+	// StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
+	// StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
+	// editPermissions.setAction(actionListener, Action.editPermissions);
+	//
+	// Panel permissionActionsEdit = new FlowPanel();
+	// permissionActionsEdit
+	// .setStyleName(StyleConstants.FILE_CONTEXT_PERMISSION_ACTIONS);
+	// permissionActionsEdit.add(editPermissions);
+	//
+	// return permissionActionsEdit;
+	// }
 
 	private Widget createButtons() {
 		Panel buttons = new FlowPanel();
@@ -270,79 +258,8 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		return componentsPanel;
 	}
 
-	private Widget createDetails() {
-		details = new DisclosurePanel(textProvider.getStrings()
-				.fileActionDetailsTitle());
-		details.setOpen(false);
-		details.addStyleName(StyleConstants.FILE_CONTEXT_DETAILS);
-		details.getHeader().getElement().getParentElement().setClassName(
-				StyleConstants.FILE_CONTEXT_DETAILS_HEADER);
-
-		detailContent = new VerticalPanel();
-		detailContent.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
-
-		detailRows = new VerticalPanel();
-		detailRows.setStyleName(StyleConstants.FILE_CONTEXT_DETAILS_CONTENT);
-
-		detailContent.add(detailRows);
-
-		if (permissionsEditable)
-			detailContent.add(createPermissionActions());
-
-		details.add(detailContent);
-		details.setVisible(false);
-		return details;
-	}
-
-	public void initializeDetailsSection() {
-		initializeDetailsSection(Collections.EMPTY_LIST, Collections.EMPTY_MAP);
-	}
-
-	public void initializeDetailsSection(List<ResourceId> order,
-			Map<ResourceId, String> headers) {
-		this.detailRowValues.clear();
-		this.detailRows.clear();
-		this.details.setVisible(false);
-
-		if (order.size() == 0 && !permissionsEditable)
-			return;
-
-		if (order.size() > 0) {
-			for (ResourceId id : order) {
-				this.detailRowValues.put(id, createDetailsRow(detailRows,
-						headers.get(id), id.name().toLowerCase()));
-			}
-		}
-
-		details.setVisible(true);
-	}
-
-	private Label createDetailsRow(Panel parent, String title, String style) {
-		Panel detailsRow = new HorizontalPanel();
-		detailsRow.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW);
-		detailsRow.addStyleDependentName(style);
-
-		Label label = new Label(title);
-		label
-				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_LABEL);
-		label.addStyleDependentName(style);
-		detailsRow.add(label);
-
-		Label value = new Label();
-		value
-				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_DETAILS_ROW_VALUE);
-		value.addStyleDependentName(style);
-		detailsRow.add(value);
-
-		parent.add(detailsRow);
-		return value;
-	}
-
 	public void reset() {
 		componentsPanel.clear();
-
-		for (Label detailsValue : detailRowValues.values())
-			detailsValue.setText("");
 
 		if (viewButton != null)
 			viewButton.setVisible(false);
@@ -355,10 +272,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 		actionsButton.setActionVisible(FileSystemAction.delete, false);
 	}
 
-	public void setDetailValue(ResourceId id, String value) {
-		detailRowValues.get(id).setText(value);
-	}
-
 	public void update(boolean isWritable, boolean isView) {
 		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
 		actionsButton.setActionVisible(FileSystemAction.move, isWritable);
@@ -366,10 +279,6 @@ public class FileItemContextComponent extends ContextPopupComponent {
 
 		if (viewButton != null)
 			viewButton.setVisible(isView);
-	}
-
-	public DisclosurePanel getDetails() {
-		return details;
 	}
 
 	public Label getName() {

@@ -43,15 +43,14 @@ public class FileContextPopupFactory {
 	public FileContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
-		boolean permissionsEditable = session.getDefaultPermissionMode()
-				.isAdmin()
-				&& session.getFeatures().permissionUpdate();
+		// boolean permissionsEditable = session.getDefaultPermissionMode()
+		// .isAdmin()
+		// && session.getFeatures().permissionUpdate();
 
 		FileItemContextComponent popup = new FileItemContextComponent(
 				Mode.File, textProvider, session.getDefaultPermissionMode()
-						.hasWritePermission(), permissionsEditable, session
-						.getFeatures().zipDownload(), session.getFeatures()
-						.filePreview(), session.getFeatures().fileView(),
+						.hasWritePermission(), session.getFeatures()
+						.zipDownload(), session.getFeatures().fileView(),
 				session.getFeatures().publicLinks(), actionDelegator);
 		FileContextPresenter presenter = new FileContextPresenter(popup,
 				session, fileDetailsProvider, textProvider, dropBox,
