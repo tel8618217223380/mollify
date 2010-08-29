@@ -99,4 +99,11 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		return label;
 	}
 
+	@Override
+	public void removeAllMenuItems() {
+		super.removeAllMenuItems();
+		items.clear();
+		itemsEnabled.clear();
+	}
+
 }

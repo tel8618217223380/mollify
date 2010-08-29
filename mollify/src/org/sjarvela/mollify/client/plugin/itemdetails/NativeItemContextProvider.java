@@ -11,9 +11,11 @@
 package org.sjarvela.mollify.client.plugin.itemdetails;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
@@ -31,7 +33,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 	}
 
 	@Override
-	public ItemContext getItemContext(FileSystemItem item) {
+	public ItemContext getItemContext(FileSystemItem item, ItemDetails details) {
 		return convert(item, invokeNativeProvider(item.asJs()));
 	}
 
@@ -56,7 +58,8 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			else
 				throw new RuntimeException("Invalid component type: " + type);
 		}
-		return new ItemContext(components);
+		return new ItemContext(components, Collections.EMPTY_LIST,
+				Collections.EMPTY_LIST);
 	}
 
 	private final native JavaScriptObject invokeNativeProvider(

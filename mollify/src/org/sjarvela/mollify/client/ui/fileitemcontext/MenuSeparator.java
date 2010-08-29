@@ -10,11 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
-
-public interface ItemContextProvider {
-
-	ItemContext getItemContext(FileSystemItem item, ItemDetails details);
+public class MenuSeparator implements MenuItem {
 
 }

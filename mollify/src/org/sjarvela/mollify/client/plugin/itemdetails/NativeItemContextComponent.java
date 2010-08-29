@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.plugin.itemdetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -54,7 +55,8 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	}
 
 	@Override
-	public boolean onInit(FileSystemItem item, ItemDetails details) {
+	public boolean onInit(ItemContextContainer container, FileSystemItem item,
+			ItemDetails details) {
 		return invokeInit(component.getElement().getId(), item.asJs(), details);
 	}
 

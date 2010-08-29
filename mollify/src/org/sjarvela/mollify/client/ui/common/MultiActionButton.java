@@ -61,4 +61,8 @@ public class MultiActionButton extends Composite {
 	public void setActionEnabled(ResourceId action, boolean enabled) {
 		dropdownButton.setActionEnabled(action, enabled);
 	}
+
+	public void addSeparator() {
+		dropdownButton.addSeparator();
+	}
 }

@@ -12,11 +12,8 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -25,7 +22,10 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ActionMenuItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
+import org.sjarvela.mollify.client.ui.fileitemcontext.MenuItem;
+import org.sjarvela.mollify.client.ui.fileitemcontext.MenuSeparator;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
@@ -33,7 +33,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -45,18 +44,13 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	private final TextProvider textProvider;
 	private final ActionListener actionListener;
 
-	private final boolean zipDownloadEnabled;
-	private final boolean fileView;
-	private final boolean publicLinks;
-
 	private Label name;
-	// private ActionLink editPermissions;
 
 	private DropdownButton actionsButton;
-	private Button viewButton;
 
 	private VerticalPanel componentsPanel;
 	private Map<ItemContextComponent, Widget> components = new HashMap();
+	private FlowPanel buttons;
 
 	public enum Action implements ResourceId {
 		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox
@@ -67,13 +61,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	}
 
 	public ItemContextPopupComponent(TextProvider textProvider,
-			boolean generalWritePermissions, boolean zipDownloadEnabled,
-			boolean fileView, boolean publicLinks, ActionListener actionListener) {
+			boolean generalWritePermissions, ActionListener actionListener) {
 		super(StyleConstants.FILE_CONTEXT, null);
-
-		this.zipDownloadEnabled = zipDownloadEnabled;
-		this.fileView = fileView;
-		this.publicLinks = publicLinks;
 
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
@@ -98,7 +87,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		return content;
 	}
 
-	public List<ItemContextComponent> createComponents(ItemContext itemContext) {
+	public List<ItemContextComponent> setup(ItemContext itemContext) {
 		List<ItemContextComponent> contextComponents = new ArrayList(
 				itemContext.getComponents());
 		this.components.clear();
@@ -107,7 +96,70 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		for (ItemContextComponent c : contextComponents)
 			addComponent(c);
 
+		setupDownload(itemContext.getDownloadItems());
+		setupActions(itemContext.getActionItems());
+
 		return contextComponents;
+	}
+
+	private void setupDownload(List<MenuItem> downloadItems) {
+		if (downloadItems.isEmpty())
+			return;
+
+		Widget downloadButton;
+		if (downloadItems.size() > 1) {
+			downloadButton = createDropdownButton(downloadItems);
+		} else {
+			downloadButton = createButton(downloadItems.get(0));
+		}
+
+		if (downloadButton == null)
+			return;
+		buttons.add(downloadButton);
+	}
+
+	private Widget createButton(MenuItem item) {
+		if (item instanceof ActionMenuItem) {
+			ActionMenuItem menuItem = (ActionMenuItem) item;
+			return createActionButton(menuItem.getTitle(), actionListener,
+					menuItem.getAction());
+		}
+		return null;
+	}
+
+	private Widget createDropdownButton(List<MenuItem> downloadItems) {
+		MultiActionButton downloadButton = createMultiActionButton(
+				actionListener, textProvider.getStrings()
+						.fileActionDownloadTitle(), FileSystemAction.download
+						.name());
+
+		boolean first = true;
+		for (MenuItem item : downloadItems) {
+			if (item instanceof ActionMenuItem) {
+				ActionMenuItem menuItem = (ActionMenuItem) item;
+				downloadButton.addAction(menuItem.getAction(), menuItem
+						.getTitle());
+				if (first)
+					downloadButton.setDefaultAction(menuItem.getAction());
+				first = false;
+			} else if (item instanceof MenuSeparator) {
+				downloadButton.addSeparator();
+			}
+		}
+
+		return downloadButton;
+	}
+
+	private void setupActions(List<MenuItem> actions) {
+		for (MenuItem item : actions) {
+			if (item instanceof ActionMenuItem)
+				actionsButton.addAction(((ActionMenuItem) item).getAction(),
+						((ActionMenuItem) item).getTitle());
+			else if (item instanceof MenuSeparator)
+				actionsButton.addSeparator();
+		}
+		if (!actions.isEmpty())
+			buttons.add(actionsButton);
 	}
 
 	private void addComponent(ItemContextComponent c) {
@@ -144,107 +196,24 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		return s;
 	}
 
-	// private Widget createPermissionActions() {
-	// editPermissions = new ActionLink(textProvider.getStrings()
-	// .fileDetailsEditPermissions(),
-	// StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
-	// StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
-	// editPermissions.setAction(actionListener, Action.editPermissions);
-	//
-	// Panel permissionActionsEdit = new FlowPanel();
-	// permissionActionsEdit
-	// .setStyleName(StyleConstants.FILE_CONTEXT_PERMISSION_ACTIONS);
-	// permissionActionsEdit.add(editPermissions);
-	//
-	// return permissionActionsEdit;
-	// }
-
 	private Widget createButtons() {
-		Panel buttons = new FlowPanel();
+		buttons = new FlowPanel();
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
 		actionsButton = new DropdownButton(actionListener, textProvider
 				.getStrings().fileDetailsActionsTitle(),
 				StyleConstants.FILE_CONTEXT_ACTIONS);
-		actionsButton.addAction(Action.addToDropbox, textProvider.getStrings()
-				.mainViewSelectActionAddToDropbox());
-//		if (Mode.File.equals(this.mode) && this.publicLinks)
-//			actionsButton.addAction(FileSystemAction.publicLink, textProvider
-//					.getStrings().fileActionPublicLinkTitle());
-		actionsButton.addSeparator();
-		actionsButton.addAction(FileSystemAction.rename, textProvider
-				.getStrings().fileActionRenameTitle());
-		actionsButton.addAction(FileSystemAction.copy, textProvider
-				.getStrings().fileActionCopyTitle());
-//		if (Mode.File.equals(this.mode))
-//			actionsButton.addAction(FileSystemAction.copyHere, textProvider
-//					.getStrings().fileActionCopyHereTitle());
-		actionsButton.addAction(FileSystemAction.move, textProvider
-				.getStrings().fileActionMoveTitle());
-		actionsButton.addAction(FileSystemAction.delete, textProvider
-				.getStrings().fileActionDeleteTitle());
-
-		Widget downloadButton = getDownloadButton();
-		if (downloadButton != null)
-			buttons.add(downloadButton);
-
-		viewButton = createViewButton();
-		if (viewButton != null)
-			buttons.add(viewButton);
-
-		buttons.add(actionsButton);
 
 		return buttons;
 	}
 
-	private Button createViewButton() {
-		if (!fileView)
-			return null;
-		Button button = createActionButton(textProvider.getStrings()
-				.fileActionViewTitle(), actionListener, FileSystemAction.view);
-		return button;
-	}
-
-	private Widget getDownloadButton() {
-		Map<FileSystemAction, String> downloadActions = new TreeMap();
-//		if (Mode.File.equals(this.mode))
-//			downloadActions.put(FileSystemAction.download, textProvider
-//					.getStrings().fileActionDownloadTitle());
-		if (this.zipDownloadEnabled)
-			downloadActions.put(FileSystemAction.download_as_zip, textProvider
-					.getStrings().fileActionDownloadZippedTitle());
-
-		if (downloadActions.size() > 1) {
-			Iterator<Entry<FileSystemAction, String>> actions = downloadActions
-					.entrySet().iterator();
-
-			MultiActionButton downloadButton = createMultiActionButton(
-					actionListener, textProvider.getStrings()
-							.fileActionDownloadTitle(),
-					FileSystemAction.download.name());
-
-			boolean first = true;
-			while (actions.hasNext()) {
-				Entry<FileSystemAction, String> action = actions.next();
-				downloadButton.addAction(action.getKey(), action.getValue());
-
-				if (first)
-					downloadButton.setDefaultAction(action.getKey());
-				first = false;
-			}
-
-			return downloadButton;
-		}
-
-		if (downloadActions.size() == 1) {
-			Entry<FileSystemAction, String> action = downloadActions.entrySet()
-					.iterator().next();
-			return createActionButton(action.getValue(), actionListener, action
-					.getKey());
-		}
-
-		return null;
-	}
+	// private Button createViewButton() {
+	// if (!fileView)
+	// return null;
+	// Button button = createActionButton(textProvider.getStrings()
+	// .fileActionViewTitle(), actionListener, FileSystemAction.view);
+	// return button;
+	// }
 
 	private Widget createComponentsPanel() {
 		componentsPanel = new VerticalPanel();
@@ -255,25 +224,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 
 	public void reset() {
 		componentsPanel.clear();
-
-		if (viewButton != null)
-			viewButton.setVisible(false);
-
-		actionsButton.setActionVisible(FileSystemAction.rename, false);
-		actionsButton.setActionVisible(FileSystemAction.copy, true);
-		// if (this.mode.equals(Mode.File))
-		// actionsButton.setActionVisible(FileSystemAction.copyHere, true);
-		actionsButton.setActionVisible(FileSystemAction.move, false);
-		actionsButton.setActionVisible(FileSystemAction.delete, false);
-	}
-
-	public void update(boolean isWritable, boolean isView) {
-		actionsButton.setActionVisible(FileSystemAction.rename, isWritable);
-		actionsButton.setActionVisible(FileSystemAction.move, isWritable);
-		actionsButton.setActionVisible(FileSystemAction.delete, isWritable);
-
-		if (viewButton != null)
-			viewButton.setVisible(isView);
+		actionsButton.removeAllActions();
+		buttons.clear();
 	}
 
 	public Label getName() {

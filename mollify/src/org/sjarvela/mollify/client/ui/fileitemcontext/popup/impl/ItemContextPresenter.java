@@ -21,45 +21,41 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class ItemContextPresenter implements ActionListener {
+public class ItemContextPresenter implements ActionListener,
+		ItemContextContainer {
 	private final ItemContextPopupComponent popup;
-	private final ItemDetailsProvider fileDetailsProvider;
-	private final SessionInfo session;
+	private final ItemDetailsProvider itemDetailsProvider;
 	private final DropBox dropBox;
 	private final ItemContextProvider itemContextProvider;
 	private final DialogManager dialogManager;
 
 	private FileSystemActionHandler fileSystemActionHandler;
-	private FileSystemPermissionHandler permissionHandler;
 
 	private FileSystemItem item = null;
 	private ItemDetails details;
 	private List<ItemContextComponent> components;
 
 	public ItemContextPresenter(ItemContextPopupComponent popup,
-			SessionInfo session, ItemDetailsProvider fileDetailsProvider,
-			TextProvider textProvider, DropBox dropBox,
-			ItemContextProvider itemContextProvider, DialogManager dialogManager) {
+			ItemDetailsProvider itemDetailsProvider, TextProvider textProvider,
+			DropBox dropBox, ItemContextProvider itemContextProvider,
+			DialogManager dialogManager) {
 		this.popup = popup;
-		this.session = session;
-		this.fileDetailsProvider = fileDetailsProvider;
+		this.itemDetailsProvider = itemDetailsProvider;
 		this.dropBox = dropBox;
 		this.itemContextProvider = itemContextProvider;
 		this.dialogManager = dialogManager;
@@ -77,11 +73,6 @@ public class ItemContextPresenter implements ActionListener {
 		this.fileSystemActionHandler = actionHandler;
 	}
 
-	public void setPermissionHandler(
-			FileSystemPermissionHandler permissionHandler) {
-		this.permissionHandler = permissionHandler;
-	}
-
 	public FileSystemItem getItem() {
 		return item;
 	}
@@ -92,7 +83,7 @@ public class ItemContextPresenter implements ActionListener {
 		popup.getName().setText(item.getName());
 		updateDetails(null);
 
-		fileDetailsProvider.getItemDetails(item,
+		itemDetailsProvider.getItemDetails(item,
 				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
 						dialogManager.showError(error);
@@ -109,23 +100,19 @@ public class ItemContextPresenter implements ActionListener {
 
 		this.components = Collections.EMPTY_LIST;
 		if (details != null) {
-			components = popup.createComponents(itemContextProvider
-					.getItemContext(item));
+			components = popup.setup(itemContextProvider.getItemContext(item,
+					details));
 		}
 
 		this.details = details;
 
-		boolean writable = (details == null ? false : details
-				.getFilePermission().canWrite());
-		boolean isView = item.isFile() && session.getFeatures().fileView()
-				&& details != null
-				&& ((FileDetails) details).getFileView() != null;
-
-		popup.update(writable, isView);
+		// boolean isView = item.isFile() && session.getFeatures().fileView()
+		// && details != null
+		// && ((FileDetails) details).getFileView() != null;
 
 		List<ItemContextComponent> rejected = new ArrayList();
 		for (ItemContextComponent c : components)
-			if (!c.onInit(item, details))
+			if (!c.onInit(this, item, details))
 				rejected.add(c);
 		components.removeAll(rejected);
 		popup.removeComponents(rejected);
@@ -144,13 +131,14 @@ public class ItemContextPresenter implements ActionListener {
 
 		if (ItemContextPopupComponent.Action.addToDropbox.equals(action))
 			onAddToDropbox();
-		else if (ItemContextPopupComponent.Action.editPermissions.equals(action)) {
-			popup.hide();
-			permissionHandler.onEditPermissions(item);
-		}
 	}
 
 	private void onAddToDropbox() {
 		dropBox.addItems(Arrays.asList((FileSystemItem) item));
+	}
+
+	@Override
+	public void close() {
+		popup.hide();
 	}
 }

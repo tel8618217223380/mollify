@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -78,7 +79,8 @@ public class DetailsComponent implements ItemContextSection {
 	}
 
 	@Override
-	public boolean onInit(FileSystemItem item, ItemDetails d) {
+	public boolean onInit(ItemContextContainer container, FileSystemItem item,
+			ItemDetails d) {
 		FileDetails details = d.cast();
 		if (details == null)
 			return false;

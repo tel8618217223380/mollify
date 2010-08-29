@@ -12,12 +12,9 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 
 public interface ItemContextPopup extends ContextPopup<FileSystemItem> {
 
 	void setActionHandler(FileSystemActionHandler actionHandler);
-
-	void setFilePermissionHandler(FileSystemPermissionHandler permissionHandler);
 
 }
