@@ -21,7 +21,6 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfigurationService;
@@ -53,7 +52,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
-		FileSystemPermissionHandler, DragDataProvider<FileSystemItem> {
+		DragDataProvider<FileSystemItem> {
 	private final MainViewModel model;
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
@@ -102,9 +101,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.dropBox = dropBox;
 		this.exposeFileUrls = exposeFileUrls;
 
-		this.view.getFileContext()
-				.setActionHandler(fileSystemActionHandler);
-		this.view.getFileContext().setFilePermissionHandler(this);
+		this.view.getFileContext().setActionHandler(fileSystemActionHandler);
 
 		this.view
 				.setListSelectController(new SelectController<FileSystemItem>() {
@@ -321,10 +318,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private GridComparator<FileSystemItem> createComparator(GridColumn column,
 			Sort sort) {
 		return new DefaultFileItemComparator(column, sort);
-	}
-
-	public void onEditPermissions(FileSystemItem item) {
-		permissionEditorViewFactory.openPermissionEditor(item);
 	}
 
 	public void onEditItemPermissions() {

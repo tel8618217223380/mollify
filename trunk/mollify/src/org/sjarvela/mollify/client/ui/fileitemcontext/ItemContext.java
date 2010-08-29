@@ -11,20 +11,19 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 public class ItemContext {
-	public static ItemContext Empty = null;
 	private final List<ItemContextComponent> components;
+	private final List<MenuItem> downloadItems;
+	private final List<MenuItem> actionItems;
 
-	static {
-		Empty = new ItemContext(Collections.EMPTY_LIST);
-	}
-
-	public ItemContext(List<ItemContextComponent> components) {
+	public ItemContext(List<ItemContextComponent> components,
+			List<MenuItem> downloadItems, List<MenuItem> actionItems) {
+		this.downloadItems = downloadItems;
+		this.actionItems = actionItems;
 		this.components = new ArrayList(components);
 	}
 
@@ -32,9 +31,24 @@ public class ItemContext {
 		return components;
 	}
 
+	public List<MenuItem> getDownloadItems() {
+		return downloadItems;
+	}
+
+	public List<MenuItem> getActionItems() {
+		return actionItems;
+	}
+
 	public ItemContext add(ItemContext other) {
 		List<ItemContextComponent> newComponents = new ArrayList(components);
 		newComponents.addAll(other.getComponents());
-		return new ItemContext(newComponents);
+
+		List<MenuItem> newDownloadItems = new ArrayList(downloadItems);
+		newDownloadItems.addAll(other.getDownloadItems());
+
+		List<MenuItem> newActionItems = new ArrayList(actionItems);
+		newActionItems.addAll(other.getActionItems());
+
+		return new ItemContext(newComponents, newDownloadItems, newActionItems);
 	}
 }

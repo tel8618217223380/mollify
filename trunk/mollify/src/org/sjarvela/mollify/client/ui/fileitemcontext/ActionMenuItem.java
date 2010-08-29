@@ -10,11 +10,22 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.ResourceId;
 
-public interface ItemContextProvider {
+public class ActionMenuItem implements MenuItem {
+	private final ResourceId action;
+	private final String title;
 
-	ItemContext getItemContext(FileSystemItem item, ItemDetails details);
+	public ActionMenuItem(ResourceId action, String title) {
+		this.action = action;
+		this.title = title;
+	}
 
+	public ResourceId getAction() {
+		return action;
+	}
+
+	public String getTitle() {
+		return title;
+	}
 }

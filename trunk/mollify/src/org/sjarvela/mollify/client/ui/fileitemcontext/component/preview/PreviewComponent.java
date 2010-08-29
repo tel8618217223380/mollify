@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -58,7 +59,8 @@ public class PreviewComponent implements ItemContextSection {
 	}
 
 	@Override
-	public boolean onInit(FileSystemItem item, ItemDetails details) {
+	public boolean onInit(ItemContextContainer container, FileSystemItem item,
+			ItemDetails details) {
 		this.details = details.cast();
 		return hasPreview();
 	}

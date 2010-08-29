@@ -17,8 +17,8 @@ import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
-import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextGlue;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPresenter;
 
 public class ItemContextPopupFactory {
@@ -44,18 +44,12 @@ public class ItemContextPopupFactory {
 	public ItemContextPopup createPopup() {
 		ActionListenerDelegator actionDelegator = new ActionListenerDelegator();
 
-		// boolean permissionsEditable = session.getDefaultPermissionMode()
-		// .isAdmin()
-		// && session.getFeatures().permissionUpdate();
-
 		ItemContextPopupComponent popup = new ItemContextPopupComponent(
 				textProvider, session.getDefaultPermissionMode()
-						.hasWritePermission(), session.getFeatures()
-						.zipDownload(), session.getFeatures().fileView(),
-				session.getFeatures().publicLinks(), actionDelegator);
+						.hasWritePermission(), actionDelegator);
 		ItemContextPresenter presenter = new ItemContextPresenter(popup,
-				session, detailsProvider, textProvider, dropBox,
-				itemDetailsProvider, dialogManager);
+				detailsProvider, textProvider, dropBox, itemDetailsProvider,
+				dialogManager);
 		return new ItemContextGlue(popup, presenter, actionDelegator);
 	}
 }

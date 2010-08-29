@@ -12,13 +12,15 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.component;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ItemContextComponent {
 	Widget getComponent();
 
-	boolean onInit(FileSystemItem item, ItemDetails details);
+	boolean onInit(ItemContextContainer container, FileSystemItem item,
+			ItemDetails details);
 
 	void onContextClose();
 }

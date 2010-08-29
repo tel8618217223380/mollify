@@ -28,6 +28,7 @@ import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.EditableLabel;
 import org.sjarvela.mollify.client.ui.common.SwitchPanel;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
@@ -140,7 +141,7 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
-	public boolean onInit(FileSystemItem item, ItemDetails details) {
+	public boolean onInit(ItemContextContainer container, FileSystemItem item, ItemDetails details) {
 		this.item = item;
 		this.details = details;
 		updateDescription();

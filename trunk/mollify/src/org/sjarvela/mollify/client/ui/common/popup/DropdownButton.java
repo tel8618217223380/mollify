@@ -50,6 +50,10 @@ public class DropdownButton extends ActionButton {
 		menu.addMenuAction(action, title);
 	}
 
+	public void removeAllActions() {
+		menu.removeAllMenuItems();
+	}
+
 	public void setActionEnabled(ResourceId action, boolean enabled) {
 		menu.setActionEnabled(action, enabled);
 	}

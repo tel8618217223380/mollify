@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemPermissionHandler;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupListener;
@@ -39,11 +38,6 @@ public class ItemContextGlue implements ItemContextPopup {
 
 	public void setActionHandler(FileSystemActionHandler actionHandler) {
 		presenter.setFileActionHandler(actionHandler);
-	}
-
-	public void setFilePermissionHandler(
-			FileSystemPermissionHandler permissionHandler) {
-		presenter.setPermissionHandler(permissionHandler);
 	}
 
 	public void showPopup() {
