@@ -10,5 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-public interface MenuItem {
+public interface ContextActionItem {
+
 }

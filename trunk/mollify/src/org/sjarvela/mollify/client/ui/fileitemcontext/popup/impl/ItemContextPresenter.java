@@ -106,10 +106,6 @@ public class ItemContextPresenter implements ActionListener,
 
 		this.details = details;
 
-		// boolean isView = item.isFile() && session.getFeatures().fileView()
-		// && details != null
-		// && ((FileDetails) details).getFileView() != null;
-
 		List<ItemContextComponent> rejected = new ArrayList();
 		for (ItemContextComponent c : components)
 			if (!c.onInit(this, item, details))

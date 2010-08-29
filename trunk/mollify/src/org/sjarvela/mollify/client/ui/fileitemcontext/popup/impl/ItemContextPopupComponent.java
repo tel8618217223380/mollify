@@ -22,10 +22,11 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ActionMenuItem;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextAction;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionItem;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionSeparator;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
-import org.sjarvela.mollify.client.ui.fileitemcontext.MenuItem;
-import org.sjarvela.mollify.client.ui.fileitemcontext.MenuSeparator;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
@@ -96,21 +97,26 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		for (ItemContextComponent c : contextComponents)
 			addComponent(c);
 
-		setupDownload(itemContext.getDownloadItems());
-		setupActions(itemContext.getActionItems());
+		setupActions(itemContext.getActions());
 
 		return contextComponents;
 	}
 
-	private void setupDownload(List<MenuItem> downloadItems) {
-		if (downloadItems.isEmpty())
+	private void setupActions(Map<ActionType, List<ContextActionItem>> actions) {
+		setupDownloadActions(actions.get(ActionType.Download));
+		setupCustomActions(actions.get(ActionType.Custom));
+		setupOtherActions(actions.get(ActionType.Other));
+	}
+
+	private void setupDownloadActions(List<ContextActionItem> items) {
+		if (items.isEmpty())
 			return;
 
 		Widget downloadButton;
-		if (downloadItems.size() > 1) {
-			downloadButton = createDropdownButton(downloadItems);
+		if (items.size() > 1) {
+			downloadButton = createDropdownButton(items);
 		} else {
-			downloadButton = createButton(downloadItems.get(0));
+			downloadButton = createButton(items.get(0));
 		}
 
 		if (downloadButton == null)
@@ -118,31 +124,28 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		buttons.add(downloadButton);
 	}
 
-	private Widget createButton(MenuItem item) {
-		if (item instanceof ActionMenuItem) {
-			ActionMenuItem menuItem = (ActionMenuItem) item;
-			return createActionButton(menuItem.getTitle(), actionListener,
-					menuItem.getAction());
+	private void setupCustomActions(List<ContextActionItem> items) {
+		for (ContextActionItem item : items) {
+			if (item instanceof ContextAction)
+				buttons.add(createButton(item));
 		}
-		return null;
 	}
 
-	private Widget createDropdownButton(List<MenuItem> downloadItems) {
+	private Widget createDropdownButton(List<ContextActionItem> items) {
 		MultiActionButton downloadButton = createMultiActionButton(
 				actionListener, textProvider.getStrings()
 						.fileActionDownloadTitle(), FileSystemAction.download
 						.name());
 
 		boolean first = true;
-		for (MenuItem item : downloadItems) {
-			if (item instanceof ActionMenuItem) {
-				ActionMenuItem menuItem = (ActionMenuItem) item;
-				downloadButton.addAction(menuItem.getAction(), menuItem
-						.getTitle());
+		for (ContextActionItem item : items) {
+			if (item instanceof ContextAction) {
+				ContextAction action = (ContextAction) item;
+				downloadButton.addAction(action.getAction(), action.getTitle());
 				if (first)
-					downloadButton.setDefaultAction(menuItem.getAction());
+					downloadButton.setDefaultAction(action.getAction());
 				first = false;
-			} else if (item instanceof MenuSeparator) {
+			} else if (item instanceof ContextActionSeparator) {
 				downloadButton.addSeparator();
 			}
 		}
@@ -150,15 +153,24 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		return downloadButton;
 	}
 
-	private void setupActions(List<MenuItem> actions) {
-		for (MenuItem item : actions) {
-			if (item instanceof ActionMenuItem)
-				actionsButton.addAction(((ActionMenuItem) item).getAction(),
-						((ActionMenuItem) item).getTitle());
-			else if (item instanceof MenuSeparator)
+	private Widget createButton(ContextActionItem item) {
+		if (item instanceof ContextAction) {
+			ContextAction action = (ContextAction) item;
+			return createActionButton(action.getTitle(), actionListener, action
+					.getAction());
+		}
+		return null;
+	}
+
+	private void setupOtherActions(List<ContextActionItem> items) {
+		for (ContextActionItem item : items) {
+			if (item instanceof ContextAction)
+				actionsButton.addAction(((ContextAction) item).getAction(),
+						((ContextAction) item).getTitle());
+			else if (item instanceof ContextActionSeparator)
 				actionsButton.addSeparator();
 		}
-		if (!actions.isEmpty())
+		if (!items.isEmpty())
 			buttons.add(actionsButton);
 	}
 
@@ -206,14 +218,6 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 
 		return buttons;
 	}
-
-	// private Button createViewButton() {
-	// if (!fileView)
-	// return null;
-	// Button button = createActionButton(textProvider.getStrings()
-	// .fileActionViewTitle(), actionListener, FileSystemAction.view);
-	// return button;
-	// }
 
 	private Widget createComponentsPanel() {
 		componentsPanel = new VerticalPanel();

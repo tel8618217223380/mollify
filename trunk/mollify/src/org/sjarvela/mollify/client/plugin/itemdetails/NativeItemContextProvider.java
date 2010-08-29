@@ -58,8 +58,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			else
 				throw new RuntimeException("Invalid component type: " + type);
 		}
-		return new ItemContext(components, Collections.EMPTY_LIST,
-				Collections.EMPTY_LIST);
+		return new ItemContext(components, Collections.EMPTY_MAP);
 	}
 
 	private final native JavaScriptObject invokeNativeProvider(

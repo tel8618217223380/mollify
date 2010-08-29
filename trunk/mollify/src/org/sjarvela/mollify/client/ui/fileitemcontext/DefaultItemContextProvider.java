@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
@@ -20,6 +21,10 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextActionTypeBuilder;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextActionsBuilder;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextBuilder;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextComponentsBuilder;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.description.DescriptionComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.details.DetailsComponent;
@@ -61,66 +66,82 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	}
 
 	private ItemContext createContext(FileSystemItem item, ItemDetails details) {
-		List<ItemContextComponent> components = getComponents(item);
-		List<MenuItem> downloadItems = getDownloadItems(item);
-		List<MenuItem> actionItems = getActionItems(item, details);
-		return new ItemContext(components, downloadItems, actionItems);
+		ItemContextBuilder context = ItemContext.def();
+		createComponents(item, context.components());
+		createActions(item, details, context.actions());
+		return context.create();
 	}
 
-	private List<MenuItem> getDownloadItems(FileSystemItem item) {
-		List<MenuItem> items = new ArrayList();
-		if (item.isFile())
-			items.add(new ActionMenuItem(FileSystemAction.download,
-					textProvider.getStrings().fileActionDownloadTitle()));
-		if (sessionProvider.getSession().getFeatures().zipDownload())
-			items.add(new ActionMenuItem(FileSystemAction.download_as_zip,
-					textProvider.getStrings().fileActionDownloadZippedTitle()));
-
-		return items;
-	}
-
-	private List<MenuItem> getActionItems(FileSystemItem item,
-			ItemDetails details) {
+	private void createActions(FileSystemItem item, ItemDetails details,
+			ItemContextActionsBuilder actions) {
 		boolean writable = (details == null ? false : details
 				.getFilePermission().canWrite());
 
-		List<MenuItem> actions = new ArrayList();
-
-		actions.add(new ActionMenuItem(Action.addToDropbox, textProvider
-				.getStrings().mainViewSelectActionAddToDropbox()));
-		if (item.isFile()
-				&& sessionProvider.getSession().getFeatures().publicLinks())
-			actions.add(new ActionMenuItem(FileSystemAction.publicLink,
-					textProvider.getStrings().fileActionPublicLinkTitle()));
-		actions.add(new MenuSeparator());
-		if (writable)
-			actions.add(new ActionMenuItem(FileSystemAction.rename,
-					textProvider.getStrings().fileActionRenameTitle()));
-		actions.add(new ActionMenuItem(FileSystemAction.copy, textProvider
-				.getStrings().fileActionCopyTitle()));
-		if (item.isFile())
-			actions.add(new ActionMenuItem(FileSystemAction.copyHere,
-					textProvider.getStrings().fileActionCopyHereTitle()));
-		if (writable)
-			actions.add(new ActionMenuItem(FileSystemAction.move, textProvider
-					.getStrings().fileActionMoveTitle()));
-		if (writable)
-			actions.add(new ActionMenuItem(FileSystemAction.delete,
-					textProvider.getStrings().fileActionDeleteTitle()));
-		return actions;
+		createDownloadActions(item, actions
+				.type(ItemContext.ActionType.Download));
+		createOtherActions(item, actions.type(ItemContext.ActionType.Other),
+				writable);
+		createCustomActions(item, details, actions
+				.type(ItemContext.ActionType.Custom));
 	}
 
-	private List<ItemContextComponent> getComponents(FileSystemItem item) {
-		List<ItemContextComponent> components = new ArrayList();
-		components.add(createDescriptionComponent());
+	private void createCustomActions(FileSystemItem item, ItemDetails details,
+			ItemContextActionTypeBuilder actions) {
+		if (item.isFile()) {
+			FileDetails d = details.cast();
+			if (d.getFileView() != null
+					&& sessionProvider.getSession().getFeatures().fileView()) {
+				actions.add(FileSystemAction.view, textProvider.getStrings()
+						.fileActionViewTitle());
+			}
+		}
+	}
+
+	private void createDownloadActions(FileSystemItem item,
+			ItemContextActionTypeBuilder actions) {
+		if (item.isFile())
+			actions.add(FileSystemAction.download, textProvider.getStrings()
+					.fileActionDownloadTitle());
+		if (sessionProvider.getSession().getFeatures().zipDownload())
+			actions.add(FileSystemAction.download_as_zip, textProvider
+					.getStrings().fileActionDownloadZippedTitle());
+	}
+
+	private void createOtherActions(FileSystemItem item,
+			ItemContextActionTypeBuilder actions, boolean writable) {
+		actions.add(Action.addToDropbox, textProvider.getStrings()
+				.mainViewSelectActionAddToDropbox());
+		if (item.isFile()
+				&& sessionProvider.getSession().getFeatures().publicLinks())
+			actions.add(FileSystemAction.publicLink, textProvider.getStrings()
+					.fileActionPublicLinkTitle());
+		actions.addSeparator();
+		if (writable)
+			actions.add(FileSystemAction.rename, textProvider.getStrings()
+					.fileActionRenameTitle());
+		actions.add(FileSystemAction.copy, textProvider.getStrings()
+				.fileActionCopyTitle());
+		if (item.isFile())
+			actions.add(FileSystemAction.copyHere, textProvider.getStrings()
+					.fileActionCopyHereTitle());
+		if (writable)
+			actions.add(FileSystemAction.move, textProvider.getStrings()
+					.fileActionMoveTitle());
+		if (writable)
+			actions.add(FileSystemAction.delete, textProvider.getStrings()
+					.fileActionDeleteTitle());
+	}
+
+	private void createComponents(FileSystemItem item,
+			ItemContextComponentsBuilder contextComponents) {
+		contextComponents.add(createDescriptionComponent());
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().filePreview())
-			components.add(createPreviewComponent());
+			contextComponents.add(createPreviewComponent());
 		if (item.isFile())
-			components.add(createDetailsComponent());
+			contextComponents.add(createDetailsComponent());
 		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
-			components.add(createPermissionsComponent());
-		return components;
+			contextComponents.add(createPermissionsComponent());
 	}
 
 	private ItemContextComponent createDescriptionComponent() {
