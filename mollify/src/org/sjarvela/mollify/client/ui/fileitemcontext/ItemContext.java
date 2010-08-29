@@ -11,44 +11,123 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 public class ItemContext {
+	public enum ActionType {
+		Download, Custom, Other
+	}
+
 	private final List<ItemContextComponent> components;
-	private final List<MenuItem> downloadItems;
-	private final List<MenuItem> actionItems;
+	private final Map<ActionType, List<ContextActionItem>> actions;
 
 	public ItemContext(List<ItemContextComponent> components,
-			List<MenuItem> downloadItems, List<MenuItem> actionItems) {
-		this.downloadItems = downloadItems;
-		this.actionItems = actionItems;
+			Map<ActionType, List<ContextActionItem>> actions) {
 		this.components = new ArrayList(components);
+		this.actions = actions;
+	}
+
+	public ItemContext() {
+		this.actions = new HashMap();
+		this.components = new ArrayList();
 	}
 
 	public List<ItemContextComponent> getComponents() {
 		return components;
 	}
 
-	public List<MenuItem> getDownloadItems() {
-		return downloadItems;
-	}
-
-	public List<MenuItem> getActionItems() {
-		return actionItems;
+	public Map<ActionType, List<ContextActionItem>> getActions() {
+		return actions;
 	}
 
 	public ItemContext add(ItemContext other) {
 		List<ItemContextComponent> newComponents = new ArrayList(components);
 		newComponents.addAll(other.getComponents());
 
-		List<MenuItem> newDownloadItems = new ArrayList(downloadItems);
-		newDownloadItems.addAll(other.getDownloadItems());
+		Map<ActionType, List<ContextActionItem>> newActions = new HashMap(
+				actions);
+		for (Entry<ActionType, List<ContextActionItem>> e : other.actions
+				.entrySet()) {
+			List<ContextActionItem> items = newActions.get(e.getKey());
+			if (items == null) {
+				items = new ArrayList();
+				newActions.put(e.getKey(), items);
+			}
+			items.addAll(e.getValue());
+		}
 
-		List<MenuItem> newActionItems = new ArrayList(actionItems);
-		newActionItems.addAll(other.getActionItems());
+		return new ItemContext(newComponents, newActions);
+	}
 
-		return new ItemContext(newComponents, newDownloadItems, newActionItems);
+	public static ItemContextBuilder def() {
+		return new ItemContextBuilder();
+	}
+
+	public static class ItemContextBuilder {
+		ItemContextComponentsBuilder components = new ItemContextComponentsBuilder();
+		ItemContextActionsBuilder actions = new ItemContextActionsBuilder();
+
+		public ItemContextComponentsBuilder components() {
+			return components;
+		}
+
+		public ItemContextActionsBuilder actions() {
+			return actions;
+		}
+
+		public ItemContext create() {
+			return new ItemContext(components.list, actions.getMap());
+		}
+	}
+
+	public static class ItemContextComponentsBuilder {
+		private final List<ItemContextComponent> list = new ArrayList();
+
+		public void add(ItemContextComponent c) {
+			list.add(c);
+		}
+	}
+
+	public static class ItemContextActionsBuilder {
+		private final Map<ActionType, ItemContextActionTypeBuilder> actions = new HashMap();
+
+		private Map<ActionType, List<ContextActionItem>> getMap() {
+			Map<ActionType, List<ContextActionItem>> result = new HashMap();
+			for (Entry<ActionType, ItemContextActionTypeBuilder> e : actions
+					.entrySet())
+				result.put(e.getKey(), e.getValue().list);
+			return result;
+		}
+
+		public ItemContextActionTypeBuilder type(ActionType type) {
+			ItemContextActionTypeBuilder builder = actions.get(type);
+			if (builder == null) {
+				builder = new ItemContextActionTypeBuilder();
+				actions.put(type, builder);
+			}
+			return builder;
+		}
+	}
+
+	public static class ItemContextActionTypeBuilder {
+		private final List<ContextActionItem> list = new ArrayList();
+
+		public void add(ContextActionItem a) {
+			list.add(a);
+		}
+
+		public void add(ResourceId action, String title) {
+			list.add(new ContextAction(action, title));
+		}
+
+		public void addSeparator() {
+			list.add(new ContextActionSeparator());
+		}
 	}
 }

@@ -10,22 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import org.sjarvela.mollify.client.ResourceId;
+public class ContextActionSeparator implements ContextActionItem {
 
-public class ActionMenuItem implements MenuItem {
-	private final ResourceId action;
-	private final String title;
-
-	public ActionMenuItem(ResourceId action, String title) {
-		this.action = action;
-		this.title = title;
-	}
-
-	public ResourceId getAction() {
-		return action;
-	}
-
-	public String getTitle() {
-		return title;
-	}
 }
