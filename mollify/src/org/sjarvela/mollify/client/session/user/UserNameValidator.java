@@ -12,8 +12,7 @@ package org.sjarvela.mollify.client.session.user;
 
 public class UserNameValidator {
 
-	private static char[] ILLEGAL_CHARS = new char[] { '"', '<', '>', '%', '/',
-			'\\' };
+	private static char[] ILLEGAL_CHARS = new char[] { '"', '<', '>', '%', '\\' };
 
 	public boolean validate(String userName) {
 		for (char c : ILLEGAL_CHARS)

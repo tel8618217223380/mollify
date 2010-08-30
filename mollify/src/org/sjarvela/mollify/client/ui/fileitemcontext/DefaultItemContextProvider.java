@@ -79,22 +79,10 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 
 		createDownloadActions(item, actions
 				.type(ItemContext.ActionType.Download));
-		createOtherActions(item, actions.type(ItemContext.ActionType.Other),
-				writable);
-		createCustomActions(item, details, actions
-				.type(ItemContext.ActionType.Custom));
-	}
-
-	private void createCustomActions(FileSystemItem item, ItemDetails details,
-			ItemContextActionTypeBuilder actions) {
-		if (item.isFile()) {
-			FileDetails d = details.cast();
-			if (d.getFileView() != null
-					&& sessionProvider.getSession().getFeatures().fileView()) {
-				actions.add(FileSystemAction.view, textProvider.getStrings()
-						.fileActionViewTitle());
-			}
-		}
+		createPrimaryActions(item, details, actions
+				.type(ItemContext.ActionType.Primary));
+		createSecondaryActions(item, actions
+				.type(ItemContext.ActionType.Secondary), writable);
 	}
 
 	private void createDownloadActions(FileSystemItem item,
@@ -107,7 +95,19 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 					.getStrings().fileActionDownloadZippedTitle());
 	}
 
-	private void createOtherActions(FileSystemItem item,
+	private void createPrimaryActions(FileSystemItem item, ItemDetails details,
+			ItemContextActionTypeBuilder actions) {
+		if (item.isFile()) {
+			FileDetails d = details.cast();
+			if (d.getFileView() != null
+					&& sessionProvider.getSession().getFeatures().fileView()) {
+				actions.add(FileSystemAction.view, textProvider.getStrings()
+						.fileActionViewTitle());
+			}
+		}
+	}
+
+	private void createSecondaryActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions, boolean writable) {
 		actions.add(Action.addToDropbox, textProvider.getStrings()
 				.mainViewSelectActionAddToDropbox());

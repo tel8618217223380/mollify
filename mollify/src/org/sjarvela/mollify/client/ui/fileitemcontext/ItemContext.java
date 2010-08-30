@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextCompo
 
 public class ItemContext {
 	public enum ActionType {
-		Download, Custom, Other
+		Download, Primary, Secondary
 	}
 
 	private final List<ItemContextComponent> components;
