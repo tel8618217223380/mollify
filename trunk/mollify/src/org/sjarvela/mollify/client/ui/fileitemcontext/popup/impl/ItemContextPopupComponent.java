@@ -104,8 +104,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 
 	private void setupActions(Map<ActionType, List<ContextActionItem>> actions) {
 		setupDownloadActions(actions.get(ActionType.Download));
-		setupCustomActions(actions.get(ActionType.Custom));
-		setupOtherActions(actions.get(ActionType.Other));
+		setupPrimaryActions(actions.get(ActionType.Primary));
+		setupSecondaryActions(actions.get(ActionType.Secondary));
 	}
 
 	private void setupDownloadActions(List<ContextActionItem> items) {
@@ -124,7 +124,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		buttons.add(downloadButton);
 	}
 
-	private void setupCustomActions(List<ContextActionItem> items) {
+	private void setupPrimaryActions(List<ContextActionItem> items) {
 		for (ContextActionItem item : items) {
 			if (item instanceof ContextAction)
 				buttons.add(createButton(item));
@@ -162,7 +162,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		return null;
 	}
 
-	private void setupOtherActions(List<ContextActionItem> items) {
+	private void setupSecondaryActions(List<ContextActionItem> items) {
 		for (ContextActionItem item : items) {
 			if (item instanceof ContextAction)
 				actionsButton.addAction(((ContextAction) item).getAction(),
