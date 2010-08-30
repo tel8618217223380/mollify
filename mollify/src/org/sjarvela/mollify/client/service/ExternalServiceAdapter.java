@@ -29,4 +29,8 @@ public class ExternalServiceAdapter implements ExternalService {
 		service.get(path, listenerFactory.createListener(listener));
 	}
 
+	@Override
+	public String getUrl(String s) {
+		return service.getUrl(s);
+	}
 }

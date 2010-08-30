@@ -20,8 +20,12 @@ public class PhpExternalService extends ServiceBase implements ExternalService {
 
 	@Override
 	public void get(String path, ResultListener listener) {
-		service.request().url(serviceUrl().build() + path).listener(listener)
-				.get();
+		service.request().url(getUrl(path)).listener(listener).get();
+	}
+
+	@Override
+	public String getUrl(String path) {
+		return serviceUrl().build() + path;
 	}
 
 }

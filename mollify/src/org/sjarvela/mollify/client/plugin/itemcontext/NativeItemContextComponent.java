@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin.itemdetails;
+package org.sjarvela.mollify.client.plugin.itemcontext;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
@@ -67,14 +67,14 @@ public class NativeItemContextComponent implements ItemContextComponent {
 
 	private final native boolean invokeInit(String elementId,
 			JavaScriptObject item, JavaScriptObject details) /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextComponent::onInit;
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::onInit;
 		if (!cb) return;
 		var ret = cb(elementId, item, details);
-		return ret == true;
+		return !(ret == false);
 	}-*/;
 
 	private final native JavaScriptObject invokeContextClose() /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextComponent::onContextClose;
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::onContextClose;
 		if (!cb) return;
 		cb();
 	}-*/;

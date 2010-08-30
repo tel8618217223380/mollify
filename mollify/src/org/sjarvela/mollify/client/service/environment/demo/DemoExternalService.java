@@ -27,13 +27,17 @@ public class DemoExternalService implements ExternalService {
 		} else if (path.equals("embedded-view")) {
 			listener
 					.onSuccess(new JsObjBuilder()
-							.string(
-									"html",
+							.string("html",
 									"<iframe id='demo-viewer' src='file-view.html' style='border: none;'></iframe>")
 							.string("size", "600;400").string(
 									"resized_element_id", "demo-viewer")
 							.create());
 		}
+	}
+
+	@Override
+	public String getUrl(String s) {
+		return s;
 	}
 
 }
