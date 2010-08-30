@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin.itemdetails;
+package org.sjarvela.mollify.client.plugin.itemcontext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			if ("section".equals(type))
 				components.add(new NativeItemContextSection(c
 						.getString("title"), c.getString("html"), c
-						.getObject("onInit"), c.getObject("onDispose"), c
+						.getObject("onInit"), c.getObject("onContextClose"), c
 						.getObject("onOpen"), c.getObject("onClose")));
 			else if ("custom".equals(type))
 				components.add(new NativeItemContextComponent(c
@@ -63,7 +63,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 
 	private final native JavaScriptObject invokeNativeProvider(
 			JavaScriptObject item) /*-{
-		cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextProvider::dp;
+		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::dp;
 		return cb(item);
 	}-*/;
 

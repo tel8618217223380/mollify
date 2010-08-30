@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin.itemdetails;
+package org.sjarvela.mollify.client.plugin.itemcontext;
 
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
@@ -48,13 +48,13 @@ public class NativeItemContextSection extends NativeItemContextComponent
 	}
 
 	private final native JavaScriptObject invokeOpen() /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextSection::onOpen;
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onOpen;
 		if (!cb) return;
 		cb();
 	}-*/;
 
 	private final native JavaScriptObject invokeClose() /*-{
-		var cb = this.@org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextSection::onClose;
+		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onClose;
 		if (!cb) return;
 		cb();
 	}-*/;

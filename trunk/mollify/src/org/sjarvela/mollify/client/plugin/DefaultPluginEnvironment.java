@@ -12,8 +12,9 @@ package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
-import org.sjarvela.mollify.client.plugin.itemdetails.NativeItemContextProvider;
+import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
@@ -29,8 +30,9 @@ import com.google.inject.Singleton;
 public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
-	private final ItemContextProvider itemDetailsProvider;
+	private final ItemContextProvider itemContextProvider;
 	private final SessionProvider sessionProvider;
+	private final ServiceProvider serviceProvider;
 	@SuppressWarnings("unused")
 	private final String locale;
 
@@ -38,11 +40,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
 			ItemContextProvider itemDetailsProvider,
-			SessionProvider sessionProvider) {
+			SessionProvider sessionProvider, ServiceProvider serviceProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
-		this.itemDetailsProvider = itemDetailsProvider;
+		this.itemContextProvider = itemDetailsProvider;
 		this.sessionProvider = sessionProvider;
+		this.serviceProvider = serviceProvider;
 		this.locale = LocaleInfo.getCurrentLocale().getLocaleName();
 	}
 
@@ -55,8 +58,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		((DefaultEventDispatcher) eventDispatcher).addEventHandler(eh);
 	}
 
-	public void addItemDetailsProvider(JavaScriptObject dp) {
-		((ItemContextHandler) itemDetailsProvider)
+	public void addItemContextProvider(JavaScriptObject dp) {
+		((ItemContextHandler) itemContextProvider)
 				.addItemContextProvider(new NativeItemContextProvider(dp));
 	}
 
@@ -68,23 +71,37 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return createNativeEnv(this);
 	}
 
+	protected JavaScriptObject getService() {
+		return new NativeService(serviceProvider.getExternalService()).asJs();
+	};
+
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e) /*-{
 		var env = {};
+
 		env.addResponseProcessor = function (cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
+
 		env.addEventHandler = function (cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
-		env.addItemDetailsProvider = function (cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemDetailsProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+
+		env.addItemContextProvider = function (cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
+
 		env.getSession = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
 		}
+
 		env.getLocale = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::locale;
 		}
+
+		env.getService = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
+		}
+
 		return env;
 	}-*/;
 

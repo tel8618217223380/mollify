@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.service;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface ExternalService {
+	String getUrl(String s);
 
 	void get(String path, ResultListener listener);
 }
