@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin;
+package org.sjarvela.mollify.client.plugin.service;
 
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -31,11 +31,11 @@ public class NativeService {
 		var env = {};
 
 		env.getUrl = function(s) {
-			return service.@org.sjarvela.mollify.client.plugin.NativeService::getUrl(Ljava/lang/String;)(s);
+			return service.@org.sjarvela.mollify.client.plugin.service.NativeService::getUrl(Ljava/lang/String;)(s);
 		}
 
 		env.get = function(path, success, fail) {
-			service.@org.sjarvela.mollify.client.plugin.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
+			service.@org.sjarvela.mollify.client.plugin.service.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 		}
 
 		return env;
