@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;

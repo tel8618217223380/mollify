@@ -28,6 +28,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextCallback;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
@@ -125,8 +126,12 @@ public class ItemContextPresenter implements ActionListener,
 			return;
 		}
 
-		if (ItemContextPopupComponent.Action.addToDropbox.equals(action))
+		if (ItemContextPopupComponent.Action.callback.equals(action)) {
+			ContextCallback c = (ContextCallback) o;
+			c.onContextAction(item);
+		} else if (ItemContextPopupComponent.Action.addToDropbox.equals(action)) {
 			onAddToDropbox();
+		}
 	}
 
 	private void onAddToDropbox() {

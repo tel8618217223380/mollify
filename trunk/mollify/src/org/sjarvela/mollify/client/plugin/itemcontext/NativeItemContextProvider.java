@@ -11,14 +11,17 @@
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.js.JsObj;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -38,10 +41,17 @@ public class NativeItemContextProvider implements ItemContextProvider {
 	}
 
 	private ItemContext convert(FileSystemItem item, JavaScriptObject result) {
-		List<ItemContextComponent> components = new ArrayList();
 
 		JsObj r = result.cast();
+		List<ItemContextComponent> components = createComponents(r);
+		Map<ActionType, List<ContextActionItem>> actions = createActions(r);
+		return new ItemContext(components, actions);
+	}
+
+	private List<ItemContextComponent> createComponents(JsObj r) {
+		List<ItemContextComponent> components = new ArrayList();
 		JsArray<JsObj> componentList = r.getArray("components");
+
 		for (int i = 0; i < componentList.length(); i++) {
 			JsObj c = componentList.get(i);
 			String type = c.getString("type").trim().toLowerCase();
@@ -58,7 +68,37 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			else
 				throw new RuntimeException("Invalid component type: " + type);
 		}
-		return new ItemContext(components, Collections.EMPTY_MAP);
+		return components;
+	}
+
+	private Map<ActionType, List<ContextActionItem>> createActions(JsObj r) {
+		Map<ActionType, List<ContextActionItem>> actions = new HashMap();
+		JsArray<JsObj> actionList = r.getArray("actions");
+		for (int i = 0; i < actionList.length(); i++) {
+			JsObj c = actionList.get(i);
+			ActionType type = getActionType(c.getString("type").trim()
+					.toLowerCase());
+
+			List<ContextActionItem> list = actions.get(type);
+			if (list == null) {
+				list = new ArrayList();
+				actions.put(type, list);
+			}
+			list.add(new NativeItemContextAction(c.getString("title"), c
+					.getObject("callback")));
+		}
+
+		return actions;
+	}
+
+	private ActionType getActionType(String action) {
+		if ("download".equals(action))
+			return ActionType.Download;
+		if ("primary".equals(action))
+			return ActionType.Primary;
+		if ("secondary".equals(action))
+			return ActionType.Secondary;
+		throw new RuntimeException("Invalid action type: " + action);
 	}
 
 	private final native JavaScriptObject invokeNativeProvider(

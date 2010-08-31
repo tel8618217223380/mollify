@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client;
 
 public interface Callback {
 	void onCallback();

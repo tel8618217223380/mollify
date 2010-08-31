@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -23,7 +24,6 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
