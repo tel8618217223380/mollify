@@ -13,11 +13,11 @@ package org.sjarvela.mollify.client.ui.dropbox.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.service.Callback;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
 public class DropBoxPresenter {

@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
@@ -29,8 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class ContextPopupComponent extends DropdownPopup {
 	private final String styleName;
 
-	public ContextPopupComponent(String styleName,
-			PopupPositioner listener) {
+	public ContextPopupComponent(String styleName, PopupPositioner listener) {
 		super(null, listener);
 		this.styleName = styleName;
 		this.setStyleName(styleName);
@@ -66,15 +66,31 @@ public abstract class ContextPopupComponent extends DropdownPopup {
 		return close;
 	}
 
+	protected Button createCallbackButton(String title, String id,
+			final Callback callback) {
+		ActionButton button = createButton(title, id);
+		button.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				callback.onCallback();
+			}
+		});
+		return button;
+	}
+
 	protected Button createActionButton(String title,
 			final ActionListener listener, final ResourceId action) {
-		String base = styleName + "-action";
+		ActionButton button = createButton(title, action.name().toLowerCase());
+		button.setAction(listener, action);
+		return button;
+	}
 
+	private ActionButton createButton(String title, String id) {
+		String base = styleName + "-action";
 		ActionButton button = new ActionButton(title);
 		button.addStyleName(base);
-		button.getElement().setId(base + "-" + action.name().toLowerCase());
-		button.setAction(listener, action);
-
+		if (id != null)
+			button.getElement().setId(base + "-" + id);
 		return button;
 	}
 

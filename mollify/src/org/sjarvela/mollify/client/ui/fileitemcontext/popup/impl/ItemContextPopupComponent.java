@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -25,6 +26,7 @@ import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextAction;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionSeparator;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ContextCallbackAction;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
@@ -54,7 +56,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	private FlowPanel buttons;
 
 	public enum Action implements ResourceId {
-		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox
+		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox, callback
 	}
 
 	public enum DescriptionActionGroup implements ResourceId {
@@ -126,8 +128,9 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 
 	private void setupPrimaryActions(List<ContextActionItem> items) {
 		for (ContextActionItem item : items) {
-			if (item instanceof ContextAction)
-				buttons.add(createButton(item));
+			Widget button = createButton(item);
+			if (button != null)
+				buttons.add(button);
 		}
 	}
 
@@ -144,10 +147,10 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 				downloadButton.addAction(action.getAction(), action.getTitle());
 				if (first)
 					downloadButton.setDefaultAction(action.getAction());
-				first = false;
 			} else if (item instanceof ContextActionSeparator) {
 				downloadButton.addSeparator();
 			}
+			first = false;
 		}
 
 		return downloadButton;
@@ -158,7 +161,17 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 			ContextAction action = (ContextAction) item;
 			return createActionButton(action.getTitle(), actionListener, action
 					.getAction());
+		} else if (item instanceof ContextCallbackAction) {
+			final ContextCallbackAction action = (ContextCallbackAction) item;
+			return createCallbackButton(action.getTitle(), null,
+					new Callback() {
+						@Override
+						public void onCallback() {
+							actionListener.onAction(Action.callback, action);
+						}
+					});
 		}
+
 		return null;
 	}
 
@@ -169,6 +182,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 						((ContextAction) item).getTitle());
 			else if (item instanceof ContextActionSeparator)
 				actionsButton.addSeparator();
+			// else if (item instanceof ContextCallbackAction)
+			// actionsButton.
 		}
 		if (!items.isEmpty())
 			buttons.add(actionsButton);
