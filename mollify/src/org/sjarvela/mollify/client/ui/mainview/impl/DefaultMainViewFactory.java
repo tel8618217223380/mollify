@@ -106,7 +106,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		MainViewModel model = new MainViewModel(fileSystemService, session,
 				fileSystemItemProvider);
 
-		FolderSelectorFactory directorySelectorFactory = new FolderSelectorFactory(
+		FolderSelectorFactory folderSelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
 		ActionDelegator actionDelegator = new ActionDelegator();
 
@@ -129,7 +129,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				false);
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
-				actionDelegator, directorySelectorFactory,
+				actionDelegator, folderSelectorFactory,
 				fileContextPopupFactory, dragAndDropManager);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view, serviceProvider

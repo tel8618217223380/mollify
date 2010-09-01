@@ -42,7 +42,7 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 		this.textProvider = textProvider;
 		this.folderModelProvider = folderModelProvider;
 		this.listItemFactory = listItemFactory;
-		this.setStyleName(StyleConstants.DIRECTORY_SELECTOR);
+		this.setStyleName(StyleConstants.FOLDER_SELECTOR);
 
 		this.upButton = createUpButton();
 		this.homeItem = createHomeButton();
@@ -55,8 +55,8 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	private Button createUpButton() {
 		final Button button = new Button(textProvider.getStrings()
 				.mainViewParentDirButtonTitle());
-		button.setStyleName(StyleConstants.DIRECTORY_SELECTOR_BUTTON);
-		button.getElement().setId(StyleConstants.DIRECTORY_SELECTOR_BUTTON_UP);
+		button.setStyleName(StyleConstants.FOLDER_SELECTOR_BUTTON);
+		button.getElement().setId(StyleConstants.FOLDER_SELECTOR_BUTTON_UP);
 
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
 				textProvider.getStrings().mainViewParentDirButtonTooltip())
@@ -80,7 +80,7 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 
 	private FolderListItem createHomeButton() {
 		FolderListItem item = listItemFactory.createListItem(this,
-				StyleConstants.DIRECTORY_LISTITEM_HOME, Folder.Empty, 0,
+				StyleConstants.FOLDER_LISTITEM_HOME, Folder.Empty, 0,
 				Folder.Empty);
 		item.addDropdownTooltip(new Tooltip(
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
@@ -105,8 +105,8 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 
 	private void updateHomeButton() {
 		homeItem
-				.setStyle(folderModelProvider.getFolderModel().isRoot() ? StyleConstants.DIRECTORY_LISTITEM_HOME_LAST
-						: StyleConstants.DIRECTORY_LISTITEM_HOME);
+				.setStyle(folderModelProvider.getFolderModel().isRoot() ? StyleConstants.FOLDER_LISTITEM_HOME_LAST
+						: StyleConstants.FOLDER_LISTITEM_HOME);
 	}
 
 	private List<FolderListItem> createItems() {
@@ -119,13 +119,13 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 		while (list.hasNext()) {
 			Folder current = list.next();
 
-			String style = (level == 1) ? StyleConstants.DIRECTORY_LISTITEM_ROOT_LEVEL
+			String style = (level == 1) ? StyleConstants.FOLDER_LISTITEM_ROOT_LEVEL
 					: null;
 			if (!list.hasNext()) {
 				if (style == null)
-					style = StyleConstants.DIRECTORY_LISTITEM_LAST;
+					style = StyleConstants.FOLDER_LISTITEM_LAST;
 				else
-					style += "-" + StyleConstants.DIRECTORY_LISTITEM_LAST;
+					style += "-" + StyleConstants.FOLDER_LISTITEM_LAST;
 			}
 			items.add(listItemFactory.createListItem(this, style, current,
 					level, parent));
