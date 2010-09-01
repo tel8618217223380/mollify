@@ -103,6 +103,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		this.view.getFileContext().setActionHandler(fileSystemActionHandler);
 
+		this.view.getFolderSelector().addListener(this);
 		this.view
 				.setListSelectController(new SelectController<FileSystemItem>() {
 					@Override
@@ -124,7 +125,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (exposeFileUrls)
 			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
-		changeToRootDirectory(model.getRootFolders().size() == 1 ? model
+		changeToRootFolder(model.getRootFolders().size() == 1 ? model
 				.getRootFolders().get(0) : null);
 		if (model.getRootFolders().size() == 0)
 			view.hideButtons();
@@ -135,22 +136,22 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
-				Folder directory = (Folder) item;
+				Folder folder = (Folder) item;
 
-				if (directory == Folder.Parent)
+				if (folder == Folder.Parent)
 					onMoveToParentFolder();
 				else
-					changeToDirectory(directory);
+					changeToFolder(folder);
 			}
 		}
 	}
 
-	public void changeToRootDirectory(Folder root) {
+	public void changeToRootFolder(Folder root) {
 		model.changeToRootDirectory(root, createRefreshListener());
 	}
 
-	public void changeToDirectory(Folder directory) {
-		model.changeToSubdirectory(directory, createRefreshListener());
+	public void changeToFolder(Folder folder) {
+		model.changeToSubdirectory(folder, createRefreshListener());
 	}
 
 	public void reset() {

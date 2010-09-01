@@ -173,7 +173,7 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 	public void onIconClicked(FileSystemItem item) {
 		if (item.isFile() || item.equals(Folder.Parent))
 			return;
-		view.showDirectoryContext((Folder) item);
+		view.showFolderContext((Folder) item);
 	}
 
 	public void onColumnSorted(GridColumn column, Sort sort) {

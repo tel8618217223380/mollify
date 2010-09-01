@@ -151,10 +151,10 @@ public class StyleConstants {
 	public static final String FILE_LIST_FILE_EXTENSION_PREFIX = "mollify-filelist-filetype-";
 	public static final String FILE_LIST_FILE_EXTENSION_UNKNOWN = "mollify-filelist-filetype-unknown";
 
-	public static final String DIRECTORY_SELECTOR = "mollify-directory-selector";
+	public static final String FOLDER_SELECTOR = "mollify-directory-selector";
 	public static final String DIRECTORY_SELECTOR_ITEMS = "mollify-directory-selector-items";
-	public static final String DIRECTORY_SELECTOR_BUTTON = "mollify-directory-selector-button";
-	public static final String DIRECTORY_SELECTOR_BUTTON_UP = "mollify-directory-selector-button-up";
+	public static final String FOLDER_SELECTOR_BUTTON = "mollify-directory-selector-button";
+	public static final String FOLDER_SELECTOR_BUTTON_UP = "mollify-directory-selector-button-up";
 
 	public static final String DIRECTORY_LISTITEM = "mollify-directory-list-item";
 	public static final String DIRECTORY_LISTITEM_BUTTON = "mollify-directory-list-item-button";
@@ -163,11 +163,11 @@ public class StyleConstants {
 	public static final String DIRECTORY_LISTITEM_BUTTON_L = "mollify-directory-list-item-button-left";
 	public static final String DIRECTORY_LISTITEM_DROPDOWN = "mollify-directory-list-item-dropdown";
 
-	public static final String DIRECTORY_LISTITEM_HOME = "home";
-	public static final String DIRECTORY_LISTITEM_HOME_LAST = "home-last";
-	public static final String DIRECTORY_LISTITEM_ROOT_LEVEL = "root";
+	public static final String FOLDER_LISTITEM_HOME = "home";
+	public static final String FOLDER_LISTITEM_HOME_LAST = "home-last";
+	public static final String FOLDER_LISTITEM_ROOT_LEVEL = "root";
 	public static final String DIRECTORY_LISTITEM_ROOT_LAST = "root-last";
-	public static final String DIRECTORY_LISTITEM_LAST = "last";
+	public static final String FOLDER_LISTITEM_LAST = "last";
 
 	public static final String DIRECTORY_LIST_MENU = "mollify-directory-list-menu";
 	public static final String DIRECTORY_LIST_MENU_WAIT = "mollify-directory-list-menu-wait";

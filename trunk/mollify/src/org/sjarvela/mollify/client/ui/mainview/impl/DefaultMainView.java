@@ -308,8 +308,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				FileList.COLUMN_NAME));
 	}
 
-	public void showDirectoryContext(Folder directory) {
-		itemContextHandler.onItemSelected(directory, list.getWidget(directory,
+	public void showFolderContext(Folder folder) {
+		itemContextHandler.onItemSelected(folder, list.getWidget(folder,
 				FileList.COLUMN_NAME));
 	}
 
@@ -317,7 +317,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return refreshButton;
 	}
 
-	public FolderSelector getDirectorySelector() {
+	public FolderSelector getFolderSelector() {
 		return folderSelector;
 	}
 
