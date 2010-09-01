@@ -80,8 +80,8 @@ public class ItemContextPresenter implements ActionListener,
 	public void setItem(FileSystemItem item) {
 		this.item = item;
 
+		this.popup.reset();
 		popup.getName().setText(item.getName());
-		updateDetails(null);
 
 		itemDetailsProvider.getItemDetails(item,
 				new ResultListener<ItemDetails>() {
@@ -96,8 +96,6 @@ public class ItemContextPresenter implements ActionListener,
 	}
 
 	private void updateDetails(ItemDetails details) {
-		this.popup.reset();
-
 		this.components = new ArrayList();
 		if (details != null) {
 			components = popup.setup(itemContextProvider.getItemContext(item,

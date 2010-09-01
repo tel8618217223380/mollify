@@ -182,8 +182,17 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 						((ContextAction) item).getTitle());
 			else if (item instanceof ContextActionSeparator)
 				actionsButton.addSeparator();
-			// else if (item instanceof ContextCallbackAction)
-			// actionsButton.
+			else if (item instanceof ContextCallbackAction) {
+				final ContextCallbackAction action = (ContextCallbackAction) item;
+				actionsButton.addCallbackAction(action.getTitle(),
+						new Callback() {
+							@Override
+							public void onCallback() {
+								actionListener
+										.onAction(Action.callback, action);
+							}
+						});
+			}
 		}
 		if (!items.isEmpty())
 			buttons.add(actionsButton);

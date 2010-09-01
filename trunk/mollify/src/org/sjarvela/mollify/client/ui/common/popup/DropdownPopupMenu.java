@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.common.popup;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -46,6 +47,17 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		items.put(action, itemWidget);
 		itemsEnabled.put(action, true);
 		addItem(itemWidget);
+	}
+
+	public void addCallbackAction(T item, final Callback callback) {
+		Label label = createMenuItemWidget(item.toString());
+		label.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				callback.onCallback();
+			}
+		});
+		addItem(label);
 	}
 
 	public void setActionEnabled(ResourceId action, boolean enabled) {
