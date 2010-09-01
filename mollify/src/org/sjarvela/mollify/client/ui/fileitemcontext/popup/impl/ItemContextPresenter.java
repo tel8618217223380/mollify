@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
@@ -99,7 +98,7 @@ public class ItemContextPresenter implements ActionListener,
 	private void updateDetails(ItemDetails details) {
 		this.popup.reset();
 
-		this.components = Collections.EMPTY_LIST;
+		this.components = new ArrayList();
 		if (details != null) {
 			components = popup.setup(itemContextProvider.getItemContext(item,
 					details));
