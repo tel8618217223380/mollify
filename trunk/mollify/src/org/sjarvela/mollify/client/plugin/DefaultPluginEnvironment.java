@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
@@ -36,17 +37,20 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	@SuppressWarnings("unused")
 	private final String locale;
+	private final DialogManager dialogManager;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
 			ItemContextProvider itemDetailsProvider,
-			SessionProvider sessionProvider, ServiceProvider serviceProvider) {
+			SessionProvider sessionProvider, ServiceProvider serviceProvider,
+			DialogManager dialogManager) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		this.itemContextProvider = itemDetailsProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
+		this.dialogManager = dialogManager;
 		this.locale = LocaleInfo.getCurrentLocale().getLocaleName();
 	}
 
@@ -76,6 +80,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return new NativeService(serviceProvider.getExternalService()).asJs();
 	};
 
+	protected JavaScriptObject getDialogManager() {
+		return new NativeDialogManager(dialogManager).asJs();
+	};
+
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e) /*-{
 		var env = {};
 
@@ -101,6 +109,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 		env.getService = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
+		}
+
+		env.getDialogManager = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
 		}
 
 		return env;
