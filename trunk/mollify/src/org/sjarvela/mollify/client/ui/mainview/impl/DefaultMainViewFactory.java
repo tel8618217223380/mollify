@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
@@ -67,9 +68,10 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final ClientSettings settings;
 	private final FileViewerFactory fileViewerFactory;
 	private final ItemContextProvider itemContextProvider;
+	private final EventDispatcher eventDispatcher;
 
 	@Inject
-	public DefaultMainViewFactory(TextProvider textProvider,
+	public DefaultMainViewFactory(EventDispatcher eventDispatcher, TextProvider textProvider,
 			ViewManager viewManager, DialogManager dialogManager,
 			ServiceProvider serviceProvider, SessionManager sessionManager,
 			ClientSettings settings,
@@ -81,6 +83,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			FileViewerFactory fileViewerFactory, DropBoxFactory dropBoxFactory,
 			DragAndDropManager dragAndDropManager,
 			ItemContextProvider itemDetailsProvider) {
+		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
@@ -116,7 +119,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				dragController);
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
-				textProvider, viewManager, dialogManager, itemSelectorFactory,
+				eventDispatcher, textProvider, viewManager, dialogManager, itemSelectorFactory,
 				this, fileViewerFactory, fileSystemService,
 				fileSystemItemProvider, sessionManager).create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
