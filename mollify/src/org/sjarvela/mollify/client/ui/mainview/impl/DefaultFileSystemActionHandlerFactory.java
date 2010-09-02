@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
@@ -33,8 +34,10 @@ public class DefaultFileSystemActionHandlerFactory implements
 	private final RenameDialogFactory renameDialogFactory;
 	private final SessionProvider sessionProvider;
 	private final FileViewerFactory fileViewerFactory;
+	private final EventDispatcher eventDispatcher;
 
-	public DefaultFileSystemActionHandlerFactory(TextProvider textProvider,
+	public DefaultFileSystemActionHandlerFactory(
+			EventDispatcher eventDispatcher, TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
@@ -42,6 +45,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider,
 			SessionProvider sessionProvider) {
+		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
@@ -54,10 +58,10 @@ public class DefaultFileSystemActionHandlerFactory implements
 	}
 
 	public FileSystemActionHandler create() {
-		return new DefaultFileSystemActionHandler(textProvider, windowManager,
+		return new DefaultFileSystemActionHandler(eventDispatcher, textProvider, windowManager,
 				dialogManager, itemSelectorFactory, renameDialogFactory,
-				fileViewerFactory, fileSystemService, fileSystemItemProvider, sessionProvider
-						.getSession());
+				fileViewerFactory, fileSystemService, fileSystemItemProvider,
+				sessionProvider.getSession());
 	}
 
 }

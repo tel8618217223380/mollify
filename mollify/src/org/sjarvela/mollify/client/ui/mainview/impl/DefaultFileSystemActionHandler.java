@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemEvent;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
@@ -42,6 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
+	private final EventDispatcher eventDispatcher;
 	private final ViewManager windowManager;
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
@@ -54,13 +57,15 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 
 	private final List<FileSystemActionListener> listeners = new ArrayList();
 
-	public DefaultFileSystemActionHandler(TextProvider textProvider,
-			ViewManager windowManager, DialogManager dialogManager,
+	public DefaultFileSystemActionHandler(EventDispatcher eventDispatcher,
+			TextProvider textProvider, ViewManager windowManager,
+			DialogManager dialogManager,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
 			FileViewerFactory fileViewerFactory,
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
+		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
@@ -93,7 +98,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					new ConfirmationListener() {
 						public void onConfirm() {
 							fileSystemService.delete(items, createListener(
-									action, cb));
+									items, action, cb));
 						}
 					}, source);
 		} else if (FileSystemAction.copy.equals(action)) {
@@ -106,7 +111,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.copy(items,
 										(Folder) selected, createListener(
-												action, cb));
+												items, action, cb));
 							}
 
 							public boolean isItemAllowed(FileSystemItem item,
@@ -126,7 +131,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 				return;
 			}
 
-			fileSystemService.copy(items, folder, createListener(action, cb));
+			fileSystemService.copy(items, folder, createListener(items, action,
+					cb));
 		} else if (FileSystemAction.move.equals(action)) {
 			if (folder == null) {
 				itemSelectorFactory.openFolderSelector(textProvider
@@ -137,7 +143,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.move(items,
 										(Folder) selected, createListener(
-												action, cb));
+												items, action, cb));
 							}
 
 							public boolean isItemAllowed(FileSystemItem item,
@@ -157,7 +163,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 				return;
 			}
 
-			fileSystemService.move(items, folder, createListener(action, cb));
+			fileSystemService.move(items, folder, createListener(items, action,
+					cb));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
 			fileSystemService.getDownloadAsZipUrl(items,
 					new ResultListener<String>() {
@@ -270,8 +277,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							@Override
 							public void onInput(String name) {
 								fileSystemService.copyWithName(file, name,
-										createListener(FileSystemAction.copy,
-												null));
+										createListener(file,
+												FileSystemAction.copy, null));
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
@@ -371,51 +378,72 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	public void rename(FileSystemItem item, String newName) {
-		fileSystemService.rename(item, newName, createListener(
+		fileSystemService.rename(item, newName, createListener(item,
 				FileSystemAction.rename, null));
 	}
 
 	protected void copyFile(File file, Folder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.copy(file, toDirectory, createListener(
+		fileSystemService.copy(file, toDirectory, createListener(file,
 				FileSystemAction.copy, null));
 	}
 
-	protected void moveFile(File file, Folder toDirectory) {
-		if (toDirectory.getId().equals(file.getParentId()))
+	protected void moveFile(File file, Folder toFolder) {
+		if (toFolder.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.move(file, toDirectory, createListener(
+		fileSystemService.move(file, toFolder, createListener(file,
 				FileSystemAction.move, null));
 	}
 
-	protected void copyFolder(Folder directory, Folder toDirectory) {
-		if (directory.equals(toDirectory))
+	protected void copyFolder(Folder folder, Folder toFolder) {
+		if (folder.equals(toFolder))
 			return;
-		fileSystemService.copy(directory, toDirectory, createListener(
+		fileSystemService.copy(folder, toFolder, createListener(folder,
 				FileSystemAction.copy, null));
 	}
 
-	protected void moveFolder(Folder directory, Folder toDirectory) {
-		if (directory.equals(toDirectory))
+	protected void moveFolder(Folder folder, Folder toFolder) {
+		if (folder.equals(toFolder))
 			return;
-		fileSystemService.move(directory, toDirectory, createListener(
+		fileSystemService.move(folder, toFolder, createListener(folder,
 				FileSystemAction.move, null));
 	}
 
 	private void delete(FileSystemItem item) {
-		fileSystemService.delete(item, createListener(FileSystemAction.delete,
-				null));
+		fileSystemService.delete(item, createListener(item,
+				FileSystemAction.delete, null));
 	}
 
-	private ResultListener createListener(final FileSystemAction action,
-			final Callback cb) {
+	private ResultListener createListener(final FileSystemItem item,
+			final FileSystemAction action, final Callback cb) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				dialogManager.showError(error);
 			}
 
 			public void onSuccess(Object result) {
+				eventDispatcher.onEvent(FileSystemEvent.createEvent(item,
+						action));
+
+				if (cb != null)
+					cb.onCallback();
+				onFileSystemEvent(action);
+			}
+		};
+	}
+
+	private ResultListener createListener(final List<FileSystemItem> items,
+			final FileSystemAction action, final Callback cb) {
+		return new ResultListener() {
+			public void onFail(ServiceError error) {
+				dialogManager.showError(error);
+			}
+
+			public void onSuccess(Object result) {
+				eventDispatcher.onEvent(FileSystemEvent.createEvent(items,
+						action));
+
 				if (cb != null)
 					cb.onCallback();
 				onFileSystemEvent(action);
