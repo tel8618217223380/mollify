@@ -114,18 +114,20 @@ public class ItemContextPresenter implements ActionListener,
 
 	public void onAction(ResourceId action, Object o) {
 		if (FileSystemAction.class.equals(action.getClass())) {
+			popup.hide();
 			Object param = null;
 			if (action.equals(FileSystemAction.view))
 				param = ((FileDetails) details).getFileView();
 			fileSystemActionHandler.onAction(item, (FileSystemAction) action,
 					popup, param);
-			popup.hide();
 			return;
 		}
 
 		if (ItemContextPopupComponent.Action.callback.equals(action)) {
 			ContextCallback c = (ContextCallback) o;
+			popup.hide();
 			c.onContextAction(item);
+			return;
 		} else if (ItemContextPopupComponent.Action.addToDropbox.equals(action)) {
 			onAddToDropbox();
 		}
