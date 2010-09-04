@@ -171,9 +171,9 @@
 			return $this->getHost().$root;
 		}
 		
-		public function utf8($s) {
+		public function utf8($s, $encode = TRUE) {
 			if (!$this->settings->setting("convert_utf8", TRUE)) return $s;
-			return Util::utf8($s);
+			return Util::utf8($s, $encode);
 		}
 		
 		public function log() {

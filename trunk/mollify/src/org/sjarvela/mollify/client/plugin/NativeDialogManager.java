@@ -37,8 +37,8 @@ public class NativeDialogManager {
 		env.showConfirmation = function(t,m,cb,s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showConfirmation(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(t,m,s,cb);
 		}
-		env.showInput = function(t,m,d,cb,v) {
-			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInput(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(t,m,d,cb,v);
+		env.showInput = function(s) {
+			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInput(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
 		env.showDialog = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showDialog(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
@@ -63,8 +63,14 @@ public class NativeDialogManager {
 				}, null);
 	}
 
-	protected void showInput(String title, String message, String defaultVal,
-			final JavaScriptObject cb, final JavaScriptObject validator) {
+	protected void showInput(JavaScriptObject s) {
+		JsObj spec = s.cast();
+		String title = spec.getString("title");
+		String message = spec.getString("message");
+		String defaultVal = spec.getString("default_value");
+		final JavaScriptObject cb = spec.getJsObj("on_input");
+		final JavaScriptObject validator = spec.getJsObj("input_validator");
+
 		dialogManager.showInputDialog(title, message, defaultVal,
 				new InputListener() {
 					@Override

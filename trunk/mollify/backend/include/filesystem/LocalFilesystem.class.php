@@ -79,7 +79,7 @@
 		}
 		
 		public function localPath($item) {
-			return self::joinPath($this->rootPath, $item->path());
+			return $this->filesystemInfo->env()->utf8(self::joinPath($this->rootPath, $item->path()), FALSE);
 		}
 		
 		public function details($item) {
@@ -117,8 +117,8 @@
 				if (in_array(strtolower($name), $ignored)) continue;
 				
 				$itemName = $this->filesystemInfo->env()->utf8($name);
-				$path = self::joinPath($parentPath, $itemName);
-				
+				$path = $this->filesystemInfo->env()->utf8(self::joinPath($parentPath, $name));
+
 				if (!is_dir($path)) {	
 					$p = $this->publicPath($path);
 					$result[] = new File($this->itemId($p), $this->rootId(), $p, $itemName, $this);
@@ -142,7 +142,7 @@
 				if (substr($name, 0, 1) == '.' || in_array(strtolower($name), $ignored))
 					continue;
 	
-				$fullPath = self::joinPath($path, $this->filesystemInfo->env()->utf8($name));
+				$fullPath = self::joinPath($path, $name);
 				if (is_dir($fullPath)) {
 					$result = array_merge($result, $this->allFilesRecursively($fullPath));
 					continue;
