@@ -33,7 +33,7 @@ public class DefaultPluginSystem implements PluginSystem {
 
 	@Override
 	public void setup() {
-		doSetup(this);
+		doSetup();
 		initializePlugins();
 	}
 
@@ -43,16 +43,20 @@ public class DefaultPluginSystem implements PluginSystem {
 			p.initialize(env);
 	}
 
-	private native void doSetup(DefaultPluginSystem p) /*-{
-		if (!$wnd.onMollifyStarted) return;
-
-		$wnd.registerPlugin = function(plugin) {
-			p.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::onRegisterPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
+	private native void doSetup() /*-{
+		if (!$wnd.mollify || !$wnd.mollify.getPlugins) return;
+		
+		var plugins = $wnd.mollify.getPlugins();
+		if (!plugins || plugins.length == 0) return;
+		
+		for(var i=0; i < plugins.length; i++) {
+			var plugin = plugins[i];
+			if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo()) continue;
+			this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
 		}
-		$wnd.onMollifyStarted();
 	}-*/;
 
-	public void onRegisterPlugin(JavaScriptObject p) {
+	public void addPlugin(JavaScriptObject p) {
 		if (p == null)
 			return;
 		Plugin plugin = p.cast();
