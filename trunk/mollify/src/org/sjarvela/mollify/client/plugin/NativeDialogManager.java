@@ -31,11 +31,11 @@ public class NativeDialogManager {
 	private native JavaScriptObject createJs(NativeDialogManager dm) /*-{
 		var env = {};
 
-		env.showInfo = function(t,m) {
-			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInfo(Ljava/lang/String;Ljava/lang/String;)(t,m);
+		env.showInfo = function(s) {
+			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInfo(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-		env.showConfirmation = function(t,m,cb,s) {
-			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showConfirmation(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(t,m,s,cb);
+		env.showConfirmation = function(s) {
+			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showConfirmation(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
 		env.showInput = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInput(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
@@ -47,12 +47,21 @@ public class NativeDialogManager {
 		return env;
 	}-*/;
 
-	protected void showInfo(String title, String message) {
+	protected void showInfo(JavaScriptObject s) {
+		JsObj spec = s.cast();
+		String title = spec.getString("title");
+		String message = spec.getString("message");
+
 		dialogManager.showInfo(title, message);
 	}
 
-	protected void showConfirmation(String title, String message, String style,
-			final JavaScriptObject cb) {
+	protected void showConfirmation(JavaScriptObject s) {
+		JsObj spec = s.cast();
+		String title = spec.getString("title");
+		String message = spec.getString("message");
+		String style = spec.getString("style");
+		final JavaScriptObject cb = spec.getJsObj("on_confirm");
+
 		dialogManager.showConfirmationDialog(title, message,
 				(style != null && !style.isEmpty()) ? style : "custom",
 				new ConfirmationListener() {
