@@ -8,14 +8,15 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 
-public interface CreateFolderDialogFactory {
-
-	void openCreateFolderDialog(Folder folder,
-			FolderHandler directoryHandler);
+public class MainViewEvent {
+	public static Event onCurrentFolderChanged(Folder folder) {
+		return Event.create("MAINVIEW_CURRENT_FOLDER_CHANGED",
+				folder != null ? folder.asJs() : null);
+	}
 
 }

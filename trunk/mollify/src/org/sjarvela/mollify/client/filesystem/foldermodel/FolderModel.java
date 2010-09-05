@@ -68,7 +68,7 @@ public class FolderModel implements CurrentFolderProvider {
 		return this.folders.size() == 0;
 	}
 
-	public void changeDirectory(int level, Folder folder) {
+	public void changeFolder(int level, Folder folder) {
 		if (level < 1 || level > (getLevels() + 1))
 			throw new RuntimeException("Invalid folder (" + folder.getName()
 					+ ") at level " + level);

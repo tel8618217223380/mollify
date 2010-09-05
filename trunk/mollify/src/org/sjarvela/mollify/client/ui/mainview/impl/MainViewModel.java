@@ -92,24 +92,24 @@ public class MainViewModel {
 		return folderModel.getCurrentFolder();
 	}
 
-	public void changeToRootDirectory(Folder root, ResultListener resultListener) {
+	public void changeToRootFolder(Folder root, ResultListener resultListener) {
 		folderModel.setRootFolder(root);
 		refreshData(resultListener);
 	}
 
-	public void changeToSubdirectory(Folder directory,
+	public void changeToSubfolder(Folder folder,
 			ResultListener resultListener) {
-		folderModel.descendIntoFolder(directory);
+		folderModel.descendIntoFolder(folder);
 		refreshData(resultListener);
 	}
 
-	public void changeToDirectory(int level, Folder directory,
+	public void changeToFolder(int level, Folder folder,
 			ResultListener resultListener) {
-		folderModel.changeDirectory(level, directory);
+		folderModel.changeFolder(level, folder);
 		refreshData(resultListener);
 	}
 
-	public void moveToParentDirectory(ResultListener resultListener) {
+	public void moveToParentFolder(ResultListener resultListener) {
 		folderModel.ascend();
 		refreshData(resultListener);
 	}

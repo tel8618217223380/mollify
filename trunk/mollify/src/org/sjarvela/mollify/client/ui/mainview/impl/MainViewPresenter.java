@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
-import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -69,7 +70,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ViewManager viewManager;
 	private final DropBox dropBox;
-	private boolean exposeFileUrls;
+	private final EventDispatcher eventDispatcher;
+
+	private final boolean exposeFileUrls;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
@@ -82,7 +85,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory,
 			DropBox dropBox, boolean exposeFileUrls,
-			SessionService sessionService) {
+			SessionService sessionService, EventDispatcher eventDispatcher) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -100,6 +103,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.createFolderDialogFactory = createFolderDialogFactory;
 		this.dropBox = dropBox;
 		this.exposeFileUrls = exposeFileUrls;
+		this.eventDispatcher = eventDispatcher;
 
 		this.view.getFileContext().setActionHandler(fileSystemActionHandler);
 
@@ -147,11 +151,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void changeToRootFolder(Folder root) {
-		model.changeToRootDirectory(root, createRefreshListener());
+		model.changeToRootFolder(root, createFolderChangeListener());
 	}
 
 	public void changeToFolder(Folder folder) {
-		model.changeToSubdirectory(folder, createRefreshListener());
+		model.changeToSubfolder(folder, createFolderChangeListener());
 	}
 
 	public void reset() {
@@ -191,14 +195,16 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.refreshFileUrls(urls);
 	}
 
+	@Override
 	public void onMoveToParentFolder() {
 		if (!model.getFolderModel().canAscend())
 			return;
-		model.moveToParentDirectory(createRefreshListener());
+		model.moveToParentFolder(createFolderChangeListener());
 	}
 
-	public void onChangeToFolder(int level, Folder directory) {
-		model.changeToDirectory(level, directory, createRefreshListener());
+	@Override
+	public void onChangeToFolder(int level, Folder folder) {
+		model.changeToFolder(level, folder, createFolderChangeListener());
 	}
 
 	public void onError(ServiceError error, boolean reload) {
@@ -218,13 +224,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				createReloadListener("Upload"));
 	}
 
-	public void openNewDirectoryDialog() {
+	public void openNewFolderDialog() {
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
 		createFolderDialogFactory.openCreateFolderDialog(model
-				.getCurrentFolder(), new DirectoryHandler() {
-			public void createDirectory(Folder parentFolder, String folderName) {
+				.getCurrentFolder(), new FolderHandler() {
+			public void createFolder(Folder parentFolder, String folderName) {
 				fileSystemService.createFolder(parentFolder, folderName,
 						createReloadListener("Create folder"));
 			}
@@ -245,8 +251,19 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		});
 	}
 
-	private ResultListener createRefreshListener() {
-		return createListener(createRefreshCallback());
+	private ResultListener createFolderChangeListener() {
+		return createListener(createRefreshCallback(),
+				createCurrentFolderChangedEventCallback());
+	}
+
+	private Callback createCurrentFolderChangedEventCallback() {
+		return new Callback() {
+			@Override
+			public void onCallback() {
+				eventDispatcher.onEvent(MainViewEvent
+						.onCurrentFolderChanged(model.getCurrentFolder()));
+			}
+		};
 	}
 
 	private Callback createRefreshCallback() {
@@ -257,14 +274,15 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		};
 	}
 
-	private ResultListener createListener(final Callback callback) {
+	private ResultListener createListener(final Callback... callbacks) {
 		return new ResultListener<Object>() {
 			public void onFail(ServiceError error) {
 				onError(error, true);
 			}
 
 			public void onSuccess(Object result) {
-				callback.onCallback();
+				for (Callback callback : callbacks)
+					callback.onCallback();
 			}
 		};
 	}
