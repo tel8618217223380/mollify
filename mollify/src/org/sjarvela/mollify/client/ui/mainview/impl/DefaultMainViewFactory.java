@@ -14,7 +14,7 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.DirectoryHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -71,10 +71,10 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final EventDispatcher eventDispatcher;
 
 	@Inject
-	public DefaultMainViewFactory(EventDispatcher eventDispatcher, TextProvider textProvider,
-			ViewManager viewManager, DialogManager dialogManager,
-			ServiceProvider serviceProvider, SessionManager sessionManager,
-			ClientSettings settings,
+	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
+			TextProvider textProvider, ViewManager viewManager,
+			DialogManager dialogManager, ServiceProvider serviceProvider,
+			SessionManager sessionManager, ClientSettings settings,
 			FileSystemItemProvider fileSystemItemProvider,
 			ItemSelectorFactory itemSelectorFactory,
 			PermissionEditorViewFactory permissionEditorViewFactory,
@@ -119,9 +119,10 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				dragController);
 
 		FileSystemActionHandler fileSystemActionHandler = new DefaultFileSystemActionHandlerFactory(
-				eventDispatcher, textProvider, viewManager, dialogManager, itemSelectorFactory,
-				this, fileViewerFactory, fileSystemService,
-				fileSystemItemProvider, sessionManager).create();
+				eventDispatcher, textProvider, viewManager, dialogManager,
+				itemSelectorFactory, this, fileViewerFactory,
+				fileSystemService, fileSystemItemProvider, sessionManager)
+				.create();
 		DropBox dropBox = dropBoxFactory.createDropBox(fileSystemActionHandler,
 				model.getFolderModel());
 		ItemContextPopupFactory fileContextPopupFactory = new ItemContextPopupFactory(
@@ -140,7 +141,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
 				fileUploadDialogFactory, this, dropBox, exposeFileUrls,
-				serviceProvider.getSessionService());
+				serviceProvider.getSessionService(), eventDispatcher);
 		dragController.setDataProvider(presenter);
 		new MainViewGlue(view, presenter, fileSystemActionHandler,
 				actionDelegator);
@@ -161,7 +162,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	}
 
 	public void openCreateFolderDialog(Folder folder,
-			DirectoryHandler directoryHandler) {
+			FolderHandler directoryHandler) {
 		new CreateFolderDialog(folder, textProvider, directoryHandler);
 	}
 }

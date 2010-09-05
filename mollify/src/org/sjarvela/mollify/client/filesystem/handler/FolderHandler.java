@@ -2,8 +2,8 @@ package org.sjarvela.mollify.client.filesystem.handler;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 
-public interface DirectoryHandler {
+public interface FolderHandler {
 
-	void createDirectory(Folder parentFolder, String folderName);
+	void createFolder(Folder parentFolder, String folderName);
 
 }

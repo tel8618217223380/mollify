@@ -86,7 +86,7 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 		actionDelegator.setActionHandler(Action.addDirectory,
 				new VoidActionHandler() {
 					public void onAction() {
-						presenter.openNewDirectoryDialog();
+						presenter.openNewFolderDialog();
 					}
 				});
 
