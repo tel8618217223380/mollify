@@ -38,7 +38,7 @@
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: onEvent: '".$e->type()."'");
 			
 			foreach($this->listeners as $type => $listeners) {
-				if ($type == '*' or strpos($e->typeId(), $type) == 0) {
+				if (strcasecmp($type, '*') == 0 or strpos($e->typeId(), $type) === 0) {
 					foreach($listeners as $listener)
 						$listener->onEvent($e);
 				}

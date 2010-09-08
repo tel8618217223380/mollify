@@ -40,10 +40,10 @@
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
 	
-	$responseHandler = new ResponseHandler(new OutputHandler());
+	$responseHandler = new ResponseHandler(new OutputHandler(isSetting($SETTINGS, 'support_output_buffer')));
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
-		$request = new Request(isset($SETTINGS) and isset($SETTINGS['enable_limited_http_methods']) and $SETTINGS['enable_limited_http_methods'] == TRUE);
+		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
 		Logging::logException($e);
@@ -51,5 +51,9 @@
 	} catch (Exception $e) {
 		Logging::logException($e);
 		$responseHandler->unknownServerError($e->getMessage());
+	}
+	
+	function isSetting($settings, $name) {
+		return isset($settings) and isset($settings[$name]) and $settings[$name] == TRUE;
 	}
 ?>
