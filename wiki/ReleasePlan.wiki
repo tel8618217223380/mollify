@@ -2,5 +2,5 @@
 
 Items included in release 1.7
 
- * Forbidden upload types
- * Folder creation when users are added (admin util)
+ * Notification plugin (email notifications for events)
+ * Client plugin system
