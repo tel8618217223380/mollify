@@ -36,12 +36,12 @@ function NotificatorListView() {
 		
 		$("#types-list").jqGrid({        
 			datatype: "local",
-			multiselect: false,
+			multiselect: true,
 			autowidth: true,
-			height: '100%',
-		   	colNames:['Name'],
+			height: '150px',
+		   	colNames:['Selected'],
 		   	colModel:[
-			   	{name:'name',index:'name',width:150, sortable:true},
+			   	{name:'name',index:'name',width:250, sortable:true},
 		   	],
 		   	sortname:'name',
 		   	sortorder:'desc'
@@ -49,22 +49,53 @@ function NotificatorListView() {
 
 		$("#available-types-list").jqGrid({        
 			datatype: "local",
-			multiselect: false,
+			multiselect: true,
 			autowidth: true,
-			height: '100%',
-		   	colNames:['Name'],
+			height: '150px',
+		   	colNames:['Available'],
 		   	colModel:[
-			   	{name:'name',index:'name',width:150, sortable:true},
+			   	{name:'name',index:'name',width:250, sortable:true},
 		   	],
 		   	sortname:'name',
 		   	sortorder:'desc'
 		});
-				
+
+		$("#users-list").jqGrid({        
+			datatype: "local",
+			multiselect: true,
+			autowidth: true,
+			height: '150px',
+		   	colNames:['Selected'],
+		   	colModel:[
+			   	{name:'name',index:'name',width:250, sortable:true},
+		   	],
+		   	sortname:'name',
+		   	sortorder:'desc'
+		});
+
+		$("#available-users-list").jqGrid({        
+			datatype: "local",
+			multiselect: true,
+			autowidth: true,
+			height: '150px',
+		   	colNames:['Available'],
+		   	colModel:[
+			   	{name:'name',index:'name',width:250, sortable:true},
+		   	],
+		   	sortname:'name',
+		   	sortorder:'desc'
+		});
+			
 		getEventTypes(that.refreshTypes, onServerError);
 	}
 	
 	this.refreshTypes = function(types) {
 		that.types = types;
+		getUsers(that.refreshUsers, onServerError);
+	}
+	
+	this.refreshUsers = function(users) {
+		that.users = users;		
 		that.onRefresh();
 	}
 	
@@ -126,8 +157,8 @@ function NotificatorListView() {
 			$("#add-notification-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
-				height: 'auto',
-				width: 270,
+				height: 400,
+				width: 650,
 				modal: true,
 				resizable: true,
 				title: "Add Notification",
@@ -151,6 +182,17 @@ function NotificatorListView() {
 		
 		for (var t in that.types) {
 			availableTypesList.jqGrid('addRowData', t, {id: t, name: that.types[t]});
+		}
+
+		var usersList = $("#users-list");
+		usersList.jqGrid('clearGridData');
+		
+		var availableUsersList = $("#available-users-list");
+		availableUsersList.jqGrid('clearGridData');
+		
+		for(var i=0;i < that.users.length;i++) {
+			var user = that.users[i];
+			availableUsersList.jqGrid('addRowData', user.id, user);
 		}
 		
 		$("#add-notification-dialog").dialog('open');

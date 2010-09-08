@@ -35,6 +35,7 @@
 			"mail_notification_from" => NULL,
 			"new_folder_permission_mask" => 0755,
 			"convert_utf8" => FALSE,
+			"support_output_buffer" => FALSE,
 			"debug" => FALSE
 		);
 		
