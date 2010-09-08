@@ -30,16 +30,6 @@ For example:
 	);
 }}}
 
-Also, file viewer plugin requires following setting:
-
-{{{
-	$SETTINGS = array(
-		"host_public_address" => "http://YOUR_HOST_IP"
-	);
-}}}
-
-Host ip is the address of the host without any paths, this is needed to construct file view urls.
-
 = Viewers =
 
 == Built-in viewers ==
