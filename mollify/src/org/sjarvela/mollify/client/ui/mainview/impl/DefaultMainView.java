@@ -185,9 +185,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				new PopupPositioner() {
 					public void setPositionOnShow(DropdownPopup popup,
 							Widget parent, int offsetWidth, int offsetHeight) {
-						int x = Math.min(parent.getAbsoluteLeft(),
-								DefaultMainView.this.getOffsetWidth()
-										- offsetWidth);
+						int x = parent.getAbsoluteLeft()
+								+ parent.getOffsetWidth() - offsetWidth;
 						popup.setPopupPosition(x, parent.getAbsoluteTop());
 					}
 				});

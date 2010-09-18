@@ -59,6 +59,10 @@
 		public function success($data) {
 			$this->output->sendResponse(new Response(200, "json", $this->getSuccessResponse($data)));
 		}
+
+		public function fail($code, $error, $details = NULL) {
+			$this->output->sendResponse(new Response(403, "json", $this->getErrorResponse(array($code, $error), $details)));
+		}
 		
 		public function error($type, $details) {
 			$error = $this->getError($type);
