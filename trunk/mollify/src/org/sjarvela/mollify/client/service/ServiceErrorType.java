@@ -70,6 +70,8 @@ public enum ServiceErrorType {
 			// 201 is actually invalid path, but for user it is invalid
 			// configuration
 			return INVALID_CONFIGURATION;
+		case 108:
+			return REQUEST_FAILED;
 		case 202:
 			return FILE_DOES_NOT_EXIST;
 		case 203:

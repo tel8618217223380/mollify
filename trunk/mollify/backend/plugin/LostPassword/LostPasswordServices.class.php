@@ -26,13 +26,13 @@
 			
 			$user = $this->getUser($data['email']);
 			if (!$user) {
-				$this->response()->fail(201, "NO_SUCH_USER");
+				$this->response()->fail(101, "NO_SUCH_USER");
 				return;
 			}
 			
 			$pw = $this->createNewPassword();
 			if (!$this->env->configuration()->changePassword($user['id'], $pw)) {
-				$this->response()->fail(202, "PASSWORD_RESET_FAILED");
+				$this->response()->fail(108, "PASSWORD_RESET_FAILED");
 				return;
 			}
 			

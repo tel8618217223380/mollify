@@ -16,6 +16,7 @@ import java.util.Map;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.common.popup.BubblePopup;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -71,19 +72,27 @@ public class ResetPasswordPopup extends BubblePopup {
 	protected void onReset() {
 		if (email.getText().length() == 0)
 			return;
-		
+
 		Map<String, String> data = new HashMap();
 		data.put("email", email.getText());
 
 		service.post(data, new ResultListener() {
 			@Override
 			public void onFail(ServiceError error) {
-				dialogManager.showError(error);
+				if (error.getType().equals(ServiceErrorType.INVALID_REQUEST))
+					dialogManager
+							.showInfo("TODO", "TODO Invalid email address");
+				else if (error.getType()
+						.equals(ServiceErrorType.REQUEST_FAILED))
+					dialogManager
+							.showInfo("TODO", "TODO Could not reset email");
+				else
+					dialogManager.showError(error);
 			}
 
 			@Override
 			public void onSuccess(Object result) {
-				dialogManager.showInfo("TODO", "todo");
+				dialogManager.showInfo("TODO", "todo Password has been reset");
 			}
 		});
 	}
