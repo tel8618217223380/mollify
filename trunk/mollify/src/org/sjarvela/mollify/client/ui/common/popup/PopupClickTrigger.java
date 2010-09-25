@@ -34,7 +34,7 @@ public class PopupClickTrigger {
 				if (menu.isShowing())
 					menu.hide();
 				else
-					menu.showMenu();
+					menu.showPopup();
 			}
 		};
 	}

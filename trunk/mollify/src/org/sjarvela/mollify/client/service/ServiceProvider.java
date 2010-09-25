@@ -20,4 +20,6 @@ public interface ServiceProvider {
 	FileUploadService getFileUploadService();
 
 	ExternalService getExternalService();
+	
+	ExternalService getExternalService(String name);
 }

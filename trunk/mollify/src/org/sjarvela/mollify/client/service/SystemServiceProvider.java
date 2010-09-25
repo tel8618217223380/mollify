@@ -55,6 +55,11 @@ public class SystemServiceProvider implements ServiceProvider,
 		return new ExternalServiceAdapter(env.getExternalService(), this);
 	}
 
+	@Override
+	public ExternalService getExternalService(String name) {
+		return new ExternalServiceAdapter(env.getExternalService(name), this);
+	}
+
 	public <T> ResultListener createListener(
 			final ResultListener<T> resultListener) {
 		return new ResultListener<T>() {

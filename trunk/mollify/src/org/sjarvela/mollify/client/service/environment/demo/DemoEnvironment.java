@@ -70,4 +70,9 @@ public class DemoEnvironment implements ServiceEnvironment {
 		return externalServiceHandler;
 	}
 
+	@Override
+	public ExternalService getExternalService(String name) {
+		return externalServiceHandler;
+	}
+
 }

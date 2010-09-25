@@ -40,6 +40,15 @@ public class ActionLink extends Label {
 		HoverDecorator.decorate(this);
 	}
 
+	public void setClickHandler(final ClickHandler clickHandler) {
+		this.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				HoverDecorator.clear(ActionLink.this);
+				clickHandler.onClick(event);
+			}
+		});
+	}
+
 	public void setAction(final ActionListener actionListener,
 			final ResourceId actionId) {
 		this.addClickHandler(new ClickHandler() {

@@ -302,7 +302,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 	@Override
 	public String getPublicLink(File file) {
-		return service.url().item("public").item("items").fileItem(file)
+		return service.serviceUrl().item("public").item("items").fileItem(file)
 				.build();
 	}
 }

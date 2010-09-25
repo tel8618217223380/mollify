@@ -28,6 +28,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String loginDialogPassword();
 
+	public String loginDialogResetPassword();
+
 	public String loginDialogLoginButton();
 
 	public String loginDialogLoginFailedMessage();
@@ -435,7 +437,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String fileViewerOpenInNewWindowTitle();
 
 	public String filePublicLinkTitle();
-	
+
 	public String copyHereDialogTitle();
 
 }

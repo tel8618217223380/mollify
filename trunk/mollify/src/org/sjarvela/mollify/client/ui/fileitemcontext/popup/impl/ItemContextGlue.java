@@ -41,7 +41,7 @@ public class ItemContextGlue implements ItemContextPopup {
 	}
 
 	public void showPopup() {
-		popup.showMenu();
+		popup.showPopup();
 	}
 
 	public void hidePopup() {

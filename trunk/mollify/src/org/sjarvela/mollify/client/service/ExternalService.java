@@ -10,10 +10,16 @@
 
 package org.sjarvela.mollify.client.service;
 
+import java.util.Map;
+
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface ExternalService {
 	String getUrl(String s);
 
 	void get(String path, ResultListener listener);
+
+	void post(String path, Map<String, String> data, ResultListener resultListener);
+
+	void post(Map<String, String> data, ResultListener resultListener);
 }

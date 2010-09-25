@@ -12,11 +12,14 @@ package org.sjarvela.mollify.client.ui.login;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
+import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.user.UserNameValidator;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
+import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -34,15 +37,23 @@ import com.google.gwt.user.client.ui.Widget;
 public class LoginDialog extends CenteredDialog {
 	private final TextProvider textProvider;
 	private final LoginHandler loginHandler;
+	private final DialogManager dialogManager;
+	private final ServiceProvider serviceProvider;
+	private final boolean showResetPassword;
 
 	private TextBox userName;
 	private PasswordTextBox password;
 
-	public LoginDialog(TextProvider textProvider, LoginHandler loginHandler) {
+	public LoginDialog(TextProvider textProvider, DialogManager dialogManager,
+			LoginHandler loginHandler, ServiceProvider serviceProvider,
+			boolean showResetPassword) {
 		super(textProvider.getStrings().loginDialogTitle(),
 				StyleConstants.LOGIN_DIALOG);
 		this.textProvider = textProvider;
+		this.dialogManager = dialogManager;
 		this.loginHandler = loginHandler;
+		this.serviceProvider = serviceProvider;
+		this.showResetPassword = showResetPassword;
 		this.setModal(false);
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
@@ -112,6 +123,21 @@ public class LoginDialog extends CenteredDialog {
 		password.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_VALUE);
 		password.addKeyPressHandler(loginHandler);
 		panel.add(password);
+
+		if (showResetPassword) {
+			final ActionLink link = createLink(textProvider.getStrings()
+					.loginDialogResetPassword(), null,
+					StyleConstants.LOGIN_DIALOG_BUTTON_RESET_PASSWORD);
+			link.setClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					new ResetPasswordPopup(link, serviceProvider
+							.getExternalService("lostpassword"), dialogManager)
+							.showPopup();
+				}
+			});
+			panel.add(link);
+		}
 
 		return panel;
 	}

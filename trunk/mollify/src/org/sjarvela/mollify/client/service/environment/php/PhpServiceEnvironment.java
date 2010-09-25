@@ -71,4 +71,9 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 		return externalService;
 	}
 
+	@Override
+	public ExternalService getExternalService(String name) {
+		return new PhpNamedExternalService(service, name);
+	}
+
 }

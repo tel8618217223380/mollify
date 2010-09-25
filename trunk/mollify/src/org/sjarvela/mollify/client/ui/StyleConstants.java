@@ -254,6 +254,7 @@ public class StyleConstants {
 	public static final String LOGIN_DIALOG = "login";
 	public static final String LOGIN_DIALOG_BUTTONS = "mollify-login-dialog-buttons";
 	public static final String LOGIN_DIALOG_BUTTON_LOGIN = "login";
+	public static final String LOGIN_DIALOG_BUTTON_RESET_PASSWORD = "reset-password";
 	public static final String LOGIN_DIALOG_CONTENT = "mollify-login-dialog-content";
 	public static final String LOGIN_DIALOG_USERNAME_TITLE = "mollify-login-dialog-username-title";
 	public static final String LOGIN_DIALOG_USERNAME_VALUE = "mollify-login-dialog-username-value";

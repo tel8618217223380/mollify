@@ -51,7 +51,7 @@ public class DropdownPopup extends PopupPanel {
 		this.positioner = positioner;
 	}
 
-	public void showMenu() {
+	public void showPopup() {
 		this.setPopupPositionAndShow(new PositionCallback() {
 			public void setPosition(int offsetWidth, int offsetHeight) {
 				if (positioner != null)

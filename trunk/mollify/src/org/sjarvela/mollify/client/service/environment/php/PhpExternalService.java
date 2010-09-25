@@ -10,7 +10,11 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.sjarvela.mollify.client.service.ExternalService;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class PhpExternalService extends ServiceBase implements ExternalService {
@@ -24,8 +28,23 @@ public class PhpExternalService extends ServiceBase implements ExternalService {
 	}
 
 	@Override
+	public void post(Map<String, String> data, ResultListener listener) {
+		post(null, data, listener);
+	}
+
+	@Override
+	public void post(String path, Map<String, String> data,
+			ResultListener listener) {
+		JSONStringBuilder dataBuilder = new JSONStringBuilder();
+		for (Entry<String, String> e : data.entrySet())
+			dataBuilder.add(e.getKey(), e.getValue());
+		service.request().url(getUrl(path)).listener(listener).data(
+				dataBuilder.toString()).post();
+	}
+
+	@Override
 	public String getUrl(String path) {
-		return serviceUrl().build() + path;
+		return serviceUrl().item(path).build();
 	}
 
 }
