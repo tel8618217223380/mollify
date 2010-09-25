@@ -24,7 +24,7 @@ function onSession(session) {
 		onError({error:"Configuration Error", details:"Current Mollify configuration does not require authentication, and reset password is disabled"});
 		return;
 	}
-	if (!session.features["lost-password"]) {
+	if (!session.features["lost_password"]) {
 		onError({error:"Configuration Error", details:"Lost password plugin not installed"});
 		return;
 	}
@@ -48,10 +48,10 @@ function onDoReset() {
 }
 
 function onResetError(response) {
-	if (response.code == 201)
-		onError({code:201, error:"No user found with given email"});
-	else if (response.code == 202)
-		onError({code:202, error:"Resetting password failed"});
+	if (response.code == 101)
+		onError({code:101, error:"No user found with given email"});
+	else if (response.code == 108)
+		onError({code:108, error:"Resetting password failed"});
 	else
 		onError(response);
 }

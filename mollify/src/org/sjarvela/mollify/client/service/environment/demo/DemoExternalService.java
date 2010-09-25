@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import java.util.Map;
+
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
@@ -33,6 +35,17 @@ public class DemoExternalService implements ExternalService {
 									"resized_element_id", "demo-viewer")
 							.create());
 		}
+	}
+
+	@Override
+	public void post(String path, Map<String, String> data,
+			ResultListener listener) {
+		listener.onSuccess(true);
+	}
+
+	@Override
+	public void post(Map<String, String> data, ResultListener listener) {
+		listener.onSuccess(true);
 	}
 
 	@Override

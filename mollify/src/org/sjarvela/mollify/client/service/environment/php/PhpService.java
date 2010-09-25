@@ -21,6 +21,7 @@ public class PhpService {
 	private static final String SERVICE_FILE = "r.php";
 	private static final String ADMIN_PATH = "admin/";
 	private final String requestBaseUrl;
+	private final String rootUrl;
 	protected final String adminUrl;
 	private final UrlResolver urlResolver;
 	private final int requestTimeout;
@@ -44,6 +45,7 @@ public class PhpService {
 		this.limitedHttpMethods = limitedHttpMethods;
 		this.responseProcessor = responseProcessor;
 		this.requestBaseUrl = getPath(path, SERVICE_FILE);
+		this.rootUrl = path;
 		this.adminUrl = getPath(path, ADMIN_PATH);
 		Log.info("Mollify service location: " + this.requestBaseUrl
 				+ ", timeout: " + requestTimeout + " sec");
@@ -69,7 +71,12 @@ public class PhpService {
 				.timeout(requestTimeout);
 	}
 
-	public UrlBuilder url() {
+	public UrlBuilder serviceUrl() {
 		return new UrlBuilder().baseUrl(requestBaseUrl);
 	}
+
+	public UrlBuilder pluginUrl(String name) {
+		return new UrlBuilder().baseUrl(rootUrl).item("plugin").item(name);
+	}
+
 }

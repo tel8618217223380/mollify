@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.service;
 
+import java.util.Map;
+
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 
@@ -27,6 +29,17 @@ public class ExternalServiceAdapter implements ExternalService {
 	@Override
 	public void get(String path, ResultListener listener) {
 		service.get(path, listenerFactory.createListener(listener));
+	}
+
+	@Override
+	public void post(String path, Map<String, String> data,
+			ResultListener listener) {
+		service.post(path, data, listenerFactory.createListener(listener));
+	}
+
+	@Override
+	public void post(Map<String, String> data, ResultListener listener) {
+		service.post(data, listenerFactory.createListener(listener));
 	}
 
 	@Override

@@ -13,7 +13,7 @@
 	class LostPassword extends PluginBase {
 		public function setup() {
 			$this->addService("lostpassword", "LostPasswordServices");
-			$this->env->features()->addFeature("lost-password");
+			$this->env->features()->addFeature("lost_password");
 		}
 				
 		public function isConfigurationSupported($type) {

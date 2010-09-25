@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
+import org.sjarvela.mollify.client.ui.common.ActionLink;
 import org.sjarvela.mollify.client.ui.dialog.DialogMoveListener;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -71,6 +72,15 @@ public abstract class Dialog extends DialogBox {
 		button.setStylePrimaryName(StyleConstants.DIALOG_BUTTON);
 		button.addStyleDependentName(style);
 		button.addClickHandler(handler);
+		return button;
+	}
+
+	protected ActionLink createLink(String title, ClickHandler handler,
+			String style) {
+		ActionLink button = new ActionLink(title);
+		button.addStyleDependentName(style);
+		if (handler != null)
+			button.addClickHandler(handler);
 		return button;
 	}
 

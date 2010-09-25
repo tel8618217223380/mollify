@@ -38,7 +38,8 @@ public class UrlBuilder {
 	}
 
 	public UrlBuilder item(String item) {
-		items.add(item);
+		if (item != null)
+			items.add(item);
 		return this;
 	}
 

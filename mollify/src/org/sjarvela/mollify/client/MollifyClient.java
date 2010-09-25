@@ -45,6 +45,7 @@ public class MollifyClient implements Client, SessionListener {
 	private final SessionService service;
 	private final TextProvider textProvider;
 	private final ClientSettings settings;
+	private final ServiceProvider serviceProvider;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
@@ -55,6 +56,7 @@ public class MollifyClient implements Client, SessionListener {
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
 		this.sessionManager = sessionManager;
+		this.serviceProvider = serviceProvider;
 		this.textProvider = textProvider;
 		this.settings = settings;
 		this.service = serviceProvider.getSessionService();
@@ -86,7 +88,7 @@ public class MollifyClient implements Client, SessionListener {
 
 	public void onSessionStarted(SessionInfo session) {
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
-			openLogin();
+			openLogin(session);
 		else
 			viewManager.openView(mainViewFactory.createMainView()
 					.getViewWidget());
@@ -96,13 +98,13 @@ public class MollifyClient implements Client, SessionListener {
 		start();
 	}
 
-	private void openLogin() {
+	private void openLogin(SessionInfo session) {
 		if (!settings.getBool(PARAM_SHOW_LOGIN, true)) {
 			viewManager.empty();
 			return;
 		}
 
-		new LoginDialog(textProvider, new LoginHandler() {
+		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
 			public void login(String userName, String password,
 					final ConfirmationListener listener) {
 				Log.info("User login: " + userName);
@@ -125,7 +127,7 @@ public class MollifyClient implements Client, SessionListener {
 							}
 						});
 			}
-		});
+		}, serviceProvider, session.getFeatures().lostPassword());
 	}
 
 	private void showLoginError() {

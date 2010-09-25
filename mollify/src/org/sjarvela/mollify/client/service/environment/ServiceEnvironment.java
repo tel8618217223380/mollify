@@ -34,4 +34,6 @@ public interface ServiceEnvironment {
 
 	ExternalService getExternalService();
 
+	ExternalService getExternalService(String name);
+
 }
