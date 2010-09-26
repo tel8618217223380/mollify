@@ -30,7 +30,7 @@ public class BorderedControl extends FlexTable {
 
 	public BorderedControl(String style) {
 		this.style = style;
-		this.setStyleName(style);
+		this.setStylePrimaryName(style);
 		createCells();
 	}
 

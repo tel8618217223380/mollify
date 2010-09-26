@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -25,23 +26,31 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ResetPasswordPopup extends BubblePopup {
-	private final TextBox email;
-	private final Button reset;
 	private final ExternalService service;
 	private final DialogManager dialogManager;
+	private final TextProvider textProvider;
 
-	public ResetPasswordPopup(Widget parent, ExternalService service,
-			DialogManager dialogManager) {
-		super("reset-password", parent, null);
+	private final TextBox email;
+	private final Button reset;
+
+	public ResetPasswordPopup(TextProvider textProvider, Widget parent,
+			ExternalService service, DialogManager dialogManager) {
+		super(parent, null, "reset-password");
+		this.textProvider = textProvider;
 		this.service = service;
 		this.dialogManager = dialogManager;
+
 		email = new TextBox();
-		reset = createCallbackButton("TODO", "reset-button", new Callback() {
+		email.setStylePrimaryName("mollify-reset-password-popup-email");
+
+		reset = createCallbackButton(textProvider.getStrings()
+				.resetPasswordPopupButton(), "reset-button", new Callback() {
 			@Override
 			public void onCallback() {
 				onReset();
@@ -53,8 +62,16 @@ public class ResetPasswordPopup extends BubblePopup {
 	@Override
 	protected Widget createContent() {
 		Panel content = new FlowPanel();
+		content.setStylePrimaryName("mollify-reset-password-popup-content");
+
+		Label label = new Label(textProvider.getStrings()
+				.resetPasswordPopupMessage());
+		label.setStylePrimaryName("mollify-reset-password-popup-label");
+		content.add(label);
+
 		content.add(email);
 		content.add(reset);
+
 		return content;
 	}
 
@@ -79,22 +96,37 @@ public class ResetPasswordPopup extends BubblePopup {
 		service.post(data, new ResultListener() {
 			@Override
 			public void onFail(ServiceError error) {
-				if (error.getType().equals(ServiceErrorType.INVALID_REQUEST))
-					dialogManager
-							.showInfo("TODO", "TODO Invalid email address");
-				else if (error.getType()
-						.equals(ServiceErrorType.REQUEST_FAILED))
-					dialogManager
-							.showInfo("TODO", "TODO Could not reset email");
-				else
+				if (error.getType().equals(ServiceErrorType.INVALID_REQUEST)) {
+					dialogManager.showInfo(textProvider.getStrings()
+							.resetPasswordPopupTitle(), textProvider
+							.getStrings().resetPasswordPopupInvalidEmail());
+					email.setFocus(true);
+				} else if (error.getType().equals(
+						ServiceErrorType.REQUEST_FAILED)) {
+					ResetPasswordPopup.this.hide();
+					dialogManager.showInfo(textProvider.getStrings()
+							.resetPasswordPopupTitle(), textProvider
+							.getStrings().resetPasswordPopupResetFailed());
+				} else {
+					ResetPasswordPopup.this.hide();
 					dialogManager.showError(error);
+				}
+
 			}
 
 			@Override
 			public void onSuccess(Object result) {
-				dialogManager.showInfo("TODO", "todo Password has been reset");
+				ResetPasswordPopup.this.hide();
+				dialogManager.showInfo(textProvider.getStrings()
+						.resetPasswordPopupTitle(), textProvider.getStrings()
+						.resetPasswordPopupResetSuccess());
 			}
 		});
+	}
+
+	@Override
+	protected Widget createCloseButton() {
+		return null;
 	}
 
 }

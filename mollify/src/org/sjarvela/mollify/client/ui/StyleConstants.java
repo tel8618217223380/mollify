@@ -88,7 +88,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS = "mollify-header-select-options";
 	public static final String MAIN_VIEW_HEADER_FILE_ACTIONS = "mollify-header-file-actions";
 
-	public static final String FILE_CONTEXT = "mollify-file-context";
+	public static final String FILE_CONTEXT = "file-context";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
 	public static final String FILE_CONTEXT_WIDTH_ENFORCER = "mollify-file-context-width-enforcer";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";

@@ -13,25 +13,30 @@ package org.sjarvela.mollify.client.ui.common.popup;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.BorderedControl;
+import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class BubblePopup extends DropdownPopup {
 	protected final String styleName;
 
-	public BubblePopup(String styleName, Widget parent,
-			PopupPositioner popupPositioner) {
+	public BubblePopup(Widget parent, PopupPositioner popupPositioner,
+			String styleName) {
 		super(parent, popupPositioner);
 		this.styleName = styleName;
-		this.setStyleName(styleName);
+		this.setStylePrimaryName("mollify-bubble-popup");
+		this.addStyleDependentName(styleName);
 	}
 
 	protected void initialize() {
-		BorderedControl content = new BorderedControl(styleName + "-border");
+		BorderedControl content = new BorderedControl(
+				"mollify-bubble-popup-border");
+		content.addStyleDependentName(styleName);
 		content.setContent(createContent());
 
 		addItem(content);
@@ -46,12 +51,23 @@ public abstract class BubblePopup extends DropdownPopup {
 
 	protected Widget createPointer() {
 		FlowPanel pointer = new FlowPanel();
-		pointer.setStyleName(styleName + "-pointer");
+		pointer.setStylePrimaryName("mollify-bubble-popup-pointer");
+		pointer.addStyleDependentName(styleName);
 		return pointer;
 	}
 
 	protected Widget createCloseButton() {
-		return null;
+		final Label close = new Label();
+		close.setStyleName("mollify-bubble-popup-close");
+		close.addStyleDependentName(styleName);
+		HoverDecorator.decorate(close);
+		close.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				HoverDecorator.clear(close);
+				BubblePopup.this.hide();
+			}
+		});
+		return close;
 	}
 
 	protected ActionButton createButton(String title, String id) {

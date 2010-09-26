@@ -44,7 +44,7 @@ public class PhpExternalService extends ServiceBase implements ExternalService {
 
 	@Override
 	public String getUrl(String path) {
-		return serviceUrl().item(path).build();
+		return serviceUrl().build() + path;
 	}
 
 }

@@ -440,4 +440,16 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String copyHereDialogTitle();
 
+	public String resetPasswordPopupMessage();
+
+	public String resetPasswordPopupButton();
+
+	public String resetPasswordPopupTitle();
+
+	public String resetPasswordPopupInvalidEmail();
+
+	public String resetPasswordPopupResetFailed();
+
+	public String resetPasswordPopupResetSuccess();
+
 }

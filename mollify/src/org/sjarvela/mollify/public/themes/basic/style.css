@@ -12,12 +12,12 @@
  * this entire header must remain intact.
  */
 
-#mollify, .mollify-dropdown-menu-item, .mollify-file-context, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip, .mollify-dropbox {
+#mollify, .mollify-dropdown-menu-item, .mollify-bubble-popup, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip, .mollify-dropbox {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	font-size: 8pt;
 }
 
-#mollify, .mollify-header, .mollify-header-container, .mollify-file-context td, .mollify-directory-context td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
+#mollify, .mollify-header, .mollify-header-container, .mollify-bubble-popup td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
@@ -819,7 +819,7 @@ td#mollify-filelist-column-size {
 	height: 15px;
 }
 
-.mollify-file-context-action, .mollify-directory-context-action, #mollify-file-context-actions {
+.file-context-action, .directory-context-action, #mollify-file-context-actions {
 	height: 25px;
 	margin-right: 6px;
 	margin-top: 6px;
@@ -828,7 +828,7 @@ td#mollify-filelist-column-size {
 	float: left;
 }
 
-.mollify-file-context-multiaction {
+.file-context-multiaction {
 	float: left;
 }
 
@@ -836,14 +836,14 @@ td#mollify-filelist-column-size {
 	float: right;
 }
 
-.mollify-file-context-border, .mollify-directory-context-border {
+.mollify-bubble-popup-border {
 	border-width: 0;
 	border-spacing: 0;
 	margin: 0;
 	padding: 0;
 }
 
-.mollify-file-context-pointer, .mollify-directory-context-pointer {
+.mollify-bubble-popup-pointer {
 	width: 30px;
 	height: 15px;
 	background: url(b-tip.png) no-repeat 0 0;
@@ -852,7 +852,7 @@ td#mollify-filelist-column-size {
 	left: 13px;
 }
 
-.mollify-file-context-close, .mollify-file-context-close-hover, .mollify-directory-context-close, .mollify-directory-context-close-hover {
+.mollify-bubble-popup-close, .mollify-bubble-popup-close-hover {
 	width: 12px;
 	height: 12px;
 	position: absolute;
@@ -862,55 +862,55 @@ td#mollify-filelist-column-size {
 	background: url(b-close.png) no-repeat;
 }
 
-.mollify-file-context-close-hover, .mollify-directory-context-close-hover {
+.mollify-bubble-popup-close-hover {
 	background: url(b-close-over.png) no-repeat;
 }
 
-.mollify-file-context-border-nw, .mollify-directory-context-border-nw {
+.mollify-bubble-popup-border-nw {
 	background: url(b-nw.png) no-repeat 0 0;
 	width: 19px;
 	height: 12px;
 }
 
-.mollify-file-context-border-n, .mollify-directory-context-border-n {
+.mollify-bubble-popup-border-n {
 	background: url(b-n.png) repeat-x 0 0;
 	height: 12px;
 }
 
-.mollify-file-context-border-ne, .mollify-directory-context-border-ne {
+.mollify-bubble-popup-border-ne {
 	background: url(b-ne.png) no-repeat 0 0;
 	width: 19px;
 	height: 12px;
 }
 
-.mollify-file-context-border-w, .mollify-directory-context-border-w {
+.mollify-bubble-popup-border-w {
 	background: url(b-w.png) repeat-y;
 	width: 19px;
 }
 
-.mollify-file-context-border-e, .mollify-directory-context-border-e {
+.mollify-bubble-popup-border-e {
 	background: url(b-e.png) repeat-y;
 	width: 19px;
 }
 
-.mollify-file-context-border-sw, .mollify-directory-context-border-sw {
+.mollify-bubble-popup-border-sw {
 	background: url(b-sw.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.mollify-file-context-border-s, .mollify-directory-context-border-s {
+.mollify-bubble-popup-border-s {
 	background: url(b-s.png) repeat-x;
 	height: 20px;
 }
 
-.mollify-file-context-border-se, .mollify-directory-context-border-se {
+.mollify-bubble-popup-border-se {
 	background: url(b-se.png) no-repeat;
 	width: 19px;
 	height: 20px;
 }
 
-.mollify-file-context-content, .mollify-directory-context-content {
+.mollify-file-context-content {
 	background-color: white;
 	padding-top: 3px;
 	padding-bottom: 0px;
@@ -938,11 +938,32 @@ td#mollify-filelist-column-size {
 	padding: 4px;
 }
 
-.mollify-actionlink-file-context-description, .mollify-actionlink-file-context-permission {
-	text-align: right;
+.mollify-actionlink {
 	color: #6488cd;
 	cursor: pointer;
-	display: inline;
+	display: inline;	
+}
+
+.mollify-reset-password-popup-email {
+	width: 200px;
+}
+
+#reset-password-action-reset-button {
+	margin-left: 6px;
+	width: 60px;
+}
+
+.mollify-reset-password-popup-content {
+	background-color: white;
+}
+
+.mollify-reset-password-popup-label {
+	padding-top: 4px;
+	padding-bottom: 8px;
+}
+
+.mollify-actionlink-file-context-description, .mollify-actionlink-file-context-permission {
+	text-align: right;
 	margin-left: 12px;
 }
 
@@ -1247,6 +1268,11 @@ table.mollify-login-dialog-content {
 
 .mollify-login-dialog-username-value, .mollify-login-dialog-password-value {
 	width: 170px;
+}
+
+.mollify-actionlink-reset-password {
+	float: right;
+	margin-top: 2px;
 }
 
 .mollify-dialog-progress .dialogContent {
