@@ -42,19 +42,24 @@ public class JsFile extends JavaScriptObject {
 		return this.extension;
 	}-*/;
 
-	public final native int getSize() /*-{
+	public final Long getSize() {
+		return Long.valueOf(getSizeString());
+	}
+
+	private final native String getSizeString() /*-{
 		return this.size;
 	}-*/;
 
 	public static JsFile create(String id, String rootId, String name,
-			String parentId, String extension, int size) {
+			String parentId, String extension, long size) {
 		JsFile result = JsFile.createObject().cast();
-		result.putValues(id, rootId, name, parentId, extension, size);
+		result.putValues(id, rootId, name, parentId, extension, Long
+				.toString(size));
 		return result;
 	}
 
 	private final native void putValues(String id, String rootId, String name,
-			String parentId, String extension, int size) /*-{
+			String parentId, String extension, String size) /*-{
 		this.id = id;
 		this.root_id = rootId;
 		this.name = name;

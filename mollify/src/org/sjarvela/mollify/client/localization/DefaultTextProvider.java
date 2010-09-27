@@ -43,7 +43,12 @@ public class DefaultTextProvider implements TextProvider {
 					: getMessages().sizeInKilobytes(kilobytes));
 		}
 
-		double megabytes = (double) bytes / (double) (1024 * 1024);
-		return getMessages().sizeInMegabytes(megabytes);
+		if (bytes < (1024l * 1024l * 1024l)) {
+			double megabytes = (double) bytes / (double) (1024 * 1024);
+			return getMessages().sizeInMegabytes(megabytes);
+		}
+
+		double gigabytes = (double) bytes / (double) (1024 * 1024 * 1024);
+		return getMessages().sizeInGigabytes(gigabytes);
 	}
 }

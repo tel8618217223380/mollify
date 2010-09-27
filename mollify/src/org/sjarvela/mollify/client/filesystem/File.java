@@ -18,12 +18,12 @@ public class File extends FileSystemItem {
 	public static File Empty = new File();
 
 	private final String extension;
-	private final int size;
+	private final Long size;
 
 	private File() {
 		super("", "", "", "", "");
 		extension = "";
-		size = 0;
+		size = 0l;
 	}
 
 	protected File(JsFile file) {
@@ -32,7 +32,7 @@ public class File extends FileSystemItem {
 	}
 
 	public File(String id, String rootId, String name, String path,
-			String parentId, String extension, int size) {
+			String parentId, String extension, long size) {
 		super(id, rootId, name, path, parentId);
 		this.extension = extension;
 		this.size = size;
@@ -42,12 +42,12 @@ public class File extends FileSystemItem {
 		return extension;
 	}
 
-	public final int getSize() {
+	public final long getSize() {
 		return size;
 	}
 
-	public final int getSizeInKB() {
-		return getSize() / 1024;
+	public final long getSizeInKB() {
+		return getSize() / 1024l;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.filelist;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
@@ -35,22 +36,26 @@ public class DefaultFileItemComparator implements
 	}
 
 	public int compare(FileSystemItem item1, FileSystemItem item2) {
+		if (Folder.Parent.equals(item1) && !Folder.Parent.equals(item2))
+			return -1;
+		if (Folder.Parent.equals(item2) && !Folder.Parent.equals(item1))
+			return 1;
 		if (item1.isFile() && !item2.isFile())
 			return 1;
 		if (item2.isFile() && !item1.isFile())
 			return -1;
 
 		if (FileList.COLUMN_SIZE.equals(column))
-			return (getSize(item1) - getSize(item2)) * sort.getCompareFactor();
+			return item1.isFile() ? getSizeCompare(item1, item2) : 0;
 
 		return getData(item1).compareToIgnoreCase(getData(item2))
 				* sort.getCompareFactor();
 	}
 
-	private int getSize(FileSystemItem item) {
-		if (item.isFile())
-			return ((File) item).getSize();
-		return 0;
+	private int getSizeCompare(FileSystemItem item1, FileSystemItem item2) {
+		int diff = Math.abs((int) ((File) item1).getSize())
+				- Math.abs((int) ((File) item2).getSize());
+		return diff * sort.getCompareFactor();
 	}
 
 	private String getData(FileSystemItem item) {

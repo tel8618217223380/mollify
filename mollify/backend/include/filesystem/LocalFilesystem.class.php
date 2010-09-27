@@ -276,7 +276,8 @@
 		}
 		
 		public function size($file) {
-			return filesize($this->localPath($file));
+			Logging::logDebug($file->name().filesize($this->localPath($file)));
+			return sprintf("%u", filesize($this->localPath($file)));
 		}
 		
 		public function lastModified($item) {
