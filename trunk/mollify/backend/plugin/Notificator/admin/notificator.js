@@ -157,24 +157,35 @@ function NotificatorListView() {
 			$("#add-notification-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
-				height: 400,
-				width: 650,
+				height: 'auto',
+				width: 350,
 				modal: true,
-				resizable: true,
+				resizable: false,
 				title: "Add Notification",
-				buttons: {
-					Cancel: function() {
-						$(this).dialog('close');
-					},
-					Add: function() {
-					}
-				}
+				buttons: {}
 			});
 		}
 		
-		$("#name").val("");
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			},
+			Add: function() {
+				var name = $("#notification-name").val();
+				alert(name);
+				if (name.length == 0) return;
+				
+				addNotification(name, function() {
+					$(this).dialog('close');
+					that.onRefresh();
+				}, onServerError);
+			}
+		}
+		$("#add-notification-dialog").dialog('option', 'buttons', buttons);
 		
-		var typesList = $("#types-list");
+		$("#notification-name").val("");
+		
+		/*var typesList = $("#types-list");
 		typesList.jqGrid('clearGridData');
 		
 		var availableTypesList = $("#available-types-list");
@@ -193,7 +204,7 @@ function NotificatorListView() {
 		for(var i=0;i < that.users.length;i++) {
 			var user = that.users[i];
 			availableUsersList.jqGrid('addRowData', user.id, user);
-		}
+		}*/
 		
 		$("#add-notification-dialog").dialog('open');
 	}
@@ -201,4 +212,9 @@ function NotificatorListView() {
 
 function getNotifications(success, fail) {
 	request("GET", 'notificator/list/', success, fail);
+}
+
+function addNotification(name, success, fail) {
+	var data = JSON.stringify({name:name});
+	request("POST", 'notificator/list/', success, fail, data);
 }

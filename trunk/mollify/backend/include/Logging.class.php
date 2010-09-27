@@ -9,15 +9,16 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-
+	include_once("Util.class.php");
+	
 	class Logging {
 		private static $debug = FALSE;
 		private static $firebug = FALSE;
 		private static $trace = array();
 	
 		static function initialize($settings) {
-			self::$debug = isset($settings["debug"]) and $settings['debug'];
-			self::$firebug = isset($settings["firebug_logging"]) and $settings['firebug_logging'];
+			self::$debug = (isset($settings) and isset($settings["debug"]) and $settings['debug'] === TRUE);
+			self::$firebug = (isset($settings) and isset($settings["firebug_logging"]) and $settings['firebug_logging'] === TRUE);
 
 			if (self::$firebug) {
 				require_once('FirePHPCore/fb.php');
@@ -54,7 +55,7 @@
 			$s = self::toStr($m);
 			error_log("MOLLIFY ERROR: ".$s);
 			
-			if (self::$firebug) FB::error($message);
+			if (self::$firebug) FB::error($m);
 			if (self::isDebug()) self::$trace[] = $s;
 		}
 
