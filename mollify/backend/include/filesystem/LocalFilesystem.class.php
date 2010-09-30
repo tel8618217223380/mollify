@@ -257,7 +257,11 @@
 		public function createFolder($folder, $name) {
 			$path = self::folderPath(self::joinPath($this->localPath($folder), $name));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
-			if (!mkdir($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE))) throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
+			if (!mkdir($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE))) {
+				throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
+			} else {
+				chmod($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE));
+			}
 			return $this->itemWithPath($this->publicPath($path));
 		}
 		
