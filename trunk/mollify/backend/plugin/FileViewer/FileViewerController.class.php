@@ -133,6 +133,8 @@
 			if ($this->plugin->env()->session()->isActive()) {
 				$s = $this->plugin->env()->session()->getSessionInfo();
 				$url .= '?session='.$s["session_id"];
+			} else {
+				$url .= '?nosession=1';
 			}
 			return $url;
 		}
