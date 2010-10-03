@@ -24,10 +24,18 @@
 			
 			if (!$this->isValidPath($this->request->method(), $this->path)) throw $this->invalidRequestException();
 		}
+
+		public function isAuthenticated() {
+			if ($this->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) return FALSE;
+			if ($this->isAuthenticationRequired() and $this->isAdminRequired() and !$this->env->authentication()->isAdmin()) return FALSE;
+			return TRUE;
+		}
 		
-		public function isAuthenticationRequired() {
+		protected function isAuthenticationRequired() {
 			return $this->env->configuration()->isAuthenticationRequired();
 		}
+		
+		protected function isAdminRequired() { return FALSE; }
 		
 		protected function isValidPath($method, $path) {
 			return FALSE;

@@ -46,7 +46,7 @@
 			$this->environment->initialize($request);
 			$service = $this->environment->getService($request);
 			
-			if ($service->isAuthenticationRequired() and !$this->environment->authentication()->isAuthenticated()) {
+			if (!$service->isAuthenticated()) {
 				$this->environment->session()->reset();
 				throw new ServiceException("UNAUTHORIZED");
 			}

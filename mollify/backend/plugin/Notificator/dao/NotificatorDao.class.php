@@ -22,7 +22,20 @@
 			$result = $db->query("select `id`, `name` from ".$db->table("notificator_notification")." order by id asc")->rows();
 			return $result;
 		}
-		
+
+		public function getNotification($id) {
+			$db = $this->env->configuration()->db();
+			
+			$query = "select ntf.`id`, ntf.`name`, ntf.`message_title`, ntf.`message`, evt.`event_type`, ntf_user.`name` as ntf_usr_name, ntf_user.`email` as ntf_usr_email ";
+			
+			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.`notification_id` = ntf.`id` left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.`notification_id` = ntf.`id` left outer join ".$db->table("user")." ntf_user on ntf_user.`id` = ntf_usr.`user_id` ";
+			
+			$query .= "where ntf.`id` = ".$db->string($id, TRUE);
+			
+			$result = $db->query($query)->rows();
+			return $result;
+		}
+
 		public function findNotifications($typeId, $userId) {
 			$db = $this->env->configuration()->db();
 			
@@ -48,6 +61,13 @@
 			}
 			
 			return $result;
+		}
+		
+		public function addNotification($data) {
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification")." (name) VALUES ('%s')", $db->string($data["name"])));
+			return $db->lastId();
+			return TRUE;
 		}
 		
 		public function __toString() {

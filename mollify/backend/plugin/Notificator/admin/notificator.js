@@ -15,6 +15,7 @@ function NotificatorListView() {
 	
 	this.onLoadView = function() {
 		$("#button-add-notification").click(that.openAddNotification);
+		$("#button-remove-notification").click(that.onRemoveNotification);
 		$("#button-refresh").click(that.onRefresh);
 
 		$("#notifications-list").jqGrid({        
@@ -135,10 +136,23 @@ function NotificatorListView() {
 	this.onNotificationSelectionChanged = function() {
 		var n = that.getSelectedNotification();
 		var selected = (n != null);
-		if (selected) notification = that.getNotification(n);
+		enableButton("button-remove-notification", selected);
 		
-//		enableButton("button-remove-notification", selected);
-//		enableButton("button-edit-notification", selected);
+		if (!n) {
+			$("#notification-details").html("Select notification from the list");
+			if (that.list.length == 0) {
+				$("#notification-details").html('<div class="message">Click "Add Notification" to create a new notification</div>');
+			} else {
+				$("#notification-details").html('<div class="message">Select a notification from the list to view details</div>');
+			}
+			return;
+		}
+
+		getNotificationDetails(n, that.showNotificationDetails, onServerError);
+	}
+	
+	this.showNotificationDetails = function(d) {
+		$("#notification-details").html("joo");
 	}
 	
 	function timeFormatter(time, options, obj) {
@@ -172,11 +186,10 @@ function NotificatorListView() {
 			},
 			Add: function() {
 				var name = $("#notification-name").val();
-				alert(name);
 				if (name.length == 0) return;
 				
 				addNotification(name, function() {
-					$(this).dialog('close');
+					$("#add-notification-dialog").dialog('close');
 					that.onRefresh();
 				}, onServerError);
 			}
@@ -208,13 +221,27 @@ function NotificatorListView() {
 		
 		$("#add-notification-dialog").dialog('open');
 	}
+	
+	this.onRemoveNotification = function() {
+		var id = that.getSelectedNotification();
+		if (id == null) return;
+		removeNotification(id, that.refresh, onServerError);
+	}
 }
 
 function getNotifications(success, fail) {
 	request("GET", 'notificator/list/', success, fail);
 }
 
+function getNotificationDetails(id, success, fail) {
+	request("GET", 'notificator/list/'+id, success, fail);
+}
+
 function addNotification(name, success, fail) {
 	var data = JSON.stringify({name:name});
 	request("POST", 'notificator/list/', success, fail, data);
+}
+
+function removeNotification(id, success, fail) {
+	request("DELETE", 'notificator/list/'+id, success, fail, data);
 }
