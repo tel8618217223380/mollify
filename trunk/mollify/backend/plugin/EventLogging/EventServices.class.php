@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli J�rvel�
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -11,6 +11,8 @@
 	 */
 
 	class EventServices extends ServicesBase {
+		protected function isAdminRequired() { return TRUE; }
+		
 		protected function isValidPath($method, $path) {
 			if (count($path) < 1 or count($path) > 2)
 				return FALSE;
@@ -18,7 +20,6 @@
 		}
 		
 		public function processPost() {
-			$this->env->authentication()->assertAdmin();
 			if (count($this->path) == 1 and $this->path[0] === 'query') {
 				$this->response()->success($this->processQuery());
 				return;

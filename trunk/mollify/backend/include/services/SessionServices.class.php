@@ -25,7 +25,7 @@
 			return TRUE;
 		}
 		
-		public function isAuthenticationRequired() {
+		protected function isAuthenticationRequired() {
 			return FALSE;
 		}
 
