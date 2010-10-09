@@ -17,9 +17,9 @@ Localizing Mollify into new language requires following steps:
 
 4) Send files to me
 
-= How to modify existing localizations =
+= How to update existing localizations =
 
-1) Open latest English version for the texts by following the link, and find the ones requiring modifications
+1) Open latest English version for the texts by following the link, and find the ones requiring updates
 
   * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
   * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
