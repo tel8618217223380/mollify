@@ -19,13 +19,10 @@ Localizing Mollify into new language requires following steps:
 
 = How to update existing localizations =
 
-1) Open latest English version for the texts by following the link, and find the ones requiring updates
+1) Open following link and find the language files requiring updates: http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/
 
-  * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
-  * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
-
-2) Copy entire lines into a new text file, and make necessay modifications
+2) Copy entire file into a new text file, and make necessary modifications
 
 3) Save the files in UTF-8 encoding with a locale identifier in the filename, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
 
-4) Send file to me
+4) Send file(s) to me
