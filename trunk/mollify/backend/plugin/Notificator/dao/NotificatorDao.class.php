@@ -26,13 +26,31 @@
 		public function getNotification($id) {
 			$db = $this->env->configuration()->db();
 			
-			$query = "select ntf.`id`, ntf.`name`, ntf.`message_title`, ntf.`message`, evt.`event_type`, ntf_user.`name` as ntf_usr_name, ntf_user.`email` as ntf_usr_email ";
+			$query = "select ntf.`id`, ntf.`name`, ntf.`message_title`, ntf.`message`, evt.`event_type`, ntf_user.`id` as ntf_usr_id, ntf_user.`name` as ntf_usr_name, ntf_user.`email` as ntf_usr_email ";
 			
 			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.`notification_id` = ntf.`id` left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.`notification_id` = ntf.`id` left outer join ".$db->table("user")." ntf_user on ntf_user.`id` = ntf_usr.`user_id` ";
 			
 			$query .= "where ntf.`id` = ".$db->string($id, TRUE);
 			
-			$result = $db->query($query)->rows();
+			$rows = $db->query($query)->rows();
+			if (count($rows) == 0) return FALSE;
+			
+			$first = $rows[0];
+			$result = array(
+				"id" => $first["id"],
+				"name" => $first["name"],
+				"message" => $first["message"],
+				"message_title"  => $first["message_title"],
+				"events" => array(),
+				"users" => array(),
+				"recipients" => array()
+			);
+			
+			$eventId = NULL;
+			foreach($rows as $row) {
+				$event = $row["event_type"];
+			}
+			
 			return $result;
 		}
 

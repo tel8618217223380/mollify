@@ -63,6 +63,7 @@
 		
 		public function sendResponse($response) {
 			header($this->getStatus($response));
+			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header('Content-type: text/html');
 			
 			$data = $response->data();
@@ -113,12 +114,13 @@
 		}
 		
 		private function doSendBinary($stream) {
+			if ($this->supportOutputBuffer) ob_start();
 			$count = 0;
 			while (!feof($stream)) {
 				$count = $count + 1;
 				set_time_limit(0);
 				echo fread($stream, 1024);
-				if ($this->supportOutputBuffer) ob_flush();
+				if ($this->supportOutputBuffer) @ob_flush();
 				flush();
 			}
 			fclose($stream);
