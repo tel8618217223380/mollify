@@ -21,15 +21,14 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionSeparator;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class NativeItemContextProvider implements ItemContextProvider {
-	@SuppressWarnings("unused")
 	private final JavaScriptObject dp;
 
 	public NativeItemContextProvider(JavaScriptObject dp) {
@@ -57,12 +56,12 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			if ("section".equals(type))
 				components.add(new NativeItemContextSection(c
 						.getString("title"), c.getString("html"), c
-						.getObject("on_init"), c.getObject("on_context_close"), c
-						.getObject("on_open"), c.getObject("on_close")));
+						.getObject("on_init"), c.getObject("on_context_close"),
+						c.getObject("on_open"), c.getObject("on_close")));
 			else if ("custom".equals(type))
 				components.add(new NativeItemContextComponent(c
-						.getObject("on_init"), c.getObject("on_context_close"), c
-						.getString("html")));
+						.getObject("on_init"), c.getObject("on_context_close"),
+						c.getString("html")));
 			else
 				throw new RuntimeException("Invalid component type: " + type);
 		}
@@ -74,8 +73,8 @@ public class NativeItemContextProvider implements ItemContextProvider {
 		JsObj actionsDef = r.getJsObj("actions");
 
 		addActions(actions, ActionType.Primary, actionsDef.getArray("primary"));
-		addActions(actions, ActionType.Secondary, actionsDef
-				.getArray("secondary"));
+		addActions(actions, ActionType.Secondary,
+				actionsDef.getArray("secondary"));
 
 		return actions;
 	}

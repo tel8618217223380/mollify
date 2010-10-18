@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ContextCallbackAction;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class NativeItemContextAction extends ContextCallbackAction {
-	@SuppressWarnings("unused")
 	private final JavaScriptObject cb;
 
 	public NativeItemContextAction(String title, JavaScriptObject cb) {

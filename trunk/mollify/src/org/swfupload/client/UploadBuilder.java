@@ -16,12 +16,11 @@ import org.swfupload.client.event.UploadStartHandler;
 import org.swfupload.client.event.UploadSuccessHandler;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
 public class UploadBuilder {
-	@SuppressWarnings("unused")
 	private static void fireDebugEvent(DebugHandler handler, String message) {
 		DebugHandler.DebugEvent event = new DebugHandler.DebugEvent(message);
 		UncaughtExceptionHandler ueh = GWT.getUncaughtExceptionHandler();
@@ -36,7 +35,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireDialogStartEvent(DialogStartHandler handler) {
 		UncaughtExceptionHandler ueh = GWT.getUncaughtExceptionHandler();
 		if (ueh != null) {
@@ -50,7 +48,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireFileDialogCompleteEvent(
 			FileDialogCompleteHandler handler, int selected, int queued) {
 		FileDialogCompleteHandler.FileDialogCompleteEvent event = new FileDialogCompleteHandler.FileDialogCompleteEvent(
@@ -67,7 +64,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireFileQueuedEvent(FileQueuedHandler handler, File file) {
 		FileQueuedHandler.FileQueuedEvent event = new FileQueuedHandler.FileQueuedEvent(
 				file);
@@ -83,7 +79,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireFileQueueErrorEvent(FileQueueErrorHandler handler,
 			File f, int queueError, String message) {
 		FileQueueErrorHandler.FileQueueErrorEvent event = new FileQueueErrorHandler.FileQueueErrorEvent(
@@ -100,7 +95,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireSWFUploadLoadedEvent(SWFUploadLoadedHandler handler) {
 		UncaughtExceptionHandler ueh = GWT.getUncaughtExceptionHandler();
 		if (ueh != null) {
@@ -114,7 +108,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireUploadCompleteEvent(UploadCompleteHandler handler,
 			File file) {
 		UploadCompleteHandler.UploadCompleteEvent event = new UploadCompleteHandler.UploadCompleteEvent(
@@ -131,7 +124,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireUploadErrorEvent(UploadErrorHandler handler,
 			File file, int uploadError, String message) {
 		UploadErrorHandler.UploadErrorEvent event = new UploadErrorHandler.UploadErrorEvent(
@@ -148,7 +140,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireUploadProgressEvent(UploadProgressHandler handler,
 			File file, double bytesComplete, double totalBytes) {
 		UploadProgressHandler.UploadProgressEvent event = new UploadProgressHandler.UploadProgressEvent(
@@ -165,7 +156,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireUploadStartEvent(UploadStartHandler handler,
 			File file) {
 		UploadStartHandler.UploadStartEvent event = new UploadStartHandler.UploadStartEvent(
@@ -182,7 +172,6 @@ public class UploadBuilder {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static void fireUploadSuccessEvent(UploadSuccessHandler handler,
 			File file, String data) {
 		UploadSuccessHandler.UploadSuccessEvent event = new UploadSuccessHandler.UploadSuccessEvent(

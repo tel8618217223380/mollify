@@ -35,7 +35,6 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ItemContextProvider itemContextProvider;
 	private final SessionProvider sessionProvider;
 	private final ServiceProvider serviceProvider;
-	@SuppressWarnings("unused")
 	private final String locale;
 	private final DialogManager dialogManager;
 
