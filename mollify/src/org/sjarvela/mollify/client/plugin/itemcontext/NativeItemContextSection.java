@@ -18,9 +18,7 @@ public class NativeItemContextSection extends NativeItemContextComponent
 		implements ItemContextSection {
 	private final String title;
 
-	@SuppressWarnings("unused")
 	private final JavaScriptObject onOpen;
-	@SuppressWarnings("unused")
 	private final JavaScriptObject onClose;
 
 	public NativeItemContextSection(String title, String html,

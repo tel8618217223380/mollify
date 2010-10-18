@@ -163,7 +163,6 @@
 
 .toggle-panel-content * {
 	font-size: 11px;
-	padding-top: 4px;
 }
 
 .toggle-panel-content code {
@@ -263,7 +262,7 @@
 	border: 1px solid #aaacac;
 	height: 16px;
 	margin-top: 4px;
-	margin-bottom: 7px;
+	margin-bottom: 4px;
 	width: 250px;
 }
 
@@ -453,12 +452,8 @@ select#event-user, select#event-type {
 }
 
 .form-data .title {
-	background-color: #e9f1fd;
 	width: 100%;
-	height: 20px;
 	padding-left: 5px;
-	padding-top: 4px;
-	margin-bottom: 6px;
 }
 
 .form-data-left {
@@ -467,4 +462,31 @@ select#event-user, select#event-type {
 
 .form-data-right {
 	float: left;
+}
+
+.notification-details-section {
+	clear: both;
+	height: 26px;
+}
+
+.notification-details-section .title {
+	background-color: #f5f5f5;
+	font-weight: bold;
+	float: left;
+	width: 100%;
+	height: 20px;
+	padding-top: 4px;
+	padding-left: 4px;
+	border-bottom: 1px dotted #bbb;
+	color: #737373;
+}
+
+.notification-details-section .content {
+	width: 100%;
+	background-color: #f7f9f9;
+	float: left;
+	padding-left: 4px;
+	margin: 0 0 8px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }

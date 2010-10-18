@@ -9,10 +9,10 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-	 
-	require_once("DbConfigurationProvider.class.php");
 
-	class MySQLConfigurationProvider extends DbConfigurationProvider {
+	require_once("DbConfigurationProvider.class.php");
+	
+	class PostgresqlConfigurationProvider extends DbConfigurationProvider {
 		const VERSION = "1_6_0";
 		
 		public function __construct($settings) {
@@ -29,8 +29,8 @@
 			if (isset($DB_TABLE_PREFIX)) $tablePrefix = $DB_TABLE_PREFIX;
 			else $tablePrefix = "";
 			
-			require_once("include/mysql/MySQLDatabase.class.php");
-			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
+			require_once("include/postgresql/PostgresqlDatabase.class.php");
+			$this->db = new PostgresqlDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
 			
 			$this->db->connect();
 			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);

@@ -19,6 +19,9 @@
 			} else if (!$configurationProviderId or strcasecmp($configurationProviderId, 'mysql') == 0) {
 				require_once("configuration/MySQLConfigurationProvider.class.php");
 				return new MySQLConfigurationProvider($settings);
+			} else if (!$configurationProviderId or strcasecmp($configurationProviderId, 'postgresql') == 0) {
+				require_once("configuration/PostgresqlConfigurationProvider.class.php");
+				return new PostgresqlConfigurationProvider($settings);
 			} else {
 				Logging::logError("Unsupported data provider: [".$configurationProviderId."]");
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported data provider: [".$configurationProviderId."]");

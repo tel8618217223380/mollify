@@ -25,9 +25,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 
 	private final String html;
 
-	@SuppressWarnings("unused")
 	private final JavaScriptObject onInit;
-	@SuppressWarnings("unused")
 	private final JavaScriptObject onContextClose;
 
 	private Widget component = null;

@@ -15,7 +15,6 @@ import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class NativeResponseProcessor implements ResponseProcessor {
-	@SuppressWarnings("unused")
 	private final JavaScriptObject cb;
 
 	public NativeResponseProcessor(JavaScriptObject cb) {

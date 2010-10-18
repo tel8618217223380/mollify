@@ -16,7 +16,6 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultEventDispatcher implements EventDispatcher {
-	@SuppressWarnings("unused")
 	private JavaScriptObject callbacks = JavaScriptObject.createArray();
 
 	@Inject
@@ -36,5 +35,4 @@ public class DefaultEventDispatcher implements EventDispatcher {
 		for (i=0; i < this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks.length; i++)
 			this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks[i](event);
 	}-*/;
-
 }

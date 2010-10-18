@@ -137,8 +137,9 @@ function NotificatorListView() {
 		var n = that.getSelectedNotification();
 		var selected = (n != null);
 		enableButton("button-remove-notification", selected);
+		that.editing = null;
 		
-		if (!n) {
+		if (!n) {	
 			$("#notification-details").html("Select notification from the list");
 			if (that.list.length == 0) {
 				$("#notification-details").html('<div class="message">Click "Add Notification" to create a new notification</div>');
@@ -152,7 +153,25 @@ function NotificatorListView() {
 	}
 	
 	this.showNotificationDetails = function(d) {
-		$("#notification-details").html("joo");
+		that.editing = d;
+		
+		var html = $.template("<div id='notification-details-info' class='details-info'><h1>Notification ${id}</h1></div>").apply(d);
+		html += "<div id='notification-details-data' class='details-data'>";
+		
+		html += that.detailSection("id", "ID", that.detailValue('id', d.id));
+		html += that.detailSection("name", "Name", that.detailValue('name', d.name));
+		html += that.detailSection("message", "Message", 'foo');
+		
+		html += "</div>";
+		$("#notification-details").html(html);
+	}
+	
+	this.detailSection = function(id, title, html) {
+		return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}</div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html});
+	}
+
+	this.detailValue = function(id, value) {
+		return $.template("<div class='notification-details-value'>${value}</div>").apply({id:id, value:value});
 	}
 	
 	function timeFormatter(time, options, obj) {
