@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
@@ -74,15 +75,22 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 
 	private void createActions(FileSystemItem item, ItemDetails details,
 			ItemContextActionsBuilder actions) {
-		boolean writable = (details == null ? false : details
-				.getFilePermission().canWrite());
+		boolean writable = isWritable(item, details);
 
-		createDownloadActions(item, actions
-				.type(ItemContext.ActionType.Download));
-		createPrimaryActions(item, details, actions
-				.type(ItemContext.ActionType.Primary));
-		createSecondaryActions(item, actions
-				.type(ItemContext.ActionType.Secondary), writable);
+		createDownloadActions(item,
+				actions.type(ItemContext.ActionType.Download));
+		createPrimaryActions(item, details,
+				actions.type(ItemContext.ActionType.Primary));
+		createSecondaryActions(item,
+				actions.type(ItemContext.ActionType.Secondary), writable);
+	}
+
+	private boolean isWritable(FileSystemItem item, ItemDetails details) {
+		if (details == null)
+			return false;
+		if (!item.isFile() && ((Folder) item).isRoot())
+			return false;
+		return details.getFilePermission().canWrite();
 	}
 
 	private void createDownloadActions(FileSystemItem item,
@@ -109,8 +117,9 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 
 	private void createSecondaryActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions, boolean writable) {
-		actions.add(Action.addToDropbox, textProvider.getStrings()
-				.mainViewSelectActionAddToDropbox());
+		if (item.isFile() || !((Folder) item).isRoot())
+			actions.add(Action.addToDropbox, textProvider.getStrings()
+					.mainViewSelectActionAddToDropbox());
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().publicLinks())
 			actions.add(FileSystemAction.publicLink, textProvider.getStrings()
@@ -145,14 +154,14 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	}
 
 	private ItemContextComponent createDescriptionComponent() {
-		return new DescriptionComponent(textProvider, serviceProvider
-				.getFileSystemService(), sessionProvider.getSession(),
-				dialogManager);
+		return new DescriptionComponent(textProvider,
+				serviceProvider.getFileSystemService(),
+				sessionProvider.getSession(), dialogManager);
 	}
 
 	private ItemContextComponent createPreviewComponent() {
-		return new PreviewComponent(textProvider, serviceProvider
-				.getExternalService());
+		return new PreviewComponent(textProvider,
+				serviceProvider.getExternalService());
 	}
 
 	private ItemContextComponent createDetailsComponent() {

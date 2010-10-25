@@ -137,8 +137,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	private Widget createDropdownButton(List<ContextActionItem> items) {
 		MultiActionButton downloadButton = createMultiActionButton(
 				actionListener, textProvider.getStrings()
-						.fileActionDownloadTitle(), FileSystemAction.download
-						.name());
+						.fileActionDownloadTitle(),
+				FileSystemAction.download.name());
 
 		boolean first = true;
 		for (ContextActionItem item : items) {
@@ -148,7 +148,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 				if (first)
 					downloadButton.setDefaultAction(action.getAction());
 			} else if (item instanceof ContextActionSeparator) {
-				downloadButton.addSeparator();
+				if (!first)
+					downloadButton.addSeparator();
 			}
 			first = false;
 		}
@@ -159,8 +160,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	private Widget createButton(ContextActionItem item) {
 		if (item instanceof ContextAction) {
 			ContextAction action = (ContextAction) item;
-			return createActionButton(action.getTitle(), actionListener, action
-					.getAction());
+			return createActionButton(action.getTitle(), actionListener,
+					action.getAction());
 		} else if (item instanceof ContextCallbackAction) {
 			final ContextCallbackAction action = (ContextCallbackAction) item;
 			return createCallbackButton(action.getTitle(), null,
@@ -176,13 +177,18 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	}
 
 	private void setupSecondaryActions(List<ContextActionItem> items) {
+		int index = 0;
 		for (ContextActionItem item : items) {
-			if (item instanceof ContextAction)
+			boolean first = (index == 0);
+			boolean last = (index == (items.size() - 1));
+
+			if (item instanceof ContextAction) {
 				actionsButton.addAction(((ContextAction) item).getAction(),
 						((ContextAction) item).getTitle());
-			else if (item instanceof ContextActionSeparator)
-				actionsButton.addSeparator();
-			else if (item instanceof ContextCallbackAction) {
+			} else if (item instanceof ContextActionSeparator) {
+				if (!first && !last)
+					actionsButton.addSeparator();
+			} else if (item instanceof ContextCallbackAction) {
 				final ContextCallbackAction action = (ContextCallbackAction) item;
 				actionsButton.addCallbackAction(action.getTitle(),
 						new Callback() {
@@ -193,6 +199,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 							}
 						});
 			}
+			index++;
 		}
 		if (!items.isEmpty())
 			buttons.add(actionsButton);
@@ -212,8 +219,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		DisclosurePanel s = new DisclosurePanel(section.getTitle());
 		s.setOpen(false);
 		s.addStyleName(StyleConstants.ITEM_CONTEXT_SECTION);
-		s.getHeader().getElement().getParentElement().setClassName(
-				StyleConstants.ITEM_CONTEXT_SECTION_HEADER);
+		s.getHeader().getElement().getParentElement()
+				.setClassName(StyleConstants.ITEM_CONTEXT_SECTION_HEADER);
 
 		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override

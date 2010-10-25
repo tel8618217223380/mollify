@@ -71,8 +71,10 @@
 			return $this->uri;
 		}
 		
-		public function path() {
-			return $this->parts;
+		public function path($index = NULL) {
+			if ($index == NULL)
+				return $this->parts;
+			return $this->parts[$index];
 		}
 
 		public function ip() {

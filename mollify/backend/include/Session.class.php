@@ -90,7 +90,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("SESSION: ".Util::array2str($this->all()));
+			Logging::logDebug("SESSION: ".Util::array2str($this->all(), array("debug_info")));
 		}
 
 		public function __toString() {
