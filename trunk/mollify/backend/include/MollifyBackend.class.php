@@ -34,8 +34,17 @@
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
 			$this->environment->addService("public", "PublicServices");
-			
+			if (Logging::isDebug()) {
+				$this->environment->addService("debug", "DebugServices");
+				$this->environment->response()->addListener($this);
+			}
 			$this->environment->plugins()->setup();
+		}
+		
+		public function onResponseSent() {
+			$path = $this->environment->request()->path();
+			if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
+			$this->environment->session()->param("debug_info", Logging::getTrace());
 		}
 		
 		public function env() {

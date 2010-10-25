@@ -39,38 +39,54 @@
 			"UNEXPECTED_ERROR" => array(999, "Unexpected server error", 500),
 		);
 		private $output;
+		private $listeners = array();
 		
 		function __construct($output) {
 			$this->output = $output;
 		}
 		
+		public function addListener($l) {
+			$this->listeners[] = $l;
+		}
+		
 		public function download($filename, $type, $stream, $size = NULL, $range = NULL) {
 			$this->output->downloadBinary($filename, $type, $stream, $size, $range);
+			$this->notifyResponse();
 		}
 
 		public function send($filename, $type, $stream, $size = NULL) {
 			$this->output->sendBinary($filename, $type, $stream, $size);
+			$this->notifyResponse();
 		}
 		
 		public function html($html) {
 			$this->output->sendResponse(new Response(200, "html", $html));
+			$this->notifyResponse();
 		}
 		
 		public function success($data) {
 			$this->output->sendResponse(new Response(200, "json", $this->getSuccessResponse($data)));
+			$this->notifyResponse();
 		}
 
 		public function fail($code, $error, $details = NULL) {
 			$this->output->sendResponse(new Response(403, "json", $this->getErrorResponse(array($code, $error), $details)));
+			$this->notifyResponse();
 		}
 		
 		public function error($type, $details) {
 			$error = $this->getError($type);
 			$this->output->sendResponse(new Response($error[2], "json", $this->getErrorResponse($error, $details)));
+			$this->notifyResponse();
 		}
 		
 		public function unknownServerError($msg) {
 			$this->error("UNEXPECTED_ERROR", $msg);
+		}
+		
+		private function notifyResponse() {
+			foreach($this->listeners as $l)
+				$l->onResponseSent();
 		}
 		
 		private function getSuccessResponse($data) {

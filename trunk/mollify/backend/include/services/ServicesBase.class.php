@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class ServicesBase {
+	abstract class ServicesBase {
 		protected $env;
 		protected $request;
 		protected $id;
@@ -23,7 +23,10 @@
 			$this->path = $path;
 			
 			if (!$this->isValidPath($this->request->method(), $this->path)) throw $this->invalidRequestException();
+			$this->init();
 		}
+		
+		protected function init() {}
 
 		public function isAuthenticated() {
 			if ($this->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) return FALSE;
