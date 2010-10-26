@@ -158,20 +158,41 @@ function NotificatorListView() {
 		var html = $.template("<div id='notification-details-info' class='details-info'><h1>Notification ${id}</h1></div>").apply(d);
 		html += "<div id='notification-details-data' class='details-data'>";
 		
-		html += that.detailSection("id", "ID", that.detailValue('id', d.id));
-		html += that.detailSection("name", "Name", that.detailValue('name', d.name));
-		html += that.detailSection("message", "Message", 'foo');
+		html += that.detailSection("name", "Name", that.detailValue('name', d.name), "edit-name");
+		html += that.detailSection("message", "Message", that.messageSection(d), "edit-message");
 		
 		html += "</div>";
+		
 		$("#notification-details").html(html);
+		$("#edit-name").click(that.onChangeName);
+		$("#edit-message").click(that.onChangeMessage);
 	}
 	
-	this.detailSection = function(id, title, html) {
+	this.onChangeName = function() {
+		alert("name");
+	}
+
+	this.onChangeMessage = function() {
+		alert("message");
+	}
+	
+	this.detailSection = function(id, title, html, editId) {
+		if (editId) {
+			return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}<a id='${editId}'>Change</a></div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html, editId:editId});
+		}
 		return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}</div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html});
 	}
 
 	this.detailValue = function(id, value) {
 		return $.template("<div class='notification-details-value'>${value}</div>").apply({id:id, value:value});
+	}
+	
+	this.messageSection = function(d) {
+		var v = {
+			title: (d.message_title != null && d.message_title.length > 0) ? d.message_title : '<i>No title</i>',
+			message: (d.message != null && d.message.length > 0) ? d.message : '<i>No message</i>',
+		}
+		return $.template("<div class='notification-details-value notification-message'><p><div class='title'>${title}</div></p><p>${message}</p></div>").apply(v);
 	}
 	
 	function timeFormatter(time, options, obj) {
