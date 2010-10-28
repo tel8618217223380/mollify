@@ -447,7 +447,7 @@
 			
 			if ($this->env->request()->hasParam('uploader') and $this->env->request()->param('uploader') === 'plupload') {
 				require_once("plupload.php");
-				plupload($folder);
+				plupload($folder, $this->env->events());
 				return;
 			}
 

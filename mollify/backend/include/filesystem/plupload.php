@@ -1,6 +1,6 @@
 <?php
 /**
- * upload.php
+ * Based on upload.php by Moxiecode
  *
  * Copyright 2009, Moxiecode Systems AB
  * Released under GPL License.
@@ -9,7 +9,7 @@
  * Contributing: http://www.plupload.com/contributing
  */
 
-function plupload($folder) {
+function plupload($folder, $eventHandler) {
 	// HTTP headers for no cache etc
 	header('Content-type: text/plain; charset=UTF-8');
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -70,6 +70,8 @@ function plupload($folder) {
 			fclose($out);
 			fclose($in);
 			unlink($_FILES['file']['tmp_name']);
+			
+			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
 		} else {
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
 		}
@@ -84,7 +86,10 @@ function plupload($folder) {
 			fwrite($out, $buff);
 		}
 		fclose($out);
-		fclose($in);			
+		fclose($in);
+		
+		if ($chunk === ($chunks-1))
+			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
 	}
 }
 ?>

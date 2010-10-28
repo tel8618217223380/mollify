@@ -44,7 +44,15 @@
 		public function onResponseSent() {
 			$path = $this->environment->request()->path();
 			if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
-			$this->environment->session()->param("debug_info", Logging::getTrace());
+			
+			if (!$this->environment->session()->hasParam("debug_info"))
+				$debug = array();
+			else
+				$debug = $this->environment->session()->param("debug_info");
+			
+			$debug[] = Logging::getTrace();
+			if (count($debug) > 10) unset($debug[0]);
+			$this->environment->session()->param("debug_info", $debug);
 		}
 		
 		public function env() {

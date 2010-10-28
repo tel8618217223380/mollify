@@ -35,6 +35,7 @@
 	<extend-property name="locale" values="sr"/>
 	<extend-property name="locale" values="kr"/>
 	<extend-property name="locale" values="tr"/>
+	<extend-property name="locale" values="br"/>
 	<extend-property name="locale" values="zh"/>
 	
 	<define-property name="demo" values="true,false" />
