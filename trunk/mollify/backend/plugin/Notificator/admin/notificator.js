@@ -173,7 +173,7 @@ function NotificatorListView() {
 	}
 
 	this.onChangeMessage = function() {
-		alert("message");
+		that.editNotificationMessage(that.editing.id, that.editing.message_title, that.editing.message);
 	}
 	
 	this.detailSection = function(id, title, html, editId) {
@@ -219,7 +219,7 @@ function NotificatorListView() {
 				width: 350,
 				modal: true,
 				resizable: false,
-				title: "Add Notification",
+				title: "",
 				buttons: {}
 			});
 		}
@@ -248,13 +248,45 @@ function NotificatorListView() {
 		}
 		if (id) {
 			buttons.Edit = cb;
+			$("#add-edit-notification-dialog").dialog('option', 'title', "Edit Notification Name");
 		} else {
 			buttons.Add = cb;
+			$("#add-edit-notification-dialog").dialog('option', 'title', "Add Notification");
 		}
 		
 		$("#add-edit-notification-dialog").dialog('option', 'buttons', buttons);
 		$("#notification-name").val(name == null ? "" : name);
 		$("#add-edit-notification-dialog").dialog('open');
+	}
+	
+	this.editNotificationMessage = function(id, title, message) {
+		if (!that.editNotificationMessageDialogInit) {
+			that.editNotificationMessageDialogInit = true;
+
+			$("#edit-notification-message-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 350,
+				modal: true,
+				resizable: false,
+				title: "Edit Notification Message",
+				buttons: {}
+			});
+		}
+		
+		var buttons = {
+			Cancel: function() {
+				$(this).dialog('close');
+			},
+			Edit: function() {
+			}
+		}
+		
+		$("#edit-notification-message-dialog").dialog('option', 'buttons', buttons);
+		$("#notification-message-title").val(title);
+		$("#notification-message").val(message);
+		$("#edit-notification-message-dialog").dialog('open');
 	}
 	
 	this.onRemoveNotification = function() {
