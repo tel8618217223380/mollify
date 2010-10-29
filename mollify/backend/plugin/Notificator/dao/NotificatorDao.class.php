@@ -87,7 +87,14 @@
 			return $db->lastId();
 			return TRUE;
 		}
-		
+
+		public function editNotificationName($id, $name) {
+			$db = $this->env->configuration()->db();
+			$affected = $db->update(sprintf("UPDATE ".$db->table("notificator_notification")." SET name = '%s' where id=%s", $db->string($name), $db->string($id)));
+			if ($affected != 1) throw new ServiceException("REQUEST_FAILED", "Invalid update for id=".$id);
+			return TRUE;
+		}
+			
 		public function __toString() {
 			return "NotificatorDao";
 		}
