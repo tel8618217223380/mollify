@@ -14,7 +14,7 @@ function NotificatorListView() {
 	this.list = null;
 	
 	this.onLoadView = function() {
-		$("#button-add-notification").click(that.openAddNotification);
+		$("#button-add-notification").click(that.addNotification);
 		$("#button-remove-notification").click(that.onRemoveNotification);
 		$("#button-refresh").click(that.onRefresh);
 
@@ -169,7 +169,7 @@ function NotificatorListView() {
 	}
 	
 	this.onChangeName = function() {
-		alert("name");
+		that.addEditNotification(that.editing.id, that.editing.name);
 	}
 
 	this.onChangeMessage = function() {
@@ -204,11 +204,15 @@ function NotificatorListView() {
 		return o;
 	}
 	
-	this.openAddNotification = function() {
-		if (!that.addNotificationDialogInit) {
-			that.addNotificationDialogInit = true;
+	this.addNotification = function() {
+		that.addEditNotification(null, null);
+	}
+	
+	this.addEditNotification = function(id, name) {
+		if (!that.addEditNotificationDialogInit) {
+			that.addEditNotificationDialogInit = true;
 
-			$("#add-notification-dialog").dialog({
+			$("#add-edit-notification-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
 				height: 'auto',
@@ -220,46 +224,37 @@ function NotificatorListView() {
 			});
 		}
 		
+		var cb = function() {
+				var newName = $("#notification-name").val();
+				if (newName.length == 0) return;
+				
+				if (id) {
+					editNotification(id, {name: newName}, function() {
+						$("#add-edit-notification-dialog").dialog('close');
+						that.onNotificationSelectionChanged();
+					}, onServerError);
+				} else {
+					addNotification(newName, function() {
+						$("#add-edit-notification-dialog").dialog('close');
+						that.onRefresh();
+					}, onServerError);
+				}
+			};
+		
 		var buttons = {
 			Cancel: function() {
 				$(this).dialog('close');
-			},
-			Add: function() {
-				var name = $("#notification-name").val();
-				if (name.length == 0) return;
-				
-				addNotification(name, function() {
-					$("#add-notification-dialog").dialog('close');
-					that.onRefresh();
-				}, onServerError);
 			}
 		}
-		$("#add-notification-dialog").dialog('option', 'buttons', buttons);
-		
-		$("#notification-name").val("");
-		
-		/*var typesList = $("#types-list");
-		typesList.jqGrid('clearGridData');
-		
-		var availableTypesList = $("#available-types-list");
-		availableTypesList.jqGrid('clearGridData');
-		
-		for (var t in that.types) {
-			availableTypesList.jqGrid('addRowData', t, {id: t, name: that.types[t]});
+		if (id) {
+			buttons.Edit = cb;
+		} else {
+			buttons.Add = cb;
 		}
-
-		var usersList = $("#users-list");
-		usersList.jqGrid('clearGridData');
 		
-		var availableUsersList = $("#available-users-list");
-		availableUsersList.jqGrid('clearGridData');
-		
-		for(var i=0;i < that.users.length;i++) {
-			var user = that.users[i];
-			availableUsersList.jqGrid('addRowData', user.id, user);
-		}*/
-		
-		$("#add-notification-dialog").dialog('open');
+		$("#add-edit-notification-dialog").dialog('option', 'buttons', buttons);
+		$("#notification-name").val(name == null ? "" : name);
+		$("#add-edit-notification-dialog").dialog('open');
 	}
 	
 	this.onRemoveNotification = function() {
@@ -280,6 +275,11 @@ function getNotificationDetails(id, success, fail) {
 function addNotification(name, success, fail) {
 	var data = JSON.stringify({name:name});
 	request("POST", 'notificator/list/', success, fail, data);
+}
+
+function editNotification(id, prop, success, fail) {
+	var data = JSON.stringify(prop);
+	request("PUT", 'notificator/list/'+id, success, fail, data);
 }
 
 function removeNotification(id, success, fail) {
