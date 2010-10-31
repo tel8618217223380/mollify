@@ -10,12 +10,14 @@
 
 package org.sjarvela.mollify.client.service;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 public enum ServiceErrorType {
+
 	UNAUTHORIZED, REQUEST_FAILED, AUTHENTICATION_FAILED, NO_RESPONSE, INVALID_RESPONSE, DATA_TYPE_MISMATCH, OPERATION_FAILED, UNKNOWN_ERROR, INVALID_CONFIGURATION, FILE_DOES_NOT_EXIST, DIR_DOES_NOT_EXIST, FILE_ALREADY_EXISTS, DIR_ALREADY_EXISTS, NOT_A_FILE, NOT_A_DIR, DELETE_FAILED, NO_UPLOAD_DATA, UPLOAD_FAILED, SAVING_FAILED, INSUFFICIENT_RIGHTS, ZIP_FAILED, NO_GENERAL_WRITE_PERMISSION, INVALID_REQUEST, FEATURE_DISABLED, FEATURE_NOT_SUPPORTED, RESOURCE_NOT_FOUND;
 
 	public String getMessage(TextProvider textProvider) {
@@ -100,7 +102,8 @@ public enum ServiceErrorType {
 			return NO_GENERAL_WRITE_PERMISSION;
 
 		default:
-			Log.error("ServiceError code " + error.getCode());
+			Logger.getLogger(ServiceErrorType.class.getName()).log(
+					Level.SEVERE, "ServiceError code " + error.getCode());
 			return UNKNOWN_ERROR;
 		}
 	}

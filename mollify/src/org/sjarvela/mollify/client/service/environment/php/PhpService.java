@@ -10,14 +10,18 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 
 public class PhpService {
+	private static Logger logger = Logger.getLogger(PhpService.class.getName());
+
 	private static final String SERVICE_FILE = "r.php";
 	private static final String ADMIN_PATH = "admin/";
 	private final String requestBaseUrl;
@@ -47,8 +51,9 @@ public class PhpService {
 		this.requestBaseUrl = getPath(path, SERVICE_FILE);
 		this.rootUrl = path;
 		this.adminUrl = getPath(path, ADMIN_PATH);
-		Log.info("Mollify service location: " + this.requestBaseUrl
-				+ ", timeout: " + requestTimeout + " sec");
+
+		logger.log(Level.INFO, "Mollify service location: "
+				+ this.requestBaseUrl + ", timeout: " + requestTimeout + " sec");
 	}
 
 	private String getPath(String path, String p) {

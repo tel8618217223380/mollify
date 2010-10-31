@@ -64,7 +64,7 @@ public class UrlBuilder {
 	public String build() {
 		StringBuilder result = new StringBuilder(baseUrl).append("/");
 		for (String item : items)
-			result.append(URL.encodeComponent(item)).append("/");
+			result.append(URL.encodeQueryString(item)).append("/");
 
 		// boolean first = true;
 		// for (UrlParam param : params) {

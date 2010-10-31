@@ -10,6 +10,10 @@
  
 <module rename-to="org.sjarvela.Mollify">
 	<inherits name='org.sjarvela.mollify.Client'/>
-	<extend-property name="log_level" values="DEBUG"/>
+	
+	<set-property name="gwt.logging.enabled" value="TRUE"/>
+	<set-property name="gwt.logging.logLevel" value="ALL"/>
+	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
+	
 	<set-property name="locale" value="en"/>
 </module>

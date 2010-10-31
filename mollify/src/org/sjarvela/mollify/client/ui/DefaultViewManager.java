@@ -10,11 +10,14 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -28,6 +31,8 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultViewManager implements ViewManager {
+	private static Logger logger = Logger.getLogger(DefaultViewManager.class
+			.getName());
 	static final String MOLLIFY_PANEL_ID = "mollify";
 
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
@@ -41,8 +46,8 @@ public class DefaultViewManager implements ViewManager {
 		this.rootPanel = RootPanel.get(MOLLIFY_PANEL_ID);
 		if (this.rootPanel == null)
 			throw new RuntimeException("No placeholder found for Mollify");
-		this.rootPanel.getElement().getStyle().setProperty("position",
-				"relative");
+		this.rootPanel.getElement().getStyle()
+				.setProperty("position", "relative");
 		this.hiddenPanel = createHiddenFrame();
 	}
 
@@ -70,8 +75,7 @@ public class DefaultViewManager implements ViewManager {
 	private Panel createHiddenFrame() {
 		Panel panel = new FlowPanel();
 		panel.getElement().setId(MOLLIFY_HIDDEN_PANEL_ID);
-		panel
-				.getElement()
+		panel.getElement()
 				.setAttribute("style",
 						"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
 		return panel;
@@ -126,16 +130,18 @@ public class DefaultViewManager implements ViewManager {
 
 	@Override
 	public void align(Dialog dialog, Widget p) {
-		if (Log.isDebugEnabled())
-			Log.debug("Align: p=[" + p.getAbsoluteTop() + ","
-					+ p.getAbsoluteLeft() + "/" + p.getOffsetWidth() + "x"
-					+ p.getOffsetHeight() + "] root=["
-					+ rootPanel.getAbsoluteTop() + ","
-					+ rootPanel.getAbsoluteLeft() + "/"
-					+ rootPanel.getOffsetWidth() + "x"
-					+ rootPanel.getOffsetHeight() + "/"
-					+ rootPanel.getElement().getClientWidth() + "x"
-					+ rootPanel.getElement().getClientHeight() + "]");
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(
+					Level.INFO,
+					"Align: p=[" + p.getAbsoluteTop() + ","
+							+ p.getAbsoluteLeft() + "/" + p.getOffsetWidth()
+							+ "x" + p.getOffsetHeight() + "] root=["
+							+ rootPanel.getAbsoluteTop() + ","
+							+ rootPanel.getAbsoluteLeft() + "/"
+							+ rootPanel.getOffsetWidth() + "x"
+							+ rootPanel.getOffsetHeight() + "/"
+							+ rootPanel.getElement().getClientWidth() + "x"
+							+ rootPanel.getElement().getClientHeight() + "]");
 		int top = (p.getAbsoluteTop() + p.getOffsetHeight() / 2)
 				- (int) (dialog.getOffsetHeight() * 0.75d);
 		top = Math.max(40, top);

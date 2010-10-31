@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
@@ -28,13 +31,15 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.login.LoginDialog;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class MollifyClient implements Client, SessionListener {
+	private static Logger logger = Logger.getLogger(MollifyClient.class
+			.getName());
+
 	public static final String PROTOCOL_VERSION = "1_5_0";
 	private static final String PARAM_SHOW_LOGIN = "show-login";
 
@@ -66,10 +71,12 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	public void start() {
-		Log.info("Starting Mollify, protocol version " + PROTOCOL_VERSION);
-		Log.debug("Host page location: " + GWT.getHostPageBaseURL());
-		Log.debug("Module name: " + GWT.getModuleName());
-		Log.debug("Module location: " + GWT.getModuleBaseURL());
+		logger.log(Level.INFO, "Starting Mollify, protocol version "
+				+ PROTOCOL_VERSION);
+		logger.log(Level.INFO,
+				"Host page location: " + GWT.getHostPageBaseURL());
+		logger.log(Level.INFO, "Module name: " + GWT.getModuleName());
+		logger.log(Level.INFO, "Module location: " + GWT.getModuleBaseURL());
 
 		viewManager.empty();
 
@@ -107,7 +114,7 @@ public class MollifyClient implements Client, SessionListener {
 		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
 			public void login(String userName, String password,
 					final ConfirmationListener listener) {
-				Log.info("User login: " + userName);
+				logger.log(Level.INFO, "User login: " + userName);
 
 				service.authenticate(userName, password,
 						MollifyClient.PROTOCOL_VERSION,

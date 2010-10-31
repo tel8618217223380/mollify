@@ -29,7 +29,7 @@ public class FileUploadResultHandler {
 		if (resultString == null || resultString.length() < 1)
 			listener.onFail(new ServiceError(ServiceErrorType.NO_RESPONSE));
 
-		ReturnValue result = JSONParser.parse(resultString).isObject()
+		ReturnValue result = JSONParser.parseLenient(resultString).isObject()
 				.getJavaScriptObject().cast();
 		listener.onSuccess(result);
 	}

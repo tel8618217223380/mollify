@@ -10,17 +10,21 @@
 
 package org.sjarvela.mollify.client;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 public class App implements EntryPoint {
-	public void onModuleLoad() {
-		Log.setUncaughtExceptionHandler();
+	private static Logger logger = Logger.getLogger(App.class.getName());
 
-		DeferredCommand.addCommand(new Command() {
+	public void onModuleLoad() {
+		logger.log(Level.INFO, "Module load");
+
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			public void execute() {
 				onLoad();
 			}
@@ -33,7 +37,7 @@ public class App implements EntryPoint {
 		try {
 			container = (Container) GWT.create(Container.class);
 		} catch (RuntimeException e) {
-			Log.error("Error initializing application", e);
+			logger.log(Level.SEVERE, "Error initializing application", e);
 
 			if (container != null)
 				container.getViewManager().showPlainError(

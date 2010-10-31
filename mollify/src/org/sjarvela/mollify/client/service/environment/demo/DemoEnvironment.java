@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -20,10 +23,10 @@ import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 public class DemoEnvironment implements ServiceEnvironment {
-	static final String MOLLIFY_PACKAGE_URL = "http://www.jaervelae.com/mollify/download/latest.php";
+	private static Logger logger = Logger.getLogger(DemoEnvironment.class
+			.getName());
+	static final String MOLLIFY_PACKAGE_URL = "http://www.mollify.org/download/latest.php";
 	private static final String PARAM_MULTI_USER = "multi-user";
 
 	private DemoSessionService sessionService;
@@ -35,7 +38,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 
 	public void initialize(UrlResolver urlProvider, ClientSettings settings,
 			ResponseProcessor responseProcessor) {
-		Log.info("Mollify Demo");
+		logger.log(Level.INFO, "Mollify Demo");
 
 		this.data = new DemoData(settings.getBool(PARAM_MULTI_USER, true));
 		this.sessionService = new DemoSessionService(data);

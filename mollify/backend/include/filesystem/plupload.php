@@ -76,6 +76,8 @@ function plupload($folder, $eventHandler) {
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
 		}
 	} else {
+		Logging::logDebug("Uploading chunk ".$chunk."/".$chunks);
+		
 		$out = fopen($file, $chunk == 0 ? "wb" : "ab");
 		if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream.");
 		
@@ -88,7 +90,7 @@ function plupload($folder, $eventHandler) {
 		fclose($out);
 		fclose($in);
 		
-		if ($chunk === ($chunks-1))
+		if ($chunks === 0 or $chunk === ($chunks-1))
 			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
 	}
 }

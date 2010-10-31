@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.fileupload.flash;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -23,8 +25,8 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.util.FileUtil;
 import org.swfupload.client.File;
 import org.swfupload.client.SWFUpload;
-import org.swfupload.client.UploadBuilder;
 import org.swfupload.client.SWFUpload.ButtonAction;
+import org.swfupload.client.UploadBuilder;
 import org.swfupload.client.event.DebugHandler;
 import org.swfupload.client.event.FileQueueErrorHandler;
 import org.swfupload.client.event.FileQueuedHandler;
@@ -35,12 +37,15 @@ import org.swfupload.client.event.UploadProgressHandler;
 import org.swfupload.client.event.UploadStartHandler;
 import org.swfupload.client.event.UploadSuccessHandler;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 
 public class FlashFileUploadPresenter implements UploadStartHandler,
 		UploadSuccessHandler, UploadCompleteHandler, UploadErrorHandler,
 		UploadProgressHandler, SWFUploadLoadedHandler, DebugHandler {
+	private static Logger logger = Logger
+			.getLogger(FlashFileUploadPresenter.class.getName());
+
 	private static final String SESSION_ID_PARAM = "session";
 	private static final String UPLOADER_ID = "uploader-flash";
 
@@ -80,10 +85,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 	protected void onLoadFailed() {
 		dialog.hide();
-		listener
-				.onFail(new ServiceError(
-						ServiceErrorType.INVALID_CONFIGURATION,
-						"Flash uploader initialization timeout, either uploader component is missing, it has wrong src url or browser cannot load flash components"));
+		listener.onFail(new ServiceError(
+				ServiceErrorType.INVALID_CONFIGURATION,
+				"Flash uploader initialization timeout, either uploader component is missing, it has wrong src url or browser cannot load flash components"));
 	}
 
 	public void setDemoMode() {
@@ -125,8 +129,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 		builder.setFileQueueErrorHandler(new FileQueueErrorHandler() {
 			public void onFileQueueError(FileQueueErrorEvent e) {
-				Log.debug("File adding failed: " + e.getFile().getName() + " ("
-						+ e.getErrorCode() + ") " + e.getMessage());
+				logger.log(Level.INFO, "File adding failed: "
+						+ e.getFile().getName() + " (" + e.getErrorCode()
+						+ ") " + e.getMessage());
 			}
 		});
 
@@ -175,8 +180,9 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		File current = uploadModel.getCurrentFile();
 		uploadModel.cancelFile(f);
 
-		dialog.cancelFile(f, uploadModel.getTotalBytes(), uploadModel
-				.getTotalProgress(), uploadModel.getTotalPercentage());
+		dialog.cancelFile(f, uploadModel.getTotalBytes(),
+				uploadModel.getTotalProgress(),
+				uploadModel.getTotalPercentage());
 
 		if (current != null && current.getId().equals(f.getId()))
 			startNextFile();
@@ -215,19 +221,19 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onUploadStart(UploadStartEvent e) {
-		Log.debug("Upload start " + e.getFile().getName());
+		logger.log(Level.INFO, "Upload start " + e.getFile().getName());
 		dialog.onActiveUploadFileChanged(e.getFile());
 	}
 
 	public void onUploadSuccess(UploadSuccessEvent e) {
-		Log.debug("Upload succeeded " + e.getFile().getName());
+		logger.log(Level.INFO, "Upload succeeded " + e.getFile().getName());
 	}
 
 	public void onUploadComplete(UploadCompleteEvent e) {
 		if (uploadModel == null)
 			return;
 
-		Log.debug("Upload completed " + e.getFile().getName());
+		logger.log(Level.INFO, "Upload completed " + e.getFile().getName());
 		uploadModel.uploadComplete(e.getFile());
 		dialog.onFileUploadCompleted(e.getFile());
 		startNextFile();
@@ -258,17 +264,20 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	private void updateProgress(File file, long bytesComplete) {
-		double percentage = uploadModel.getPercentage(bytesComplete, file
-				.getSize());
+		double percentage = uploadModel.getPercentage(bytesComplete,
+				file.getSize());
 		uploadModel.updateProgress(bytesComplete);
 
-		if (Log.isDebugEnabled())
-			Log.debug("Progress: file " + bytesComplete + "/" + file.getSize()
-					+ "=" + percentage + ", total "
-					+ uploadModel.getTotalProgress() + "="
-					+ uploadModel.getTotalPercentage());
-		dialog.setProgress(file, percentage, bytesComplete, uploadModel
-				.getTotalPercentage(), uploadModel.getTotalProgress());
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(
+					Level.INFO,
+					"Progress: file " + bytesComplete + "/" + file.getSize()
+							+ "=" + percentage + ", total "
+							+ uploadModel.getTotalProgress() + "="
+							+ uploadModel.getTotalPercentage());
+		dialog.setProgress(file, percentage, bytesComplete,
+				uploadModel.getTotalPercentage(),
+				uploadModel.getTotalProgress());
 	}
 
 	public void startUpload() {
@@ -310,7 +319,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onSWFUploadLoaded() {
-		Log.debug("Flash uploader loaded");
+		logger.log(Level.INFO, "Flash uploader loaded");
 		if (flashLoadTimer != null) {
 			flashLoadTimer.cancel();
 			flashLoadTimer = null;
@@ -319,7 +328,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	}
 
 	public void onDebug(DebugEvent e) {
-		Log.debug(e.getMessage());
+		logger.log(Level.INFO, e.getMessage());
 	}
 
 	public void onCancel() {

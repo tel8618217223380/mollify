@@ -26,9 +26,9 @@
 		public function getNotification($id) {
 			$db = $this->env->configuration()->db();
 			
-			$query = "select ntf.`id`, ntf.`name`, ntf.`message_title`, ntf.`message`, evt.`event_type`, ntf_user.`id` as ntf_usr_id, ntf_user.`name` as ntf_usr_name, ntf_user.`email` as ntf_usr_email ";
+			$query = "select ntf.`id`, ntf.`name`, ntf.`message_title`, ntf.`message`, evt.`event_type`, ntf_user.`id` as ntf_usr_id, ntf_user.`name` as ntf_usr_name, ntf_user.`email` as ntf_usr_email, ntf_rcp_user.`id` as ntf_rcp_usr_id, ntf_rcp_user.`name` as ntf_rcp_usr_name, ntf_rcp_user.`email` as ntf_rcp_usr_email ";
 			
-			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.`notification_id` = ntf.`id` left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.`notification_id` = ntf.`id` left outer join ".$db->table("user")." ntf_user on ntf_user.`id` = ntf_usr.`user_id` ";
+			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.`notification_id` = ntf.`id` left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.`notification_id` = ntf.`id` left outer join ".$db->table("user")." ntf_user on ntf_user.`id` = ntf_usr.`user_id` left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.`notification_id` = ntf.`id` left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.`id` = ntf_rcp.`user_id`";
 			
 			$query .= "where ntf.`id` = ".$db->string($id, TRUE);
 			
@@ -46,9 +46,19 @@
 				"recipients" => array()
 			);
 			
-			$eventId = NULL;
+			$events = NULL;
+			$recipientIds = array();
+			
 			foreach($rows as $row) {
 				$event = $row["event_type"];
+				if ($event != NULL and !in_array($event, $result["events"]))
+					$result["events"][] = $event;
+					
+				$recipient = $row["ntf_rcp_usr_id"];
+				if ($recipient != NULL and !in_array($recipient, $recipientIds)) {
+					$recipientIds[] = $recipient;
+					$result["recipients"][] = array("id" => $recipient, "name" => $row["ntf_rcp_usr_name"], "email" => $row["ntf_rcp_usr_email"]);
+				}
 			}
 			
 			return $result;
@@ -94,7 +104,26 @@
 			if ($affected != 1) throw new ServiceException("REQUEST_FAILED", "Invalid update for id=".$id);
 			return TRUE;
 		}
+
+		public function editNotificationMessage($id, $title, $message) {
+			$db = $this->env->configuration()->db();
+			$affected = $db->update(sprintf("UPDATE ".$db->table("notificator_notification")." SET message_title = '%s', message = '%s' where id=%s", $db->string($title), $db->string($message), $db->string($id)));
+			if ($affected != 1) throw new ServiceException("REQUEST_FAILED", "Invalid update for id=".$id);
+			return TRUE;
+		}
+
+		public function editNotificationEvents($id, $events) {
+			$db = $this->env->configuration()->db();
 			
+			$db->startTransaction();
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s'", $db->string($id)));
+			foreach ($events as $event)
+				$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification_event")." (notification_id, event_type) VALUES ('%s', '%s')", $db->string($id), $db->string($event)));
+			$db->commit();
+			
+			return TRUE;
+		}
+					
 		public function __toString() {
 			return "NotificatorDao";
 		}
