@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.fileupload.pluploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -32,13 +34,16 @@ import plupload.client.Plupload;
 import plupload.client.PluploadBuilder;
 import plupload.client.PluploadListener;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class PluploaderPresenter implements PluploadListener {
+	private static Logger logger = Logger.getLogger(PluploaderPresenter.class
+			.getName());
+
 	private static final String PARAM_PLUPLOAD_RUNTIMES = "plupload-runtimes";
 	private static final String PARAM_PLUPLOAD_CHUNK_SIZE = "plupload-chunk-size";
 
@@ -89,7 +94,7 @@ public class PluploaderPresenter implements PluploadListener {
 		try {
 			uploader.init();
 		} catch (JavaScriptException e) {
-			Log.debug(e.getDescription());
+			logger.log(Level.INFO, e.getDescription());
 		}
 	}
 
@@ -113,9 +118,9 @@ public class PluploaderPresenter implements PluploadListener {
 		if (chunk != null)
 			builder.chunk(chunk);
 
-		if (Log.isDebugEnabled())
-			Log.debug("Pluploader: "
-					+ JsUtil.asJsonString(builder.getSettings()));
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO,
+					"Pluploader: " + JsUtil.asJsonString(builder.getSettings()));
 		return builder.create();
 	}
 
@@ -136,7 +141,7 @@ public class PluploaderPresenter implements PluploadListener {
 				builder.runtime("silverlight").silverlightUrl(
 						getUrl(SILVERLIGHT_FILE_NAME));
 			} else {
-				DeferredCommand.addCommand(new Command() {
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
 						dialogManager.showError(new ServiceError(
@@ -214,8 +219,8 @@ public class PluploaderPresenter implements PluploadListener {
 
 			File file = next;
 			dialog.onActiveUploadFileChanged(file);
-			updateProgress(File.create(file.getId(), file.getName(), file
-					.getSize(), file.getSize() / 100 * 20));
+			updateProgress(File.create(file.getId(), file.getName(),
+					file.getSize(), file.getSize() / 100 * 20));
 		}
 	}
 
@@ -224,12 +229,15 @@ public class PluploaderPresenter implements PluploadListener {
 				.getSize()) * 100d;
 		uploadModel.updateProgress(file.getLoaded());
 
-		if (Log.isDebugEnabled())
-			Log.debug("Progress: file " + percentage + "%, total "
-					+ uploadModel.getTotalProgress() + "="
-					+ uploadModel.getTotalPercentage() + "%");
-		dialog.setProgress(file, percentage, file.getLoaded(), uploadModel
-				.getTotalPercentage(), uploadModel.getTotalProgress());
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(
+					Level.INFO,
+					"Progress: file " + percentage + "%, total "
+							+ uploadModel.getTotalProgress() + "="
+							+ uploadModel.getTotalPercentage() + "%");
+		dialog.setProgress(file, percentage, file.getLoaded(),
+				uploadModel.getTotalPercentage(),
+				uploadModel.getTotalProgress());
 	}
 
 	public void startUpload() {
@@ -249,7 +257,7 @@ public class PluploaderPresenter implements PluploadListener {
 		dialog.onFileUploadCompleted(file);
 
 		if (uploadModel.allComplete()) {
-			Log.debug("Upload complete");
+			logger.log(Level.INFO, "Upload complete");
 			stopUpload();
 			dialog.hide();
 			listener.onSuccess(null);
@@ -258,7 +266,7 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	public void onCancel() {
-		Log.debug("Upload cancelled");
+		logger.log(Level.INFO, "Upload cancelled");
 		dialog.hide();
 	}
 
@@ -267,38 +275,38 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	public void onCancelUpload() {
-		Log.debug("Upload cancelled");
+		logger.log(Level.INFO, "Upload cancelled");
 		stopUpload();
 		dialog.hide();
 	}
 
 	@Override
 	public void onInit(Plupload p, String runtime) {
-		Log.debug("Plupload init, runtime=" + runtime);
+		logger.log(Level.INFO, "Plupload init, runtime=" + runtime);
 	}
 
 	@Override
 	public void onFilesAdded(Plupload p, List<File> files) {
-		Log.debug("Files added: " + files.size());
+		logger.log(Level.INFO, "Files added: " + files.size());
 		for (File file : files)
 			onAddFile(file);
 	}
 
 	@Override
 	public void onFilesRemoved(Plupload uploader, List<File> files) {
-		Log.debug("Files removed: " + files.size());
+		logger.log(Level.INFO, "Files removed: " + files.size());
 	}
 
 	@Override
 	public void onFileUpload(Plupload uploader, File file) {
-		Log.debug("File upload started: " + file.getName());
+		logger.log(Level.INFO, "File upload started: " + file.getName());
 		uploadModel.start(file);
 		dialog.onActiveUploadFileChanged(file);
 	}
 
 	@Override
 	public void onFileUploaded(Plupload p, File file, JavaScriptObject response) {
-		Log.debug("File uploaded: " + file.getName());
+		logger.log(Level.INFO, "File uploaded: " + file.getName());
 		complete(file);
 	}
 
@@ -306,37 +314,38 @@ public class PluploaderPresenter implements PluploadListener {
 	public void onFileUploadProgress(Plupload uploader, File file) {
 		if (file == null)
 			return;
-		Log.debug("File upload progress: " + JsUtil.asJsonString(file));
+		logger.log(Level.INFO,
+				"File upload progress: " + JsUtil.asJsonString(file));
 		updateProgress(file);
 	}
 
 	@Override
 	public void onChunkUploaded(Plupload p, File file, JavaScriptObject response) {
-		Log.debug("Chunk uploaded: " + file.getName());
+		logger.log(Level.INFO, "Chunk uploaded: " + file.getName());
 	}
 
 	@Override
 	public void onQueueChanged(Plupload uploader) {
-		Log.debug("Queue changed");
+		logger.log(Level.INFO, "Queue changed");
 	}
 
 	@Override
 	public void onRefresh(Plupload uploader) {
-		Log.debug("Refresh");
+		logger.log(Level.INFO, "Refresh");
 	}
 
 	@Override
 	public void onStateChanged(Plupload uploader) {
-		Log.debug("State changed");
+		logger.log(Level.INFO, "State changed");
 	}
 
 	@Override
 	public void postInit(Plupload uploader) {
-		Log.debug("Post init");
+		logger.log(Level.INFO, "Post init");
 	}
 
 	@Override
 	public void onError(Plupload p, JavaScriptObject error) {
-		Log.debug("Error: " + JsUtil.asJsonString(error));
+		logger.log(Level.INFO, "Error: " + JsUtil.asJsonString(error));
 	}
 }

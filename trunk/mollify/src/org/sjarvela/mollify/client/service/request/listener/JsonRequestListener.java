@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.service.request.listener;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.HttpRequestResponseListener;
@@ -17,12 +20,14 @@ import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 import org.sjarvela.mollify.client.service.request.data.ReturnValue;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 public class JsonRequestListener implements HttpRequestResponseListener {
+	private static Logger logger = Logger.getLogger(JsonRequestListener.class
+			.getName());
+
 	private final ResultListener listener;
 	private final ResponseProcessor responseProcessor;
 
@@ -39,7 +44,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	public void onSuccess(String r) {
 		String response = responseProcessor.processResponse(r);
 		try {
-			JSONObject o = JSONParser.parse(response).isObject();
+			JSONObject o = JSONParser.parseLenient(response).isObject();
 			if (o == null) {
 				onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 				return;
@@ -47,8 +52,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 			ReturnValue returnValue = (ReturnValue) o.getJavaScriptObject()
 					.cast();
 			if (returnValue.isResultBoolean())
-				listener
-						.onSuccess(new Boolean(returnValue.getResultAsBoolean()));
+				listener.onSuccess(new Boolean(returnValue.getResultAsBoolean()));
 			else
 				listener.onSuccess(returnValue.getResult());
 		} catch (com.google.gwt.json.client.JSONException e) {
@@ -67,7 +71,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 					"Empty response received (status " + code + ")"));
 			return;
 		}
-		JSONObject o = JSONParser.parse(jsonString).isObject();
+		JSONObject o = JSONParser.parseLenient(jsonString).isObject();
 		if (o == null) {
 			onError(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 			return;
@@ -90,7 +94,7 @@ public class JsonRequestListener implements HttpRequestResponseListener {
 	}
 
 	private void onError(ServiceError error) {
-		Log.error("Request failed: error=" + error.toString());
+		logger.log(Level.SEVERE, "Request failed: error=" + error.toString());
 		listener.onFail(error);
 	}
 

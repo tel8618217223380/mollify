@@ -19,15 +19,15 @@
 		<title>Mollify Administration</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
-		<link rel="stylesheet" href="../resources/jquery-ui-1.7.2.custom.css">
+		<link rel="stylesheet" href="../resources/jquery-ui-1.8.5.custom.css">
 		<link rel="stylesheet" href="../resources/ui.jqgrid.css">
 		<link rel="stylesheet" href="resources/style.css">
 		
-		<script type="text/javascript" src="../resources/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="../resources/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="../resources/md5.js"></script>
 		<script type="text/javascript" src="../resources/json.js"></script>
 		<script type="text/javascript" src="../resources/template.js"></script>
-		<script type="text/javascript" src="../resources/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="../resources/jquery-ui-1.8.5.custom.min.js"></script>
 		<script type="text/javascript" src="../resources/jquery.jqGrid.min.js"></script>
 		<script type="text/javascript" src="resources/service.js"></script>
 		<?php if (file_exists("settings.js")) { ?><script type="text/javascript" src="settings.js"></script><?php } ?>

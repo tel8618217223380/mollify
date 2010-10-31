@@ -304,6 +304,14 @@ function getRandomNumber() {
 	return (parseInt(Math.random() * 1000) % 94) + 33;
 }
 
+function inArray(o, a) {
+	if (!a) return false;
+	for (var i=0; i < a.length; i++) {
+		if (a[i] == o) return true;
+	}
+	return false;
+}
+
 Date.prototype.format = function(format) {
 	var date = this;
 	if (!format) format="mm/dd/yy";               

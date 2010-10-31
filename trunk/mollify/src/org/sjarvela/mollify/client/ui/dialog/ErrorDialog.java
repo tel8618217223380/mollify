@@ -16,9 +16,9 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -59,7 +59,7 @@ public class ErrorDialog extends CenteredDialog {
 
 		main.add(content);
 
-		if (Log.isDebugEnabled()) {
+		if (LogConfiguration.loggingIsEnabled()) {
 			DisclosurePanel debug = new DisclosurePanel("Debug");
 			debug.setOpen(false);
 			debug.addStyleName("mollify-error-dialog-debug");

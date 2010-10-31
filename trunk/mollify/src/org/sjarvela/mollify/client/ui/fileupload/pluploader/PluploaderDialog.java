@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.fileupload.pluploader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -22,7 +24,6 @@ import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 
 import plupload.client.File;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -36,6 +37,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class PluploaderDialog extends CenteredDialog {
+	private static Logger logger = Logger.getLogger(PluploaderDialog.class
+			.getName());
+
 	enum Mode {
 		Select, Upload
 	}
@@ -118,8 +122,7 @@ public class PluploaderDialog extends CenteredDialog {
 
 	private Widget createHeader() {
 		header = new HorizontalPanel();
-		header
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD_HEADER);
+		header.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD_HEADER);
 
 		message = new Label(textProvider.getStrings().fileUploadDialogMessage());
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
@@ -140,8 +143,7 @@ public class PluploaderDialog extends CenteredDialog {
 
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadTotalProgressTitle());
-		label
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
+		label.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
 		totalPanel.add(label);
 
 		Panel progressPanel = new FlowPanel();
@@ -209,8 +211,9 @@ public class PluploaderDialog extends CenteredDialog {
 	}
 
 	public void onFileAddFailed(File file, int errorCode, String message) {
-		Log.error("File queue error (" + errorCode + ") " + file.toString()
-				+ ": " + message);
+		logger.log(Level.SEVERE,
+				"File queue error (" + errorCode + ") " + file.toString()
+						+ ": " + message);
 	}
 
 	public void onUploadStarted(long totalSize) {

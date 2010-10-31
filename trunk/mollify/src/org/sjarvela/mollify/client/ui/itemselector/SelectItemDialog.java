@@ -16,6 +16,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -30,7 +32,6 @@ import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -48,6 +49,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SelectItemDialog extends CenteredDialog implements
 		SelectionHandler<TreeItem>, OpenHandler<TreeItem> {
+	private static Logger logger = Logger.getLogger(SelectItemDialog.class
+			.getName());
+
 	public enum Mode {
 		Folders, FoldersAndFiles
 	};
@@ -309,7 +313,7 @@ public class SelectItemDialog extends CenteredDialog implements
 	}
 
 	protected void onRequestError(ServiceError error) {
-		Log.error(error.toString());
+		logger.log(Level.SEVERE, error.toString());
 		dialogManager.showError(error);
 		this.hide();
 	}

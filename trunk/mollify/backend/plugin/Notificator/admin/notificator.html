@@ -28,13 +28,27 @@
 </div>
 
 <div id="edit-notification-message-dialog" style="display:none">	
-	<div class='form-data' id='data-notification-type'>
+	<div class='form-data' id='data-notification-message-title'>
 		<div class='title'>Title:</div>
 		<input id='notification-message-title' class='form-data-value' type='text' name='title' value=''>
 	</div>
 	
 	<div class='form-data' id='data-notification-message'>
 		<div class='title'>Message:</div>
-		<textarea rows="4" cols="20" id='notification-message' class='form-data-value' name='message' value=''/>
+		<textarea rows="4" cols="40" id='notification-message' class='form-data-value' name='message' value=''/>
+	</div>
+</div>
+
+<div id="edit-notification-events-dialog" style="display:none">
+	<p>Select events that trigger the notification, or clear the list to trigger it for any event.</p>
+	
+	<div class='form-data-left' id='data-notification-events-selected'>
+		<table id='notification-events-list'></table>
+		<button id="button-remove-notification-event" class="ui-state-default ui-corner-all">Remove</button>
+	</div>
+	
+	<div class='form-data-right' id='data-notification-events-available'>
+		<table id='notification-events-available-list'></table>
+		<button id="button-add-notification-event" class="ui-state-default ui-corner-all">Add</button>
 	</div>
 </div>

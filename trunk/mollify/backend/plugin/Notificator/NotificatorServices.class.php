@@ -55,6 +55,14 @@
 				$this->response()->success($dao->editNotificationName($id, $data["name"]));
 				return;
 			}
+			if (isset($data["message"])) {
+				$this->response()->success($dao->editNotificationMessage($id, isset($data["message_title"]) ? $data["message_title"] : "", $data["message"]));
+				return;
+			}
+			if (isset($data["events"])) {
+				$this->response()->success($dao->editNotificationEvents($id, $data["events"]));
+				return;
+			}
 			
 			throw $this->invalidRequestException();
 		}

@@ -10,9 +10,14 @@
 
 package org.sjarvela.mollify.client.session;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class ClientSettings {
+	private static Logger logger = Logger.getLogger(ClientSettings.class
+			.getName());
 	private final ParameterParser parser;
 
 	private static boolean getBool(String string) {
@@ -53,8 +58,8 @@ public class ClientSettings {
 		try {
 			return getInt(parser.getParameter(param));
 		} catch (NumberFormatException e) {
-			if (Log.isDebugEnabled())
-				Log.debug("Invalid integer parameter " + param
+			if (LogConfiguration.loggingIsEnabled())
+				logger.log(Level.INFO, "Invalid integer parameter " + param
 						+ " value, using default " + defaultValue);
 			return defaultValue;
 		}

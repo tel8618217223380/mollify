@@ -35,33 +35,7 @@ function NotificatorListView() {
 			}
 		});
 		
-		$("#types-list").jqGrid({        
-			datatype: "local",
-			multiselect: true,
-			autowidth: true,
-			height: '150px',
-		   	colNames:['Selected'],
-		   	colModel:[
-			   	{name:'name',index:'name',width:250, sortable:true},
-		   	],
-		   	sortname:'name',
-		   	sortorder:'desc'
-		});
-
-		$("#available-types-list").jqGrid({        
-			datatype: "local",
-			multiselect: true,
-			autowidth: true,
-			height: '150px',
-		   	colNames:['Available'],
-		   	colModel:[
-			   	{name:'name',index:'name',width:250, sortable:true},
-		   	],
-		   	sortname:'name',
-		   	sortorder:'desc'
-		});
-
-		$("#users-list").jqGrid({        
+/*		$("#users-list").jqGrid({        
 			datatype: "local",
 			multiselect: true,
 			autowidth: true,
@@ -85,7 +59,7 @@ function NotificatorListView() {
 		   	],
 		   	sortname:'name',
 		   	sortorder:'desc'
-		});
+		});*/
 			
 		getEventTypes(that.refreshTypes, onServerError);
 	}
@@ -117,7 +91,6 @@ function NotificatorListView() {
 		
 		for (var i=0; i < list.length; i++) {
 			var r = list[i];
-//			r.time = parseInternalTime(r.time);
 			
 			that.notificationsById[r.id] = r;
 			grid.jqGrid('addRowData', r.id, r);
@@ -159,26 +132,36 @@ function NotificatorListView() {
 		html += "<div id='notification-details-data' class='details-data'>";
 		
 		html += that.detailSection("name", "Name", that.detailValue('name', d.name), "edit-name");
+		html += that.detailSection("event", "Events", that.eventsSection(d), "edit-events");
 		html += that.detailSection("message", "Message", that.messageSection(d), "edit-message");
+		html += that.detailSection("recipient", "Recipients", that.recipientsSection(d), "edit-recipients");
 		
 		html += "</div>";
 		
 		$("#notification-details").html(html);
-		$("#edit-name").click(that.onChangeName);
-		$("#edit-message").click(that.onChangeMessage);
+		
+		$("#edit-name").click(that.onEditName);
+		$("#edit-message").click(that.onEditMessage);
+		$("#edit-events").click(that.onEditEvents);
+		
+		if (d.events.length > 0) that.showEvents(d);
 	}
 	
-	this.onChangeName = function() {
+	this.onEditName = function() {
 		that.addEditNotification(that.editing.id, that.editing.name);
 	}
 
-	this.onChangeMessage = function() {
+	this.onEditMessage = function() {
 		that.editNotificationMessage(that.editing.id, that.editing.message_title, that.editing.message);
+	}
+
+	this.onEditEvents = function() {
+		that.editNotificationEvents(that.editing.id, that.editing.events);
 	}
 	
 	this.detailSection = function(id, title, html, editId) {
 		if (editId) {
-			return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}<a id='${editId}'>Change</a></div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html, editId:editId});
+			return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}<a id='${editId}'>Edit</a></div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html, editId:editId});
 		}
 		return $.template("<div id='notification-details-section-${id}' class='notification-details-section'><div class='title'>${title}</div><div class='content'>${html}</div></div>").apply({id:id, title:title, html:html});
 	}
@@ -193,6 +176,38 @@ function NotificatorListView() {
 			message: (d.message != null && d.message.length > 0) ? d.message : '<i>No message</i>',
 		}
 		return $.template("<div class='notification-details-value notification-message'><p><div class='title'>${title}</div></p><p>${message}</p></div>").apply(v);
+	}
+
+	this.eventsSection = function(d) {
+		if (d.events.length == 0) return "<div class='notification-details-value notification-events'><i>Any event</i></div>";
+		return "<div class='notification-details-value notification-events'><table id='notification-event-list'/></div>";
+	}
+	
+	this.showEvents = function(d) {
+		$("#notification-event-list").jqGrid({        
+			datatype: "local",
+			width: 250,
+		   	colNames:['Event'],
+		   	colModel:[
+			   	{name:'name',index:'name',width:250, sortable:true},
+		   	],
+		   	sortname:'name',
+		   	sortorder:'desc'
+		});
+			
+		var list = $("#notification-event-list");
+		list.jqGrid('clearGridData');
+		
+		for (var i=0; i < d.events.length; i++) {
+			var t = d.events[i];
+			var o = {"id": t, "name": that.types[t]};
+			list.jqGrid('addRowData', t, o);
+		}
+	}
+
+	this.recipientsSection = function(d) {
+		if (d.recipients.length == 0) return "<div class='notification-details-value notification-recipients'><i>No recipients</i></div>";
+		return "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list'/></div>";
 	}
 	
 	function timeFormatter(time, options, obj) {
@@ -280,6 +295,15 @@ function NotificatorListView() {
 				$(this).dialog('close');
 			},
 			Edit: function() {
+				var newTitle = $("#notification-message-title").val();
+				if (newTitle.length == 0) return;
+				var newMessage = $("#notification-message").val();
+				if (newMessage.length == 0) return;
+				
+				editNotification(id, {message_title: newTitle, message: newMessage}, function() {
+					$("#edit-notification-message-dialog").dialog('close');
+					that.onNotificationSelectionChanged();
+				}, onServerError);
 			}
 		}
 		
@@ -287,6 +311,108 @@ function NotificatorListView() {
 		$("#notification-message-title").val(title);
 		$("#notification-message").val(message);
 		$("#edit-notification-message-dialog").dialog('open');
+	}
+
+	this.editNotificationEvents = function(id, events) {
+		if (!that.editNotificationEventsDialogInit) {
+			that.editNotificationEventsDialogInit = true;
+
+			$("#notification-events-list").jqGrid({        
+				datatype: "local",
+				multiselect: true,
+				autowidth: true,
+				height: '150px',
+			   	colNames:['Selected'],
+			   	colModel:[
+				   	{name:'name',index:'name',width:250, sortable:true},
+			   	],
+			   	sortname:'name',
+			   	sortorder:'desc'
+			});
+	
+			$("#notification-events-available-list").jqGrid({        
+				datatype: "local",
+				autowidth: true,
+				multiselect: true,
+			   	colNames:['Available'],
+			   	colModel:[
+				   	{name:'name',index:'name',width:250, sortable:true},
+			   	],
+			   	sortname:'name',
+			   	sortorder:'desc'
+			});
+		
+			$("#edit-notification-events-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 600,
+				modal: true,
+				resizable: true,
+				title: "Events",
+				buttons: {}
+			});
+		}
+		
+		var buttons = {
+			OK: function() {
+				var ids = $("#notification-events-list").jqGrid('getDataIDs');
+				
+				editNotification(id, {events: ids}, function() {
+					$("#edit-notification-events-dialog").dialog('close');
+					that.onNotificationSelectionChanged();
+				}, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		var addRemoveEvent = function(ids, remove) {
+			var selected = $("#notification-events-list");
+			var available = $("#notification-events-available-list");
+
+			for (var i=0; i < ids.length; i++) {
+				var t = ids[i];
+				
+				if (remove) {
+					selected.jqGrid('delRowData', t);
+				} else {
+					if (!inArray(t, selected.jqGrid('getDataIDs')))
+						selected.jqGrid('addRowData', t, {"id": t, "name": that.types[t]});
+				}
+			}
+		}
+		
+		$("#button-add-notification-event").click(function(){
+			var sel = $("#notification-events-available-list").getGridParam("selarrrow");
+			if (sel.length < 1) return;
+			addRemoveEvent(sel, false);
+		});
+
+		$("#button-remove-notification-event").click(function(){
+			var sel = $("#notification-events-list").getGridParam("selarrrow");
+			if (sel.length < 1) return;
+			addRemoveEvent(sel, true);
+		});
+		
+		$("#edit-notification-events-dialog").dialog('option', 'buttons', buttons);
+		
+		var selected = $("#notification-events-list");
+		selected.jqGrid('clearGridData');
+		
+		var available = $("#notification-events-available-list");
+		available.jqGrid('clearGridData');
+		
+		for (var t in that.types) {
+			var o = {"id": t, "name": that.types[t]};
+
+			if (inArray(t,events))
+				selected.jqGrid('addRowData', t, o);
+			else
+				available.jqGrid('addRowData', t, o);
+		}
+		$("#edit-notification-events-dialog").dialog('open');
 	}
 	
 	this.onRemoveNotification = function() {

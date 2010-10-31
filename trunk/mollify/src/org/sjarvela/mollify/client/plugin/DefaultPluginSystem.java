@@ -14,14 +14,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultPluginSystem implements PluginSystem {
+	private static Logger logger = Logger.getLogger(DefaultPluginSystem.class
+			.getName());
 	private final List<Plugin> plugins = new ArrayList();
 	private final Map<String, Plugin> pluginsById = new HashMap();
 	private final PluginEnvironment pluginEnv;
@@ -45,10 +48,10 @@ public class DefaultPluginSystem implements PluginSystem {
 
 	private native void doSetup() /*-{
 		if (!$wnd.mollify || !$wnd.mollify.getPlugins) return;
-		
+
 		var plugins = $wnd.mollify.getPlugins();
 		if (!plugins || plugins.length == 0) return;
-		
+
 		for(var i=0; i < plugins.length; i++) {
 			var plugin = plugins[i];
 			if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo()) continue;
@@ -62,13 +65,13 @@ public class DefaultPluginSystem implements PluginSystem {
 		Plugin plugin = p.cast();
 		PluginInfo info = plugin.getPluginInfo();
 		if (info == null) {
-			Log.debug("Plugin ignored, does not provide info");
+			logger.log(Level.INFO, "Plugin ignored, does not provide info");
 			return;
 		}
 		plugins.add(plugin);
 
 		String id = info.getId();
-		Log.debug("Plugin registered: " + id);
+		logger.log(Level.INFO, "Plugin registered: " + id);
 		pluginsById.put(id, plugin);
 	};
 }

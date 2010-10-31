@@ -13,13 +13,15 @@
 	<inherits name="com.google.gwt.json.JSON"/>
 	<inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
-	<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
+	<inherits name="com.google.gwt.logging.Logging"/>
 	<inherits name="org.swfupload.SWFUpload"/>
 	<inherits name="plupload.Plupload"/>
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
 	
 	<entry-point class='org.sjarvela.mollify.client.App'/>
+	
+	<set-property name="gwt.logging.enabled" value="FALSE"/>
 	
 	<extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="es"/>

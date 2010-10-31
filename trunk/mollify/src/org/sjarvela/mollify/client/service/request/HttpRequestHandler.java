@@ -10,16 +10,22 @@
 
 package org.sjarvela.mollify.client.service.request;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class HttpRequestHandler extends
 		com.google.gwt.http.client.RequestBuilder {
+	private static Logger logger = Logger.getLogger(HttpRequestHandler.class
+			.getName());
+
 	public static final int HTTP_STATUS_OK = 200;
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
 
@@ -42,7 +48,7 @@ public class HttpRequestHandler extends
 
 		setCallback(new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
-				Log.error("Request error", exception);
+				logger.log(Level.SEVERE, "Request error", exception);
 
 				if (RequestTimeoutException.class.equals(exception.getClass()))
 					listener.onNoResponse();
@@ -52,9 +58,9 @@ public class HttpRequestHandler extends
 
 			public void onResponseReceived(Request request, Response response) {
 				int statusCode = response.getStatusCode();
-				if (Log.isDebugEnabled())
-					Log.debug("Request response: " + statusCode + " "
-							+ response.getText());
+				if (LogConfiguration.loggingIsEnabled())
+					logger.log(Level.INFO, "Request response: " + statusCode
+							+ " " + response.getText());
 
 				if (statusCode == HTTP_STATUS_OK) {
 					listener.onSuccess(response);
@@ -103,9 +109,8 @@ public class HttpRequestHandler extends
 		try {
 			send();
 		} catch (RequestException e) {
-			Log.error("Request failed", e);
+			logger.log(Level.SEVERE, "Request failed", e);
 			listener.onRequestFailed(e.getMessage());
 		}
 	}
-
 }

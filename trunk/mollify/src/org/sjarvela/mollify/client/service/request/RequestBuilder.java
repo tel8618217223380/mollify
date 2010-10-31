@@ -10,9 +10,15 @@
 
 package org.sjarvela.mollify.client.service.request;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class RequestBuilder {
+	private static Logger logger = Logger.getLogger(RequestBuilder.class
+			.getName());
+
 	public enum Method {
 		GET, PUT, POST, DELETE
 	}
@@ -54,8 +60,8 @@ public class RequestBuilder {
 
 	public void send(
 			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method) {
-		if (Log.isDebugEnabled())
-			Log.debug("REQUEST (" + method.name() + "): " + url
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO, "REQUEST (" + method.name() + "): " + url
 					+ (data != null ? (" [" + data + "]") : ""));
 		new HttpRequestHandler(limitedHttpMethods, method, url, timeout, data,
 				listener).process();

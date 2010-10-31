@@ -10,15 +10,21 @@
 
 package org.sjarvela.mollify.client.service.environment.php;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.MD5;
 
-import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.logging.client.LogConfiguration;
 
 public class PhpSessionService extends ServiceBase implements SessionService {
+	private static Logger logger = Logger.getLogger(PhpSessionService.class
+			.getName());
+
 	enum SessionAction implements ActionId {
 		authenticate, info, logout
 	}
@@ -29,34 +35,35 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 
 	public void getSessionInfo(String protocolVersion,
 			ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Requesting session info (protocol version '"
-					+ protocolVersion + "')");
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO,
+					"Requesting session info (protocol version '"
+							+ protocolVersion + "')");
 
-		request().url(
-				serviceUrl().action(SessionAction.info).item(protocolVersion))
-				.listener(resultListener).get();
+		request()
+				.url(serviceUrl().action(SessionAction.info).item(
+						protocolVersion)).listener(resultListener).get();
 	}
 
 	public void authenticate(String userName, String password,
 			String protocolVersion, final ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Authenticating '" + userName + "'");
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO, "Authenticating '" + userName + "'");
 
-		String data = new JSONStringBuilder("username", userName).add(
-				"password", MD5.generate(password)).add("protocol_version",
-				protocolVersion).toString();
+		String data = new JSONStringBuilder("username", userName)
+				.add("password", MD5.generate(password))
+				.add("protocol_version", protocolVersion).toString();
 
-		request().url(serviceUrl().action(SessionAction.authenticate)).data(
-				data).listener(resultListener).post();
+		request().url(serviceUrl().action(SessionAction.authenticate))
+				.data(data).listener(resultListener).post();
 	}
 
 	public void logout(ResultListener resultListener) {
-		if (Log.isDebugEnabled())
-			Log.debug("Logout");
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO, "Logout");
 
-		request().url(serviceUrl().action(SessionAction.logout)).listener(
-				resultListener).post();
+		request().url(serviceUrl().action(SessionAction.logout))
+				.listener(resultListener).post();
 	}
 
 }

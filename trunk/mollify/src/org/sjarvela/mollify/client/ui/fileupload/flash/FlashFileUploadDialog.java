@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.fileupload.flash;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -20,11 +22,10 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ProgressBar;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
 import org.swfupload.client.File;
-import org.swfupload.client.UploadBuilder;
 import org.swfupload.client.SWFUpload.ButtonCursor;
 import org.swfupload.client.SWFUpload.WindowMode;
+import org.swfupload.client.UploadBuilder;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -35,6 +36,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FlashFileUploadDialog extends CenteredDialog {
+	private static Logger logger = Logger.getLogger(FlashFileUploadDialog.class
+			.getName());
+
 	enum Mode {
 		Select, Upload
 	};
@@ -111,8 +115,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 	private Widget createHeader() {
 		header = new FlowPanel();
-		header
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_HEADER);
+		header.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_HEADER);
 
 		message = new Label(textProvider.getStrings().fileUploadDialogMessage());
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
@@ -121,8 +124,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 		uploadButtonContainer = new FlowPanel();
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadDialogAddFilesButton());
-		label
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL);
+		label.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER_LABEL);
 		uploadButtonContainer.add(label);
 		uploadButtonContainer
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FLASH_UPLOADER);
@@ -144,8 +146,7 @@ public class FlashFileUploadDialog extends CenteredDialog {
 
 		Label label = new Label(textProvider.getStrings()
 				.fileUploadTotalProgressTitle());
-		label
-				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
+		label.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
 		totalPanel.add(label);
 
 		Panel progressPanel = new FlowPanel();
@@ -213,8 +214,9 @@ public class FlashFileUploadDialog extends CenteredDialog {
 	}
 
 	public void onFileAddFailed(File file, int errorCode, String message) {
-		Log.error("File queue error (" + errorCode + ") " + file.toString()
-				+ ": " + message);
+		logger.log(Level.SEVERE,
+				"File queue error (" + errorCode + ") " + file.toString()
+						+ ": " + message);
 	}
 
 	public void onUploadStarted(long totalSize) {

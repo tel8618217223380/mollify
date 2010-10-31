@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.event.EventDispatcher;
@@ -48,12 +50,14 @@ import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
 		DragDataProvider<FileSystemItem> {
+	private static Logger logger = Logger.getLogger(MainViewPresenter.class
+			.getName());
+
 	private final MainViewModel model;
 	private final DefaultMainView view;
 	private final DialogManager dialogManager;
@@ -190,8 +194,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		String sessionId = sessionManager.getSession().getSessionId();
 		Map<String, String> urls = new HashMap();
 		for (File f : files)
-			urls.put(f.getName(), fileSystemService
-					.getDownloadUrl(f, sessionId));
+			urls.put(f.getName(),
+					fileSystemService.getDownloadUrl(f, sessionId));
 		view.refreshFileUrls(urls);
 	}
 
@@ -228,22 +232,24 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		createFolderDialogFactory.openCreateFolderDialog(model
-				.getCurrentFolder(), new FolderHandler() {
-			public void createFolder(Folder parentFolder, String folderName) {
-				fileSystemService.createFolder(parentFolder, folderName,
-						createReloadListener("Create folder"));
-			}
-		});
+		createFolderDialogFactory.openCreateFolderDialog(
+				model.getCurrentFolder(), new FolderHandler() {
+					public void createFolder(Folder parentFolder,
+							String folderName) {
+						fileSystemService.createFolder(parentFolder,
+								folderName,
+								createReloadListener("Create folder"));
+					}
+				});
 	}
 
 	private ResultListener createReloadListener(final String operation) {
 		return createListener(new Callback() {
 			public void onCallback() {
-				DeferredCommand.addCommand(new Command() {
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
-						Log.debug(operation + " complete");
+						logger.log(Level.INFO, operation + " complete");
 						reload();
 					}
 				});

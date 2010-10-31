@@ -12,12 +12,15 @@ package org.sjarvela.mollify.client.ui.fileupload.pluploader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import plupload.client.File;
 
-import com.allen_sauer.gwt.log.client.Log;
-
 public class UploadModel {
+	private static Logger logger = Logger
+			.getLogger(UploadModel.class.getName());
+
 	private final List<File> files;
 	private final List<File> completed = new ArrayList();
 
@@ -44,8 +47,8 @@ public class UploadModel {
 		completed.add(f);
 		completedBytes += f.getSize();
 
-		Log.debug("File complete: " + file.getName() + ", all=" + files.size()
-				+ ", left=" + (files.size() - completed.size()));
+		logger.log(Level.INFO, "File complete: " + file.getName() + ", all="
+				+ files.size() + ", left=" + (files.size() - completed.size()));
 		return true;
 	}
 
