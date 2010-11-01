@@ -51,7 +51,10 @@
 				$debug = $this->environment->session()->param("debug_info");
 			
 			$debug[] = Logging::getTrace();
-			if (count($debug) > 10) unset($debug[0]);
+			while (count($debug) > 5) {
+				unset($debug[0]);
+				$debug = array_values($debug);
+			}
 			$this->environment->session()->param("debug_info", $debug);
 		}
 		
