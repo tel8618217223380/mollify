@@ -27,7 +27,17 @@
 			if (!$this->env->session()->hasParam("debug_info"))
 				$this->response()->html("<html><body><h1>Mollify Debug</h1><p>No debug info available</p></body></html>");
 			else
-				$this->response()->html("<html><body><h1>Mollify Debug</h1><p><code>".Util::toString($this->env->session()->param("debug_info"))."</code></p></body></html>");
+				$this->response()->html($this->getDebugHtml());
+		}
+		
+		private function getDebugHtml() {
+			$html = "<html><body><h1>Mollify Debug</h1><p>";
+			
+			foreach($this->env->session()->param("debug_info") as $d)
+				$html .= "<p><code>".Util::toString($d)."</code></p>";
+			
+			$html .= "</body></html>";
+			return $html;
 		}
 		
 		public function __toString() {
