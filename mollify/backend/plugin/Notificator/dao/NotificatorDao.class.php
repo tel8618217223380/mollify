@@ -85,7 +85,7 @@
 				}
 				$recipients[] = array("id" => $row["ntf_rcp_usr_id"], "name" => $row["ntf_rcp_usr_name"], "email" => $row["ntf_rcp_usr_email"]);
 			}
-			if (strcmp($prev["id"], $row["id"]) === 0 and count($recipients) > 0)
+			if (count($recipients) > 0)
 				$result[] = new Notification($prev["id"], $prev["name"], $prev["message_title"], $prev["message"], $recipients);
 						
 			return $result;

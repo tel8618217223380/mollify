@@ -54,29 +54,38 @@ function plupload($folder, $eventHandler) {
 		throw new ServiceException("UPLOAD_FAILED", "Failed to open temp directory.");
 
 	$file = $targetDir.$fileName;
-	Logging::logDebug("Uploading to ".$file);
-
+	Logging::logDebug("Uploading to ".$file." (".$chunk."/".$chunks.")");
+	if (isset($_SERVER["CONTENT_TYPE"]))
+		Logging::logDebug("Content type: ".$_SERVER["CONTENT_TYPE"]);
+	
 	if (isset($_SERVER["CONTENT_TYPE"]) and strpos($_SERVER["CONTENT_TYPE"], "multipart") !== false) {
-		if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {		
+		if (isset($_FILES['file']['tmp_name']) and is_uploaded_file($_FILES['file']['tmp_name'])) {
+			$from = $_FILES['file']['tmp_name'];
+			
 			$out = fopen($file, $chunk == 0 ? "wb" : "ab");
 			if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream");
 
-			$in = fopen($_FILES['file']['tmp_name'], "rb");
+			$in = fopen($from, "rb");
 			if (!$in) throw new ServiceException("UPLOAD_FAILED", "Failed to open input stream");
+			
+			Logging::logDebug("Reading from file ".$from);
 			
 			while ($buff = fread($in, 4096))
 				fwrite($out, $buff);
 
 			fclose($out);
 			fclose($in);
-			unlink($_FILES['file']['tmp_name']);
 			
+			Logging::logDebug("Upload finished");
 			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
+			
+			Logging::logDebug("Removing file ".$from);
+			@unlink($from);
 		} else {
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
 		}
 	} else {
-		Logging::logDebug("Uploading chunk ".$chunk."/".$chunks);
+		Logging::logDebug("Reading from chunk ".$chunk."/".$chunks);
 		
 		$out = fopen($file, $chunk == 0 ? "wb" : "ab");
 		if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream.");
@@ -89,6 +98,8 @@ function plupload($folder, $eventHandler) {
 		}
 		fclose($out);
 		fclose($in);
+		
+		Logging::logDebug("Upload finished");
 		
 		if ($chunks === 0 or $chunk === ($chunks-1))
 			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
