@@ -126,9 +126,6 @@ function NotificatorListView() {
 		$("#edit-message").click(that.onEditMessage);
 		$("#edit-events").click(that.onEditEvents);
 		$("#edit-recipients").click(that.onEditRecipients);
-		
-		if (d.events.length > 0) that.showEvents(d);
-		if (d.recipients.length > 0) that.showRecipients(d);
 	}
 	
 	this.onEditName = function() {
@@ -163,61 +160,28 @@ function NotificatorListView() {
 			title: (d.message_title != null && d.message_title.length > 0) ? d.message_title : '<i>No title</i>',
 			message: (d.message != null && d.message.length > 0) ? d.message : '<i>No message</i>',
 		}
-		return $.template("<div class='notification-details-value notification-message'><p><div class='title'>${title}</div></p><p>${message}</p></div>").apply(v);
+		return $.template("<div class='notification-details-value notification-message'><div class='title'>${title}</div><div class='message'>${message}</div></div>").apply(v);
 	}
 
 	this.eventsSection = function(d) {
 		if (d.events.length == 0) return "<div class='notification-details-value notification-events'><i>Any event</i></div>";
-		return "<div class='notification-details-value notification-events'><table id='notification-event-list'/></div>";
-	}
-	
-	this.showEvents = function(d) {
-		$("#notification-event-list").jqGrid({        
-			datatype: "local",
-			width: 250,
-		   	colNames:['Event'],
-		   	colModel:[
-			   	{name:'name',index:'name',width:250, sortable:true},
-		   	],
-		   	sortname:'name',
-		   	sortorder:'desc'
-		});
-			
-		var list = $("#notification-event-list");
-		list.jqGrid('clearGridData');
-		
+
+		var html = "<div class='notification-details-value notification-events'><table id='notification-event-list' class='details-table'><tr><th>Event</th></tr>";
 		for (var i=0; i < d.events.length; i++) {
-			var t = d.events[i];
-			var o = {"id": t, "name": that.types[t]};
-			list.jqGrid('addRowData', t, o);
+			html += "<tr><td id='col-event-name'>"+that.types[d.events[i]]+"</td></tr>";
 		}
+		return html + "</table></div>"
 	}
 
 	this.recipientsSection = function(d) {
 		if (d.recipients.length == 0) return "<div class='notification-details-value notification-recipients'><i>No recipients</i></div>";
-		return "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list'/></div>";
-	}
-	
-	this.showRecipients = function(d) {
-		$("#notification-recipient-list").jqGrid({        
-			datatype: "local",
-			width: 450,
-		   	colNames:['Name', 'Email'],
-		   	colModel:[
-			   	{name:'name',index:'name',width:250, sortable:true},
-			   	{name:'email',index:'email',width:200, sortable:true},
-		   	],
-		   	sortname:'name',
-		   	sortorder:'desc'
-		});
-			
-		var list = $("#notification-recipient-list");
-		list.jqGrid('clearGridData');
 		
+		var html = "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list' class='details-table'><tr><th>Name</th><th>Email</th></tr>";
 		for (var i=0; i < d.recipients.length; i++) {
-			var u = d.recipients[i];
-			list.jqGrid('addRowData', u, that.getUser(u));
+			var u = that.getUser(d.recipients[i]);
+			html += "<tr><td id='col-recipient-name'>"+u.name+"</td><td id='col-recipient-email'>"+u.email+"</td></tr>";
 		}
+		return html + "</table></div>"
 	}
 	
 	function timeFormatter(time, options, obj) {
