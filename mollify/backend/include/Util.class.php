@@ -64,5 +64,11 @@
 				return utf8_encode($v);
 			return utf8_decode($v);
 		}
+		
+		static function replaceParams($text, $values) {
+			foreach($values as $k => $v)
+				$text = str_replace('%'.$k.'%', $v, $text);
+			return $text;
+		}
 	}
 ?>

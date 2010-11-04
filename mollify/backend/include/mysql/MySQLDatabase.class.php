@@ -16,16 +16,20 @@
 		private $pw;
 		private $database;
 		private $tablePrefix;
+		private $port;
+		private $socket;
 		
 		private $db = NULL;
 		
-		public function __construct($host, $user, $pw, $database, $tablePrefix) {
+		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
 			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;
 			$this->user = $user;
 			$this->pw = $pw;
 			$this->database = $database;
 			$this->tablePrefix = $tablePrefix;
+			$this->port = $port;
+			$this->socket = $socket;
 		}
 		
 		public function host() {
@@ -52,8 +56,20 @@
 			return $this->db != NULL;
 		}
 		
+		public function port() {
+			return $this->port;
+		}
+		
+		public function socket() {
+			return $this->socket;
+		}
+		
 		public function connect($selectDb = TRUE) {
-			$db = @mysql_connect($this->host, $this->user, $this->pw);
+			$host = $this->host;
+			if ($this->socket != NULL) $host = $this->socket;
+			else if ($this->port != NULL) $host .= ":".$this->port;
+			
+			$db = @mysql_connect($host, $this->user, $this->pw);
 			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysql_error());
 
 			$this->db = $db;			

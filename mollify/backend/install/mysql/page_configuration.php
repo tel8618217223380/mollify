@@ -39,6 +39,8 @@
 					<li>Database name (optional, by default "mollify")</li>
 					<li>User</li>
 					<li>Password</li>
+					<li>Port (optional)</li>
+					<li>Socket (optional)</li>
 					<li>Table prefix (optional)</li>
 				</ul>
 				
@@ -53,6 +55,8 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PORT = &quot;<span class="value">3301</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_SOCKET = &quot;<span class="value">/tmp/mysql5.sock</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
 					?&gt;
 				</div>

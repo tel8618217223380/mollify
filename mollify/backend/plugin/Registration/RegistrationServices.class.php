@@ -192,16 +192,10 @@
 			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
 			$values = array("name" => $name, "email" => $email, "link" => $link);
 			
-			$subject = $this->replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
-			$msg = $this->replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
+			$subject = Util::replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
+			$msg = Util::replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
 			
 			$this->env->notification()->send($email, $subject, $msg);
-		}
-		
-		private function replaceParams($text, $values) {
-			foreach($values as $k => $v)
-				$text = str_replace('%'.$k.'%', $v, $text);
-			return $text;
 		}
 				
 		public function __toString() {

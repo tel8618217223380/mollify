@@ -505,6 +505,10 @@ select#event-user, select#event-type {
 	background-color: #e1e3e3;
 }
 
+th.col-event-name {
+	width: 200px;
+}
+
 .notification-message .title {
 	border-bottom-style: none;
 	margin: 0;
@@ -514,6 +518,7 @@ select#event-user, select#event-type {
 	clear: both;
 	font-weight: normal;
 	font-style: normal;
+	background-color: transparent;
 }
 
 .notification-message .message {
@@ -529,13 +534,22 @@ table.details-table {
 }
 
 table.details-table th {
-	background-color: #dedede;
+	background-color: #cddae3;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 0;
 	padding: 4px;
 }
 
+th.col-recipient-name {
+	width: 150px;
+}
+
+th.col-recipient-email {
+	width: 200px;
+}
+
 table.details-table td {
 	font-size: 11px;
 }
+
