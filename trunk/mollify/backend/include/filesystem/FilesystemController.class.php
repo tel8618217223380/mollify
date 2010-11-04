@@ -306,7 +306,7 @@
 			if ($this->env->features()->isFeatureEnabled("permission_update"))
 				$this->env->configuration()->moveItemPermissions($item, $to);
 			
-			$this->env->events()->onEvent(FileEvent::rename($item, $name));
+			$this->env->events()->onEvent(FileEvent::rename($item, $to));
 		}
 
 		public function copy($item, $to) {
@@ -561,8 +561,8 @@
 			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::UPLOAD, "Upload file");
 		}
 		
-		static function rename($item, $name) {
-			return new FileEvent($item, self::RENAME, $name);
+		static function rename($item, $to) {
+			return new FileEvent($item, self::RENAME, $to);
 		}
 
 		static function copy($item, $to) {
@@ -606,11 +606,26 @@
 		public function details() {
 			$f = $this->item->id()." (".$this->item->filesystem()->name().")";
 			
-			if ($this->subType() === self::RENAME)
-				return 'item id='.$f.';to='.$this->info;
-			if ($this->subType() === self::COPY or $this->subType() === self::MOVE)
+			if ($this->subType() === self::RENAME or $this->subType() === self::COPY or $this->subType() === self::MOVE)
 				return 'item id='.$f.';to='.$this->info->id()." (".$this->info->filesystem()->name().")";
 			return 'item id='.$f;
+		}
+		
+		public function values() {
+			$values = parent::values();
+			$values["item_id"] = $this->item->id();
+			$values["item_name"] = $this->item->name();
+			$values["item_path"] = $this->item->path();
+			$values["internal_path"] = $this->item->internalPath();
+
+			if ($this->subType() === self::COPY or $this->subType() === self::MOVE) {
+				$values["to_id"] = $this->info->id();
+				$values["to_name"] = $this->info->name();
+				$values["to_path"] = $this->info->path();
+				$values["to_internal_path"] = $this->info->internalPath();
+			}
+
+			return $values;
 		}
 		
 		public function __toString() {

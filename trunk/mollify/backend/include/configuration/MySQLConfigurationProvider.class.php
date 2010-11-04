@@ -16,7 +16,7 @@
 		const VERSION = "1_6_0";
 		
 		public function __construct($settings) {
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET;
+			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET, $DB_SOCKET, $DB_PORT;
 			
 			if (!isset($DB_USER) or !isset($DB_PASSWORD)) throw new ServiceException("INVALID_CONFIGURATION", "No database information defined");
 			
@@ -29,8 +29,14 @@
 			if (isset($DB_TABLE_PREFIX)) $tablePrefix = $DB_TABLE_PREFIX;
 			else $tablePrefix = "";
 			
+			if (isset($DB_PORT)) $port = $DB_PORT;
+			else $port = NULL;
+
+			if (isset($DB_SOCKET)) $socket = $DB_SOCKET;
+			else $socket = NULL;
+			
 			require_once("include/mysql/MySQLDatabase.class.php");
-			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
+			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix, $port, $socket);
 			
 			$this->db->connect();
 			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);

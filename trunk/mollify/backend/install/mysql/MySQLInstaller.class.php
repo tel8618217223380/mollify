@@ -22,19 +22,21 @@
 		public function __construct($type, $settingsVar, $pageRoot = "install") {
 			parent::__construct($pageRoot, $type, $settingsVar);
 			
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX;
+			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT;
 			$this->configured = isset($DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX);
+			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 
-		private function createDB($host, $user, $password, $database, $tablePrefix) {
+		private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket) {
 			if (!isset($host)) $host = "localhost";
 			if (!isset($database)) $database = "mollify";
 			if (!isset($tablePrefix)) $tablePrefix = "";
+			if (!isset($port)) $port = NULL;
+			if (!isset($socket)) $socket = NULL;
 			
 			require_once("include/mysql/MySQLIDatabase.class.php");
-			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix);
+			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket);
 		}
 		
 		protected function util() {

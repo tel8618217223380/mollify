@@ -166,9 +166,9 @@ function NotificatorListView() {
 	this.eventsSection = function(d) {
 		if (d.events.length == 0) return "<div class='notification-details-value notification-events'><i>Any event</i></div>";
 
-		var html = "<div class='notification-details-value notification-events'><table id='notification-event-list' class='details-table'><tr><th>Event</th></tr>";
+		var html = "<div class='notification-details-value notification-events'><table id='notification-event-list' class='details-table'><tr><th class='col-event-name'>Event</th></tr>";
 		for (var i=0; i < d.events.length; i++) {
-			html += "<tr><td id='col-event-name'>"+that.types[d.events[i]]+"</td></tr>";
+			html += "<tr><td class='col-event-name'>"+that.types[d.events[i]]+"</td></tr>";
 		}
 		return html + "</table></div>"
 	}
@@ -176,10 +176,10 @@ function NotificatorListView() {
 	this.recipientsSection = function(d) {
 		if (d.recipients.length == 0) return "<div class='notification-details-value notification-recipients'><i>No recipients</i></div>";
 		
-		var html = "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list' class='details-table'><tr><th>Name</th><th>Email</th></tr>";
+		var html = "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list' class='details-table'><tr><th class='col-recipient-name'>Name</th><th class='col-recipient-email'>Email</th></tr>";
 		for (var i=0; i < d.recipients.length; i++) {
 			var u = that.getUser(d.recipients[i]);
-			html += "<tr><td id='col-recipient-name'>"+u.name+"</td><td id='col-recipient-email'>"+u.email+"</td></tr>";
+			html += "<tr><td class='col-recipient-name'>"+u.name+"</td><td class='col-recipient-email'>"+u.email+"</td></tr>";
 		}
 		return html + "</table></div>"
 	}
@@ -296,7 +296,7 @@ function NotificatorListView() {
 				multiselect: true,
 				autowidth: true,
 				height: '150px',
-			   	colNames:['Selected'],
+			   	colNames:['Event'],
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],
@@ -308,7 +308,7 @@ function NotificatorListView() {
 				datatype: "local",
 				autowidth: true,
 				multiselect: true,
-			   	colNames:['Available'],
+			   	colNames:['Event'],
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],

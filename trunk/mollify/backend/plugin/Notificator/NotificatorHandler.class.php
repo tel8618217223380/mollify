@@ -22,7 +22,7 @@
 			$userId = $this->getUserId($e);
 
 			$notifications = $this->findNotifications($type, $userId);
-			$this->sendNotifications($notifications);
+			$this->sendNotifications($notifications, $e);
 		}
 		
 		private function findNotifications($type, $userId) {
@@ -33,15 +33,27 @@
 			return $dao->findNotifications($type, $userId);
 		}
 
-		private function sendNotifications($notifications) {
-			Logging::logDebug("NOTIFICATOR: Sending ".count($notifications)." notifications");
+		private function sendNotifications($notifications, $e) {
+			Logging::logDebug("NOTIFICATOR: Sending ".count($notifications)." notifications for event: ".$e);
 			
 			foreach($notifications as $notification)
-				$this->sendNotification($notification);
+				$this->sendNotification($notification, $e);
 		}
 
-		private function sendNotification($notification) {
-			Logging::logDebug("NOTIFICATOR: Sending notification ".$notification);
+		private function sendNotification($notification, $e) {
+			$values = $e->values();
+			$title = $this->getTitle($notification, $values);
+			$message = $this->getMessage($notification, $values);
+			//$this->env->notificator()->send();
+			Logging::logDebug("NOTIFICATOR: Sending notification ".$message);
+		}
+
+		private function getTitle($notification, $values) {			
+			return Util::replaceParams($notification->getTitle(), $values);
+		}
+		
+		private function getMessage($notification, $values) {
+			return Util::replaceParams($notification->getMessage(), $values);
 		}
 
 		private function getUserId($e) {

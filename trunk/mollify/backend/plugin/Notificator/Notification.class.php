@@ -24,6 +24,22 @@
 			$this->msg = $msg;
 			$this->recipients = $recipients;
 		}
+
+		public function getName() {
+			return $this->name;
+		}
+
+		public function getTitle() {
+			return $this->title;
+		}
+		
+		public function getMessage() {
+			return $this->msg;
+		}
+		
+		public function getRecipients() {
+			return $this->recipients;
+		}
 		
 		public function __toString() {
 			return "Notification [".$this->id."]";

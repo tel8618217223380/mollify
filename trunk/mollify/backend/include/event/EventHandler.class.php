@@ -94,8 +94,22 @@
 			$this->user = $user;
 		}
 		
+		public function values() {
+			$values = array(
+				"type-id" => $this->typeId(),
+				"type" => $this->type,
+				"sub-type" => $this->subType,
+				"time" => $this->time
+			);
+			if ($this->user != NULL) {
+				$values["user_id"] = $this->user["user_id"];
+				$values["username"] = $this->user["username"];
+			}
+			return $values;
+		}
+		
 		public function __toString() {
-			return "Event ".$this->type;
+			return "Event ".$this->typeId();
 		}
 	}
 ?>

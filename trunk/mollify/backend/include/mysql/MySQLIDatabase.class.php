@@ -16,16 +16,20 @@
 		private $pw;
 		private $database;
 		private $tablePrefix;
-		
+		private $port;
+		private $socket;
+
 		private $db = NULL;
 		
-		public function __construct($host, $user, $pw, $database, $tablePrefix) {
+		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
 			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;
 			$this->user = $user;
 			$this->pw = $pw;
 			$this->database = $database;
 			$this->tablePrefix = $tablePrefix;
+			$this->port = $port;
+			$this->socket = $socket;
 		}
 		
 		public function host() {
@@ -48,6 +52,14 @@
 			return $this->tablePrefix;
 		}
 		
+		public function port() {
+			return $this->port;
+		}
+		
+		public function socket() {
+			return $this->socket;
+		}
+		
 		public function isConnected() {
 			return $this->db != NULL;
 		}
@@ -55,12 +67,12 @@
 		public function connect($selectDb = TRUE) {
 			mysqli_report(MYSQLI_REPORT_ALL);
 			try {
-				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database);
-				else $db = @mysqli_connect($this->host, $this->user, $this->pw);
+				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database, $this->port, $this->socket);
+				else $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->port, $this->socket);
 			} catch (mysqli_sql_exception $e) {
-				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_error());
+				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_errno()."/".mysqli_connect_error());
 			}
-			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_error());
+			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_errno()."/".mysqli_connect_error());
 
 			$this->db = $db;
 		}
