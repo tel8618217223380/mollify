@@ -194,8 +194,9 @@
 			
 			$subject = Util::replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
 			$msg = Util::replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
+			$recipient = array(array("name" => $name, "email" => $email));
 			
-			$this->env->notification()->send($email, $subject, $msg);
+			$this->env->notificator()->send($recipient, $subject, $msg);
 		}
 				
 		public function __toString() {

@@ -67,8 +67,8 @@
 			
 			$subject = $this->replaceParams($RESET_PASSWORD_NOTIFICATION_SUBJECT, $values);
 			$msg = $this->replaceParams($RESET_PASSWORD_NOTIFICATION_MESSAGE, $values);
-			
-			$this->env->notification()->send($email, $subject, $msg);
+			$recipient = array(array("name" => NULL, "email" => $email));
+			$this->env->notificator()->send($recipient, $subject, $msg);
 		}
 		
 		private function replaceParams($text, $values) {

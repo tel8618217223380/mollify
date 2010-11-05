@@ -32,10 +32,12 @@
 			"description_file" => "mollify.dsc",
 			"enable_public_links" => FALSE,
 			"enable_mail_notification" => FALSE,
-			"mail_notification_from" => NULL,
+			"mail_notification_from" => "Admin",
 			"new_folder_permission_mask" => 0755,
 			"convert_utf8" => FALSE,
 			"support_output_buffer" => FALSE,
+			"mail_notificator_class" => "mail/MailNotificator.class.php",
+			"datetime_format" => "d.m.Y H:i:s",
 			"debug" => FALSE
 		);
 		

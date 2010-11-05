@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class MailNotification {
+	class MailNotificator {
 		private $env;
 		private $enabled;
 		
@@ -21,16 +21,30 @@
 		
 		public function send($to, $subject, $message, $from = NULL) {
 			if (Logging::isDebug())
-				Logging::logDebug("Sending mail to ".$to.": [".$message."]");
+				Logging::logDebug("Sending mail to [".Util::array2str($to)."]: [".$message."]");
 			
 			if ($this->enabled) {
 				$f = $from != NULL ? $from : $this->env->settings()->setting("mail_notification_from");
-				mail($to, $subject, wordwrap($message), 'From: '.$f);
+				
+				$headers = 'From: '.$f;
+				$email = NULL;
+				$first = TRUE;
+				foreach ($to as $recipient) {
+					if ($first) $email = $recipient["email"];
+					else $headers .= PHP_EOL."Bcc:".$recipient["email"];
+					
+					$first = FALSE;
+				}
+				if ($email === NULL) {
+					Logging::logDebug("No email address, sending cancelled");
+					return;
+				}
+				mail($email, $subject, wordwrap($message), $headers);
 			}
 		}
 				
 		public function __toString() {
-			return "MailNotification";
+			return "MailNotificator";
 		}
 	}
 ?>

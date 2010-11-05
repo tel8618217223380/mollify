@@ -41,11 +41,13 @@
 		}
 
 		private function sendNotification($notification, $e) {
-			$values = $e->values();
+			$values = $e->values($this->env->formatter());
 			$title = $this->getTitle($notification, $values);
 			$message = $this->getMessage($notification, $values);
-			//$this->env->notificator()->send();
-			Logging::logDebug("NOTIFICATOR: Sending notification ".$message);
+			
+			if (Logging::isDebug())
+				Logging::logDebug("NOTIFICATOR: Sending notification ".$message);
+			$this->env->notificator()->send($notification->getRecipients(), $title, $message);
 		}
 
 		private function getTitle($notification, $values) {			

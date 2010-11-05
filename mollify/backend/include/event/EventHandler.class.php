@@ -94,12 +94,12 @@
 			$this->user = $user;
 		}
 		
-		public function values() {
+		public function values($formatter) {
 			$values = array(
 				"type-id" => $this->typeId(),
 				"type" => $this->type,
 				"sub-type" => $this->subType,
-				"time" => $this->time
+				"time" => $formatter->formatDateTime($this->time)
 			);
 			if ($this->user != NULL) {
 				$values["user_id"] = $this->user["user_id"];
