@@ -15,7 +15,7 @@
 	require_once("filesystem/FilesystemController.class.php");
 	require_once("plugin/PluginController.class.php");
 	require_once("services/ServicesBase.class.php");
-	require_once("MailNotification.class.php");
+	require_once("Formatter.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -25,7 +25,7 @@
 		private $serviceControllerPaths = array();
 		
 		private $session;
-		private $authentication; 
+		private $authentication;
 		private $responseHandler;
 		private $configurationProvider;
 		private $settings;
@@ -44,9 +44,14 @@
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
-			$this->notification = new MailNotification($this);
+			$this->notificator = $this->createMailNotificator();
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
+		}
+		
+		private function createMailNotificator() {
+			require_once($this->settings->setting("mail_notificator_class", TRUE));
+			return new MailNotificator($this);
 		}
 		
 		public function session() {
@@ -89,8 +94,12 @@
 			return $this->request;
 		}
 
-		public function notification() {
-			return $this->notification;
+		public function notificator() {
+			return $this->notificator;
+		}
+		
+		public function formatter() {
+			return new Formatter($this->settings);
 		}
 										
 		public function initialize($request = NULL) {

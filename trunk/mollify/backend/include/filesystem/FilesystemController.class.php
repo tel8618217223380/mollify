@@ -611,18 +611,18 @@
 			return 'item id='.$f;
 		}
 		
-		public function values() {
-			$values = parent::values();
+		public function values($formatter) {
+			$values = parent::values($formatter);
 			$values["item_id"] = $this->item->id();
 			$values["item_name"] = $this->item->name();
 			$values["item_path"] = $this->item->path();
 			$values["internal_path"] = $this->item->internalPath();
 
 			if ($this->subType() === self::COPY or $this->subType() === self::MOVE) {
-				$values["to_id"] = $this->info->id();
-				$values["to_name"] = $this->info->name();
-				$values["to_path"] = $this->info->path();
-				$values["to_internal_path"] = $this->info->internalPath();
+				$values["to_item_id"] = $this->info->id();
+				$values["to_item_name"] = $this->info->name();
+				$values["to_item_path"] = $this->info->path();
+				$values["to_item_internal_path"] = $this->info->internalPath();
 			}
 
 			return $values;

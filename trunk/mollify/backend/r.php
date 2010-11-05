@@ -15,18 +15,22 @@
 	require_once("include/ResponseHandler.class.php");
 	require_once("include/OutputHandler.class.php");
 	
+	$responseHandler = NULL;
+	
 	function globalErrorHandler($errno, $errstr, $errfile, $errline) {
+		global $responseHandler;
 		$info = "PHP error #".$errno.", ".$errstr." (".$errfile.":".$errline.")";
 		Logging::logError($info);
-		$responseHandler = new ResponseHandler(new OutputHandler());
+		if ($responseHandler == NULL) $responseHandler = new ResponseHandler(new OutputHandler());
 		$responseHandler->unknownServerError($info);
 		die();
 	}
 	set_error_handler('globalErrorHandler');
 	
 	function globalExceptionHandler($e) {
+		global $responseHandler;
 		Logging::logException($e);
-		$responseHandler = new ResponseHandler(new OutputHandler());
+		if ($responseHandler == NULL) $responseHandler = new ResponseHandler(new OutputHandler());
 		$responseHandler->unknownServerError($e->getMessage());
 		die();
 	}
