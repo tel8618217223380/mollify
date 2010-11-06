@@ -292,32 +292,34 @@ function MollifyUsersConfigurationView() {
 				width: 270,
 				modal: true,
 				resizable: false,
-				title: "Add User",
-				buttons: {
-					Cancel: function() {
-						$(this).dialog('close');
-					},
-					Add: function() {
-						if (!that.validateUserData(false)) return;
-						
-						var name = $("#username").val();
-						var email = $("#email").val();
-						var pw = $("#password").val();
-						var permission = $("#permission").val();
-						
-						onSuccess = function() {
-							$("#add-user-dialog").dialog('close');
-							that.refresh();
-						}
-						addUser(name, pw, email, permission, onSuccess, onServerError);
-					}
-				}
+				title: "Add User"
 			});
 			$("#button-generate-user-password").click(function() {
 				$("#password").val(generatePassword());
 			});
 		}
 		
+		var buttons = {
+			Add: function() {
+				if (!that.validateUserData(false)) return;
+				
+				var name = $("#username").val();
+				var email = $("#email").val();
+				var pw = $("#password").val();
+				var permission = $("#permission").val();
+				
+				onSuccess = function() {
+					$("#add-user-dialog").dialog('close');
+					that.refresh();
+				}
+				addUser(name, pw, email, permission, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#add-user-dialog").dialog('option', 'buttons', buttons);
 		$("#username").val("");
 		$("#email").val("");
 		$("#password").val("");
@@ -338,28 +340,30 @@ function MollifyUsersConfigurationView() {
 				modal: true,
 				resizable: false,
 				autoOpen: false,
-				title: "Edit User",
-				buttons: {
-					Cancel: function() {
-						$(this).dialog('close');
-					},
-					Edit: function() {
-						if (!that.validateUserData(true)) return;
-						
-						var name = $("#edit-username").val();
-						var email = $("#edit-email").val();
-						var permission = $("#edit-permission").val();
-						
-						onSuccess = function() {
-							$("#edit-user-dialog").dialog('close');
-							that.refresh();
-						}
-						editUser(id, name, email, permission, onSuccess, onServerError);
-					}
-				}
+				title: "Edit User"
 			});
 		}
 		
+		var buttons = {
+			Edit: function() {
+				if (!that.validateUserData(true)) return;
+				
+				var name = $("#edit-username").val();
+				var email = $("#edit-email").val();
+				var permission = $("#edit-permission").val();
+				
+				onSuccess = function() {
+					$("#edit-user-dialog").dialog('close');
+					that.refresh();
+				}
+				editUser(id, name, email, permission, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#edit-user-dialog").dialog('option', 'buttons', buttons);
 		$("#edit-username").val(user.name);
 		$("#edit-email").val(user.email);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
@@ -380,32 +384,34 @@ function MollifyUsersConfigurationView() {
 				width: 270,
 				modal: true,
 				resizable: false,
-				title: "Change Password",
-				buttons: {
-					Cancel: function() {
-						$(this).dialog('close');
-					},
-					Change: function() {
-						$("#change-password-dialog > .form-data").removeClass("invalid");
-						if ($("#change-password-field").val().length == 0) {
-							$("#change-password").addClass("invalid");
-							return;
-						}
-						onSuccess = function() {
-							$("#change-password-dialog").dialog('close');
-							notify("Password changed");
-						}
-						
-						var pw = $("#change-password-field").val();
-						changePassword(id, pw, onSuccess, onServerError);
-					}
-				}
+				title: "Change Password"
 			});
 			$("#button-generate-user-change-password").click(function() {
 				$("#change-password-field").val(generatePassword());
 			});
 		}
 		
+		var buttons = {
+			Change: function() {
+				$("#change-password-dialog > .form-data").removeClass("invalid");
+				if ($("#change-password-field").val().length == 0) {
+					$("#change-password").addClass("invalid");
+					return;
+				}
+				onSuccess = function() {
+					$("#change-password-dialog").dialog('close');
+					notify("Password changed");
+				}
+				
+				var pw = $("#change-password-field").val();
+				changePassword(id, pw, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#change-password-dialog").dialog('option', 'buttons', buttons);
 		$("#change-password-field").val("");
 		$("#change-password-dialog").dialog('open');
 	}
@@ -457,23 +463,6 @@ function MollifyUsersConfigurationView() {
 
 		if (!that.addGroupsDialogInit) {
 			that.addGroupsDialogInit = true;
-		
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Add: function() {
-					var sel = $("#add-groups-list").getGridParam("selarrrow");
-					if (sel.length == 0) return;
-	
-					var onSuccess = function() {
-						$("#add-user-groups-dialog").dialog('close');
-						that.refreshUserGroups();
-					}
-					
-					addUsersGroups(that.getSelectedUser(), sel, onSuccess, onServerError);
-				}
-			}
 			
 			$("#add-user-groups-dialog").dialog({
 				bgiframe: true,
@@ -482,11 +471,28 @@ function MollifyUsersConfigurationView() {
 				modal: true,
 				resizable: true,
 				autoOpen: false,
-				title: "Add Groups",
-				buttons: buttons
+				title: "Add Groups"
 			});
 		}
 		
+		var buttons = {
+			Add: function() {
+				var sel = $("#add-groups-list").getGridParam("selarrrow");
+				if (sel.length == 0) return;
+
+				var onSuccess = function() {
+					$("#add-user-groups-dialog").dialog('close');
+					that.refreshUserGroups();
+				}
+				
+				addUsersGroups(that.getSelectedUser(), sel, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#add-user-groups-dialog").dialog('option', 'buttons', buttons);
 		$("#add-user-groups-dialog").dialog('open');
 	}
 	
@@ -539,26 +545,6 @@ function MollifyUsersConfigurationView() {
 
 		if (!that.addFoldersDialogInit) {
 			that.addFoldersDialogInit = true;
-						
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Add: function() {
-					if (!that.validateFolder(false)) return;
-					
-					var useDefault = $("#use-default-folder-name").attr('checked');
-					var folder = $("#published-folder-list").val();
-					var name = useDefault ? null : $("#published-folder-name").val();
-					
-					var onSuccess = function() {
-						$("#add-user-folder-dialog").dialog('close');
-						that.refreshUserFolders();
-					}
-					
-					addUserFolder(that.getSelectedUser(), folder, name, onSuccess, onServerError);
-				}
-			}
 			
 			$("#add-user-folder-dialog").dialog({
 				bgiframe: true,
@@ -567,14 +553,34 @@ function MollifyUsersConfigurationView() {
 				modal: true,
 				resizable: true,
 				autoOpen: false,
-				title: "Add User Folder",
-				buttons: buttons
+				title: "Add User Folder"
 			});
 			
 			$("#published-folder-list").change(onFolderOrDefaultChanged);
 			$("#use-default-folder-name").click(onFolderOrDefaultChanged);
 		}
 		
+		var buttons = {
+			Add: function() {
+				if (!that.validateFolder(false)) return;
+				
+				var useDefault = $("#use-default-folder-name").attr('checked');
+				var folder = $("#published-folder-list").val();
+				var name = useDefault ? null : $("#published-folder-name").val();
+				
+				var onSuccess = function() {
+					$("#add-user-folder-dialog").dialog('close');
+					that.refreshUserFolders();
+				}
+				
+				addUserFolder(that.getSelectedUser(), folder, name, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#add-user-folder-dialog").dialog('option', 'buttons', buttons);
 		$("#use-default-folder-name").attr('checked', true);
 		$("#use-default-folder-name").click(onFolderOrDefaultChanged);
 		onFolderOrDefaultChanged();
@@ -606,25 +612,6 @@ function MollifyUsersConfigurationView() {
 
 		if (!that.editFolderDialogInit) {
 			that.editFolderDialogInit = true;
-						
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Edit: function() {
-					if (!that.validateFolder(true)) return;
-					
-					var useDefault = $("#edit-use-default-folder-name").attr('checked');
-					var name = useDefault ? null : $("#edit-published-folder-name").val();
-					
-					var onSuccess = function() {
-						$("#edit-user-folder-dialog").dialog('close');
-						that.refreshUserFolders();
-					}
-					
-					editUserFolder(that.getSelectedUser(), that.getSelectedUserFolder(), name, onSuccess, onServerError);
-				}
-			}
 			
 			$("#edit-user-folder-dialog").dialog({
 				bgiframe: true,
@@ -638,6 +625,26 @@ function MollifyUsersConfigurationView() {
 			});
 		}
 		
+		var buttons = {
+			Edit: function() {
+				if (!that.validateFolder(true)) return;
+				
+				var useDefault = $("#edit-use-default-folder-name").attr('checked');
+				var name = useDefault ? null : $("#edit-published-folder-name").val();
+				
+				var onSuccess = function() {
+					$("#edit-user-folder-dialog").dialog('close');
+					that.refreshUserFolders();
+				}
+				
+				editUserFolder(that.getSelectedUser(), that.getSelectedUserFolder(), name, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#edit-user-folder-dialog").dialog('option', 'buttons', buttons);
 		$("#published-folder-path").val(selected.path);
 		$("#edit-use-default-folder-name").attr('checked', (selected.name == null));
 		

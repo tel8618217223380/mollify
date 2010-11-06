@@ -216,11 +216,7 @@ function MollifyUserGroupsConfigurationView() {
 			});
 		}
 		
-		var buttons = {
-			Cancel: function() {
-				$(this).dialog('close');
-			}
-		}
+		var buttons = {}
 
 		var action = function() {
 			if (!that.validateGroupData()) return;
@@ -243,6 +239,10 @@ function MollifyUserGroupsConfigurationView() {
 			buttons["Edit"] = action;
 		else
 			buttons["Add"] = action;
+		
+		buttons["Cancel"] = function() {
+			$(this).dialog('close');
+		}
 		
 		$("#group-dialog").dialog('option', 'buttons', buttons);
 		
@@ -290,23 +290,6 @@ function MollifyUserGroupsConfigurationView() {
 
 		if (!that.addUserDialogInit) {
 			that.addUserDialogInit = true;
-			
-			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
-				Add: function() {
-					var sel = $("#add-users-list").getGridParam("selarrrow");
-					if (sel.length == 0) return;
-	
-					var onSuccess = function() {
-						$("#add-group-users-dialog").dialog('close');
-						that.refreshGroupUsers();
-					}
-					
-					addGroupUsers(that.getSelectedGroup(), sel, onSuccess, onServerError);
-				}
-			}
 					
 			$("#add-group-users-dialog").dialog({
 				bgiframe: true,
@@ -315,11 +298,28 @@ function MollifyUserGroupsConfigurationView() {
 				modal: true,
 				resizable: true,
 				autoOpen: false,
-				title: "Add Users to Group",
-				buttons: buttons
+				title: "Add Users to Group"
 			});
 		}
 		
+		var buttons = {
+			Add: function() {
+				var sel = $("#add-users-list").getGridParam("selarrrow");
+				if (sel.length == 0) return;
+
+				var onSuccess = function() {
+					$("#add-group-users-dialog").dialog('close');
+					that.refreshGroupUsers();
+				}
+				
+				addGroupUsers(that.getSelectedGroup(), sel, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#add-group-users-dialog").dialog('option', 'buttons', buttons);
 		$("#add-group-users-dialog").dialog('open');
 	}
 	

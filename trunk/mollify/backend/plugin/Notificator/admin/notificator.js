@@ -256,18 +256,15 @@ function NotificatorListView() {
 				autoOpen: false,
 				bgiframe: true,
 				height: 'auto',
-				width: 350,
+				width: 650,
 				modal: true,
-				resizable: false,
+				resizable: true,
 				title: "Edit Notification Message",
 				buttons: {}
 			});
 		}
 		
 		var buttons = {
-			Cancel: function() {
-				$(this).dialog('close');
-			},
 			Edit: function() {
 				var newTitle = $("#notification-message-title").val();
 				if (newTitle.length == 0) return;
@@ -278,6 +275,9 @@ function NotificatorListView() {
 					$("#edit-notification-message-dialog").dialog('close');
 					that.onNotificationSelectionChanged();
 				}, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
 			}
 		}
 		

@@ -121,7 +121,7 @@
 		}
 		
 		public function string($s, $quote = FALSE) {
-			if ($s == NULL) return 'NULL';
+			if ($s === NULL) return 'NULL';
 			$r = mysql_real_escape_string($s, $this->db);
 			if ($quote) return "'".$r."'";
 			return $r;

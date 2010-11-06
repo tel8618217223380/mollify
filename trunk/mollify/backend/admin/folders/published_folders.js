@@ -201,11 +201,7 @@ function MollifyPublishedFoldersConfigurationView() {
 			});
 		}
 		
-		var buttons = {
-			Cancel: function() {
-				$(this).dialog('close');
-			}
-		}
+		var buttons = {}
 		
 		var action = function() {
 			$("#folder-dialog > .form-data").removeClass("invalid");
@@ -251,6 +247,10 @@ function MollifyPublishedFoldersConfigurationView() {
 			buttons["Edit"] = action;
 		else
 			buttons["Add"] = action;
+			
+		buttons["Cancel"] = function() {
+			$(this).dialog('close');
+		};
 
 		$("#folder-dialog").dialog('option', 'buttons', buttons);
 		$("#folder-dialog > .form-data").removeClass("invalid");
@@ -299,12 +299,12 @@ function MollifyPublishedFoldersConfigurationView() {
 		}
 		
 		var buttons = {
-			No: function() {
-				$(this).dialog('close');
-			},
 			Yes: function() {
 				var deleteFolderContents = $("#delete-folder-contents").attr('checked');
 				removeFolder(id, deleteFolderContents, onSuccess, onServerError);
+			},
+			No: function() {
+				$(this).dialog('close');
 			}
 		}
 
@@ -335,9 +335,6 @@ function MollifyPublishedFoldersConfigurationView() {
 			that.addUserDialogInit = true;
 			
 			var buttons = {
-				Cancel: function() {
-					$(this).dialog('close');
-				},
 				Add: function() {
 					var sel = $("#add-users-list").getGridParam("selarrrow");
 					if (sel.length == 0) return;
@@ -348,6 +345,9 @@ function MollifyPublishedFoldersConfigurationView() {
 					}
 					
 					addFolderUsers(that.getSelectedFolder(), sel, onSuccess, onServerError);
+				},
+				Cancel: function() {
+					$(this).dialog('close');
 				}
 			}
 					

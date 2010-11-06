@@ -34,7 +34,12 @@
 		}
 
 		private function sendNotifications($notifications, $e) {
-			Logging::logDebug("NOTIFICATOR: Sending ".count($notifications)." notifications for event: ".$e);
+			Logging::logDebug("NOTIFICATOR: Found ".count($notifications)." notifications for event: ".$e);
+			
+			if (!$this->env->features()->isFeatureEnabled("mail_notification")) {
+				Logging::logError("Mail notification not enabled, notifications not sent");
+				return;
+			}
 			
 			foreach($notifications as $notification)
 				$this->sendNotification($notification, $e);
