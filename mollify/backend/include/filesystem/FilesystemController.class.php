@@ -616,7 +616,7 @@
 			$values["item_id"] = $this->item->id();
 			$values["item_name"] = $this->item->name();
 			$values["item_path"] = $this->item->path();
-			$values["internal_path"] = $this->item->internalPath();
+			$values["item_internal_path"] = $this->item->internalPath();
 
 			if ($this->subType() === self::COPY or $this->subType() === self::MOVE) {
 				$values["to_item_id"] = $this->info->id();

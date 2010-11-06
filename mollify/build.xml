@@ -164,7 +164,6 @@
 				<exclude name="plugin/FileViewer/viewers/FlowPlayer/" />
 				<exclude name="plugin/FileViewer/viewers/JPlayer/" />
 				<exclude name="plugin/FileViewer/viewers/TextFile/" />
-				<exclude name="plugin/Notificator/" />
 				<exclude name="dav/" />
 			</fileset>
 		</copy>

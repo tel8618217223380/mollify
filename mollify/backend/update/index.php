@@ -18,11 +18,17 @@
 	require("configuration.php");
 	global $SETTINGS, $CONFIGURATION_PROVIDER;
 
-	$installer = createUpdater($CONFIGURATION_PROVIDER, $SETTINGS);
+	try {
+		$installer = createUpdater($CONFIGURATION_PROVIDER, $SETTINGS);
+	} catch (Exception $e) {
+		showError($e);
+		die();
+	} 
 	try {
 		$installer->process();
 	} catch (Exception $e) {
 		$installer->onError($e);
+		showError($e);
 	}
 
 	function isValidConfigurationType($type) {
@@ -43,6 +49,15 @@
 			default:
 				die("Unsupported updater type: ".$type);
 
+		}
+	}
+	
+	function showError($e) {
+		$c = get_class($e);
+		if ($c === "ServiceException") {
+			echo "Mollify error (".$e->type()."): ".$e->details();
+		} else {
+			echo "Unknown error (".$c."): ".$e->getMessage();
 		}
 	}
 ?>

@@ -521,6 +521,14 @@ th.col-event-name {
 	background-color: transparent;
 }
 
+#notification-message-title {
+	width: 620px;
+}
+
+textarea#notification-message {
+	width: 620px;
+}
+
 .notification-message .message {
 	float: left;
 	clear: both;
@@ -551,5 +559,9 @@ th.col-recipient-email {
 
 table.details-table td {
 	font-size: 11px;
+}
+
+.toggle-panel {
+	float: left;
 }
 

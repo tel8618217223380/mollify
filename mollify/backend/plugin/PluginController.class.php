@@ -33,7 +33,11 @@
 		}
 		
 		private function addPlugin($id, $settings) {
-			require_once($id."/".$id.".plugin.class.php");
+			$cls = $id."/".$id.".plugin.class.php";
+			$path = dirname(__FILE__).DIRECTORY_SEPARATOR.$cls;
+			if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Plugin not found: ".$id);
+			
+			require_once($cls);
 			$p = new $id($this->env, $id, $settings);
 			if (!$p->isConfigurationSupported($this->env->configuration()->getType()))
 				return;

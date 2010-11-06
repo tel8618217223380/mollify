@@ -28,10 +28,6 @@
 		}				
 
 		public function setup() {
-			if (!$this->env->features()->isFeatureEnabled("mail_notification")) {
-				Logging::logError("Mail notification not enabled, notificator plugin disabled");
-				return;
-			}
 			$this->addService("notificator", "NotificatorServices");
 			
 			require_once("NotificatorHandler.class.php");

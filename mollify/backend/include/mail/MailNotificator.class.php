@@ -30,13 +30,15 @@
 				$email = NULL;
 				$first = TRUE;
 				foreach ($to as $recipient) {
+					if ($recipient["email"] == NULL or strlen($recipient["email"]) == 0) continue;
+					
 					if ($first) $email = $recipient["email"];
 					else $headers .= PHP_EOL."Bcc:".$recipient["email"];
 					
 					$first = FALSE;
 				}
 				if ($email === NULL) {
-					Logging::logDebug("No email address, sending cancelled");
+					Logging::logDebug("No valid recipient email addresses, sending cancelled");
 					return;
 				}
 				mail($email, $subject, wordwrap($message), $headers);
