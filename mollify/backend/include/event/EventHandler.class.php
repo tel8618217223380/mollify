@@ -96,10 +96,10 @@
 		
 		public function values($formatter) {
 			$values = array(
-				"type-id" => $this->typeId(),
-				"type" => $this->type,
-				"sub-type" => $this->subType,
-				"time" => $formatter->formatDateTime($this->time)
+				"event_type" => $this->typeId(),
+				"event_main_type" => $this->type,
+				"event_sub_type" => $this->subType,
+				"event_time" => $formatter->formatDateTime($this->time)
 			);
 			if ($this->user != NULL) {
 				$values["user_id"] = $this->user["user_id"];

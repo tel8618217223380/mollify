@@ -11,6 +11,7 @@
 #login-panel {
 	width: 450px;
 	background-color: #eee8ec;
+	height: 121px;
 }
 
 #login-panel .title {
@@ -149,7 +150,7 @@
 }
 
 #folder-instructions {
-	height: 170px;
+	height: 165px;
 	overflow: auto;
 }
 

@@ -25,7 +25,7 @@
 			$logged = $this->getSetting("logged_events", NULL);
 			if (!$logged or count($logged) == 0) $logged = array("*");
 			
-			$this->addService("events", "EventServices");
+			$this->addService("eventlog", "EventLoggingServices");
 			$this->env->features()->addFeature("event_logging");
 			$e = new EventLogger($this->env);
 			

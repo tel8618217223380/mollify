@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli J�rvel�
+ * Copyright (c) 2008- Samuli Järvelä
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -211,7 +211,7 @@ function getDownloads(start, end, file, success, fail) {
 	if (end) data["end_time"] = formatInternalTime(end);
 	if (file) data["file"] = item;
 	
-	request("POST", 'events/downloads', success, fail, JSON.stringify(data));
+	request("POST", 'eventlog/downloads', success, fail, JSON.stringify(data));
 }
 
 function getDownloadEvents(start, end, file, success, fail) {
@@ -220,5 +220,5 @@ function getDownloadEvents(start, end, file, success, fail) {
 	if (end) data["end_time"] = formatInternalTime(end);
 	data["file"] = file;
 	
-	request("POST", 'events/downloads/events', success, fail, JSON.stringify(data));
+	request("POST", 'eventlog/downloads/events', success, fail, JSON.stringify(data));
 }

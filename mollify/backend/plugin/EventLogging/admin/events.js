@@ -282,7 +282,7 @@ function MollifyEventsView() {
 }
 
 function getEventTypes(success, fail) {
-	request("POST", 'events/types', success, fail);
+	request("GET", 'events/types', success, fail);
 }
 
 function getEvents(rangeStart, rangeEnd, user, item, type, start, maxRows, success, fail) {
@@ -295,5 +295,5 @@ function getEvents(rangeStart, rangeEnd, user, item, type, start, maxRows, succe
 	if (item) data["item"] = item;
 	if (type) data["type"] = type;
 	
-	request("POST", 'events/query', success, fail, JSON.stringify(data));
+	request("POST", 'eventlog/query', success, fail, JSON.stringify(data));
 }
