@@ -2,10 +2,10 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.7 ===
-  * Notificator plugin
-  * Added "forgot password" feature
+  * Added Notificator plugin (see Plugins)
+  * Added Lost password plugin (see Plugins)
   * Initial client plugin architecture
-  * Better debugging options
+  * Better debugging options (see Troubleshooting)
   * Fixed issue 41
   * Fixed issue 59
   * Fixed issue 118
