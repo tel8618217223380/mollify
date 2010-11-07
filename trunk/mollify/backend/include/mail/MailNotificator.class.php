@@ -26,27 +26,24 @@
 			if ($this->enabled) {
 				$f = ($from != NULL ? $from : $this->env->settings()->setting("mail_notification_from"));
 				
-				$headers = 'From: '.$f;
-				$email = NULL;
-				$first = TRUE;
+				$headers = 'From:'.$f;
+				$count = 0;
 				foreach ($to as $recipient) {
 					if ($recipient["email"] === NULL or strlen($recipient["email"]) == 0) continue;
 					
-					if ($first) {
-						$email = $recipient["email"];
-						$headers .= PHP_EOL.'Bcc: '.$recipient["name"].'<'.$recipient["email"].'>';
+					if ($count == 0) {
+						$headers .= PHP_EOL.'Bcc:'.$recipient["name"].'<'.$recipient["email"].'>';
 					} else {
-						$email .= ', '.$recipient["email"];
-						$headers .= ', '.$recipient["name"].'<'.$recipient["email"].'>';
+						$headers .= ','.$recipient["name"].'<'.$recipient["email"].'>';
 					}
 					
-					$first = FALSE;
+					$count .= 1;
 				}
-				if ($email === NULL) {
+				if ($count === 0) {
 					Logging::logDebug("No valid recipient email addresses, no mail sent");
 					return;
 				}
-				mail($email, $subject, wordwrap($message), $headers);
+				mail('', $subject, wordwrap($message), $headers);
 			}
 		}
 				

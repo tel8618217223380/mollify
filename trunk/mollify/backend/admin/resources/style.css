@@ -536,6 +536,11 @@ textarea#notification-message {
 	font-family: "Courier New", Courier, mono;
 }
 
+#notification-message-variables {
+	height: 350px;
+	overflow: auto;
+}
+
 table.details-table {
 	border-color: #e5e5e5;
 	border-style: solid;
