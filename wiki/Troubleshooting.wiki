@@ -3,10 +3,12 @@
 
 = Troubleshooting =
 
-In case of errors, first check most common errors below. If none of those help with your problem, do following steps before reporting new issue:
+In case of errors, first check most common errors below.
 
-=== 1. Enable server side logging ===
-Enable server side logging by adding following setting in configuration.php:
+If none of those help with your problem, do following steps before reporting new issue:
+
+1. Enable server side logging by adding following setting in configuration.php:
+
 {{{
 	$SETTINGS = array(
 		"debug" => TRUE
@@ -21,7 +23,15 @@ If you have other settings already, add this to the same list, for example:
 	);
 }}}
 
-=== 2. Enable client side logging ===
+2. Recreate the error situation
+
+3. Open url in your browser: http://yourhost/backend/r.php/debug
+
+4. Copy the debug info displayed and attach into error report
+
+=== 2. Client side debugging ===
+
+Sometimes server side debug log is not enough to solve problems, and then you need to install debug client that provides also client side debug information.
 
 1. Download debug client from http://code.google.com/p/mollify/downloads/list (select the debug client for the same version as installed)
 
