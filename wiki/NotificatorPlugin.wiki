@@ -14,6 +14,22 @@ Notificator plugin does not have any parameters. Configure plugin by adding foll
 	);
 }}}
 
+Notificator requires mail notification enabled with setting:
+
+{{{
+	$SETTINGS = array(
+		"enable_mail_notification" => TRUE
+	);
+}}}
+
+Additionally, you can set the email address where notifications are sent from:
+
+{{{
+	$SETTINGS = array(
+		"mail_notification_from" => "admin@yourhost.com"
+	);
+}}}
+
 = Installation =
 
 Notificator plugin requires database, so run Mollify updater after adding configuration.
