@@ -61,7 +61,7 @@ function NotificatorListView() {
 	}
 
 	function getEventTypes(success, fail) {
-		request("POST", 'events/types', success, fail);
+		request("GET", 'events/types', success, fail);
 	}
 	
 	this.refreshList = function(list) {
@@ -258,7 +258,7 @@ function NotificatorListView() {
 				height: 'auto',
 				width: 650,
 				modal: true,
-				resizable: true,
+				resizable: false,
 				title: "Edit Notification Message",
 				buttons: {}
 			});

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli J�rvel�
+ * Copyright (c) 2008- Samuli Järvelä
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -133,5 +133,5 @@ function getUploads(start, end, file, success, fail) {
 	if (file) data["item"] = file;
 	data["type"] = "filesystem/upload";
 	
-	request("POST", 'events/query', success, fail, JSON.stringify(data));
+	request("POST", 'eventlog/query', success, fail, JSON.stringify(data));
 }

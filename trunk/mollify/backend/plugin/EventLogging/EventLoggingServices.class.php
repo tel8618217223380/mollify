@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class EventServices extends ServicesBase {
+	class EventLoggingServices extends ServicesBase {
 		protected function isAdminRequired() { return TRUE; }
 		
 		protected function isValidPath($method, $path) {
@@ -22,9 +22,6 @@
 		public function processPost() {
 			if (count($this->path) == 1 and $this->path[0] === 'query') {
 				$this->response()->success($this->processQuery());
-				return;
-			} else if (count($this->path) == 1 and $this->path[0] === 'types') {
-				$this->response()->success($this->env->events()->getTypes());
 				return;
 			} else if ($this->path[0] === 'downloads') {
 				if (count($this->path) == 2 and $this->path[1] === 'events')

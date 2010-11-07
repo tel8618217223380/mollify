@@ -24,21 +24,26 @@
 				Logging::logDebug("Sending mail to [".Util::array2str($to)."]: [".$message."]");
 			
 			if ($this->enabled) {
-				$f = $from != NULL ? $from : $this->env->settings()->setting("mail_notification_from");
+				$f = ($from != NULL ? $from : $this->env->settings()->setting("mail_notification_from"));
 				
 				$headers = 'From: '.$f;
 				$email = NULL;
 				$first = TRUE;
 				foreach ($to as $recipient) {
-					if ($recipient["email"] == NULL or strlen($recipient["email"]) == 0) continue;
+					if ($recipient["email"] === NULL or strlen($recipient["email"]) == 0) continue;
 					
-					if ($first) $email = $recipient["email"];
-					else $headers .= PHP_EOL."Bcc:".$recipient["email"];
+					if ($first) {
+						$email = $recipient["email"];
+						$headers .= PHP_EOL.'Bcc: '.$recipient["name"].'<'.$recipient["email"].'>';
+					} else {
+						$email .= ', '.$recipient["email"];
+						$headers .= ', '.$recipient["name"].'<'.$recipient["email"].'>';
+					}
 					
 					$first = FALSE;
 				}
 				if ($email === NULL) {
-					Logging::logDebug("No valid recipient email addresses, sending cancelled");
+					Logging::logDebug("No valid recipient email addresses, no mail sent");
 					return;
 				}
 				mail($email, $subject, wordwrap($message), $headers);
