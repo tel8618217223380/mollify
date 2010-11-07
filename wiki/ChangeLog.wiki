@@ -5,12 +5,16 @@
   * Notificator plugin
   * Added "forgot password" feature
   * Initial client plugin architecture
+  * Better debugging options
   * Fixed issue 41
   * Fixed issue 59
   * Fixed issue 118
   * Fixed issue 121
   * Fixed issue 124
   * Fixed issue 125
+
+*BREAKING CHANGES:*
+Due to client plugin system old event listening mechanism has become obsolte, which makes old custom logins inoperatible. Download new version for custom login.
 
 === Version 1.6.5.6 ===
   * Added support for non-UTF8 filesystems
