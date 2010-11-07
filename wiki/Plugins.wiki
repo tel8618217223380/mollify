@@ -38,6 +38,10 @@ See [RegistrationPlugin]
 
 See [FileViewerPlugin]
 
+== Lost Password ==
+
+See [LostPasswordPlugin]
+
 == Notificator ==
 
 See [NotificatorPlugin]
