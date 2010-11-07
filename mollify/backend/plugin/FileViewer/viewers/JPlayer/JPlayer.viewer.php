@@ -8,7 +8,7 @@
 			$resourceUrl = $this->getResourceUrl();
 			
 			$head =
-				'<script type="text/javascript" src="'.$this->env->getCommonResourcesUrl().'jquery-1.3.2.min.js"></script>'.
+				'<script type="text/javascript" src="'.$this->env->getCommonResourcesUrl().'jquery-1.4.2.min.js"></script>'.
 				'<script type="text/javascript" src="'.$resourceUrl.'jquery.jplayer.min.js"></script>'.
 				'<link href="'.$resourceUrl.'jplayer.blue.monday.css" rel="stylesheet" type="text/css" />'.
 				'<script>
