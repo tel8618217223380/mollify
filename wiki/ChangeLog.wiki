@@ -3,8 +3,14 @@
 
 === Version 1.7 ===
   * Notificator plugin
+  * Added "forgot password" feature
   * Initial client plugin architecture
-  * _More complete list coming soon..._
+  * Fixed issue 41
+  * Fixed issue 59
+  * Fixed issue 118
+  * Fixed issue 121
+  * Fixed issue 124
+  * Fixed issue 125
 
 === Version 1.6.5.6 ===
   * Added support for non-UTF8 filesystems
