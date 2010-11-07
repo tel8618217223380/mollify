@@ -1,0 +1,19 @@
+#summary Notificator plugin
+
+= Introduction =
+
+Notificator plugin is built-in plugin that provides mail notifications when certain events happen.
+
+= Configuration =
+
+Notificator plugin does not have any parameters. Configure plugin by adding following into configuration.php:
+
+{{{
+	$PLUGINS = array(
+		"Notificator" => array()
+	);
+}}}
+
+= Installation =
+
+Notificator plugin requires database, so run Mollify updater after adding configuration.
