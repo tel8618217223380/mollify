@@ -37,3 +37,7 @@ See [RegistrationPlugin]
 == File Viewer ==
 
 See [FileViewerPlugin]
+
+== Notificator ==
+
+See [NotificatorPlugin]
