@@ -31,7 +31,7 @@
 			}
 			
 			$pw = $this->createNewPassword();
-			if (!$this->env->configuration()->changePassword($user['id'], $pw)) {
+			if (!$this->env->configuration()->changePassword($user['id'], md5($pw))) {
 				$this->response()->fail(108, "PASSWORD_RESET_FAILED");
 				return;
 			}

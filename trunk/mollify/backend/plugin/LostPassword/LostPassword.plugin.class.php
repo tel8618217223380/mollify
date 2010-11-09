@@ -19,14 +19,6 @@
 		public function isConfigurationSupported($type) {
 			return $type === ConfigurationProvider::TYPE_DATABASE;
 		}
-		
-		public function version() {
-			return "1_0";
-		}
-
-		public function versionHistory() {
-			return array("1_0");
-		}
 				
 		public function __toString() {
 			return "LostPasswordPlugin";
