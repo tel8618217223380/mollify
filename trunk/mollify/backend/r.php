@@ -44,7 +44,7 @@
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
 	
-	$responseHandler = new ResponseHandler(new OutputHandler(isSetting($SETTINGS, 'support_output_buffer')));
+	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime-types', array()), isSetting($SETTINGS, 'support_output_buffer')));
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
 		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
@@ -56,7 +56,12 @@
 		Logging::logException($e);
 		$responseHandler->unknownServerError($e->getMessage());
 	}
-	
+
+	function getSetting($settings, $name, $def) {
+		if (!isset($settings) or !isset($settings[$name])) return $def;
+		return $settings[$name];
+	}
+		
 	function isSetting($settings, $name) {
 		return isset($settings) and isset($settings[$name]) and $settings[$name] == TRUE;
 	}

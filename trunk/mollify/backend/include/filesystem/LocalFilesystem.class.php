@@ -166,7 +166,7 @@
 			if (!$item->isFile()) $new = self::folderPath($new);
 
 			if (file_exists($new))
-				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists ".self::basename($new));
+				throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to rename [".$item->id()."], target already exists (".$new.")");
 
 			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
 			
@@ -174,19 +174,19 @@
 		}
 
 		public function copy($item, $to) {			
-			$target = $this->localPath($to);
+			$target = $to->internalPath();
 
-			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists");
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to copy [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
 			
 			$result = FALSE;
 			if ($item->isFile()) {
-				$result = copy($this->localPath($item), $target);
+				$result = copy($item->internalPath(), $target);
 			} else {
-				$result = $this->copyFolderRecursively($this->localPath($item), $target);
+				$result = $this->copyFolderRecursively($item->internalPath(), $target);
 			}
 			if (!$result) throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to .".$to->id()."]");
 			
-			return $this->itemWithPath($this->publicPath($target));
+			return $to;
 		}
 		
 		private function copyFolderRecursively($from, $to) { 
@@ -209,12 +209,14 @@
 		} 
 		
 		public function move($item, $to) {			
-			$target = self::joinPath($this->localPath($to), $item->name());
+			$target = self::joinPath($to->internalPath(), $item->name());
 			if (!$item->isFile()) $target = self::folderPath($target);
-			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists");
-			if (!rename($this->localPath($item), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."]");
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
+			if (!rename($item->internalPath(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			return $this->itemWithPath($this->publicPath($target));
+			if ($item->isFile())
+				return $to->fileWithName($item->name());
+			return $to->folderWithName($item->name());
 		}
 		
 		public function delete($item) {
@@ -318,6 +320,10 @@
 					$zip->add(substr($file, $offset), $st['size'], $file);
 				}
 			}
+		}
+		
+		public function __toString() {
+			return "LOCAL (".$this->id.") ".$this->name."(".$this->rootPath.")";
 		}
 				
 		static function joinPath($item1, $item2) {

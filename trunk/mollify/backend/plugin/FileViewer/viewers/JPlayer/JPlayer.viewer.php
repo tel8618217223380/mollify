@@ -5,6 +5,7 @@
 		}
 		
 		protected function getHtml($item, $full) {
+			$isOgg = strcmp($item->extension(), 'ogg') == 0;
 			$resourceUrl = $this->getResourceUrl();
 			
 			$head =
@@ -15,8 +16,9 @@
 					$(document).ready( function() {
 						$("#player").jPlayer( {
 							swfPath: "'.$resourceUrl.'",
-							nativeSupport: false,
-							ready: function () { this.element.jPlayer("setFile", "'.$this->getContentUrl($item).'").jPlayer("play"); }
+							errorAlerts:true,'.
+							($isOgg ? 'nativeSupport: true, oggSupport: true,' : 'nativeSupport: false,').
+							'ready: function () { this.element.jPlayer("setFile", "'.$this->getContentUrl($item).'", "'.$this->getContentUrl($item).'").jPlayer("play"); }
 						});
 					});
 				</script>';

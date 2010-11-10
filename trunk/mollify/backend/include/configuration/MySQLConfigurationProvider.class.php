@@ -32,8 +32,12 @@
 			if (isset($DB_PORT)) $port = $DB_PORT;
 			else $port = NULL;
 
-			if (isset($DB_SOCKET)) $socket = $DB_SOCKET;
-			else $socket = NULL;
+			if (isset($DB_SOCKET)) {
+				$socket = $DB_SOCKET;
+				$port = NULL;
+			} else {
+				$socket = NULL;
+			}
 			
 			require_once("include/mysql/MySQLDatabase.class.php");
 			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix, $port, $socket);
