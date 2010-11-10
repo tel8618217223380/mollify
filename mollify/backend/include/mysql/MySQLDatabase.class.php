@@ -22,7 +22,7 @@
 		private $db = NULL;
 		
 		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
-			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
+			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.") port=".$port." socket=".$socket);
 			$this->host = $host;
 			$this->user = $user;
 			$this->pw = $pw;
@@ -66,7 +66,7 @@
 		
 		public function connect($selectDb = TRUE) {
 			$host = $this->host;
-			if ($this->socket != NULL) $host = $this->socket;
+			if ($this->socket != NULL) $host = 'localhost:'.$this->socket;
 			else if ($this->port != NULL) $host .= ":".$this->port;
 			
 			$db = @mysql_connect($host, $this->user, $this->pw);

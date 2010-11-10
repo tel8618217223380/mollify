@@ -34,6 +34,10 @@
 			if (!isset($tablePrefix)) $tablePrefix = "";
 			if (!isset($port)) $port = NULL;
 			if (!isset($socket)) $socket = NULL;
+			else {
+				$host = NULL;
+				$port = NULL;
+			}
 			
 			require_once("include/mysql/MySQLIDatabase.class.php");
 			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket);

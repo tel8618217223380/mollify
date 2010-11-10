@@ -55,9 +55,11 @@
 			505 => 'HTTP Version Not Supported'  
         );
         
+        private $mimeTypes;
         private $supportOutputBuffer;
         
-		function __construct($supportOutputBuffer = FALSE) {
+		function __construct($mimeTypes = array(), $supportOutputBuffer = FALSE) {
+			$this->mimeTypes = $mimeTypes;
 			$this->supportOutputBuffer = $supportOutputBuffer;
 		}
 		
@@ -132,6 +134,8 @@
 		}
 		
 		private function getMime($type) {
+			if (in_array($type, $this->mimeTypes)) return $this->mimeTypes[$type];
+			
 			if ($type === 'ogg') return 'application/ogg';
 			if ($type === 'mov') return 'video/quicktime';
 			if ($type === 'mp4') return 'video/mp4';

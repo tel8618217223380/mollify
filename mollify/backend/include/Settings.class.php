@@ -38,6 +38,7 @@
 			"support_output_buffer" => FALSE,
 			"mail_notificator_class" => "mail/MailNotificator.class.php",
 			"datetime_format" => "d.m.Y H:i:s",
+			"mime-types" => array(),
 			"debug" => FALSE
 		);
 		
