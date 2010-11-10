@@ -1,5 +1,5 @@
 #summary Troubleshooting errors
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Troubleshooting =
 
