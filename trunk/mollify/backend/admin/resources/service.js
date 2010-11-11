@@ -18,6 +18,10 @@ function getSessionInfo(success, fail) {
 	request("GET", 'session/info/'+protocolVersion+'?type=admin', success, fail);
 }
 
+function doLogout(success, fail) {
+	request("GET", 'session/logout', success, fail);
+}
+
 function authenticate(username, pw, success, fail) {
 	var data = JSON.stringify({username:username, password:generate_md5(pw), protocol_version:protocolVersion});
 	request("POST", 'session/authenticate', success, fail, data);

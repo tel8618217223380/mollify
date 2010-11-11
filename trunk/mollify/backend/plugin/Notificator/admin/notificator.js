@@ -359,13 +359,13 @@ function NotificatorListView() {
 		}
 		
 		$("#button-add-notification-event").click(function(){
-			var sel = $("#notification-events-available-list").getGridParam("selarrrow");
+			var sel = getValidSelections($("#notification-events-available-list").getGridParam("selarrrow"));
 			if (sel.length < 1) return;
 			addRemoveEvent(sel, false);
 		});
 
 		$("#button-remove-notification-event").click(function(){
-			var sel = $("#notification-events-list").getGridParam("selarrrow");
+			var sel = getValidSelections($("#notification-events-list").getGridParam("selarrrow"));
 			if (sel.length < 1) return;
 			addRemoveEvent(sel, true);
 		});
@@ -463,13 +463,13 @@ function NotificatorListView() {
 		}
 		
 		$("#button-add-notification-recipient").click(function(){
-			var sel = $("#notification-recipients-available-list").getGridParam("selarrrow");
+			var sel = getValidSelections($("#notification-recipients-available-list").getGridParam("selarrrow"));
 			if (sel.length < 1) return;
 			addRemoveRecipient(sel, false);
 		});
 
 		$("#button-remove-notification-recipient").click(function(){
-			var sel = $("#notification-recipients-list").getGridParam("selarrrow");
+			var sel = getValidSelections($("#notification-recipients-list").getGridParam("selarrrow"));
 			if (sel.length < 1) return;
 			addRemoveRecipient(sel, true);
 		});

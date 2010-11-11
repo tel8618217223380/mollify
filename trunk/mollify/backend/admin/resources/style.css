@@ -51,6 +51,19 @@
 	background: url(../../resources/images/wait.gif) no-repeat;
 }
 
+#admin-logout {
+	float: right;
+	position: absolute;
+	top: 31px;
+	right: 13px;
+	color: #dddcde;
+	cursor: pointer;
+}
+
+#admin-logout:hover {
+	color: #cacacd;	
+}
+
 #main-menu {
 	padding-left: 0px;
 	margin-right: 5px;

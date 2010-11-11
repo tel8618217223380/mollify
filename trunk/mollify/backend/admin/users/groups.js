@@ -96,7 +96,7 @@ function MollifyUserGroupsConfigurationView() {
 	}
 
 	this.getSelectedGroupUsers = function() {
-		return $("#group-users-list").getGridParam("selarrrow");
+		return getValidSelections($("#group-users-list").getGridParam("selarrrow"));
 	}
 
 	this.refresh = function() {
@@ -304,7 +304,7 @@ function MollifyUserGroupsConfigurationView() {
 		
 		var buttons = {
 			Add: function() {
-				var sel = $("#add-users-list").getGridParam("selarrrow");
+				var sel = getValidSelections($("#add-users-list").getGridParam("selarrrow"));
 				if (sel.length == 0) return;
 
 				var onSuccess = function() {
