@@ -28,8 +28,16 @@ $(document).ready(function() {
 	postRequestCallback = function() { $("#request-indicator").removeClass("active"); }
 	$.datepicker.setDefaults( { dateFormat: getDateFormat() } );
 	
+	$("#admin-logout").click(function() {
+		doLogout(onLogout, onServerError);
+	});
+	
 	getSessionInfo(onSession, onServerError);				
 });
+
+function onLogout() {
+	window.location = window.location;
+}
 
 function buildMenu() {
 	var html = '<ul>';
@@ -377,6 +385,16 @@ String.prototype.padR = function(width, pad) {
 	var length = width - this.length
 	if (length < 1) this.substr(0, width);
 	return (this + String.repeat(pad,length)).substr(0,width);
+}
+
+function getValidSelections(list) {
+	var result = [];
+	for (var i=0; i < list.length; i++) {
+		var v = list[i];
+		if (!v || v.length == 0) continue;
+		result.push(v);
+	}
+	return result;
 }
 
 // jqGrid formatters

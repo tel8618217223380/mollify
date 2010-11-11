@@ -20,7 +20,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		$("#button-edit-folder").click(that.openEditFolder);
 		$("#button-refresh-folders").click(that.refresh);
 
-		$("#folders-list").jqGrid({        
+		$("#folders-list").jqGrid({
 			datatype: "local",
 			multiselect: false,
 			autowidth: true,
@@ -42,7 +42,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		$("#button-remove-folder-users").click(that.onRemoveFolderUsers);
 		$("#button-refresh-folder-users").click(that.refreshFolderUsers);
 
-		$("#folder-users-list").jqGrid({        
+		$("#folder-users-list").jqGrid({
 			datatype: "local",
 			multiselect: true,
 			autowidth: true,
@@ -59,7 +59,7 @@ function MollifyPublishedFoldersConfigurationView() {
 			}
 		});
 		
-		$("#add-users-list").jqGrid({        
+		$("#add-users-list").jqGrid({
 			datatype: "local",
 			autowidth: true,
 			multiselect: true,
@@ -84,7 +84,7 @@ function MollifyPublishedFoldersConfigurationView() {
 	}
 	
 	this.getSelectedFolderUsers = function() {
-		return $("#folder-users-list").getGridParam("selarrrow");
+		return getValidSelections($("#folder-users-list").getGridParam("selarrrow"));
 	}
 	
 	this.refresh = function() {
@@ -336,7 +336,7 @@ function MollifyPublishedFoldersConfigurationView() {
 			
 			var buttons = {
 				Add: function() {
-					var sel = $("#add-users-list").getGridParam("selarrrow");
+					var sel = getValidSelections($("#add-users-list").getGridParam("selarrrow"));
 					if (sel.length == 0) return;
 	
 					var onSuccess = function() {

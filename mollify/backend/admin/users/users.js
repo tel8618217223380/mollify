@@ -477,7 +477,7 @@ function MollifyUsersConfigurationView() {
 		
 		var buttons = {
 			Add: function() {
-				var sel = $("#add-groups-list").getGridParam("selarrrow");
+				var sel = getValidSelections($("#add-groups-list").getGridParam("selarrrow"));
 				if (sel.length == 0) return;
 
 				var onSuccess = function() {

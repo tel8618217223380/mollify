@@ -37,6 +37,7 @@
 	<body id="page-admin">
 		<header>
 			<h1>Administration</h1>
+			<div id="admin-logout">Logout</div>
 		</header>
 
 		<div id="content" class="content" style="display:none">
