@@ -2,6 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.7.1 ===
+  * Added logout to admin utility
   * Fixed issue 92
   * Fixed issue 151
   * Fixed issue 152
