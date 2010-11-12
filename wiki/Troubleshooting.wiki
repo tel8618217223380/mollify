@@ -29,7 +29,7 @@ If you have other settings already, add this to the same list, for example:
 
 4. Copy the debug info displayed and attach into error report
 
-NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
+NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries.
 
 === 2. Client side debugging ===
 
