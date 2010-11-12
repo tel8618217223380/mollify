@@ -29,6 +29,8 @@ If you have other settings already, add this to the same list, for example:
 
 4. Copy the debug info displayed and attach into error report
 
+NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
+
 === 2. Client side debugging ===
 
 Sometimes server side debug log is not enough to solve problems, and then you need to install debug client that provides also client side debug information.
@@ -52,15 +54,7 @@ into
 <script type="text/javascript" language="javascript" src="debug-client/org.sjarvela.Mollify.nocache.js"></script>
 }}}
 
-== 3. Recreate the error ===
 Once the debug client is installed, you should see the debug window. Recreate the error, and copy all the logging information into the issue report
-
-== 4. Additional information ===
-If you have access to PHP error logs, include it as well.
-
-If you don't want to post logs here in public, you can send them to me directly with the issue link.
-
-NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries. Debug client does not have to be removed, just change the script location back to original.
 
 
 ----
