@@ -31,7 +31,7 @@ If you have other settings already, add this to the same list, for example:
 
 NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries.
 
-=== 2. Client side debugging ===
+=== Client side debugging ===
 
 Sometimes server side debug log is not enough to solve problems, and then you need to install debug client that provides also client side debug information.
 
