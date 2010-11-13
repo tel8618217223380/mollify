@@ -492,6 +492,23 @@
 			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
 		
+		public function uploadFrom($folder, $name, $stream, $src = '[Unknown]') {
+			$this->env->features()->assertFeature("file_upload");
+			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
+
+			$targetItem = $folder->fileWithName($name, TRUE);
+			if (Logging::isDebug()) Logging::logDebug("Upload from $src ($name) to ".$targetItem->id());
+			
+			$target = $targetItem->write();
+			while (!feof($stream)) {
+				set_time_limit(0);
+				fwrite($target, fread($stream, 1024));
+			}			
+			fclose($target);
+
+			$this->env->events()->onEvent(FileEvent::upload($targetItem));
+		}
+		
 		public function downloadAsZip($items) {
 			$this->env->features()->assertFeature("zip_download");
 			

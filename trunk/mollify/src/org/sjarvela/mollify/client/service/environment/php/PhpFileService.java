@@ -40,7 +40,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			.getName());
 
 	enum FileAction implements ActionId {
-		files, folders, info, details, name, copy, move, delete, download, upload, zip, description, permissions
+		files, folders, info, details, name, copy, move, delete, download, upload, zip, description, permissions, retrieveUrl
 	};
 
 	public PhpFileService(PhpService service) {
@@ -243,6 +243,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				}).data(data.toString()).post();
 	}
 
+	@Override
 	public void setItemDescription(FileSystemItem item, String description,
 			ResultListener listener) {
 		if (LogConfiguration.loggingIsEnabled())
@@ -254,6 +255,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 						.toString()).listener(listener).put();
 	}
 
+	@Override
 	public void removeItemDescription(FileSystemItem item,
 			ResultListener listener) {
 		if (LogConfiguration.loggingIsEnabled())
@@ -264,6 +266,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(listener).delete();
 	}
 
+	@Override
 	public void getItemPermissions(FileSystemItem item,
 			final ResultListener<List<FileItemUserPermission>> resultListener,
 			final UserCache userCache, final FileSystemItemCache itemCache) {
@@ -288,6 +291,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(listener).get();
 	}
 
+	@Override
 	public void updateItemPermissions(
 			List<FileItemUserPermission> newPermissions,
 			List<FileItemUserPermission> modifiedPermissions,
@@ -311,5 +315,12 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	public String getPublicLink(File file) {
 		return service.serviceUrl().item("public").item("items").fileItem(file)
 				.build();
+	}
+
+	@Override
+	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+		request().url(serviceUrl().fileItem(folder).item("retrieve"))
+				.data(new JSONStringBuilder("url", url).toString())
+				.listener(listener).post();
 	}
 }

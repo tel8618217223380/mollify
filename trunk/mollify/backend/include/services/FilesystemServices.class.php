@@ -288,6 +288,16 @@
 					if (!isset($data['id'])) throw $this->invalidRequestException();
 					$this->env->filesystem()->move($item, $this->item($data['id'], FALSE));
 					break;
+				case 'retrieve':
+					$this->env->features()->assertFeature("retrieve_url");
+					$data = $this->request->data;
+					if (!isset($data['url'])) throw $this->invalidRequestException();
+					
+					$retrieved = $this->env->urlRetriever()->retrieve($data['url']);
+					$this->env->filesystem()->uploadFrom($item, $retrieved["name"], $retrieved["stream"], $data['url']);
+					fclose($retrieved["stream"]);
+					unlink($retrieved["file"]);
+					break;
 				default:
 					throw $this->invalidRequestException();
 			}

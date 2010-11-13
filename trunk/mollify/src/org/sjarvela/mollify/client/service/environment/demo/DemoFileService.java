@@ -149,4 +149,9 @@ public class DemoFileService implements FileSystemService {
 	public String getPublicLink(File file) {
 		return "http://www.mollify.org/images/mollify_logo.png";
 	}
+
+	@Override
+	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+		listener.onSuccess(true);
+	}
 }

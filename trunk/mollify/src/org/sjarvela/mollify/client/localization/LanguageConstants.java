@@ -52,6 +52,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String mainViewAddDirectoryMenuItem();
 
+	public String mainViewRetrieveUrlMenuItem();
+
 	public String fileDetailsLabelLastAccessed();
 
 	public String fileDetailsLabelLastModified();

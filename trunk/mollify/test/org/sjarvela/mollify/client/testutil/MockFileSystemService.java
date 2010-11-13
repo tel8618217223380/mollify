@@ -182,4 +182,9 @@ public class MockFileSystemService implements FileSystemService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+		// TODO Auto-generated method stub
+	}
 }

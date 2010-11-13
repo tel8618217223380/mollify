@@ -26,25 +26,47 @@
 			if ($this->enabled) {
 				$f = ($from != NULL ? $from : $this->env->settings()->setting("mail_notification_from"));
 				
-				$headers = 'From:'.$f;
-				$count = 0;
-				foreach ($to as $recipient) {
-					if ($recipient["email"] === NULL or strlen($recipient["email"]) == 0) continue;
-					
-					if ($count == 0) {
-						$headers .= PHP_EOL.'Bcc:'.$recipient["name"].'<'.$recipient["email"].'>';
-					} else {
-						$headers .= ','.$recipient["name"].'<'.$recipient["email"].'>';
-					}
-					
-					$count .= 1;
-				}
-				if ($count === 0) {
+				$validRecipients = $this->getValidRecipients($to);
+				if (count($validRecipients) === 0) {
 					Logging::logDebug("No valid recipient email addresses, no mail sent");
 					return;
 				}
-				mail('', $subject, wordwrap($message), $headers);
+				
+				$toAddress = '';
+				$headers = 'From:'.$f;
+				
+				if (count($validRecipients) == 1) {
+					$toAddress = $this->getRecipientString($validRecipients[0]);
+				} else {
+					$headers .= PHP_EOL.$this->getBccHeaders($validRecipients);
+				}
+				
+				mail($toAddress, $subject, wordwrap($message), $headers);
 			}
+		}
+
+		private function getBccHeaders($recipients) {
+			$headers = 'Bcc:';
+			$first = TRUE;
+			
+			foreach ($recipients as $recipient) {
+				if (!$first) $headers .= ',';
+				$headers .= $this->getRecipientString($recipient);				
+				$first = FALSE;
+			}
+		}
+				
+		private function getRecipientString($r) {
+			return $r["name"].'<'.$r["email"].'>';
+		}
+		
+		private function getValidRecipients($recipients) {
+			$valid = array();
+			foreach ($recipients as $recipient) {
+				if ($recipient["email"] === NULL or strlen($recipient["email"]) == 0) continue;
+				$valid[] = $recipient;
+			}
+			return $valid;
 		}
 				
 		public function __toString() {

@@ -85,6 +85,10 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.lost_password;
 	}-*/;
 
+	public final native boolean retrieveUrl() /*-{
+		return this.retrieve_url;
+	}-*/;
+
 	private final native void putValues(boolean folderActions,
 			boolean fileUpload, boolean fileUploadProgress,
 			boolean zipDownload, boolean descriptionUpdate,
@@ -104,5 +108,6 @@ public class FeatureInfo extends JavaScriptObject {
 		this.file_view = fileView;
 		this.public_links = publicLinks;
 		this.lost_password = true;
+		this.retrieve_url = true;
 	}-*/;
 }

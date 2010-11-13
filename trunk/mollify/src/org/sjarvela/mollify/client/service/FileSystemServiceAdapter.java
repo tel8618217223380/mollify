@@ -35,26 +35,26 @@ public class FileSystemServiceAdapter implements FileSystemService {
 
 	public void copy(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener) {
-		service.copy(item, directory, resultListenerFactory
-				.createListener(listener));
+		service.copy(item, directory,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void copy(List<FileSystemItem> items, Folder folder,
 			ResultListener<Boolean> listener) {
-		service.copy(items, folder, resultListenerFactory
-				.createListener(listener));
+		service.copy(items, folder,
+				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
 	public void copyWithName(File file, String name, ResultListener listener) {
-		service.copyWithName(file, name, resultListenerFactory
-				.createListener(listener));
+		service.copyWithName(file, name,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
-		service.createFolder(parentFolder, folderName, resultListenerFactory
-				.createListener(resultListener));
+		service.createFolder(parentFolder, folderName,
+				resultListenerFactory.createListener(resultListener));
 	}
 
 	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
@@ -68,8 +68,8 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	}
 
 	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
-		service.getFolders(parent, resultListenerFactory
-				.createListener(listener));
+		service.getFolders(parent,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
@@ -98,42 +98,41 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	@Override
 	public void getItemDetails(FileSystemItem item,
 			ResultListener<ItemDetails> listener) {
-		service.getItemDetails(item, resultListenerFactory
-				.createListener(listener));
+		service.getItemDetails(item,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void getItemPermissions(FileSystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache fileSystemItemCache) {
-		service
-				.getItemPermissions(item, resultListenerFactory
-						.createListener(resultListener), userCache,
-						fileSystemItemCache);
+		service.getItemPermissions(item,
+				resultListenerFactory.createListener(resultListener),
+				userCache, fileSystemItemCache);
 	}
 
 	public void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener) {
-		service.move(file, toDirectory, resultListenerFactory
-				.createListener(listener));
+		service.move(file, toDirectory,
+				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
 	public void move(List<FileSystemItem> items, Folder folder,
 			ResultListener<Boolean> listener) {
-		service.move(items, folder, resultListenerFactory
-				.createListener(listener));
+		service.move(items, folder,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void removeItemDescription(FileSystemItem item,
 			ResultListener listener) {
-		service.removeItemDescription(item, resultListenerFactory
-				.createListener(listener));
+		service.removeItemDescription(item,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener) {
-		service.rename(item, newName, resultListenerFactory
-				.createListener(listener));
+		service.rename(item, newName,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public void setItemDescription(FileSystemItem item, String description,
@@ -147,13 +146,19 @@ public class FileSystemServiceAdapter implements FileSystemService {
 			List<FileItemUserPermission> removedPermissions,
 			ResultListener resultListener) {
 		service.updateItemPermissions(newPermissions, modifiedPermissions,
-				removedPermissions, resultListenerFactory
-						.createListener(resultListener));
+				removedPermissions,
+				resultListenerFactory.createListener(resultListener));
 	}
 
 	@Override
 	public String getPublicLink(File file) {
 		return service.getPublicLink(file);
+	}
+
+	@Override
+	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+		service.retrieveUrl(folder, url,
+				resultListenerFactory.createListener(listener));
 	}
 
 }

@@ -77,4 +77,6 @@ public interface FileSystemService extends ItemDetailsProvider {
 
 	String getPublicLink(File file);
 
+	void retrieveUrl(Folder folder, String url, ResultListener listener);
+
 }
