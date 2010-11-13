@@ -253,7 +253,28 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					@Override
 					public void onInput(String url) {
 						fileSystemService.retrieveUrl(model.getCurrentFolder(),
-								url, createReloadListener("Create folder"));
+								url, new ResultListener() {
+									@Override
+									public void onSuccess(Object result) {
+										logger.log(Level.INFO,
+												"URL retrieve complete");
+										reload();
+									}
+
+									@Override
+									public void onFail(ServiceError error) {
+										if (ServiceErrorType.REQUEST_FAILED
+												.equals(error.getType())) {
+											dialogManager
+													.showInfo(
+															"TODO url retrieve",
+															"TODO failed to retrieve url",
+															error.getDetails());
+										} else {
+											dialogManager.showError(error);
+										}
+									}
+								});
 					}
 
 					@Override
