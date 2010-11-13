@@ -54,8 +54,8 @@
 		
 		private function getName($url) {
 			$name = $url;
-			$pos = strrpos("/", $name);
-			if ($pos >= 0) $name = substr($name, $pos);
+			$pos = strrpos($name, "/");
+			if ($pos >= 0) $name = substr($name, $pos+1);
 			return strtr($name, "/:", "__");
 		}
 				

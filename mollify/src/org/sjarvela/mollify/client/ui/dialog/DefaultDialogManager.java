@@ -62,4 +62,9 @@ public class DefaultDialogManager implements DialogManager {
 			String defaultValue, InputListener listener) {
 		new InputDialog(textProvider, title, message, defaultValue, listener);
 	}
+
+	@Override
+	public WaitDialog openWaitDialog(String title, String message) {
+		return new DefaultWaitDialog(textProvider, title, message);
+	}
 }
