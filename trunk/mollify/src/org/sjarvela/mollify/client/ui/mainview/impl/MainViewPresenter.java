@@ -41,6 +41,7 @@ import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
+import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
@@ -252,34 +253,42 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				"", new InputListener() {
 					@Override
 					public void onInput(String url) {
-						fileSystemService.retrieveUrl(model.getCurrentFolder(),
-								url, new ResultListener() {
-									@Override
-									public void onSuccess(Object result) {
-										logger.log(Level.INFO,
-												"URL retrieve complete");
-										reload();
-									}
-
-									@Override
-									public void onFail(ServiceError error) {
-										if (ServiceErrorType.REQUEST_FAILED
-												.equals(error.getType())) {
-											dialogManager
-													.showInfo(
-															"TODO url retrieve",
-															"TODO failed to retrieve url",
-															error.getDetails());
-										} else {
-											dialogManager.showError(error);
-										}
-									}
-								});
+						retrieveUrl(url);
 					}
 
 					@Override
 					public boolean isInputAcceptable(String input) {
-						return input.length() > 0;
+						return input.length() > 0
+								&& input.toLowerCase().startsWith("http");
+					}
+				});
+	}
+
+	private void retrieveUrl(String url) {
+		final WaitDialog waitDialog = dialogManager.openWaitDialog(
+				"TODO Retrieving from URL", "TODO Please wait...");
+
+		fileSystemService.retrieveUrl(model.getCurrentFolder(), url,
+				new ResultListener() {
+					@Override
+					public void onSuccess(Object result) {
+						waitDialog.close();
+						logger.log(Level.INFO, "URL retrieve complete");
+						reload();
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						waitDialog.close();
+
+						if (ServiceErrorType.REQUEST_FAILED.equals(error
+								.getType())) {
+							dialogManager.showInfo("TODO url retrieve",
+									"TODO failed to retrieve url",
+									error.getDetails());
+						} else {
+							dialogManager.showError(error);
+						}
 					}
 				});
 	}

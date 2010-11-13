@@ -29,4 +29,6 @@ public interface DialogManager {
 	void showInputDialog(String title, String message, String defaultValue,
 			InputListener listener);
 
+	WaitDialog openWaitDialog(String title, String message);
+
 }
