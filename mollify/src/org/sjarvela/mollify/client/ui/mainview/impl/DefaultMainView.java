@@ -79,7 +79,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FlowPanel fileUrlContainer;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -273,6 +273,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			if (model.getSession().getFeatures().folderActions())
 				addButton.addAction(Action.addDirectory, textProvider
 						.getStrings().mainViewAddDirectoryMenuItem());
+			if (model.getSession().getFeatures().retrieveUrl())
+				addButton.addAction(Action.retrieveUrl, textProvider
+						.getStrings().mainViewRetrieveUrlMenuItem());
+
 		}
 	}
 
@@ -303,13 +307,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void showFileContext(File file) {
-		itemContextHandler.onItemSelected(file, list.getWidget(file,
-				FileList.COLUMN_NAME));
+		itemContextHandler.onItemSelected(file,
+				list.getWidget(file, FileList.COLUMN_NAME));
 	}
 
 	public void showFolderContext(Folder folder) {
-		itemContextHandler.onItemSelected(folder, list.getWidget(folder,
-				FileList.COLUMN_NAME));
+		itemContextHandler.onItemSelected(folder,
+				list.getWidget(folder, FileList.COLUMN_NAME));
 	}
 
 	public ActionButton getRefreshButton() {
@@ -330,9 +334,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void setPositionOnShow(DropdownPopup popup, Widget parent,
 			int offsetWidth, int offsetHeight) {
-		popup.setPopupPosition(parent.getAbsoluteLeft(), parent
-				.getAbsoluteTop()
-				+ parent.getOffsetHeight());
+		popup.setPopupPosition(parent.getAbsoluteLeft(),
+				parent.getAbsoluteTop() + parent.getOffsetHeight());
 	}
 
 	public void hideButtons() {
@@ -348,9 +351,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void setSelectMode(boolean select) {
-		list
-				.setSelectionMode(select ? SelectionMode.Multi
-						: SelectionMode.None);
+		list.setSelectionMode(select ? SelectionMode.Multi : SelectionMode.None);
 	}
 
 	public void setListSelectController(SelectController controller) {

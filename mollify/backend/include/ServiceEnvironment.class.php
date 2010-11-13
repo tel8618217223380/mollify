@@ -32,7 +32,8 @@
 		private $eventHandler;
 		private $filesystem;
 		private $request;
-		private $notification;
+		private $notificator = NULL;
+		private $urlRetriever = NULL;
 		
 		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
 			$this->session = $session;
@@ -44,7 +45,6 @@
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
-			$this->notificator = $this->createMailNotificator();
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -52,6 +52,11 @@
 		private function createMailNotificator() {
 			require_once($this->settings->setting("mail_notificator_class", TRUE));
 			return new MailNotificator($this);
+		}
+		
+		private function createUrlRetriever() {
+			require_once($this->settings->setting("url_retriever_class", TRUE));
+			return new UrlRetriever($this);
 		}
 		
 		public function session() {
@@ -95,7 +100,15 @@
 		}
 
 		public function notificator() {
+			if ($this->notificator == NULL)
+				$this->notificator = $this->createMailNotificator();
 			return $this->notificator;
+		}
+		
+		public function urlRetriever() {
+			if ($this->urlRetriever == NULL)
+				$this->urlRetriever = $this->createUrlRetriever();
+			return $this->urlRetriever;
 		}
 		
 		public function formatter() {

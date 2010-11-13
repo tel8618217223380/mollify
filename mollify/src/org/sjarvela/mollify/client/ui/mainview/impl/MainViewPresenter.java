@@ -40,6 +40,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
@@ -239,6 +240,25 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 						fileSystemService.createFolder(parentFolder,
 								folderName,
 								createReloadListener("Create folder"));
+					}
+				});
+	}
+
+	public void retrieveFromUrl() {
+		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
+			return;
+
+		dialogManager.showInputDialog("TODO retrieve", "TODO Enter the url:",
+				"", new InputListener() {
+					@Override
+					public void onInput(String url) {
+						fileSystemService.retrieveUrl(model.getCurrentFolder(),
+								url, createReloadListener("Create folder"));
+					}
+
+					@Override
+					public boolean isInputAcceptable(String input) {
+						return input.length() > 0;
 					}
 				});
 	}

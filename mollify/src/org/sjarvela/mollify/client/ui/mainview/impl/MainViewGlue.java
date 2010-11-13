@@ -90,6 +90,13 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 					}
 				});
 
+		actionDelegator.setActionHandler(Action.retrieveUrl,
+				new VoidActionHandler() {
+					public void onAction() {
+						presenter.retrieveFromUrl();
+					}
+				});
+
 		actionDelegator.setActionHandler(Action.changePassword,
 				new VoidActionHandler() {
 					public void onAction() {
