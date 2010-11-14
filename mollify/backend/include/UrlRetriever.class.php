@@ -56,7 +56,7 @@
 			$name = $url;
 			$pos = strrpos($name, "/");
 			if ($pos >= 0) $name = substr($name, $pos+1);
-			return strtr($name, "/:", "__");
+			return strtr($name, "/:?=", "____");
 		}
 				
 		public function __toString() {

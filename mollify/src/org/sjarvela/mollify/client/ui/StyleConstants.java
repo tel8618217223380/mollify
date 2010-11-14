@@ -371,4 +371,8 @@ public class StyleConstants {
 	public static final String FILE_VIEWER_BUTTONS = "mollify-file-viewer-buttons";
 	public static final String FILE_VIEWER_BUTTON_OPEN = "file-viewer-open";
 	public static final String FILE_VIEWER_BUTTON_CLOSE = "file-viewer-close";
+
+	public static final String WAIT_DIALOG_CONTENT = "mollify-wait-dialog-content";
+	public static final String WAIT_DIALOG_ICON = "mollify-wait-dialog-icon";
+	public static final String WAIT_DIALOG_MESSAGE = "mollify-wait-dialog-message";
 }
