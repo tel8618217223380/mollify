@@ -13,7 +13,9 @@
 	class ConfigurationProviderFactory {
 		public function createConfigurationProvider($configurationProviderId, $settings) {
 			require_once("configuration/ConfigurationProvider.class.php");
-			if (!$configurationProviderId or strcasecmp($configurationProviderId, 'file') == 0) {
+			if (!$configurationProviderId) throw new ServiceException("INVALID_CONFIGURATION", "No configuration provider defined");
+			
+			if (strcasecmp($configurationProviderId, 'file') == 0) {
 				require_once("configuration/FileConfigurationProvider.class.php");
 				return new FileConfigurationProvider($settings);
 			} else if (!$configurationProviderId or strcasecmp($configurationProviderId, 'mysql') == 0) {
@@ -23,7 +25,6 @@
 				require_once("configuration/PostgresqlConfigurationProvider.class.php");
 				return new PostgresqlConfigurationProvider($settings);
 			} else {
-				Logging::logError("Unsupported data provider: [".$configurationProviderId."]");
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported data provider: [".$configurationProviderId."]");
 			}
 		}

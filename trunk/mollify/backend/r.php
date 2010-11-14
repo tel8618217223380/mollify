@@ -14,6 +14,7 @@
 	require_once("include/Request.class.php");
 	require_once("include/ResponseHandler.class.php");
 	require_once("include/OutputHandler.class.php");
+	require_once("include/Version.info.php");
 	
 	$responseHandler = NULL;
 	
@@ -38,8 +39,8 @@
 	
 	require_once("configuration.php");
 	
-	global $SETTINGS, $CONFIGURATION_PROVIDER;
-	Logging::initialize($SETTINGS);
+	global $SETTINGS, $CONFIGURATION_PROVIDER, $VERSION;
+	Logging::initialize($SETTINGS, $VERSION);
 
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
