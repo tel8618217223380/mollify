@@ -15,6 +15,7 @@
 	require_once("filesystem/FilesystemController.class.php");
 	require_once("plugin/PluginController.class.php");
 	require_once("services/ServicesBase.class.php");
+	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
 	
 	class ServiceEnvironment {

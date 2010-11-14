@@ -12,11 +12,13 @@
 	include_once("Util.class.php");
 	
 	class Logging {
+		private static $version = "";
 		private static $debug = FALSE;
 		private static $firebug = FALSE;
 		private static $trace = array();
 	
-		static function initialize($settings) {
+		static function initialize($settings, $version = "-") {
+			self::$version = $version;
 			self::$debug = (isset($settings) and isset($settings["debug"]) and $settings['debug'] === TRUE);
 			self::$firebug = (isset($settings) and isset($settings["firebug_logging"]) and $settings['firebug_logging'] === TRUE);
 
@@ -72,7 +74,7 @@
 				
 		public static function logSystem() {
 			if (!self::isDebug()) return;
-			self::logDebug("SERVER: ".Util::array2str($_SERVER, array("HTTP_USER_AGENT", "HTTP_ACCEPT", "HTTP_HOST", "HTTP_ACCEPT_LANGUAGE", "HTTP_ACCEPT_ENCODING", "HTTP_ACCEPT_CHARSET", "HTTP_KEEP_ALIVE", "HTTP_CONNECTION", "PATH", "SERVER_SIGNATURE", "SERVER_SOFTWARE", "SERVER_NAME", "SERVER_ADDR", "SERVER_PORT", "REMOTE_ADDR", "DOCUMENT_ROOT", "SERVER_ADMIN", "REMOTE_PORT", "GATEWAY_INTERFACE", "FILES")));
+			self::logDebug("VERSION: ".self::$version." SERVER: ".Util::array2str($_SERVER, array("HTTP_USER_AGENT", "HTTP_ACCEPT", "HTTP_HOST", "HTTP_ACCEPT_LANGUAGE", "HTTP_ACCEPT_ENCODING", "HTTP_ACCEPT_CHARSET", "HTTP_KEEP_ALIVE", "HTTP_CONNECTION", "PATH", "SERVER_SIGNATURE", "SERVER_SOFTWARE", "SERVER_NAME", "SERVER_ADDR", "SERVER_PORT", "REMOTE_ADDR", "DOCUMENT_ROOT", "SERVER_ADMIN", "REMOTE_PORT", "GATEWAY_INTERFACE", "FILES")));
 		}
 		
 		private static function toStr($o) {
