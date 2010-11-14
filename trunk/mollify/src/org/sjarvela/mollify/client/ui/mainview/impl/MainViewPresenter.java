@@ -249,24 +249,25 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		dialogManager.showInputDialog("TODO retrieve", "TODO Enter the url:",
-				"", new InputListener() {
-					@Override
-					public void onInput(String url) {
-						retrieveUrl(url);
-					}
+		dialogManager.showInputDialog(textProvider.getStrings()
+				.retrieveUrlTitle(), textProvider.getStrings()
+				.retrieveUrlMessage(), "", new InputListener() {
+			@Override
+			public void onInput(String url) {
+				retrieveUrl(url);
+			}
 
-					@Override
-					public boolean isInputAcceptable(String input) {
-						return input.length() > 0
-								&& input.toLowerCase().startsWith("http");
-					}
-				});
+			@Override
+			public boolean isInputAcceptable(String input) {
+				return input.length() > 0
+						&& input.toLowerCase().startsWith("http");
+			}
+		});
 	}
 
 	private void retrieveUrl(String url) {
-		final WaitDialog waitDialog = dialogManager.openWaitDialog(
-				"TODO Retrieving from URL", "TODO Please wait...");
+		final WaitDialog waitDialog = dialogManager.openWaitDialog("",
+				textProvider.getStrings().pleaseWait());
 
 		fileSystemService.retrieveUrl(model.getCurrentFolder(), url,
 				new ResultListener() {
@@ -283,9 +284,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 						if (ServiceErrorType.REQUEST_FAILED.equals(error
 								.getType())) {
-							dialogManager.showInfo("TODO url retrieve",
-									"TODO failed to retrieve url",
-									error.getDetails());
+							dialogManager.showInfo(textProvider.getStrings()
+									.retrieveUrlTitle(), textProvider
+									.getStrings().retrieveUrlFailed(), error
+									.getDetails());
 						} else {
 							dialogManager.showError(error);
 						}

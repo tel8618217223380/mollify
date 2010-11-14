@@ -51,6 +51,7 @@ public class InputDialog extends CenteredDialog {
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
+						input.setFocus(true);
 						input.selectAll();
 					}
 				});

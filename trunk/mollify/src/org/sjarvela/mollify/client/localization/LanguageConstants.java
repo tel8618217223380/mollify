@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.localization;
 
 public interface LanguageConstants extends com.google.gwt.i18n.client.Constants {
 
+	public String pleaseWait();
+	
 	public String shortDateTimeFormat();
 
 	public String permissionModeNone();
@@ -453,5 +455,11 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String resetPasswordPopupResetFailed();
 
 	public String resetPasswordPopupResetSuccess();
+
+	public String retrieveUrlTitle();
+
+	public String retrieveUrlMessage();
+
+	public String retrieveUrlFailed();
 
 }
