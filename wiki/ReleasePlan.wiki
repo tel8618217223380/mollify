@@ -1,6 +1,6 @@
 #summary Items in next release
 
-Items included in release 1.7
+Items included in release 1.8
 
- * Notification plugin (email notifications for events)
- * Client plugin system
+ * Customizable localizations
+ * Search
