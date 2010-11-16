@@ -62,6 +62,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final FolderSelector folderSelector;
 	private final FileList list;
 	private final FlowPanel listPanel;
+	private final FlowPanel progress;
 
 	private final ItemContextPopup itemContextPopup;
 	private final ContextPopupHandler<FileSystemItem> itemContextHandler;
@@ -97,6 +98,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.listPanel = new FlowPanel();
 		this.listPanel.setStylePrimaryName(StyleConstants.FILE_LIST_PANEL);
 
+		this.progress = new FlowPanel();
+		this.progress.setStylePrimaryName(StyleConstants.FILE_LIST_PROGRESS);
+		this.progress.setVisible(false);
+
 		this.folderSelector = folderSelectorFactory.createSelector();
 		this.list = new FileList(textProvider, dragAndDropManager);
 
@@ -128,6 +133,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		listPanel.add(list);
 		content.add(listPanel);
+		listPanel.add(progress);
+
 		return content;
 	}
 
@@ -388,6 +395,14 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			a.setInnerHTML(e.getKey());
 			fileUrlContainer.getElement().appendChild(a);
 		}
+	}
+
+	public void showProgress() {
+		this.progress.setVisible(true);
+	}
+
+	public void hideProgress() {
+		this.progress.setVisible(false);
 	}
 
 }

@@ -38,8 +38,12 @@
 			$this->session->initialize($env);
 			$this->authentication = new Authentication($env);
 		}
-				
-		public function isAuthenticated() { 
+		
+		public function authenticate($userId) {
+			$this->authentication->doAuth($this->getUser($userId));
+		}
+		
+		public function isAuthenticated() {
 			return $this->authentication->isAuthenticated();
 		} 
 		

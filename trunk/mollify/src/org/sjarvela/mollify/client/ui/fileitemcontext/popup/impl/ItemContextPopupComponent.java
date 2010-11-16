@@ -54,6 +54,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	private VerticalPanel componentsPanel;
 	private Map<ItemContextComponent, Widget> components = new HashMap();
 	private FlowPanel buttons;
+	private FlowPanel progress;
 
 	public enum Action implements ResourceId {
 		addDescription, editDescription, removeDescription, cancelEditDescription, applyDescription, editPermissions, addToDropbox, callback
@@ -81,9 +82,14 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		widthEnforcer.setStyleName(StyleConstants.FILE_CONTEXT_WIDTH_ENFORCER);
 		content.add(widthEnforcer);
 
+		progress = new FlowPanel();
+		progress.setStyleName(StyleConstants.FILE_CONTEXT_PROGRESS);
+		progress.setVisible(false);
+
 		name = new Label();
 		name.setStyleName(StyleConstants.FILE_CONTEXT_FILENAME);
 		content.add(name);
+		content.add(progress);
 
 		content.add(createComponentsPanel());
 		content.add(createButtons());
@@ -277,5 +283,13 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	public void removeComponents(List<ItemContextComponent> list) {
 		for (ItemContextComponent c : list)
 			removeComponent(c);
+	}
+
+	public void showProgress() {
+		progress.setVisible(true);
+	}
+
+	public void hideProgress() {
+		progress.setVisible(false);
 	}
 }

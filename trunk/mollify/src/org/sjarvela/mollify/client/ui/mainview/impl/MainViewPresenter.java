@@ -146,6 +146,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
+				view.showProgress();
+
 				Folder folder = (Folder) item;
 
 				if (folder == Folder.Parent)
@@ -157,10 +159,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void changeToRootFolder(Folder root) {
+		view.showProgress();
 		model.changeToRootFolder(root, createFolderChangeListener());
 	}
 
 	public void changeToFolder(Folder folder) {
+		view.showProgress();
 		model.changeToSubfolder(folder, createFolderChangeListener());
 	}
 
@@ -169,13 +173,17 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void reload() {
+		view.showProgress();
+
 		model.refreshData(new ResultListener<FolderInfo>() {
 			public void onFail(ServiceError error) {
+				view.hideProgress();
 				onError(error, false);
 			}
 
 			public void onSuccess(FolderInfo result) {
 				refreshView();
+				view.hideProgress();
 			}
 		});
 	}
@@ -205,11 +213,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	public void onMoveToParentFolder() {
 		if (!model.getFolderModel().canAscend())
 			return;
+		view.showProgress();
 		model.moveToParentFolder(createFolderChangeListener());
 	}
 
 	@Override
 	public void onChangeToFolder(int level, Folder folder) {
+		view.showProgress();
 		model.changeToFolder(level, folder, createFolderChangeListener());
 	}
 
@@ -328,6 +338,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		return new Callback() {
 			public void onCallback() {
 				refreshView();
+				view.hideProgress();
 			}
 		};
 	}

@@ -90,6 +90,7 @@ public class StyleConstants {
 
 	public static final String FILE_CONTEXT = "file-context";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";
+	public static final String FILE_CONTEXT_PROGRESS = "mollify-file-context-progress";
 	public static final String FILE_CONTEXT_WIDTH_ENFORCER = "mollify-file-context-width-enforcer";
 	public static final String FILE_CONTEXT_FILENAME = "mollify-file-context-filename";
 	public static final String FILE_CONTEXT_DESCRIPTION = "file-context-description";
@@ -132,6 +133,7 @@ public class StyleConstants {
 
 	public static final String FILE_LIST = "mollify-filelist";
 	public static final String FILE_LIST_PANEL = "mollify-filelist-panel";
+	public static final String FILE_LIST_PROGRESS = "mollify-filelist-progress";
 	public static final String FILE_LIST_HEADER = "mollify-filelist-column";
 	public static final String FILE_LIST_COLUMN_PREFIX = "mollify-filelist-column-";
 	public static final String FILE_LIST_ROW_PARENT_DIRECTORY = "mollify-filelist-row-directory-up";
