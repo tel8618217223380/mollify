@@ -81,11 +81,26 @@ public class ItemContextPresenter implements ActionListener,
 		this.item = item;
 
 		this.popup.reset();
+		this.popup.showProgress();
+
 		popup.getName().setText(item.getName());
 
 		itemDetailsProvider.getItemDetails(item,
 				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
+						popup.hide();
+
+						if (error.getDetails() != null
+								&& (error.getDetails().startsWith(
+										"PHP error #2048") || error
+										.getDetails()
+										.contains(
+												"It is not safe to rely on the system's timezone settings"))) {
+							dialogManager
+									.showInfo("ERROR",
+											"Mollify configuration error, PHP timezone information missing.");
+							return;
+						}
 						dialogManager.showError(error);
 					}
 
@@ -96,6 +111,8 @@ public class ItemContextPresenter implements ActionListener,
 	}
 
 	private void updateDetails(ItemDetails details) {
+		this.popup.hideProgress();
+
 		this.components = new ArrayList();
 		if (details != null) {
 			components = popup.setup(itemContextProvider.getItemContext(item,
