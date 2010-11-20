@@ -56,6 +56,8 @@ import org.sjarvela.mollify.client.ui.password.DefaultPasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.DefaultPermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
+import org.sjarvela.mollify.client.ui.searchresult.impl.DefaultSearchResultDialogFactory;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 import org.sjarvela.mollify.client.ui.viewer.impl.DefaultFileViewerFactory;
 
@@ -94,6 +96,8 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
 		bind(PluginEnvironment.class).to(DefaultPluginEnvironment.class);
 		bind(ItemContextProvider.class).to(DefaultItemContextProvider.class);
+		bind(SearchResultDialogFactory.class).to(
+				DefaultSearchResultDialogFactory.class);
 	}
 
 	@Provides
@@ -155,12 +159,12 @@ public class ContainerConfiguration extends AbstractGinModule {
 			return new FlashFileUploadDialogFactory(textProvider, urlResolver,
 					env.getFileUploadService(), sessionProvider, settings);
 		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
-			return new PluploaderDialogFactory(textProvider, urlResolver, env
-					.getFileUploadService(), sessionProvider, dialogManager,
+			return new PluploaderDialogFactory(textProvider, urlResolver,
+					env.getFileUploadService(), sessionProvider, dialogManager,
 					settings);
 
-		return new HttpFileUploadDialogFactory(env, textProvider, env
-				.getFileUploadService(), sessionProvider, dialogManager);
+		return new HttpFileUploadDialogFactory(env, textProvider,
+				env.getFileUploadService(), sessionProvider, dialogManager);
 	}
 
 }

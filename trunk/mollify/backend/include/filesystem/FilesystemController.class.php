@@ -20,6 +20,7 @@
 		private $permissionCache = array();
 		private $folderCache = array();
 		private $detailsPlugins = array();
+		private $searchers = array();
 		
 		public $allowFilesystems = TRUE;
 
@@ -27,9 +28,12 @@
 			require_once("MollifyFilesystem.class.php");
 			require_once("LocalFilesystem.class.php");
 			require_once("FilesystemItem.class.php");
+			require_once("BaseSearcher.class.php");
+			require_once("FilesystemSearcher.class.php");
 			
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
+			$this->registerSearcher(new FileSystemSearcher());
 			
 			FileEvent::register($this->env->events());
 		}
@@ -38,6 +42,10 @@
 
 		public function registerDetailsPlugin($plugin) {
 			$this->detailsPlugins[] = $plugin;
+		}
+
+		public function registerSearcher($searcher) {
+			$this->searchers[] = $searcher;
 		}
 		
 		public function getRootFolders($all = FALSE) {
@@ -535,6 +543,25 @@
 			}
 			
 			$this->env->response()->download($name, "zip", $zip->stream());	
+		}
+		
+		public function search($parent, $text) {
+			$m = $this->searchRecursive($parent, $text);
+			return array("count" => count($m), "matches" => $m);
+		}
+		
+		private function searchRecursive($parent, $text) {
+			$result = array();
+			
+			foreach($parent->items() as $item) {
+				Logging::logDebug("Searching ".$item->name());
+				foreach($this->searchers as $searcher) {
+					$match = $searcher->match($item, $text);
+					if ($match) $result[] = $match;
+				}
+				if (!$item->isFile()) $result = array_merge($result, $this->searchRecursive($item, $text));
+			}
+			return $result;
 		}
 		
 		public function zipper() {

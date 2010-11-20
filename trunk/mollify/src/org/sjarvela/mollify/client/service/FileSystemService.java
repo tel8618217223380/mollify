@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -78,5 +79,7 @@ public interface FileSystemService extends ItemDetailsProvider {
 	String getPublicLink(File file);
 
 	void retrieveUrl(Folder folder, String url, ResultListener listener);
+
+	void search(Folder parent, String text, ResultListener<SearchResult> listener);
 
 }

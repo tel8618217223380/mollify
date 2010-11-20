@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -185,6 +186,12 @@ public class MockFileSystemService implements FileSystemService {
 
 	@Override
 	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void search(Folder parent, String text,
+			ResultListener<SearchResult> listener) {
 		// TODO Auto-generated method stub
 	}
 }

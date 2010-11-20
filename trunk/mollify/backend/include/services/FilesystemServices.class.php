@@ -62,6 +62,7 @@
 				$this->processMultiItemAction();
 				return;
 			}
+
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
 				$this->processPostFile($item);
@@ -298,6 +299,13 @@
 					fclose($retrieved["stream"]);
 					unlink($retrieved["file"]);
 					break;
+				case 'search':
+					$data = $this->request->data;
+					if (!isset($data['text'])) throw $this->invalidRequestException();
+					
+					$this->response()->success($this->env->filesystem()->search($item, $data['text']));
+					return;
+
 				default:
 					throw $this->invalidRequestException();
 			}

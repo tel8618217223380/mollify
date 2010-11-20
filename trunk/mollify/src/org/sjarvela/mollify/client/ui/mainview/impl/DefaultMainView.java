@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.ActionToggleButton;
 import org.sjarvela.mollify.client.ui.common.Coords;
+import org.sjarvela.mollify.client.ui.common.HintTextBox;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
@@ -43,6 +44,8 @@ import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
@@ -66,6 +69,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	private final ItemContextPopup itemContextPopup;
 	private final ContextPopupHandler<FileSystemItem> itemContextHandler;
+	private final List<ViewListener> viewListeners = new ArrayList();
+	private final List<SearchListener> searchListeners = new ArrayList();
 
 	private MainViewHeader header;
 	private DropdownButton addButton;
@@ -75,8 +80,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private DropdownButton selectOptionsButton;
 	private DropdownButton fileActions;
 	private ActionToggleButton dropBoxButton;
+	private HintTextBox searchField;
 
-	List<ViewListener> viewListeners = new ArrayList<ViewListener>();
 	private FlowPanel fileUrlContainer;
 
 	public enum Action implements ResourceId {
@@ -110,12 +115,34 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
 				itemContextPopup);
 
+		this.searchField = new HintTextBox("TODO search");
+		this.searchField
+				.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_SEARCH_FIELD);
+		this.searchField.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeKeyCode() == 13)
+					onSearch(searchField.getValue());
+			}
+		});
+
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
 	}
 
+	private void onSearch(String text) {
+		if (text.isEmpty())
+			return;
+		for (SearchListener listener : searchListeners)
+			listener.onSearch(text);
+	}
+
 	public void addViewListener(ViewListener listener) {
 		viewListeners.add(listener);
+	}
+
+	public void addSearchListener(SearchListener listener) {
+		searchListeners.add(listener);
 	}
 
 	public void setContextHandler(FileSystemActionHandler actionHandler) {
@@ -164,6 +191,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		headerLower.add(selectOptionsButton);
 		headerLower.add(fileActions);
 		headerLower.add(dropBoxButton);
+		headerLower.add(searchField);
 
 		if (addButton != null)
 			buttonPanel.add(addButton);
@@ -403,6 +431,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void hideProgress() {
 		this.progress.setVisible(false);
+	}
+
+	public void clearSearchField() {
+		this.searchField.clear();
 	}
 
 }

@@ -14,8 +14,8 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
+import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -42,6 +42,7 @@ import org.sjarvela.mollify.client.ui.mainview.RenameDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -70,6 +71,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final ItemContextProvider itemContextProvider;
 	private final EventDispatcher eventDispatcher;
 
+	private final SearchResultDialogFactory searchResultDialogFactory;
+
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
 			TextProvider textProvider, ViewManager viewManager,
@@ -82,7 +85,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileViewerFactory fileViewerFactory, DropBoxFactory dropBoxFactory,
 			DragAndDropManager dragAndDropManager,
-			ItemContextProvider itemDetailsProvider) {
+			ItemContextProvider itemDetailsProvider, SearchResultDialogFactory searchResultDialogFactory) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
@@ -99,6 +102,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.dropBoxFactory = dropBoxFactory;
 		this.dragAndDropManager = dragAndDropManager;
 		this.itemContextProvider = itemDetailsProvider;
+		this.searchResultDialogFactory = searchResultDialogFactory;
 	}
 
 	public MainView createMainView() {
@@ -141,7 +145,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
 				fileUploadDialogFactory, this, dropBox, exposeFileUrls,
-				serviceProvider.getSessionService(), eventDispatcher);
+				serviceProvider.getSessionService(), eventDispatcher,
+				searchResultDialogFactory);
 		dragController.setDataProvider(presenter);
 		new MainViewGlue(view, presenter, fileSystemActionHandler,
 				actionDelegator);

@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -321,6 +322,14 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
 		request().url(serviceUrl().fileItem(folder).item("retrieve"))
 				.data(new JSONStringBuilder("url", url).toString())
+				.listener(listener).post();
+	}
+
+	@Override
+	public void search(Folder parent, String text,
+			ResultListener<SearchResult> listener) {
+		request().url(serviceUrl().fileItem(parent).item("search"))
+				.data(new JSONStringBuilder("text", text).toString())
 				.listener(listener).post();
 	}
 }

@@ -21,6 +21,10 @@ public class JsObj extends JavaScriptObject {
 		return this[name];
 	}-*/;
 
+	public final native int getInt(String name) /*-{
+		return this[name];
+	}-*/;
+
 	public final native JsObj getJsObj(String name) /*-{
 		return this[name];
 	}-*/;
@@ -30,6 +34,10 @@ public class JsObj extends JavaScriptObject {
 	}-*/;
 
 	public final native JavaScriptObject getObject(String name) /*-{
+		return this[name];
+	}-*/;
+
+	public final native boolean getBoolean(String name) /*-{
 		return this[name];
 	}-*/;
 }
