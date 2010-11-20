@@ -103,7 +103,8 @@
 				"root_id" => $this->publicRootId(),
 				"parent_id" => $this->parent()->publicId(),
 				"name" => $this->name,
-				"path" => $this->path
+				"path" => $this->path,
+				"is_file" => $this->isFile()
 			);
 		}
 				

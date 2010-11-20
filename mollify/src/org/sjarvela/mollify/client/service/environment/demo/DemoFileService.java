@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -153,5 +154,11 @@ public class DemoFileService implements FileSystemService {
 	@Override
 	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
 		listener.onSuccess(true);
+	}
+
+	@Override
+	public void search(Folder parent, String text,
+			ResultListener<SearchResult> listener) {
+		listener.onSuccess(null); // TODO
 	}
 }

@@ -14,6 +14,7 @@
  */
 
 /* Utilities */
+include 'Sabre/HTTP/Util.php';
 include 'Sabre/HTTP/Response.php';
 include 'Sabre/HTTP/Request.php';
 include 'Sabre/HTTP/AbstractAuth.php';
@@ -23,6 +24,7 @@ include 'Sabre/HTTP/AWSAuth.php';
 
 /* Version */
 include 'Sabre/DAV/Version.php';
+include 'Sabre/HTTP/Version.php';
 
 /* Exceptions */
 include 'Sabre/DAV/Exception.php';
@@ -40,7 +42,6 @@ include 'Sabre/DAV/Exception/RequestedRangeNotSatisfiable.php';
 include 'Sabre/DAV/Exception/UnsupportedMediaType.php';
 include 'Sabre/DAV/Exception/NotAuthenticated.php';
 
-include 'Sabre/DAV/Exception/PermissionDenied.php'; //deprecated
 include 'Sabre/DAV/Exception/ConflictingLock.php';
 include 'Sabre/DAV/Exception/ReportNotImplemented.php';
 include 'Sabre/DAV/Exception/InvalidResourceType.php';
@@ -55,12 +56,12 @@ include 'Sabre/DAV/Property/IHref.php';
 include 'Sabre/DAV/Property/Href.php';
 include 'Sabre/DAV/Property/SupportedReportSet.php';
 include 'Sabre/DAV/Property/Response.php';
+include 'Sabre/DAV/Property/Principal.php';
 
 /* Node interfaces */
 include 'Sabre/DAV/INode.php';
 include 'Sabre/DAV/IFile.php';
 include 'Sabre/DAV/ICollection.php';
-include 'Sabre/DAV/IDirectory.php'; // deprecated
 include 'Sabre/DAV/IProperties.php';
 include 'Sabre/DAV/ILockable.php';
 include 'Sabre/DAV/IQuota.php';
@@ -123,23 +124,4 @@ include 'Sabre/DAV/Auth/PrincipalCollection.php';
 /* DavMount plugin */
 include 'Sabre/DAV/Mount/Plugin.php';
 
-/* CalDAV */
-include 'Sabre/CalDAV/Property/SupportedCalendarComponentSet.php';
-include 'Sabre/CalDAV/Property/SupportedCalendarData.php';
-include 'Sabre/CalDAV/Property/SupportedCollationSet.php';
-
-include 'Sabre/CalDAV/Backend/Abstract.php';
-include 'Sabre/CalDAV/Backend/PDO.php';
-
-include 'Sabre/CalDAV/ICalendar.php';
-include 'Sabre/CalDAV/Calendar.php';
-include 'Sabre/CalDAV/CalendarObject.php';
-include 'Sabre/CalDAV/CalendarRootNode.php';
-include 'Sabre/CalDAV/UserCalendars.php';
-
-include 'Sabre/CalDAV/XCalICal.php';
-
-include 'Sabre/CalDAV/Plugin.php';
-
-include 'Sabre/CalDAV/Server.php';
 

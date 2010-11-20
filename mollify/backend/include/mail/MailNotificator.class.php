@@ -54,6 +54,7 @@
 				$headers .= $this->getRecipientString($recipient);				
 				$first = FALSE;
 			}
+			return $headers;
 		}
 				
 		private function getRecipientString($r) {

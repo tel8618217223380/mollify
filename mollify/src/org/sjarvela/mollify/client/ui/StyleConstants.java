@@ -87,6 +87,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX = "mollify-header-toggle-button-dropbox";
 	public static final String MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS = "mollify-header-select-options";
 	public static final String MAIN_VIEW_HEADER_FILE_ACTIONS = "mollify-header-file-actions";
+	public static final String MAIN_VIEW_HEADER_SEARCH_FIELD = "mollify-header-search-field";
 
 	public static final String FILE_CONTEXT = "file-context";
 	public static final String FILE_CONTEXT_CONTENT = "mollify-file-context-content";

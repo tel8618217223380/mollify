@@ -165,7 +165,7 @@ public class FileList extends Grid<FileSystemItem> implements
 				FileList.this.onClick(item, COLUMN_NAME);
 			}
 		});
-		if (draggable)
+		if (draggable && dragAndDropManager != null)
 			dragAndDropManager.getController(FileSystemItem.class)
 					.makeDraggable(itemWidget);
 		return itemWidget;

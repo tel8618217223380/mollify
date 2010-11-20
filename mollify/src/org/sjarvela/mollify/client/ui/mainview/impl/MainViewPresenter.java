@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -51,12 +52,13 @@ import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
 import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
-		DragDataProvider<FileSystemItem> {
+		DragDataProvider<FileSystemItem>, SearchListener {
 	private static Logger logger = Logger.getLogger(MainViewPresenter.class
 			.getName());
 
@@ -80,6 +82,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private final boolean exposeFileUrls;
 
+	private final SearchResultDialogFactory searchResultDialogFactory;
+
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
 			MainViewModel model, DefaultMainView view,
@@ -91,7 +95,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory,
 			DropBox dropBox, boolean exposeFileUrls,
-			SessionService sessionService, EventDispatcher eventDispatcher) {
+			SessionService sessionService, EventDispatcher eventDispatcher,
+			SearchResultDialogFactory searchResultDialogFactory) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -110,6 +115,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.dropBox = dropBox;
 		this.exposeFileUrls = exposeFileUrls;
 		this.eventDispatcher = eventDispatcher;
+		this.searchResultDialogFactory = searchResultDialogFactory;
 
 		this.view.getFileContext().setActionHandler(fileSystemActionHandler);
 
@@ -129,6 +135,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
+
+		view.addSearchListener(this);
 	}
 
 	public void initialize() {
@@ -462,6 +470,30 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 						view.selectNone();
 					}
 				});
+	}
+
+	@Override
+	public void onSearch(final String text) {
+		if (!model.hasFolder())
+			return;
+
+		fileSystemService.search(model.getCurrentFolder(), text,
+				new ResultListener<SearchResult>() {
+					@Override
+					public void onSuccess(SearchResult result) {
+						view.clearSearchField();
+						onShowSearchResult(text, result);
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						dialogManager.showError(error);
+					}
+				});
+	}
+
+	protected void onShowSearchResult(String criteria, SearchResult result) {
+		searchResultDialogFactory.show(criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {
