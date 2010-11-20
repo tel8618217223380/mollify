@@ -3,7 +3,7 @@
 
 === Version 1.7.2 ===
   * Added retrieve url feature
-  * Fixed mail notification issue
+  * Fixed issue 154
 
 === Version 1.7.1 ===
   * Added logout to admin utility
