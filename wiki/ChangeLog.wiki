@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.2 ===
+  * Added retrieve url feature
+  * Fixed mail notification issue
+
 === Version 1.7.1 ===
   * Added logout to admin utility
   * Fixed issue 92
