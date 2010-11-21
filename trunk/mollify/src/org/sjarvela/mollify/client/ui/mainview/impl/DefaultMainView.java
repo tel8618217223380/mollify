@@ -115,7 +115,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
 				itemContextPopup);
 
-		this.searchField = new HintTextBox("TODO search");
+		this.searchField = new HintTextBox(textProvider.getStrings()
+				.mainViewSearchHint());
 		this.searchField
 				.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_SEARCH_FIELD);
 		this.searchField.addKeyUpHandler(new KeyUpHandler() {
@@ -191,7 +192,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		headerLower.add(selectOptionsButton);
 		headerLower.add(fileActions);
 		headerLower.add(dropBoxButton);
-		headerLower.add(searchField);
+		headerLower.add(createSearchField());
 
 		if (addButton != null)
 			buttonPanel.add(addButton);
@@ -213,6 +214,26 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		headerLowerPanel.add(headerLower);
 		header.build(headerUpperPanel, headerLower, headerLowerPanel);
 		return header;
+	}
+
+	private Widget createSearchField() {
+		FlowPanel p = new FlowPanel();
+		p.setStylePrimaryName("mollify-header-search-container");
+		
+		FlowPanel l = new FlowPanel();
+		l.setStylePrimaryName("mollify-header-search-container-left");
+		p.add(l);
+		
+		FlowPanel c = new FlowPanel();
+		c.setStylePrimaryName("mollify-header-search-container-center");
+		c.add(searchField);
+		p.add(c);
+
+		FlowPanel r = new FlowPanel();
+		r.setStylePrimaryName("mollify-header-search-container-right");
+		p.add(r);
+		
+		return p;
 	}
 
 	private Widget createUserName() {

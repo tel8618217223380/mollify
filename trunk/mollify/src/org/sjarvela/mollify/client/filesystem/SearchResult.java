@@ -12,7 +12,17 @@ package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.js.JsObj;
 
+import com.google.gwt.core.client.JsArray;
+
 public class SearchResult extends JsObj {
 	protected SearchResult() {
+	}
+
+	public final int getMatchCount() {
+		return this.getInt("count");
+	}
+
+	public final JsArray getMatches() {
+		return this.getArray("matches");
 	}
 }

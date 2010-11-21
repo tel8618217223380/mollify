@@ -378,4 +378,12 @@ public class StyleConstants {
 	public static final String WAIT_DIALOG_CONTENT = "mollify-wait-dialog-content";
 	public static final String WAIT_DIALOG_ICON = "mollify-wait-dialog-icon";
 	public static final String WAIT_DIALOG_MESSAGE = "mollify-wait-dialog-message";
+
+	public static final String SEARCH_RESULTS_DIALOG_CONTENT = "mollify-search-results-content";
+	public static final String SEARCH_RESULTS_DIALOG_INFO = "mollify-search-results-info";
+	public static final String SEARCH_RESULTS_DIALOG_INFO_TEXT = "mollify-search-results-info-text";
+	public static final String SEARCH_RESULTS_DIALOG_LIST = "mollify-search-results-list";
+	public static final String SEARCH_RESULTS_DIALOG_BUTTONS = "mollify-search-results-buttons";
+
+
 }

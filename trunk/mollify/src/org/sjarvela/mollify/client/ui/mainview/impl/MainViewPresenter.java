@@ -474,19 +474,20 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	@Override
 	public void onSearch(final String text) {
-		if (!model.hasFolder())
-			return;
-
+		view.showProgress();
+		
 		fileSystemService.search(model.getCurrentFolder(), text,
 				new ResultListener<SearchResult>() {
 					@Override
 					public void onSuccess(SearchResult result) {
 						view.clearSearchField();
+						view.hideProgress();
 						onShowSearchResult(text, result);
 					}
 
 					@Override
 					public void onFail(ServiceError error) {
+						view.hideProgress();
 						dialogManager.showError(error);
 					}
 				});

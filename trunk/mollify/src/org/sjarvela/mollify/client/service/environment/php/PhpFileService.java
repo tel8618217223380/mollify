@@ -26,6 +26,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder.JSONArrayBuilder;
+import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -328,7 +329,11 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	@Override
 	public void search(Folder parent, String text,
 			ResultListener<SearchResult> listener) {
-		request().url(serviceUrl().fileItem(parent).item("search"))
+		UrlBuilder url = serviceUrl();
+		if (parent != null)
+			url.fileItem(parent);
+
+		request().url(url.item("search"))
 				.data(new JSONStringBuilder("text", text).toString())
 				.listener(listener).post();
 	}
