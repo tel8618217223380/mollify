@@ -29,7 +29,7 @@ public class DefaultSearchResultDialogFactory implements
 
 	@Override
 	public void show(String criteria, SearchResult result) {
-		new SearchResultDialog(textProvider, criteria, result);
+		new SearchResultDialog(textProvider, criteria, result).center();
 	}
 
 }

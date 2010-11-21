@@ -437,6 +437,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String mainViewSelectActionAddToDropbox();
 
 	public String mainViewDropBoxButton();
+	
+	public String mainViewSearchHint();
 
 	public String fileViewerOpenInNewWindowTitle();
 
@@ -461,5 +463,7 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 	public String retrieveUrlMessage();
 
 	public String retrieveUrlFailed();
+
+	public String searchResultsDialogTitle();
 
 }

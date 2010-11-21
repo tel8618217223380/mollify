@@ -603,6 +603,7 @@
 	width: 66px;
 	background: #919191 url(sort-desc.png) no-repeat 52px 10px;
 	text-align: left;
+	float: left;
 }
 
 #mollify-header-file-actions[disabled] {
@@ -2172,3 +2173,68 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	width: 200px;
 }
 
+.mollify-header-search-container {
+	display: block;
+	margin-left: 4px;
+	float: left;
+	margin-top: 1px;
+}
+
+.mollify-header-search-container-center {
+	float: left;
+	background: url(search_field_b.png) repeat-x;
+	height: 23px;
+}
+
+.mollify-header-search-container-left {
+	float: left;
+	background: url(search_field_l.png) no-repeat;
+	width: 19px;
+	height: 25px;
+}
+
+.mollify-header-search-container-right {
+	float: left;
+	background: url(search_field_r.png) no-repeat;
+	width: 11px;
+	height: 25px;
+}
+
+input.mollify-header-search-field {
+	float: left;
+	border-style: none;
+	width: 150px;
+	height: 17px;
+	margin: 4px;
+}
+
+.mollify-dialog-button-search-results {
+	float: right;
+}
+
+.mollify-header-search-field-hinted {
+	font-style: italic;
+	color: #d0d0d0;
+}
+
+.mollify-search-results-info-text {
+	font-size: 13px;
+	margin-top: 4px;
+	margin-left: 4px;
+	margin-bottom: 4px;
+}
+
+.mollify-search-results-content {
+	margin: 4px;
+}
+
+.mollify-search-results-list {
+	overflow: auto;
+	width: 500px;
+	height: 300px;
+}
+
+.mollify-search-results-buttons {
+	margin-top: 4px;
+	padding-right: 4px;
+}

@@ -62,6 +62,13 @@
 				$this->processMultiItemAction();
 				return;
 			}
+			if ($this->path[0] === 'search') {
+				$data = $this->request->data;
+				if (!isset($data['text'])) throw $this->invalidRequestException();
+				
+				$this->response()->success($this->env->filesystem()->search(NULL, $data['text']));
+				return;
+			}
 
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())

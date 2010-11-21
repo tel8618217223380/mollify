@@ -61,4 +61,6 @@ public interface MessageConstants extends Messages {
 
 	String copyHereDialogMessage(String name);
 
+	String searchResultsInfo(String text, int count);
+
 }

@@ -21,7 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class ResizableDialog extends Dialog implements
 		MousePanelListener {
-	private Panel content;
+	private Panel contentPanel;
+	private Widget content;
 
 	private int mouseDownX = -1;
 	private int mouseDownY = -1;
@@ -32,14 +33,17 @@ public abstract class ResizableDialog extends Dialog implements
 	private int contentWidth = -1;
 	private int contentHeight = -1;
 
+
 	public ResizableDialog(String title, String style) {
 		super(title, style);
 	}
 
 	@Override
 	protected void initialize() {
-		content = new VerticalPanel();
-		content.add(createContent());
+		contentPanel = new VerticalPanel();
+		
+		content = createContent();
+		contentPanel.add(content);
 
 		HorizontalPanel lower = new HorizontalPanel();
 		lower.setWidth("100%");
@@ -47,9 +51,9 @@ public abstract class ResizableDialog extends Dialog implements
 		if (buttons != null)
 			lower.add(buttons);
 		lower.add(createResizeWidget());
-		content.add(lower);
+		contentPanel.add(lower);
 
-		this.add(content);
+		this.add(contentPanel);
 	}
 
 	protected void setMinimumSize(int minWidth, int minHeight) {

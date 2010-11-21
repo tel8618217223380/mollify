@@ -546,7 +546,14 @@
 		}
 		
 		public function search($parent, $text) {
-			$m = $this->searchRecursive($parent, $text);
+			if ($parent == NULL) {
+				$m = array();
+				foreach($this->getRootFolders() as $id => $root) {
+					$m = array_merge($m, $this->searchRecursive($root, $text));
+				}
+			} else {
+				$m = $this->searchRecursive($parent, $text);
+			}
 			return array("count" => count($m), "matches" => $m);
 		}
 		
