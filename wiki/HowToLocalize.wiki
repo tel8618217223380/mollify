@@ -1,6 +1,6 @@
 #summary Instructions for how to localize Mollify
 
-= How to localize into new languge =
+= How to localize into new language =
 Localizing Mollify into new language requires following steps:
 
 1) Open latest English version for the texts by following the link
