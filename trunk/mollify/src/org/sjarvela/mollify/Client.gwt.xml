@@ -39,6 +39,7 @@
 	<extend-property name="locale" values="tr"/>
 	<extend-property name="locale" values="br"/>
 	<extend-property name="locale" values="zh"/>
+	<extend-property name="locale" values="ru"/>
 	
 	<define-property name="demo" values="true,false" />
 	<property-provider name="demo">
