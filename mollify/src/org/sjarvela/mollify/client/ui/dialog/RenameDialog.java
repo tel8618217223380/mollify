@@ -8,10 +8,11 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview.impl;
+package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -27,28 +28,26 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CreateFolderDialog extends CenteredDialog {
-	private final Folder parentFolder;
+public class RenameDialog extends CenteredDialog {
+	private final FileSystemItem item;
 	private final TextProvider textProvider;
-	private final FolderHandler handler;
+	private final RenameHandler renameHandler;
 	private TextBox name;
 
-	public CreateFolderDialog(Folder parentFolder, TextProvider textProvider,
-			FolderHandler handler) {
-		super(textProvider.getStrings().createFolderDialogTitle(),
-				StyleConstants.CREATE_FOLDER_DIALOG);
-
-		this.parentFolder = parentFolder;
+	public RenameDialog(final FileSystemItem item, TextProvider textProvider,
+			RenameHandler renameHandler) {
+		super(item.isFile() ? textProvider.getStrings().renameDialogTitleFile()
+				: textProvider.getStrings().renameDialogTitleDirectory(),
+				StyleConstants.RENAME_DIALOG);
+		this.item = item;
 		this.textProvider = textProvider;
-		this.handler = handler;
+		this.renameHandler = renameHandler;
 
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
 				focusName();
 			}
-
 		});
-
 		initialize();
 	}
 
@@ -56,6 +55,8 @@ public class CreateFolderDialog extends CenteredDialog {
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			public void execute() {
 				name.setFocus(true);
+				if (item.isFile())
+					hilightFilename();
 			}
 		});
 	}
@@ -63,15 +64,26 @@ public class CreateFolderDialog extends CenteredDialog {
 	@Override
 	protected Widget createContent() {
 		VerticalPanel panel = new VerticalPanel();
-		panel.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_CONTENT);
+		panel.addStyleName(StyleConstants.RENAME_DIALOG_CONTENT);
 
-		Label nameTitle = new Label(textProvider.getStrings()
-				.createFolderDialogName());
-		nameTitle.setStyleName(StyleConstants.CREATE_FOLDER_DIALOG_NAME_TITLE);
-		panel.add(nameTitle);
+		Label originalNameTitle = new Label(textProvider.getStrings()
+				.renameDialogOriginalName());
+		originalNameTitle
+				.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_TITLE);
+		panel.add(originalNameTitle);
+
+		Label originalName = new Label(item.getName());
+		originalName.setStyleName(StyleConstants.RENAME_ORIGINAL_NAME_VALUE);
+		panel.add(originalName);
+
+		Label newNameTitle = new Label(textProvider.getStrings()
+				.renameDialogNewName());
+		newNameTitle.setStyleName(StyleConstants.RENAME_NEW_NAME_TITLE);
+		panel.add(newNameTitle);
 
 		name = new TextBox();
-		name.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_NAME_VALUE);
+		name.addStyleName(StyleConstants.RENAME_NEW_NAME_VALUE);
+		name.setText(item.getName());
 
 		panel.add(name);
 
@@ -81,36 +93,49 @@ public class CreateFolderDialog extends CenteredDialog {
 	@Override
 	protected Widget createButtons() {
 		HorizontalPanel buttons = new HorizontalPanel();
-		buttons.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.RENAME_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
 		buttons.add(createButton(textProvider.getStrings()
-				.createFolderDialogCreateButton(), new ClickHandler() {
+				.renameDialogRenameButton(), new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				onCreate();
+				onRename();
 			}
-		}, StyleConstants.CREATE_FOLDER_DIALOG_BUTTON_CREATE));
+		}, StyleConstants.RENAME_DIALOG_BUTTON_RENAME));
 
 		buttons.add(createButton(
 				textProvider.getStrings().dialogCancelButton(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						CreateFolderDialog.this.hide();
+						RenameDialog.this.hide();
 					}
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
 		return buttons;
 	}
 
-	private void onCreate() {
-		String folderName = name.getText();
+	private void hilightFilename() {
+		File file = (File) item;
+		if (file.getExtension().length() > 0)
+			name.setSelectionRange(0, file.getName().length()
+					- (file.getExtension().length() + 1));
+		name.setFocus(true);
+	}
 
-		if (folderName.length() < 1) {
+	private void onRename() {
+		String newName = name.getText();
+
+		if (newName.length() < 1) {
 			focusName();
 			return;
 		}
 
+		if (newName.equals(item.getName())) {
+			hilightFilename();
+			return;
+		}
+
 		this.hide();
-		handler.createFolder(parentFolder, folderName);
+		renameHandler.rename(item, newName);
 	}
 }

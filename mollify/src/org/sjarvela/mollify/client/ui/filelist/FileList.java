@@ -35,45 +35,38 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FileList extends Grid<FileSystemItem> implements
 		GridDataProvider<FileSystemItem> {
-	private final TextProvider textProvider;
+	public static String COLUMN_ID_NAME = "name";
+	public static String COLUMN_ID_TYPE = "type";
+	public static String COLUMN_ID_SIZE = "size";
+
 	private final DragAndDropManager dragAndDropManager;
 
-	public static GridColumn COLUMN_NAME;
-	public static GridColumn COLUMN_TYPE;
-	public static GridColumn COLUMN_SIZE;
-	public static List<GridColumn> ALL_COLUMNS = null;
-
-	private static String TYPE_DIR = "";
-	private static String SIZE_DIR = "";
+	private String typeTextFolder = "";
+	private String sizeTextFolder = "";
 
 	public FileList(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager) {
-		super(StyleConstants.FILE_LIST_HEADER, getColumns(textProvider));
+		super(textProvider, StyleConstants.FILE_LIST_HEADER);
+
+		typeTextFolder = textProvider.getStrings().fileListDirectoryType();
 
 		setDataProvider(this);
 		setCustomSelection(true);
 
-		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.addStyleName(StyleConstants.FILE_LIST);
 	}
 
-	private static List<GridColumn> getColumns(TextProvider textProvider) {
-		if (ALL_COLUMNS == null) {
-			COLUMN_NAME = new DefaultGridColumn("name", textProvider
-					.getStrings().fileListColumnTitleName(), true);
-			COLUMN_TYPE = new DefaultGridColumn("type", textProvider
-					.getStrings().fileListColumnTitleType(), true);
-			COLUMN_SIZE = new DefaultGridColumn("size", textProvider
-					.getStrings().fileListColumnTitleSize(), true);
+	protected List<GridColumn> getColumns() {
+		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
+				textProvider.getStrings().fileListColumnTitleName(), true);
+		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,
+				textProvider.getStrings().fileListColumnTitleType(), true);
+		GridColumn columnSize = new DefaultGridColumn(COLUMN_ID_SIZE,
+				textProvider.getStrings().fileListColumnTitleSize(), true);
 
-			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
-					(GridColumn) COLUMN_TYPE, (GridColumn) COLUMN_SIZE);
-
-			TYPE_DIR = textProvider.getStrings().fileListDirectoryType();
-		}
-
-		return ALL_COLUMNS;
+		return Arrays.asList((GridColumn) columnName, (GridColumn) columnType,
+				(GridColumn) columnSize);
 	}
 
 	public GridData getData(FileSystemItem item, GridColumn column) {
@@ -83,22 +76,22 @@ public class FileList extends Grid<FileSystemItem> implements
 	}
 
 	private GridData getFileData(File file, GridColumn column) {
-		if (column.equals(COLUMN_NAME))
+		if (column.getId().equals(COLUMN_ID_NAME))
 			return new GridData.Widget(createFileNameWidget(file));
-		else if (column.equals(COLUMN_TYPE))
+		else if (column.getId().equals(COLUMN_ID_TYPE))
 			return new GridData.Widget(createTypeWidget(file));
-		else if (column.equals(COLUMN_SIZE))
+		else if (column.getId().equals(COLUMN_ID_SIZE))
 			return new GridData.Widget(createSizeWidget(file));
 		return new GridData.Text("");
 	}
 
 	private GridData getFolderData(Folder folder, GridColumn column) {
-		if (column.equals(COLUMN_NAME))
+		if (column.getId().equals(COLUMN_ID_NAME))
 			return new GridData.Widget(createFolderNameWidget(folder));
-		else if (column.equals(COLUMN_TYPE))
+		else if (column.getId().equals(COLUMN_ID_TYPE))
 			return new GridData.Widget(createTypeWidget(folder));
-		else if (column.equals(COLUMN_SIZE))
-			return new GridData.Text(SIZE_DIR);
+		else if (column.getId().equals(COLUMN_ID_SIZE))
+			return new GridData.Text(sizeTextFolder);
 		return new GridData.Text("");
 	}
 
@@ -162,7 +155,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		DraggableFileSystemItem itemWidget = new DraggableFileSystemItem(item);
 		itemWidget.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FileList.this.onClick(item, COLUMN_NAME);
+				FileList.this.onClick(item, COLUMN_ID_NAME);
 			}
 		});
 		if (draggable && dragAndDropManager != null)
@@ -173,7 +166,7 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	private Widget createTypeWidget(FileSystemItem item) {
 		Label name = new Label(item.isFile() ? ((File) item).getExtension()
-				: TYPE_DIR);
+				: typeTextFolder);
 		name.setStyleName(StyleConstants.FILE_LIST_ITEM_TYPE);
 		return name;
 	}
@@ -187,7 +180,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	public List<String> getRowStyles(FileSystemItem t) {
 		if (t.isFile())
 			return getFileStyles((File) t);
-		return getDirectoryStyles((Folder) t);
+		return getFolderStyles((Folder) t);
 	}
 
 	private List<String> getFileStyles(File file) {
@@ -206,9 +199,9 @@ public class FileList extends Grid<FileSystemItem> implements
 		return styles;
 	}
 
-	private List<String> getDirectoryStyles(Folder directory) {
+	private List<String> getFolderStyles(Folder folder) {
 		ArrayList<String> styles = new ArrayList<String>();
-		int index = getRowIndex(directory);
+		int index = getRowIndex(folder);
 
 		styles.add(index % 2 == 0 ? StyleConstants.FILE_LIST_ROW_DIRECTORY_EVEN
 				: StyleConstants.FILE_LIST_ROW_DIRECTORY_ODD);

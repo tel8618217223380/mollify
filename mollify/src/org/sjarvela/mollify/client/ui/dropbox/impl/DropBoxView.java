@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -22,6 +21,7 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
+import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -37,26 +37,24 @@ public class DropBoxView extends DialogBox {
 	};
 
 	private final ActionListener actionListener;
-	private final FileSystemItemProvider fileSystemItemProvider;
-	private final String folderSeparator;
 	private final SessionInfo session;
+	private final TextProvider textProvider;
+	private final PathFormatter pathFormatter;
 
 	private boolean shown = false;
 
 	private Panel dropTarget;
 	private Panel contents;
 	private DropdownButton actionsButton;
-	private final TextProvider textProvider;
 
 	public DropBoxView(TextProvider textProvider,
-			ActionListener actionListener,
-			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
+			ActionListener actionListener, SessionInfo session,
+			PathFormatter pathFormatter) {
 		super(false, false);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
-		this.fileSystemItemProvider = fileSystemItemProvider;
+		this.pathFormatter = pathFormatter;
 		this.session = session;
-		this.folderSeparator = session.getFileSystemInfo().getFolderSeparator();
 
 		this.setText(textProvider.getStrings().dropBoxTitle());
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
@@ -118,9 +116,9 @@ public class DropBoxView extends DialogBox {
 			setPopupPositionAndShow(new PositionCallback() {
 				@Override
 				public void setPosition(int offsetWidth, int offsetHeight) {
-					setPopupPosition(position.getX()
-							- DropBoxView.this.getOffsetWidth() - 5, position
-							.getY() + 10);
+					setPopupPosition(
+							position.getX() - DropBoxView.this.getOffsetWidth()
+									- 5, position.getY() + 10);
 				}
 			});
 		else
@@ -179,8 +177,7 @@ public class DropBoxView extends DialogBox {
 	}
 
 	private String getPath(FileSystemItem item) {
-		return fileSystemItemProvider.getRootFolder(item.getRootId()).getName()
-				+ folderSeparator + item.getParentPath();
+		return pathFormatter.format(item);
 	}
 
 	public Widget getActionButton() {

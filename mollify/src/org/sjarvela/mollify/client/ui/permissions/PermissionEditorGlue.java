@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
@@ -35,10 +34,10 @@ public class PermissionEditorGlue {
 
 		view.getList().addListener(new GridListener<FileItemUserPermission>() {
 			public void onColumnClicked(FileItemUserPermission t,
-					GridColumn column) {
+					String columnId) {
 			}
 
-			public void onColumnSorted(GridColumn column, Sort sort) {
+			public void onColumnSorted(String columnId, Sort sort) {
 			}
 
 			public void onIconClicked(FileItemUserPermission t) {

@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
+import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment;
@@ -37,17 +39,24 @@ import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
+import org.sjarvela.mollify.client.ui.dialog.DefaultRenameDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.ui.dialog.RenameDialogFactory;
 import org.sjarvela.mollify.client.ui.dnd.DefaultDragAndDropManager;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
+import org.sjarvela.mollify.client.ui.filesystem.DefaultFileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.pluploader.PluploaderDialogFactory;
+import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
+import org.sjarvela.mollify.client.ui.formatter.impl.DefaultPathFormatter;
 import org.sjarvela.mollify.client.ui.itemselector.DefaultItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
@@ -98,6 +107,12 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(ItemContextProvider.class).to(DefaultItemContextProvider.class);
 		bind(SearchResultDialogFactory.class).to(
 				DefaultSearchResultDialogFactory.class);
+		bind(PathFormatter.class).to(DefaultPathFormatter.class);
+		bind(FileSystemActionHandlerFactory.class).to(
+				DefaultFileSystemActionHandlerFactory.class);
+		bind(ItemContextPopupFactory.class).to(
+				DefaultItemContextPopupFactory.class);
+		bind(RenameDialogFactory.class).to(DefaultRenameDialogFactory.class);
 	}
 
 	@Provides
@@ -123,6 +138,12 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Singleton
 	UrlResolver getUrlResolver() {
 		return new UrlResolver(GWT.getHostPageBaseURL(), GWT.getModuleBaseURL());
+	}
+
+	@Provides
+	@Singleton
+	ItemDetailsProvider getItemDetailsProvider(ServiceEnvironment env) {
+		return env.getFileSystemService();
 	}
 
 	@Provides

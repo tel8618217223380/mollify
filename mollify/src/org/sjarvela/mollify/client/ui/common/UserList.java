@@ -23,15 +23,11 @@ import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 
 public class UserList extends Grid<User> implements GridDataProvider<User> {
-	public static GridColumn COLUMN_NAME;
-	public static GridColumn COLUMN_TYPE;
-	public static List<GridColumn> ALL_COLUMNS = null;
-
-	private final TextProvider textProvider;
+	public static String COLUMN_ID_NAME = "name";
+	public static String COLUMN_ID_TYPE = "type";
 
 	public UserList(TextProvider textProvider, String style) {
-		super(StyleConstants.USER_LIST_HEADER, getColumns(textProvider));
-		this.textProvider = textProvider;
+		super(textProvider, StyleConstants.USER_LIST_HEADER);
 
 		this.setStylePrimaryName(StyleConstants.USER_LIST);
 		if (style != null)
@@ -39,18 +35,12 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 		this.setDataProvider(this);
 	}
 
-	private static List<GridColumn> getColumns(TextProvider textProvider) {
-		if (ALL_COLUMNS == null) {
-			COLUMN_NAME = new DefaultGridColumn("name", textProvider
-					.getStrings().userListColumnTitleName(), false);
-			COLUMN_TYPE = new DefaultGridColumn("type", textProvider
-					.getStrings().userListColumnTitleType(), false);
-
-			ALL_COLUMNS = Arrays.asList((GridColumn) COLUMN_NAME,
-					(GridColumn) COLUMN_TYPE);
-		}
-
-		return ALL_COLUMNS;
+	protected List<GridColumn> getColumns() {
+		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
+				textProvider.getStrings().userListColumnTitleName(), false);
+		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,
+				textProvider.getStrings().userListColumnTitleType(), false);
+		return Arrays.asList((GridColumn) columnName, (GridColumn) columnType);
 	}
 
 	public String getColumnStyle(GridColumn column) {
@@ -58,9 +48,9 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 	}
 
 	public GridData getData(User user, GridColumn column) {
-		if (column.equals(UserList.COLUMN_NAME))
+		if (column.getId().equals(UserList.COLUMN_ID_NAME))
 			return new GridData.Text(user.getName());
-		else if (column.equals(UserList.COLUMN_TYPE))
+		else if (column.getId().equals(UserList.COLUMN_ID_TYPE))
 			return new GridData.Text(user.getType().getLocalizedText(
 					textProvider));
 		return new GridData.Text("");

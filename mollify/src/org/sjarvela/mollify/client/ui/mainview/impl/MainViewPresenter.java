@@ -36,10 +36,10 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
@@ -49,7 +49,6 @@ import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
-import org.sjarvela.mollify.client.ui.mainview.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
@@ -131,7 +130,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					}
 
 				});
-		this.setListOrder(FileList.COLUMN_NAME, Sort.asc);
+		this.setListOrder(FileList.COLUMN_ID_NAME, Sort.asc);
 
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
@@ -149,8 +148,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			view.hideButtons();
 	}
 
-	public void onFileSystemItemSelected(FileSystemItem item, GridColumn column) {
-		if (column.equals(FileList.COLUMN_NAME)) {
+	public void onFileSystemItemSelected(FileSystemItem item, String columnId) {
+		if (columnId.equals(FileList.COLUMN_ID_NAME)) {
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
@@ -407,13 +406,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				});
 	}
 
-	public void setListOrder(GridColumn column, Sort sort) {
-		view.getList().setComparator(createComparator(column, sort));
+	public void setListOrder(String columnId, Sort sort) {
+		view.getList().setComparator(createComparator(columnId, sort));
 	}
 
-	private GridComparator<FileSystemItem> createComparator(GridColumn column,
+	private GridComparator<FileSystemItem> createComparator(String columnId,
 			Sort sort) {
-		return new DefaultFileItemComparator(column, sort);
+		return new DefaultFileItemComparator(columnId, sort);
 	}
 
 	public void onEditItemPermissions() {
@@ -475,7 +474,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	@Override
 	public void onSearch(final String text) {
 		view.showProgress();
-		
+
 		fileSystemService.search(model.getCurrentFolder(), text,
 				new ResultListener<SearchResult>() {
 					@Override
@@ -494,7 +493,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
-		searchResultDialogFactory.show(criteria, result);
+		searchResultDialogFactory.show(dropBox, criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {

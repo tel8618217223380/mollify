@@ -8,16 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.common.grid;
+package org.sjarvela.mollify.client.ui.formatter;
 
-import java.util.List;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
-public interface GridListener<T> {
-	void onColumnClicked(T t, String columnId);
-
-	void onIconClicked(T t);
-
-	void onColumnSorted(String columnId, Sort sort);
-
-	void onSelectionChanged(List<T> selected);
+public interface PathFormatter {
+	String format(FileSystemItem item);
 }
