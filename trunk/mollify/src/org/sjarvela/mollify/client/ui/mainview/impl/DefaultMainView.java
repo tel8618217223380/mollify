@@ -38,7 +38,6 @@ import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
-import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
@@ -91,7 +90,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
 			ActionListener actionListener,
 			FolderSelectorFactory folderSelectorFactory,
-			ItemContextPopupFactory itemContextPopupFactory,
+			ItemContextPopup itemContextPopup,
 			DragAndDropManager dragAndDropManager) {
 		this.model = model;
 		this.textProvider = textProvider;
@@ -110,7 +109,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.folderSelector = folderSelectorFactory.createSelector();
 		this.list = new FileList(textProvider, dragAndDropManager);
 
-		this.itemContextPopup = itemContextPopupFactory.createPopup();
+		this.itemContextPopup = itemContextPopup;
 		this.itemContextPopup.setPopupPositioner(this);
 		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
 				itemContextPopup);
@@ -219,11 +218,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private Widget createSearchField() {
 		FlowPanel p = new FlowPanel();
 		p.setStylePrimaryName("mollify-header-search-container");
-		
+
 		FlowPanel l = new FlowPanel();
 		l.setStylePrimaryName("mollify-header-search-container-left");
 		p.add(l);
-		
+
 		FlowPanel c = new FlowPanel();
 		c.setStylePrimaryName("mollify-header-search-container-center");
 		c.add(searchField);
@@ -232,7 +231,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		FlowPanel r = new FlowPanel();
 		r.setStylePrimaryName("mollify-header-search-container-right");
 		p.add(r);
-		
+
 		return p;
 	}
 
@@ -364,12 +363,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void showFileContext(File file) {
 		itemContextHandler.onItemSelected(file,
-				list.getWidget(file, FileList.COLUMN_NAME));
+				list.getWidget(file, FileList.COLUMN_ID_NAME));
 	}
 
 	public void showFolderContext(Folder folder) {
 		itemContextHandler.onItemSelected(folder,
-				list.getWidget(folder, FileList.COLUMN_NAME));
+				list.getWidget(folder, FileList.COLUMN_ID_NAME));
 	}
 
 	public ActionButton getRefreshButton() {

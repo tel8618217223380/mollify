@@ -11,9 +11,10 @@
 package org.sjarvela.mollify.client.ui.searchresult;
 
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 
 public interface SearchResultDialogFactory {
 
-	void show(String criteria, SearchResult result);
+	void show(DropBox dropBox, String criteria, SearchResult result);
 
 }

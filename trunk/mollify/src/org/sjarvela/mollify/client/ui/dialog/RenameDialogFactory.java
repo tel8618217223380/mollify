@@ -8,14 +8,16 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.mainview;
+package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 
-public interface CreateFolderDialogFactory {
+import com.google.gwt.user.client.ui.Widget;
 
-	void openCreateFolderDialog(Folder folder,
-			FolderHandler directoryHandler);
+public interface RenameDialogFactory {
+
+	void openRenameDialog(FileSystemItem item, RenameHandler handler,
+			Widget parent);
 
 }

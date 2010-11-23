@@ -15,13 +15,21 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
+import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,19 +45,49 @@ public class SearchResultDialog extends ResizableDialog {
 	private final String criteria;
 	private final SearchResult result;
 
-	private FileList list;
+	private SearchResultFileList list;
 	private FlowPanel listPanel;
+	private ItemContextPopup itemContextPopup;
+	private ContextPopupHandler<FileSystemItem> itemContextHandler;
 
 	public SearchResultDialog(TextProvider textProvider, String criteria,
-			SearchResult result) {
+			SearchResult result, PathFormatter formatter,
+			DefaultItemContextPopupFactory itemContextPopupFactory,
+			FileSystemActionHandler FileSystemActionHandler, DropBox dropBox) {
 		super(textProvider.getStrings().searchResultsDialogTitle(),
 				"search-results");
 		this.textProvider = textProvider;
 		this.criteria = criteria;
 		this.result = result;
 
-		this.list = new FileList(textProvider, null);
+		this.itemContextPopup = itemContextPopupFactory.createPopup(dropBox);
+		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
+				itemContextPopup);
+
+		this.list = new SearchResultFileList(textProvider, formatter);
 		this.list.setContent(getItems());
+		this.list.addListener(new GridListener<FileSystemItem>() {
+			@Override
+			public void onColumnClicked(FileSystemItem item, String columnId) {
+				itemContextHandler.onItemSelected(item,
+						list.getWidget(item, FileList.COLUMN_ID_NAME));
+			}
+
+			@Override
+			public void onIconClicked(FileSystemItem item) {
+			}
+
+			@Override
+			public void onColumnSorted(String columnId, Sort sort) {
+			}
+
+			@Override
+			public void onSelectionChanged(List<FileSystemItem> selected) {
+			}
+		});
+
+		this.itemContextPopup.setActionHandler(FileSystemActionHandler);
+		// this.itemContextPopup.setPopupPositioner(this);
 
 		this.setMinimumSize(500, 300);
 		initialize();

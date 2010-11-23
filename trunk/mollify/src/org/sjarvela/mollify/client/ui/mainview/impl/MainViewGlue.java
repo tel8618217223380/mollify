@@ -20,7 +20,6 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
@@ -173,8 +172,8 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 
 	}
 
-	public void onColumnClicked(FileSystemItem item, GridColumn column) {
-		presenter.onFileSystemItemSelected(item, column);
+	public void onColumnClicked(FileSystemItem item, String columnId) {
+		presenter.onFileSystemItemSelected(item, columnId);
 	}
 
 	public void onIconClicked(FileSystemItem item) {
@@ -183,8 +182,8 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 		view.showFolderContext((Folder) item);
 	}
 
-	public void onColumnSorted(GridColumn column, Sort sort) {
-		presenter.setListOrder(column, sort);
+	public void onColumnSorted(String columnId, Sort sort) {
+		presenter.setListOrder(columnId, sort);
 	}
 
 	public void onSelectionChanged(List<FileSystemItem> selected) {

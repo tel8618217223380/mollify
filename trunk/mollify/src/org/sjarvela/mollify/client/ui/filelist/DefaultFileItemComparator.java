@@ -13,22 +13,21 @@ package org.sjarvela.mollify.client.ui.filelist;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class DefaultFileItemComparator implements
 		GridComparator<FileSystemItem> {
-	private final GridColumn column;
+	private final String columnId;
 	private final Sort sort;
 
-	public DefaultFileItemComparator(GridColumn column, Sort sort) {
-		this.column = column;
+	public DefaultFileItemComparator(String columnId, Sort sort) {
+		this.columnId = columnId;
 		this.sort = sort;
 	}
 
-	public GridColumn getColumn() {
-		return column;
+	public String getColumnId() {
+		return columnId;
 	}
 
 	public Sort getSort() {
@@ -45,7 +44,7 @@ public class DefaultFileItemComparator implements
 		if (item2.isFile() && !item1.isFile())
 			return -1;
 
-		if (FileList.COLUMN_SIZE.equals(column))
+		if (FileList.COLUMN_ID_SIZE.equals(columnId))
 			return item1.isFile() ? getSizeCompare(item1, item2) : 0;
 
 		return getData(item1).compareToIgnoreCase(getData(item2))
@@ -59,10 +58,10 @@ public class DefaultFileItemComparator implements
 	}
 
 	private String getData(FileSystemItem item) {
-		if (column.equals(FileList.COLUMN_NAME))
+		if (FileList.COLUMN_ID_NAME.equals(columnId))
 			return item.getName();
 
-		if (column.equals(FileList.COLUMN_TYPE) && item.isFile())
+		if (FileList.COLUMN_ID_TYPE.equals(columnId) && item.isFile())
 			return String.valueOf(((File) item).getExtension());
 
 		return "";

@@ -11,7 +11,11 @@
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
+import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
 import com.google.inject.Inject;
@@ -21,15 +25,26 @@ import com.google.inject.Singleton;
 public class DefaultSearchResultDialogFactory implements
 		SearchResultDialogFactory {
 	private final TextProvider textProvider;
+	private final PathFormatter formatter;
+	private final DefaultItemContextPopupFactory itemContextPopupFactory;
+	private final FileSystemActionHandlerFactory filesystemActionHandlerFactory;
 
 	@Inject
-	public DefaultSearchResultDialogFactory(TextProvider textProvider) {
+	public DefaultSearchResultDialogFactory(TextProvider textProvider,
+			PathFormatter formatter,
+			DefaultItemContextPopupFactory itemContextPopupFactory,
+			FileSystemActionHandlerFactory filesystemActionHandlerFactory) {
 		this.textProvider = textProvider;
+		this.formatter = formatter;
+		this.itemContextPopupFactory = itemContextPopupFactory;
+		this.filesystemActionHandlerFactory = filesystemActionHandlerFactory;
 	}
 
 	@Override
-	public void show(String criteria, SearchResult result) {
-		new SearchResultDialog(textProvider, criteria, result).center();
+	public void show(DropBox dropBox, String criteria, SearchResult result) {
+		new SearchResultDialog(textProvider, criteria, result, formatter,
+				itemContextPopupFactory,
+				filesystemActionHandlerFactory.create(), dropBox).center();
 	}
 
 }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Coords;
 
@@ -28,11 +29,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class Grid<T> extends FlexTable {
+public abstract class Grid<T> extends FlexTable {
 	private static final String DEFAULT_ROW_STYLE = "grid-row";
 	private static final String TITLE_STYLE = "-title";
 	private static final String SORT_STYLE = "-sort";
 
+	protected final TextProvider textProvider;
 	private final String headerCss;
 	private final List<GridColumn> columns;
 	private final Map<GridColumn, GridColumnSortButton> sortButtons = new HashMap();
@@ -55,13 +57,14 @@ public class Grid<T> extends FlexTable {
 	private Map<Class, String> widgetBaseClasses = new HashMap();
 	private SelectController selectController;
 
-	public Grid(String headerCss, List<GridColumn> columns) {
+	public Grid(TextProvider textProvider, String headerCss) {
 		super();
+		this.textProvider = textProvider;
 
 		this.headerCss = headerCss;
 		this.sortableHeaderTitleCss = headerCss + TITLE_STYLE;
 		this.sortableHeaderSortCss = headerCss + SORT_STYLE;
-		this.columns = columns;
+		this.columns = getColumns();
 
 		initializeElement();
 		initializeColumns();
@@ -70,6 +73,8 @@ public class Grid<T> extends FlexTable {
 		sinkEvents(Event.ONMOUSEOVER);
 		sinkEvents(Event.ONMOUSEOUT);
 	}
+
+	protected abstract List<GridColumn> getColumns();
 
 	private void initializeElement() {
 		head = DOM.createTHead();
@@ -154,13 +159,13 @@ public class Grid<T> extends FlexTable {
 		Sort sort = Sort.none;
 
 		if (this.comparator != null)
-			if (this.comparator.getColumn().equals(column))
+			if (this.comparator.getColumnId().equals(column.getId()))
 				sort = toggleSort(this.comparator.getSort());
 			else
 				sort = Sort.asc;
 
 		for (GridListener listener : listeners)
-			listener.onColumnSorted(column, sort);
+			listener.onColumnSorted(column.getId(), sort);
 	}
 
 	public void setSelectionMode(SelectionMode mode) {
@@ -252,9 +257,9 @@ public class Grid<T> extends FlexTable {
 
 		for (GridColumn column : columns) {
 			if (sortButtons.containsKey(column)) {
-				Sort sort = comparator == null ? Sort.none : (column
-						.equals(comparator.getColumn()) ? comparator.getSort()
-						: Sort.none);
+				Sort sort = comparator == null ? Sort.none : (column.getId()
+						.equals(comparator.getColumnId()) ? comparator
+						.getSort() : Sort.none);
 				sortButtons.get(column).setSort(sort);
 			}
 		}
@@ -297,12 +302,12 @@ public class Grid<T> extends FlexTable {
 	}
 
 	protected void onClick(int row, GridColumn column) {
-		onClick(content.get(row), column);
+		onClick(content.get(row), column.getId());
 	}
 
-	protected void onClick(T t, GridColumn column) {
+	protected void onClick(T t, String columnId) {
 		for (GridListener listener : listeners)
-			listener.onColumnClicked(t, column);
+			listener.onColumnClicked(t, columnId);
 	}
 
 	private void removeAllSelections() {
@@ -438,13 +443,24 @@ public class Grid<T> extends FlexTable {
 		return DOM.getChildIndex(getBodyElement(), row);
 	}
 
-	public Widget getWidget(T t, GridColumn column) {
+	public Widget getWidget(T t, String columnId) {
+		return getWidget(t, getColumn(columnId));
+	}
+
+	private Widget getWidget(T t, GridColumn column) {
 		return getWidget(content.indexOf(t), getColumnIndex(column));
+	}
+
+	private GridColumn getColumn(String columnId) {
+		for (GridColumn column : columns)
+			if (column.getId().equals(columnId))
+				return column;
+		return null;
 	}
 
 	public Coords getWidgetCoords(T t, GridColumn column) {
 		Widget cell = getWidget(t, column);
-		return new Coords(cell.getAbsoluteLeft(), cell.getAbsoluteTop(), cell
-				.getOffsetWidth(), cell.getOffsetHeight());
+		return new Coords(cell.getAbsoluteLeft(), cell.getAbsoluteTop(),
+				cell.getOffsetWidth(), cell.getOffsetHeight());
 	}
 }
