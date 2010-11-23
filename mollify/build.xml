@@ -96,7 +96,7 @@
 			<arg value="-logLevel" />
 			<arg value="INFO" />
 			<arg value="-localWorkers" />
-			<arg value="4" />
+			<arg value="2" />
 			<arg value="-style" />
 			<arg value="${gwt.style}" />
 			<arg value="${gwt.module}" />
