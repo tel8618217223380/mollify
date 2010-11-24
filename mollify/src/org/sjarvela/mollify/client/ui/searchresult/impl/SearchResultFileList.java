@@ -23,7 +23,7 @@ import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
 public class SearchResultFileList extends FileList {
-	private static final String COLUMN_ID_PATH = "path";
+	public static final String COLUMN_ID_PATH = "path";
 
 	private final PathFormatter formatter;
 

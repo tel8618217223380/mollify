@@ -18,8 +18,8 @@ import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
 public class DefaultFileItemComparator implements
 		GridComparator<FileSystemItem> {
-	private final String columnId;
-	private final Sort sort;
+	protected final String columnId;
+	protected final Sort sort;
 
 	public DefaultFileItemComparator(String columnId, Sort sort) {
 		this.columnId = columnId;
@@ -51,7 +51,7 @@ public class DefaultFileItemComparator implements
 				* sort.getCompareFactor();
 	}
 
-	private int getSizeCompare(FileSystemItem item1, FileSystemItem item2) {
+	protected int getSizeCompare(FileSystemItem item1, FileSystemItem item2) {
 		int diff = Math.abs((int) ((File) item1).getSize())
 				- Math.abs((int) ((File) item2).getSize());
 		return diff * sort.getCompareFactor();
