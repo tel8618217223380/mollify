@@ -13,6 +13,9 @@ package org.sjarvela.mollify.client.ui.searchresult.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -21,15 +24,19 @@ import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
+import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,32 +47,43 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SearchResultDialog extends ResizableDialog {
+public class SearchResultDialog extends ResizableDialog implements
+		ActionListener {
 	private final TextProvider textProvider;
 	private final String criteria;
 	private final SearchResult result;
+	private final FileSystemActionHandler fileSystemActionHandler;
+	private final ContextPopupHandler<FileSystemItem> itemContextHandler;
+	private final DropBox dropBox;
 
-	private SearchResultFileList list;
+	private final SearchResultFileList list;
+	private final DropdownButton selectOptionsButton;
+	private final DropdownButton fileActions;
+	private final ItemContextPopup itemContextPopup;
+
 	private FlowPanel listPanel;
-	private ItemContextPopup itemContextPopup;
-	private ContextPopupHandler<FileSystemItem> itemContextHandler;
+	private List<FileSystemItem> items;
 
 	public SearchResultDialog(TextProvider textProvider, String criteria,
 			SearchResult result, PathFormatter formatter,
 			DefaultItemContextPopupFactory itemContextPopupFactory,
-			FileSystemActionHandler FileSystemActionHandler, DropBox dropBox) {
+			FileSystemActionHandler fileSystemActionHandler, DropBox dropBox) {
 		super(textProvider.getStrings().searchResultsDialogTitle(),
 				"search-results");
+		this.result = result;
+		this.items = getItems();
+
 		this.textProvider = textProvider;
 		this.criteria = criteria;
-		this.result = result;
+		this.fileSystemActionHandler = fileSystemActionHandler;
+		this.dropBox = dropBox;
 
 		this.itemContextPopup = itemContextPopupFactory.createPopup(dropBox);
 		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
 				itemContextPopup);
 
 		this.list = new SearchResultFileList(textProvider, formatter);
-		this.list.setContent(getItems());
+		this.list.setContent(items);
 		this.list.addListener(new GridListener<FileSystemItem>() {
 			@Override
 			public void onColumnClicked(FileSystemItem item, String columnId) {
@@ -79,18 +97,44 @@ public class SearchResultDialog extends ResizableDialog {
 
 			@Override
 			public void onColumnSorted(String columnId, Sort sort) {
+				list.setComparator(createComparator(columnId, sort));
 			}
 
 			@Override
 			public void onSelectionChanged(List<FileSystemItem> selected) {
+				fileActions.setEnabled(selected.size() > 0);
 			}
 		});
 
-		this.itemContextPopup.setActionHandler(FileSystemActionHandler);
-		// this.itemContextPopup.setPopupPositioner(this);
+		this.itemContextPopup.setActionHandler(fileSystemActionHandler);
+
+		selectOptionsButton = new DropdownButton(this, "todo Select",
+				"mollify-search-result-select-options");
+		selectOptionsButton.addAction(Action.selectAll, textProvider
+				.getStrings().mainViewSelectAll());
+		selectOptionsButton.addAction(Action.selectNone, textProvider
+				.getStrings().mainViewSelectNone());
+
+		fileActions = new DropdownButton(this, "TODO actions",
+				"mollify-search-result-actions");
+		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
+				.mainViewSelectActionAddToDropbox());
+		fileActions.addSeparator();
+		fileActions.addAction(Action.copyMultiple, textProvider.getStrings()
+				.fileActionCopyTitle());
+		fileActions.addAction(Action.moveMultiple, textProvider.getStrings()
+				.fileActionMoveTitle());
+		fileActions.addAction(Action.deleteMultiple, textProvider.getStrings()
+				.fileActionDeleteTitle());
+		fileActions.setEnabled(false);
 
 		this.setMinimumSize(500, 300);
 		initialize();
+	}
+
+	protected GridComparator<FileSystemItem> createComparator(String columnId,
+			Sort sort) {
+		return new SearchResultsComparator(columnId, sort);
 	}
 
 	private List<FileSystemItem> getItems() {
@@ -144,6 +188,8 @@ public class SearchResultDialog extends ResizableDialog {
 		FlowPanel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.SEARCH_RESULTS_DIALOG_BUTTONS);
 
+		buttons.add(selectOptionsButton);
+		buttons.add(fileActions);
 		buttons.add(createButton(textProvider.getStrings().dialogCloseButton(),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -152,5 +198,55 @@ public class SearchResultDialog extends ResizableDialog {
 				}, "search-results"));
 
 		return buttons;
+	}
+
+	@Override
+	public void onAction(ResourceId action, Object o) {
+		if (Action.selectAll.equals(action)) {
+			list.selectAll();
+			return;
+		}
+		if (Action.selectNone.equals(action)) {
+			list.selectNone();
+			return;
+		}
+
+		// file actions
+		List<FileSystemItem> selected = list.getSelected();
+		if (selected.isEmpty())
+			return;
+
+		if (Action.copyMultiple.equals(action)) {
+			fileSystemActionHandler.onAction(selected, FileSystemAction.copy,
+					null, null, new Callback() {
+						@Override
+						public void onCallback() {
+							list.selectNone();
+						}
+					});
+
+		}
+		if (Action.moveMultiple.equals(action)) {
+			fileSystemActionHandler.onAction(selected, FileSystemAction.move,
+					null, null, new Callback() {
+						@Override
+						public void onCallback() {
+							list.selectNone();
+						}
+					});
+		}
+		if (Action.deleteMultiple.equals(action)) {
+			fileSystemActionHandler.onAction(selected, FileSystemAction.delete,
+					null, null, new Callback() {
+						@Override
+						public void onCallback() {
+							list.selectNone();
+						}
+					});
+		}
+		if (Action.addToDropbox.equals(action)) {
+			dropBox.addItems(selected);
+			list.selectNone();
+		}
 	}
 }
