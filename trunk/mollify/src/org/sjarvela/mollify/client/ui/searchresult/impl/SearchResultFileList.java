@@ -38,7 +38,7 @@ public class SearchResultFileList extends FileList {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getStrings().fileListColumnTitleName(), true);
 		GridColumn columnPath = new DefaultGridColumn(COLUMN_ID_PATH,
-				"TODO path", true);
+				textProvider.getStrings().searchResultListColumnTitlePath(), true);
 		GridColumn columnSize = new DefaultGridColumn(COLUMN_ID_SIZE,
 				textProvider.getStrings().fileListColumnTitleSize(), true);
 

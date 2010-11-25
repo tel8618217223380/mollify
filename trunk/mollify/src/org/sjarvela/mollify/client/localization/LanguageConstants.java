@@ -466,4 +466,8 @@ public interface LanguageConstants extends com.google.gwt.i18n.client.Constants 
 
 	public String searchResultsDialogTitle();
 
+	public String searchResultListColumnTitlePath();
+
+	public String searchResultsNoMatchesFound();
+
 }
