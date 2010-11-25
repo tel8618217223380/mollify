@@ -493,7 +493,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
-		searchResultDialogFactory.show(dropBox, criteria, result);
+		if (result.getMatchCount() == 0)
+			dialogManager.showInfo(textProvider.getStrings()
+					.searchResultsDialogTitle(), textProvider.getStrings()
+					.searchResultsNoMatchesFound());
+		else
+			searchResultDialogFactory.show(dropBox, criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {

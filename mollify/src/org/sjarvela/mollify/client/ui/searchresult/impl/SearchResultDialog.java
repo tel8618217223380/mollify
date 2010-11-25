@@ -108,15 +108,16 @@ public class SearchResultDialog extends ResizableDialog implements
 
 		this.itemContextPopup.setActionHandler(fileSystemActionHandler);
 
-		selectOptionsButton = new DropdownButton(this, "todo Select",
+		selectOptionsButton = new DropdownButton(this, textProvider
+				.getStrings().mainViewSelectButton(),
 				"mollify-search-result-select-options");
 		selectOptionsButton.addAction(Action.selectAll, textProvider
 				.getStrings().mainViewSelectAll());
 		selectOptionsButton.addAction(Action.selectNone, textProvider
 				.getStrings().mainViewSelectNone());
 
-		fileActions = new DropdownButton(this, "TODO actions",
-				"mollify-search-result-actions");
+		fileActions = new DropdownButton(this, textProvider.getStrings()
+				.mainViewSelectActions(), "mollify-search-result-actions");
 		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
 				.mainViewSelectActionAddToDropbox());
 		fileActions.addSeparator();
