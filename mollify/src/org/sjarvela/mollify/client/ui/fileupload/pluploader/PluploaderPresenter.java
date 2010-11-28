@@ -298,6 +298,11 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	@Override
+	public void onBeforeUpload(Plupload uploader, File file) {
+		logger.log(Level.INFO, "File upload string: " + file.getName());
+	}
+
+	@Override
 	public void onFileUpload(Plupload uploader, File file) {
 		logger.log(Level.INFO, "File upload started: " + file.getName());
 		uploadModel.start(file);

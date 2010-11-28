@@ -10,16 +10,9 @@
  */
 
 function plupload($folder, $eventHandler) {
-	// HTTP headers for no cache etc
-	header('Content-type: text/plain; charset=UTF-8');
-	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-	header("Cache-Control: no-store, no-cache, must-revalidate");
-	header("Cache-Control: post-check=0, pre-check=0", false);
-	header("Pragma: no-cache");
-
 	// Settings
 	$targetDir = $folder->filesystem()->localPath($folder);
+//	$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR."plupload";
 	$cleanupTargetDir = false; // Remove old files
 	$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -34,6 +27,19 @@ function plupload($folder, $eventHandler) {
 
 	// Clean the fileName for security reasons
 	$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
+	
+	// Make sure the fileName is unique but only if chunking is disabled
+	if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
+		$ext = strrpos($fileName, '.');
+		$fileName_a = substr($fileName, 0, $ext);
+		$fileName_b = substr($fileName, $ext);
+
+		$count = 1;
+		while (file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName_a . '_' . $count . $fileName_b))
+			$count++;
+
+		$fileName = $fileName_a . '_' . $count . $fileName_b;
+	}
 	
 	// Create target dir
 	if (!file_exists($targetDir))
@@ -53,12 +59,18 @@ function plupload($folder, $eventHandler) {
 	} else
 		throw new ServiceException("UPLOAD_FAILED", "Failed to open temp directory.");
 
+	// Look for the content type header
+	if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
+		$contentType = $_SERVER["HTTP_CONTENT_TYPE"];
+
+	if (isset($_SERVER["CONTENT_TYPE"]))
+		$contentType = $_SERVER["CONTENT_TYPE"];
+	
 	$file = $targetDir.$fileName;
 	Logging::logDebug("Uploading to ".$file." (".$chunk."/".$chunks.")");
-	if (isset($_SERVER["CONTENT_TYPE"]))
-		Logging::logDebug("Content type: ".$_SERVER["CONTENT_TYPE"]);
+	Logging::logDebug("Content type: ".$contentType);
 	
-	if (isset($_SERVER["CONTENT_TYPE"]) and strpos($_SERVER["CONTENT_TYPE"], "multipart") !== false) {
+	if (strpos($contentType, "multipart") !== false) {
 		if (isset($_FILES['file']['tmp_name']) and is_uploaded_file($_FILES['file']['tmp_name'])) {
 			$from = $_FILES['file']['tmp_name'];
 			
@@ -93,9 +105,9 @@ function plupload($folder, $eventHandler) {
 		$in = fopen("php://input", "rb");
 		if (!$in) throw new ServiceException("UPLOAD_FAILED", "Failed to open input stream.");
 		
-		while ($buff = fread($in, 4096)) {
+		while ($buff = fread($in, 4096))
 			fwrite($out, $buff);
-		}
+		
 		fclose($out);
 		fclose($in);
 		
