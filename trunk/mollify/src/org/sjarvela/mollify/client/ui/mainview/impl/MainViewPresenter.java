@@ -78,10 +78,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final ViewManager viewManager;
 	private final DropBox dropBox;
 	private final EventDispatcher eventDispatcher;
+	private final SearchResultDialogFactory searchResultDialogFactory;
 
 	private final boolean exposeFileUrls;
-
-	private final SearchResultDialogFactory searchResultDialogFactory;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,

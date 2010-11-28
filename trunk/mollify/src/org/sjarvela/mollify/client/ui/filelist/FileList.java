@@ -123,6 +123,12 @@ public class FileList extends Grid<FileSystemItem> implements
 		Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_FILE_ICON);
 		HoverDecorator.decorate(icon);
+		icon.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				FileList.this.onIconClicked(file);
+			}
+		});
+
 		panel.add(icon);
 		panel.add(createNameWidget(file, true));
 		return panel;
@@ -166,7 +172,7 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	private Widget createTypeWidget(FileSystemItem item) {
 		Label name = new Label(item.isFile() ? ((File) item).getExtension()
-				: typeTextFolder);
+				: (Folder.Parent.equals(item) ? "" : typeTextFolder));
 		name.setStyleName(StyleConstants.FILE_LIST_ITEM_TYPE);
 		return name;
 	}
@@ -205,6 +211,8 @@ public class FileList extends Grid<FileSystemItem> implements
 
 		styles.add(index % 2 == 0 ? StyleConstants.FILE_LIST_ROW_DIRECTORY_EVEN
 				: StyleConstants.FILE_LIST_ROW_DIRECTORY_ODD);
+		if (Folder.Parent.equals(folder))
+			styles.add(StyleConstants.FILE_LIST_ROW_DIRECTORY_PARENT);
 		return styles;
 	}
 

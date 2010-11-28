@@ -142,6 +142,7 @@ public class StyleConstants {
 	public static final String FILE_LIST_ROW_FILE_ODD = "mollify-filelist-row-file-odd";
 	public static final String FILE_LIST_ROW_DIRECTORY_EVEN = "mollify-filelist-row-directory-even";
 	public static final String FILE_LIST_ROW_DIRECTORY_ODD = "mollify-filelist-row-directory-odd";
+	public static final String FILE_LIST_ROW_DIRECTORY_PARENT = "mollify-filelist-row-directory-parent";
 	public static final String FILE_LIST_ROW_DIRECTORY_ICON = "mollify-filelist-row-directory-icon";
 	public static final String FILE_LIST_ROW_FILE_ICON = "mollify-filelist-row-file-icon";
 	public static final String FILE_LIST_ROW_SELECTOR = "mollify-filelist-row-selector";
@@ -384,6 +385,5 @@ public class StyleConstants {
 	public static final String SEARCH_RESULTS_DIALOG_INFO_TEXT = "mollify-search-results-info-text";
 	public static final String SEARCH_RESULTS_DIALOG_LIST = "mollify-search-results-list";
 	public static final String SEARCH_RESULTS_DIALOG_BUTTONS = "mollify-search-results-buttons";
-
 
 }
