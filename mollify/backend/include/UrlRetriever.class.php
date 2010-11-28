@@ -45,9 +45,16 @@
 			
 			set_time_limit(0);
 			$success = curl_exec($h);
+			$status = FALSE;
+			if ($success) $status = curl_getinfo($h, CURLINFO_HTTP_CODE);
+			
 			fclose($fh);
 			curl_close($h);
 			if (!$success) throw new ServiceException("REQUEST_FAILED", "Failed to get url: ".curl_errno()." ".curl_error());
+			if ($status !== 200) {
+				if (file_exists($tempFile)) unlink($tempFile);
+				throw new ServiceException("REQUEST_FAILED", "Retrieving url failed, http status code: ".$status);
+			}
 			
 			return array("file" => $tempFile, "stream" => @fopen($tempFile, "rb"), "name" => $this->getName($url));
 		}
