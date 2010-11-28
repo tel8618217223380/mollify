@@ -668,12 +668,14 @@
 			$values["item_name"] = $this->item->name();
 			$values["item_path"] = $this->item->path();
 			$values["item_internal_path"] = $this->item->internalPath();
+			$values["root_name"] = $this->item->root()->name();
 
-			if ($this->subType() === self::COPY or $this->subType() === self::MOVE) {
+			if ($this->subType() === self::RENAME or $this->subType() === self::COPY or $this->subType() === self::MOVE) {
 				$values["to_item_id"] = $this->info->id();
 				$values["to_item_name"] = $this->info->name();
 				$values["to_item_path"] = $this->info->path();
 				$values["to_item_internal_path"] = $this->info->internalPath();
+				$values["to_root_name"] = $this->info->root()->name();
 			}
 
 			return $values;
