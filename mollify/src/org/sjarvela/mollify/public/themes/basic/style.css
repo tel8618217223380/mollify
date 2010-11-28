@@ -755,6 +755,10 @@ td#mollify-filelist-column-size {
 	background: #f4e5f0;
 }
 
+.mollify-filelist-row-directory-parent td {
+	color: #8b8b8b;
+}
+
 .mollify-filelist-row-directory-odd td {
 	background-color: #eedaee;
 }
@@ -784,9 +788,10 @@ td#mollify-filelist-column-size {
 .mollify-filelist .mollify-filelist-item-name {
 	height: 15px;
 	padding-left: 5px;
-	padding-top: 2px;
+	padding-top: 4px;
 	cursor: pointer;
 	overflow: hidden;
+	padding-bottom: 2px;
 }
 
 .mollify-filelist-row-directory-even .mollify-filelist-item-name, .mollify-filelist-row-directory-odd .mollify-filelist-item-name {
@@ -802,6 +807,20 @@ td#mollify-filelist-column-size {
 	float: left;
 	cursor: pointer;
 	margin-right: 2px;
+}
+
+.mollify-filelist-row-directory-parent .mollify-filelist-row-directory-icon {
+	background: url(folder2.png) no-repeat 3px 3px;
+	cursor: default;
+}
+
+.mollify-filelist-row-file-icon, .mollify-filelist-row-file-icon-hover {
+	width: 20px;
+	background: url(mimetypes/empty.png) no-repeat 3px 3px;
+	height: 20px;
+	float: left;
+	margin-right: 2px;
+	cursor: pointer;
 }
 
 .mollify-filelist-row-directory-icon-hover {
@@ -2249,4 +2268,46 @@ input.mollify-header-search-field {
 
 #mollify-search-result-actions {
 	margin-left: 4px;
+}
+
+/* mimetypes */
+
+.mollify-filelist-filetype-pdf .mollify-filelist-row-file-icon {
+	background: url(mimetypes/application_pdf.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-php .mollify-filelist-row-file-icon {
+	background: url(mimetypes/application_x_php.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-zip .mollify-filelist-row-file-icon {
+	background: url(mimetypes/application_zip.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-mp3 .mollify-filelist-row-file-icon, .mollify-filelist-filetype-ogg .mollify-filelist-row-file-icon, .mollify-filelist-filetype-wav .mollify-filelist-row-file-icon {
+	background: url(mimetypes/audio_basic.png) no-repeat 3px 3px;
+}
+
+.mollify-filelist-filetype-avi .mollify-filelist-row-file-icon, .mollify-filelist-filetype-mkv .mollify-filelist-row-file-icon {
+	background: url(mimetypes/video.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-jpg .mollify-filelist-row-file-icon, .mollify-filelist-filetype-png .mollify-filelist-row-file-icon, .mollify-filelist-filetype-gif .mollify-filelist-row-file-icon, .mollify-filelist-filetype-jpeg .mollify-filelist-row-file-icon, .mollify-filelist-filetype-tiff .mollify-filelist-row-file-icon {
+	background: url(mimetypes/image_png.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-xls .mollify-filelist-row-file-icon {
+	background: url(mimetypes/application_vnd.ms_excel.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-doc .mollify-filelist-row-file-icon {
+	background: url(mimetypes/application_vnd.ms_word.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-txt .mollify-filelist-row-file-icon {
+	background: url(mimetypes/text_plain.png) no-repeat 3px 3px;	
+}
+
+.mollify-filelist-filetype-html .mollify-filelist-row-file-icon {
+	background: url(mimetypes/text_html.png) no-repeat 3px 3px;	
 }
