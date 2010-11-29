@@ -19,7 +19,7 @@
 		<link rel="stylesheet" href="<?php echo $PATH ?>resources/style.css">
 		<link rel="stylesheet" href="pages/style.css">
 
-		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/json.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/md5.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/template.js"></script>

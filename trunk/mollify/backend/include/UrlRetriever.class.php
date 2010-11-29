@@ -46,17 +46,31 @@
 			set_time_limit(0);
 			$success = curl_exec($h);
 			$status = FALSE;
-			if ($success) $status = curl_getinfo($h, CURLINFO_HTTP_CODE);
+			$errorNo = 0;
+			$error = NULL;
+			
+			if ($success) {
+				$status = curl_getinfo($h, CURLINFO_HTTP_CODE);
+			} else {
+				$errorNo = curl_errno($h);
+				$error = curl_error($h);
+				Logging::logDebug("Failed to retrieve url: $errorNo $error");
+			}
 			
 			fclose($fh);
 			curl_close($h);
-			if (!$success) throw new ServiceException("REQUEST_FAILED", "Failed to get url: ".curl_errno()." ".curl_error());
-			if ($status !== 200) {
-				if (file_exists($tempFile)) unlink($tempFile);
-				throw new ServiceException("REQUEST_FAILED", "Retrieving url failed, http status code: ".$status);
+			
+			if (!$success) {
+				if ($errorNo === 6) return array("success" => false, "result" => 404);
+				throw new ServiceException("REQUEST_FAILED", $error);
 			}
 			
-			return array("file" => $tempFile, "stream" => @fopen($tempFile, "rb"), "name" => $this->getName($url));
+			if ($status !== 200) {
+				if (file_exists($tempFile)) unlink($tempFile);
+				return array("success" => false, "result" => $status);
+			}
+			
+			return array("success" => true, "file" => $tempFile, "stream" => @fopen($tempFile, "rb"), "name" => $this->getName($url));
 		}
 		
 		private function getName($url) {

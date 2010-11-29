@@ -63,4 +63,8 @@ public interface MessageConstants extends Messages {
 
 	String searchResultsInfo(String text, int count);
 
+	String retrieveUrlNotFound(String url);
+
+	String retrieveUrlNotAuthorized(String url);
+
 }

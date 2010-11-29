@@ -38,7 +38,7 @@ public class ServiceError {
 	}
 
 	public String getDetails() {
-		return details;
+		return details == null ? "" : details;
 	}
 
 	public ErrorValue getError() {

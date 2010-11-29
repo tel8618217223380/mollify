@@ -302,6 +302,15 @@
 					if (!isset($data['url'])) throw $this->invalidRequestException();
 					
 					$retrieved = $this->env->urlRetriever()->retrieve($data['url']);
+					if (!$retrieved["success"]) {
+						if ($retrieved["result"] === 404)
+							$this->response()->fail(301, "Resource not found [".$data['url']."]");
+						else if ($retrieved["result"] === 401)
+							$this->response()->fail(302, "Unauthorized");
+						else
+							$this->response()->fail(108, "Failed to retrieve resource [".$data['url']."], http status ".$retrieved["result"]);
+						return;
+					}
 					$this->env->filesystem()->uploadFrom($item, $retrieved["name"], $retrieved["stream"], $data['url']);
 					fclose($retrieved["stream"]);
 					unlink($retrieved["file"]);
