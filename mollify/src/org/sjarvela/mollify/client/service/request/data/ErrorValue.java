@@ -10,7 +10,10 @@
 
 package org.sjarvela.mollify.client.service.request.data;
 
-public class ErrorValue extends ReturnValue {
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
+
+public class ErrorValue extends JavaScriptObject {
 	protected ErrorValue() {
 	}
 
@@ -24,6 +27,10 @@ public class ErrorValue extends ReturnValue {
 
 	public final native String getDetails() /*-{
 		return this.details;
+	}-*/;
+
+	public final native JsArrayString getDebugInfo() /*-{
+		return this.trace;
 	}-*/;
 
 	public final String asString() {

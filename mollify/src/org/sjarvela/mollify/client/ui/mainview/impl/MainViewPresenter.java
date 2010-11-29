@@ -281,7 +281,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		});
 	}
 
-	private void retrieveUrl(String url) {
+	private void retrieveUrl(final String url) {
 		final WaitDialog waitDialog = dialogManager.openWaitDialog("",
 				textProvider.getStrings().pleaseWait());
 
@@ -298,15 +298,23 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					public void onFail(ServiceError error) {
 						waitDialog.close();
 
-						if (ServiceErrorType.REQUEST_FAILED.equals(error
-								.getType())) {
+						if (error.getError().getCode() == 301)
+							dialogManager.showInfo(textProvider.getStrings()
+									.retrieveUrlTitle(), textProvider
+									.getMessages().retrieveUrlNotFound(url));
+						else if (error.getError().getCode() == 302)
+							dialogManager.showInfo(textProvider.getStrings()
+									.retrieveUrlTitle(), textProvider
+									.getMessages()
+									.retrieveUrlNotAuthorized(url));
+						else if (ServiceErrorType.REQUEST_FAILED.equals(error
+								.getType()))
 							dialogManager.showInfo(textProvider.getStrings()
 									.retrieveUrlTitle(), textProvider
 									.getStrings().retrieveUrlFailed(), error
 									.getDetails());
-						} else {
+						else
 							dialogManager.showError(error);
-						}
 					}
 				});
 	}

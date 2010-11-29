@@ -576,6 +576,10 @@
 	float: left;
 	margin-left: 4px;
 	height: 13px;
+	font-weight: bold;
+	font-size: 10px;
+	padding-top: 5px;
+	padding-bottom: 4px;
 }
 
 #mollify-header-select-options {
@@ -603,11 +607,13 @@
 	height: 24px;
 	min-width: 66px;
 	width: auto;
-	background: #919191 url(sort-desc.png) no-repeat;
-	background-position: center right;
+	background: #919191 url(sort-desc.png) no-repeat right;
 	text-align: left;
 	float: left;
 	padding-right: 11px;
+	font-size: 10px;
+	padding-top: 5px;
+	padding-left: 7px;
 }
 
 #mollify-header-file-actions[disabled] {
@@ -2200,7 +2206,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 
 .mollify-header-search-container {
 	display: block;
-	margin-left: 4px;
+	margin-left: 10px;
 	float: left;
 	margin-top: 1px;
 }
