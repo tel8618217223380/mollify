@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
@@ -48,7 +49,7 @@ public class ItemContextPresenter implements ActionListener,
 
 	private FileSystemItem item = null;
 	private ItemDetails details;
-	private List<ItemContextComponent> components;
+	private List<ItemContextComponent> components = Collections.EMPTY_LIST;
 
 	public ItemContextPresenter(ItemContextPopupComponent popup,
 			ItemDetailsProvider itemDetailsProvider, TextProvider textProvider,

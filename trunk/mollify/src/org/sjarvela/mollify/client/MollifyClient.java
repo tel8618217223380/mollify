@@ -52,6 +52,8 @@ public class MollifyClient implements Client, SessionListener {
 	private final ClientSettings settings;
 	private final ServiceProvider serviceProvider;
 
+	private final PluginSystem pluginSystem;
+
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
@@ -64,10 +66,10 @@ public class MollifyClient implements Client, SessionListener {
 		this.serviceProvider = serviceProvider;
 		this.textProvider = textProvider;
 		this.settings = settings;
+		this.pluginSystem = pluginSystem;
 		this.service = serviceProvider.getSessionService();
 
 		sessionManager.addSessionListener(this);
-		pluginSystem.setup();
 	}
 
 	public void start() {
@@ -88,12 +90,14 @@ public class MollifyClient implements Client, SessionListener {
 					}
 
 					public void onSuccess(SessionInfo session) {
+						pluginSystem.setup(session);
 						sessionManager.setSession(session);
 					}
 				});
 	}
 
 	public void onSessionStarted(SessionInfo session) {
+
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin(session);
 		else

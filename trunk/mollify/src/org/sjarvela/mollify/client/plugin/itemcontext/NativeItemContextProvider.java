@@ -37,7 +37,7 @@ public class NativeItemContextProvider implements ItemContextProvider {
 
 	@Override
 	public ItemContext getItemContext(FileSystemItem item, ItemDetails details) {
-		return convert(item, invokeNativeProvider(item.asJs()));
+		return convert(item, invokeNativeProvider(item.asJs(), details));
 	}
 
 	private ItemContext convert(FileSystemItem item, JavaScriptObject result) {
@@ -97,9 +97,9 @@ public class NativeItemContextProvider implements ItemContextProvider {
 	}
 
 	private final native JavaScriptObject invokeNativeProvider(
-			JavaScriptObject item) /*-{
+			JavaScriptObject item, JavaScriptObject details) /*-{
 		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::dp;
-		return cb(item);
+		return cb(item, details);
 	}-*/;
 
 }

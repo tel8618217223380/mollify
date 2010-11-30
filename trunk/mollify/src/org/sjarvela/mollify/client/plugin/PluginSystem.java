@@ -10,8 +10,10 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import org.sjarvela.mollify.client.session.SessionInfo;
+
 public interface PluginSystem {
 
-	void setup();
+	void setup(SessionInfo session);
 
 }
