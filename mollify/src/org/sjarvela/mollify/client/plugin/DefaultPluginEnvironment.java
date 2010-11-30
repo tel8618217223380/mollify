@@ -41,12 +41,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
-			ItemContextProvider itemDetailsProvider,
+			ItemContextProvider itemContextProvider,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
 			DialogManager dialogManager) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
-		this.itemContextProvider = itemDetailsProvider;
+		this.itemContextProvider = itemContextProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;

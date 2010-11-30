@@ -10,8 +10,13 @@
 
 package org.sjarvela.mollify.client.js;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.util.JsUtil;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 
 public class JsObj extends JavaScriptObject {
 	protected JsObj() {
@@ -39,5 +44,20 @@ public class JsObj extends JavaScriptObject {
 
 	public final native boolean getBoolean(String name) /*-{
 		return this[name];
+	}-*/;
+
+	public final native boolean hasValue(String name) /*-{
+		if (!this[name]) return false;
+		return true;
+	}-*/;
+
+	public final List<String> getKeys() {
+		return JsUtil.asList(getKeyList());
+	}
+
+	private final native JsArrayString getKeyList() /*-{
+		var result = [];
+		for (id in this) result.push(id);
+		return result;
 	}-*/;
 }

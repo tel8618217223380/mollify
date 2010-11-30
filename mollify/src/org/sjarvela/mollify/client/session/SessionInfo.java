@@ -70,6 +70,10 @@ public class SessionInfo extends JavaScriptObject {
 		return this.features;
 	}-*/;
 
+	public final native JavaScriptObject getPlugins() /*-{
+		return this.plugins;
+	}-*/;
+
 	public final UserPermissionMode getDefaultPermissionMode() {
 		if (getDefaultPermissionModeString() == null)
 			return UserPermissionMode.None;

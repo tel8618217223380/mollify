@@ -36,6 +36,10 @@
 		public function hasAdminView() {
 			return FALSE;
 		}
+
+		public function getClientPlugin() {
+			return NULL;
+		}
 		
 		public function isConfigurationSupported($type) {
 			return TRUE;

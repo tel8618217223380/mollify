@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.plugin.service;
 
+import java.util.Collections;
+
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -38,6 +40,10 @@ public class NativeService {
 			service.@org.sjarvela.mollify.client.plugin.service.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 		}
 
+		env.post = function(path, success, fail) {
+			service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
+		}
+		
 		return env;
 	}-*/;
 
@@ -59,6 +65,23 @@ public class NativeService {
 				invokeSuccess(success, result);
 			}
 		});
+	}
+
+	protected void post(String path, final JavaScriptObject success,
+			final JavaScriptObject fail) {
+		externalService.post(path, Collections.EMPTY_MAP,
+				new ResultListener<String>() {
+					@Override
+					public void onFail(ServiceError error) {
+						invokeFail(fail, error.getError().getCode(), error
+								.getError().getError());
+					}
+
+					@Override
+					public void onSuccess(String result) {
+						invokeSuccess(success, result);
+					}
+				});
 	}
 
 	protected native void invokeSuccess(JavaScriptObject cb, String result) /*-{

@@ -162,8 +162,8 @@
 			return $url."/";
 		}
 		
-		public function getPluginUrl($pluginId, $path = NULL) {
-			return $this->getResourceUrl("plugin/".$pluginId."/".($path != NULL ? $path."/" : ""));
+		public function getPluginUrl($pluginId, $path = NULL, $file = FALSE) {
+			return $this->getResourceUrl("plugin/".$pluginId."/".($path != NULL ? $path.($file ? "" : "/") : ""));
 		}
 		
 		public function getResourceUrl($path) {

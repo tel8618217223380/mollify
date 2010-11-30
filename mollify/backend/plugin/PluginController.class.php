@@ -57,6 +57,10 @@
 			foreach($this->plugins as $id => $p) {
 				$info = $p->getSessionInfo();
 				$info["admin"] = $p->hasAdminView();
+
+				$clientPlugin = $p->getClientPlugin();
+				if ($clientPlugin != NULL)
+					$info["client_plugin"] = $this->env->getPluginUrl($id, $clientPlugin, TRUE);
 				
 				$result[$id] = $info;
 			}

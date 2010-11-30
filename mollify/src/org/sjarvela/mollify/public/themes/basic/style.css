@@ -548,26 +548,29 @@
 	padding-top: 4px;
 	padding-bottom: 5px;
 	cursor: pointer;
-	border: 1px solid #7b7b7b;
+	border: 1px solid #929494;
 	height: 13px;
 	background-image: none;
-	background-color: #919191;
+	background-color: #9ea0a0;
+	border-right-style: none;
 }
 
 .mollify-header-toggle-button:hover {
-	border: 1px solid #6e7070;
-	background-color: #848484;
+	border: 1px solid #8b8e8e;
+	background-color: #989a9a;
+	border-right-style: none;
 }
 
 .mollify-header-toggle-button-down {
 	border-style: solid;
-	background: #616366 0 0;
+	background: #8b8e93 0 0;
 	color: #e9e8ea;
-	border-color: #4f4f4f;
+	border-color: #7c7d7d;
+	border-right-style: none;
 }
 
 .mollify-header-toggle-button-down:hover {
-	background: #68696b 0 0;
+	background: #989a9a 0 0;
 }
 
 #mollify-header-toggle-button-select {
@@ -586,13 +589,13 @@
 	float: left;
 	width: 10px;
 	height: 24px;
-	border: 1px solid #787878;
+	border: 1px solid #929494;
 	border-left-style: none;
-	background: #919191 url(sort-desc.png) no-repeat 1px 10px;
+	background: #9ea0a0 url(sort-desc.png) no-repeat 1px 10px;
 }
 
 #mollify-header-select-options:hover {
-	background-color: #848484;
+	background-color: #989a9a;
 }
 
 #mollify-header-select-options-menu {
@@ -603,17 +606,21 @@
 	margin-left: 3px;
 	margin-top: 0;
 	border-style: solid;
-	border-color: #7d7d7d;
+	border-color: #929494;
 	height: 24px;
 	min-width: 66px;
 	width: auto;
-	background: #919191 url(sort-desc.png) no-repeat right;
+	background: #9ea0a0 url(sort-desc.png) no-repeat right;
 	text-align: left;
 	float: left;
 	padding-right: 11px;
 	font-size: 10px;
 	padding-top: 5px;
 	padding-left: 7px;
+}
+
+#mollify-header-file-actions:hover {
+	background: #989a9a url(sort-desc.png) no-repeat right;
 }
 
 #mollify-header-file-actions[disabled] {
