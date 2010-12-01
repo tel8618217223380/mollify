@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.fileupload.flash;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
@@ -40,8 +41,8 @@ public class FileComponent extends FlowPanel {
 		this.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_FILE);
 
 		// remove button
-		button = new ActionButton(textProvider.getStrings()
-				.fileUploadDialogRemoveFileButton(),
+		button = new ActionButton(
+				textProvider.getText(Texts.fileUploadDialogRemoveFileButton),
 				StyleConstants.FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON,
 				StyleConstants.FILE_UPLOAD_DIALOG_FILE_REMOVE_BUTTON);
 		button.setAction(actionListener, clickAction, file);
@@ -93,16 +94,16 @@ public class FileComponent extends FlowPanel {
 	public void setFinished() {
 		button.setVisible(false);
 		setActive(false);
-		info.setText(textProvider.getStrings()
-				.fileUploadDialogMessageFileCompleted());
+		info.setText(textProvider
+				.getText(Texts.fileUploadDialogMessageFileCompleted));
 		addStyleDependentName(StyleConstants.COMPLETE);
 	}
 
 	public void setCancelled() {
 		button.setVisible(false);
 		setActive(false);
-		info.setText(textProvider.getStrings()
-				.fileUploadDialogMessageFileCancelled());
+		info.setText(textProvider
+				.getText(Texts.fileUploadDialogMessageFileCancelled));
 		addStyleDependentName(StyleConstants.CANCEL);
 	}
 

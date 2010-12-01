@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -89,32 +90,32 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	private SwitchPanel createDescriptionActions() {
-		addDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsAddDescription(),
+		addDescription = new ActionLink(
+				textProvider.getText(Texts.fileDetailsAddDescription),
 				StyleConstants.FILE_CONTEXT_ADD_DESCRIPTION,
 				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
 		addDescription.setAction(this, Action.addDescription);
 
-		removeDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsRemoveDescription(),
+		removeDescription = new ActionLink(
+				textProvider.getText(Texts.fileDetailsRemoveDescription),
 				StyleConstants.FILE_CONTEXT_REMOVE_DESCRIPTION,
 				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
 		removeDescription.setAction(this, Action.removeDescription);
 
-		editDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsEditDescription(),
+		editDescription = new ActionLink(
+				textProvider.getText(Texts.fileDetailsEditDescription),
 				StyleConstants.FILE_CONTEXT_EDIT_DESCRIPTION,
 				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
 		editDescription.setAction(this, Action.editDescription);
 
-		applyDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsApplyDescription(),
+		applyDescription = new ActionLink(
+				textProvider.getText(Texts.fileDetailsApplyDescription),
 				StyleConstants.FILE_CONTEXT_APPLY_DESCRIPTION,
 				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
 		applyDescription.setAction(this, Action.applyDescription);
 
-		cancelEditDescription = new ActionLink(textProvider.getStrings()
-				.fileDetailsCancelEditDescription(),
+		cancelEditDescription = new ActionLink(
+				textProvider.getText(Texts.fileDetailsCancelEditDescription),
 				StyleConstants.FILE_CONTEXT_CANCEL_EDIT_DESCRIPTION,
 				StyleConstants.FILE_CONTEXT_DESCRIPTION_ACTION);
 		cancelEditDescription.setAction(this, Action.cancelEditDescription);
@@ -141,7 +142,8 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
-	public boolean onInit(ItemContextContainer container, FileSystemItem item, ItemDetails details) {
+	public boolean onInit(ItemContextContainer container, FileSystemItem item,
+			ItemDetails details) {
 		this.item = item;
 		this.details = details;
 		updateDescription();
@@ -167,7 +169,8 @@ public class DescriptionComponent implements ItemContextComponent,
 	public void onAction(ResourceId action, Object o) {
 		if (ItemContextPopupComponent.Action.addDescription.equals(action))
 			onStartEditDescription();
-		else if (ItemContextPopupComponent.Action.editDescription.equals(action))
+		else if (ItemContextPopupComponent.Action.editDescription
+				.equals(action))
 			onStartEditDescription();
 		else if (ItemContextPopupComponent.Action.cancelEditDescription
 				.equals(action))
@@ -251,9 +254,9 @@ public class DescriptionComponent implements ItemContextComponent,
 	private boolean validateDescription(String description) {
 		List<String> unsafeTags = Html.findUnsafeHtmlTags(description);
 		if (unsafeTags.size() > 0) {
-			dialogManager.showInfo(textProvider.getStrings()
-					.infoDialogErrorTitle(), textProvider.getStrings()
-					.invalidDescriptionUnsafeTags());
+			dialogManager.showInfo(
+					textProvider.getText(Texts.infoDialogErrorTitle),
+					textProvider.getText(Texts.invalidDescriptionUnsafeTags));
 			return false;
 		}
 		return true;

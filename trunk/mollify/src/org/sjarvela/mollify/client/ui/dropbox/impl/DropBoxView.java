@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
@@ -56,7 +57,7 @@ public class DropBoxView extends DialogBox {
 		this.pathFormatter = pathFormatter;
 		this.session = session;
 
-		this.setText(textProvider.getStrings().dropBoxTitle());
+		this.setText(textProvider.getText(Texts.dropBoxTitle));
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
 		this.add(createContent());
 		this.show();
@@ -79,28 +80,28 @@ public class DropBoxView extends DialogBox {
 		actions.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ACTIONS);
 		panel.add(actions);
 
-		actionsButton = new DropdownButton(actionListener, textProvider
-				.getStrings().dropBoxActions(),
+		actionsButton = new DropdownButton(actionListener,
+				textProvider.getText(Texts.dropBoxActions),
 				StyleConstants.DROPBOX_VIEW_ACTIONS_BUTTON);
-		actionsButton.addAction(Actions.clear, textProvider.getStrings()
-				.dropBoxActionClear());
+		actionsButton.addAction(Actions.clear,
+				textProvider.getText(Texts.dropBoxActionClear));
 		actionsButton.addSeparator();
-		actionsButton.addAction(Actions.copy, textProvider.getStrings()
-				.dropBoxActionCopy());
-		actionsButton.addAction(Actions.copyHere, textProvider.getStrings()
-				.dropBoxActionCopyHere());
-		actionsButton.addAction(Actions.move, textProvider.getStrings()
-				.dropBoxActionMove());
-		actionsButton.addAction(Actions.moveHere, textProvider.getStrings()
-				.dropBoxActionMoveHere());
+		actionsButton.addAction(Actions.copy,
+				textProvider.getText(Texts.dropBoxActionCopy));
+		actionsButton.addAction(Actions.copyHere,
+				textProvider.getText(Texts.dropBoxActionCopyHere));
+		actionsButton.addAction(Actions.move,
+				textProvider.getText(Texts.dropBoxActionMove));
+		actionsButton.addAction(Actions.moveHere,
+				textProvider.getText(Texts.dropBoxActionMoveHere));
 		actionsButton.addSeparator();
-		actionsButton.addAction(Actions.delete, textProvider.getStrings()
-				.fileActionDeleteTitle());
+		actionsButton.addAction(Actions.delete,
+				textProvider.getText(Texts.fileActionDeleteTitle));
 
 		if (session.getFeatures().zipDownload()) {
 			actionsButton.addSeparator();
-			actionsButton.addAction(Actions.downloadAsZip, textProvider
-					.getStrings().fileActionDownloadZippedTitle());
+			actionsButton.addAction(Actions.downloadAsZip,
+					textProvider.getText(Texts.fileActionDownloadZippedTitle));
 		}
 		actions.add(actionsButton);
 

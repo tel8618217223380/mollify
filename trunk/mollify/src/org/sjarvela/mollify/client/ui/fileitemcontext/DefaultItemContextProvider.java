@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -96,11 +97,11 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private void createDownloadActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions) {
 		if (item.isFile())
-			actions.add(FileSystemAction.download, textProvider.getStrings()
-					.fileActionDownloadTitle());
+			actions.add(FileSystemAction.download,
+					textProvider.getText(Texts.fileActionDownloadTitle));
 		if (sessionProvider.getSession().getFeatures().zipDownload())
-			actions.add(FileSystemAction.download_as_zip, textProvider
-					.getStrings().fileActionDownloadZippedTitle());
+			actions.add(FileSystemAction.download_as_zip,
+					textProvider.getText(Texts.fileActionDownloadZippedTitle));
 	}
 
 	private void createPrimaryActions(FileSystemItem item, ItemDetails details,
@@ -109,8 +110,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 			FileDetails d = details.cast();
 			if (d.getFileView() != null
 					&& sessionProvider.getSession().getFeatures().fileView()) {
-				actions.add(FileSystemAction.view, textProvider.getStrings()
-						.fileActionViewTitle());
+				actions.add(FileSystemAction.view,
+						textProvider.getText(Texts.fileActionViewTitle));
 			}
 		}
 	}
@@ -118,27 +119,27 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private void createSecondaryActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions, boolean writable) {
 		if (item.isFile() || !((Folder) item).isRoot())
-			actions.add(Action.addToDropbox, textProvider.getStrings()
-					.mainViewSelectActionAddToDropbox());
+			actions.add(Action.addToDropbox, textProvider
+					.getText(Texts.mainViewSelectActionAddToDropbox));
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().publicLinks())
-			actions.add(FileSystemAction.publicLink, textProvider.getStrings()
-					.fileActionPublicLinkTitle());
+			actions.add(FileSystemAction.publicLink,
+					textProvider.getText(Texts.fileActionPublicLinkTitle));
 		actions.addSeparator();
 		if (writable)
-			actions.add(FileSystemAction.rename, textProvider.getStrings()
-					.fileActionRenameTitle());
-		actions.add(FileSystemAction.copy, textProvider.getStrings()
-				.fileActionCopyTitle());
+			actions.add(FileSystemAction.rename,
+					textProvider.getText(Texts.fileActionRenameTitle));
+		actions.add(FileSystemAction.copy,
+				textProvider.getText(Texts.fileActionCopyTitle));
 		if (item.isFile())
-			actions.add(FileSystemAction.copyHere, textProvider.getStrings()
-					.fileActionCopyHereTitle());
+			actions.add(FileSystemAction.copyHere,
+					textProvider.getText(Texts.fileActionCopyHereTitle));
 		if (writable)
-			actions.add(FileSystemAction.move, textProvider.getStrings()
-					.fileActionMoveTitle());
+			actions.add(FileSystemAction.move,
+					textProvider.getText(Texts.fileActionMoveTitle));
 		if (writable)
-			actions.add(FileSystemAction.delete, textProvider.getStrings()
-					.fileActionDeleteTitle());
+			actions.add(FileSystemAction.delete,
+					textProvider.getText(Texts.fileActionDeleteTitle));
 	}
 
 	private void createComponents(FileSystemItem item,

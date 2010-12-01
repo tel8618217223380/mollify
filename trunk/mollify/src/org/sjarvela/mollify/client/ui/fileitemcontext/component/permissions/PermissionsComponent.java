@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionLink;
@@ -50,8 +51,8 @@ public class PermissionsComponent implements ItemContextComponent,
 	}
 
 	private Widget createContent() {
-		ActionLink editPermissions = new ActionLink(textProvider.getStrings()
-				.fileDetailsEditPermissions(),
+		ActionLink editPermissions = new ActionLink(
+				textProvider.getText(Texts.fileDetailsEditPermissions),
 				StyleConstants.FILE_CONTEXT_EDIT_PERMISSIONS,
 				StyleConstants.FILE_CONTEXT_PERMISSION_ACTION);
 		editPermissions.setAction(this, Action.editPermissions);

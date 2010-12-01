@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
@@ -68,7 +69,7 @@ public class SearchResultDialog extends ResizableDialog implements
 			SearchResult result, PathFormatter formatter,
 			DefaultItemContextPopupFactory itemContextPopupFactory,
 			FileSystemActionHandler fileSystemActionHandler, DropBox dropBox) {
-		super(textProvider.getStrings().searchResultsDialogTitle(),
+		super(textProvider.getText(Texts.searchResultsDialogTitle),
 				"search-results");
 		this.result = result;
 		this.items = getItems();
@@ -108,25 +109,26 @@ public class SearchResultDialog extends ResizableDialog implements
 
 		this.itemContextPopup.setActionHandler(fileSystemActionHandler);
 
-		selectOptionsButton = new DropdownButton(this, textProvider
-				.getStrings().mainViewSelectButton(),
+		selectOptionsButton = new DropdownButton(this,
+				textProvider.getText(Texts.mainViewSelectButton),
 				"mollify-search-result-select-options");
-		selectOptionsButton.addAction(Action.selectAll, textProvider
-				.getStrings().mainViewSelectAll());
-		selectOptionsButton.addAction(Action.selectNone, textProvider
-				.getStrings().mainViewSelectNone());
+		selectOptionsButton.addAction(Action.selectAll,
+				textProvider.getText(Texts.mainViewSelectAll));
+		selectOptionsButton.addAction(Action.selectNone,
+				textProvider.getText(Texts.mainViewSelectNone));
 
-		fileActions = new DropdownButton(this, textProvider.getStrings()
-				.mainViewSelectActions(), "mollify-search-result-actions");
-		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
-				.mainViewSelectActionAddToDropbox());
+		fileActions = new DropdownButton(this,
+				textProvider.getText(Texts.mainViewSelectActions),
+				"mollify-search-result-actions");
+		fileActions.addAction(Action.addToDropbox,
+				textProvider.getText(Texts.mainViewSelectActionAddToDropbox));
 		fileActions.addSeparator();
-		fileActions.addAction(Action.copyMultiple, textProvider.getStrings()
-				.fileActionCopyTitle());
-		fileActions.addAction(Action.moveMultiple, textProvider.getStrings()
-				.fileActionMoveTitle());
-		fileActions.addAction(Action.deleteMultiple, textProvider.getStrings()
-				.fileActionDeleteTitle());
+		fileActions.addAction(Action.copyMultiple,
+				textProvider.getText(Texts.fileActionCopyTitle));
+		fileActions.addAction(Action.moveMultiple,
+				textProvider.getText(Texts.fileActionMoveTitle));
+		fileActions.addAction(Action.deleteMultiple,
+				textProvider.getText(Texts.fileActionDeleteTitle));
 		fileActions.setEnabled(false);
 
 		this.setMinimumSize(500, 300);
@@ -191,7 +193,7 @@ public class SearchResultDialog extends ResizableDialog implements
 
 		buttons.add(selectOptionsButton);
 		buttons.add(fileActions);
-		buttons.add(createButton(textProvider.getStrings().dialogCloseButton(),
+		buttons.add(createButton(textProvider.getText(Texts.dialogCloseButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						SearchResultDialog.this.hide();

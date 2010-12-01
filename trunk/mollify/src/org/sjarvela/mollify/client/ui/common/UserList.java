@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -37,9 +38,9 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 
 	protected List<GridColumn> getColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
-				textProvider.getStrings().userListColumnTitleName(), false);
+				textProvider.getText(Texts.userListColumnTitleName), false);
 		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,
-				textProvider.getStrings().userListColumnTitleType(), false);
+				textProvider.getText(Texts.userListColumnTitleType), false);
 		return Arrays.asList((GridColumn) columnName, (GridColumn) columnType);
 	}
 

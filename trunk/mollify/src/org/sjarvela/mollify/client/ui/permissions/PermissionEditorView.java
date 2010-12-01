@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.ListBox;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -53,7 +54,7 @@ public class PermissionEditorView extends CenteredDialog {
 
 	public PermissionEditorView(TextProvider textProvider,
 			ActionListener actionListener, Mode mode, boolean allowUserGroups) {
-		super(textProvider.getStrings().itemPermissionEditorDialogTitle(),
+		super(textProvider.getText(Texts.itemPermissionEditorDialogTitle),
 				StyleConstants.PERMISSION_EDITOR_VIEW);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
@@ -73,24 +74,27 @@ public class PermissionEditorView extends CenteredDialog {
 		defaultPermission.setAction(actionListener,
 				Actions.defaultPermissionChanged);
 
-		addUserButton = createButton(textProvider.getStrings()
-				.itemPermissionEditorButtonAddUserPermission(),
+		addUserButton = createButton(
+				textProvider
+						.getText(Texts.itemPermissionEditorButtonAddUserPermission),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_ADD_PERMISSION,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.addUserPermission);
 		addUserGroupButton = createButton(
-				textProvider.getStrings()
-						.itemPermissionEditorButtonAddUserGroupPermission(),
+				textProvider
+						.getText(Texts.itemPermissionEditorButtonAddUserGroupPermission),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_ADD_GROUP_PERMISSION,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.addUserGroupPermission);
-		editButton = createButton(textProvider.getStrings()
-				.itemPermissionEditorButtonEditPermission(),
+		editButton = createButton(
+				textProvider
+						.getText(Texts.itemPermissionEditorButtonEditPermission),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_EDIT_PERMISSION,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.editPermission);
-		removeButton = createButton(textProvider.getStrings()
-				.itemPermissionEditorButtonRemovePermission(),
+		removeButton = createButton(
+				textProvider
+						.getText(Texts.itemPermissionEditorButtonRemovePermission),
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_REMOVE_PERMISSION,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.removePermission);
@@ -102,8 +106,8 @@ public class PermissionEditorView extends CenteredDialog {
 		Panel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_CONTENT);
 
-		Label itemTitle = new Label(textProvider.getStrings()
-				.itemPermissionEditorItemTitle());
+		Label itemTitle = new Label(
+				textProvider.getText(Texts.itemPermissionEditorItemTitle));
 		itemTitle
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_ITEM_TITLE);
 		panel.add(itemTitle);
@@ -114,16 +118,17 @@ public class PermissionEditorView extends CenteredDialog {
 
 		itemPanel.add(itemName);
 		if (Mode.ItemSelectable.equals(this.mode)) {
-			itemPanel.add(createButton(textProvider.getStrings()
-					.itemPermissionEditorButtonSelectItem(),
+			itemPanel.add(createButton(textProvider
+					.getText(Texts.itemPermissionEditorButtonSelectItem),
 					StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON_SELECT_ITEM,
 					StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON,
 					actionListener, Actions.selectItem));
 		}
 		panel.add(itemPanel);
 
-		Label defaultPermissionTitle = new Label(textProvider.getStrings()
-				.itemPermissionEditorDefaultPermissionTitle());
+		Label defaultPermissionTitle = new Label(
+				textProvider
+						.getText(Texts.itemPermissionEditorDefaultPermissionTitle));
 		defaultPermissionTitle
 				.setStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_DEFAULT_PERMISSION_TITLE);
 		panel.add(defaultPermissionTitle);
@@ -135,9 +140,8 @@ public class PermissionEditorView extends CenteredDialog {
 		listPanel.add(list);
 
 		Panel actions = new FlowPanel();
-		actions
-				.setStyleName(allowUserGroups ? StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS
-						: StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS_NO_GROUPS);
+		actions.setStyleName(allowUserGroups ? StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS
+				: StyleConstants.PERMISSION_EDITOR_VIEW_PERMISSION_ACTIONS_NO_GROUPS);
 		actions.add(addUserButton);
 		if (allowUserGroups)
 			actions.add(addUserGroupButton);
@@ -155,13 +159,13 @@ public class PermissionEditorView extends CenteredDialog {
 		Panel buttons = new FlowPanel();
 		buttons.addStyleName(StyleConstants.PERMISSION_EDITOR_VIEW_BUTTONS);
 
-		okButton = createButton(textProvider.getStrings().dialogOkButton(),
+		okButton = createButton(textProvider.getText(Texts.dialogOkButton),
 				StyleConstants.PERMISSION_EDITOR_VIEW_OK,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.ok);
 		buttons.add(okButton);
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				StyleConstants.PERMISSION_EDITOR_VIEW_CANCEL,
 				StyleConstants.PERMISSION_EDITOR_VIEW_BUTTON, actionListener,
 				Actions.cancel));

@@ -1,6 +1,7 @@
 package org.sjarvela.mollify.client.ui.password;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -23,7 +24,7 @@ public class PasswordDialog extends CenteredDialog {
 
 	public PasswordDialog(TextProvider textProvider,
 			PasswordHandler passwordHandler) {
-		super(textProvider.getStrings().passwordDialogTitle(),
+		super(textProvider.getText(Texts.passwordDialogTitle),
 				StyleConstants.PASSWORD_DIALOG);
 		this.textProvider = textProvider;
 		this.passwordHandler = passwordHandler;
@@ -36,8 +37,8 @@ public class PasswordDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.PASSWORD_DIALOG_CONTENT);
 
-		Label originalPasswordTitle = new Label(textProvider.getStrings()
-				.passwordDialogOriginalPassword());
+		Label originalPasswordTitle = new Label(
+				textProvider.getText(Texts.passwordDialogOriginalPassword));
 		originalPasswordTitle
 				.setStyleName(StyleConstants.PASSWORD_ORIGINAL_PASSWORD_TITLE);
 		panel.add(originalPasswordTitle);
@@ -47,8 +48,8 @@ public class PasswordDialog extends CenteredDialog {
 				.addStyleName(StyleConstants.PASSWORD_ORIGINAL_PASSWORD_VALUE);
 		panel.add(originalPassword);
 
-		Label newPasswordTitle = new Label(textProvider.getStrings()
-				.passwordDialogNewPassword());
+		Label newPasswordTitle = new Label(
+				textProvider.getText(Texts.passwordDialogNewPassword));
 		newPasswordTitle
 				.setStyleName(StyleConstants.PASSWORD_NEW_PASSWORD_TITLE);
 		panel.add(newPasswordTitle);
@@ -57,8 +58,8 @@ public class PasswordDialog extends CenteredDialog {
 		newPassword.addStyleName(StyleConstants.PASSWORD_NEW_PASSWORD_VALUE);
 		panel.add(newPassword);
 
-		Label confirmNewPasswordTitle = new Label(textProvider.getStrings()
-				.passwordDialogConfirmNewPassword());
+		Label confirmNewPasswordTitle = new Label(
+				textProvider.getText(Texts.passwordDialogConfirmNewPassword));
 		confirmNewPasswordTitle
 				.setStyleName(StyleConstants.PASSWORD_CONFIRM_NEW_PASSWORD_TITLE);
 		panel.add(confirmNewPasswordTitle);
@@ -77,15 +78,16 @@ public class PasswordDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.PASSWORD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings()
-				.passwordDialogChangeButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onRename();
-			}
-		}, StyleConstants.PASSWORD_DIALOG_BUTTON_CHANGE));
+		buttons.add(createButton(
+				textProvider.getText(Texts.passwordDialogChangeButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						onRename();
+					}
+				}, StyleConstants.PASSWORD_DIALOG_BUTTON_CHANGE));
 
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						PasswordDialog.this.hide();

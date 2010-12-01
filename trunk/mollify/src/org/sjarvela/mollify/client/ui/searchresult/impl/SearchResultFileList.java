@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
@@ -36,11 +37,12 @@ public class SearchResultFileList extends FileList {
 
 	protected List<GridColumn> getColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
-				textProvider.getStrings().fileListColumnTitleName(), true);
+				textProvider.getText(Texts.fileListColumnTitleName), true);
 		GridColumn columnPath = new DefaultGridColumn(COLUMN_ID_PATH,
-				textProvider.getStrings().searchResultListColumnTitlePath(), true);
+				textProvider.getText(Texts.searchResultListColumnTitlePath),
+				true);
 		GridColumn columnSize = new DefaultGridColumn(COLUMN_ID_SIZE,
-				textProvider.getStrings().fileListColumnTitleSize(), true);
+				textProvider.getText(Texts.fileListColumnTitleSize), true);
 
 		return Arrays.asList((GridColumn) columnName, (GridColumn) columnPath,
 				(GridColumn) columnSize);

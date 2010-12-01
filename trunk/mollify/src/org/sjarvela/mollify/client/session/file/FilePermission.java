@@ -1,6 +1,7 @@
 package org.sjarvela.mollify.client.session.file;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 
 public enum FilePermission {
 	None("no"), ReadWrite("rw"), ReadOnly("ro");
@@ -17,11 +18,11 @@ public enum FilePermission {
 
 	public String getLocalizedText(TextProvider textProvider) {
 		if (this.equals(None))
-			return textProvider.getStrings().permissionModeNone();
+			return textProvider.getText(Texts.permissionModeNone);
 		if (this.equals(ReadWrite))
-			return textProvider.getStrings().permissionModeReadWrite();
+			return textProvider.getText(Texts.permissionModeReadWrite);
 		if (this.equals(ReadOnly))
-			return textProvider.getStrings().permissionModeReadOnly();
+			return textProvider.getText(Texts.permissionModeReadOnly);
 		throw new RuntimeException("Unlocalized permission: " + this.name());
 	}
 

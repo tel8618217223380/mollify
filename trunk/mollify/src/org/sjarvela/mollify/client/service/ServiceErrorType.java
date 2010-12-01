@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
 
 public enum ServiceErrorType {
@@ -23,35 +24,35 @@ public enum ServiceErrorType {
 	public String getMessage(TextProvider textProvider) {
 		switch (this) {
 		case REQUEST_FAILED:
-			return textProvider.getStrings().errorMessageRequestFailed();
+			return textProvider.getText(Texts.errorMessageRequestFailed);
 		case INVALID_REQUEST:
-			return textProvider.getStrings().errorMessageInvalidRequest();
+			return textProvider.getText(Texts.errorMessageInvalidRequest);
 		case NO_RESPONSE:
-			return textProvider.getStrings().errorMessageNoResponse();
+			return textProvider.getText(Texts.errorMessageNoResponse);
 		case INVALID_RESPONSE:
-			return textProvider.getStrings().errorMessageInvalidResponse();
+			return textProvider.getText(Texts.errorMessageInvalidResponse);
 		case DATA_TYPE_MISMATCH:
-			return textProvider.getStrings().errorMessageDataTypeMismatch();
+			return textProvider.getText(Texts.errorMessageDataTypeMismatch);
 		case OPERATION_FAILED:
-			return textProvider.getStrings().errorMessageOperationFailed();
+			return textProvider.getText(Texts.errorMessageOperationFailed);
 		case AUTHENTICATION_FAILED:
-			return textProvider.getStrings().errorMessageAuthenticationFailed();
+			return textProvider.getText(Texts.errorMessageAuthenticationFailed);
 		case INVALID_CONFIGURATION:
-			return textProvider.getStrings().errorMessageInvalidConfiguration();
+			return textProvider.getText(Texts.errorMessageInvalidConfiguration);
 		case FILE_ALREADY_EXISTS:
-			return textProvider.getStrings().errorMessageFileAlreadyExists();
+			return textProvider.getText(Texts.errorMessageFileAlreadyExists);
 		case DIR_ALREADY_EXISTS:
-			return textProvider.getStrings()
-					.errorMessageDirectoryAlreadyExists();
+			return textProvider
+					.getText(Texts.errorMessageDirectoryAlreadyExists);
 		case DIR_DOES_NOT_EXIST:
-			return textProvider.getStrings()
-					.errorMessageDirectoryDoesNotExist();
+			return textProvider
+					.getText(Texts.errorMessageDirectoryDoesNotExist);
 		case INSUFFICIENT_RIGHTS:
-			return textProvider.getStrings().errorMessageInsufficientRights();
+			return textProvider.getText(Texts.errorMessageInsufficientRights);
 		default:
 			if (!this.equals(UNKNOWN_ERROR))
 				return this.name();
-			return textProvider.getStrings().errorMessageUnknown();
+			return textProvider.getText(Texts.errorMessageUnknown);
 		}
 	}
 

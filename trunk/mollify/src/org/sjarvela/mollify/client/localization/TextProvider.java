@@ -10,11 +10,14 @@
 
 package org.sjarvela.mollify.client.localization;
 
+import org.sjarvela.mollify.client.ResourceId;
+
 public interface TextProvider {
+	String getText(ResourceId id);
 
 	String getSizeText(long bytes);
 
-	LanguageConstants getStrings();
+//	LanguageConstants getStrings();
 
 	MessageConstants getMessages();
 

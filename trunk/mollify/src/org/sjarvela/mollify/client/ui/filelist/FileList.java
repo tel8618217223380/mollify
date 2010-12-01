@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
@@ -48,7 +49,7 @@ public class FileList extends Grid<FileSystemItem> implements
 			DragAndDropManager dragAndDropManager) {
 		super(textProvider, StyleConstants.FILE_LIST_HEADER);
 
-		typeTextFolder = textProvider.getStrings().fileListDirectoryType();
+		typeTextFolder = textProvider.getText(Texts.fileListDirectoryType);
 
 		setDataProvider(this);
 		setCustomSelection(true);
@@ -59,11 +60,11 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	protected List<GridColumn> getColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
-				textProvider.getStrings().fileListColumnTitleName(), true);
+				textProvider.getText(Texts.fileListColumnTitleName), true);
 		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,
-				textProvider.getStrings().fileListColumnTitleType(), true);
+				textProvider.getText(Texts.fileListColumnTitleType), true);
 		GridColumn columnSize = new DefaultGridColumn(COLUMN_ID_SIZE,
-				textProvider.getStrings().fileListColumnTitleSize(), true);
+				textProvider.getText(Texts.fileListColumnTitleSize), true);
 
 		return Arrays.asList((GridColumn) columnName, (GridColumn) columnType,
 				(GridColumn) columnSize);

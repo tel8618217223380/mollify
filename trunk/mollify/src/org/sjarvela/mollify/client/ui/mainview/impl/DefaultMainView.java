@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
@@ -114,8 +115,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.itemContextHandler = new ContextPopupHandler<FileSystemItem>(
 				itemContextPopup);
 
-		this.searchField = new HintTextBox(textProvider.getStrings()
-				.mainViewSearchHint());
+		this.searchField = new HintTextBox(
+				textProvider.getText(Texts.mainViewSearchHint));
 		this.searchField
 				.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_SEARCH_FIELD);
 		this.searchField.addKeyUpHandler(new KeyUpHandler() {
@@ -249,88 +250,89 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		if (model.getSession().getDefaultPermissionMode().isAdmin()
 				&& model.getSession().getFeatures().permissionUpdate()) {
-			username.addAction(Action.editItemPermissions, textProvider
-					.getStrings().mainViewEditPermissionsTitle());
+			username.addAction(Action.editItemPermissions,
+					textProvider.getText(Texts.mainViewEditPermissionsTitle));
 
 			if (model.getSession().getFeatures().administration()) {
-				username.addAction(Action.admin, textProvider.getStrings()
-						.mainViewAdministrationTitle());
+				username.addAction(Action.admin,
+						textProvider.getText(Texts.mainViewAdministrationTitle));
 			}
 			username.addSeparator();
 		}
 
 		if (model.getSession().getFeatures().changePassword()) {
-			username.addAction(Action.changePassword, textProvider.getStrings()
-					.mainViewChangePasswordTitle());
+			username.addAction(Action.changePassword,
+					textProvider.getText(Texts.mainViewChangePasswordTitle));
 			username.addSeparator();
 		}
 
-		username.addAction(Action.logout, textProvider.getStrings()
-				.mainViewLogoutButtonTitle());
+		username.addAction(Action.logout,
+				textProvider.getText(Texts.mainViewLogoutButtonTitle));
 
 		return username;
 	}
 
 	private void createButtons() {
-		refreshButton = new ActionButton(textProvider.getStrings()
-				.mainViewRefreshButtonTitle(),
+		refreshButton = new ActionButton(
+				textProvider.getText(Texts.mainViewRefreshButtonTitle),
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
-				textProvider.getStrings().mainViewRefreshButtonTooltip())
+				textProvider.getText(Texts.mainViewRefreshButtonTooltip))
 				.attach(refreshButton);
 		refreshButton.setAction(actionListener, Action.refresh);
 
-		selectButton = new ActionToggleButton(textProvider.getStrings()
-				.mainViewSelectButton(),
+		selectButton = new ActionToggleButton(
+				textProvider.getText(Texts.mainViewSelectButton),
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT,
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
 		selectButton.setAction(actionListener, Action.selectMode);
 		selectOptionsButton = new DropdownButton(actionListener, "",
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS,
 				selectButton);
-		selectOptionsButton.addAction(Action.selectAll, textProvider
-				.getStrings().mainViewSelectAll());
-		selectOptionsButton.addAction(Action.selectNone, textProvider
-				.getStrings().mainViewSelectNone());
+		selectOptionsButton.addAction(Action.selectAll,
+				textProvider.getText(Texts.mainViewSelectAll));
+		selectOptionsButton.addAction(Action.selectNone,
+				textProvider.getText(Texts.mainViewSelectNone));
 
-		fileActions = new DropdownButton(actionListener, textProvider
-				.getStrings().mainViewSelectActions(),
+		fileActions = new DropdownButton(actionListener,
+				textProvider.getText(Texts.mainViewSelectActions),
 				StyleConstants.MAIN_VIEW_HEADER_FILE_ACTIONS);
-		fileActions.addAction(Action.addToDropbox, textProvider.getStrings()
-				.mainViewSelectActionAddToDropbox());
+		fileActions.addAction(Action.addToDropbox,
+				textProvider.getText(Texts.mainViewSelectActionAddToDropbox));
 		fileActions.addSeparator();
-		fileActions.addAction(Action.copyMultiple, textProvider.getStrings()
-				.fileActionCopyTitle());
-		fileActions.addAction(Action.moveMultiple, textProvider.getStrings()
-				.fileActionMoveTitle());
-		fileActions.addAction(Action.deleteMultiple, textProvider.getStrings()
-				.fileActionDeleteTitle());
+		fileActions.addAction(Action.copyMultiple,
+				textProvider.getText(Texts.fileActionCopyTitle));
+		fileActions.addAction(Action.moveMultiple,
+				textProvider.getText(Texts.fileActionMoveTitle));
+		fileActions.addAction(Action.deleteMultiple,
+				textProvider.getText(Texts.fileActionDeleteTitle));
 
-		dropBoxButton = new ActionToggleButton(textProvider.getStrings()
-				.mainViewDropBoxButton(),
+		dropBoxButton = new ActionToggleButton(
+				textProvider.getText(Texts.mainViewDropBoxButton),
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX,
 				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
 		dropBoxButton.setAction(actionListener, Action.dropBox);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())) {
-			addButton = new DropdownButton(actionListener, textProvider
-					.getStrings().mainViewAddButtonTitle(),
+			addButton = new DropdownButton(actionListener,
+					textProvider.getText(Texts.mainViewAddButtonTitle),
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
 			new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
-					textProvider.getStrings().mainViewAddButtonTooltip())
+					textProvider.getText(Texts.mainViewAddButtonTooltip))
 					.attach(addButton);
 
 			if (model.getSession().getFeatures().fileUpload())
-				addButton.addAction(Action.addFile, textProvider.getStrings()
-						.mainViewAddFileMenuItem());
+				addButton.addAction(Action.addFile,
+						textProvider.getText(Texts.mainViewAddFileMenuItem));
 			if (model.getSession().getFeatures().folderActions())
 				addButton.addAction(Action.addDirectory, textProvider
-						.getStrings().mainViewAddDirectoryMenuItem());
+						.getText(Texts.mainViewAddDirectoryMenuItem));
 			if (model.getSession().getFeatures().retrieveUrl())
-				addButton.addAction(Action.retrieveUrl, textProvider
-						.getStrings().mainViewRetrieveUrlMenuItem());
+				addButton
+						.addAction(Action.retrieveUrl, textProvider
+								.getText(Texts.mainViewRetrieveUrlMenuItem));
 
 		}
 	}

@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.upload.FileUploadMonitor;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadProgressListener;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -48,10 +49,10 @@ public class HttpFileUploadHandler implements FileUploadListener {
 				.getMessages().uploadingNFilesInfo(filenames.size());
 
 		progressDisplayer = progressDialogFactory.openProgressDialog(
-				textProvider.getStrings().fileUploadProgressTitle(), false);
+				textProvider.getText(Texts.fileUploadProgressTitle), false);
 		progressDisplayer.setInfo(info);
-		progressDisplayer.setDetails(textProvider.getStrings()
-				.fileUploadProgressPleaseWait());
+		progressDisplayer.setDetails(textProvider
+				.getText(Texts.fileUploadProgressPleaseWait));
 
 		if (!isProgressEnabled)
 			return;

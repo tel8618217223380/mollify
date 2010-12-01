@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -33,7 +34,7 @@ public class ErrorDialog extends CenteredDialog {
 	private final ServiceError error;
 
 	public ErrorDialog(TextProvider textProvider, ServiceError error) {
-		super(textProvider.getStrings().infoDialogErrorTitle(),
+		super(textProvider.getText(Texts.infoDialogErrorTitle),
 				StyleConstants.INFO_DIALOG_TYPE_ERROR);
 		this.textProvider = textProvider;
 		this.error = error;
@@ -96,7 +97,7 @@ public class ErrorDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.INFO_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
+		buttons.add(createButton(textProvider.getText(Texts.dialogOkButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						ErrorDialog.this.hide();
