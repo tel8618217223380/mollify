@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -265,25 +266,26 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		dialogManager.showInputDialog(textProvider.getStrings()
-				.retrieveUrlTitle(), textProvider.getStrings()
-				.retrieveUrlMessage(), "", new InputListener() {
-			@Override
-			public void onInput(String url) {
-				retrieveUrl(url);
-			}
+		dialogManager.showInputDialog(
+				textProvider.getText(Texts.retrieveUrlTitle),
+				textProvider.getText(Texts.retrieveUrlMessage), "",
+				new InputListener() {
+					@Override
+					public void onInput(String url) {
+						retrieveUrl(url);
+					}
 
-			@Override
-			public boolean isInputAcceptable(String input) {
-				return input.length() > 0
-						&& input.toLowerCase().startsWith("http");
-			}
-		});
+					@Override
+					public boolean isInputAcceptable(String input) {
+						return input.length() > 0
+								&& input.toLowerCase().startsWith("http");
+					}
+				});
 	}
 
 	private void retrieveUrl(final String url) {
 		final WaitDialog waitDialog = dialogManager.openWaitDialog("",
-				textProvider.getStrings().pleaseWait());
+				textProvider.getText(Texts.pleaseWait));
 
 		fileSystemService.retrieveUrl(model.getCurrentFolder(), url,
 				new ResultListener() {
@@ -299,20 +301,22 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 						waitDialog.close();
 
 						if (error.getError().getCode() == 301)
-							dialogManager.showInfo(textProvider.getStrings()
-									.retrieveUrlTitle(), textProvider
-									.getMessages().retrieveUrlNotFound(url));
+							dialogManager.showInfo(textProvider
+									.getText(Texts.retrieveUrlTitle),
+									textProvider.getMessages()
+											.retrieveUrlNotFound(url));
 						else if (error.getError().getCode() == 302)
-							dialogManager.showInfo(textProvider.getStrings()
-									.retrieveUrlTitle(), textProvider
-									.getMessages()
-									.retrieveUrlNotAuthorized(url));
+							dialogManager.showInfo(textProvider
+									.getText(Texts.retrieveUrlTitle),
+									textProvider.getMessages()
+											.retrieveUrlNotAuthorized(url));
 						else if (ServiceErrorType.REQUEST_FAILED.equals(error
 								.getType()))
-							dialogManager.showInfo(textProvider.getStrings()
-									.retrieveUrlTitle(), textProvider
-									.getStrings().retrieveUrlFailed(), error
-									.getDetails());
+							dialogManager.showInfo(textProvider
+									.getText(Texts.retrieveUrlTitle),
+									textProvider
+											.getText(Texts.retrieveUrlFailed),
+									error.getDetails());
 						else
 							dialogManager.showError(error);
 					}
@@ -395,20 +399,21 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					public void onFail(ServiceError error) {
 						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
 								.getType())) {
-							dialogManager.showInfo(textProvider.getStrings()
-									.passwordDialogTitle(), textProvider
-									.getStrings()
-									.passwordDialogOldPasswordIncorrect());
+							dialogManager.showInfo(
+									textProvider
+											.getText(Texts.passwordDialogTitle),
+									textProvider
+											.getText(Texts.passwordDialogOldPasswordIncorrect));
 						} else {
 							onError(error, false);
 						}
 					}
 
 					public void onSuccess(Object result) {
-						dialogManager.showInfo(textProvider.getStrings()
-								.passwordDialogTitle(), textProvider
-								.getStrings()
-								.passwordDialogPasswordChangedSuccessfully());
+						dialogManager.showInfo(
+								textProvider.getText(Texts.passwordDialogTitle),
+								textProvider
+										.getText(Texts.passwordDialogPasswordChangedSuccessfully));
 					}
 				});
 	}
@@ -501,9 +506,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
 		if (result.getMatchCount() == 0)
-			dialogManager.showInfo(textProvider.getStrings()
-					.searchResultsDialogTitle(), textProvider.getStrings()
-					.searchResultsNoMatchesFound());
+			dialogManager.showInfo(
+					textProvider.getText(Texts.searchResultsDialogTitle),
+					textProvider.getText(Texts.searchResultsNoMatchesFound));
 		else
 			searchResultDialogFactory.show(dropBox, criteria, result);
 	}

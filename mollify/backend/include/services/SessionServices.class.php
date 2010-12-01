@@ -11,7 +11,7 @@
 	 */
 
 	class SessionServices extends ServicesBase {
-		private static $PROTOCOL_VERSION = "1_5_0";
+		private static $PROTOCOL_VERSION = "2";
 		private static $GET_ITEMS = array("info", "logout");
 		private static $POST_ITEMS = array("authenticate", "logout");
 		
@@ -67,15 +67,14 @@
 			$this->env->configuration()->checkProtocolVersion($protocolVersion);
 			
 			$auth = $this->env->authentication();
-			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures());
+			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo());
 			
 			if (!$auth->isAuthenticationRequired() or $auth->isAuthenticated()) {
 				$info = array_merge(
 					$info,
 					$this->env->session()->getSessionInfo(),
 					$this->env->authentication()->getUserInfo(),
-					$this->env->filesystem()->getSessionInfo(),
-					$this->env->plugins()->getSessionInfo()
+					$this->env->filesystem()->getSessionInfo()
 				);
 			}
 			if ($this->env->request()->hasParam("type")) {

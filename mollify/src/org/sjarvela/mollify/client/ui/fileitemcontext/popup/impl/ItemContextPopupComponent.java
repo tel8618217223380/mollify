@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
@@ -142,8 +143,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 
 	private Widget createDropdownButton(List<ContextActionItem> items) {
 		MultiActionButton downloadButton = createMultiActionButton(
-				actionListener, textProvider.getStrings()
-						.fileActionDownloadTitle(),
+				actionListener,
+				textProvider.getText(Texts.fileActionDownloadTitle),
 				FileSystemAction.download.name());
 
 		boolean first = true;
@@ -249,8 +250,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		buttons = new FlowPanel();
 		buttons.setStyleName(StyleConstants.FILE_CONTEXT_BUTTONS);
 
-		actionsButton = new DropdownButton(actionListener, textProvider
-				.getStrings().fileDetailsActionsTitle(),
+		actionsButton = new DropdownButton(actionListener,
+				textProvider.getText(Texts.fileDetailsActionsTitle),
 				StyleConstants.FILE_CONTEXT_ACTIONS);
 
 		return buttons;

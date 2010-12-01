@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.Formatter;
@@ -28,7 +29,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		GridDataProvider<FileItemUserPermission> {
 	public static String COLUMN_ID_NAME = "name";
 	public static String COLUMN_ID_PERMISSION = "permission";
-	
+
 	private Formatter<FilePermission> filePermissionFormatter;
 
 	public ItemPermissionList(TextProvider textProvider, String style) {
@@ -42,11 +43,13 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 
 	protected List<GridColumn> getColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
-				textProvider.getStrings().itemPermissionListColumnTitleName(),
+				textProvider.getText(Texts.itemPermissionListColumnTitleName),
 				false);
 		GridColumn columnPermission = new DefaultGridColumn(
-				COLUMN_ID_PERMISSION, textProvider.getStrings()
-						.itemPermissionListColumnTitlePermission(), false);
+				COLUMN_ID_PERMISSION,
+				textProvider
+						.getText(Texts.itemPermissionListColumnTitlePermission),
+				false);
 
 		return Arrays.asList((GridColumn) columnName, columnPermission);
 	}

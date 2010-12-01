@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -81,7 +82,7 @@ public class InputDialog extends CenteredDialog {
 		buttons.setStylePrimaryName(StyleConstants.INPUT_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings().dialogOkButton(),
+		buttons.add(createButton(textProvider.getText(Texts.dialogOkButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						if (!listener.isInputAcceptable(input.getText()))
@@ -91,7 +92,7 @@ public class InputDialog extends CenteredDialog {
 					}
 				}, "input-ok"));
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						InputDialog.this.hide();

@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.login;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.LoginHandler;
@@ -47,7 +48,7 @@ public class LoginDialog extends CenteredDialog {
 	public LoginDialog(TextProvider textProvider, DialogManager dialogManager,
 			LoginHandler loginHandler, ServiceProvider serviceProvider,
 			boolean showResetPassword) {
-		super(textProvider.getStrings().loginDialogTitle(),
+		super(textProvider.getText(Texts.loginDialogTitle),
 				StyleConstants.LOGIN_DIALOG);
 		this.textProvider = textProvider;
 		this.dialogManager = dialogManager;
@@ -74,15 +75,16 @@ public class LoginDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.LOGIN_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings()
-				.loginDialogLoginButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onLogin();
-			}
-		}, StyleConstants.LOGIN_DIALOG_BUTTON_LOGIN));
+		buttons.add(createButton(
+				textProvider.getText(Texts.loginDialogLoginButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						onLogin();
+					}
+				}, StyleConstants.LOGIN_DIALOG_BUTTON_LOGIN));
 
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						LoginDialog.this.hide();
@@ -104,8 +106,8 @@ public class LoginDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
 
-		Label usernameTitle = new Label(textProvider.getStrings()
-				.loginDialogUsername());
+		Label usernameTitle = new Label(
+				textProvider.getText(Texts.loginDialogUsername));
 		usernameTitle.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_TITLE);
 		panel.add(usernameTitle);
 
@@ -114,8 +116,8 @@ public class LoginDialog extends CenteredDialog {
 		userName.addKeyPressHandler(loginHandler);
 		panel.add(userName);
 
-		Label passwordTitle = new Label(textProvider.getStrings()
-				.loginDialogPassword());
+		Label passwordTitle = new Label(
+				textProvider.getText(Texts.loginDialogPassword));
 		passwordTitle.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_TITLE);
 		panel.add(passwordTitle);
 
@@ -125,8 +127,8 @@ public class LoginDialog extends CenteredDialog {
 		panel.add(password);
 
 		if (showResetPassword) {
-			final ActionLink link = createLink(textProvider.getStrings()
-					.loginDialogResetPassword(), null,
+			final ActionLink link = createLink(
+					textProvider.getText(Texts.loginDialogResetPassword), null,
 					StyleConstants.LOGIN_DIALOG_BUTTON_RESET_PASSWORD);
 			link.setClickHandler(new ClickHandler() {
 				@Override

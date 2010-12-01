@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -117,8 +118,8 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 
 		if (!allowedTypes.isEmpty()) {
 			builder.setFileTypes(getFileTypeList());
-			builder.setFileTypesDescription(textProvider.getStrings()
-					.fileUploadDialogSelectFileTypesDescription());
+			builder.setFileTypesDescription(textProvider
+					.getText(Texts.fileUploadDialogSelectFileTypesDescription));
 		}
 
 		builder.setFileQueuedHandler(new FileQueuedHandler() {

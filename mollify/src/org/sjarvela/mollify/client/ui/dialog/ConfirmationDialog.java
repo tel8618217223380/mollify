@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -63,21 +64,23 @@ public class ConfirmationDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.CONFIRMATION_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		Button yesButton = createButton(textProvider.getStrings()
-				.confirmationDialogYesButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				ConfirmationDialog.this.hide();
-				listener.onConfirm();
-			}
-		}, type + "-yes");
+		Button yesButton = createButton(
+				textProvider.getText(Texts.confirmationDialogYesButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ConfirmationDialog.this.hide();
+						listener.onConfirm();
+					}
+				}, type + "-yes");
 		buttons.add(yesButton);
 
-		Button noButton = createButton(textProvider.getStrings()
-				.confirmationDialogNoButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				ConfirmationDialog.this.hide();
-			}
-		}, type + "-no");
+		Button noButton = createButton(
+				textProvider.getText(Texts.confirmationDialogNoButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ConfirmationDialog.this.hide();
+					}
+				}, type + "-no");
 		buttons.add(noButton);
 
 		return buttons;

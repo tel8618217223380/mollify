@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -108,8 +109,8 @@ public class PluploaderPresenter implements PluploadListener {
 				.browseButton(dialog.getBrowseButtonId()).listener(this);
 
 		if (allowedTypes.size() > 0)
-			builder.filter(textProvider.getStrings()
-					.fileUploadDialogSelectFileTypesDescription(),
+			builder.filter(textProvider
+					.getText(Texts.fileUploadDialogSelectFileTypesDescription),
 					getFileTypeList());
 
 		addRuntimes(builder);

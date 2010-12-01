@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -31,6 +32,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -38,8 +41,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	private static final String UPLOADER_ID = "uploader-http[]";
@@ -64,7 +65,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	public HttpFileUploadDialog(Folder directory, TextProvider textProvider,
 			FileUploadService service, FileSystemInfo info,
 			FileUploadListener listener, DialogManager dialogManager) {
-		super(textProvider.getStrings().fileUploadDialogTitle(),
+		super(textProvider.getText(Texts.fileUploadDialogTitle),
 				StyleConstants.FILE_UPLOAD_DIALOG);
 		this.info = info;
 		this.listener = listener;
@@ -84,16 +85,17 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		buttons.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		uploadButton = createButton(textProvider.getStrings()
-				.fileUploadDialogUploadButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				form.submit();
-			}
-		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
+		uploadButton = createButton(
+				textProvider.getText(Texts.fileUploadDialogUploadButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						form.submit();
+					}
+				}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
 
 		buttons.add(uploadButton);
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						HttpFileUploadDialog.this.hide();
@@ -115,12 +117,12 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	}
 
 	private Widget createInfoPanel() {
-		uploadInfo = new DisclosurePanel(textProvider.getStrings()
-				.fileUploadDialogInfoTitle());
+		uploadInfo = new DisclosurePanel(
+				textProvider.getText(Texts.fileUploadDialogInfoTitle));
 		uploadInfo.setOpen(false);
 		uploadInfo.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO);
-		uploadInfo.getHeader().getElement().getParentElement().setClassName(
-				StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);
+		uploadInfo.getHeader().getElement().getParentElement()
+				.setClassName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);
 
 		HTML content = new HTML(textProvider.getMessages().uploadMaxSizeHtml(
 				textProvider.getSizeText((long) info.getUploadMaxFileSize()),
@@ -132,8 +134,8 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	}
 
 	private Widget createMessage() {
-		Label message = new Label(textProvider.getStrings()
-				.fileUploadDialogMessage());
+		Label message = new Label(
+				textProvider.getText(Texts.fileUploadDialogMessage));
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 		return message;
 	}
@@ -178,19 +180,21 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		uploaderButtons
 				.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOADERS_BUTTONS);
 
-		uploaderButtons.add(createButton(textProvider.getStrings()
-				.fileUploadDialogAddFileButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onAddFile();
-			}
-		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
+		uploaderButtons.add(createButton(
+				textProvider.getText(Texts.fileUploadDialogAddFileButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						onAddFile();
+					}
+				}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_ADD_FILE));
 
-		uploaderButtons.add(createButton(textProvider.getStrings()
-				.fileUploadDialogRemoveFileButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onRemoveFile();
-			}
-		}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE));
+		uploaderButtons.add(createButton(
+				textProvider.getText(Texts.fileUploadDialogRemoveFileButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						onRemoveFile();
+					}
+				}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_REMOVE_FILE));
 
 		return uploaderButtons;
 	}
@@ -243,9 +247,10 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 				return true;
 
 			if (maxFileSize > 0 && size > maxFileSize) {
-				dialogManager.showInfo(textProvider.getStrings()
-						.infoDialogErrorTitle(), textProvider.getMessages()
-						.fileUploadSizeTooBig(uploader.getFilename(),
+				dialogManager.showInfo(
+						textProvider.getText(Texts.infoDialogErrorTitle),
+						textProvider.getMessages().fileUploadSizeTooBig(
+								uploader.getFilename(),
 								textProvider.getSizeText((long) size),
 								textProvider.getSizeText((long) maxFileSize)));
 				return false;
@@ -253,9 +258,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 			total += size;
 			if (maxTotalSize > 0 && total > maxTotalSize) {
-				dialogManager.showInfo(textProvider.getStrings()
-						.infoDialogErrorTitle(), textProvider.getMessages()
-						.fileUploadTotalSizeTooBig(
+				dialogManager.showInfo(
+						textProvider.getText(Texts.infoDialogErrorTitle),
+						textProvider.getMessages().fileUploadTotalSizeTooBig(
 								textProvider.getSizeText((long) maxTotalSize)));
 				return false;
 			}
@@ -283,9 +288,12 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		String extension = FileUtil.getExtension(fu.getFilename())
 				.toLowerCase();
 		if (!isAllowedExtension(extension)) {
-			dialogManager.showInfo(textProvider.getStrings()
-					.fileUploadDialogTitle(), textProvider.getMessages()
-					.fileUploadDialogUnallowedFileType(extension));
+			dialogManager
+					.showInfo(
+							textProvider.getText(Texts.fileUploadDialogTitle),
+							textProvider.getMessages()
+									.fileUploadDialogUnallowedFileType(
+											extension));
 			return false;
 		}
 		return true;

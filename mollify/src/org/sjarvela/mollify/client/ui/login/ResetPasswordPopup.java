@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
@@ -49,13 +50,14 @@ public class ResetPasswordPopup extends BubblePopup {
 		email = new TextBox();
 		email.setStylePrimaryName("mollify-reset-password-popup-email");
 
-		reset = createCallbackButton(textProvider.getStrings()
-				.resetPasswordPopupButton(), "reset-button", new Callback() {
-			@Override
-			public void onCallback() {
-				onReset();
-			}
-		});
+		reset = createCallbackButton(
+				textProvider.getText(Texts.resetPasswordPopupButton),
+				"reset-button", new Callback() {
+					@Override
+					public void onCallback() {
+						onReset();
+					}
+				});
 		initialize();
 	}
 
@@ -64,8 +66,8 @@ public class ResetPasswordPopup extends BubblePopup {
 		Panel content = new FlowPanel();
 		content.setStylePrimaryName("mollify-reset-password-popup-content");
 
-		Label label = new Label(textProvider.getStrings()
-				.resetPasswordPopupMessage());
+		Label label = new Label(
+				textProvider.getText(Texts.resetPasswordPopupMessage));
 		label.setStylePrimaryName("mollify-reset-password-popup-label");
 		content.add(label);
 
@@ -97,16 +99,18 @@ public class ResetPasswordPopup extends BubblePopup {
 			@Override
 			public void onFail(ServiceError error) {
 				if (error.getType().equals(ServiceErrorType.INVALID_REQUEST)) {
-					dialogManager.showInfo(textProvider.getStrings()
-							.resetPasswordPopupTitle(), textProvider
-							.getStrings().resetPasswordPopupInvalidEmail());
+					dialogManager.showInfo(
+							textProvider.getText(Texts.resetPasswordPopupTitle),
+							textProvider
+									.getText(Texts.resetPasswordPopupInvalidEmail));
 					email.setFocus(true);
 				} else if (error.getType().equals(
 						ServiceErrorType.REQUEST_FAILED)) {
 					ResetPasswordPopup.this.hide();
-					dialogManager.showInfo(textProvider.getStrings()
-							.resetPasswordPopupTitle(), textProvider
-							.getStrings().resetPasswordPopupResetFailed());
+					dialogManager.showInfo(
+							textProvider.getText(Texts.resetPasswordPopupTitle),
+							textProvider
+									.getText(Texts.resetPasswordPopupResetFailed));
 				} else {
 					ResetPasswordPopup.this.hide();
 					dialogManager.showError(error);
@@ -117,9 +121,9 @@ public class ResetPasswordPopup extends BubblePopup {
 			@Override
 			public void onSuccess(Object result) {
 				ResetPasswordPopup.this.hide();
-				dialogManager.showInfo(textProvider.getStrings()
-						.resetPasswordPopupTitle(), textProvider.getStrings()
-						.resetPasswordPopupResetSuccess());
+				dialogManager.showInfo(textProvider
+						.getText(Texts.resetPasswordPopupTitle), textProvider
+						.getText(Texts.resetPasswordPopupResetSuccess));
 			}
 		});
 	}

@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -40,8 +41,10 @@ public class MollifyClient implements Client, SessionListener {
 	private static Logger logger = Logger.getLogger(MollifyClient.class
 			.getName());
 
-	public static final String PROTOCOL_VERSION = "1_5_0";
+	public static final String PROTOCOL_VERSION = "2";
 	private static final String PARAM_SHOW_LOGIN = "show-login";
+
+	private static boolean pluginsInitialized = false;
 
 	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
@@ -51,7 +54,6 @@ public class MollifyClient implements Client, SessionListener {
 	private final TextProvider textProvider;
 	private final ClientSettings settings;
 	private final ServiceProvider serviceProvider;
-
 	private final PluginSystem pluginSystem;
 
 	@Inject
@@ -90,14 +92,16 @@ public class MollifyClient implements Client, SessionListener {
 					}
 
 					public void onSuccess(SessionInfo session) {
-						pluginSystem.setup(session);
+						if (!pluginsInitialized) {
+							pluginSystem.setup(session);
+							pluginsInitialized = true;
+						}
 						sessionManager.setSession(session);
 					}
 				});
 	}
 
 	public void onSessionStarted(SessionInfo session) {
-
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin(session);
 		else
@@ -142,8 +146,8 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	private void showLoginError() {
-		String title = textProvider.getStrings().loginDialogTitle();
-		String msg = textProvider.getStrings().loginDialogLoginFailedMessage();
+		String title = textProvider.getText(Texts.loginDialogTitle);
+		String msg = textProvider.getText(Texts.loginDialogLoginFailedMessage);
 		dialogManager.showInfo(title, msg);
 	}
 

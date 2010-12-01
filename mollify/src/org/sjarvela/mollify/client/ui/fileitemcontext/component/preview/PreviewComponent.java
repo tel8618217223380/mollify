@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -40,7 +41,7 @@ public class PreviewComponent implements ItemContextSection {
 
 	@Override
 	public String getTitle() {
-		return textProvider.getStrings().filePreviewTitle();
+		return textProvider.getText(Texts.filePreviewTitle);
 	}
 
 	@Override
@@ -52,8 +53,7 @@ public class PreviewComponent implements ItemContextSection {
 
 	private Widget createContent() {
 		FlowPanel content = new FlowPanel();
-		content
-				.setStylePrimaryName(StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT);
+		content.setStylePrimaryName(StyleConstants.FILE_CONTEXT_PREVIEW_CONTENT);
 		content.addStyleDependentName(StyleConstants.LOADING);
 		return content;
 	}

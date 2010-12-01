@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -77,8 +78,8 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 	}
 
 	public void initialize() {
-		List<FilePermission> values = new ArrayList(Arrays
-				.asList(FilePermission.values()));
+		List<FilePermission> values = new ArrayList(
+				Arrays.asList(FilePermission.values()));
 		values.add(0, null);
 
 		view.getDefaultPermission().setContent(values);
@@ -89,9 +90,10 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 		view.updateControls(false);
 
 		if (!model.hasItem()) {
-			view.getItemName().setText(
-					textProvider.getStrings()
-							.itemPermissionEditorSelectItemMessage());
+			view.getItemName()
+					.setText(
+							textProvider
+									.getText(Texts.itemPermissionEditorSelectItemMessage));
 			return;
 		}
 
@@ -196,25 +198,28 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 
 	public void onSelectItem() {
 		if (model.hasChanged())
-			dialogManager.showConfirmationDialog(textProvider.getStrings()
-					.itemPermissionEditorDialogTitle(), textProvider
-					.getStrings().itemPermissionEditorConfirmItemChange(),
-					StyleConstants.CONFIRMATION_DIALOG_TYPE_OVERRIDE,
-					new ConfirmationListener() {
-						public void onConfirm() {
-							openSelectItemDialog();
-						}
-					}, null);
+			dialogManager
+					.showConfirmationDialog(
+							textProvider
+									.getText(Texts.itemPermissionEditorDialogTitle),
+							textProvider
+									.getText(Texts.itemPermissionEditorConfirmItemChange),
+							StyleConstants.CONFIRMATION_DIALOG_TYPE_OVERRIDE,
+							new ConfirmationListener() {
+								public void onConfirm() {
+									openSelectItemDialog();
+								}
+							}, null);
 		else
 			openSelectItemDialog();
 	}
 
 	protected void openSelectItemDialog() {
-		itemSelectorFactory.openItemSelector(textProvider.getStrings()
-				.selectItemDialogTitle(), textProvider.getStrings()
-				.selectPermissionItemDialogMessage(), textProvider.getStrings()
-				.selectPermissionItemDialogAction(), fileSystemItemProvider,
-				new SelectItemHandler() {
+		itemSelectorFactory.openItemSelector(
+				textProvider.getText(Texts.selectItemDialogTitle),
+				textProvider.getText(Texts.selectPermissionItemDialogMessage),
+				textProvider.getText(Texts.selectPermissionItemDialogAction),
+				fileSystemItemProvider, new SelectItemHandler() {
 					public boolean isItemAllowed(FileSystemItem item,
 							List<Folder> path) {
 						return true;

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
 import org.sjarvela.mollify.client.session.file.FilePermission;
@@ -55,9 +56,10 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	public FileItemUserPermissionDialog(TextProvider textProvider,
 			FileItemUserPermissionHandler handler,
 			List<? extends UserBase> availableUsersOrGroups, boolean groups) {
-		super(groups ? textProvider.getStrings()
-				.fileItemUserPermissionDialogAddGroupTitle() : textProvider
-				.getStrings().fileItemUserPermissionDialogAddTitle(),
+		super(groups ? textProvider
+				.getText(Texts.fileItemUserPermissionDialogAddGroupTitle)
+				: textProvider
+						.getText(Texts.fileItemUserPermissionDialogAddTitle),
 				StyleConstants.FILEITEM_USER_PERMISSION_DIALOG);
 		this.mode = Mode.Add;
 
@@ -73,9 +75,10 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	public FileItemUserPermissionDialog(TextProvider textProvider,
 			FileItemUserPermissionHandler handler,
 			FileItemUserPermission fileItemUserPermission, boolean group) {
-		super(group ? textProvider.getStrings()
-				.fileItemUserPermissionDialogEditGroupTitle() : textProvider
-				.getStrings().fileItemUserPermissionDialogEditTitle(),
+		super(group ? textProvider
+				.getText(Texts.fileItemUserPermissionDialogEditGroupTitle)
+				: textProvider
+						.getText(Texts.fileItemUserPermissionDialogEditTitle),
 				StyleConstants.FILEITEM_USER_PERMISSION_DIALOG);
 		this.mode = Mode.Edit;
 
@@ -100,8 +103,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 
 		if (Mode.Add.equals(this.mode)) {
 			user = new ListBox();
-			user
-					.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER);
+			user.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER);
 			user.setFormatter(new Formatter<UserBase>() {
 				public String format(UserBase user) {
 					return user.getName();
@@ -134,11 +136,10 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	@Override
 	protected Widget createContent() {
 		Panel panel = new VerticalPanel();
-		panel
-				.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_CONTENT);
+		panel.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_CONTENT);
 
-		Label userTitle = new Label(textProvider.getStrings()
-				.fileItemUserPermissionDialogName());
+		Label userTitle = new Label(
+				textProvider.getText(Texts.fileItemUserPermissionDialogName));
 		userTitle
 				.setStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_USER_TITLE);
 		panel.add(userTitle);
@@ -149,8 +150,9 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 			panel.add(userLabel);
 		}
 
-		Label permissionTitle = new Label(textProvider.getStrings()
-				.fileItemUserPermissionDialogPermission());
+		Label permissionTitle = new Label(
+				textProvider
+						.getText(Texts.fileItemUserPermissionDialogPermission));
 		permissionTitle
 				.setStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_PERMISSION_TITLE);
 		panel.add(permissionTitle);
@@ -162,12 +164,12 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 	@Override
 	protected Widget createButtons() {
 		Panel buttons = new HorizontalPanel();
-		buttons
-				.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_BUTTONS);
+		buttons.addStyleName(StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_BUTTONS);
 
-		String title = Mode.Add.equals(mode) ? textProvider.getStrings()
-				.fileItemUserPermissionDialogAddButton() : textProvider
-				.getStrings().fileItemUserPermissionDialogEditButton();
+		String title = Mode.Add.equals(mode) ? textProvider
+				.getText(Texts.fileItemUserPermissionDialogAddButton)
+				: textProvider
+						.getText(Texts.fileItemUserPermissionDialogEditButton);
 
 		buttons.add(createButton(title, new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -179,7 +181,7 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 		}, StyleConstants.FILEITEM_USER_PERMISSION_DIALOG_BUTTON_ADD_EDIT));
 
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						FileItemUserPermissionDialog.this.hide();
@@ -194,8 +196,8 @@ public class FileItemUserPermissionDialog extends CenteredDialog {
 		if (userOrGroup == null)
 			return;
 
-		handler.addFileItemUserPermission(userOrGroup, permission
-				.getSelectedItem());
+		handler.addFileItemUserPermission(userOrGroup,
+				permission.getSelectedItem());
 		this.hide();
 	}
 

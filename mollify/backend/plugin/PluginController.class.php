@@ -64,7 +64,7 @@
 				
 				$result[$id] = $info;
 			}
-			return array("plugins" => $result);
+			return $result;
 		}
 		
 		public function initialize() {

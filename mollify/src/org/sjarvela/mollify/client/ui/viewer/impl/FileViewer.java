@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.viewer.impl;
 
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -129,8 +130,8 @@ public class FileViewer extends ResizableDialog {
 		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_HEADER);
 
 		if (fullUrl != null) {
-			Button openInNewWindowButton = createButton(textProvider
-					.getStrings().fileViewerOpenInNewWindowTitle(),
+			Button openInNewWindowButton = createButton(
+					textProvider.getText(Texts.fileViewerOpenInNewWindowTitle),
 					new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							viewManager.openUrlInNewWindow(fullUrl);
@@ -140,12 +141,13 @@ public class FileViewer extends ResizableDialog {
 			p.add(openInNewWindowButton);
 		}
 
-		Button closeButton = createButton(textProvider.getStrings()
-				.dialogCloseButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				FileViewer.this.hide();
-			}
-		}, StyleConstants.FILE_VIEWER_BUTTON_CLOSE);
+		Button closeButton = createButton(
+				textProvider.getText(Texts.dialogCloseButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						FileViewer.this.hide();
+					}
+				}, StyleConstants.FILE_VIEWER_BUTTON_CLOSE);
 		p.add(closeButton);
 
 		return p;

@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -93,8 +94,8 @@ public class SelectItemDialog extends CenteredDialog implements
 		this.listener = handler;
 
 		if (pleaseWaitText == null)
-			pleaseWaitText = textProvider.getStrings()
-					.selectFolderDialogRetrievingFolders();
+			pleaseWaitText = textProvider
+					.getText(Texts.selectFolderDialogRetrievingFolders);
 
 		this.addViewListener(new ViewListener() {
 			public void onShow() {
@@ -119,8 +120,8 @@ public class SelectItemDialog extends CenteredDialog implements
 		itemTree.addOpenHandler(this);
 		panel.add(itemTree);
 
-		rootItem = createItem(textProvider.getStrings()
-				.selectFolderDialogFoldersRoot(),
+		rootItem = createItem(
+				textProvider.getText(Texts.selectFolderDialogFoldersRoot),
 				StyleConstants.SELECT_ITEM_DIALOG_TREE_ROOT_ITEM_LABEL,
 				StyleConstants.SELECT_ITEM_DIALOG_TREE_ROOT_ITEM);
 
@@ -142,7 +143,7 @@ public class SelectItemDialog extends CenteredDialog implements
 		buttons.add(selectButton);
 
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						SelectItemDialog.this.hide();

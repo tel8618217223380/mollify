@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -40,9 +41,9 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 	boolean initialized = false;
 	boolean dataRequested = false;
 
-	public FolderListMenu(String itemStyle, Folder currentDirectory,
-			int level, FolderProvider directoryProvider,
-			FolderListener listener, TextProvider textProvider, Widget parent) {
+	public FolderListMenu(String itemStyle, Folder currentDirectory, int level,
+			FolderProvider directoryProvider, FolderListener listener,
+			TextProvider textProvider, Widget parent) {
 		super(null, parent, null);
 
 		this.level = level;
@@ -58,8 +59,8 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 	}
 
 	private Label createWaitLabel() {
-		Label waitLabel = new Label(textProvider.getStrings()
-				.directorySelectorMenuPleaseWait());
+		Label waitLabel = new Label(
+				textProvider.getText(Texts.directorySelectorMenuPleaseWait));
 		waitLabel.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_WAIT);
 		return waitLabel;
 	}
@@ -107,8 +108,8 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 	}
 
 	private void addNoFoldersLabel() {
-		Label label = new Label(textProvider.getStrings()
-				.directorySelectorMenuNoItemsText());
+		Label label = new Label(
+				textProvider.getText(Texts.directorySelectorMenuNoItemsText));
 		label.setStyleName(StyleConstants.DIRECTORY_LIST_MENU_ITEM_NONE);
 		addItem(label);
 	}

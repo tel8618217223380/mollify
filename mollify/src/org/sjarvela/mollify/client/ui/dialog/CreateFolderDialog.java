@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
@@ -35,7 +36,7 @@ public class CreateFolderDialog extends CenteredDialog {
 
 	public CreateFolderDialog(Folder parentFolder, TextProvider textProvider,
 			FolderHandler handler) {
-		super(textProvider.getStrings().createFolderDialogTitle(),
+		super(textProvider.getText(Texts.createFolderDialogTitle),
 				StyleConstants.CREATE_FOLDER_DIALOG);
 
 		this.parentFolder = parentFolder;
@@ -65,8 +66,8 @@ public class CreateFolderDialog extends CenteredDialog {
 		VerticalPanel panel = new VerticalPanel();
 		panel.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_CONTENT);
 
-		Label nameTitle = new Label(textProvider.getStrings()
-				.createFolderDialogName());
+		Label nameTitle = new Label(
+				textProvider.getText(Texts.createFolderDialogName));
 		nameTitle.setStyleName(StyleConstants.CREATE_FOLDER_DIALOG_NAME_TITLE);
 		panel.add(nameTitle);
 
@@ -84,15 +85,16 @@ public class CreateFolderDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.CREATE_FOLDER_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings()
-				.createFolderDialogCreateButton(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onCreate();
-			}
-		}, StyleConstants.CREATE_FOLDER_DIALOG_BUTTON_CREATE));
+		buttons.add(createButton(
+				textProvider.getText(Texts.createFolderDialogCreateButton),
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						onCreate();
+					}
+				}, StyleConstants.CREATE_FOLDER_DIALOG_BUTTON_CREATE));
 
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						CreateFolderDialog.this.hide();

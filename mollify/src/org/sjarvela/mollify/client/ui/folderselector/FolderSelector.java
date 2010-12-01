@@ -17,6 +17,7 @@ import java.util.ListIterator;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModelProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.TooltipTarget;
@@ -53,13 +54,13 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	}
 
 	private Button createUpButton() {
-		final Button button = new Button(textProvider.getStrings()
-				.mainViewParentDirButtonTitle());
+		final Button button = new Button(
+				textProvider.getText(Texts.mainViewParentDirButtonTitle));
 		button.setStyleName(StyleConstants.FOLDER_SELECTOR_BUTTON);
 		button.getElement().setId(StyleConstants.FOLDER_SELECTOR_BUTTON_UP);
 
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
-				textProvider.getStrings().mainViewParentDirButtonTooltip())
+				textProvider.getText(Texts.mainViewParentDirButtonTooltip))
 				.attach(new TooltipTarget() {
 					public FocusWidget getWidget() {
 						return button;
@@ -84,7 +85,7 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 				Folder.Empty);
 		item.addDropdownTooltip(new Tooltip(
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP, textProvider
-						.getStrings().mainViewHomeButtonTooltip()));
+						.getText(Texts.mainViewHomeButtonTooltip)));
 		return item;
 	}
 
@@ -104,9 +105,8 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	}
 
 	private void updateHomeButton() {
-		homeItem
-				.setStyle(folderModelProvider.getFolderModel().isRoot() ? StyleConstants.FOLDER_LISTITEM_HOME_LAST
-						: StyleConstants.FOLDER_LISTITEM_HOME);
+		homeItem.setStyle(folderModelProvider.getFolderModel().isRoot() ? StyleConstants.FOLDER_LISTITEM_HOME_LAST
+				: StyleConstants.FOLDER_LISTITEM_HOME);
 	}
 
 	private List<FolderListItem> createItems() {

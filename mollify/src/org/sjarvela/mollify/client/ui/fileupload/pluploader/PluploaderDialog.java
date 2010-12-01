@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ProgressBar;
@@ -79,7 +80,7 @@ public class PluploaderDialog extends CenteredDialog {
 
 	public PluploaderDialog(TextProvider textProvider,
 			ActionListener actionListener) {
-		super(textProvider.getStrings().fileUploadDialogTitle(),
+		super(textProvider.getText(Texts.fileUploadDialogTitle),
 				StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD);
 		open = true;
 
@@ -124,12 +125,12 @@ public class PluploaderDialog extends CenteredDialog {
 		header = new HorizontalPanel();
 		header.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_PLUPLOAD_HEADER);
 
-		message = new Label(textProvider.getStrings().fileUploadDialogMessage());
+		message = new Label(textProvider.getText(Texts.fileUploadDialogMessage));
 		message.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_MESSAGE);
 		header.add(message);
 
-		uploadButton = new Button(textProvider.getStrings()
-				.fileUploadDialogAddFilesButton());
+		uploadButton = new Button(
+				textProvider.getText(Texts.fileUploadDialogAddFilesButton));
 		uploadButton.getElement().setId(PLUPLOADER_BROWSE_BUTTON_ID);
 		header.add(uploadButton);
 
@@ -141,8 +142,8 @@ public class PluploaderDialog extends CenteredDialog {
 		totalPanel
 				.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_PANEL);
 
-		Label label = new Label(textProvider.getStrings()
-				.fileUploadTotalProgressTitle());
+		Label label = new Label(
+				textProvider.getText(Texts.fileUploadTotalProgressTitle));
 		label.setStylePrimaryName(StyleConstants.FILE_UPLOAD_DIALOG_TOTAL_TITLE);
 		totalPanel.add(label);
 
@@ -170,13 +171,13 @@ public class PluploaderDialog extends CenteredDialog {
 		buttons.addStyleName(StyleConstants.FILE_UPLOAD_DIALOG_BUTTONS);
 		buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-		buttons.add(createButton(textProvider.getStrings()
-				.fileUploadDialogUploadButton(),
+		buttons.add(createButton(
+				textProvider.getText(Texts.fileUploadDialogUploadButton),
 				StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD,
 				StyleConstants.FILE_UPLOAD_DIALOG_BUTTON, actionListener,
 				Actions.upload));
 		buttons.add(createButton(
-				textProvider.getStrings().dialogCancelButton(),
+				textProvider.getText(Texts.dialogCancelButton),
 				StyleConstants.DIALOG_BUTTON_CANCEL,
 				StyleConstants.FILE_UPLOAD_DIALOG_BUTTON, actionListener,
 				Actions.cancel));
@@ -186,10 +187,10 @@ public class PluploaderDialog extends CenteredDialog {
 
 	private Widget createUploadButtons() {
 		uploadButtonPanel = new FlowPanel();
-		uploadButtonPanel.add(createButton(textProvider.getStrings()
-				.dialogCancelButton(), "cancel-upload",
-				StyleConstants.FILE_UPLOAD_DIALOG_BUTTON, actionListener,
-				Actions.cancelUpload));
+		uploadButtonPanel.add(createButton(
+				textProvider.getText(Texts.dialogCancelButton),
+				"cancel-upload", StyleConstants.FILE_UPLOAD_DIALOG_BUTTON,
+				actionListener, Actions.cancelUpload));
 		return uploadButtonPanel;
 	}
 
@@ -228,8 +229,8 @@ public class PluploaderDialog extends CenteredDialog {
 	private void setMode(Mode mode) {
 		if (Mode.Upload.equals(mode)) {
 			header.addStyleDependentName(StyleConstants.UPLOAD);
-			message.setText(textProvider.getStrings()
-					.fileUploadProgressPleaseWait());
+			message.setText(textProvider
+					.getText(Texts.fileUploadProgressPleaseWait));
 			fileList.addStyleDependentName(StyleConstants.UPLOAD);
 			totalPanel.setVisible(true);
 			buttons.setVisible(false);
