@@ -19,15 +19,12 @@ import org.sjarvela.mollify.client.formatting.Formatting;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.i18n.client.constants.NumberConstants;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultTextProvider implements TextProvider {
 	private static Logger logger = Logger.getLogger(DefaultTextProvider.class
 			.getName());
-
-	public static NumberConstants NumberConstants;
 
 	private JavaScriptObject texts;
 	private String locale;
