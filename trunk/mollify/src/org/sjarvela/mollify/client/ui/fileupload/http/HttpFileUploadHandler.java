@@ -46,7 +46,8 @@ public class HttpFileUploadHandler implements FileUploadListener {
 
 	public void onUploadStarted(String uploadId, List<String> filenames) {
 		String info = filenames.size() == 1 ? filenames.get(0) : textProvider
-				.getMessages().uploadingNFilesInfo(filenames.size());
+				.getText(Texts.uploadingNFilesInfo,
+						String.valueOf(filenames.size()));
 
 		progressDisplayer = progressDialogFactory.openProgressDialog(
 				textProvider.getText(Texts.fileUploadProgressTitle), false);

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.dnd.DragController;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
@@ -41,8 +42,8 @@ public class FileItemDragController implements DragController {
 	public Widget createProxy(DragContext context) {
 		FileSystemItem item = ((DraggableFileSystemItem) context.selectedWidgets
 				.get(0)).getSourceItem();
-		List<FileSystemItem> items = new ArrayList(dataProvider
-				.getSelectedItems());
+		List<FileSystemItem> items = new ArrayList(
+				dataProvider.getSelectedItems());
 		if (!items.contains(item))
 			items.add(item);
 
@@ -54,7 +55,8 @@ public class FileItemDragController implements DragController {
 
 	private Label createProxy(List<FileSystemItem> items) {
 		Label proxy = new Label(items.size() == 1 ? items.get(0).getName()
-				: textProvider.getMessages().dragMultipleItems(items.size()));
+				: textProvider.getText(Texts.dragMultipleItems,
+						String.valueOf(items.size())));
 		proxy.setStylePrimaryName(StyleConstants.FILE_ITEM_DRAG);
 		return proxy;
 	}

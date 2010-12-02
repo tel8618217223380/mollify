@@ -23,7 +23,7 @@
 	
 	<set-property name="gwt.logging.enabled" value="FALSE"/>
 	
-	<extend-property name="locale" values="en"/>
+	<!--extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="es"/>
 	<extend-property name="locale" values="de"/>
 	<extend-property name="locale" values="dk"/>
@@ -39,7 +39,7 @@
 	<extend-property name="locale" values="tr"/>
 	<extend-property name="locale" values="br"/>
 	<extend-property name="locale" values="zh"/>
-	<extend-property name="locale" values="ru"/>
+	<extend-property name="locale" values="ru"/-->
 	
 	<define-property name="demo" values="true,false" />
 	<property-provider name="demo">

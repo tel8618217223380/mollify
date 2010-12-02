@@ -18,5 +18,5 @@
 	<set-property name="gwt.logging.developmentModeHandler" value="ENABLED" />
 	<set-property name="gwt.logging.systemHandler" value="ENABLED" />
   
-	<set-property name="locale" value="en"/>
+	<!--set-property name="locale" value="en"/-->
 </module>

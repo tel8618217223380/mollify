@@ -179,8 +179,8 @@ public class SearchResultDialog extends ResizableDialog implements
 	private Widget createInfoPanel() {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName(StyleConstants.SEARCH_RESULTS_DIALOG_INFO);
-		Label info = new Label(textProvider.getMessages().searchResultsInfo(
-				criteria, result.getMatchCount()));
+		Label info = new Label(textProvider.getText(Texts.searchResultsInfo,
+				criteria, String.valueOf(result.getMatchCount())));
 		info.setStylePrimaryName(StyleConstants.SEARCH_RESULTS_DIALOG_INFO_TEXT);
 		p.add(info);
 		return p;

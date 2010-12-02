@@ -13,6 +13,61 @@ package org.sjarvela.mollify.client.localization;
 import org.sjarvela.mollify.client.ResourceId;
 
 public enum Texts implements ResourceId {
+	decimalSeparator, groupingSeparator, zeroDigit, plusSign, minusSign,
+
+	fileSizeFormat,
+
+	sizeOneByte,
+
+	sizeInBytes, // (long bytes);
+
+	sizeOneKilobyte,
+
+	sizeInKilobytes, // (double kilobytes);
+
+	sizeInMegabytes, // (double megabytes);
+
+	sizeInGigabytes, // (double gigabytes);
+
+	confirmFileDeleteMessage,
+
+	confirmDirectoryDeleteMessage, uploadingNFilesInfo, // (int amount);
+
+	uploadMaxSizeHtml, // (String fileMax, String totalMax);
+
+	copyFileMessage, // (String name);
+
+	moveFileMessage, // (String name);
+
+	copyDirectoryMessage, // (String name);
+
+	moveDirectoryMessage, // (String name);
+
+	userDirectoryListDefaultName, // (String defaultName);
+
+	fileUploadDialogUnallowedFileType, // (String extension);
+
+	fileUploadSizeTooBig, // (String file, String fileSize, String maxSize);
+
+	fileUploadTotalSizeTooBig,
+
+	confirmMultipleItemDeleteMessage, // (int count);
+
+	copyMultipleItemsMessage, // (int count);
+
+	moveMultipleItemsMessage, // (int count);
+
+	dragMultipleItems, // (int count);
+
+	publicLinkMessage, // (String name);
+
+	copyHereDialogMessage, // (String name);
+
+	searchResultsInfo, // (String text, int count);
+
+	retrieveUrlNotFound, // (String url);
+
+	retrieveUrlNotAuthorized, // (String url);
 
 	pleaseWait,
 
