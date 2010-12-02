@@ -124,7 +124,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		uploadInfo.getHeader().getElement().getParentElement()
 				.setClassName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_HEADER);
 
-		HTML content = new HTML(textProvider.getMessages().uploadMaxSizeHtml(
+		HTML content = new HTML(textProvider.getText(Texts.uploadMaxSizeHtml,
 				textProvider.getSizeText((long) info.getUploadMaxFileSize()),
 				textProvider.getSizeText((long) info.getUploadMaxTotalSize())));
 		content.setStyleName(StyleConstants.FILE_UPLOAD_DIALOG_INFO_CONTENT);
@@ -247,9 +247,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 				return true;
 
 			if (maxFileSize > 0 && size > maxFileSize) {
-				dialogManager.showInfo(
-						textProvider.getText(Texts.infoDialogErrorTitle),
-						textProvider.getMessages().fileUploadSizeTooBig(
+				dialogManager.showInfo(textProvider
+						.getText(Texts.infoDialogErrorTitle), textProvider
+						.getText(Texts.fileUploadSizeTooBig,
 								uploader.getFilename(),
 								textProvider.getSizeText((long) size),
 								textProvider.getSizeText((long) maxFileSize)));
@@ -258,9 +258,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 			total += size;
 			if (maxTotalSize > 0 && total > maxTotalSize) {
-				dialogManager.showInfo(
-						textProvider.getText(Texts.infoDialogErrorTitle),
-						textProvider.getMessages().fileUploadTotalSizeTooBig(
+				dialogManager.showInfo(textProvider
+						.getText(Texts.infoDialogErrorTitle), textProvider
+						.getText(Texts.fileUploadTotalSizeTooBig,
 								textProvider.getSizeText((long) maxTotalSize)));
 				return false;
 			}
@@ -291,9 +291,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 			dialogManager
 					.showInfo(
 							textProvider.getText(Texts.fileUploadDialogTitle),
-							textProvider.getMessages()
-									.fileUploadDialogUnallowedFileType(
-											extension));
+							textProvider.getText(
+									Texts.fileUploadDialogUnallowedFileType,
+									extension));
 			return false;
 		}
 		return true;

@@ -92,8 +92,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		if (FileSystemAction.delete.equals(action)) {
 			String title = textProvider
 					.getText(Texts.deleteFileConfirmationDialogTitle);
-			String message = textProvider.getMessages()
-					.confirmMultipleItemDeleteMessage(items.size());
+			String message = textProvider.getText(
+					Texts.confirmMultipleItemDeleteMessage,
+					String.valueOf(items.size()));
 			dialogManager.showConfirmationDialog(title, message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
@@ -104,11 +105,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					}, source);
 		} else if (FileSystemAction.copy.equals(action)) {
 			if (folder == null) {
-				itemSelectorFactory.openFolderSelector(
-						textProvider.getText(Texts.copyMultipleItemsTitle),
-						textProvider.getMessages().copyMultipleItemsMessage(
-								items.size()),
-						textProvider.getText(Texts.copyFileDialogAction),
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getText(Texts.copyMultipleItemsTitle), textProvider
+						.getText(Texts.copyMultipleItemsMessage,
+								String.valueOf(items.size())), textProvider
+						.getText(Texts.copyFileDialogAction),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.copy(items,
@@ -137,11 +138,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 					createListener(items, action, cb));
 		} else if (FileSystemAction.move.equals(action)) {
 			if (folder == null) {
-				itemSelectorFactory.openFolderSelector(
-						textProvider.getText(Texts.moveMultipleItemsTitle),
-						textProvider.getMessages().moveMultipleItemsMessage(
-								items.size()),
-						textProvider.getText(Texts.moveFileDialogAction),
+				itemSelectorFactory.openFolderSelector(textProvider
+						.getText(Texts.moveMultipleItemsTitle), textProvider
+						.getText(Texts.moveMultipleItemsMessage,
+								String.valueOf(items.size())), textProvider
+						.getText(Texts.moveFileDialogAction),
 						fileSystemItemProvider, new SelectItemHandler() {
 							public void onSelect(FileSystemItem selected) {
 								fileSystemService.move(items,
@@ -236,9 +237,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			JsObj viewParams = (JsObj) param;
 			fileViewerFactory.openFileViewer(file, viewParams);
 		} else if (action.equals(FileSystemAction.publicLink)) {
-			dialogManager.showInfo(textProvider
-					.getText(Texts.filePublicLinkTitle), textProvider
-					.getMessages().publicLinkMessage(file.getName()),
+			dialogManager.showInfo(
+					textProvider.getText(Texts.filePublicLinkTitle),
+					textProvider.getText(Texts.publicLinkMessage,
+							file.getName()),
 					fileSystemService.getPublicLink(file));
 		} else if (action.equals(FileSystemAction.download)) {
 			windowManager.openDownloadUrl(fileSystemService.getDownloadUrl(
@@ -252,7 +254,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			if (action.equals(FileSystemAction.copy)) {
 				itemSelectorFactory.openFolderSelector(
 						textProvider.getText(Texts.copyFileDialogTitle),
-						textProvider.getMessages().copyFileMessage(
+						textProvider.getText(Texts.copyFileMessage,
 								file.getName()),
 						textProvider.getText(Texts.copyFileDialogAction),
 						fileSystemItemProvider, new SelectItemHandler() {
@@ -270,7 +272,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			} else if (FileSystemAction.copyHere.equals(action)) {
 				dialogManager.showInputDialog(
 						textProvider.getText(Texts.copyHereDialogTitle),
-						textProvider.getMessages().copyHereDialogMessage(
+						textProvider.getText(Texts.copyHereDialogMessage,
 								file.getName()), file.getName(),
 						new InputListener() {
 							@Override
@@ -291,7 +293,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			} else if (action.equals(FileSystemAction.move)) {
 				itemSelectorFactory.openFolderSelector(
 						textProvider.getText(Texts.moveFileDialogTitle),
-						textProvider.getMessages().moveFileMessage(
+						textProvider.getText(Texts.moveFileMessage,
 								file.getName()),
 						textProvider.getText(Texts.moveFileDialogAction),
 						fileSystemItemProvider, new SelectItemHandler() {
@@ -309,8 +311,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			} else if (action.equals(FileSystemAction.delete)) {
 				String title = textProvider
 						.getText(Texts.deleteFileConfirmationDialogTitle);
-				String message = textProvider.getMessages()
-						.confirmFileDeleteMessage(file.getName());
+				String message = textProvider.getText(
+						Texts.confirmFileDeleteMessage, file.getName());
 				dialogManager.showConfirmationDialog(title, message,
 						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 						new ConfirmationListener() {
@@ -335,7 +337,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (action.equals(FileSystemAction.copy)) {
 			itemSelectorFactory.openFolderSelector(
 					textProvider.getText(Texts.copyDirectoryDialogTitle),
-					textProvider.getMessages().copyDirectoryMessage(
+					textProvider.getText(Texts.copyDirectoryMessage,
 							folder.getName()),
 					textProvider.getText(Texts.copyDirectoryDialogAction),
 					fileSystemItemProvider, new SelectItemHandler() {
@@ -354,7 +356,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (action.equals(FileSystemAction.move)) {
 			itemSelectorFactory.openFolderSelector(
 					textProvider.getText(Texts.moveDirectoryDialogTitle),
-					textProvider.getMessages().moveDirectoryMessage(
+					textProvider.getText(Texts.moveDirectoryMessage,
 							folder.getName()),
 					textProvider.getText(Texts.moveDirectoryDialogAction),
 					fileSystemItemProvider, new SelectItemHandler() {
@@ -372,8 +374,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = textProvider
 					.getText(Texts.deleteDirectoryConfirmationDialogTitle);
-			String message = textProvider.getMessages()
-					.confirmDirectoryDeleteMessage(folder.getName());
+			String message = textProvider.getText(
+					Texts.confirmDirectoryDeleteMessage, folder.getName());
 			dialogManager.showConfirmationDialog(title, message,
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {

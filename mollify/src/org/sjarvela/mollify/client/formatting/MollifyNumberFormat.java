@@ -8,15 +8,16 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.localization;
+package org.sjarvela.mollify.client.formatting;
 
-import org.sjarvela.mollify.client.ResourceId;
 
-public interface TextProvider {
-	String getText(ResourceId id);
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.i18n.client.constants.NumberConstants;
 
-	String getText(ResourceId id, String... params);
+public class MollifyNumberFormat extends NumberFormat {
 
-	String getSizeText(long bytes);
+	public MollifyNumberFormat(NumberConstants numberConstants, String pattern) {
+		super(numberConstants, pattern, new MollifyCurrencyData(), true);
+	}
 
 }

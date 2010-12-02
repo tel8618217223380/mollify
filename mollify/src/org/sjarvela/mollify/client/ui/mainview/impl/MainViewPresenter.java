@@ -303,13 +303,16 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 						if (error.getError().getCode() == 301)
 							dialogManager.showInfo(textProvider
 									.getText(Texts.retrieveUrlTitle),
-									textProvider.getMessages()
-											.retrieveUrlNotFound(url));
+									textProvider.getText(
+											Texts.retrieveUrlNotFound, url));
 						else if (error.getError().getCode() == 302)
-							dialogManager.showInfo(textProvider
-									.getText(Texts.retrieveUrlTitle),
-									textProvider.getMessages()
-											.retrieveUrlNotAuthorized(url));
+							dialogManager.showInfo(
+									textProvider
+											.getText(Texts.retrieveUrlTitle),
+									textProvider
+											.getText(
+													Texts.retrieveUrlNotAuthorized,
+													url));
 						else if (ServiceErrorType.REQUEST_FAILED.equals(error
 								.getType()))
 							dialogManager.showInfo(textProvider
