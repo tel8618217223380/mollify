@@ -47,8 +47,10 @@ public class NativeItemContextProvider implements ItemContextProvider {
 
 	private List<ItemContextComponent> createComponents(JsObj r) {
 		List<ItemContextComponent> components = new ArrayList();
-		JsArray<JsObj> componentList = r.getArray("components");
+		if (r == null || !r.hasValue("components"))
+			return components;
 
+		JsArray<JsObj> componentList = r.getArray("components");
 		for (int i = 0; i < componentList.length(); i++) {
 			JsObj c = componentList.get(i);
 			String type = c.getString("type").trim().toLowerCase();
@@ -70,11 +72,18 @@ public class NativeItemContextProvider implements ItemContextProvider {
 
 	private Map<ActionType, List<ContextActionItem>> createActions(JsObj r) {
 		Map<ActionType, List<ContextActionItem>> actions = new HashMap();
+		if (r == null || !r.hasValue("actions"))
+			return actions;
+
 		JsObj actionsDef = r.getJsObj("actions");
 
-		addActions(actions, ActionType.Primary, actionsDef.getArray("primary"));
-		addActions(actions, ActionType.Secondary,
-				actionsDef.getArray("secondary"));
+		if (actionsDef.hasValue("primary"))
+			addActions(actions, ActionType.Primary,
+					actionsDef.getArray("primary"));
+
+		if (actionsDef.hasValue("secondary"))
+			addActions(actions, ActionType.Secondary,
+					actionsDef.getArray("secondary"));
 
 		return actions;
 	}

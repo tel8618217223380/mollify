@@ -8,13 +8,21 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin;
+package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.FileView;
-import org.sjarvela.mollify.client.session.SessionInfo;
+public class FileViewDelegate implements FileView {
 
-public interface PluginSystem {
+	private FileView delegate;
 
-	void setup(FileView filesystemHandler, SessionInfo session);
+	@Override
+	public void refreshCurrentFolder() {
+		if (delegate != null)
+			delegate.refreshCurrentFolder();
+	}
+
+	public void setDelegate(FileView delegate) {
+		this.delegate = delegate;
+
+	}
 
 }

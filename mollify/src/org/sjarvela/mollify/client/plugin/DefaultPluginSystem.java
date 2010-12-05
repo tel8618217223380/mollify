@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
@@ -41,16 +42,16 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	@Override
-	public void setup(SessionInfo session) {
+	public void setup(final FileView fileView, final SessionInfo session) {
 		Map<String, String> externalPluginScripts = getExternalPluginScripts(session);
 		if (externalPluginScripts.isEmpty()) {
-			init();
+			init(fileView, session);
 		} else {
 			new JQueryScriptLoader().load(externalPluginScripts,
 					new Callback() {
 						@Override
 						public void onCallback() {
-							init();
+							init(fileView, session);
 						}
 					});
 		}
@@ -73,14 +74,15 @@ public class DefaultPluginSystem implements PluginSystem {
 		return result;
 	}
 
-	private void init() {
+	private void init(FileView fileView, SessionInfo session) {
 		setupPlugins();
-		initializePlugins();
+		initializePlugins(fileView, session);
 	}
 
-	private void initializePlugins() {
+	private void initializePlugins(FileView filesystem, SessionInfo session) {
 		logger.log(Level.INFO, "Initializing client plugins");
-		JavaScriptObject env = pluginEnv.getJsEnv();
+		JavaScriptObject env = pluginEnv.getJsEnv(filesystem,
+				session.getPluginBaseUrl());
 		for (Plugin p : plugins)
 			p.initialize(env);
 	}
