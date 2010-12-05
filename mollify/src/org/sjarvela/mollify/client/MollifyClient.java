@@ -82,8 +82,6 @@ public class MollifyClient implements Client, SessionListener {
 		logger.log(Level.INFO, "Module name: " + GWT.getModuleName());
 		logger.log(Level.INFO, "Module location: " + GWT.getModuleBaseURL());
 
-		viewManager.empty();
-
 		service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
@@ -114,10 +112,9 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	private void openLogin(SessionInfo session) {
-		if (!settings.getBool(PARAM_SHOW_LOGIN, true)) {
-			viewManager.empty();
+		viewManager.empty();
+		if (!settings.getBool(PARAM_SHOW_LOGIN, true))
 			return;
-		}
 
 		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
 			public void login(String userName, String password,

@@ -17,8 +17,8 @@ function ArchiverPlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		
-		env.addItemContextProvider(that.getItemContext);
+		that.env.addItemContextProvider(that.getItemContext);
+		$.getScript(that.env.pluginUrl("Archiver") + "client/texts_" + that.env.texts().locale + ".js");
 	}
 	
 	this.getItemContext = function(item, details) {
@@ -33,7 +33,7 @@ function ArchiverPlugin() {
 				secondary: [
 					{ title: "-" },
 					{
-						title: "TODO Extract",
+						title: that.env.texts().get("plugin_archiver_extract_action"),
 						callback: function(item) { that.onAction(action); }
 					}
 				]
@@ -42,7 +42,7 @@ function ArchiverPlugin() {
 	}
 	
 	this.onAction = function(action) {
-		that.env.getService().post(action,
+		that.env.service().post(action,
 			function(result) {},
 			function(code, error) {
 				alert("Extract error: "+code+"/"+error);
