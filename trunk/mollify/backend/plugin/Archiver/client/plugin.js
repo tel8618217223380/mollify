@@ -27,9 +27,7 @@ function ArchiverPlugin() {
 		var action = details["plugin_archiver"]["action_extract"];
 		
 		return {
-			components : [],
 			actions : {
-				primary : [],
 				secondary: [
 					{ title: "-" },
 					{
@@ -42,9 +40,15 @@ function ArchiverPlugin() {
 	}
 	
 	this.onAction = function(action) {
+		var wd = that.env.dialog().showWait("TODO t", "TODO please wait");
+		
 		that.env.service().post(action,
-			function(result) {},
+			function(result) {
+				wd.close();
+				that.env.fileview().refresh();
+			},
 			function(code, error) {
+				wd.close();
 				alert("Extract error: "+code+"/"+error);
 			}
 		);

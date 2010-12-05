@@ -14,8 +14,28 @@ import org.sjarvela.mollify.client.FileView;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public interface PluginEnvironment {
+public class NativeFileView {
+	private final FileView fileView;
 
-	JavaScriptObject getJsEnv(FileView filesystem, String pluginBaseUrl);
+	public NativeFileView(FileView fileView) {
+		this.fileView = fileView;
+	}
 
+	public void refresh() {
+		fileView.refreshCurrentFolder();
+	}
+
+	public JavaScriptObject asJs() {
+		return createJs(this);
+	}
+
+	private native JavaScriptObject createJs(NativeFileView fs) /*-{
+		var o = {};
+
+		o.refresh = function() {
+			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::refresh()();
+		}
+
+		return o;
+	}-*/;
 }

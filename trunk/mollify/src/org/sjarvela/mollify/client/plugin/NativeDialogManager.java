@@ -14,6 +14,7 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
+import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -29,22 +30,24 @@ public class NativeDialogManager {
 	}
 
 	private native JavaScriptObject createJs(NativeDialogManager dm) /*-{
-		var env = {};
+		var o = {};
 
-		env.showInfo = function(s) {
+		o.showInfo = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInfo(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-		env.showConfirmation = function(s) {
+		o.showConfirmation = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showConfirmation(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-		env.showInput = function(s) {
+		o.showInput = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showInput(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-		env.showDialog = function(s) {
+		o.showDialog = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showDialog(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-
-		return env;
+		o.showWait = function(t, m) {
+			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showWait(Ljava/lang/String;Ljava/lang/String;)(t, m);
+		}
+		return o;
 	}-*/;
 
 	protected void showInfo(JavaScriptObject s) {
@@ -97,6 +100,24 @@ public class NativeDialogManager {
 	protected void showDialog(JavaScriptObject s) {
 		JsObj spec = s.cast();
 
+	}
+
+	protected JavaScriptObject showWait(String title, String message) {
+		WaitDialog waitDialog = dialogManager.openWaitDialog(title, message);
+		return createNativeWaitDialog(this, waitDialog);
+	}
+
+	private native final JavaScriptObject createNativeWaitDialog(
+			NativeDialogManager dm, WaitDialog waitDialog) /*-{
+		var o = {};
+		o.close = function() {
+			dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::closeWait(Lorg/sjarvela/mollify/client/ui/dialog/WaitDialog;)(waitDialog);
+		};
+		return o;
+	}-*/;
+
+	protected void closeWait(WaitDialog waitDialog) {
+		waitDialog.close();
 	}
 
 	protected static native final void invokeNativeCallback(JavaScriptObject cb) /*-{

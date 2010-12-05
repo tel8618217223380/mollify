@@ -26,7 +26,8 @@
 			
 			$archive = $this->item($itemId);
 			$folder = $archive->parent();
-			$target = $folder->internalPath().DIRECTORY_SEPARATOR.basename($archive->internalPath());
+			$name = str_replace(".", "_", basename($archive->internalPath()));
+			$target = $folder->internalPath().DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR;
 			
 			if (file_exists($target))
 				throw new ServiceException("FOLDER_ALREADY_EXISTS", $target);

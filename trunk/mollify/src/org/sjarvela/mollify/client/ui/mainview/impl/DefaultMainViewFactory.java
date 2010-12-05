@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import org.sjarvela.mollify.client.FileViewDelegate;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
@@ -100,7 +101,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.itemContextPopupFactory = itemContextPopupFactory;
 	}
 
-	public MainView createMainView() {
+	public MainView createMainView(FileViewDelegate fileViewDelegate) {
 		SessionInfo session = sessionManager.getSession();
 
 		FileSystemService fileSystemService = serviceProvider
@@ -139,8 +140,9 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				serviceProvider.getSessionService(), eventDispatcher,
 				searchResultDialogFactory);
 		dragController.setDataProvider(presenter);
-		new MainViewGlue(view, presenter, fileSystemActionHandler,
-				actionDelegator);
+		MainViewGlue glue = new MainViewGlue(view, presenter,
+				fileSystemActionHandler, actionDelegator);
+		fileViewDelegate.setDelegate(glue);
 
 		return view;
 	}

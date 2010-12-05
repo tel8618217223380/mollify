@@ -55,6 +55,7 @@ public class MollifyClient implements Client, SessionListener {
 	private final ClientSettings settings;
 	private final ServiceProvider serviceProvider;
 	private final PluginSystem pluginSystem;
+	private final FileViewDelegate fileViewDelegate;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
@@ -70,6 +71,7 @@ public class MollifyClient implements Client, SessionListener {
 		this.settings = settings;
 		this.pluginSystem = pluginSystem;
 		this.service = serviceProvider.getSessionService();
+		this.fileViewDelegate = new FileViewDelegate();
 
 		sessionManager.addSessionListener(this);
 	}
@@ -91,7 +93,7 @@ public class MollifyClient implements Client, SessionListener {
 
 					public void onSuccess(SessionInfo session) {
 						if (!pluginsInitialized) {
-							pluginSystem.setup(session);
+							pluginSystem.setup(fileViewDelegate, session);
 							pluginsInitialized = true;
 						}
 						sessionManager.setSession(session);
@@ -103,8 +105,8 @@ public class MollifyClient implements Client, SessionListener {
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin(session);
 		else
-			viewManager.openView(mainViewFactory.createMainView()
-					.getViewWidget());
+			viewManager.openView(mainViewFactory.createMainView(
+					fileViewDelegate).getViewWidget());
 	}
 
 	public void onSessionEnded() {

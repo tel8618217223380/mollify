@@ -8,13 +8,10 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.plugin;
+package org.sjarvela.mollify.client;
 
-import org.sjarvela.mollify.client.FileView;
-import org.sjarvela.mollify.client.session.SessionInfo;
+public interface FileView {
 
-public interface PluginSystem {
-
-	void setup(FileView filesystemHandler, SessionInfo session);
+	void refreshCurrentFolder();
 
 }

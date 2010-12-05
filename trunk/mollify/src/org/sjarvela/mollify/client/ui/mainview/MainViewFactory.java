@@ -10,8 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.FileViewDelegate;
+
 public interface MainViewFactory {
 
-	MainView createMainView();
+	MainView createMainView(FileViewDelegate fileViewProxy);
 
 }

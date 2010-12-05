@@ -16,7 +16,7 @@
 			if ($zip->open($archive) !== TRUE)
 				throw new ServiceException("REQUEST_FAILED", "Could not open archive ".$archive);
 			
-			$zip->extractTo($target);
+			$zip->extractTo($to);
 			$zip->close();
 		}
 			

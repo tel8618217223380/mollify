@@ -43,7 +43,7 @@ public class NativeService {
 		env.post = function(path, success, fail) {
 			service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 		}
-		
+
 		return env;
 	}-*/;
 
@@ -53,7 +53,7 @@ public class NativeService {
 
 	protected void get(String path, final JavaScriptObject success,
 			final JavaScriptObject fail) {
-		externalService.get(path, new ResultListener<String>() {
+		externalService.get(path, new ResultListener<JavaScriptObject>() {
 			@Override
 			public void onFail(ServiceError error) {
 				invokeFail(fail, error.getError().getCode(), error.getError()
@@ -61,7 +61,7 @@ public class NativeService {
 			}
 
 			@Override
-			public void onSuccess(String result) {
+			public void onSuccess(JavaScriptObject result) {
 				invokeSuccess(success, result);
 			}
 		});
@@ -70,7 +70,7 @@ public class NativeService {
 	protected void post(String path, final JavaScriptObject success,
 			final JavaScriptObject fail) {
 		externalService.post(path, Collections.EMPTY_MAP,
-				new ResultListener<String>() {
+				new ResultListener<JavaScriptObject>() {
 					@Override
 					public void onFail(ServiceError error) {
 						invokeFail(fail, error.getError().getCode(), error
@@ -78,13 +78,14 @@ public class NativeService {
 					}
 
 					@Override
-					public void onSuccess(String result) {
+					public void onSuccess(JavaScriptObject result) {
 						invokeSuccess(success, result);
 					}
 				});
 	}
 
-	protected native void invokeSuccess(JavaScriptObject cb, String result) /*-{
+	protected native void invokeSuccess(JavaScriptObject cb,
+			JavaScriptObject result) /*-{
 		if (!cb) return;
 		cb(result);
 	}-*/;

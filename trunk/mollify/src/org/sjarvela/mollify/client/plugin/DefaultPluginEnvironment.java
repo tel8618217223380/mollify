@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -71,9 +72,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return sessionProvider.getSession();
 	}
 
-	public JavaScriptObject getJsEnv() {
-		return createNativeEnv(this, sessionProvider.getSession()
-				.getPluginBaseUrl());
+	@Override
+	public JavaScriptObject getJsEnv(FileView fileView, String pluginBaseUrl) {
+		JavaScriptObject fs = new NativeFileView(fileView).asJs();
+		return createNativeEnv(this, fs, pluginBaseUrl);
 	}
 
 	protected JavaScriptObject getService() {
@@ -89,7 +91,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	};
 
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
-			String pluginBaseUrl) /*-{
+			JavaScriptObject fv, String pluginBaseUrl) /*-{
 		var env = {};
 
 		env.addResponseProcessor = function (cb) {
@@ -118,6 +120,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 		env.texts = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
+		}
+
+		env.fileview = function() {
+			return fv;
 		}
 
 		env.pluginUrl = function(id) {

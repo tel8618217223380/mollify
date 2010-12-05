@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -25,7 +26,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
-public class MainViewGlue implements GridListener<FileSystemItem> {
+public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 	private final DefaultMainView view;
@@ -192,5 +193,10 @@ public class MainViewGlue implements GridListener<FileSystemItem> {
 
 	public void onSelectionChanged(List<FileSystemItem> selected) {
 		presenter.onFileSystemItemSelectionChanged(selected);
+	}
+
+	@Override
+	public void refreshCurrentFolder() {
+		presenter.reload();
 	}
 }
