@@ -99,6 +99,10 @@ public class SessionInfo extends JavaScriptObject {
 		return this.folders;
 	}-*/;
 
+	public final native String getPluginBaseUrl() /*-{
+		return this.plugin_base_url;
+	}-*/;
+
 	private final native void putValues(boolean authenticationRequired,
 			boolean authenticated, String sessionName, String sessionId,
 			String userId, String user, String permissionMode,
@@ -115,4 +119,5 @@ public class SessionInfo extends JavaScriptObject {
 		this.filesystem = fileSystemInfo;
 		this.folders = folders;
 	}-*/;
+
 }

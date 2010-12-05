@@ -139,6 +139,8 @@
 			if ($type === 'ogg') return 'application/ogg';
 			if ($type === 'mov') return 'video/quicktime';
 			if ($type === 'mp4') return 'video/mp4';
+			if ($type === 'aif') return "audio/x-aiff";
+			if ($type === 'wav') return "audio/x-wav";
 			return 'application/octet-stream';
 		}
 		

@@ -40,25 +40,25 @@ public class DefaultTextProvider implements TextProvider {
 	}
 
 	private final native void initTexts() /*-{
-		if (!$wnd.mollify || !$wnd.mollify.getTexts || typeof($wnd.mollify.getTexts()) != "object")
+		if (!$wnd.mollify || !$wnd.mollify.texts || typeof($wnd.mollify.texts.values) != "object")
 			@org.sjarvela.mollify.client.localization.DefaultTextProvider::invalidLocalizationError()();
 
 		try {
-			this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale = $wnd.mollify.getLocale();
-			this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts = $wnd.mollify.getTexts();
+			this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale = $wnd.mollify.texts.locale;
+			this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts = $wnd.mollify.texts.values;
 		} catch (e) {
 			@org.sjarvela.mollify.client.localization.DefaultTextProvider::invalidLocalizationError()();
 		}
 	}-*/;
 
-	private native final String getText(String key) /*-{
+	private native final String get(String key) /*-{
 		// In Firefox, jsObject.hasOwnProperty(key) requires a primitive string
 		key = String(key);
 		var map = this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts;
 		var value = map[key];
 
 		if (value == null || !map.hasOwnProperty(key))
-			return "["+key+"]";
+			return "[" + this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale + ":" + key + "]";
 
 		return String(value);
 	}-*/;
@@ -74,8 +74,18 @@ public class DefaultTextProvider implements TextProvider {
 	}
 
 	@Override
+	public String getLocale() {
+		return locale;
+	}
+
+	@Override
 	public String getText(ResourceId id) {
-		return getText(id.name());
+		return get(id.name());
+	}
+
+	@Override
+	public String getText(String id) {
+		return get(id);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.sjarvela.mollify.client.App;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -33,7 +34,6 @@ import com.google.inject.Singleton;
 public class DefaultViewManager implements ViewManager {
 	private static Logger logger = Logger.getLogger(DefaultViewManager.class
 			.getName());
-	static final String MOLLIFY_PANEL_ID = "mollify";
 
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
@@ -43,7 +43,7 @@ public class DefaultViewManager implements ViewManager {
 
 	@Inject
 	public DefaultViewManager() {
-		this.rootPanel = RootPanel.get(MOLLIFY_PANEL_ID);
+		this.rootPanel = RootPanel.get(App.MOLLIFY_PANEL_ID);
 		if (this.rootPanel == null)
 			throw new RuntimeException("No placeholder found for Mollify");
 		this.rootPanel.getElement().getStyle()

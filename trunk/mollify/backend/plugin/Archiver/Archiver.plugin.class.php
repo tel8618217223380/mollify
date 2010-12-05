@@ -13,7 +13,6 @@
 	require_once("ArchiveManager.class.php");
 	
 	class Archiver extends PluginBase {
-
 		public function setup() {
 			$this->addService("archive", "ArchiverServices");
 			$this->env->filesystem()->registerDetailsPlugin($this);	

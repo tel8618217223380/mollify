@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
@@ -24,7 +25,6 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,22 +35,22 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ItemContextProvider itemContextProvider;
 	private final SessionProvider sessionProvider;
 	private final ServiceProvider serviceProvider;
-	private final String locale;
 	private final DialogManager dialogManager;
+	private final TextProvider textProvider;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
 			ItemContextProvider itemContextProvider,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
-			DialogManager dialogManager) {
+			DialogManager dialogManager, TextProvider textProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		this.itemContextProvider = itemContextProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
-		this.locale = LocaleInfo.getCurrentLocale().getLocaleName();
+		this.textProvider = textProvider;
 	}
 
 	public void addResponseProcessor(JavaScriptObject rp) {
@@ -72,7 +72,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	}
 
 	public JavaScriptObject getJsEnv() {
-		return createNativeEnv(this);
+		return createNativeEnv(this, sessionProvider.getSession()
+				.getPluginBaseUrl());
 	}
 
 	protected JavaScriptObject getService() {
@@ -83,7 +84,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return new NativeDialogManager(dialogManager).asJs();
 	};
 
-	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e) /*-{
+	protected JavaScriptObject getTextProvider() {
+		return new NativeTextProvider(textProvider).asJs();
+	};
+
+	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
+			String pluginBaseUrl) /*-{
 		var env = {};
 
 		env.addResponseProcessor = function (cb) {
@@ -98,20 +104,24 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
-		env.getSession = function() {
+		env.session = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
 		}
 
-		env.getLocale = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::locale;
-		}
-
-		env.getService = function() {
+		env.service = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
 		}
 
-		env.getDialogManager = function() {
+		env.dialog = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
+		}
+
+		env.texts = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
+		}
+
+		env.pluginUrl = function(id) {
+			return pluginBaseUrl + id + "/";
 		}
 
 		return env;

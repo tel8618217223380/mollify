@@ -15,8 +15,12 @@ import org.sjarvela.mollify.client.ResourceId;
 public interface TextProvider {
 	String getText(ResourceId id);
 
+	String getText(String id);
+
 	String getText(ResourceId id, String... params);
 
 	String getSizeText(long bytes);
+
+	String getLocale();
 
 }
