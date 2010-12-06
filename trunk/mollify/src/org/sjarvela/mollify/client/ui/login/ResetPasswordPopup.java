@@ -10,15 +10,13 @@
 
 package org.sjarvela.mollify.client.ui.login;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
+import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.common.popup.BubblePopup;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -92,8 +90,8 @@ public class ResetPasswordPopup extends BubblePopup {
 		if (email.getText().length() == 0)
 			return;
 
-		Map<String, String> data = new HashMap();
-		data.put("email", email.getText());
+		String data = new JSONStringBuilder("email", email.getText())
+				.toString();
 
 		service.post(data, new ResultListener() {
 			@Override

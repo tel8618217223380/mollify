@@ -76,7 +76,7 @@ public class App implements EntryPoint {
 		if (rootPanel == null)
 			throw new RuntimeException("No placeholder found for Mollify");
 		rootPanel.clear();
-		rootPanel.add(new HTML("<div class='mollify_loading'/>"));
+		rootPanel.add(new HTML("<div class='mollify-loading'></div>"));
 	}
 
 	private void showError(Throwable reason) {

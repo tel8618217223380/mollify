@@ -24,31 +24,40 @@ function ArchiverPlugin() {
 	this.getItemContext = function(item, details) {
 		if (!details["plugin_archiver"] || !details["plugin_archiver"]["action_extract"]) return null;
 		
-		var action = details["plugin_archiver"]["action_extract"];
+		var extractServiceUrl = details["plugin_archiver"]["action_extract"];
 		
 		return {
 			actions : {
 				secondary: [
 					{ title: "-" },
 					{
-						title: that.env.texts().get("plugin_archiver_extract_action"),
-						callback: function(item) { that.onAction(action); }
+						title: that.env.texts().get("plugin_archiver_extractAction"),
+						callback: function(item) { that.onExtract(extractServiceUrl, false); }
 					}
 				]
 			}
 		}
 	}
 	
-	this.onAction = function(action) {
-		var wd = that.env.dialog().showWait("TODO t", "TODO please wait");
+	this.onExtract = function(url, allowOverwrite) {
+		var wd = that.env.dialog().showWait(that.env.texts().get("pleaseWait"));
+		var params = { overwrite: allowOverwrite };
 		
-		that.env.service().post(action,
+		that.env.service().post(url, params,
 			function(result) {
 				wd.close();
 				that.env.fileview().refresh();
 			},
 			function(code, error) {
 				wd.close();
+				if (code == 205) {
+					that.env.dialog().showConfirmation({
+						title: that.env.texts().get("plugin_archiver_extractFolderAlreadyExistsTitle"),
+						message: that.env.texts().get("plugin_archiver_extractFolderAlreadyExistsMessage"),
+						on_confirm: function() { that.onExtract(url, true); }
+					});
+					return;
+				}
 				alert("Extract error: "+code+"/"+error);
 			}
 		);
