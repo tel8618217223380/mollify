@@ -23,14 +23,19 @@
 			$itemId = $this->path[0];
 			$action = $this->path[1];
 			if ($action !== 'extract') throw $this->invalidRequestException();
+			$data = $this->request->data;
 			
+			$overwrite = isset($data['overwrite']) ? $data['overwrite'] : FALSE;
 			$archive = $this->item($itemId);
-			$folder = $archive->parent();
+			$parent = $archive->parent();
 			$name = str_replace(".", "_", basename($archive->internalPath()));
-			$target = $folder->internalPath().DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR;
+			$target = $parent->internalPath().DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR;
 			
-			if (file_exists($target))
-				throw new ServiceException("FOLDER_ALREADY_EXISTS", $target);
+			if (file_exists($target)) {
+				if (!$overwrite)
+					throw new ServiceException("DIR_ALREADY_EXISTS", $target);
+				$parent->folderWithName($name)->delete();
+			}
 			
 			mkdir($target);
 			

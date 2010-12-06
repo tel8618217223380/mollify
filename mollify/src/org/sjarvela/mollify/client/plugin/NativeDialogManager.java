@@ -44,8 +44,8 @@ public class NativeDialogManager {
 		o.showDialog = function(s) {
 			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showDialog(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
-		o.showWait = function(t, m) {
-			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showWait(Ljava/lang/String;Ljava/lang/String;)(t, m);
+		o.showWait = function(m) {
+			return dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::showWait(Ljava/lang/String;Ljava/lang/String;)('', m);
 		}
 		return o;
 	}-*/;

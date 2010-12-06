@@ -10,11 +10,10 @@
 
 package org.sjarvela.mollify.client.plugin.service;
 
-import java.util.Collections;
-
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -40,8 +39,8 @@ public class NativeService {
 			service.@org.sjarvela.mollify.client.plugin.service.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 		}
 
-		env.post = function(path, success, fail) {
-			service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
+		env.post = function(path, data, success, fail) {
+			service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, data, success, fail);
 		}
 
 		return env;
@@ -67,9 +66,12 @@ public class NativeService {
 		});
 	}
 
-	protected void post(String path, final JavaScriptObject success,
-			final JavaScriptObject fail) {
-		externalService.post(path, Collections.EMPTY_MAP,
+	protected void post(String path, JavaScriptObject data,
+			final JavaScriptObject success, final JavaScriptObject fail) {
+		String jsonData = JsUtil.asJsonString(data == null ? JavaScriptObject
+				.createObject() : data);
+
+		externalService.post(path, jsonData,
 				new ResultListener<JavaScriptObject>() {
 					@Override
 					public void onFail(ServiceError error) {
