@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.localization;
 
-import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +26,7 @@ public class DefaultTextProvider implements TextProvider {
 			.getName());
 
 	private JavaScriptObject texts;
-	private String locale;
+	private String locale = "";
 	private NumberFormat sizeFormatter;
 
 	public DefaultTextProvider() {
@@ -40,8 +39,12 @@ public class DefaultTextProvider implements TextProvider {
 	}
 
 	private final native void initTexts() /*-{
-		if (!$wnd.mollify || !$wnd.mollify.texts || typeof($wnd.mollify.texts.values) != "object")
+		this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts = {}
+
+		if (!$wnd.mollify || !$wnd.mollify.texts || !$wnd.mollify.texts.values || typeof($wnd.mollify.texts.values) != "object") {
 			@org.sjarvela.mollify.client.localization.DefaultTextProvider::invalidLocalizationError()();
+			return;
+		}
 
 		try {
 			this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale = $wnd.mollify.texts.locale;
@@ -55,7 +58,7 @@ public class DefaultTextProvider implements TextProvider {
 		// In Firefox, jsObject.hasOwnProperty(key) requires a primitive string
 		key = String(key);
 		var map = this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts;
-		var value = map[key];
+		var value = map != null ? map[key] : null;
 
 		if (value == null || !map.hasOwnProperty(key))
 			return "[" + this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale + ":" + key + "]";
@@ -64,13 +67,7 @@ public class DefaultTextProvider implements TextProvider {
 	}-*/;
 
 	static void invalidLocalizationError() {
-		throw new MissingResourceException(
-				"Missing or invalid localization file", null, "");
-	}
-
-	void resourceError(String key) {
-		throw new MissingResourceException("Cannot find text: " + key,
-				this.toString(), key);
+		logger.log(Level.SEVERE, "Invalid or missing localization file");
 	}
 
 	@Override

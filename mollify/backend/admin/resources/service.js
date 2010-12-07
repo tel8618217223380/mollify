@@ -12,7 +12,7 @@ jQuery.fn.exists = function() { return ($(this).length > 0); }
 
 var preRequestCallback = null;
 var postRequestCallback = null;
-var protocolVersion = "1_5_0";
+var protocolVersion = "2";
 
 function getSessionInfo(success, fail) {
 	request("GET", 'session/info/'+protocolVersion+'?type=admin', success, fail);
