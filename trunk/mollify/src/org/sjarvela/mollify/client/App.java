@@ -58,6 +58,7 @@ public class App implements EntryPoint {
 
 		try {
 			container = (Container) GWT.create(Container.class);
+			container.getClient().start();
 		} catch (RuntimeException e) {
 			logger.log(Level.SEVERE, "Error initializing application", e);
 
@@ -67,8 +68,6 @@ public class App implements EntryPoint {
 
 			return;
 		}
-
-		container.getClient().start();
 	}
 
 	private void showInitMessage() {
