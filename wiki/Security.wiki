@@ -1,6 +1,8 @@
 #summary Security considerations
 
-Published folders should not be accessible via regular web access, and since Mollify cannot prevent it, there are two options how to do it:
+Published folders should not be accessible via regular web access. Mollify does not need web access, as it has direct filesystem access.
+
+But since Mollify cannot prevent this, there are two options how to do it:
 
 1) Place all published folders outside www root. With this option, there is no way users can access the files with browser via Apache. Only PHP has to have read and write access to the folders.
 
