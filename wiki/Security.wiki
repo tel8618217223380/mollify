@@ -4,4 +4,4 @@ Published folders should not be accessible via regular web access, and since Mol
 
 1) Place all published folders outside www root. With this option, there is no way users can access the files with browser via Apache. Only PHP has to have read and write access to the folders.
 
-2) Prevent access with web server configuration, for example htaccess rules in Apache.
+2) Prevent access with web server configuration, for example htaccess rule "deny from all" in Apache.
