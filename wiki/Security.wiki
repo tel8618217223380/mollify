@@ -1,4 +1,5 @@
 #summary Security considerations
+#labels Featured
 
 Published folders should not be accessible via regular web access. Using Mollify does not require web access to published folders as it has direct filesystem access.
 
