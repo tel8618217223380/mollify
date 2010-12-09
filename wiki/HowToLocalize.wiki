@@ -1,28 +1,29 @@
 #summary Instructions for how to localize Mollify
 
+= Downloading localization files =
+
+Mollify localization files are located at "client/localization/texts_xx.js". If your language is not found, search from Downloads section, and save a copy into the client localization folder.
+
+If your language is not found, see next chapter on how to create a new localization.
+
 = How to localize into new language =
-Localizing Mollify into new language requires following steps:
 
-1) Open latest English version for the texts by following the link
+To localize into new language, do following steps:
 
-  * Static labels etc: [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/LanguageConstants.properties LanguageConstants.properties]
-  * Messages:  [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/MessageConstants.properties MessageConstants.properties]
+1) Copy English version "texts_en.js" into a new file with your locale identifier
+2) Edit the file, and change the locale identifier in the first line
+3) Localize all the values in the file
+4) Edit the host page, and change the localization file import to match your new language
 
-2) Files contain name/value pairs (for example  "`loginDialogTitle = Login`", where value is "`Login`"), translate only the values. In "`MessageConstants.properties`", also following items should be left untouched:
 
-  * Variables, for example "`{0,number,#.#}`"
-  * HTML elements, for example: "`<span class="mollify-copy-file-message">`"
+= How to upgrade old localizations into new version =
 
-3) Save the files in UTF-8 encoding with a locale identifier in the filename, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
+All the texts in previous (prior to 1.7.5) versions are identical to the new format, only the location and locale selection has changed.
 
-4) Send files to me
+Therefore old localizations can be used when updating the language files:
 
-= How to update existing localizations =
+1) Create new localization file according to previous chapter
 
-1) Open following link and find the language files requiring updates: http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/
+2) Find old versions from [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/]
 
-2) Copy entire file into a new text file, and make necessary modifications
-
-3) Save the files in UTF-8 encoding with a locale identifier in the filename, for example "`LanguageConstants_fr.properties`" for French (where "fr" is the locale identifier)
-
-4) Send file(s) to me
+3) Copy values from old file (NOTE! be careful as new file has a different format, each title must be followed by ":", value must be surrounded by parenthesis "" and lines must be ended with comma)
