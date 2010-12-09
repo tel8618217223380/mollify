@@ -11,8 +11,11 @@ If your language is not found, see next chapter on how to create a new localizat
 To localize into new language, do following steps:
 
 1) Copy English version "texts_en.js" into a new file with your locale identifier
+
 2) Edit the file, and change the locale identifier in the first line
+
 3) Localize all the values in the file
+
 4) Edit the host page, and change the localization file import to match your new language
 
 
