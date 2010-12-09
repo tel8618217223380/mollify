@@ -7,7 +7,7 @@
 
 *BREAKING CHANGES:*
 
-Localizations are no longer built-in, but are now imported from external localization file. This file is fully customizable by user, and changes are effective immediately. Upgrading from earlier versions need host page updated, see example provided in package for new requirements.
+Localizations are no longer built-in, but are now imported from external localization file. This file is fully customizable by user, and changes are effective immediately. Upgrading from earlier versions need host page updated, see example provided in package for new requirements. Also see [HowToLocalize] for new localization instructions.
 
 === Version 1.7.4 ===
   * Enhanced URL retrieve error handling
