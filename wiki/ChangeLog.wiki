@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.5 ===
+  * New localization mechanism (NOTE! see breaking changes)
+  * Extract zip archives
+
+*BREAKING CHANGES:*
+
+Localizations are no longer built-in, but are now imported from external localization file. This file is fully customizable by user, and changes are effective immediately. Upgrading from earlier versions need host page updated, see example provided in package for new requirements.
+
 === Version 1.7.4 ===
   * Enhanced URL retrieve error handling
   * UI improvements
