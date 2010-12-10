@@ -3,5 +3,5 @@
 Items included in release 1.8
 
  * Search (ready, released in 1.7.3)
- * Customizable localizations (started, will be released in 1.7.5)
- * Extract archives (started, will be released in 1.7.5)
+ * Customizable localizations (ready, released in 1.7.5)
+ * Extract archives (ready, released in 1.7.5)
