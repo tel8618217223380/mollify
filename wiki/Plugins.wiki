@@ -45,3 +45,7 @@ See [LostPasswordPlugin]
 == Notificator ==
 
 See [NotificatorPlugin]
+
+== Archiver ==
+
+See [ArchiverPlugin]
