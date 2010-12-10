@@ -41,11 +41,7 @@ Sometimes server side debug log is not enough to solve problems, and then you ne
 
 3. Unzip the package into created folder
 
-4. Modify host page and add this line
-{{{
-<meta name="gwt:property" content="log_level=DEBUG">
-}}}
-and then modify the client script location to use the debug client instead
+4. Modify host page client script location to use the debug client
 {{{
 <script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
 }}}
