@@ -2,7 +2,7 @@
 
 = Downloading localization files =
 
-Mollify localization files are located at "client/localization/texts_xx.js". If your language is not found, search from Downloads section, and save a copy into the client localization folder.
+Mollify localization files are located at "client/localization/texts_xx.js". If your language is not found, search from [http://code.google.com/p/mollify/downloads/list?can=2&q=label:Localization&colspec=Filename+Summary+Uploaded+Size+DownloadCount Downloads section], and save a copy into the client localization folder.
 
 If your language is not found, see next chapter on how to create a new localization.
 
