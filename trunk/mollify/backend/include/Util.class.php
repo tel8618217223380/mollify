@@ -59,10 +59,15 @@
 			return $r."}";
 		}
 		
-		static function utf8($v, $encode = TRUE) {
-			if ($encode)
-				return utf8_encode($v);
-			return utf8_decode($v);
+		static function convertCharset($v, $charset = NULL, $encode = TRUE) {
+			if (!$charset or $charset === NULL) {
+				if ($encode)
+					return utf8_encode($v);
+				return utf8_decode($v);
+			}
+			$from = $encode ? $charset : 'UTF-8';
+			$to = $encode ? 'UTF-8' : $charset;
+			return iconv($from, $to, $v);
 		}
 		
 		static function replaceParams($text, $values) {

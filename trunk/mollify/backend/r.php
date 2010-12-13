@@ -45,7 +45,7 @@
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
 	
-	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime-types', array()), isSetting($SETTINGS, 'support_output_buffer')));
+	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime_types', array()), isSetting($SETTINGS, 'support_output_buffer')));
 	try {
 		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
 		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
