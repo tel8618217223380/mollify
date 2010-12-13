@@ -198,9 +198,11 @@
 			return $this->getHost().$root;
 		}
 		
-		public function utf8($s, $encode = TRUE) {
-			if (!$this->settings->setting("convert_utf8", TRUE)) return $s;
-			return Util::utf8($s, $encode);
+		public function convertCharset($s, $encode = TRUE) {
+			$cs = $this->settings->setting("convert_filenames", TRUE);
+			if (!$cs) return $s;
+			if ($cs === TRUE) $cs = NULL;
+			return Util::convertCharset($s, $cs, $encode);
 		}
 		
 		public function log() {

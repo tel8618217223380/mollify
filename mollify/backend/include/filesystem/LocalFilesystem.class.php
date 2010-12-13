@@ -79,7 +79,7 @@
 		}
 		
 		public function localPath($item) {
-			return $this->filesystemInfo->env()->utf8(self::joinPath($this->rootPath, $item->path()), FALSE);
+			return $this->filesystemInfo->env()->convertCharset(self::joinPath($this->rootPath, $item->path()), FALSE);
 		}
 		
 		public function details($item) {
@@ -116,8 +116,8 @@
 				if (substr($name, 0, 1) == '.') continue;
 				if (in_array(strtolower($name), $ignored)) continue;
 				
-				$itemName = $this->filesystemInfo->env()->utf8($name);
-				$path = $this->filesystemInfo->env()->utf8(self::joinPath($parentPath, $name));
+				$itemName = $this->filesystemInfo->env()->convertCharset($name);
+				$path = $this->filesystemInfo->env()->convertCharset(self::joinPath($parentPath, $name));
 
 				if (!is_dir($path)) {	
 					$p = $this->publicPath($path);

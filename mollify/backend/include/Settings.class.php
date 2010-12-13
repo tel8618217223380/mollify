@@ -35,7 +35,7 @@
 			"description_file" => "mollify.dsc",
 			"mail_notification_from" => "Admin",
 			"new_folder_permission_mask" => 0755,
-			"convert_utf8" => FALSE,
+			"convert_filenames" => FALSE,
 			"support_output_buffer" => FALSE,
 			"mail_notificator_class" => "mail/MailNotificator.class.php",
 			"url_retriever_class" => "UrlRetriever.class.php",
