@@ -17,6 +17,7 @@
 	require_once("services/ServicesBase.class.php");
 	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
+	require_once("KennyHWLCustomizations.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -46,6 +47,7 @@
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
 			$this->plugins = new PluginController($this);
+			$this->customizations = new KennyHWLCustomizations($this);
 			
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
@@ -100,6 +102,10 @@
 			return $this->request;
 		}
 
+		public function customizations() {
+			return $this->customizations;
+		}
+		
 		public function notificator() {
 			if ($this->notificator == NULL)
 				$this->notificator = $this->createMailNotificator();
