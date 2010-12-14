@@ -12,6 +12,7 @@
 
 	class Authentication {
 		const PERMISSION_VALUE_ADMIN = "A";
+		const PERMISSION_VALUE_STAFF = 'ST';
 		const PERMISSION_VALUE_READWRITE = "RW";
 		const PERMISSION_VALUE_READONLY = "RO";
 		const PERMISSION_VALUE_NO_RIGHTS = 'NO';
@@ -30,7 +31,7 @@
 		public function initialize() {}
 		
 		public function assertPermissionValue($value) {
-			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
+			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_STAFF and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
 		}
 		
