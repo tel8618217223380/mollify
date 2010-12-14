@@ -11,9 +11,8 @@
 function permissionModeFormatter(mode, options, obj) {
 	switch (mode.toLowerCase()) {
 		case 'a': return "Admin";
-		case 'rw': return "Read and Write";
-		case 'ro': return "Read Only";
-		case 'no': return "No Rights";
+		case 'st': return "Staff";
+		case 'no': return "Normal";
 		default: return "-";
 	}
 }

@@ -45,7 +45,7 @@ function MollifyUsersConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','E-mail','Permission Mode'],
+		   	colNames:['ID', 'Name','E-mail','Type'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
@@ -323,7 +323,7 @@ function MollifyUsersConfigurationView() {
 		$("#username").val("");
 		$("#email").val("");
 		$("#password").val("");
-		$("#permission").val("ro");
+		$("#permission").val("no");
 		$("#add-user-dialog").dialog('open');
 	}
 

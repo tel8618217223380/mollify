@@ -34,7 +34,7 @@
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
 			$this->registerSearcher(new FileSystemSearcher());
-			
+
 			FileEvent::register($this->env->events());
 		}
 		
@@ -206,7 +206,7 @@
 			$details["permission"] = $this->permission($item);
 			
 			foreach($this->detailsPlugins as $p) {
-				$l = $p->getItemDetails($item, $details);
+				$l = $p->getItemDetails($item);
 				if (!$l) continue;
 				
 				foreach($l as $k=>$v)
@@ -278,7 +278,7 @@
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
 				$parentId = $item->parent()->id();
-				if ($item->isFile() and array_key_exists($parentId, $this->permissionCache)) {
+				if (array_key_exists($parentId, $this->permissionCache)) {
 					$permission = $this->permissionCache[$parentId];
 					Logging::logDebug("Permission cache get [".$item->id()."->".$parentId."]=".$permission);
 				} else {

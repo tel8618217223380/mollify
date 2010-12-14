@@ -110,7 +110,7 @@
 			$items = scandir($parentPath);
 			if (!$items) throw new ServiceException("INVALID_PATH", $parent->id());
 			$ignored = $this->ignoredItems($this->publicPath($parentPath));
-				
+
 			$result = array();
 			foreach($items as $i => $name) {
 				if (substr($name, 0, 1) == '.') continue;
@@ -118,7 +118,7 @@
 				
 				$itemName = $this->filesystemInfo->env()->convertCharset($name);
 				$path = $this->filesystemInfo->env()->convertCharset(self::joinPath($parentPath, $name));
-
+				
 				if (!is_dir($path)) {	
 					$p = $this->publicPath($path);
 					$result[] = new File($this->itemId($p), $this->rootId(), $p, $itemName, $this);
