@@ -41,6 +41,10 @@
 			$p = new $id($this->env, $id, $settings);
 			if (!$p->isConfigurationSupported($this->env->configuration()->getType()))
 				return;
+			$this->registerPlugin($id, $p);
+		}
+		
+		public function registerPlugin($id, $p) {
 			$this->plugins[$id] = $p;
 		}
 		

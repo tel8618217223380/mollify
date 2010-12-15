@@ -104,7 +104,8 @@
 				"parent_id" => $this->parent()->publicId(),
 				"name" => $this->name,
 				"path" => $this->path,
-				"is_file" => $this->isFile()
+				"is_file" => $this->isFile(),
+				"is_protected" => $this->filesystem->isProtected($this)
 			);
 		}
 				

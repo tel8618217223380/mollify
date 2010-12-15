@@ -61,10 +61,10 @@
 		}
 		
 		private function getFolderDefs($all = FALSE) {
-			if ($this->env->configuration()->isAuthenticationRequired() and !$all)
-				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
-			else
+			if ($all or $this->env->authentication()->isAdminOrStaff())
 				$folderDefs = $this->env->configuration()->getFolders();
+			else
+				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
 
 			$list = array();
 			
@@ -107,6 +107,7 @@
 			
 			$result['filesystem'] = array(
 				"folder_separator" => DIRECTORY_SEPARATOR,
+				"inbox_path" => $this->env->customizations()->getInboxPath(),
 				"max_upload_file_size" => Util::inBytes(ini_get("upload_max_filesize")),
 				"max_upload_total_size" => Util::inBytes(ini_get("post_max_size")),
 				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
@@ -318,6 +319,8 @@
 		}
 
 		public function copy($item, $to) {
+			if ($this->env->customizations()->isProtected($item)) throw new ServiceException("INVALID_REQUEST", "Cannot copy protected item");
+			
 			Logging::logDebug('copying '.$item->id()."[".$item->path().'] to ['.$to.']');
 			
 			if (!$item->isFile() and $to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
@@ -343,6 +346,8 @@
 		}
 		
 		public function move($item, $to) {
+			if ($this->env->customizations()->isProtected($item)) throw new ServiceException("INVALID_REQUEST", "Cannot move protected item");
+			
 			Logging::logDebug('moving '.$item->id()."[".$item->path().'] to ['.$to.']');
 
 			if ($to->isFile()) throw new ServiceException("NOT_A_DIR", $to->path());
@@ -369,6 +374,7 @@
 		}
 		
 		public function delete($item) {
+			if ($this->env->customizations()->isProtected($item)) throw new ServiceException("INVALID_REQUEST", "Cannot delete protected item");
 			Logging::logDebug('deleting ['.$item->id().']');
 			
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");

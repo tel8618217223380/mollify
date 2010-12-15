@@ -36,13 +36,15 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class DemoData {
-	private static final List<User> users = Arrays.asList(User.create("1",
-			"Test User", UserPermissionMode.Admin), User.create("2",
-			"Another Test User", UserPermissionMode.ReadWrite), User.create(
-			"3", "Third Test User", UserPermissionMode.ReadOnly));
+	private static final List<User> users = Arrays
+			.asList(User.create("1", "Test User", UserPermissionMode.Admin),
+					User.create("2", "Another Test User",
+							UserPermissionMode.ReadWrite), User.create("3",
+							"Third Test User", UserPermissionMode.ReadOnly));
 
-	private static final List<UserGroup> groups = Arrays.asList(UserGroup
-			.create("g1", "Group 1"), UserGroup.create("g2", "Group 2"));
+	private static final List<UserGroup> groups = Arrays.asList(
+			UserGroup.create("g1", "Group 1"),
+			UserGroup.create("g2", "Group 2"));
 
 	private static final String ROOT_1 = "r1";
 	private static final String ROOT_2 = "r2";
@@ -73,8 +75,8 @@ public class DemoData {
 		this.multiUser = multiUser;
 		this.settings = FeatureInfo.create(true, true, true, true, true, true,
 				true, true, true, true, true, true);
-		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024, Arrays
-				.asList("txt", "gif"));
+		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024,
+				Arrays.asList("txt", "gif"));
 
 		createDirectoriesAndFiles();
 	}
@@ -89,21 +91,23 @@ public class DemoData {
 
 	private void createDirectoriesAndFiles() {
 		rootDirectories = JavaScriptObject.createArray().cast();
-		rootDirectories.set(0, JsFolder.create(ROOT_1, "", "Folder A", ""));
-		rootDirectories.set(1, JsFolder.create(ROOT_2, "", "Folder B", ""));
+		rootDirectories.set(0,
+				JsFolder.create(ROOT_1, "", "Folder A", "", false));
+		rootDirectories.set(1,
+				JsFolder.create(ROOT_2, "", "Folder B", "", false));
 
 		List<Folder> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
 
 		subDirs.add(new Folder(DIR_1A, ROOT_1, "Sub folder A", "Sub folder A/",
-				ROOT_1));
+				ROOT_1, false));
 		subDirs.add(new Folder(DIR_1B, ROOT_1, "Sub folder B", "Sub folder B/",
-				ROOT_1));
+				ROOT_1, false));
 
 		subDirs = new ArrayList();
 		directories.put(ROOT_2, subDirs);
 		subDirs.add(new Folder(DIR_2A, ROOT_2, "Sub folder A", "Sub folder A/",
-				ROOT_2));
+				ROOT_2, false));
 
 		files = new ArrayList();
 		files.add(new File(FILE_1A1, ROOT_1, "Example.txt", "Example.txt",

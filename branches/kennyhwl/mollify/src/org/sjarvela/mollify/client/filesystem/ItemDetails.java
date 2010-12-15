@@ -41,4 +41,9 @@ public class ItemDetails extends JavaScriptObject {
 	public final native void removeDescription() /*-{
 		this.description = null;
 	}-*/;
+
+	public final native boolean getBool(String name, boolean def) /*-{
+		if (this[name] != null && (String(this[name]) == 'true' || String(this[name]) == 'false')) return this[name];
+		return def;
+	}-*/;
 }

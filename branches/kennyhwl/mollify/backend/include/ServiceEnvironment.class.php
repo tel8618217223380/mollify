@@ -17,7 +17,7 @@
 	require_once("services/ServicesBase.class.php");
 	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
-	require_once("KennyHWLCustomizations.class.php");
+	require_once("customizations/KennyHWLCustomizations.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -131,6 +131,7 @@
 			$this->configurationProvider->initialize($this);
 			$this->filesystem->initialize();
 			$this->authentication->initialize();
+			$this->customizations->initialize($this);
 			$this->plugins->initialize($this);
 
 			$this->log();

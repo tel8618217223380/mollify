@@ -16,9 +16,19 @@
 		
 		protected $env;
 		
-		public function __construct($env) {
+		public function __construct() {
+		}
+		
+		public function initialize($env) {
 			$this->env = $env;
 			$this->env->filesystem()->registerDetailsPlugin($this);
+			
+			require_once("SharePlugin.plugin.class.php");
+			$this->env->plugins()->registerPlugin("SharePlugin", new SharePlugin($this->env, "SharePlugin", array()));
+		}
+		
+		public function getInboxPath() {
+			return self::$INBOX_NAME.DIRECTORY_SEPARATOR;
 		}
 		
 		public function onUserAdded($id, $user) {
@@ -37,13 +47,12 @@
 			$this->env->configuration()->addItemPermission($fs->root()->id(), Authentication::PERMISSION_VALUE_READWRITE, $id);
 		}
 		
+		public function isProtected($item) {
+			return ($item->path() === $this->getInboxPath());
+		}
+		
 		public function getItemDetails($item) {
-			if (!$item->isFile()) {
-				if ($item->path() === self::$INBOX_NAME.DIRECTORY_SEPARATOR)
-					return array("protected" => true);
-				return array("protected" => false);
-			}
-			return FALSE;
+			return array("protected" => $this->isProtected($item));
 		}
 		
 		public function __toString() {

@@ -27,6 +27,10 @@ public class FileSystemInfo extends JavaScriptObject {
 		return this.allowed_file_upload_types;
 	}-*/;
 
+	public final native String getInboxPath() /*-{
+		return this.inbox_path;
+	}-*/;
+	
 	public final List<String> getAllowedFileUploadTypes() {
 		return JsUtil.asList(getAllowedFileUploadTypesArray());
 	}

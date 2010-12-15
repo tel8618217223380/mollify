@@ -184,6 +184,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 	}
 
 	private void setupSecondaryActions(List<ContextActionItem> items) {
+		if (items == null)
+			return;
 		int index = 0;
 		for (ContextActionItem item : items) {
 			boolean first = (index == 0);

@@ -25,6 +25,7 @@ public abstract class FileSystemItem {
 	protected final String name;
 	protected final String path;
 	protected final String parentId;
+	protected final boolean isProtected;
 
 	public static File createFrom(JsFile file) {
 		return new File(file);
@@ -57,12 +58,13 @@ public abstract class FileSystemItem {
 	}
 
 	protected FileSystemItem(String id, String rootId, String name,
-			String path, String parentId) {
+			String path, String parentId, boolean isProtected) {
 		this.id = id;
 		this.rootId = rootId;
 		this.name = name;
 		this.path = path;
 		this.parentId = parentId;
+		this.isProtected = isProtected;
 	}
 
 	public String getId() {
@@ -83,6 +85,10 @@ public abstract class FileSystemItem {
 
 	public final String getParentId() {
 		return parentId;
+	}
+
+	public boolean isProtected() {
+		return isProtected;
 	}
 
 	public abstract boolean isFile();
@@ -109,6 +115,6 @@ public abstract class FileSystemItem {
 		return path.substring(0, path.length() - getName().length()
 				- (isFile() ? 0 : 1));
 	}
-	
+
 	public abstract JavaScriptObject asJs();
 }

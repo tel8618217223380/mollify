@@ -322,6 +322,10 @@
 			}
 		}
 		
+		public function isProtected($item) {
+			return $this->filesystemInfo->env()->customizations()->isProtected($item);
+		}
+		
 		public function __toString() {
 			return "LOCAL (".$this->id.") ".$this->name."(".$this->rootPath.")";
 		}

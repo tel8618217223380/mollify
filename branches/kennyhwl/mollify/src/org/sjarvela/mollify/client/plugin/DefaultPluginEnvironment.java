@@ -68,8 +68,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 				.addItemContextProvider(new NativeItemContextProvider(dp));
 	}
 
-	protected SessionInfo getSession() {
-		return sessionProvider.getSession();
+	protected JavaScriptObject getSession() {
+		return new NativeSession(sessionProvider.getSession()).asJs();
 	}
 
 	@Override
