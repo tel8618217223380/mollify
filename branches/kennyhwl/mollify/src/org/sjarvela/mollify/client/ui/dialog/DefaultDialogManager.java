@@ -67,4 +67,10 @@ public class DefaultDialogManager implements DialogManager {
 	public WaitDialog openWaitDialog(String title, String message) {
 		return new DefaultWaitDialog(textProvider, title, message);
 	}
+
+	@Override
+	public CustomContentDialog showCustomDialog(String title, String style,
+			Widget content, CustomDialogListener listener) {
+		return new DefaultCustomContentDialog(title, style, content, listener);
+	}
 }

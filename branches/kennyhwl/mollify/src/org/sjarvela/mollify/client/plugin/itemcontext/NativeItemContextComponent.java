@@ -55,6 +55,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	@Override
 	public boolean onInit(ItemContextContainer container, FileSystemItem item,
 			ItemDetails details) {
+		// TODO container
 		return invokeInit(component.getElement().getId(), item.asJs(), details);
 	}
 
