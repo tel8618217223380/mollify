@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		RenameHandler {
+	private static String INBOX_FOLDER = "";
 	private final EventDispatcher eventDispatcher;
 	private final ViewManager windowManager;
 	private final DialogManager dialogManager;
@@ -76,6 +77,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
+
+		INBOX_FOLDER = session.getFileSystemInfo().getInboxPath();
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action,
@@ -195,6 +198,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	}
 
 	private boolean canCopyTo(FileSystemItem item, Folder folder) {
+		if (!item.isFile() && item.getPath().equals(INBOX_FOLDER))
+			return false;
 		if (item.getParentId().equals(folder.getId()))
 			return false;
 		if (!item.isFile() && item.getRootId().equals(folder.getRootId())
@@ -217,6 +222,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			if (item.getParentId().equals(folder.getId()))
 				return false;
 		} else {
+			if (item.getPath().equals(INBOX_FOLDER))
+				return false;
+
 			// cannot move to itself
 			if (item.getId().equals(folder.getId()))
 				return false;

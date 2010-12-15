@@ -17,13 +17,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JsFolder extends JavaScriptObject {
 	public static JsFolder create(Folder folder) {
 		return create(folder.getId(), folder.getRootId(), folder.getName(),
-				folder.getParentId());
+				folder.getParentId(), folder.isProtected());
 	}
 
 	public static JsFolder create(String id, String rootId, String name,
-			String parentId) {
+			String parentId, boolean isProtected) {
 		JsFolder result = JsFolder.createObject().cast();
-		result.putValues(id, rootId, name, parentId);
+		result.putValues(id, rootId, name, parentId, isProtected);
 		return result;
 	}
 
@@ -50,12 +50,18 @@ public class JsFolder extends JavaScriptObject {
 		return this.parent_id;
 	}-*/;
 
+	public final native boolean isProtected() /*-{
+		if (!this.is_protected) return false;
+		return this.is_protected;
+	}-*/;
+
 	private final native void putValues(String id, String rootId, String name,
-			String parentId) /*-{
+			String parentId, boolean isProtected) /*-{
 		this.id = id;
 		this.root_id = rootId;
 		this.name = name;
 		this.parent_id = parentId;
+		this.is_protected = isProtected;
 	}-*/;
 
 }

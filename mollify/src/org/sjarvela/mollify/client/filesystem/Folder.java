@@ -9,21 +9,21 @@ public class Folder extends FileSystemItem {
 	public static FileSystemItem Parent = new Folder("..");
 
 	private Folder(String name) {
-		super("", "", name, "", "");
+		super("", "", name, "", "", false);
 	}
 
 	private Folder() {
-		super("", "", "", "", "");
+		super("", "", "", "", "", false);
 	}
 
 	protected Folder(JsFolder dir) {
 		this(dir.getId(), dir.getRootId(), dir.getName(), dir.getPath(), dir
-				.getParentId());
+				.getParentId(), dir.isProtected());
 	}
 
 	public Folder(String id, String rootId, String name, String path,
-			String parentId) {
-		super(id, rootId, name, path, parentId);
+			String parentId, boolean isProtected) {
+		super(id, rootId, name, path, parentId, isProtected);
 	}
 
 	@Override

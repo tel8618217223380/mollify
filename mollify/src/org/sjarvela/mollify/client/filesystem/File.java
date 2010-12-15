@@ -21,7 +21,7 @@ public class File extends FileSystemItem {
 	private final Long size;
 
 	private File() {
-		super("", "", "", "", "");
+		super("", "", "", "", "", false);
 		extension = "";
 		size = 0l;
 	}
@@ -33,7 +33,7 @@ public class File extends FileSystemItem {
 
 	public File(String id, String rootId, String name, String path,
 			String parentId, String extension, long size) {
-		super(id, rootId, name, path, parentId);
+		super(id, rootId, name, path, parentId, false);
 		this.extension = extension;
 		this.size = size;
 	}

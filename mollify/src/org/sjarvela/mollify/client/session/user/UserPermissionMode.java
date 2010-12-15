@@ -4,7 +4,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 
 public enum UserPermissionMode {
-	Admin("a"), ReadWrite("rw"), ReadOnly("ro"), None("-");
+	Admin("a"), Staff("st"), ReadWrite("rw"), ReadOnly("ro"), None("-");
 
 	private final String value;
 
@@ -20,7 +20,7 @@ public enum UserPermissionMode {
 	}
 
 	public boolean hasWritePermission() {
-		return this.equals(Admin) || this.equals(ReadWrite);
+		return this.equals(Admin) || this.equals(Staff) || this.equals(ReadWrite);
 	}
 
 	public String getStringValue() {
@@ -40,5 +40,9 @@ public enum UserPermissionMode {
 
 	public boolean isAdmin() {
 		return this.equals(Admin);
+	}
+
+	public boolean isStaff() {
+		return this.equals(Staff);
 	}
 }

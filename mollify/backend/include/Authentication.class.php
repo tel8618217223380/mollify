@@ -93,7 +93,7 @@
 		}
 		
 		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
-			if ($this->isAdmin() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
+			if ($this->isAdminOrStaff() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
 					
 			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
 				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;
@@ -106,12 +106,12 @@
 		}
 		
 		public function hasReadRights($permission) {
-			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
+			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_STAFF) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
 		}
 		
 		function hasModifyRights() {
 			$base = $this->getDefaultPermission();
-			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE);
+			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_STAFF || $base === self::PERMISSION_VALUE_READWRITE);
 		}
 
 		function assertAdmin() {
@@ -121,7 +121,11 @@
 		function isAdmin() {
 			return ($this->isAuthenticated() and ($this->getDefaultPermission() === self::PERMISSION_VALUE_ADMIN));
 		}
-		
+
+		function isAdminOrStaff() {
+			return ($this->isAuthenticated() and ($this->isAdmin() or $this->getDefaultPermission() === self::PERMISSION_VALUE_STAFF));
+		}
+				
 		public function log() {
 			Logging::logDebug("AUTH: is_authentication_required=".$this->isAuthenticationRequired().", is_authenticated=".$this->isAuthenticated());
 		}

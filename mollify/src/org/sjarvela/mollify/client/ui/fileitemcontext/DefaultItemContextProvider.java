@@ -76,14 +76,16 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 
 	private void createActions(FileSystemItem item, ItemDetails details,
 			ItemContextActionsBuilder actions) {
-		boolean writable = isWritable(item, details);
+		boolean isProtected = details.getBool("protected", false);
+		boolean writable = !isProtected && isWritable(item, details);
 
 		createDownloadActions(item,
 				actions.type(ItemContext.ActionType.Download));
 		createPrimaryActions(item, details,
 				actions.type(ItemContext.ActionType.Primary));
-		createSecondaryActions(item,
-				actions.type(ItemContext.ActionType.Secondary), writable);
+		if (!isProtected)
+			createSecondaryActions(item,
+					actions.type(ItemContext.ActionType.Secondary), writable);
 	}
 
 	private boolean isWritable(FileSystemItem item, ItemDetails details) {
