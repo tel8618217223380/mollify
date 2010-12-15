@@ -27,7 +27,7 @@ function SharePlugin() {
 			components : [
 				{
 					type: "custom",
-					html: "",
+					html: "<div class='share-plugin'><a id='share-link'>Share</a></div>",
 					on_init: that.onInit
 				}
 			]
@@ -35,11 +35,24 @@ function SharePlugin() {
 	}
 	
 	this.onInit = function(id, item, details) {
-		$("#"+id).html("<div class='share-plugin'><a id='share-link'>Share</a></div>");
 		$("#share-link").click(function() { that.onShare(item); });
 	}
 	
 	this.onShare = function(item) {
-		alert("todo");
+		that.env.dialog().showDialog({
+			title: "Share",
+			html: that.getDialogContent(item),
+			on_show: that.onShowDialog
+		});
+	}
+	
+	this.getDialogContent = function(item) {
+		return "<div id='share-dialog-content'>"+
+			"<a id='share-dialog-close'>Close</a>"+
+			"</div>";
+	}
+	
+	this.onShowDialog = function(d) {
+		$("#share-dialog-close").click(function(){ d.close() });
 	}
 }

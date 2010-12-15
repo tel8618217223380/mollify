@@ -12,11 +12,14 @@ package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
+import org.sjarvela.mollify.client.ui.dialog.CustomContentDialog;
+import org.sjarvela.mollify.client.ui.dialog.CustomDialogListener;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.ui.HTML;
 
 public class NativeDialogManager {
 	private final DialogManager dialogManager;
@@ -99,7 +102,35 @@ public class NativeDialogManager {
 
 	protected void showDialog(JavaScriptObject s) {
 		JsObj spec = s.cast();
+		String html = spec.getString("html");
+		String title = spec.getString("title");
+		String style = spec.hasValue("style") ? "custom" : spec
+				.getString("style");
+		final JavaScriptObject cb = spec.getJsObj("on_show");
 
+		dialogManager.showCustomDialog(title, style, new HTML(html),
+				new CustomDialogListener() {
+					@Override
+					public void onShow(CustomContentDialog d) {
+						invokeNativeValueCallback(
+								cb,
+								createNativeCustomDialog(
+										NativeDialogManager.this, d));
+					}
+				});
+	}
+
+	private native final JavaScriptObject createNativeCustomDialog(
+			NativeDialogManager dm, CustomContentDialog d) /*-{
+		var o = {};
+		o.close = function() {
+			dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::closeCustom(Lorg/sjarvela/mollify/client/ui/dialog/CustomContentDialog;)(d);
+		};
+		return o;
+	}-*/;
+
+	protected void closeCustom(CustomContentDialog d) {
+		d.close();
 	}
 
 	protected JavaScriptObject showWait(String title, String message) {

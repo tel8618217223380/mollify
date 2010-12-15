@@ -31,4 +31,7 @@ public interface DialogManager {
 
 	WaitDialog openWaitDialog(String title, String message);
 
+	CustomContentDialog showCustomDialog(String title, String style, Widget content,
+			CustomDialogListener listener);
+
 }
