@@ -22,9 +22,7 @@
 		public function initialize($env) {
 			$this->env = $env;
 			$this->env->filesystem()->registerDetailsPlugin($this);
-			
-			require_once("SharePlugin.plugin.class.php");
-			$this->env->plugins()->registerPlugin("SharePlugin", new SharePlugin($this->env, "SharePlugin", array()));
+			$this->env->plugins()->addPlugin("SharePlugin", array());
 		}
 		
 		public function getInboxPath() {

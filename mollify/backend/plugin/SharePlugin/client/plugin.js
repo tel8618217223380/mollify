@@ -104,6 +104,12 @@ function SharePlugin() {
 		if (!permission) return;
 		
 		var selected = $("input:checkbox[@name=share-user]:checked").map(function() { return $(this).val(); });
-		alert(selected.length);
+		if (selected.length == 0) return;
+		
+		that.env.service().post("share/"+that.item.id, {users:selected, permission:permission}, function(result) {
+			that.dialog.close();
+		}, function(code, error) {
+			alert("ERROR "+code);
+		});
 	}
 }
