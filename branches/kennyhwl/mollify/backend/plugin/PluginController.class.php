@@ -27,12 +27,9 @@
 			
 			foreach($PLUGINS as $p => $settings)
 				$this->addPlugin($p, $settings);
-			
-			foreach($this->plugins as $id => $p)
-				$p->setup();
 		}
 		
-		private function addPlugin($id, $settings) {
+		public function addPlugin($id, $settings) {
 			$cls = $id."/".$id.".plugin.class.php";
 			$path = dirname(__FILE__).DIRECTORY_SEPARATOR.$cls;
 			if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Plugin not found: ".$id);
@@ -46,6 +43,7 @@
 		
 		public function registerPlugin($id, $p) {
 			$this->plugins[$id] = $p;
+			$p->setup();
 		}
 		
 		public function getPlugins() {
