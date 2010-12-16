@@ -55,8 +55,21 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	@Override
 	public boolean onInit(ItemContextContainer container, FileSystemItem item,
 			ItemDetails details) {
-		// TODO container
-		return invokeInit(component.getElement().getId(), item.asJs(), details);
+		return invokeInit(component.getElement().getId(),
+				createJsContainer(this, container), item.asJs(), details);
+	}
+
+	private final native JavaScriptObject createJsContainer(
+			NativeItemContextComponent c, ItemContextContainer container) /*-{
+		var o = {};
+		o.close = function() {
+			c.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::closeContainer(Lorg/sjarvela/mollify/client/ui/fileitemcontext/ItemContextContainer;)(container);
+		}
+		return o;
+	}-*/;
+
+	public void closeContainer(ItemContextContainer container) {
+		container.close();
 	}
 
 	@Override
@@ -65,10 +78,11 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	}
 
 	private final native boolean invokeInit(String elementId,
-			JavaScriptObject item, JavaScriptObject details) /*-{
+			JavaScriptObject container, JavaScriptObject item,
+			JavaScriptObject details) /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::onInit;
 		if (!cb) return;
-		var ret = cb(elementId, item, details);
+		var ret = cb(elementId, container, item, details);
 		return !(ret == false);
 	}-*/;
 
