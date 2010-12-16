@@ -108,7 +108,10 @@
 		
 		private function processGetUsers() {
 			if (count($this->path) == 1) {
-				$this->response()->success($this->env->configuration()->getAllUsers());
+				if ($this->request->hasParam("t"))
+					$this->response()->success($this->env->configuration()->getAllUsers($this->request->param("t")));
+				else
+					$this->response()->success($this->env->configuration()->getAllUsers());
 				return;
 			}
 			$userId = $this->path[1];

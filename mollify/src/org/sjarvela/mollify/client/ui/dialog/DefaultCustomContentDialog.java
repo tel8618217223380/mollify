@@ -1,11 +1,11 @@
 package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.ui.ViewListener;
-import org.sjarvela.mollify.client.ui.common.dialog.CenteredDialog;
+import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultCustomContentDialog extends CenteredDialog implements
+public class DefaultCustomContentDialog extends ResizableDialog implements
 		CustomContentDialog {
 	private final Widget content;
 
@@ -17,10 +17,12 @@ public class DefaultCustomContentDialog extends CenteredDialog implements
 		this.addViewListener(new ViewListener() {
 			@Override
 			public void onShow() {
+				DefaultCustomContentDialog.this.setMinimumSizeToCurrent();
 				listener.onShow(DefaultCustomContentDialog.this);
 			}
 		});
 		this.initialize();
+		this.center();
 	}
 
 	@Override

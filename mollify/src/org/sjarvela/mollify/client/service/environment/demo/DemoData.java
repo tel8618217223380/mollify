@@ -92,9 +92,9 @@ public class DemoData {
 	private void createDirectoriesAndFiles() {
 		rootDirectories = JavaScriptObject.createArray().cast();
 		rootDirectories.set(0,
-				JsFolder.create(ROOT_1, "", "Folder A", "", false));
+				JsFolder.create(ROOT_1, "", "Folder A", "", "", false));
 		rootDirectories.set(1,
-				JsFolder.create(ROOT_2, "", "Folder B", "", false));
+				JsFolder.create(ROOT_2, "", "Folder B", "", "", false));
 
 		List<Folder> subDirs = new ArrayList();
 		directories.put(ROOT_1, subDirs);
