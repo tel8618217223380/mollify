@@ -100,13 +100,14 @@ function SharePlugin() {
 	}
 	
 	this.onShareItem = function() {
-		var permission = $("input[@name=permission]:checked").val();
-		if (!permission) return;
+		var p = $("input:radio[@name=permission]:checked").val();
+		if (!p) return;
 		
-		var selected = $("input:checkbox[@name=share-user]:checked").map(function() { return $(this).val(); });
+		var selected = [];
+		$("input:checkbox[@name=share-user]:checked").map(function() { selected.push($(this).val()); });
 		if (selected.length == 0) return;
 		
-		that.env.service().post("share/"+that.item.id, {users:selected, permission:permission}, function(result) {
+		that.env.service().post("share/"+that.item.id, {users:selected, permission:p}, function(result) {
 			that.dialog.close();
 		}, function(code, error) {
 			alert("ERROR "+code);
