@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.6 ===
+  * Added new languages: fr, it, kr and ru
+  * Added default timezone in backend
+  * Fixed issue 175
+
 === Version 1.7.5 ===
   * New localization mechanism (NOTE! see breaking changes)
   * Extract zip archives
