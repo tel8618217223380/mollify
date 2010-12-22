@@ -21,6 +21,8 @@ CREATE TABLE `{TABLE_PREFIX}folder` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
+  `quota` INT(8) UNSIGNED NOT NULL DEFAULT '0',
+  `quota_used` INT(8) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify published folders';
 
@@ -60,3 +62,11 @@ CREATE TABLE `{TABLE_PREFIX}event_log` (
   `details` varchar(1024) NULL,
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify event log';
+
+CREATE TABLE `{TABLE_PREFIX}item_share` (
+  `from_user_id` int(11) NOT NULL,
+  `from_item_id` char(255) NOT NULL,
+  `to_user_id` int(11) NOT NULL,
+  `to_item_id` char(255) NOT NULL,
+  PRIMARY KEY (`from_item_id`,`to_user_id`)
+) COLLATE utf8_general_ci COMMENT = 'Mollify item shares';

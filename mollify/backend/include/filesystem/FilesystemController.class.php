@@ -60,6 +60,18 @@
 			return $list;
 		}
 		
+		public function getRootFolderInfos() {
+			$list = array();
+			
+			foreach($this->getFolderDefs(FALSE) as $folderDef) {				
+				$root = $this->filesystem($folderDef, TRUE)->root();
+				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
+				$list[$folderDef['id']] = array("root" => $root, "info" => $folderDef);
+			}
+			
+			return $list;
+		}
+		
 		private function getFolderDefs($all = FALSE) {
 			if ($all or $this->env->authentication()->isAdminOrStaff())
 				$folderDefs = $this->env->configuration()->getFolders();
@@ -114,13 +126,17 @@
 			);
 			
 			$result["folders"] = array();
-			foreach($this->getRootFolders() as $id => $folder) {
+			foreach($this->getRootFolderInfos() as $id => $folderInfo) {
+				$folder = $folderInfo["root"];
+				$info = $folderInfo["info"];
 				$result["folders"][] = array(
 					"id" => $folder->publicId(),
 					"name" => $folder->name(),
 					"parent_id" => NULL,
 					"root_id" => $folder->publicId(),
-					"path" => ""
+					"path" => "",
+					"quota" => (isset($info["quota"]) ? $info["quota"] : 0),
+					"quota_used" => (isset($info["quota_used"]) ? $info["quota_used"] : 0)
 				);
 			}
 
@@ -307,6 +323,7 @@
 			Logging::logDebug('rename from ['.$item->path().'] to ['.$name.']');
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "rename");
 			
+			$this->env->customizations()->onBeforeRename($item);
 			$to = $item->rename($name);
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
@@ -380,6 +397,7 @@
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "delete");
 			
+			$this->env->customizations()->onBeforeDelete($item);
 			$item->delete();
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))
@@ -654,6 +672,10 @@
 
 		public function item() {
 			return $this->item;
+		}
+		
+		public function info() {
+			return $this->info;
 		}
 
 		public function itemToStr() {
