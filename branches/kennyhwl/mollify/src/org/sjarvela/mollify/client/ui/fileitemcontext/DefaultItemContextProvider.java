@@ -152,8 +152,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 			contextComponents.add(createPreviewComponent());
 		if (item.isFile())
 			contextComponents.add(createDetailsComponent());
-		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
-			contextComponents.add(createPermissionsComponent());
+//		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
+//			contextComponents.add(createPermissionsComponent());
 	}
 
 	private ItemContextComponent createDescriptionComponent() {

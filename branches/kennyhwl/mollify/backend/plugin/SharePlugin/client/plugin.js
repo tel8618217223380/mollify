@@ -80,8 +80,8 @@ function SharePlugin() {
 		$("#share-dialog-share").click(that.onShareItem);
 		$("#share-dialog-close").click(function(){ d.close() });
 		
-		that.env.service().get("configuration/users?t=no", function(result) {
-			that.updateUsers(result);
+		that.env.service().get("share/"+item.id+"/info", function(result) {
+			that.updateUsers(result.users);
 		}, function(code, error) {
 			alert("ERROR "+code);
 		});

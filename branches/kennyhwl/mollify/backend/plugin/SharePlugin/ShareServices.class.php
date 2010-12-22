@@ -12,18 +12,44 @@
 
 	class ShareServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) == 1;
+			return count($path) == 1 or count($path) == 2;
 		}
 		
 		public function isAuthenticationRequired() {
 			return TRUE;
 		}
 		
+		public function processGet() {
+			if (count($this->path) != 2 or $this->path[1] != 'info') throw $this->invalidRequestException();		
+
+			$item = $this->item($this->path[0]);
+			$currentUser = $this->getFolderUser($item);
+			if (!$currentUser) throw new ServiceException("REQUEST_FAILED");
+			
+			$users = $this->env->configuration()->getAllUsers("no");
+			$available = array();
+			foreach($users as $user) {
+				if ($user["id"] === $currentUser["id"]) continue;
+				$available[] = $user;
+			}
+			$this->response()->success(array("users" => $available));
+		}
+		
+		private function getFolderUser($item) {
+			$users = $this->env->configuration()->getFolderUsers($item->rootId());
+			if (!$users or count($users) < 1) return FALSE;
+			return $users[0];
+		}
+		
 		public function processPost() {
+			if (count($this->path) != 1) throw $this->invalidRequestException();		
+
 			$item = $this->item($this->path[0]);			
 			$data = $this->request->data;
 			
 			if (!isset($data['users']) or !isset($data['permission'])) throw $this->invalidRequestException();
+			$fromUserId = $this->getUserForItem($item);
+			if (!$fromUserId) throw new ServiceException("REQUEST_FAILED", "Could not resolve user");
 			
 			foreach($data['users'] as $id) {
 				$userFolder = $this->getUserFolder($id);
@@ -34,16 +60,28 @@
 				
 				$target = $this->shareTo($item, $userFolder);
 				if ($target != NULL) {
-					$this->env->configuration()->addItemPermission($target->id(), $data['permission'], $id);
+					$p = $data['permission'];
+					if (strcasecmp(Authentication::PERMISSION_VALUE_READWRITE, $p) != 0)
+						$this->env->configuration()->addItemPermission($target->id(), $p, $id);
 					Logging::logDebug("Item ".$item->id()." shared with user ".$id);
 				} else {
 					Logging::logDebug("Item ".$item->id()." not shared with user ".$id);
 				}
+				
+				$this->addShareToDb($fromUserId, $item, $id, $target);
 			}
 
 			$this->response()->success(array());
 		}
 		
+		private function getUserForItem($item) {
+			$users = $this->env->configuration()->getFolderUsers($item->rootId());
+			if (!$users or count($users) == 0) return NULL;
+			
+			$user = $users[0];
+			return $user["id"];
+		}	
+	
 		private function getUserFolder($userId) {
 			$folders = $this->env->configuration()->getUserFolders($userId);
 			if (!$folders or count($folders) == 0) return NULL;
@@ -59,6 +97,11 @@
 			
 			if (!symlink($item->internalPath(), $target->internalPath())) return NULL;
 			return $target;
+		}
+
+		private function addShareToDb($fromUser, $fromItem, $toUser, $toItem) {
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("INSERT INTO ".$db->table("item_share")." (`from_user_id`, `from_item_id`, `to_user_id`, `to_item_id`) VALUES (%s, %s, %s, %s)", $db->string($fromUser, TRUE), $db->string($fromItem->id(), TRUE), $db->string($toUser, TRUE), $db->string($toItem->id(), TRUE)));
 		}
 		
 		public function __toString() {
