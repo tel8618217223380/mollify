@@ -47,7 +47,7 @@
 		}
 
 		public function onEvent($e) {
-			if ($e->subType() !== FileEvent::RENAME) return;
+			if ($e->subType() !== FileEvent::RENAME and $e->subType() !== FileEvent::MOVE) return;
 			
 			$item = $e->item();
 			$shared = $this->isShared($item);
@@ -62,7 +62,7 @@
 			if ($shared === 'FROM') {
 				foreach($this->getSharedTo($item) as $to) {
 					$copy = $this->env->filesystem()->item($to["to_item_id"], TRUE);
-					$copyPath = $copy->internalPath();
+					$copyPath = rtrim($copy->internalPath(), DIRECTORY_SEPARATOR);
 
 					// TODO if copy name needs to change as well, all permissions, descriptions etc must be renamed as well
 					// but in this case user should not be able to rename the shared copy at all
@@ -70,10 +70,10 @@
 					//$toItem->isFile() ? $toItem->parent()->fileWithName($e->info()->name()) : $toItem->parent()->folderWithName($e->info()->name());
 					
 					if (file_exists($copyPath)) {
-						Logging::logDebug("Could not rename shared copy, item with same name exists already:".$copyPath);
+						Logging::logDebug("Could not read shared copy, item with same name exists already:".$copyPath);
 					} else {
 						if (!symlink($toItem->internalPath(), $copyPath))
-							Logging::logDebug("Readding shared copy failed: ".$copyPath);
+							Logging::logDebug("Reading shared copy failed: ".$copyPath);
 					}
 				}
 
@@ -101,11 +101,22 @@
 			foreach($this->getSharedTo($item) as $to) {
 				$id = $to["to_item_id"];
 				$copy = $this->env->filesystem()->item($id);
-				unlink($copy->internalPath());
+				
+				$path = rtrim($copy->internalPath(), DIRECTORY_SEPARATOR);
+				unlink($path);
 			}
 		}
 
 		public function onBeforeRename($item) {
+			$shared = $this->isShared($item);
+			if (!$shared) return;
+
+			// remove symbolic links before rename, and add new ones afterwards
+			if ($shared === 'FROM')
+				$this->deleteAllSharedCopies($item);
+		}
+		
+		public function onBeforeMove($item) {
 			$shared = $this->isShared($item);
 			if (!$shared) return;
 

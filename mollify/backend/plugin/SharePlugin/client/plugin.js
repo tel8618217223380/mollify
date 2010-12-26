@@ -22,12 +22,22 @@ function SharePlugin() {
 	
 	this.getItemContext = function(item, details) {
 		if (!that.env.session().isAdminOrStaff() || item["is_protected"] || item.path == '') return null;
-		
+		if (details["shared"] == 'TO') {
+			return {
+				components : [
+					{
+						type: "custom",
+						html: "<div id='share-plugin' style='width:100%'><div id='share-link' style='float:right'><i>Shared item</i></div></div>",
+						on_init: function(id, c, i, d) {}
+					}
+				]
+			};
+		}
 		return {
 			components : [
 				{
 					type: "custom",
-					html: "<div id='share-link' class='mollify-actionlink'>Share with...</div>",
+					html: "<div id='share-plugin' style='width:100%'><div id='share-link' class='mollify-actionlink' style='float:right'>Share with...</div></div>",
 					on_init: that.onInit
 				}
 			]
