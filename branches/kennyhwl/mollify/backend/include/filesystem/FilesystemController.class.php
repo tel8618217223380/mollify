@@ -371,6 +371,7 @@
 			$this->assertRights($item, Authentication::RIGHTS_READ, "move");
 			$this->assertRights($to, Authentication::RIGHTS_WRITE, "move");
 
+			$this->env->customizations()->onBeforeMove($item);
 			$to = $item->move($to);
 			
 			if ($this->env->features()->isFeatureEnabled("description_update"))

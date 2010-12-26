@@ -65,7 +65,7 @@
 						$this->env->configuration()->addItemPermission($target->id(), $p, $id);
 					Logging::logDebug("Item ".$item->id()." shared with user ".$id);
 				} else {
-					Logging::logDebug("Item ".$item->id()." not shared with user ".$id);
+					Logging::logDebug("Item ".$item->id()." share failed with user ".$id);
 				}
 				
 				$this->addShareToDb($fromUserId, $item, $id, $target);
@@ -95,7 +95,14 @@
 			if ($item->isFile()) $target = $to->fileWithName($item->name(), TRUE);
 			else $target = $to->folderWithName($item->name(), TRUE);
 			
-			if (!symlink($item->internalPath(), $target->internalPath())) return NULL;
+			$fromPath = $item->internalPath();
+			// links are always made as files
+			$toPath = rtrim($target->internalPath(), DIRECTORY_SEPARATOR);
+			
+			Logging::logDebug("Sharing ".$fromPath." => ".$toPath);
+			if (!@symlink($fromPath, $toPath)) return NULL;
+			
+			if (!$item->isFile()) return $to->folderWithName($item->name());
 			return $target;
 		}
 
