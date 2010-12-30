@@ -78,7 +78,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
 
-		INBOX_FOLDER = session.getFileSystemInfo().getInboxPath();
+		if (session != null)
+			INBOX_FOLDER = session.getFileSystemInfo().getInboxPath();
 	}
 
 	public void onAction(FileSystemItem item, FileSystemAction action,

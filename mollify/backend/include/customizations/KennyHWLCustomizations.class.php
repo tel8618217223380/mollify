@@ -23,7 +23,7 @@
 			$this->env = $env;
 			$this->env->filesystem()->registerDetailsPlugin($this);
 			$this->env->events()->register("filesystem/", $this);
-			$this->env->plugins()->addPlugin("SharePlugin", array());
+			//$this->env->plugins()->addPlugin("SharePlugin", array());
 		}
 		
 		public function getInboxPath() {
@@ -47,6 +47,10 @@
 		}
 
 		public function onEvent($e) {
+			if ($e->subType() === FileEvent::UPLOAD) {
+				// remove quota
+				return;
+			}
 			if ($e->subType() !== FileEvent::RENAME and $e->subType() !== FileEvent::MOVE) return;
 			
 			$item = $e->item();
@@ -85,7 +89,10 @@
 		
 		public function onBeforeDelete($item) {
 			$shared = $this->isShared($item);
-			if (!$shared) return;
+			if (!$shared) {
+				// restore quota
+				return;
+			}
 
 			if ($shared === 'FROM')
 				$this->deleteAllSharedCopies($item);
