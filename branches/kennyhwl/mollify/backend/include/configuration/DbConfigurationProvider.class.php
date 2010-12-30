@@ -176,7 +176,7 @@
 		}
 	
 		public function getFolders() {
-			return $this->db->query("SELECT id, name, path FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, path, quota, quota_used FROM ".$this->db->table("folder")." ORDER BY id ASC")->rows();
 		}
 
 		public function getFolder($id) {

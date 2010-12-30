@@ -344,15 +344,24 @@
 			}
 			
 			if (count($this->path) == 3) {
-				$id = $this->path[1];		
-				$users = $this->request->data;
+				$id = $this->path[1];
 				
 				switch ($this->path[2]) {
+					case 'quota':
+						$size = $this->request->data["size"];
+						
+						$db = $this->env->configuration()->db();
+						$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota=%s WHERE id='%s'", $size, $db->string($id)));
+						
+						$this->response()->success(TRUE);
+						return;
 					case 'users':
+						$users = $this->request->data;
 						$this->env->configuration()->addFolderUsers($id, $users);
 						$this->response()->success(TRUE);
 						return;
 					case 'remove_users':
+						$users = $this->request->data;
 						$this->env->configuration()->removeFolderUsers($id, $users);
 						$this->response()->success(TRUE);
 					return;

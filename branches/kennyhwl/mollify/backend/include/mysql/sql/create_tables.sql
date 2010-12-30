@@ -21,8 +21,8 @@ CREATE TABLE `{TABLE_PREFIX}folder` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
-  `quota` INT(8) UNSIGNED NOT NULL DEFAULT '0',
-  `quota_used` INT(8) UNSIGNED NOT NULL DEFAULT '0',
+  `quota` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `quota_used` BIGINT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify published folders';
 

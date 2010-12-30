@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli J‰rvel‰
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,6 +18,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		$("#button-add-folder").click(that.openAddFolder);
 		$("#button-remove-folder").click(that.onRemoveFolder);
 		$("#button-edit-folder").click(that.openEditFolder);
+		$("#button-set-quota").click(that.onSetQuota);
 		$("#button-refresh-folders").click(that.refresh);
 
 		$("#folders-list").jqGrid({
@@ -25,11 +26,13 @@ function MollifyPublishedFoldersConfigurationView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name','Path'],
+		   	colNames:['ID', 'Name','Path','Quota', 'Quota Used'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
 				{name:'path',index:'path',width:150, sortable:true},
+				{name:'quota',index:'quota',width:100, sortable:true, sorttype:"int", formatter: that.quotaSizeFormatter},
+				{name:'quota_used',index:'quota_used',width:50, sortable:true, sorttype:"int", formatter: that.quotaUsedFormatter}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -73,6 +76,16 @@ function MollifyPublishedFoldersConfigurationView() {
 		});
 
 		that.refresh();
+	}
+	
+	this.quotaSizeFormatter = function(name, options, folder) {
+		if (folder.quota == 0) return "";
+		return ((folder.quota / 1024) / 1024) + " Mb";
+	}
+
+	this.quotaUsedFormatter = function(name, options, folder) {
+		if (folder.quota == 0) return "";
+		return ((folder.quota_used / folder.quota) * 100) + "%";
 	}
 	
 	this.getFolder = function(id) {
@@ -147,6 +160,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		
 		enableButton("button-remove-folder", selected);
 		enableButton("button-edit-folder", selected);
+		enableButton("button-set-quota", selected);
 		
 		that.folderUsers = null;
 		
@@ -379,5 +393,51 @@ function MollifyPublishedFoldersConfigurationView() {
 		var sel = that.getSelectedFolderUsers();
 		if (sel.length == 0) return;
 		removeFolderUsers(that.getSelectedFolder(), sel, that.refreshFolderUsers, onServerError);
+	}
+	
+	this.onSetQuota = function() {
+		var id = that.getSelectedFolder();
+		if (id == null) return;
+		folder = that.getFolder(id);
+		
+		if (!that.setQuotaDialogInit) {
+			that.setQuotaDialogInit = true;
+					
+			$("#set-quota-dialog").dialog({
+				autoOpen: false,
+				bgiframe: true,
+				height: 'auto',
+				width: 300,
+				modal: true,
+				resizable: false,
+				buttons: {},
+				title: 'Set Quota'
+			});
+		}
+		
+		onSuccess = function() {
+			$("#set-quota-dialog").dialog('close');
+			that.refresh();
+		}
+		
+		var buttons = {
+			OK: function() {
+				var sizeText = $("#quota-size-field").val();
+				if (sizeText.length == 0) return;
+
+				var size = parseInt(sizeText);
+				if (!size && size != 0) return;
+				
+				var data = JSON.stringify({size:((size * 1024)*1024)});
+				request("POST", 'configuration/folders/' + id + '/quota', onSuccess, onServerError, data);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#quota-size-field").val((folder.quota/1024)/1024);
+		$("#set-quota-dialog").dialog('option', 'buttons', buttons);
+		$("#set-quota-dialog").dialog('open');
 	}
 }

@@ -1,5 +1,5 @@
 <!--
-	Copyright (c) 2008- Samuli Järvelä
+	Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -13,6 +13,7 @@
 		<button id="button-add-folder" class="ui-state-default ui-corner-all">Add Folder</button>
 		<button id="button-edit-folder" class="ui-state-default ui-state-disabled ui-corner-all">Edit Folder</button>
 		<button id="button-remove-folder" class="ui-state-default ui-state-disabled ui-corner-all">Remove Folder</button>
+		<button id="button-set-quota" class="ui-state-default ui-state-disabled ui-corner-all">Set Quota</button>
 		<button id="button-refresh-folders" class="ui-state-default ui-corner-all">Refresh</button>
 	</div>
 	<table id="folders-list">
@@ -67,4 +68,11 @@
 <div id="remove-folder-confirmation-dialog" style="display:none">
 	<p>Are you sure you want to remove folder <span id="removed-folder-info"></span> from published list?</p>
 	<div class='titled-checkbox' id='delete-folder-contents-panel'><input id='delete-folder-contents' type="checkbox"/>Delete folder and its contents</div>
+</div>
+
+<div id="set-quota-dialog" style="display:none">
+	<div class='form-data' id='folder-name'>
+		<div class='title'>Quota size (Mb):</div>
+		<input id='quota-size-field' class='form-data-value' type='number' name='quota' value='0'>
+	</div>
 </div>
