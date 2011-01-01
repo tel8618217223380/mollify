@@ -47,7 +47,7 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	}
 
 	protected void updateRootFolders(SessionInfo session) {
-		this.roots = session.getRootDirectories();
+		this.roots = session.getRootFolders();
 	}
 
 	@Override

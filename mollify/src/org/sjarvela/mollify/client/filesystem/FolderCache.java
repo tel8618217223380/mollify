@@ -19,21 +19,21 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class FolderCache implements FolderProvider {
-	private final FolderProvider directoryProvider;
+	private final FolderProvider folderProvider;
 	private final Map<Folder, List<Folder>> cache = new HashMap();
 
-	public FolderCache(FolderProvider directoryProvider) {
-		this.directoryProvider = directoryProvider;
+	public FolderCache(FolderProvider folderProvider) {
+		this.folderProvider = folderProvider;
 	}
 
 	@Override
 	public List<Folder> getRootFolders() {
-		return directoryProvider.getRootFolders();
+		return folderProvider.getRootFolders();
 	}
 
 	@Override
 	public Folder getRootFolder(String id) {
-		return directoryProvider.getRootFolder(id);
+		return folderProvider.getRootFolder(id);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class FolderCache implements FolderProvider {
 			return;
 		}
 
-		directoryProvider.getFolders(parent,
+		folderProvider.getFolders(parent,
 				new ResultListener<List<Folder>>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);

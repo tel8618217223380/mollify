@@ -133,7 +133,7 @@
 		
 		private function allFilesRecursively($path) {
 			$files = scandir($path);
-			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);
+			if (!$files) throw new ServiceException("INVALID_PATH", $path);
 			
 			$ignored = $this->ignoredItems($this->publicPath($path));
 			$result = array();

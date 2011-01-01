@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -48,7 +48,15 @@
 
 		public function onEvent($e) {
 			if ($e->subType() === FileEvent::UPLOAD) {
-				// remove quota
+				$item = $e->item();
+				
+				$available = $this->getAvailableQuota($item);
+				if ($available === FALSE) return;	// no quota set
+				
+				$size = $this->getItemSize($item);
+				if ($size > $available) throw new ServiceException("QUOTA_EXCEEDED");
+				
+				$this->removeQuota($item, $size);
 				return;
 			}
 			if ($e->subType() !== FileEvent::RENAME and $e->subType() !== FileEvent::MOVE) return;
@@ -87,10 +95,26 @@
 			}
 		}
 		
+		private function getAvailableQuota($item) {
+			$folder = $this->env->configuration()->getFolder($item->rootId());
+			if ($folder["quota"] === 0) return FALSE;
+			return $folder["quota"] - $folder["quota_used"];
+		}
+		
+		public function onBeforeCopy($item, $to) {
+			$available = $this->getAvailableQuota($item);
+			if ($available === FALSE) return;	// no quota set
+			
+			$size = $this->getItemSize($item);
+			if ($size > $available) throw new ServiceException("QUOTA_EXCEEDED");
+			
+			$this->removeQuota($item, $size);
+		}
+		
 		public function onBeforeDelete($item) {
 			$shared = $this->isShared($item);
 			if (!$shared) {
-				// restore quota
+				$this->restoreQuota($item, $this->getItemSize($item));
 				return;
 			}
 
@@ -100,6 +124,41 @@
 			$db = $this->env->configuration()->db();
 			$id = $db->string($item->id());	
 			$db->update(sprintf("DELETE FROM ".$db->table("item_share")." WHERE from_item_id='%s' OR to_item_id='%s'", $id, $id));
+		}
+		
+		private function getItemSize($item) {
+			if ($item->isFile()) return $item->size();
+			return $this->folderSize($item->internalPath());
+		}
+		
+		private function folderSize($path) {
+			$files = scandir($path);
+			if (!$files) throw new ServiceException("INVALID_PATH", $path);
+			
+			$size = 0;
+			
+			foreach($files as $i => $name) {
+				if (substr($name, 0, 1) == '.')
+					continue;
+	
+				$fullPath = $path.DIRECTORY_SEPARATOR.$name;
+				if (is_dir($fullPath)) {
+					$size .= $this->folderSize($fullPath);
+				} else {
+					$size .= filesize($fullPath);
+				}
+			}
+			return $result;
+		}
+
+		private function removeQuota($item, $amount) {
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s'", $amount, $db->string($item->id())));
+		}
+				
+		private function restoreQuota($item, $amount) {
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s'", $amount, $db->string($item->id())));
 		}
 		
 		private function deleteAllSharedCopies($item) {

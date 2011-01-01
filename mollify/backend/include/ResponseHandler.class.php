@@ -35,6 +35,7 @@
 			"ZIP_FAILED" => array(213, "Creating a zip package failed", 403),
 			"NO_GENERAL_WRITE_PERMISSION" => array(214, "User has no general read/write permission", 403),
 			"NOT_AN_ADMIN" => array(215, "User is not an administrator", 403),
+			"QUOTA_EXCEEDED" => array(216, "Quota exceeded", 403),
 			
 			"UNEXPECTED_ERROR" => array(999, "Unexpected server error", 500),
 		);
