@@ -1,5 +1,7 @@
 (function(){ mollify.texts.set('en', {
 
+errorMessageQuotaExceeded: "Quota exceeded",
+
 decimalSeparator: ".",
 groupingSeparator: ",",
 zeroDigit: "0",

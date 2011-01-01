@@ -525,6 +525,6 @@ public enum Texts implements ResourceId {
 
 	searchResultListColumnTitlePath,
 
-	searchResultsNoMatchesFound,
+	searchResultsNoMatchesFound, errorMessageQuotaExceeded,
 
 }

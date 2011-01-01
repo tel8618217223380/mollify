@@ -101,7 +101,7 @@
 			
 			Logging::logDebug("Sharing ".$fromPath." => ".$toPath);
 			if (!@symlink($fromPath, $toPath)) return NULL;
-			
+						
 			if (!$item->isFile()) return $to->folderWithName($item->name());
 			return $target;
 		}

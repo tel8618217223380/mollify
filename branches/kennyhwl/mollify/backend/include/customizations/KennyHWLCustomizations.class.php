@@ -23,7 +23,7 @@
 			$this->env = $env;
 			$this->env->filesystem()->registerDetailsPlugin($this);
 			$this->env->events()->register("filesystem/", $this);
-			//$this->env->plugins()->addPlugin("SharePlugin", array());
+			$this->env->plugins()->addPlugin("SharePlugin", array());
 		}
 		
 		public function getInboxPath() {
@@ -56,7 +56,7 @@
 				$size = $this->getItemSize($item);
 				if ($size > $available) {
 					unlink($item->internalPath());
-					throw new ServiceException("QUOTA_EXCEEDED");
+					throw new ServiceException("QUOTA_EXCEEDED", "Quota available ".$available.", required ".$size);
 				}
 				
 				$this->removeQuota($item, $size);
@@ -98,9 +98,9 @@
 			}
 		}
 		
-		private function getAvailableQuota($item) {
+		public function getAvailableQuota($item) {
 			$folder = $this->env->configuration()->getFolder($item->rootId());
-			if ($folder["quota"] === 0) return FALSE;
+			if ($folder["quota"] === "0" or $folder["quota"] === 0) return FALSE;
 			return $folder["quota"] - $folder["quota_used"];
 		}
 		
@@ -115,11 +115,10 @@
 		}
 		
 		public function onBeforeDelete($item) {
+			$this->restoreQuota($item, $this->getItemSize($item));
+			
 			$shared = $this->isShared($item);
-			if (!$shared) {
-				$this->restoreQuota($item, $this->getItemSize($item));
-				return;
-			}
+			if (!$shared) return;
 
 			if ($shared === 'FROM')
 				$this->deleteAllSharedCopies($item);
@@ -129,7 +128,7 @@
 			$db->update(sprintf("DELETE FROM ".$db->table("item_share")." WHERE from_item_id='%s' OR to_item_id='%s'", $id, $id));
 		}
 		
-		private function getItemSize($item) {
+		public function getItemSize($item) {
 			if ($item->isFile()) return $item->size();
 			return $this->folderSize($item->internalPath());
 		}
@@ -154,12 +153,12 @@
 			return $size;
 		}
 
-		private function removeQuota($item, $amount) {
+		public function removeQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s'", $amount, $db->string($item->id())));
 		}
 				
-		private function restoreQuota($item, $amount) {
+		public function restoreQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s'", $amount, $db->string($item->id())));
 		}
@@ -207,6 +206,22 @@
 			
 			$to = $db->query("SELECT count(from_user_id) FROM ".$db->table("item_share")." where to_item_id = '".$id."'")->value(0) > 0;
 			if ($to) return "TO";
+			
+			$paths = split(DIRECTORY_SEPARATOR, $item->path());
+			$current = $item->rootId();
+			$count = 0;
+			$a = array();
+			foreach($paths as $p) {
+				if ($count >= count($paths) - 1) break;
+				$current .= $p.DIRECTORY_SEPARATOR;
+				$count = $count + 1;
+				$a[] = $current;
+			}
+			
+			if (count($a) > 0) {
+				$to = $db->query("SELECT count(from_user_id) FROM ".$db->table("item_share")." where to_item_id in (".$db->arrayString($a, TRUE).")")->value(0) > 0;
+				if ($to) return "TO_CHILD";
+			}
 			
 			return NULL;
 		}
