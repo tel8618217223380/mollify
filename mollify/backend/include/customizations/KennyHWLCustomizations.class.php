@@ -54,7 +54,10 @@
 				if ($available === FALSE) return;	// no quota set
 				
 				$size = $this->getItemSize($item);
-				if ($size > $available) throw new ServiceException("QUOTA_EXCEEDED");
+				if ($size > $available) {
+					unlink($item->internalPath());
+					throw new ServiceException("QUOTA_EXCEEDED");
+				}
 				
 				$this->removeQuota($item, $size);
 				return;
@@ -106,7 +109,7 @@
 			if ($available === FALSE) return;	// no quota set
 			
 			$size = $this->getItemSize($item);
-			if ($size > $available) throw new ServiceException("QUOTA_EXCEEDED");
+			if ($size > $available) throw new ServiceException("QUOTA_EXCEEDED", "Quota available ".$available.", required ".$size);
 			
 			$this->removeQuota($item, $size);
 		}
@@ -143,12 +146,12 @@
 	
 				$fullPath = $path.DIRECTORY_SEPARATOR.$name;
 				if (is_dir($fullPath)) {
-					$size .= $this->folderSize($fullPath);
+					$size = $size + $this->folderSize($fullPath);
 				} else {
-					$size .= filesize($fullPath);
+					$size = $size + filesize($fullPath);
 				}
 			}
-			return $result;
+			return $size;
 		}
 
 		private function removeQuota($item, $amount) {
