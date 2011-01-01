@@ -180,7 +180,7 @@
 		}
 
 		public function getFolder($id) {
-			return $this->db->query(sprintf("SELECT id, name, path FROM ".$this->db->table("folder")." where id='%s'", $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, path, quota, quota_used FROM ".$this->db->table("folder")." where id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
 		public function getFolderUsers($id) {

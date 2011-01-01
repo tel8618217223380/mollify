@@ -346,6 +346,7 @@
 			$this->assertRights($item, Authentication::RIGHTS_READ, "copy");
 			$this->assertRights($to->parent(), Authentication::RIGHTS_WRITE, "copy");
 
+			$this->env->customizations()->onBeforeCopy($item, $to);
 			$to = $item->copy($to);
 			$this->env->events()->onEvent(FileEvent::copy($item, $to));
 		}

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -89,14 +90,23 @@ public class SessionInfo extends JavaScriptObject {
 		return this.filesystem;
 	}-*/;
 
-	public final List<Folder> getRootDirectories() {
-		if (getRootDirectoryList() == null)
+	public final List<Folder> getRootFolders() {
+		if (getRootFolderList() == null)
 			return Collections.EMPTY_LIST;
-		return Folder.createFromFolders(getRootDirectoryList());
+		return Folder.createFromFolders(getRootFolderList());
 	}
 
-	private final native JsArray getRootDirectoryList() /*-{
+	private final native JsArray getRootFolderList() /*-{
 		return this.folders;
+	}-*/;
+
+	public final native JsObj getRootQuota(String id) /*-{
+		for(var i=0; i<this.folders.length; i++) {
+			var root = this.folders[i];
+			if (root.id == id)
+				return { quota: root.quota, used:root.quota_used };
+		}
+		return null;
 	}-*/;
 
 	public final native String getPluginBaseUrl() /*-{
