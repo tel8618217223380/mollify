@@ -22,7 +22,7 @@ function SharePlugin() {
 	
 	this.getItemContext = function(item, details) {
 		if (!that.env.session().isAdminOrStaff() || item["is_protected"] || item.path == '') return null;
-		if (details["shared"] == 'TO') {
+		if (details["shared"] == 'TO' || details["shared"] == 'TO_CHILD') {
 			return {
 				components : [
 					{
