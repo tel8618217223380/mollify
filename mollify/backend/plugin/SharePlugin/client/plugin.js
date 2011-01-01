@@ -27,8 +27,7 @@ function SharePlugin() {
 				components : [
 					{
 						type: "custom",
-						html: "<div id='share-plugin' style='width:100%'><div id='share-link' style='float:right'><i>Shared item</i></div></div>",
-						on_init: function(id, c, i, d) {}
+						html: "<div id='share-plugin' style='width:100%'><div id='share-link' style='float:right'><i>Shared item</i></div></div>"
 					}
 				]
 			};

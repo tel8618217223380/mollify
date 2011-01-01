@@ -173,7 +173,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			UrlResolver urlResolver, SessionProvider sessionProvider,
-			DialogManager dialogManager) {
+			DialogManager dialogManager, FileSystemItemProvider fileSystemItemProvider) {
 		String param = settings.getString(PARAM_FILE_UPLOADER);
 
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(param))
@@ -182,7 +182,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
 			return new PluploaderDialogFactory(textProvider, urlResolver,
 					env.getFileUploadService(), sessionProvider, dialogManager,
-					settings);
+					settings, fileSystemItemProvider);
 
 		return new HttpFileUploadDialogFactory(env, textProvider,
 				env.getFileUploadService(), sessionProvider, dialogManager);

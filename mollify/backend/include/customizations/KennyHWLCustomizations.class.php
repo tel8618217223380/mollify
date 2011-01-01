@@ -160,18 +160,25 @@
 				
 		public function restoreQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s'", $amount, $db->string($item->id())));
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s' and quota > 0", $amount, $db->string($item->id())));
 		}
 		
 		private function deleteAllSharedCopies($item) {
 			Logging::logDebug("Removing shared copies of ".$item->id());
 			
+			$ids = array();
 			foreach($this->getSharedTo($item) as $to) {
 				$id = $to["to_item_id"];
+				$ids[] = $id;
 				$copy = $this->env->filesystem()->item($id);
 				
 				$path = rtrim($copy->internalPath(), DIRECTORY_SEPARATOR);
 				unlink($path);
+			}
+			
+			if (count($ids) > 0) {
+				$db = $this->env->configuration()->db();
+				$db->update("DELETE FROM ".$db->table("item_permission")." where item_id in (".$db->arrayString($ids, TRUE).")");
 			}
 		}
 
