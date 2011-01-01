@@ -30,7 +30,6 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextCom
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.description.DescriptionComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.details.DetailsComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.component.permissions.PermissionsComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.preview.PreviewComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
@@ -45,7 +44,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private final TextProvider textProvider;
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
-	private final PermissionEditorViewFactory permissionEditorViewFactory;
+
+	// private final PermissionEditorViewFactory permissionEditorViewFactory;
 
 	@Inject
 	public DefaultItemContextProvider(SessionProvider sessionProvider,
@@ -56,7 +56,7 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		this.textProvider = textProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
-		this.permissionEditorViewFactory = permissionEditorViewFactory;
+		// this.permissionEditorViewFactory = permissionEditorViewFactory;
 	}
 
 	@Override
@@ -152,8 +152,9 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 			contextComponents.add(createPreviewComponent());
 		if (item.isFile())
 			contextComponents.add(createDetailsComponent());
-//		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
-//			contextComponents.add(createPermissionsComponent());
+		// if
+		// (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
+		// contextComponents.add(createPermissionsComponent());
 	}
 
 	private ItemContextComponent createDescriptionComponent() {
@@ -171,10 +172,10 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		return new DetailsComponent(textProvider);
 	}
 
-	private ItemContextComponent createPermissionsComponent() {
-		return new PermissionsComponent(textProvider,
-				permissionEditorViewFactory);
-	}
+	// private ItemContextComponent createPermissionsComponent() {
+	// return new PermissionsComponent(textProvider,
+	// permissionEditorViewFactory);
+	// }
 
 	@Override
 	public void addItemContextProvider(ItemContextProvider itemContextProvider) {

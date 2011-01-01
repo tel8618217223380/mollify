@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
@@ -62,22 +63,28 @@ public class PluploaderPresenter implements PluploadListener {
 	private final Plupload uploader;
 	private UploadModel uploadModel;
 	private final List<String> allowedTypes;
+	private final Folder folder;
 
 	private boolean demo = false;
 
+	private final FileSystemItemProvider fileSystemItemProvider;
+
 	public PluploaderPresenter(SessionInfo session, FileUploadService service,
-			UrlResolver urlResolver, ResultListener listener, Folder directory,
+			UrlResolver urlResolver, ResultListener listener, Folder folder,
 			PluploaderDialog dialog, DialogManager dialogManager,
-			TextProvider textProvider, ClientSettings settings) {
+			TextProvider textProvider, ClientSettings settings,
+			FileSystemItemProvider fileSystemItemProvider) {
 		this.urlResolver = urlResolver;
 		this.listener = listener;
+		this.folder = folder;
 		this.dialog = dialog;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.settings = settings;
+		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
-		this.uploader = createUploader(session, service, directory);
+		this.uploader = createUploader(session, service, folder);
 
 		dialog.addMoveListener(new DialogMoveListener() {
 			@Override
@@ -242,9 +249,22 @@ public class PluploaderPresenter implements PluploadListener {
 	}
 
 	public void startUpload() {
+		long quota = fileSystemItemProvider.getQuotaForRoot(folder.getRootId());
+		if (quota > 0 && getTotalSize() > quota) {
+			dialogManager.showInfo("Quota", "Selected files exceeds the quota");
+			return;
+		}
+
 		uploadModel = new UploadModel(files);
 		dialog.onUploadStarted(uploadModel.getTotalBytes());
 		uploader.start();
+	}
+
+	private long getTotalSize() {
+		long size = 0;
+		for (File f : files)
+			size += f.getSize();
+		return size;
 	}
 
 	private void stopUpload() {

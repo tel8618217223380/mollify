@@ -135,8 +135,8 @@
 					"parent_id" => NULL,
 					"root_id" => $folder->publicId(),
 					"path" => "",
-					"quota" => (isset($info["quota"]) ? $info["quota"] : 0),
-					"quota_used" => (isset($info["quota_used"]) ? $info["quota_used"] : 0)
+					"quota" => (isset($info["quota"]) ? (int)$info["quota"] : 0),
+					"quota_used" => (isset($info["quota_used"]) ? (int)$info["quota_used"] : 0)
 				);
 			}
 

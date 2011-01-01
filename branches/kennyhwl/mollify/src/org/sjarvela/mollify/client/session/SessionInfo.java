@@ -104,7 +104,7 @@ public class SessionInfo extends JavaScriptObject {
 		for(var i=0; i<this.folders.length; i++) {
 			var root = this.folders[i];
 			if (root.id == id)
-				return { quota: root.quota, used:root.quota_used };
+				return { quota: root.quota, used: root.quota_used };
 		}
 		return null;
 	}-*/;

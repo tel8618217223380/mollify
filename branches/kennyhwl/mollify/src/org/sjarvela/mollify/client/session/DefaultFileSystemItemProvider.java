@@ -12,11 +12,14 @@ package org.sjarvela.mollify.client.session;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
-import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -29,6 +32,7 @@ import com.google.inject.Singleton;
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
 	private List<Folder> roots = new ArrayList();
+	private Map<String, JsObj> quotas = Collections.EMPTY_MAP;
 
 	@Inject
 	public DefaultFileSystemItemProvider(SessionManager sessionManager,
@@ -48,6 +52,20 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 
 	protected void updateRootFolders(SessionInfo session) {
 		this.roots = session.getRootFolders();
+		this.quotas = new HashMap();
+		for (Folder f : roots)
+			quotas.put(f.getId(), session.getRootQuota(f.getId()));
+	}
+
+	@Override
+	public long getQuotaForRoot(String rootId) {
+		Folder root = getRootFolder(rootId);
+		JsObj quota = quotas.get(root.getId());
+		if (quota == null)
+			return 0;
+		if (quota.getInt("quota") == 0l)
+			return 0;
+		return quota.getInt("quota") - quota.getInt("used");
 	}
 
 	@Override
