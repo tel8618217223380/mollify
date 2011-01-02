@@ -250,8 +250,13 @@ public class PluploaderPresenter implements PluploadListener {
 
 	public void startUpload() {
 		long quota = fileSystemItemProvider.getQuotaForRoot(folder.getRootId());
-		if (quota > 0 && getTotalSize() > quota) {
-			dialogManager.showInfo("Quota", "Selected files exceeds the quota");
+		long used = fileSystemItemProvider.getUsedQuotaForRoot(folder
+				.getRootId());
+		if (quota > 0 && getTotalSize() > (quota - used)) {
+			dialogManager.showInfo(textProvider
+					.getText(Texts.uploadQuotaExceededTitle), textProvider
+					.getText(Texts.uploadQuotaExceeded,
+							textProvider.getSizeText(quota)));
 			return;
 		}
 
