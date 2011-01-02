@@ -63,9 +63,16 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 		JsObj quota = quotas.get(root.getId());
 		if (quota == null)
 			return 0;
-		if (quota.getInt("quota") == 0l)
+		return quota.getInt("quota");
+	}
+
+	@Override
+	public long getUsedQuotaForRoot(String rootId) {
+		Folder root = getRootFolder(rootId);
+		JsObj quota = quotas.get(root.getId());
+		if (quota == null)
 			return 0;
-		return quota.getInt("quota") - quota.getInt("used");
+		return quota.getInt("used");
 	}
 
 	@Override

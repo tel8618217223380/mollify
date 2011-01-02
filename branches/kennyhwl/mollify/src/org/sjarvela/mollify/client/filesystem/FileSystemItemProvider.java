@@ -17,4 +17,7 @@ public interface FileSystemItemProvider extends FolderProvider {
 	void getFilesAndFolders(Folder parent, ResultListener<FolderInfo> listener);
 
 	long getQuotaForRoot(String rootId);
+
+	long getUsedQuotaForRoot(String rootId);
+
 }

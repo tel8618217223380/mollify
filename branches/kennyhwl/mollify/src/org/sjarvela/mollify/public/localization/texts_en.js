@@ -1,6 +1,8 @@
 (function(){ mollify.texts.set('en', {
 
 errorMessageQuotaExceeded: "Quota exceeded",
+uploadQuotaExceededTitle: "Quota",
+uploadQuotaExceeded: "Selected files will exceed the quota limit of {0}.",
 
 decimalSeparator: ".",
 groupingSeparator: ",",
