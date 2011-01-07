@@ -235,7 +235,7 @@
 		
 		public function getSharedTo($item) {
 			$db = $this->env->configuration()->db();
-			return $db->query("SELECT to_item_id FROM ".$db->table("item_share")." where from_item_id = '".$item->id()."'")->rows();
+			return $db->query("SELECT to_item_id, to_user_id FROM ".$db->table("item_share")." where from_item_id = '".$item->id()."'")->rows();
 		}
 		
 		public function getItemDetails($item) {

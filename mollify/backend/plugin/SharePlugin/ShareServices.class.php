@@ -26,10 +26,15 @@
 			$currentUser = $this->getFolderUser($item);
 			if (!$currentUser) throw new ServiceException("REQUEST_FAILED");
 			
+			$toUserIds = array();
+			foreach($this->env->customizations()->getSharedTo($item) as $user) {
+				$toUserIds[] = $user["to_user_id"];
+			}
+			
 			$users = $this->env->configuration()->getAllUsers("no");
 			$available = array();
 			foreach($users as $user) {
-				if ($user["id"] === $currentUser["id"]) continue;
+				if ($user["id"] === $currentUser["id"] or in_array($user["id"], $toUserIds)) continue;
 				$available[] = $user;
 			}
 			$this->response()->success(array("users" => $available));
