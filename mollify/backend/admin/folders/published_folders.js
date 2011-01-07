@@ -401,7 +401,10 @@ function MollifyPublishedFoldersConfigurationView() {
 	}
 	
 	this.onRefreshUsedQuota = function() {
-		request("POST", 'configuration/folders/' + id + '/refreshquota', that.refresh, onServerError);
+		var id = that.getSelectedFolder();
+		if (id == null) return;
+		
+		request("POST", 'configuration/folders/' + id + '/refreshquota', that.refresh, onServerError, {t:true});
 	}
 	
 	this.onSetQuota = function() {
