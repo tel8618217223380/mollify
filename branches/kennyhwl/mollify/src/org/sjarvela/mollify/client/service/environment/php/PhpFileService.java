@@ -80,7 +80,9 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			public void onSuccess(JsFolderInfo result) {
 				listener.onSuccess(new FolderInfo(result.getPermission(),
 						FileSystemItem.createFromFolders(result.getFolders()),
-						FileSystemItem.createFromFiles(result.getFiles())));
+						FileSystemItem.createFromFiles(result.getFiles()),
+						result.getQuota(), result.getQuotaUsed(), result
+								.getSharedFrom(), result.getSharedTo()));
 			}
 		};
 

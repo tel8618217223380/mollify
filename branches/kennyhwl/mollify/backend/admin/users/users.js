@@ -312,7 +312,11 @@ function MollifyUsersConfigurationView() {
 					$("#add-user-dialog").dialog('close');
 					that.refresh();
 				}
-				addUser(name, pw, email, permission, onSuccess, onServerError);
+				onFail = function(err) {
+					if (err.code == 300) alert("User already exists");
+					else onServerError(err);
+				}
+				addUser(name, pw, email, permission, onSuccess, onFail);
 			},
 			Cancel: function() {
 				$(this).dialog('close');

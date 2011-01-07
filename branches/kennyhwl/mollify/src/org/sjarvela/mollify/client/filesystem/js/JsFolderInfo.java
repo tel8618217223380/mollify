@@ -10,10 +10,14 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.session.file.FilePermission;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 
 public class JsFolderInfo extends JavaScriptObject {
 	protected JsFolderInfo() {
@@ -46,5 +50,33 @@ public class JsFolderInfo extends JavaScriptObject {
 			JsArray<JsFile> files) /*-{
 		this.directories = directories;
 		this.files = files;
+	}-*/;
+
+	public final native int getQuota() /*-{
+		if (!this["quota"]) return 0;
+		return parseInt(this["quota"].quota);
+	}-*/;
+
+	public final native int getQuotaUsed() /*-{
+		if (!this["quota"]) return 0;
+		return parseInt(this["quota"].used);
+	}-*/;
+
+	public final List<String> getSharedFrom() {
+		return JsUtil.asList(this.getNativeSharedFrom());
+	}
+
+	public final List<String> getSharedTo() {
+		return JsUtil.asList(this.getNativeSharedTo());
+	}
+
+	public final native JsArrayString getNativeSharedFrom() /*-{
+		if (!this["shared"]) return [];
+		return this["shared"].from;
+	}-*/;
+
+	public final native JsArrayString getNativeSharedTo() /*-{
+		if (!this["shared"]) return [];
+		return this["shared"].to;
 	}-*/;
 }

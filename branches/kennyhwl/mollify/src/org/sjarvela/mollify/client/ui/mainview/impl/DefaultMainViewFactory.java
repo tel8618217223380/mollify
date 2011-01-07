@@ -106,8 +106,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FileSystemService fileSystemService = serviceProvider
 				.getFileSystemService();
-		MainViewModel model = new MainViewModel(fileSystemService, session,
-				fileSystemItemProvider);
+		MainViewModel model = new MainViewModel(fileSystemItemProvider,
+				session, fileSystemItemProvider);
 
 		FolderSelectorFactory folderSelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);

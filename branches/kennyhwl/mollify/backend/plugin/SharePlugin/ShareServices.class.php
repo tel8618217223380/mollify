@@ -88,10 +88,9 @@
 		}	
 	
 		private function getUserFolder($userId) {
-			$folders = $this->env->configuration()->getUserFolders($userId);
-			if (!$folders or count($folders) == 0) return NULL;
+			$folder = $this->env->customizations()->getUserFolder($userId);
+			if ($folder == NULL) return NULL;
 			
-			$folder = $folders[0];
 			$target = $this->env->filesystem()->filesystemFromId($folder["id"]);
 			return $target->root();
 		}
