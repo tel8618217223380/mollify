@@ -367,7 +367,7 @@
 						$this->env->customizations()->refreshUsedQuota($id);
 						$this->response()->success(TRUE);
 						return;
-					case 'refresh-quota':
+					case 'refreshquota':
 						$this->env->customizations()->refreshUsedQuota($id);
 						$this->response()->success(TRUE);
 						return;

@@ -33,14 +33,14 @@
 		public function onUserAdded($id, $user) {
 			if (strtoupper($user['permission_mode']) !== 'NO') return;
 			
-			$folderName = $id;
-			$folderPath = self::$FOLDER_PATHS.$folderName;
+			$folderName = $user["name"];
+			$folderPath = self::$FOLDER_PATHS.$id;
 			
 			mkdir($folderPath);
 			mkdir($folderPath.DIRECTORY_SEPARATOR.self::$INBOX_NAME);
 			
 			$folderId = $this->env->configuration()->addFolder($folderName, $folderPath);
-			$this->env->configuration()->addUserFolder($id, $folderId, $user["name"]);
+			$this->env->configuration()->addUserFolder($id, $folderId, NULL);
 			
 			$fs = $this->env->filesystem()->filesystem(array("id" => $folderId, "path" => $folderPath, "name" => $folderName), FALSE);
 			$this->env->configuration()->addItemPermission($fs->root()->id(), Authentication::PERMISSION_VALUE_READWRITE, $id);
@@ -135,7 +135,11 @@
 			$this->restoreQuota($item, $this->getItemSize($item));
 			
 			$shared = $this->isShared($item);
-			if (!$shared) return;
+			if (!$shared) {
+				if (!$item->isFile())
+					$this->deleteAllPossibleChildShares($item);
+				return;
+			}
 
 			if ($shared === 'FROM')
 				$this->deleteAllSharedCopies($item);
@@ -161,10 +165,24 @@
 		
 		public function getItemSize($item) {
 			if ($item->isFile()) return $item->size();
-			return $this->folderSize($item->internalPath());
+			$excluded = $this->getAllSharedItemsInRoot($item->rootId());
+			return $this->folderSize($item->internalPath(), $excluded);
 		}
 		
-		private function folderSize($path) {
+		private function getAllSharedItemsInRoot($rootId) {
+			$folder = $this->env->configuration()->getFolder($rootId);
+			$path = rtrim($folder["path"], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+			
+			$paths = array();
+			$db = $this->env->configuration()->db();	
+			foreach($db->query("SELECT to_item_id FROM ".$db->table("item_share")." where to_item_id REGEXP '^".$rootId."*'")->rows() as $row)
+				$paths[] = str_replace($rootId, $path, $row["to_item_id"]);
+			
+			Logging::logDebug("Exclude: ".Util::array2str($paths));
+			return $paths;
+		}
+		
+		private function folderSize($path, $excluded) {
 			$files = scandir($path);
 			if (!$files) throw new ServiceException("INVALID_PATH", $path);
 			
@@ -174,9 +192,13 @@
 				if (substr($name, 0, 1) == '.')
 					continue;
 	
-				$fullPath = $path.DIRECTORY_SEPARATOR.$name;
+				$fullPath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
+				
+				if (in_array($fullPath, $excluded)) {
+					continue;
+				}
 				if (is_dir($fullPath)) {
-					$size = $size + $this->folderSize($fullPath);
+					$size = $size + $this->folderSize($fullPath, $excluded);
 				} else {
 					$size = $size + filesize($fullPath);
 				}
@@ -192,6 +214,16 @@
 		public function restoreQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s' and quota > 0", $amount, $db->string($item->rootId())));
+		}
+		
+		private function deleteAllPossibleChildShares($item) {
+			$db = $this->env->configuration()->db();
+			
+			foreach($db->query("SELECT distinct from_item_id FROM ".$db->table("item_share")." where from_item_id REGEXP '^".$item->id()."*'")->rows() as $from) {
+				$fromItem = $this->env->filesystem()->item($from["from_item_id"]);
+				$this->deleteAllSharedCopies($fromItem);
+			}
+			$db->update("DELETE FROM ".$db->table("item_share")." WHERE from_item_id like '".$item->id()."%' or to_item_id like '".$item->id()."%'");
 		}
 		
 		private function deleteAllSharedCopies($item) {
