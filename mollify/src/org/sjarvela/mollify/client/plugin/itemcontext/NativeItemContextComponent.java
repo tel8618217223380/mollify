@@ -81,7 +81,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 			JavaScriptObject container, JavaScriptObject item,
 			JavaScriptObject details) /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::onInit;
-		if (!cb) return;
+		if (!cb) return false;
 		var ret = cb(elementId, container, item, details);
 		return !(ret == false);
 	}-*/;

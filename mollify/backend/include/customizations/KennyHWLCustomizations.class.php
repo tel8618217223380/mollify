@@ -33,19 +33,36 @@
 		public function onUserAdded($id, $user) {
 			if (strtoupper($user['permission_mode']) !== 'NO') return;
 			
-			$folderName = $user["name"];
+			$folderName = $id;
 			$folderPath = self::$FOLDER_PATHS.$folderName;
 			
 			mkdir($folderPath);
 			mkdir($folderPath.DIRECTORY_SEPARATOR.self::$INBOX_NAME);
 			
 			$folderId = $this->env->configuration()->addFolder($folderName, $folderPath);
-			$this->env->configuration()->addUserFolder($id, $folderId, NULL);
+			$this->env->configuration()->addUserFolder($id, $folderId, $user["name"]);
 			
 			$fs = $this->env->filesystem()->filesystem(array("id" => $folderId, "path" => $folderPath, "name" => $folderName), FALSE);
 			$this->env->configuration()->addItemPermission($fs->root()->id(), Authentication::PERMISSION_VALUE_READWRITE, $id);
 		}
 
+		public function onUserRenamed($userId, $name) {
+			$folder = $this->getUserFolder($userId);
+			if (!$folder) return;
+			
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET name='%s' WHERE id='%s'", $db->string($name), $db->string($folder["id"])));
+			
+			$this->env->configuration()->updateUserFolder($userId, $folder["id"], $name);
+		}
+		
+		public function getUserFolder($userId) {
+			$folders = $this->env->configuration()->getUserFolders($userId);
+			if (!$folders or count($folders) == 0) return NULL;
+			
+			return $folders[0];
+		}
+		
 		public function onEvent($e) {
 			if ($e->subType() === FileEvent::UPLOAD) {
 				$item = $e->item();
@@ -128,6 +145,20 @@
 			$db->update(sprintf("DELETE FROM ".$db->table("item_share")." WHERE from_item_id='%s' OR to_item_id='%s'", $id, $id));
 		}
 		
+		public function refreshUsedQuota($id) {
+			$root = $this->env->filesystem()->item($id.":/");
+			$size = $this->getItemSize($root);
+			Logging::logDebug("Quota used for ".$id.": ".$size);
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=%s WHERE id='%s' and quota > 0", $size, $db->string($root->id())));
+		}
+		
+		public function getQuotaInfo($item) {
+			$folder = $this->env->configuration()->getFolder($item->rootId());
+			if ($folder["quota"] === "0" or $folder["quota"] === 0) return array("quota" => 0, "used" => 0);
+			return array("quota" => $folder["quota"], "used" => $folder["quota_used"]);
+		}
+		
 		public function getItemSize($item) {
 			if ($item->isFile()) return $item->size();
 			return $this->folderSize($item->internalPath());
@@ -155,12 +186,12 @@
 
 		public function removeQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s'", $amount, $db->string($item->id())));
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s'", $amount, $db->string($item->rootId())));
 		}
 				
 		public function restoreQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s' and quota > 0", $amount, $db->string($item->id())));
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=GREATEST(0, quota_used-%s) WHERE id='%s' and quota > 0", $amount, $db->string($item->rootId())));
 		}
 		
 		private function deleteAllSharedCopies($item) {
@@ -236,6 +267,25 @@
 		public function getSharedTo($item) {
 			$db = $this->env->configuration()->db();
 			return $db->query("SELECT to_item_id, to_user_id FROM ".$db->table("item_share")." where from_item_id = '".$item->id()."'")->rows();
+		}
+
+		public function getSharingInfo($item) {
+			$id = $item->id();
+			
+			$result = array();
+			$db = $this->env->configuration()->db();
+			
+			$from = array();
+			foreach($db->query("SELECT from_item_id FROM ".$db->table("item_share")." where from_item_id REGEXP '^".$id."*'")->rows() as $row)
+				$from[] = base64_encode($row["from_item_id"]);
+			$result["from"] = $from;
+			
+			$to = array();
+			foreach($db->query("SELECT to_item_id FROM ".$db->table("item_share")." where to_item_id REGEXP '^".$id."*'")->rows() as $row)
+				$to[] = base64_encode($row["to_item_id"]);
+			$result["to"] = $to;
+			
+			return $result;
 		}
 		
 		public function getItemDetails($item) {

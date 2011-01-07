@@ -16,11 +16,11 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
-import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -29,7 +29,6 @@ import org.sjarvela.mollify.client.session.file.FilePermission;
 
 public class MainViewModel {
 	private final SessionInfo session;
-	private final FileSystemService fileServices;
 	private final List<Folder> rootFolders;
 
 	private FolderModel folderModel;
@@ -38,10 +37,13 @@ public class MainViewModel {
 	private List<FileSystemItem> all = new ArrayList();
 	private List<FileSystemItem> selected = new ArrayList();
 	private FilePermission folderPermission = FilePermission.None;
+	private final FileSystemItemProvider fileSystemItemProvider;
+	private List<String> sharedFrom;
+	private List<String> sharedTo;
 
-	public MainViewModel(FileSystemService fileServices, SessionInfo session,
-			FolderProvider folderProvider) {
-		this.fileServices = fileServices;
+	public MainViewModel(FileSystemItemProvider fileSystemItemProvider,
+			SessionInfo session, FolderProvider folderProvider) {
+		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
 		this.rootFolders = folderProvider.getRootFolders();
 
@@ -97,8 +99,7 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void changeToSubfolder(Folder folder,
-			ResultListener resultListener) {
+	public void changeToSubfolder(Folder folder, ResultListener resultListener) {
 		folderModel.descendIntoFolder(folder);
 		refreshData(resultListener);
 	}
@@ -117,18 +118,21 @@ public class MainViewModel {
 	public void refreshData(ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
 			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
-					rootFolders, Collections.EMPTY_LIST);
+					rootFolders, Collections.EMPTY_LIST, 0, 0, new ArrayList(),
+					new ArrayList());
 			onUpdateData(result);
 			resultListener.onSuccess(result);
 			return;
 		}
 
-		fileServices.getInfo(getCurrentFolder(), createListener(resultListener,
-				new ResultCallback<FolderInfo>() {
-					public void onCallback(FolderInfo result) {
-						onUpdateData(result);
-					}
-				}));
+		fileSystemItemProvider.getFilesAndFolders(
+				getCurrentFolder(),
+				createListener(resultListener,
+						new ResultCallback<FolderInfo>() {
+							public void onCallback(FolderInfo result) {
+								onUpdateData(result);
+							}
+						}));
 	}
 
 	private void onUpdateData(FolderInfo data) {
@@ -137,6 +141,8 @@ public class MainViewModel {
 		this.folderPermission = data.getPermission();
 		this.all = new ArrayList(data.getFolders());
 		this.all.addAll(files);
+		this.sharedFrom = data.getSharedFrom();
+		this.sharedTo = data.getSharedTo();
 	}
 
 	private ResultListener createListener(final ResultListener listener,
@@ -163,5 +169,9 @@ public class MainViewModel {
 
 	public void clearSelected() {
 		this.selected.clear();
+	}
+
+	public boolean isShared(FileSystemItem t) {
+		return sharedFrom.contains(t.getId()) || sharedTo.contains(t.getId());
 	}
 }

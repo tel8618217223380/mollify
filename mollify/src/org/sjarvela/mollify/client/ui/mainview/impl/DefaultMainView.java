@@ -88,8 +88,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
 	};
 
-	public DefaultMainView(MainViewModel model, TextProvider textProvider,
-			ActionListener actionListener,
+	public DefaultMainView(final MainViewModel model,
+			TextProvider textProvider, ActionListener actionListener,
 			FolderSelectorFactory folderSelectorFactory,
 			ItemContextPopup itemContextPopup,
 			DragAndDropManager dragAndDropManager) {
@@ -108,7 +108,15 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.progress.setVisible(false);
 
 		this.folderSelector = folderSelectorFactory.createSelector();
-		this.list = new FileList(textProvider, dragAndDropManager);
+		this.list = new FileList(textProvider, dragAndDropManager) {
+			@Override
+			public List<String> getRowStyles(FileSystemItem t) {
+				List<String> styles = super.getRowStyles(t);
+				if (model.isShared(t))
+					styles.add("shared");
+				return styles;
+			}
+		};
 
 		this.itemContextPopup = itemContextPopup;
 		this.itemContextPopup.setPopupPositioner(this);

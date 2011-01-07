@@ -29,6 +29,10 @@ public class JsObj extends JavaScriptObject {
 	public final native int getInt(String name) /*-{
 		return this[name];
 	}-*/;
+	
+	public final native void setInt(String name, int l) /*-{
+		this[name] = l;
+	}-*/;
 
 	public final native JsObj getJsObj(String name) /*-{
 		return this[name];

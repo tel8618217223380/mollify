@@ -48,6 +48,7 @@ function SharePlugin() {
 			container.close();
 			that.onShare(item);
 		});
+		return true;
 	}
 	
 	this.onShare = function(item) {
@@ -99,6 +100,11 @@ function SharePlugin() {
 	this.updateUsers = function(users) {
 		that.users = users;
 		
+		if (users.length == 0) {
+			$("#share-users").html('<i>No users to share for.</i>');
+			$("#share-dialog-share").hide();
+			return;
+		}
 		var html = '<table>';
 		for (var i=0; i<users.length; i++) {
 			var u = users[i];

@@ -19,6 +19,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		$("#button-remove-folder").click(that.onRemoveFolder);
 		$("#button-edit-folder").click(that.openEditFolder);
 		$("#button-set-quota").click(that.onSetQuota);
+		$("#button-refresh-quota").click(that.onRefreshUsedQuota);
 		$("#button-refresh-folders").click(that.refresh);
 
 		$("#folders-list").jqGrid({
@@ -164,6 +165,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		enableButton("button-remove-folder", selected);
 		enableButton("button-edit-folder", selected);
 		enableButton("button-set-quota", selected);
+		enableButton("button-refresh-quota", selected);
 		
 		that.folderUsers = null;
 		
@@ -396,6 +398,10 @@ function MollifyPublishedFoldersConfigurationView() {
 		var sel = that.getSelectedFolderUsers();
 		if (sel.length == 0) return;
 		removeFolderUsers(that.getSelectedFolder(), sel, that.refreshFolderUsers, onServerError);
+	}
+	
+	this.onRefreshUsedQuota = function() {
+		request("POST", 'configuration/folders/' + id + '/refreshquota', that.refresh, onServerError);
 	}
 	
 	this.onSetQuota = function() {

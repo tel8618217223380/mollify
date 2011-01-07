@@ -140,6 +140,14 @@
 				$user['permission_mode'] = strtoupper($user['permission_mode']);
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
+				$db = $this->env->configuration()->db();
+				$query = "select count(id) from ".$db->table("user")." where name=".$db->string($user['name'],TRUE);
+				$count = $db->query($query)->value(0);
+				if ($count > 0) {
+					$this->response()->fail(300, "User already registered with same name");
+					return;
+				}
+				
 				$id = $this->env->configuration()->addUser($user['name'], $user['password'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
 				$this->env->customizations()->onUserAdded($id, $user);
 				$this->response()->success(TRUE);
@@ -177,6 +185,9 @@
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
 				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
+				if (isset($user['name']))
+					$this->env->customizations()->onUserRenamed($userId, $user['name']);
+
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -353,6 +364,11 @@
 						$db = $this->env->configuration()->db();
 						$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota=%s WHERE id='%s'", $size, $db->string($id)));
 						
+						$this->env->customizations()->refreshUsedQuota($id);
+						$this->response()->success(TRUE);
+						return;
+					case 'refresh-quota':
+						$this->env->customizations()->refreshUsedQuota($id);
 						$this->response()->success(TRUE);
 						return;
 					case 'users':

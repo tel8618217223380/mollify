@@ -220,7 +220,8 @@
 					}
 					$result["files"] = $files;
 					$result["folders"] = $folders;
-					$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders));
+					
+					$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders, "quota" => $this->env->customizations()->getQuotaInfo($item), "shared" => $this->env->customizations()->getSharingInfo($item)));
 					break;
 				case 'files':
 					$items = $this->env->filesystem()->items($item);

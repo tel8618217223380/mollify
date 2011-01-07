@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +55,8 @@ public class DemoFileService implements FileSystemService {
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
 		listener.onSuccess(new FolderInfo(FilePermission.ReadWrite, data
-				.getDirectories(parent), data.getFiles(parent)));
+				.getDirectories(parent), data.getFiles(parent), 0, 0,
+				new ArrayList(), new ArrayList()));
 	}
 
 	public String getDownloadUrl(File file) {
