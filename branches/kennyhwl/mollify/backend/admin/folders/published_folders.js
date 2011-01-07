@@ -80,12 +80,15 @@ function MollifyPublishedFoldersConfigurationView() {
 	
 	this.quotaSizeFormatter = function(name, options, folder) {
 		if (folder.quota == 0) return "";
-		return ((folder.quota / 1024) / 1024) + " Mb";
+		return (((folder.quota / 1024) / 1024).toFixed(2)) + " Mb";
 	}
 
 	this.quotaUsedFormatter = function(name, options, folder) {
 		if (folder.quota == 0) return "";
-		return ((folder.quota_used / folder.quota) * 100) + "%";
+		var used = ((folder.quota_used / folder.quota) * 100);
+		var text = used.toFixed(2) + "%";
+		if (used > 90) return "<span style='color:red'>"+text+"</span>";
+		return text;
 	}
 	
 	this.getFolder = function(id) {
