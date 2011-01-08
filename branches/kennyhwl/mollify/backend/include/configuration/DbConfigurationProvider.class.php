@@ -73,10 +73,10 @@
 			return $result->firstRow();
 		}
 		
-		public function getAllUsers($type = NULL) {
+		public function getAllUsers($types = NULL) {
 			$query = "SELECT id, name, email, permission_mode FROM ".$this->db->table("user")." where is_group = 0";
-			if ($type != NULL)
-				$query .= " AND permission_mode=".$this->db->string(strtoupper($type),TRUE);
+			if ($types != NULL)
+				$query .= " AND permission_mode in (".$this->db->arrayString($types,TRUE).")";
 			$query .= " ORDER BY id ASC";
 			return $this->db->query($query)->rows();
 		}

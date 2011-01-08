@@ -332,7 +332,7 @@
 		}
 		
 		private function processPostFolders() {
-			if (!$this->request->hasData()) throw $this->invalidRequestException();
+			if (count($this->path) != 3 and $this->path[2] != 'refreshquota' and !$this->request->hasData()) throw $this->invalidRequestException();
 			
 			if (count($this->path) == 1) {
 				$folder = $this->request->data;

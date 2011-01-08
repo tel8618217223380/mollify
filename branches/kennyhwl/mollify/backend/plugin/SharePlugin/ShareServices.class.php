@@ -31,7 +31,7 @@
 				$toUserIds[] = $user["to_user_id"];
 			}
 			
-			$users = $this->env->configuration()->getAllUsers("no");
+			$users = $this->env->configuration()->getAllUsers(array("NO", "ST"));
 			$available = array();
 			foreach($users as $user) {
 				if ($user["id"] === $currentUser["id"] or in_array($user["id"], $toUserIds)) continue;

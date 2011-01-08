@@ -19,6 +19,8 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.ClientSettings;
@@ -69,6 +71,10 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final FileSystemActionHandlerFactory fileSystemActionHandlerFactory;
 	private final ItemContextPopupFactory itemContextPopupFactory;
 
+	private final PluginEnvironment pluginEnvironment;
+
+	private final PluginSystem pluginSystem;
+
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
 			TextProvider textProvider, ViewManager viewManager,
@@ -82,7 +88,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			DragAndDropManager dragAndDropManager,
 			SearchResultDialogFactory searchResultDialogFactory,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
-			ItemContextPopupFactory itemContextPopupFactory) {
+			ItemContextPopupFactory itemContextPopupFactory,
+			PluginSystem pluginSystem, PluginEnvironment pluginEnvironment) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
@@ -99,6 +106,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.searchResultDialogFactory = searchResultDialogFactory;
 		this.fileSystemActionHandlerFactory = fileSystemActionHandlerFactory;
 		this.itemContextPopupFactory = itemContextPopupFactory;
+		this.pluginSystem = pluginSystem;
+		this.pluginEnvironment = pluginEnvironment;
 	}
 
 	public MainView createMainView(FileViewDelegate fileViewDelegate) {
@@ -130,7 +139,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
-				dragAndDropManager);
+				dragAndDropManager, pluginSystem, pluginEnvironment);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view,
 				serviceProvider.getConfigurationService(), fileSystemService,

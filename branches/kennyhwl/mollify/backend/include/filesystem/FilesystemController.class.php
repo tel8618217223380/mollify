@@ -73,7 +73,7 @@
 		}
 		
 		private function getFolderDefs($all = FALSE) {
-			if ($all or $this->env->authentication()->isAdminOrStaff())
+			if ($all or $this->env->authentication()->isAdmin())
 				$folderDefs = $this->env->configuration()->getFolders();
 			else
 				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
