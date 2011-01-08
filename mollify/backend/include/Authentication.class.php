@@ -93,7 +93,7 @@
 		}
 		
 		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
-			if ($this->isAdminOrStaff() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
+			if ($this->isAdmin() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
 					
 			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
 				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;

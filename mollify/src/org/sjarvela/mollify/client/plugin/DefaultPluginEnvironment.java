@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
@@ -37,6 +40,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
+	private final Map<String, NativeAction> actions = new HashMap();
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
@@ -65,6 +69,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	public void addItemContextProvider(JavaScriptObject dp) {
 		((ItemContextHandler) itemContextProvider)
 				.addItemContextProvider(new NativeItemContextProvider(dp));
+	}
+
+	public void addAction(String title, JavaScriptObject dp) {
+		actions.put(title, new NativeAction(dp));
 	}
 
 	protected JavaScriptObject getSession() {
@@ -105,6 +113,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
+		env.addAction = function (s, cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addAction(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(s,cb);
+		}
+
 		env.session = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
 		}
@@ -132,4 +144,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return env;
 	}-*/;
 
+	@Override
+	public Map<String, NativeAction> getActions() {
+		return actions;
+	}
 }

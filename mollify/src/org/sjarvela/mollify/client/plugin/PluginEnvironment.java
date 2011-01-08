@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import java.util.Map;
+
 import org.sjarvela.mollify.client.FileView;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -17,5 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public interface PluginEnvironment {
 
 	JavaScriptObject getJsEnv(FileView filesystem, String pluginBaseUrl);
+
+	Map<String, NativeAction> getActions();
 
 }

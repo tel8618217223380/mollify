@@ -36,9 +36,16 @@ public class DefaultPluginSystem implements PluginSystem {
 	private final Map<String, Plugin> pluginsById = new HashMap();
 	private final PluginEnvironment pluginEnv;
 
+	private Callback listener = null;
+
 	@Inject
 	public DefaultPluginSystem(PluginEnvironment pluginEnv) {
 		this.pluginEnv = pluginEnv;
+	}
+
+	@Override
+	public void addListener(Callback callback) {
+		this.listener = callback;
 	}
 
 	@Override
@@ -85,6 +92,8 @@ public class DefaultPluginSystem implements PluginSystem {
 				session.getPluginBaseUrl());
 		for (Plugin p : plugins)
 			p.initialize(env);
+		if (listener != null)
+			listener.onCallback();
 	}
 
 	private native void setupPlugins() /*-{

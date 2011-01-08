@@ -24,6 +24,7 @@
 			$this->env->filesystem()->registerDetailsPlugin($this);
 			$this->env->events()->register("filesystem/", $this);
 			$this->env->plugins()->addPlugin("SharePlugin", array());
+			$this->env->plugins()->addPlugin("GuestUpload", array());
 		}
 		
 		public function getInboxPath() {
@@ -31,7 +32,7 @@
 		}
 		
 		public function onUserAdded($id, $user) {
-			if (strtoupper($user['permission_mode']) !== 'NO') return;
+			if (strtoupper($user['permission_mode']) !== 'NO' and strtoupper($user['permission_mode']) !== 'A') return;
 			
 			$folderName = $user["name"];
 			$folderPath = self::$FOLDER_PATHS.$id;

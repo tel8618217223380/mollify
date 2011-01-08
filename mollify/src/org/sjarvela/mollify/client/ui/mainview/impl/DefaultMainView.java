@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -22,6 +23,9 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.plugin.NativeAction;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
@@ -83,6 +87,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private HintTextBox searchField;
 
 	private FlowPanel fileUrlContainer;
+	private final PluginEnvironment pluginEnvironment;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
@@ -92,10 +97,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			TextProvider textProvider, ActionListener actionListener,
 			FolderSelectorFactory folderSelectorFactory,
 			ItemContextPopup itemContextPopup,
-			DragAndDropManager dragAndDropManager) {
+			DragAndDropManager dragAndDropManager, PluginSystem pluginSystem,
+			final PluginEnvironment pluginEnvironment) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.pluginEnvironment = pluginEnvironment;
 
 		this.buttonPanel = new FlowPanel();
 		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
@@ -137,6 +144,21 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
+
+		pluginSystem.addListener(new Callback() {
+			@Override
+			public void onCallback() {
+				for (final Entry<String, NativeAction> e : pluginEnvironment
+						.getActions().entrySet()) {
+					username.addCallbackAction(e.getKey(), new Callback() {
+						@Override
+						public void onCallback() {
+							e.getValue().onAction();
+						}
+					});
+				}
+			}
+		});
 	}
 
 	private void onSearch(String text) {
