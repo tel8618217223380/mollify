@@ -1,7 +1,7 @@
 <?php
 	class GuestUpload extends PluginBase {
 		public function setup() {
-			//$this->addService("share", "ShareServices");
+			$this->addService("guestupload", "GuestUploadServices");
 		}
 		
 		public function getClientPlugin() {
