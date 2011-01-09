@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DropdownPopup extends PopupPanel {
 	private PopupPositioner positioner;
 
-	protected final Panel container;
+	protected final FlowPanel container;
 	private Widget parent;
 
 	public DropdownPopup(Widget parent) {
@@ -31,7 +31,7 @@ public class DropdownPopup extends PopupPanel {
 		this.parent = parent;
 		this.positioner = positioner;
 
-		this.container = createContainer();
+		this.container = (FlowPanel) createContainer();
 		setWidget(container);
 	}
 
@@ -40,7 +40,14 @@ public class DropdownPopup extends PopupPanel {
 	}
 
 	protected void addItem(Widget item) {
-		container.add(item);
+		addItem(item, false);
+	}
+
+	protected void addItem(Widget item, boolean first) {
+		if (first)
+			container.insert(item, 0);
+		else
+			container.add(item);
 	}
 
 	public void removeAllMenuItems() {

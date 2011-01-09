@@ -24,7 +24,7 @@
 			$this->env->filesystem()->registerDetailsPlugin($this);
 			$this->env->events()->register("filesystem/", $this);
 			$this->env->plugins()->addPlugin("SharePlugin", array());
-			$this->env->plugins()->addPlugin("GuestUpload", array());
+			$this->env->plugins()->addPlugin("Guest", array());
 		}
 		
 		public function getInboxPath() {
