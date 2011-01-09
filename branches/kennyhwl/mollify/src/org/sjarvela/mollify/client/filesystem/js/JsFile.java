@@ -67,6 +67,7 @@ public class JsFile extends JavaScriptObject {
 		this.parent_id = parentId;
 		this.extension = extension;
 		this.size = size;
+		this.is_file = true;
 	}-*/;
 
 	public static JavaScriptObject create(File file) {

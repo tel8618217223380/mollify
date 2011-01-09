@@ -49,7 +49,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		addItem(itemWidget);
 	}
 
-	public void addCallbackAction(T item, final Callback callback) {
+	public void addCallbackAction(T item, final Callback callback, boolean first) {
 		Label label = createMenuItemWidget(item.toString());
 		label.addClickHandler(new ClickHandler() {
 			@Override
@@ -57,7 +57,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 				callback.onCallback();
 			}
 		});
-		addItem(label);
+		addItem(label, first);
 	}
 
 	public void setActionEnabled(ResourceId action, boolean enabled) {
@@ -102,7 +102,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	}
 
 	public void addSeparator() {
-		addItem(createSeparatorWidget());
+		addItem(createSeparatorWidget(), false);
 	}
 
 	private Widget createSeparatorWidget() {

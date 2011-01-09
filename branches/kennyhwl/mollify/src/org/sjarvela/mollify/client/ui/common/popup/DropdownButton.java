@@ -73,7 +73,11 @@ public class DropdownButton extends ActionButton {
 	}
 
 	public void addCallbackAction(String title, Callback callback) {
-		menu.addCallbackAction(title, callback);
+		addCallbackAction(title, callback, false);
+	}
+
+	public void addCallbackAction(String title, Callback callback, boolean first) {
+		menu.addCallbackAction(title, callback, first);
 	}
 
 }

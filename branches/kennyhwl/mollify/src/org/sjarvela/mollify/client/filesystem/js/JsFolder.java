@@ -63,6 +63,7 @@ public class JsFolder extends JavaScriptObject {
 		this.path = path;
 		this.parent_id = parentId;
 		this.is_protected = isProtected;
+		this.is_file = false;
 	}-*/;
 
 }
