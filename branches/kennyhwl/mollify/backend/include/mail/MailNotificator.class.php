@@ -58,6 +58,7 @@
 		}
 				
 		private function getRecipientString($r) {
+			if (!isset($r["name"])) return $r["email"];
 			return $r["name"].'<'.$r["email"].'>';
 		}
 		

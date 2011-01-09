@@ -20,7 +20,7 @@
 		}
 		
 		public function processGet() {
-			if (count($this->path) != 2 or $this->path[1] != 'info') throw $this->invalidRequestException();		
+			if (count($this->path) != 2 or $this->path[1] != 'info') throw $this->invalidRequestException();
 
 			$item = $this->item($this->path[0]);
 			$currentUser = $this->getFolderUser($item);
