@@ -54,7 +54,7 @@
 					
 					uploader.bind('UploadProgress', function() {
 						if (uploader.total.uploaded == uploader.files.length)
-							$('body').html("<div class='complete'>Upload complete</div>");
+							$('body').load("complete.html");
 					});
 					uploader.start();
 			    });
