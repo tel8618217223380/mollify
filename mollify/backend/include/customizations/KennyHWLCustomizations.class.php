@@ -32,7 +32,7 @@
 		}
 		
 		public function onUserAdded($id, $user) {
-			if (strtoupper($user['permission_mode']) !== 'NO' and strtoupper($user['permission_mode']) !== 'A') return;
+			if (strtoupper($user['permission_mode']) !== 'NO' and strtoupper($user['permission_mode']) !== 'ST') return;
 			
 			$folderName = $user["name"];
 			$folderPath = self::$FOLDER_PATHS.$id;
@@ -45,6 +45,14 @@
 			
 			$fs = $this->env->filesystem()->filesystem(array("id" => $folderId, "path" => $folderPath, "name" => $folderName), FALSE);
 			$this->env->configuration()->addItemPermission($fs->root()->id(), Authentication::PERMISSION_VALUE_READWRITE, $id);
+		}
+		
+		public function onUserRemoved($user) {
+			if (strtoupper($user['permission_mode']) !== 'NO' and strtoupper($user['permission_mode']) !== 'ST') return;
+			$folder = $this->getUserFolder($user["id"]);
+			$root = $this->env->filesystem()->item($folder["id"].":/");
+			$this->onBeforeDelete($root);
+			$root->delete();
 		}
 
 		public function onUserRenamed($userId, $name) {
