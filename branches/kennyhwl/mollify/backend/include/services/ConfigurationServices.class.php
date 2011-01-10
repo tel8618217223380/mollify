@@ -233,6 +233,8 @@
 
 			$userId = $this->path[1];
 			if (count($this->path) == 2) {
+				$user = $this->env->configuration()->getUser($userId);
+				$this->env->customizations()->onUserRemoved($user);
 				$this->env->configuration()->removeUser($userId);
 				$this->response()->success(TRUE);
 				return;
