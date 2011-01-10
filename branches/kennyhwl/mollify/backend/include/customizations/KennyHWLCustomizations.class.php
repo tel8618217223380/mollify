@@ -66,15 +66,19 @@
 		
 		public function onEvent($e) {
 			if ($e->subType() === FileEvent::UPLOAD) {
+				$guestUpload = (strpos($this->env->request()->URI(), "guest/") === 0);
 				$item = $e->item();
-				
-				$available = $this->getAvailableQuota($item);
-				if ($available === FALSE) return;	// no quota set
-				
+				Logging::logDebug("Customization: File uploaded, guest: ".($guestUpload ? "yes" : "no"));
+
 				$size = $this->getItemSize($item);
-				if ($size > $available) {
-					unlink($item->internalPath());
-					throw new ServiceException("QUOTA_EXCEEDED", "Quota available ".$available.", required ".$size);
+				if (!$guestUpload) {
+					$available = $this->getAvailableQuota($item);
+					if ($available === FALSE) return;	// no quota set	
+
+					if ($size > $available) {
+						unlink($item->internalPath());
+						throw new ServiceException("QUOTA_EXCEEDED", "Quota available ".$available.", required ".$size);
+					}
 				}
 				
 				$this->removeQuota($item, $size);
@@ -179,7 +183,7 @@
 			foreach($db->query("SELECT to_item_id FROM ".$db->table("item_share")." where to_item_id REGEXP '^".$rootId."*'")->rows() as $row)
 				$paths[] = str_replace($rootId, $path, $row["to_item_id"]);
 			
-			Logging::logDebug("Exclude: ".Util::array2str($paths));
+			//Logging::logDebug("Exclude: ".Util::array2str($paths));
 			return $paths;
 		}
 		
@@ -209,7 +213,7 @@
 
 		public function removeQuota($item, $amount) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s'", $amount, $db->string($item->rootId())));
+			$db->update(sprintf("UPDATE ".$db->table("folder")." SET quota_used=(quota_used+%s) WHERE id='%s' and quota > 0", $amount, $db->string($item->rootId())));
 		}
 				
 		public function restoreQuota($item, $amount) {
