@@ -10,13 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class GuestServices extends ServicesBase {
-		const UPLOAD_SUBJECT = "Upload link";
-		const UPLOAD_MESSAGE = "Open following link to upload files: %link%";
-
-		const DOWNLOAD_SUBJECT = "Download link";
-		const DOWNLOAD_MESSAGE = "Open following link to download file \"%name%\": %link%";
-		
+	class GuestServices extends ServicesBase {		
 		protected function isValidPath($method, $path) {
 			return TRUE;
 		}
@@ -28,10 +22,11 @@
 		public function processGet() {
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
+			require_once("include/customizations/Messages.php");
 			if ($this->path[0] == 'upload' and $this->path[1] == 'info') {
-				$this->response()->success(array("subject" => self::UPLOAD_SUBJECT, "message" => self::UPLOAD_MESSAGE));
+				$this->response()->success(array("subject" => $GUEST_UPLOAD_SUBJECT, "message" => $GUEST_UPLOAD_MESSAGE));
 			} else if ($this->path[0] == 'download' and $this->path[1] == 'info') {
-				$this->response()->success(array("subject" => self::DOWNLOAD_SUBJECT, "message" => self::DOWNLOAD_MESSAGE));			
+				$this->response()->success(array("subject" => $GUEST_DOWNLOAD_SUBJECT, "message" => $GUEST_DOWNLOAD_MESSAGE));
 			} else {
 				throw $this->invalidRequestException();
 			}
@@ -55,17 +50,8 @@
 			$data = $this->request->data;
 			if (!isset($data["to"]) or !isset($data["subject"]) or !isset($data["message"])) throw $this->invalidRequestException();
 			
-			$user = $this->env->configuration()->getUser($this->env->authentication()->getUserId());
-			if ($user["email"] == NULL or strlen($user["email"]) == 0) $this->response()->fail("1", "User does not have email defined");
-			
 			$link = $this->env->getPluginUrl("Guest")."upload/?id=".$this->env->authentication()->getUserId();
-			$values = array("link" => $link);
-			
-			$msg = Util::replaceParams($data["message"], $values);
-			$recipient = array(array("email" => $data["to"]));
-			
-			$this->env->notificator()->send($recipient, $data["subject"], $msg);
-			$this->response()->success(array("success"=>TRUE));
+			$this->send($data, $link);
 		}
 
 		private function doSendDownload() {			
@@ -74,13 +60,18 @@
 			$data = $this->request->data;
 			if (!isset($data["to"]) or !isset($data["subject"]) or !isset($data["message"]) or !isset($data["id"])) throw $this->invalidRequestException();
 			
-			$user = $this->env->configuration()->getUser($this->env->authentication()->getUserId());
-			if ($user["email"] == NULL or strlen($user["email"]) == 0) $this->response()->fail("1", "User does not have email defined");
-			
 			$link = $this->env->getServiceUrl("public", array("items", $data["id"]), TRUE);
-			$values = array("link" => $link);
+			$this->send($data, $link);
+		}
+		
+		private function send($data, $link) {
+			$user = $this->env->configuration()->getUser($this->env->authentication()->getUserId());
+			if ($user["email"] == NULL or strlen($user["email"]) == 0) {
+				$this->response()->fail("1", "User does not have email defined");
+				return;
+			}
 			
-			$msg = Util::replaceParams($data["message"], $values);
+			$msg = Util::replaceParams($data["message"], array("link" => $link));
 			$recipient = array(array("email" => $data["to"]));
 			
 			$this->env->notificator()->send($recipient, $data["subject"], $msg);
