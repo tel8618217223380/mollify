@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class KennyHWLCustomizations {
+	class W3HubCustomizations {
 		static $FOLDER_PATHS = "/foo/kennyhwl/users/";
 		static $INBOX_NAME = "Inbox";
 		
@@ -50,9 +50,14 @@
 		public function onUserRemoved($user) {
 			if (strtoupper($user['permission_mode']) !== 'NO' and strtoupper($user['permission_mode']) !== 'ST') return;
 			$folder = $this->getUserFolder($user["id"]);
-			$root = $this->env->filesystem()->item($folder["id"].":/");
-			$this->onBeforeDelete($root);
-			$root->delete();
+			if ($folder) {
+				$root = $this->env->filesystem()->item($folder["id"].":/");
+				$this->onBeforeDelete($root);
+				$root->delete();
+				
+				$db = $this->env->configuration()->db();
+				$db->update(sprintf("DELETE FROM ".$db->table("folder")." WHERE id='%s'", $db->string($folder["id"])));
+			}
 		}
 
 		public function onUserRenamed($userId, $name) {
@@ -70,6 +75,12 @@
 			if (!$folders or count($folders) == 0) return NULL;
 			
 			return $folders[0];
+		}
+		
+		public function getFolderUser($item) {
+			$users = $this->env->configuration()->getFolderUsers($item->rootId());
+			if (!$users or count($users) < 1) return FALSE;
+			return $users[0];
 		}
 		
 		public function onEvent($e) {
@@ -90,6 +101,18 @@
 				}
 				
 				$this->removeQuota($item, $size);
+				
+				if ($guestUpload) {
+					$user = $this->getFolderUser($item);
+					if (!$user and isset($user["email"]) and strlen() > 0) {
+						require_once("include/customizations/Messages.php");
+						$msg = Util::replaceParams($GUEST_UPLOAD_NOTIFICATION_MESSAGE, array("name" => $item->name()));
+						$recipient = array(array("email" => $user["email"]));
+			
+						$this->env->notificator()->send($recipient, $GUEST_UPLOAD_NOTIFICATION_SUBJECT, $msg);
+					}
+					// send notification "file xxx uploaded"
+				}
 				return;
 			}
 			if ($e->subType() !== FileEvent::RENAME and $e->subType() !== FileEvent::MOVE) return;

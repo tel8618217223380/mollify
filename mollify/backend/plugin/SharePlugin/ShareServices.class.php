@@ -23,7 +23,7 @@
 			if (count($this->path) != 2 or $this->path[1] != 'info') throw $this->invalidRequestException();
 
 			$item = $this->item($this->path[0]);
-			$currentUser = $this->getFolderUser($item);
+			$currentUser = $this->env->customizations()->getFolderUser($item);
 			if (!$currentUser) throw new ServiceException("REQUEST_FAILED");
 			
 			$toUserIds = array();
@@ -38,12 +38,6 @@
 				$available[] = $user;
 			}
 			$this->response()->success(array("users" => $available));
-		}
-		
-		private function getFolderUser($item) {
-			$users = $this->env->configuration()->getFolderUsers($item->rootId());
-			if (!$users or count($users) < 1) return FALSE;
-			return $users[0];
 		}
 		
 		public function processPost() {
