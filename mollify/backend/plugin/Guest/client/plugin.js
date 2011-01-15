@@ -30,7 +30,7 @@ function GuestPlugin() {
 						title: "-"
 					},
 					{
-						title: "Send link...",
+						title: "Send download link...",
 						callback: that.onSendDownloadLink
 					}
 				]

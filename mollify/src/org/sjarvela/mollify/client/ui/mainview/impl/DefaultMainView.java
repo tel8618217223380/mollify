@@ -87,6 +87,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private HintTextBox searchField;
 
 	private FlowPanel fileUrlContainer;
+	private final PluginEnvironment pluginEnvironment;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
@@ -101,6 +102,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.pluginEnvironment = pluginEnvironment;
 
 		this.buttonPanel = new FlowPanel();
 		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
@@ -146,18 +148,22 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		pluginSystem.addListener(new Callback() {
 			@Override
 			public void onCallback() {
-				Map<String, NativeAction> actions = pluginEnvironment
-						.getActions();
-				for (final Entry<String, NativeAction> e : actions.entrySet()) {
-					username.addCallbackAction(e.getKey(), new Callback() {
-						@Override
-						public void onCallback() {
-							e.getValue().onAction();
-						}
-					}, true);
-				}
+				addPluginActions();
 			}
+
 		});
+	}
+
+	private void addPluginActions() {
+		Map<String, NativeAction> actions = pluginEnvironment.getActions();
+		for (final Entry<String, NativeAction> e : actions.entrySet()) {
+			username.addCallbackAction(e.getKey(), new Callback() {
+				@Override
+				public void onCallback() {
+					e.getValue().onAction();
+				}
+			}, true);
+		}
 	}
 
 	private void onSearch(String text) {
@@ -234,6 +240,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			loggedInPanel
 					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
 			loggedInPanel.add(createUserName());
+			addPluginActions();
 			headerUpper.add(loggedInPanel);
 		}
 
