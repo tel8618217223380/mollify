@@ -16,10 +16,11 @@
 		}
 		
 		public function isAuthenticationRequired() {
-			return TRUE;
+			return FALSE;
 		}
 		
 		public function processGet() {
+			if (!$this->env->authentication()->isAuthenticated()) throw $this->invalidRequestException();
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
 			require_once("include/customizations/Messages.php");
@@ -36,9 +37,14 @@
 			if (count($this->path) == 0 or count($this->path) > 2) throw $this->invalidRequestException();
 			
 			if ($this->path[0] == 'upload') {
-				if (count($this->path) == 1) $this->doUpload();
-				else if ($this->path[1] === 'send') $this->doSendUpload();
+				if (count($this->path) == 1) {
+					$this->doUpload();
+					return;
+				}
+				if (!$this->env->authentication()->isAuthenticated()) throw $this->invalidRequestException();
+				if ($this->path[1] === 'send') $this->doSendUpload();
 			} else if ($this->path[0] == 'download') {
+				if (!$this->env->authentication()->isAuthenticated()) throw $this->invalidRequestException();
 				if ($this->path[1] === 'send') $this->doSendDownload();
 			}
 			else throw $this->invalidRequestException();
@@ -90,6 +96,6 @@
 			$folder = $this->env->customizations()->getUserFolder($id);
 			$target = $this->env->filesystem()->filesystemFromId($folder["id"]);
 			$root = $target->root();
-			return $root->folderWithName(KennyHWLCustomizations::$INBOX_NAME);
+			return $root->folderWithName(W3HubCustomizations::$INBOX_NAME);
 		}
 	}

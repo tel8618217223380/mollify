@@ -104,14 +104,13 @@
 				
 				if ($guestUpload) {
 					$user = $this->getFolderUser($item);
-					if (!$user and isset($user["email"]) and strlen() > 0) {
+					if ($user and isset($user["email"]) and strlen($user["email"]) > 0) {
 						require_once("include/customizations/Messages.php");
 						$msg = Util::replaceParams($GUEST_UPLOAD_NOTIFICATION_MESSAGE, array("name" => $item->name()));
 						$recipient = array(array("email" => $user["email"]));
 			
 						$this->env->notificator()->send($recipient, $GUEST_UPLOAD_NOTIFICATION_SUBJECT, $msg);
 					}
-					// send notification "file xxx uploaded"
 				}
 				return;
 			}
@@ -361,7 +360,7 @@
 		}
 		
 		public function __toString() {
-			return "KennyHWLCustomizations";
+			return "W3HubCustomizations";
 		}
 	}
 ?>

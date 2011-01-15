@@ -184,7 +184,7 @@
 		}
 		
 		public function getFolderUsers($id) {
-			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id, user.name, user.email, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addFolderUsers($folderId, $userIds) {
