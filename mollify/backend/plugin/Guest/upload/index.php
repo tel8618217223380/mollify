@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="resources/gears_init.js"></script>
 		<script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
 		<script type="text/javascript" src="resources/plupload.full.min.js"></script>
-		<script type="text/javascript" src="/plupload/js/jquery.plupload.queue.min.js"></script>
+		<script type="text/javascript" src="resources/jquery.plupload.queue.min.js"></script>
 		<script type="text/javascript">
 			$(function() {
 			    $("#uploader").pluploadQueue({
@@ -65,9 +65,8 @@
 	<body>
 		<form>
 		    <div id="uploader">
-		        <p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
+		        <p>Your browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
 		    </div>
-		    <input type="submit" value="Start" />
 		</form>
 	</body>
 </html>

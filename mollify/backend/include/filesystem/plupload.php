@@ -111,10 +111,10 @@ function plupload($folder, $eventHandler) {
 		fclose($out);
 		fclose($in);
 		
-		Logging::logDebug("Upload finished");
-		
-		if ($chunks === 0 or $chunk === ($chunks-1))
+		if ($chunks == 0 or $chunk == ($chunks-1)) {
 			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
+			Logging::logDebug("Upload finished");
+		}
 	}
 }
 ?>

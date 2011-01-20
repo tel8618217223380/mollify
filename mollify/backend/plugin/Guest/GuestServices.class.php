@@ -80,7 +80,7 @@
 			$msg = Util::replaceParams($data["message"], array("link" => $link));
 			$recipient = array(array("email" => $data["to"]));
 			
-			$this->env->notificator()->send($recipient, $data["subject"], $msg);
+			$this->env->notificator()->send($recipient, $data["subject"], $msg, $user["email"]);
 			$this->response()->success(array("success"=>TRUE));
 		}
 		
