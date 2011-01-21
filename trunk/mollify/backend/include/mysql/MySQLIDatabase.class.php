@@ -68,7 +68,7 @@
 			mysqli_report(MYSQLI_REPORT_ALL);
 			try {
 				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database, $this->port, $this->socket);
-				else $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->port, $this->socket);
+				else $db = @mysqli_connect($this->host, $this->user, $this->pw, "", $this->port, $this->socket);
 			} catch (mysqli_sql_exception $e) {
 				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (host=".$this->host.", user=".$this->user.", password=".$this->pw."), error: ".mysqli_connect_errno()."/".mysqli_connect_error());
 			}

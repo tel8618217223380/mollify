@@ -49,8 +49,8 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		addItem(itemWidget);
 	}
 
-	public void addCallbackAction(T item, final Callback callback) {
-		Label label = createMenuItemWidget(item.toString());
+	public void addCallbackAction(T item, String id, final Callback callback) {
+		Label label = createMenuItemWidget(id, item.toString());
 		label.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -75,7 +75,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	}
 
 	protected Label createMenuItemWidget(final ResourceId action, T item) {
-		Label label = createMenuItemWidget(item.toString());
+		Label label = createMenuItemWidget(action.name(), item.toString());
 
 		if (action != null)
 			label.addClickHandler(new ClickHandler() {
@@ -87,9 +87,11 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		return label;
 	}
 
-	protected Label createMenuItemWidget(String title) {
+	protected Label createMenuItemWidget(String id, String title) {
 		final Label label = new Label(title);
-		label.setStyleName(StyleConstants.DROPDOWN_MENU_ITEM);
+		label.setStylePrimaryName(StyleConstants.DROPDOWN_MENU_ITEM);
+		if (id != null)
+			label.addStyleDependentName(id);
 		HoverDecorator.decorate(label);
 
 		label.addClickHandler(new ClickHandler() {

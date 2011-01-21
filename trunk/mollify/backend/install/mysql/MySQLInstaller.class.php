@@ -24,7 +24,7 @@
 			
 			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT;
 			$this->configured = isset($DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT);
+			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 

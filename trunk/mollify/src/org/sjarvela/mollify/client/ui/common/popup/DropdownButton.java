@@ -72,8 +72,8 @@ public class DropdownButton extends ActionButton {
 		return !menu.isShowing();
 	}
 
-	public void addCallbackAction(String title, Callback callback) {
-		menu.addCallbackAction(title, callback);
+	public void addCallbackAction(String title, String id, Callback callback) {
+		menu.addCallbackAction(title, id, callback);
 	}
 
 }

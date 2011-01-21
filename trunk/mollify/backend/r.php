@@ -10,6 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
+	date_default_timezone_set("Europe/Helsinki");
 	require_once("include/Logging.class.php");
 	require_once("include/Request.class.php");
 	require_once("include/ResponseHandler.class.php");

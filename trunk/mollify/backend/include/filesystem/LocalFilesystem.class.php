@@ -282,7 +282,6 @@
 		}
 		
 		public function size($file) {
-			Logging::logDebug($file->name().filesize($this->localPath($file)));
 			return sprintf("%u", filesize($this->localPath($file)));
 		}
 		

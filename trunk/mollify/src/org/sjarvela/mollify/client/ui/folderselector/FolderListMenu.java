@@ -117,7 +117,8 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 	@Override
 	protected Label createMenuItemWidget(final ResourceId action,
 			final Folder item) {
-		Label label = createMenuItemWidget(item.getName());
+		Label label = createMenuItemWidget(action != null ? action.name()
+				: null, item.getName());
 		label.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				listener.onChangeToFolder(level, item);
