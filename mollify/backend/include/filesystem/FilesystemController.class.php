@@ -445,7 +445,7 @@
 		public function view($file) {
 			Logging::logDebug('view ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "view");
-			$this->env->events()->onEvent(FileEvent::download($file));
+			$this->env->events()->onEvent(FileEvent::view($file));
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
 		}
 		
@@ -587,7 +587,6 @@
 		public function __toString() {
 			return "FILESYSTEMCONTROLLER";
 		}
-
 	 }
 	 
 	 class FileEvent extends Event {
@@ -598,6 +597,7 @@
 		const CREATE_FOLDER = "create_folder";
 		const DOWNLOAD = "download";
 		const UPLOAD = "upload";
+		const VIEW = "view";
 		
 		private $item;
 		private $info;
@@ -609,6 +609,7 @@
 			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::DELETE, "Delete file");
 			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::CREATE_FOLDER, "Create folder");
 			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::DOWNLOAD, "Download file");
+			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::VIEW, "View file");
 			$eventHandler->registerEventType(FilesystemController::EVENT_TYPE_FILE, self::UPLOAD, "Upload file");
 		}
 		
@@ -638,6 +639,10 @@
 
 		static function upload($item) {
 			return new FileEvent($item, self::UPLOAD);
+		}
+		
+		static function view($item) {
+			return new FileEvent($item, self::VIEW);
 		}
 		
 		function __construct($item, $type, $info = NULL) {

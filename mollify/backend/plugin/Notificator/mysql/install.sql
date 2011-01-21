@@ -1,8 +1,8 @@
 CREATE TABLE `{TABLE_PREFIX}notificator_notification` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
-  `message_title` varchar(255) NOT NULL,
-  `message` varchar(512) NOT NULL,
+  `message_title` varchar(255) NOT NULL DEFAULT '',
+  `message` varchar(512) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Notifications';
 

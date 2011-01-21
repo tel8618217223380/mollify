@@ -70,6 +70,7 @@ public class DefaultViewManager implements ViewManager {
 
 	public void empty() {
 		rootPanel.clear();
+		rootPanel.getElement().setInnerHTML("");
 	}
 
 	private Panel createHiddenFrame() {
