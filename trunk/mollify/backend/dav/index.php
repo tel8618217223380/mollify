@@ -4,6 +4,7 @@
 	$BASE_URI = "/mollify/backend/dav/";
 	$ENABLE_LOCKING = TRUE;
 	$ENABLE_BROWSER = FALSE;
+	$ENABLE_TEMPORARY_FILE_FILTER = TRUE;
 	
 	require_once("mollify_dav.php");
 ?>

@@ -42,6 +42,7 @@
 			require_once("include/Features.class.php");
 			require_once("include/Util.class.php");
 			require_once("include/Session.class.php");
+			require_once("include/event/EventHandler.class.php");
 			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationProviderFactory.class.php");
 			require_once("plugin/PluginController.class.php");

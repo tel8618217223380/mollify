@@ -159,6 +159,7 @@
 		$dav->setBaseUri($BASE_URI);
 		if ($ENABLE_LOCKING) $dav->addPlugin(new Sabre_DAV_Locks_Plugin(new Sabre_DAV_Locks_Backend_FS('data')));
 		if ($ENABLE_BROWSER) $dav->addPlugin(new Sabre_DAV_Browser_Plugin());
+		if ($ENABLE_TEMPORARY_FILE_FILTER) $dav->addPlugin(new Sabre_DAV_TemporaryFileFilterPlugin('temp'));
 		$dav->addPlugin(new Sabre_DAV_Mount_Plugin());
 		$dav->exec();
 	} catch (ServiceException $e) {

@@ -35,7 +35,7 @@
 		}
 		
 		public function authenticate($userId, $password) {
-			$user = $this->env->configuration()->findUser($userId, $password);
+			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings("email_login", TRUE));
 			if (!$user) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
@@ -50,6 +50,10 @@
 				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
 			$this->env->session()->param('username', $user["name"]);
 			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
+		}
+		
+		public function realm() {
+			return "mollify";
 		}
 		
 		public function isAuthenticated() {

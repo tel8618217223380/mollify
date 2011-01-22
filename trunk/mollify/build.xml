@@ -130,6 +130,8 @@
 		<mkdir dir="${deploy.dir}" />
 		<mkdir dir="${target.dir}" />
 		<mkdir dir="${target.dir}/dav/" />
+		<mkdir dir="${target.dir}/dav/data/" />
+		<mkdir dir="${target.dir}/dav/temp/" />
 		
 		<copy todir="${target.dir}/dav/">
 			<fileset dir="${root.dir}/backend/dav/">
@@ -138,7 +140,7 @@
 			</fileset>
 		</copy>
 		
-		<zip destfile="${deploy.dir}/dav_1.0.zip" basedir="${target.dir}" includes="dav/**" />
+		<zip destfile="${deploy.dir}/plugin_webdav_1.2.zip" basedir="${target.dir}" includes="dav/**" />
 		
 		<delete dir="${target.dir}" />
 	</target>

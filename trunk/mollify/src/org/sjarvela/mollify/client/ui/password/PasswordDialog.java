@@ -82,7 +82,7 @@ public class PasswordDialog extends CenteredDialog {
 				textProvider.getText(Texts.passwordDialogChangeButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						onRename();
+						onChange();
 					}
 				}, StyleConstants.PASSWORD_DIALOG_BUTTON_CHANGE));
 
@@ -97,7 +97,7 @@ public class PasswordDialog extends CenteredDialog {
 		return buttons;
 	}
 
-	private void onRename() {
+	private void onChange() {
 		this.newPassword.removeStyleDependentName(StyleConstants.INVALID);
 		this.confirmNewPassword
 				.removeStyleDependentName(StyleConstants.INVALID);
