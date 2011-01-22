@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.7 ===
+  * Added new languages: nl
+  * Fixed issue 177
+  * Fixed issue 178
+  * Fixed issue 181
+  * Fixed issue 182
+  * Fixed issue 190
+
 === Version 1.7.6 ===
   * Added new languages: fr, it, kr and ru
   * Added default timezone in backend
