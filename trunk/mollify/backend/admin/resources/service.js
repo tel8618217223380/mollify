@@ -83,12 +83,12 @@ function getUsers(success, fail) {
 }
 
 function addUser(name, pw, email, permission, success, fail) {
-	var data = JSON.stringify({name:name, password:generate_md5(pw), email:email, "permission_mode":permission});
+	var data = JSON.stringify({name:name, password: Base64.encode(pw), email:email, "permission_mode":permission});
 	request("POST", 'configuration/users', success, fail, data);
 }
 
 function changePassword(id, pw, success, fail) {
-	var data = JSON.stringify({"new":generate_md5(pw)});
+	var data = JSON.stringify({"new": Base64.encode(pw)});
 	request("PUT", 'configuration/users/'+id+'/password', success, fail, data);
 }
 

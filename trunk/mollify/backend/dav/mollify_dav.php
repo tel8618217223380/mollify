@@ -135,25 +135,49 @@
 		$env = $backend->env();
 		$env->initialize();
 		
-		$auth = new Sabre_HTTP_BasicAuth();
-		$result = $auth->getUserPass();
+		if (isset($AUTH_DIGEST) and $AUTH_DIGEST) {
+			$auth = new Sabre_HTTP_DigestAuth();
+			$auth->setRealm($env->authentication()->realm());
+			$auth->init();
+			$username = $auth->getUserName();
+			
+			if (!$username) {
+				Logging::logDebug("DAV digest authentication missing");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			
+			$user = $env->configuration()->getUserByName($username);
+			Logging::logDebug("DAV digest authentication: ".$username."/".$user["a1password"]);
+			
+			if (!$auth->validateA1($user["a1password"])) {
+				Logging::logDebug("DAV digest authentication failure");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			$env->authentication()->doAuth($user);
+		} else {
+			$auth = new Sabre_HTTP_BasicAuth();
+			$result = $auth->getUserPass();
 		
-		if (!$result) {
-			Logging::logDebug("DAV authentication missing");
-			$auth->requireLogin();
-			echo "Authentication required\n";
-			die();
+			if (!$result) {
+				Logging::logDebug("DAV authentication missing");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			
+			$user = $env->configuration()->getUserByName($result[0]);
+			if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
+				Logging::logDebug("DAV authentication failure");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			$env->authentication()->doAuth($user);
 		}
-		
-		$user = $env->configuration()->getUserByName($result[0]);
-		if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
-			Logging::logDebug("DAV authentication failure");
-			$auth->requireLogin();
-			echo "Authentication required\n";
-			die();
-		}
-
-		$env->authentication()->doAuth($user);
 
 		$dav = new Sabre_DAV_Server(new Mollify_DAV_Root($env->filesystem()));
 		$dav->setBaseUri($BASE_URI);
