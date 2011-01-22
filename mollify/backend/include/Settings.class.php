@@ -14,6 +14,7 @@
 		private $settings = array();
 		
 		private static $VALUES = array(
+			"email_login" => FALSE,
 			"host_public_address" => NULL,
 			"session_name" => NULL,
 			"timezone" => NULL,

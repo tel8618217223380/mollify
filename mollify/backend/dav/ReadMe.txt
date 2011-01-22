@@ -17,6 +17,9 @@ CONFIGURATION
 	Modify "index.php" and update variable $BASE_URI according to your configuration. The value is the access url without protocol or host ip.
 
 	For example, if mollify backend is located at "http://host/mollify/backend", the base uri should be "/mollify/backend/dav/" (assuming rewrite applies, "/mollify/backend/dav/index.php/" if not).
+	
+	If htaccess rules are not available, you can also use Apache alias. For example following alias in Apache configuration will do the same (without the quotes):
+	"alias  /mollify/backend/dav  /mollify/backend/dav/index.php"
 
 2) Script location
 
@@ -25,3 +28,7 @@ CONFIGURATION
 3) Locking
 
 	By default, dav is set up with locking support. Some clients don't require this (see http://code.google.com/p/sabredav/), and can be disabled by setting "$ENABLE_LOCKING = FALSE;" in index.php
+
+4) Temporary file filter
+
+	By default, dav is set up to filter temporary files, because many clients create garbage files on your WebDAV share (see http://code.google.com/p/sabredav/wiki/TemporaryFileFilter). This can be disabled by setting "$ENABLE_TEMPORARY_FILE_FILTER = FALSE;" in index.php

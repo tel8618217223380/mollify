@@ -13,7 +13,7 @@
 	require_once("DbConfigurationProvider.class.php");
 
 	class MySQLConfigurationProvider extends DbConfigurationProvider {
-		const VERSION = "1_6_0";
+		const VERSION = "1_7_8";
 		
 		public function __construct($settings) {
 			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET, $DB_SOCKET, $DB_PORT;

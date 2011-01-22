@@ -25,6 +25,7 @@ import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserGroup;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
 import org.sjarvela.mollify.client.session.user.UsersAndGroups;
+import org.sjarvela.mollify.client.util.Base64;
 import org.sjarvela.mollify.client.util.JsUtil;
 import org.sjarvela.mollify.client.util.MD5;
 
@@ -52,7 +53,7 @@ public class PhpConfigurationService extends ServiceBase implements
 			logger.log(Level.INFO, "Change password");
 
 		String data = new JSONStringBuilder("old", MD5.generate(oldPassword))
-				.add("new", MD5.generate(newPassword)).toString();
+				.add("new", Base64.encode(newPassword)).toString();
 
 		request()
 				.url(serviceUrl().item("users").item("current")

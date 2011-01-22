@@ -193,7 +193,7 @@
 							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
 						}
 						
-						$this->response()->success($this->env->configuration()->changePassword($userId, $pw['new']));
+						$this->response()->success($this->env->configuration()->changePassword($userId, base64_decode($pw['new'])));
 						return;
 				}				
 			}

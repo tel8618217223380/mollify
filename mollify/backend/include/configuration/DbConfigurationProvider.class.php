@@ -39,8 +39,12 @@
 		
 		public function checkProtocolVersion($version) {}
 	
-		public function findUser($username, $password) {
-			$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE name='%s' AND password='%s'", $this->db->string($username), $this->db->string($password)));
+		public function findUser($username, $password, $allowEmail = FALSE) {
+			if ($allowEmail) {
+				$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND password='%s'", $this->db->string($username), $this->db->string($username), $this->db->string($password)));
+			} else {
+				$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE name='%s' AND password='%s'", $this->db->string($username), $this->db->string($password)));
+			}
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -167,7 +171,11 @@
 		}
 	
 		public function changePassword($id, $new) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s' WHERE id=%s", $this->db->string($new), $this->db->string($id)));
+			$user = $this->getUser($id);
+			$md5new = md5($new);
+			$a1new = md5($user["name"].$this->env->authentication()->realm().$new);
+			
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s', a1password='%s' WHERE id=%s", $this->db->string($md5new), $this->db->string($a1new), $this->db->string($id)));
 			return TRUE;
 		}
 	
