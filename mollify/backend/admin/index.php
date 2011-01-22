@@ -25,6 +25,7 @@
 		
 		<script type="text/javascript" src="../resources/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="../resources/md5.js"></script>
+		<script type="text/javascript" src="../resources/base64.js"></script>
 		<script type="text/javascript" src="../resources/json.js"></script>
 		<script type="text/javascript" src="../resources/template.js"></script>
 		<script type="text/javascript" src="../resources/jquery-ui-1.8.5.custom.min.js"></script>

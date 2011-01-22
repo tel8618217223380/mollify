@@ -61,7 +61,7 @@
 		}
 
 		public function getUserByName($username) {
-			$result = $this->db->query(sprintf("SELECT id, name, password FROM ".$this->db->table("user")." WHERE name='%s'", $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, password, a1password FROM ".$this->db->table("user")." WHERE name='%s'", $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -86,7 +86,10 @@
 		}
 		
 		public function addUser($name, $pw, $email, $permission) {
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, email, permission_mode, is_group) VALUES ('%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($pw), $this->db->string($email, TRUE), $this->db->string($permission)));
+			$md5pw = md5($pw);
+			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
+
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, is_group) VALUES ('%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission)));
 			return $this->db->lastId();
 		}
 	
@@ -173,7 +176,7 @@
 		public function changePassword($id, $new) {
 			$user = $this->getUser($id);
 			$md5new = md5($new);
-			$a1new = md5($user["name"].$this->env->authentication()->realm().$new);
+			$a1new = md5($user["name"].":".$this->env->authentication()->realm().":".$new);
 			
 			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET password='%s', a1password='%s' WHERE id=%s", $this->db->string($md5new), $this->db->string($a1new), $this->db->string($id)));
 			return TRUE;
