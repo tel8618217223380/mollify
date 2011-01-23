@@ -21,7 +21,8 @@ function PublicUploadPlugin() {
 	}
 	
 	this.getItemContext = function(item, details) {
-		if (item["is_file"]) return null;
+		if (item["is_file"] || item["permission"].toLowerCase() != 'rw') return null;
+		
 		return {
 			actions : {
 				secondary: [
@@ -46,7 +47,7 @@ function PublicUploadPlugin() {
 	}
 	
 	this.getUploadDialogContent = function() {
-		return "<div id='publicupload-dialog-content' style='height:100%'>"+
+		return "<div id='public-upload-dialog-content' style='width:100%; height:100%'>"+
 			"<table cellspacing=0 cellpadding=0 style='height:100%'>"+
 			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
 			"    <div class='public-upload-title'>Upload to:</div><div id='public-upload-value-to' class='public-upload-value'><input id='public-upload-to' readonly='true'></input></div>"+
