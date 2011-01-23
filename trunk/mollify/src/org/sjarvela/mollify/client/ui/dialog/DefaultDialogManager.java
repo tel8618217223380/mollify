@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -66,5 +67,11 @@ public class DefaultDialogManager implements DialogManager {
 	@Override
 	public WaitDialog openWaitDialog(String title, String message) {
 		return new DefaultWaitDialog(textProvider, title, message);
+	}
+
+	@Override
+	public CustomContentDialog showCustomDialog(String title, String style,
+			HTML html, CustomDialogListener listener) {
+		return new DefaultCustomContentDialog(title, style, html, listener);
 	}
 }

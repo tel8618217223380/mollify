@@ -33,7 +33,6 @@ public abstract class ResizableDialog extends Dialog implements
 	private int contentWidth = -1;
 	private int contentHeight = -1;
 
-
 	public ResizableDialog(String title, String style) {
 		super(title, style);
 	}
@@ -41,7 +40,7 @@ public abstract class ResizableDialog extends Dialog implements
 	@Override
 	protected void initialize() {
 		contentPanel = new VerticalPanel();
-		
+
 		content = createContent();
 		contentPanel.add(content);
 
@@ -68,6 +67,11 @@ public abstract class ResizableDialog extends Dialog implements
 	private void resetSize() {
 		contentWidth = getSizedElement().getClientWidth();
 		contentHeight = getSizedElement().getClientHeight();
+	}
+
+	public void setMinimumSizeToCurrent() {
+		setMinimumSize(getSizedElement().getClientWidth(), getSizedElement()
+				.getClientHeight());
 	}
 
 	private Widget createResizeWidget() {

@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface DialogManager {
@@ -30,5 +31,8 @@ public interface DialogManager {
 			InputListener listener);
 
 	WaitDialog openWaitDialog(String title, String message);
+
+	CustomContentDialog showCustomDialog(String title, String style, HTML html,
+			CustomDialogListener listener);
 
 }
