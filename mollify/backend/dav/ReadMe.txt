@@ -25,10 +25,14 @@ CONFIGURATION
 
 	If dav folder needs to be located somewhere else than under Mollify backend, modify "index.php" and update variables $MOLLIFY_BACKEND_ROOT and $BASE_URI (see previous chapter) accordingly.
 
-3) Locking
+3) Authentication
+
+	Dav plugin default authentication method is digest authentication. If basic authentication is required (not recommended), set "$BASIC_AUTH = TRUE;" in index.php
+
+4) Locking
 
 	By default, dav is set up with locking support. Some clients don't require this (see http://code.google.com/p/sabredav/), and can be disabled by setting "$ENABLE_LOCKING = FALSE;" in index.php
 
-4) Temporary file filter
+5) Temporary file filter
 
 	By default, dav is set up to filter temporary files, because many clients create garbage files on your WebDAV share (see http://code.google.com/p/sabredav/wiki/TemporaryFileFilter). This can be disabled by setting "$ENABLE_TEMPORARY_FILE_FILTER = FALSE;" in index.php

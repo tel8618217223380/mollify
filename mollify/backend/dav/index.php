@@ -6,7 +6,7 @@
 	$ENABLE_LOCKING = TRUE;
 	$ENABLE_BROWSER = FALSE;
 	$ENABLE_TEMPORARY_FILE_FILTER = TRUE;
-	$AUTH_DIGEST = FALSE;
+	$BASIC_AUTH = FALSE;
 	
 	require_once("mollify_dav.php");
 ?>
