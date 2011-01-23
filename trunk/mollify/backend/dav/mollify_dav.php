@@ -135,30 +135,7 @@
 		$env = $backend->env();
 		$env->initialize();
 		
-		if (isset($AUTH_DIGEST) and $AUTH_DIGEST) {
-			$auth = new Sabre_HTTP_DigestAuth();
-			$auth->setRealm($env->authentication()->realm());
-			$auth->init();
-			$username = $auth->getUserName();
-			
-			if (!$username) {
-				Logging::logDebug("DAV digest authentication missing");
-				$auth->requireLogin();
-				echo "Authentication required\n";
-				die();
-			}
-			
-			$user = $env->configuration()->getUserByName($username);
-			Logging::logDebug("DAV digest authentication: ".$username."/".$user["a1password"]);
-			
-			if (!$auth->validateA1($user["a1password"])) {
-				Logging::logDebug("DAV digest authentication failure");
-				$auth->requireLogin();
-				echo "Authentication required\n";
-				die();
-			}
-			$env->authentication()->doAuth($user);
-		} else {
+		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
 			$auth = new Sabre_HTTP_BasicAuth();
 			$result = $auth->getUserPass();
 		
@@ -172,6 +149,28 @@
 			$user = $env->configuration()->getUserByName($result[0]);
 			if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
 				Logging::logDebug("DAV authentication failure");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			$env->authentication()->doAuth($user);
+		} else {
+			$auth = new Sabre_HTTP_DigestAuth();
+			$auth->setRealm($env->authentication()->realm());
+			$auth->init();
+			$username = $auth->getUserName();
+			
+			if (!$username) {
+				Logging::logDebug("DAV digest authentication missing");
+				$auth->requireLogin();
+				echo "Authentication required\n";
+				die();
+			}
+			
+			$user = $env->configuration()->getUserByName($username);
+			
+			if (!$user or !$auth->validateA1($user["a1password"])) {
+				Logging::logDebug("DAV digest authentication failure");
 				$auth->requireLogin();
 				echo "Authentication required\n";
 				die();
