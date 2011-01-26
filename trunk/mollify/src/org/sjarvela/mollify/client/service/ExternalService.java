@@ -20,4 +20,6 @@ public interface ExternalService {
 	void post(String path, String data, ResultListener resultListener);
 
 	void post(String data, ResultListener resultListener);
+
+	String getPluginUrl(String id);
 }

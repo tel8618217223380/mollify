@@ -31,8 +31,14 @@ public class NativeService {
 	private native JavaScriptObject createJs(NativeService service) /*-{
 		var env = {};
 
+		env.getPluginUrl = function(id) {
+			var u = service.@org.sjarvela.mollify.client.plugin.service.NativeService::getPluginUrl(Ljava/lang/String;)(id);
+			return u;
+		}
+
 		env.getUrl = function(s) {
-			return service.@org.sjarvela.mollify.client.plugin.service.NativeService::getUrl(Ljava/lang/String;)(s);
+			var u = service.@org.sjarvela.mollify.client.plugin.service.NativeService::getUrl(Ljava/lang/String;)(s);
+			return u;
 		}
 
 		env.get = function(path, success, fail) {
@@ -45,6 +51,10 @@ public class NativeService {
 
 		return env;
 	}-*/;
+
+	protected String getPluginUrl(String id) {
+		return externalService.getPluginUrl(id);
+	}
 
 	protected String getUrl(String s) {
 		return externalService.getUrl(s);

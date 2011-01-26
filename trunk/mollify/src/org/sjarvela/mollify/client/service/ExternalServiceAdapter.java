@@ -43,4 +43,9 @@ public class ExternalServiceAdapter implements ExternalService {
 	public String getUrl(String s) {
 		return service.getUrl(s);
 	}
+
+	@Override
+	public String getPluginUrl(String id) {
+		return service.getPluginUrl(id);
+	}
 }

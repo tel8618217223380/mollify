@@ -56,6 +56,7 @@ public class JsFolder extends JavaScriptObject {
 		this.root_id = rootId;
 		this.name = name;
 		this.parent_id = parentId;
+		this.is_file = false;
 	}-*/;
 
 }

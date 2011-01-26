@@ -39,4 +39,9 @@ public class PhpExternalService extends ServiceBase implements ExternalService {
 		return serviceUrl().build() + path;
 	}
 
+	@Override
+	public String getPluginUrl(String id) {
+		return service.pluginUrl(id).build();
+	}
+
 }

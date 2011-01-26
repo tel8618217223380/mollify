@@ -81,7 +81,7 @@ public class PhpService {
 	}
 
 	public UrlBuilder pluginUrl(String name) {
-		return new UrlBuilder().baseUrl(rootUrl).item("plugin").item(name);
+		return new UrlBuilder().baseUrl(getPath(rootUrl, "plugin")).item(name);
 	}
 
 }

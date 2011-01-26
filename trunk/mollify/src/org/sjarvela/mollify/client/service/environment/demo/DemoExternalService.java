@@ -46,4 +46,9 @@ public class DemoExternalService implements ExternalService {
 		return s;
 	}
 
+	@Override
+	public String getPluginUrl(String id) {
+		return id;
+	}
+
 }
