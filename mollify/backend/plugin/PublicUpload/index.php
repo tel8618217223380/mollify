@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	$PATH = "../../../";
+	$PATH = "../../";
 	
 	if (!file_exists($PATH."configuration.php")) die("Mollify not configured");
 	if (!isset($_GET["id"])) die();
@@ -35,7 +35,7 @@
 			$(function() {
 			    $("#uploader").pluploadQueue({
 			        runtimes : 'gears,flash,silverlight,browserplus,html5',
-			        url : '<?php echo $PATH ?>r.php/guest/upload/?id=<?php echo $id ?>',
+			        url : '<?php echo $PATH ?>r.php/public_upload/?id=<?php echo $id ?>',
 			        chunk_size : '1mb',
 			        flash_swf_url : 'resources/plupload.flash.swf',
 			        silverlight_xap_url : 'resources/plupload.silverlight.xap'
@@ -65,7 +65,7 @@
 	<body>
 		<form>
 		    <div id="uploader">
-		        <p>Your browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
+		        <p>Your browser does not support Flash, Silverlight, Gears, BrowserPlus or HTML5.</p>
 		    </div>
 		</form>
 	</body>

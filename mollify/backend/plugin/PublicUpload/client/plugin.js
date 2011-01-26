@@ -21,7 +21,7 @@ function PublicUploadPlugin() {
 	}
 	
 	this.getItemContext = function(item, details) {
-		if (item["is_file"] || item["permission"].toLowerCase() != 'rw') return null;
+		if (item["is_file"] || details["permission"].toLowerCase() != 'rw') return null;
 		
 		return {
 			actions : {
@@ -30,7 +30,7 @@ function PublicUploadPlugin() {
 						title: "-"
 					},
 					{
-						title: "Public upload link...",
+						title: "Get public upload link...",
 						callback: that.onGetPublicUploadLink
 					}
 				]
@@ -48,14 +48,15 @@ function PublicUploadPlugin() {
 	
 	this.getUploadDialogContent = function() {
 		return "<div id='public-upload-dialog-content' style='width:100%; height:100%'>"+
-			"<table cellspacing=0 cellpadding=0 style='height:100%'>"+
+			"<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
 			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
-			"    <div class='public-upload-title'>Upload to:</div><div id='public-upload-value-to' class='public-upload-value'><input id='public-upload-to' readonly='true'></input></div>"+
-			"    <div class='public-upload-title'>Link:</div><div id='public-upload-value-link' class='public-upload-value'><input id='public-upload-link' readonly='true'></input></div>"+
+			"    <div class='public-upload-title'>Upload to:</div>"+
+			"    <div class='public-upload-value' id='public-upload-value-to'><input id='public-upload-to' readonly='readonly'></input></div>"+
+			"    <div class='public-upload-title'>Link:</div><div id='public-upload-value-link' class='public-upload-value'><input id='public-upload-link' readonly='readonly'></input></div>"+
 			"</td></tr>"+
 			"<tr height='1%'><td align='right'>"+
-			"    <table class='public-upload-buttons'>"+
-			"        <tr><td><button id='public-upload-dialog-close' class='gwt-Button mollify-public-upload-button' type='button' style=''>Close</button></td>"+
+			"    <table class='public-upload-buttons' style='width:100%'>"+
+			"        <tr><td align='right'><button id='public-upload-dialog-close' class='gwt-Button mollify-public-upload-button' type='button'>Close</button></td>"+
 			"    </table>"+
 			"</td></tr></table></div>";
 	}
@@ -65,6 +66,6 @@ function PublicUploadPlugin() {
 		
 		$("#public-upload-dialog-close").click(function(){ d.close(); });		
 		$("#public-upload-to").val(i.name);
-		$("#public-upload-to").val('TODO');
+		$("#public-upload-link").val(that.env.service().getPluginUrl("PublicUpload") + "?id=" + i.id);
 	}
 }
