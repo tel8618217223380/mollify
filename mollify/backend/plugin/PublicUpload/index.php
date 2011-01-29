@@ -35,7 +35,7 @@
 			$(function() {
 			    $("#uploader").pluploadQueue({
 			        runtimes : 'gears,flash,silverlight,browserplus,html5',
-			        url : '<?php echo $PATH ?>r.php/public_upload/?id=<?php echo $id ?>',
+			        url : '<?php echo $PATH ?>r.php/public_upload/?id=<?php echo $id ?>&uploader=plupload',
 			        chunk_size : '1mb',
 			        flash_swf_url : 'resources/plupload.flash.swf',
 			        silverlight_xap_url : 'resources/plupload.silverlight.xap'

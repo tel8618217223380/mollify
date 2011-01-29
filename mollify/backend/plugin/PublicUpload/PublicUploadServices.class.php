@@ -12,7 +12,7 @@
 
 	class PublicUploadServices extends ServicesBase {		
 		protected function isValidPath($method, $path) {
-			return TRUE;
+			return count($path) == 0;
 		}
 		
 		public function isAuthenticationRequired() {
@@ -20,9 +20,11 @@
 		}
 		
 		public function processPost() {
-			if (count($this->path) != 0) throw $this->invalidRequestException();
 			if (!$this->request->hasParam("id")) throw $this->invalidRequestException();
 			
-			throw $this->invalidRequestException();
+			$folder = $this->item($this->request->param("id"));
+			Logging::logDebug("Public upload to: ".$folder->id());
+			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
+			$this->env->filesystem()->uploadTo($folder);
 		}
 	}
