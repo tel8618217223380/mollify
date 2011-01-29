@@ -2330,3 +2330,35 @@ input.mollify-header-search-field {
 .mollify-filelist-filetype-html .mollify-filelist-row-file-icon {
 	background: url(mimetypes/text_html.png) no-repeat 3px 3px;	
 }
+
+#public-upload-dialog-content {
+	width: 100%;
+	height: 100%;
+}
+
+#public-upload-content {
+	margin: 4px;
+	margin-top: 0px;
+	margin-right: 12px;
+	height: 100%;
+}
+
+.public-upload-title {
+	width: 350px;
+	font-weight: bold;
+	margin-left: 2px;
+	margin-top: 12px;
+	margin-bottom: 2px;
+}
+
+.public-upload-value input {
+	font-style: italic;
+	color: #848484;
+	width: 100%;
+	margin: 0;
+}
+
+.public-upload-buttons {
+	margin-top: 19px;
+}
+
