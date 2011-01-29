@@ -115,7 +115,7 @@ fileListColumnTitleSelect: "",
 fileListColumnTitleName: "Nom",
 fileListColumnTitleType: "Type",
 fileListColumnTitleSize: "Taille",
-fileListDirectoryType: "Dosdier",
+fileListDirectoryType: "Dossier",
 
 errorMessageRequestFailed: "Requête échouée",
 errorMessageInvalidRequest: "Le serveur ne peut pas traiter la requête.",
