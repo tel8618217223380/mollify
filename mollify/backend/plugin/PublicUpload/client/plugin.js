@@ -47,7 +47,7 @@ function PublicUploadPlugin() {
 	}
 	
 	this.getUploadDialogContent = function() {
-		return "<div id='public-upload-dialog-content' style='width:100%; height:100%'>"+
+		return "<div id='public-upload-dialog-content'><div id='public-upload-content'>"+
 			"<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
 			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
 			"    <div class='public-upload-title'>Upload to:</div>"+
@@ -58,7 +58,7 @@ function PublicUploadPlugin() {
 			"    <table class='public-upload-buttons' style='width:100%'>"+
 			"        <tr><td align='right'><button id='public-upload-dialog-close' class='gwt-Button mollify-public-upload-button' type='button'>Close</button></td>"+
 			"    </table>"+
-			"</td></tr></table></div>";
+			"</td></tr></table></div></div>";
 	}
 	
 	this.onShowUploadDialog = function(d, i) {

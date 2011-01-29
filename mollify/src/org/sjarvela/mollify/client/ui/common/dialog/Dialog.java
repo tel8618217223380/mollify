@@ -35,7 +35,8 @@ public abstract class Dialog extends DialogBox {
 	public Dialog(String title, String style) {
 		super(false, true);
 		this.setStylePrimaryName(StyleConstants.DIALOG);
-		this.addStyleDependentName(style);
+		if (style != null)
+			this.addStyleDependentName(style);
 		this.setText(title);
 	}
 
