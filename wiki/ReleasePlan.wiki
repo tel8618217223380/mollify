@@ -2,6 +2,6 @@
 
 Items included in release 1.8
 
- * Public upload
+ * Public upload (ready)
  * A1 password support for digest authentication in WebDAV plugin (ready)
  * Login with email (ready)
