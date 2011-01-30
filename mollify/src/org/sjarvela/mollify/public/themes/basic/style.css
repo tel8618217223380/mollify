@@ -445,7 +445,7 @@
 	width: 6px;
 	height: 23px;
 	float: left;
-	background: url(dir-item-body.png) repeat-x;
+	background: transparent url(folder-selector.png) repeat-x 0 -184px;
 }
 
 .mollify-directory-list-item-button-center {
@@ -453,19 +453,19 @@
 	padding-left: 2px;
 	padding-right: 3px;
 	float: left;
-	background: url(dir-item-body.png) repeat-x;
+	background: transparent url(folder-selector.png) repeat-x 0 -184px;
 	padding-top: 4px;
 }
 
 .mollify-directory-list-item-button-right {
-	width: 11px;
-	background: url(dir-item-head-combined.png) no-repeat;
+	background: transparent url(folder-selector.png) no-repeat 0 -92px;
 	height: 23px;
 	float: left;
+	width: 11px;
 }
 
 .mollify-directory-list-item-button-root-last .mollify-directory-list-item-button-right, .mollify-directory-list-item-button-last .mollify-directory-list-item-button-right {
-	background: url(dir-item-head.png) no-repeat;
+	background: transparent url(folder-selector.png) no-repeat 0 -46px;
 }
 
 .mollify-directory-list-item-button {
@@ -478,28 +478,28 @@
 	width: 7px;
 	float: left;
 	height: 23px;
-	background: url(dir-item-body.png) repeat-x;
+	background: transparent url(folder-selector.png) repeat-x 0 -184px;
 	cursor: pointer;
 }
 
 .mollify-directory-list-item-button-center-pressed, .mollify-directory-list-item-dropdown-pressed {
-	background: url(dir-item-body.png) repeat-x 0 -23px;
+	background: transparent url(folder-selector.png) repeat-x 0 -207px;
 }
 
 .mollify-directory-list-item-button-left-pressed {
-	background: url(dir-item-left-pressed.png) no-repeat;
+	background: transparent url(folder-selector.png) no-repeat 0 -230px;
 }
 
 .mollify-directory-list-item-button-right-pressed {
-	background: url(dir-item-head-combined.png) no-repeat 0px -23px;
+	background: transparent url(folder-selector.png) no-repeat 0 -115px;
 }
 
 .mollify-directory-list-item-button-root-last .mollify-directory-list-item-button-right-pressed, .mollify-directory-list-item-button-last .mollify-directory-list-item-button-right-pressed {
-	background: url(dir-item-head.png) no-repeat 0px -23px;
+	background: transparent url(folder-selector.png) no-repeat 0 -69px;
 }
 
 .mollify-directory-list-item-dropdown-hover {
-	background: url(dir-item-dropdown.png) no-repeat;
+	background: transparent url(folder-selector.png) no-repeat 0 -138px;
 }
 
 .mollify-directory-list-item-home {
