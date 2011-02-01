@@ -2362,3 +2362,40 @@ input.mollify-header-search-field {
 	margin-top: 19px;
 }
 
+.mollify-file-grid-item {
+	clear: none;
+	display: block;
+	float: left;
+	width: 100px;
+	height: 100px;
+	cursor: pointer;
+	margin: 4px;
+}
+
+.mollify-file-grid-item-selected {
+	background-color: #f8f8f8;
+}
+
+.mollify-file-grid-item-icon {
+	width: 75px;
+	height: 75px;
+	background: url(big/empty.png) no-repeat;
+	margin-left: 13px;
+}
+
+.mollify-file-grid-item-label {
+	width: 100%;
+	text-align: center;
+	padding-top: 6px;
+	overflow: hidden;
+}
+
+.mollify-file-grid-item-selected .mollify-file-grid-item-label {
+	font-weight: bold;
+	overflow: visible;
+}
+
+.mollify-file-grid-item-folder .mollify-file-grid-item-icon {
+	background: url(big/folder_blue.png) no-repeat 5px 9px;	
+}
+

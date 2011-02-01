@@ -128,9 +128,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
 				false);
 
+		FileListWidgetFactory fileListViewFactory = new DefaultFileListWidgetFactory(
+				textProvider, dragAndDropManager, settings);
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
-				dragAndDropManager);
+				dragAndDropManager, fileListViewFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view,
 				serviceProvider.getConfigurationService(), fileSystemService,
