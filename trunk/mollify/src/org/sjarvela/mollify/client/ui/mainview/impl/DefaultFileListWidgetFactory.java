@@ -1,0 +1,37 @@
+/**
+ * Copyright (c) 2008- Samuli Järvelä
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ */
+
+package org.sjarvela.mollify.client.ui.mainview.impl;
+
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.session.ClientSettings;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
+
+public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
+
+	private final TextProvider textProvider;
+	private final DragAndDropManager dragAndDropManager;
+	private final boolean grid;
+
+	public DefaultFileListWidgetFactory(TextProvider textProvider,
+			DragAndDropManager dragAndDropManager, ClientSettings settings) {
+		this.textProvider = textProvider;
+		this.dragAndDropManager = dragAndDropManager;
+		this.grid = settings.getBool("grid-view", false);
+	}
+
+	@Override
+	public FileListWidget create() {
+		if (grid)
+			return new DefaultFileListGridWidget(textProvider);
+		return new DefaultFileListWidget(textProvider, dragAndDropManager);
+	}
+
+}

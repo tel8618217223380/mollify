@@ -63,7 +63,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final MainViewModel model;
 	private final Panel buttonPanel;
 	private final FolderSelector folderSelector;
-	private final FileList list;
+	// private final FileList list;
 	private final FlowPanel listPanel;
 	private final FlowPanel progress;
 
@@ -71,6 +71,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final ContextPopupHandler<FileSystemItem> itemContextHandler;
 	private final List<ViewListener> viewListeners = new ArrayList();
 	private final List<SearchListener> searchListeners = new ArrayList();
+	private final FileListWidgetFactory fileListViewFactory;
 
 	private MainViewHeader header;
 	private DropdownButton addButton;
@@ -81,8 +82,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private DropdownButton fileActions;
 	private ActionToggleButton dropBoxButton;
 	private HintTextBox searchField;
-
 	private FlowPanel fileUrlContainer;
+	private FileListWidget fileListView;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
@@ -92,10 +93,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			ActionListener actionListener,
 			FolderSelectorFactory folderSelectorFactory,
 			ItemContextPopup itemContextPopup,
-			DragAndDropManager dragAndDropManager) {
+			DragAndDropManager dragAndDropManager,
+			FileListWidgetFactory fileViewFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.fileListViewFactory = fileViewFactory;
 
 		this.buttonPanel = new FlowPanel();
 		this.buttonPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_BUTTONS);
@@ -108,7 +111,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		this.progress.setVisible(false);
 
 		this.folderSelector = folderSelectorFactory.createSelector();
-		this.list = new FileList(textProvider, dragAndDropManager);
 
 		this.itemContextPopup = itemContextPopup;
 		this.itemContextPopup.setPopupPositioner(this);
@@ -129,6 +131,16 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		initWidget(createControls());
 		setStyleName(StyleConstants.MAIN_VIEW);
+
+		createFileView();
+	}
+
+	private void createFileView() {
+		fileListView = fileListViewFactory.create();
+
+		listPanel.clear();
+		listPanel.add(fileListView.getWidget());
+		listPanel.add(progress);
 	}
 
 	private void onSearch(String text) {
@@ -150,19 +162,15 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		itemContextPopup.setActionHandler(actionHandler);
 	}
 
-	public FileList getList() {
-		return list;
+	public FileListWidget getFileWidget() {
+		return fileListView;
 	}
 
 	private Widget createControls() {
 		Panel content = new VerticalPanel();
 		content.getElement().setId("mollify-main-content");
 		content.add(createHeader(listPanel));
-
-		listPanel.add(list);
 		content.add(listPanel);
-		listPanel.add(progress);
-
 		return content;
 	}
 
@@ -343,7 +351,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void addFileListListener(GridListener listener) {
-		list.addListener(listener);
+		fileListView.addListener(listener);
 	}
 
 	@Override
@@ -355,22 +363,22 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void refresh() {
 		folderSelector.refresh();
-		list.refresh();
+		fileListView.refresh();
 	}
 
 	public void clear() {
-		list.removeAllRows();
+		fileListView.removeAllRows();
 		model.clear();
 	}
 
 	public void showFileContext(File file) {
 		itemContextHandler.onItemSelected(file,
-				list.getWidget(file, FileList.COLUMN_ID_NAME));
+				fileListView.getWidget(file, FileList.COLUMN_ID_NAME));
 	}
 
 	public void showFolderContext(Folder folder) {
 		itemContextHandler.onItemSelected(folder,
-				list.getWidget(folder, FileList.COLUMN_ID_NAME));
+				fileListView.getWidget(folder, FileList.COLUMN_ID_NAME));
 	}
 
 	public ActionButton getRefreshButton() {
@@ -408,11 +416,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void setSelectMode(boolean select) {
-		list.setSelectionMode(select ? SelectionMode.Multi : SelectionMode.None);
+		fileListView.setSelectionMode(select ? SelectionMode.Multi
+				: SelectionMode.None);
 	}
 
 	public void setListSelectController(SelectController controller) {
-		list.setSelectController(controller);
+		fileListView.setSelectController(controller);
 	}
 
 	public void updateFileSelection(List<FileSystemItem> selected) {
@@ -422,13 +431,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	public void selectAll() {
 		setSelectMode(true);
 		selectButton.setDown(true);
-		list.selectAll();
+		fileListView.selectAll();
 	}
 
 	public void selectNone() {
 		setSelectMode(true);
 		selectButton.setDown(true);
-		list.selectNone();
+		fileListView.selectNone();
 	}
 
 	public Coords getDropboxLocation() {

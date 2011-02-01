@@ -200,7 +200,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (model.getFolderModel().canAscend())
 			allFileItems.add(0, Folder.Parent);
 
-		view.getList().setContent(allFileItems);
+		view.getFileWidget().setContent(allFileItems);
 		view.setAddButtonVisible(model.getFolderPermission().canWrite());
 		view.refresh();
 		if (exposeFileUrls)
@@ -422,7 +422,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void setListOrder(String columnId, Sort sort) {
-		view.getList().setComparator(createComparator(columnId, sort));
+		view.getFileWidget().setComparator(createComparator(columnId, sort));
 	}
 
 	private GridComparator<FileSystemItem> createComparator(String columnId,
