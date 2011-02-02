@@ -19,7 +19,7 @@ public class DropdownPopup extends PopupPanel {
 	private PopupPositioner positioner;
 
 	protected final Panel container;
-	private Widget parent;
+	protected Widget parent;
 
 	public DropdownPopup(Widget parent) {
 		this(parent, null);

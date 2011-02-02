@@ -33,6 +33,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -95,6 +96,18 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		content.add(createComponentsPanel());
 		content.add(createButtons());
 		return content;
+	}
+
+	@Override
+	public void showPopup() {
+		super.showPopup();
+		int pointerPos = (parent.getAbsoluteLeft() + (parent.getOffsetWidth() / 2))
+				- container.getAbsoluteLeft();
+		if (pointerPos > (container.getAbsoluteLeft() + container
+				.getOffsetWidth()))
+			pointerPos = 30;
+		pointer.getElement().getStyle()
+				.setLeft((double) pointerPos, Style.Unit.PX);
 	}
 
 	public List<ItemContextComponent> setup(ItemContext itemContext) {

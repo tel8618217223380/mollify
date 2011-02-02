@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class BubblePopup extends DropdownPopup {
 	protected final String styleName;
+	protected Widget pointer;
 
 	public BubblePopup(Widget parent, PopupPositioner popupPositioner,
 			String styleName) {
@@ -40,7 +41,9 @@ public abstract class BubblePopup extends DropdownPopup {
 		content.setContent(createContent());
 
 		addItem(content);
-		addItem(createPointer());
+
+		pointer = createPointer();
+		addItem(pointer);
 
 		Widget closeButton = createCloseButton();
 		if (closeButton != null)

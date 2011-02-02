@@ -82,4 +82,6 @@ public interface FileSystemService extends ItemDetailsProvider {
 
 	void search(Folder parent, String text, ResultListener<SearchResult> listener);
 
+	String getThumbnailUrl(FileSystemItem item);
+
 }

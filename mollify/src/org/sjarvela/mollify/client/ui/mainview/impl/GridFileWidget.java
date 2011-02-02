@@ -10,21 +10,34 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.FileSystemService;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class GridFileWidget extends Composite {
+	private static final List<String> extensions = Arrays.asList("png", "gif",
+			"jpg");
+
 	private final FileSystemItem item;
 	private final Widget widget;
+	private final boolean thumbnails;
+	private final FileSystemService service;
 
-	public GridFileWidget(FileSystemItem item) {
+	public GridFileWidget(FileSystemItem item, boolean thumbnails,
+			FileSystemService service) {
 		this.item = item;
+		this.thumbnails = thumbnails;
+		this.service = service;
 		this.widget = createContent();
 		initWidget(widget);
 	}
@@ -36,15 +49,32 @@ public class GridFileWidget extends Composite {
 		if (item.isFile())
 			panel.addStyleDependentName(((File) item).getExtension());
 
-		Panel icon = new FlowPanel();
-		icon.setStylePrimaryName("mollify-file-grid-item-icon");
-		panel.add(icon);
+		if (showThumbnais()) {
+			String url = service.getThumbnailUrl(item);
+			panel.add(new HTML(
+					"<div class='mollify-file-grid-item-thumbnail-container'><img src='"
+							+ url
+							+ "' class='mollify-file-grid-item-thumbnail'></img></div>"));
+		} else {
+			Panel icon = new FlowPanel();
+			icon.setStylePrimaryName("mollify-file-grid-item-icon");
+			panel.add(icon);
+		}
 
 		Label label = new Label(item.getName());
 		label.setStylePrimaryName("mollify-file-grid-item-label");
 		panel.add(label);
 
 		return panel;
+	}
+
+	private boolean showThumbnais() {
+		if (!thumbnails || !item.isFile())
+			return false;
+		String ext = ((File) item).getExtension().trim().toLowerCase();
+		if (ext.isEmpty())
+			return false;
+		return GridFileWidget.extensions.contains(ext);
 	}
 
 	public void select(boolean b) {

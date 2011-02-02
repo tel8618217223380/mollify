@@ -129,7 +129,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				false);
 
 		FileListWidgetFactory fileListViewFactory = new DefaultFileListWidgetFactory(
-				textProvider, dragAndDropManager, settings);
+				textProvider, dragAndDropManager, settings, fileSystemService);
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
 				dragAndDropManager, fileListViewFactory);
