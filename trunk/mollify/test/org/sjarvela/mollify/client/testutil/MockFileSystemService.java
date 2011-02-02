@@ -194,4 +194,10 @@ public class MockFileSystemService implements FileSystemService {
 			ResultListener<SearchResult> listener) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public String getThumbnailUrl(FileSystemItem item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

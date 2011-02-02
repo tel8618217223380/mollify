@@ -84,6 +84,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private HintTextBox searchField;
 	private FlowPanel fileUrlContainer;
 	private FileListWidget fileListView;
+	private Widget content;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
@@ -129,7 +130,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			}
 		});
 
-		initWidget(createControls());
+		content = createControls();
+		initWidget(content);
 		setStyleName(StyleConstants.MAIN_VIEW);
 
 		createFileView();
@@ -399,7 +401,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void setPositionOnShow(DropdownPopup popup, Widget parent,
 			int offsetWidth, int offsetHeight) {
-		popup.setPopupPosition(parent.getAbsoluteLeft(),
+		int x = parent.getAbsoluteLeft();
+
+		if ((x + offsetWidth) > content.getOffsetWidth())
+			x = content.getOffsetWidth() - offsetWidth;
+
+		popup.setPopupPosition(x,
 				parent.getAbsoluteTop() + parent.getOffsetHeight());
 	}
 

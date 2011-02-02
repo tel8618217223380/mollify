@@ -907,7 +907,7 @@ td#mollify-filelist-column-size {
 	background: url(b-tip.png) no-repeat 0 0;
 	position: absolute;
 	top: -4px;
-	left: 13px;
+	margin-left: -15px;
 }
 
 .mollify-bubble-popup-close, .mollify-bubble-popup-close-hover {
@@ -2399,3 +2399,11 @@ input.mollify-header-search-field {
 	background: url(big/folder_blue.png) no-repeat 5px 9px;	
 }
 
+.mollify-file-grid-item-thumbnail-container {
+	max-height: 75px;
+	margin-left: 13px;
+}
+
+.mollify-file-grid-item-thumbnail {
+	max-width: 75px;
+}

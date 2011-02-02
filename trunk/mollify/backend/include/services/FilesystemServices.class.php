@@ -136,6 +136,13 @@
 			}
 						
 			switch (strtolower($this->path[1])) {
+				case 'thumbnail':
+					if (!$item->isFile()) throw $this->invalidRequestException();
+					$ext = strtolower($item->extension());
+					if (!in_array($ext, array("gif", "png", "jpg"))) throw $this->invalidRequestException();
+					
+					$this->env->filesystem()->view($item);
+					return;
 				case 'zip':
 					$this->env->filesystem()->downloadAsZip($item);
 					return;

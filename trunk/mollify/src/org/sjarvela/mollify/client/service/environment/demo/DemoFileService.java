@@ -161,4 +161,10 @@ public class DemoFileService implements FileSystemService {
 			ResultListener<SearchResult> listener) {
 		listener.onSuccess(null); // TODO
 	}
+
+	@Override
+	public String getThumbnailUrl(FileSystemItem item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

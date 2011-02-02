@@ -337,4 +337,9 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.data(new JSONStringBuilder("text", text).toString())
 				.listener(listener).post();
 	}
+
+	@Override
+	public String getThumbnailUrl(FileSystemItem item) {
+		return serviceUrl().fileItem(item).item("thumbnail").build();
+	}
 }

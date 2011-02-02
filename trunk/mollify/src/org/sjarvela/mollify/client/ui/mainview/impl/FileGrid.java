@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -41,7 +42,13 @@ public class FileGrid extends Composite {
 	private FileSystemItem selected = null;
 	private Timer clickTimer;
 
-	public FileGrid() {
+	private final boolean thumbnails;
+	private final FileSystemService service;
+
+	public FileGrid(boolean thumbnails, FileSystemService service) {
+		this.thumbnails = thumbnails;
+		this.service = service;
+
 		panel = createWidget();
 		initWidget(panel);
 	}
@@ -85,7 +92,7 @@ public class FileGrid extends Composite {
 	}
 
 	private GridFileWidget createItemWidget(final FileSystemItem item) {
-		GridFileWidget widget = new GridFileWidget(item);
+		GridFileWidget widget = new GridFileWidget(item, thumbnails, service);
 		widget.addDomHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

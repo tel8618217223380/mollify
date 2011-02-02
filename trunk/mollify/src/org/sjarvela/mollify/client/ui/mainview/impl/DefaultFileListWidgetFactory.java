@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 
@@ -19,18 +20,22 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	private final TextProvider textProvider;
 	private final DragAndDropManager dragAndDropManager;
 	private final boolean grid;
+	private final boolean thumbnails;
+	private final FileSystemService service;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
-			DragAndDropManager dragAndDropManager, ClientSettings settings) {
+			DragAndDropManager dragAndDropManager, ClientSettings settings, FileSystemService service) {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
+		this.service = service;
 		this.grid = settings.getBool("grid-view", false);
+		this.thumbnails = settings.getBool("show-thumbnails", false);
 	}
 
 	@Override
 	public FileListWidget create() {
 		if (grid)
-			return new DefaultFileListGridWidget(textProvider);
+			return new DefaultFileListGridWidget(thumbnails, service);
 		return new DefaultFileListWidget(textProvider, dragAndDropManager);
 	}
 

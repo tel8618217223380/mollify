@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
@@ -22,12 +22,11 @@ import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileListGridWidget implements FileListWidget {
-	private final TextProvider textProvider;
 	private FileGrid grid;
 
-	public DefaultFileListGridWidget(TextProvider textProvider) {
-		this.textProvider = textProvider;
-		this.grid = new FileGrid();
+	public DefaultFileListGridWidget(boolean thumbnails,
+			FileSystemService service) {
+		this.grid = new FileGrid(thumbnails, service);
 	}
 
 	@Override

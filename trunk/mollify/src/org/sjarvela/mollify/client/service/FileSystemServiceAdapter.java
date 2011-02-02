@@ -169,4 +169,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				resultListenerFactory.createListener(listener));
 	}
 
+	@Override
+	public String getThumbnailUrl(FileSystemItem item) {
+		return service.getThumbnailUrl(item);
+	}
+
 }
