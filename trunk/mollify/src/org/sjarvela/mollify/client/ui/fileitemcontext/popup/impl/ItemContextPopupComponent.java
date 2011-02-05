@@ -105,7 +105,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 				- container.getAbsoluteLeft();
 		if (pointerPos > (container.getAbsoluteLeft() + container
 				.getOffsetWidth()))
-			pointerPos = 30;
+			pointerPos = 30; // TODO is there a better way to set default pos
+		
 		pointer.getElement().getStyle()
 				.setLeft((double) pointerPos, Style.Unit.PX);
 	}
