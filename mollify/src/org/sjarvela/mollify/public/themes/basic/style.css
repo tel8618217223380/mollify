@@ -2379,7 +2379,7 @@ input.mollify-header-search-field {
 .mollify-file-grid-item-icon {
 	width: 75px;
 	height: 75px;
-	background: url(big/empty.png) no-repeat;
+	background: url(big/empty.png) no-repeat 4px 7px;
 	margin-left: 13px;
 }
 
@@ -2396,7 +2396,7 @@ input.mollify-header-search-field {
 }
 
 .mollify-file-grid-item-folder .mollify-file-grid-item-icon {
-	background: url(big/folder_blue.png) no-repeat 5px 9px;	
+	background: url(big/folder_blue.png) no-repeat 5px 10px;	
 }
 
 .mollify-file-grid-item-thumbnail-container {
