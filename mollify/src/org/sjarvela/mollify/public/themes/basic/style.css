@@ -2380,6 +2380,7 @@ input.mollify-header-search-field {
 	width: 75px;
 	height: 75px;
 	background: url(big/empty.png) no-repeat 4px 7px;
+	margin-top: 4px;
 	margin-left: 13px;
 }
 
@@ -2400,8 +2401,9 @@ input.mollify-header-search-field {
 }
 
 .mollify-file-grid-item-thumbnail-container {
-	max-height: 75px;
+	height: 75px;
 	margin-left: 13px;
+	margin-top: 4px;
 }
 
 .mollify-file-grid-item-thumbnail {
