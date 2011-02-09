@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -10,12 +10,15 @@
 	 * this entire header must remain intact.
 	 */
 
-	class MollifyZipStream {
+	class MollifyZipArchive implements MollifyZip {
 		private $env;
 		private $name;
 		private $zip;
 		
 		function __construct($env) {
+			if (!class_exists('ZipArchive'))
+				throw new ServiceException("INVALID_CONFIGURATION", "ZipArchive lib not installed");
+				
 			$this->env = $env;
 			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
 			$this->zip = new ZipArchive();
@@ -23,7 +26,11 @@
 				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->name);
 		}
 		
-		public function add($name, $size, $path) {
+		public function acceptFolders() {
+			return FALSE;
+		}
+
+		public function add($name, $path, $size = 0) {
 			$this->zip->addFile($path, $name);
 		}
 		

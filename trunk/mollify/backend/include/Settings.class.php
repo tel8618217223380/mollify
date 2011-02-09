@@ -23,6 +23,7 @@
 			"enable_folder_actions" => TRUE,
 			"enable_file_upload_progress" => FALSE,
 			"enable_zip_download" => FALSE,
+			"zipper" => "ZipArchive",
 			"enable_change_password" => TRUE,
 			"enable_description_update" => FALSE,
 			"enable_permission_update" => FALSE,

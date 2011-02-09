@@ -572,8 +572,21 @@
 		}
 		
 		public function zipper() {
-			require_once('MollifyZipStream.class.php');
-			return new MollifyZipStream($this->env);
+			require_once('zip/MollifyZip.class.php');
+			$zipper = $this->setting("zipper", TRUE);
+			
+			if (strcasecmp($zipper, "ziparchive") === 0) {
+				require_once('zip/MollifyZipArchive.class.php');
+				return new MollifyZipArchive($this->env);
+			} else if (strcasecmp($zipper, "native") === 0) {
+				require_once('zip/MollifyZipNative.class.php');
+				return new MollifyZipNative($this->env);
+			} else if (strcasecmp($zipper, "raw") === 0) {
+				require_once('zip/MollifyZipRaw.class.php');
+				return new MollifyZipRaw($this->env);
+			}
+			
+			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported zipper configured: ".$zipper);
 		}
 		
 		public function setting($setting, $allowDefaultIfNotDefined = FALSE) {

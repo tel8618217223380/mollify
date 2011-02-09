@@ -309,14 +309,18 @@
 
 		public function addToZip($item, $zip) {
 			if ($item->isFile()) {
-				$zip->add($item->name(), $item->size(), $this->localPath($item));
+				$zip->add($item->name(), $this->localPath($item), $item->size());
 			} else {
-				$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
-				$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
-				
-				foreach($files as $file) {
-					$st = stat($file);
-					$zip->add(substr($file, $offset), $st['size'], $file);
+				if ($zip->acceptFolders()) {
+					$zip->add($item->name(), $this->localPath($item));
+				} else {
+					$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
+					$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
+					
+					foreach($files as $file) {
+						$st = stat($file);
+						$zip->add(substr($file, $offset), $file, $st['size']);
+					}
 				}
 			}
 		}
