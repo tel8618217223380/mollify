@@ -89,7 +89,7 @@
 			$md5pw = md5($pw);
 			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, is_group) VALUES ('%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, is_group) VALUES ('%s', '%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission)));
 			return $this->db->lastId();
 		}
 	
