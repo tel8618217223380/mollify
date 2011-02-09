@@ -74,7 +74,7 @@
 				if (!validate()) return;
 				
 				setData("name", $("#username").val());
-				setData("password", generate_md5($("#password").val()));
+				setData("password", $("#password").val());
 				action("install");
 			});
 		}

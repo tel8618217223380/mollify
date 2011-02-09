@@ -137,7 +137,7 @@
 				$user['permission_mode'] = strtoupper($user['permission_mode']);
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
-				$this->env->configuration()->addUser($user['name'], $user['password'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
+				$this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
 				$this->response()->success(TRUE);
 				return;
 			}
