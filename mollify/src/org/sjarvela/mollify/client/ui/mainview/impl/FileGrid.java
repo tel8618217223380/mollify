@@ -119,7 +119,7 @@ public class FileGrid extends Composite {
 			}
 		};
 
-		clickTimer.schedule(100);
+		clickTimer.schedule(300);
 	}
 
 	protected void onClick(FileSystemItem item) {
