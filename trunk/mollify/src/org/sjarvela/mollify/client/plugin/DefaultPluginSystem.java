@@ -66,6 +66,9 @@ public class DefaultPluginSystem implements PluginSystem {
 		Map<String, String> result = new HashMap();
 		JsObj plugins = pluginsObj.cast();
 		for (String id : plugins.getKeys()) {
+			if (id == null || id.length() == 0 || id.startsWith("_"))
+				continue;
+			logger.log(Level.INFO, "Initializing client plugin " + id);
 			JsObj plugin = plugins.getJsObj(id).cast();
 
 			if (plugin.hasValue("client_plugin"))
@@ -88,17 +91,17 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	private native void setupPlugins() /*-{
-		if (!$wnd.mollify || !$wnd.mollify.getPlugins) return;
+										if (!$wnd.mollify || !$wnd.mollify.getPlugins) return;
 
-		var plugins = $wnd.mollify.getPlugins();
-		if (!plugins || plugins.length == 0) return;
+										var plugins = $wnd.mollify.getPlugins();
+										if (!plugins || plugins.length == 0) return;
 
-		for(var i=0; i < plugins.length; i++) {
-			var plugin = plugins[i];
-			if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo()) continue;
-			this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
-		}
-	}-*/;
+										for(var i=0; i < plugins.length; i++) {
+										var plugin = plugins[i];
+										if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo()) continue;
+										this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
+										}
+										}-*/;
 
 	public void addPlugin(JavaScriptObject p) {
 		if (p == null)

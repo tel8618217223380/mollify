@@ -41,6 +41,13 @@ public class Folder extends FileSystemItem {
 	}
 
 	@Override
+	public String getParentPath() {
+		if (isRoot())
+			return "";
+		return super.getParentPath();
+	}
+
+	@Override
 	public JavaScriptObject asJs() {
 		return JsFolder.create(this);
 	}

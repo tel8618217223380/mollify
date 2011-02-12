@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,16 +34,19 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileGrid extends Composite {
+	private final boolean thumbnails;
+	private final FileSystemService service;
+
 	private Panel panel;
 	private List<FileSystemItem> items = Collections.EMPTY_LIST;
 	private Map<FileSystemItem, GridFileWidget> widgets = new HashMap();
 	private GridComparator<FileSystemItem> comparator;
 	private List<GridListener> listeners = new ArrayList();
-	private FileSystemItem selected = null;
+	private List<FileSystemItem> selected = new ArrayList();
+	private FileSystemItem hilighted = null;
 	private Timer clickTimer;
-
-	private final boolean thumbnails;
-	private final FileSystemService service;
+	private SelectController selectController;
+	private boolean selectMode = false;
 
 	public FileGrid(boolean thumbnails, FileSystemService service) {
 		this.thumbnails = thumbnails;
@@ -82,13 +85,15 @@ public class FileGrid extends Composite {
 	public void refresh() {
 		panel.clear();
 		widgets.clear();
-		selected = null;
+		selected.clear();
+		hilighted = null;
 
 		for (final FileSystemItem item : this.items) {
 			GridFileWidget widget = createItemWidget(item);
 			panel.add(widget);
 			widgets.put(item, widget);
 		}
+		onSelectionChanged();
 	}
 
 	private GridFileWidget createItemWidget(final FileSystemItem item) {
@@ -123,14 +128,54 @@ public class FileGrid extends Composite {
 	}
 
 	protected void onClick(FileSystemItem item) {
-		if (selected != null)
-			widgets.get(selected).select(false);
-		selected = item;
-		widgets.get(selected).select(true);
+		changeHilight(item);
+		updateSelectionOnClick(item);
 
+		if (!selectMode)
+			for (GridListener l : listeners)
+				l.onIconClicked(item);
+
+		onSelectionChanged();
+	}
+
+	private void updateSelectionOnClick(FileSystemItem item) {
+		if (!selectMode)
+			clearSelected();
+		if (!canSelect(item))
+			return;
+
+		GridFileWidget widget = widgets.get(item);
+		if (selectMode) {
+			boolean isSelected = selected.contains(item);
+			widget.select(!isSelected);
+			if (isSelected)
+				selected.remove(item);
+			else
+				selected.add(item);
+		} else {
+			widget.select(true);
+			selected.add(item);
+		}
+	}
+
+	private void changeHilight(FileSystemItem item) {
+		if (hilighted != null)
+			widgets.get(hilighted).hilight(false);
+		if (selectMode)
+			return;
+		hilighted = item;
+		widgets.get(hilighted).hilight(true);
+	}
+
+	private boolean canSelect(FileSystemItem item) {
+		if (selectController != null)
+			return selectController.isSelectable(item);
+		return true;
+	}
+
+	private void onSelectionChanged() {
 		for (GridListener l : listeners) {
-			l.onIconClicked(item);
-			l.onSelectionChanged(Arrays.asList(item));
+			l.onSelectionChanged(selected);
 		}
 	}
 
@@ -152,4 +197,48 @@ public class FileGrid extends Composite {
 		this.listeners.add(listener);
 	}
 
+	public void selectAll() {
+		clearSelected();
+		for (final FileSystemItem item : this.items) {
+			selected.add(item);
+			widgets.get(item).select(true);
+		}
+		onSelectionChanged();
+	}
+
+	public void selectNone() {
+		clearSelected();
+		onSelectionChanged();
+	}
+
+	private void clearSelected() {
+		for (final FileSystemItem item : selected)
+			widgets.get(item).select(false);
+		selected.clear();
+	}
+
+	private void clearHilight() {
+		if (hilighted != null) {
+			widgets.get(hilighted).hilight(false);
+			hilighted = null;
+		}
+	}
+
+	public void clear() {
+		clearSelected();
+		panel.clear();
+		widgets.clear();
+		items.clear();
+		hilighted = null;
+	}
+
+	public void setSelectMode(boolean b) {
+		this.selectMode = b;
+		if (selectMode)
+			clearHilight();
+	}
+
+	public void setSelectController(SelectController selectController) {
+		this.selectController = selectController;
+	}
 }

@@ -109,6 +109,6 @@ public abstract class FileSystemItem {
 		return path.substring(0, path.length() - getName().length()
 				- (isFile() ? 0 : 1));
 	}
-	
+
 	public abstract JavaScriptObject asJs();
 }
