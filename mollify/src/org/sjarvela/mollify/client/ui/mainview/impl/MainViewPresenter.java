@@ -125,8 +125,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					public boolean isSelectable(FileSystemItem t) {
 						if (t.isFile())
 							return true;
-						return !Folder.Parent.equals(t)
-								&& !((Folder) t).isRoot();
+						if (Folder.Parent.equals(t))
+							return false;
+//						if (((Folder) t).isRoot())
+//							return false;
+						return true;
 					}
 
 				});

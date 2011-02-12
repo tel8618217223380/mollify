@@ -41,7 +41,7 @@ public class DefaultFileListGridWidget implements FileListWidget {
 
 	@Override
 	public void removeAllRows() {
-		// TODO Auto-generated method stub
+		grid.clear();
 	}
 
 	@Override
@@ -51,26 +51,22 @@ public class DefaultFileListGridWidget implements FileListWidget {
 
 	@Override
 	public void setSelectionMode(SelectionMode selectionMode) {
-		// TODO Auto-generated method stub
-
+		grid.setSelectMode(!SelectionMode.None.equals(selectionMode));
 	}
 
 	@Override
 	public void setSelectController(SelectController controller) {
-		// TODO Auto-generated method stub
-
+		grid.setSelectController(controller);
 	}
 
 	@Override
 	public void selectAll() {
-		// TODO Auto-generated method stub
-
+		grid.selectAll();
 	}
 
 	@Override
 	public void selectNone() {
-		// TODO Auto-generated method stub
-
+		grid.selectNone();
 	}
 
 	@Override

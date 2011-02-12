@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.service.FileSystemService;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -48,6 +49,8 @@ public class GridFileWidget extends Composite {
 		panel.addStyleDependentName(item.isFile() ? "file" : "folder");
 		if (item.isFile())
 			panel.addStyleDependentName(((File) item).getExtension());
+		else if (Folder.Parent.equals(item))
+			panel.addStyleDependentName("folder-parent");
 
 		if (showThumbnais()) {
 			String url = service.getThumbnailUrl(item);
@@ -82,6 +85,13 @@ public class GridFileWidget extends Composite {
 			widget.addStyleDependentName("selected");
 		else
 			widget.removeStyleDependentName("selected");
+	}
+
+	public void hilight(boolean b) {
+		if (b)
+			widget.addStyleDependentName("hilighted");
+		else
+			widget.removeStyleDependentName("hilighted");
 	}
 
 }
