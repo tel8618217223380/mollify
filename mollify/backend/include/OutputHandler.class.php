@@ -55,6 +55,18 @@
 			505 => 'HTTP Version Not Supported'  
         );
         
+        private $defaultMimeTypes = array(
+			'ogg' => 'application/ogg',
+			'mov' => 'video/quicktime',
+			'mp4' => 'video/mp4',
+			'aif' => "audio/x-aiff",
+			'wav' => "audio/x-wav",
+			'wav' => "audio/x-wav",
+			'divx' => "video/divx",
+			'avi' => "video/divx",
+			'mkv' => "video/divx"
+        );
+        
         private $mimeTypes;
         private $supportOutputBuffer;
         
@@ -135,12 +147,7 @@
 		
 		private function getMime($type) {
 			if (in_array($type, $this->mimeTypes)) return $this->mimeTypes[$type];
-			
-			if ($type === 'ogg') return 'application/ogg';
-			if ($type === 'mov') return 'video/quicktime';
-			if ($type === 'mp4') return 'video/mp4';
-			if ($type === 'aif') return "audio/x-aiff";
-			if ($type === 'wav') return "audio/x-wav";
+			if (in_array($type, $this->defaultMimeTypes)) return $this->defaultMimeTypes[$type];
 			return 'application/octet-stream';
 		}
 		
