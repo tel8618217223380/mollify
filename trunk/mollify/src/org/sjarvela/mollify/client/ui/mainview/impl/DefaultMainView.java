@@ -63,7 +63,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final MainViewModel model;
 	private final Panel buttonPanel;
 	private final FolderSelector folderSelector;
-	// private final FileList list;
 	private final FlowPanel listPanel;
 	private final FlowPanel progress;
 
