@@ -49,3 +49,7 @@ See [NotificatorPlugin]
 == Archiver ==
 
 See [ArchiverPlugin]
+
+== Public upload ==
+
+See [PublicUploadPlugin]
