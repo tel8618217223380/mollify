@@ -159,7 +159,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	With this setting, client can provide links that can be used for downloading files without Mollify account.
 
-=== 6.5. Email login ===
+=== 6.6. Email login ===
 
 	To enable login with email, add with following setting in "configuration.php":
 
