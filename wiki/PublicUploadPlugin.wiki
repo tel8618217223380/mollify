@@ -1,0 +1,15 @@
+#summary Public upload plugin
+
+= Introduction =
+
+Public upload plugin is built-in plugin that provides possibility to send a upload link to anyone. Files uploaded will be saved in the folder where the link was generated from.
+
+= Configuration =
+
+Public upload plugin does not have any parameters. Configure plugin by adding following into configuration.php (or merge into existing plugins array):
+
+{{{
+	$PLUGINS = array(
+		"PublicUpload" => array()
+	);
+}}}
