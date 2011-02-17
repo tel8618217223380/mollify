@@ -59,7 +59,8 @@
 		}
 		
 		public function createAdminUser($name, $pw) {
-			$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, permission_mode, is_group) VALUES ('".$this->db->string($name)."','".md5($pw)."','".Authentication::PERMISSION_VALUE_ADMIN."', 0)", FALSE);
+			$a1pw = md5($name.":mollify:".$pw);	//TODO
+			$this->db->query("INSERT INTO ".$this->db->table("user")." (name, password, a1password, permission_mode, is_group) VALUES ('".$this->db->string($name)."','".md5($pw)."','".$a1pw."','".Authentication::PERMISSION_VALUE_ADMIN."', 0)", FALSE);
 		}
 		
 		public function updateVersionStep($from, $to) {
