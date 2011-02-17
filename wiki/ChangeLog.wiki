@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.8 ===
+  * Added new languages: de, ja
+  * Public upload
+  * UI fixes
+  * A1 password support for WebDAV
+
 === Version 1.7.7 ===
   * Added new languages: nl
   * Fixed issue 177
