@@ -35,7 +35,9 @@
 		<pathelement location="${build.dir}" />
 		<pathelement location="${lib.dir}/aopalliance.jar" />
 		<pathelement location="${lib.dir}/gin.jar" />
-		<pathelement location="${lib.dir}/guice-2.0.jar" />
+		<pathelement location="${lib.dir}/guice.jar" />
+		<pathelement location="${lib.dir}/guice-assistedinject.jar" />
+		<pathelement location="${lib.dir}/javax.inject.jar" />
 		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
 		<pathelement location="${lib.dir}/junit-4.6.jar" />
 		<pathelement location="${lib.dir}/gwt-plupload.jar" />
