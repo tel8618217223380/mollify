@@ -52,8 +52,6 @@
 		public abstract function write($item);
 		
 		public abstract function put($item, $content);
-		
-		public abstract function addToZip($item, $zip);
 				
 		public abstract function createFolder($folder, $name);
 		

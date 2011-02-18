@@ -21,6 +21,7 @@
 		private $folderCache = array();
 		private $detailsPlugins = array();
 		private $searchers = array();
+		private $filesystems = array();
 		
 		public $allowFilesystems = TRUE;
 
@@ -39,6 +40,11 @@
 		}
 		
 		public function initialize() {}
+		
+		public function registerFilesystem($id, $factory) {
+			Logging::logDebug("Filesystem registered: ".$id);
+			$this->filesystems[$id] = $factory;
+		}
 
 		public function registerDetailsPlugin($plugin) {
 			$this->detailsPlugins[] = $plugin;
@@ -89,6 +95,12 @@
 		
 		private function createFilesystem($folderDef) {
 			$id = isset($folderDef['id']) ? $folderDef['id'] : '';
+			
+			//TODO this is hack, support real filesystem types
+			if (array_key_exists("S3FS", $this->filesystems)) {
+				$factory = $this->filesystems["S3FS"];
+				return $factory->createFilesystem($id, $folderDef, $this);
+			}
 			
 			switch ($this->filesystemType($folderDef)) {
 				case MollifyFilesystem::TYPE_LOCAL:
