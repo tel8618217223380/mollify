@@ -43,6 +43,8 @@
 			"url_retriever_class" => "UrlRetriever.class.php",
 			"datetime_format" => "d.m.Y H:i:s",
 			"mime-types" => array(),
+			"enable_s3" => FALSE,
+			"s3_settings" => array(),
 			"debug" => FALSE
 		);
 		

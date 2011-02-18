@@ -40,15 +40,19 @@
 	
 	require_once("configuration.php");
 	
-	global $SETTINGS, $CONFIGURATION_PROVIDER, $VERSION;
+	global $SETTINGS, $CONFIGURATION_PROVIDER, $VERSION, $ENABLE_AMAZON_S3_MODE, $AMAZON_S3_SETTINGS;
 	Logging::initialize($SETTINGS, $VERSION);
 
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
-	
+	require_once("include/Settings.class.php");
+		
 	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime_types', array()), isSetting($SETTINGS, 'support_output_buffer')));
 	try {
-		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), $responseHandler);
+		$settings = new Settings($SETTINGS);
+		$configurationProvider = getConfigurationProvider($CONFIGURATION_PROVIDER, $settings);
+		$backend = new MollifyBackend($settings, $configurationProvider, $responseHandler);
+		
 		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
@@ -57,6 +61,11 @@
 	} catch (Exception $e) {
 		Logging::logException($e);
 		$responseHandler->unknownServerError($e->getMessage());
+	}
+	
+	function getConfigurationProvider($id, $settings) {
+		$f = new ConfigurationProviderFactory();
+		return $f->createConfigurationProvider($id, $settings);
 	}
 
 	function getSetting($settings, $name, $def) {

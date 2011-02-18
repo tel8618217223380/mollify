@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("include/Settings.class.php");
+
 	require_once("include/event/EventHandler.class.php");
 	require_once("include/Session.class.php");
 	require_once("include/ServiceEnvironment.class.php");
@@ -19,12 +19,11 @@
 	class MollifyBackend {
 		private $environment;
 		
-		function __construct($settingsVar, $configurationProviderId, $configurationProviderFactory, $responseHandler) {
-			$settings = new Settings($settingsVar);
-			$session = new Session($settings);
-			$configurationProvider = $configurationProviderFactory->createConfigurationProvider($configurationProviderId, $settings);
-			
-			$this->environment = new ServiceEnvironment($session, $responseHandler, $configurationProvider, $settings);
+		function __construct($settings, $configurationProvider, $responseHandler) {
+			$this->settings = $settings;
+			$this->session = new Session($settings);
+			$this->configurationProvider = $configurationProvider;
+			$this->environment = new ServiceEnvironment($this->session, $responseHandler, $this->configurationProvider, $settings);
 			$this->setup();
 		}
 	
