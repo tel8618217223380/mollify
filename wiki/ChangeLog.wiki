@@ -7,6 +7,7 @@
   * UI fixes
   * A1 password support for WebDAV
   * Possibility to allow login with email address
+  * Alternative zip methods
 
 === Version 1.7.7 ===
   * Added new languages: nl
