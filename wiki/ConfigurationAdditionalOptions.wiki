@@ -181,6 +181,21 @@ $PASSWORDS_HASHED = TRUE;
 
 	With this setting, client will show new item in the add menu: "Retrieve URL". Client will retrieve a file behind a given url and save it to the current folder.
 
+=== 6.8. Zip method ===
+
+	Downloading files as zip package requires a zip library support in server. By default, PHP zip library is used, but there are alternatives. Zipping method can be chose with following setting in "configuration.php":
+
+	{{{
+		$SETTINGS = array(
+			"zipper" => "ziparchive"
+		);
+	}}}
+
+Options are:
+  * "`ziparchive`" is the PHP native zip library, and this is used by default.
+  * "`native`" uses server external zip tools for building zip packages (requires binaries 'zip' or '7z' installed)
+  * "`raw`" uses a custom PHP zip library
+
 = 7. Client Options =
 
 == 7.1. File uploader ==
