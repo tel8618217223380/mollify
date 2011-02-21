@@ -18,6 +18,10 @@
 			$this->rootPath = self::folderPath($def["path"]);
 		}
 		
+		public function isDirectDownload() {
+			return TRUE;
+		}
+		
 		public function assert() {
 			if (!$this->exists())
 				throw new NonExistingFolderException("INVALID_CONFIGURATION", "Invalid folder definition, path does not exist [".$this->id()."]");

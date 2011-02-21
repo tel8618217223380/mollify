@@ -80,6 +80,10 @@
 			$this->notifyResponse();
 		}
 		
+		public function redirect($url) {
+			$this->output->redirect($url);
+		}
+		
 		public function unknownServerError($msg) {
 			$this->error("UNEXPECTED_ERROR", $msg);
 		}

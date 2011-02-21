@@ -893,6 +893,8 @@ class RequestCore
 	 */
 	public function send_request($parse = false)
 	{
+		Logging::logDebug("S3 request ".$this->method." ".$this->request_url);
+		
 		set_time_limit(0);
 
 		$curl_handle = $this->prep_request();
