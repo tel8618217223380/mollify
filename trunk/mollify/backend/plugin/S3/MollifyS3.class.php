@@ -15,6 +15,8 @@
 	class MollifyS3 {
 	 	private $s3;
 	 	private $settings;
+	 	private $bucketCache = array();
+	 	private $objectHeaderCache = array();
 	 	
 	 	public function __construct($settings) {
 	 		$this->settings = $settings;
@@ -26,11 +28,18 @@
 			include_once("sdk.class.php");
 			
 			$this->s3 = new AmazonS3();
-			$this->s3->enable_debug_mode(true);
+			$this->s3->set_cache_config("./s3_cache");
 		}
 
-		public function bucketExists($bucket) {
-			return $this->s3->if_bucket_exists($this->getBucketId($bucket));
+		public function bucketExists($b) {
+			$bucket = $this->getBucketId($b);
+			
+			if (array_key_exists($bucket, $this->bucketCache))
+				return $this->bucketCache[$bucket];
+			
+			$e = $this->s3->if_bucket_exists($bucket);
+			$this->bucketCache[$bucket] = $e;
+			return $e;
 		}
 
 		public function createBucket($b) {
@@ -48,10 +57,76 @@
 			}
 		}
 		
-		public function getObjects($bucket) {
-			return $this->s3->get_object_list($this->getBucketId($bucket));
+		public function getObjects($bucket, $parent) {
+			$filters = array();
+			if (strlen($parent) > 0) $filters["prefix"] = $parent;
+			$ret = $this->s3->get_object_list($this->getBucketId($bucket), $filters);
+			return $ret;
+		}
+
+		public function createEmptyObject($bucket, $obj) {
+			$ret = $this->s3->create_object($this->getBucketId($bucket), $obj, array("body" => ""));
+			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not create empty object: ".$ret->status." ".Util::array2str($ret->header));
+			return $ret;
+		}
+				
+		public function getObjectSize($bucket, $obj) {
+			$h = $this->getObjectHeaders($bucket, $obj);
+			return $h["content-length"];
+		}
+
+		public function getObjectHeaders($b, $obj) {
+			$bucket = $this->getBucketId($b);
+			if (is_array($obj)) {
+				if (count($obj) == 0) return NULL;
+				
+				foreach($obj as $path)
+					$this->s3->batch()->get_object_headers($bucket, $path);
+				$ret = $this->s3->batch()->cache('5 minutes')->send();
+				
+				$i = 0;
+				foreach($ret as $r) {
+					if (!$r->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not get multiple S3 headers: ".$ret->status." ".Util::array2str($ret->header));
+					Logging::logDebug(Util::array2str($r));
+					
+					$p = $obj[$i++];
+					$this->objectHeaderCache[$p] = $r->header;
+				}
+				return;
+			}
+			
+			if (array_key_exists($obj, $this->objectHeaderCache)) return $this->objectHeaderCache[$obj];
+			$ret = $this->s3->get_object_headers($bucket, $obj);
+			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not get S3 headers: ".$ret->status." ".Util::array2str($ret->header));
+			return $ret->header;
+		}
+
+		public function copyObject($bucket, $obj, $to) {
+			$b = $this->getBucketId($bucket);
+			$ret = $this->s3->copy_object(array("bucket" => $b, "filename" => $obj), array("bucket" => $b, "filename" => $to));
+			return $ret->isOK();
+		}
+
+		public function moveObject($bucket, $obj, $to) {
+			$b = $this->getBucketId($bucket);
+			$ret = $this->s3->copy_object(array("bucket" => $b, "filename" => $obj), array("bucket" => $b, "filename" => $to));
+			if (!$ret->isOK())
+				throw new ServiceException("REQUEST_FAILED", "Could not rename: ".$ret->status." ".Util::array2str($ret->header));
+			$ret = $this->s3->delete_object($this->getBucketId($bucket), $obj);
+			if (!$ret->isOK())
+				throw new ServiceException("REQUEST_FAILED", "Could not rename: ".$ret->status." ".Util::array2str($ret->header));
 		}
 		
+		public function deleteObject($bucket, $obj) {
+			$ret = $this->s3->delete_object($this->getBucketId($bucket), $obj);
+			if (!$ret->isOK())
+				throw new ServiceException("REQUEST_FAILED", "Could not delete: ".$ret->status." ".Util::array2str($ret->header));
+		}
+
+		public function getObjectUrl($bucket, $obj) {
+			return $this->s3->get_object_url($this->getBucketId($bucket), $obj, '5 minutes');
+		}
+				
 		private function getBucketId($b) {
 			return strtolower($this->settings['AWS_KEY'])."-".$b;
 		}

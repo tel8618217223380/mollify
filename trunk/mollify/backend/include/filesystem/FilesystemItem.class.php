@@ -24,7 +24,7 @@
 		}
 		
 		abstract function isFile();
-		
+				
 		public function id() {
 			return $this->id;
 		}

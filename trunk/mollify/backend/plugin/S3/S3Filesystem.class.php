@@ -12,11 +12,17 @@
 
 	class S3Filesystem extends MollifyFilesystem {
 		private $bucketId;
+		private $rootId;
 		
 		function __construct($s3, $id, $def, $env) {
 			parent::__construct($id, $def['name'] != NULL ? $def['name'] : $def['default_name'], $env->filesystem());
 			$this->s3 = $s3;
 			$this->bucketId = $def["path"];
+			$this->rootId = $id.":".DIRECTORY_SEPARATOR;
+		}
+		
+		public function isDirectDownload() {
+			return FALSE;
 		}
 		
 		public function assert() {
@@ -41,7 +47,7 @@
 		public function createItem($id, $path, $nonexisting = FALSE) {
 			$isFile = (strcasecmp(substr($id, -1), DIRECTORY_SEPARATOR) != 0);
 			$name = self::basename($path);
-			Logging::logDebug("S3 item [".$id."] (".$name.") ".$isFile);
+			//Logging::logDebug("S3 item [".$id."] (".$name.") ".$isFile);
 			
 			if ($isFile) return new File($id, $this->rootId(), $path, $name, $this);
 			return new Folder($id, $this->rootId(), $path, $name, $this);
@@ -56,6 +62,8 @@
 		}
 				
 		public function details($item) {
+			$hdr = $this->s3->getObjectHeaders($this->bucketId, $item->path());
+			Logging::logDebug(Util::array2str($hdr));
 			$details = array("id" => $item->publicId());
 			return $details;
 		}
@@ -71,7 +79,10 @@
 
 		public function items($parent) {
 			$result = array();
-			foreach($this->s3->getObjects($this->bucketId) as $path) {
+			$items = $this->s3->getObjects($this->bucketId, $parent->path());
+			$this->s3->getObjectHeaders($this->bucketId, $items);
+			
+			foreach($this->s3->getObjects($this->bucketId, $parent->path()) as $path) {
 				Logging::logDebug($path);
 				$id = $this->rootId().$path;
 				$result[] = $this->createItem($id, $path);
@@ -81,40 +92,57 @@
 		}
 		
 		public function parent($item) {
-			Logging::logDebug("Parent: ".$item->path());
 			if ($item->path() === '') return NULL;
 			
 			$pos = strrpos($item->path(), DIRECTORY_SEPARATOR);
 			if ($pos === FALSE) return $this->root();
 			
-			$path = substr($item->path, 0, $pos);
+			$path = substr($item->path(), 0, $pos);
 			$id = $this->rootId().$path;
-			Logging::logDebug($id);
 			return $this->createItem($id, $path, self::basename($path));
 		}
 
 		public function rename($item, $name) {
-			return $item;	//TODO
+			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Renaming folders in S3 is not supported");
+			$new = $item->parent()->fileWithName($name, TRUE);
+			$this->s3->moveObject($this->bucketId, $item->path(), $new->path());
+			return $new;
 		}
 
 		public function copy($item, $to) {
-			return $to;	//TODO (also folder copy)
+			if ($item->rootId() != $this->rootId or $to->rootId() != $this->rootId) throw new ServiceException("FEATURE_DISABLED", "Copying from/to outside S3 fs is not supported");
+			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Copying folders in S3 is not supported");
+
+			if (!$this->s3->copyObject($this->bucketId, $item->path(), $to->path()))
+				throw new ServiceException("REQUEST_FAILED", "Failed to copy [".$item->id()." to .".$to->id()."]");
+			
+			return $to;
 		}
 				
 		public function move($item, $to) {
-			return $item;	//TODO
+			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Moving folders in S3 is not supported");
+			$new = $to->fileWithName($item->name(), TRUE);
+			$this->s3->moveObject($this->bucketId, $item->path(), $new->path());
+			return $new;
 		}
 		
 		public function delete($item) {
-			//TODO
+			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Deleting folders in S3 is not supported");
+			$this->s3->deleteObject($this->bucketId, $item->path());
+			return $item;
 		}
 				
 		public function createFolder($folder, $name) {
-			return $folder;	//TODO
+			$new = $folder->folderWithName($name, TRUE);
+			
+			if (!$this->s3->createEmptyObject($this->bucketId, $new->path()))
+				throw new ServiceException("REQUEST_FAILED", "Failed to create folder [".$new->id()."]");
+
+			return $new;
 		}
 		
 		public function createFile($folder, $name) {
-			return $folder;	//TODO
+			return $this->itemWithPath(self::joinPath($folder->path(), $name), TRUE);
 		}
 
 		public function fileWithName($folder, $name, $nonExisting = FALSE) {
@@ -128,23 +156,27 @@
 		}
 		
 		public function size($file) {
-			return "0";	//TODO
+			return sprintf("%d", $this->s3->getObjectSize($this->bucketId, $file->path()));
 		}
 		
 		public function lastModified($item) {
 			return 0;	//TODO
 		}
+		
+		public function getDownloadUrl($item) {
+			return $this->s3->getObjectUrl($this->bucketId, $item->path());
+		}
 
 		public function read($item, $range = NULL) {
-			return NULL;
+			throw new ServiceException("FEATURE_DISABLED", "Stream reading from S3 object is not supported");
 		}
 		
 		public function write($item) {
-			return NULL;
+			throw new ServiceException("FEATURE_DISABLED", "Stream writing to S3 object is not supported");
 		}
 		
 		public function put($item, $content) {
-			//file_put_contents($this->localPath($item), $content);
+			throw new ServiceException("FEATURE_DISABLED", "Updating S3 object is not supported");
 		}
 		
 		public function __toString() {

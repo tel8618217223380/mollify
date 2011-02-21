@@ -421,6 +421,10 @@
 			if (!$range)
 				Logging::logDebug('download ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
+			if (!$file->filesystem()->isDirectDownload()) {
+				$this->env->response()->redirect($file->filesystem()->getDownloadUrl($file));
+				return;
+			}
 			
 			$name = $file->name();
 			$size = $file->size();

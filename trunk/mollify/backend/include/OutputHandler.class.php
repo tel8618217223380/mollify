@@ -140,7 +140,11 @@
 			fclose($stream);
 			Logging::logDebug("Sent $count chunks");
 		}
-		
+
+		public function redirect($url) {
+			header("Location: ".$url);
+		}
+				
 		private function getStatus($response) {
 			return 'HTTP/1.1 '.$response->code().' '.$this->codes[$response->code()];
 		}
