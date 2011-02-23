@@ -13,12 +13,14 @@
 	class S3Filesystem extends MollifyFilesystem {
 		private $bucketId;
 		private $rootId;
+		private $env;
 		
 		function __construct($s3, $id, $def, $env) {
 			parent::__construct($id, $def['name'] != NULL ? $def['name'] : $def['default_name'], $env->filesystem());
 			$this->s3 = $s3;
 			$this->bucketId = $def["path"];
 			$this->rootId = $id.":".DIRECTORY_SEPARATOR;
+			$this->env = $env;
 		}
 		
 		public function isDirectDownload() {
@@ -32,6 +34,7 @@
 		
 		public function exists() {
 			Logging::logDebug("Checking bucket ".$this->bucketId);
+			return TRUE;	//TODO remove
 			return $this->s3->bucketExists($this->bucketId);
 		}
 		
@@ -63,8 +66,11 @@
 				
 		public function details($item) {
 			$hdr = $this->s3->getObjectHeaders($this->bucketId, $item->path());
-			Logging::logDebug(Util::array2str($hdr));
+			//Logging::logDebug(Util::array2str($hdr));
 			$details = array("id" => $item->publicId());
+			if ($item->isFile()) {
+				$details["last_changed"] = date($this->env->datetimeFormat(), strtotime($hdr["last-modified"]));
+			}
 			return $details;
 		}
 
@@ -83,7 +89,7 @@
 			$this->s3->getObjectHeaders($this->bucketId, $items);
 			
 			foreach($this->s3->getObjects($this->bucketId, $parent->path()) as $path) {
-				Logging::logDebug($path);
+				//Logging::logDebug($path);
 				$id = $this->rootId().$path;
 				$result[] = $this->createItem($id, $path);
 			}
@@ -160,7 +166,8 @@
 		}
 		
 		public function lastModified($item) {
-			return 0;	//TODO
+			$hdr = $this->s3->getObjectHeaders($this->bucketId, $item->path());
+			return strtotime($hdr["last-modified"]);
 		}
 		
 		public function getDownloadUrl($item) {

@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
+import org.sjarvela.mollify.client.filesystem.upload.FileUploadFactory;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment;
@@ -173,19 +174,24 @@ public class ContainerConfiguration extends AbstractGinModule {
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			UrlResolver urlResolver, SessionProvider sessionProvider,
-			DialogManager dialogManager) {
+			DialogManager dialogManager, PluginEnvironment pluginEnv) {
 		String param = settings.getString(PARAM_FILE_UPLOADER);
 
+		FileUploadDialogFactory uploaderFactory;
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(param))
-			return new FlashFileUploadDialogFactory(textProvider, urlResolver,
-					env.getFileUploadService(), sessionProvider, settings);
-		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
-			return new PluploaderDialogFactory(textProvider, urlResolver,
-					env.getFileUploadService(), sessionProvider, dialogManager,
+			uploaderFactory = new FlashFileUploadDialogFactory(textProvider,
+					urlResolver, env.getFileUploadService(), sessionProvider,
 					settings);
+		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
+			uploaderFactory = new PluploaderDialogFactory(textProvider,
+					urlResolver, env.getFileUploadService(), sessionProvider,
+					dialogManager, settings);
+		else
+			uploaderFactory = new HttpFileUploadDialogFactory(env,
+					textProvider, env.getFileUploadService(), sessionProvider,
+					dialogManager);
 
-		return new HttpFileUploadDialogFactory(env, textProvider,
-				env.getFileUploadService(), sessionProvider, dialogManager);
+		return new FileUploadFactory(uploaderFactory, pluginEnv);
 	}
 
 }

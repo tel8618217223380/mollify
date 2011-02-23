@@ -21,6 +21,10 @@
 	 		$this->s3 = new MollifyS3($this->getSettings());
 		}
 		
+		public function getClientPlugin() {
+			return "client/plugin.js";
+		}
+		
 		public function createFilesystem($id, $folderDef) {
 			return new S3Filesystem($this->s3, $id, $folderDef, $this->env);
 		}

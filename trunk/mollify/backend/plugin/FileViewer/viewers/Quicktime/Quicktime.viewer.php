@@ -9,7 +9,8 @@
 		}
 		
 		protected function getHtml($item, $full) {
-			return '<embed id="quicktime-player" width="580" height="380" src="'.$this->getContentUrl($item).'" autoplay="true" controller="true" pluginspace="/quicktime/download/">';
-		}		
+			$url = $this->getContentUrl($item);
+			return '<object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab" height="580" width="380"><param name="src" value="'.$url.'"/><embed id="quicktime-player" width="580" height="380" src="'.$url.'" autoplay="true" controller="true" pluginspace="/quicktime/download/"></object>';
+		}
 	}
 ?>

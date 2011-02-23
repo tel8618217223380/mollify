@@ -91,17 +91,20 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	private native void setupPlugins() /*-{
-										if (!$wnd.mollify || !$wnd.mollify.getPlugins) return;
+		if (!$wnd.mollify || !$wnd.mollify.getPlugins)
+			return;
 
-										var plugins = $wnd.mollify.getPlugins();
-										if (!plugins || plugins.length == 0) return;
+		var plugins = $wnd.mollify.getPlugins();
+		if (!plugins || plugins.length == 0)
+			return;
 
-										for(var i=0; i < plugins.length; i++) {
-										var plugin = plugins[i];
-										if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo()) continue;
-										this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
-										}
-										}-*/;
+		for ( var i = 0; i < plugins.length; i++) {
+			var plugin = plugins[i];
+			if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo())
+				continue;
+			this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
+		}
+	}-*/;
 
 	public void addPlugin(JavaScriptObject p) {
 		if (p == null)
