@@ -11,11 +11,14 @@
 package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.FileView;
+import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public interface PluginEnvironment {
 
 	JavaScriptObject getJsEnv(FileView filesystem, String pluginBaseUrl);
+
+	FileUploadDialogFactory getCustomUploader();
 
 }

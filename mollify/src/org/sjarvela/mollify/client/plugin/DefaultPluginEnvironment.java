@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
@@ -37,6 +38,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
+	private FileUploadDialogFactory uploader = null;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
@@ -60,6 +62,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	public void addEventHandler(JavaScriptObject eh) {
 		// TODO use proper interface here instead of casting
 		((DefaultEventDispatcher) eventDispatcher).addEventHandler(eh);
+	}
+
+	public void addUploader(JavaScriptObject uploader) {
+		this.uploader = new NativeUploader(uploader);
 	}
 
 	public void addItemContextProvider(JavaScriptObject dp) {
@@ -93,15 +99,19 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			JavaScriptObject fv, String pluginBaseUrl) /*-{
 		var env = {};
 
-		env.addResponseProcessor = function (cb) {
+		env.addResponseProcessor = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
-		env.addEventHandler = function (cb) {
+		env.addUploader = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
+
+		env.addEventHandler = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
-		env.addItemContextProvider = function (cb) {
+		env.addItemContextProvider = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
@@ -131,5 +141,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 		return env;
 	}-*/;
+
+	@Override
+	public FileUploadDialogFactory getCustomUploader() {
+		return uploader;
+	}
 
 }
