@@ -42,6 +42,7 @@
 		}
 		
 		public function onResponseSent() {
+			if (!$this->environment->request()) return;
 			$path = $this->environment->request()->path();
 			if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
 			

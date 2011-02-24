@@ -12,13 +12,20 @@
 
 	class S3 extends PluginBase {
 		private $s3;
-		
+				
 		public function setup() {
+			$this->env()->filesystem()->registerFilesystem("S3FS", $this);
+	 		$this->addService("s3", "S3Services");
+		}
+		
+		public function initialize() {
 	 		require_once("S3Filesystem.class.php");
 	 		require_once("MollifyS3.class.php");
-
-			$this->env->filesystem()->registerFilesystem("S3FS", $this);	 		
 	 		$this->s3 = new MollifyS3($this->getSettings());
+		}
+		
+		public function getS3() {
+			return $this->s3;
 		}
 		
 		public function getClientPlugin() {

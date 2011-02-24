@@ -24,17 +24,9 @@ function S3Plugin() {
 		that.env.dialog().showDialog({
 			title: that.env.texts().get('fileUploadDialogTitle'),
 			html: that.getUploadDialogContent(),
-			on_show: function(d) { that.onShowUploadDialog(d); }
+			on_show: function(d) { that.onShowUploadDialog(d, folder); }
 		});
 	}
-	
-	/**"<form action='http://johnsmith.s3.amazonaws.com/' method='post' enctype='multipart/form-data'>"+
-			"<input type='hidden' name="success_action_redirect" value="http://johnsmith.s3.amazonaws.com/successful_upload.html" />"+
-			"<input type='hidden' name='AWSAccessKeyId' value='15B4D3461F177624206A' />"+
-			"<input type='file' name="file" />"+
-			"<input type='submit' name='submit' value="Upload to Amazon S3" />"+
-			"</form>
-	*/
 	
 	this.getUploadDialogContent = function() {
 		return "<div id='s3-upload-dialog-content'><div id='s3-upload-content'>"+
@@ -47,10 +39,12 @@ function S3Plugin() {
 			"</td></tr></table></div></div>";
 	}
 	
-	this.onShowUploadDialog = function(d) {
+	this.onShowUploadDialog = function(d, f) {
 		that.dialog = d;
 		
 		$("#s3-upload-dialog-close").click(function(){ d.close(); });
-		$("#s3-upload-form").load(that.env.service().get("s3/upload");
+		$("#s3-upload-form").load(that.env.service().getUrl("s3")+"/upload?id="+f.id, function() {
+			$("#btn-submit").attr('value', 'todo');
+		});
 	}
 }

@@ -29,27 +29,27 @@ public class NativeService {
 	}
 
 	private native JavaScriptObject createJs(NativeService service) /*-{
-		var env = {};
+		var s = {};
 
-		env.getPluginUrl = function(id) {
+		s.getPluginUrl = function(id) {
 			var u = service.@org.sjarvela.mollify.client.plugin.service.NativeService::getPluginUrl(Ljava/lang/String;)(id);
 			return u;
 		}
 
-		env.getUrl = function(s) {
+		s.getUrl = function(s) {
 			var u = service.@org.sjarvela.mollify.client.plugin.service.NativeService::getUrl(Ljava/lang/String;)(s);
 			return u;
 		}
 
-		env.get = function(path, success, fail) {
+		s.get = function(path, success, fail) {
 			service.@org.sjarvela.mollify.client.plugin.service.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 		}
 
-		env.post = function(path, data, success, fail) {
+		s.post = function(path, data, success, fail) {
 			service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, data, success, fail);
 		}
 
-		return env;
+		return s;
 	}-*/;
 
 	protected String getPluginUrl(String id) {
@@ -98,12 +98,14 @@ public class NativeService {
 
 	protected native void invokeSuccess(JavaScriptObject cb,
 			JavaScriptObject result) /*-{
-		if (!cb) return;
+		if (!cb)
+			return;
 		cb(result);
 	}-*/;
 
 	protected native void invokeFail(JavaScriptObject cb, int code, String error) /*-{
-		if (!cb) return;
+		if (!cb)
+			return;
 		cb(code, error);
 	}-*/;
 }

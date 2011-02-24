@@ -78,14 +78,15 @@
 		public function sendResponse($response) {
 			header($this->getStatus($response));
 			header("Cache-Control: no-store, no-cache, must-revalidate");
-			header('Content-type: text/html');
 			
 			$data = $response->data();
 			if (!$data) return;
 			
 			if ($response->type() === 'json') {
+				header('Content-type: application/json');
 				echo json_encode($data);
 			} else {
+				header('Content-type: text/html');
 				echo $data;
 			}
 		}
