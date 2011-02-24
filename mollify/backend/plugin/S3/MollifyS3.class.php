@@ -30,9 +30,17 @@
 			$this->s3 = new AmazonS3();
 			$this->s3->set_cache_config("./s3_cache");
 		}
+		
+		public function getKey() {
+			return $this->settings['AWS_KEY'];
+		}
+
+		public function getSecretKey() {
+			return $this->settings['AWS_SECRET_KEY'];
+		}
 
 		public function bucketExists($b) {
-			$bucket = $this->getBucketId($b);
+			$bucket = $this->getBucketKey($b);
 			
 			if (array_key_exists($bucket, $this->bucketCache))
 				return $this->bucketCache[$bucket];
@@ -43,7 +51,7 @@
 		}
 
 		public function createBucket($b) {
-			$bucket = $this->getBucketId($b);
+			$bucket = $this->getBucketKey($b);
 			
 			$ret = $this->s3->create_bucket($bucket, isset($settings["REGION"]) ? $settings["REGION"] : AmazonS3::REGION_EU_W1);
 			if ($ret->isOK()) {
@@ -60,12 +68,12 @@
 		public function getObjects($bucket, $parent) {
 			$filters = array();
 			if (strlen($parent) > 0) $filters["prefix"] = $parent;
-			$ret = $this->s3->get_object_list($this->getBucketId($bucket), $filters);
+			$ret = $this->s3->get_object_list($this->getBucketKey($bucket), $filters);
 			return $ret;
 		}
 
 		public function createEmptyObject($bucket, $obj) {
-			$ret = $this->s3->create_object($this->getBucketId($bucket), $obj, array("body" => ""));
+			$ret = $this->s3->create_object($this->getBucketKey($bucket), $obj, array("body" => ""));
 			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not create empty object: ".$ret->status." ".Util::array2str($ret->header));
 			return $ret;
 		}
@@ -76,7 +84,7 @@
 		}
 
 		public function getObjectHeaders($b, $obj) {
-			$bucket = $this->getBucketId($b);
+			$bucket = $this->getBucketKey($b);
 			if (is_array($obj)) {
 				if (count($obj) == 0) return NULL;
 				
@@ -102,33 +110,33 @@
 		}
 
 		public function copyObject($bucket, $obj, $to) {
-			$b = $this->getBucketId($bucket);
+			$b = $this->getBucketKey($bucket);
 			$ret = $this->s3->copy_object(array("bucket" => $b, "filename" => $obj), array("bucket" => $b, "filename" => $to));
 			return $ret->isOK();
 		}
 
 		public function moveObject($bucket, $obj, $to) {
-			$b = $this->getBucketId($bucket);
+			$b = $this->getBucketKey($bucket);
 			$ret = $this->s3->copy_object(array("bucket" => $b, "filename" => $obj), array("bucket" => $b, "filename" => $to));
 			if (!$ret->isOK())
 				throw new ServiceException("REQUEST_FAILED", "Could not rename: ".$ret->status." ".Util::array2str($ret->header));
-			$ret = $this->s3->delete_object($this->getBucketId($bucket), $obj);
+			$ret = $this->s3->delete_object($this->getBucketKey($bucket), $obj);
 			if (!$ret->isOK())
 				throw new ServiceException("REQUEST_FAILED", "Could not rename: ".$ret->status." ".Util::array2str($ret->header));
 		}
 		
 		public function deleteObject($bucket, $obj) {
-			$ret = $this->s3->delete_object($this->getBucketId($bucket), $obj);
+			$ret = $this->s3->delete_object($this->getBucketKey($bucket), $obj);
 			if (!$ret->isOK())
 				throw new ServiceException("REQUEST_FAILED", "Could not delete: ".$ret->status." ".Util::array2str($ret->header));
 		}
 
 		public function getObjectUrl($bucket, $obj) {
-			return $this->s3->get_object_url($this->getBucketId($bucket), $obj, '5 minutes');
+			return $this->s3->get_object_url($this->getBucketKey($bucket), $obj, '5 minutes');
 		}
 				
-		private function getBucketId($b) {
-			return strtolower($this->settings['AWS_KEY'])."-".$b;
+		public function getBucketKey($b) {
+			return strtolower($this->getKey())."-".$b;
 		}
 		
 		public function __toString() {

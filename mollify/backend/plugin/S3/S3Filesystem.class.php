@@ -23,6 +23,10 @@
 			$this->env = $env;
 		}
 		
+		public function getBucketKey() {
+			return $this->s3->getBucketKey($this->bucketId);
+		}
+		
 		public function isDirectDownload() {
 			return FALSE;
 		}
@@ -85,6 +89,8 @@
 
 		public function items($parent) {
 			$result = array();
+			return $result;	//TODO remove
+			
 			$items = $this->s3->getObjects($this->bucketId, $parent->path());
 			$this->s3->getObjectHeaders($this->bucketId, $items);
 			
