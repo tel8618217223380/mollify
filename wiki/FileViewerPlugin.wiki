@@ -45,13 +45,13 @@ Configuration:
 
 === Google ===
 
-Provides file viewer for PDF, DOC and XLS.
+Provides file viewer for PDF, DOC and TIFF.
 
 *NOTE!* All sites using this service must agree to the [https://docs.google.com/viewer/TOS?hl=en Google Viewer Terms of Service]
 
 Configuration:
 {{{
-"Google" => array("pdf", "xls", "doc")
+"Google" => array("pdf", "tiff", "doc")
 }}}
 
 Using Google Viewer requires that files can be accessed from internet (as the Google service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
