@@ -24,27 +24,64 @@ function S3Plugin() {
 		that.env.dialog().showDialog({
 			title: that.env.texts().get('fileUploadDialogTitle'),
 			html: that.getUploadDialogContent(),
-			on_show: function(d) { that.onShowUploadDialog(d, folder); }
+			on_show: function(d) { that.onShowUploadDialog(d, folder, listener); }
 		});
 	}
 	
 	this.getUploadDialogContent = function() {
-		return "<div id='s3-upload-dialog-content'><div id='s3-upload-content'>"+
+		return "<div id='s3-upload-dialog-content' style='width:100%; height:100%'>"+
 			"<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
-			"<tr height='99%'><td align='left' style='vertical-align: top'><div id='s3-upload-form' /></td></tr>"+
+			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
+			"    <form id='s3-upload-form' method='post' enctype='multipart/form-data' target='s3-upload-frame'>"+
+			"        <input type='file' name='file' />"+
+			"    </form>"+
+			"    <div id='s3-upload-progress' style='display:none'>"+that.env.texts().get("fileUploadProgressPleaseWait")+"</div>"+
+			"</td></tr>"+
 			"<tr height='1%'><td align='right'>"+
 			"    <table class='s3-upload-buttons' style='width:100%'>"+
-			"        <tr><td align='right'><button id='s3-upload-dialog-close' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.env.texts().get('dialogCloseButton')+"</button></td>"+
+			"        <tr><td align='right'>"+
+			"             <button id='s3-upload-dialog-upload' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.env.texts().get('fileUploadDialogUploadButton')+"</button>"+
+			"             <button id='s3-upload-dialog-close' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.env.texts().get('dialogCloseButton')+"</button>"+
+			"        </td></tr>"+
 			"    </table>"+
-			"</td></tr></table></div></div>";
+			"</td></tr></table></div>";
 	}
 	
-	this.onShowUploadDialog = function(d, f) {
-		that.dialog = d;
+	this.onShowUploadDialog = function(d, f, l) {
+		if (!$('#s3-upload-frame').length)
+			$('body').append('<iframe name="s3-upload-frame" id="s3-upload-frame" style="display:none"></iframe>');
+		$('#s3-upload-frame').contents().html('');
 		
-		$("#s3-upload-dialog-close").click(function(){ d.close(); });
-		$("#s3-upload-form").load(that.env.service().getUrl("s3")+"/upload?id="+f.id, function() {
-			$("#btn-submit").attr('value', 'todo');
+		$("#s3-upload-dialog-close").click(function() { d.close(); });
+		
+		$("#s3-upload-dialog-upload").click(function() {
+			$('#s3-upload-frame').one('load', function () {
+				var response;
+				try {
+					response = $('#s3-upload-frame').contents().html();
+				} catch (e) {
+					alert(e);
+					d.close();
+					l.result(false);
+					return;
+				}
+				alert(response);
+				d.close();
+				l.result(true);
+			});
+			$("#s3-upload-form").submit();
 		});
+		
+		that.env.service().get("s3/upload?id="+f.id, function(result) {
+			var form = $("#s3-upload-form");
+			form.attr("action", result.url);
+			
+			var keys = result.keys;
+			for (k in keys)
+				form.prepend("<input type='hidden' name='"+k+"' value='"+keys[k]+"'></input>");
+		},	function(code, error) {
+			alert(error);
+		});
+		//$("#s3-upload-form").load(that.env.service().getUrl("s3")+"/upload?id="+f.id);
 	}
 }

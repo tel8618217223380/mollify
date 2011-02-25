@@ -16,28 +16,41 @@
 		}
 		
 		public function processGet() {
-			if (!$this->path[0] === 'upload' or !$this->request->hasParam("id")) throw $this->invalidRequestException();
+			if (($this->path[0] !== 'upload' and $this->path[0] !== 'success') or !$this->request->hasParam("id")) throw $this->invalidRequestException();
+			
+			if ($this->path[0] === 'success') {
+				$this->env->response()->html("ok"); 
+				return;
+			}
 			
 			$s3 = $this->env->plugins()->getPlugin("S3")->getS3();
 			$folder = $this->item($this->request->param("id"));
 			if ($folder->filesystem()->type() != 'S3FS') throw $this->invalidRequestException();
 			
-			Logging::logDebug("S3 upload page for: ".$folder->id());
 			$bucket = $folder->filesystem()->getBucketKey();
-			$policy = base64_encode('{"expiration": "2999-12-01T12:00:00.000Z", "conditions":[ {"bucket": "'.$bucket.'"}, ["starts-with", "$key", "'.$folder->path().'"], { "success_action_status": "200" } ]}');
+			$success = $this->env->getServiceUrl("s3", array(), TRUE)."success?id=".$this->request->param("id");
+			$policy = base64_encode('{"expiration": "2999-12-01T12:00:00.000Z", "conditions":[ {"bucket": "'.$bucket.'"}, ["starts-with", "$key", "'.$folder->path().'"], { "success_action_redirect": "'.$success.'" } ]}');
 			$signature = $this->hex2b64($this->hmacsha1($s3->getSecretKey(), $policy));
 			
-			$html =
-			"<form action='http://".$bucket.".s3.amazonaws.com/' method='post' enctype='multipart/form-data'>".
+			/*$html =
+			"<form action='http://".$bucket.".s3.amazonaws.com/' method='post' enctype='multipart/form-data' target='s3-upload-frame' id='s3-upload-form'>".
 				"<input type='hidden' name='AWSAccessKeyId' value='".$s3->getKey()."' />".
 				"<input type='hidden' name='key' value='".$folder->path()."\${filename}' />".
 				"<input type='hidden' name='success_action_status' value='200' />".
 				"<input type='hidden' name='policy' value='".$policy."' />".
 				"<input type='hidden' name='signature' value='".$signature."' />".
 				"<input type='file' name='file' />".
-				"<input type='submit' name='submit' value='' id='btn-submit' />".
-			"</form>";
-			$this->env->response()->html($html);
+			"</form>";*/
+			$this->env->response()->success(array(
+				"url" => "http://".$bucket.".s3.amazonaws.com/",
+				"keys" => array(
+					"AWSAccessKeyId" => $s3->getKey(),
+					"key" => $folder->path()."\${filename}",
+					"policy" => $policy,
+					"signature" => $signature,
+					"success_action_redirect" => $success
+				)
+			));
 		}
 		
 		/*
