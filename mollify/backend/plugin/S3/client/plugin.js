@@ -22,7 +22,7 @@ function S3Plugin() {
 	
 	this.onUpload = function(folder, listener) {
 		that.env.dialog().showDialog({
-			title: that.env.texts().get('fileUploadDialogTitle'),
+			title: that.t('fileUploadDialogTitle'),
 			html: that.getUploadDialogContent(),
 			on_show: function(d) { that.onShowUploadDialog(d, folder, listener); }
 		});
@@ -35,13 +35,13 @@ function S3Plugin() {
 			"    <form id='s3-upload-form' method='post' enctype='multipart/form-data' target='s3-upload-frame'>"+
 			"        <input type='file' name='file' />"+
 			"    </form>"+
-			"    <div id='s3-upload-progress' style='display:none'>"+that.env.texts().get("fileUploadProgressPleaseWait")+"</div>"+
+			"    <div id='s3-upload-progress' style='display:none'>"+that.t("fileUploadProgressPleaseWait")+"</div>"+
 			"</td></tr>"+
 			"<tr height='1%'><td align='right'>"+
 			"    <table class='s3-upload-buttons' style='width:100%'>"+
 			"        <tr><td align='right'>"+
-			"             <button id='s3-upload-dialog-upload' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.env.texts().get('fileUploadDialogUploadButton')+"</button>"+
-			"             <button id='s3-upload-dialog-close' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.env.texts().get('dialogCloseButton')+"</button>"+
+			"             <button id='s3-upload-dialog-upload' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.t('fileUploadDialogUploadButton')+"</button>"+
+			"             <button id='s3-upload-dialog-close' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.t('dialogCloseButton')+"</button>"+
 			"        </td></tr>"+
 			"    </table>"+
 			"</td></tr></table></div>";
@@ -50,24 +50,25 @@ function S3Plugin() {
 	this.onShowUploadDialog = function(d, f, l) {
 		if (!$('#s3-upload-frame').length)
 			$('body').append('<iframe name="s3-upload-frame" id="s3-upload-frame" style="display:none"></iframe>');
-		$('#s3-upload-frame').contents().html('');
-		
+		$('#s3-upload-frame').contents().find('body').html('');
 		$("#s3-upload-dialog-close").click(function() { d.close(); });
-		
 		$("#s3-upload-dialog-upload").click(function() {
 			$('#s3-upload-frame').one('load', function () {
 				var response;
 				try {
-					response = $('#s3-upload-frame').contents().html();
+					response = $('#s3-upload-frame').contents().find('body').html();
 				} catch (e) {
-					alert(e);
 					d.close();
-					l.result(false);
+					l.fail("Error:"+e);
 					return;
 				}
-				alert(response);
+				if (response == 'ok') {
+					d.close();
+					l.success();
+					return;
+				}
 				d.close();
-				l.result(true);
+				l.fail("Invalid response:"+response);
 			});
 			$("#s3-upload-form").submit();
 		});
@@ -82,6 +83,9 @@ function S3Plugin() {
 		},	function(code, error) {
 			alert(error);
 		});
-		//$("#s3-upload-form").load(that.env.service().getUrl("s3")+"/upload?id="+f.id);
+	}
+	
+	this.t = function(s) {
+		return that.env.texts().get(s);
 	}
 }

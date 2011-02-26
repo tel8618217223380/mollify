@@ -35,17 +35,22 @@ public class NativeUploader implements FileUploadDialogFactory {
 	private native final JavaScriptObject createNativeListener(
 			NativeUploader uploader, ResultListener listener) /*-{
 		var o = {};
-		o.result = function(s) {
-			uploader.@org.sjarvela.mollify.client.plugin.NativeUploader::onResult(Lorg/sjarvela/mollify/client/service/request/listener/ResultListener;Z)(listener,s);
+		o.success = function() {
+			uploader.@org.sjarvela.mollify.client.plugin.NativeUploader::onSuccess(Lorg/sjarvela/mollify/client/service/request/listener/ResultListener;)(listener);
+		};
+		o.fail = function(d) {
+			uploader.@org.sjarvela.mollify.client.plugin.NativeUploader::onFail(Lorg/sjarvela/mollify/client/service/request/listener/ResultListener;Ljava/lang/String;)(listener,d);
 		};
 		return o;
 	}-*/;
 
-	protected void onResult(ResultListener listener, boolean success) {
-		if (success)
-			listener.onSuccess(null);
-		else
-			listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED));
+	protected void onSuccess(ResultListener listener) {
+		listener.onSuccess(null);
+	}
+
+	protected void onFail(ResultListener listener, String details) {
+		listener.onFail(new ServiceError(ServiceErrorType.UPLOAD_FAILED,
+				details));
 	}
 
 	protected static native final void invokeUploaderCallback(

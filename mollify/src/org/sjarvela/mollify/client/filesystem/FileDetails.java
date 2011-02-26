@@ -23,18 +23,24 @@ public class FileDetails extends ItemDetails {
 	}
 
 	public final Date getLastAccessed() {
-		return DateTime.getInstance().getInternalFormat().parse(
-				getLastAccessedString());
+		String string = getLastAccessedString();
+		if (string == null)
+			return null;
+		return DateTime.getInstance().getInternalFormat().parse(string);
 	}
 
 	public final Date getLastChanged() {
-		return DateTime.getInstance().getInternalFormat().parse(
-				getLastChangedString());
+		String string = getLastChangedString();
+		if (string == null)
+			return null;
+		return DateTime.getInstance().getInternalFormat().parse(string);
 	}
 
 	public final Date getLastModified() {
-		return DateTime.getInstance().getInternalFormat().parse(
-				getLastModifiedString());
+		String string = getLastModifiedString();
+		if (string == null)
+			return null;
+		return DateTime.getInstance().getInternalFormat().parse(string);
 	}
 
 	public final native String getFilePreview() /*-{
@@ -62,8 +68,8 @@ public class FileDetails extends ItemDetails {
 			String preview, JsObj view) {
 		FileDetails result = FileDetails.createObject().cast();
 		DateTimeFormat fmt = DateTime.getInstance().getInternalFormat();
-		result.putData(fmt.format(lastAccessed), fmt.format(lastChanged), fmt
-				.format(lastModified), description,
+		result.putData(fmt.format(lastAccessed), fmt.format(lastChanged),
+				fmt.format(lastModified), description,
 				permission.getStringValue(), preview, view);
 		return result;
 	}

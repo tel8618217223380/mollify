@@ -38,7 +38,6 @@
 		
 		public function exists() {
 			Logging::logDebug("Checking bucket ".$this->bucketId);
-			return TRUE;	//TODO remove
 			return $this->s3->bucketExists($this->bucketId);
 		}
 		
@@ -73,7 +72,7 @@
 			//Logging::logDebug(Util::array2str($hdr));
 			$details = array("id" => $item->publicId());
 			if ($item->isFile()) {
-				$details["last_changed"] = date($this->env->datetimeFormat(), strtotime($hdr["last-modified"]));
+				$details["last_changed"] = date($this->env->filesystem()->datetimeFormat(), strtotime($hdr["last-modified"]));
 			}
 			return $details;
 		}
@@ -89,7 +88,6 @@
 
 		public function items($parent) {
 			$result = array();
-			return $result;	//TODO remove
 			
 			$items = $this->s3->getObjects($this->bucketId, $parent->path());
 			$this->s3->getObjectHeaders($this->bucketId, $items);
