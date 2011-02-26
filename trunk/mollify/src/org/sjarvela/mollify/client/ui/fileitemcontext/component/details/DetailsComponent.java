@@ -92,19 +92,23 @@ public class DetailsComponent implements ItemContextSection {
 
 	private Map<ResourceId, String> getValues(FileDetails details) {
 		Map<ResourceId, String> values = new HashMap();
-		values.put(Details.Accessed,
-				dateTimeFormat.format(details.getLastAccessed()));
-		values.put(Details.Modified,
-				dateTimeFormat.format(details.getLastModified()));
-		values.put(Details.Changed,
-				dateTimeFormat.format(details.getLastChanged()));
+		if (details.getLastAccessed() != null)
+			values.put(Details.Accessed,
+					dateTimeFormat.format(details.getLastAccessed()));
+		if (details.getLastModified() != null)
+			values.put(Details.Modified,
+					dateTimeFormat.format(details.getLastModified()));
+		if (details.getLastChanged() != null)
+			values.put(Details.Changed,
+					dateTimeFormat.format(details.getLastChanged()));
 		return values;
 	}
 
 	private void createRows(Map<ResourceId, String> values) {
 		for (ResourceId id : order) {
-			component.add(createDetailsRow(headers.get(id), id.name()
-					.toLowerCase(), values.get(id)));
+			if (values.containsKey(id))
+				component.add(createDetailsRow(headers.get(id), id.name()
+						.toLowerCase(), values.get(id)));
 		}
 	}
 
