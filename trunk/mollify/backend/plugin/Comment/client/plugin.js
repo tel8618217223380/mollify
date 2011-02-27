@@ -18,26 +18,24 @@ function CommentPlugin() {
 	this.initialize = function(env) {
 		that.env = env;
 		that.env.addItemContextProvider(that.getItemContext);
+		
+		importCss(that.env.service().getPluginUrl("comment")+"client/style.css");
 	}
 	
 	this.getItemContext = function(item, details) {
 		return {
-			components : [
-				{
-					type: "custom",
-//					title: that.t("details_comments_title"),
-					html: "<b>Testi</b>",
-					on_init: that.onInit
-				}
-			]
+			components : [{
+				type: "custom",
+				html: "",
+				on_init: that.onInit
+			}]
 		};
 	}
 	
 	this.onInit = function(id, item, details) {
 		if (!details.comments) return;
 		
-		var html = "<div class='details-comments'>"+that.t("details_comments_title")+details.comments.count+"</div>";
-		$("#"+id).html(html);
+		$("#"+id).html("<div class='details-comments'><div class='details-comments-content'><div class='details-comments-icon'/><div id='details-comment-count'>"+details.comments.count+"</div></div></div>");
 	}
 	
 	this.t = function(s) {

@@ -1,0 +1,19 @@
+.details-comments {
+	width: 100%
+}
+
+.details-comments-content {
+	float: right;
+}
+
+.details-comments-icon {
+	float: left;
+	width: 16px;
+	height: 16px;
+	background: url(comment.png) no-repeat;
+}
+
+.details-comment-count {
+	float: left;
+	font-weight: bold;
+}
