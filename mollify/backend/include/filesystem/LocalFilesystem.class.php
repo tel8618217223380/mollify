@@ -300,12 +300,18 @@
 			return $handle;
 		}
 		
-		public function write($item) {
+		public function write($item, $s) {
 			$handle = @fopen($this->localPath($item), "wb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
-			return $handle;
+			while (!feof($s)) {
+				set_time_limit(0);
+				fwrite($handle, fread($s, 1024));
+			}			
+			fclose($handle);
 		}
+		
+		public function endWrite($item, $s) {}
 		
 		public function put($item, $content) {
 			file_put_contents($this->localPath($item), $content);

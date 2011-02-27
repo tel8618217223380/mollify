@@ -128,8 +128,8 @@
 			return $this->filesystem->read($this);
 		}
 		
-		public function write() {
-			return $this->filesystem->write($this);
+		public function write($s) {
+			return $this->filesystem->write($this, $s);
 		}
 
 		public function put($content) {

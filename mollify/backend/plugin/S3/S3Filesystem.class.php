@@ -179,15 +179,21 @@
 		}
 
 		public function read($item, $range = NULL) {
-			throw new ServiceException("FEATURE_DISABLED", "Stream reading from S3 object is not supported");
+			$f = fopen('php://temp', 'w+');
+			$this->s3->getObject($this->bucketId, $item->path(), $f);
+			rewind($f);
+			return $f;
 		}
 		
-		public function write($item) {
-			throw new ServiceException("FEATURE_DISABLED", "Stream writing to S3 object is not supported");
+		public function write($item, $s) {
+			$this->s3->createObject($this->bucketId, $item->path(), $s);
 		}
-		
+				
 		public function put($item, $content) {
-			throw new ServiceException("FEATURE_DISABLED", "Updating S3 object is not supported");
+			$f = $this->write($item);
+			fwrite($f, $content);
+			rewind($f);
+			$this->s3->createObject($this->bucketId, $item->path(), $f);
 		}
 		
 		public function __toString() {

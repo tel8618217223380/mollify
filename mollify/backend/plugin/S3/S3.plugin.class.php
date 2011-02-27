@@ -28,9 +28,9 @@
 			return $this->s3;
 		}
 		
-		public function getClientPlugin() {
-			return "client/plugin.js";
-		}
+		//public function getClientPlugin() {
+		//	return "client/plugin.js";
+		//}
 		
 		public function createFilesystem($id, $folderDef) {
 			return new S3Filesystem($this->s3, $id, $folderDef, $this->env);

@@ -30,12 +30,11 @@ function S3Plugin() {
 	
 	this.getUploadDialogContent = function() {
 		return "<div id='s3-upload-dialog-content' style='width:100%; height:100%'>"+
-			"<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
+			"<div id='s3-upload-info' style='width:100%; height:100%'><table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
 			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
 			"    <form id='s3-upload-form' method='post' enctype='multipart/form-data' target='s3-upload-frame'>"+
 			"        <input type='file' name='file' />"+
 			"    </form>"+
-			"    <div id='s3-upload-progress' style='display:none'>"+that.t("fileUploadProgressPleaseWait")+"</div>"+
 			"</td></tr>"+
 			"<tr height='1%'><td align='right'>"+
 			"    <table class='s3-upload-buttons' style='width:100%'>"+
@@ -44,7 +43,8 @@ function S3Plugin() {
 			"             <button id='s3-upload-dialog-close' class='gwt-Button mollify-s3-upload-button' type='button'>"+that.t('dialogCloseButton')+"</button>"+
 			"        </td></tr>"+
 			"    </table>"+
-			"</td></tr></table></div>";
+			"</td></tr></table></div>"+
+			"<div id='s3-upload-progress' style='display:none'><div class='upload-progress'>"+that.t("fileUploadProgressPleaseWait")+"</div></div></div>";
 	}
 	
 	this.onShowUploadDialog = function(d, f, l) {
@@ -70,6 +70,8 @@ function S3Plugin() {
 				d.close();
 				l.fail("Invalid response:"+response);
 			});
+			$("#s3-upload-info").hide();
+			$("#s3-upload-progress").show();
 			$("#s3-upload-form").submit();
 		});
 		

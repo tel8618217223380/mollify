@@ -471,7 +471,7 @@
 			
 			if ($this->env->request()->hasParam('uploader') and $this->env->request()->param('uploader') === 'plupload') {
 				require_once("plupload.php");
-				plupload($folder, $this->env->events());
+				plupload($folder, $this);
 				return;
 			}
 
@@ -512,6 +512,7 @@
 			fclose($dst);
 			fclose($src);
 			unlink($origin);
+			$target->endWrite($dst);
 			
 			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
@@ -522,14 +523,8 @@
 
 			$targetItem = $folder->fileWithName($name, TRUE);
 			if (Logging::isDebug()) Logging::logDebug("Upload from $src ($name) to ".$targetItem->id());
+			$targetItem->write($stream);
 			
-			$target = $targetItem->write();
-			while (!feof($stream)) {
-				set_time_limit(0);
-				fwrite($target, fread($stream, 1024));
-			}			
-			fclose($target);
-
 			$this->env->events()->onEvent(FileEvent::upload($targetItem));
 		}
 		

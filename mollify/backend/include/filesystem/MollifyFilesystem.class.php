@@ -49,7 +49,7 @@
 		
 		public abstract function read($item, $range = NULL);
 		
-		public abstract function write($item);
+		public abstract function write($item, $s);
 		
 		public abstract function put($item, $content);
 				
