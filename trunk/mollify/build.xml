@@ -121,6 +121,7 @@
 		<zip destfile="${deploy.dir}/viewer_flowplayer.zip" basedir="${target.dir}" includes="FlowPlayer/**" />
 		<zip destfile="${deploy.dir}/viewer_jplayer.zip" basedir="${target.dir}" includes="JPlayer/**" />
 		<zip destfile="${deploy.dir}/viewer_textfile.zip" basedir="${target.dir}" includes="TextFile/**" />
+		<zip destfile="${deploy.dir}/viewer_zoho.zip" basedir="${target.dir}" includes="Zoho/**" />
 		
 		<delete dir="${target.dir}" />
 	</target>
@@ -168,6 +169,7 @@
 				<exclude name="plugin/FileViewer/viewers/FlowPlayer/" />
 				<exclude name="plugin/FileViewer/viewers/JPlayer/" />
 				<exclude name="plugin/FileViewer/viewers/TextFile/" />
+				<exclude name="plugin/FileViewer/viewers/Zoho/" />
 				<exclude name="dav/" />
 				<exclude name="plugin/S3/" />
 			</fileset>
