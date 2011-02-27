@@ -9,10 +9,9 @@
  * Contributing: http://www.plupload.com/contributing
  */
 
-function plupload($folder, $eventHandler) {
+function plupload($folder, $uploadHandler) {
 	// Settings
-	$targetDir = $folder->filesystem()->localPath($folder);
-//	$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR."plupload";
+	$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR."mollify".DIRECTORY_SEPARATOR;
 	$cleanupTargetDir = false; // Remove old files
 	$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -73,26 +72,16 @@ function plupload($folder, $eventHandler) {
 	if (strpos($contentType, "multipart") !== false) {
 		if (isset($_FILES['file']['tmp_name']) and is_uploaded_file($_FILES['file']['tmp_name'])) {
 			$from = $_FILES['file']['tmp_name'];
-			
-			$out = fopen($file, $chunk == 0 ? "wb" : "ab");
-			if (!$out) throw new ServiceException("UPLOAD_FAILED", "Failed to open output stream");
-
 			$in = fopen($from, "rb");
 			if (!$in) throw new ServiceException("UPLOAD_FAILED", "Failed to open input stream");
 			
-			Logging::logDebug("Reading from file ".$from);
-			
-			while ($buff = fread($in, 4096))
-				fwrite($out, $buff);
-
-			fclose($out);
+			Logging::logDebug("Reading from file ".$from);						
+			$uploadHandler->uploadFrom($folder, $fileName, $in);
 			fclose($in);
 			
-			Logging::logDebug("Upload finished");
-			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
-			
-			Logging::logDebug("Removing file ".$from);
+			Logging::logDebug("Upload finished, removing temp files");
 			@unlink($from);
+			@unlink($file);
 		} else {
 			throw new ServiceException("UPLOAD_FAILED", "Failed to move uploaded file.");
 		}
@@ -112,7 +101,9 @@ function plupload($folder, $eventHandler) {
 		fclose($in);
 		
 		if ($chunks == 0 or $chunk == ($chunks-1)) {
-			$eventHandler->onEvent(FileEvent::upload($folder->fileWithName($fileName)));
+			$f = fopen($file, "rb");
+			$uploadHandler->uploadFrom($folder, $fileName, $f);
+			fclose($f);
 			Logging::logDebug("Upload finished");
 		}
 	}

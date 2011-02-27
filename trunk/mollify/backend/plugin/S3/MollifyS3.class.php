@@ -72,6 +72,12 @@
 			return $ret;
 		}
 
+		public function createObject($bucket, $obj, $content) {
+			$ret = $this->s3->create_object($this->getBucketKey($bucket), $obj, array("fileUpload" => $content));
+			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not create empty object: ".$ret->status." ".Util::array2str($ret->header));
+			return $ret;
+		}
+		
 		public function createEmptyObject($bucket, $obj) {
 			$ret = $this->s3->create_object($this->getBucketKey($bucket), $obj, array("body" => ""));
 			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not create empty object: ".$ret->status." ".Util::array2str($ret->header));
@@ -131,6 +137,12 @@
 				throw new ServiceException("REQUEST_FAILED", "Could not delete: ".$ret->status." ".Util::array2str($ret->header));
 		}
 
+		public function getObject($bucket, $obj, $r) {
+			$ret = $this->s3->get_object($this->getBucketKey($bucket), $obj, array("fileDownload" => $r));
+			if (!$ret->isOK())
+				throw new ServiceException("REQUEST_FAILED", "Could not get object: ".$ret->status." ".Util::array2str($ret->header));
+		}
+		
 		public function getObjectUrl($bucket, $obj) {
 			return $this->s3->get_object_url($this->getBucketKey($bucket), $obj, '5 minutes');
 		}
