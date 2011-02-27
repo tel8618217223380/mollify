@@ -130,6 +130,7 @@
 
 		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
 			$url = $this->plugin->env()->getServiceUrl($id, $path, $fullUrl);
+			
 			if ($this->plugin->env()->session()->isActive()) {
 				$s = $this->plugin->env()->session()->getSessionInfo();
 				$url .= '?session='.$s["session_id"];
