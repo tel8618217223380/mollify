@@ -67,7 +67,11 @@
 		
 		public function getObjects($bucket, $parent) {
 			$filters = array();
-			if (strlen($parent) > 0) $filters["prefix"] = $parent;
+			//if (strlen($parent) > 0) $filters["prefix"] = $parent;
+			$m = "/^".str_replace("/", "\/", $parent)."[^\/]+[\/]?$/";
+			Logging::logDebug("Finding items matching [".$m."]");
+			$filters["pcre"] = $m;
+			
 			$ret = $this->s3->get_object_list($this->getBucketKey($bucket), $filters);
 			return $ret;
 		}

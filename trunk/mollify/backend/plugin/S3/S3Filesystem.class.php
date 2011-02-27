@@ -28,7 +28,7 @@
 		}
 		
 		public function isDirectDownload() {
-			return FALSE;
+			return TRUE;
 		}
 		
 		public function assert() {
@@ -53,7 +53,6 @@
 		public function createItem($id, $path, $nonexisting = FALSE) {
 			$isFile = (strcasecmp(substr($id, -1), DIRECTORY_SEPARATOR) != 0);
 			$name = self::basename($path);
-			//Logging::logDebug("S3 item [".$id."] (".$name.") ".$isFile);
 			
 			if ($isFile) return new File($id, $this->rootId(), $path, $name, $this);
 			return new Folder($id, $this->rootId(), $path, $name, $this);
@@ -69,7 +68,7 @@
 				
 		public function details($item) {
 			$hdr = $this->s3->getObjectHeaders($this->bucketId, $item->path());
-			//Logging::logDebug(Util::array2str($hdr));
+
 			$details = array("id" => $item->publicId());
 			if ($item->isFile()) {
 				$details["last_changed"] = date($this->env->filesystem()->datetimeFormat(), strtotime($hdr["last-modified"]));
@@ -89,11 +88,14 @@
 		public function items($parent) {
 			$result = array();
 			
+			Logging::logDebug("Retrieving objects under [".$parent->path()."]");
 			$items = $this->s3->getObjects($this->bucketId, $parent->path());
-			$this->s3->getObjectHeaders($this->bucketId, $items);
+			
+			// retrieve object headers into cache
+			if (count($items) > 0)
+				$this->s3->getObjectHeaders($this->bucketId, $items);
 			
 			foreach($this->s3->getObjects($this->bucketId, $parent->path()) as $path) {
-				//Logging::logDebug($path);
 				$id = $this->rootId().$path;
 				$result[] = $this->createItem($id, $path);
 			}
@@ -152,16 +154,16 @@
 		}
 		
 		public function createFile($folder, $name) {
-			return $this->itemWithPath(self::joinPath($folder->path(), $name), TRUE);
+			return $this->fileWithName($folder, $name, TRUE);
 		}
 
 		public function fileWithName($folder, $name, $nonExisting = FALSE) {
-			$path = self::joinPath($folder->path(), $name);
+			$path = ltrim(self::joinPath($folder->path(), $name), DIRECTORY_SEPARATOR);
 			return $this->itemWithPath($path, $nonExisting);
 		}
 
 		public function folderWithName($folder, $name, $nonExisting = FALSE) {
-			$path = self::joinPath($folder->path(), $name.DIRECTORY_SEPARATOR);
+			$path = ltrim(self::joinPath($folder->path(), $name.DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
 			return $this->itemWithPath($path, $nonExisting);
 		}
 		
@@ -209,9 +211,10 @@
 		}
 		
 		static function basename($path) {
-			$name = strrchr(rtrim($path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
-			if (!$name) return $path;
-			return substr($name, 1);
+			$name = rtrim($path, DIRECTORY_SEPARATOR);
+			$last = strrchr($name, DIRECTORY_SEPARATOR);
+			if (!$last) return $name;
+			return ltrim($last, DIRECTORY_SEPARATOR);
 		}		
 	}
 ?>
