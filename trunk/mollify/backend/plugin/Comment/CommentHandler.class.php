@@ -31,6 +31,10 @@
 				"count" => $this->getDao()->getCommentCount($item)
 			));
 		}
+
+		public function getComments($item) {
+			return $this->getDao()->getComments($item);
+		}
 		
 		public function addComment($user, $item, $comment) {
 			$this->getDao()->addComment($user, $item, time(), $comment);

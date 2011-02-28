@@ -19,6 +19,13 @@
 			return TRUE;
 		}
 		
+		public function processGet() {
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			
+			$item = $this->item($this->path[0]);
+			$this->response()->success($this->handler()->getComments($item));
+		}
+		
 		public function processPost() {
 			if (count($this->path) != 1) throw $this->invalidRequestException();
 			
@@ -26,7 +33,11 @@
 			$data = $this->request->data;
 			if (!isset($data["user"]) or !isset($data["comment"])) throw $this->invalidRequestException("No data");
 			
-			$this->env->plugins()->getPlugin("Comment")->getHandler()->addComment($data["user"], $item, $data["comment"]);
+			$this->handler()->addComment($data["user"], $item, $data["comment"]);
 			$this->response()->success(TRUE);
+		}
+		
+		private function handler() {
+			return $this->env->plugins()->getPlugin("Comment")->getHandler();
 		}
 	}
