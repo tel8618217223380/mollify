@@ -21,6 +21,11 @@
 			$db = $this->env->configuration()->db();
 			return $db->query("select count(`id`) from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE))->value(0);
 		}
+
+		public function getComments($item) {
+			$db = $this->env->configuration()->db();
+			return $db->query("select user_id, time, comment from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE)." order by time desc")->values();
+		}
 		
 		public function addComment($userId, $item, $time, $comment) {
 			$db = $this->env->configuration()->db();
