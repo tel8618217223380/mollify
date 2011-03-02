@@ -58,10 +58,11 @@ function CommentPlugin() {
 			"<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>"+
 			"<tr height='99%'><td align='left' style='vertical-align: top'>"+
 			"<div id='comments-list'></div>"+
+			"<div id='new-comment'><input type='text' id='comments-dialog-add-text' /></div>"+
 			"</td></tr>"+
 			"<tr height='1%'><td align='right'>"+
 			"    <table class='comments-dialog-buttons' style='width:100%'>"+
-			"        <tr><td align='right'><button id='comments-dialog-close' class='gwt-Button comments-dialog-button' type='button'>"+that.t("dialogCloseButton")+"</button></td>"+
+			"        <tr><td align='right'><button id='comments-dialog-add-btn' class='gwt-Button comments-dialog-button' type='button'>"+that.t("commentsDialogAddButton")+"</button><button id='comments-dialog-close' class='gwt-Button comments-dialog-button' type='button'>"+that.t("dialogCloseButton")+"</button></td>"+
 			"    </table>"+
 			"</td></tr></table></div>";
 	}
@@ -77,6 +78,11 @@ function CommentPlugin() {
 	}
 	
 	this.onShowComments = function(item, comments) {
+		var list = $("#comments-list");
+		for (var i=0; i<comments.length; i++) {
+			var c = comments[i];
+			list.append(c.comment);
+		}
 	}
 	
 	this.t = function(s) {

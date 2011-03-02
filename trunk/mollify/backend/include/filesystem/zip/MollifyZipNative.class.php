@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -43,7 +43,7 @@
 			
 			exec('7z --help', $o, $c);
 			if ($c == 0) {
-				$this->commands['application/x-7z-compressed']  = array('cmd' => '7z', 'argc' => 'a', 'ext' => '7z');
+				self::$availableCommands['application/x-7z-compressed']  = array('cmd' => '7z', 'argc' => 'a', 'ext' => '7z');
 				
 				if (empty(self::$availableCommands['application/x-gzip'])) {
 					self::$availableCommands['application/x-gzip'] = array('cmd' => '7z', 'argc' => 'a -tgzip', 'ext' => 'tar.gz');
@@ -85,14 +85,8 @@
 		}
 		
 		public function add($name, $path, $size = 0) {
-			if (is_file($path)) {
-				//echo("ADD FILE: " . realpath($path) . "\n");
+			if (is_file($path) || is_dir($path)) {
 				$this->files[] = realpath($path);
-			} else if (is_dir($path)) {
-				//echo("ADD FOLDER: " . realpath($path) . "\n");
-				$this->files[] = realpath($path);
-			} else {	
-				//echo("ADD OTHER: " . realpath($path) . "\n");
 			}
 		}
 		
@@ -135,8 +129,6 @@
 				$common_path_use = true;
 				if (substr($common_path, -1) != DIRECTORY_SEPARATOR)
 					$common_path .= DIRECTORY_SEPARATOR;
-				
-				//echo("COMMON: " . $common_path . "\n");
 			}
 			
 			$argc  = '';
@@ -155,9 +147,7 @@
 			
 			$cmd = $this->cmd['cmd'].' '.$this->cmd['argc'].' '.escapeshellarg($this->name).' '.$argc;
 			
-			//echo("COMMAND: " . $cmd . "\n");
 			exec($cmd, $o, $c);
-			//echo("RESPONSE: " . $c . "\n");
 			
 			if ($common_path_use)
 				chdir($cwd);
@@ -167,7 +157,7 @@
 			if (file_exists($this->name)) {
 				return true;
 			} else {
-				//echo('Unable to create archive' . "\n");
+				// Unable to create archive
 				return false;
 			}
 		}
