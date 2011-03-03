@@ -12,7 +12,7 @@
 
 	class ConfigurationServices extends ServicesBase {
 		private static $ITEMS = array("users", "usergroups", "usersgroups", "folders");
-		
+				
 		protected function isValidPath($method, $path) {
 			if (count($path) == 0) return FALSE;
 			if (!in_array($path[0], self::$ITEMS)) return FALSE;
@@ -137,7 +137,8 @@
 				$user['permission_mode'] = strtoupper($user['permission_mode']);
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
-				$this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
+				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode']);
+				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], $user['email']));
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -219,6 +220,7 @@
 			$userId = $this->path[1];
 			if (count($this->path) == 2) {
 				$this->env->configuration()->removeUser($userId);
+				$this->env->events()->onEvent(UserEvent::userRemoved($userId));
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -256,7 +258,8 @@
 				$group = $this->request->data;
 				if (!isset($group['name'])) throw $this->invalidRequestException();
 								
-				$this->env->configuration()->addUserGroup($group['name'], $group['description']);
+				$id = $this->env->configuration()->addUserGroup($group['name'], $group['description']);
+				$this->env->events()->onEvent(UserEvent::groupAdded($id, $group['name']));
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -295,6 +298,7 @@
 
 			$id = $this->path[1];
 			$this->env->configuration()->removeUserGroup($id);
+			$this->env->events()->onEvent(UserEvent::groupRemoved($id));
 			$this->response()->success(TRUE);			
 		}
 

@@ -61,7 +61,7 @@
 		}
 
 		public function getUserByName($username) {
-			$result = $this->db->query(sprintf("SELECT id, name, password, a1password FROM ".$this->db->table("user")." WHERE name='%s'", $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, password, a1password FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0", $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -86,6 +86,10 @@
 		}
 		
 		public function addUser($name, $pw, $email, $permission) {
+			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value(0);
+			if ($matches > 0)
+				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
+
 			$md5pw = md5($pw);
 			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
 
@@ -107,7 +111,7 @@
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
 			if ($affected === 0)
-				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");	
+				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");
 			$this->db->commit();					
 			return TRUE;
 		}
@@ -153,8 +157,12 @@
 		}
 		
 		public function addUserGroup($name, $description) {
+			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=1", $this->db->string($name)))->value(0);
+			if ($matches > 0)
+				throw new ServiceException("INVALID_REQUEST", "Duplicate group found with name [".$name."]");
+
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, description, password, permission_mode, is_group) VALUES ('%s', '%s', NULL, NULL, 1)", $this->db->string($name), $this->db->string($description)));
-			return TRUE;
+			return $this->db->lastId();
 		}
 
 		public function updateUserGroup($id, $name, $description) {
