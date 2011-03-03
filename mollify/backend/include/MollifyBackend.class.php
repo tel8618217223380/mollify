@@ -15,6 +15,7 @@
 	require_once("include/Session.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
+	require_once("include/configuration/UserEvent.class.php");
 
 	class MollifyBackend {
 		private $environment;
@@ -38,6 +39,9 @@
 				$this->environment->addService("debug", "DebugServices");
 				$this->environment->response()->addListener($this);
 			}
+			
+			UserEvent::register($this->environment->events());
+			
 			$this->environment->plugins()->setup();
 		}
 		
