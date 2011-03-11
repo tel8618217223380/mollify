@@ -21,7 +21,7 @@
 
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/json.js"></script>
-		<script type="text/javascript" src="<?php echo $PATH ?>resources/md5.js"></script>
+		<script type="text/javascript" src="<?php echo $PATH ?>resources/base64.js"></script>
 		<script type="text/javascript" src="<?php echo $PATH ?>resources/template.js"></script>
 		<script type="text/javascript" src="js/registration.js"></script>
 		<script type="text/javascript" src="js/registration_form.js"></script>

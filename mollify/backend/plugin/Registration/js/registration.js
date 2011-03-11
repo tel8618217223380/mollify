@@ -28,7 +28,7 @@ function getSessionInfo(success, fail) {
 }
 
 function register(name, pw, email, success, fail) {
-	var data = JSON.stringify({name:name, password:generate_md5(pw), email:email});
+	var data = JSON.stringify({name:name, password:Base64.encode(pw), email:email});
 	request("POST", 'registration/create', success, fail, data);
 }
 
