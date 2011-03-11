@@ -11,6 +11,26 @@
 			t.plugins.push(p);
 		}
 		
+		this.importCss = function(url) {
+			var link = $("<link>");
+			link.attr({
+		    	type: 'text/css',
+		    	rel: 'stylesheet',
+		    	href: url
+			});
+			$("head").append(link);
+		}
+		
+		this.loadContent = function(id, url, t, cb) {
+			$("#"+id).load(url, function() {
+				$("#"+id+" text").each(function(){
+					var key = $(this).attr('key');
+					$(this).text(t(key));
+				});
+				if (cb) cb();
+			});
+		}
+		
 		this.texts = new function(){
 			var tt = this;
 			this.locale = '';
@@ -30,14 +50,3 @@
 		}
 	}
 })();
-
-function importCss(url) {
-	var link = $("<link>");
-	link.attr({
-    	type: 'text/css',
-    	rel: 'stylesheet',
-    	href: url
-	});
-	$("head").append(link);
-
-}

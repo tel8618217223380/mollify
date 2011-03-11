@@ -12,7 +12,7 @@
 
 	class CommentServices extends ServicesBase {		
 		protected function isValidPath($method, $path) {
-			return count($path) == 0;
+			return count($path) == 1;
 		}
 		
 		public function isAuthenticationRequired() {
