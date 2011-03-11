@@ -102,7 +102,7 @@ public class NativeDialogManager {
 
 	protected void showDialog(JavaScriptObject s) {
 		JsObj spec = s.cast();
-		String html = spec.getString("html");
+		String html = spec.hasValue("html") ? spec.getString("html") : "";
 		String title = spec.getString("title");
 		String style = spec.hasValue("style") ? "custom" : spec
 				.getString("style");
@@ -152,17 +152,20 @@ public class NativeDialogManager {
 	}
 
 	protected static native final void invokeNativeCallback(JavaScriptObject cb) /*-{
-		if (cb) cb();
+		if (cb)
+			cb();
 	}-*/;
 
 	protected static native final void invokeNativeValueCallback(
 			JavaScriptObject cb, Object v) /*-{
-		if (cb) cb(v);
+		if (cb)
+			cb(v);
 	}-*/;
 
 	protected static native final boolean invokeNativeValidator(
 			JavaScriptObject cb, String s) /*-{
-		if (cb) return cb(s);
+		if (cb)
+			return cb(s);
 		return true;
 	}-*/;
 

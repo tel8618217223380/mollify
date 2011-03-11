@@ -24,7 +24,7 @@
 
 		public function getComments($item) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select user_id, time, comment from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE)." order by time desc")->values();
+			return $db->query("select user_id, time, comment from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE)." order by time desc")->rows();
 		}
 		
 		public function addComment($userId, $item, $time, $comment) {
