@@ -12,7 +12,7 @@ var servicePath = null;
 var session = null;
 var preRequestCallback = null;
 var postRequestCallback = null;
-var protocolVersion = "1_5_0";
+var protocolVersion = "2";
 
 function init(path) {
 	servicePath = path;

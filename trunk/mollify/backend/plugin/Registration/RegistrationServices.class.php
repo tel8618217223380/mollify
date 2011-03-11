@@ -55,7 +55,7 @@
 
 			$db = $this->env->configuration()->db();
 			$name = $registration['name'];
-			$password = $registration['password'];
+			$password = base64_decode($registration['password']);
 			$email = $registration['email'];
 			$time = date('YmdHis', time());
 			$key = str_replace(".", "", uniqid("", TRUE));
