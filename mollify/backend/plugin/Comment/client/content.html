@@ -11,10 +11,17 @@
 		<table class='comments-dialog-buttons' style='width:100%'>
 			<tr>
 				<td align='right'>
-					<button id='comments-dialog-add-btn' class='gwt-Button comments-dialog-button' type='button'><text key="commentsDialogAddButton" /></button>
+					<button id='comments-dialog-add' class='gwt-Button comments-dialog-button' type='button'><text key="commentsDialogAddButton" /></button>
 					<button id='comments-dialog-close' class='gwt-Button comments-dialog-button' type='button'><text key="dialogCloseButton" /></button>
 				</td>
 			</tr>
 		</table>
 	</tr>
 </table>
+<script id="comment-template" type="text/x-jquery-tmpl"> 
+	<div class="comment-content">
+		<div class="comment-user">${username}</div>
+		<div class="comment-time">${time}</div>
+		<div class="comment-text">${comment}</div>
+	</div>
+</script>

@@ -56,6 +56,7 @@ function CommentPlugin() {
 
 	this.onShowCommentsDialog = function(d, item) {
 		mollify.loadContent("comments-dialog-content", that.url("content.html"), that.t, function() {
+			$("#comments-dialog-add").click(function(){ that.onAddComment(d, item); });
 			$("#comments-dialog-close").click(function(){ d.close(); });
 			
 			that.env.service().get("comment/"+item.id, function(result) {
@@ -66,12 +67,22 @@ function CommentPlugin() {
 		});
 	}
 	
+	this.onAddComment = function(d, item) {
+		var comment = $("#comments-dialog-add-text").val();
+		if (!comment || comment.length == 0) return;
+		
+		that.env.service().post("comment/"+item.id, { comment: comment }, function(result) {
+			d.close();
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+	
 	this.onShowComments = function(item, comments) {
-		var list = $("#comments-list");
-		for (var i=0; i<comments.length; i++) {
-			var c = comments[i];
-			list.append(c.comment);
-		}
+		for (var i=0; i<comments.length; i++)
+			comments[i].time = that.env.texts().formatInternalTime(comments[i].time);
+
+		$("#comment-template").tmpl(comments).appendTo("#comments-list");
 	}
 	
 	this.url = function(p) {

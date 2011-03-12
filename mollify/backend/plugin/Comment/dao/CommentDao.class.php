@@ -24,12 +24,12 @@
 
 		public function getComments($item) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select user_id, time, comment from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE)." order by time desc")->rows();
+			return $db->query("select u.id as user_id, u.name as username, c.time, c.comment from ".$db->table("comment")." c, ".$db->table("user")." u where c.`item_id` = ".$db->string($item->id(), TRUE)." and u.id = c.user_id order by time desc")->rows();
 		}
 		
 		public function addComment($userId, $item, $time, $comment) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("comment")." (item_id, user_id, time, comment) VALUES (%s, %s, %s, %s)", $db->string($userId, TRUE), $db->string($item->id(), TRUE), $db->string(date('YmdHis', $time)), $db->string($comment, TRUE)));
+			$db->update(sprintf("INSERT INTO ".$db->table("comment")." (user_id, item_id, time, comment) VALUES (%s, %s, %s, %s)", $db->string($userId, TRUE), $db->string($item->id(), TRUE), $db->string(date('YmdHis', $time)), $db->string($comment, TRUE)));
 			return $db->lastId();
 		}
 						
