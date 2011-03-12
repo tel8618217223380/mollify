@@ -31,13 +31,14 @@
 			
 			$item = $this->item($this->path[0]);
 			$data = $this->request->data;
-			if (!isset($data["user"]) or !isset($data["comment"])) throw $this->invalidRequestException("No data");
+			if (!isset($data["comment"]) or strlen($data["comment"]) == 0) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->addComment($data["user"], $item, $data["comment"]);
-			$this->response()->success(TRUE);
+			$this->handler()->addComment($this->env->authentication()->getUserId(), $item, $data["comment"]);
+			$this->response()->success(array());
 		}
 		
 		private function handler() {
 			return $this->env->plugins()->getPlugin("Comment")->getHandler();
 		}
 	}
+?>
