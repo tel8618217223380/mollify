@@ -18,7 +18,9 @@ function CommentPlugin() {
 	this.initialize = function(env) {
 		that.env = env;
 		that.env.addItemContextProvider(that.getItemContext);
+		
 		mollify.importCss(that.url("style.css"));
+		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 	}
 	
 	this.getItemContext = function(item, details) {
@@ -34,7 +36,7 @@ function CommentPlugin() {
 	this.onInit = function(id, c, item, details) {
 		if (!details.comments) return;
 		
-		$("#"+id).html("<div class='details-comments'><div id='details-comments-content'><div class='details-comments-icon'/><div id='details-comment-count'>"+details.comments.count+"</div></div></div>");
+		$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details.comments.count+"</div></div></div>");
 		
 		$("#details-comments-content").hover(
 			function () { $(this).addClass("hover"); }, 
@@ -49,15 +51,25 @@ function CommentPlugin() {
 	this.openComments = function(item) {
 		that.env.dialog().showDialog({
 			title: that.t("commentsDialogTitle"),
-			html: "<div id='comments-dialog-content' />",
+			html: "<div id='comments-dialog-content' class='loading' />",
 			on_show: function(d) { that.onShowCommentsDialog(d, item); }
 		});
 	}
 
 	this.onShowCommentsDialog = function(d, item) {
-		mollify.loadContent("comments-dialog-content", that.url("content.html"), that.t, function() {
-			$("#comments-dialog-add").click(function(){ that.onAddComment(d, item); });
-			$("#comments-dialog-close").click(function(){ d.close(); });
+		mollify.loadContent("comments-dialog-content", that.url("content.html"), function() {
+			d.setMinimumSizeToCurrent();
+			d.center();
+			
+			$("#comments-item").html(item.name);
+			$("#comments-dialog-content").removeClass("loading");
+			$("#comments-dialog-content .mollify-actionlink").hover(
+				function () { $(this).addClass("mollify-actionlink-hover"); }, 
+				function () { $(this).removeClass("mollify-actionlink-hover"); }
+			);
+
+			$("#comments-dialog-add").click(function() { that.onAddComment(d, item); } );
+			$("#comments-dialog-close").click(function() { d.close(); } );
 			
 			that.env.service().get("comment/"+item.id, function(result) {
 				that.onShowComments(item, result);

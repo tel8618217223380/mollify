@@ -123,11 +123,25 @@ public class NativeDialogManager {
 	private native final JavaScriptObject createNativeCustomDialog(
 			NativeDialogManager dm, CustomContentDialog d) /*-{
 		var o = {};
+		o.center = function() {
+			dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::center(Lorg/sjarvela/mollify/client/ui/dialog/CustomContentDialog;)(d);
+		}
+		o.setMinimumSizeToCurrent = function() {
+			dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::setMinimumSizeToCurrent(Lorg/sjarvela/mollify/client/ui/dialog/CustomContentDialog;)(d);
+		}
 		o.close = function() {
 			dm.@org.sjarvela.mollify.client.plugin.NativeDialogManager::closeCustom(Lorg/sjarvela/mollify/client/ui/dialog/CustomContentDialog;)(d);
 		};
 		return o;
 	}-*/;
+
+	protected void center(CustomContentDialog d) {
+		d.center();
+	}
+
+	protected void setMinimumSizeToCurrent(CustomContentDialog d) {
+		d.setMinimumSizeToCurrent();
+	}
 
 	protected void closeCustom(CustomContentDialog d) {
 		d.close();

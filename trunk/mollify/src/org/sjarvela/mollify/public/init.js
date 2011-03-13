@@ -2,6 +2,10 @@
 	window.mollify = new function(){
 		var t = this;
 		this.plugins = [];
+		
+		this.init = function(e) {
+			t.env = e;
+		}
 
 		this.getPlugins = function() {
 			return t.plugins;
@@ -9,6 +13,10 @@
 		
 		this.registerPlugin = function(p) {
 			t.plugins.push(p);
+		}
+
+		this.importScript = function(url) {
+			$.getScript(url);
 		}
 		
 		this.importCss = function(url) {
@@ -21,11 +29,11 @@
 			$("head").append(link);
 		}
 		
-		this.loadContent = function(id, url, t, cb) {
+		this.loadContent = function(id, url, cb) {
 			$("#"+id).load(url, function() {
 				$("#"+id+" text").each(function(){
 					var key = $(this).attr('key');
-					$(this).text(t(key));
+					$(this).text(t.env.texts().get(key));
 				});
 				if (cb) cb();
 			});
