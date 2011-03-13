@@ -78,14 +78,22 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	private void init(FileView fileView, SessionInfo session) {
+		JavaScriptObject env = pluginEnv.getJsEnv(fileView,
+				session.getPluginBaseUrl());
+
+		initLib(env);
 		setupPlugins();
-		initializePlugins(fileView, session);
+		initializePlugins(env);
 	}
 
-	private void initializePlugins(FileView filesystem, SessionInfo session) {
+	private native void initLib(JavaScriptObject env) /*-{
+		if (!$wnd.mollify || !$wnd.mollify.getPlugins)
+			return;
+		$wnd.mollify.init(env);
+	}-*/;
+
+	private void initializePlugins(JavaScriptObject env) {
 		logger.log(Level.INFO, "Initializing client plugins");
-		JavaScriptObject env = pluginEnv.getJsEnv(filesystem,
-				session.getPluginBaseUrl());
 		for (Plugin p : plugins)
 			p.initialize(env);
 	}
