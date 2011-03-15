@@ -65,6 +65,14 @@
 	margin-right: 4px;
 }
 
+#comments-list message {
+	font-size: 12px;
+	color: #cacaca;
+	font-style: italic;
+	margin-top: 10px;
+	display: block;
+}
+
 .comment-user {
 	float: left;
 	font-weight: bold;
