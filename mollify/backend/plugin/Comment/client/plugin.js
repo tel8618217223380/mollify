@@ -91,8 +91,15 @@ function CommentPlugin() {
 	}
 	
 	this.onShowComments = function(item, comments) {
-		for (var i=0; i<comments.length; i++)
+		if (comments.length == 0) {
+			$("#comments-list").html("<message>"+that.t("commentsDialogNoComments")+"</message>");
+			return;
+		}
+		
+		for (var i=0; i<comments.length; i++) {
 			comments[i].time = that.env.texts().formatInternalTime(comments[i].time);
+			comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
+		}
 
 		$("#comment-template").tmpl(comments).appendTo("#comments-list");
 	}
