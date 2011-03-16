@@ -35,12 +35,18 @@
 		
 		public function deleteComments($item) {
 			$db = $this->env->configuration()->db();
-			return $db->update("DELETE FROM ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE));
+			if ($item->isFile())
+				return $db->update("DELETE FROM ".$db->table("comment")." WHERE `item_id` = ".$db->string($item->id(), TRUE));
+			else
+				return $db->update(sprintf("DELETE FROM ".$db->table("comment")." WHERE `item_id` like '%s%%'", $db->string($item->id())));
 		}
 
 		public function moveComments($item, $to) {
 			$db = $this->env->configuration()->db();
-			return $db->update("UPDATE ".$db->table("comment")." SET `item_id` = ".$db->string($to->id(), TRUE) ." where `item_id` = ".$db->string($item->id(), TRUE));
+			if ($item->isFile())
+				return $db->update("UPDATE ".$db->table("comment")." SET `item_id` = ".$db->string($to->id(), TRUE) ." where `item_id` = ".$db->string($item->id(), TRUE));
+			else
+				return $db->update(sprintf("UPDATE ".$db->table("comment")." SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $to->id(), strlen($item->id())+1, $item->id()));
 		}
 						
 		public function __toString() {
