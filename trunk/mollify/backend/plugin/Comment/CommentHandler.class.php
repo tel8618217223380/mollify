@@ -20,10 +20,15 @@
 		}
 		
 		public function onEvent($e) {
-			$type = $e->typeId();
-			//$userId = $this->getUserId($e);
+			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
+			$type = $e->subType();
+			if (!in_array($type, array(FileEvent::MOVE, FileEvent::RENAME, FileEvent::DELETE))) return;
 			
-			//TODO handle remove, rename and move
+			Logging::logDebug("COMMENT EVENT ".$e->typeId());
+			if ($type === FileEvent::DELETE)
+				$this->getDao()->deleteComments($e->item());
+			else if ($type === FileEvent::MOVE or $type === FileEvent::RENAME)
+				$this->getDao()->moveComments($e->item(), $e->info());
 		}
 		
 		public function getItemDetails($item, $details) {
