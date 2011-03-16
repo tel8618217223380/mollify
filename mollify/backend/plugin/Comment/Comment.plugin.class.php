@@ -31,7 +31,7 @@
 			$this->addService("comment", "CommentServices");
 			
 			$this->handler = new CommentHandler($this->env);
-			$this->env->events()->register("*", $this->handler);
+			$this->env->events()->register("filesystem/", $this->handler);
 			$this->env->filesystem()->registerDetailsPlugin($this->handler);
 		}
 		

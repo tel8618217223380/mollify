@@ -32,6 +32,16 @@
 			$db->update(sprintf("INSERT INTO ".$db->table("comment")." (user_id, item_id, time, comment) VALUES (%s, %s, %s, %s)", $db->string($userId, TRUE), $db->string($item->id(), TRUE), $db->string(date('YmdHis', $time)), $db->string($comment, TRUE)));
 			return $db->lastId();
 		}
+		
+		public function deleteComments($item) {
+			$db = $this->env->configuration()->db();
+			return $db->update("DELETE FROM ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE));
+		}
+
+		public function moveComments($item, $to) {
+			$db = $this->env->configuration()->db();
+			return $db->update("UPDATE ".$db->table("comment")." SET `item_id` = ".$db->string($to->id(), TRUE) ." where `item_id` = ".$db->string($item->id(), TRUE));
+		}
 						
 		public function __toString() {
 			return "CommentDao";

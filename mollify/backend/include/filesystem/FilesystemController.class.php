@@ -679,6 +679,10 @@
 			return $this->item;
 		}
 
+		public function info() {
+			return $this->info;
+		}
+		
 		public function itemToStr() {
 			return $this->item->internalPath();
 		}
