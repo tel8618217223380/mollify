@@ -1,9 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.9.2 ===
+  * Fixed issue #219
+
 === Version 1.7.9.1 ===
   * Fixed incorrect release package with debug client
-  * Fixed issue #219
 
 === Version 1.7.9 ===
   * Added new language: cs
