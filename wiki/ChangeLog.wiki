@@ -1,6 +1,13 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.9 ===
+  * Added new language: cs
+  * Added comment plugin
+  * Added Zoho file viewer
+  * Added new events: user added and removed
+  * Fixed issue #218 and #204
+
 === Version 1.7.8 ===
   * Added new languages: de, ja
   * Public upload
