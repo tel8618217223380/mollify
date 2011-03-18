@@ -6,7 +6,7 @@
   * Added comment plugin
   * Added Zoho file viewer
   * Added new events: user added and removed
-  * Fixed issue #218 and #204
+  * Fixed issue #218 and issue #204
 
 === Version 1.7.8 ===
   * Added new languages: de, ja
