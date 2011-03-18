@@ -284,6 +284,8 @@
 			switch (strtolower($this->path[1])) {
 				case 'files':
 					$this->env->filesystem()->uploadTo($item);
+					$this->response()->html(json_encode(array("result" => TRUE)));
+					die();
 					break;
 				case 'folders':
 					$data = $this->request->data;

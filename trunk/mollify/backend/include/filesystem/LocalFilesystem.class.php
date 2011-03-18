@@ -311,8 +311,6 @@
 			fclose($handle);
 		}
 		
-		public function endWrite($item, $s) {}
-		
 		public function put($item, $content) {
 			file_put_contents($this->localPath($item), $content);
 		}

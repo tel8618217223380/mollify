@@ -501,18 +501,12 @@
 			$target = $folder->createFile($name);
 			Logging::logDebug('uploading to ['.$target.']');
 			
-			$src = @fopen($origin, "r");
+			$src = @fopen($origin, "rb");
 			if (!$src)
 				throw new ServiceException("SAVING_FAILED", "Failed to read uploaded data");			
-			$dst = $target->write();
-			
-			while (!feof($src))
-				fwrite($dst, fread($src, 4096));
-
-			fclose($dst);
+			$target->write($src);
 			fclose($src);
 			unlink($origin);
-			$target->endWrite($dst);
 			
 			$this->env->events()->onEvent(FileEvent::upload($target));
 		}
