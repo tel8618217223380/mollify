@@ -6,6 +6,7 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `a1password` varchar(128) NULL,
   `permission_mode` char(2) NULL,
   `email` varchar(128) NULL,
+  `auth` varchar(8) NULL,
   `is_group` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify users and groups';

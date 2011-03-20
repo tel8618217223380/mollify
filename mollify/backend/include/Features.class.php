@@ -24,7 +24,8 @@
 			"user_groups" => FALSE,
 			"public_links" => FALSE,
 			"mail_notification" => FALSE,
-			"retrieve_url" => FALSE
+			"retrieve_url" => FALSE,
+			"ldap" => FALSE
 		);
 		
 		private $defaultValues = array();

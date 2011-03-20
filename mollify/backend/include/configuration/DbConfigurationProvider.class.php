@@ -41,9 +41,9 @@
 	
 		public function findUser($username, $password, $allowEmail = FALSE) {
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND password='%s'", $this->db->string($username), $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND auth='PW') or auth != 'PW')", $this->db->string($username), $this->db->string($username), $this->db->string($password)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name FROM ".$this->db->table("user")." WHERE name='%s' AND password='%s'", $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND auth='PW') or auth != 'PW')", $this->db->string($username), $this->db->string($password)));
 			}
 			$matches = $result->count();
 			
@@ -61,7 +61,7 @@
 		}
 
 		public function getUserByName($username) {
-			$result = $this->db->query(sprintf("SELECT id, name, password, a1password FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0", $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, password, a1password, auth FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0", $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -78,14 +78,14 @@
 		}
 		
 		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, email, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, email, auth, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id) {
-			return $this->db->query(sprintf("SELECT id, name, email FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, email, auth FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
-		public function addUser($name, $pw, $email, $permission) {
+		public function addUser($name, $pw, $email, $permission, $auth) {
 			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value(0);
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
@@ -93,12 +93,12 @@
 			$md5pw = md5($pw);
 			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, is_group) VALUES ('%s', '%s', '%s', %s, '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, $auth, is_group) VALUES ('%s', '%s', '%s', %s, '%s', '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth)));
 			return $this->db->lastId();
 		}
 	
-		public function updateUser($id, $name, $email, $permission, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($description), $this->db->string($id)));			
+		public function updateUser($id, $name, $email, $permission, $auth, $description = NULL) {
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', auth=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth, TRUE), $this->db->string($description), $this->db->string($id)));			
 			return TRUE;
 		}
 		
@@ -166,7 +166,7 @@
 		}
 
 		public function updateUserGroup($id, $name, $description) {
-			return $this->updateUser($id, $name, NULL, NULL, $description);
+			return $this->updateUser($id, $name, NULL, NULL, NULL, $description);
 		}
 		
 		public function removeUserGroup($id) {

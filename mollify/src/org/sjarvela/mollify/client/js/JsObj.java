@@ -42,6 +42,10 @@ public class JsObj extends JavaScriptObject {
 		return this[name];
 	}-*/;
 
+	public final native String getAsString(String name) /*-{
+		return "" + this[name];
+	}-*/;
+
 	public final native boolean getBoolean(String name) /*-{
 		return this[name];
 	}-*/;

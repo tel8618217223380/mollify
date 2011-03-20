@@ -13,53 +13,55 @@ package org.sjarvela.mollify.client.session;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParameterParser {
+import org.sjarvela.mollify.client.js.JsObj;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class SettingsProvider {
 	private final String name;
 	private final Map<String, String> values;
 
-	public ParameterParser(String name) {
+	public SettingsProvider(String name) {
 		this.name = name;
 		this.values = readValues();
 	}
 
 	private Map<String, String> readValues() {
-		Map<String, String> result = new HashMap();
-		String[] values = getMetaParameter(name).split(";");
+		JsObj settings = this.getSettings();
+		if (settings == null)
+			throw new RuntimeException("Mollify not initialized");
 
-		for (String valueString : values) {
-			if (valueString.length() == 0)
+		Map<String, String> result = new HashMap();
+
+		for (String k : settings.getKeys()) {
+			if (k == null || k.trim().length() == 0)
 				continue;
 
-			String[] parts = valueString.split("=");
-			if (parts.length != 2)
-				throw new RuntimeException("Invalid parameter: " + valueString);
-
-			String name = parts[0].trim();
-			String value = parts[1].trim();
-			if (name.length() == 0 || value.length() == 0)
-				throw new RuntimeException("Invalid parameter: " + valueString);
+			String name = k.trim();
+			String value = settings.getAsString(k);
+			if (value.length() == 0)
+				continue;
 
 			result.put(name, value);
 		}
 		return result;
 	}
 
+	private native String getStringValue(JavaScriptObject o) /*-{
+		return "" + o;
+	}-*/;
+
+	private native JsObj getSettings() /*-{
+		if (!$wnd.mollify || !$wnd.mollify.getSettings)
+			return null;
+		return $wnd.mollify.getSettings();
+	}-*/;
+
 	public String getParameter(String name) {
 		if (!values.containsKey(name))
 			return null;
 		return values.get(name);
 	}
-
-	private native static String getMetaParameter(String name) /*-{
-		var metaArray = $doc.getElementsByTagName("meta");
-		var result = '';
-		
-		for (var i = 0; i < metaArray.length; i++) {
-			if (metaArray[i].getAttribute("name") == name)
-				result = result + metaArray[i].getAttribute("content") + ';';
-		}
-		return result;
-	}-*/;
 
 	public boolean hasParameter(String param) {
 		return values.containsKey(param);

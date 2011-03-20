@@ -1,10 +1,19 @@
 (function(){
 	window.mollify = new function(){
 		var t = this;
+		this.settings = {};
 		this.plugins = [];
+
+		this.init = function(s) {
+			t.settings = s;
+		}
 		
-		this.init = function(e) {
+		this.setup = function(e) {
 			t.env = e;
+		}
+		
+		this.getSettings = function() {
+			return t.settings;
 		}
 
 		this.getPlugins = function() {

@@ -41,7 +41,7 @@ public class MollifyClient implements Client, SessionListener {
 	private static Logger logger = Logger.getLogger(MollifyClient.class
 			.getName());
 
-	public static final String PROTOCOL_VERSION = "2";
+	public static final String PROTOCOL_VERSION = "3";
 	private static final String PARAM_SHOW_LOGIN = "show-login";
 
 	private static boolean pluginsInitialized = false;
@@ -91,12 +91,20 @@ public class MollifyClient implements Client, SessionListener {
 								.getError(), error);
 					}
 
-					public void onSuccess(SessionInfo session) {
+					public void onSuccess(final SessionInfo session) {
 						if (!pluginsInitialized) {
-							pluginSystem.setup(fileViewDelegate, session);
-							pluginsInitialized = true;
+							pluginSystem.setup(fileViewDelegate, session,
+									new Callback() {
+										@Override
+										public void onCallback() {
+											pluginsInitialized = true;
+											sessionManager.setSession(session);
+										}
+									});
+
+						} else {
+							sessionManager.setSession(session);
 						}
-						sessionManager.setSession(session);
 					}
 				});
 	}

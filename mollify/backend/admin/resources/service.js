@@ -12,7 +12,7 @@ jQuery.fn.exists = function() { return ($(this).length > 0); }
 
 var preRequestCallback = null;
 var postRequestCallback = null;
-var protocolVersion = "2";
+var protocolVersion = "3";
 
 function getSessionInfo(success, fail) {
 	request("GET", 'session/info/'+protocolVersion+'?type=admin', success, fail);
@@ -82,8 +82,8 @@ function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
 }
 
-function addUser(name, pw, email, permission, success, fail) {
-	var data = JSON.stringify({name:name, password: Base64.encode(pw), email:email, "permission_mode":permission});
+function addUser(name, pw, email, permission, auth, success, fail) {
+	var data = JSON.stringify({name:name, password: Base64.encode(pw), email:email, "permission_mode":permission, "auth":auth});
 	request("POST", 'configuration/users', success, fail, data);
 }
 
@@ -92,8 +92,8 @@ function changePassword(id, pw, success, fail) {
 	request("PUT", 'configuration/users/'+id+'/password', success, fail, data);
 }
 
-function editUser(id, name, email, permission, success, fail) {
-	var data = JSON.stringify({name:name, email:email, "permission_mode":permission});
+function editUser(id, name, email, permission, auth, success, fail) {
+	var data = JSON.stringify({name:name, email:email, "permission_mode":permission, "auth":auth});
 	request("PUT", 'configuration/users/'+id, success, fail, data);
 }
 
