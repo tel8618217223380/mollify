@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
 import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-import org.sjarvela.mollify.client.util.MD5;
+import org.sjarvela.mollify.client.util.Base64;
 
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -51,7 +51,7 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 			logger.log(Level.INFO, "Authenticating '" + userName + "'");
 
 		String data = new JSONStringBuilder("username", userName)
-				.add("password", MD5.generate(password))
+				.add("password", Base64.encode(password))
 				.add("protocol_version", protocolVersion).toString();
 
 		request().url(serviceUrl().action(SessionAction.authenticate))

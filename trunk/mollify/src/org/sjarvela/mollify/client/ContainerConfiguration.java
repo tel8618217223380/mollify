@@ -32,7 +32,7 @@ import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.DefaultSessionManager;
-import org.sjarvela.mollify.client.session.ParameterParser;
+import org.sjarvela.mollify.client.session.SettingsProvider;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.session.user.DefaultPasswordGenerator;
@@ -132,7 +132,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	@Provides
 	@Singleton
 	ClientSettings getClientSettings() {
-		return new ClientSettings(new ParameterParser(META_PROPERTY));
+		return new ClientSettings(new SettingsProvider(META_PROPERTY));
 	}
 
 	@Provides

@@ -12,7 +12,7 @@ var servicePath = null;
 var session = null;
 var preRequestCallback = null;
 var postRequestCallback = null;
-var protocolVersion = "2";
+var protocolVersion = "3";
 
 function onError(error) {
 	var errorHtml = $.template("<div class='error'><div class='title'>${title}</div><div class='details'>${details}</div></div>");

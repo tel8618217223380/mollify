@@ -42,16 +42,17 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	@Override
-	public void setup(final FileView fileView, final SessionInfo session) {
+	public void setup(final FileView fileView, final SessionInfo session,
+			final Callback onReady) {
 		Map<String, String> externalPluginScripts = getExternalPluginScripts(session);
 		if (externalPluginScripts.isEmpty()) {
-			init(fileView, session);
+			init(fileView, session, onReady);
 		} else {
 			new JQueryScriptLoader().load(externalPluginScripts,
 					new Callback() {
 						@Override
 						public void onCallback() {
-							init(fileView, session);
+							init(fileView, session, onReady);
 						}
 					});
 		}
@@ -77,19 +78,19 @@ public class DefaultPluginSystem implements PluginSystem {
 		return result;
 	}
 
-	private void init(FileView fileView, SessionInfo session) {
+	private void init(FileView fileView, SessionInfo session, Callback onReady) {
 		JavaScriptObject env = pluginEnv.getJsEnv(fileView,
 				session.getPluginBaseUrl());
-
 		initLib(env);
 		setupPlugins();
 		initializePlugins(env);
+		onReady.onCallback();
 	}
 
 	private native void initLib(JavaScriptObject env) /*-{
 		if (!$wnd.mollify || !$wnd.mollify.getPlugins)
 			return;
-		$wnd.mollify.init(env);
+		$wnd.mollify.setup(env);
 	}-*/;
 
 	private void initializePlugins(JavaScriptObject env) {

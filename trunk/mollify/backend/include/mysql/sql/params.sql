@@ -1,1 +1,1 @@
-INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('version', '1_7_8');
+INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('version', '1_7_10');

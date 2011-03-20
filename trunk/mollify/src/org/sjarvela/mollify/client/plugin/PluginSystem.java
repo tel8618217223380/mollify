@@ -10,11 +10,12 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
 public interface PluginSystem {
 
-	void setup(FileView filesystemHandler, SessionInfo session);
+	void setup(FileView filesystemHandler, SessionInfo session, Callback onReady);
 
 }

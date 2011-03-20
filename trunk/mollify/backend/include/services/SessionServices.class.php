@@ -11,7 +11,7 @@
 	 */
 
 	class SessionServices extends ServicesBase {
-		private static $PROTOCOL_VERSION = "2";
+		private static $PROTOCOL_VERSION = "3";
 		private static $GET_ITEMS = array("info", "logout");
 		private static $POST_ITEMS = array("authenticate", "logout");
 		
@@ -54,7 +54,7 @@
 			if (!$this->request->hasData("username") or !$this->request->hasData("password") or !$this->request->hasData("protocol_version"))
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
-			$this->env->authentication()->authenticate($this->request->data("username"), $this->request->data("password"));
+			$this->env->authentication()->authenticate($this->request->data("username"), base64_decode($this->request->data("password")));
 			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
 			$this->response()->success($this->getSessionInfo($this->request->data("protocol_version")));
 		}

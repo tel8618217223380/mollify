@@ -18,7 +18,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 public class ClientSettings {
 	private static Logger logger = Logger.getLogger(ClientSettings.class
 			.getName());
-	private final ParameterParser parser;
+	private final SettingsProvider parser;
 
 	private static boolean getBool(String string) {
 		if (string == null)
@@ -37,7 +37,7 @@ public class ClientSettings {
 		return Integer.parseInt(string.trim());
 	}
 
-	public ClientSettings(ParameterParser parser) {
+	public ClientSettings(SettingsProvider parser) {
 		this.parser = parser;
 	}
 

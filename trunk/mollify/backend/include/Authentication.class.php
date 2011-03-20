@@ -34,14 +34,40 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
 		}
 		
-		public function authenticate($userId, $password) {
+		public function authenticate($userId, $pw) {
+			$password = md5($pw);
+			
 			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings("email_login", TRUE));
 			if (!$user) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
+			if (strcasecmp("PW", $user["auth"]) != 0) {
+				// handle other authentications
+				if (strcasecmp("LDAP", $user["auth"]) == 0) {
+					$this->authenticateLDAP($user, $pw);
+				} else {
+					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
+				}
+
+			}
 			$this->doAuth($user);
+		}
+		
+		private function authenticateLDAP($user, $pw) {
+			$this->env->features()->assertFeature("ldap");
+			
+			$conn = @ldap_connect($this->env->settings()->setting("ldap_server"));
+			if (!$conn)
+				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to LDAP server");
+	
+			$bind = @ldap_bind($conn, $user["name"]."@".$this->env->settings()->setting("ldap_fqdn"), $pw);
+			if (!$bind) {
+				Logging::logDebug("LDAP error: ".ldap_error($conn));
+				throw new ServiceException("AUTHENTICATION_FAILED");
+			}
+			ldap_close($conn);
 		}
 
 		public function doAuth($user) {

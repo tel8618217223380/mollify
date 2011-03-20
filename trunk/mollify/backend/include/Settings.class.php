@@ -45,6 +45,9 @@
 			"mime-types" => array(),
 			"enable_s3" => FALSE,
 			"s3_settings" => array(),
+			"enable_ldap" => FALSE,
+			"ldap_server" => NULL,
+			"ldap_fqdn" => NULL,
 			"debug" => FALSE
 		);
 		
