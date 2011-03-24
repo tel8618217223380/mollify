@@ -23,7 +23,7 @@ function doLogout(success, fail) {
 }
 
 function authenticate(username, pw, success, fail) {
-	var data = JSON.stringify({username:username, password:generate_md5(pw), protocol_version:protocolVersion});
+	var data = JSON.stringify({username:username, password:Base64.encode(pw), protocol_version:protocolVersion});
 	request("POST", 'session/authenticate', success, fail, data);
 }
 
@@ -80,6 +80,10 @@ function removeUserFolder(user, id, success, fail) {
 
 function getUsers(success, fail) {
 	request("GET", 'configuration/users', success, fail);
+}
+
+function getUsersAndFolders(success, fail) {
+	request("GET", 'configuration/usersgroups', success, fail);
 }
 
 function addUser(name, pw, email, permission, auth, success, fail) {

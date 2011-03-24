@@ -47,10 +47,11 @@ function MollifyPublishedFoldersConfigurationView() {
 			multiselect: true,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name'],
+		   	colNames:['ID', 'Name', 'Group'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
-		   		{name:'name',index:'name', width:200, sortable:true}
+		   		{name:'name',index:'name', width:200, sortable:true},
+		   		{name:'is_group',index:'is_group', width:50, sortable:true}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -63,10 +64,11 @@ function MollifyPublishedFoldersConfigurationView() {
 			datatype: "local",
 			autowidth: true,
 			multiselect: true,
-		   	colNames:['ID', 'Name'],
+		   	colNames:['ID', 'Name', 'Group'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
-		   		{name:'name',index:'name', width:200, sortable:true}
+		   		{name:'name',index:'name', width:200, sortable:true},
+		   		{name:'is_group',index:'is_group', width:50, sortable:true}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc'
@@ -106,15 +108,20 @@ function MollifyPublishedFoldersConfigurationView() {
 		
 		that.onFolderSelectionChanged();
 		
-		getUsers(that.refreshUsers, onServerError);
+		getUsersAndFolders(that.refreshUsersAndFolders, onServerError);
 	}
 	
-	this.refreshUsers = function(users) {
+	this.refreshUsersAndFolders = function(result) {
 		that.users = {};
+		that.groups = {};
 		
-		for (var i=0; i < users.length; i++) {
-			user = users[i];
+		for (var i=0; i < result.users.length; i++) {
+			user = result.users[i];
 			that.users[user.id] = user;
+		}
+		for (var i=0; i < result.groups.length; i++) {
+			group = result.groups[i];
+			that.groups[group.id] = group;
 		}
 	}
 	
@@ -320,7 +327,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		
 		var availableUsers = that.getAvailableFolderUsers();
 		if (availableUsers.length == 0) {
-			alert("No more users available");
+			alert("No more users or groups available");
 			return;
 		}
 		
@@ -354,7 +361,7 @@ function MollifyPublishedFoldersConfigurationView() {
 			$("#add-folder-users-dialog").dialog({
 				bgiframe: true,
 				height: 'auto',
-				width: 330,
+				width: 380,
 				modal: true,
 				resizable: true,
 				autoOpen: false,
@@ -371,6 +378,10 @@ function MollifyPublishedFoldersConfigurationView() {
 		for (id in that.users) {
 			if (!that.folderUsers[id])
 				result.push(that.users[id]);
+		}
+		for (id in that.groups) {
+			if (!that.folderUsers[id])
+				result.push(that.groups[id]);
 		}
 		return result;
 	}

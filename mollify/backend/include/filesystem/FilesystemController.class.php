@@ -68,13 +68,15 @@
 		
 		private function getFolderDefs($all = FALSE) {
 			if ($this->env->configuration()->isAuthenticationRequired() and !$all)
-				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId());
+				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId(), TRUE);
 			else
 				$folderDefs = $this->env->configuration()->getFolders();
 
 			$list = array();
 			
 			foreach($folderDefs as $folderDef) {
+				if (array_key_exists($folderDef['id'], $list)) continue;
+				
 				$root = $this->filesystem($folderDef, !$all)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
 				
