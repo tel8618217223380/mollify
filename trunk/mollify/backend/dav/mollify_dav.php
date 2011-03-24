@@ -10,6 +10,7 @@
 
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationProviderFactory.class.php");
+	require_once("include/Settings.class.php");
 	require_once("Sabre/autoload.php");
 	
 	class VoidResponseHandler {
@@ -131,7 +132,11 @@
 	}
 	
 	try {
-		$backend = new MollifyBackend($SETTINGS, $CONFIGURATION_PROVIDER, new ConfigurationProviderFactory(), new VoidResponseHandler());
+		$settings = new Settings($SETTINGS);
+		$factory = new ConfigurationProviderFactory();
+		$conf = $factory->createConfigurationProvider($CONFIGURATION_PROVIDER, $settings);
+		$backend = new MollifyBackend($settings, $conf, new VoidResponseHandler());
+		
 		$env = $backend->env();
 		$env->initialize();
 		

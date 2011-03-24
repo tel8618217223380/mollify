@@ -78,7 +78,7 @@
 		}
 		
 		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, email, auth, permission_mode FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
+			return $this->db->query("SELECT id, name, email, auth, permission_mode, is_group FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id) {
@@ -199,7 +199,7 @@
 		}
 		
 		public function getFolderUsers($id) {
-			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id, user.name, user.permission_mode, user.is_group FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addFolderUsers($folderId, $userIds) {
@@ -242,11 +242,19 @@
 			return TRUE;
 		}
 
-		public function getUserFolders($userId) {
+		public function getUserFolders($userId, $includeGroupFolders = FALSE) {
 			$folderTable = $this->db->table("folder");
 			$userFolderTable = $this->db->table("user_folder");
+			$userTable = $this->db->table("user");
 			
-			return $this->db->query(sprintf("SELECT ".$folderTable.".id, ".$userFolderTable.".name, ".$folderTable.".name as default_name, ".$folderTable.".path FROM ".$userFolderTable.", ".$folderTable." WHERE user_id='%s' AND ".$folderTable.".id = ".$userFolderTable.".folder_id", $this->db->string($userId)))->rows();
+			$userIds = array($userId);
+			if ($includeGroupFolders and $this->env->authentication()->hasUserGroups()) {
+				foreach($this->env->authentication()->getUserGroups() as $g)
+					$userIds[] = $g['id'];
+			}
+			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
+
+			return $this->db->query(sprintf("SELECT f.id, uf.name, f.name as default_name, f.path FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
 		}
 		
 		public function addUserFolders($userId, $folderIds) {
