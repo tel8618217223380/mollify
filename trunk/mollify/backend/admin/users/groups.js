@@ -27,6 +27,11 @@ function MollifyUserGroupsConfigurationView() {
 		$("#button-remove-group").click(that.onRemoveGroup);
 		$("#button-edit-group").click(that.onEditGroup);
 		$("#button-refresh-groups").click(that.refresh);
+		
+		$("#button-add-group-folder").click(that.openAddGroupFolder);
+		$("#button-edit-group-folder").click(that.openEditGroupFolder);
+		$("#button-remove-group-folder").click(that.onRemoveGroupFolder);
+		$("#button-refresh-group-folders").click(that.refreshGroupFolders);
 
 		$("#groups-list").jqGrid({        
 			datatype: "local",
@@ -67,6 +72,25 @@ function MollifyUserGroupsConfigurationView() {
 			}
 		});
 
+		$("#group-folders-list").jqGrid({        
+			datatype: "local",
+			multiselect: false,
+			autowidth: true,
+			height: '100%',
+		   	colNames:['ID', 'Name', 'Default Name', 'Path'],
+		   	colModel:[
+			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
+		   		{name:'name',index:'name', width:150, sortable:true, formatter:that.folderNameFormatter},
+		   		{name:'default_name',index:'name', width:150, sortable:true, formatter:that.defaultFolderNameFormatter},
+				{name:'path',index:'path',width:200, sortable:true},
+		   	],
+		   	sortname:'id',
+		   	sortorder:'asc',
+			onSelectRow: function(id){
+				//that.onUserFolderSelectionChanged();
+			}
+		});
+		
 		$("#add-users-list").jqGrid({        
 			datatype: "local",
 			autowidth: true,
@@ -147,10 +171,42 @@ function MollifyUserGroupsConfigurationView() {
 			that.groupUsers[groupUser.id] = groupUser;
 			grid.jqGrid('addRowData', groupUser.id, groupUser);
 		}
-				
+		
 		that.onGroupUserSelectionChanged();
 	}
+
+	this.refreshGroupFolders = function() {
+		var id = $("#groups-list").getGridParam("selrow");
+		if (!id) return;
+
+		getUserFolders(id, that.onRefreshGroupFolders, onServerError);
+	}
+	
+	this.onRefreshGroupFolders = function(folders) {
+		that.userFolders = {};
 		
+		var grid = $("#group-folders-list");
+		grid.jqGrid('clearGridData');
+
+		for (var i=0; i < folders.length; i++) {
+			var folder = folders[i];
+			that.userFolders[folder.id] = folder;
+			grid.jqGrid('addRowData', folder.id, folder);
+		}
+		
+		//that.onGroupFolderSelectionChanged();
+	}
+
+	this.refreshGroupDetails = function() {
+		var id = $("#groups-list").getGridParam("selrow");
+		if (!id) return;
+		
+		getGroupUsers(id, function(users) {
+			that.onRefreshGroupUsers(users);
+			getUserFolders(id, that.onRefreshGroupFolders, onServerError);
+		}, onServerError);		
+	}
+	
 	this.onGroupSelectionChanged = function() {
 		var group = that.getSelectedGroup();
 		var selected = (group != null);
@@ -168,7 +224,7 @@ function MollifyUserGroupsConfigurationView() {
 				$("#group-users-list").jqGrid('setGridWidth', $("#group-details").width(), true);
 				$("#group-details-info").html("<h1>Group '"+group.name+"'</h1>");
 				
-				that.refreshGroupUsers();
+				that.refreshGroupDetails();
 			} else {
 				$("#group-details-info").html('<div class="message">Select a group from the list to view details</div>');
 			}
@@ -183,7 +239,7 @@ function MollifyUserGroupsConfigurationView() {
 
 	this.onGroupUserSelectionChanged = function() {
 		var selected = (that.getSelectedGroupUsers().length > 0);
-		enableButton("button-remove-group-users", selected);		
+		enableButton("button-remove-group-users", selected);
 	}
 	
 	this.validateGroupData = function() {
@@ -271,7 +327,7 @@ function MollifyUserGroupsConfigurationView() {
 		if (id == null) return;
 		that.openAddEditGroup(id);
 	}
-
+	
 	this.openAddGroupUsers = function() {
 		if (that.users == null) return;
 		
@@ -336,5 +392,11 @@ function MollifyUserGroupsConfigurationView() {
 		var sel = that.getSelectedGroupUsers();
 		if (sel.length == 0) return;
 		removeGroupUsers(that.getSelectedGroup(), sel, that.refreshGroupUsers, onServerError);
+	}
+	
+	this.onRemoveGroupFolder = function() {
+		var id = that.getSelectedGroupFolder();
+		if (id == null) return;
+		removeUserFolder(that.getSelectedGroup(), id, that.refreshUserFolders, onServerError);
 	}
 }

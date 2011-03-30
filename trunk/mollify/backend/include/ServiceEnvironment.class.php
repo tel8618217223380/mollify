@@ -180,6 +180,8 @@
 		
 		private function getHost() {
 			if (!$this->settings->hasSetting("host_public_address")) {
+				if (!isset($_SERVER['HTTP_REFERER'])) throw new ServiceException("Cannot resolve host");
+				
 				$protocol = substr($_SERVER['HTTP_REFERER'], 0, strpos($_SERVER['HTTP_REFERER'], ":"));
 				$start = strlen($protocol) + 3;
 				$end = strpos($_SERVER['HTTP_REFERER'], "/", $start);

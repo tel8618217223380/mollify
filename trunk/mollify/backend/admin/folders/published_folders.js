@@ -47,11 +47,11 @@ function MollifyPublishedFoldersConfigurationView() {
 			multiselect: true,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Name', 'Group'],
+		   	colNames:['ID', 'Name', 'Type'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
-		   		{name:'is_group',index:'is_group', width:50, sortable:true}
+		   		{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -64,17 +64,22 @@ function MollifyPublishedFoldersConfigurationView() {
 			datatype: "local",
 			autowidth: true,
 			multiselect: true,
-		   	colNames:['ID', 'Name', 'Group'],
+		   	colNames:['ID', 'Name', 'Type'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true},
-		   		{name:'is_group',index:'is_group', width:50, sortable:true}
+		   		{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc'
 		});
 
 		that.refresh();
+	}
+	
+	this.groupFormatter = function(name, options, u) {
+		if (u.is_group == "1") return "Group";
+		return "User";
 	}
 	
 	this.getFolder = function(id) {
