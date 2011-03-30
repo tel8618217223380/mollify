@@ -20,13 +20,25 @@
 	<div id="group-details" class="configuration-details">
 		<div id="group-details-info" class="details-info"></div>
 		<div id="group-details-data" class="details-data" style="display:none">
-			<div class="toolbar">
-				<h1>Users</h1>
-				<button id="button-add-group-users" class="ui-state-default ui-corner-all">Add New Users to Group</button>
-				<button id="button-remove-group-users" class="ui-state-default ui-state-disabled ui-corner-all">Remove Selected Users from Group</button>
-				<button id="button-refresh-group-users" class="ui-state-default ui-corner-all">Refresh</button>
+			<div id="group-users-section" class="details-data-section left">
+				<div class="toolbar">
+					<h1>Users</h1>
+					<button id="button-add-group-users" class="ui-state-default ui-corner-all">Add</button>
+					<button id="button-remove-group-users" class="ui-state-default ui-state-disabled ui-corner-all">Remove</button>
+					<button id="button-refresh-group-users" class="ui-state-default ui-corner-all">Refresh</button>
+				</div>
+				<table id="group-users-list"></table>
 			</div>
-			<table id="group-users-list"></table>
+			<div id="group-folders-section" class="details-data-section right">
+				<div class="toolbar">
+					<h1>Published Folders</h1>
+					<button id="button-add-group-folder" class="ui-state-default ui-corner-all">Add</button>
+					<button id="button-edit-group-folder" class="ui-state-default ui-state-disabled ui-corner-all">Edit</button>
+					<button id="button-remove-group-folder" class="ui-state-default ui-state-disabled ui-corner-all">Remove</button>
+					<button id="button-refresh-group-folders" class="ui-state-default ui-corner-all">Refresh</button>
+				</div>
+				<table id="group-folders-list"></table>
+			</div>
 		</div>
 	</div>
 </div>
