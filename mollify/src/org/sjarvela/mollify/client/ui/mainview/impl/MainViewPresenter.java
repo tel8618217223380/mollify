@@ -127,8 +127,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 							return true;
 						if (Folder.Parent.equals(t))
 							return false;
-//						if (((Folder) t).isRoot())
-//							return false;
+						// if (((Folder) t).isRoot())
+						// return false;
 						return true;
 					}
 
@@ -151,31 +151,47 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			view.hideButtons();
 	}
 
-	public void onFileSystemItemSelected(FileSystemItem item, String columnId) {
+	public void onFileSystemItemSelected(final FileSystemItem item,
+			String columnId) {
 		if (columnId.equals(FileList.COLUMN_ID_NAME)) {
 			if (item.isFile()) {
 				view.showFileContext((File) item);
 			} else {
 				view.showProgress();
 
-				Folder folder = (Folder) item;
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+					@Override
+					public void execute() {
+						Folder folder = (Folder) item;
 
-				if (folder == Folder.Parent)
-					onMoveToParentFolder();
-				else
-					changeToFolder(folder);
+						if (folder == Folder.Parent)
+							onMoveToParentFolder();
+						else
+							changeToFolder(folder);
+					}
+				});
 			}
 		}
 	}
 
-	public void changeToRootFolder(Folder root) {
+	public void changeToRootFolder(final Folder root) {
 		view.showProgress();
-		model.changeToRootFolder(root, createFolderChangeListener());
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.changeToRootFolder(root, createFolderChangeListener());
+			}
+		});
 	}
 
-	public void changeToFolder(Folder folder) {
+	public void changeToFolder(final Folder folder) {
 		view.showProgress();
-		model.changeToSubfolder(folder, createFolderChangeListener());
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.changeToSubfolder(folder, createFolderChangeListener());
+			}
+		});
 	}
 
 	public void reset() {
@@ -224,13 +240,24 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (!model.getFolderModel().canAscend())
 			return;
 		view.showProgress();
-		model.moveToParentFolder(createFolderChangeListener());
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.moveToParentFolder(createFolderChangeListener());
+			}
+		});
 	}
 
 	@Override
-	public void onChangeToFolder(int level, Folder folder) {
+	public void onChangeToFolder(final int level, final Folder folder) {
 		view.showProgress();
-		model.changeToFolder(level, folder, createFolderChangeListener());
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.changeToFolder(level, folder,
+						createFolderChangeListener());
+			}
+		});
 	}
 
 	public void onError(ServiceError error, boolean reload) {
