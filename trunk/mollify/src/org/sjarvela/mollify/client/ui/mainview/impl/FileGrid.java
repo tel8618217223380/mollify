@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -88,12 +91,41 @@ public class FileGrid extends Composite {
 		selected.clear();
 		hilighted = null;
 
-		for (final FileSystemItem item : this.items) {
-			GridFileWidget widget = createItemWidget(item);
-			panel.add(widget);
-			widgets.put(item, widget);
+		final Iterator<FileSystemItem> iterator = this.items.iterator();
+		RepeatingCommand cmd = new RepeatingCommand() {
+
+			public boolean execute() {
+				boolean continueProcessing = process(iterator);
+				if (!continueProcessing)
+					onSelectionChanged();
+				return continueProcessing;
+			}
+
+		};
+
+		Scheduler.get().scheduleIncremental(cmd);
+	}
+
+	private boolean process(Iterator<FileSystemItem> iterator) {
+		if (!iterator.hasNext())
+			return false;
+
+		int processed = 0;
+		while (true) {
+			add(iterator.next());
+			processed++;
+
+			if (!iterator.hasNext())
+				return false;
+			if (processed == 100)
+				return true;
 		}
-		onSelectionChanged();
+	}
+
+	protected void add(FileSystemItem item) {
+		GridFileWidget widget = createItemWidget(item);
+		panel.add(widget);
+		widgets.put(item, widget);
 	}
 
 	private GridFileWidget createItemWidget(final FileSystemItem item) {
