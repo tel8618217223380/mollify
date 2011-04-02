@@ -20,4 +20,6 @@ public interface GridListener<T> {
 	void onColumnSorted(String columnId, Sort sort);
 
 	void onSelectionChanged(List<T> selected);
+
+	void onRendered();
 }

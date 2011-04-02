@@ -33,18 +33,26 @@ public class PermissionEditorGlue {
 		});
 
 		view.getList().addListener(new GridListener<FileItemUserPermission>() {
+			@Override
 			public void onColumnClicked(FileItemUserPermission t,
 					String columnId) {
 			}
 
+			@Override
 			public void onColumnSorted(String columnId, Sort sort) {
 			}
 
+			@Override
 			public void onIconClicked(FileItemUserPermission t) {
 			}
 
+			@Override
 			public void onSelectionChanged(List<FileItemUserPermission> selected) {
 				updateButtons(selected.size() == 1);
+			}
+
+			@Override
+			public void onRendered() {
 			}
 		});
 

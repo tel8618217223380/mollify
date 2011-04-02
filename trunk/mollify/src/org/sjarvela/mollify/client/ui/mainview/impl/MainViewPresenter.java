@@ -209,7 +209,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 			public void onSuccess(FolderInfo result) {
 				refreshView();
-				view.hideProgress();
 			}
 		});
 	}
@@ -389,7 +388,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		return new Callback() {
 			public void onCallback() {
 				refreshView();
-				view.hideProgress();
 			}
 		};
 	}

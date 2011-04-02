@@ -22,13 +22,16 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	private final boolean grid;
 	private final boolean thumbnails;
 	private final FileSystemService service;
+	private final boolean experimental;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
-			DragAndDropManager dragAndDropManager, ClientSettings settings, FileSystemService service) {
+			DragAndDropManager dragAndDropManager, ClientSettings settings,
+			FileSystemService service) {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.service = service;
 		this.grid = settings.getBool("grid-view", false);
+		this.experimental = settings.getBool("experimental-list", false);
 		this.thumbnails = settings.getBool("show-thumbnails", false);
 	}
 
@@ -36,6 +39,8 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	public FileListWidget create() {
 		if (grid)
 			return new DefaultFileListGridWidget(thumbnails, service);
+		if (experimental)
+			return new CellTableFileList(textProvider);
 		return new DefaultFileListWidget(textProvider, dragAndDropManager);
 	}
 
