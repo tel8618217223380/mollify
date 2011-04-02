@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.common.grid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Coords;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -103,9 +106,9 @@ public abstract class Grid<T> extends FlexTable {
 	}
 
 	private native void addHeaderCells(Element row, int count) /*-{
-		for(var i = 0; i < count; i++){ 
-			var cell = $doc.createElement("th"); 
-			row.appendChild(cell);   
+		for ( var i = 0; i < count; i++) {
+			var cell = $doc.createElement("th");
+			row.appendChild(cell);
 		}
 	}-*/;
 
@@ -269,32 +272,73 @@ public abstract class Grid<T> extends FlexTable {
 	public void refresh() {
 		removeAllRows();
 
-		int row = 0;
-		for (T t : content) {
-			int column = 0;
+		final Iterator<T> iterator = this.content.iterator();
+		RepeatingCommand cmd = new RepeatingCommand() {
+			int row = 0;
 
-			for (GridColumn col : columns) {
-				dataProvider.getData(t, col).applyTo(row, column, this);
-				String columnStyle = dataProvider.getColumnStyle(col);
-				if (columnStyle != null)
-					getCellFormatter().addStyleName(row, column, columnStyle);
-				column++;
+			public boolean execute() {
+				int processed = process(row, iterator);
+				if (processed == 0) {
+					onRenderFinished();
+
+					return false;
+				}
+				row += processed;
+				return true;
 			}
+		};
 
-			List<String> styles = dataProvider.getRowStyles(t);
+		Scheduler.get().scheduleIncremental(cmd);
+	}
 
-			for (String style : styles)
-				getRowFormatter().addStyleName(row, style);
+	protected int process(int start, Iterator<T> iterator) {
+		if (!iterator.hasNext())
+			return 0;
 
-			if (styles.size() > 0)
-				rowStyles.add(styles.get(0));
-			else
-				rowStyles.add(DEFAULT_ROW_STYLE);
-
-			if (selected.contains(t))
-				addSelectedStyle(t);
+		int processed = 0;
+		int row = start;
+		while (true) {
+			T t = iterator.next();
+			add(row, t);
 			row++;
+			processed++;
+
+			if (!iterator.hasNext())
+				return 0;
+			if (processed == 100)
+				break;
 		}
+		return processed;
+	}
+
+	private void add(int row, T t) {
+		int column = 0;
+
+		for (GridColumn col : columns) {
+			dataProvider.getData(t, col).applyTo(row, column, this);
+			String columnStyle = dataProvider.getColumnStyle(col);
+			if (columnStyle != null)
+				getCellFormatter().addStyleName(row, column, columnStyle);
+			column++;
+		}
+
+		List<String> styles = dataProvider.getRowStyles(t);
+
+		for (String style : styles)
+			getRowFormatter().addStyleName(row, style);
+
+		if (styles.size() > 0)
+			rowStyles.add(styles.get(0));
+		else
+			rowStyles.add(DEFAULT_ROW_STYLE);
+
+		if (selected.contains(t))
+			addSelectedStyle(t);
+	}
+
+	private void onRenderFinished() {
+		for (GridListener listener : listeners)
+			listener.onRendered();
 	}
 
 	public int getRowIndex(T t) {

@@ -105,6 +105,10 @@ public class SearchResultDialog extends ResizableDialog implements
 			public void onSelectionChanged(List<FileSystemItem> selected) {
 				fileActions.setEnabled(selected.size() > 0);
 			}
+
+			@Override
+			public void onRendered() {
+			}
 		});
 
 		this.itemContextPopup.setActionHandler(fileSystemActionHandler);

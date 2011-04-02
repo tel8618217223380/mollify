@@ -196,6 +196,11 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	}
 
 	@Override
+	public void onRendered() {
+		view.hideProgress();
+	}
+
+	@Override
 	public void refreshCurrentFolder() {
 		presenter.reload();
 	}

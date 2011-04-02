@@ -96,8 +96,11 @@ public class FileGrid extends Composite {
 
 			public boolean execute() {
 				boolean continueProcessing = process(iterator);
-				if (!continueProcessing)
+				if (!continueProcessing) {
 					onSelectionChanged();
+					for (GridListener listener : listeners)
+						listener.onRendered();
+				}
 				return continueProcessing;
 			}
 
