@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.BorderedControl;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -26,7 +27,7 @@ public abstract class BubblePopup extends DropdownPopup {
 	protected final String styleName;
 	protected Widget pointer;
 
-	public BubblePopup(Widget parent, PopupPositioner popupPositioner,
+	public BubblePopup(Element parent, PopupPositioner popupPositioner,
 			String styleName) {
 		super(parent, popupPositioner);
 		this.styleName = styleName;

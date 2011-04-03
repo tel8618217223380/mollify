@@ -28,8 +28,6 @@ public interface FileListWidget {
 
 	void removeAllRows();
 
-	Widget getWidget(FileSystemItem item, String columnId);
-
 	void setSelectionMode(SelectionMode selectionMode);
 
 	void setSelectController(SelectController controller);

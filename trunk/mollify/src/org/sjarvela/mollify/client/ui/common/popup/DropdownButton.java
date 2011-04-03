@@ -40,7 +40,8 @@ public class DropdownButton extends ActionButton {
 			getElement().setId(id);
 
 		menu = new DropdownPopupMenu<String>(actionListener,
-				parent != null ? parent : this, listener);
+				parent != null ? parent.getElement() : this.getElement(),
+				listener);
 		if (id != null)
 			menu.getElement().setId(id + "-menu");
 

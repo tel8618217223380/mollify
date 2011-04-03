@@ -47,11 +47,6 @@ public class DefaultFileListWidget implements FileListWidget {
 	}
 
 	@Override
-	public Widget getWidget(FileSystemItem item, String columnId) {
-		return list.getWidget(item, columnId);
-	}
-
-	@Override
 	public void setSelectionMode(SelectionMode selectionMode) {
 		list.setSelectionMode(selectionMode);
 	}

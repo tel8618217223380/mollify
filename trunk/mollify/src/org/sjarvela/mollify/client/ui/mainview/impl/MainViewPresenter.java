@@ -56,6 +56,7 @@ import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
 		DragDataProvider<FileSystemItem>, SearchListener {
@@ -152,10 +153,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onFileSystemItemSelected(final FileSystemItem item,
-			String columnId) {
+			String columnId, Element e) {
 		if (columnId.equals(FileList.COLUMN_ID_NAME)) {
 			if (item.isFile()) {
-				view.showFileContext((File) item);
+				view.showItemContext(item, e);
 			} else {
 				view.showProgress();
 

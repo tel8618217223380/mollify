@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.dom.client.Element;
 
 public interface ContextPopup<T> {
 	void showPopup();
@@ -23,5 +23,5 @@ public interface ContextPopup<T> {
 
 	void setPopupPositioner(PopupPositioner positioner);
 
-	void update(T t, Widget parent);
+	void update(T t, Element parent);
 }

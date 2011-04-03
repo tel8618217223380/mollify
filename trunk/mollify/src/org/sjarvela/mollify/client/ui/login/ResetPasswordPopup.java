@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +39,7 @@ public class ResetPasswordPopup extends BubblePopup {
 	private final TextBox email;
 	private final Button reset;
 
-	public ResetPasswordPopup(TextProvider textProvider, Widget parent,
+	public ResetPasswordPopup(TextProvider textProvider, Element parent,
 			ExternalService service, DialogManager dialogManager) {
 		super(parent, null, "reset-password");
 		this.textProvider = textProvider;

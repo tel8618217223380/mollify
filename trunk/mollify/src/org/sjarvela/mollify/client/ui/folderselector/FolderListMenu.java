@@ -44,7 +44,7 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 	public FolderListMenu(String itemStyle, Folder currentDirectory, int level,
 			FolderProvider directoryProvider, FolderListener listener,
 			TextProvider textProvider, Widget parent) {
-		super(null, parent, null);
+		super(null, parent.getElement(), null);
 
 		this.level = level;
 		this.folderProvider = directoryProvider;

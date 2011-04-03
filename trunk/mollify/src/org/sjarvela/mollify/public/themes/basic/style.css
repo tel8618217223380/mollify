@@ -2510,3 +2510,39 @@ input.mollify-header-search-field {
 .mollify-file-grid-item-html .mollify-file-grid-item-icon {
 	background: url(mimetypes128/text_html.png) no-repeat 24px 7px;	
 }
+
+.GJLWQD-DCD.GJLWQD-DED, .GJLWQD-DCD.GJLWQD-DEE {
+	border-collapse: collapse;
+	border: 0px;
+	border-spacing: 0;
+}
+
+td.GJLWQD-DCD.GJLWQD-DED.GJLWQD-DFD, td.GJLWQD-DCD.GJLWQD-DEE.GJLWQD-DFD {
+	width: 20px;
+	padding: 0 0 0 4px;
+}
+
+td.GJLWQD-DCD.GJLWQD-DED, td.GJLWQD-DCD.GJLWQD-DEE {
+	padding: 0;
+}
+
+th.GJLWQD-DJD.GJLWQD-DHD {
+	width: 0;
+	margin: 0;
+	padding: 0;
+}
+
+td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-column-name, td.GJLWQD-DCD.GJLWQD-DED .mollify-filelist-column-name, td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-column-type, td.GJLWQD-DCD.GJLWQD-DED .mollify-filelist-column-type {
+	height: 18px;
+}
+
+th.GJLWQD-DID {
+	display: none;
+}
+
+th.GJLWQD-DJD {
+	text-shadow: none;
+}
+
+
+
