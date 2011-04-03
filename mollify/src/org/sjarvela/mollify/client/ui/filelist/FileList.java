@@ -26,8 +26,10 @@ import org.sjarvela.mollify.client.ui.common.grid.Grid;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
+import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -101,18 +103,21 @@ public class FileList extends Grid<FileSystemItem> implements
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(folder));
 
-		Label icon = new Label();
+		final Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
+		final Widget nameWidget = createNameWidget(folder,
+				!folder.equals(Folder.Parent));
 		icon.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FileList.this.onIconClicked(folder);
+				FileList.this.onIconClicked(folder,
+						getWidget(folder, COLUMN_ID_NAME).getElement());
 			}
 		});
 
-		panel.add(createNameWidget(folder, !folder.equals(Folder.Parent)));
+		panel.add(nameWidget);
 		return panel;
 	}
 
@@ -121,18 +126,26 @@ public class FileList extends Grid<FileSystemItem> implements
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(file));
 
-		Label icon = new Label();
+		final Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_FILE_ICON);
 		HoverDecorator.decorate(icon);
+
+		final Widget nameWidget = createNameWidget(file, true);
 		icon.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FileList.this.onIconClicked(file);
+				FileList.this.onIconClicked(file,
+						getWidget(file, COLUMN_ID_NAME).getElement());
 			}
 		});
 
 		panel.add(icon);
-		panel.add(createNameWidget(file, true));
+		panel.add(nameWidget);
 		return panel;
+	}
+
+	public void onIconClicked(FileSystemItem item, Element e) {
+		for (GridListener listener : listeners)
+			listener.onIconClicked(item, e);
 	}
 
 	private Widget createSelector(final FileSystemItem item) {

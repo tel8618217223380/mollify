@@ -17,10 +17,10 @@ import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupListener;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ItemContextGlue implements ItemContextPopup {
 
@@ -48,8 +48,8 @@ public class ItemContextGlue implements ItemContextPopup {
 		popup.hide();
 	}
 
-	public void update(FileSystemItem item, Widget parent) {
-		popup.setParentWidget(parent);
+	public void update(FileSystemItem item, Element parent) {
+		popup.setParentElement(parent);
 		presenter.setItem(item);
 	}
 

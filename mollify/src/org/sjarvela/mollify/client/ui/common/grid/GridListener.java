@@ -12,10 +12,12 @@ package org.sjarvela.mollify.client.ui.common.grid;
 
 import java.util.List;
 
-public interface GridListener<T> {
-	void onColumnClicked(T t, String columnId);
+import com.google.gwt.dom.client.Element;
 
-	void onIconClicked(T t);
+public interface GridListener<T> {
+	void onColumnClicked(T t, String columnId, Element e);
+
+	void onIconClicked(T t, Element e);
 
 	void onColumnSorted(String columnId, Sort sort);
 

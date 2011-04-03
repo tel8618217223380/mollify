@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileView;
-import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
@@ -25,6 +24,8 @@ import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
+
+import com.google.gwt.dom.client.Element;
 
 public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	private final MainViewPresenter presenter;
@@ -174,17 +175,16 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 
 	}
 
-	public void onColumnClicked(FileSystemItem item, String columnId) {
-		presenter.onFileSystemItemSelected(item, columnId);
+	public void onColumnClicked(FileSystemItem item, String columnId, Element e) {
+		presenter.onFileSystemItemSelected(item, columnId, e);
 	}
 
-	public void onIconClicked(FileSystemItem item) {
+	@Override
+	public void onIconClicked(FileSystemItem item, Element e) {
 		if (item.equals(Folder.Parent))
 			return;
-		if (item.isFile())
-			view.showFileContext((File) item);
-		else
-			view.showFolderContext((Folder) item);
+
+		view.showItemContext(item, e);
 	}
 
 	public void onColumnSorted(String columnId, Sort sort) {

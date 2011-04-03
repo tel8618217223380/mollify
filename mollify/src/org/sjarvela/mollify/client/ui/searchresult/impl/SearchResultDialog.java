@@ -35,14 +35,13 @@ import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
-import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -87,13 +86,13 @@ public class SearchResultDialog extends ResizableDialog implements
 		this.list.setContent(items);
 		this.list.addListener(new GridListener<FileSystemItem>() {
 			@Override
-			public void onColumnClicked(FileSystemItem item, String columnId) {
-				itemContextHandler.onItemSelected(item,
-						list.getWidget(item, FileList.COLUMN_ID_NAME));
+			public void onColumnClicked(FileSystemItem item, String columnId,
+					Element e) {
+				itemContextHandler.onItemSelected(item, e);
 			}
 
 			@Override
-			public void onIconClicked(FileSystemItem item) {
+			public void onIconClicked(FileSystemItem item, Element e) {
 			}
 
 			@Override
@@ -176,7 +175,7 @@ public class SearchResultDialog extends ResizableDialog implements
 	}
 
 	@Override
-	protected Element getSizedElement() {
+	protected com.google.gwt.user.client.Element getSizedElement() {
 		return listPanel.getElement();
 	}
 

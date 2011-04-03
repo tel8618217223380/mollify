@@ -19,6 +19,8 @@ import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.Sort;
 
+import com.google.gwt.dom.client.Element;
+
 public class PermissionEditorGlue {
 	private final PermissionEditorView view;
 
@@ -35,7 +37,7 @@ public class PermissionEditorGlue {
 		view.getList().addListener(new GridListener<FileItemUserPermission>() {
 			@Override
 			public void onColumnClicked(FileItemUserPermission t,
-					String columnId) {
+					String columnId, Element e) {
 			}
 
 			@Override
@@ -43,7 +45,7 @@ public class PermissionEditorGlue {
 			}
 
 			@Override
-			public void onIconClicked(FileItemUserPermission t) {
+			public void onIconClicked(FileItemUserPermission t, Element e) {
 			}
 
 			@Override

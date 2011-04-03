@@ -41,7 +41,7 @@ public abstract class Grid<T> extends FlexTable {
 	private final String headerCss;
 	private final List<GridColumn> columns;
 	private final Map<GridColumn, GridColumnSortButton> sortButtons = new HashMap();
-	private final List<GridListener> listeners = new ArrayList<GridListener>();
+	protected final List<GridListener> listeners = new ArrayList<GridListener>();
 
 	private final String sortableHeaderTitleCss;
 	private final String sortableHeaderSortCss;
@@ -351,7 +351,8 @@ public abstract class Grid<T> extends FlexTable {
 
 	protected void onClick(T t, String columnId) {
 		for (GridListener listener : listeners)
-			listener.onColumnClicked(t, columnId);
+			listener.onColumnClicked(t, columnId, getWidget(t, columnId)
+					.getElement());
 	}
 
 	private void removeAllSelections() {
@@ -370,11 +371,6 @@ public abstract class Grid<T> extends FlexTable {
 		int row = content.indexOf(t);
 		getRowFormatter().removeStyleName(row,
 				rowStyles.get(row) + "-" + StyleConstants.SELECTED);
-	}
-
-	public void onIconClicked(T t) {
-		for (GridListener listener : listeners)
-			listener.onIconClicked(t);
 	}
 
 	public void removeAllRows() {

@@ -133,9 +133,9 @@ public class LoginDialog extends CenteredDialog {
 			link.setClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					new ResetPasswordPopup(textProvider, link, serviceProvider
-							.getExternalService("lostpassword"), dialogManager)
-							.showPopup();
+					new ResetPasswordPopup(textProvider, link.getElement(),
+							serviceProvider.getExternalService("lostpassword"),
+							dialogManager).showPopup();
 				}
 			});
 			panel.add(link);

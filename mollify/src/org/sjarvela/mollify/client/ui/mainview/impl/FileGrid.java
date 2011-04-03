@@ -168,7 +168,7 @@ public class FileGrid extends Composite {
 
 		if (!selectMode)
 			for (GridListener l : listeners)
-				l.onIconClicked(item);
+				l.onIconClicked(item, getWidget(item).getElement());
 
 		onSelectionChanged();
 	}
@@ -221,7 +221,8 @@ public class FileGrid extends Composite {
 		}
 
 		for (GridListener l : listeners)
-			l.onColumnClicked(item, FileList.COLUMN_ID_NAME);
+			l.onColumnClicked(item, FileList.COLUMN_ID_NAME, getWidget(item)
+					.getElement());
 	}
 
 	public Widget getWidget(FileSystemItem item) {

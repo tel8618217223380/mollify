@@ -16,9 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
@@ -39,15 +37,14 @@ import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
-import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -249,7 +246,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		username = new DropdownButton(actionListener, "", "username", null,
 				new PopupPositioner() {
 					public void setPositionOnShow(DropdownPopup popup,
-							Widget parent, int offsetWidth, int offsetHeight) {
+							Element parent, int offsetWidth, int offsetHeight) {
 						int x = parent.getAbsoluteLeft()
 								+ parent.getOffsetWidth() - offsetWidth;
 						popup.setPopupPosition(x, parent.getAbsoluteTop());
@@ -372,15 +369,15 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		model.clear();
 	}
 
-	public void showFileContext(File file) {
-		itemContextHandler.onItemSelected(file,
-				fileListView.getWidget(file, FileList.COLUMN_ID_NAME));
+	public void showItemContext(FileSystemItem item, Element e) {
+		itemContextHandler.onItemSelected(item, e);
 	}
 
-	public void showFolderContext(Folder folder) {
-		itemContextHandler.onItemSelected(folder,
-				fileListView.getWidget(folder, FileList.COLUMN_ID_NAME));
-	}
+	//
+	// public void showFolderContext(Folder folder) {
+	// itemContextHandler.onItemSelected(folder,
+	// fileListView.getWidget(folder, FileList.COLUMN_ID_NAME));
+	// }
 
 	public ActionButton getRefreshButton() {
 		return refreshButton;
@@ -398,7 +395,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return itemContextPopup;
 	}
 
-	public void setPositionOnShow(DropdownPopup popup, Widget parent,
+	public void setPositionOnShow(DropdownPopup popup, Element parent,
 			int offsetWidth, int offsetHeight) {
 		int x = parent.getAbsoluteLeft();
 

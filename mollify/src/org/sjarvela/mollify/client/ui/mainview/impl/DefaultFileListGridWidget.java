@@ -45,11 +45,6 @@ public class DefaultFileListGridWidget implements FileListWidget {
 	}
 
 	@Override
-	public Widget getWidget(FileSystemItem item, String columnId) {
-		return grid.getWidget(item);
-	}
-
-	@Override
 	public void setSelectionMode(SelectionMode selectionMode) {
 		grid.setSelectMode(!SelectionMode.None.equals(selectionMode));
 	}

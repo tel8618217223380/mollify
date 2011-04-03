@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.dom.client.Element;
 
 public class ContextPopupHandler<T> {
 	private final ContextPopup<T> contextPopup;
@@ -28,7 +28,7 @@ public class ContextPopupHandler<T> {
 		});
 	}
 
-	public void onItemSelected(T t, Widget parent) {
+	public void onItemSelected(T t, Element parent) {
 		if (t.equals(current)) {
 			current = null;
 			contextPopup.hidePopup();
