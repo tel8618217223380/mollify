@@ -44,13 +44,13 @@ public class CellTableFileList implements FileListWidget, CellListener {
 			.getName());
 
 	interface Template extends SafeHtmlTemplates {
-		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-column-name\"><div class=\"mollify-filelist-item-name\">{0}<div></div>")
+		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-item-name\">{0}<div>")
 		SafeHtml nameCellContent(String name);
 
-		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-column-size\"><div class=\"mollify-filelist-item-size\">{0}<div></div>")
+		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-item-size\">{0}<div>")
 		SafeHtml sizeCellContent(String size);
 
-		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-column-type\"><div class=\"mollify-filelist-item-type\">{0}<div></div>")
+		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-item-type\">{0}<div>")
 		SafeHtml typeCellContent(String type);
 	}
 
@@ -76,6 +76,7 @@ public class CellTableFileList implements FileListWidget, CellListener {
 		template = GWT.create(Template.class);
 		table = new CellTable();
 		table.setStylePrimaryName(StyleConstants.FILE_LIST);
+		table.addStyleDependentName("v2");
 
 		iconColumn = new CellTableFileListColumn(new CellTableFileListCell(
 				COL_ICON, this));
@@ -112,6 +113,10 @@ public class CellTableFileList implements FileListWidget, CellListener {
 				return getFolderStyles((Folder) item, i);
 			}
 		});
+		table.addColumnStyleName(0, "mollify-filelist-column-icon");
+		table.addColumnStyleName(1, "mollify-filelist-column-name");
+		table.addColumnStyleName(2, "mollify-filelist-column-type");
+		table.addColumnStyleName(3, "mollify-filelist-column-size");
 	}
 
 	private void setupSorting() {
@@ -147,7 +152,7 @@ public class CellTableFileList implements FileListWidget, CellListener {
 	public void onBrowserEvent(String id, Context context, Element e,
 			FileSystemItem item, NativeEvent event) {
 		if (event.getType().equals("click")) {
-			onClick(id, item, e.getFirstChildElement());
+			onClick(id, item, e);
 		} else if (event.getType().equals("mouseover")) {
 			Element tr = e.getParentElement().getParentElement();
 			tr.addClassName("hover");
@@ -159,16 +164,19 @@ public class CellTableFileList implements FileListWidget, CellListener {
 
 	private void onClick(String id, FileSystemItem item, Element e) {
 		if (COL_NAME.equals(id)) {
-			listener.onColumnClicked(item, FileList.COLUMN_ID_NAME, e);
+			listener.onColumnClicked(item, FileList.COLUMN_ID_NAME, e
+					.getFirstChildElement().getFirstChildElement());
 		} else if (COL_ICON.equals(id)) {
-			listener.onIconClicked(item, e);
+			Element nameElement = e.getParentElement().getNextSiblingElement()
+					.getFirstChildElement();
+			listener.onIconClicked(item, nameElement);
 		}
 	}
 
 	@Override
 	public void onRender(String id, FileSystemItem item, SafeHtmlBuilder sb) {
 		if (COL_ICON.equals(id)) {
-			sb.appendHtmlConstant("<div class=\"mollify-filelist-column-icon "
+			sb.appendHtmlConstant("<div class=\""
 					+ (item.isFile() ? "mollify-filelist-row-file-icon"
 							: "mollify-filelist-row-directory-icon") + "\"/>");
 		} else if (COL_NAME.equals(id)) {
