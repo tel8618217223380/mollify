@@ -95,6 +95,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return new NativeTextProvider(textProvider).asJs();
 	};
 
+	protected JavaScriptObject getFileView() {
+		return new NativeTextProvider(textProvider).asJs();
+	};
+
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
 			JavaScriptObject fv, String pluginBaseUrl) /*-{
 		var env = {};

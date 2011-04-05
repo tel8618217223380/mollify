@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -557,6 +558,28 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	@Override
 	public List<FileSystemItem> getSelectedItems() {
 		return model.getSelectedItems();
+	}
+
+	public void onListRendered() {
+		view.hideProgress();
+		dispatchEvent(MainViewEvent.onFileListReady(model.getCurrentFolder()));
+	}
+
+	private void dispatchEvent(final Event event) {
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				eventDispatcher.onEvent(event);
+			}
+		});
+	}
+
+	public List<FileSystemItem> getAllItems() {
+		return model.getAllItems();
+	}
+
+	public Folder getCurrentFolder() {
+		return model.getCurrentFolder();
 	}
 
 }

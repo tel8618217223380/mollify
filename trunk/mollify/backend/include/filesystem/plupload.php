@@ -11,7 +11,8 @@
 
 function plupload($folder, $uploadHandler) {
 	// Settings
-	$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR."mollify".DIRECTORY_SEPARATOR;
+	$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR;
+	
 	$cleanupTargetDir = false; // Remove old files
 	$maxFileAge = 60 * 60; // Temp file age in seconds
 

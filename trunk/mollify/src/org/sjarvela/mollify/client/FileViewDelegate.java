@@ -10,19 +10,40 @@
 
 package org.sjarvela.mollify.client;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+
 public class FileViewDelegate implements FileView {
 
 	private FileView delegate;
 
 	@Override
 	public void refreshCurrentFolder() {
-		if (delegate != null)
-			delegate.refreshCurrentFolder();
+		ensureDelegate();
+		delegate.refreshCurrentFolder();
+	}
+
+	@Override
+	public Folder getCurrentFolder() {
+		ensureDelegate();
+		return delegate.getCurrentFolder();
+	}
+
+	@Override
+	public List<FileSystemItem> getAllItems() {
+		ensureDelegate();
+		return delegate.getAllItems();
+	}
+
+	private void ensureDelegate() {
+		if (delegate == null)
+			throw new RuntimeException("No delegate");
 	}
 
 	public void setDelegate(FileView delegate) {
 		this.delegate = delegate;
-
 	}
 
 }

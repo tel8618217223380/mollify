@@ -361,7 +361,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void refresh() {
 		folderSelector.refresh();
-		fileListView.refresh();
 	}
 
 	public void clear() {
