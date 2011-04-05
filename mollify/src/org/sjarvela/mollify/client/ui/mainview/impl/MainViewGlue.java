@@ -172,7 +172,6 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 						presenter.onAddSelectedToDropbox();
 					}
 				});
-
 	}
 
 	public void onColumnClicked(FileSystemItem item, String columnId, Element e) {
@@ -197,11 +196,21 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 
 	@Override
 	public void onRendered() {
-		view.hideProgress();
+		presenter.onListRendered();
 	}
 
 	@Override
 	public void refreshCurrentFolder() {
 		presenter.reload();
+	}
+
+	@Override
+	public Folder getCurrentFolder() {
+		return presenter.getCurrentFolder();
+	}
+
+	@Override
+	public List<FileSystemItem> getAllItems() {
+		return presenter.getAllItems();
 	}
 }

@@ -19,4 +19,9 @@ public class MainViewEvent {
 				folder != null ? folder.asJs() : null);
 	}
 
+	public static Event onFileListReady(Folder folder) {
+		return Event.create("MAINVIEW_FILE_LIST_READY",
+				folder != null ? folder.asJs() : null);
+	}
+
 }

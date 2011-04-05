@@ -10,9 +10,15 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sjarvela.mollify.client.FileView;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 public class NativeFileView {
 	private final FileView fileView;
@@ -25,6 +31,18 @@ public class NativeFileView {
 		fileView.refreshCurrentFolder();
 	}
 
+	public JavaScriptObject getCurrentFolder() {
+		return fileView.getCurrentFolder().asJs();
+	}
+
+	public JsArray getItems() {
+		List<FileSystemItem> items = fileView.getAllItems();
+		List<JavaScriptObject> jsItems = new ArrayList();
+		for (FileSystemItem item : items)
+			jsItems.add(item.asJs());
+		return JsUtil.asJsArray(jsItems, JavaScriptObject.class);
+	}
+
 	public JavaScriptObject asJs() {
 		return createJs(this);
 	}
@@ -34,6 +52,14 @@ public class NativeFileView {
 
 		o.refresh = function() {
 			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::refresh()();
+		}
+
+		o.items = function() {
+			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getItems()();
+		}
+
+		o.currentFolder = function() {
+			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getCurrentFolder()();
 		}
 
 		return o;

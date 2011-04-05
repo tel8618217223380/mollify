@@ -10,8 +10,17 @@
 
 package org.sjarvela.mollify.client;
 
+import java.util.List;
+
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+
 public interface FileView {
 
 	void refreshCurrentFolder();
+
+	List<FileSystemItem> getAllItems();
+
+	Folder getCurrentFolder();
 
 }
