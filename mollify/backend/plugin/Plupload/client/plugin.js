@@ -19,6 +19,8 @@ function PluploadPlugin() {
 	}
 	
 	this.onShowUploadDialog = function(d, f, l) {
+		that.d = d;
+		
 		mollify.loadContent("plupload-dialog-content", that.url("uploader.html"), function() {
 			d.setMinimumSizeToCurrent();
 			d.center();
@@ -27,38 +29,67 @@ function PluploadPlugin() {
 
 			var uploader = new plupload.Uploader(that.getSettings());
 
+			$('#plupload-cancel-select').click(function(e) {
+				d.close();
+			});
+			$('#plupload-cancel-upload').click(function(e) {
+				uploader.stop();
+				d.close();
+			});
 			$('#plupload-upload').click(function(e) {
+				if (uploader.files.length == 0) return;
+				
+				$('#plupload-select-buttons').hide();
+				$('#plupload-upload-buttons').show();
+				$('#plupload-files').addClass("uploading");
+				
 				uploader.start();
 				e.preventDefault();
 			});
 						
 			uploader.bind('Init', function(up, params) {
-				alert("init");
-				$('#plupload-files').html("<div>Current runtime: " + params.runtime + "</div>");
+				that.initialized = true;
+				$('#plupload-content').show();
 			});
 
 			uploader.bind('FilesAdded', function(up, files) {
-				$.each(files, function(i, file) {
-				$('#plupload-files').append(
-					'<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>');
-				});
+				$("#plupload-file-template").tmpl(files).appendTo("#plupload-files");
         		up.refresh();
     		});
 
+			uploader.bind('UploadFile', function(up, file) {
+				$('.plupload-file').removeClass("active");
+				$('#'+file.id).addClass("active");
+				up.refresh();
+			});
+
 			uploader.bind('UploadProgress', function(up, file) {
-				$('#' + file.id + " b").html(file.percent + "%");
+				$('#'+file.id+'-progress').html('<div id="box"><div id="bar" style="width:'+file.percent+'%;"></div></div>');
+				up.refresh();
+			});
+
+			uploader.bind('UploadComplete', function(up, files) {
+				that.d.close();
 			});
 
 			uploader.bind('Error', function(up, err) {
-				$('#filelist').append("<div>Error: " + err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : "") + "</div>");
-	      	  up.refresh();
+				alert("Error: " + err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : ""));
+				up.refresh();
     		});
 
 		    uploader.bind('FileUploaded', function(up, file) {
-				$('#' + file.id + " b").html("100%");
+		    	$('#'+file.id+'-progress').html('');
+		    	$('#'+file.id).addClass("complete");
 			});
 			
 			uploader.init();
+			
+			window.setTimeout(function() {
+				if (!that.initialized) {
+					that.d.hide();
+					alert("Invalid Plupload configuration, initialization failed.");
+				}
+			}, 5000);
 		});
 	}
 	

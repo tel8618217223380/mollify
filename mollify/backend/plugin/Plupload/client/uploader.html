@@ -1,7 +1,25 @@
 <div id="plupload-container">
-	<div id="plupload-files">No runtime found.</div>
-    <br />
-    <a id="plupload-select" href="#">[Select files]</a>
-    <a id="plupload-upload" href="#">[Upload files]</a>
+	<div id="plupload-content" style="display:none">
+		<div id="plupload-files"></div>
+		<div id="plupload-select-buttons">
+		    <a id="plupload-select" class="plupload-button" href="#"><text key="pluploadSelectFiles" /></a>
+		    <a id="plupload-upload" class="plupload-button" href="#"><text key="pluploadStartUpload" /></a>
+		    <a id="plupload-cancel-select" class="plupload-button" href="#"><text key="pluploadCancel" /></a>
+	    </div>
+		<div id="plupload-upload-buttons" style="display:none">
+		    <a id="plupload-cancel-upload" class="plupload-button" href="#"><text key="pluploadCancel" /></a>
+	    </div>
+    </div>
 </div>
+
+<script id="plupload-file-template" type="text/x-jquery-tmpl"> 
+	<div id="${id}" class="plupload-file">
+		<div class="plupload-file-data">
+			<div class="plupload-file-name">${name}</div>
+			<div class="plupload-file-size">${size}</div>
+		</div>
+		<div id="${id}-progress" class="plupload-file-progress" style="display:none"></div>
+		<div class="plupload-remove"></div>
+	</div>
+</script>
 
