@@ -27,7 +27,7 @@ function PluploadPlugin() {
 			
 			$("#plupload-dialog-content").removeClass("loading");
 
-			var uploader = new plupload.Uploader(that.getSettings());
+			var uploader = new plupload.Uploader(that.getSettings(f));
 
 			$('#plupload-cancel-select').click(function(e) {
 				d.close();
@@ -37,14 +37,22 @@ function PluploadPlugin() {
 				d.close();
 			});
 			$('#plupload-upload').click(function(e) {
+				e.preventDefault();
 				if (uploader.files.length == 0) return;
 				
-				$('#plupload-select-buttons').hide();
-				$('#plupload-upload-buttons').show();
-				$('#plupload-files').addClass("uploading");
-				
-				uploader.start();
-				e.preventDefault();
+				that.env.service().post("plupload/"+f.id+"/check/", {files: uploader.files}, function(result) {
+					if (!result.ok) {
+						alert("nope");
+						return;
+					}
+					$('#plupload-select-buttons').hide();
+					$('#plupload-upload-buttons').show();
+					$('#plupload-files').addClass("uploading");
+					
+					uploader.start();
+				},	function(code, error) {
+					alert(error);
+				});
 			});
 						
 			uploader.bind('Init', function(up, params) {
@@ -70,10 +78,12 @@ function PluploadPlugin() {
 
 			uploader.bind('UploadComplete', function(up, files) {
 				that.d.close();
+				that.env.fileview().refresh();
 			});
 
 			uploader.bind('Error', function(up, err) {
 				alert("Error: " + err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : ""));
+				uploader.stop();
 				up.refresh();
     		});
 
@@ -93,11 +103,11 @@ function PluploadPlugin() {
 		});
 	}
 	
-	this.getSettings = function() {
+	this.getSettings = function(f) {
 		var settings = mollify.getSettings()["plupload"];
 		settings["browse_button"] = "plupload-select";
 		settings["container"] = "plupload-container";
-		settings["url"] = that.url();
+		settings["url"] = that.serviceUrl(f.id);
 		settings["flash_swf_url"] = that.url('plupload.flash.swf');
         settings["silverlight_xap_url"] = that.url('plupload.silverlight.xap');
 		return settings;
@@ -108,7 +118,11 @@ function PluploadPlugin() {
 		if (!p) return url;
 		return url + p;
 	}
-	
+
+	this.serviceUrl = function(id) {
+		return that.env.service().getUrl("plupload")+"/"+id+"/";
+	}
+		
 	this.t = function(s) {
 		return that.env.texts().get(s);
 	}
