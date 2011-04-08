@@ -2574,3 +2574,48 @@ input.mollify-header-search-field {
 .mollify-file-grid-item-html .mollify-file-grid-item-icon {
 	background: url(mimetypes128/text_html.png) no-repeat 24px 7px;	
 }
+
+#plupload-container {
+	padding: 4px;
+	min-width: 450px;
+	min-height: 250px;
+}
+
+#plupload-content-loading {
+	width: 450px;
+	height: 250px;
+	background: url(wait.gif) no-repeat 50% 50%;
+}
+
+#plupload-files {
+	display: block;
+	height: 200px;
+	background-color: #f4f4f4;
+	overflow: auto;
+	width: 100%;
+	float: left;
+}
+
+#plupload-header {
+	float: left;
+	height: 25px;
+	width: 100%;
+}
+
+#plupload-header-text {
+	font-weight: bold;
+	font-size: 13px;
+	float: left;
+}
+
+#plupload-select-button {
+	float: right;
+}
+
+.plupload-file {
+	height: 29px;
+	background-color: #e4e4e4;
+	width: auto;
+	padding: 4px;
+	display: block;
+}
