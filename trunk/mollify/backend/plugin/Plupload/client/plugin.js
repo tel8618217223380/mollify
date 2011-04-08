@@ -13,7 +13,7 @@ function PluploadPlugin() {
 	this.onUpload = function(folder, listener) {
 		that.env.dialog().showDialog({
 			title: that.t('pluploadUploadDialogTitle'),
-			html: "<div id='plupload-dialog-content' class='loading' />",
+			html: "<div id='plupload-dialog-content'><div id='plupload-content-loading' /></div>",
 			on_show: function(d) { that.onShowUploadDialog(d, folder, listener); }
 		});
 	}
@@ -24,15 +24,13 @@ function PluploadPlugin() {
 		mollify.loadContent("plupload-dialog-content", that.url("uploader.html"), function() {
 			d.setMinimumSizeToCurrent();
 			d.center();
-			
-			$("#plupload-dialog-content").removeClass("loading");
 
 			var uploader = new plupload.Uploader(that.getSettings(f));
 
-			$('#plupload-cancel-select').click(function(e) {
+			$('#plupload-cancel-select-button').click(function(e) {
 				d.close();
 			});
-			$('#plupload-cancel-upload').click(function(e) {
+			$('#plupload-cancel-upload-button').click(function(e) {
 				uploader.stop();
 				d.close();
 			});
@@ -45,8 +43,8 @@ function PluploadPlugin() {
 						alert("nope");
 						return;
 					}
-					$('#plupload-select-buttons').hide();
-					$('#plupload-upload-buttons').show();
+					$('#plupload-select-state').hide();
+					$('#plupload-upload-state').show();
 					$('#plupload-files').addClass("uploading");
 					
 					uploader.start();
@@ -72,7 +70,7 @@ function PluploadPlugin() {
 			});
 
 			uploader.bind('UploadProgress', function(up, file) {
-				$('#'+file.id+'-progress').html('<div id="box"><div id="bar" style="width:'+file.percent+'%;"></div></div>');
+				$('#'+file.id+'-progress').html('<div class="plupload-file-progress-bar" style="width:'+file.percent+'%;"></div>');
 				up.refresh();
 			});
 
@@ -105,11 +103,15 @@ function PluploadPlugin() {
 	
 	this.getSettings = function(f) {
 		var settings = mollify.getSettings()["plupload"];
-		settings["browse_button"] = "plupload-select";
+		settings["browse_button"] = "plupload-select-button";
+		settings["drop_element"] = "plupload-files";
 		settings["container"] = "plupload-container";
 		settings["url"] = that.serviceUrl(f.id);
 		settings["flash_swf_url"] = that.url('plupload.flash.swf');
         settings["silverlight_xap_url"] = that.url('plupload.silverlight.xap');
+        settings["multipart_params"] = {};
+        settings["headers"] = {};
+        settings["unique_names"] = false;
 		return settings;
 	}
 	
