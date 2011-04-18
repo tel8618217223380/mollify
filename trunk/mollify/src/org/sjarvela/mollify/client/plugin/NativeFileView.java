@@ -35,6 +35,10 @@ public class NativeFileView {
 		return fileView.getCurrentFolder().asJs();
 	}
 
+	public void openUploader(boolean forceBasic) {
+		fileView.openUploader(forceBasic);
+	}
+
 	public JsArray getItems() {
 		List<FileSystemItem> items = fileView.getAllItems();
 		List<JavaScriptObject> jsItems = new ArrayList();
@@ -60,6 +64,13 @@ public class NativeFileView {
 
 		o.currentFolder = function() {
 			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getCurrentFolder()();
+		}
+
+		o.openBasicUploader = function(b) {
+			var fb = false;
+			if (b && b == true)
+				fb = true;
+			fs.@org.sjarvela.mollify.client.plugin.NativeFileView::openUploader(Z)(fb);
 		}
 
 		return o;

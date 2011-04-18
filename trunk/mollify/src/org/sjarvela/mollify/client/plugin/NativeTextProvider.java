@@ -39,6 +39,10 @@ public class NativeTextProvider {
 			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::getText(Ljava/lang/String;)(s);
 		}
 
+		o.formatSize = function(s) {
+			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatSize(I)(s);
+		}
+
 		o.formatInternalTime = function(s) {
 			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatInternalTime(Ljava/lang/String;)(s);
 		}
@@ -55,5 +59,9 @@ public class NativeTextProvider {
 	public String formatInternalTime(String timeString) {
 		return dateTimeFormat.format(DateTime.getInstance().getInternalFormat()
 				.parse(timeString));
+	}
+
+	public String formatSize(int s) {
+		return textProvider.getSizeText(s);
 	}
 }

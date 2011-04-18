@@ -213,4 +213,9 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	public List<FileSystemItem> getAllItems() {
 		return presenter.getAllItems();
 	}
+
+	@Override
+	public void openUploader(boolean forceBasic) {
+		presenter.openUploadDialog();
+	}
 }
