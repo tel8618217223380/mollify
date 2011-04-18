@@ -34,18 +34,22 @@ function PluploadPlugin() {
 				uploader.stop();
 				d.close();
 			});
-			$('#plupload-upload').click(function(e) {
+			$('#plupload-upload-button').click(function(e) {
 				e.preventDefault();
 				if (uploader.files.length == 0) return;
+
+				that.fakeUpload();
+				return;
 				
 				that.env.service().post("plupload/"+f.id+"/check/", {files: uploader.files}, function(result) {
 					if (!result.ok) {
 						alert("nope");
 						return;
 					}
-					$('#plupload-select-state').hide();
-					$('#plupload-upload-state').show();
+					$('#plupload-footer-select').hide();
+					$('#plupload-footer-upload').show();
 					$('#plupload-files').addClass("uploading");
+					$(".plupload-file-remove").remove();
 					
 					uploader.start();
 				},	function(code, error) {
@@ -59,18 +63,39 @@ function PluploadPlugin() {
 			});
 
 			uploader.bind('FilesAdded', function(up, files) {
-				$("#plupload-file-template").tmpl(files).appendTo("#plupload-files");
+				$("#plupload-file-template").tmpl(files, {formatSize: that.formatFileSize }).appendTo("#plupload-files");
+				
+				$(".plupload-file").hover(function(){
+					$(this).addClass("plupload-file-over");
+				}, function(){
+					$(this).removeClass("plupload-file-over");
+				});
+				
+				$(".plupload-file-remove").hover(function(){
+					$(this).addClass("plupload-file-remove-over");
+				}, function(){
+					$(this).removeClass("plupload-file-remove-over");
+				}).click(function(){
+					var p = $(this).parent();
+					var id = p.attr('id');
+					uploader.removeFile(uploader.getFile(id));
+					p.remove();
+					up.refresh();
+				});
         		up.refresh();
     		});
 
 			uploader.bind('UploadFile', function(up, file) {
 				$('.plupload-file').removeClass("active");
 				$('#'+file.id).addClass("active");
+				$('#'+file.id+'-progress').show();
+				
+				that.onFileProgress({id: file.id, percent:0});
 				up.refresh();
 			});
 
 			uploader.bind('UploadProgress', function(up, file) {
-				$('#'+file.id+'-progress').html('<div class="plupload-file-progress-bar" style="width:'+file.percent+'%;"></div>');
+				that.onFileProgress(file);
 				up.refresh();
 			});
 
@@ -90,6 +115,7 @@ function PluploadPlugin() {
 		    	$('#'+file.id).addClass("complete");
 			});
 			
+			that.uploader = uploader;
 			uploader.init();
 			
 			window.setTimeout(function() {
@@ -99,6 +125,30 @@ function PluploadPlugin() {
 				}
 			}, 5000);
 		});
+	}
+	
+	this.formatFileSize = function(s) {
+		return that.env.texts().formatSize(s);
+	}
+	
+	this.fakeUpload = function() {
+		$('#plupload-footer-select').hide();
+		$('#plupload-footer-upload').show();
+		$('#plupload-files').addClass("uploading");
+		$(".plupload-file-remove").remove();
+		
+		var first = that.uploader.files[0];
+		$('#'+first.id).addClass("active");
+		$('#'+first.id+'-progress').show();
+		that.onFileProgress({id: first.id, percent:40});
+		
+		var second = that.uploader.files[1];
+    	$('#'+second.id+'-progress').html('');
+    	$('#'+second.id).addClass("complete");
+	}
+	
+	this.onFileProgress = function(file) {
+		$('#'+file.id+'-progress').html(file.percent+"%"); //'<div class="plupload-file-progress-bar" style="width:'+file.percent+'%;"></div>');
 	}
 	
 	this.getSettings = function(f) {

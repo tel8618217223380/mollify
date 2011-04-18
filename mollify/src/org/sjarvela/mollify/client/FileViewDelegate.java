@@ -26,6 +26,12 @@ public class FileViewDelegate implements FileView {
 	}
 
 	@Override
+	public void openUploader(boolean forceBasic) {
+		ensureDelegate();
+		delegate.openUploader(forceBasic);
+	}
+
+	@Override
 	public Folder getCurrentFolder() {
 		ensureDelegate();
 		return delegate.getCurrentFolder();

@@ -32,9 +32,9 @@ import org.sjarvela.mollify.client.service.request.ResponseProcessor;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.DefaultSessionManager;
-import org.sjarvela.mollify.client.session.SettingsProvider;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.session.SettingsProvider;
 import org.sjarvela.mollify.client.session.user.DefaultPasswordGenerator;
 import org.sjarvela.mollify.client.session.user.PasswordGenerator;
 import org.sjarvela.mollify.client.ui.DefaultViewManager;
@@ -55,7 +55,6 @@ import org.sjarvela.mollify.client.ui.filesystem.DefaultFileSystemActionHandlerF
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.flash.FlashFileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.fileupload.http.HttpFileUploadDialogFactory;
-import org.sjarvela.mollify.client.ui.fileupload.pluploader.PluploaderDialogFactory;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 import org.sjarvela.mollify.client.ui.formatter.impl.DefaultPathFormatter;
 import org.sjarvela.mollify.client.ui.itemselector.DefaultItemSelectorFactory;
@@ -81,7 +80,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 
 	static final String PARAM_FILE_UPLOADER = "file-uploader";
 	static final String VALUE_FILE_UPLOADER_FLASH = "flash";
-	static final String VALUE_FILE_UPLOADER_PLUPLOAD = "plupload";
 
 	@Override
 	protected void configure() {
@@ -182,10 +180,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 			uploaderFactory = new FlashFileUploadDialogFactory(textProvider,
 					urlResolver, env.getFileUploadService(), sessionProvider,
 					settings);
-		else if (VALUE_FILE_UPLOADER_PLUPLOAD.equalsIgnoreCase(param))
-			uploaderFactory = new PluploaderDialogFactory(textProvider,
-					urlResolver, env.getFileUploadService(), sessionProvider,
-					dialogManager, settings);
 		else
 			uploaderFactory = new HttpFileUploadDialogFactory(env,
 					textProvider, env.getFileUploadService(), sessionProvider,

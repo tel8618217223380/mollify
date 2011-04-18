@@ -15,7 +15,6 @@
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="com.google.gwt.logging.Logging"/>
 	<inherits name="org.swfupload.SWFUpload"/>
-	<inherits name="plupload.Plupload"/>
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
 	
