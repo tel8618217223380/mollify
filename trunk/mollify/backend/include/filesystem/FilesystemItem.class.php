@@ -41,6 +41,10 @@
 			return base64_encode($this->rootId());
 		}
 		
+		public function exists() {
+			return $this->filesystem->itemExists($this);
+		}
+		
 		public function internalPath() {
 			return $this->filesystem->internalPath($this);
 		}
@@ -151,12 +155,12 @@
 			return $this->filesystem->items($this);
 		}
 
-		public function fileWithName($name, $nonExisting = FALSE) {
-			return $this->filesystem->fileWithName($this, $name, $nonExisting);
+		public function fileWithName($name) {
+			return $this->filesystem->fileWithName($this, $name);
 		}
 
-		public function folderWithName($name, $nonExisting = FALSE) {
-			return $this->filesystem->folderWithName($this, $name, $nonExisting);
+		public function folderWithName($name) {
+			return $this->filesystem->folderWithName($this, $name);
 		}
 		
 		public function isRoot() {

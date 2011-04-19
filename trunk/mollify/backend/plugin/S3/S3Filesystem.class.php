@@ -58,6 +58,10 @@
 			return new Folder($id, $this->rootId(), $path, $name, $this);
 		}
 		
+		public function itemExists($item) {
+			return TRUE;	//TODO check item in bucket
+		}
+		
 		public function pathExists($path) {
 			return TRUE;	//TODO check item in bucket
 		}
@@ -116,7 +120,7 @@
 
 		public function rename($item, $name) {
 			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Renaming folders in S3 is not supported");
-			$new = $item->parent()->fileWithName($name, TRUE);
+			$new = $item->parent()->fileWithName($name);
 			$this->s3->moveObject($this->bucketId, $item->path(), $new->path());
 			return $new;
 		}
@@ -145,7 +149,7 @@
 		}
 				
 		public function createFolder($folder, $name) {
-			$new = $folder->folderWithName($name, TRUE);
+			$new = $folder->folderWithName($name);
 			
 			if (!$this->s3->createEmptyObject($this->bucketId, $new->path()))
 				throw new ServiceException("REQUEST_FAILED", "Failed to create folder [".$new->id()."]");

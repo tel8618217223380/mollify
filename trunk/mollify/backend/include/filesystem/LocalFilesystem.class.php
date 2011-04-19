@@ -39,14 +39,14 @@
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
 		
-		public function createItem($id, $path, $nonexisting = FALSE) {
+		public function createItem($id, $path) {
 			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
 			$fullPath = self::joinPath($this->rootPath, $path);
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
-			if ($isFile) {
+			/*if ($isFile) {
 				if (!$nonexisting and !$this->pathExists($fullPath))
 					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id.' path:'.$fullPath);
 
@@ -64,7 +64,7 @@
 
 				if (!$nonexisting and !is_dir($fullPath))
 					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
-			}
+			}*/
 			
 			if ($isFile) return new File($id, $this->rootId(), $path, self::basename($fullPath), $this);
 			return new Folder($id, $this->rootId(), $path, self::basename($fullPath), $this);
@@ -84,6 +84,10 @@
 		
 		public function localPath($item) {
 			return $this->filesystemInfo->env()->convertCharset(self::joinPath($this->rootPath, $item->path()), FALSE);
+		}
+		
+		public function itemExists($item) {
+			return file_exists($this->internalPath($item));
 		}
 		
 		public function details($item) {
