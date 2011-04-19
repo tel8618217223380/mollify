@@ -29,7 +29,7 @@
 		
 		abstract function create();
 
-		public abstract function createItem($id, $path, $nonexisting = FALSE);
+		public abstract function createItem($id, $path);
 				
 		public abstract function items($parent);
 		
@@ -57,9 +57,11 @@
 		
 		public abstract function createFile($folder, $name);
 		
-		public abstract function fileWithName($folder, $name, $nonExisting = FALSE);
+		public abstract function fileWithName($folder, $name);
 
-		public abstract function folderWithName($folder, $name, $nonExisting = FALSE);
+		public abstract function folderWithName($folder, $name);
+		
+		public abstract function itemExists($item);
 		
 		public function id() {
 			return $this->id;
@@ -89,8 +91,8 @@
 			return $this->filesystemInfo->ignoredItems($this, $path);
 		}
 		
-		protected function itemWithPath($path, $nonExisting = FALSE) {
-			return $this->createItem($this->itemId($path), $path, $nonExisting);
+		protected function itemWithPath($path) {
+			return $this->createItem($this->itemId($path), $path);
 		}
 
 		public function __toString() {

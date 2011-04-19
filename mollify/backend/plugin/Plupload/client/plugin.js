@@ -38,14 +38,20 @@ function PluploadPlugin() {
 				e.preventDefault();
 				if (uploader.files.length == 0) return;
 
-				that.fakeUpload();
-				return;
+				//that.fakeUpload();
+				//return;
 				
 				that.env.service().post("plupload/"+f.id+"/check/", {files: uploader.files}, function(result) {
 					if (!result.ok) {
-						alert("nope");
+						var list = result.existing[0];
+						for(var i=1; i < result.existing.length; i++) list = list + ", " + result.existing[i];
+						alert(that.t("pluploadFilesAlreadyExist") + list);
 						return;
 					}
+					
+					$('#plupload-header-text').html(that.t("pluploadHeaderUploading"));
+					$('#plupload-select-button').remove();
+					
 					$('#plupload-footer-select').hide();
 					$('#plupload-footer-upload').show();
 					$('#plupload-files').addClass("uploading");
@@ -63,6 +69,8 @@ function PluploadPlugin() {
 			});
 
 			uploader.bind('FilesAdded', function(up, files) {
+				if (that.uploader.files.length == 0) $("#plupload-files").html('');
+				
 				$("#plupload-file-template").tmpl(files, {formatSize: that.formatFileSize }).appendTo("#plupload-files");
 				
 				$(".plupload-file").hover(function(){
@@ -99,6 +107,11 @@ function PluploadPlugin() {
 				up.refresh();
 			});
 
+		    uploader.bind('FileUploaded', function(up, file) {
+		    	$('#'+file.id+'-progress').html('');
+		    	$('#'+file.id).addClass("complete");
+			});
+
 			uploader.bind('UploadComplete', function(up, files) {
 				that.d.close();
 				that.env.fileview().refresh();
@@ -109,11 +122,6 @@ function PluploadPlugin() {
 				uploader.stop();
 				up.refresh();
     		});
-
-		    uploader.bind('FileUploaded', function(up, file) {
-		    	$('#'+file.id+'-progress').html('');
-		    	$('#'+file.id).addClass("complete");
-			});
 			
 			that.uploader = uploader;
 			uploader.init();

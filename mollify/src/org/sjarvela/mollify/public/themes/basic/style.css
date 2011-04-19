@@ -2598,6 +2598,16 @@ input.mollify-header-search-field {
 	border: 1px dotted #e1e1e1;
 }
 
+#plupload-no-files-text {
+	display: block;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	bottom: 50%;
+	font-size: 14px;
+	color: #bebebe;
+}
+
 #plupload-header {
 	float: left;
 	height: 25px;
@@ -2640,7 +2650,7 @@ input.mollify-header-search-field {
 }
 
 .plupload-file.complete {
-	background-color: #cefddc;
+	background-color: #c5f2d4;
 }
 
 .plupload-file-over {
@@ -2678,9 +2688,20 @@ input.mollify-header-search-field {
 	height: 35px;
 }
 
+#plupload-footer-upload {
+	position: relative;
+	float: left;
+	width: 100%;
+	height: 35px;
+}
+
 #plupload-upload-button {
 	position: absolute;
 	left: 0;
+}
+
+#plupload-cancel-upload-button {
+	margin-top: 8px;
 }
 
 #plupload-cancel-select-button {

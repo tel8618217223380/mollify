@@ -197,9 +197,11 @@
 					
 					if (isset($data['folder'])) {
 						$folder = $this->item($data['folder'], FALSE);
-						$to = $folder->fileWithName($item->name(), TRUE);
+						$to = $folder->fileWithName($item->name());
+						//TODO assert not exists
 					} else {
-						$to = $item->parent()->fileWithName($data['name'], TRUE);
+						$to = $item->parent()->fileWithName($data['name']);
+						//TODO assert not exists
 					}
 					$this->env->filesystem()->copy($item, $to);
 					break;
@@ -296,8 +298,9 @@
 					$data = $this->request->data;
 					if (!isset($data['folder'])) throw $this->invalidRequestException();
 					
-					$folder = $this->item($data['folder'], FALSE);
-					$to = $folder->folderWithName($item->name(), TRUE);
+					$folder = $this->item($data['folder']);
+					$to = $folder->folderWithName($item->name());
+					//TODO assert to does not exist
 					$this->env->filesystem()->copy($item, $to);
 					break;
 				case 'move':

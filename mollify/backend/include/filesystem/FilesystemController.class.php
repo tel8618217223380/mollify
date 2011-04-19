@@ -350,9 +350,9 @@
 			
 			foreach($items as $item) {
 				if ($item->isFile())
-					$this->copy($item, $folder->fileWithName($item->name(), TRUE));
+					$this->copy($item, $folder->fileWithName($item->name()));
 				else
-					$this->copy($item, $folder->folderWithName($item->name(), TRUE));
+					$this->copy($item, $folder->folderWithName($item->name()));
 			}
 		}
 		
@@ -465,6 +465,12 @@
 			$this->assertRights($file, Authentication::RIGHTS_READ, "view");
 			$this->env->events()->onEvent(FileEvent::view($file));
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
+		}
+		
+		public function getUploadTempDir() {
+			$dir = $this->env->settings()->setting("upload_temp_dir");
+			if ($dir != NULL and strlen($dir) > 0) return $dir;
+			return sys_get_temp_dir();
 		}
 		
 		public function uploadTo($folder) {
