@@ -181,7 +181,7 @@ $PASSWORDS_HASHED = TRUE;
 
 	With this setting, client will show new item in the add menu: "Retrieve URL". Client will retrieve a file behind a given url and save it to the current folder.
 
-	*NOTE!* This feature requires [http://php.net/manual/en/book.curl.php curl library] installed in PHP.
+*NOTE!* This feature requires [http://php.net/manual/en/book.curl.php curl library] installed in PHP.
 
 === 6.8. Zip method ===
 
