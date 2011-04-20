@@ -28,10 +28,12 @@ function PluploadPlugin() {
 			var uploader = new plupload.Uploader(that.getSettings(f));
 
 			$('#plupload-cancel-select-button').click(function(e) {
+				uploader.destroy();
 				d.close();
 			});
 			$('#plupload-cancel-upload-button').click(function(e) {
 				uploader.stop();
+				uploader.destroy();
 				d.close();
 			});
 			$('#plupload-upload-button').click(function(e) {
@@ -66,12 +68,13 @@ function PluploadPlugin() {
 			uploader.bind('Init', function(up, params) {
 				that.initialized = true;
 				$('#plupload-content').show();
+				that.addNoFilesLabel();
 			});
 
 			uploader.bind('FilesAdded', function(up, files) {
 				if (that.uploader.files.length == 0) $("#plupload-files").html('');
 				
-				$("#plupload-file-template").tmpl(files, {formatSize: that.formatFileSize }).appendTo("#plupload-files");
+				$("#plupload-file-template").tmpl(files, {formatSize: that.formatFileSize}).appendTo("#plupload-files");
 				
 				$(".plupload-file").hover(function(){
 					$(this).addClass("plupload-file-over");
@@ -84,11 +87,8 @@ function PluploadPlugin() {
 				}, function(){
 					$(this).removeClass("plupload-file-remove-over");
 				}).click(function(){
-					var p = $(this).parent();
-					var id = p.attr('id');
-					uploader.removeFile(uploader.getFile(id));
-					p.remove();
-					up.refresh();
+					var id = $(this).parent().attr('id');
+					that.removeFile(id);
 				});
         		up.refresh();
     		});
@@ -113,11 +113,17 @@ function PluploadPlugin() {
 			});
 
 			uploader.bind('UploadComplete', function(up, files) {
+				that.uploader.destroy();
 				that.d.close();
 				that.env.fileview().refresh();
 			});
 
 			uploader.bind('Error', function(up, err) {
+				if (err.code == -600) {
+					that.removeFile(err.file.id);
+					alert(that.t("pluploadErrorFileTooBig") + " (" + that.formatFileSize(that.uploader.settings["max_file_size"]) + ")");
+					return;
+				}
 				alert("Error: " + err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : ""));
 				uploader.stop();
 				up.refresh();
@@ -133,6 +139,21 @@ function PluploadPlugin() {
 				}
 			}, 5000);
 		});
+	}
+	
+	this.addNoFilesLabel = function() {
+		$("#plupload-files-empty").tmpl({}).appendTo("#plupload-files");
+		mollify.localize("plupload-files");
+	}
+	
+	this.removeFile = function(id) {
+		var f = that.uploader.getFile(id);
+		if (f) {
+			that.uploader.removeFile(f);
+			that.uploader.refresh();
+		}
+		$('#'+id).remove();
+		if (that.uploader.files.length == 0) that.addNoFilesLabel();
 	}
 	
 	this.formatFileSize = function(s) {

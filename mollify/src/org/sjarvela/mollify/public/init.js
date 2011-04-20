@@ -40,11 +40,15 @@
 		
 		this.loadContent = function(id, url, cb) {
 			$("#"+id).load(url, function() {
-				$("#"+id+" text").each(function(){
-					var key = $(this).attr('key');
-					$(this).text(t.env.texts().get(key));
-				});
+				t.localize(id);
 				if (cb) cb();
+			});
+		}
+		
+		this.localize = function(id) {
+			$("#"+id+" text").each(function(){
+				var key = $(this).attr('key');
+				$(this).text(t.env.texts().get(key));
 			});
 		}
 		
