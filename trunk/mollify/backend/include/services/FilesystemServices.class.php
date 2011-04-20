@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli Järvelä
+	 * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -198,10 +198,10 @@
 					if (isset($data['folder'])) {
 						$folder = $this->item($data['folder'], FALSE);
 						$to = $folder->fileWithName($item->name());
-						//TODO assert not exists
+						if ($to->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
 					} else {
 						$to = $item->parent()->fileWithName($data['name']);
-						//TODO assert not exists
+						if ($to->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
 					}
 					$this->env->filesystem()->copy($item, $to);
 					break;
@@ -300,7 +300,7 @@
 					
 					$folder = $this->item($data['folder']);
 					$to = $folder->folderWithName($item->name());
-					//TODO assert to does not exist
+					if ($to->exists()) throw new ServiceException("DIR_ALREADY_EXISTS");
 					$this->env->filesystem()->copy($item, $to);
 					break;
 				case 'move':

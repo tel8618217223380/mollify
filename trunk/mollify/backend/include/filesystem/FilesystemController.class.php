@@ -78,6 +78,7 @@
 				if (array_key_exists($folderDef['id'], $list)) continue;
 				
 				$root = $this->filesystem($folderDef, !$all)->root();
+				if (!$all and !$root->exists()) throw new ServiceException("DIR_DOES_NOT_EXIST", 'root id:'.$folderDef['id']);
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
 				
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
