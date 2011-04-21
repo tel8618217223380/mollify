@@ -51,7 +51,7 @@
 			$message = $this->getMessage($notification, $values);
 			
 			if (Logging::isDebug())
-				Logging::logDebug("NOTIFICATOR: Sending notification ".$message);
+				Logging::logDebug("NOTIFICATOR: Sending notification ".$notification->id().":".$message);
 			$this->env->notificator()->send($notification->getRecipients(), $title, $message);
 		}
 

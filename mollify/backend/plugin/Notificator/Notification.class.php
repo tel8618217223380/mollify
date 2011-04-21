@@ -25,6 +25,10 @@
 			$this->recipients = $recipients;
 		}
 
+		public function id() {
+			return $this->id;
+		}
+
 		public function getName() {
 			return $this->name;
 		}

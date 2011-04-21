@@ -12,19 +12,19 @@
 
 <html>
 	<head>
-		<title>Example Mollify Host Page</title>
-		
+		<title>Example Mollify Host Page</title>		
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<meta name="mollify:property" content="service-path=backend">
 
 		<link rel="stylesheet" href="client/themes/basic/style.css">
 
 		<script type="text/javascript" language="javascript" src="client/include/jquery.js"></script>
+		<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>
 		<script type="text/javascript" language="javascript" src="client/init.js"></script>
 		<script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
 		<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
 		<script type="text/javascript">
-			$(document).ready(function(){
+			mollify.init({
+				"service-path": "backend/",
 			});
 		</script>
 	</head>

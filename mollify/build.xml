@@ -40,7 +40,6 @@
 		<pathelement location="${lib.dir}/javax.inject.jar" />
 		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
 		<pathelement location="${lib.dir}/junit-4.6.jar" />
-		<pathelement location="${lib.dir}/gwt-plupload.jar" />
 		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
 		<pathelement location="${lib.dir}/gwt-dnd-r1015.jar" />
 	</path>
@@ -148,6 +147,26 @@
 		<delete dir="${target.dir}" />
 	</target>
 	
+	<target name="deploy-plugins">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/Plupload/" />
+		<mkdir dir="${target.dir}/S3/" />
+		
+		<copy todir="${target.dir}/Plupload/">
+			<fileset dir="${root.dir}/backend/plugin/Plupload">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/plugin_plupload.zip" basedir="${target.dir}" includes="Plupload/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+	
 	<target name="do-deploy">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 
@@ -172,6 +191,7 @@
 				<exclude name="plugin/FileViewer/viewers/Zoho/" />
 				<exclude name="dav/" />
 				<exclude name="plugin/S3/" />
+				<exclude name="plugin/Plupload/" />
 			</fileset>
 		</copy>
 		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />
