@@ -1,6 +1,19 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.10 ===
+  * Major speed improvements
+  * Due to licensing differences, Plupload support has been dropped from Mollify build. Instead a new Plupload plugin is downloadable separately, which is released with GPLv2 license
+  * Group published folders
+  * Added new notification info for session events: ip address and failed login user
+  * Fixed issue #234
+  * Fixed issue #230
+  * Fixed issue #215
+
+*BREAKING CHANGES:*
+
+Client settings are no longer defined with meta params, but instead with javascript init call. See example host page.
+
 === Version 1.7.9.2 ===
   * Fixed issue #219
 
