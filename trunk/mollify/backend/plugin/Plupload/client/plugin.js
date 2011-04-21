@@ -109,6 +109,7 @@ function PluploadPlugin() {
 
 		    uploader.bind('FileUploaded', function(up, file) {
 		    	$('#'+file.id+'-progress').html('');
+		    	$('#'+file.id).removeClass("active");
 		    	$('#'+file.id).addClass("complete");
 			});
 
