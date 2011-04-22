@@ -92,6 +92,10 @@ public class MollifyClient implements Client, SessionListener {
 					}
 
 					public void onSuccess(final SessionInfo session) {
+						logger.log(Level.FINE,
+								"Session info received, plugins initialized "
+										+ pluginsInitialized);
+
 						if (!pluginsInitialized) {
 							pluginSystem.setup(fileViewDelegate, session,
 									new Callback() {
@@ -101,7 +105,6 @@ public class MollifyClient implements Client, SessionListener {
 											sessionManager.setSession(session);
 										}
 									});
-
 						} else {
 							sessionManager.setSession(session);
 						}
@@ -110,6 +113,8 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	public void onSessionStarted(SessionInfo session) {
+		logger.log(Level.FINE,
+				"Session started, authenticated: " + session.isAuthenticated());
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin(session);
 		else

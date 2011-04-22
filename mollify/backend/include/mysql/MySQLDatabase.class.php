@@ -178,7 +178,16 @@
 			mysql_free_result($this->result);
 			return $list;
 		}
-				
+			
+		public function valueMap($keyCol) {
+			$list = array();
+			while ($row = mysql_fetch_assoc($this->result)) {
+				$list[$row[$keyCol]] = $row;
+			}
+			mysql_free_result($this->result);
+			return $list;
+		}
+			
 		public function firstRow() {
 			$ret = mysql_fetch_assoc($this->result);
 			mysql_free_result($this->result);

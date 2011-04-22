@@ -17,11 +17,9 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.SearchMatch;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.js.JsFile;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -146,13 +144,8 @@ public class SearchResultDialog extends ResizableDialog implements
 		List<FileSystemItem> list = new ArrayList();
 		List<String> matchKeys = result.getMatches();
 		for (String id : matchKeys) {
-			JsObj o = result.getMatch(id);
-			JsObj item = o.getJsObj("item");
-
-			if (item.getBoolean("is_file"))
-				list.add(FileSystemItem.createFrom((JsFile) item.cast()));
-			else
-				list.add(FileSystemItem.createFrom((JsFolder) item.cast()));
+			SearchMatch m = result.getMatch(id);
+			list.add(m.getItem());
 		}
 		return list;
 	}

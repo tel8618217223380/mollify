@@ -43,14 +43,13 @@
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
-			if (strcasecmp("PW", $user["auth"]) != 0) {
+			if ($user["auth"] != NULL and strcasecmp("PW", $user["auth"]) != 0) {
 				// handle other authentications
 				if (strcasecmp("LDAP", $user["auth"]) == 0) {
 					$this->authenticateLDAP($user, $pw);
-				} else {
-					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
-				}
-
+					return;
+				} 
+				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
 			}
 			$this->doAuth($user);
 		}
