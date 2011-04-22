@@ -38,7 +38,6 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -145,9 +144,9 @@ public class SearchResultDialog extends ResizableDialog implements
 
 	private List<FileSystemItem> getItems() {
 		List<FileSystemItem> list = new ArrayList();
-		JsArray matches = result.getMatches();
-		for (int i = 0; i < matches.length(); i++) {
-			JsObj o = matches.get(i).cast();
+		List<String> matchKeys = result.getMatches();
+		for (String id : matchKeys) {
+			JsObj o = result.getMatch(id);
 			JsObj item = o.getJsObj("item");
 
 			if (item.getBoolean("is_file"))
