@@ -10,23 +10,21 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import java.util.List;
-
+import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 
-public class SearchResult extends JsObj {
-	protected SearchResult() {
+public class SearchMatch extends JsObj {
+	protected SearchMatch() {
 	}
 
-	public final int getMatchCount() {
-		return this.getInt("count");
+	public final FileSystemItem getItem() {
+		JsObj item = this.getJsObj("item");
+
+		if (item.getBoolean("is_file"))
+			return FileSystemItem.createFrom((JsFile) item.cast());
+		else
+			return FileSystemItem.createFrom((JsFolder) item.cast());
 	}
 
-	public final List<String> getMatches() {
-		return this.getJsObj("matches").getKeys();
-	}
-
-	public final SearchMatch getMatch(String id) {
-		return this.getJsObj("matches").getJsObj(id).cast();
-	}
 }

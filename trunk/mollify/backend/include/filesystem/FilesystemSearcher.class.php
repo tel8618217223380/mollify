@@ -22,15 +22,16 @@
 		protected function getMatch($data, $item, $text) {
 			$result = array();
 			if (stripos($item->name(), $text) !== FALSE)
-				$result[] = "name";
-			if ($this->searchDescriptions and in_array($item->id(), $data))
-				$result[] = "description";
+				$result[] = array("type" => "name");
+			if ($this->searchDescriptions and array_key_exists($item->id(), $data))
+				$result[] = array("type" => "description", "description" => $data[$item->id()]);
 			return $result;
 		}
 		
 		public function preData($parent, $text) {
 			if (!$this->searchDescriptions) return NULL;
 			$descMatches = $this->env->configuration()->findItemsWithDescription($parent, $text);
+			//Logging::logDebug(Util::array2str($descMatches));
 			return $descMatches;
 		}
 	}

@@ -41,9 +41,9 @@
 	
 		public function findUser($username, $password, $allowEmail = FALSE) {
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND auth='PW') or auth != 'PW')", $this->db->string($username), $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')", $this->db->string($username), $this->db->string($username), $this->db->string($password)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND auth='PW') or auth != 'PW')", $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')", $this->db->string($username), $this->db->string($password)));
 			}
 			$matches = $result->count();
 			
@@ -324,8 +324,8 @@
 		}
 		
 		public function findItemsWithDescription($parent, $text) {
-			$query = "SELECT distinct item_id from `".$this->db->table("item_description")."` where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
-			return $this->db->query($query)->values("item_id");
+			$query = "SELECT item_id, description from `".$this->db->table("item_description")."` where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
+			return $this->db->query($query)->valueMap("item_id");
 		}
 		
 		function moveItemDescription($from, $to) {
