@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.7.10.1 ===
+  * Search extended to descriptions
+  * Fixed issue 236
+
 === Version 1.7.10 ===
   * Major speed improvements
   * Due to licensing differences, Plupload support has been dropped from Mollify build. Instead a new Plupload plugin is downloadable separately, which is released with GPLv2 license
