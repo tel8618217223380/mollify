@@ -169,7 +169,16 @@
 			mysql_free_result($this->result);
 			return $list;
 		}
-		
+
+		public function values($col) {
+			$list = array();
+			while ($row = mysql_fetch_assoc($this->result)) {
+				$list[] = $row[$col];
+			}
+			mysql_free_result($this->result);
+			return $list;
+		}
+				
 		public function firstRow() {
 			$ret = mysql_fetch_assoc($this->result);
 			mysql_free_result($this->result);

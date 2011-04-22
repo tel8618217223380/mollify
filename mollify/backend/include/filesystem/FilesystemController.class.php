@@ -34,7 +34,7 @@
 			
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
-			$this->registerSearcher(new FileSystemSearcher());
+			$this->registerSearcher(new FileSystemSearcher($this->env));
 			
 			FileEvent::register($this->env->events());
 		}
@@ -563,24 +563,37 @@
 			if ($parent == NULL) {
 				$m = array();
 				foreach($this->getRootFolders() as $id => $root) {
-					$m = array_merge($m, $this->searchRecursive($root, $text));
+					$data = array();
+					foreach($this->searchers as $searcher)
+						$data[$searcher->key()] = $searcher->preData($root, $text);
+					$m = array_merge($m, $this->searchRecursive($data, $root, $text));
 				}
 			} else {
-				$m = $this->searchRecursive($parent, $text);
+				$data = array();
+				foreach($this->searchers as $searcher)
+					$data[$searcher->key()] = $searcher->preData($parent, $text);
+				$m = $this->searchRecursive($data, $parent, $text);
 			}
 			return array("count" => count($m), "matches" => $m);
 		}
 		
-		private function searchRecursive($parent, $text) {
+		private function searchRecursive($data, $parent, $text) {
 			$result = array();
 			
 			foreach($parent->items() as $item) {
-				Logging::logDebug("Searching ".$item->name());
+				$id = $item->publicId();
+				
 				foreach($this->searchers as $searcher) {
-					$match = $searcher->match($item, $text);
-					if ($match) $result[] = $match;
+					$match = $searcher->match($data[$searcher->key()], $item, $text);
+					if (!$match) continue;
+					
+					if (in_array($id, $result)) {
+						$result[$id]["matches"] = array_merge($match, $result[$id]["matches"]);
+					} else {
+						$result[$id] = array("item" => $item->data(), "matches" => $match);
+					}
 				}
-				if (!$item->isFile()) $result = array_merge($result, $this->searchRecursive($item, $text));
+				if (!$item->isFile()) $result = array_merge($result, $this->searchRecursive($data, $item, $text));
 			}
 			return $result;
 		}

@@ -11,12 +11,18 @@
 	 */
 	 			
 	 abstract class BaseSearcher {
-		public function match($item, $text) {
-			$m = $this->getMatch($item, $text);
-			if ($m) return array("item" => $item->data(), "match" => $m);
-			return NULL;
+	 	public function key() {
+	 		return get_class($this);
+	 	}
+	 	
+		public function match($data, $item, $text) {
+			return $this->getMatch($data, $item, $text);
 		}
 		
-		protected abstract function getMatch($item, $text);
+		protected abstract function getMatch($data, $item, $text);
+		
+		public function preData($parent, $text) {
+			return NULL;
+		}
 	}
 ?>

@@ -10,9 +10,9 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.js.JsObj;
+import java.util.List;
 
-import com.google.gwt.core.client.JsArray;
+import org.sjarvela.mollify.client.js.JsObj;
 
 public class SearchResult extends JsObj {
 	protected SearchResult() {
@@ -22,7 +22,11 @@ public class SearchResult extends JsObj {
 		return this.getInt("count");
 	}
 
-	public final JsArray getMatches() {
-		return this.getArray("matches");
+	public final List<String> getMatches() {
+		return this.getJsObj("matches").getKeys();
+	}
+
+	public final JsObj getMatch(String id) {
+		return this.getJsObj("matches").getJsObj(id);
 	}
 }

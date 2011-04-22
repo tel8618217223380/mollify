@@ -97,7 +97,7 @@
 			$md5pw = md5($pw);
 			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, $auth, is_group) VALUES ('%s', '%s', '%s', %s, '%s', '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, auth, is_group) VALUES ('%s', '%s', '%s', %s, '%s', '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth)));
 			return $this->db->lastId();
 		}
 	
@@ -323,6 +323,11 @@
 			return TRUE;
 		}
 		
+		public function findItemsWithDescription($parent, $text) {
+			$query = "SELECT distinct item_id from `".$this->db->table("item_description")."` where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
+			return $this->db->query($query)->values("item_id");
+		}
+		
 		function moveItemDescription($from, $to) {
 			$fromId = $this->itemId($from);
 			
@@ -331,7 +336,7 @@
 			} else {
 				$this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET item_id='%s' WHERE item_id='%s'", $this->itemId($to), $fromId));
 			}
-					
+			
 			return TRUE;
 		}
 					
