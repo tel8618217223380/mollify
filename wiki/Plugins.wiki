@@ -53,3 +53,9 @@ See [ArchiverPlugin]
 == Public upload ==
 
 See [PublicUploadPlugin]
+
+= Separately Downloaded Plugins =
+
+== Plupload uploader plugin ==
+
+See [PluploadPlugin]
