@@ -222,31 +222,7 @@ Options are:
 
 == 7.1.2. Plupload uploader ===
 
-	Plupload is external upload component, see [http://www.plupload.com]
-
-	If Plupload uploader is preferred, add following setting in host page:
-
-{{{
-<meta name="mollify:property" content="file-uploader=plupload">
-}}}
-
-	Also the javascript library needs to be loaded with following line:
-
-{{{
-<script type="text/javascript" language="javascript" src="[PATH_TO_CLIENT_FILES]/plupload.full.min.js"></script>
-}}}
-
-	By default, all runtimes (see Plupload site for more information) are enabled. To customize enabled runtimes or their preferred order, use following parameter:
-
-{{{
-<meta name="mollify:property" content="plupload-runtimes=flash,browserplus,html5">
-}}}
-
-	Plupload supports chunked uploads, ie files are upload in small chunks, and allows uploading files larger than max upload size set by server. To set chunk size, use following parameter:
-
-{{{
-<meta name="mollify:property" content="plupload-chunk-size=1mb">
-}}}
+	Plupload is external upload component, see PluploadPlugin
 
 == 7.2. Request timeout ==
 
