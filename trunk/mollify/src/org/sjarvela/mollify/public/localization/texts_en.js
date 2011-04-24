@@ -319,5 +319,8 @@ retrieveUrlFailed: "Could not retrieve the file.",
 
 searchResultsDialogTitle: "Search Results",
 searchResultsNoMatchesFound: "No matches found.",
-searchResultListColumnTitlePath: "Path"
+searchResultListColumnTitlePath: "Path",
+searchResultsTooltipMatches: "Matches:",
+searchResultsTooltipMatchName: "Name",
+searchResultsTooltipMatchDescription: "Description"
 })})();

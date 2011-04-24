@@ -10,14 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.SearchMatch;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -59,7 +57,6 @@ public class SearchResultDialog extends ResizableDialog implements
 	private final ItemContextPopup itemContextPopup;
 
 	private FlowPanel listPanel;
-	private List<FileSystemItem> items;
 
 	public SearchResultDialog(TextProvider textProvider, String criteria,
 			SearchResult result, PathFormatter formatter,
@@ -68,7 +65,6 @@ public class SearchResultDialog extends ResizableDialog implements
 		super(textProvider.getText(Texts.searchResultsDialogTitle),
 				"search-results");
 		this.result = result;
-		this.items = getItems();
 
 		this.textProvider = textProvider;
 		this.criteria = criteria;
@@ -80,7 +76,7 @@ public class SearchResultDialog extends ResizableDialog implements
 				itemContextPopup);
 
 		this.list = new SearchResultFileList(textProvider, formatter);
-		this.list.setContent(items);
+		this.list.setResults(result);
 		this.list.addListener(new GridListener<FileSystemItem>() {
 			@Override
 			public void onColumnClicked(FileSystemItem item, String columnId,
@@ -138,16 +134,6 @@ public class SearchResultDialog extends ResizableDialog implements
 	protected GridComparator<FileSystemItem> createComparator(String columnId,
 			Sort sort) {
 		return new SearchResultsComparator(columnId, sort);
-	}
-
-	private List<FileSystemItem> getItems() {
-		List<FileSystemItem> list = new ArrayList();
-		List<String> matchKeys = result.getMatches();
-		for (String id : matchKeys) {
-			SearchMatch m = result.getMatch(id);
-			list.add(m.getItem());
-		}
-		return list;
 	}
 
 	@Override

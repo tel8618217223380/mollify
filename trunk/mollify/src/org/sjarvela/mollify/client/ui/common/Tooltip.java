@@ -18,21 +18,21 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Tooltip extends PopupPanel {
 	private MouseOutHandler mouseOutHandler;
 	private ClickHandler clickHandler;
 
-	public Tooltip(String style, String text) {
+	public Tooltip(String style, String content) {
 		this.setStylePrimaryName(StyleConstants.TOOLTIP);
 		if (style != null)
 			this.addStyleDependentName(style);
 
-		Label content = new Label(text);
-		content.setStylePrimaryName(StyleConstants.TOOLTIP_CONTENT);
-		this.add(content);
+		this.add(createContent(content));
 
 		this.mouseOutHandler = new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
@@ -44,6 +44,12 @@ public class Tooltip extends PopupPanel {
 				Tooltip.this.hide();
 			}
 		};
+	}
+
+	protected Widget createContent(String text) {
+		Label content = new Label(text);
+		content.setStylePrimaryName(StyleConstants.TOOLTIP_CONTENT);
+		return content;
 	}
 
 	public void attach(TooltipTarget target) {
@@ -65,8 +71,28 @@ public class Tooltip extends PopupPanel {
 					public void setPosition(int offsetWidth, int offsetHeight) {
 						Tooltip.this.setPopupPosition(target.getWidget()
 								.getAbsoluteLeft(), target.getWidget()
-								.getAbsoluteTop()
-								+ offsetHeight + 5);
+								.getAbsoluteTop() + offsetHeight + 5);
+					}
+				});
+			}
+		};
+	}
+
+	public void attachTo(Widget target) {
+		target.sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
+		target.addHandler(createMouseOverHandler(target),
+				MouseOverEvent.getType());
+		target.addHandler(mouseOutHandler, MouseOutEvent.getType());
+		target.addHandler(clickHandler, ClickEvent.getType());
+	}
+
+	private MouseOverHandler createMouseOverHandler(final Widget target) {
+		return new MouseOverHandler() {
+			public void onMouseOver(MouseOverEvent event) {
+				Tooltip.this.setPopupPositionAndShow(new PositionCallback() {
+					public void setPosition(int offsetWidth, int offsetHeight) {
+						Tooltip.this.setPopupPosition(target.getAbsoluteLeft(),
+								target.getAbsoluteTop() + offsetHeight);
 					}
 				});
 			}

@@ -10,12 +10,19 @@
 
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.SearchMatch;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.ui.common.HtmlTooltip;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
@@ -23,10 +30,15 @@ import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.user.client.ui.FlowPanel;
+
 public class SearchResultFileList extends FileList {
 	public static final String COLUMN_ID_PATH = "path";
 
 	private final PathFormatter formatter;
+
+	private SearchResult result;
 
 	public SearchResultFileList(TextProvider textProvider,
 			PathFormatter formatter) {
@@ -52,5 +64,63 @@ public class SearchResultFileList extends FileList {
 		if (column.getId().equals(COLUMN_ID_PATH))
 			return new GridData.Text(formatter.format(item));
 		return super.getData(item, column);
+	}
+
+	public void setResults(SearchResult result) {
+		this.result = result;
+		setContent(getItems());
+	}
+
+	private List<FileSystemItem> getItems() {
+		List<FileSystemItem> list = new ArrayList();
+		List<String> matchKeys = result.getMatches();
+		for (String id : matchKeys) {
+			SearchMatch m = result.getMatch(id);
+			list.add(m.getItem());
+		}
+		return list;
+	}
+
+	@Override
+	protected FlowPanel createFileNameWidget(File file) {
+		FlowPanel w = super.createFileNameWidget(file);
+		addMatchTooltip(w, file);
+		return w;
+	}
+
+	@Override
+	protected FlowPanel createFolderNameWidget(Folder folder) {
+		FlowPanel w = super.createFolderNameWidget(folder);
+		addMatchTooltip(w, folder);
+		return w;
+	}
+
+	private void addMatchTooltip(FlowPanel w, FileSystemItem item) {
+		SearchMatch match = result.getMatch(item.getId());
+		JsArray matches = match.getMatches();
+
+		String html = "<span class='title'>"
+				+ textProvider.getText(Texts.searchResultsTooltipMatches)
+				+ "</span><li>";
+		for (int i = 0; i < matches.length(); i++)
+			html += addMatch(matches.get(i).<JsObj> cast());
+		html += "</li>";
+		new HtmlTooltip("search-results", html).attachTo(w);
+	}
+
+	private String addMatch(JsObj m) {
+		String type = m.getString("type");
+		String html = type;
+		if ("name".equals(type)) {
+			html = "<span class='title'>"
+					+ textProvider.getText(Texts.searchResultsTooltipMatchName)
+					+ "</span>";
+		} else if ("description".equals(type)) {
+			html = "<span class='title'>"
+					+ textProvider
+							.getText(Texts.searchResultsTooltipMatchDescription)
+					+ ":</span>&nbsp;" + m.getString("description");
+		}
+		return "<ul>" + html + "</ul>";
 	}
 }

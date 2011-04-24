@@ -2353,6 +2353,28 @@ input.mollify-header-search-field {
 	margin-left: 4px;
 }
 
+.mollify-tooltip-search-results {
+	
+	margin-left: 25px;
+	min-width: 150px;
+	margin-top: -23px;
+}
+
+.mollify-tooltip-search-results .title {
+	font-weight: bold;
+	color: #000;
+}
+
+.mollify-tooltip-search-results ul {
+	padding-left: 8px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.mollify-tooltip-search-results ul .title {
+	color: #6b6b6b;
+}
+
 /* mimetypes */
 
 .mollify-filelist-filetype-pdf .mollify-filelist-row-file-icon {

@@ -394,7 +394,12 @@ function MollifyUsersConfigurationView() {
 		$("#edit-username").val(user.name);
 		$("#edit-email").val(user.email);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
-		$("#edit-auth").val(user["auth"].toLowerCase());
+		if (that.ldap) {
+			if (user["auth"] != null)
+				$("#edit-user-auth").val(user["auth"].toLowerCase());
+			else
+				$("#edit-user-auth").val('pw');
+		}
 		$("#edit-user-dialog").dialog('open');
 	}
 

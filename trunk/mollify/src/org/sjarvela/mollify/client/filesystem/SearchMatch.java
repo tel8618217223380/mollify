@@ -14,6 +14,8 @@ import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 
+import com.google.gwt.core.client.JsArray;
+
 public class SearchMatch extends JsObj {
 	protected SearchMatch() {
 	}
@@ -25,6 +27,10 @@ public class SearchMatch extends JsObj {
 			return FileSystemItem.createFrom((JsFile) item.cast());
 		else
 			return FileSystemItem.createFrom((JsFolder) item.cast());
+	}
+
+	public final JsArray getMatches() {
+		return this.getArray("matches");
 	}
 
 }
