@@ -34,3 +34,41 @@ mollify.init({
 });
 }}}
 	 For complete settings list, visit http://plupload.com
+
+== Example host page ==
+
+{{{
+<html>
+  <head>
+	<title>Example Mollify host page with Plupload plugin</title>
+	
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	
+	<script type="text/javascript" language="javascript" src="client/init.js"></script>
+	<script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
+	<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
+	<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
+	<script type="text/javascript" src="backend/plugin/Plupload/client/plupload.full.min.js"></script>
+	<script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
+	<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
+
+	<script type="text/javascript" language="javascript" src="client/include/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>
+
+	<script type="text/javascript">
+		mollify.init({
+			"service-path": "backend/",
+			"plupload": {
+				runtimes : 'gears,flash,silverlight,browserplus,html5',
+				max_file_size : '180mb',
+				chunk_size : '1mb'
+			}
+		});
+	</script>
+  </head>
+
+  <body>
+	<div id="mollify"></div>
+  </body>
+</html>
+}}}
