@@ -12,22 +12,25 @@
 
    a) Add required javascript libraries (make sure they are imported only once):
 {{{
-		<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>   
-		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
-		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plupload.full.min.js"></script>
-		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
+<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>   
+<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
+<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plupload.full.min.js"></script>
+<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
 }}}
+
+   Note that all these must be inserted *after* mollify init script import.
+
    b) Add any other needed Plupload libraries (for example Browserplus or Gears libs), see http://plupload.com
    
    c) Add plupload settings into client initialization, for example:
    {{{
-			mollify.init({
-				"service-path": "backend/",
-				"plupload": {
-					runtimes : 'gears,flash,silverlight,browserplus,html5',
-					max_file_size : '10mb',
-					chunk_size : '1mb'
-				}
-			});
+mollify.init({
+	"service-path": "backend/",
+	"plupload": {
+		runtimes : 'gears,flash,silverlight,browserplus,html5',
+		max_file_size : '10mb',
+		chunk_size : '1mb'
+	}
+});
 }}}
 	 For complete settings list, visit http://plupload.com
