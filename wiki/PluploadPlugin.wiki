@@ -3,11 +3,11 @@
 1) Copy plugin folder into backend plugins folder
 
 2) Register plugin in backend configuration.php
-
-	$PLUGINS = array(
-		"Plupload" => array()
-	);
-	
+{{{
+$PLUGINS = array(
+	"Plupload" => array()
+);
+}}}	
 3) Register client plugin in host page:
 
    a) Add required javascript libraries (make sure they are imported only once):
