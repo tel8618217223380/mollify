@@ -325,7 +325,7 @@
 		
 		public function findItemsWithDescription($parent, $text) {
 			$query = "SELECT item_id, description from `".$this->db->table("item_description")."` where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
-			return $this->db->query($query)->valueMap("item_id");
+			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 		
 		function moveItemDescription($from, $to) {

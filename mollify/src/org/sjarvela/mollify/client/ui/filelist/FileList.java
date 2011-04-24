@@ -98,7 +98,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return new GridData.Text("");
 	}
 
-	private FlowPanel createFolderNameWidget(final Folder folder) {
+	protected FlowPanel createFolderNameWidget(final Folder folder) {
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(folder));
@@ -121,7 +121,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return panel;
 	}
 
-	private FlowPanel createFileNameWidget(final File file) {
+	protected FlowPanel createFileNameWidget(final File file) {
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(file));

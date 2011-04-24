@@ -13,39 +13,29 @@
 	require_once("install/MollifyInstaller.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/mysql/DatabaseUtil.class.php");
-	require_once("install/mysql/MySQLInstallUtil.class.php");
+	require_once("install/sqlite/SQLiteInstallUtil.class.php");
 	
-	class MySQLInstaller extends MollifyInstaller {
+	class SQLiteInstaller extends MollifyInstaller {
 		private $configured;
 		protected $db;
 
 		public function __construct($type, $settingsVar, $pageRoot = "install") {
 			parent::__construct($pageRoot, $type, $settingsVar);
 			
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT;
-			$this->configured = isset($DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET);
+			global $DB_FILE;
+			$this->configured = isset($DB_FILE);
+			$this->db = $this->createDB($DB_FILE);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 
-		private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket) {
-			if (!isset($host)) $host = "localhost";
-			if (!isset($database)) $database = "mollify";
-			if (!isset($tablePrefix)) $tablePrefix = "";
-			if (!isset($port)) $port = NULL;
-			if (!isset($socket)) $socket = NULL;
-			else {
-				$host = NULL;
-				$port = NULL;
-			}
-			
-			require_once("include/mysql/MySQLIDatabase.class.php");
-			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket);
+		private function createDB($file) {			
+			require_once("include/sqlite/SQLiteDatabase.class.php");
+			return new MollifySQLiteDatabase($file);
 		}
 		
 		protected function util() {
-			require_once("install/mysql/MySQLInstallUtil.class.php");
-			return new MySQLInstallUtil($this->db);
+			require_once("install/sqlite/SQLiteInstallUtil.class.php");
+			return new SQLiteInstallUtil($this->db);
 		}
 		
 		public function isConfigured() {
@@ -57,18 +47,8 @@
 				return FALSE;
 			
 			try {
-				if (!$this->db->isConnected()) $this->db->connect(FALSE);
+				if (!$this->db->isConnected()) $this->db->connect();
 			} catch (ServiceException $e) {
-				return FALSE;
-			}
-
-			if (!$this->db->databaseExists())
-				return FALSE;
-			
-			try {
-				$this->db->selectDb();
-			} catch (ServiceException $e) {
-				Logging::logDebug('Mollify not installed');
 				return FALSE;
 			}
 			
@@ -100,7 +80,7 @@
 		}
 
 		public function currentVersion() {
-			return MySQLConfigurationProvider::VERSION;
+			return SQLiteConfigurationProvider::VERSION;
 		}
 		
 		public function db() {
@@ -120,13 +100,8 @@
 		}
 		
 		private function checkSystem() {
-			if (!function_exists('mysql_connect')) {
-				$this->setError("MySQL not detected", "Mollify cannot be installed to this system when MySQL is not available. Check your system configuration or choose different configuration type.");
-				$this->showPage("install_error");
-			}
-		
-			if (!function_exists('mysqli_multi_query')) {
-				$this->setError("MySQL Improved (mysqli) not detected", "Mollify installer cannot continue without <a href='http://www.php.net/manual/en/mysqli.overview.php' target='_blank'>MySQL Improved</a> installed. Either check your configuration to install or enable this, or install Mollify manually (see instructions <a href='http://code.google.com/p/mollify/wiki/ConfigurationMySql' target='_blank'>here</a>).");
+			if (!function_exists('sqlite_open')) {
+				$this->setError("SQLite not detected", "Mollify cannot be installed to this system when SQLite is not available. Check your system configuration or choose different configuration type.");
 				$this->showPage("install_error");
 			}
 		}
@@ -214,17 +189,7 @@
 		
 		private function install() {
 			try {
-				$this->db->selectDb();
-			} catch (ServiceException $e) {
-				$this->setError("Could not select database", '<code>'.$e->details().'</code>');
-				$this->showPage("install_error");
-			}
-			
-			$this->db->startTransaction();
-			
-			try {
 				$this->util()->execCreateTables();
-				$this->util()->execInsertParams();
 			} catch (ServiceException $e) {
 				$this->setError("Could not install", '<code>'.$e->details().'</code>');
 				$this->showPage("install_error");
@@ -237,13 +202,6 @@
 				$this->showPage("install_error");
 			}
 			
-			try {
-				$this->db->commit();
-			} catch (ServiceException $e) {
-				$this->setError("Could not install", '<code>'.$e->details().'</code>');
-				$this->showPage("install_error");
-			}
-
 			$this->onPhase('success');
 		}
 	}

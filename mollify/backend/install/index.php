@@ -31,7 +31,7 @@
 	}
 
 	function isValidConfigurationType($type) {
-		$TYPES = array("file","mysql");
+		$TYPES = array("file","mysql","sqlite");
 		return in_array(strtolower($type), $TYPES);
 	}
 	
@@ -48,6 +48,9 @@
 			case 'mysql':
 				require_once("install/mysql/MySQLInstaller.class.php");
 				return new MySQLInstaller($type, $settings);
+			case 'sqlite':
+				require_once("install/sqlite/SQLiteInstaller.class.php");
+				return new SQLiteInstaller($type, $settings);
 			default:
 				require_once("install/DefaultInstaller.class.php");
 				return new DefaultInstaller();

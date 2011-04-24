@@ -95,6 +95,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		return new NativeTextProvider(textProvider).asJs();
 	};
 
+	protected JavaScriptObject getLogger() {
+		return new NativeLogger().asJs();
+	};
+	
 	protected JavaScriptObject getFileView() {
 		return new NativeTextProvider(textProvider).asJs();
 	};
@@ -135,6 +139,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
 		}
 
+		env.log = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
+		}
+		
 		env.fileview = function() {
 			return fv;
 		}

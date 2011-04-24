@@ -8,6 +8,7 @@ function PluploadPlugin() {
 	this.initialize = function(env) {
 		that.env = env;
 		that.env.addUploader(that.onUpload);
+		that.logDebug("Plugin init");
 	}
 	
 	this.onUpload = function(folder, listener) {
@@ -67,11 +68,13 @@ function PluploadPlugin() {
 						
 			uploader.bind('Init', function(up, params) {
 				that.initialized = true;
+				that.logDebug("Plupload init, runtime: " + params.runtime);
 				$('#plupload-content').show();
 				that.addNoFilesLabel();
 			});
 
 			uploader.bind('FilesAdded', function(up, files) {
+				that.logDebug("Added files: "+files.length);
 				if (that.uploader.files.length == 0) $("#plupload-files").html('');
 				
 				$("#plupload-file-template").tmpl(files, {formatSize: that.formatFileSize}).appendTo("#plupload-files");
@@ -94,6 +97,7 @@ function PluploadPlugin() {
     		});
 
 			uploader.bind('UploadFile', function(up, file) {
+				that.logDebug("File upload starting " + file.name);
 				$('.plupload-file').removeClass("active");
 				$('#'+file.id).addClass("active");
 				$('#'+file.id+'-progress').show();
@@ -103,17 +107,20 @@ function PluploadPlugin() {
 			});
 
 			uploader.bind('UploadProgress', function(up, file) {
+				that.logDebug("File upload progress " + file.name + ": " + file.progress);
 				that.onFileProgress(file);
 				up.refresh();
 			});
 
 		    uploader.bind('FileUploaded', function(up, file) {
+		    	that.logDebug("File uploaded: " + file.name);
 		    	$('#'+file.id+'-progress').html('');
 		    	$('#'+file.id).removeClass("active");
 		    	$('#'+file.id).addClass("complete");
 			});
 
 			uploader.bind('UploadComplete', function(up, files) {
+				that.logDebug("Upload complete");
 				that.uploader.destroy();
 				that.d.close();
 				that.env.fileview().refresh();
@@ -125,9 +132,11 @@ function PluploadPlugin() {
 					alert(that.t("pluploadErrorFileTooBig") + " (" + that.formatFileSize(that.uploader.settings["max_file_size"]) + ")");
 					return;
 				}
-				alert("Error: " + err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : ""));
+				var msg = err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : "";
+				that.logError("Upload error " + msg);
 				uploader.stop();
 				up.refresh();
+				alert("Error: " + msg));
     		});
 			
 			that.uploader = uploader;
@@ -207,5 +216,9 @@ function PluploadPlugin() {
 		
 	this.t = function(s) {
 		return that.env.texts().get(s);
+	}
+	
+	this.logDebug = function(s) {
+		that.env.log().debug("pluginPlupload: " + s);
 	}
 }

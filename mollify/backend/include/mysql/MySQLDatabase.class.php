@@ -179,10 +179,13 @@
 			return $list;
 		}
 			
-		public function valueMap($keyCol) {
+		public function valueMap($keyCol, $valueCol = NULL) {
 			$list = array();
 			while ($row = mysql_fetch_assoc($this->result)) {
-				$list[$row[$keyCol]] = $row;
+				if ($valueCol == NULL)
+					$list[$row[$keyCol]] = $row;
+				else
+					$list[$row[$keyCol]] = $row[$valueCol];
 			}
 			mysql_free_result($this->result);
 			return $list;
