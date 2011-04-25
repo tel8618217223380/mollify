@@ -40,10 +40,6 @@
 		public function getClientPlugin() {
 			return NULL;
 		}
-		
-		public function isConfigurationSupported($type) {
-			return TRUE;
-		}
 				
 		public function id() {
 			return $this->id;

@@ -11,12 +11,12 @@
 	 */
 
 	require_once("configuration.php");
-	global $SETTINGS, $CONFIGURATION_PROVIDER;
-	if (!isset($CONFIGURATION_PROVIDER)) die("Mollify not configured");
+	global $SETTINGS, $CONFIGURATION_TYPE;
+	if (!isset($CONFIGURATION_TYPE)) die("Mollify not configured");
 	
 	function MollifyExternalInterface() {
-		global $SETTINGS, $CONFIGURATION_PROVIDER;
-		return new MollifyExternalInterface($SETTINGS, $CONFIGURATION_PROVIDER);
+		global $SETTINGS, $CONFIGURATION_TYPE;
+		return new MollifyExternalInterface($SETTINGS, $CONFIGURATION_TYPE);
 	}
 	
 	class MollifyExternalInterface {
@@ -30,7 +30,7 @@
 			require_once("include/Session.class.php");
 			require_once("include/ServiceEnvironment.class.php");
 			require_once("include/Util.class.php");
-			require_once("include/ConfigurationProviderFactory.class.php");
+			require_once("include/ConfigurationFactory.class.php");
 			require_once("include/Logging.class.php");
 			require_once("include/Version.info.php");
 		
@@ -39,8 +39,8 @@
 			$this->settings = new Settings($settingsVar);
 			$this->session = new Session($this->settings);
 			
-			$factory = new ConfigurationProviderFactory();
-			$this->configuration = $factory->createConfigurationProvider($configurationId, $this->settings);
+			$factory = new ConfigurationFactory();
+			$this->configuration = $factory->createConfiguration($configurationId, $this->settings);
 			
 			$env = new ExternalEnv($this->session, $this->configuration);
 			$this->configuration->initialize($env);

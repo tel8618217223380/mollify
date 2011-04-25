@@ -20,11 +20,11 @@
 	class MollifyBackend {
 		private $environment;
 		
-		function __construct($settings, $configurationProvider, $responseHandler) {
+		function __construct($settings, $configuration, $responseHandler) {
 			$this->settings = $settings;
 			$this->session = new Session($settings);
-			$this->configurationProvider = $configurationProvider;
-			$this->environment = new ServiceEnvironment($this->session, $responseHandler, $this->configurationProvider, $settings);
+			$this->configuration = $configuration;
+			$this->environment = new ServiceEnvironment($this->session, $responseHandler, $this->configuration, $settings);
 			$this->setup();
 		}
 	

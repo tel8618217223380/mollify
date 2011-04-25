@@ -11,7 +11,7 @@
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 	
-	$CONFIGURATION_PROVIDER = 'mysql';
+	$CONFIGURATION_TYPE = 'mysql';
 	
 	$DB_HOST = "localhost";		/* optional, default is "localhost" */
 	$DB_DATABASE = "mollify";	/* optional, default is "mollify" */

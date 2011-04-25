@@ -80,7 +80,7 @@
 		}
 
 		public function currentVersion() {
-			return SQLiteConfigurationProvider::VERSION;
+			return SQLiteConfiguration::VERSION;
 		}
 		
 		public function db() {

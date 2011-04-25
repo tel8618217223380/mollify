@@ -11,7 +11,7 @@
 	 */
 	 
 	include("installation_page.php");
-	global $CONFIGURATION_PROVIDER;
+	global $CONFIGURATION_TYPE;
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -21,19 +21,19 @@
 	
 	<body id="install-instructions-type">
 		<?php pageBody("Installation", "Welcome to Mollify Installer"); ?>
-		<?php if (isset($CONFIGURATION_PROVIDER)) { ?>
+		<?php if (isset($CONFIGURATION_TYPE)) { ?>
 		<div class="error">
 			<div class="title">	
 				Configuration type value is invalid.
 			</div>
 			<div class="details">
-				Configuration type "<code><?php echo($CONFIGURATION_PROVIDER); ?></code>" is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+				Configuration type "<code><?php echo($CONFIGURATION_TYPE); ?></code>" is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
 			</div>
 		</div>
 		<?php } ?>
 		
 		<div class="content">
-			<?php if (!isset($CONFIGURATION_PROVIDER)) { ?>
+			<?php if (!isset($CONFIGURATION_TYPE)) { ?>
 			<p>
 				To continue with Mollify installation, you have to choose the configuration type suitable for your installation.
 			</p>
@@ -54,18 +54,17 @@
 			<?php } ?>
 	
 			<p>
-				Edit the configuration file <code>configuration.php</code> by adding the configuration provider variable, for example:
+				Edit the configuration file <code>configuration.php</code> by adding the configuration type variable, for example:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">[ENTER VALUE HERE]</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">[ENTER VALUE HERE]</span>&quot;;<br/>
 					?&gt;<br/>
 				</div>
 			</p>
 			<p>
 				Possible values are:
 				<ul>
-					<li>"<code>file</code>" for file based configuration</li>
-					<li>"<code>mysql</code>" for database configuration</li>
+					<li>"<code>mysql</code>" for MySQL database configuration</li>
 				</ul>
 				
 				When this is added, click "Continue".

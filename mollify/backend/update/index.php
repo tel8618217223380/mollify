@@ -16,10 +16,10 @@
 	set_include_path("..");
 	if (!file_exists("../configuration.php")) die();
 	require("configuration.php");
-	global $SETTINGS, $CONFIGURATION_PROVIDER;
+	global $SETTINGS, $CONFIGURATION_TYPE;
 
 	try {
-		$installer = createUpdater($CONFIGURATION_PROVIDER, $SETTINGS);
+		$installer = createUpdater($CONFIGURATION_TYPE, $SETTINGS);
 	} catch (Exception $e) {
 		showError($e);
 		die();
@@ -32,7 +32,7 @@
 	}
 
 	function isValidConfigurationType($type) {
-		$TYPES = array("file","mysql","sqlite");
+		$TYPES = array("mysql","sqlite");
 		return in_array(strtolower($type), $TYPES);
 	}
 		
@@ -40,9 +40,6 @@
 		if (!isset($type) or !isValidConfigurationType($type)) die();
 		
 		switch (strtolower($type)) {
-			case 'file':
-				require_once("update/file/FileUpdater.class.php");
-				return new FileUpdater($type, $settings);
 			case 'mysql':
 				require_once("update/mysql/MySQLUpdater.class.php");
 				return new MySQLUpdater($type, $settings);
@@ -51,7 +48,6 @@
 				return new SQLiteUpdater($type, $settings);
 			default:
 				die("Unsupported updater type: ".$type);
-
 		}
 	}
 	

@@ -15,14 +15,14 @@
 	
 	set_include_path("..");
 	@include("configuration.php");
-	global $SETTINGS, $CONFIGURATION_PROVIDER;
+	global $SETTINGS, $CONFIGURATION_TYPE;
 
-	$installer = createInstaller($CONFIGURATION_PROVIDER, $SETTINGS);
+	$installer = createInstaller($CONFIGURATION_TYPE, $SETTINGS);
 	try {
 		if (!file_exists("../configuration.php"))
 			showInstructions("configuration_create");
 
-		if (!isset($CONFIGURATION_PROVIDER) or !isValidConfigurationType($CONFIGURATION_PROVIDER))
+		if (!isset($CONFIGURATION_TYPE) or !isValidConfigurationType($CONFIGURATION_TYPE))
 			showInstructions("configuration_type");
 
 		$installer->process();
@@ -31,7 +31,7 @@
 	}
 
 	function isValidConfigurationType($type) {
-		$TYPES = array("file","mysql","sqlite");
+		$TYPES = array("mysql","sqlite");
 		return in_array(strtolower($type), $TYPES);
 	}
 	
@@ -42,9 +42,6 @@
 	
 	function createInstaller($type, $settings) {
 		switch (strtolower($type)) {
-			case 'file':
-				require_once("install/file/FileInstaller.class.php");
-				return new FileInstaller($type, $settings);
 			case 'mysql':
 				require_once("install/mysql/MySQLInstaller.class.php");
 				return new MySQLInstaller($type, $settings);

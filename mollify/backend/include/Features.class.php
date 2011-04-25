@@ -30,14 +30,14 @@
 		
 		private $defaultValues = array();
 		
-		private static $featuresControlledByConfigurationProvider = array("change_password", "description_update", "permission_update", "administration", "user_groups");
+		private static $featuresControlledByConfiguration = array("change_password", "description_update", "permission_update", "administration", "user_groups");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
 			
 			foreach ($this->features as $f=>$k) {
 				$enabled = FALSE;
-				$configControlled = in_array($f, self::$featuresControlledByConfigurationProvider);
+				$configControlled = in_array($f, self::$featuresControlledByConfiguration);
 				
 				if ($configControlled) {
 					$configSupported = in_array($f, $configurationFeatures);

@@ -16,10 +16,6 @@
 			$this->env->features()->addFeature("lost_password");
 		}
 				
-		public function isConfigurationSupported($type) {
-			return $type === ConfigurationProvider::TYPE_DATABASE;
-		}
-				
 		public function __toString() {
 			return "LostPasswordPlugin";
 		}
