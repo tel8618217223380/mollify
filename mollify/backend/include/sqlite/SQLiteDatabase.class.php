@@ -51,7 +51,7 @@
 		public function query($query) {
 			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
 			
-			$result = @sqlite_query($query, $this->db, SQLITE_NUM, $err);
+			$result = @sqlite_query(str_replace("`", "", $query), $this->db, SQLITE_NUM, $err);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".$err);
 			return new Result($this->db, $result);
@@ -67,8 +67,8 @@
 		public function queries($query) {
 			if (Logging::isDebug()) Logging::logDebug("DB: ".$query);
 			
-			$result = @sqlite_query($query, $this->db, SQLITE_NUM, $err);
-			if (!$result)
+			@sqlite_query($query, $this->db, SQLITE_NUM, $err);
+			if ($err)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing query (".$query."): ".$err);
 			return TRUE;
 		}
@@ -140,6 +140,11 @@
 				$list[] = $row[$col];
 			}
 			return $list;
+		}
+		
+		public function firstValue($val) {
+			$ret = $this->firstRow();
+			return $ret[$val];
 		}
 			
 		public function valueMap($keyCol, $valueCol = NULL) {

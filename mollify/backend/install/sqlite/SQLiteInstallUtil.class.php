@@ -21,34 +21,6 @@
 			return $this->db;
 		}
 		
-		public function checkPermissions() {
-			$table = $this->db->table("mollify_install_test");
-
-			// first cleanup, if test table was left
-			try {
-				$this->db->query('DROP TABLE '.$table, FALSE);
-			} catch (ServiceException $e) {
-				// ignore
-			}
-			
-			$this->db->startTransaction();
-			try {
-				$tests = array("create table" => 'CREATE TABLE '.$table.' (id int NULL)',
-					"insert data" => 'INSERT INTO '.$table.' (id) VALUES (1)',
-					"update data" => 'UPDATE '.$table.' SET id = 2',
-					"delete data" => 'DELETE FROM '.$table,
-					"drop table" => 'DROP TABLE '.$table);
-					
-				foreach ($tests as $name => $query) {
-					$phase = $name;
-					$this->db->query($query, FALSE);
-				}
-			} catch (ServiceException $e) {
-				throw new ServiceException("INVALID_CONFIGURATION", "Permission test failed, could not ".$phase." (".$e->details().")");
-			}
-			$this->db->commit();
-		}
-		
 		public function execCreateTables() {
 			$this->db->execSqlFile("../include/sqlite/sql/create_tables.sql");
 		}
@@ -63,16 +35,16 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "../include/mysql/sql/".$from."-".$to.".sql";
+			$file = "../include/sqlite/sql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 
 		public function execPluginCreateTables($id) {
-			$this->db->execSqlFile("../plugin/".$id."/mysql/install.sql");
+			$this->db->execSqlFile("../plugin/".$id."/sqlite/install.sql");
 		}
 		
 		public function updatePluginVersionStep($id, $from, $to) {
-			$file = "../plugin/".$id."/mysql/".$from."-".$to.".sql";
+			$file = "../plugin/".$id."/sqlite/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 	}

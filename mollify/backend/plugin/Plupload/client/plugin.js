@@ -132,11 +132,11 @@ function PluploadPlugin() {
 					alert(that.t("pluploadErrorFileTooBig") + " (" + that.formatFileSize(that.uploader.settings["max_file_size"]) + ")");
 					return;
 				}
-				var msg = err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : "";
+				var msg = err.code + ", Message: " + err.message + (err.file ? ", File: " + err.file.name : "");
 				that.logError("Upload error " + msg);
 				uploader.stop();
 				up.refresh();
-				alert("Error: " + msg));
+				alert("Error: " + msg);
     		});
 			
 			that.uploader = uploader;
