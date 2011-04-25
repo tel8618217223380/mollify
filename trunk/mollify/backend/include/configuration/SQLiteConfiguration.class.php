@@ -10,9 +10,9 @@
 	 * this entire header must remain intact.
 	 */
 	 
-	require_once("DbConfigurationProvider.class.php");
+	require_once("DbConfiguration.class.php");
 
-	class SQLiteConfigurationProvider extends DbConfigurationProvider {
+	class SQLiteConfiguration extends DbConfiguration {
 		const VERSION = "1_7_10";
 		
 		public function __construct($settings) {

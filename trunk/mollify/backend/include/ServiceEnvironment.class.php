@@ -28,7 +28,7 @@
 		private $session;
 		private $authentication;
 		private $responseHandler;
-		private $configurationProvider;
+		private $configuration;
 		private $settings;
 		private $eventHandler;
 		private $filesystem;
@@ -36,12 +36,12 @@
 		private $notificator = NULL;
 		private $urlRetriever = NULL;
 		
-		public function __construct($session, $responseHandler, $configurationProvider, $settings) {
+		public function __construct($session, $responseHandler, $configuration, $settings) {
 			$this->session = $session;
 			$this->responseHandler = $responseHandler;
-			$this->configurationProvider = $configurationProvider;
+			$this->configuration = $configuration;
 			$this->settings = $settings;
-			$this->features = new Features($configurationProvider, $settings);
+			$this->features = new Features($configuration, $settings);
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
@@ -73,7 +73,7 @@
 		}
 		
 		public function configuration() {
-			return $this->configurationProvider;
+			return $this->configuration;
 		}
 
 		public function features() {
@@ -122,7 +122,7 @@
 			$this->request = $request;
 			
 			$this->session->initialize($this, $sessionId);
-			$this->configurationProvider->initialize($this);
+			$this->configuration->initialize($this);
 			$this->filesystem->initialize();
 			$this->authentication->initialize();
 			$this->plugins->initialize($this);
@@ -212,7 +212,7 @@
 			Logging::logSystem();
 			
 			$this->settings->log();
-			$this->configurationProvider->log();
+			$this->configuration->log();
 			$this->features->log();
 			$this->filesystem->log();
 			$this->session->log();

@@ -44,13 +44,13 @@
 			require_once("include/Session.class.php");
 			require_once("include/event/EventHandler.class.php");
 			require_once("InstallerAuthentication.class.php");
-			require_once("include/ConfigurationProviderFactory.class.php");
+			require_once("include/ConfigurationFactory.class.php");
 			require_once("plugin/PluginController.class.php");
-			$configurationProviderFactory = new ConfigurationProviderFactory();
+			$configurationFactory = new ConfigurationFactory();
 			
 			$this->settings = new Settings($this->settingsVar);
 			$this->session = new Session($this->settings);
-			$this->configuration = $configurationProviderFactory->createConfigurationProvider($this->type, $this->settings);
+			$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
 			$this->authentication = new InstallerAuthentication($this);
 			$this->features = new Features($this->configuration, $this->settings);
 			$this->plugins = new PluginController($this);

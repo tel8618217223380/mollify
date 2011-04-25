@@ -5,11 +5,11 @@
 	require_once("configuration.php");
 	require_once("include/Logging.class.php");
 		
-	global $SETTINGS, $CONFIGURATION_PROVIDER;
+	global $SETTINGS, $CONFIGURATION_TYPE;
 	Logging::initialize($SETTINGS);
 
 	require_once("include/MollifyBackend.class.php");
-	require_once("include/ConfigurationProviderFactory.class.php");
+	require_once("include/ConfigurationFactory.class.php");
 	require_once("include/Settings.class.php");
 	require_once("Sabre/autoload.php");
 	
@@ -133,8 +133,8 @@
 	
 	try {
 		$settings = new Settings($SETTINGS);
-		$factory = new ConfigurationProviderFactory();
-		$conf = $factory->createConfigurationProvider($CONFIGURATION_PROVIDER, $settings);
+		$factory = new ConfigurationFactory();
+		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
 		$backend = new MollifyBackend($settings, $conf, new VoidResponseHandler());
 		
 		$env = $backend->env();

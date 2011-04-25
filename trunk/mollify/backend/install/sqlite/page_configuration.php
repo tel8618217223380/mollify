@@ -38,7 +38,7 @@
 				An example configuration:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">sqlite</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">sqlite</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_FILE = &quot;<span class="value">[SQLITE_DB_FILE]</span>&quot;;<br/>
 					?&gt;
 				</div>

@@ -39,8 +39,6 @@
 			
 			require_once($cls);
 			$p = new $id($this->env, $id, $settings);
-			if (!$p->isConfigurationSupported($this->env->configuration()->getType()))
-				return;
 			$this->plugins[$id] = $p;
 		}
 		

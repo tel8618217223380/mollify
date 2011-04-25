@@ -100,7 +100,7 @@
 		}
 
 		public function currentVersion() {
-			return MySQLConfigurationProvider::VERSION;
+			return MySQLConfiguration::VERSION;
 		}
 		
 		public function db() {

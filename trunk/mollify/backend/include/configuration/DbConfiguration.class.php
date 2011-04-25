@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
+	 * Copyright (c) 2008- Samuli JŠrvelŠ
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -9,11 +9,12 @@
 	 * this entire header must remain intact.
 	 */
 
-	abstract class DbConfigurationProvider extends ConfigurationProvider {
+	abstract class DbConfiguration {
 		protected $db;
-				
-		public function getType() {
-			return ConfigurationProvider::TYPE_DATABASE;
+		protected $env;
+		
+		function initialize($env) {
+			$this->env = $env;
 		}
 		
 		public function db() {
@@ -520,6 +521,14 @@
 		
 		private function itemId($item) {
 			return $this->db->string($item->id());
+		}
+		
+		function log() {
+			Logging::logDebug("CONFIGURATION PROVIDER (".get_class($this)."): supported features=".Util::array2str($this->getSupportedFeatures())." auth=".$this->isAuthenticationRequired());
+		}
+		
+		public function __toString() {
+			return "DbConfiguration (".get_class($this).")";
 		}
 	}
 ?>

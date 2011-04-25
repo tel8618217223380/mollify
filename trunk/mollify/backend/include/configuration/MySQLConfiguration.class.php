@@ -9,14 +9,14 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 
+	require_once("DbConfiguration.class.php");
 
-	require_once("DbConfigurationProvider.class.php");
-	
-	class PostgresqlConfigurationProvider extends DbConfigurationProvider {
-		const VERSION = "1_6_0";
+	class MySQLConfiguration extends DbConfiguration {
+		const VERSION = "1_7_10";
 		
 		public function __construct($settings) {
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET;
+			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_CHARSET, $DB_SOCKET, $DB_PORT;
 			
 			if (!isset($DB_USER) or !isset($DB_PASSWORD)) throw new ServiceException("INVALID_CONFIGURATION", "No database information defined");
 			
@@ -29,8 +29,18 @@
 			if (isset($DB_TABLE_PREFIX)) $tablePrefix = $DB_TABLE_PREFIX;
 			else $tablePrefix = "";
 			
-			require_once("include/postgresql/PostgresqlDatabase.class.php");
-			$this->db = new PostgresqlDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix);
+			if (isset($DB_PORT)) $port = $DB_PORT;
+			else $port = NULL;
+
+			if (isset($DB_SOCKET)) {
+				$socket = $DB_SOCKET;
+				$port = NULL;
+			} else {
+				$socket = NULL;
+			}
+			
+			require_once("include/mysql/MySQLDatabase.class.php");
+			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix, $port, $socket);
 			
 			$this->db->connect();
 			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);

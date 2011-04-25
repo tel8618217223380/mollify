@@ -15,10 +15,6 @@
 			return TRUE;
 		}
 
-		public function isConfigurationSupported($type) {
-			return $type === ConfigurationProvider::TYPE_DATABASE;
-		}
-
 		public function version() {
 			return "1_0";
 		}

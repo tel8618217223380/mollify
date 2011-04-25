@@ -19,14 +19,14 @@
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
 	<body id="page-mysql-configuration">
-		<?php pageBody("Installation", "Database Configuration"); ?>
+		<?php pageBody("Installation", "MySQL Database Configuration"); ?>
 		<?php if ($installer->action() === 'continue') { ?>
 		<div class="error">
 			<div class="title">	
 				No database configuration found.
 			</div>
 			<div class="details">
-				Database configuration is missing or it is not complete. Make sure that the configuration is done according to the instructions below. At minimum, database user and password must be defined.
+				MySQL database configuration is missing or it is not complete. Make sure that the configuration is done according to the instructions below. At minimum, database user and password must be defined.
 			</div>
 		</div>
 		<?php } ?>
@@ -50,7 +50,7 @@
 				An example configuration:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_PROVIDER = &quot;<span class="value">mysql</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$$CONFIGURATION_TYPE = &quot;<span class="value">mysql</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
