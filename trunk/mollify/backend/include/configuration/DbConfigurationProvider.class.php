@@ -142,7 +142,7 @@
 		}
 
 		public function getGroupUsers($id) {
-			return $this->db->query("SELECT user.id, user.name, user.permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode as permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addGroupUsers($groupId, $userIds) {
@@ -203,7 +203,7 @@
 		}
 		
 		public function getFolderUsers($id) {
-			return $this->db->query("SELECT user.id, user.name, user.permission_mode, user.is_group FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode as permission_mode, user.is_group as is_group FROM ".$this->db->table("user")." as user, ".$this->db->table("user_folder")." as user_folder where user_folder.user_id = user.id and user_folder.folder_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addFolderUsers($folderId, $userIds) {
@@ -258,7 +258,9 @@
 			}
 			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
 
-			return $this->db->query(sprintf("SELECT f.id, uf.name, f.name as default_name, f.path FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
+			$l = $this->db->query(sprintf("SELECT f.id as id, uf.name as name, f.name as default_name, f.path as path FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
+			Logging::logDebug(Util::array2str($l));
+			return $l;
 		}
 		
 		public function addUserFolders($userId, $folderIds) {

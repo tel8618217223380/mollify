@@ -32,7 +32,7 @@
 	}
 
 	function isValidConfigurationType($type) {
-		$TYPES = array("file","mysql");
+		$TYPES = array("file","mysql","sqlite");
 		return in_array(strtolower($type), $TYPES);
 	}
 		
@@ -46,6 +46,9 @@
 			case 'mysql':
 				require_once("update/mysql/MySQLUpdater.class.php");
 				return new MySQLUpdater($type, $settings);
+			case 'sqlite':
+				require_once("update/sqlite/SQLiteUpdater.class.php");
+				return new SQLiteUpdater($type, $settings);
 			default:
 				die("Unsupported updater type: ".$type);
 

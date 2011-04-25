@@ -164,21 +164,11 @@
 						$this->onPhase('db');
 					}
 				}
-
-				$this->checkDatabasePermissions();
+				
+				$this->onPhase('admin');
 			}
 			
 			$this->showPage("database");
-		}
-		
-		private function checkDatabasePermissions() {
-			try {
-				$this->util()->checkPermissions();
-			} catch (ServiceException $e) {
-				$this->setError("Insufficient database permissions", '<code>'.$e->details().'</code>');
-				$this->onPhase('db');
-			}
-			$this->onPhase('admin');
 		}
 		
 		private function onPhaseAdmin() {
@@ -188,8 +178,11 @@
 		}
 		
 		private function install() {
+			$this->db->startTransaction();
+			
 			try {
 				$this->util()->execCreateTables();
+				$this->util()->execInsertParams();
 			} catch (ServiceException $e) {
 				$this->setError("Could not install", '<code>'.$e->details().'</code>');
 				$this->showPage("install_error");
@@ -199,6 +192,13 @@
 				$this->util()->createAdminUser($this->data("name"), $this->data("password"));
 			} catch (ServiceException $e) {
 				$this->setError("Could not create admin user", '<code>'.$e->details().'</code>');
+				$this->showPage("install_error");
+			}
+			
+			try {
+				$this->db->commit();
+			} catch (ServiceException $e) {
+				$this->setError("Could not install", '<code>'.$e->details().'</code>');
 				$this->showPage("install_error");
 			}
 			
