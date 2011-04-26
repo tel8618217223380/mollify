@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.ActionHandler;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
-import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DropBoxView.Actions;
@@ -103,19 +102,24 @@ public class DropBoxGlue implements DropBox, DropController {
 	}
 
 	@Override
-	public void close() {
-		view.hide();
+	public Widget getWidget() {
+		return view;
 	}
 
-	@Override
-	public boolean isVisible() {
-		return view.isVisible();
-	}
+	// @Override
+	// public void close() {
+	// view.hide();
+	// }
 
-	@Override
-	public void toggle(Coords position) {
-		view.toggleShow(position);
-	}
+	// @Override
+	// public boolean isVisible() {
+	// return view.isVisible();
+	// }
+
+	// @Override
+	// public void toggle(Coords position) {
+	// view.toggleShow(position);
+	// }
 
 	@Override
 	public Widget getDropTarget() {

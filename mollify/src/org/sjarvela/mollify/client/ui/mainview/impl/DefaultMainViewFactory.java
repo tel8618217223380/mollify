@@ -132,7 +132,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				textProvider, dragAndDropManager, settings, fileSystemService);
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
-				dragAndDropManager, fileListViewFactory);
+				dropBox, dragAndDropManager, fileListViewFactory);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view,
 				serviceProvider.getConfigurationService(), fileSystemService,

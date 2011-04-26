@@ -35,6 +35,7 @@ import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownPopup;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelector;
@@ -47,6 +48,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -69,7 +71,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final List<SearchListener> searchListeners = new ArrayList();
 	private final FileListWidgetFactory fileListViewFactory;
 
-	private MainViewHeader header;
+	private VerticalPanel header;
 	private DropdownButton addButton;
 	private ActionButton refreshButton;
 	private DropdownButton username;
@@ -81,6 +83,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FlowPanel fileUrlContainer;
 	private FileListWidget fileListView;
 	private Widget content;
+	private final DropBox dropBox;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
@@ -89,12 +92,13 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
 			ActionListener actionListener,
 			FolderSelectorFactory folderSelectorFactory,
-			ItemContextPopup itemContextPopup,
+			ItemContextPopup itemContextPopup, DropBox dropBox,
 			DragAndDropManager dragAndDropManager,
 			FileListWidgetFactory fileViewFactory) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
+		this.dropBox = dropBox;
 		this.fileListViewFactory = fileViewFactory;
 
 		this.buttonPanel = new FlowPanel();
@@ -165,11 +169,57 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	private Widget createControls() {
+		createButtons();
+
 		Panel content = new VerticalPanel();
+		content.setWidth("100%");
+
 		content.getElement().setId("mollify-main-content");
-		content.add(createHeader(listPanel));
-		content.add(listPanel);
+		content.add(createTopHeader());
+		content.add(createHeader());
+
+		Panel p = new HorizontalPanel();
+		p.setWidth("100%");
+
+		Panel p1 = new FlowPanel();
+		p1.getElement().setId("mollify-main-content-panel");
+
+		Panel headerLower = new FlowPanel();
+		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
+		headerLower.add(dropBoxButton);
+
+		p1.add(headerLower);
+		p1.add(listPanel);
+
+		Panel p2 = new FlowPanel();
+		p2.getElement().setId("mollify-mainview-dropbox");
+		p2.add(selectButton);
+		p2.add(selectOptionsButton);
+		p2.add(fileActions);
+		p2.add(dropBox.getWidget());
+
+		p.add(p1);
+		p1.getElement().getParentElement().setAttribute("width", "*");
+		p.add(p2);
+		p2.getElement().getParentElement().setAttribute("width", "0px");
+		content.add(p);
+
 		return content;
+	}
+
+	private Widget createTopHeader() {
+		Panel top = new FlowPanel();
+		top.setStylePrimaryName("mollify-header-top");
+
+		top.add(new HTML("<div id='mollify-logo'/>"));
+		if (model.getSession().isAuthenticationRequired()) {
+			Panel loggedInPanel = new FlowPanel();
+			loggedInPanel
+					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
+			loggedInPanel.add(createUserName());
+			top.add(loggedInPanel);
+		}
+		return top;
 	}
 
 	public Widget createFileUrlContainer() {
@@ -179,47 +229,27 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return fileUrlContainer;
 	}
 
-	private Widget createHeader(Panel contentPanel) {
-		createButtons();
-
-		header = new MainViewHeader();
-
+	private Widget createHeader() {
 		Panel headerUpperPanel = new HorizontalPanel();
 		headerUpperPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PANEL);
 
 		Panel headerUpper = new HorizontalPanel();
 		headerUpper.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
-		headerUpperPanel.add(headerUpper);
-
-		Panel headerLower = new FlowPanel();
-		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
-
-		headerLower.add(selectButton);
-		headerLower.add(selectOptionsButton);
-		headerLower.add(fileActions);
-		headerLower.add(dropBoxButton);
-		headerLower.add(createSearchField());
-
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(folderSelector);
 		headerUpper.add(buttonPanel);
+		headerUpper.add(createSearchField());
+		headerUpperPanel.add(headerUpper);
 
-		if (model.getSession().isAuthenticationRequired()) {
-			Panel loggedInPanel = new FlowPanel();
-			loggedInPanel
-					.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOGGED_IN);
-			loggedInPanel.add(createUserName());
-			headerUpper.add(loggedInPanel);
-		}
-
-		Panel headerLowerPanel = new FlowPanel();
-		headerLowerPanel
-				.setStyleName(StyleConstants.MAIN_VIEW_HEADER_LOWER_PANEL);
-		headerLowerPanel.add(headerLower);
-		header.build(headerUpperPanel, headerLower, headerLowerPanel);
-		return header;
+		return headerUpperPanel;
+		//
+		// header = new VerticalPanel();
+		// header.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_CONTAINER);
+		// header.add(headerUpperPanel);
+		// header.add(headerLower);
+		// return header;
 	}
 
 	private Widget createSearchField() {
@@ -279,8 +309,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	private void createButtons() {
-		refreshButton = new ActionButton(
-				textProvider.getText(Texts.mainViewRefreshButtonTitle),
+		refreshButton = new ActionButton("",
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON_REFRESH,
 				StyleConstants.MAIN_VIEW_HEADER_BUTTON);
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
@@ -322,8 +351,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())) {
-			addButton = new DropdownButton(actionListener,
-					textProvider.getText(Texts.mainViewAddButtonTitle),
+			addButton = new DropdownButton(actionListener, "",
 					StyleConstants.MAIN_VIEW_HEADER_BUTTON_ADD);
 			new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
 					textProvider.getText(Texts.mainViewAddButtonTooltip))
@@ -371,12 +399,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	public void showItemContext(FileSystemItem item, Element e) {
 		itemContextHandler.onItemSelected(item, e);
 	}
-
-	//
-	// public void showFolderContext(Folder folder) {
-	// itemContextHandler.onItemSelected(folder,
-	// fileListView.getWidget(folder, FileList.COLUMN_ID_NAME));
-	// }
 
 	public ActionButton getRefreshButton() {
 		return refreshButton;

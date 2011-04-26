@@ -16,8 +16,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 public class HoverDecorator {
@@ -47,18 +46,25 @@ public class HoverDecorator {
 		return mouseOutHandler;
 	}
 
-	public static void decorate(Button decorated) {
-		decorated.addMouseOverHandler(getMouseOverHandler());
-		decorated.addMouseOutHandler(getMouseOutHandler());
-	}
-
-	public static void decorate(Label decorated) {
-		decorated.addMouseOverHandler(getMouseOverHandler());
-		decorated.addMouseOutHandler(getMouseOutHandler());
-	}
+	// public static void decorate(Button decorated) {
+	// decorated.addMouseOverHandler(getMouseOverHandler());
+	// decorated.addMouseOutHandler(getMouseOutHandler());
+	// }
+	//
+	// public static void decorate(Label decorated) {
+	// decorated.addMouseOverHandler(getMouseOverHandler());
+	// decorated.addMouseOutHandler(getMouseOutHandler());
+	// }
 
 	public static void clear(Widget decorated) {
 		decorated.removeStyleDependentName(StyleConstants.HOVER);
+	}
+
+	public static void decorate(Widget decorated) {
+		decorated.sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER
+				| Event.ONMOUSEOUT);
+		decorated.addHandler(getMouseOverHandler(), MouseOverEvent.getType());
+		decorated.addHandler(getMouseOutHandler(), MouseOutEvent.getType());
 	}
 
 }
