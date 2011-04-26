@@ -129,8 +129,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 							return true;
 						if (Folder.Parent.equals(t))
 							return false;
-						// if (((Folder) t).isRoot())
-						// return false;
 						return true;
 					}
 
@@ -411,7 +409,6 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		sessionService.logout(new ResultListener<Boolean>() {
 			@Override
 			public void onSuccess(Boolean result) {
-				dropBox.close();
 				sessionManager.endSession();
 			}
 
@@ -551,9 +548,17 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.selectNone();
 	}
 
+	boolean v = false;
+
 	public void onToggleDropBox() {
-		dropBox.toggle(view.getDropboxLocation());
+		toggle(!v);
+		v = !v;
 	}
+
+	private native void toggle(boolean open) /*-{
+												$wnd.$("#mollify-mainview-dropbox").stop().animate({'width': open ? "300px" : "0px"}, 200);
+												$wnd.$("#mollify-main-content-panel").stop().animate({'marginRight': open ? "300px" : "0px"}, 200);
+												}-*/;
 
 	@Override
 	public List<FileSystemItem> getSelectedItems() {

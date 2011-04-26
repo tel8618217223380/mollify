@@ -19,20 +19,18 @@ import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
-import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DropBoxView extends DialogBox {
+public class DropBoxView extends FlowPanel {
 	enum Actions implements ResourceId {
 		clear, remove, copy, move, delete, copyHere, moveHere, downloadAsZip
 	};
@@ -42,8 +40,6 @@ public class DropBoxView extends DialogBox {
 	private final TextProvider textProvider;
 	private final PathFormatter pathFormatter;
 
-	private boolean shown = false;
-
 	private Panel dropTarget;
 	private Panel contents;
 	private DropdownButton actionsButton;
@@ -51,17 +47,17 @@ public class DropBoxView extends DialogBox {
 	public DropBoxView(TextProvider textProvider,
 			ActionListener actionListener, SessionInfo session,
 			PathFormatter pathFormatter) {
-		super(false, false);
+		// super(false, false);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 		this.pathFormatter = pathFormatter;
 		this.session = session;
 
-		this.setText(textProvider.getText(Texts.dropBoxTitle));
+		// this.setText(textProvider.getText(Texts.dropBoxTitle));
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
 		this.add(createContent());
-		this.show();
-		this.setVisible(false);
+		// this.show();
+		// this.setVisible(false);
 	}
 
 	private Widget createContent() {
@@ -112,21 +108,21 @@ public class DropBoxView extends DialogBox {
 		return dropTarget;
 	}
 
-	public void toggleShow(final Coords position) {
-		if (!shown)
-			setPopupPositionAndShow(new PositionCallback() {
-				@Override
-				public void setPosition(int offsetWidth, int offsetHeight) {
-					setPopupPosition(
-							position.getX() - DropBoxView.this.getOffsetWidth()
-									- 5, position.getY() + 10);
-				}
-			});
-		else
-			setVisible(!isVisible());
-
-		shown = true;
-	}
+	// public void toggleShow(final Coords position) {
+	// if (!shown)
+	// setPopupPositionAndShow(new PositionCallback() {
+	// @Override
+	// public void setPosition(int offsetWidth, int offsetHeight) {
+	// setPopupPosition(
+	// position.getX() - DropBoxView.this.getOffsetWidth()
+	// - 5, position.getY() + 10);
+	// }
+	// });
+	// else
+	// setVisible(!isVisible());
+	//
+	// shown = true;
+	// }
 
 	public void onDragEnter() {
 		dropTarget.addStyleDependentName(StyleConstants.DRAG_OVER);
@@ -137,9 +133,12 @@ public class DropBoxView extends DialogBox {
 	}
 
 	public void setContent(List<FileSystemItem> items) {
+		dropTarget.removeStyleDependentName("empty");
 		contents.clear();
 		for (FileSystemItem item : items)
 			contents.add(createItemWidget(item));
+		if (items.isEmpty())
+			dropTarget.addStyleDependentName("empty");
 	}
 
 	private Widget createItemWidget(final FileSystemItem item) {
@@ -164,7 +163,6 @@ public class DropBoxView extends DialogBox {
 
 		Label remove = new Label();
 		remove.setStylePrimaryName(StyleConstants.DROPBOX_VIEW_ITEM_REMOVE);
-		HoverDecorator.decorate(remove);
 		w.add(remove);
 
 		remove.addClickHandler(new ClickHandler() {
@@ -173,6 +171,8 @@ public class DropBoxView extends DialogBox {
 				actionListener.onAction(Actions.remove, item);
 			}
 		});
+
+		HoverDecorator.decorate(w);
 
 		return w;
 	}

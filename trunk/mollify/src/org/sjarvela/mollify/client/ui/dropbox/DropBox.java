@@ -13,16 +13,19 @@ package org.sjarvela.mollify.client.ui.dropbox;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.ui.common.Coords;
+
+import com.google.gwt.user.client.ui.Widget;
 
 public interface DropBox {
 
-	public boolean isVisible();
+	// public boolean isVisible();
 
-	public void toggle(Coords position);
+	// public void toggle(Coords position);
 
 	public void addItems(List<FileSystemItem> selectedItems);
 
-	public void close();
+	// public void close();
+
+	public Widget getWidget();
 
 }

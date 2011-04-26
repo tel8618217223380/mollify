@@ -12,6 +12,10 @@
  * this entire header must remain intact.
  */
 
+body {
+	margin: 0;	
+}
+
 #mollify, .mollify-dropdown-menu-item, .mollify-bubble-popup, .mollify-directory-context, .mollify-directory-list-menu-item-none, .mollify-directory-list-menu-wait, .mollify-tooltip, .mollify-dropbox {
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 	font-size: 8pt;
@@ -262,12 +266,28 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	z-index: 4;
 }
 
-.mollify-main, .mollify-header-panel, .mollify-header, .mollify-subheader, .mollify-header-container, .mollify-header-lower-panel {
+.mollify-main, .mollify-header-top, .mollify-header-panel, .mollify-header, .mollify-subheader, .mollify-header-container, .mollify-header-lower-panel {
 	width: 100%;
 }
 
 #mollify-main-content {
 	position: relative;
+}
+
+.mollify-header-top {
+	width: 100%;
+	background-color: #000;
+	float: left;
+}
+
+#mollify-logo {
+	height: 58px;
+	background: url(mollify.png) no-repeat;
+	float: left;
+	width: 90px;
+	margin-left: 8px;
+	margin-top: 8px;
+	margin-bottom: 8px;
 }
 
 .mollify-header-container {
@@ -284,21 +304,12 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	background: url(header.png) repeat-x 0 0;
 	height: 38px;
 	float: left;
-}
-
-.mollify-header-lower-panel {
-	overflow: hidden;
-	height: 0px;
-	float: left;
+	width: 100%;
 }
 
 .mollify-subheader {
-	height: 29px;
-	background: #c1cad2 url(subheader.png) repeat-x 0 -2px;
-	float: left;
+	height: 24px;
 	padding-top: 4px;
-	position: relative;
-	margin-top: -30px;
 }
 
 .mollify-filelist-panel {
@@ -437,9 +448,11 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	padding-right: 11px;
 	cursor: pointer;
 	height: 15px;
-	margin-top: 11px;
+	margin-top: 27px;
 	margin-right: 4px;
 	background-color: transparent;
+	color: #fffeff;
+	margin-bottom: 11px;
 }
 
 .mollify-header-username:hover {
@@ -621,7 +634,10 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	border: 1px solid #929494;
 	height: 13px;
 	background-image: none;
-	background-color: #9ea0a0;
+	background-color: #dce0e0;
+}
+
+#mollify-header-toggle-button-select {
 	border-right-style: none;
 }
 
@@ -661,7 +677,7 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	height: 24px;
 	border: 1px solid #929494;
 	border-left-style: none;
-	background: #9ea0a0 url(sort-desc.png) no-repeat 1px 10px;
+	background: #dce0e0 url(sort-desc.png) no-repeat 1px 10px;
 }
 
 #mollify-header-select-options:hover {
@@ -680,7 +696,7 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	height: 24px;
 	min-width: 66px;
 	width: auto;
-	background: #9ea0a0 url(sort-desc.png) no-repeat right;
+	background: #dce0e0 url(sort-desc.png) no-repeat right;
 	text-align: left;
 	float: left;
 	padding-right: 11px;
@@ -2135,30 +2151,34 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	z-index: 10;
 }
 
-.mollify-dropbox {
-	background-color: #3a3a3a;
-	z-index: 4;
+#mollify-mainview-dropbox {
+	overflow: hidden;
+	width: 0px;
+	position: absolute;
+	right: 0;
+	height: 100%;
 }
 
-.mollify-dropbox .Caption {
-	color: #fffeff;
-	font-weight: bold;
-	text-align: center;
-	height: 17px;
-	background-color: #454646;
-	cursor: move;
+.mollify-dropbox {
+	background-color: #eceeee;
+	height: 100%;
+	border-left: 1px solid #cbcbcb;
+	border-top: 1px solid #f3f3f3;
 	padding-top: 4px;
 }
 
 .mollify-dropbox-content {
-	width: 220px;
+
 }
 
 .mollify-dropbox-dropzone {
-	width: 204px;
-	height: 230px;
+	min-height: 200px;
 	margin: 6px;
-	border: 2px solid #515252;
+	border: 1px dotted #515252;
+}
+
+.mollify-dropbox-dropzone-empty {
+	border: 2px dashed #515252;
 }
 
 .mollify-dropbox-dropzone-drag-over {
@@ -2170,58 +2190,62 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dropbox-item {
+	position: relative;
 	height: 27px;
 	overflow: hidden;
-	color: #fffeff;
+	color: #000;
 	border-bottom: 1px dotted #acacac;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	background-color: #444545;
+	background-color: #d7dbdb;
 	border-color: #5b5b5b;
 }
 
+.mollify-dropbox-item-hover {
+	background-color: #b9c5e3;
+}
+
 .mollify-dropbox-item-name {
-	margin-left: 20px;
+	margin-left: 25px;
 	font-weight: bold;
 }
 
 .mollify-dropbox-item-path {
-	margin-left: 20px;
+	margin-left: 25px;
 	font-size: 9px;
 	font-style: italic;
 	margin-top: 3px;
-	color: #cecece;
+	color: #6d6e6e;
 }
 
 #mollify-dropbox-actions-button {
-	margin-left: 70px;
+	margin-left: 109px;
 	width: 80px;
-	background: #4e4f4f url(sort-desc.png) no-repeat 67px 10px;
+	background: #f5f9f9 url(sort-desc.png) no-repeat 67px 10px;
 	margin-bottom: 5px;
-	color: #9e9e9e;
+	color: #6d6e6e;
 	border: 1px solid #6e6e6e;
 }
 
 #mollify-dropbox-actions-button:hover {
-	border: 1px solid #8f9090;
+	border: 1px solid #a9aaab;
 }
 
 #mollify-dropbox-actions-button[disabled], #mollify-dropbox-actions-button[disabled]:hover {
-	color: #3f4040;
-	border: 1px solid #575858;
+	color: #bfc2c2;
+	border: 1px solid #a6a9a9;
 }
 
 .mollify-dropbox-item-remove {
 	width: 16px;
 	height: 16px;
-	position: relative;
-	top: -20px;
-	right: 0;
-	left: 2px;
+	position: absolute;
+	left: 6px;
 	cursor: pointer;
+	top: 12px;
 }
 
-.mollify-dropbox-item-remove-hover {
+.mollify-dropbox-item-hover .mollify-dropbox-item-remove {
 	background: url(remove.png) no-repeat 0 0;
 }
 
@@ -2282,10 +2306,10 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-header-search-container {
-	display: block;
 	margin-left: 10px;
-	float: left;
-	margin-top: 1px;
+	float: right;
+	margin-top: 8px;
+	margin-right: 4px;
 }
 
 .mollify-header-search-container-center {
