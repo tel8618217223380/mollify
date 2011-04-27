@@ -50,6 +50,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -78,7 +79,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private ActionToggleButton selectButton;
 	private DropdownButton selectOptionsButton;
 	private DropdownButton fileActions;
-	private ActionToggleButton dropBoxButton;
+	private ActionToggleButton slideBarButton;
 	private HintTextBox searchField;
 	private FlowPanel fileUrlContainer;
 	private FileListWidget fileListView;
@@ -86,7 +87,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final DropBox dropBox;
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, dropBox, addToDropbox, retrieveUrl;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -180,31 +181,57 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		Panel p = new HorizontalPanel();
 		p.setWidth("100%");
+		content.add(p);
 
-		Panel p1 = new FlowPanel();
-		p1.getElement().setId("mollify-main-content-panel");
+		Panel contentPanel = new FlowPanel();
+		contentPanel.getElement().setId("mollify-main-content-panel");
 
 		Panel headerLower = new FlowPanel();
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
-		headerLower.add(dropBoxButton);
+		headerLower.add(slideBarButton);
 
-		p1.add(headerLower);
-		p1.add(listPanel);
+		contentPanel.add(headerLower);
+		contentPanel.add(listPanel);
+		p.add(contentPanel);
+		contentPanel.getElement().getParentElement().setAttribute("width", "*");
 
-		Panel p2 = new FlowPanel();
-		p2.getElement().setId("mollify-mainview-dropbox");
-		p2.add(selectButton);
-		p2.add(selectOptionsButton);
-		p2.add(fileActions);
-		p2.add(dropBox.getWidget());
-
-		p.add(p1);
-		p1.getElement().getParentElement().setAttribute("width", "*");
-		p.add(p2);
-		p2.getElement().getParentElement().setAttribute("width", "0px");
-		content.add(p);
+		Panel slideBar = new FlowPanel();
+		slideBar.getElement().setId("mollify-mainview-slidebar");
+		slideBar.add(createSelectBar());
+		slideBar.add(createDropboxBar());
+		p.add(slideBar);
+		slideBar.getElement().getParentElement().setAttribute("width", "0px");
 
 		return content;
+	}
+
+	private Panel createDropboxBar() {
+		Panel dropboxPanel = new FlowPanel();
+		dropboxPanel.setStylePrimaryName("mollify-mainview-slidebar-panel");
+		dropboxPanel.getElement().setId("mollify-mainview-slidebar-dropbox");
+
+		Label title = new Label(textProvider.getText(Texts.dropBoxTitle));
+		title.setStylePrimaryName("title");
+
+		dropboxPanel.add(title);
+		dropboxPanel.add(dropBox.getWidget());
+		return dropboxPanel;
+	}
+
+	private Panel createSelectBar() {
+		Panel selectBar = new FlowPanel();
+		selectBar.setStylePrimaryName("mollify-mainview-slidebar-panel");
+		selectBar.getElement().setId("mollify-mainview-slidebar-select");
+
+		Label title = new Label(
+				textProvider.getText(Texts.mainViewSlideBarTitleSelect));
+		title.setStylePrimaryName("title");
+
+		selectBar.add(title);
+		selectBar.add(selectButton);
+		selectBar.add(selectOptionsButton);
+		selectBar.add(fileActions);
+		return selectBar;
 	}
 
 	private Widget createTopHeader() {
@@ -343,11 +370,14 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		fileActions.addAction(Action.deleteMultiple,
 				textProvider.getText(Texts.fileActionDeleteTitle));
 
-		dropBoxButton = new ActionToggleButton(
-				textProvider.getText(Texts.mainViewDropBoxButton),
-				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX,
-				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON);
-		dropBoxButton.setAction(actionListener, Action.dropBox);
+		slideBarButton = new ActionToggleButton("",
+				StyleConstants.MAIN_VIEW_HEADER_TOGGLE_BUTTON_SLIDEBAR, null) {
+			protected void updateStyle() {
+				super.updateStyle();
+				this.setText(down ? ">" : "<");
+			};
+		};
+		slideBarButton.setAction(actionListener, Action.slideBar);
 
 		if ((model.getSession().getFeatures().fileUpload() || model
 				.getSession().getFeatures().folderActions())) {

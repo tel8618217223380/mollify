@@ -47,17 +47,13 @@ public class DropBoxView extends FlowPanel {
 	public DropBoxView(TextProvider textProvider,
 			ActionListener actionListener, SessionInfo session,
 			PathFormatter pathFormatter) {
-		// super(false, false);
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
 		this.pathFormatter = pathFormatter;
 		this.session = session;
 
-		// this.setText(textProvider.getText(Texts.dropBoxTitle));
 		this.setStylePrimaryName(StyleConstants.DROPBOX_VIEW);
 		this.add(createContent());
-		// this.show();
-		// this.setVisible(false);
 	}
 
 	private Widget createContent() {
@@ -107,22 +103,6 @@ public class DropBoxView extends FlowPanel {
 	public Widget getDropTarget() {
 		return dropTarget;
 	}
-
-	// public void toggleShow(final Coords position) {
-	// if (!shown)
-	// setPopupPositionAndShow(new PositionCallback() {
-	// @Override
-	// public void setPosition(int offsetWidth, int offsetHeight) {
-	// setPopupPosition(
-	// position.getX() - DropBoxView.this.getOffsetWidth()
-	// - 5, position.getY() + 10);
-	// }
-	// });
-	// else
-	// setVisible(!isVisible());
-	//
-	// shown = true;
-	// }
 
 	public void onDragEnter() {
 		dropTarget.addStyleDependentName(StyleConstants.DRAG_OVER);
