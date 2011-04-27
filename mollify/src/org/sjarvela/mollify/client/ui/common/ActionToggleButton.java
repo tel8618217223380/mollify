@@ -18,7 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 
 public class ActionToggleButton extends Label {
-	boolean down = false;
+	protected boolean down = false;
 
 	public ActionToggleButton(String title, String id) {
 		this(title, id, null);
@@ -36,7 +36,7 @@ public class ActionToggleButton extends Label {
 		updateStyle();
 	}
 
-	private void updateStyle() {
+	protected void updateStyle() {
 		if (down)
 			this.addStyleDependentName("down");
 		else

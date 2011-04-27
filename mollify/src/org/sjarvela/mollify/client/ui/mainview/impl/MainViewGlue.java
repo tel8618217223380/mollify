@@ -157,11 +157,11 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 					}
 				});
 
-		actionDelegator.setActionHandler(Action.dropBox,
+		actionDelegator.setActionHandler(Action.slideBar,
 				new VoidActionHandler() {
 					@Override
 					public void onAction() {
-						presenter.onToggleDropBox();
+						presenter.onToggleSlidebar();
 					}
 				});
 

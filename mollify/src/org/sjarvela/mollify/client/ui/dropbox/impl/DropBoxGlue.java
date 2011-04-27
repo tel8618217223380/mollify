@@ -106,21 +106,6 @@ public class DropBoxGlue implements DropBox, DropController {
 		return view;
 	}
 
-	// @Override
-	// public void close() {
-	// view.hide();
-	// }
-
-	// @Override
-	// public boolean isVisible() {
-	// return view.isVisible();
-	// }
-
-	// @Override
-	// public void toggle(Coords position) {
-	// view.toggleShow(position);
-	// }
-
 	@Override
 	public Widget getDropTarget() {
 		return view.getDropTarget();

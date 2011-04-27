@@ -548,15 +548,15 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.selectNone();
 	}
 
-	boolean v = false;
+	boolean slidebarVisible = false;
 
-	public void onToggleDropBox() {
-		toggle(!v);
-		v = !v;
+	public void onToggleSlidebar() {
+		toggle(!slidebarVisible);
+		slidebarVisible = !slidebarVisible;
 	}
 
 	private native void toggle(boolean open) /*-{
-												$wnd.$("#mollify-mainview-dropbox").stop().animate({'width': open ? "300px" : "0px"}, 200);
+												$wnd.$("#mollify-mainview-slidebar").stop().animate({'width': open ? "300px" : "0px"}, 200);
 												$wnd.$("#mollify-main-content-panel").stop().animate({'marginRight': open ? "300px" : "0px"}, 200);
 												}-*/;
 

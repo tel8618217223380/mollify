@@ -84,7 +84,7 @@ public class StyleConstants {
 	public static final String MAIN_VIEW_HEADER_BUTTON_TOOLTIP = "mainview";
 	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON = "mollify-header-toggle-button";
 	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON_SELECT = "mollify-header-toggle-button-select";
-	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON_DROPBOX = "mollify-header-toggle-button-dropbox";
+	public static final String MAIN_VIEW_HEADER_TOGGLE_BUTTON_SLIDEBAR = "mollify-header-toggle-button-slidebar";
 	public static final String MAIN_VIEW_HEADER_TOGGLE_SELECT_OPTIONS = "mollify-header-select-options";
 	public static final String MAIN_VIEW_HEADER_FILE_ACTIONS = "mollify-header-file-actions";
 	public static final String MAIN_VIEW_HEADER_SEARCH_FIELD = "mollify-header-search-field";

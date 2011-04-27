@@ -46,16 +46,6 @@ public class HoverDecorator {
 		return mouseOutHandler;
 	}
 
-	// public static void decorate(Button decorated) {
-	// decorated.addMouseOverHandler(getMouseOverHandler());
-	// decorated.addMouseOutHandler(getMouseOutHandler());
-	// }
-	//
-	// public static void decorate(Label decorated) {
-	// decorated.addMouseOverHandler(getMouseOverHandler());
-	// decorated.addMouseOutHandler(getMouseOutHandler());
-	// }
-
 	public static void clear(Widget decorated) {
 		decorated.removeStyleDependentName(StyleConstants.HOVER);
 	}
