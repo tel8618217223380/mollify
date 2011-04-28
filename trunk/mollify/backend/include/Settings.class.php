@@ -45,7 +45,7 @@
 			"mime-types" => array(),
 			"enable_s3" => FALSE,
 			"s3_settings" => array(),
-			"enable_ldap" => FALSE,
+			"authentication_methods" => array("pw"),
 			"ldap_server" => NULL,
 			"ldap_fqdn" => NULL,
 			"upload_temp_dir" => NULL,
@@ -72,6 +72,10 @@
 		
 		public function hasSetting($setting) {
 			return array_key_exists($setting, $this->settings);
+		}
+		
+		public function getAllSettings() {
+			return $this->settings;
 		}
 		
 		function log() {

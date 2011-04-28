@@ -70,7 +70,7 @@
 		public function processRequest($request) {
 			$this->environment->initialize($request);
 			$service = $this->environment->getService($request);
-			
+
 			if (!$service->isAuthenticated()) {
 				$this->environment->session()->reset();
 				throw new ServiceException("UNAUTHORIZED");

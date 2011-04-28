@@ -43,9 +43,13 @@
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
 				throw new ServiceException("AUTHENTICATION_FAILED");
 			}
-			if ($user["auth"] != NULL and strcasecmp("PW", $user["auth"]) != 0) {
+			
+			$auth = $user["auth"];
+			if ($auth == NULL) $auth = $this->getDefaultAuthenticationMethod();
+			
+			if (strcasecmp("PW", $auth) != 0) {
 				// handle other authentications
-				if (strcasecmp("LDAP", $user["auth"]) == 0) {
+				if (strcasecmp("LDAP", $auth) == 0) {
 					$this->authenticateLDAP($user, $pw);
 					return;
 				} 
@@ -54,9 +58,12 @@
 			$this->doAuth($user);
 		}
 		
+		public function getDefaultAuthenticationMethod() {
+			$m = $this->env->settings()->setting("authentication_methods",TRUE);
+			return $m[0];
+		}
+		
 		private function authenticateLDAP($user, $pw) {
-			$this->env->features()->assertFeature("ldap");
-			
 			$conn = @ldap_connect($this->env->settings()->setting("ldap_server"));
 			if (!$conn)
 				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to LDAP server");

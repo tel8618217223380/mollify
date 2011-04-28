@@ -137,9 +137,10 @@
 				$user['permission_mode'] = strtoupper($user['permission_mode']);
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
-				$auth = "PW";
-				if ($this->env->features()->isFeatureEnabled("ldap") and isset($user['auth']))
-					$auth = strtoupper($user['auth']);
+				$auths = $this->env->settings()->setting("authentication_methods");
+				$auth = NULL;
+				//TODO verify auth
+				if (isset($user['auth'])) $auth = strtoupper($user['auth']);
 				
 				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $auth);
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], $user['email']));
@@ -177,9 +178,10 @@
 				$user['permission_mode'] = strtoupper($user['permission_mode']);
 				$this->env->authentication()->assertPermissionValue($user['permission_mode']);
 				
-				$auth = "PW";
-				if ($this->env->features()->isFeatureEnabled("ldap") and isset($user['auth']))
+				$auth = NULL;
+				if (isset($user['auth']))
 					$auth = strtoupper($user['auth']);
+				//TODO verify $auth
 
 				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $auth);
 				$this->response()->success(TRUE);

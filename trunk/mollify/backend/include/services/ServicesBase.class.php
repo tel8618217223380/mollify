@@ -90,7 +90,6 @@
 		
 		function log() {
 			if (!Logging::isDebug()) return;
-			$this->request->log();
 			Logging::logDebug("SERVICE (".get_class($this)."): is_auth_required=".$this->isAuthenticationRequired($this->request));
 		}
 	}

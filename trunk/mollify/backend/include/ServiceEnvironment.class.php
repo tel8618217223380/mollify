@@ -217,6 +217,7 @@
 			$this->filesystem->log();
 			$this->session->log();
 			$this->authentication->log();
+			if ($this->request) $this->request->log();
 		}
 		
 		public function __toString() {

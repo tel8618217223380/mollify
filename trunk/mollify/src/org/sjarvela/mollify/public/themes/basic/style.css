@@ -714,7 +714,7 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 }
 
 #mollify-header-toggle-button-slidebar {
-	width: 15px;
+	width: 16px;
 	float: right;
 	height: 17px;
 	background-color: #c9c8cc;
@@ -2168,17 +2168,15 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	background-color: #eceeee;
 	right: 0;
 	height: 100%;
+	border-left: 1px solid #cbcbcb;
 }
 
 #mollify-mainview-slidebar-select {
-	border-left: 1px solid #cbcbcb;
-	border-top: 1px solid #828484;
 	width: 100%;
 	float: left;
 }
 
 #mollify-mainview-slidebar-dropbox {
-	border-left: 1px solid #cbcbcb;
 	padding-top: 4px;
 	float: left;
 	width: 100%;
