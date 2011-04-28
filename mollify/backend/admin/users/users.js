@@ -40,8 +40,8 @@ function MollifyUsersConfigurationView() {
 		$("#button-remove-user-folder").click(that.onRemoveUserFolder);
 		$("#button-refresh-user-folders").click(that.refreshUserFolders);
 		
-		that.ldap = getSession().features['ldap'];
-		var cols =  that.ldap ? [
+		that.auth_methods = getSession()['authentication_methods'];
+		var cols =  that.auth_methods.length >  1 ? [
 		   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 	   		{name:'name',index:'name', width:200, sortable:true},
 	   		{name:'email',index:'email', width:150, sortable:true},
@@ -53,7 +53,7 @@ function MollifyUsersConfigurationView() {
 	   		{name:'email',index:'email', width:200, sortable:true},
 			{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
 	   	];
-	   	var colNames = that.ldap ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode'] : ['ID', 'Name', 'E-mail', 'Permission Mode'];
+	   	var colNames = that.auth_methods.length >  1 ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode'] : ['ID', 'Name', 'E-mail', 'Permission Mode'];
 	   	
 		$("#users-list").jqGrid({        
 			datatype: "local",
@@ -120,8 +120,16 @@ function MollifyUsersConfigurationView() {
 	}
 
 	this.authFormatter = function(name, options, user) {
-		if (user.auth == 'PW') return "Password";
-		if (user.auth == 'LDAP') return "LDAP";
+		var a = user.auth;
+		if (!a) return "Default ("+that.formatAuth(that.auth_methods[0])+")";
+		return that.formatAuth(a);
+	}
+	
+	this.formatAuth = function(a) {
+		var u = a.toUpperCase();
+		if (u == 'PW') return "Password";
+		if (u == 'REMOTE') return "Remote";
+		if (u == 'LDAP') return "LDAP";
 		return "";
 	}
 
@@ -301,6 +309,12 @@ function MollifyUsersConfigurationView() {
 		if (!that.addUserDialogInit) {
 			that.addUserDialogInit = true;
 
+			if (that.auth_methods.length > 1) {
+				$.each(that.getAuthOptions(), function(key, value) {   
+				     $('#auth').append($("<option></option>").attr("value",key).text(value)); 
+				});
+			}
+			
 			$("#add-user-dialog").dialog({
 				autoOpen: false,
 				bgiframe: true,
@@ -324,6 +338,7 @@ function MollifyUsersConfigurationView() {
 				var pw = $("#password").val();
 				var permission = $("#permission").val();
 				var auth = $("#auth").val();
+				if (auth == '-') auth = null;
 				
 				onSuccess = function() {
 					$("#add-user-dialog").dialog('close');
@@ -336,17 +351,30 @@ function MollifyUsersConfigurationView() {
 			}
 		}
 		
-		if (that.ldap)
+		if (that.auth_methods.length > 1) {
 			$("#user-auth").show();
-		else
+		} else {
 			$("#user-auth").hide();
+		}
 		$("#add-user-dialog").dialog('option', 'buttons', buttons);
 		$("#username").val("");
 		$("#email").val("");
 		$("#password").val("");
 		$("#permission").val("ro");
-		$("#auth").val("pw");
+		$("#auth").val("-");
 		$("#add-user-dialog").dialog('open');
+	}
+	
+	this.getAuthOptions = function() {
+		var def = 'Default ('+that.formatAuth(that.auth_methods[0])+')';
+		var result = {
+			"-" : def
+		};
+		for (var i=0; i < that.auth_methods.length; i++) {
+			var a = that.auth_methods[i];
+			result[a.toLowerCase()] = that.formatAuth(a);
+		}
+		return result;
 	}
 
 	this.openEditUser = function(id) {
@@ -354,6 +382,12 @@ function MollifyUsersConfigurationView() {
 		
 		if (!that.editUserDialogInit) {
 			that.editUserDialogInit = true;
+			
+			if (that.auth_methods.length > 1) {
+				$.each(that.getAuthOptions(), function(key, value) {   
+				     $('#edit-auth').append($("<option></option>").attr("value",key).text(value)); 
+				});
+			}
 
 			$("#edit-user-dialog").dialog({
 				bgiframe: true,
@@ -374,6 +408,7 @@ function MollifyUsersConfigurationView() {
 				var email = $("#edit-email").val();
 				var permission = $("#edit-permission").val();
 				var auth = $("#edit-auth").val();
+				if (auth == '-') auth = null;
 				
 				onSuccess = function() {
 					$("#edit-user-dialog").dialog('close');
@@ -386,20 +421,20 @@ function MollifyUsersConfigurationView() {
 			}
 		}
 		
-		if (that.ldap)
+		if (that.auth_methods.length > 1) {
 			$("#edit-user-auth").show();
-		else
+			
+			if (user["auth"] != null)
+				$("#edit-auth").val(user["auth"].toLowerCase());
+			else
+				$("#edit-auth").val("-");
+		} else
 			$("#edit-user-auth").hide();
 		$("#edit-user-dialog").dialog('option', 'buttons', buttons);
 		$("#edit-username").val(user.name);
 		$("#edit-email").val(user.email);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
-		if (that.ldap) {
-			if (user["auth"] != null)
-				$("#edit-user-auth").val(user["auth"].toLowerCase());
-			else
-				$("#edit-user-auth").val('pw');
-		}
+		
 		$("#edit-user-dialog").dialog('open');
 	}
 

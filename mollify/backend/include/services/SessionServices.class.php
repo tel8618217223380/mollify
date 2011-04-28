@@ -80,6 +80,7 @@
 			if ($this->env->request()->hasParam("type")) {
 				if (strcasecmp($this->env->request()->param("type"), "admin") === 0 and $this->env->authentication()->isAdmin()) {
 					$info["script_location"] = dirname($_SERVER['SCRIPT_FILENAME']);
+					$info["authentication_methods"] = $this->env->settings()->setting("authentication_methods", TRUE);
 				}
 			}
 			return $info;
