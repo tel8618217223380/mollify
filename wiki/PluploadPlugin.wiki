@@ -1,5 +1,14 @@
 #summary Plupload uploader plugin
 
+= Introduction =
+For licensing issues, Plupload plugin is released as a separate plugin. It can be downloaded from [http://code.google.com/p/mollify/downloads/list]
+
+= License =
+
+Plupload itself (as well as Mollify Plupload plugin) is released under GPLv2 license. For more information, see license file in the plugin package, or [http://www.plupload.com]
+
+= Installation =
+
 1) Copy plugin folder into backend plugins folder
 
 2) Register plugin in backend configuration.php
