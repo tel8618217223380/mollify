@@ -41,7 +41,10 @@ function MollifyUsersConfigurationView() {
 		$("#button-refresh-user-folders").click(that.refreshUserFolders);
 		
 		that.auth_methods = getSession()['authentication_methods'];
-		var cols =  that.auth_methods.length >  1 ? [
+		that.auth_options = that.auth_methods.length > 1;
+		that.default_auth_method = getSession()['authentication_methods'][0].toLowerCase();
+		
+		var cols = that.auth_options ? [
 		   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 	   		{name:'name',index:'name', width:200, sortable:true},
 	   		{name:'email',index:'email', width:150, sortable:true},
@@ -53,7 +56,7 @@ function MollifyUsersConfigurationView() {
 	   		{name:'email',index:'email', width:200, sortable:true},
 			{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
 	   	];
-	   	var colNames = that.auth_methods.length >  1 ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode'] : ['ID', 'Name', 'E-mail', 'Permission Mode'];
+	   	var colNames = that.auth_options ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode'] : ['ID', 'Name', 'E-mail', 'Permission Mode'];
 	   	
 		$("#users-list").jqGrid({        
 			datatype: "local",
@@ -297,7 +300,12 @@ function MollifyUsersConfigurationView() {
 				$("#user-username").addClass("invalid");
 				result = false;
 			}
-			if ($("#password").val().length == 0) {
+			
+			var auth = $("#auth").val();
+			if (auth == '-') auth = that.default_auth_method;
+			var pw_required = (auth == 'pw');
+			
+			if (pw_required && $("#password").val().length == 0) {
 				$("#user-password").addClass("invalid");
 				result = false;
 			}
@@ -351,7 +359,7 @@ function MollifyUsersConfigurationView() {
 			}
 		}
 		
-		if (that.auth_methods.length > 1) {
+		if (that.auth_options) {
 			$("#user-auth").show();
 		} else {
 			$("#user-auth").hide();
@@ -366,7 +374,7 @@ function MollifyUsersConfigurationView() {
 	}
 	
 	this.getAuthOptions = function() {
-		var def = 'Default ('+that.formatAuth(that.auth_methods[0])+')';
+		var def = 'Default ('+that.formatAuth(that.default_auth_method)+')';
 		var result = {
 			"-" : def
 		};
@@ -421,7 +429,7 @@ function MollifyUsersConfigurationView() {
 			}
 		}
 		
-		if (that.auth_methods.length > 1) {
+		if (that.auth_options) {
 			$("#edit-user-auth").show();
 			
 			if (user["auth"] != null)
