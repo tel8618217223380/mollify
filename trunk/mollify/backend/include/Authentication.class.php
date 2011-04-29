@@ -34,6 +34,26 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
 		}
 		
+		public function check() {
+			if (!$this->isAuthenticationRequired() or $this->isAuthenticated()) return;
+			
+			$methods = $this->env->settings()->setting("authentication_methods",TRUE);
+			if (!in_array("remote", $methods)) return;
+			
+			Logging::logDebug("No authenticated session active, attempting remote authentication");
+			if (!isset($_SERVER["REMOTE_USER"])) return;
+			
+			$userName = $_SERVER["REMOTE_USER"];
+			Logging::logDebug("Remote authentication found for [".$userName."] ".(isset($_SERVER["AUTH_TYPE"]) ? $_SERVER["AUTH_TYPE"] : ""));
+			
+			$user = $this->env->configuration()->getUserByName($userName);
+			if ($user == NULL) return;
+			
+			Logging::logDebug("Remote authentication succeeded for [".$user["id"]."] ".$user["name"]);
+			$this->doAuth($user);
+			$this->env->session()->param('auth', "remote");
+		}
+		
 		public function authenticate($userId, $pw) {
 			$password = md5($pw);
 			
@@ -51,9 +71,12 @@
 				// handle other authentications
 				if (strcasecmp("LDAP", $auth) == 0) {
 					$this->authenticateLDAP($user, $pw);
+					$this->env->session()->param('auth', "ldap");
 					return;
 				} 
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
+			} else {
+				$this->env->session()->param('auth', "pw");
 			}
 			$this->doAuth($user);
 		}

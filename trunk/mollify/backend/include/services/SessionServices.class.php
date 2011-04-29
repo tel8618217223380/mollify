@@ -36,6 +36,7 @@
 				$this->response()->success(TRUE);
 				return;
 			}
+			$this->env->authentication()->check();
 			$this->response()->success($this->getSessionInfo($this->path[1]));
 		}
 
