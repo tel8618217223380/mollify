@@ -557,7 +557,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private native void toggle(boolean open) /*-{
 												$wnd.$("#mollify-mainview-slidebar").stop().animate({'width': open ? "300px" : "0px"}, 200);
-												$wnd.$("#mollify-main-content-panel").stop().animate({'marginRight': open ? "300px" : "0px"}, 200);
+												$wnd.$("#mollify-main-lower-content").stop().animate({'marginRight': open ? "300px" : "0px"}, 200);
 												}-*/;
 
 	@Override
