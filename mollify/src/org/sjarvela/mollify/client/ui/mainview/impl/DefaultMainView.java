@@ -71,6 +71,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private final List<ViewListener> viewListeners = new ArrayList();
 	private final List<SearchListener> searchListeners = new ArrayList();
 	private final FileListWidgetFactory fileListViewFactory;
+	private final DropBox dropBox;
 
 	private VerticalPanel header;
 	private DropdownButton addButton;
@@ -84,7 +85,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FlowPanel fileUrlContainer;
 	private FileListWidget fileListView;
 	private Widget content;
-	private final DropBox dropBox;
 
 	public enum Action implements ResourceId {
 		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl;
@@ -173,34 +173,32 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		createButtons();
 
 		Panel content = new VerticalPanel();
-		content.setWidth("100%");
-
 		content.getElement().setId("mollify-main-content");
-		content.add(createTopHeader());
+
 		content.add(createHeader());
+		content.add(createToolbar());
 
-		Panel p = new HorizontalPanel();
-		p.setWidth("100%");
-		content.add(p);
+		Panel lowerContentPanel = new FlowPanel();
+		lowerContentPanel.getElement()
+				.setId("mollify-main-lower-content-panel");
+		content.add(lowerContentPanel);
 
-		Panel contentPanel = new FlowPanel();
-		contentPanel.getElement().setId("mollify-main-content-panel");
+		Panel lowerContent = new FlowPanel();
+		lowerContent.getElement().setId("mollify-main-lower-content");
 
 		Panel headerLower = new FlowPanel();
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
 		headerLower.add(slideBarButton);
 
-		contentPanel.add(headerLower);
-		contentPanel.add(listPanel);
-		p.add(contentPanel);
-		contentPanel.getElement().getParentElement().setAttribute("width", "*");
+		lowerContent.add(headerLower);
+		lowerContent.add(listPanel);
+		lowerContentPanel.add(lowerContent);
 
 		Panel slideBar = new FlowPanel();
 		slideBar.getElement().setId("mollify-mainview-slidebar");
 		slideBar.add(createSelectBar());
 		slideBar.add(createDropboxBar());
-		p.add(slideBar);
-		slideBar.getElement().getParentElement().setAttribute("width", "0px");
+		lowerContentPanel.add(slideBar);
 
 		return content;
 	}
@@ -234,7 +232,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return selectBar;
 	}
 
-	private Widget createTopHeader() {
+	private Widget createHeader() {
 		Panel top = new FlowPanel();
 		top.setStylePrimaryName("mollify-header-top");
 
@@ -256,27 +254,16 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return fileUrlContainer;
 	}
 
-	private Widget createHeader() {
-		Panel headerUpperPanel = new HorizontalPanel();
-		headerUpperPanel.setStyleName(StyleConstants.MAIN_VIEW_HEADER_PANEL);
-
-		Panel headerUpper = new HorizontalPanel();
-		headerUpper.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
+	private Widget createToolbar() {
+		Panel toolbar = new HorizontalPanel();
+		toolbar.setStyleName(StyleConstants.MAIN_VIEW_HEADER);
 		if (addButton != null)
 			buttonPanel.add(addButton);
 		buttonPanel.add(refreshButton);
 		buttonPanel.add(folderSelector);
-		headerUpper.add(buttonPanel);
-		headerUpper.add(createSearchField());
-		headerUpperPanel.add(headerUpper);
-
-		return headerUpperPanel;
-		//
-		// header = new VerticalPanel();
-		// header.setStylePrimaryName(StyleConstants.MAIN_VIEW_HEADER_CONTAINER);
-		// header.add(headerUpperPanel);
-		// header.add(headerLower);
-		// return header;
+		toolbar.add(buttonPanel);
+		toolbar.add(createSearchField());
+		return toolbar;
 	}
 
 	private Widget createSearchField() {
