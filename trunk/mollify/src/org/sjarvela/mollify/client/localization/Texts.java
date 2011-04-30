@@ -483,6 +483,8 @@ public enum Texts implements ResourceId {
 
 	dropBoxActionMoveHere,
 
+	dropBoxNoItems,
+
 	mainViewSelectButton,
 
 	mainViewSelectAll,
