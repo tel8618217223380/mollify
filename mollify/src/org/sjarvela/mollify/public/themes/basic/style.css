@@ -2200,6 +2200,15 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	overflow: auto;
 }
 
+#mollify-dropbox-empty-label {
+	text-align: center;
+	width: 100%;
+	font-size: 16px;
+	font-weight: bold;
+	color: #b8b8b8;
+	margin-top: 85px;
+}
+
 .mollify-dropbox-item {
 	position: relative;
 	height: 27px;

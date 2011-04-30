@@ -43,6 +43,7 @@ public class DropBoxView extends FlowPanel {
 	private Panel dropTarget;
 	private Panel contents;
 	private DropdownButton actionsButton;
+	private Widget noItemsLabel;
 
 	public DropBoxView(TextProvider textProvider,
 			ActionListener actionListener, SessionInfo session,
@@ -97,6 +98,7 @@ public class DropBoxView extends FlowPanel {
 		}
 		actions.add(actionsButton);
 
+		noItemsLabel = createNoItemsLabel();
 		return panel;
 	}
 
@@ -117,8 +119,16 @@ public class DropBoxView extends FlowPanel {
 		contents.clear();
 		for (FileSystemItem item : items)
 			contents.add(createItemWidget(item));
-		if (items.isEmpty())
+		if (items.isEmpty()) {
 			dropTarget.addStyleDependentName("empty");
+			contents.add(noItemsLabel);
+		}
+	}
+
+	private Widget createNoItemsLabel() {
+		Label l = new Label(textProvider.getText(Texts.dropBoxNoItems));
+		l.getElement().setId("mollify-dropbox-empty-label");
+		return l;
 	}
 
 	private Widget createItemWidget(final FileSystemItem item) {
