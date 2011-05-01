@@ -85,6 +85,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FlowPanel fileUrlContainer;
 	private FileListWidget fileListView;
 	private Widget content;
+	private List<GridListener> listListeners = new ArrayList();
 
 	public enum ViewType {
 		list, gridSmall, gridLarge
@@ -144,6 +145,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void setViewType(ViewType type) {
 		fileListView = fileListViewFactory.create(type);
+		for (GridListener l : listListeners)
+			fileListView.addListener(l);
 
 		listPanel.clear();
 		listPanel.add(fileListView.getWidget());
@@ -423,6 +426,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void addFileListListener(GridListener listener) {
+		listListeners.add(listener);
 		fileListView.addListener(listener);
 	}
 

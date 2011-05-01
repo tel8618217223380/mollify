@@ -2511,55 +2511,6 @@ input.mollify-header-search-field {
 	margin-top: 19px;
 }
 
-/*
-.mollify-file-grid-item {
-	clear: none;
-	display: block;
-	float: left;
-	width: 100px;
-	height: 100px;
-	cursor: pointer;
-	margin: 4px;
-}
-
-.mollify-file-grid-item-selected {
-	background-color: #f8f8f8;
-}
-
-.mollify-file-grid-item-icon {
-	width: 75px;
-	height: 75px;
-	background: url(big/empty.png) no-repeat 4px 7px;
-	margin-top: 4px;
-	margin-left: 13px;
-}
-
-.mollify-file-grid-item-label {
-	width: 100%;
-	text-align: center;
-	padding-top: 6px;
-	overflow: hidden;
-}
-
-.mollify-file-grid-item-selected .mollify-file-grid-item-label {
-	font-weight: bold;
-	overflow: visible;
-}
-
-.mollify-file-grid-item-folder .mollify-file-grid-item-icon {
-	background: url(big/folder_blue.png) no-repeat 5px 10px;	
-}
-
-.mollify-file-grid-item-thumbnail-container {
-	height: 75px;
-	margin-left: 13px;
-	margin-top: 4px;
-}
-
-.mollify-file-grid-item-thumbnail {
-	max-width: 75px;
-}
-*/
 .mollify-file-grid-item {
 	clear: none;
 	display: block;
@@ -2568,6 +2519,11 @@ input.mollify-header-search-field {
 	height: 185px;
 	cursor: pointer;
 	margin: 4px;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item {
+	width: 100px;
+	height: 100px;
 }
 
 .mollify-file-grid-item-selected {
@@ -2584,6 +2540,14 @@ input.mollify-header-search-field {
 	background: url(mimetypes128/empty.png) no-repeat 24px 7px;
 	margin-left: 13px;
 	margin-top: 14px;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-icon {
+	width: 75px;
+	height: 75px;
+	background: url(mimetypes64/empty.png) no-repeat 4px 7px;
+	margin-top: 4px;
+	margin-left: 13px;
 }
 
 .mollify-file-grid-item-label {
@@ -2606,10 +2570,24 @@ input.mollify-header-search-field {
 	background: url(mimetypes128/folder_blue.png) no-repeat 23px 10px;	
 }
 
+.mollify-file-grid-small .mollify-file-grid-item-folder .mollify-file-grid-item-icon {
+	background: url(mimetypes64/folder.png) no-repeat 5px 10px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-folder-parent .mollify-file-grid-item-icon {
+	background: url(mimetypes64/folder_blue.png) no-repeat 5px 10px;	
+}
+
 .mollify-file-grid-item-thumbnail-container {
 	height: 145px;
 	margin-left: 2px;
 	margin-top: 14px;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-thumbnail-container {
+	height: 75px;
+	margin-left: 13px;
+	margin-top: 4px;
 }
 
 .mollify-file-grid-item-thumbnail {
@@ -2618,6 +2596,11 @@ input.mollify-header-search-field {
 	margin-right: auto;
 	margin-left: auto;
 	display: block;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-thumbnail {
+	max-width: 75px;
+	max-height: 70px;
 }
 
 .mollify-file-grid-item-pdf .mollify-file-grid-item-icon {
@@ -2649,7 +2632,7 @@ input.mollify-header-search-field {
 }
 
 .mollify-file-grid-item-doc .mollify-file-grid-item-icon {
-	background: url(mimetypes128/application_vnd.ms_word.png) no-repeat 24px 7px;	
+	background: url(mimetypes128/application_vnd.ms_word.png) no-repeat 24px 7px;
 }
 
 .mollify-file-grid-item-txt .mollify-file-grid-item-icon {
@@ -2658,6 +2641,48 @@ input.mollify-header-search-field {
 
 .mollify-file-grid-item-html .mollify-file-grid-item-icon {
 	background: url(mimetypes128/text_html.png) no-repeat 24px 7px;	
+}
+
+/* small */
+
+.mollify-file-grid-small .mollify-file-grid-item-pdf .mollify-file-grid-item-icon {
+	background: url(mimetypes64/application_pdf.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-php .mollify-file-grid-item-icon {
+	background: url(mimetypes64/application_x_php.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-zip .mollify-file-grid-item-icon {
+	background: url(mimetypes64/application_zip.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-mp3 .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-ogg .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-wav .mollify-file-grid-item-icon {
+	background: url(mimetypes64/audio_basic.png) no-repeat 7px 7px;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-avi .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-mkv .mollify-file-grid-item-icon {
+	background: url(mimetypes64/video.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-jpg .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-png .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-gif .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-jpeg .mollify-file-grid-item-icon, .mollify-file-grid-small .mollify-file-grid-item-tiff .mollify-file-grid-item-icon {
+	background: url(mimetypes64/image_png.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-xls .mollify-file-grid-item-icon {
+	background: url(mimetypes64/application_vnd.ms_excel.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-doc .mollify-file-grid-item-icon {
+	background: url(mimetypes64/application_vnd.ms_word.png) no-repeat 7px 7px;
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-txt .mollify-file-grid-item-icon {
+	background: url(mimetypes64/text_plain.png) no-repeat 7px 7px;	
+}
+
+.mollify-file-grid-small .mollify-file-grid-item-html .mollify-file-grid-item-icon {
+	background: url(mimetypes64/text_html.png) no-repeat 7px 7px;	
 }
 
 #plupload-container {
