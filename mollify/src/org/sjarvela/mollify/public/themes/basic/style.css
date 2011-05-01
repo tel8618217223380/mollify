@@ -597,6 +597,25 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	margin-top: 17px;
 }
 
+#mollify-mainview-options-panel {
+	float: right;
+	margin-right: 29px;
+}
+
+.mollify-mainview-options-button {
+	width: 15px;
+	height: 15px;
+	float: left;
+	background-color: #ff7172;
+	margin-left: 4px;
+	margin-top: 4px;
+	cursor: pointer;
+}
+
+.mollify-mainview-options-button-down {
+	
+}
+
 .mollify-header-toggle-button, #mollify-header-select-options, #mollify-header-file-actions {
 	width: 40px;
 	text-align: center;

@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -25,6 +24,7 @@ import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.ActionToggleButton;
+import org.sjarvela.mollify.client.ui.common.ActionToggleButtonGroup;
 import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.HintTextBox;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
@@ -86,8 +86,12 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private FileListWidget fileListView;
 	private Widget content;
 
+	public enum ViewType {
+		list, gridSmall, gridLarge
+	}
+
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl, listView, gridViewSmall, gridViewLarge;
 	};
 
 	public DefaultMainView(MainViewModel model, TextProvider textProvider,
@@ -135,11 +139,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		initWidget(content);
 		setStyleName(StyleConstants.MAIN_VIEW);
 
-		createFileView();
+		setViewType(ViewType.list);
 	}
 
-	private void createFileView() {
-		fileListView = fileListViewFactory.create();
+	public void setViewType(ViewType type) {
+		fileListView = fileListViewFactory.create(type);
 
 		listPanel.clear();
 		listPanel.add(fileListView.getWidget());
@@ -159,10 +163,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void addSearchListener(SearchListener listener) {
 		searchListeners.add(listener);
-	}
-
-	public void setContextHandler(FileSystemActionHandler actionHandler) {
-		itemContextPopup.setActionHandler(actionHandler);
 	}
 
 	public FileListWidget getFileWidget() {
@@ -188,6 +188,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 		Panel headerLower = new FlowPanel();
 		headerLower.setStyleName(StyleConstants.MAIN_VIEW_SUBHEADER);
+		headerLower.add(createOptionsPanel());
 		headerLower.add(slideBarButton);
 
 		lowerContent.add(headerLower);
@@ -201,6 +202,34 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		lowerContentPanel.add(slideBar);
 
 		return content;
+	}
+
+	private Widget createOptionsPanel() {
+		Panel optionsPanel = new FlowPanel();
+		optionsPanel.getElement().setId("mollify-mainview-options-panel");
+
+		ActionToggleButton listViewButton = new ActionToggleButton("",
+				"mollify-mainview-options-list",
+				"mollify-mainview-options-button");
+		listViewButton.setAction(actionListener, Action.listView);
+		optionsPanel.add(listViewButton);
+
+		ActionToggleButton largeGridViewButton = new ActionToggleButton("",
+				"mollify-mainview-options-grid-large",
+				"mollify-mainview-options-button");
+		largeGridViewButton.setAction(actionListener, Action.gridViewLarge);
+		optionsPanel.add(largeGridViewButton);
+
+		ActionToggleButton smallGridViewButton = new ActionToggleButton("",
+				"mollify-mainview-options-grid-small",
+				"mollify-mainview-options-button");
+		smallGridViewButton.setAction(actionListener, Action.gridViewSmall);
+		optionsPanel.add(smallGridViewButton);
+
+		new ActionToggleButtonGroup(listViewButton, smallGridViewButton,
+				largeGridViewButton);
+
+		return optionsPanel;
 	}
 
 	private Panel createDropboxBar() {
@@ -429,7 +458,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return username;
 	}
 
-	public ItemContextPopup getFileContext() {
+	public ItemContextPopup getItemContext() {
 		return itemContextPopup;
 	}
 

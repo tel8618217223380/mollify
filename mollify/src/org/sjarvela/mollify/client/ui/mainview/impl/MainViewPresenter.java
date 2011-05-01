@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
@@ -118,7 +120,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.eventDispatcher = eventDispatcher;
 		this.searchResultDialogFactory = searchResultDialogFactory;
 
-		this.view.getFileContext().setActionHandler(fileSystemActionHandler);
+		this.view.getItemContext().setActionHandler(fileSystemActionHandler);
 
 		this.view.getFolderSelector().addListener(this);
 		this.view
@@ -214,11 +216,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	private void refreshView() {
-		List<FileSystemItem> allFileItems = model.getAllItems();
+		List<FileSystemItem> allItems = new ArrayList(model.getAllItems());
 		if (model.getFolderModel().canAscend())
-			allFileItems.add(0, Folder.Parent);
+			allItems.add(0, Folder.Parent);
 
-		view.getFileWidget().setContent(allFileItems);
+		view.getFileWidget().setContent(allItems);
 		view.setAddButtonVisible(model.getFolderPermission().canWrite());
 		view.refresh();
 		if (exposeFileUrls)
@@ -556,9 +558,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	private native void toggle(boolean open) /*-{
-												$wnd.$("#mollify-mainview-slidebar").stop().animate({'width': open ? "300px" : "0px"}, 200);
-												$wnd.$("#mollify-main-lower-content").stop().animate({'marginRight': open ? "300px" : "0px"}, 200);
-												}-*/;
+		$wnd.$("#mollify-mainview-slidebar").stop().animate({
+			'width' : open ? "300px" : "0px"
+		}, 200);
+		$wnd.$("#mollify-main-lower-content").stop().animate({
+			'marginRight' : open ? "300px" : "0px"
+		}, 200);
+	}-*/;
 
 	@Override
 	public List<FileSystemItem> getSelectedItems() {
@@ -585,6 +591,24 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public Folder getCurrentFolder() {
 		return model.getCurrentFolder();
+	}
+
+	public void onShowListView() {
+		setViewType(ViewType.list);
+	}
+
+	public void onShowGridView(boolean small) {
+		setViewType(small ? ViewType.gridSmall : ViewType.gridLarge);
+	}
+
+	private void setViewType(ViewType type) {
+		view.showProgress();
+		try {
+			view.setViewType(type);
+			refreshView();
+		} finally {
+			view.hideProgress();
+		}
 	}
 
 }

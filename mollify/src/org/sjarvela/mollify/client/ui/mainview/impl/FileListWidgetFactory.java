@@ -10,8 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
+
 public interface FileListWidgetFactory {
 
-	FileListWidget create();
+	FileListWidget create(ViewType type);
 
 }

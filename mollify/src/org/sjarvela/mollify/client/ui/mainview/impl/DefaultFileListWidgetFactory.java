@@ -14,12 +14,12 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 
 	private final TextProvider textProvider;
 	private final DragAndDropManager dragAndDropManager;
-	private final boolean grid;
 	private final boolean thumbnails;
 	private final FileSystemService service;
 	private final boolean experimental;
@@ -30,18 +30,20 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.service = service;
-		this.grid = settings.getBool("grid-view", false);
+		// this.grid = settings.getBool("grid-view", false);
 		this.experimental = settings.getBool("experimental-list", false);
 		this.thumbnails = settings.getBool("show-thumbnails", false);
 	}
 
 	@Override
-	public FileListWidget create() {
-		if (grid)
-			return new DefaultFileListGridWidget(thumbnails, service);
-		if (experimental)
-			return new CellTableFileList(textProvider);
-		return new DefaultFileListWidget(textProvider, dragAndDropManager);
+	public FileListWidget create(ViewType type) {
+		if (ViewType.list.equals(type)) {
+			if (experimental)
+				return new CellTableFileList(textProvider);
+			return new DefaultFileListWidget(textProvider, dragAndDropManager);
+		}
+		return new DefaultFileListGridWidget(thumbnails, service,
+				ViewType.gridSmall.equals(type));
 	}
 
 }

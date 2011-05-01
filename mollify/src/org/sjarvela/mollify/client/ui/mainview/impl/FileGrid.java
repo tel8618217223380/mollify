@@ -51,17 +51,18 @@ public class FileGrid extends Composite {
 	private SelectController selectController;
 	private boolean selectMode = false;
 
-	public FileGrid(boolean thumbnails, FileSystemService service) {
+	public FileGrid(boolean thumbnails, FileSystemService service, String style) {
 		this.thumbnails = thumbnails;
 		this.service = service;
 
-		panel = createWidget();
+		panel = createWidget(style);
 		initWidget(panel);
 	}
 
-	private Panel createWidget() {
+	private Panel createWidget(String style) {
 		Panel panel = new FlowPanel();
 		panel.setStylePrimaryName("mollify-file-grid");
+		panel.addStyleDependentName(style);
 		return panel;
 	}
 

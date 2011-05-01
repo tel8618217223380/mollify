@@ -25,8 +25,8 @@ public class DefaultFileListGridWidget implements FileListWidget {
 	private FileGrid grid;
 
 	public DefaultFileListGridWidget(boolean thumbnails,
-			FileSystemService service) {
-		this.grid = new FileGrid(thumbnails, service);
+			FileSystemService service, boolean small) {
+		this.grid = new FileGrid(thumbnails, service, small ? "small" : "large");
 	}
 
 	@Override
