@@ -89,7 +89,7 @@
 			if (isset($_SERVER["CONTENT_TYPE"]))
 				$contentType = $_SERVER["CONTENT_TYPE"];
 			
-			$file = $targetDir.$fileName;
+			$file = ltrim($targetDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$fileName;
 			Logging::logDebug("Uploading to ".$file." (".$chunk."/".$chunks.")");
 			Logging::logDebug("Content type: ".$contentType);
 			

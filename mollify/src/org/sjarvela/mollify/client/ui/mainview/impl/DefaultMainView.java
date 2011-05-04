@@ -416,7 +416,6 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				addButton
 						.addAction(Action.retrieveUrl, textProvider
 								.getText(Texts.mainViewRetrieveUrlMenuItem));
-
 		}
 	}
 
