@@ -606,14 +606,33 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	width: 15px;
 	height: 15px;
 	float: left;
-	background-color: #ff7172;
-	margin-left: 4px;
+	margin-left: 1px;
 	margin-top: 4px;
 	cursor: pointer;
 }
 
-.mollify-mainview-options-button-down {
-	
+#mollify-mainview-options-list {
+	background: url(view-options.png) no-repeat 0 0;
+}
+
+#mollify-mainview-options-grid-large {
+	background: url(view-options.png) no-repeat 0 -31px;
+}
+
+#mollify-mainview-options-grid-small {
+	background: url(view-options.png) no-repeat 0 -15px;
+}
+
+#mollify-mainview-options-list:hover, #mollify-mainview-options-list.mollify-mainview-options-button-down {
+	background: url(view-options.png) no-repeat -15px 0;
+}
+
+#mollify-mainview-options-grid-large:hover, #mollify-mainview-options-grid-large.mollify-mainview-options-button-down {
+	background: url(view-options.png) no-repeat -15px -31px;
+}
+
+#mollify-mainview-options-grid-small:hover, #mollify-mainview-options-grid-small.mollify-mainview-options-button-down {
+	background: url(view-options.png) no-repeat -15px -15px;
 }
 
 .mollify-header-toggle-button, #mollify-header-select-options, #mollify-header-file-actions {

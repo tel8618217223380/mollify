@@ -20,13 +20,11 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
-import org.sjarvela.mollify.client.ui.common.TooltipTarget;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusWidget;
 
 public class FolderSelector extends FlowPanel implements FolderListener {
 	private final FolderModelProvider folderModelProvider;
@@ -61,15 +59,7 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 
 		new Tooltip(StyleConstants.MAIN_VIEW_HEADER_BUTTON_TOOLTIP,
 				textProvider.getText(Texts.mainViewParentDirButtonTooltip))
-				.attach(new TooltipTarget() {
-					public FocusWidget getWidget() {
-						return button;
-					}
-
-					public boolean showTooltip() {
-						return true;
-					}
-				});
+				.attachTo(button);
 
 		button.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {

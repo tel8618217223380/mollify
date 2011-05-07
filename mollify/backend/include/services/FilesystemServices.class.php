@@ -140,6 +140,12 @@
 					if (!$item->isFile()) throw $this->invalidRequestException();
 					$ext = strtolower($item->extension());
 					if (!in_array($ext, array("gif", "png", "jpg"))) throw $this->invalidRequestException();
+
+					if ($this->env->settings()->getSetting("enable_thumbnails", TRUE)) {
+						require_once("include/Thumbnail.class.php");
+						$t = new Thumbnail();
+						if ($t->generate($item)) die();
+					}
 					
 					$this->env->filesystem()->view($item);
 					return;

@@ -527,6 +527,6 @@ public enum Texts implements ResourceId {
 
 	searchResultListColumnTitlePath,
 
-	searchResultsNoMatchesFound, searchResultsTooltipMatches, searchResultsTooltipMatchName, searchResultsTooltipMatchDescription, mainViewSlideBarTitleSelect
+	searchResultsNoMatchesFound, searchResultsTooltipMatches, searchResultsTooltipMatchName, searchResultsTooltipMatchDescription, mainViewSlideBarTitleSelect, mainViewOptionsListTooltip, mainViewOptionsGridSmallTooltip, mainViewOptionsGridLargeTooltip
 
 }

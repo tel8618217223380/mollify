@@ -28,6 +28,7 @@ import org.sjarvela.mollify.client.ui.common.ActionToggleButtonGroup;
 import org.sjarvela.mollify.client.ui.common.Coords;
 import org.sjarvela.mollify.client.ui.common.HintTextBox;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
+import org.sjarvela.mollify.client.ui.common.TooltipPositioner;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
@@ -211,23 +212,43 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		Panel optionsPanel = new FlowPanel();
 		optionsPanel.getElement().setId("mollify-mainview-options-panel");
 
+		TooltipPositioner p = new TooltipPositioner() {
+			@Override
+			public Coords getPosition(Widget target, int top, int left,
+					int popupWidth, int popupHeight) {
+				int max = (content.getAbsoluteLeft() + content.getOffsetWidth())
+						- popupWidth;
+				return new Coords(Math.min(left, max), top);
+			}
+		};
+
 		ActionToggleButton listViewButton = new ActionToggleButton("",
 				"mollify-mainview-options-list",
 				"mollify-mainview-options-button");
 		listViewButton.setAction(actionListener, Action.listView);
+		listViewButton.setDown(true);
+		new Tooltip("mainview-options",
+				textProvider.getText(Texts.mainViewOptionsListTooltip))
+				.attachTo(listViewButton, p);
 		optionsPanel.add(listViewButton);
-
-		ActionToggleButton largeGridViewButton = new ActionToggleButton("",
-				"mollify-mainview-options-grid-large",
-				"mollify-mainview-options-button");
-		largeGridViewButton.setAction(actionListener, Action.gridViewLarge);
-		optionsPanel.add(largeGridViewButton);
 
 		ActionToggleButton smallGridViewButton = new ActionToggleButton("",
 				"mollify-mainview-options-grid-small",
 				"mollify-mainview-options-button");
 		smallGridViewButton.setAction(actionListener, Action.gridViewSmall);
+		new Tooltip("mainview-options",
+				textProvider.getText(Texts.mainViewOptionsGridSmallTooltip))
+				.attachTo(smallGridViewButton, p);
 		optionsPanel.add(smallGridViewButton);
+
+		ActionToggleButton largeGridViewButton = new ActionToggleButton("",
+				"mollify-mainview-options-grid-large",
+				"mollify-mainview-options-button");
+		largeGridViewButton.setAction(actionListener, Action.gridViewLarge);
+		new Tooltip("mainview-options",
+				textProvider.getText(Texts.mainViewOptionsGridLargeTooltip))
+				.attachTo(largeGridViewButton, p);
+		optionsPanel.add(largeGridViewButton);
 
 		new ActionToggleButtonGroup(listViewButton, smallGridViewButton,
 				largeGridViewButton);
