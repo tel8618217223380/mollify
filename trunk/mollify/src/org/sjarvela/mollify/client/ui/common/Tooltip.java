@@ -71,7 +71,8 @@ public class Tooltip extends PopupPanel {
 					public void setPosition(int offsetWidth, int offsetHeight) {
 						Tooltip.this.setPopupPosition(target.getWidget()
 								.getAbsoluteLeft(), target.getWidget()
-								.getAbsoluteTop() + offsetHeight + 5);
+								.getAbsoluteTop()
+								+ target.getWidget().getOffsetHeight() + 5);
 					}
 				});
 			}
@@ -79,20 +80,33 @@ public class Tooltip extends PopupPanel {
 	}
 
 	public void attachTo(Widget target) {
+		attachTo(target, null);
+	}
+
+	public void attachTo(Widget target, TooltipPositioner p) {
 		target.sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT);
-		target.addHandler(createMouseOverHandler(target),
+		target.addHandler(createMouseOverHandler(target, p),
 				MouseOverEvent.getType());
 		target.addHandler(mouseOutHandler, MouseOutEvent.getType());
 		target.addHandler(clickHandler, ClickEvent.getType());
 	}
 
-	private MouseOverHandler createMouseOverHandler(final Widget target) {
+	private MouseOverHandler createMouseOverHandler(final Widget target,
+			final TooltipPositioner p) {
 		return new MouseOverHandler() {
 			public void onMouseOver(MouseOverEvent event) {
 				Tooltip.this.setPopupPositionAndShow(new PositionCallback() {
 					public void setPosition(int offsetWidth, int offsetHeight) {
-						Tooltip.this.setPopupPosition(target.getAbsoluteLeft(),
-								target.getAbsoluteTop() + offsetHeight);
+						int left = target.getAbsoluteLeft();
+						int top = target.getAbsoluteTop()
+								+ target.getOffsetHeight() + 5;
+						if (p != null) {
+							Coords c = p.getPosition(target, top, left,
+									offsetWidth, offsetHeight);
+							left = c.x;
+							top = c.y;
+						}
+						Tooltip.this.setPopupPosition(left, top);
 					}
 				});
 			}

@@ -30,9 +30,8 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.service = service;
-		// this.grid = settings.getBool("grid-view", false);
 		this.experimental = settings.getBool("experimental-list", false);
-		this.thumbnails = settings.getBool("show-thumbnails", false);
+		this.thumbnails = settings.getBool("icon-view-thumbnails", true);
 	}
 
 	@Override

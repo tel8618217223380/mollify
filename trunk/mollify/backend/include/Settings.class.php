@@ -49,6 +49,7 @@
 			"ldap_server" => NULL,
 			"ldap_fqdn" => NULL,
 			"upload_temp_dir" => NULL,
+			"enable_thumbnails" => TRUE,
 			"debug" => FALSE
 		);
 		
