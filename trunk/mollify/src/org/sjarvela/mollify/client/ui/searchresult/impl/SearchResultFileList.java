@@ -101,10 +101,10 @@ public class SearchResultFileList extends FileList {
 
 		String html = "<span class='title'>"
 				+ textProvider.getText(Texts.searchResultsTooltipMatches)
-				+ "</span><li>";
+				+ "</span><ul>";
 		for (int i = 0; i < matches.length(); i++)
 			html += addMatch(matches.get(i).<JsObj> cast());
-		html += "</li>";
+		html += "</ul>";
 		new HtmlTooltip("search-results", html).attachTo(w);
 	}
 
@@ -121,6 +121,6 @@ public class SearchResultFileList extends FileList {
 							.getText(Texts.searchResultsTooltipMatchDescription)
 					+ ":</span>&nbsp;" + m.getString("description");
 		}
-		return "<ul>" + html + "</ul>";
+		return "<li>" + html + "</li>";
 	}
 }

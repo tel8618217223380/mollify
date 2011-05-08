@@ -612,23 +612,23 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 }
 
 #mollify-mainview-options-list {
-	background: url(view-options.png) no-repeat 0 0;
+	background: url(view-options.png) no-repeat 0px 0;
 }
 
 #mollify-mainview-options-grid-large {
-	background: url(view-options.png) no-repeat 0 -31px;
+	background: url(view-options.png) no-repeat -30px 0;
 }
 
 #mollify-mainview-options-grid-small {
-	background: url(view-options.png) no-repeat 0 -15px;
-}
-
-#mollify-mainview-options-list:hover, #mollify-mainview-options-list.mollify-mainview-options-button-down {
 	background: url(view-options.png) no-repeat -15px 0;
 }
 
+#mollify-mainview-options-list:hover, #mollify-mainview-options-list.mollify-mainview-options-button-down {
+	background: url(view-options.png) no-repeat 0px -15px;
+}
+
 #mollify-mainview-options-grid-large:hover, #mollify-mainview-options-grid-large.mollify-mainview-options-button-down {
-	background: url(view-options.png) no-repeat -15px -31px;
+	background: url(view-options.png) no-repeat -30px -15px;
 }
 
 #mollify-mainview-options-grid-small:hover, #mollify-mainview-options-grid-small.mollify-mainview-options-button-down {
@@ -2436,10 +2436,8 @@ input.mollify-header-search-field {
 }
 
 .mollify-tooltip-search-results {
-	
 	margin-left: 25px;
 	min-width: 150px;
-	margin-top: -23px;
 }
 
 .mollify-tooltip-search-results .title {
@@ -2448,12 +2446,18 @@ input.mollify-header-search-field {
 }
 
 .mollify-tooltip-search-results ul {
-	padding-left: 8px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding-left: 21px;
+}
+
+.mollify-tooltip-search-results li {
+	padding-left: 4px;
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
 
-.mollify-tooltip-search-results ul .title {
+.mollify-tooltip-search-results li .title {
 	color: #6b6b6b;
 }
 

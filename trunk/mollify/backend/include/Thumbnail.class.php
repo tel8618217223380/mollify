@@ -12,16 +12,17 @@
 
 	class Thumbnail {
 		function generate($item) {
+			//Logging::logDebug("Creating thumbnail for ".$item->internalPath());
 			$MAX_THUMB_WIDTH = 200;
 			$MAX_THUMB_HEIGHT = 200;
 	
 			$img = null;
-			$ext = strtolower($item->extension());
-			if ($ext == 'jpg' || $ext == 'jpeg') {
+			$ext = $item->extension();
+			if (strcasecmp('jpg', $ext) == 0 || strcasecmp('jpeg', $ext) == 0) {
 	    		$img = @imagecreatefromjpeg($item->internalPath());
-			} else if ($ext == 'png') {
+			} else if (strcasecmp('png', $ext) == 0) {
 				$img = @imagecreatefrompng($item->internalPath());
-			} else if ($ext == 'gif') {
+			} else if (strcasecmp('gif', $ext) == 0) {
 				$img = @imagecreatefromgif($item->internalPath());
 			}
 			if ($img == NULL) {
@@ -32,7 +33,10 @@
 			$w = imagesx($img);
 			$h = imagesy($img);
 			$s = min($MAX_THUMB_WIDTH/$w, $MAX_THUMB_HEIGHT/$h);
-			if ($s >= 1) return FALSE;
+			if ($s >= 1) {
+				Logging::logDebug("Skipping thumbnail, image smaller than thumbnail");
+				return FALSE;
+			}
 			
 	        $tw = floor($s*$w);
 	        $th = floor($s*$h);
