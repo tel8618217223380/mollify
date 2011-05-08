@@ -138,10 +138,9 @@
 			switch (strtolower($this->path[1])) {
 				case 'thumbnail':
 					if (!$item->isFile()) throw $this->invalidRequestException();
-					$ext = strtolower($item->extension());
-					if (!in_array($ext, array("gif", "png", "jpg"))) throw $this->invalidRequestException();
+					if (!in_array(strtolower($item->extension()), array("gif", "png", "jpg", "jpeg"))) throw $this->invalidRequestException();
 
-					if ($this->env->settings()->getSetting("enable_thumbnails", TRUE)) {
+					if ($this->env->settings()->setting("enable_thumbnails", TRUE)) {
 						require_once("include/Thumbnail.class.php");
 						$t = new Thumbnail();
 						if ($t->generate($item)) die();
