@@ -13,7 +13,7 @@
 	require_once("DbConfiguration.class.php");
 
 	class SQLiteConfiguration extends DbConfiguration {
-		const VERSION = "1_7_10";
+		const VERSION = "1_8";
 		
 		public function __construct($settings) {
 			global $DB_FILE;
@@ -21,7 +21,14 @@
 			if (!isset($DB_FILE)) throw new ServiceException("INVALID_CONFIGURATION", "No database information defined");
 						
 			require_once("include/sqlite/SQLiteDatabase.class.php");
+			
 			$this->db = new MollifySQLiteDatabase($DB_FILE);
 			$this->db->connect();
-		}	
+			$this->db->registerRegex();
+		}
+		
+		public function getType() {
+			return "sqlite";
+		}
 	}
+?>
