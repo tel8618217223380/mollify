@@ -44,5 +44,10 @@
 			
 			$this->db->connect();
 			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);
-		}	
+		}
+		
+		public function getType() {
+			return "mysql";
+		}
 	}
+?>

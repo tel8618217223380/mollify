@@ -36,6 +36,10 @@
 			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (file=".$this->file."), error: ".$error);
 			$this->db = $db;
 		}
+		
+		public function registerRegex() {
+			sqlite_create_function($this->db, 'REGEX', 'sqlite_regex_match', 2);
+		}
 
 		public function table($name) {
 			return $name;
@@ -170,5 +174,12 @@
 		
 		public function free() {
 		}
+	}
+	
+	function sqlite_regex_match($str, $regex) {  
+		if (preg_match($regex, $str, $matches)) {  
+			return $matches[0];  
+		}
+		return false;  
 	}
 ?>

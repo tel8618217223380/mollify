@@ -86,7 +86,7 @@
 			return $this->db->query(sprintf("SELECT id, name, email, auth FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
-		public function addUser($name, $pw, $email, $permission, $auth) {
+		public function addUser($name, $pw, $email, $permission, $auth = NULL) {
 			if (isset($email) and strlen($email) > 0)
 				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value(0);
 			else
@@ -98,7 +98,7 @@
 			$md5pw = md5($pw);
 			$a1pw = md5($name.":".$this->env->authentication()->realm().":".$pw);
 
-			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, auth, is_group) VALUES ('%s', '%s', '%s', %s, '%s', '%s', 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth)));
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user")." (name, password, a1password, email, permission_mode, auth, is_group) VALUES ('%s', '%s', '%s', %s, '%s', %s, 0)", $this->db->string($name), $this->db->string($md5pw), $this->db->string($a1pw), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($auth, TRUE)));
 			return $this->db->lastId();
 		}
 	
@@ -356,31 +356,42 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 			
 			// order within category into 1) user specific 2) group 3) item default
-			$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
+			if (strcasecmp($this->getType(), 'mysql') == 0) {
+				$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
+			} else {
+				$subcategoryQuery = sprintf("case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end", $userId);
+			}
 
 			// item permissions
-			$query = sprintf("(SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s)", $subcategoryQuery, $id, $userQuery);
+			$query = sprintf("SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s", $subcategoryQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentId = $this->itemId($item->parent());
 				$rootId = $this->itemId($item->root());
 				
-				$hierarchyQuery = "(item_id REGEXP '^".$rootId;
+				if (strcasecmp($this->getType(), 'mysql') == 0)
+					$hierarchyQuery = "(item_id REGEXP '^".$rootId;
+				else
+					$hierarchyQuery = "REGEX(item_id, '^".$rootId;
+				
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
-				Logging::logDebug(Util::array2str($parts));
+				//Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
 					$hierarchyQuery .= "(".$part."/";
 					$hierarchyQueryEnd .= ")*";
 				}
 				$hierarchyQuery .= $hierarchyQueryEnd."$')";
 			
-				$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
-				$query .= sprintf(
-					" UNION ALL (SELECT permission, user_id, 2 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE %s AND %s) ", $subcategoryQuery, $hierarchyQuery, $userQuery);
+				if (strcasecmp($this->getType(), 'mysql') == 0) {
+					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
+				} else {
+					$subcategoryQuery = sprintf("((%s - LENGTH(item_id)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentId), $userId);
+				}
+				$query = sprintf("SELECT permission, user_id, case when item_id = '%s' then 1 else 2 end AS category, %s AS subcategory FROM ".$table." WHERE (item_id = '%s' OR %s) AND %s", $id, $subcategoryQuery, $id, $hierarchyQuery, $userQuery);
 			}
 			
-			$query = "SELECT permission FROM (".$query.") AS u ORDER BY u.category ASC, u.subcategory ASC, u.permission DESC";
+			$query = "SELECT permission FROM (".$query.") as u ORDER BY u.category ASC, u.subcategory ASC, u.permission DESC";
 			
 			$result = $this->db->query($query);
 			if ($result->count() < 1) return NULL;
@@ -398,8 +409,13 @@
 			$userIds[] = "0";
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
-			$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
-			$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+			if (strcasecmp($this->getType(), 'mysql') == 0) {
+				$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
+				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+			} else {
+				$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and REGEX(item_id, \"^".$parentId."[^/]+[/]?$\")";
+				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+			}			
 			
 			$all = $this->db->query($query)->rows();
 			$all[] = array(

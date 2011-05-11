@@ -140,7 +140,7 @@
 				$auths = $this->env->settings()->setting("authentication_methods");
 				$auth = NULL;
 				//TODO verify auth
-				if (isset($user['auth'])) $auth = strtoupper($user['auth']);
+				if (isset($user['auth']) and $user['auth'] != NULL) $auth = strtoupper($user['auth']);
 				
 				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $auth);
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], $user['email']));
