@@ -22,11 +22,11 @@
 		}
 		
 		public function execCreateTables() {
-			$this->db->execSqlFile("../include/sqlite/sql/create_tables.sql");
+			$this->db->execSqlFile("include/sqlite/sql/create_tables.sql");
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("../include/mysql/sql/params.sql");
+			$this->db->execSqlFile("include/mysql/sql/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {
@@ -35,16 +35,16 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "../include/sqlite/sql/".$from."-".$to.".sql";
+			$file = "include/sqlite/sql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 
 		public function execPluginCreateTables($id) {
-			$this->db->execSqlFile("../plugin/".$id."/sqlite/install.sql");
+			$this->db->execSqlFile("plugin/".$id."/sqlite/install.sql");
 		}
 		
 		public function updatePluginVersionStep($id, $from, $to) {
-			$file = "../plugin/".$id."/sqlite/".$from."-".$to.".sql";
+			$file = "plugin/".$id."/sqlite/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 	}
