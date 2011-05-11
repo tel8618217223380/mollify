@@ -35,21 +35,7 @@
 		<div class="content">
 			<?php if (!isset($CONFIGURATION_TYPE)) { ?>
 			<p>
-				To continue with Mollify installation, you have to choose the configuration type suitable for your installation.
-			</p>
-			<p>
-				Options are:
-				<ul>
-					<li>
-						<b>File based configuration</b>
-						<p>In file based configuration all the configuration options are in the <code>configuration.php</code>. Options are read-only,  and all changes must be made by manually editing the file. This option does not support all features, and is best for non-changing environments.</p>
-					</li>
-					<li>
-						<b>Database configuration (MySQL)</b>
-						<p>In database configuration, all the options are stored in the database, and can be modified from the client.</p>
-					</li>
-				</ul>
-				For more information about the alternatives, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+				To continue with Mollify installation, you have to setup the configuration.
 			</p>
 			<?php } ?>
 	
@@ -64,10 +50,12 @@
 			<p>
 				Possible values are:
 				<ul>
-					<li>"<code>mysql</code>" for MySQL database configuration</li>
+					<li>"<code>mysql</code>" for MySQL</li>
+					<li>"<code>sqlite</code>" for SQLite</li>
 				</ul>
 				
-				When this is added, click "Continue".
+				When this is added, click "Continue". For more information about the installation, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+
 			</p>
 
 			<p>
