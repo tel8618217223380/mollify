@@ -83,7 +83,10 @@ mainViewParentDirButtonTooltip: "Up one level",
 mainViewHomeButtonTooltip: "Root folders",
 mainViewSearchHint: "Search",
 mainViewSlideBarTitleSelect: "Select Mode",
-	
+mainViewOptionsListTooltip: "List",
+mainViewOptionsGridSmallTooltip: "Small Icons",
+mainViewOptionsGridLargeTooltip: "Large Icons",
+
 fileDetailsLabelLastAccessed: "Last accessed",
 fileDetailsLabelLastModified: "Last modified",
 fileDetailsLabelLastChanged: "Last changed",
