@@ -115,7 +115,7 @@
 			$plugin = $this->env->plugins()->getPlugin("Registration");
 			$permission = $plugin->getSetting("permission", Authentication::PERMISSION_VALUE_READONLY);
 			
-			$id = $this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], $permission, $this->env->authentication()->getDefaultAuthenticationMethod());
+			$id = $this->env->configuration()->addUser($registration['name'], $registration['password'], $registration['email'], $permission);
 			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
 			
 			$this->addUserProperties($id, $registration['name'], $plugin);
