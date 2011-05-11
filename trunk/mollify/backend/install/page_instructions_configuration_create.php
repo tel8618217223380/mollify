@@ -39,8 +39,11 @@
 		
 		<div class="content">
 			<p>
-				To begin with the installation process, first create empty configuration file called "<code>configuration.php</code>" in the Mollify backend directory.
-			</p>	
+				To begin with the installation process, first create empty configuration file called "<code>configuration.php</code>" in the Mollify backend directory. Installer will guide you through the needed steps.
+			</p>
+			<p>
+				Alternatively, you can create full configuration based on <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.
+			</p>
 			<p>
 				<a id="button-retry" href="#" class="btn">Continue</a>
 			</p>

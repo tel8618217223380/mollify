@@ -13,18 +13,19 @@
 	$MAIN_PAGE = "install";
 	$installer = NULL;
 	
-	set_include_path("..");
+	set_include_path(realpath('../').PATH_SEPARATOR.get_include_path());
+	chdir("..");
+
+	if (!file_exists("configuration.php"))
+		showInstructions("configuration_create");
+
 	@include("configuration.php");
 	global $SETTINGS, $CONFIGURATION_TYPE;
+	if (!isset($CONFIGURATION_TYPE) or !isValidConfigurationType($CONFIGURATION_TYPE))
+		showInstructions("configuration_type");
 
 	$installer = createInstaller($CONFIGURATION_TYPE, $SETTINGS);
 	try {
-		if (!file_exists("../configuration.php"))
-			showInstructions("configuration_create");
-
-		if (!isset($CONFIGURATION_TYPE) or !isValidConfigurationType($CONFIGURATION_TYPE))
-			showInstructions("configuration_type");
-
 		$installer->process();
 	} catch (Exception $e) {
 		$installer->onError($e);
