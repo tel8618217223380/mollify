@@ -13,8 +13,10 @@
 	$MAIN_PAGE = "update";
 	$updater = NULL;
 	
-	set_include_path("..");
-	if (!file_exists("../configuration.php")) die();
+	set_include_path(realpath('../').PATH_SEPARATOR.get_include_path());
+	chdir("..");
+
+	if (!file_exists("configuration.php")) die();
 	require("configuration.php");
 	global $SETTINGS, $CONFIGURATION_TYPE;
 

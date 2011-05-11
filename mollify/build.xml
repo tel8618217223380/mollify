@@ -182,6 +182,7 @@
 			<fileset dir="${root.dir}/backend">
 				<exclude name="**/.svn" />
 				<exclude name="configuration.php" />
+				<exclude name="db.file" />
 				<exclude name="index.html" />
 				<exclude name="admin/settings.js" />
 				<exclude name="admin/custom/**" />
