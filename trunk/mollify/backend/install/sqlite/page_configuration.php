@@ -44,7 +44,7 @@
 				</div>
 			</p>
 			<p>
-				Edit the configuration and click "Continue".
+				When the configuration is updated, click "Continue".
 			</p>
 			<p>
 				<a id="button-continue" href="#" class="btn">Continue</a>

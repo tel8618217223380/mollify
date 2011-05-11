@@ -23,7 +23,7 @@
 
 		<div class="content">
 			<p>
-				Mollify will be installed in following SQLite database: <code><?php echo $installer->db()->file(); ?></code>
+				Mollify will be installed in following SQLite database: <code><?php echo realpath($installer->db()->file()); ?></code>
 			</p>
 			<p>
 				If this database is correct, click "Continue Installation". Otherwise, modify the configuration file and click "Refresh Configuration".

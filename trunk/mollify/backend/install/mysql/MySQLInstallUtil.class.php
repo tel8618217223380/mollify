@@ -51,11 +51,11 @@
 		}
 		
 		public function execCreateTables() {
-			$this->db->execSqlFile("../include/mysql/sql/create_tables.sql");
+			$this->db->execSqlFile("include/mysql/sql/create_tables.sql");
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("../include/mysql/sql/params.sql");
+			$this->db->execSqlFile("include/mysql/sql/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {
@@ -64,16 +64,16 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "../include/mysql/sql/".$from."-".$to.".sql";
+			$file = "include/mysql/sql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 
 		public function execPluginCreateTables($id) {
-			$this->db->execSqlFile("../plugin/".$id."/mysql/install.sql");
+			$this->db->execSqlFile("plugin/".$id."/mysql/install.sql");
 		}
 		
 		public function updatePluginVersionStep($id, $from, $to) {
-			$file = "../plugin/".$id."/mysql/".$from."-".$to.".sql";
+			$file = "plugin/".$id."/mysql/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 	}
