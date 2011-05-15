@@ -327,7 +327,7 @@
 		}
 		
 		public function findItemsWithDescription($parent, $text) {
-			$query = "SELECT item_id, description from `".$this->db->table("item_description")."` where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
+			$query = "SELECT item_id, description from ".$this->db->table("item_description")." where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 		
@@ -344,6 +344,7 @@
 		}
 					
 		function getItemPermission($item, $userId) {
+			$mysql = $this->isMySql();
 			$table = $this->db->table("item_permission");
 			$id = $this->itemId($item);
 			
@@ -356,23 +357,23 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 			
 			// order within category into 1) user specific 2) group 3) item default
-			if (strcasecmp($this->getType(), 'mysql') == 0) {
+			if ($mysql) {
 				$subcategoryQuery = sprintf("(IF(user_id = '%s', 1, IF(user_id = '0', 3, 2)))", $userId);
 			} else {
 				$subcategoryQuery = sprintf("case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end", $userId);
 			}
 
 			// item permissions
-			$query = sprintf("SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM `".$table."` WHERE item_id = '%s' AND %s", $subcategoryQuery, $id, $userQuery);
+			$query = sprintf("SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM ".$table." WHERE item_id = '%s' AND %s", $subcategoryQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
 				$parentId = $this->itemId($item->parent());
 				$rootId = $this->itemId($item->root());
 				
-				if (strcasecmp($this->getType(), 'mysql') == 0)
+				if ($mysql)
 					$hierarchyQuery = "(item_id REGEXP '^".$rootId;
 				else
-					$hierarchyQuery = "REGEX(item_id, '^".$rootId;
+					$hierarchyQuery = "REGEX(item_id, '#^".$rootId;
 				
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
@@ -381,9 +382,9 @@
 					$hierarchyQuery .= "(".$part."/";
 					$hierarchyQueryEnd .= ")*";
 				}
-				$hierarchyQuery .= $hierarchyQueryEnd."$')";
+				$hierarchyQuery .= $hierarchyQueryEnd."$#')";
 			
-				if (strcasecmp($this->getType(), 'mysql') == 0) {
+				if ($mysql) {
 					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
 				} else {
 					$subcategoryQuery = sprintf("((%s - LENGTH(item_id)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentId), $userId);
@@ -409,12 +410,12 @@
 			$userIds[] = "0";
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
-			if (strcasecmp($this->getType(), 'mysql') == 0) {
-				$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
-				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+			if ($this->isMySql()) {
+				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
+				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from `".$table."` where ".$userQuery." and REGEX(item_id, \"^".$parentId."[^/]+[/]?$\")";
-				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from `%s` where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(item_id, \"#^".$parentId."[^/]+[/]?$#\")";
+				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
 			$all = $this->db->query($query)->rows();
@@ -434,7 +435,7 @@
 	
 		function getItemPermissions($item) {
 			$id = $this->itemId($item);
-			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, item_permission.permission as permission FROM `".$this->db->table("item_permission")."` as item_permission LEFT OUTER JOIN `".$this->db->table("user")."` as user ON user.id = item_permission.user_id WHERE item_permission.item_id = '%s'", $id))->rows();
+			$rows = $this->db->query(sprintf("SELECT user.id as user_id, user.is_group as is_group, item_permission.permission as permission FROM ".$this->db->table("item_permission")." as item_permission LEFT OUTER JOIN ".$this->db->table("user")." as user ON user.id = item_permission.user_id WHERE item_permission.item_id = '%s'", $id))->rows();
 			
 			$list = array();
 			foreach ($rows as $row) {
@@ -450,18 +451,19 @@
 			$new = $updates['new'];
 			$modified = $updates['modified'];
 			$removed = $updates['removed'];
+			$mysql = $this->isMySql();
 			
-			$this->db->startTransaction();
+			if ($mysql) $this->db->startTransaction();
 			if (count($new) > 0) $this->addItemPermissionValues($new);
 			if (count($modified) > 0) $this->updateItemPermissionValues($modified);
 			if (count($removed) > 0) $this->removeItemPermissionValues($removed);
-			$this->db->commit();
+			if ($mysql) $this->db->commit();
 							
 			return TRUE;
 		}
 
 		private function addItemPermissionValues($list) {
-			$query = "INSERT INTO `".$this->db->table("item_permission")."` (item_id, user_id, permission) VALUES ";
+			$query = "INSERT INTO ".$this->db->table("item_permission")." (item_id, user_id, permission) VALUES ";
 			$first = TRUE;
 			
 			foreach($list as $item) {
@@ -484,7 +486,7 @@
 			$id = $this->db->string($id);
 			$user = $this->db->string($userId);
 
-			$query = sprintf("INSERT INTO `".$this->db->table("item_permission")."` (item_id, user_id, permission) VALUES ('%s', '%s', '%s')", $id, $user, $permission);
+			$query = sprintf("INSERT INTO ".$this->db->table("item_permission")." (item_id, user_id, permission) VALUES ('%s', '%s', '%s')", $id, $user, $permission);
 			$this->db->update($query);							
 			return TRUE;
 		}
@@ -496,7 +498,7 @@
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
-				$this->db->update(sprintf("UPDATE `".$this->db->table("item_permission")."` SET permission='%s' WHERE item_id='%s' and user_id='%s'", $permission, $id, $user));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET permission='%s' WHERE item_id='%s' and user_id='%s'", $permission, $id, $user));
 			}
 							
 			return TRUE;
@@ -507,7 +509,7 @@
 				$id = $this->db->string(base64_decode($item["item_id"]));
 				$user = "user_id = '0'";
 				if ($item["user_id"] != NULL) $user = sprintf("user_id = '%s'", $this->db->string($item["user_id"]));
-				$this->db->update(sprintf("DELETE FROM `".$this->db->table("item_permission")."` WHERE item_id='%s' AND %s", $id, $user));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s' AND %s", $id, $user));
 			}
 							
 			return TRUE;
@@ -515,9 +517,9 @@
 
 		function removeItemPermissions($item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM `".$this->db->table("item_permission")."` WHERE item_id like '%s%%'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $this->itemId($item)));
 			} else {
-				$this->db->update(sprintf("DELETE FROM `".$this->db->table("item_permission")."` WHERE item_id='%s'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s'", $this->itemId($item)));
 			}
 			return TRUE;
 		}
@@ -527,9 +529,9 @@
 			$toId = $this->itemId($to);
 			
 			if (!$from->isFile()) {
-				$this->db->update(sprintf("UPDATE `".$this->db->table("item_permission")."` SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $toId, strlen($fromId)+1, $fromId));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $toId, strlen($fromId)+1, $fromId));
 			} else {
-				$this->db->update(sprintf("UPDATE `".$this->db->table("item_permission")."` SET item_id='%s' WHERE item_id='%s'", $toId, $fromId));
+				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET item_id='%s' WHERE item_id='%s'", $toId, $fromId));
 			}
 					
 			return TRUE;
@@ -537,6 +539,10 @@
 		
 		private function itemId($item) {
 			return $this->db->string($item->id());
+		}
+		
+		private function isMySql() {
+			return strcasecmp($this->getType(), 'mysql') == 0;
 		}
 		
 		function log() {

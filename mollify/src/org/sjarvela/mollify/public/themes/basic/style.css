@@ -1744,26 +1744,22 @@ td.mollify-userlist-column-type, td.mollify-folderlist-column-path, td.mollify-p
 	cursor: pointer;
 }
 
-.mollify-userlist-column-type, .mollify-folderlist-column-path, .mollify-permissionlist-column-permission {
+.mollify-userlist-column-type, .mollify-folderlist-column-path, 
+**/
+
+.mollify-permissionlist-column-permission {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	padding-left: 6px;
 }
 
-.mollify-userlist th, .mollify-folderlist th, .mollify-userfolderlist th {
-	color: #494949;
-	border-bottom: 2px solid #AAAAAA;
-	font-weight: bold;
-	padding-bottom: 3px;
-	padding-left: 5px;
-}
 
-tr.mollify-userlist-row, tr.mollify-folderlist-row, .mollify-permissionlist-row, .mollify-permissionlist-row-group {
+.mollify-permissionlist-row, .mollify-permissionlist-row-group {
 	background-color: #f7f7f7;
 	border-bottom: 1px dotted #c9c9c9;
 }
 
-tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover, .mollify-permissionlist-row-hover {
+.mollify-permissionlist-row-hover {
 	background-color: #efefef;
 }
 
@@ -1775,7 +1771,7 @@ tr.mollify-userlist-row-hover, tr.mollify-folderlist-row-hover, .mollify-permiss
 	background-color: #d7dfe5;
 }
 
-tr.mollify-userlist-row-selected, tr.mollify-folderlist-row-selected, .mollify-permissionlist-row-selected, .mollify-permissionlist-row-group-selected {
+.mollify-permissionlist-row-selected, .mollify-permissionlist-row-group-selected {
 	background-color: #a3bad8;
 }
 
@@ -1789,22 +1785,17 @@ tr.mollify-permissionlist-row td.mollify-permissionlist-column-name {
 	padding-left: 25px;
 }
 
-.mollify-user-dialog-content, .mollify-folder-dialog-content, .mollify-user-folder-dialog-content, .mollify-reset-password-dialog-content {
+.mollify-reset-password-dialog-content {
 	margin-right: 6px;
 	margin-left: 6px;
 }
 
-.mollify-user-dialog-name-title, .mollify-user-dialog-type-title, .mollify-user-dialog-password-title, .mollify-folder-dialog-name-title, .mollify-folder-dialog-path-title, .mollify-user-folder-dialog-folders-title, .mollify-user-folder-dialog-name-title, .mollify-user-folder-dialog-default-name, .mollify-reset-password-dialog-password-title {
+.mollify-reset-password-dialog-password-title {
 	margin-bottom: 3px;
 	margin-top: 6px;
 }
 
-.mollify-user-dialog-name-value, .mollify-user-dialog-type-value, .mollify-folder-dialog-name-value, .mollify-folder-dialog-path-value, .mollify-user-folder-dialog-folders, .mollify-user-folder-dialog-name-value, .mollify-user-folder-dialog-default-name-value {
-	width: 280px;
-	height: 15px;
-}
-
-.mollify-user-folder-dialog-name-value-readonly, .mollify-user-folder-dialog-default-name-value, .mollify-reset-password-dialog-password-value, .mollify-user-dialog-password-value {
+.mollify-reset-password-dialog-password-value {
 	background-color: #efefef;
 	font-style: italic;
 	color: #969696;
@@ -1813,26 +1804,22 @@ tr.mollify-permissionlist-row td.mollify-permissionlist-column-name {
 	width: 283px;
 }
 
-.mollify-user-dialog-password-value, .mollify-reset-password-dialog-password-value {
+.mollify-reset-password-dialog-password-value {
 	width: 195px;
 }
 
-.mollify-user-folder-dialog-folders, .mollify-user-folder-dialog-default-name-value {
-	margin-bottom: 8px;
-}
-
-.mollify-dialog-button-user-generate-password, .mollify-dialog-button-reset-password-dialog-generate {
+.mollify-dialog-button-reset-password-dialog-generate {
 	width: 80px;
 	height: 23px;
 	margin-left: 6px;
 }
 
-.mollify-user-dialog-buttons, .mollify-folder-dialog-buttons, .mollify-user-folder-dialog-buttons, .mollify-reset-password-dialog-buttons, .mollify-password-dialog-buttons {
+.mollify-reset-password-dialog-buttons, .mollify-password-dialog-buttons {
 	width: 100%;
 	margin-top: 12px;
 }
 
-.mollify-dialog-button-user-dialog-add-edit, .mollify-dialog-button-folder-dialog-add-edit, .mollify-dialog-button-user-folder-dialog-add-edit, .mollify-dialog-button-reset-password-dialog-reset, .mollify-dialog-button-password-change {
+.mollify-dialog-button-reset-password-dialog-reset, .mollify-dialog-button-password-change {
 	float: right;
 	width: 80px;
 }
@@ -1840,7 +1827,7 @@ tr.mollify-permissionlist-row td.mollify-permissionlist-column-name {
 .mollify-user-dialog-generate-password {
 	width: 80px;
 	height: 14px;
-}*/
+}
 
 .mollify-permission-editor-content {
 	margin: 4px;
