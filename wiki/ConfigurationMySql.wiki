@@ -11,7 +11,7 @@ Before installing Mollify, you have to make following preparations:
 
 {{{
 	<?php
-		$CONFIGURATION_PROVIDER = 'mysql';
+		$CONFIGURATION_TYPE = 'mysql';
 		$DB_HOST = "localhost";
 		$DB_DATABASE = "mollify";
 		$DB_USER = "mollify";
