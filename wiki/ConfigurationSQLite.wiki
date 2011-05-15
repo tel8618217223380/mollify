@@ -1,0 +1,20 @@
+#summary Configuration for SQLite
+
+= 1. Preparations =
+
+Before installing Mollify, create configuration.php as in following example:
+
+{{{
+	<?php
+		$CONFIGURATION_TYPE = 'sqlite';
+		$DB_FILE = 'db.file';
+	?>
+}}}
+
+Value $DB_FILE defines the location of the SQLite database file. Using absolute path is recommended.
+
+= 2. Installation =
+
+After creating configuration, open the installer "`http://[URL_TO_MOLLIFY_BACKEND_DIR]/install/`", where `[URL_TO_MOLLIFY_BACKEND_DIR]` is the mollify backend folder where, for example, configuration.php and r.php are located.
+
+Installer will check your configuration and system, and guide you through the installation.
