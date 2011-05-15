@@ -44,7 +44,12 @@
 	<html>
 		<head>
 			...
-			<meta name="mollify:property" content="service-path=[RELATIVE_PATH]">
+			<script type="text/javascript" language="javascript" src="client/init.js"></script>
+			<script type="text/javascript">
+				mollify.init({
+					"service-path": "[RELATIVE_PATH]",
+				});
+			</script>
 		</head>
 		...
 	</html>
