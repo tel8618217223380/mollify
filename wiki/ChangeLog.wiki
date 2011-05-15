@@ -2,7 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.8.0.1 ===  
-  * Fixed installer error (NOTE! Those who had previous version installed, no need to update from 1.8 to 1.8.0.1)
+  * Fixed installer error (NOTE! Those who had previous version installed and upgraded to 1.8, no need to update from 1.8.0.1)
 
 === Version 1.8 ===  
   * SQLite support
