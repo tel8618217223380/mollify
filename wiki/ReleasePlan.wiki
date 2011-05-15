@@ -1,7 +1,5 @@
 #summary Items in next release
 
-Items included in release 1.8
+Items included in release 1.9
 
- * Public upload (released)
- * A1 password support for digest authentication in WebDAV plugin (released)
- * Login with email (released)
+ * Not planned yet
