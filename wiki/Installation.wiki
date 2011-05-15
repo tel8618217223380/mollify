@@ -61,7 +61,11 @@
 	if you place host file in `http://your_host_name/mollify.html` and the backend interface files into `http://your_host_name/mollify/scripts/`, the setting should be as follows:
 
 {{{
-	<meta name="mollify:property" content="service-path=mollify/scripts">
+		<script type="text/javascript">
+			mollify.init({
+				"service-path": "mollify/scripts",
+			});
+		</script>
 }}}
 
 == 4.2. Relocating client application files ==
