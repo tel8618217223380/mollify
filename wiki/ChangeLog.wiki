@@ -6,6 +6,7 @@
   * Redesigned dropbox
   * Icon view
   * Support for single-sign-on (remote authentication)
+  * Support for IE9
   * Fixed issue #206
   * Fixed issue #222
   * Fixed issue #247
@@ -16,6 +17,8 @@
 Backend configuration format has been changed, variable `CONFIGURATION_PROVIDER` is replaced by `CONFIGURATION_TYPE`. See example configurations.
 
 File configuration option is removed, and is replaced with SQLite database. Support for single user mode has been dropped as well, but it will be replaced with guest account feature in some later version.
+
+Also from now on, version 9 is the only supported version of IE. Older versions are still working, but any possible CSS incompatibilities are not fixed.
 
 === Version 1.7.10.1 ===
   * Search extended to descriptions
