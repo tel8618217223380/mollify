@@ -16,8 +16,11 @@
 	set_include_path(realpath('../').PATH_SEPARATOR.get_include_path());
 	chdir("..");
 
-	if (!file_exists("configuration.php"))
+	if (!file_exists("configuration.php")) {
+		require_once("install/DefaultInstaller.class.php");
+		$installer = new DefaultInstaller();
 		showInstructions("configuration_create");
+	}
 
 	@include("configuration.php");
 	global $SETTINGS, $CONFIGURATION_TYPE;
@@ -50,9 +53,7 @@
 				require_once("install/sqlite/SQLiteInstaller.class.php");
 				return new SQLiteInstaller($type, $settings);
 			default:
-				require_once("install/DefaultInstaller.class.php");
-				return new DefaultInstaller();
-
+				die("Invalid configuration type");
 		}
 	}
 ?>
