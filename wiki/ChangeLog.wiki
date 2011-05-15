@@ -8,11 +8,11 @@
   * Fixed issue #206
   * Fixed issue #222
   * Fixed issue #247
-  * Implemented #232
+  * Implemented issue #232
 
 *BREAKING CHANGES:*
 
-Configuration format has been changed, variable CONFIGURATION_PROVIDER is replaced by CONFIGURATION_TYPE. See example configurations.
+Configuration format has been changed, variable `CONFIGURATION_PROVIDER` is replaced by `CONFIGURATION_TYPE`. See example configurations.
 
 File configuration option is removed, and is replaced with SQLite database. Support for single user mode has been dropped as well, but it will be replaced with guest account feature in some later version.
 
