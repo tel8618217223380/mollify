@@ -11,6 +11,8 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -28,6 +30,9 @@ import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 import com.google.gwt.dom.client.Element;
 
 public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
+	private static Logger logger = Logger.getLogger(MainViewGlue.class
+			.getName());
+
 	private final MainViewPresenter presenter;
 	private final ActionDelegator actionDelegator;
 	private final DefaultMainView view;
@@ -231,6 +236,12 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	@Override
 	public Folder getCurrentFolder() {
 		return presenter.getCurrentFolder();
+	}
+
+	@Override
+	public void setCurrentFolder(String id) {
+		logger.log(Level.FINE, id);
+		presenter.setCurrentFolder(id);
 	}
 
 	@Override

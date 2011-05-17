@@ -16,6 +16,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
@@ -49,12 +50,21 @@ public class DemoFileService implements FileSystemService {
 	}
 
 	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
-		listener.onSuccess(data.getDirectories(parent));
+		listener.onSuccess(data.getFolders(parent));
 	}
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
 		listener.onSuccess(new FolderInfo(FilePermission.ReadWrite, data
-				.getDirectories(parent), data.getFiles(parent)));
+				.getFolders(parent), data.getFiles(parent)));
+	}
+
+	@Override
+	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
+		Folder parent = data.folders.get(DemoData.ROOT_1).get(0);
+		Folder root = new Folder(DemoData.ROOT_1, "", "Folder A", "", "");
+		listener.onSuccess(new FolderHierarchyInfo(FilePermission.ReadWrite,
+				data.getFolders(parent), data.getFiles(parent), Arrays
+						.asList(root)));
 	}
 
 	public String getDownloadUrl(File file) {

@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
@@ -75,6 +76,11 @@ public class FileSystemServiceAdapter implements FileSystemService {
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
 		service.getInfo(parent, resultListenerFactory.createListener(listener));
+	}
+
+	@Override
+	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
+		service.getInfo(id, resultListenerFactory.createListener(listener));
 	}
 
 	public String getDownloadAsZipUrl(FileSystemItem item) {

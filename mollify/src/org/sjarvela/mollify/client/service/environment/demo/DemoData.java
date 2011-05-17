@@ -44,8 +44,8 @@ public class DemoData {
 	private static final List<UserGroup> groups = Arrays.asList(UserGroup
 			.create("g1", "Group 1"), UserGroup.create("g2", "Group 2"));
 
-	private static final String ROOT_1 = "r1";
-	private static final String ROOT_2 = "r2";
+	public static final String ROOT_1 = "r1";
+	public static final String ROOT_2 = "r2";
 
 	private static final String DIR_1A = "r1a";
 	private static final String DIR_1B = "r1b";
@@ -60,8 +60,8 @@ public class DemoData {
 
 	private static final String DESCRIPTION = "<b>Mollify demo</b><br/><br/>For downloads and instructions, visit <a href='http://code.google.com/p/mollify/' target='_new'>project page</a>";
 
-	private JsArray<JsFolder> rootDirectories;
-	private Map<String, List<Folder>> directories = new HashMap();
+	private JsArray<JsFolder> rootFolders;
+	public Map<String, List<Folder>> folders = new HashMap();
 	private List<File> files;
 
 	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
@@ -88,12 +88,12 @@ public class DemoData {
 	}
 
 	private void createDirectoriesAndFiles() {
-		rootDirectories = JavaScriptObject.createArray().cast();
-		rootDirectories.set(0, JsFolder.create(ROOT_1, "", "Folder A", ""));
-		rootDirectories.set(1, JsFolder.create(ROOT_2, "", "Folder B", ""));
+		rootFolders = JavaScriptObject.createArray().cast();
+		rootFolders.set(0, JsFolder.create(ROOT_1, "", "Folder A", ""));
+		rootFolders.set(1, JsFolder.create(ROOT_2, "", "Folder B", ""));
 
 		List<Folder> subDirs = new ArrayList();
-		directories.put(ROOT_1, subDirs);
+		folders.put(ROOT_1, subDirs);
 
 		subDirs.add(new Folder(DIR_1A, ROOT_1, "Sub folder A", "Sub folder A/",
 				ROOT_1));
@@ -101,7 +101,7 @@ public class DemoData {
 				ROOT_1));
 
 		subDirs = new ArrayList();
-		directories.put(ROOT_2, subDirs);
+		folders.put(ROOT_2, subDirs);
 		subDirs.add(new Folder(DIR_2A, ROOT_2, "Sub folder A", "Sub folder A/",
 				ROOT_2));
 
@@ -127,20 +127,20 @@ public class DemoData {
 	public SessionInfo getSessionInfo(String user) {
 		if (!multiUser) {
 			return SessionInfo.create(false, false, "", "", "", "",
-					permissionMode, settings, fileSystemInfo, rootDirectories);
+					permissionMode, settings, fileSystemInfo, rootFolders);
 		}
 
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, "", "", user, user,
-					permissionMode, settings, fileSystemInfo, rootDirectories);
+					permissionMode, settings, fileSystemInfo, rootFolders);
 		return SessionInfo.create(true, false, "", "", "", "", permissionMode,
-				settings, fileSystemInfo, rootDirectories);
+				settings, fileSystemInfo, rootFolders);
 	}
 
-	public List<Folder> getDirectories(Folder dir) {
-		if (!directories.containsKey(dir.getId()))
+	public List<Folder> getFolders(Folder dir) {
+		if (!folders.containsKey(dir.getId()))
 			return new ArrayList();
-		return directories.get(dir.getId());
+		return folders.get(dir.getId());
 	}
 
 	public List<File> getFiles(Folder dir) {

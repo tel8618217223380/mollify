@@ -23,6 +23,8 @@ public interface FileView {
 
 	Folder getCurrentFolder();
 
+	void setCurrentFolder(String id);
+
 	void openUploader(boolean forceBasic);
 
 }

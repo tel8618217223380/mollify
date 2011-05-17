@@ -72,6 +72,8 @@ function MollifyUserGroupsConfigurationView() {
 			}
 		});
 
+		$("#button-add-group-folder").click(that.openAddGroupFolder);
+		
 		$("#group-folders-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
@@ -124,7 +126,7 @@ function MollifyUserGroupsConfigurationView() {
 	}
 
 	this.refresh = function() {
-		getUserGroups(that.refreshGroups, onServerError);
+		getUserGroups(function(groups) { that.refreshGroups(groups); getFolders(that.refreshFolders, onServerError) }, onServerError);
 	}
 	
 	this.refreshGroups = function(groups) {
@@ -150,6 +152,15 @@ function MollifyUserGroupsConfigurationView() {
 		for (var i=0; i < users.length; i++) {
 			user = users[i];
 			that.users[user.id] = user;
+		}
+	}
+	
+	this.refreshFolders = function(folders) {
+		that.folders = {};
+		
+		for (var i=0; i < folders.length; i++) {
+			folder = folders[i];
+			that.folders[folder.id] = folder;
 		}
 	}
 	
@@ -394,9 +405,108 @@ function MollifyUserGroupsConfigurationView() {
 		removeGroupUsers(that.getSelectedGroup(), sel, that.refreshGroupUsers, onServerError);
 	}
 	
+	this.openAddGroupFolder = function() {
+		if (that.folders == null) return;
+		
+		var availableFolders = that.getAvailableFolders();
+		if (availableFolders.length == 0) {
+			alert("No more folders available");
+			return;
+		}
+		
+		$("#published-folder-list").html('');
+		var item = $.template('<option value="${id}">${name} (${path})</option>');
+		
+		for(var i=0;i < availableFolders.length;i++) {
+			$("#published-folder-list").append(item, availableFolders[i]);
+		}
+				
+		var onFolderOrDefaultChanged = function() {
+			var sel = $("#published-folder-list").val();
+			$("#published-folder-default-name").val(that.folders[sel].name);
+			var useDefault = $("#use-default-folder-name").attr('checked');
+			
+			if (!useDefault) {
+				$("#published-folder-name").removeAttr("disabled");
+				$("#folder-name").show();
+			} else {
+				$("#folder-name").removeClass("invalid");
+				$("#folder-name").hide();
+				$("#published-folder-name").val(that.folders[sel].name);
+				$("#published-folder-name").attr("disabled", true);
+			}
+		}
+
+		if (!that.addFoldersDialogInit) {
+			that.addFoldersDialogInit = true;
+			
+			$("#add-group-folder-dialog").dialog({
+				bgiframe: true,
+				height: 'auto',
+				width: 270,
+				modal: true,
+				resizable: true,
+				autoOpen: false,
+				title: "Add Group Folder"
+			});
+			
+			$("#published-folder-list").change(onFolderOrDefaultChanged);
+			$("#use-default-folder-name").click(onFolderOrDefaultChanged);
+		}
+		
+		var buttons = {
+			Add: function() {
+				if (!that.validateFolder(false)) return;
+				
+				var useDefault = $("#use-default-folder-name").attr('checked');
+				var folder = $("#published-folder-list").val();
+				var name = useDefault ? null : $("#published-folder-name").val();
+				
+				var onSuccess = function() {
+					$("#add-group-folder-dialog").dialog('close');
+					that.refreshUserFolders();
+				}
+				
+				addUserFolder(that.getSelectedGroup(), folder, name, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#add-group-folder-dialog").dialog('option', 'buttons', buttons);
+		$("#use-default-folder-name").attr('checked', true);
+		$("#use-default-folder-name").click(onFolderOrDefaultChanged);
+		onFolderOrDefaultChanged();
+		$("#add-group-folder-dialog").dialog('open');
+	}
+	
 	this.onRemoveGroupFolder = function() {
 		var id = that.getSelectedGroupFolder();
 		if (id == null) return;
 		removeUserFolder(that.getSelectedGroup(), id, that.refreshUserFolders, onServerError);
+	}
+	
+	this.validateFolder = function(edit) {
+		if (edit) $("#edit-folder-name").removeClass("invalid");
+		else $("#folder-name").removeClass("invalid");
+		
+		var useDefault = $(edit ? "#edit-use-default-folder-name" : "#use-default-folder-name").attr('checked');
+		var value = $(edit ? "#edit-published-folder-name" : "#published-folder-name").val();
+		
+		if (!useDefault && value.length == 0) {
+			$(edit ? "#edit-published-folder-name" : "#published-folder-name").addClass("invalid");
+			return false;
+		}
+		return true;
+	}
+	
+	this.getAvailableFolders = function() {
+		var result = [];
+		for (id in that.folders) {
+			if (!that.userFolders[id])
+				result.push(that.folders[id]);
+		}
+		return result;
 	}
 }

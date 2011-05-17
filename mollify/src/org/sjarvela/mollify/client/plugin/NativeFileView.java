@@ -35,6 +35,10 @@ public class NativeFileView {
 		return fileView.getCurrentFolder().asJs();
 	}
 
+	public void setCurrentFolder(String id) {
+		fileView.setCurrentFolder(id);
+	}
+
 	public void openUploader(boolean forceBasic) {
 		fileView.openUploader(forceBasic);
 	}
@@ -64,6 +68,10 @@ public class NativeFileView {
 
 		o.currentFolder = function() {
 			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getCurrentFolder()();
+		}
+
+		o.setCurrentFolder = function(id) {
+			fs.@org.sjarvela.mollify.client.plugin.NativeFileView::setCurrentFolder(Ljava/lang/String;)(id);
 		}
 
 		o.openBasicUploader = function(b) {
