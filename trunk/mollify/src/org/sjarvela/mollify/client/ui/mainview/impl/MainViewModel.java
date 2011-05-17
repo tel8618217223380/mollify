@@ -17,6 +17,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
@@ -97,8 +98,7 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void changeToSubfolder(Folder folder,
-			ResultListener resultListener) {
+	public void changeToSubfolder(Folder folder, ResultListener resultListener) {
 		folderModel.descendIntoFolder(folder);
 		refreshData(resultListener);
 	}
@@ -123,12 +123,14 @@ public class MainViewModel {
 			return;
 		}
 
-		fileServices.getInfo(getCurrentFolder(), createListener(resultListener,
-				new ResultCallback<FolderInfo>() {
-					public void onCallback(FolderInfo result) {
-						onUpdateData(result);
-					}
-				}));
+		fileServices.getInfo(
+				getCurrentFolder(),
+				createListener(resultListener,
+						new ResultCallback<FolderInfo>() {
+							public void onCallback(FolderInfo result) {
+								onUpdateData(result);
+							}
+						}));
 	}
 
 	private void onUpdateData(FolderInfo data) {
@@ -163,5 +165,21 @@ public class MainViewModel {
 
 	public void clearSelected() {
 		this.selected.clear();
+	}
+
+	public void changeToFolder(String id, final ResultListener listener) {
+		fileServices.getInfo(id, new ResultListener<FolderHierarchyInfo>() {
+
+			@Override
+			public void onSuccess(FolderHierarchyInfo result) {
+				folderModel.setFolderHierarchy(result.getHierarchy());
+				onUpdateData(result);
+			}
+
+			@Override
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
+		});
 	}
 }

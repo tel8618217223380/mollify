@@ -205,6 +205,11 @@
 			}
 			return $list;
 		}
+
+		public function hierarchy($folder) {
+			$this->assertRights($folder, Authentication::RIGHTS_READ, "hierarchy");
+			return $folder->hierarchy();
+		}
 		
 		private function isItemVisible($item) {
 			if ($this->env->authentication()->isAdmin()) return TRUE;

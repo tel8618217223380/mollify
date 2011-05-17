@@ -56,6 +56,10 @@
 		public function parent() {
 			return $this->filesystem->parent($this);
 		}
+
+		public function hierarchy() {
+			return $this->filesystem->hierarchy($this);
+		}
 		
 		public function name() {
 			return $this->name;
@@ -102,10 +106,11 @@
 		}
 		
 		public function data() {
+			$p = $this->parent();
 			return array(
 				"id" => $this->publicId(),
 				"root_id" => $this->publicRootId(),
-				"parent_id" => $this->parent()->publicId(),
+				"parent_id" => $p != NULL ? $p->publicId() : "",
 				"name" => $this->name,
 				"path" => $this->path,
 				"is_file" => $this->isFile()

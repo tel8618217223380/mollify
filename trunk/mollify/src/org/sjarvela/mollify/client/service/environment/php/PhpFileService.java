@@ -17,9 +17,11 @@ import java.util.logging.Logger;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -86,6 +88,31 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request().url(serviceUrl().fileItem(parent).action(FileAction.info))
 				.listener(resultListener).get();
+	}
+
+	@Override
+	public void getInfo(String id,
+			final ResultListener<FolderHierarchyInfo> listener) {
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(Level.INFO, "Get folder items: " + id);
+
+		ResultListener<JsFolderHierarchyInfo> resultListener = new ResultListener<JsFolderHierarchyInfo>() {
+			public void onFail(ServiceError error) {
+				listener.onFail(error);
+			}
+
+			public void onSuccess(JsFolderHierarchyInfo result) {
+				listener.onSuccess(new FolderHierarchyInfo(result
+						.getPermission(), FileSystemItem
+						.createFromFolders(result.getFolders()), FileSystemItem
+						.createFromFiles(result.getFiles()), FileSystemItem
+						.createFromFolders(result.getHierarchy())));
+			}
+		};
+
+		request()
+				.url(serviceUrl().fileItemId(id).action(FileAction.info)
+						.param("h", "1")).listener(resultListener).get();
 	}
 
 	public void getItemDetails(FileSystemItem item,

@@ -15,12 +15,16 @@ import org.sjarvela.mollify.client.session.file.FilePermission;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class JsFolderInfo extends JavaScriptObject {
-	protected JsFolderInfo() {
+public class JsFolderHierarchyInfo extends JavaScriptObject {
+	protected JsFolderHierarchyInfo() {
 	}
 
 	public final native JsArray<JsFolder> getFolders() /*-{
 		return this.folders;
+	}-*/;
+
+	public final native JsArray<JsFolder> getHierarchy() /*-{
+		return this.hierarchy;
 	}-*/;
 
 	public final native JsArray<JsFile> getFiles() /*-{
@@ -35,16 +39,18 @@ public class JsFolderInfo extends JavaScriptObject {
 		return this.permission;
 	}-*/;
 
-	public static JsFolderInfo create(JsArray<JsFolder> folders,
-			JsArray<JsFile> files) {
-		JsFolderInfo result = JsFolderInfo.createObject().cast();
-		result.putValues(folders, files);
+	public static JsFolderHierarchyInfo create(JsArray<JsFolder> folders,
+			JsArray<JsFile> files, JsArray<JsFolder> hierarchy) {
+		JsFolderHierarchyInfo result = JsFolderHierarchyInfo.createObject()
+				.cast();
+		result.putValues(folders, files, hierarchy);
 		return result;
 	}
 
 	private final native void putValues(JsArray<JsFolder> folders,
-			JsArray<JsFile> files) /*-{
+			JsArray<JsFile> files, JsArray<JsFolder> hierarchy) /*-{
 		this.folders = folders;
 		this.files = files;
+		this.hierarchy = hierarchy;
 	}-*/;
 }

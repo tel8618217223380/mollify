@@ -57,3 +57,22 @@
 <div id="add-group-users-dialog" style="display:none">
 	<table id="add-users-list"></table>
 </div>
+
+<div id="add-group-folder-dialog" style="display:none">
+	<div class='form-data' id='published-folder'>
+		<div class='title'>Folder:</div>
+		<select id='published-folder-list' class='form-data-value' name='folder'>
+		</select>
+	</div>
+	<div class='form-data' id='default-folder-name'>
+		<div id="name-title">
+			<div class='title'>Default Name:</div>
+			<div class='titled-checkbox'><input id='use-default-folder-name' type="checkbox"/>Use default name</div>
+		</div>
+		<input id='published-folder-default-name' class='form-data-value' name='default-name' disabled="true">
+	</div>
+	<div class='form-data' id='folder-name'>
+		<div class='title'>Name:</div>
+		<input id='published-folder-name' class='form-data-value' type='text' name='name' value=''>
+	</div>
+</div>

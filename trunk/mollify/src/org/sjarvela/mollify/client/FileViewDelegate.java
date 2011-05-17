@@ -38,6 +38,12 @@ public class FileViewDelegate implements FileView {
 	}
 
 	@Override
+	public void setCurrentFolder(String id) {
+		ensureDelegate();
+		delegate.setCurrentFolder(id);
+	}
+
+	@Override
 	public List<FileSystemItem> getAllItems() {
 		ensureDelegate();
 		return delegate.getAllItems();

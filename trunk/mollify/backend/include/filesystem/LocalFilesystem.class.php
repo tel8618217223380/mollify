@@ -139,6 +139,29 @@
 			return $result;
 		}
 		
+		public function hierarchy($item) {
+			$p = $item->parent();
+			$result = array();
+			if ($p != NULL) {
+				$path = $this->localPath($p);
+
+				$root = $item->root();
+				$rootPath = $root->internalPath();
+				
+				$parts = preg_split("/\//", substr($path, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
+				$current = $rootPath;
+				$result[] = $root;
+				
+				foreach($parts as $p) {
+					$public = $this->publicPath(self::folderPath($current));
+					$result[] = new Folder($this->itemId($public), $this->rootId(), $public, $this->filesystemInfo->env()->convertCharset($p), $this);				
+					$current .= $p.DIRECTORY_SEPARATOR;
+				}
+				if (!$item->isFile()) $result[] = $item;
+			}
+			return $result;
+		}
+		
 		private function allFilesRecursively($path) {
 			$files = scandir($path);
 			if (!$files) throw new ServiceException("INVALID_PATH", $this->path);

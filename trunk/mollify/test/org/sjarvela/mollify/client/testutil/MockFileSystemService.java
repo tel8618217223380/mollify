@@ -17,6 +17,7 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderDetails;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
@@ -76,6 +77,12 @@ public class MockFileSystemService implements FileSystemService {
 	}
 
 	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
 		// TODO Auto-generated method stub
 
 	}

@@ -81,4 +81,10 @@ public class FolderModel implements CurrentFolderProvider {
 		descendIntoFolder(folder);
 	}
 
+	public void setFolderHierarchy(List<Folder> hierarchy) {
+		folders.clear();
+		for (Folder f : hierarchy)
+			descendIntoFolder(f);
+	}
+
 }

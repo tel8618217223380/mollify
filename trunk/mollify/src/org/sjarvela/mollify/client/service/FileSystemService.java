@@ -15,6 +15,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
@@ -28,6 +29,8 @@ public interface FileSystemService extends ItemDetailsProvider {
 	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
 	void getInfo(Folder parent, ResultListener<FolderInfo> listener);
+
+	void getInfo(String id, ResultListener<FolderHierarchyInfo> listener);
 
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);
@@ -80,7 +83,8 @@ public interface FileSystemService extends ItemDetailsProvider {
 
 	void retrieveUrl(Folder folder, String url, ResultListener listener);
 
-	void search(Folder parent, String text, ResultListener<SearchResult> listener);
+	void search(Folder parent, String text,
+			ResultListener<SearchResult> listener);
 
 	String getThumbnailUrl(FileSystemItem item);
 

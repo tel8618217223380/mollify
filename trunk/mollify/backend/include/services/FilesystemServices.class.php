@@ -225,6 +225,8 @@
 					$this->env->filesystem()->downloadAsZip($item);
 					return;
 				case 'info':
+					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
+					
 					$items = $this->env->filesystem()->items($item);
 					$files = array();
 					$folders = array();
@@ -234,7 +236,15 @@
 					}
 					$result["files"] = $files;
 					$result["folders"] = $folders;
-					$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders));
+					if ($includeHierarchy) {
+						$h = array();
+						foreach($this->env->filesystem()->hierarchy($item) as $i) {
+							$h[] = $i->data();
+						}
+						$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders, "hierarchy" => $h));
+					} else {
+						$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders));
+					}
 					break;
 				case 'files':
 					$items = $this->env->filesystem()->items($item);

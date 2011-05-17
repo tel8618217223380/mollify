@@ -147,8 +147,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (exposeFileUrls)
 			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
-		changeToRootFolder(model.getRootFolders().size() == 1 ? model
-				.getRootFolders().get(0) : null);
+		if (!model.hasFolder())
+			changeToRootFolder(model.getRootFolders().size() == 1 ? model
+					.getRootFolders().get(0) : null);
 		if (model.getRootFolders().size() == 0)
 			view.hideButtons();
 	}
@@ -609,6 +610,21 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		} finally {
 			view.hideProgress();
 		}
+	}
+
+	public void setCurrentFolder(String id) {
+		model.changeToFolder(id, new ResultListener() {
+			@Override
+			public void onSuccess(Object result) {
+				refreshView();
+			}
+
+			@Override
+			public void onFail(ServiceError error) {
+				dialogManager.showError(error);
+			}
+
+		});
 	}
 
 }
