@@ -129,7 +129,7 @@
 		}
 		
 		private function doSendBinary($stream) {
-			if ($this->supportOutputBuffer) ob_start();
+			//if ($this->supportOutputBuffer) ob_start();
 			$count = 0;
 			while (!feof($stream)) {
 				$count = $count + 1;
