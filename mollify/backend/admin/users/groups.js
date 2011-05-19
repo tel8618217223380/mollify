@@ -8,6 +8,26 @@
 	this entire header must remain intact.
 */
 
+(function($) {
+	jQuery.jgrid.fluid = {
+    	fluidGrid: function(options) {
+			var grid = $(this);
+			
+			var settings = $.extend({
+				example: grid.closest('.ui-jqgrid').parent(),
+				offset: 0
+            }, options || {});
+			
+			var w = $(settings.example).innerWidth() + settings.offset;
+			if (w <= 0) return;
+			
+			grid.setGridWidth(w);
+    	}
+	}}
+)(jQuery);
+	
+jQuery.fn.extend({ fluidGrid : jQuery.jgrid.fluid.fluidGrid });
+
 function MollifyUserGroupsConfigurationView() {
 	var that = this;
 	
@@ -58,12 +78,11 @@ function MollifyUserGroupsConfigurationView() {
 		$("#group-users-list").jqGrid({        
 			datatype: "local",
 			multiselect: true,
-			autowidth: true,
 			height: '100%',
 		   	colNames:['ID', 'Name'],
 		   	colModel:[
-			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
-		   		{name:'name',index:'name', width:200, sortable:true}
+			   	{name:'id', index:'id', width:10, sortable:true, sorttype:"int"},
+		   		{name:'name', index:'name', width:10, sortable:true}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -73,11 +92,13 @@ function MollifyUserGroupsConfigurationView() {
 		});
 
 		$("#button-add-group-folder").click(that.openAddGroupFolder);
-		
+		$("#button-edit-group-folder").click(that.openEditGroupFolder);
+		$("#button-remove-group-folder").click(that.onRemoveGroupFolder);
+
 		$("#group-folders-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
-			autowidth: true,
+			autowidth: false,
 			height: '100%',
 		   	colNames:['ID', 'Name', 'Default Name', 'Path'],
 		   	colModel:[
@@ -89,13 +110,13 @@ function MollifyUserGroupsConfigurationView() {
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
-				//that.onUserFolderSelectionChanged();
+				that.onGroupFolderSelectionChanged();
 			}
 		});
 		
 		$("#add-users-list").jqGrid({        
 			datatype: "local",
-			autowidth: true,
+			autowidth: false,
 			multiselect: true,
 		   	colNames:['ID', 'Name'],
 		   	colModel:[
@@ -107,6 +128,16 @@ function MollifyUserGroupsConfigurationView() {
 		});
 		
 		that.refresh();
+		
+		$(window).resize(function() {
+			if (!that.getSelectedGroup()) return;
+			that.resizeGrids();
+		});
+	}
+	
+	this.resizeGrids = function() {
+		$("#group-users-list").fluidGrid({ example:"#group-users-section", offset:-10 });
+		$("#group-folders-list").fluidGrid({ example:"#group-folders-section", offset:-10 });
 	}
 	
 	this.getUserGroup = function(id) {
@@ -125,6 +156,10 @@ function MollifyUserGroupsConfigurationView() {
 		return getValidSelections($("#group-users-list").getGridParam("selarrrow"));
 	}
 
+	this.getSelectedGroupFolder = function() {
+		return $("#group-folders-list").getGridParam("selrow");
+	}
+	
 	this.refresh = function() {
 		getUserGroups(function(groups) { that.refreshGroups(groups); getFolders(that.refreshFolders, onServerError) }, onServerError);
 	}
@@ -194,18 +229,18 @@ function MollifyUserGroupsConfigurationView() {
 	}
 	
 	this.onRefreshGroupFolders = function(folders) {
-		that.userFolders = {};
+		that.groupFolders = {};
 		
 		var grid = $("#group-folders-list");
 		grid.jqGrid('clearGridData');
 
 		for (var i=0; i < folders.length; i++) {
 			var folder = folders[i];
-			that.userFolders[folder.id] = folder;
+			that.groupFolders[folder.id] = folder;
 			grid.jqGrid('addRowData', folder.id, folder);
 		}
 		
-		//that.onGroupFolderSelectionChanged();
+		that.onGroupFolderSelectionChanged();
 	}
 
 	this.refreshGroupDetails = function() {
@@ -245,6 +280,7 @@ function MollifyUserGroupsConfigurationView() {
 			$("#group-details-data").hide();
 		} else {
 			$("#group-details-data").show();
+			that.resizeGrids();
 		}
 	}
 
@@ -252,7 +288,15 @@ function MollifyUserGroupsConfigurationView() {
 		var selected = (that.getSelectedGroupUsers().length > 0);
 		enableButton("button-remove-group-users", selected);
 	}
-	
+
+	this.onGroupFolderSelectionChanged = function() {
+		var folder = that.getSelectedGroupFolder();
+		var selected = (folder != null);
+		
+		enableButton("button-edit-group-folder", selected);
+		enableButton("button-remove-group-folder", selected);
+	}
+
 	this.validateGroupData = function() {
 		$("#group-dialog > .form-data").removeClass("invalid");
 	
@@ -464,7 +508,7 @@ function MollifyUserGroupsConfigurationView() {
 				
 				var onSuccess = function() {
 					$("#add-group-folder-dialog").dialog('close');
-					that.refreshUserFolders();
+					that.refreshGroupFolders();
 				}
 				
 				addUserFolder(that.getSelectedGroup(), folder, name, onSuccess, onServerError);
@@ -481,10 +525,78 @@ function MollifyUserGroupsConfigurationView() {
 		$("#add-group-folder-dialog").dialog('open');
 	}
 	
+	this.openEditGroupFolder = function() {
+		if (that.folders == null) return;
+		var selected = that.getSelectedGroupFolder();
+		if (selected == null) return;
+		selected = that.groupFolders[selected];
+			
+		var onFolderOrDefaultChanged = function() {
+			var sel = that.getSelectedGroupFolder();
+			$("#edit-published-folder-default-name").val(that.folders[sel].name);
+			var useDefault = $("#edit-use-default-folder-name").attr('checked');
+			
+			if (!useDefault) {
+				$("#edit-published-folder-name").removeAttr("disabled");
+				$("#edit-folder-name").show();
+			} else {
+				$("#edit-folder-name").removeClass("invalid");
+				$("#edit-folder-name").hide();
+	
+				$("#edit-published-folder-name").val(that.folders[sel].name);
+				$("#edit-published-folder-name").attr("disabled", true);
+			}
+		}
+
+		if (!that.editFolderDialogInit) {
+			that.editFolderDialogInit = true;
+			
+			$("#edit-group-folder-dialog").dialog({
+				bgiframe: true,
+				height: 200,
+				height: 'auto',
+				modal: true,
+				resizable: true,
+				autoOpen: false,
+				title: "Edit Group Folder",
+				buttons: buttons
+			});
+		}
+		
+		var buttons = {
+			Edit: function() {
+				if (!that.validateFolder(true)) return;
+				
+				var useDefault = $("#edit-use-default-folder-name").attr('checked');
+				var name = useDefault ? null : $("#edit-published-folder-name").val();
+				
+				var onSuccess = function() {
+					$("#edit-group-folder-dialog").dialog('close');
+					that.refreshGroupFolders();
+				}
+				
+				editUserFolder(that.getSelectedGroup(), that.getSelectedGroupFolder(), name, onSuccess, onServerError);
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
+		
+		$("#edit-group-folder-dialog").dialog('option', 'buttons', buttons);
+		$("#published-folder-path").val(selected.path);
+		$("#edit-use-default-folder-name").attr('checked', (selected.name == null));
+		
+		$("#edit-use-default-folder-name").click(onFolderOrDefaultChanged);
+		onFolderOrDefaultChanged();
+		if (selected.name) $("#edit-published-folder-name").val(selected.name);
+		
+		$("#edit-group-folder-dialog").dialog('open');
+	}
+
 	this.onRemoveGroupFolder = function() {
 		var id = that.getSelectedGroupFolder();
 		if (id == null) return;
-		removeUserFolder(that.getSelectedGroup(), id, that.refreshUserFolders, onServerError);
+		removeUserFolder(that.getSelectedGroup(), id, that.refreshGroupFolders, onServerError);
 	}
 	
 	this.validateFolder = function(edit) {
@@ -504,7 +616,7 @@ function MollifyUserGroupsConfigurationView() {
 	this.getAvailableFolders = function() {
 		var result = [];
 		for (id in that.folders) {
-			if (!that.userFolders[id])
+			if (!that.groupFolders[id])
 				result.push(that.folders[id]);
 		}
 		return result;
