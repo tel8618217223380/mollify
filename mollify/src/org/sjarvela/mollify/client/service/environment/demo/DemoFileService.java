@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.service.FileSystemService;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FilePermission;
@@ -169,7 +170,9 @@ public class DemoFileService implements FileSystemService {
 	@Override
 	public void search(Folder parent, String text,
 			ResultListener<SearchResult> listener) {
-		listener.onSuccess(null); // TODO
+		JSONBuilder result = new JSONBuilder().add("count", 0);
+		// result.object("matches");
+		listener.onSuccess((SearchResult) result.toJSON().cast());
 	}
 
 	@Override

@@ -36,13 +36,15 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class DemoData {
-	private static final List<User> users = Arrays.asList(User.create("1",
-			"Test User", UserPermissionMode.Admin), User.create("2",
-			"Another Test User", UserPermissionMode.ReadWrite), User.create(
-			"3", "Third Test User", UserPermissionMode.ReadOnly));
+	private static final List<User> users = Arrays
+			.asList(User.create("1", "Test User", UserPermissionMode.Admin),
+					User.create("2", "Another Test User",
+							UserPermissionMode.ReadWrite), User.create("3",
+							"Third Test User", UserPermissionMode.ReadOnly));
 
-	private static final List<UserGroup> groups = Arrays.asList(UserGroup
-			.create("g1", "Group 1"), UserGroup.create("g2", "Group 2"));
+	private static final List<UserGroup> groups = Arrays.asList(
+			UserGroup.create("g1", "Group 1"),
+			UserGroup.create("g2", "Group 2"));
 
 	public static final String ROOT_1 = "r1";
 	public static final String ROOT_2 = "r2";
@@ -67,14 +69,12 @@ public class DemoData {
 	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
 	private final FeatureInfo settings;
 	private final FileSystemInfo fileSystemInfo;
-	private final boolean multiUser;
 
-	public DemoData(boolean multiUser) {
-		this.multiUser = multiUser;
+	public DemoData() {
 		this.settings = FeatureInfo.create(true, true, true, true, true, true,
 				true, true, true, true, true, true);
-		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024, Arrays
-				.asList("txt", "gif"));
+		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024,
+				Arrays.asList("txt", "gif"));
 
 		createDirectoriesAndFiles();
 	}
@@ -125,11 +125,6 @@ public class DemoData {
 	}
 
 	public SessionInfo getSessionInfo(String user) {
-		if (!multiUser) {
-			return SessionInfo.create(false, false, "", "", "", "",
-					permissionMode, settings, fileSystemInfo, rootFolders);
-		}
-
 		if (user != null && user.length() > 0)
 			return SessionInfo.create(true, true, "", "", user, user,
 					permissionMode, settings, fileSystemInfo, rootFolders);

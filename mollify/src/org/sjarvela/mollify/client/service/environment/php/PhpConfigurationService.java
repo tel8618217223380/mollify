@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.filesystem.UserFolder;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserGroup;
@@ -52,7 +52,7 @@ public class PhpConfigurationService extends ServiceBase implements
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Change password");
 
-		String data = new JSONStringBuilder("old", MD5.generate(oldPassword))
+		String data = new JSONBuilder("old", MD5.generate(oldPassword))
 				.add("new", Base64.encode(newPassword)).toString();
 
 		request()
@@ -108,7 +108,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void addUser(String name, String password, UserPermissionMode mode,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("name", name)
+		String data = new JSONBuilder("name", name)
 				.add("password", MD5.generate(password))
 				.add("permission_mode", mode.getStringValue()).toString();
 
@@ -118,7 +118,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void editUser(User user, String name, UserPermissionMode mode,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("name", name).add(
+		String data = new JSONBuilder("name", name).add(
 				"permission_mode", mode.getStringValue()).toString();
 
 		request()
@@ -135,7 +135,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void addFolder(String name, String path,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("name", name).add("path", path)
+		String data = new JSONBuilder("name", name).add("path", path)
 				.toString();
 
 		request().url(serviceUrl().action(ConfigurationAction.folders))
@@ -144,7 +144,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void editFolder(FolderDef dir, String name, String path,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("name", name).add("path", path)
+		String data = new JSONBuilder("name", name).add("path", path)
 				.toString();
 
 		request()
@@ -180,7 +180,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void addUserFolder(User user, FolderDef dir, String name,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("id", dir.getId())
+		String data = new JSONBuilder("id", dir.getId())
 				.add("name", name).toString();
 
 		request()
@@ -191,7 +191,7 @@ public class PhpConfigurationService extends ServiceBase implements
 
 	public void editUserFolder(User user, UserFolder dir, String name,
 			ResultListener resultListener) {
-		String data = new JSONStringBuilder("name", name).toString();
+		String data = new JSONBuilder("name", name).toString();
 
 		request()
 				.url(serviceUrl().action(ConfigurationAction.userfolders)

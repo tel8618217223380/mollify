@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.service.request.data;
 
 import org.junit.Test;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -23,7 +23,7 @@ public class JSONStringBuilderTest extends GWTTestCase {
 
 	@Test
 	public void testTypes() {
-		JSONStringBuilder b = new JSONStringBuilder();
+		JSONBuilder b = new JSONBuilder();
 		b.add("string", "stringVal");
 		b.add("int", 13);
 		b.add("double", 15.5d);

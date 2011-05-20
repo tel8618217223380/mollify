@@ -61,7 +61,7 @@ public class DefaultPluginSystem implements PluginSystem {
 	private Map<String, String> getExternalPluginScripts(SessionInfo session) {
 		logger.log(Level.INFO, "Initializing client plugins from session");
 		JavaScriptObject pluginsObj = session.getPlugins();
-		if (plugins == null)
+		if (pluginsObj == null)
 			return Collections.EMPTY_MAP;
 
 		Map<String, String> result = new HashMap();

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.Base64;
 
@@ -50,7 +50,7 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Authenticating '" + userName + "'");
 
-		String data = new JSONStringBuilder("username", userName)
+		String data = new JSONBuilder("username", userName)
 				.add("password", Base64.encode(password))
 				.add("protocol_version", protocolVersion).toString();
 
