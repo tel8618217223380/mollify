@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.common.popup.BubblePopup;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -91,7 +91,7 @@ public class ResetPasswordPopup extends BubblePopup {
 		if (email.getText().length() == 0)
 			return;
 
-		String data = new JSONStringBuilder("email", email.getText())
+		String data = new JSONBuilder("email", email.getText())
 				.toString();
 
 		service.post(data, new ResultListener() {

@@ -26,8 +26,8 @@ import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder;
-import org.sjarvela.mollify.client.service.request.JSONStringBuilder.JSONArrayBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
+import org.sjarvela.mollify.client.service.request.JSONBuilder.JSONArrayBuilder;
 import org.sjarvela.mollify.client.service.request.UrlBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -129,7 +129,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Rename " + item.getId() + " to [" + newName
 					+ "]");
-		String data = new JSONStringBuilder("name", newName).toString();
+		String data = new JSONBuilder("name", newName).toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.name))
 				.data(data).listener(listener).put();
@@ -140,7 +140,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO,
 					"Copy " + item.getId() + " to [" + directory.getId() + "]");
-		String data = new JSONStringBuilder("folder", directory.getId())
+		String data = new JSONBuilder("folder", directory.getId())
 				.toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.copy))
@@ -152,7 +152,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Copy " + file.getId() + " with name ["
 					+ name + "]");
-		String data = new JSONStringBuilder("name", name).toString();
+		String data = new JSONBuilder("name", name).toString();
 
 		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
 				.data(data).listener(listener).post();
@@ -163,9 +163,9 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Copy " + items.size() + " items to ["
 					+ folder.getId() + "]");
-		JSONStringBuilder data = new JSONStringBuilder("action", "copy").add(
+		JSONBuilder data = new JSONBuilder("action", "copy").add(
 				"to", folder.getId());
-		JSONArrayBuilder itemArray = data.addArray("items");
+		JSONArrayBuilder itemArray = data.array("items");
 		for (FileSystemItem item : items)
 			itemArray.add(item.getId());
 
@@ -178,7 +178,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO,
 					"Move " + item.getId() + " to [" + directory.getId() + "]");
-		String data = new JSONStringBuilder("id", directory.getId()).toString();
+		String data = new JSONBuilder("id", directory.getId()).toString();
 
 		request().url(serviceUrl().fileItem(item).action(FileAction.move))
 				.data(data).listener(listener).post();
@@ -189,9 +189,9 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Move " + items.size() + " items to ["
 					+ folder.getId() + "]");
-		JSONStringBuilder data = new JSONStringBuilder("action", "move").add(
+		JSONBuilder data = new JSONBuilder("action", "move").add(
 				"to", folder.getId());
-		JSONArrayBuilder itemArray = data.addArray("items");
+		JSONArrayBuilder itemArray = data.array("items");
 		for (FileSystemItem item : items)
 			itemArray.add(item.getId());
 
@@ -212,8 +212,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Delete " + items.size() + " items");
 
-		JSONStringBuilder data = new JSONStringBuilder("action", "delete");
-		JSONArrayBuilder itemArray = data.addArray("items");
+		JSONBuilder data = new JSONBuilder("action", "delete");
+		JSONArrayBuilder itemArray = data.array("items");
 		for (FileSystemItem item : items)
 			itemArray.add(item.getId());
 
@@ -225,7 +225,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			ResultListener<Boolean> listener) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Create directory: [" + folderName + "]");
-		String data = new JSONStringBuilder("name", folderName).toString();
+		String data = new JSONBuilder("name", folderName).toString();
 
 		request()
 				.url(serviceUrl().fileItem(parentFolder).action(
@@ -252,8 +252,8 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Download as zip " + items.size() + " items");
 
-		JSONStringBuilder data = new JSONStringBuilder("action", "zip");
-		JSONArrayBuilder itemArray = data.addArray("items");
+		JSONBuilder data = new JSONBuilder("action", "zip");
+		JSONArrayBuilder itemArray = data.array("items");
 		for (FileSystemItem item : items)
 			itemArray.add(item.getId());
 
@@ -280,7 +280,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request()
 				.url(serviceUrl().fileItem(item).action(FileAction.description))
-				.data(new JSONStringBuilder("description", description)
+				.data(new JSONBuilder("description", description)
 						.toString()).listener(listener).put();
 	}
 
@@ -329,7 +329,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Update item permissions");
 
-		JSONStringBuilder data = new JSONStringBuilder();
+		JSONBuilder data = new JSONBuilder();
 		data.add("new", FileItemUserPermission.asJsArray(newPermissions));
 		data.add("modified",
 				FileItemUserPermission.asJsArray(modifiedPermissions));
@@ -349,7 +349,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	@Override
 	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
 		request().url(serviceUrl().fileItem(folder).item("retrieve"))
-				.data(new JSONStringBuilder("url", url).toString())
+				.data(new JSONBuilder("url", url).toString())
 				.listener(listener).post();
 	}
 
@@ -361,7 +361,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			url.fileItem(parent);
 
 		request().url(url.item("search"))
-				.data(new JSONStringBuilder("text", text).toString())
+				.data(new JSONBuilder("text", text).toString())
 				.listener(listener).post();
 	}
 

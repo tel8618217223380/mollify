@@ -184,6 +184,7 @@
 }
 
 .configuration-details {
+	width: 100%;
 	margin-top: 5px;
 	border-top: 2px solid #b9b9b9;
 	padding-top: 4px;
@@ -244,14 +245,17 @@
 }
 
 .details-data-section.left {
+	clear: left;
 	float: left;
 	width: 49%;
 	margin-right: 4px;
+	display: inline;
 }
 
 .details-data-section.right {
-	float: left;
+	float: right;
 	width: 50%;
+	display: inline;
 }
 
 .details-data-section .toolbar {
@@ -304,6 +308,10 @@
 }
 
 #name-title div.titled-checkbox, #edit-name-title div.titled-checkbox {
+	float: right;
+}
+
+#edit-user-folder-dialog #edit-name-title div.titled-checkbox  {
 	float: right;
 }
 

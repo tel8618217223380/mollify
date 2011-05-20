@@ -66,7 +66,7 @@ public class App implements EntryPoint {
 				container.getViewManager().showPlainError(
 						"Unexpected error: " + e.getMessage());
 
-			return;
+			throw e;
 		}
 	}
 

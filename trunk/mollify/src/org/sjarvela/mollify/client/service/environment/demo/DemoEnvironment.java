@@ -27,7 +27,6 @@ public class DemoEnvironment implements ServiceEnvironment {
 	private static Logger logger = Logger.getLogger(DemoEnvironment.class
 			.getName());
 	static final String MOLLIFY_PACKAGE_URL = "http://www.mollify.org/download/latest.php";
-	private static final String PARAM_MULTI_USER = "multi-user";
 
 	private DemoSessionService sessionService;
 	private DemoData data;
@@ -40,7 +39,7 @@ public class DemoEnvironment implements ServiceEnvironment {
 			ResponseProcessor responseProcessor) {
 		logger.log(Level.INFO, "Mollify Demo");
 
-		this.data = new DemoData(settings.getBool(PARAM_MULTI_USER, true));
+		this.data = new DemoData();
 		this.sessionService = new DemoSessionService(data);
 		this.fileSystemService = new DemoFileService(data);
 		this.demoFileUploadHandler = new DemoFileUploadHandler();
