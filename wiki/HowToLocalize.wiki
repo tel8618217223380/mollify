@@ -10,7 +10,7 @@ If your language is not found, see next chapter on how to create a new localizat
 
 To localize into new language, do following steps:
 
-1) Copy English version "texts_en.js" into a new file with your locale identifier
+1) Copy English version "texts_en.js" into a new file with your locale identifier (from installation package, or from http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/public/localization/texts_en.js)
 
 2) Edit the file, and change the locale identifier in the first line
 
