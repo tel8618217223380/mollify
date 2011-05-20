@@ -18,7 +18,7 @@ To localize into new language, do following steps:
 
 4) Edit the host page, and change the localization file import to match your new language
 
-5) Send the localization file to me, and I add it to downloads section for others to download
+5) Send the localization file to me
 
 = How to upgrade old localizations into new version =
 
