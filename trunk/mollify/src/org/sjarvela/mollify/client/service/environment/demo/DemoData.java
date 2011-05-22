@@ -64,7 +64,7 @@ public class DemoData {
 
 	private JsArray<JsFolder> rootFolders;
 	public Map<String, List<Folder>> folders = new HashMap();
-	private List<File> files;
+	public List<File> files;
 
 	private final UserPermissionMode permissionMode = UserPermissionMode.Admin;
 	private final FeatureInfo settings;
@@ -76,7 +76,7 @@ public class DemoData {
 		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024,
 				Arrays.asList("txt", "gif"));
 
-		createDirectoriesAndFiles();
+		createFoldersAndFiles();
 	}
 
 	public List<User> getUsers() {
@@ -87,7 +87,7 @@ public class DemoData {
 		return groups;
 	}
 
-	private void createDirectoriesAndFiles() {
+	private void createFoldersAndFiles() {
 		rootFolders = JavaScriptObject.createArray().cast();
 		rootFolders.set(0, JsFolder.create(ROOT_1, "", "Folder A", ""));
 		rootFolders.set(1, JsFolder.create(ROOT_2, "", "Folder B", ""));

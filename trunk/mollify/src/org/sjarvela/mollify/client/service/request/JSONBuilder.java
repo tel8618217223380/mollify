@@ -55,6 +55,11 @@ public class JSONBuilder {
 		return this;
 	}
 
+	public JSONBuilder object(String name, JavaScriptObject jso) {
+		result.put(name, new JSONObject(jso));
+		return this;
+	}
+
 	public JSONBuilder object(String name) {
 		JSONBuilder builder = new JSONBuilder();
 		objects.put(name, builder);
