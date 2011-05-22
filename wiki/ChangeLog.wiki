@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.0.2 === 
+  * Fixed issue 251
+
 === Version 1.8.0.1 ===  
   * Fixed installer error (NOTE! Those who had previous version installed and upgraded to 1.8, no need to update to 1.8.0.1)
 
