@@ -75,7 +75,7 @@ function MollifyUsersConfigurationView() {
 		$("#user-groups-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
-			autowidth: true,
+			autowidth: false,
 			height: '100%',
 		   	colNames:['ID', 'Name', 'Description'],
 		   	colModel:[
@@ -93,7 +93,7 @@ function MollifyUsersConfigurationView() {
 		$("#user-folders-list").jqGrid({        
 			datatype: "local",
 			multiselect: false,
-			autowidth: true,
+			autowidth: false,
 			height: '100%',
 		   	colNames:['ID', 'Name', 'Default Name', 'Path'],
 		   	colModel:[
@@ -155,6 +155,16 @@ function MollifyUsersConfigurationView() {
 		that.onUserSelectionChanged();
 		
 		getUserGroups(function(groups) { that.refreshGroups(groups); getFolders(that.refreshFolders, onServerError) }, onServerError);
+		
+		$(window).resize(function() {
+			if (!that.getSelectedUser()) return;
+			that.resizeGrids();
+		});
+	}
+	
+	this.resizeGrids = function() {
+		$("#user-groups-list").fluidGrid({ example:"#user-groups-section", offset:-10 });
+		$("#user-folders-list").fluidGrid({ example:"#user-folders-section", offset:-10 });
 	}
 	
 	this.refreshGroups = function(groups) {
@@ -242,10 +252,14 @@ function MollifyUsersConfigurationView() {
 		var user = that.getSelectedUser();
 		var selected = (user != null);
 		if (selected) user = that.getUser(user);
+		var changePwEnabled = false;
+		
+		if (selected && ((user.auth && user.auth == 'PW') || (!user.auth && that.default_auth_method == 'pw')))
+			changePwEnabled = true;
 		
 		enableButton("button-remove-user", selected);
 		enableButton("button-edit-user", selected);
-		enableButton("button-change-password", selected && user.auth == 'PW');
+		enableButton("button-change-password", changePwEnabled);
 		
 		$("#user-groups-list").jqGrid('clearGridData');
 		$("#user-folders-list").jqGrid('clearGridData');
@@ -266,6 +280,7 @@ function MollifyUsersConfigurationView() {
 			$("#user-details-data").hide();
 		} else {
 			$("#user-details-data").show();
+			that.resizeGrids();
 		}
 	}
 	

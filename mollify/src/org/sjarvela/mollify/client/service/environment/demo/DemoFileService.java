@@ -170,14 +170,24 @@ public class DemoFileService implements FileSystemService {
 	@Override
 	public void search(Folder parent, String text,
 			ResultListener<SearchResult> listener) {
-		JSONBuilder result = new JSONBuilder().add("count", 0);
-		// result.object("matches");
+		JSONBuilder result = new JSONBuilder().add("count", 2);
+		JSONBuilder matches = result.object("matches");
+
+		JSONBuilder match1 = matches.object("1");
+		match1.object("item", data.files.get(0).asJs());
+		match1.array("matches").addObject().add("type", "name");
+
+		JSONBuilder match2 = matches.object("2");
+		match2.object("item", data.files.get(1).asJs());
+		match2.array("matches").addObject().add("type", "name");
+		match2.array("matches").addObject().add("type", "description")
+				.add("description", "Example description");
+
 		listener.onSuccess((SearchResult) result.toJSON().cast());
 	}
 
 	@Override
 	public String getThumbnailUrl(FileSystemItem item) {
-		// TODO Auto-generated method stub
-		return null;
+		return "http://www.mollify.org/images/mollify_logo.png";
 	}
 }

@@ -8,26 +8,6 @@
 	this entire header must remain intact.
 */
 
-(function($) {
-	jQuery.jgrid.fluid = {
-    	fluidGrid: function(options) {
-			var grid = $(this);
-			
-			var settings = $.extend({
-				example: grid.closest('.ui-jqgrid').parent(),
-				offset: 0
-            }, options || {});
-			
-			var w = $(settings.example).innerWidth() + settings.offset;
-			if (w <= 0) return;
-			
-			grid.setGridWidth(w);
-    	}
-	}}
-)(jQuery);
-	
-jQuery.fn.extend({ fluidGrid : jQuery.jgrid.fluid.fluidGrid });
-
 function MollifyUserGroupsConfigurationView() {
 	var that = this;
 	
@@ -78,6 +58,7 @@ function MollifyUserGroupsConfigurationView() {
 		$("#group-users-list").jqGrid({        
 			datatype: "local",
 			multiselect: true,
+			autowidth: false,
 			height: '100%',
 		   	colNames:['ID', 'Name'],
 		   	colModel:[

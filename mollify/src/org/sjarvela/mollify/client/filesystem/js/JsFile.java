@@ -51,18 +51,19 @@ public class JsFile extends JavaScriptObject {
 	}-*/;
 
 	public static JsFile create(String id, String rootId, String name,
-			String parentId, String extension, long size) {
+			String path, String parentId, String extension, long size) {
 		JsFile result = JsFile.createObject().cast();
-		result.putValues(id, rootId, name, parentId, extension, Long
-				.toString(size));
+		result.putValues(id, rootId, name, path, parentId, extension,
+				Long.toString(size));
 		return result;
 	}
 
 	private final native void putValues(String id, String rootId, String name,
-			String parentId, String extension, String size) /*-{
+			String path, String parentId, String extension, String size) /*-{
 		this.id = id;
 		this.root_id = rootId;
 		this.name = name;
+		this.path = path;
 		this.parent_id = parentId;
 		this.extension = extension;
 		this.size = size;
@@ -70,8 +71,9 @@ public class JsFile extends JavaScriptObject {
 	}-*/;
 
 	public static JavaScriptObject create(File file) {
-		return create(file.getId(), file.getRootId(), file.getName(), file
-				.getParentId(), file.getExtension(), file.getSize());
+		return create(file.getId(), file.getRootId(), file.getName(),
+				file.getPath(), file.getParentId(), file.getExtension(),
+				file.getSize());
 	}
 
 }
