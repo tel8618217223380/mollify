@@ -88,6 +88,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private Widget content;
 	private List<GridListener> listListeners = new ArrayList();
 
+	private ActionToggleButton listViewButton;
+	private ActionToggleButton largeGridViewButton;
+	private ActionToggleButton smallGridViewButton;
+	private ActionToggleButtonGroup viewTypeGroup;
+
 	public enum ViewType {
 		list, gridSmall, gridLarge
 	}
@@ -101,7 +106,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			FolderSelectorFactory folderSelectorFactory,
 			ItemContextPopup itemContextPopup, DropBox dropBox,
 			DragAndDropManager dragAndDropManager,
-			FileListWidgetFactory fileViewFactory) {
+			FileListWidgetFactory fileViewFactory, ViewType defaultViewType) {
 		this.model = model;
 		this.textProvider = textProvider;
 		this.actionListener = actionListener;
@@ -141,7 +146,11 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		initWidget(content);
 		setStyleName(StyleConstants.MAIN_VIEW);
 
-		setViewType(ViewType.list);
+		setViewType(defaultViewType);
+		if (ViewType.gridSmall.equals(defaultViewType))
+			viewTypeGroup.activate(smallGridViewButton);
+		else if (ViewType.gridLarge.equals(defaultViewType))
+			viewTypeGroup.activate(largeGridViewButton);
 	}
 
 	public void setViewType(ViewType type) {
@@ -222,7 +231,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 			}
 		};
 
-		ActionToggleButton listViewButton = new ActionToggleButton("",
+		listViewButton = new ActionToggleButton("",
 				"mollify-mainview-options-list",
 				"mollify-mainview-options-button");
 		listViewButton.setAction(actionListener, Action.listView);
@@ -232,7 +241,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				.attachTo(listViewButton, p);
 		optionsPanel.add(listViewButton);
 
-		ActionToggleButton smallGridViewButton = new ActionToggleButton("",
+		smallGridViewButton = new ActionToggleButton("",
 				"mollify-mainview-options-grid-small",
 				"mollify-mainview-options-button");
 		smallGridViewButton.setAction(actionListener, Action.gridViewSmall);
@@ -241,7 +250,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				.attachTo(smallGridViewButton, p);
 		optionsPanel.add(smallGridViewButton);
 
-		ActionToggleButton largeGridViewButton = new ActionToggleButton("",
+		largeGridViewButton = new ActionToggleButton("",
 				"mollify-mainview-options-grid-large",
 				"mollify-mainview-options-button");
 		largeGridViewButton.setAction(actionListener, Action.gridViewLarge);
@@ -250,8 +259,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				.attachTo(largeGridViewButton, p);
 		optionsPanel.add(largeGridViewButton);
 
-		new ActionToggleButtonGroup(listViewButton, smallGridViewButton,
-				largeGridViewButton);
+		viewTypeGroup = new ActionToggleButtonGroup(listViewButton,
+				smallGridViewButton, largeGridViewButton);
 
 		return optionsPanel;
 	}

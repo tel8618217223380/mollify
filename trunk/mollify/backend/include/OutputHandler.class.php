@@ -135,7 +135,7 @@
 				$count = $count + 1;
 				set_time_limit(0);
 				echo fread($stream, 1024);
-				if ($this->supportOutputBuffer) @ob_flush();
+				if ($this->supportOutputBuffer and ob_get_length() != FALSE) @ob_flush();
 				flush();
 			}
 			fclose($stream);
