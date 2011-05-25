@@ -39,6 +39,7 @@ import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderSelectorFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
@@ -51,6 +52,7 @@ import com.google.inject.Singleton;
 public class DefaultMainViewFactory implements MainViewFactory,
 		CreateFolderDialogFactory {
 	private static final String SETTING_EXPOSE_FILE_LINKS = "expose-file-links";
+	private static final String SETTING_DEFAULT_VIEW_MODE = "default-view-mode";
 
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
@@ -130,9 +132,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		FileListWidgetFactory fileListViewFactory = new DefaultFileListWidgetFactory(
 				textProvider, dragAndDropManager, settings, fileSystemService);
+		ViewType defaultViewType = getDefaultViewType();
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
-				dropBox, dragAndDropManager, fileListViewFactory);
+				dropBox, dragAndDropManager, fileListViewFactory,
+				defaultViewType);
 		MainViewPresenter presenter = new MainViewPresenter(dialogManager,
 				viewManager, sessionManager, model, view,
 				serviceProvider.getConfigurationService(), fileSystemService,
@@ -147,6 +151,18 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		fileViewDelegate.setDelegate(glue);
 
 		return view;
+	}
+
+	private ViewType getDefaultViewType() {
+		String setting = settings.getString(SETTING_DEFAULT_VIEW_MODE);
+		if (setting != null) {
+			setting = setting.trim().toLowerCase();
+			if (setting.equals("small-icon"))
+				return ViewType.gridSmall;
+			if (setting.equals("large-icon"))
+				return ViewType.gridLarge;
+		}
+		return ViewType.list;
 	}
 
 	public void openPasswordDialog(PasswordHandler handler) {

@@ -37,9 +37,14 @@ public class ActionToggleButtonGroup {
 	protected void onButtonClicked(ActionToggleButton b) {
 		for (ActionToggleButton button : buttons) {
 			if (button.equals(b))
-				continue;
-			button.setDown(false);
+				button.setDown(true);
+			else
+				button.setDown(false);
 		}
+	}
+
+	public void activate(ActionToggleButton b) {
+		onButtonClicked(b);
 	}
 
 }
