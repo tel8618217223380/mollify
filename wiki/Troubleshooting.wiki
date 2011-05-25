@@ -89,9 +89,13 @@ To fix this, Mollify can be set to operate on limited HTTP methods mode by addin
 	);
 }}}
 
-and following client setting into the host page:
+and following client setting into the host page (merge your existing settings):
 {{{
-	<meta name="mollify:property" content="limited-http-methods=true">
+	<script type="text/javascript">
+		mollify.init({
+			"limited-http-methods": true,
+		});
+	</script>
 }}}
 
 == Downloaded files are corrupted ==
