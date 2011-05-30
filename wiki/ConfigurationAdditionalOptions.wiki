@@ -209,7 +209,11 @@ Options are:
 	If flash uploader is preferred, add following setting in host page:
 
 {{{
-<meta name="mollify:property" content="file-uploader=flash">
+<script type="text/javascript">
+    mollify.init({
+        "file-uploader": "flash"
+    });
+</script>
 }}}
 
 	Also the javascript library needs to be loaded with following line:
@@ -229,7 +233,11 @@ Options are:
 	By default, client requests timeout after 5 seconds if no response has been received. This timeout should be adequate for all environments, but if needed, this can be changed with following setting:
 
 {{{
-<meta name="mollify:property" content="request-timeout=8">
+<script type="text/javascript">
+    mollify.init({
+        "request-timeout": 8
+    });
+</script>
 }}}
 
 	Value given is timeout in seconds.
@@ -239,7 +247,11 @@ Options are:
 	Mollify has a default login screen which is shown when Mollify is accessed and no login has been done. To create a custom login screen etc., this can be disabled with following parameter in host page head section:
 
 {{{
-<meta name="mollify:property" content="show-login=false">
+<script type="text/javascript">
+    mollify.init({
+        "show-login": false
+    });
+</script>
 }}}
 
 An example of creating a custom login page can be found in downloads section.
