@@ -243,22 +243,3 @@ Options are:
 }}}
 
 An example of creating a custom login page can be found in downloads section.
-
-
-= 8. Demo Mode =
-
-	For demonstration and theme development purposes, Mollify can be compiled into standalone demo mode (if downloads section does not have this, ask from developer). In demo mode, client does not require backend, but will instead function entirely on demo data. All actions are available, but don't actually affect anything.
-
-	Demo mode can be set up with following property in host page head section:
-
-{{{
-<meta name="gwt:property" content="demo=true">
-}}}
-
-	If not set otherwise, demo mode simulates multi-user environment (accepts login "demo/demo").
-
-	To use single-user mode, add following property in host page head section:
-
-{{{
-<meta name="mollify:property" content="multi-user=false">
-}}}
