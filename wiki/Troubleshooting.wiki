@@ -7,7 +7,11 @@ In case of errors, first check most common errors below.
 
 If none of those help with your problem, do following steps before reporting new issue:
 
-1. Enable server side logging by adding following setting in configuration.php:
+1. Check for configuration file errors
+
+Modify script "backend/check.php" and enable the script as instructed in the file. Open url in your browser: http://yourhost/backend/check.php. If the script tells that file is OK, continue with other steps. Otherwise correct the problem as instructed, and try again.
+
+2. Enable server side logging by adding following setting in configuration.php:
 
 {{{
 	$SETTINGS = array(
@@ -23,11 +27,13 @@ If you have other settings already, add this to the same list, for example:
 	);
 }}}
 
-2. Recreate the error situation
+3. Recreate the error situation
 
-3. Open url in your browser: http://yourhost/backend/r.php/debug
+4. Open url in your browser: http://yourhost/backend/r.php/debug
 
-4. Copy the debug info displayed and attach into error report
+NOTE! Debug url works only when admin user has logged in, so it will not help you to solve login problems. For those you need to access the server error log to get the debug log.
+
+5. Copy the debug info and attach into error report
 
 NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries.
 
