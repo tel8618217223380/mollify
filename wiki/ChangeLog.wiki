@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.0.3 === 
+  * Fixed notificator plugin SQL error
+  * Added utility script for checking configuration errors
+
 === Version 1.8.0.2 === 
   * Fixed issue 251
 
