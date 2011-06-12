@@ -12,32 +12,28 @@ $SETTINGS = array(
 	"email_login" => FALSE,						// allow email login
 	"session_name" => NULL,						// Mollify session name
 	"enable_limited_http_methods" => FALSE,
+	"support_output_buffer" => FALSE,
+	"mime-types" => array(),
 	"enable_file_upload" => TRUE,
 	"enable_folder_actions" => TRUE,
 	"enable_file_upload_progress" => FALSE,
 	"enable_zip_download" => FALSE,
-	"zipper" => "ZipArchive",
 	"enable_change_password" => TRUE,
 	"enable_description_update" => FALSE,
 	"enable_permission_update" => FALSE,
 	"enable_public_links" => FALSE,
 	"enable_mail_notification" => FALSE,
 	"enable_retrieve_url" => FALSE,
+	"zipper" => "ZipArchive",
+	"zip_options" => array(),
 	"allowed_file_upload_types" => array(),
 	"firebug_logging" => FALSE,
-	"zip_options" => array(),
-	"permission_file" => "mollify.uac",
-	"description_file" => "mollify.dsc",
 	"mail_notification_from" => "Admin",
 	"new_folder_permission_mask" => 0755,
 	"convert_filenames" => FALSE,
-	"support_output_buffer" => FALSE,
 	"mail_notificator_class" => "mail/MailNotificator.class.php",
 	"url_retriever_class" => "UrlRetriever.class.php",
 	"datetime_format" => "d.m.Y H:i:s",
-	"mime-types" => array(),
-	"enable_s3" => FALSE,
-	"s3_settings" => array(),
 	"authentication_methods" => array("pw"),
 	"ldap_server" => NULL,
 	"ldap_fqdn" => NULL,
@@ -57,3 +53,5 @@ Server timezone, needed for PHP datetime functions. Without this information, so
 == Host public address ==
 
 Public address to the server or the site where Mollify is used. If not given, Mollify uses the PHP variable HTTP_REFERER to determine this. Some servers don't provide this, and all requests will fail until this is defined. The value is the URL for the site root including the protocol, but not any page, for example "http://www.yoursite.com"
+
+* More setting descriptions coming soon *
