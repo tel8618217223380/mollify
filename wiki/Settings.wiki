@@ -11,9 +11,9 @@ $SETTINGS = array(
 	"host_public_address" => NULL,					// host public address
 	"email_login" => FALSE,						// allow email login
 	"session_name" => NULL,						// Mollify session name
-	"enable_limited_http_methods" => FALSE,
+	"enable_limited_http_methods" => FALSE,	// limited HTTP methods
 	"support_output_buffer" => FALSE,
-	"mime-types" => array(),
+	"mime_types" => array(),
 	"enable_file_upload" => TRUE,
 	"enable_folder_actions" => TRUE,
 	"enable_file_upload_progress" => FALSE,
@@ -44,7 +44,7 @@ $SETTINGS = array(
 
 == Debug mode ==
 
-Enables backend debug mode. This writes debug information to PHP error log, and enables debug url for retrieving debug information without having to access server logs. Possible values are TRUE and FALSE.
+Enables backend debug mode. This writes debug information to PHP error log, and enables debug url for retrieving debug information without having to access server logs. Possible values are TRUE and FALSE (default).
 
 == Timezone ==
 
@@ -53,5 +53,9 @@ Server timezone, needed for PHP datetime functions. Without this information, so
 == Host public address ==
 
 Public address to the server or the site where Mollify is used. If not given, Mollify uses the PHP variable HTTP_REFERER to determine this. Some servers don't provide this, and all requests will fail until this is defined. The value is the URL for the site root including the protocol, but not any page, for example "http://www.yoursite.com"
+
+== Limited HTTP methods ==
+
+Mollify uses REST API for client/server communication. This uses all HTTP methods, ie. GET, PUT, POST and DELETE. Some servers don't support other methods than GET and POST, and in this case Mollify must be configured to use limited HTTP methods. Possible values are TRUE and FALSE (default).
 
 * More setting descriptions coming soon *
