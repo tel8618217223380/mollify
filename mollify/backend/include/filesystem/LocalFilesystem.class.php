@@ -46,32 +46,8 @@
 			$fullPath = self::joinPath($this->rootPath, $path);
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
 			
-			/*if ($isFile) {
-				if (!$nonexisting and !$this->pathExists($fullPath))
-					throw new ServiceException("FILE_DOES_NOT_EXIST", 'id:'.$id.' path:'.$fullPath);
-
-				if ($nonexisting and $this->pathExists($fullPath))
-					throw new ServiceException("FILE_ALREADY_EXISTS", 'id:'.$id);
-				
-				if (!$nonexisting and !is_file($fullPath))
-					throw new ServiceException("NOT_A_FILE", 'id:'.$id);
-			} else {
-				if (!$nonexisting and !$this->pathExists($fullPath))
-					throw new ServiceException("DIR_DOES_NOT_EXIST", 'id:'.$id);
-
-				if ($nonexisting and $this->pathExists($fullPath))
-					throw new ServiceException("DIR_ALREADY_EXISTS", 'id:'.$id);
-
-				if (!$nonexisting and !is_dir($fullPath))
-					throw new ServiceException("NOT_A_DIR", 'id:'.$id);
-			}*/
-			
 			if ($isFile) return new File($id, $this->rootId(), $path, self::basename($fullPath), $this);
 			return new Folder($id, $this->rootId(), $path, self::basename($fullPath), $this);
-		}
-		
-		public function pathExists($path) {
-			return file_exists($path);
 		}
 
 		private function publicPath($path) {
