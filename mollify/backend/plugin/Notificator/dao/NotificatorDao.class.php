@@ -30,7 +30,7 @@
 			
 			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("user")." ntf_user on ntf_user.id = ntf_usr.user_id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
 			
-			$query .= "where ntf.id = ".$db->string($id, TRUE);
+			$query .= " where ntf.id = ".$db->string($id, TRUE);
 			
 			$rows = $db->query($query)->rows();
 			if (count($rows) == 0) return FALSE;

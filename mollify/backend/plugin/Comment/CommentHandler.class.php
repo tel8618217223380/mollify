@@ -24,7 +24,6 @@
 			$type = $e->subType();
 			if (!in_array($type, array(FileEvent::MOVE, FileEvent::RENAME, FileEvent::DELETE))) return;
 			
-			Logging::logDebug("COMMENT EVENT ".$e->typeId());
 			if ($type === FileEvent::DELETE)
 				$this->getDao()->deleteComments($e->item());
 			else if ($type === FileEvent::MOVE or $type === FileEvent::RENAME)

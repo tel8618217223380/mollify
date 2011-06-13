@@ -193,7 +193,8 @@
 
 		public function rename($item, $name) {
 			$old = $this->localPath($item);
-			$new = self::joinPath(dirname($old),$name);
+			$new = self::joinPath(dirname($old), $this->filesystemInfo->env()->convertCharset($name, FALSE));
+			
 			if (!$item->isFile()) $new = self::folderPath($new);
 
 			if (file_exists($new))

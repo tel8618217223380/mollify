@@ -373,7 +373,7 @@
 				if ($mysql)
 					$hierarchyQuery = "(item_id REGEXP '^".$rootId;
 				else
-					$hierarchyQuery = "REGEX(item_id, '#^".$rootId;
+					$hierarchyQuery = "REGEX(item_id, '#^".str_replace("\\", "/\\", str_replace("/", "//", $rootId));
 				
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);

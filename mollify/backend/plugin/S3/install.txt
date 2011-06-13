@@ -1,0 +1,34 @@
+Mollify S3 Plugin Version 0.1b
+==============================
+
+1) Install Mollify as normally, but don't setup published folders
+
+2) Register Amazon account at https://aws-portal.amazon.com/gp/aws/developer/registration/index.html
+
+3) Setup configuration with Amazon keys with following formats:
+
+	$PLUGINS = array(
+		"S3" => array(
+			"AWS_KEY" => "GET_AWS_KEY_FROM_AMAZON",
+			"AWS_SECRET_KEY" => "GET_AWS_SECRET_KEY_FROM_AMAZON",
+			"AWS_CANONICAL_ID" => "GET_AWS_CANONICAL_ID_FROM_AMAZON",
+			"AWS_CANONICAL_NAME" => ""	// not needed
+		)
+	);
+	
+	These keys can be retrieved from Amazon account:
+	- Go to http://aws.amazon.com/.
+	- Click Account and then click Security Credentials.
+	- Scroll down to Access Credentials and make sure the Access Keys tab is selected.
+	  The AWS Access Key ID appears in the Access Key column. To view the Secret Access Key, click Show.
+
+4) Open Mollify admin util and setup published folders:
+  - for name, use any name you like
+  - for path, give plain text unique identifier, for example "images1", "images2" etc, but no path separators "/" or "\" etc
+
+
+Notes
+-----
+- In beta version 0.1b, installer instructions for publishing folders are not valid for S3
+- In beta version 0.1b, Plupload uploading will fail because of incomplete item existence check in S3 filesystem
+- When S3 plugin is enabled, no other filesystems are supported (ie. cannot publish one folder from S3 and another from local drive). In future this will be possible.

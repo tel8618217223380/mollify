@@ -26,7 +26,7 @@
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("include/mysql/sql/params.sql");
+			$this->db->execSqlFile("include/sqlite/sql/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {

@@ -161,8 +161,15 @@
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
-		
+
+		<copy todir="${target.dir}/S3/">
+			<fileset dir="${root.dir}/backend/plugin/S3">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+
 		<zip destfile="${deploy.dir}/plugin_plupload.zip" basedir="${target.dir}" includes="Plupload/**" />
+		<zip destfile="${deploy.dir}/plugin_s3.zip" basedir="${target.dir}" includes="S3/**" />
 		
 		<delete dir="${target.dir}" />
 	</target>
