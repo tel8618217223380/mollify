@@ -11,7 +11,7 @@
 <module rename-to="org.sjarvela.Mollify">
 	<inherits name='org.sjarvela.mollify.Client'/>
 	
-	<set-property name="gwt.logging.enabled" value="TRUE"/>
+	<set-property name="gwt.logging.enabled" value="FALSE"/>
 	<set-property name="gwt.logging.logLevel" value="ALL"/>
 	<set-property name="gwt.logging.popupHandler" value="ENABLED" />
 	<set-property name="gwt.logging.consoleHandler" value="ENABLED" />

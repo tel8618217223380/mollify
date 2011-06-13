@@ -61,6 +61,8 @@
 		
 		public abstract function isConfigured();
 		
+		public function registerFilesystem($id, $fs) {}
+		
 		public function onError($e) {
 			Logging::logException($e);
 		}

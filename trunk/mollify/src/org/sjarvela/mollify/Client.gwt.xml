@@ -21,6 +21,7 @@
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
 	<set-property name="gwt.logging.enabled" value="FALSE"/>
+	<set-configuration-property name="user.agent.runtimeWarning" value="false" />
 	
 	<!--extend-property name="locale" values="en"/>
 	<extend-property name="locale" values="es"/>
