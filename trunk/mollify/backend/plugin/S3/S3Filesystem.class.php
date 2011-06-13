@@ -59,13 +59,10 @@
 		}
 		
 		public function itemExists($item) {
-			return TRUE;	//TODO check item in bucket
+			if ($item->isRoot()) return TRUE;
+			return $this->s3->objectExists($this->bucketId, $item->path());
 		}
-		
-		public function pathExists($path) {
-			return TRUE;	//TODO check item in bucket
-		}
-		
+				
 		public function internalPath($item) {
 			return $item->path();
 		}
@@ -143,8 +140,10 @@
 		}
 		
 		public function delete($item) {
-			if (!$item->isFile()) throw new ServiceException("FEATURE_DISABLED", "Deleting folders in S3 is not supported");
-			$this->s3->deleteObject($this->bucketId, $item->path());
+			if ($item->isFile())
+				$this->s3->deleteObject($this->bucketId, $item->path());
+			else
+				$this->s3->deleteObjects($this->bucketId, $item->path());
 			return $item;
 		}
 				

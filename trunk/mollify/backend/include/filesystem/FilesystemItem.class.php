@@ -105,6 +105,10 @@
 			return $this->filesystem->addToZip($this, $zip);
 		}
 		
+		public function isRoot() {
+			return FALSE;
+		}
+		
 		public function data() {
 			$p = $this->parent();
 			return array(

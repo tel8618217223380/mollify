@@ -23,8 +23,8 @@
 	 			 	
 		 	define('AWS_KEY', $settings['AWS_KEY']);
 			define('AWS_SECRET_KEY', $settings['AWS_SECRET_KEY']);
-			define('AWS_CANONICAL_ID', $settings['AWS_CANONICAL_ID']);
-			define('AWS_CANONICAL_NAME', $settings['AWS_CANONICAL_NAME']);
+			//define('AWS_CANONICAL_ID', $settings['AWS_CANONICAL_ID']);
+			//define('AWS_CANONICAL_NAME', $settings['AWS_CANONICAL_NAME']);
 			include_once("sdk.class.php");
 			
 			$this->s3 = new AmazonS3();
@@ -65,6 +65,10 @@
 			}
 		}
 		
+		public function objectExists($bucket, $item) {
+			return $this->s3->if_object_exists($this->getBucketKey($bucket), $item);
+		}
+		
 		public function getObjects($bucket, $parent) {
 			$filters = array();
 			//if (strlen($parent) > 0) $filters["prefix"] = $parent;
@@ -75,7 +79,7 @@
 			$ret = $this->s3->get_object_list($this->getBucketKey($bucket), $filters);
 			return $ret;
 		}
-
+		
 		public function createObject($bucket, $obj, $content) {
 			$ret = $this->s3->create_object($this->getBucketKey($bucket), $obj, array("fileUpload" => $content));
 			if (!$ret->isOK()) throw new ServiceException("REQUEST_FAILED", "Could not create empty object: ".$ret->status." ".Util::array2str($ret->header));
@@ -139,6 +143,17 @@
 			$ret = $this->s3->delete_object($this->getBucketKey($bucket), $obj);
 			if (!$ret->isOK())
 				throw new ServiceException("REQUEST_FAILED", "Could not delete: ".$ret->status." ".Util::array2str($ret->header));
+		}
+
+		public function deleteObjects($bucket, $parent) {
+			$pcre = "/^".str_replace("/", "\/", $parent)."*$/";
+			Logging::logDebug("Deleting items matching [".$pcre."]");
+			
+			$ret = $this->s3->delete_all_objects($this->getBucketKey($bucket), $pcre);
+			if (!$ret)
+				throw new ServiceException("REQUEST_FAILED", "Could not delete objects under: ".$parent);
+
+			return TRUE;
 		}
 
 		public function getObject($bucket, $obj, $r) {
