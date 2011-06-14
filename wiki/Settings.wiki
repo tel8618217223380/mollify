@@ -11,9 +11,9 @@ $SETTINGS = array(
 	"host_public_address" => NULL,					// host public address
 	"email_login" => FALSE,						// allow email login
 	"session_name" => NULL,						// Mollify session name
-	"enable_limited_http_methods" => FALSE,	// limited HTTP methods
-	"support_output_buffer" => FALSE,
-	"mime_types" => array(),
+	"enable_limited_http_methods" => FALSE,				// limited HTTP methods
+	"support_output_buffer" => FALSE,				// support for output buffer
+	"mime_types" => array(),					// MIME types
 	"enable_file_upload" => TRUE,
 	"enable_folder_actions" => TRUE,
 	"enable_file_upload_progress" => FALSE,
@@ -57,5 +57,21 @@ Public address to the server or the site where Mollify is used. If not given, Mo
 == Limited HTTP methods ==
 
 Mollify uses REST API for client/server communication. This uses all HTTP methods, ie. GET, PUT, POST and DELETE. Some servers don't support other methods than GET and POST, and in this case Mollify must be configured to use limited HTTP methods. Possible values are TRUE and FALSE (default).
+
+== Support for output buffer ==
+
+If web server is configured to use output buffer, set this option to TRUE, and it will flush buffer on file downloads. See [http://www.php.net/manual/en/function.ob-flush.php]
+
+== MIME types ==
+
+File downloads may require special MIME type in order to be processed correctly. Mollify has few predefined common MIME types, but this variable allows setting custom types.
+
+Mime types are defined by the file extension, for example:
+
+{{{
+	$SETTINGS = array(
+		"mime_types" => array("avi" => "video/divx", "wav" => "audio/x-wav")
+	);
+}}}
 
 * More setting descriptions coming soon *
