@@ -32,7 +32,11 @@
 		}
 		
 		public function create() {
-			return mkdir($this->rootPath, 0755);
+			if (!mkdir($this->rootPath, 0755)) return FALSE;
+			if ($this->filesystemInfo->env()->settings()->setting("enable_folder_protection", TRUE)) {
+				copy($this->filesystemInfo->env()->getScriptRootPath()."/include/apache/htaccess", $this->rootPath.'.htaccess');
+			}
+			return TRUE;
 		}
 		
 		public function type() {

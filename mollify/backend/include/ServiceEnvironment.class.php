@@ -199,6 +199,10 @@
 			$root = substr($_SERVER['SCRIPT_NAME'], 0, strlen($_SERVER['SCRIPT_NAME']) - strlen(self::ENTRY_SCRIPT));
 			return $this->getHost().$root;
 		}
+
+		public function getScriptRootPath() {			
+			return substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen(self::ENTRY_SCRIPT));
+		}
 		
 		public function convertCharset($s, $encode = TRUE) {
 			$cs = $this->settings->setting("convert_filenames", TRUE);
