@@ -14,18 +14,17 @@ $SETTINGS = array(
 	"enable_limited_http_methods" => FALSE,				// limited HTTP methods
 	"support_output_buffer" => FALSE,				// support for output buffer
 	"mime_types" => array(),					// MIME types
-	"enable_file_upload" => TRUE,
-	"enable_folder_actions" => TRUE,
-	"enable_file_upload_progress" => FALSE,
-	"enable_zip_download" => FALSE,
+	"enable_file_upload" => TRUE,					// enable file upload
+	"enable_folder_actions" => TRUE,				// enable folder actions
+	"enable_file_upload_progress" => FALSE,				// enable file upload progress
 	"enable_change_password" => TRUE,
 	"enable_description_update" => FALSE,
 	"enable_permission_update" => FALSE,
 	"enable_public_links" => FALSE,
 	"enable_mail_notification" => FALSE,
 	"enable_retrieve_url" => FALSE,
+	"enable_zip_download" => FALSE,
 	"zipper" => "ZipArchive",
-	"zip_options" => array(),
 	"allowed_file_upload_types" => array(),
 	"firebug_logging" => FALSE,
 	"mail_notification_from" => "Admin",
@@ -46,7 +45,7 @@ $SETTINGS = array(
 
 Enables backend debug mode. This writes debug information to PHP error log, and enables debug url for retrieving debug information without having to access server logs. Possible values are TRUE and FALSE (default).
 
-== Timezone ==
+== Server timezone ==
 
 Server timezone, needed for PHP datetime functions. Without this information, some functions may fail. For values, see [http://php.net/manual/en/timezones.php]
 
@@ -73,5 +72,17 @@ Mime types are defined by the file extension, for example:
 		"mime_types" => array("avi" => "video/divx", "wav" => "audio/x-wav")
 	);
 }}}
+
+== Enable file upload ==
+
+By default, file uploads are enabled, but setting this to FALSE you can disable file uploads.
+
+== Enable folder actions ==
+
+By default, folder actions (copy, move, delete) are enabled, but setting this to FALSE you can disable folder actions.
+
+== Enable file upload progress (basic uploader) ==
+
+Basic HTTP file uploader can support file upload progress, if server has installed APC (Alternative PHP Cache), see [HowToEnableUploadProgressDisplay wiki page] for more information. By default, file upload progress is disabled.
 
 * More setting descriptions coming soon *
