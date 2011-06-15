@@ -43,7 +43,7 @@ $SETTINGS = array(
 
 == Debug mode ==
 
-Enables backend debug mode. This writes debug information to PHP error log, and enables debug url for retrieving debug information without having to access server logs. Possible values are TRUE and FALSE (default).
+Enables backend debug mode. This writes debug information to PHP error log and enables debug url, used for [Troubleshooting troubleshooting]. Possible values are TRUE and FALSE (default).
 
 == Server timezone ==
 
@@ -51,11 +51,11 @@ Server timezone, needed for PHP datetime functions. Without this information, so
 
 == Host public address ==
 
-Public address to the server or the site where Mollify is used. If not given, Mollify uses the PHP variable HTTP_REFERER to determine this. Some servers don't provide this, and all requests will fail until this is defined. The value is the URL for the site root including the protocol, but not any page, for example "http://www.yoursite.com"
+Public address to the server where Mollify is installed. If not given, Mollify uses the PHP variable HTTP_REFERER to determine this. Some servers don't provide this, and all requests will fail until given. The value is the URL for the site root including the protocol, for example "http://www.yoursite.com"
 
 == Limited HTTP methods ==
 
-Mollify uses REST API for client/server communication. This uses all HTTP methods, ie. GET, PUT, POST and DELETE. Some servers don't support other methods than GET and POST, and in this case Mollify must be configured to use limited HTTP methods. Possible values are TRUE and FALSE (default).
+Mollify uses REST API for client/server communication, which relies on all HTTP methods, ie. GET, PUT, POST and DELETE. Some servers don't support other methods than GET and POST, and in this case Mollify must be configured to use limited HTTP methods. Possible values are TRUE and FALSE (default).
 
 == Support for output buffer ==
 
@@ -63,7 +63,7 @@ If web server is configured to use output buffer, set this option to TRUE, and i
 
 == MIME types ==
 
-File downloads may require special MIME type in order to be processed correctly. Mollify has few predefined common MIME types, but this variable allows setting custom types.
+File downloads may require special MIME type in order to be processed correctly. Mollify has predefined common MIME types, but this variable allows setting custom types.
 
 Mime types are defined by the file extension, for example:
 
