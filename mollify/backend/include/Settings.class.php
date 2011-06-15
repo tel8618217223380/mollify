@@ -32,7 +32,6 @@
 			"enable_retrieve_url" => FALSE,
 			"allowed_file_upload_types" => array(),
 			"firebug_logging" => FALSE,
-			"zip_options" => array(),
 			"mail_notification_from" => "Admin",
 			"new_folder_permission_mask" => 0755,
 			"convert_filenames" => FALSE,

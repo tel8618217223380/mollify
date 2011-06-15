@@ -33,5 +33,6 @@ Mollify S3 Plugin Version 1.0
 
 Notes
 -----
-- In beta version 0.1b, installer instructions for publishing folders are not valid for S3
 - When S3 plugin is enabled, no other filesystems are supported (ie. cannot publish one folder from S3 and another from local drive). In future this will be possible.
+- In beta version, installer instructions for publishing folders are not valid for S3
+- Amazon S3 does not support copying, moving or renaming folders
