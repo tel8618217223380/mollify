@@ -15,12 +15,12 @@ $SETTINGS = array(
 	"support_output_buffer" => FALSE,				// support for output buffer
 	"mime_types" => array(),					// MIME types
 	"enable_file_upload" => TRUE,					// enable file upload
-	"enable_folder_actions" => TRUE,				// enable folder actions
 	"enable_file_upload_progress" => FALSE,				// enable file upload progress
-	"enable_change_password" => TRUE,
-	"enable_description_update" => FALSE,
-	"enable_permission_update" => FALSE,
-	"enable_public_links" => FALSE,
+	"enable_folder_actions" => TRUE,				// enable folder actions
+	"enable_change_password" => TRUE,				// enable change password
+	"enable_description_update" => FALSE,				// enable descriptions (to be renamed)
+	"enable_permission_update" => FALSE,				// enable permissions (to be removed)
+	"enable_public_links" => FALSE,					// enable public links
 	"enable_mail_notification" => FALSE,
 	"enable_retrieve_url" => FALSE,
 	"enable_zip_download" => FALSE,
@@ -41,27 +41,27 @@ $SETTINGS = array(
 );
 }}}
 
-== Debug mode ==
+== Debug mode (`debug`) ==
 
 Enables backend debug mode. This writes debug information to PHP error log and enables debug url, used for [Troubleshooting troubleshooting]. Possible values are TRUE and FALSE (default).
 
-== Server timezone ==
+== Server timezone (`timezone`) ==
 
 Server timezone, needed for PHP datetime functions. Without this information, some functions may fail. For values, see [http://php.net/manual/en/timezones.php]
 
-== Host public address ==
+== Host public address (`host_public_address`) ==
 
 Public address to the server where Mollify is installed. If not given, Mollify uses the PHP variable HTTP_REFERER to determine this. Some servers don't provide this, and all requests will fail until given. The value is the URL for the site root including the protocol, for example "http://www.yoursite.com"
 
-== Limited HTTP methods ==
+== Limited HTTP methods (`enable_limited_http_methods`) ==
 
 Mollify uses REST API for client/server communication, which relies on all HTTP methods, ie. GET, PUT, POST and DELETE. Some servers don't support other methods than GET and POST, and in this case Mollify must be configured to use limited HTTP methods. Possible values are TRUE and FALSE (default).
 
-== Support for output buffer ==
+== Support for output buffer (`support_output_buffer`) ==
 
 If web server is configured to use output buffer, set this option to TRUE, and it will flush buffer on file downloads. See [http://www.php.net/manual/en/function.ob-flush.php]
 
-== MIME types ==
+== MIME types (`mime_types`) ==
 
 File downloads may require special MIME type in order to be processed correctly. Mollify has predefined common MIME types, but this variable allows setting custom types.
 
@@ -73,16 +73,22 @@ Mime types are defined by the file extension, for example:
 	);
 }}}
 
-== Enable file upload ==
+== Enable file upload (`enable_file_upload`) ==
 
 By default, file uploads are enabled, but setting this to FALSE you can disable file uploads.
 
-== Enable folder actions ==
+== Enable file upload progress (`enable_file_upload_progress`) ==
+
+Basic HTTP file uploader can support file upload progress, if server has installed APC (Alternative PHP Cache), see [HowToEnableUploadProgressDisplay wiki page] for more information. By default, file upload progress is disabled.
+
+*Note* Only for basic uploader
+
+== Enable folder actions (`enable_folder_actions`) ==
 
 By default, folder actions (copy, move, delete) are enabled, but setting this to FALSE you can disable folder actions.
 
-== Enable file upload progress (basic uploader) ==
+== Enable change password (`enable_change_password`) ==
 
-Basic HTTP file uploader can support file upload progress, if server has installed APC (Alternative PHP Cache), see [HowToEnableUploadProgressDisplay wiki page] for more information. By default, file upload progress is disabled.
+By default, changing password is enabled, but setting this to FALSE you can prevent users from changing passwords.
 
 * More setting descriptions coming soon *
