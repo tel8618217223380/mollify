@@ -328,11 +328,10 @@
 			
 			$to = $item->rename($name);
 			
-			if ($this->env->features()->isFeatureEnabled("description_update"))
+			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->moveItemDescription($item, $to);
 				
-			if ($this->env->features()->isFeatureEnabled("permission_update"))
-				$this->env->configuration()->moveItemPermissions($item, $to);
+			$this->env->configuration()->moveItemPermissions($item, $to);
 			
 			$this->env->events()->onEvent(FileEvent::rename($item, $to));
 		}
@@ -371,11 +370,10 @@
 
 			$to = $item->move($to);
 			
-			if ($this->env->features()->isFeatureEnabled("description_update"))
+			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->moveItemDescription($item, $to);
 				
-			if ($this->env->features()->isFeatureEnabled("permission_update"))
-				$this->env->configuration()->moveItemPermissions($item, $to);
+			$this->env->configuration()->moveItemPermissions($item, $to);
 			
 			$this->env->events()->onEvent(FileEvent::move($item, $to));			
 		}
@@ -396,11 +394,11 @@
 			
 			$item->delete();
 			
-			if ($this->env->features()->isFeatureEnabled("description_update"))
+			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->removeItemDescription($item);
 				
-			if ($this->env->features()->isFeatureEnabled("permission_update"))
-				$this->env->configuration()->removeItemPermissions($item);
+			
+			$this->env->configuration()->removeItemPermissions($item);
 			
 			$this->env->events()->onEvent(FileEvent::delete($item));
 		}
@@ -421,7 +419,7 @@
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 			
-			if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()) and $this->env->features()->isFeatureEnabled("permission_update"))
+			if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()))
 				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
 		}
 

@@ -16,7 +16,7 @@
 	 	
 		function __construct($env) {
 			$this->env = $env;
-			$this->searchDescriptions = $env->features()->isFeatureEnabled("description_update");
+			$this->searchDescriptions = $env->features()->isFeatureEnabled("descriptions");
 		}
 		
 		protected function getMatch($data, $item, $text) {

@@ -18,8 +18,7 @@
 			"file_upload_progress" => FALSE,
 			"zip_download" => FALSE,
 			"change_password" => FALSE,
-			"description_update" => FALSE,
-			"permission_update" => FALSE,
+			"descriptions" => FALSE,
 			"administration" => FALSE,
 			"user_groups" => FALSE,
 			"public_links" => FALSE,
@@ -29,7 +28,7 @@
 		
 		private $defaultValues = array();
 		
-		private static $featuresControlledByConfiguration = array("change_password", "description_update", "permission_update", "administration", "user_groups");
+		private static $featuresControlledByConfiguration = array("change_password", "descriptions", "administration", "user_groups");
 		
 		function __construct($configuration, $settings) {
 			$configurationFeatures = $configuration->getSupportedFeatures();
