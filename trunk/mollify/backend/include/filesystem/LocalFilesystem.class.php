@@ -15,6 +15,7 @@
 		
 		function __construct($id, $def, $filesystemInfo) {
 			parent::__construct($id, $def['name'] != NULL ? $def['name'] : $def['default_name'], $filesystemInfo);
+			if ($def == NULL or !isset($def["path"])) throw new ServiceException("INVALID_CONFIGURATION", "Invalid filesystem definition");
 			$this->rootPath = self::folderPath($def["path"]);
 		}
 		

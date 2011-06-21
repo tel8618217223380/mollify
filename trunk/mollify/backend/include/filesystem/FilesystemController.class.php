@@ -173,8 +173,7 @@
 		}
 		
 		private function isFolderValid($id) {
-			$folders = $this->getFolderDefs($this->allowFilesystems);
-			return array_key_exists($id, $folders);
+			return array_key_exists($id, $this->getFolderDefs($this->allowFilesystems));
 		}
 		
 		public function assertFilesystem($folderDef) {
