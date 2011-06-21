@@ -171,8 +171,7 @@
 		}
 		
 		private function isFolderValid($id) {
-			if ($this->allowFilesystems) return TRUE;	//TODO used for public services, not a proper way
-			$folders = $this->getFolderDefs();
+			$folders = $this->getFolderDefs($this->allowFilesystems);
 			return array_key_exists($id, $folders);
 		}
 		
