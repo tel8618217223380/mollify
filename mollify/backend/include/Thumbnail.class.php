@@ -18,8 +18,9 @@
 	
 			$img = null;
 			$ext = $item->extension();
+
 			if (strcasecmp('jpg', $ext) == 0 || strcasecmp('jpeg', $ext) == 0) {
-	    		$img = @imagecreatefromjpeg($item->internalPath());
+				$img = @imagecreatefromjpeg($item->internalPath());
 			} else if (strcasecmp('png', $ext) == 0) {
 				$img = @imagecreatefrompng($item->internalPath());
 			} else if (strcasecmp('gif', $ext) == 0) {
@@ -38,15 +39,15 @@
 				return FALSE;
 			}
 			
-	        $tw = floor($s*$w);
-	        $th = floor($s*$h);
-	        $thumb = imagecreatetruecolor($tw, $th);
-	        imagecopyresized($thumb, $img, 0, 0, 0, 0, $tw, $th, $w, $h);
-	        imagedestroy($img);
-	        if ($thumb == NULL) {
-		        Logging::logDebug("Failed to create thumbnail");
-	        	return FALSE;
-	        }
+			$tw = floor($s*$w);
+			$th = floor($s*$h);
+			$thumb = imagecreatetruecolor($tw, $th);
+			imagecopyresized($thumb, $img, 0, 0, 0, 0, $tw, $th, $w, $h);
+			imagedestroy($img);
+			if ($thumb == NULL) {
+				Logging::logDebug("Failed to create thumbnail");
+				return FALSE;
+		        }
 	
 			header("Content-type: image/jpeg");
 			imagejpeg($thumb);

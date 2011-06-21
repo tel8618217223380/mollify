@@ -23,7 +23,8 @@
 			"user_groups" => FALSE,
 			"public_links" => FALSE,
 			"mail_notification" => FALSE,
-			"retrieve_url" => FALSE
+			"retrieve_url" => FALSE,
+			"folder_protection" => FALSE
 		);
 		
 		private $defaultValues = array();
