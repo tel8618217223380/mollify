@@ -23,7 +23,7 @@
 		private $searchers = array();
 		private $filesystems = array();
 		
-		public $allowFilesystems = TRUE;
+		public $allowFilesystems = FALSE;
 
 		function __construct($env) {
 			require_once("MollifyFilesystem.class.php");
@@ -67,7 +67,7 @@
 		}
 		
 		private function getFolderDefs($all = FALSE) {
-			if ($this->env->configuration()->isAuthenticationRequired() and !$all)
+			if (!$all)
 				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId(), TRUE);
 			else
 				$folderDefs = $this->env->configuration()->getFolders();
@@ -171,7 +171,7 @@
 		}
 		
 		private function isFolderValid($id) {
-			if ($this->allowFilesystems or !$this->env->configuration()->isAuthenticationRequired()) return TRUE;
+			if ($this->allowFilesystems) return TRUE;	//TODO used for public services, not a proper way
 			$folders = $this->getFolderDefs();
 			return array_key_exists($id, $folders);
 		}
