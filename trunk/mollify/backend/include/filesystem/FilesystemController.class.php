@@ -97,6 +97,8 @@
 		}
 		
 		private function createFilesystem($folderDef) {
+			if ($folderDef == NULL) throw new ServiceException("INVALID_CONFIGURATION", "Invalid root folder definition");
+
 			$id = isset($folderDef['id']) ? $folderDef['id'] : '';
 			
 			//TODO this is hack, support real filesystem types
