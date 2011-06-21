@@ -34,7 +34,7 @@
 		
 		public function create() {
 			if (!mkdir($this->rootPath, 0755)) return FALSE;
-			if ($this->filesystemInfo->env()->settings()->setting("enable_folder_protection", TRUE)) {
+			if ($this->filesystemInfo->env()->features()->isFeatureEnabled("folder_protection")) {
 				copy($this->filesystemInfo->env()->getScriptRootPath()."/include/apache/htaccess", $this->rootPath.'.htaccess');
 			}
 			return TRUE;
