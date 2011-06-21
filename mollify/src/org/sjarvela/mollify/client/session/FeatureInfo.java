@@ -46,16 +46,12 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.zip_download;
 	}-*/;
 
-	public final native boolean descriptionUpdate() /*-{
-		return this.description_update;
+	public final native boolean descriptions() /*-{
+		return this.descriptions;
 	}-*/;
 
 	public final native boolean changePassword() /*-{
 		return this.change_password;
-	}-*/;
-
-	public final native boolean permissionUpdate() /*-{
-		return this.permission_update;
 	}-*/;
 
 	public final native boolean administration() /*-{

@@ -65,7 +65,7 @@ public class DescriptionComponent implements ItemContextComponent,
 		this.textProvider = textProvider;
 		this.fileSystemService = fileSystemService;
 		this.descriptionUpdate = session.getDefaultPermissionMode().isAdmin()
-				&& session.getFeatures().descriptionUpdate();
+				&& session.getFeatures().descriptions();
 		this.dialogManager = dialogManager;
 	}
 

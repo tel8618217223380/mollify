@@ -360,8 +360,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 				});
 		username.setStyleName(StyleConstants.MAIN_VIEW_HEADER_USERNAME);
 
-		if (model.getSession().getDefaultPermissionMode().isAdmin()
-				&& model.getSession().getFeatures().permissionUpdate()) {
+		if (model.getSession().getDefaultPermissionMode().isAdmin()) {
 			username.addAction(Action.editItemPermissions,
 					textProvider.getText(Texts.mainViewEditPermissionsTitle));
 
