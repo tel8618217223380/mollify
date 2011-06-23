@@ -72,7 +72,7 @@ public class DemoData {
 
 	public DemoData() {
 		this.settings = FeatureInfo.create(true, true, true, true, true, true,
-				true, true, true, true, true, true);
+				true, true, true, true, true);
 		this.fileSystemInfo = FileSystemInfo.create("/", 1024, 1024,
 				Arrays.asList("txt", "gif"));
 

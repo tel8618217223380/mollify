@@ -16,14 +16,12 @@ public class FeatureInfo extends JavaScriptObject {
 	public static FeatureInfo create(boolean folderActions, boolean fileUpload,
 			boolean fileUploadProgress, boolean zipDownload,
 			boolean descriptionUpdate, boolean changePassword,
-			boolean permissionUpdate, boolean administration,
-			boolean userGroups, boolean filePreview, boolean fileView,
-			boolean publicLinks) {
+			boolean administration, boolean userGroups, boolean filePreview,
+			boolean fileView, boolean publicLinks) {
 		FeatureInfo result = FeatureInfo.createObject().cast();
 		result.putValues(folderActions, fileUpload, fileUploadProgress,
-				zipDownload, descriptionUpdate, changePassword,
-				permissionUpdate, administration, userGroups, filePreview,
-				fileView, publicLinks);
+				zipDownload, descriptionUpdate, changePassword, administration,
+				userGroups, filePreview, fileView, publicLinks);
 		return result;
 	}
 
@@ -63,12 +61,14 @@ public class FeatureInfo extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean filePreview() /*-{
-		if (!this.file_preview) return false;
+		if (!this.file_preview)
+			return false;
 		return true;
 	}-*/;
 
 	public final native boolean fileView() /*-{
-		if (!this.file_view) return false;
+		if (!this.file_view)
+			return false;
 		return this.file_view;
 	}-*/;
 
@@ -77,7 +77,8 @@ public class FeatureInfo extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean lostPassword() /*-{
-		if (!this.lost_password) return false;
+		if (!this.lost_password)
+			return false;
 		return this.lost_password;
 	}-*/;
 
@@ -88,16 +89,14 @@ public class FeatureInfo extends JavaScriptObject {
 	private final native void putValues(boolean folderActions,
 			boolean fileUpload, boolean fileUploadProgress,
 			boolean zipDownload, boolean descriptionUpdate,
-			boolean changePassword, boolean permissionUpdate,
-			boolean administration, boolean userGroups, boolean filePreview,
-			boolean fileView, boolean publicLinks) /*-{
+			boolean changePassword, boolean administration, boolean userGroups,
+			boolean filePreview, boolean fileView, boolean publicLinks) /*-{
 		this.folder_actions = folderActions;
 		this.file_upload = fileUpload;
 		this.file_upload_progress = fileUploadProgress;
 		this.zip_download = zipDownload;
 		this.change_password = changePassword;
-		this.description_update = descriptionUpdate;
-		this.permission_update = permissionUpdate;
+		this.descriptions = descriptionUpdate;
 		this.administration = administration;
 		this.user_groups = userGroups;
 		this.file_preview = filePreview;
