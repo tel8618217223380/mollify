@@ -132,7 +132,7 @@
 			$first = TRUE;
 			foreach($a as $s) {
 				if (!$first) $result .= ',';
-				if ($quote) $result .= "'".$s-"'";
+				if ($quote) $result .= "'".$s."'";
 				else $result .= $s;
 				$first = FALSE;
 			}

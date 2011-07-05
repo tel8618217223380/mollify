@@ -210,6 +210,9 @@
 					}
 					$this->env->filesystem()->copy($item, $to);
 					break;
+				case 'content':
+					//TODO
+					break;
 				default:
 					throw $this->invalidRequestException();
 			}
