@@ -471,6 +471,14 @@
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
 		}
 		
+		public function updateFileContents($item, $content) {
+			if (!$item->isFile()) throw new ServiceException("NOT_A_FILE", $item->path());
+			Logging::logDebug('update file contents ['.$item->id().']');
+			$this->assertRights($item, Authentication::RIGHTS_WRITE, "update content");
+			$this->env->events()->onEvent(FileEvent::upload($item));
+			$item->put($content);
+		}
+		
 		public function getUploadTempDir() {
 			$dir = $this->env->settings()->setting("upload_temp_dir");
 			if ($dir != NULL and strlen($dir) > 0) return $dir;
@@ -481,12 +489,6 @@
 			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 			
-			if ($this->env->request()->hasParam('uploader') and $this->env->request()->param('uploader') === 'plupload') {
-				require_once("plupload.php");
-				plupload($folder, $this);
-				return;
-			}
-
 			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
 				throw new ServiceException("NO_UPLOAD_DATA");
 			

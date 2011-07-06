@@ -2175,7 +2175,8 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	position: absolute;
 	background-color: #eceeee;
 	right: 0;
-	height: 100%;
+	min-height: 360px;
+	min-height: 100%;
 	border-left: 1px solid #cbcbcb;
 }
 
