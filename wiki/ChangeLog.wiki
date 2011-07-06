@@ -3,7 +3,7 @@
 
 === Version 1.8.0.5 === 
   * Fixed issue 275
-  * Fixed issue 265
+  * Fixed issue 264
   * Added new language: chinese
 
 === Version 1.8.0.4 === 
