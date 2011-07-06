@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.0.5 === 
+  * Fixed issue 275
+  * Fixed issue 265
+  * Added new language: chinese
+
 === Version 1.8.0.4 === 
   * Fixed issue 267
 
