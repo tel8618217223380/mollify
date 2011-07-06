@@ -211,7 +211,7 @@
 					$this->env->filesystem()->copy($item, $to);
 					break;
 				case 'content':
-					//TODO
+					$this->env->filesystem()->updateFileContents($item, $this->request->data);
 					break;
 				default:
 					throw $this->invalidRequestException();
