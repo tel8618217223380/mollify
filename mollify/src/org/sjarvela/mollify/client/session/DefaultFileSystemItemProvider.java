@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
-import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -78,7 +78,8 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 			listener.onSuccess(new FolderInfo(FilePermission.None, roots,
 					Collections.EMPTY_LIST));
 		else
-			fileSystemService.getInfo(parent, listener);
+			fileSystemService.getFolderInfo(parent, Collections.EMPTY_LIST,
+					listener);
 	}
 
 }

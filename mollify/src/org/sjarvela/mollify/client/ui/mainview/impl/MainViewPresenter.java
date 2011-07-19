@@ -182,7 +182,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToRootFolder(root, createFolderChangeListener());
+				model.changeToRootFolder(view.getViewType(), root,
+						createFolderChangeListener());
 			}
 		});
 	}
@@ -192,7 +193,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToSubfolder(folder, createFolderChangeListener());
+				model.changeToSubfolder(view.getViewType(), folder,
+						createFolderChangeListener());
 			}
 		});
 	}
@@ -203,8 +205,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void reload() {
 		view.showProgress();
-
-		model.refreshData(new ResultListener<FolderInfo>() {
+		model.refreshData(view.getViewType(), new ResultListener<FolderInfo>() {
 			public void onFail(ServiceError error) {
 				view.hideProgress();
 				onError(error, false);
@@ -245,7 +246,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.moveToParentFolder(createFolderChangeListener());
+				model.moveToParentFolder(view.getViewType(),
+						createFolderChangeListener());
 			}
 		});
 	}
@@ -256,7 +258,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToFolder(level, folder,
+				model.changeToFolder(view.getViewType(), level, folder,
 						createFolderChangeListener());
 			}
 		});

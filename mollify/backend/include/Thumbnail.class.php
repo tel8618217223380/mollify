@@ -47,7 +47,7 @@
 			if ($thumb == NULL) {
 				Logging::logDebug("Failed to create thumbnail");
 				return FALSE;
-		        }
+			}
 	
 			header("Content-type: image/jpeg");
 			imagejpeg($thumb);

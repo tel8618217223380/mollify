@@ -13,6 +13,8 @@ package org.sjarvela.mollify.client.session;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.sjarvela.mollify.client.js.JsObj;
+
 import com.google.gwt.logging.client.LogConfiguration;
 
 public class ClientSettings {
@@ -63,5 +65,19 @@ public class ClientSettings {
 						+ " value, using default " + defaultValue);
 			return defaultValue;
 		}
+	}
+
+	public JsObj getJsObj(String name) {
+		if (!parser.hasParameter(name))
+			return null;
+		return parser.getParameterAsJsObj(name);
+		// String s = getString(name);
+		// if (s == null || s.trim().isEmpty())
+		// return null;
+		// JSONObject o = JSONParser.parseLenient(s).isObject();
+		// if (o == null)
+		// throw new RuntimeException("Invalid client settings [" + name
+		// + "], not JSON format");
+		// return o.getJavaScriptObject().cast();
 	}
 }

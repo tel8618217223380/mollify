@@ -23,12 +23,14 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	private final boolean thumbnails;
 	private final FileSystemService service;
 	private final boolean experimental;
+	private final ClientSettings settings;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager, ClientSettings settings,
 			FileSystemService service) {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
+		this.settings = settings;
 		this.service = service;
 		this.experimental = settings.getBool("experimental-list", false);
 		this.thumbnails = settings.getBool("icon-view-thumbnails", false);
@@ -39,7 +41,8 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 		if (ViewType.list.equals(type)) {
 			if (experimental)
 				return new CellTableFileList(textProvider);
-			return new DefaultFileListWidget(textProvider, dragAndDropManager);
+			return new DefaultFileListWidget(textProvider, dragAndDropManager,
+					settings.getJsObj("list-view-columns"));
 		}
 		return new DefaultFileListGridWidget(thumbnails, service,
 				ViewType.gridSmall.equals(type));

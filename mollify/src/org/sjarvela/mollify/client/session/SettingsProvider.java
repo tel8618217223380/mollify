@@ -15,22 +15,20 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.js.JsObj;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 public class SettingsProvider {
 	private final String name;
-	private final Map<String, String> values;
+	private final JsObj settings;
+	private final Map<String, String> stringValues;
 
 	public SettingsProvider(String name) {
 		this.name = name;
-		this.values = readValues();
-	}
-
-	private Map<String, String> readValues() {
-		JsObj settings = this.getSettings();
+		this.settings = getSettings();
 		if (settings == null)
 			throw new RuntimeException("Mollify not initialized");
+		this.stringValues = getStringValues();
+	}
 
+	private Map<String, String> getStringValues() {
 		Map<String, String> result = new HashMap();
 
 		for (String k : settings.getKeys()) {
@@ -47,10 +45,6 @@ public class SettingsProvider {
 		return result;
 	}
 
-	private native String getStringValue(JavaScriptObject o) /*-{
-		return "" + o;
-	}-*/;
-
 	private native JsObj getSettings() /*-{
 		if (!$wnd.mollify || !$wnd.mollify.getSettings)
 			return null;
@@ -58,12 +52,18 @@ public class SettingsProvider {
 	}-*/;
 
 	public String getParameter(String name) {
-		if (!values.containsKey(name))
+		if (!stringValues.containsKey(name))
 			return null;
-		return values.get(name);
+		return stringValues.get(name);
+	}
+
+	public JsObj getParameterAsJsObj(String name) {
+		if (!stringValues.containsKey(name))
+			return null;
+		return settings.getJsObj(name);
 	}
 
 	public boolean hasParameter(String param) {
-		return values.containsKey(param);
+		return stringValues.containsKey(param);
 	}
 }
