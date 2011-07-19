@@ -54,13 +54,15 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(data.getFolders(parent));
 	}
 
-	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
+	public void getFolderInfo(Folder parent, List<String> d,
+			ResultListener<FolderInfo> listener) {
 		listener.onSuccess(new FolderInfo(FilePermission.ReadWrite, data
 				.getFolders(parent), data.getFiles(parent)));
 	}
 
 	@Override
-	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
+	public void getFolderInfoWithHierarchy(String id,
+			ResultListener<FolderHierarchyInfo> listener) {
 		Folder parent = data.folders.get(DemoData.ROOT_1).get(0);
 		Folder root = new Folder(DemoData.ROOT_1, "", "Folder A", "", "");
 		listener.onSuccess(new FolderHierarchyInfo(FilePermission.ReadWrite,

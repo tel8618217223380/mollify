@@ -88,6 +88,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private Widget content;
 	private List<GridListener> listListeners = new ArrayList();
 
+	private ViewType viewType;
 	private ActionToggleButton listViewButton;
 	private ActionToggleButton largeGridViewButton;
 	private ActionToggleButton smallGridViewButton;
@@ -154,6 +155,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void setViewType(ViewType type) {
+		this.viewType = type;
 		fileListView = fileListViewFactory.create(type);
 		for (GridListener l : listListeners)
 			fileListView.addListener(l);
@@ -568,6 +570,10 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 
 	public void clearSearchField() {
 		this.searchField.clear();
+	}
+
+	public ViewType getViewType() {
+		return viewType;
 	}
 
 }

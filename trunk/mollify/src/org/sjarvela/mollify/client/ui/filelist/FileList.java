@@ -60,6 +60,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		this.addStyleName(StyleConstants.FILE_LIST);
 	}
 
+	@Override
 	protected List<GridColumn> getColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getText(Texts.fileListColumnTitleName), true);
@@ -100,6 +101,7 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	protected FlowPanel createFolderNameWidget(final Folder folder) {
 		FlowPanel panel = new FlowPanel();
+		panel.getElement().setId("item-" + folder.getId());
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(folder));
 
@@ -123,6 +125,7 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	protected FlowPanel createFileNameWidget(final File file) {
 		FlowPanel panel = new FlowPanel();
+		panel.getElement().setId("item-" + file.getId());
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(file));
 

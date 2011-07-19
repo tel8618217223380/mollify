@@ -74,6 +74,13 @@ public class JSONBuilder {
 		return arrayBuilder;
 	}
 
+	public JSONBuilder array(String name, List<String> items) {
+		JSONArrayBuilder array = this.array(name);
+		for (String item : items)
+			array.add(item);
+		return this;
+	}
+
 	public JavaScriptObject toJSON() {
 		for (Entry<String, JSONBuilder> e : objects.entrySet())
 			result.put(e.getKey(), new JSONObject(e.getValue().toJSON()));

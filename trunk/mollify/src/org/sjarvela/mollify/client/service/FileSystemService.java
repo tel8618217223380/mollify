@@ -28,9 +28,11 @@ public interface FileSystemService extends ItemDetailsProvider {
 
 	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
-	void getInfo(Folder parent, ResultListener<FolderInfo> listener);
+	void getFolderInfo(Folder parent, List<String> data,
+			ResultListener<FolderInfo> listener);
 
-	void getInfo(String id, ResultListener<FolderHierarchyInfo> listener);
+	void getFolderInfoWithHierarchy(String id,
+			ResultListener<FolderHierarchyInfo> listener);
 
 	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);

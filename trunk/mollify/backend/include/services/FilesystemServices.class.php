@@ -211,7 +211,7 @@
 					$this->env->filesystem()->copy($item, $to);
 					break;
 				case 'content':
-					$this->env->filesystem()->updateFileContents($item, $this->request->data);
+					$this->env->filesystem()->updateFileContents($item, file_get_contents("php://input"));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -229,25 +229,7 @@
 					return;
 				case 'info':
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
-					
-					$items = $this->env->filesystem()->items($item);
-					$files = array();
-					$folders = array();
-					foreach($items as $i) {
-						if ($i->isFile()) $files[] = $i->data();
-						else $folders[] = $i->data();
-					}
-					$result["files"] = $files;
-					$result["folders"] = $folders;
-					if ($includeHierarchy) {
-						$h = array();
-						foreach($this->env->filesystem()->hierarchy($item) as $i) {
-							$h[] = $i->data();
-						}
-						$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders, "hierarchy" => $h));
-					} else {
-						$this->response()->success(array("permission" => $this->env->filesystem()->permission($item), "files" => $files, "folders" => $folders));
-					}
+					$this->response()->success($this->getFolderInfo($item, $includeHierarchy));
 					break;
 				case 'files':
 					$items = $this->env->filesystem()->items($item);
@@ -278,6 +260,27 @@
 			}
 		}
 		
+		private function getFolderInfo($item, $includeHierarchy, $data = NULL) {
+			$items = $this->env->filesystem()->items($item);
+			$files = array();
+			$folders = array();
+			foreach($items as $i) {
+				if ($i->isFile()) $files[] = $i->data();
+				else $folders[] = $i->data();
+			}
+			$result["files"] = $files;
+			$result["folders"] = $folders;
+			$result["permission"] = $this->env->filesystem()->permission($item);
+			if ($includeHierarchy) {
+				$h = array();
+				foreach($this->env->filesystem()->hierarchy($item) as $i) {
+					$h[] = $i->data();
+				}
+				$result["hierarchy"] = $h;
+			}
+			return $result;
+		}
+		
 		private function processPutFolder($item) {
 			if (count($this->path) != 2) throw invalidRequestException();
 			$data = $this->request->data;
@@ -302,6 +305,10 @@
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
+				case 'info':
+					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
+					$this->response()->success($this->getFolderInfo($item, $includeHierarchy, $this->request->data["data"]));
+					return;
 				case 'files':
 					$this->env->filesystem()->uploadTo($item);
 					$this->response()->html(json_encode(array("result" => TRUE)));

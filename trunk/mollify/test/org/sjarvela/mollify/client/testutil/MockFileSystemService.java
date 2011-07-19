@@ -76,13 +76,15 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
+	public void getFolderInfo(Folder parent, List<String> d,
+			ResultListener<FolderInfo> listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
+	public void getFolderInfoWithHierarchy(String id,
+			ResultListener<FolderHierarchyInfo> listener) {
 		// TODO Auto-generated method stub
 
 	}

@@ -74,13 +74,17 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void getInfo(Folder parent, ResultListener<FolderInfo> listener) {
-		service.getInfo(parent, resultListenerFactory.createListener(listener));
+	public void getFolderInfo(Folder parent, List<String> data,
+			ResultListener<FolderInfo> listener) {
+		service.getFolderInfo(parent, data,
+				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public void getInfo(String id, ResultListener<FolderHierarchyInfo> listener) {
-		service.getInfo(id, resultListenerFactory.createListener(listener));
+	public void getFolderInfoWithHierarchy(String id,
+			ResultListener<FolderHierarchyInfo> listener) {
+		service.getFolderInfoWithHierarchy(id,
+				resultListenerFactory.createListener(listener));
 	}
 
 	public String getDownloadAsZipUrl(FileSystemItem item) {

@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 public class MainViewModel {
 	private final SessionInfo session;
@@ -93,28 +94,32 @@ public class MainViewModel {
 		return folderModel.getCurrentFolder();
 	}
 
-	public void changeToRootFolder(Folder root, ResultListener resultListener) {
+	public void changeToRootFolder(ViewType viewType, Folder root,
+			ResultListener resultListener) {
 		folderModel.setRootFolder(root);
-		refreshData(resultListener);
+		refreshData(viewType, resultListener);
 	}
 
-	public void changeToSubfolder(Folder folder, ResultListener resultListener) {
+	public void changeToSubfolder(ViewType viewType, Folder folder,
+			ResultListener resultListener) {
 		folderModel.descendIntoFolder(folder);
-		refreshData(resultListener);
+		refreshData(viewType, resultListener);
 	}
 
-	public void changeToFolder(int level, Folder folder,
+	public void changeToFolder(ViewType viewType, int level, Folder folder,
 			ResultListener resultListener) {
 		folderModel.changeFolder(level, folder);
-		refreshData(resultListener);
+		refreshData(viewType, resultListener);
 	}
 
-	public void moveToParentFolder(ResultListener resultListener) {
+	public void moveToParentFolder(ViewType viewType,
+			ResultListener resultListener) {
 		folderModel.ascend();
-		refreshData(resultListener);
+		refreshData(viewType, resultListener);
 	}
 
-	public void refreshData(ResultListener<FolderInfo> resultListener) {
+	public void refreshData(ViewType viewType,
+			ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
 			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
 					rootFolders, Collections.EMPTY_LIST);
@@ -123,14 +128,20 @@ public class MainViewModel {
 			return;
 		}
 
-		fileServices.getInfo(
+		fileServices.getFolderInfo(
 				getCurrentFolder(),
+				getViewData(viewType),
 				createListener(resultListener,
 						new ResultCallback<FolderInfo>() {
 							public void onCallback(FolderInfo result) {
 								onUpdateData(result);
 							}
 						}));
+	}
+
+	private List<String> getViewData(ViewType viewType) {
+		// TODO get needed data from plugins etc
+		return Collections.EMPTY_LIST;
 	}
 
 	private void onUpdateData(FolderInfo data) {
@@ -168,18 +179,19 @@ public class MainViewModel {
 	}
 
 	public void changeToFolder(String id, final ResultListener listener) {
-		fileServices.getInfo(id, new ResultListener<FolderHierarchyInfo>() {
+		fileServices.getFolderInfoWithHierarchy(id,
+				new ResultListener<FolderHierarchyInfo>() {
 
-			@Override
-			public void onSuccess(FolderHierarchyInfo result) {
-				folderModel.setFolderHierarchy(result.getHierarchy());
-				onUpdateData(result);
-			}
+					@Override
+					public void onSuccess(FolderHierarchyInfo result) {
+						folderModel.setFolderHierarchy(result.getHierarchy());
+						onUpdateData(result);
+					}
 
-			@Override
-			public void onFail(ServiceError error) {
-				listener.onFail(error);
-			}
-		});
+					@Override
+					public void onFail(ServiceError error) {
+						listener.onFail(error);
+					}
+				});
 	}
 }
