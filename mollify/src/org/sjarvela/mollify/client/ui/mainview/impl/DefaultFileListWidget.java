@@ -29,12 +29,10 @@ import org.sjarvela.mollify.client.ui.filelist.FileList;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileListWidget implements FileListWidget {
-	private final JsObj columnSetup;
 	private final FileList list;
 
 	public DefaultFileListWidget(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager, final JsObj columnSetup) {
-		this.columnSetup = columnSetup;
 		this.list = new FileList(textProvider, dragAndDropManager) {
 			protected java.util.List<org.sjarvela.mollify.client.ui.common.grid.GridColumn> getColumns() {
 				if (columnSetup == null || columnSetup.getKeys().size() == 0)
@@ -51,19 +49,25 @@ public class DefaultFileListWidget implements FileListWidget {
 								textProvider
 										.getText(titleKey != null ? titleKey
 												: Texts.fileListColumnTitleName
-														.name()), true);
+														.name()),
+								col.hasValue("sortable") ? col
+										.getBoolean("sortable") : true);
 					else if (COLUMN_ID_TYPE.equals(id))
 						column = new DefaultGridColumn(COLUMN_ID_TYPE,
 								textProvider
 										.getText(titleKey != null ? titleKey
 												: Texts.fileListColumnTitleType
-														.name()), true);
+														.name()),
+								col.hasValue("sortable") ? col
+										.getBoolean("sortable") : true);
 					else if (COLUMN_ID_SIZE.equals(id))
 						column = new DefaultGridColumn(COLUMN_ID_SIZE,
 								textProvider
 										.getText(titleKey != null ? titleKey
 												: Texts.fileListColumnTitleSize
-														.name()), true);
+														.name()),
+								col.hasValue("sortable") ? col
+										.getBoolean("sortable") : true);
 					else {
 						// TODO custom
 					}
