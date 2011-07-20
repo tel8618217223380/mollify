@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
@@ -38,6 +41,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
+	private final Map<String, NativeColumnSpec> customColumnSpecs = new HashMap();
 	private FileUploadDialogFactory uploader = null;
 
 	@Inject
@@ -73,6 +77,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 				.addItemContextProvider(new NativeItemContextProvider(dp));
 	}
 
+	public void addListColumnSpec(String id, JavaScriptObject contentCb,
+			JavaScriptObject sortCb) {
+		this.customColumnSpecs.put(id, new NativeColumnSpec(id, contentCb,
+				sortCb));
+	}
+
 	protected JavaScriptObject getSession() {
 		return new NativeSession(sessionProvider.getSession()).asJs();
 	}
@@ -98,7 +108,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	protected JavaScriptObject getLogger() {
 		return new NativeLogger().asJs();
 	};
-	
+
 	protected JavaScriptObject getFileView() {
 		return new NativeTextProvider(textProvider).asJs();
 	};
@@ -123,6 +133,10 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
+		env.addListColumnSpec = function(id, contentCb, sortCb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb);
+		}
+
 		env.session = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
 		}
@@ -142,7 +156,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		env.log = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
 		}
-		
+
 		env.fileview = function() {
 			return fv;
 		}
