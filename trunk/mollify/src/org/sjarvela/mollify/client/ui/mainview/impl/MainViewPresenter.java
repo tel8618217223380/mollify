@@ -39,16 +39,14 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
-import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
@@ -135,7 +133,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 					}
 
 				});
-		this.setListOrder(FileList.COLUMN_ID_NAME, Sort.asc);
+		this.setListOrder(FileList.COLUMN_ID_NAME, SortOrder.asc);
 
 		if (model.getSession().isAuthenticationRequired())
 			view.getUsername().setText(model.getSession().getLoggedUser());
@@ -453,13 +451,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				});
 	}
 
-	public void setListOrder(String columnId, Sort sort) {
-		view.getFileWidget().setComparator(createComparator(columnId, sort));
-	}
-
-	private GridComparator<FileSystemItem> createComparator(String columnId,
-			Sort sort) {
-		return new DefaultFileItemComparator(columnId, sort);
+	public void setListOrder(String columnId, SortOrder sort) {
+		view.getFileWidget().sortColumn(columnId, sort);
 	}
 
 	public void onEditItemPermissions() {

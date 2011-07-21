@@ -8,12 +8,12 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.common.grid;
+package org.sjarvela.mollify.client.ui.filelist;
 
-public enum Sort {
-	asc, desc, none;
+public interface ColumnSpec {
 
-	public int getCompareFactor() {
-		return desc.equals(this) ? -1 : 1;
-	}
+	String getId();
+
+	boolean isSortable();
+
 }

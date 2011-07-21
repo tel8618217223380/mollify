@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -21,10 +20,10 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 import com.google.gwt.cell.client.Cell.Context;
@@ -40,8 +39,8 @@ import com.google.gwt.user.cellview.client.RowStyles;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CellTableFileList implements FileListWidget, CellListener {
-	private final Logger log = Logger.getLogger(CellTableFileList.class
-			.getName());
+	// private final Logger log = Logger.getLogger(CellTableFileList.class
+	// .getName());
 
 	interface Template extends SafeHtmlTemplates {
 		@com.google.gwt.safehtml.client.SafeHtmlTemplates.Template("<div class=\"mollify-filelist-item-name\">{0}<div>")
@@ -261,7 +260,7 @@ public class CellTableFileList implements FileListWidget, CellListener {
 	}
 
 	@Override
-	public void setComparator(final GridComparator<FileSystemItem> c) {
+	public void sortColumn(String columnId, SortOrder sort) {
+		// TODO Auto-generated method stub
 	}
-
 }

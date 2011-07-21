@@ -11,12 +11,12 @@
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 public class SearchResultsComparator extends DefaultFileItemComparator {
-	public SearchResultsComparator(String columnId, Sort sort) {
+	public SearchResultsComparator(String columnId, SortOrder sort) {
 		super(columnId, sort);
 	}
 

@@ -10,18 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-import java.util.List;
+public enum SortOrder {
+	asc, desc, none;
 
-import com.google.gwt.dom.client.Element;
-
-public interface GridListener<T> {
-	void onColumnClicked(T t, String columnId, Element e);
-
-	void onIconClicked(T t, Element e);
-
-	void onColumnSorted(String columnId, SortOrder sort);
-
-	void onSelectionChanged(List<T> selected);
-
-	void onRendered();
+	public int getCompareFactor() {
+		return desc.equals(this) ? -1 : 1;
+	}
 }

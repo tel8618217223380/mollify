@@ -23,6 +23,8 @@ import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
@@ -81,6 +83,17 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			JavaScriptObject sortCb) {
 		this.customColumnSpecs.put(id, new NativeColumnSpec(id, contentCb,
 				sortCb));
+	}
+
+	@Override
+	public GridComparator getListColumnComparator(String columnId,
+			SortOrder sort) {
+		return new NativeFileListComparator(getListColumnSpec(columnId), sort);
+	}
+
+	@Override
+	public NativeColumnSpec getListColumnSpec(String id) {
+		return customColumnSpecs.get(id);
 	}
 
 	protected JavaScriptObject getSession() {

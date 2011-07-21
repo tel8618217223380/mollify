@@ -24,7 +24,7 @@ import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
-import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 import com.google.gwt.dom.client.Element;
@@ -215,7 +215,7 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 		view.showItemContext(item, e);
 	}
 
-	public void onColumnSorted(String columnId, Sort sort) {
+	public void onColumnSorted(String columnId, SortOrder sort) {
 		presenter.setListOrder(columnId, sort);
 	}
 

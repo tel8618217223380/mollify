@@ -13,10 +13,10 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -38,8 +38,10 @@ public interface FileListWidget {
 
 	void addListener(GridListener listener);
 
-	void setContent(List<FileSystemItem> allFileItems);
+	void setContent(List<FileSystemItem> items);
 
-	void setComparator(GridComparator<FileSystemItem> createComparator);
+	// void setComparator(GridComparator<FileSystemItem> createComparator);
+
+	void sortColumn(String columnId, SortOrder sort);
 
 }

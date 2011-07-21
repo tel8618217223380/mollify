@@ -5,5 +5,5 @@ import java.util.Comparator;
 public interface GridComparator<T> extends Comparator<T> {
 	String getColumnId();
 
-	Sort getSort();
+	SortOrder getSort();
 }
