@@ -17,22 +17,30 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
+import org.sjarvela.mollify.client.ui.filelist.ColumnSpec;
+import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public class DefaultFileListWidget implements FileListWidget {
 	private final FileList list;
+	private final PluginEnvironment pluginEnvironment;
 
 	public DefaultFileListWidget(TextProvider textProvider,
-			DragAndDropManager dragAndDropManager, final JsObj columnSetup) {
+			DragAndDropManager dragAndDropManager,
+			final PluginEnvironment pluginEnvironment, final JsObj columnSetup) {
+		this.pluginEnvironment = pluginEnvironment;
+
 		this.list = new FileList(textProvider, dragAndDropManager) {
 			protected java.util.List<org.sjarvela.mollify.client.ui.common.grid.GridColumn> getColumns() {
 				if (columnSetup == null || columnSetup.getKeys().size() == 0)
@@ -69,7 +77,16 @@ public class DefaultFileListWidget implements FileListWidget {
 								col.hasValue("sortable") ? col
 										.getBoolean("sortable") : true);
 					else {
-						// TODO custom
+						ColumnSpec colSpec = pluginEnvironment
+								.getListColumnSpec(id);
+						if (colSpec == null)
+							continue;
+						boolean sortable = colSpec.isSortable();
+						if (sortable && col.hasValue("sortable"))
+							sortable = col.getBoolean("sortable");
+						column = new DefaultGridColumn(id,
+								titleKey != null ? textProvider
+										.getText(titleKey) : "", sortable);
 					}
 					if (column != null)
 						c.add(column);
@@ -122,8 +139,21 @@ public class DefaultFileListWidget implements FileListWidget {
 	}
 
 	@Override
-	public void setComparator(GridComparator<FileSystemItem> comparator) {
+	public void sortColumn(String columnId, SortOrder sort) {
+		GridComparator comparator = isCoreColumn(columnId) ? new DefaultFileItemComparator(
+				columnId, sort) : createCustomComparator(columnId, sort);
 		list.setComparator(comparator);
+	}
+
+	private GridComparator createCustomComparator(String columnId,
+			SortOrder sort) {
+		return pluginEnvironment.getListColumnComparator(columnId, sort);
+	}
+
+	private boolean isCoreColumn(String columnId) {
+		return FileList.COLUMN_ID_NAME.equals(columnId)
+				|| FileList.COLUMN_ID_TYPE.equals(columnId)
+				|| FileList.COLUMN_ID_SIZE.equals(columnId);
 	}
 
 	@Override

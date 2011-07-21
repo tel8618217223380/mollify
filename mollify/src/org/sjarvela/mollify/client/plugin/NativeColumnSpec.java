@@ -10,13 +10,33 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import org.sjarvela.mollify.client.ui.filelist.ColumnSpec;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class NativeColumnSpec {
+public class NativeColumnSpec implements ColumnSpec {
+	private final String id;
+	private final JavaScriptObject contentCb;
+	private final JavaScriptObject sortCb;
 
 	public NativeColumnSpec(String id, JavaScriptObject contentCb,
 			JavaScriptObject sortCb) {
-		// TODO Auto-generated constructor stub
+		this.id = id;
+		this.contentCb = contentCb;
+		this.sortCb = sortCb;
 	}
 
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public boolean isSortable() {
+		return sortCb != null;
+	}
+
+	public JavaScriptObject getSortCallback() {
+		return sortCb;
+	}
 }

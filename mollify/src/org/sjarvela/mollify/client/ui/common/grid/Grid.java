@@ -159,13 +159,13 @@ public abstract class Grid<T> extends FlexTable {
 	}-*/;
 
 	protected void onColumnSortClick(GridColumn column) {
-		Sort sort = Sort.none;
+		SortOrder sort = SortOrder.none;
 
 		if (this.comparator != null)
 			if (this.comparator.getColumnId().equals(column.getId()))
 				sort = toggleSort(this.comparator.getSort());
 			else
-				sort = Sort.asc;
+				sort = SortOrder.asc;
 
 		for (GridListener listener : listeners)
 			listener.onColumnSorted(column.getId(), sort);
@@ -210,10 +210,10 @@ public abstract class Grid<T> extends FlexTable {
 		notifySelectionChange();
 	}
 
-	private Sort toggleSort(Sort sort) {
-		if (Sort.asc.equals(sort))
-			return Sort.desc;
-		return Sort.asc;
+	private SortOrder toggleSort(SortOrder sort) {
+		if (SortOrder.asc.equals(sort))
+			return SortOrder.desc;
+		return SortOrder.asc;
 	}
 
 	public int getColumnIndex(GridColumn column) {
@@ -260,9 +260,9 @@ public abstract class Grid<T> extends FlexTable {
 
 		for (GridColumn column : columns) {
 			if (sortButtons.containsKey(column)) {
-				Sort sort = comparator == null ? Sort.none : (column.getId()
+				SortOrder sort = comparator == null ? SortOrder.none : (column.getId()
 						.equals(comparator.getColumnId()) ? comparator
-						.getSort() : Sort.none);
+						.getSort() : SortOrder.none);
 				sortButtons.get(column).setSort(sort);
 			}
 		}

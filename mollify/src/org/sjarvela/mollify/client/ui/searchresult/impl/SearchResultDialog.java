@@ -25,7 +25,7 @@ import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
-import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
@@ -89,7 +89,7 @@ public class SearchResultDialog extends ResizableDialog implements
 			}
 
 			@Override
-			public void onColumnSorted(String columnId, Sort sort) {
+			public void onColumnSorted(String columnId, SortOrder sort) {
 				list.setComparator(createComparator(columnId, sort));
 			}
 
@@ -132,7 +132,7 @@ public class SearchResultDialog extends ResizableDialog implements
 	}
 
 	protected GridComparator<FileSystemItem> createComparator(String columnId,
-			Sort sort) {
+			SortOrder sort) {
 		return new SearchResultsComparator(columnId, sort);
 	}
 

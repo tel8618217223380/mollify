@@ -14,14 +14,14 @@ import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
-import org.sjarvela.mollify.client.ui.common.grid.Sort;
+import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
 public class DefaultFileItemComparator implements
 		GridComparator<FileSystemItem> {
 	protected final String columnId;
-	protected final Sort sort;
+	protected final SortOrder sort;
 
-	public DefaultFileItemComparator(String columnId, Sort sort) {
+	public DefaultFileItemComparator(String columnId, SortOrder sort) {
 		this.columnId = columnId;
 		this.sort = sort;
 	}
@@ -30,7 +30,7 @@ public class DefaultFileItemComparator implements
 		return columnId;
 	}
 
-	public Sort getSort() {
+	public SortOrder getSort() {
 		return sort;
 	}
 

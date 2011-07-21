@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.ui.common.grid;
 import com.google.gwt.user.client.ui.Label;
 
 public class GridColumnSortButton extends Label {
-	private Sort sort = Sort.none;
+	private SortOrder sort = SortOrder.none;
 
 	public GridColumnSortButton(GridColumn column, String styleClass) {
 		this.setStylePrimaryName(styleClass);
@@ -21,7 +21,7 @@ public class GridColumnSortButton extends Label {
 		this.addStyleDependentName(sort.name());
 	}
 
-	public void setSort(Sort sort) {
+	public void setSort(SortOrder sort) {
 		this.removeStyleDependentName(this.sort.name());
 		this.sort = sort;
 		this.addStyleDependentName(sort.name());

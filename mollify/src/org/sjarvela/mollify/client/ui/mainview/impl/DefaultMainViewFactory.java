@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.ClientSettings;
@@ -70,6 +71,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final SearchResultDialogFactory searchResultDialogFactory;
 	private final FileSystemActionHandlerFactory fileSystemActionHandlerFactory;
 	private final ItemContextPopupFactory itemContextPopupFactory;
+	private final PluginEnvironment pluginEnvironment;
 
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
@@ -84,7 +86,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			DragAndDropManager dragAndDropManager,
 			SearchResultDialogFactory searchResultDialogFactory,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
-			ItemContextPopupFactory itemContextPopupFactory) {
+			ItemContextPopupFactory itemContextPopupFactory,
+			PluginEnvironment pluginEnvironment) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
@@ -101,6 +104,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.searchResultDialogFactory = searchResultDialogFactory;
 		this.fileSystemActionHandlerFactory = fileSystemActionHandlerFactory;
 		this.itemContextPopupFactory = itemContextPopupFactory;
+		this.pluginEnvironment = pluginEnvironment;
 	}
 
 	public MainView createMainView(FileViewDelegate fileViewDelegate) {
@@ -131,7 +135,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				false);
 
 		FileListWidgetFactory fileListViewFactory = new DefaultFileListWidgetFactory(
-				textProvider, dragAndDropManager, settings, fileSystemService);
+				textProvider, dragAndDropManager, settings, fileSystemService,
+				pluginEnvironment);
 		ViewType defaultViewType = getDefaultViewType();
 		DefaultMainView view = new DefaultMainView(model, textProvider,
 				actionDelegator, folderSelectorFactory, itemContextPopup,
