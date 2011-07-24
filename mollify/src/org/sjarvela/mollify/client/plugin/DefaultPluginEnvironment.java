@@ -17,6 +17,8 @@ import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
+import org.sjarvela.mollify.client.plugin.filelist.NativeFileListComparator;
 import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;

@@ -18,6 +18,8 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.filelist.NativeColumnDataProvider;
+import org.sjarvela.mollify.client.plugin.filelist.NativeGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
@@ -84,7 +86,7 @@ public class DefaultFileListWidget implements FileListWidget {
 						boolean sortable = colSpec.isSortable();
 						if (sortable && col.hasValue("sortable"))
 							sortable = col.getBoolean("sortable");
-						column = new DefaultGridColumn(id,
+						column = new NativeGridColumn(id, colSpec,
 								titleKey != null ? textProvider
 										.getText(titleKey) : "", sortable);
 					}
@@ -94,6 +96,14 @@ public class DefaultFileListWidget implements FileListWidget {
 				if (c.isEmpty())
 					throw new RuntimeException("Column setup empty");
 				return c;
+			};
+
+			public org.sjarvela.mollify.client.ui.common.grid.GridData getData(
+					FileSystemItem item, GridColumn column) {
+				if (isCoreColumn(column.getId()))
+					return super.getData(item, column);
+				return new NativeColumnDataProvider((NativeGridColumn) column)
+						.getData(item);
 			};
 		};
 	}
