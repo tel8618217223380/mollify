@@ -25,6 +25,8 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class FileSystemServiceAdapter implements FileSystemService {
 	private final FileSystemService service;
 	private final ResultListenerFactory resultListenerFactory;
@@ -74,7 +76,7 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void getFolderInfo(Folder parent, List<String> data,
+	public void getFolderInfo(Folder parent, JavaScriptObject data,
 			ResultListener<FolderInfo> listener) {
 		service.getFolderInfo(parent, data,
 				resultListenerFactory.createListener(listener));

@@ -8,9 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service.environment.demo;
-
-import org.sjarvela.mollify.client.js.JsObj;
+package org.sjarvela.mollify.client.js;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -31,4 +29,13 @@ public class JsObjBuilder {
 		return obj.cast();
 	}
 
+	public JsObjBuilder obj(String id, JavaScriptObject o) {
+		putO(obj, id, o);
+		return this;
+	}
+
+	private native final void putO(JavaScriptObject obj, String name,
+			JavaScriptObject value) /*-{
+		obj[name] = value;
+	}-*/;
 }

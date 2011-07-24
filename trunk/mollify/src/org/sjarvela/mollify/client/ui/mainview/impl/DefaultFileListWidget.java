@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.plugin.filelist.NativeColumnDataProvider;
+import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
 import org.sjarvela.mollify.client.plugin.filelist.NativeGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
@@ -28,7 +29,6 @@ import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
-import org.sjarvela.mollify.client.ui.filelist.ColumnSpec;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DefaultFileListWidget implements FileListWidget {
 	private final FileList list;
 	private final PluginEnvironment pluginEnvironment;
+	private JsObj data = null;
 
 	public DefaultFileListWidget(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager,
@@ -79,7 +80,7 @@ public class DefaultFileListWidget implements FileListWidget {
 								col.hasValue("sortable") ? col
 										.getBoolean("sortable") : true);
 					else {
-						ColumnSpec colSpec = pluginEnvironment
+						NativeColumnSpec colSpec = pluginEnvironment
 								.getListColumnSpec(id);
 						if (colSpec == null)
 							continue;
@@ -103,7 +104,7 @@ public class DefaultFileListWidget implements FileListWidget {
 				if (isCoreColumn(column.getId()))
 					return super.getData(item, column);
 				return new NativeColumnDataProvider((NativeGridColumn) column)
-						.getData(item);
+						.getData(item, data);
 			};
 		};
 	}
@@ -167,7 +168,8 @@ public class DefaultFileListWidget implements FileListWidget {
 	}
 
 	@Override
-	public void setContent(List<FileSystemItem> items) {
+	public void setContent(List<FileSystemItem> items, JsObj data) {
+		this.data = data;
 		list.setContent(items);
 	}
 }

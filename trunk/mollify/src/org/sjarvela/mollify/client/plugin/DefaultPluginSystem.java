@@ -84,6 +84,7 @@ public class DefaultPluginSystem implements PluginSystem {
 		initLib(env);
 		setupPlugins();
 		initializePlugins(env);
+		pluginEnv.onPluginsInitialized(plugins);
 		onReady.onCallback();
 	}
 

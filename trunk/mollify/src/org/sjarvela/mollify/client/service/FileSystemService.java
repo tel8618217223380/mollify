@@ -24,11 +24,13 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public interface FileSystemService extends ItemDetailsProvider {
 
 	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
-	void getFolderInfo(Folder parent, List<String> data,
+	void getFolderInfo(Folder parent, JavaScriptObject data,
 			ResultListener<FolderInfo> listener);
 
 	void getFolderInfoWithHierarchy(String id,

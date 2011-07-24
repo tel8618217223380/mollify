@@ -16,11 +16,11 @@ import org.sjarvela.mollify.client.ui.filelist.ColumnSpec;
 public class NativeGridColumn implements GridColumn {
 
 	private final String id;
-	private final ColumnSpec colSpec;
+	private final NativeColumnSpec colSpec;
 	private final String title;
 	private final boolean sortable;
 
-	public NativeGridColumn(String id, ColumnSpec colSpec, String title,
+	public NativeGridColumn(String id, NativeColumnSpec colSpec, String title,
 			boolean sortable) {
 		this.id = id;
 		this.colSpec = colSpec;
@@ -43,7 +43,7 @@ public class NativeGridColumn implements GridColumn {
 		return sortable;
 	}
 
-	public ColumnSpec getColSpec() {
+	public NativeColumnSpec getColSpec() {
 		return colSpec;
 	}
 }

@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 

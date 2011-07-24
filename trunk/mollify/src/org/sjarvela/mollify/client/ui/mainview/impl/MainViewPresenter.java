@@ -220,7 +220,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (model.getFolderModel().canAscend())
 			allItems.add(0, Folder.Parent);
 
-		view.getFileWidget().setContent(allItems);
+		view.getFileWidget().setContent(allItems, model.getData());
 		view.setAddButtonVisible(model.getFolderPermission().canWrite());
 		view.refresh();
 		if (exposeFileUrls)
@@ -599,12 +599,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private void setViewType(ViewType type) {
 		view.showProgress();
-		try {
-			view.setViewType(type);
-			refreshView();
-		} finally {
-			view.hideProgress();
-		}
+		view.setViewType(type);
+		reload();
 	}
 
 	public void setCurrentFolder(String id) {

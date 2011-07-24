@@ -19,7 +19,7 @@ public class FolderHierarchyInfo extends FolderInfo {
 
 	public FolderHierarchyInfo(FilePermission permission, List<Folder> folders,
 			List<File> files, List<Folder> hierarchy) {
-		super(permission, folders, files);
+		super(permission, folders, files, null);
 		this.hierarchy = hierarchy;
 	}
 

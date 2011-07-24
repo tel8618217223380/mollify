@@ -18,12 +18,14 @@ public class NativeColumnSpec implements ColumnSpec {
 	private final String id;
 	private final JavaScriptObject contentCb;
 	private final JavaScriptObject sortCb;
+	private final JavaScriptObject dataRequestCb;
 
 	public NativeColumnSpec(String id, JavaScriptObject contentCb,
-			JavaScriptObject sortCb) {
+			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
 		this.id = id;
 		this.contentCb = contentCb;
 		this.sortCb = sortCb;
+		this.dataRequestCb = dataRequestCb;
 	}
 
 	@Override
@@ -38,5 +40,17 @@ public class NativeColumnSpec implements ColumnSpec {
 
 	public JavaScriptObject getSortCallback() {
 		return sortCb;
+	}
+
+	public JavaScriptObject getContentCallback() {
+		return contentCb;
+	}
+
+	public JavaScriptObject getDataRequestCallback() {
+		return dataRequestCb;
+	}
+
+	public boolean hasDataRequest() {
+		return dataRequestCb != null;
 	}
 }

@@ -27,6 +27,8 @@ import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class MockFileSystemService implements FileSystemService {
 
 	private List<FileItemUserPermission> permissions = Collections.EMPTY_LIST;
@@ -76,7 +78,7 @@ public class MockFileSystemService implements FileSystemService {
 
 	}
 
-	public void getFolderInfo(Folder parent, List<String> d,
+	public void getFolderInfo(Folder parent, JavaScriptObject d,
 			ResultListener<FolderInfo> listener) {
 		// TODO Auto-generated method stub
 

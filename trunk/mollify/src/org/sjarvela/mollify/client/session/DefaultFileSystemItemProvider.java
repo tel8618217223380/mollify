@@ -76,10 +76,9 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 			ResultListener<FolderInfo> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(new FolderInfo(FilePermission.None, roots,
-					Collections.EMPTY_LIST));
+					Collections.EMPTY_LIST, null));
 		else
-			fileSystemService.getFolderInfo(parent, Collections.EMPTY_LIST,
-					listener);
+			fileSystemService.getFolderInfo(parent, null, listener);
 	}
 
 }
