@@ -260,8 +260,8 @@ public abstract class Grid<T> extends FlexTable {
 
 		for (GridColumn column : columns) {
 			if (sortButtons.containsKey(column)) {
-				SortOrder sort = comparator == null ? SortOrder.none : (column.getId()
-						.equals(comparator.getColumnId()) ? comparator
+				SortOrder sort = comparator == null ? SortOrder.none : (column
+						.getId().equals(comparator.getColumnId()) ? comparator
 						.getSort() : SortOrder.none);
 				sortButtons.get(column).setSort(sort);
 			}
