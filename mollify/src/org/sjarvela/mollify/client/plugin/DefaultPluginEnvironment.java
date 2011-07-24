@@ -11,11 +11,14 @@
 package org.sjarvela.mollify.client.plugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
 import org.sjarvela.mollify.client.plugin.filelist.NativeFileListComparator;
@@ -47,6 +50,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final TextProvider textProvider;
 	private final Map<String, NativeColumnSpec> customColumnSpecs = new HashMap();
 	private FileUploadDialogFactory uploader = null;
+	private List<Plugin> plugins;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
@@ -61,6 +65,11 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
+	}
+
+	@Override
+	public void onPluginsInitialized(List<Plugin> plugins) {
+		this.plugins = plugins;
 	}
 
 	public void addResponseProcessor(JavaScriptObject rp) {
@@ -82,9 +91,9 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	}
 
 	public void addListColumnSpec(String id, JavaScriptObject contentCb,
-			JavaScriptObject sortCb) {
+			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
 		this.customColumnSpecs.put(id, new NativeColumnSpec(id, contentCb,
-				sortCb));
+				sortCb, dataRequestCb));
 	}
 
 	@Override
@@ -97,6 +106,24 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	public NativeColumnSpec getListColumnSpec(String id) {
 		return customColumnSpecs.get(id);
 	}
+
+	@Override
+	public JavaScriptObject getDataRequest(FileSystemItem i) {
+		JsObjBuilder rq = new JsObjBuilder();
+		for (NativeColumnSpec col : customColumnSpecs.values()) {
+			if (!col.hasDataRequest())
+				continue;
+			rq.obj(col.getId(),
+					invokeDataRequestCallback(col.getDataRequestCallback(),
+							i.asJs()));
+		}
+		return rq.create();
+	}
+
+	protected static native final JavaScriptObject invokeDataRequestCallback(
+			JavaScriptObject cb, JavaScriptObject i) /*-{
+														return cb(i);
+														}-*/;
 
 	protected JavaScriptObject getSession() {
 		return new NativeSession(sessionProvider.getSession()).asJs();
@@ -130,58 +157,58 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
 			JavaScriptObject fv, String pluginBaseUrl) /*-{
-		var env = {};
+														var env = {};
 
-		env.addResponseProcessor = function(cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+														env.addResponseProcessor = function(cb) {
+														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+														}
 
-		env.addUploader = function(cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+														env.addUploader = function(cb) {
+														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+														}
 
-		env.addEventHandler = function(cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+														env.addEventHandler = function(cb) {
+														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+														}
 
-		env.addItemContextProvider = function(cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+														env.addItemContextProvider = function(cb) {
+														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+														}
 
-		env.addListColumnSpec = function(id, contentCb, sortCb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb);
-		}
+														env.addListColumnSpec = function(id, contentCb, sortCb, dataRequestCb) {
+														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb, dataRequestCb);
+														}
 
-		env.session = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
-		}
+														env.session = function() {
+														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
+														}
 
-		env.service = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
-		}
+														env.service = function() {
+														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
+														}
 
-		env.dialog = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
-		}
+														env.dialog = function() {
+														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
+														}
 
-		env.texts = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
-		}
+														env.texts = function() {
+														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
+														}
 
-		env.log = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
-		}
+														env.log = function() {
+														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
+														}
 
-		env.fileview = function() {
-			return fv;
-		}
+														env.fileview = function() {
+														return fv;
+														}
 
-		env.pluginUrl = function(id) {
-			return pluginBaseUrl + id + "/";
-		}
+														env.pluginUrl = function(id) {
+														return pluginBaseUrl + id + "/";
+														}
 
-		return env;
-	}-*/;
+														return env;
+														}-*/;
 
 	@Override
 	public FileUploadDialogFactory getCustomUploader() {

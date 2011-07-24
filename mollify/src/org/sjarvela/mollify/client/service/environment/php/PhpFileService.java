@@ -36,6 +36,7 @@ import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
 import org.sjarvela.mollify.client.session.user.UserCache;
 import org.sjarvela.mollify.client.util.JsUtil;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.logging.client.LogConfiguration;
 
@@ -69,7 +70,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				.listener(resultListener).get();
 	}
 
-	public void getFolderInfo(final Folder parent, List<String> data,
+	public void getFolderInfo(final Folder parent, JavaScriptObject data,
 			final ResultListener<FolderInfo> listener) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Get folder items: " + parent.getId());
@@ -82,13 +83,14 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			public void onSuccess(JsFolderInfo result) {
 				listener.onSuccess(new FolderInfo(result.getPermission(),
 						FileSystemItem.createFromFolders(result.getFolders()),
-						FileSystemItem.createFromFiles(result.getFiles())));
+						FileSystemItem.createFromFiles(result.getFiles()),
+						result.getData()));
 			}
 		};
 
 		request().url(serviceUrl().fileItem(parent).action(FileAction.info))
 				.listener(resultListener)
-				.data(new JSONBuilder().array("data", data).toString()).post();
+				.data(new JSONBuilder().object("data", data).toString()).post();
 	}
 
 	@Override

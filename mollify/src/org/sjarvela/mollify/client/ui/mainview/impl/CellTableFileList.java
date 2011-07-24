@@ -17,6 +17,7 @@ import java.util.List;
 import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -200,12 +201,12 @@ public class CellTableFileList implements FileListWidget, CellListener {
 
 	@Override
 	public void refresh() {
-		this.setContent(items);
+		this.setContent(items, null);
 	}
 
 	@Override
 	public void removeAllRows() {
-		this.setContent(Collections.EMPTY_LIST);
+		this.setContent(Collections.EMPTY_LIST, null);
 	}
 
 	@Override
@@ -230,7 +231,7 @@ public class CellTableFileList implements FileListWidget, CellListener {
 	}
 
 	@Override
-	public void setContent(List<FileSystemItem> items) {
+	public void setContent(List<FileSystemItem> items, JsObj data) {
 		this.items = items;
 		table.setRowCount(items.size());
 		table.setRowData(items);

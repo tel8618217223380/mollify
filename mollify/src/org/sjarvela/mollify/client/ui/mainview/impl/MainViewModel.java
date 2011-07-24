@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -21,6 +20,8 @@ import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
+import org.sjarvela.mollify.client.js.JsObj;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -29,10 +30,13 @@ import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
 	private final List<Folder> rootFolders;
+	private final PluginEnvironment pluginEnv;
 
 	private FolderModel folderModel;
 	private List<File> files = new ArrayList();
@@ -40,11 +44,13 @@ public class MainViewModel {
 	private List<FileSystemItem> all = new ArrayList();
 	private List<FileSystemItem> selected = new ArrayList();
 	private FilePermission folderPermission = FilePermission.None;
+	private JsObj data;
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
-			FolderProvider folderProvider) {
+			FolderProvider folderProvider, PluginEnvironment pluginEnv) {
 		this.fileServices = fileServices;
 		this.session = session;
+		this.pluginEnv = pluginEnv;
 		this.rootFolders = folderProvider.getRootFolders();
 
 		clear();
@@ -122,15 +128,16 @@ public class MainViewModel {
 			ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
 			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
-					rootFolders, Collections.EMPTY_LIST);
+					rootFolders, null, null);
 			onUpdateData(result);
 			resultListener.onSuccess(result);
 			return;
 		}
 
+		Folder currentFolder = getCurrentFolder();
 		fileServices.getFolderInfo(
-				getCurrentFolder(),
-				getViewData(viewType),
+				currentFolder,
+				getDataRequest(viewType, currentFolder),
 				createListener(resultListener,
 						new ResultCallback<FolderInfo>() {
 							public void onCallback(FolderInfo result) {
@@ -139,16 +146,19 @@ public class MainViewModel {
 						}));
 	}
 
-	private List<String> getViewData(ViewType viewType) {
-		// TODO get needed data from plugins etc
-		return Collections.EMPTY_LIST;
+	private JavaScriptObject getDataRequest(ViewType viewType,
+			Folder currentFolder) {
+		if (!ViewType.list.equals(viewType))
+			return null;
+		return pluginEnv.getDataRequest(currentFolder);
 	}
 
-	private void onUpdateData(FolderInfo data) {
-		this.folders = data.getFolders();
-		this.files = data.getFiles();
-		this.folderPermission = data.getPermission();
-		this.all = new ArrayList(data.getFolders());
+	private void onUpdateData(FolderInfo info) {
+		this.folders = info.getFolders();
+		this.files = info.getFiles();
+		this.data = info.getData();
+		this.folderPermission = info.getPermission();
+		this.all = new ArrayList(info.getFolders());
 		this.all.addAll(files);
 	}
 
@@ -193,5 +203,9 @@ public class MainViewModel {
 						listener.onFail(error);
 					}
 				});
+	}
+
+	public JsObj getData() {
+		return data;
 	}
 }

@@ -11,7 +11,10 @@
 package org.sjarvela.mollify.client.plugin.filelist;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 public class NativeColumnDataProvider {
 	private final NativeGridColumn column;
@@ -20,13 +23,16 @@ public class NativeColumnDataProvider {
 		this.column = column;
 	}
 
-	public GridData getData(FileSystemItem item) {
-		// return invokeSortCallback(colSpec.getSortCallback(), i1.asJs(),
-		// i2.asJs(), sort.getCompareFactor());
-		return new GridData.Text("foo");
+	public GridData getData(FileSystemItem item, JsObj data) {
+		String html = invokeContentCallback(column.getColSpec()
+				.getContentCallback(), item.asJs());
+		return new GridData.HTML(html);
 	}
-	// protected static native final int invokeSortCallback(JavaScriptObject cb,
-	// JavaScriptObject i1, JavaScriptObject i2, int f) /*-{
-	// return cb(i1, i2, f);
-	// }-*/;
+
+	protected static native final String invokeContentCallback(
+			JavaScriptObject cb, JavaScriptObject i) /*-{
+		if (!cb)
+			return "";
+		return cb(i);
+	}-*/;
 }

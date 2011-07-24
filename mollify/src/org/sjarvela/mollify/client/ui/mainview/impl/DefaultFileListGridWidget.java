@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SelectController;
@@ -70,7 +71,7 @@ public class DefaultFileListGridWidget implements FileListWidget {
 	}
 
 	@Override
-	public void setContent(List<FileSystemItem> items) {
+	public void setContent(List<FileSystemItem> items, JsObj data) {
 		grid.setContent(items);
 	}
 

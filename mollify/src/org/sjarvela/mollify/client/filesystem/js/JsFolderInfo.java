@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -46,5 +47,9 @@ public class JsFolderInfo extends JavaScriptObject {
 			JsArray<JsFile> files) /*-{
 		this.folders = folders;
 		this.files = files;
+	}-*/;
+
+	public final native JsObj getData() /*-{
+		return this.data;
 	}-*/;
 }

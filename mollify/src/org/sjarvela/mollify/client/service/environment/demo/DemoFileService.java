@@ -28,6 +28,8 @@ import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
 import org.sjarvela.mollify.client.session.user.UserCache;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public class DemoFileService implements FileSystemService {
 	private final DemoData data;
 
@@ -54,10 +56,10 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(data.getFolders(parent));
 	}
 
-	public void getFolderInfo(Folder parent, List<String> d,
+	public void getFolderInfo(Folder parent, JavaScriptObject d,
 			ResultListener<FolderInfo> listener) {
 		listener.onSuccess(new FolderInfo(FilePermission.ReadWrite, data
-				.getFolders(parent), data.getFiles(parent)));
+				.getFolders(parent), data.getFiles(parent), null));
 	}
 
 	@Override
