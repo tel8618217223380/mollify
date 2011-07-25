@@ -84,7 +84,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private ActionToggleButton slideBarButton;
 	private HintTextBox searchField;
 	private FlowPanel fileUrlContainer;
-	private FileListWidget fileListView;
+	private FileWidget fileListView;
 	private Widget content;
 	private List<GridListener> listListeners = new ArrayList();
 
@@ -180,7 +180,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		searchListeners.add(listener);
 	}
 
-	public FileListWidget getFileWidget() {
+	public FileWidget getFileWidget() {
 		return fileListView;
 	}
 

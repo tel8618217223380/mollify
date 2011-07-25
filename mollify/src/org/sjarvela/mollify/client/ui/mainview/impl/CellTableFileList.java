@@ -39,7 +39,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.RowStyles;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CellTableFileList implements FileListWidget, CellListener {
+public class CellTableFileList implements FileWidget, CellListener {
 	// private final Logger log = Logger.getLogger(CellTableFileList.class
 	// .getName());
 

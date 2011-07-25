@@ -13,12 +13,7 @@ package org.sjarvela.mollify.client.plugin;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileView;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
-import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
-import org.sjarvela.mollify.client.ui.common.grid.GridData;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
+import org.sjarvela.mollify.client.plugin.filelist.NativeFileListInterface;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -31,15 +26,6 @@ public interface PluginEnvironment {
 
 	FileUploadDialogFactory getCustomUploader();
 
-	// TODO separate from plugin env, to FileListPluginHandler etc ->
-	GridComparator getListColumnComparator(String columnId, SortOrder sort);
-
-	JavaScriptObject getFileListDataRequest(FileSystemItem folder,
-			List<GridColumn> cols);
-
-	GridColumn createNativeGridColumn(String id, String string, boolean b);
-
-	GridData getNativeColumnData(GridColumn column, FileSystemItem item,
-			JsObj data);
+	NativeFileListInterface getFileListInterface();
 
 }

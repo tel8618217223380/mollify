@@ -10,31 +10,19 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.filelist.NativeColumnDataProvider;
-import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
-import org.sjarvela.mollify.client.plugin.filelist.NativeFileListComparator;
-import org.sjarvela.mollify.client.plugin.filelist.NativeGridColumn;
+import org.sjarvela.mollify.client.plugin.filelist.NativeFileListInterface;
 import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
-import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
-import org.sjarvela.mollify.client.ui.common.grid.GridData;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
@@ -53,7 +41,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
-	private final Map<String, NativeColumnSpec> customColumnSpecs = new HashMap();
+	private final NativeFileListInterface fileListInterface;
+
 	private FileUploadDialogFactory uploader = null;
 	private List<Plugin> plugins;
 
@@ -70,6 +59,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
+		this.fileListInterface = new NativeFileListInterface();
 	}
 
 	@Override
@@ -97,59 +87,17 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	public void addListColumnSpec(String id, JavaScriptObject contentCb,
 			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
-		this.customColumnSpecs.put(id, new NativeColumnSpec(id, contentCb,
-				sortCb, dataRequestCb));
-	}
-
-	@Override
-	public GridComparator getListColumnComparator(String columnId,
-			SortOrder sort) {
-		return new NativeFileListComparator(customColumnSpecs.get(columnId),
-				sort);
-	}
-
-	@Override
-	public GridColumn createNativeGridColumn(String id, String title,
-			boolean allowSortable) {
-		NativeColumnSpec colSpec = customColumnSpecs.get(id);
-		if (colSpec == null)
-			return null;
-		return new NativeGridColumn(id, colSpec, title, colSpec.isSortable()
-				&& allowSortable);
-	}
-
-	@Override
-	public JavaScriptObject getFileListDataRequest(FileSystemItem i,
-			List<GridColumn> cols) {
-		JsObjBuilder rq = new JsObjBuilder();
-		for (GridColumn c : cols) {
-			if (!(c instanceof NativeGridColumn))
-				continue;
-
-			NativeColumnSpec colSpec = ((NativeGridColumn) c).getColSpec();
-			if (!colSpec.hasDataRequest())
-				continue;
-			rq.obj(colSpec.getId(),
-					invokeDataRequestCallback(colSpec.getDataRequestCallback(),
-							i.asJs()));
-		}
-		return rq.create();
-	}
-
-	protected static native final JavaScriptObject invokeDataRequestCallback(
-			JavaScriptObject cb, JavaScriptObject i) /*-{
-		return cb(i);
-	}-*/;
-
-	@Override
-	public GridData getNativeColumnData(GridColumn column, FileSystemItem item,
-			JsObj data) {
-		return new NativeColumnDataProvider((NativeGridColumn) column).getData(
-				item, data);
+		fileListInterface.addListColumnSpec(id, contentCb, sortCb,
+				dataRequestCb);
 	}
 
 	protected JavaScriptObject getSession() {
 		return new NativeSession(sessionProvider.getSession()).asJs();
+	}
+
+	@Override
+	public NativeFileListInterface getFileListInterface() {
+		return fileListInterface;
 	}
 
 	@Override

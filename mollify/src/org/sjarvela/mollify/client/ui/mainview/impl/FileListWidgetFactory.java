@@ -14,6 +14,6 @@ import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 public interface FileListWidgetFactory {
 
-	FileListWidget create(ViewType type);
+	FileWidget create(ViewType type);
 
 }
