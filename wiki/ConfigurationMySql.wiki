@@ -26,7 +26,6 @@ With localhost database, you can also provide socket for the connection:
 
 {{{
 	$DB_SOCKET = "/tmp/mysql5.sock";
-?>
 }}}
 
 = 2. Installation =
