@@ -11,7 +11,6 @@
 package org.sjarvela.mollify.client.plugin.filelist;
 
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
-import org.sjarvela.mollify.client.ui.filelist.ColumnSpec;
 
 public class NativeGridColumn implements GridColumn {
 

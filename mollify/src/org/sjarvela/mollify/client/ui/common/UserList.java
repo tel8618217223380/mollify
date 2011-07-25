@@ -36,7 +36,7 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 		this.setDataProvider(this);
 	}
 
-	protected List<GridColumn> getColumns() {
+	protected List<GridColumn> initColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getText(Texts.userListColumnTitleName), false);
 		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,

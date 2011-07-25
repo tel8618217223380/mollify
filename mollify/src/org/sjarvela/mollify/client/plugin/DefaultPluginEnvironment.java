@@ -18,17 +18,22 @@ import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.filelist.NativeColumnDataProvider;
 import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
 import org.sjarvela.mollify.client.plugin.filelist.NativeFileListComparator;
+import org.sjarvela.mollify.client.plugin.filelist.NativeGridColumn;
 import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
+import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
+import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
@@ -99,22 +104,33 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	@Override
 	public GridComparator getListColumnComparator(String columnId,
 			SortOrder sort) {
-		return new NativeFileListComparator(getListColumnSpec(columnId), sort);
+		return new NativeFileListComparator(customColumnSpecs.get(columnId),
+				sort);
 	}
 
 	@Override
-	public NativeColumnSpec getListColumnSpec(String id) {
-		return customColumnSpecs.get(id);
+	public GridColumn createNativeGridColumn(String id, String title,
+			boolean allowSortable) {
+		NativeColumnSpec colSpec = customColumnSpecs.get(id);
+		if (colSpec == null)
+			return null;
+		return new NativeGridColumn(id, colSpec, title, colSpec.isSortable()
+				&& allowSortable);
 	}
 
 	@Override
-	public JavaScriptObject getDataRequest(FileSystemItem i) {
+	public JavaScriptObject getFileListDataRequest(FileSystemItem i,
+			List<GridColumn> cols) {
 		JsObjBuilder rq = new JsObjBuilder();
-		for (NativeColumnSpec col : customColumnSpecs.values()) {
-			if (!col.hasDataRequest())
+		for (GridColumn c : cols) {
+			if (!(c instanceof NativeGridColumn))
 				continue;
-			rq.obj(col.getId(),
-					invokeDataRequestCallback(col.getDataRequestCallback(),
+
+			NativeColumnSpec colSpec = ((NativeGridColumn) c).getColSpec();
+			if (!colSpec.hasDataRequest())
+				continue;
+			rq.obj(colSpec.getId(),
+					invokeDataRequestCallback(colSpec.getDataRequestCallback(),
 							i.asJs()));
 		}
 		return rq.create();
@@ -122,8 +138,15 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	protected static native final JavaScriptObject invokeDataRequestCallback(
 			JavaScriptObject cb, JavaScriptObject i) /*-{
-														return cb(i);
-														}-*/;
+		return cb(i);
+	}-*/;
+
+	@Override
+	public GridData getNativeColumnData(GridColumn column, FileSystemItem item,
+			JsObj data) {
+		return new NativeColumnDataProvider((NativeGridColumn) column).getData(
+				item, data);
+	}
 
 	protected JavaScriptObject getSession() {
 		return new NativeSession(sessionProvider.getSession()).asJs();
@@ -157,58 +180,58 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
 			JavaScriptObject fv, String pluginBaseUrl) /*-{
-														var env = {};
+		var env = {};
 
-														env.addResponseProcessor = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addResponseProcessor = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addUploader = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addUploader = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addEventHandler = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addEventHandler = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addItemContextProvider = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addItemContextProvider = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addListColumnSpec = function(id, contentCb, sortCb, dataRequestCb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb, dataRequestCb);
-														}
+		env.addListColumnSpec = function(id, contentCb, sortCb, dataRequestCb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb, dataRequestCb);
+		}
 
-														env.session = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
-														}
+		env.session = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
+		}
 
-														env.service = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
-														}
+		env.service = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
+		}
 
-														env.dialog = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
-														}
+		env.dialog = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
+		}
 
-														env.texts = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
-														}
+		env.texts = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
+		}
 
-														env.log = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
-														}
+		env.log = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
+		}
 
-														env.fileview = function() {
-														return fv;
-														}
+		env.fileview = function() {
+			return fv;
+		}
 
-														env.pluginUrl = function(id) {
-														return pluginBaseUrl + id + "/";
-														}
+		env.pluginUrl = function(id) {
+			return pluginBaseUrl + id + "/";
+		}
 
-														return env;
-														}-*/;
+		return env;
+	}-*/;
 
 	@Override
 	public FileUploadDialogFactory getCustomUploader() {

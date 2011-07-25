@@ -47,7 +47,7 @@ public class SearchResultFileList extends FileList {
 		setSelectionMode(SelectionMode.Multi);
 	}
 
-	protected List<GridColumn> getColumns() {
+	protected List<GridColumn> initColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getText(Texts.fileListColumnTitleName), true);
 		GridColumn columnPath = new DefaultGridColumn(COLUMN_ID_PATH,

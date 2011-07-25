@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-
 public class DefaultGridColumn implements GridColumn {
 	private final boolean sortable;
 	private final String title;

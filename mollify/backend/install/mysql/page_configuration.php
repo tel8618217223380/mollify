@@ -40,7 +40,7 @@
 					<li>User</li>
 					<li>Password</li>
 					<li>Port (optional)</li>
-					<li>Socket (optional)</li>
+					<li>Socket (optional, use ONLY with localhost DB)</li>
 					<li>Table prefix (optional)</li>
 				</ul>
 				

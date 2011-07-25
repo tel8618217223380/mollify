@@ -30,6 +30,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -55,12 +56,14 @@ import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 
 public class MainViewPresenter implements FolderListener, PasswordHandler,
-		DragDataProvider<FileSystemItem>, SearchListener {
+		DragDataProvider<FileSystemItem>, SearchListener,
+		FolderInfoRequestDataProvider {
 	private static Logger logger = Logger.getLogger(MainViewPresenter.class
 			.getName());
 
@@ -85,6 +88,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private final boolean exposeFileUrls;
 
+	private final PluginEnvironment pluginEnvironment;
+
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
 			MainViewModel model, DefaultMainView view,
@@ -97,13 +102,15 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			CreateFolderDialogFactory createFolderDialogFactory,
 			DropBox dropBox, boolean exposeFileUrls,
 			SessionService sessionService, EventDispatcher eventDispatcher,
-			SearchResultDialogFactory searchResultDialogFactory) {
+			SearchResultDialogFactory searchResultDialogFactory,
+			PluginEnvironment pluginEnvironment) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
 		this.sessionService = sessionService;
+		this.pluginEnvironment = pluginEnvironment;
 
 		this.model = model;
 		this.view = view;
@@ -139,6 +146,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			view.getUsername().setText(model.getSession().getLoggedUser());
 
 		view.addSearchListener(this);
+		model.setRequestDataProvider(this);
 	}
 
 	public void initialize() {
@@ -180,8 +188,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToRootFolder(view.getViewType(), root,
-						createFolderChangeListener());
+				model.changeToRootFolder(root, createFolderChangeListener());
 			}
 		});
 	}
@@ -191,8 +198,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToSubfolder(view.getViewType(), folder,
-						createFolderChangeListener());
+				model.changeToSubfolder(folder, createFolderChangeListener());
 			}
 		});
 	}
@@ -203,7 +209,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	public void reload() {
 		view.showProgress();
-		model.refreshData(view.getViewType(), new ResultListener<FolderInfo>() {
+		model.refreshData(new ResultListener<FolderInfo>() {
 			public void onFail(ServiceError error) {
 				view.hideProgress();
 				onError(error, false);
@@ -256,7 +262,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToFolder(view.getViewType(), level, folder,
+				model.changeToFolder(level, folder,
 						createFolderChangeListener());
 			}
 		});
@@ -618,4 +624,11 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		});
 	}
 
+	@Override
+	public JavaScriptObject getDataRequest(Folder folder) {
+		if (!ViewType.list.equals(view.getViewType()))
+			return null;
+		return pluginEnvironment.getFileListDataRequest(folder,
+				((DefaultFileListWidget) view.getFileWidget()).getColumns());
+	}
 }

@@ -41,7 +41,7 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		this.setDataProvider(this);
 	}
 
-	protected List<GridColumn> getColumns() {
+	protected List<GridColumn> initColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getText(Texts.itemPermissionListColumnTitleName),
 				false);

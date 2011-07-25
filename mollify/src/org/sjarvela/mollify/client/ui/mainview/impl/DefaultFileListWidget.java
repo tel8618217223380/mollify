@@ -18,9 +18,6 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.PluginEnvironment;
-import org.sjarvela.mollify.client.plugin.filelist.NativeColumnDataProvider;
-import org.sjarvela.mollify.client.plugin.filelist.NativeColumnSpec;
-import org.sjarvela.mollify.client.plugin.filelist.NativeGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
@@ -45,9 +42,9 @@ public class DefaultFileListWidget implements FileListWidget {
 		this.pluginEnvironment = pluginEnvironment;
 
 		this.list = new FileList(textProvider, dragAndDropManager) {
-			protected java.util.List<org.sjarvela.mollify.client.ui.common.grid.GridColumn> getColumns() {
+			protected java.util.List<org.sjarvela.mollify.client.ui.common.grid.GridColumn> initColumns() {
 				if (columnSetup == null || columnSetup.getKeys().size() == 0)
-					return super.getColumns();
+					return super.initColumns();
 
 				List<GridColumn> c = new ArrayList();
 				for (String id : columnSetup.getKeys()) {
@@ -80,22 +77,19 @@ public class DefaultFileListWidget implements FileListWidget {
 								col.hasValue("sortable") ? col
 										.getBoolean("sortable") : true);
 					else {
-						NativeColumnSpec colSpec = pluginEnvironment
-								.getListColumnSpec(id);
-						if (colSpec == null)
-							continue;
-						boolean sortable = colSpec.isSortable();
-						if (sortable && col.hasValue("sortable"))
-							sortable = col.getBoolean("sortable");
-						column = new NativeGridColumn(id, colSpec,
+						column = pluginEnvironment.createNativeGridColumn(
+								id,
 								titleKey != null ? textProvider
-										.getText(titleKey) : "", sortable);
+										.getText(titleKey) : "",
+								col.hasValue("sortable") ? col
+										.getBoolean("sortable") : false);
 					}
 					if (column != null)
 						c.add(column);
 				}
 				if (c.isEmpty())
 					throw new RuntimeException("Column setup empty");
+
 				return c;
 			};
 
@@ -103,10 +97,14 @@ public class DefaultFileListWidget implements FileListWidget {
 					FileSystemItem item, GridColumn column) {
 				if (isCoreColumn(column.getId()))
 					return super.getData(item, column);
-				return new NativeColumnDataProvider((NativeGridColumn) column)
-						.getData(item, data);
+				return pluginEnvironment
+						.getNativeColumnData(column, item, data);
 			};
 		};
+	}
+
+	public List<GridColumn> getColumns() {
+		return list.getColumns();
 	}
 
 	@Override
@@ -172,4 +170,5 @@ public class DefaultFileListWidget implements FileListWidget {
 		this.data = data;
 		list.setContent(items);
 	}
+
 }
