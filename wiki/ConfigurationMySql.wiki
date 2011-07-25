@@ -10,14 +10,14 @@ Before installing Mollify, you have to make following preparations:
 2) Create configuration.php as in following example:
 
 {{{
-	<?php
-		$CONFIGURATION_TYPE = 'mysql';
-		$DB_HOST = "localhost";
-		$DB_DATABASE = "mollify";
-		$DB_USER = "mollify";
-		$DB_PASSWORD = "mollify";
-		$DB_TABLE_PREFIX = "mollify_";
-	?>
+<?php
+	$CONFIGURATION_TYPE = 'mysql';
+	$DB_HOST = "localhost";
+	$DB_DATABASE = "mollify";
+	$DB_USER = "mollify";
+	$DB_PASSWORD = "mollify";
+	$DB_TABLE_PREFIX = "mollify_";
+?>
 }}}
 
 Values $DB_HOST, $DB_DATABASE and $DB_TABLE_PREFIX are optional. If these are not defined, it is assumed that MySQL server is running on localhost, database is called "mollify" and tables are accessed without name prefix.
