@@ -21,7 +21,6 @@ import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -36,9 +35,10 @@ public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
 	private final List<Folder> rootFolders;
-	private final PluginEnvironment pluginEnv;
 
+	private FolderInfoRequestDataProvider dataRequestProvider = null;
 	private FolderModel folderModel;
+
 	private List<File> files = new ArrayList();
 	private List<Folder> folders = new ArrayList();
 	private List<FileSystemItem> all = new ArrayList();
@@ -47,10 +47,9 @@ public class MainViewModel {
 	private JsObj data;
 
 	public MainViewModel(FileSystemService fileServices, SessionInfo session,
-			FolderProvider folderProvider, PluginEnvironment pluginEnv) {
+			FolderProvider folderProvider) {
 		this.fileServices = fileServices;
 		this.session = session;
-		this.pluginEnv = pluginEnv;
 		this.rootFolders = folderProvider.getRootFolders();
 
 		clear();
@@ -62,6 +61,11 @@ public class MainViewModel {
 		folders.clear();
 		files.clear();
 		all.clear();
+	}
+
+	public void setRequestDataProvider(
+			FolderInfoRequestDataProvider requestDataProvider) {
+		this.dataRequestProvider = requestDataProvider;
 	}
 
 	public SessionInfo getSession() {
@@ -100,32 +104,29 @@ public class MainViewModel {
 		return folderModel.getCurrentFolder();
 	}
 
-	public void changeToRootFolder(ViewType viewType, Folder root,
-			ResultListener resultListener) {
+	public void changeToRootFolder(Folder root, ResultListener resultListener) {
 		folderModel.setRootFolder(root);
-		refreshData(viewType, resultListener);
+		refreshData(resultListener);
 	}
 
-	public void changeToSubfolder(ViewType viewType, Folder folder,
-			ResultListener resultListener) {
+	public void changeToSubfolder(Folder folder, ResultListener resultListener) {
 		folderModel.descendIntoFolder(folder);
-		refreshData(viewType, resultListener);
+		refreshData(resultListener);
 	}
 
-	public void changeToFolder(ViewType viewType, int level, Folder folder,
+	public void changeToFolder(int level, Folder folder,
 			ResultListener resultListener) {
 		folderModel.changeFolder(level, folder);
-		refreshData(viewType, resultListener);
+		refreshData(resultListener);
 	}
 
 	public void moveToParentFolder(ViewType viewType,
 			ResultListener resultListener) {
 		folderModel.ascend();
-		refreshData(viewType, resultListener);
+		refreshData(resultListener);
 	}
 
-	public void refreshData(ViewType viewType,
-			ResultListener<FolderInfo> resultListener) {
+	public void refreshData(ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
 			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
 					rootFolders, null, null);
@@ -135,22 +136,17 @@ public class MainViewModel {
 		}
 
 		Folder currentFolder = getCurrentFolder();
+		JavaScriptObject dataRequest = dataRequestProvider != null ? dataRequestProvider
+				.getDataRequest(currentFolder) : null;
 		fileServices.getFolderInfo(
 				currentFolder,
-				getDataRequest(viewType, currentFolder),
+				dataRequest,
 				createListener(resultListener,
 						new ResultCallback<FolderInfo>() {
 							public void onCallback(FolderInfo result) {
 								onUpdateData(result);
 							}
 						}));
-	}
-
-	private JavaScriptObject getDataRequest(ViewType viewType,
-			Folder currentFolder) {
-		if (!ViewType.list.equals(viewType))
-			return null;
-		return pluginEnv.getDataRequest(currentFolder);
 	}
 
 	private void onUpdateData(FolderInfo info) {

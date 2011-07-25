@@ -61,7 +61,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	}
 
 	@Override
-	protected List<GridColumn> getColumns() {
+	protected List<GridColumn> initColumns() {
 		GridColumn columnName = new DefaultGridColumn(COLUMN_ID_NAME,
 				textProvider.getText(Texts.fileListColumnTitleName), true);
 		GridColumn columnType = new DefaultGridColumn(COLUMN_ID_TYPE,

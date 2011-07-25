@@ -113,7 +113,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		FileSystemService fileSystemService = serviceProvider
 				.getFileSystemService();
 		MainViewModel model = new MainViewModel(fileSystemService, session,
-				fileSystemItemProvider, pluginEnvironment);
+				fileSystemItemProvider);
 
 		FolderSelectorFactory folderSelectorFactory = new FolderSelectorFactory(
 				model, fileSystemService, textProvider, fileSystemItemProvider);
@@ -149,7 +149,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				permissionEditorViewFactory, passwordDialogFactory,
 				fileUploadDialogFactory, this, dropBox, exposeFileUrls,
 				serviceProvider.getSessionService(), eventDispatcher,
-				searchResultDialogFactory);
+				searchResultDialogFactory, pluginEnvironment);
 		dragController.setDataProvider(presenter);
 		MainViewGlue glue = new MainViewGlue(view, presenter,
 				fileSystemActionHandler, actionDelegator);

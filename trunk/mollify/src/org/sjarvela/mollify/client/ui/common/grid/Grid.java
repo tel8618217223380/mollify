@@ -67,7 +67,7 @@ public abstract class Grid<T> extends FlexTable {
 		this.headerCss = headerCss;
 		this.sortableHeaderTitleCss = headerCss + TITLE_STYLE;
 		this.sortableHeaderSortCss = headerCss + SORT_STYLE;
-		this.columns = getColumns();
+		this.columns = initColumns();
 
 		initializeElement();
 		initializeColumns();
@@ -77,7 +77,11 @@ public abstract class Grid<T> extends FlexTable {
 		sinkEvents(Event.ONMOUSEOUT);
 	}
 
-	protected abstract List<GridColumn> getColumns();
+	protected abstract List<GridColumn> initColumns();
+
+	public List<GridColumn> getColumns() {
+		return columns;
+	}
 
 	private void initializeElement() {
 		head = DOM.createTHead();
