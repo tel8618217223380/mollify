@@ -22,11 +22,11 @@ import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class DefaultFileListGridWidget implements FileListWidget {
+public class FileGridWidget implements FileWidget {
 	private FileGrid grid;
 
-	public DefaultFileListGridWidget(boolean thumbnails,
-			FileSystemService service, boolean small) {
+	public FileGridWidget(boolean thumbnails, FileSystemService service,
+			boolean small) {
 		this.grid = new FileGrid(thumbnails, service, small ? "small" : "large");
 	}
 

@@ -40,14 +40,14 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	}
 
 	@Override
-	public FileListWidget create(ViewType type) {
+	public FileWidget create(ViewType type) {
 		if (ViewType.list.equals(type)) {
 			if (experimental)
 				return new CellTableFileList(textProvider);
-			return new DefaultFileListWidget(textProvider, dragAndDropManager,
+			return new FileListWidget(textProvider, dragAndDropManager,
 					pluginEnvironment, settings.getJsObj("list-view-columns"));
 		}
-		return new DefaultFileListGridWidget(thumbnails, service,
+		return new FileGridWidget(thumbnails, service,
 				ViewType.gridSmall.equals(type));
 	}
 
