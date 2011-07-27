@@ -15,7 +15,7 @@ APC requires PHP versions >= 5.2 and PEAR >= 1.4.
 
 == 1. Installing APC ==
 
-  #1 To install it in Windows, download PECL and the APC extension from [http://pecl4win.php.net/]
+  #1 To install it in Windows, follow instructions at [http://www.php.net/manual/en/apc.installation.php]
   #2 To install it in Debian linux (Ubuntu etc), use following commands:
 {{{
 apt-get install apache2
