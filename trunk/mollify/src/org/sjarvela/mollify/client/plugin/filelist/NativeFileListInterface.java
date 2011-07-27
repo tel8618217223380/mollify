@@ -38,6 +38,11 @@ public class NativeFileListInterface {
 				&& allowSortable);
 	}
 
+	public GridData getNativeColumnData(GridColumn column, FileSystemItem item,
+			JsObj data) {
+		return ((NativeGridColumn) column).getData(item, data);
+	}
+
 	public JavaScriptObject getDataRequest(FileSystemItem i,
 			List<GridColumn> cols) {
 		JsObjBuilder rq = new JsObjBuilder();
@@ -59,11 +64,5 @@ public class NativeFileListInterface {
 			JavaScriptObject cb, JavaScriptObject i) /*-{
 		return cb(i);
 	}-*/;
-
-	public GridData getNativeColumnData(GridColumn column, FileSystemItem item,
-			JsObj data) {
-		return new NativeColumnDataProvider((NativeGridColumn) column).getData(
-				item, data);
-	}
 
 }
