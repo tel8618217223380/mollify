@@ -23,13 +23,13 @@ public class NativeFileListInterface {
 				sortCb, dataRequestCb));
 	}
 
-	public GridComparator getListColumnComparator(String columnId,
+	public GridComparator getComparator(String columnId,
 			SortOrder sort) {
 		return new NativeFileListComparator(customColumnSpecs.get(columnId),
 				sort);
 	}
 
-	public GridColumn createNativeGridColumn(String id, String title,
+	public GridColumn getColumn(String id, String title,
 			boolean allowSortable) {
 		NativeColumnSpec colSpec = customColumnSpecs.get(id);
 		if (colSpec == null)
@@ -38,7 +38,7 @@ public class NativeFileListInterface {
 				&& allowSortable);
 	}
 
-	public GridData getNativeColumnData(GridColumn column, FileSystemItem item,
+	public GridData getData(GridColumn column, FileSystemItem item,
 			JsObj data) {
 		return ((NativeGridColumn) column).getData(item, data);
 	}

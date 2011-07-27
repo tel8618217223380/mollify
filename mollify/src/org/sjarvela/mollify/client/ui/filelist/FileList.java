@@ -73,6 +73,7 @@ public class FileList extends Grid<FileSystemItem> implements
 				(GridColumn) columnSize);
 	}
 
+	@Override
 	public GridData getData(FileSystemItem item, GridColumn column) {
 		if (item.isFile())
 			return getFileData((File) item, column);
@@ -113,6 +114,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		final Widget nameWidget = createNameWidget(folder,
 				!folder.equals(Folder.Parent));
 		icon.addClickHandler(new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				FileList.this.onIconClicked(folder,
 						getWidget(folder, COLUMN_ID_NAME).getElement());
@@ -200,6 +202,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return name;
 	}
 
+	@Override
 	public List<String> getRowStyles(FileSystemItem t) {
 		if (t.isFile())
 			return getFileStyles((File) t);
@@ -233,6 +236,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		return styles;
 	}
 
+	@Override
 	public String getColumnStyle(GridColumn column) {
 		return StyleConstants.FILE_LIST_COLUMN_PREFIX + column.getId();
 	}

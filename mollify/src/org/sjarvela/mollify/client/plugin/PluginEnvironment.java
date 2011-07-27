@@ -26,6 +26,6 @@ public interface PluginEnvironment {
 
 	FileUploadDialogFactory getCustomUploader();
 
-	NativeFileListInterface getFileListInterface();
+	NativeFileListInterface getFileListExt();
 
 }
