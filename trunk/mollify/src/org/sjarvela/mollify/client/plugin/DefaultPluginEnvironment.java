@@ -96,7 +96,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	}
 
 	@Override
-	public NativeFileListInterface getFileListInterface() {
+	public NativeFileListInterface getFileListExt() {
 		return fileListInterface;
 	}
 

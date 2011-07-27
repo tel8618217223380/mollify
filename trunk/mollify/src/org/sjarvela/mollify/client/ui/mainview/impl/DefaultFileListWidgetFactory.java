@@ -44,7 +44,7 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 		if (ViewType.list.equals(type)) {
 			if (experimental)
 				return new CellTableFileList(textProvider);
-			return new FileListWidget(textProvider, dragAndDropManager,
+			return new FileListWithExternalColumns(textProvider, dragAndDropManager,
 					pluginEnvironment, settings.getJsObj("list-view-columns"));
 		}
 		return new FileGridWidget(thumbnails, service,

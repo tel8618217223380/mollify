@@ -628,7 +628,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	public JavaScriptObject getDataRequest(Folder folder) {
 		if (!ViewType.list.equals(view.getViewType()))
 			return null;
-		return pluginEnvironment.getFileListInterface().getDataRequest(folder,
-				((FileListWidget) view.getFileWidget()).getColumns());
+		return pluginEnvironment.getFileListExt().getDataRequest(folder,
+				((FileListWithExternalColumns) view.getFileWidget()).getColumns());
 	}
 }
