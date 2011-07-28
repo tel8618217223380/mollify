@@ -14,23 +14,25 @@ import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class NativeFileListInterface {
+public class FileListExt {
 	private final Map<String, NativeColumnSpec> customColumnSpecs = new HashMap();
 
-	public void addListColumnSpec(String id, JavaScriptObject contentCb,
-			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
+	public void addListColumnSpec(JavaScriptObject s) {
+		JsObj spec = s.cast();
+		String id = spec.getString("id");
+		JavaScriptObject contentCb = spec.getObject("get_content");
+		JavaScriptObject sortCb = spec.getObject("sort");
+		JavaScriptObject dataRequestCb = spec.getObject("get_request");
 		this.customColumnSpecs.put(id, new NativeColumnSpec(id, contentCb,
 				sortCb, dataRequestCb));
 	}
 
-	public GridComparator getComparator(String columnId,
-			SortOrder sort) {
+	public GridComparator getComparator(String columnId, SortOrder sort) {
 		return new NativeFileListComparator(customColumnSpecs.get(columnId),
 				sort);
 	}
 
-	public GridColumn getColumn(String id, String title,
-			boolean allowSortable) {
+	public GridColumn getColumn(String id, String title, boolean allowSortable) {
 		NativeColumnSpec colSpec = customColumnSpecs.get(id);
 		if (colSpec == null)
 			return null;
@@ -38,8 +40,7 @@ public class NativeFileListInterface {
 				&& allowSortable);
 	}
 
-	public GridData getData(GridColumn column, FileSystemItem item,
-			JsObj data) {
+	public GridData getData(GridColumn column, FileSystemItem item, JsObj data) {
 		return ((NativeGridColumn) column).getData(item, data);
 	}
 

@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.filelist.NativeFileListInterface;
+import org.sjarvela.mollify.client.plugin.filelist.FileListExt;
 import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
@@ -41,7 +41,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
-	private final NativeFileListInterface fileListInterface;
+	private final FileListExt fileListInterface;
 
 	private FileUploadDialogFactory uploader = null;
 	private List<Plugin> plugins;
@@ -59,7 +59,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
-		this.fileListInterface = new NativeFileListInterface();
+		this.fileListInterface = new FileListExt();
 	}
 
 	@Override
@@ -85,10 +85,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 				.addItemContextProvider(new NativeItemContextProvider(dp));
 	}
 
-	public void addListColumnSpec(String id, JavaScriptObject contentCb,
-			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
-		fileListInterface.addListColumnSpec(id, contentCb, sortCb,
-				dataRequestCb);
+	public void addListColumnSpec(JavaScriptObject spec) {
+		fileListInterface.addListColumnSpec(spec);
 	}
 
 	protected JavaScriptObject getSession() {
@@ -96,7 +94,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	}
 
 	@Override
-	public NativeFileListInterface getFileListExt() {
+	public FileListExt getFileListExt() {
 		return fileListInterface;
 	}
 
@@ -146,8 +144,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
 
-		env.addListColumnSpec = function(id, contentCb, sortCb, dataRequestCb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(id, contentCb, sortCb, dataRequestCb);
+		env.addListColumnSpec = function(s) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 		}
 
 		env.session = function() {
