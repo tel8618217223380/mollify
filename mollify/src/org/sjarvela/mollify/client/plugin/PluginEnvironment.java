@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.plugin;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileView;
-import org.sjarvela.mollify.client.plugin.filelist.NativeFileListInterface;
+import org.sjarvela.mollify.client.plugin.filelist.FileListExt;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -26,6 +26,6 @@ public interface PluginEnvironment {
 
 	FileUploadDialogFactory getCustomUploader();
 
-	NativeFileListInterface getFileListExt();
+	FileListExt getFileListExt();
 
 }
