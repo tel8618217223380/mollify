@@ -19,10 +19,13 @@ public class NativeColumnSpec implements ColumnSpec {
 	private final JavaScriptObject contentCb;
 	private final JavaScriptObject sortCb;
 	private final JavaScriptObject dataRequestCb;
+	private final String defaultTitleKey;
 
-	public NativeColumnSpec(String id, JavaScriptObject contentCb,
-			JavaScriptObject sortCb, JavaScriptObject dataRequestCb) {
+	public NativeColumnSpec(String id, String defaultTitleKey,
+			JavaScriptObject contentCb, JavaScriptObject sortCb,
+			JavaScriptObject dataRequestCb) {
 		this.id = id;
+		this.defaultTitleKey = defaultTitleKey;
 		this.contentCb = contentCb;
 		this.sortCb = sortCb;
 		this.dataRequestCb = dataRequestCb;
@@ -31,6 +34,10 @@ public class NativeColumnSpec implements ColumnSpec {
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	public String getDefaultTitleKey() {
+		return defaultTitleKey;
 	}
 
 	@Override
