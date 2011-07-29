@@ -74,7 +74,7 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 			else {
 				column = pluginEnv.getFileListExt().getColumn(
 						id,
-						titleKey != null ? textProvider.getText(titleKey) : "",
+						titleKey,
 						col.hasValue("sortable") ? col.getBoolean("sortable")
 								: false);
 			}
