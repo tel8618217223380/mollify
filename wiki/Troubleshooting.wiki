@@ -108,6 +108,7 @@ and following client setting into the host page (merge your existing settings):
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
 
+Alternatively, see troubleshooting step 1 to check your configuration.php.
 
 == Error "Failed to get response from server" ==
 
