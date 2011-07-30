@@ -144,7 +144,7 @@ function PluploadPlugin() {
 			
 			window.setTimeout(function() {
 				if (!that.initialized) {
-					that.d.hide();
+					that.d.close();
 					alert("Invalid Plupload configuration, initialization failed.");
 				}
 			}, 5000);
@@ -217,7 +217,11 @@ function PluploadPlugin() {
 	this.t = function(s) {
 		return that.env.texts().get(s);
 	}
-	
+
+	this.logError = function(s) {
+		that.env.log().error("pluginPlupload: " + s);
+	}
+		
 	this.logDebug = function(s) {
 		that.env.log().debug("pluginPlupload: " + s);
 	}
