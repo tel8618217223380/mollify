@@ -23,7 +23,7 @@ $PLUGINS = array(
 {{{
 <script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>   
 <script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
-<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plupload.full.min.js"></script>
+<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plupload.full.js"></script>
 <script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
 }}}
 
@@ -57,7 +57,7 @@ mollify.init({
 	<script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
 	<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
 	<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
-	<script type="text/javascript" src="backend/plugin/Plupload/client/plupload.full.min.js"></script>
+	<script type="text/javascript" src="backend/plugin/Plupload/client/plupload.min.js"></script>
 	<script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
 	<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
 
