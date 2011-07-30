@@ -6,6 +6,10 @@
 
 		this.init = function(s) {
 			t.settings = s;
+			if (s.plugins) {
+				for (var i=0; i < s.plugins.length; i++)
+					t.registerPlugin(s.plugins[i]);
+			}
 		}
 		
 		this.setup = function(e) {

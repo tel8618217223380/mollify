@@ -40,6 +40,12 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 		super(textProvider, dragAndDropManager);
 		this.pluginEnv = pluginEnvironment;
 		this.columnSetup = columnSetup;
+		super.initialize();
+	}
+
+	@Override
+	protected void initialize() {
+		// prevent initialization before own constructor has finished
 	}
 
 	@Override

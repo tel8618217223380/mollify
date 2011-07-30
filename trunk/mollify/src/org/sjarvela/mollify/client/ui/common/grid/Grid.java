@@ -39,9 +39,9 @@ public abstract class Grid<T> extends FlexTable {
 
 	protected final TextProvider textProvider;
 	private final String headerCss;
-	private final List<GridColumn> columns;
 	private final Map<GridColumn, GridColumnSortButton> sortButtons = new HashMap();
 	protected final List<GridListener> listeners = new ArrayList<GridListener>();
+	private List<GridColumn> columns = Collections.EMPTY_LIST;
 
 	private final String sortableHeaderTitleCss;
 	private final String sortableHeaderSortCss;
@@ -67,21 +67,20 @@ public abstract class Grid<T> extends FlexTable {
 		this.headerCss = headerCss;
 		this.sortableHeaderTitleCss = headerCss + TITLE_STYLE;
 		this.sortableHeaderSortCss = headerCss + SORT_STYLE;
-		this.columns = initColumns();
-
-		initializeElement();
-		initializeColumns();
 
 		sinkEvents(Event.ONCLICK);
 		sinkEvents(Event.ONMOUSEOVER);
 		sinkEvents(Event.ONMOUSEOUT);
+
+		initialize();
+	}
+
+	protected void initialize() {
+		initializeElement();
+		initializeColumns();
 	}
 
 	protected abstract List<GridColumn> initColumns();
-
-	public List<GridColumn> getColumns() {
-		return columns;
-	}
 
 	private void initializeElement() {
 		head = DOM.createTHead();
@@ -100,6 +99,7 @@ public abstract class Grid<T> extends FlexTable {
 	}
 
 	private void initializeColumns() {
+		this.columns = initColumns();
 		addHeaderCells(headerRow, columns.size());
 
 		int index = 0;
@@ -107,6 +107,10 @@ public abstract class Grid<T> extends FlexTable {
 			initializeColumn(index, column);
 			index++;
 		}
+	}
+
+	public List<GridColumn> getColumns() {
+		return columns;
 	}
 
 	private native void addHeaderCells(Element row, int count) /*-{
