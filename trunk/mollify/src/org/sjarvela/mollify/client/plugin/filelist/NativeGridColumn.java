@@ -53,14 +53,14 @@ public class NativeGridColumn implements GridColumn {
 
 	public GridData getData(FileSystemItem item, JsObj data) {
 		String html = invokeContentCallback(colSpec.getContentCallback(),
-				item.asJs());
+				item.asJs(), data);
 		return new GridData.HTML(html);
 	}
 
 	protected static native final String invokeContentCallback(
-			JavaScriptObject cb, JavaScriptObject i) /*-{
+			JavaScriptObject cb, JavaScriptObject i, JavaScriptObject data) /*-{
 		if (!cb)
 			return "";
-		return cb(i);
+		return cb(i, data);
 	}-*/;
 }

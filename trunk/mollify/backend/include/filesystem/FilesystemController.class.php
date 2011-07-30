@@ -20,6 +20,7 @@
 		private $permissionCache = array();
 		private $folderCache = array();
 		private $detailsPlugins = array();
+		private $dataRequestPlugins = array();
 		private $searchers = array();
 		private $filesystems = array();
 		
@@ -50,6 +51,14 @@
 			$this->detailsPlugins[] = $plugin;
 		}
 
+		public function registerDataRequestPlugin($plugin) {
+			$this->dataRequestPlugins[] = $plugin;
+		}
+		
+		public function getDataRequestPlugins() {
+			return $this->dataRequestPlugins;
+		}
+		
 		public function registerSearcher($searcher) {
 			$this->searchers[] = $searcher;
 		}
@@ -57,7 +66,7 @@
 		public function getRootFolders($all = FALSE) {
 			$list = array();
 			
-			foreach($this->getFolderDefs($all) as $folderDef) {				
+			foreach($this->getFolderDefs($all) as $folderDef) {
 				$root = $this->filesystem($folderDef, !$all)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
 				$list[$folderDef['id']] = $root;

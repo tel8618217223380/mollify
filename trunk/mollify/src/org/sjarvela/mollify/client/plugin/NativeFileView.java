@@ -51,6 +51,13 @@ public class NativeFileView {
 		return JsUtil.asJsArray(jsItems, JavaScriptObject.class);
 	}
 
+	public JavaScriptObject getItem(String id) {
+		for (FileSystemItem item : fileView.getAllItems())
+			if (item.getId().equals(id))
+				return item.asJs();
+		return null;
+	}
+
 	public JavaScriptObject asJs() {
 		return createJs(this);
 	}
@@ -64,6 +71,10 @@ public class NativeFileView {
 
 		o.items = function() {
 			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getItems()();
+		}
+
+		o.item = function(id) {
+			return fs.@org.sjarvela.mollify.client.plugin.NativeFileView::getItem(Ljava/lang/String;)(id);
 		}
 
 		o.currentFolder = function() {

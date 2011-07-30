@@ -2,6 +2,10 @@
 	http://localhost:8888/mollify/dev/backend/plugin/comment/client/style.css
 */
 
+.mollify-filelist-column-comment-count {
+	width: 22px;
+}
+
 .details-comments {
 	width: 100%
 }
@@ -26,6 +30,20 @@
 	float: left;
 	font-weight: bold;
 	margin-left: 2px;
+}
+
+.filelist-item-comment-count {
+	height: 16px;
+	width: 20px;
+	font-weight: bold;
+	background: url(comment.png) no-repeat;
+	padding-left: 18px;
+	float: right;
+	cursor: pointer;
+}
+
+.filelist-item-comment-count.hover {
+	text-decoration: underline;
 }
 
 #details-comments-content.hover #details-comment-count {
