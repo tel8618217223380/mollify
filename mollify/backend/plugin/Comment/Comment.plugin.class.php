@@ -29,14 +29,11 @@
 			$this->handler = new CommentHandler($this->env);
 			$this->env->events()->register("filesystem/", $this->handler);
 			$this->env->filesystem()->registerDetailsPlugin($this->handler);
+			$this->env->filesystem()->registerDataRequestPlugin($this->handler);
 		}
 		
 		public function getHandler() {
 			return $this->handler;
-		}
-		
-		public function getClientPlugin() {
-			return "client/plugin.js";
 		}
 		
 		public function __toString() {

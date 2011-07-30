@@ -120,6 +120,14 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 	}
 
 	@Override
+	protected void onRenderFinished() {
+		for (GridColumn col : getColumns())
+			if (!isCoreColumn(col.getId()))
+				pluginEnv.getFileListExt().onFileListRendered(col);
+		super.onRenderFinished();
+	}
+
+	@Override
 	public Widget getWidget() {
 		return this;
 	}

@@ -22,6 +22,18 @@
 			return $db->query("select count(`id`) from ".$db->table("comment")." where `item_id` = ".$db->string($item->id(), TRUE))->value(0);
 		}
 
+		public function getCommentCountForChildren($parent) {
+			$db = $this->env->configuration()->db();
+			$parentId = $db->string($parent->id());
+			
+			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+				$itemFilter = "item_id REGEXP '^".$parentId."[^/]+[/]?$'";
+			} else {
+				$itemFilter = "REGEX(item_id, \"#^".$parentId."[^/]+[/]?$#\")";
+			}
+			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where ".$itemFilter." group by item_id")->valueMap("item_id", "count");
+		}
+		
 		public function getComments($item) {
 			$db = $this->env->configuration()->db();
 			return $db->query("select u.id as user_id, u.name as username, c.time as time, c.comment as comment from ".$db->table("comment")." c, ".$db->table("user")." u where c.`item_id` = ".$db->string($item->id(), TRUE)." and u.id = c.user_id order by time desc")->rows();

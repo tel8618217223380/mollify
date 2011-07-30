@@ -20,20 +20,29 @@ public class NativeColumnSpec implements ColumnSpec {
 	private final JavaScriptObject sortCb;
 	private final JavaScriptObject dataRequestCb;
 	private final String defaultTitleKey;
+	private final String requestId;
+	private final JavaScriptObject onRenderCb;
 
-	public NativeColumnSpec(String id, String defaultTitleKey,
-			JavaScriptObject contentCb, JavaScriptObject sortCb,
-			JavaScriptObject dataRequestCb) {
+	public NativeColumnSpec(String id, String requestId,
+			String defaultTitleKey, JavaScriptObject contentCb,
+			JavaScriptObject sortCb, JavaScriptObject dataRequestCb,
+			JavaScriptObject onRenderCb) {
 		this.id = id;
+		this.requestId = requestId;
 		this.defaultTitleKey = defaultTitleKey;
 		this.contentCb = contentCb;
 		this.sortCb = sortCb;
 		this.dataRequestCb = dataRequestCb;
+		this.onRenderCb = onRenderCb;
 	}
 
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	public String getRequestId() {
+		return requestId;
 	}
 
 	public String getDefaultTitleKey() {
@@ -57,7 +66,11 @@ public class NativeColumnSpec implements ColumnSpec {
 		return dataRequestCb;
 	}
 
+	public JavaScriptObject getOnRenderCb() {
+		return onRenderCb;
+	}
+
 	public boolean hasDataRequest() {
-		return dataRequestCb != null;
+		return requestId != null && dataRequestCb != null;
 	}
 }

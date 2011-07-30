@@ -26,12 +26,14 @@ public class FileListExt {
 	public void addListColumnSpec(JavaScriptObject s) {
 		JsObj spec = s.cast();
 		String id = spec.getString("id");
-		JavaScriptObject contentCb = spec.getObject("get-content");
+		String requestId = spec.getString("request-id");
+		JavaScriptObject contentCb = spec.getObject("content");
 		JavaScriptObject sortCb = spec.getObject("sort");
-		JavaScriptObject dataRequestCb = spec.getObject("get-request");
+		JavaScriptObject dataRequestCb = spec.getObject("request");
+		JavaScriptObject onRenderCb = spec.getObject("on-render");
 		String defaultTitleKey = spec.getString("default-title-key");
-		this.customColumnSpecs.put(id, new NativeColumnSpec(id,
-				defaultTitleKey, contentCb, sortCb, dataRequestCb));
+		this.customColumnSpecs.put(id, new NativeColumnSpec(id, requestId,
+				defaultTitleKey, contentCb, sortCb, dataRequestCb, onRenderCb));
 	}
 
 	public GridComparator getComparator(String columnId, SortOrder sort) {
@@ -44,9 +46,12 @@ public class FileListExt {
 		NativeColumnSpec colSpec = customColumnSpecs.get(id);
 		if (colSpec == null)
 			return null;
-		String title = (titleKey != null ? textProvider.getText(titleKey)
-				: (colSpec.getDefaultTitleKey() != null ? textProvider
-						.getText(colSpec.getDefaultTitleKey()) : ""));
+
+		String effectiveTitleKey = (titleKey != null ? titleKey : (colSpec
+				.getDefaultTitleKey() != null ? colSpec.getDefaultTitleKey()
+				: ""));
+		String title = (effectiveTitleKey != null && !effectiveTitleKey
+				.isEmpty()) ? textProvider.getText(effectiveTitleKey) : "";
 		return new NativeGridColumn(id, colSpec, title, colSpec.isSortable()
 				&& allowSortable);
 	}
@@ -65,7 +70,7 @@ public class FileListExt {
 			NativeColumnSpec colSpec = ((NativeGridColumn) c).getColSpec();
 			if (!colSpec.hasDataRequest())
 				continue;
-			rq.obj(colSpec.getId(),
+			rq.obj(colSpec.getRequestId(),
 					invokeDataRequestCallback(colSpec.getDataRequestCallback(),
 							i.asJs()));
 		}
@@ -77,4 +82,14 @@ public class FileListExt {
 		return cb(i);
 	}-*/;
 
+	public void onFileListRendered(GridColumn col) {
+		NativeGridColumn c = (NativeGridColumn) col;
+		if (c.getColSpec().getOnRenderCb() == null)
+			return;
+		invokeRenderCallback(c.getColSpec().getOnRenderCb());
+	}
+
+	private static native void invokeRenderCallback(JavaScriptObject cb) /*-{
+		cb();
+	}-*/;
 }

@@ -344,7 +344,7 @@ public abstract class Grid<T> extends FlexTable {
 			addSelectedStyle(t);
 	}
 
-	private void onRenderFinished() {
+	protected void onRenderFinished() {
 		for (GridListener listener : listeners)
 			listener.onRendered();
 	}

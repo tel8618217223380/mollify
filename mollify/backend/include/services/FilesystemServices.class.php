@@ -261,6 +261,7 @@
 		}
 		
 		private function getFolderInfo($item, $includeHierarchy, $data = NULL) {
+			$requestDataResult = array();
 			$items = $this->env->filesystem()->items($item);
 			$files = array();
 			$folders = array();
@@ -271,6 +272,18 @@
 			$result["files"] = $files;
 			$result["folders"] = $folders;
 			$result["permission"] = $this->env->filesystem()->permission($item);
+			
+			if ($data != NULL) {
+				foreach($this->env->filesystem()->getDataRequestPlugins() as $plugin) {
+					$key = $plugin->getRequestKey();
+					if (!array_key_exists($key, $data)) continue;
+					
+					$d = $plugin->getRequestData($item, $items, $result, $data[$key]);
+					if ($d != NULL) $requestDataResult[$key] = $d;
+				}
+			}
+			$result["data"] = $requestDataResult;
+			
 			if ($includeHierarchy) {
 				$h = array();
 				foreach($this->env->filesystem()->hierarchy($item) as $i) {
