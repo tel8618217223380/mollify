@@ -5,7 +5,7 @@
 		}
 		
 		protected function getHtml($item, $full) {
-			$isOgg = strcmp($item->extension(), 'ogg') == 0;
+			//$isOgg = strcmp($item->extension(), 'ogg') == 0;
 			$resourceUrl = $this->getResourceUrl();
 			
 			$head =
@@ -14,43 +14,51 @@
 				'<link href="'.$resourceUrl.'jplayer.blue.monday.css" rel="stylesheet" type="text/css" />'.
 				'<script>
 					$(document).ready( function() {
-						$("#player").jPlayer( {
+						$("#jquery_jplayer_1").jPlayer( {
+							ready: function () {
+								$(this).jPlayer("setMedia", {
+									'.$item->extension().':"'.$this->getContentUrl($item).'"
+								}).jPlayer("play");
+							},
+							solution: "html, flash",
 							swfPath: "'.$resourceUrl.'",
-							errorAlerts:true,'.
-							($isOgg ? 'nativeSupport: true, oggSupport: true,' : 'nativeSupport: false,').
-							'ready: function () { this.element.jPlayer("setFile", "'.$this->getContentUrl($item).'", "'.$this->getContentUrl($item).'").jPlayer("play"); }
+							errorAlerts:false,
+							supplied: "'.$item->extension().'"
 						});
 					});
 				</script>';
 
 			$html =
-				'<div class="jp-single-player">
-					<div class="jp-interface">
-						<ul class="jp-controls">
-							<li id="jplayer_play" class="jp-play">play</li>
-							<li id="jplayer_pause" class="jp-pause">pause</li>
-							<li id="jplayer_stop" class="jp-stop">stop</li>
-							<li id="jplayer_volume_min" class="jp-volume-min">min volume</li>
-							<li id="jplayer_volume_max" class="jp-volume-max">max volume</li>
-						</ul>
-						<div class="jp-progress">
-							<div id="jplayer_load_bar" class="jp-load-bar">
-								<div id="jplayer_play_bar" class="jp-play-bar"></div>
+				'<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+
+				<div class="jp-audio">
+					<div class="jp-type-single">
+						<div id="jp_interface_1" class="jp-interface">
+							<ul class="jp-controls">
+								<li><a href="#" class="jp-play" tabindex="1">play</a></li>
+								<li><a href="#" class="jp-pause" tabindex="1">pause</a></li>
+								<li><a href="#" class="jp-stop" tabindex="1">stop</a></li>
+								<li><a href="#" class="jp-mute" tabindex="1">mute</a></li>
+								<li><a href="#" class="jp-unmute" tabindex="1">unmute</a></li>
+							</ul>
+							<div class="jp-progress">
+								<div class="jp-seek-bar">
+									<div class="jp-play-bar"></div>
+								</div>
 							</div>
+							<div class="jp-volume-bar">
+								<div class="jp-volume-bar-value"></div>
+							</div>
+							<div class="jp-current-time"></div>
+							<div class="jp-duration"></div>
 						</div>
-						<div id="jplayer_volume_bar" class="jp-volume-bar">
-							<div id="jplayer_volume_bar_value" class="jp-volume-bar-value"></div>
+						<div id="jp_playlist_1" class="jp-playlist">
+							<ul>
+								<li>'.$item->name().'</li>
+							</ul>
 						</div>
-						<div id="jplayer_play_time" class="jp-play-time"></div>
-						<div id="jplayer_total_time" class="jp-total-time"></div>
 					</div>
-					<div id="jplayer_playlist" class="jp-playlist">
-						<ul>
-							<li>'.$item->name().'</li>
-						</ul>
-					</div>
-				</div>
-				<div id="player"></div>';
+				</div>';
 
 			return "<html><head><title>".$item->name()."</title>".$head."</head><body>".$html."</body></html>";
 		}
