@@ -56,12 +56,15 @@
         );
         
         private $defaultMimeTypes = array(
-			'ogg' => 'application/ogg',
+			'ogg' => 'audio/ogg',
+			'oga' => 'audio/ogg',
 			'mov' => 'video/quicktime',
+			'mp3' => 'audio/mpeg',
+			'm4a' => 'audio/mp4',
+			'webma' => 'audio/webm',
 			'mp4' => 'video/mp4',
 			'aif' => "audio/x-aiff",
-			'wav' => "audio/x-wav",
-			'wav' => "audio/x-wav",
+			'wav' => "audio/wav",
 			'divx' => "video/divx",
 			'avi' => "video/divx",
 			'mkv' => "video/divx"
