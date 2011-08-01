@@ -20,7 +20,7 @@ $SETTINGS = array(
 	"enable_change_password" => TRUE,				// enable change password
 	"enable_descriptions" => FALSE,					// enable descriptions
 	"enable_public_links" => FALSE,					// enable public links
-	"enable_mail_notification" => FALSE,
+	"enable_mail_notification" => FALSE,				// enable email notification
 	"enable_retrieve_url" => FALSE,
 	"enable_zip_download" => FALSE,
 	"zipper" => "ZipArchive",
@@ -89,5 +89,17 @@ By default, folder actions (copy, move, delete) are enabled, but setting this to
 == Enable change password (`enable_change_password`) ==
 
 By default, changing password is enabled, but setting this to FALSE you can prevent users from changing passwords.
+
+== Enable descriptions(`enable_descriptions`) ==
+
+Enable file and folder descriptions (by default disabled).
+
+== Enable public links (`enable_public_links`) ==
+
+Enable public links, which allow downloading files without user account (by default disabled). When enabled, there will be a new option in the context popup actions menu for getting the link.
+
+== Enable email notification (`enable_email_notification`) ==
+
+Enable email notifications from any component or plugin (by default disabled).
 
 * More setting descriptions coming soon *
