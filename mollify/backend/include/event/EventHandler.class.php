@@ -34,6 +34,7 @@
 		
 		public function onEvent($e) {
 			$e->setUser($this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL);
+			$e->setIp($this->env->request()->ip());
 			
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: onEvent: '".$e->type()."'");
 			
@@ -57,6 +58,7 @@
 	abstract class Event {
 		private $time;
 		protected $user = NULL;
+		protected $ip = NULL;
 		private $type;
 		private $subType;
 		
@@ -73,7 +75,11 @@
 		public function user() {
 			return $this->user;
 		}
-				
+
+		public function ip() {
+			return $this->ip;
+		}
+						
 		public function type() {
 			return $this->type;
 		}
@@ -92,6 +98,10 @@
 		
 		public function setUser($user) {
 			$this->user = $user;
+		}
+		
+		public function setIp($ip) {
+			$this->ip = $ip;
 		}
 		
 		public function values($formatter) {

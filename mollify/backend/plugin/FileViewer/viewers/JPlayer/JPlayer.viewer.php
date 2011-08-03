@@ -5,7 +5,6 @@
 		}
 		
 		protected function getHtml($item, $full) {
-			//$isOgg = strcmp($item->extension(), 'ogg') == 0;
 			$resourceUrl = $this->getResourceUrl();
 			
 			$head =
@@ -21,8 +20,9 @@
 								}).jPlayer("play");
 							},
 							solution: "html, flash",
-							swfPath: "'.$resourceUrl.'",
+							swfPath: "resources/",
 							errorAlerts:false,
+							warningAlerts:false,
 							supplied: "'.$item->extension().'"
 						});
 					});

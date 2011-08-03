@@ -63,6 +63,8 @@
 		
 		public function registerFilesystem($id, $fs) {}
 		
+		public function registerDataRequestPlugin($p) {}
+		
 		public function onError($e) {
 			Logging::logException($e);
 		}

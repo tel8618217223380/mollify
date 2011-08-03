@@ -49,6 +49,7 @@ CREATE TABLE event_log (
   id INTEGER PRIMARY KEY,
   time bigint(11) NOT NULL,
   user varchar(128) NULL,
+  ip varchar(128) NULL,
   type varchar(128) NOT NULL,
   item varchar(512) NULL,
   details varchar(1024) NULL

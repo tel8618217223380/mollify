@@ -13,7 +13,7 @@
 	require_once("install/sqlite/SQLiteInstaller.class.php");
 	
 	class SQLiteUpdater extends SQLiteInstaller {
-		private static $versionHistory = array("1_7_10", "1_8");
+		private static $versionHistory = array("1_7_10", "1_8", "1_8_1");
 		
 		public function __construct($type, $settingsVar) {
 			parent::__construct($type, $settingsVar, "update");
