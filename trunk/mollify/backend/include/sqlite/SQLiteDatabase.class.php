@@ -63,8 +63,8 @@
 		
 		public function execSqlFile($file) {
 			$sql = file_get_contents($file);
-			$sql = str_replace("{TABLE_PREFIX}", "", str_replace("`", "", $sql));
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
+			$sql = str_replace("{TABLE_PREFIX}", "", str_replace("`", "", $sql));
 			$this->queries($sql);
 		}
 
@@ -87,6 +87,12 @@
 			$result = @sqlite_query("COMMIT;", $this->db);
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error committing transaction: ".sqlite_last_error($this->db));
+		}
+		
+		public function rollback() {
+			$result = @sqlite_query("ROLLBACK;", $this->db);
+			if (!$result)
+				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".sqlite_last_error($this->db));
 		}
 		
 		public function string($s, $quote = FALSE) {
