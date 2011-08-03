@@ -1,5 +1,14 @@
 #summary Items in next release
 
+Items included in release 1.8.1
+
+ * Customizable file list columns
+
+Items included in release 1.8.2
+
+ * Ability to edit text files
+ * Customizable details plugin
+
 Items included in release 1.9
 
  * Not planned yet
