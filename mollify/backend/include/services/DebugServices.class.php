@@ -34,7 +34,7 @@
 			$html = "<html><body><h1>Mollify Debug</h1><p>";
 			
 			foreach($this->env->session()->param("debug_info") as $d)
-				$html .= "<p><code>".Util::toString($d)."</code></p>";
+				$html .= "<p><code>".htmlspecialchars(Util::toString($d), , ENT_QUOTES)."</code></p>";
 			
 			$html .= "</body></html>";
 			return $html;

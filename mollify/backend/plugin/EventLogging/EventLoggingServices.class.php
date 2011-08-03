@@ -61,7 +61,7 @@
 			$count = $db->query("select count(id) ".$query)->value(0);
 			$rows = isset($data["rows"]) ? $data["rows"] : 50;
 			$start = isset($data["start"]) ? $data["start"] : 0;
-			$result = $db->query("select id, time, user, type, item, details ".$query." limit ".$rows." offset ".$start)->rows();
+			$result = $db->query("select id, time, user, ip, type, item, details ".$query." limit ".$rows." offset ".$start)->rows();
 			
 			return array("start" => $start, "count" => count($result), "total" => $count, "events" => $result);
 		}

@@ -24,15 +24,15 @@
 		}
 		
 		static function login($ip) {
-			return new SessionEvent(self::LOGIN, array("ip" => $ip));
+			return new SessionEvent(self::LOGIN, array());
 		}
 
 		static function logout($ip) {
-			return new SessionEvent(self::LOGOUT, array("ip" => $ip));
+			return new SessionEvent(self::LOGOUT, array());
 		}
 
 		static function failedLogin($userId, $ip) {
-			return new SessionEvent(self::FAILED_LOGIN, array("ip" => $ip, "user" => $userId));
+			return new SessionEvent(self::FAILED_LOGIN, array("user" => $userId));
 		}
 		
 		function __construct($type, $values) {
