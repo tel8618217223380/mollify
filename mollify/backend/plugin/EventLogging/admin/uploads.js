@@ -27,11 +27,12 @@ function MollifyUploadsView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Time', 'User', 'File'],
+		   	colNames:['ID', 'Time', 'User', 'IP', 'File'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'time',index:'time', width:150, sortable:true, formatter:timeFormatter},
 				{name:'user',index:'user',width:150, sortable:true, formatter:notNullFormatter},
+				{name:'ip',index:'ip',width:150, sortable:true, formatter:notNullFormatter},
 				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
 		   	sortname:'item',

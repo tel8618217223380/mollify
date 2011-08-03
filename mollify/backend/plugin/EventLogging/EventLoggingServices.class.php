@@ -75,7 +75,7 @@
 			if (!$events) {
 				$query = "select distinct item ";
 			} else {
-				$query = "select id, time, user ";
+				$query = "select id, time, user, ip ";
 			}
 			$query .= "from ".$db->table("event_log")." where type='".$type."'";
 			

@@ -50,9 +50,11 @@ function MollifyDownloadsView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['User', 'Time'],
+		   	colNames:['ID', 'User', 'IP', 'Time'],
 		   	colModel:[
+			   	{name:'id',index:'id',width:100, sortable:true},
 				{name:'user',index:'user',width:300, sortable:true},
+				{name:'ip',index:'ip',width:300, sortable:true},
 		   		{name:'time',index:'time', width:200, sortable:true, formatter:timeFormatter},
 		   	],
 		   	sortname:'time',
