@@ -39,11 +39,12 @@ function MollifyEventsView() {
 			multiselect: false,
 			autowidth: true,
 			height: '100%',
-		   	colNames:['ID', 'Time', 'User', 'Type', 'Item'],
+		   	colNames:['ID', 'Time', 'User', 'IP', 'Type', 'Item'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'time',index:'time', width:150, sortable:true, formatter:timeFormatter},
 				{name:'user',index:'user',width:150, sortable:true, formatter:notNullFormatter},
+				{name:'ip',index:'ip',width:100, sortable:true, formatter:notNullFormatter},
 				{name:'type',index:'type',width:150, sortable:true, formatter:typeFormatter},
 				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
@@ -158,7 +159,9 @@ function MollifyEventsView() {
 		} else {
 			var s = event.details.split(";");
 			for (var i=0; i < s.length; i++) {
+				if (!s[i] || s[i].length == 0) continue;
 				var r = s[i].split("=");
+				if (!r[1]) continue;
 				var title = r[0].substr(0, 1).toUpperCase() + r[0].substr(1) + ":";
 				html += that.getEventDetailsRow(title,r[1],true);
 			}
