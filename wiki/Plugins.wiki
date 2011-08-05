@@ -54,6 +54,10 @@ See [ArchiverPlugin]
 
 See [PublicUploadPlugin]
 
+== Comments ==
+
+See [CommentsPlugin]
+
 = Separately Downloaded Plugins =
 
 == Plupload uploader plugin ==
