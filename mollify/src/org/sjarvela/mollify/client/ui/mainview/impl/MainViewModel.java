@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -151,7 +152,8 @@ public class MainViewModel {
 
 	private void onUpdateData(FolderInfo info) {
 		this.folders = info.getFolders();
-		this.files = info.getFiles();
+		this.files = info.getFiles() != null ? info.getFiles()
+				: Collections.EMPTY_LIST;
 		this.data = info.getData();
 		this.folderPermission = info.getPermission();
 		this.all = new ArrayList(info.getFolders());
