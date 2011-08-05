@@ -4,6 +4,7 @@
 === Version 1.8.1 === 
   * Added support for custom file list content
   * Added comments count in file list (see [CommentsPlugin])
+  * Added IP address in logged events data
   * Fixed issue 286
 
 === Version 1.8.0.6 === 
