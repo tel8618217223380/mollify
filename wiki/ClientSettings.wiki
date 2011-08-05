@@ -17,10 +17,19 @@ Following settings are available in client (and their default values):
 								// client plugins
 		]
 	});
+</script>
 }}}
 
 == Service path (`service-path`) ==
 
-Location of the backend script.
+Location of the backend script relative to the host file. See [http://code.google.com/p/mollify/wiki/Installation#4.1._Relocating_host_page_or_backend_interface_files installation] for more info.
+
+== Expose file links (`expose-file-links`) ==
+
+Expose file links creates invisible file download links into the page, which makes it possible to use download managers (like [http://www.downthemall.net/ DownThemAll!] for Firefox) to download many files simultaneously as well as pause or resume downloads.
+
+== Show default login page (`show-login`) ==
+
+To use custom login page, the default login page can be disabled with this setting.
 
 * More setting descriptions coming soon *
