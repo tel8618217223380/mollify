@@ -33,3 +33,46 @@ Expose file links creates invisible file download links into the page, which mak
 To use custom login page, the default login page can be disabled with this setting.
 
 * More setting descriptions coming soon *
+
+= File list column customization =
+
+File list columns can be customized with setting 'list-view-columns'.
+
+The setting accepts following format:
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"list-view-columns": {
+			"column-1-id": { column-1-settings: "" },
+			"column-2-id": { column-2-settings: "" },
+			...
+		}
+	});
+</script>
+}}}
+
+Column ID identifies the data shown, which can be either built-in predefined column or plugin provided. 
+
+Mollify provides following columns:
+ * 'name': File or folder name
+ * 'type': File or folder type description
+ * 'size': File size
+
+Column settings accepts following settings:
+ * 'title': Text key (in localization file) shown in the column title. If not provided, default title used
+ * 'sortable': Is column sortable
+
+Example configuration (the default):
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"list-view-columns": {
+			"name": {title:"fileListColumnTitleType"},
+			"type": {title:"fileListColumnTitleType"},
+			"size": {title:"fileListColumnTitleSize"}
+		}
+	});
+</script>
+}}}
