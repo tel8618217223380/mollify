@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.1 === 
+  * Added support for custom file list content
+  * Added comments count in file list
+  * Fixed issue 286
+
 === Version 1.8.0.6 === 
   * Added support for file list column customizations
 
