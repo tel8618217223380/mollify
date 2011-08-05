@@ -1,0 +1,26 @@
+#summary All available client settings
+
+Following settings are available in client (and their default values):
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"service-path": "backend/",	// service path
+		"expose-file-links": false,		// expose file links
+		"show-login": true,			// show default login page
+		"default-view-mode": "list",	// default view mode
+		"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
+		"list-view-columns": {
+								// file list column setup
+		},
+		"plugins": [
+								// client plugins
+		]
+	});
+}}}
+
+== Service path (`service-path`) ==
+
+Location of the backend script.
+
+* More setting descriptions coming soon *
