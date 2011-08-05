@@ -1,6 +1,4 @@
-#summary All available settings
-
-= Backend settings =
+#summary All available backend settings
 
 Following settings are available in backend (and their default values):
 
