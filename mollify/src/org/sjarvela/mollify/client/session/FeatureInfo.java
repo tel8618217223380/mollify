@@ -72,6 +72,12 @@ public class FeatureInfo extends JavaScriptObject {
 		return this.file_view;
 	}-*/;
 
+	public final native boolean fileEdit() /*-{
+		if (!this.file_edit)
+			return false;
+		return this.file_edit;
+	}-*/;
+
 	public final native boolean publicLinks() /*-{
 		return this.public_links;
 	}-*/;

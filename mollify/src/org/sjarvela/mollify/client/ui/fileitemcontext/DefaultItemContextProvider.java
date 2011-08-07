@@ -113,6 +113,11 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 				actions.add(FileSystemAction.view,
 						textProvider.getText(Texts.fileActionViewTitle));
 			}
+			if (d.getFileEdit() != null
+					&& sessionProvider.getSession().getFeatures().fileEdit()) {
+				actions.add(FileSystemAction.edit,
+						textProvider.getText(Texts.fileActionEditTitle));
+			}
 		}
 	}
 

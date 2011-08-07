@@ -51,6 +51,10 @@ public class FileDetails extends ItemDetails {
 		return this.view;
 	}-*/;
 
+	public final native JsObj getFileEdit() /*-{
+		return this.edit;
+	}-*/;
+
 	private final native String getLastAccessedString() /*-{
 		return this.last_accessed;
 	}-*/;

@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialogFactory;
+import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
@@ -40,6 +41,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 	private final SessionProvider sessionProvider;
 	private final FileViewerFactory fileViewerFactory;
 	private final EventDispatcher eventDispatcher;
+	private final FileEditorFactory fileEditorFactory;
 
 	@Inject
 	public DefaultFileSystemActionHandlerFactory(
@@ -47,7 +49,8 @@ public class DefaultFileSystemActionHandlerFactory implements
 			ViewManager windowManager, DialogManager dialogManager,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
-			FileViewerFactory fileViewerFactory, ServiceEnvironment env,
+			FileViewerFactory fileViewerFactory,
+			FileEditorFactory fileEditorFactory, ServiceEnvironment env,
 			FileSystemItemProvider fileSystemItemProvider,
 			SessionProvider sessionProvider) {
 		this.eventDispatcher = eventDispatcher;
@@ -57,6 +60,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.renameDialogFactory = renameDialogFactory;
 		this.fileViewerFactory = fileViewerFactory;
+		this.fileEditorFactory = fileEditorFactory;
 		this.fileSystemService = env.getFileSystemService();
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.sessionProvider = sessionProvider;
@@ -67,7 +71,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 		return new DefaultFileSystemActionHandler(eventDispatcher,
 				textProvider, windowManager, dialogManager,
 				itemSelectorFactory, renameDialogFactory, fileViewerFactory,
-				fileSystemService, fileSystemItemProvider,
+				fileEditorFactory, fileSystemService, fileSystemItemProvider,
 				sessionProvider.getSession());
 	}
 

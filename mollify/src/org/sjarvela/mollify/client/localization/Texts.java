@@ -137,6 +137,8 @@ public enum Texts implements ResourceId {
 
 	fileActionViewTitle,
 
+	fileActionEditTitle,
+
 	fileActionPublicLinkTitle,
 
 	filePreviewTitle,
@@ -501,6 +503,8 @@ public enum Texts implements ResourceId {
 
 	fileViewerOpenInNewWindowTitle,
 
+	fileEditorSave,
+
 	filePublicLinkTitle,
 
 	copyHereDialogTitle,
@@ -527,6 +531,6 @@ public enum Texts implements ResourceId {
 
 	searchResultListColumnTitlePath,
 
-	searchResultsNoMatchesFound, searchResultsTooltipMatches, searchResultsTooltipMatchName, searchResultsTooltipMatchDescription, mainViewSlideBarTitleSelect, mainViewOptionsListTooltip, mainViewOptionsGridSmallTooltip, mainViewOptionsGridLargeTooltip
+	searchResultsNoMatchesFound, searchResultsTooltipMatches, searchResultsTooltipMatchName, searchResultsTooltipMatchDescription, mainViewSlideBarTitleSelect, mainViewOptionsListTooltip, mainViewOptionsGridSmallTooltip, mainViewOptionsGridLargeTooltip,
 
 }

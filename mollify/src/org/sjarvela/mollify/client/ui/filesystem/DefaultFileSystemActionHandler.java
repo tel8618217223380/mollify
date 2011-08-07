@@ -37,6 +37,7 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialogFactory;
+import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
 import org.sjarvela.mollify.client.ui.itemselector.SelectItemHandler;
 import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
@@ -54,6 +55,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 	private final ItemSelectorFactory itemSelectorFactory;
 	private final RenameDialogFactory renameDialogFactory;
 	private final FileViewerFactory fileViewerFactory;
+	private final FileEditorFactory fileEditorFactory;
 	private final SessionInfo session;
 
 	private final List<FileSystemActionListener> listeners = new ArrayList();
@@ -64,6 +66,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 			ItemSelectorFactory itemSelectorFactory,
 			RenameDialogFactory renameDialogFactory,
 			FileViewerFactory fileViewerFactory,
+			FileEditorFactory fileEditorFactory,
 			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.eventDispatcher = eventDispatcher;
@@ -73,6 +76,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		this.itemSelectorFactory = itemSelectorFactory;
 		this.renameDialogFactory = renameDialogFactory;
 		this.fileViewerFactory = fileViewerFactory;
+		this.fileEditorFactory = fileEditorFactory;
 		this.fileSystemService = fileSystemService;
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
@@ -236,6 +240,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 		if (action.equals(FileSystemAction.view)) {
 			JsObj viewParams = (JsObj) param;
 			fileViewerFactory.openFileViewer(file, viewParams);
+		} else if (action.equals(FileSystemAction.edit)) {
+			JsObj viewParams = (JsObj) param;
+			fileEditorFactory.openFileEditor(file, viewParams);
 		} else if (action.equals(FileSystemAction.publicLink)) {
 			dialogManager.showInfo(
 					textProvider.getText(Texts.filePublicLinkTitle),
