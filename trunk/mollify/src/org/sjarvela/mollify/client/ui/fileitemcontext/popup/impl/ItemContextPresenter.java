@@ -136,6 +136,8 @@ public class ItemContextPresenter implements ActionListener,
 			Object param = null;
 			if (action.equals(FileSystemAction.view))
 				param = ((FileDetails) details).getFileView();
+			else if (action.equals(FileSystemAction.edit))
+				param = ((FileDetails) details).getFileEdit();
 			fileSystemActionHandler.onAction(item, (FileSystemAction) action,
 					popup, param);
 			return;

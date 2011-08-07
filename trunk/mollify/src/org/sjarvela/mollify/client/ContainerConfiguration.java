@@ -47,6 +47,8 @@ import org.sjarvela.mollify.client.ui.dnd.DefaultDragAndDropManager;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
+import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
+import org.sjarvela.mollify.client.ui.editor.impl.DefaultFileEditorFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
@@ -95,6 +97,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(PermissionEditorViewFactory.class).to(
 				DefaultPermissionEditorViewFactory.class);
 		bind(FileViewerFactory.class).to(DefaultFileViewerFactory.class);
+		bind(FileEditorFactory.class).to(DefaultFileEditorFactory.class);
 		bind(DropBoxFactory.class).to(DefaultDropBoxFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
