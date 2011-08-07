@@ -7,6 +7,8 @@
   * Added IP address in logged events data
   * Fixed issue 286
 
+*NOTE:* Requires database update
+
 === Version 1.8.0.6 === 
   * Added support for file list column customizations (see [http://code.google.com/p/mollify/wiki/ClientSettings#File_list_column_customization])
 
