@@ -1,5 +1,5 @@
 <?php
-	class TextFileEditor extends EmbeddedEditor {
+	class TextFileEditor extends FullEditor {
 		protected function getHtml($item) {
 			$html = '<textarea id="text-editor" style="width:100%;height:100%">';
 			
@@ -11,9 +11,9 @@
 			
 			return $html.'</textarea>';
 		}
-		
-		protected function getEmbeddedSize() {
-			return array("640", "480");
-		}
+
+		protected function getDataJs() {
+			return "return $('#text-editor').val();";
+		}		
 	}
 ?>
