@@ -35,6 +35,7 @@ public class FileEditor extends ResizableDialog {
 	private String resizedElementId;
 
 	private FlowPanel editorPanel;
+	private FlowPanel progress;
 
 	public FileEditor(TextProvider textProvider, ViewManager viewManager,
 			ExternalService service, String title, String embeddedUrl,
@@ -49,12 +50,15 @@ public class FileEditor extends ResizableDialog {
 		this.resizedElementId = "mollify-file-editor-content";
 		this.fullUrl = fullUrl;
 
+		this.progress = new FlowPanel();
+		this.progress.setStylePrimaryName("mollify-file-editor-progress");
+		this.progress.setVisible(false);
+
 		editorPanel = new FlowPanel();
 		editorPanel.getElement().setId("mollify-file-editor-content");
 		editorPanel.getElement().setAttribute("style", "overflow:none");
 
 		editorPanel.setStylePrimaryName("mollify-file-editor-content-panel");
-		// editorPanel.addStyleDependentName(StyleConstants.LOADING);
 
 		initialize();
 	}
@@ -71,47 +75,9 @@ public class FileEditor extends ResizableDialog {
 				.setInnerHTML(
 						"<iframe id=\"editor-frame\" src=\""
 								+ url
-								+ "\" width=\"100%\" height:\"100%\" style=\"width:100%;height:100%;border: none;overflow:none;\"></iframe>");
+								+ "\" width=\"100%\" height:\"100%\" style=\"width:100%;height:100%;border: none;overflow: none;\"></iframe>");
 		this.center();
-		// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-		// @Override
-		// public void execute() {
-		// service.get(url, new ResultListener<JsObj>() {
-		// @Override
-		// public void onFail(ServiceError error) {
-		// editorPanel.getElement().setInnerHTML(
-		// error.getDetails());
-		// }
-		//
-		// @Override
-		// public void onSuccess(JsObj result) {
-		// setContent(result);
-		// }
-		// });
-		//
-		// }
-		// });
 	}
-
-	// private void setContent(JsObj result) {
-	// editorPanel.removeStyleDependentName(StyleConstants.LOADING);
-	// editorPanel.getElement().setInnerHTML(result.getString("html"));
-	//
-	// String resizedElementId = result.getString("resized_element_id");
-	// if (resizedElementId != null)
-	// this.resizedElementId = resizedElementId;
-	//
-	// String size = result.getString("size");
-	// if (size != null) {
-	// String[] s = size.split(";");
-	// int w = Integer.parseInt(s[0]);
-	// int h = Integer.parseInt(s[1]);
-	// setElementSize(w, h);
-	// } else {
-	// setElementSize(600, 400);
-	// }
-	// this.center();
-	// }
 
 	@Override
 	protected Element getSizedElement() {
@@ -121,15 +87,16 @@ public class FileEditor extends ResizableDialog {
 	@Override
 	protected Widget createContent() {
 		Panel p = new FlowPanel();
-		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_CONTENT);
+		p.setStylePrimaryName("mollify-file-editor-content");
 		p.add(editorPanel);
 		p.add(createTools());
+		p.add(progress);
 		return p;
 	}
 
 	private Widget createTools() {
 		Panel p = new FlowPanel();
-		p.setStylePrimaryName(StyleConstants.FILE_VIEWER_HEADER);
+		p.setStylePrimaryName("mollify-file-editor-header");
 
 		if (fullUrl != null) {
 			// Button openInNewWindowButton = createButton(
@@ -163,8 +130,19 @@ public class FileEditor extends ResizableDialog {
 		return p;
 	}
 
-	protected native final void onSave() /*-{
+	protected void onSave() {
+		progress.setVisible(true);
+		invokeSave(this);
+	}
+
+	protected native final void invokeSave(FileEditor e) /*-{
+		var s = e
+				.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveSuccess();
 		$wnd.document.getElementById('editor-frame').contentWindow
-				.onEditorSave();
+				.onEditorSave(s);
 	}-*/;
+
+	public void onSaveSuccess() {
+		this.hide();
+	};
 }
