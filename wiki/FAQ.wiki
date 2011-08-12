@@ -27,11 +27,13 @@ For changing settings for Mollify with htaccess, create this file in the backend
 Change following line in the host page according to your language:
 {{{
 <head>
+    ...
     <script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
+    ...
 </head>
 }}}
 
-For example, change script into "texts_fr.js" for French. See client folder "localization" for language options, and [HowToLocalize this] page for instructions on how to translate into new language.
+For example, change script into "`texts_fr.js`" for French. See client folder "localization" for language options, and [HowToLocalize this] page for instructions on how to translate into new language.
 
 === How can I translate Mollify into new language, or make corrections to existing translations? ===
 
