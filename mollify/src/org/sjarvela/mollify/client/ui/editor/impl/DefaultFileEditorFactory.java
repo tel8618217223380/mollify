@@ -15,6 +15,7 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
 
 import com.google.inject.Inject;
@@ -23,15 +24,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileEditorFactory implements FileEditorFactory {
 
-	private TextProvider textProvider;
-	private ViewManager viewManager;
-	private ServiceProvider serviceProvider;
+	private final TextProvider textProvider;
+	private final ViewManager viewManager;
+	private final ServiceProvider serviceProvider;
+	private final DialogManager dialogManager;
 
 	@Inject
 	public DefaultFileEditorFactory(TextProvider textProvider,
-			ViewManager viewManager, ServiceProvider serviceProvider) {
+			ViewManager viewManager, DialogManager dialogManager,
+			ServiceProvider serviceProvider) {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
+		this.dialogManager = dialogManager;
 		this.serviceProvider = serviceProvider;
 	}
 
@@ -41,7 +45,7 @@ public class DefaultFileEditorFactory implements FileEditorFactory {
 		String fullUrl = params.getString("full");
 
 		if (embeddedUrl != null) {
-			new FileEditor(textProvider, viewManager,
+			new FileEditor(textProvider, viewManager, dialogManager,
 					serviceProvider.getExternalService(), file.getName(),
 					embeddedUrl, fullUrl).center();
 		} else if (fullUrl != null) {

@@ -13,9 +13,12 @@ package org.sjarvela.mollify.client.ui.editor.impl;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
+import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,6 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class FileEditor extends ResizableDialog {
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
+	private final DialogManager dialogManager;
 	private final ExternalService service;
 	private final String url;
 	private final String fullUrl;
@@ -38,12 +42,13 @@ public class FileEditor extends ResizableDialog {
 	private FlowPanel progress;
 
 	public FileEditor(TextProvider textProvider, ViewManager viewManager,
-			ExternalService service, String title, String embeddedUrl,
-			String fullUrl) {
+			DialogManager dialogManager, ExternalService service, String title,
+			String embeddedUrl, String fullUrl) {
 		super(title, "mollify-file-editor");
 
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
+		this.dialogManager = dialogManager;
 		this.service = service;
 
 		this.url = embeddedUrl;
@@ -136,13 +141,25 @@ public class FileEditor extends ResizableDialog {
 	}
 
 	protected native final void invokeSave(FileEditor e) /*-{
-		var s = e
-				.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveSuccess();
+		var s = function() {
+			e.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveSuccess()();
+		}
+		var e = function(c, e) {
+			e.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveFail(ILjava/lang/String;)(c, e);
+		}
+
 		$wnd.document.getElementById('editor-frame').contentWindow
-				.onEditorSave(s);
+				.onEditorSave(s, e);
 	}-*/;
 
 	public void onSaveSuccess() {
 		this.hide();
 	};
+
+	public void onSaveFail(int code, String error) {
+		dialogManager.showError(new ServiceError(ServiceErrorType
+				.fromCode(code), error));
+		this.hide();
+	};
+
 }

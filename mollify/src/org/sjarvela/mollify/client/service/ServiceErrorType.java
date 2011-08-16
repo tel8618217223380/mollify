@@ -57,7 +57,18 @@ public enum ServiceErrorType {
 	}
 
 	public static ServiceErrorType getFrom(ErrorValue error) {
-		switch (error.getCode()) {
+		return fromCode(error.getCode());
+	}
+
+	public static ServiceErrorType getByName(String name) {
+		for (ServiceErrorType e : ServiceErrorType.values())
+			if (e.name().equals(name))
+				return e;
+		return UNKNOWN_ERROR;
+	}
+
+	public static ServiceErrorType fromCode(int code) {
+		switch (code) {
 		case 100:
 			return UNAUTHORIZED;
 		case 101:
@@ -104,15 +115,8 @@ public enum ServiceErrorType {
 
 		default:
 			Logger.getLogger(ServiceErrorType.class.getName()).log(
-					Level.SEVERE, "ServiceError code " + error.getCode());
+					Level.SEVERE, "ServiceError code " + code);
 			return UNKNOWN_ERROR;
 		}
-	}
-
-	public static ServiceErrorType getByName(String name) {
-		for (ServiceErrorType e : ServiceErrorType.values())
-			if (e.name().equals(name))
-				return e;
-		return UNKNOWN_ERROR;
 	}
 }
