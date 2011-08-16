@@ -314,6 +314,7 @@ mainViewSelectActionAddToDropbox: "Add to Dropbox",
 mainViewDropBoxButton: "Dropbox",
 
 fileViewerOpenInNewWindowTitle: "Open in New Window",
+fileEditorSave: "Save",
 
 filePublicLinkTitle: "Public Link",
 
