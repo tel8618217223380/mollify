@@ -15,7 +15,6 @@ import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
-import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.dialog.ResizableDialog;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -52,18 +51,16 @@ public class FileEditor extends ResizableDialog {
 		this.service = service;
 
 		this.url = embeddedUrl;
-		this.resizedElementId = "mollify-file-editor-content";
 		this.fullUrl = fullUrl;
+		this.resizedElementId = "mollify-file-editor-content-panel";
 
 		this.progress = new FlowPanel();
-		this.progress.setStylePrimaryName("mollify-file-editor-progress");
+		this.progress.getElement().setId("mollify-file-editor-progress");
 		this.progress.setVisible(false);
 
 		editorPanel = new FlowPanel();
-		editorPanel.getElement().setId("mollify-file-editor-content");
+		editorPanel.getElement().setId("mollify-file-editor-content-panel");
 		editorPanel.getElement().setAttribute("style", "overflow:none");
-
-		editorPanel.setStylePrimaryName("mollify-file-editor-content-panel");
 
 		initialize();
 	}
@@ -93,6 +90,8 @@ public class FileEditor extends ResizableDialog {
 	protected Widget createContent() {
 		Panel p = new FlowPanel();
 		p.setStylePrimaryName("mollify-file-editor-content");
+		p.getElement().setAttribute("style", "overflow:none");
+
 		p.add(editorPanel);
 		p.add(createTools());
 		p.add(progress);
@@ -129,7 +128,7 @@ public class FileEditor extends ResizableDialog {
 					public void onClick(ClickEvent event) {
 						FileEditor.this.hide();
 					}
-				}, StyleConstants.FILE_VIEWER_BUTTON_CLOSE);
+				}, "file-editor-close");
 		p.add(closeButton);
 
 		return p;
@@ -141,15 +140,15 @@ public class FileEditor extends ResizableDialog {
 	}
 
 	protected native final void invokeSave(FileEditor e) /*-{
-		var s = function() {
+		var scb = function() {
 			e.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveSuccess()();
 		}
-		var e = function(c, e) {
-			e.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveFail(ILjava/lang/String;)(c, e);
+		var ecb = function(c, er) {
+			e.@org.sjarvela.mollify.client.ui.editor.impl.FileEditor::onSaveFail(ILjava/lang/String;)(c, er);
 		}
 
 		$wnd.document.getElementById('editor-frame').contentWindow
-				.onEditorSave(s, e);
+				.onEditorSave(scb, ecb);
 	}-*/;
 
 	public void onSaveSuccess() {
@@ -157,9 +156,9 @@ public class FileEditor extends ResizableDialog {
 	};
 
 	public void onSaveFail(int code, String error) {
+		this.hide();
 		dialogManager.showError(new ServiceError(ServiceErrorType
 				.fromCode(code), error));
-		this.hide();
 	};
 
 }

@@ -12,28 +12,28 @@
 
 	abstract class FullEditor extends EditorBase {
 		public function getInfo($item) {
+			$url = $this->getUrl($item, "editor", TRUE);
 			return array(
-				"embedded" => $this->getUrl($item, "embedded", TRUE),
-				"full" => $this->getUrl($item, "full", TRUE)
+				"embedded" => $url,
+				"full" => $url
 			);
 		}
 		
 		public function processRequest($item, $path) {
-			if ($path[0] === 'embedded')
-				$this->processEmbeddedEditorRequest($item);
-			else if ($path[0] === 'full')
-				$this->processFullEditorRequest($item);
+			if ($path[0] === 'editor')
+				$this->processEditorRequest($item);
 			else
 				throw $this->invalidRequestException();
 		}
 
-		protected function processEmbeddedEditorRequest($item) {
+		protected function processEditorRequest($item) {
 			$html = '<html>
 				<head>
 					<title>'.$item->name().'</title>
 					<script type="text/javascript" src="'.$this->getCommonResourcesUrl().'jquery-1.4.2.min.js"></script>
+					<script type="text/javascript" src="'.$this->getCommonResourcesUrl().'json.js"></script>
 					<script>
-						function onEditorSave(s) {
+						function onEditorSave(s, e) {
 							var data = getSaveContent();
 							$.ajax({
 								type: "POST",
@@ -45,11 +45,19 @@
 								success: function(result) {
 									s();
 								},
-								error: function (xhr, desc, exc) {
-									alert("error");
+								error: function(xhr, desc, exc) {
+									var errorText = xhr.responseText;
+									var error;
+									
+									if (!errorText) error = {code:999, error:"Unknown error", details:"Request failed, no response received"};
+									else if (errorText.substr(0, 1) != "{") error = {code:999, error:"Unknown error", details:"Invalid response received: " + errorText};
+									else error = JSON.parse(errorText);
+
+									e(error.code, error.error);
 								}
 							});
 						}
+						
 						function getSaveContent() {
 						'.$this->getDataJs().'
 						}

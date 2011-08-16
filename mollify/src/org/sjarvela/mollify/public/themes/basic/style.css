@@ -2316,9 +2316,21 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 	margin-top: 2px;
 }
 
-.mollify-dialog-button-file-viewer-close {
+.mollify-dialog-button-file-viewer-close, .mollify-dialog-button-file-editor-close {
 	float: right;
 	margin-right: 15px;
+}
+
+.mollify-dialog-button-file-editor-save {
+	margin-left: 8px;
+}
+
+#mollify-file-editor-progress {
+	background: rgba(244,244,244,0.6) url(wait.gif) no-repeat 50% 50%;
+	width: 98%;
+	position: absolute;
+	top: 0;
+	height: 98%;
 }
 
 .mollify-wait-dialog-content {
