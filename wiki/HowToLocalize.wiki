@@ -22,12 +22,12 @@ To localize into new language, do following steps:
 
 = How to upgrade old localizations into new version =
 
-All the texts in previous (prior to 1.7.5) versions are identical to the new format, only the location and locale selection has changed.
+All the texts in versions prior to 1.7.5 were in a slightly different format.
 
-Therefore old localizations can be used when updating the language files:
+If these old localizations needs to be updated, follow these steps:
 
 1) Create new localization file according to previous chapter
 
-2) Find old versions from [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/]
+2) Find old version from [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/]
 
 3) Copy values from old file (NOTE! be careful as new file has a different format, each title must be followed by ":", value must be surrounded by parenthesis "" and lines must be ended with comma)
