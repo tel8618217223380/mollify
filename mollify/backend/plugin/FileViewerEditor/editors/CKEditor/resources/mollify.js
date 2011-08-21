@@ -1,34 +1,27 @@
 $(function() {
-	var saveCmd = {
-		modes : { wysiwyg:1, source:1 },
-		exec : function( editor ) {
-			alert("on save");
-		}
-    }
-  
-	var pluginName = 'custom_save';
-	CKEDITOR.plugins.add( pluginName, {
-		init : function( editor ) {
-	        var command = editor.addCommand( pluginName, saveCmd );
-	        
-			editor.ui.addButton( 'CustomSave', {
-				label : editor.lang.save,
-				command : pluginName,
-				icon: "/img/save.png"
-			});
-		}
+	CKEDITOR.on('instanceReady', function(ev) {
+		ev.editor.execCommand('maximize');
+		ev.editor.document.$.documentElement.scrollTop = 0;
 	});
 	
 	var editor = $('#ckeditor').ckeditor({
-		extraPlugins : 'autogrow',
 		removePlugins : 'resize',
+		fullPage: true,
+		height: "250px",
 		toolbar: [
-			['Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink'],
-			['UIColor']
+		    { name: 'document',    items : [ 'Source','-','DocProps','Preview','Print','-','Templates' ] },
+		    { name: 'clipboard',   items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+		    { name: 'editing',     items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
+		    { name: 'forms',       items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+		    '/',
+		    { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+		    { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
+		    { name: 'links',       items : [ 'Link','Unlink','Anchor' ] },
+		    { name: 'insert',      items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak' ] },
+		    '/',
+		    { name: 'styles',      items : [ 'Styles','Format','Font','FontSize' ] },
+		    { name: 'colors',      items : [ 'TextColor','BGColor' ] },
+		    { name: 'tools',       items : [ 'ShowBlocks'] }
 		]
-	});
-
-	$(editor).bind('saved.ckeditor', function() {
-		alert('SAVE');
 	});
 });

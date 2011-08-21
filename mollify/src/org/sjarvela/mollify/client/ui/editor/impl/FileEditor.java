@@ -71,7 +71,7 @@ public class FileEditor extends ResizableDialog {
 
 		setMinimumSize(editorPanel.getElement().getClientWidth(), editorPanel
 				.getElement().getClientHeight());
-		setElementSize(600, 400);
+		setElementSize(800, 400);
 		editorPanel
 				.getElement()
 				.setInnerHTML(
