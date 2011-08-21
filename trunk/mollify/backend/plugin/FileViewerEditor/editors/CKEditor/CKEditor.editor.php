@@ -10,7 +10,7 @@
 		}
 		
 		protected function getHtml($item) {
-			$html = '<textarea id="ckeditor" style="width:100%;height:100%">';
+			$html = '<div id="ckeditor-content" style="width:100%;height:100%"><textarea id="ckeditor">';
 			
 			// read file			
 			$stream = $item->read();
@@ -18,7 +18,7 @@
 				$html .= htmlspecialchars(fread($stream, 1024));
 			fclose($stream);
 			
-			return $html.'</textarea>';
+			return $html.'</textarea></div>';
 		}
 
 		protected function getDataJs() {
