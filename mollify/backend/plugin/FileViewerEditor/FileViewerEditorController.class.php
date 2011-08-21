@@ -188,8 +188,12 @@
 			return $url;
 		}
 
-		public function getResourceUrl($viewerId) {
-			return $this->plugin->env()->getPluginUrl($this->plugin->id(), "viewers/".$viewerId."/resources");
+		public function getViewerResourceUrl($id) {
+			return $this->plugin->env()->getPluginUrl($this->plugin->id(), "viewers/".$id."/resources");
+		}
+
+		public function getEditorResourceUrl($id) {
+			return $this->plugin->env()->getPluginUrl($this->plugin->id(), "editors/".$id."/resources");
 		}
 
 		public function getCommonResourcesUrl() {

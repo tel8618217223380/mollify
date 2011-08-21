@@ -30,8 +30,10 @@
 			$html = '<html>
 				<head>
 					<title>'.$item->name().'</title>
+					<meta content="text/html; charset=utf-8" http-equiv="content-type" />
 					<script type="text/javascript" src="'.$this->getCommonResourcesUrl().'jquery-1.4.2.min.js"></script>
 					<script type="text/javascript" src="'.$this->getCommonResourcesUrl().'json.js"></script>
+					'.$this->getHead($item).'
 					<script>
 						function onEditorSave(s, e) {
 							var data = getSaveContent();
@@ -69,6 +71,8 @@
 			
 			$this->response()->html($html);
 		}
+		
+		protected function getHead($item) { return ""; }
 		
 		protected abstract function getHtml($item);
 		

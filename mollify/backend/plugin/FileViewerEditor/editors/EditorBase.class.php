@@ -40,7 +40,7 @@
 		}
 
 		public function getResourceUrl() {
-			return $this->env->getResourceUrl($this->id);
+			return $this->env->getEditorResourceUrl($this->id);
 		}
 
 		public function getCommonResourcesUrl() {
