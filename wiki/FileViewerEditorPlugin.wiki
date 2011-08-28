@@ -19,7 +19,7 @@ For example:
 
 {{{
 	$PLUGINS = array(
-		"FileViewer" => array(
+		"FileViewerEditor" => array(
 			"viewers" => array(
 				"Image" => array("gif", "png", "jpg"),
 				"TextFile" => array("txt", "php", "html")
