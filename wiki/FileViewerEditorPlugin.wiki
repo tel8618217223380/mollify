@@ -1,4 +1,4 @@
-#summary File viewer plugin
+#summary File viewer and editor plugin
 
 = Introduction =
 
