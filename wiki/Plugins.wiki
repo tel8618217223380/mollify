@@ -34,9 +34,9 @@ See [EventLoggingPlugin]
 
 See [RegistrationPlugin]
 
-== File Viewer ==
+== File Viewer and Editor ==
 
-See [FileViewerPlugin]
+See [FileViewerEditorPlugin]
 
 == Lost Password ==
 
