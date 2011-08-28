@@ -1,6 +1,15 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.2 === 
+  * Added initial support for file editing
+  * Built-in file editor for text files
+  * Separately downloaded editor for HTML files (CKEditor)
+
+*BREAKING CHANGES:*
+
+Plugin `FileViewer` has been renamed to `FileViewerEditor`. If this plugin has been used, it must be renamed in the configuration.
+
 === Version 1.8.1 === 
   * Added support for custom file list content
   * Added comments count in file list (see [CommentsPlugin])
