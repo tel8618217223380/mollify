@@ -136,7 +136,7 @@ Additional previewers can be found from Downloads section with label "Previewer"
 
 = Editors =
 
-=== !CKEditor ===
+=== CKEditor ===
 
 Provides HTML file editing, and uses [http://ckeditor.com/ CKEditor] by CKSource. CKEditor is released under GPL, LGPL and MPL open source licenses, for more info see [http://ckeditor.com/license].
 
