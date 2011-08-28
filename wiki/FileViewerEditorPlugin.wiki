@@ -138,6 +138,8 @@ Additional previewers can be found from Downloads section with label "Previewer"
 
 == Built-in editors ==
 
+=== TextFile ===
+
 Provides text file editing.
 
 Configuration:
