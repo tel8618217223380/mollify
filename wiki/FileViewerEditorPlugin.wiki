@@ -84,7 +84,7 @@ Configuration:
 
 == Additional viewers ==
 
-File viewer plugins are installed by unzipping installation package to "`backend/plugin/FileViewer/viewers`".
+File viewer plugins are installed by unzipping installation package to "`backend/plugin/FileViewerEditor/viewers`".
 
 Additional viewers can be found from Downloads section with label "Viewer" [http://code.google.com/p/mollify/downloads/list?can=2&q=Viewer&colspec=Filename+Summary+Uploaded+Size+DownloadCount]
 
@@ -135,6 +135,21 @@ File previewer plugins are installed by unzipping installation package to "`back
 Additional previewers can be found from Downloads section with label "Previewer" [http://code.google.com/p/mollify/downloads/list?can=2&q=Previewer&colspec=Filename+Summary+Uploaded+Size+DownloadCount]
 
 = Editors =
+
+== Built-in editors ==
+
+Provides text file editing.
+
+Configuration:
+{{{
+"TextFile" => array("txt")
+}}}
+
+== Additional editors ==
+
+File editor plugins are installed by unzipping installation package to "`backend/plugin/FileViewerEditor/editors`".
+
+Additional editors can be found from Downloads section with label "Editor" [http://code.google.com/p/mollify/downloads/list?can=2&q=Editor&colspec=Filename+Summary+Uploaded+Size+DownloadCount]
 
 === CKEditor ===
 
