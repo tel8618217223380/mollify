@@ -10,7 +10,7 @@ Comments plugin does not have any parameters. Configure plugin by adding followi
 
 {{{
 	$PLUGINS = array(
-		"Comments" => array()
+		"Comment" => array()
 	);
 }}}
 
