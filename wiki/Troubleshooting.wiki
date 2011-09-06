@@ -88,14 +88,14 @@ To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mol
 
 Mollify uses REST HTTP protocol for the requests, which means all HTTP methods (ie. GET, PUT, POST and DELETE) must be supported by the web server. If these are not supported, many operations will fail (error in the server log indicate protocol error or missing resource).
 
-To fix this, Mollify can be set to operate on limited HTTP methods mode by adding following server setting: 
+To fix this, Mollify can be set to operate on limited HTTP methods mode by adding following setting in configuration.php: 
 {{{
 	$SETTINGS = array(
 		"enable_limited_http_methods" => TRUE
 	);
 }}}
 
-and following client setting into the host page (merge your existing settings):
+and following client setting into the index.html (merge into your existing settings):
 {{{
 	<script type="text/javascript">
 		mollify.init({
