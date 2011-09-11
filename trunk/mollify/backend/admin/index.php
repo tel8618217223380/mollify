@@ -30,6 +30,7 @@
 		<script type="text/javascript" src="../resources/template.js"></script>
 		<script type="text/javascript" src="../resources/jquery-ui-1.8.5.custom.min.js"></script>
 		<script type="text/javascript" src="../resources/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/jquery.tools.min.js"></script>
 		<script type="text/javascript" src="resources/service.js"></script>
 		<?php if (file_exists("settings.js")) { ?><script type="text/javascript" src="settings.js"></script><?php } ?>
 		<script type="text/javascript" src="resources/main.js"></script>
@@ -38,6 +39,8 @@
 	<body id="page-admin">
 		<header>
 			<h1>Administration</h1>
+			<div id="mollify-version"></div>
+			<div id="mollify-update-info" class="tooltip" style="display:none"></div>
 			<div id="admin-logout">Logout</div>
 		</header>
 

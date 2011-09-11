@@ -112,7 +112,7 @@
 		<mkdir dir="${target.dir}" />
 		
 		<copy todir="${target.dir}">
-			<fileset dir="${root.dir}/backend/plugin/FileViewer/viewers/">
+			<fileset dir="${root.dir}/backend/plugin/FileViewerEditor/viewers/">
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
@@ -124,7 +124,25 @@
 		
 		<delete dir="${target.dir}" />
 	</target>
-	
+
+	<target name="deploy-editors">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${root.dir}/backend/plugin/FileViewerEditor/editors/">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/editor_ck.zip" basedir="${target.dir}" includes="CKEditor/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+
 	<target name="deploy-dav">
 		<property name="target.dir" location="${deploy.dir}/temp" />
 
@@ -193,10 +211,11 @@
 				<exclude name="index.html" />
 				<exclude name="admin/settings.js" />
 				<exclude name="admin/custom/**" />
-				<exclude name="plugin/FileViewer/viewers/FlowPlayer/" />
-				<exclude name="plugin/FileViewer/viewers/JPlayer/" />
-				<exclude name="plugin/FileViewer/viewers/TextFile/" />
-				<exclude name="plugin/FileViewer/viewers/Zoho/" />
+				<exclude name="plugin/FileViewerEditor/viewers/FlowPlayer/" />
+				<exclude name="plugin/FileViewerEditor/viewers/JPlayer/" />
+				<exclude name="plugin/FileViewerEditor/viewers/TextFile/" />
+				<exclude name="plugin/FileViewerEditor/viewers/Zoho/" />
+				<exclude name="plugin/FileViewerEditor/editors/CKEditor/" />
 				<exclude name="dav/" />
 				<exclude name="plugin/S3/" />
 				<exclude name="plugin/Plupload/" />
