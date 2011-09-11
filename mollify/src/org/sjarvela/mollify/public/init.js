@@ -194,7 +194,7 @@ function CommentPlugin() {
 	}
 	
 	this.url = function(p) {
-		return that.env.service().getPluginUrl("comment")+"client/"+p;
+		return that.env.service().getPluginUrl("Comment")+"client/"+p;
 	}
 	
 	this.t = function(s) {

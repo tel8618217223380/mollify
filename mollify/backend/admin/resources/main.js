@@ -32,7 +32,7 @@ $(document).ready(function() {
 		doLogout(onLogout, onServerError);
 	});
 	
-	getSessionInfo(onSession, onServerError);				
+	getSessionInfo(onSession, onServerError);
 });
 
 function onLogout() {
@@ -68,6 +68,8 @@ function buildMenu() {
 	});
 	
 	$("#content").show();
+	
+	showVersion();
 }
 
 function createMenuItems(views, pathPrefix) {
@@ -119,6 +121,19 @@ function onSession(session) {
 	
 	if (pluginsToInit.length == 0) buildMenu();
 	else loadPlugin(pluginsToInit, 0);
+}
+
+function showVersion() {
+	$("#mollify-version").html("Version "+session.version);
+	
+	$.getJSON("http://www.mollify.org/latest.php?jsoncallback=?", function(result) {
+		if (!result || !result.version) return;
+		if (result.version != session.version) {
+			$("#mollify-update-info").html("<h1>Update available!</h1><p><span class='title'>Latest version:</span>&nbsp;"+result.version+"<br/><span class='title'>Release date:</span>&nbsp;"+result.date+"</p><p><a id='update-download-link' href='http://www.mollify.org/download.php' class='update-link' target='_new'>Download</a>&nbsp;<a id='update-changelog-link' class='update-link' href='http://code.google.com/p/mollify/wiki/ChangeLog' target='_new'>Change log</a></p>");
+			$("#mollify-version").tooltip({ effect: "slide", position: "bottom"});
+			$("#mollify-version").addClass("update");
+		}
+	});
 }
 
 function loadPlugin(list, i) {

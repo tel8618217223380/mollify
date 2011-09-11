@@ -37,7 +37,7 @@
 		public function check() {
 			if (!$this->isAuthenticationRequired()) return;
 			if ($this->isAuthenticated()) {
-				if (strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
+				if ($this->env->session()->hasParam('auth') and strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
 				if (strcasecmp($this->env->session()->param('username'), $_SERVER["REMOTE_USER"]) == 0) return;
 
 				// remote user has changed, reset old session
@@ -59,8 +59,7 @@
 			if ($user == NULL) return;
 			
 			Logging::logDebug("Remote authentication succeeded for [".$user["id"]."] ".$user["name"]);
-			$this->doAuth($user);
-			$this->env->session()->param('auth', "remote");
+			$this->doAuth($user, "remote");
 		}
 		
 		public function authenticate($userId, $pw) {
@@ -84,10 +83,8 @@
 					return;
 				} 
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
-			} else {
-				$this->env->session()->param('auth', "pw");
 			}
-			$this->doAuth($user);
+			$this->doAuth($user, $auth);
 		}
 		
 		public function getDefaultAuthenticationMethod() {
@@ -108,12 +105,13 @@
 			ldap_close($conn);
 		}
 
-		public function doAuth($user) {
+		public function doAuth($user, $auth = NULL) {
 			$this->env->session()->param('user_id', $user["id"]);
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
 			$this->env->session()->param('username', $user["name"]);
 			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
+			if ($auth != NULL) $this->env->session()->param('auth', $auth);
 		}
 		
 		public function realm() {

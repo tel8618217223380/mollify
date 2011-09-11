@@ -1,4 +1,4 @@
-/* @override
+/* @override 
 	http://localhost:8888/mollify/dev/backend/admin/resources/style.css
 */
 
@@ -6,6 +6,58 @@
 
 .content {
 	margin: 2px 0 0;
+}
+
+#mollify-version {
+	float: none;
+	position: absolute;
+	top: 50px;
+	color: #e6e6e6;
+	font-size: 9px;
+	left: 113px;
+	cursor: pointer;
+}
+
+#mollify-version.update {
+	background: url(info_small.png) no-repeat;
+	padding-left: 19px;
+	height: 17px;
+	padding-top: 3px;
+}
+
+.tooltip {
+	background: #d7d6da url(info_big.png) no-repeat 8px 22px;
+	height: 76px;
+	padding: 10px 10px 10px 31px;
+	width: 210px;
+	color:#00;
+	z-index: 99;
+	border: 1px dotted #8b8b8b;
+	color: #686868;
+}
+
+.tooltip p, .tooltip .title, .tooltip .update-link {
+	font-size: 10px;
+	padding-left: 17px;
+}
+
+#update-changelog-link {
+	margin-left: 12px;
+}
+
+.tooltip h1 {
+	background-image: none;
+	font-size: 12px;
+	padding: 0 0 0 34px;
+	border: 0;
+	color: #000;
+	margin: 0;
+	height: 14px;
+	font-weight: bold;
+}
+
+.tooltip .title, .tooltip .update-link {
+	font-weight: bold;
 }
 
 #login-panel {

@@ -84,6 +84,10 @@
 					$info["authentication_methods"] = $this->env->settings()->setting("authentication_methods", TRUE);
 				}
 			}
+			include_once("include/Version.info.php");
+			global $VERSION, $REVISION;
+			$info["version"] = $VERSION;
+			$info["revision"] = $REVISION;
 			return $info;
 		}
 		
