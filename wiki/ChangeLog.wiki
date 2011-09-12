@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.2.1 === 
+  * Added version information and update notification into admin util
+  * Fixed issue 278
+
 === Version 1.8.2 === 
   * Added initial support for file editing
   * Built-in file editor for text files
