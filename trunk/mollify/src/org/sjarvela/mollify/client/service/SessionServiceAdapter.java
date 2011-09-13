@@ -30,9 +30,9 @@ public class SessionServiceAdapter implements SessionService {
 				.createListener(resultListener));
 	}
 
-	public void authenticate(String userName, String password,
+	public void authenticate(String userName, String password, boolean remember,
 			String protocolVersion, ResultListener<SessionInfo> resultListener) {
-		sessionService.authenticate(userName, password, protocolVersion,
+		sessionService.authenticate(userName, password, remember, protocolVersion,
 				resultListenerFactory.createListener(resultListener));
 	}
 

@@ -87,6 +87,8 @@ public enum Texts implements ResourceId {
 
 	loginDialogPassword,
 
+	loginDialogRememberMe,
+
 	loginDialogResetPassword,
 
 	loginDialogLoginButton,

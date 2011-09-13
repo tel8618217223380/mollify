@@ -55,9 +55,15 @@
 			if (!$this->request->hasData("username") or !$this->request->hasData("password") or !$this->request->hasData("protocol_version"))
 				throw new ServiceException("INVALID_REQUEST", "Missing parameters");
 			
-			$this->env->authentication()->authenticate($this->request->data("username"), base64_decode($this->request->data("password")));
+			$pw = base64_decode($this->request->data("password"));
+			$this->env->authentication()->authenticate($this->request->data("username"), $pw);
 			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
-			$this->response()->success($this->getSessionInfo($this->request->data("protocol_version")));
+			
+			$sessionInfo = $this->getSessionInfo($this->request->data("protocol_version"));
+			if ($this->request->data("remember"))
+				$this->env->authentication()->storeCookie();
+
+			$this->response()->success($sessionInfo);
 		}
 		
 		private function getSessionInfo($protocolVersion) {

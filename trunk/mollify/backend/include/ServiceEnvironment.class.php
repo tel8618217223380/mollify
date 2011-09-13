@@ -17,6 +17,7 @@
 	require_once("services/ServicesBase.class.php");
 	require_once("event/EventHandler.class.php");
 	require_once("Formatter.class.php");
+	require_once("Cookie.class.php");
 	
 	class ServiceEnvironment {
 		const ENTRY_SCRIPT = 'r.php';
@@ -41,6 +42,7 @@
 			$this->responseHandler = $responseHandler;
 			$this->configuration = $configuration;
 			$this->settings = $settings;
+			$this->cookies = new Cookie($settings);
 			$this->features = new Features($configuration, $settings);
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler($this);
@@ -62,6 +64,10 @@
 		
 		public function session() {
 			return $this->session;
+		}
+
+		public function cookies() {
+			return $this->cookies;
 		}
 
 		public function response() {

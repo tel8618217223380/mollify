@@ -46,13 +46,15 @@ public class PhpSessionService extends ServiceBase implements SessionService {
 	}
 
 	public void authenticate(String userName, String password,
-			String protocolVersion, final ResultListener resultListener) {
+			boolean remember, String protocolVersion,
+			final ResultListener resultListener) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Authenticating '" + userName + "'");
 
 		String data = new JSONBuilder("username", userName)
 				.add("password", Base64.encode(password))
-				.add("protocol_version", protocolVersion).toString();
+				.add("protocol_version", protocolVersion)
+				.add("remember", remember).toString();
 
 		request().url(serviceUrl().action(SessionAction.authenticate))
 				.data(data).listener(resultListener).post();

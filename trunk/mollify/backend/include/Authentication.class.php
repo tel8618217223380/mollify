@@ -46,20 +46,59 @@
 				$this->env->session()->removeParam('default_permission');
 			}
 			
+			Logging::logDebug("No authenticated session active");
 			$methods = $this->env->settings()->setting("authentication_methods",TRUE);
-			if (!in_array("remote", $methods)) return;
-			
-			Logging::logDebug("No authenticated session active, attempting remote authentication");
-			if (!isset($_SERVER["REMOTE_USER"])) return;
+			if (in_array("remote", $methods) and $this->checkRemoteAuth()) return;
+			if ($this->checkStoredCookieAuth()) return;
+		}
+		
+		private function checkRemoteAuth() {
+			if (!isset($_SERVER["REMOTE_USER"])) return FALSE;
 			
 			$userName = $_SERVER["REMOTE_USER"];
 			Logging::logDebug("Remote authentication found for [".$userName."] ".(isset($_SERVER["AUTH_TYPE"]) ? $_SERVER["AUTH_TYPE"] : ""));
 			
 			$user = $this->env->configuration()->getUserByName($userName);
-			if ($user == NULL) return;
+			if ($user == NULL) return FALSE;
 			
 			Logging::logDebug("Remote authentication succeeded for [".$user["id"]."] ".$user["name"]);
 			$this->doAuth($user, "remote");
+			return true;
+		}
+		
+		private function checkStoredCookieAuth() {
+			if (!$this->env->cookies()->exists("login")) return FALSE;
+			$data = $this->env->cookies()->get("login");
+			Logging::logDebug("Stored login data ".$data);
+			if (!$data or strlen($data) == 0) return FALSE;
+			
+			$parts = explode(":", $data);
+			if (count($parts) != 2) {
+				Logging::logDebug("Invalid auth cookie string: ".$data);
+				return FALSE;
+			}
+			$userId = $parts[0];
+			$token = $parts[1];
+			$user = $this->env->configuration()->getUser($userId);
+			$check = $this->getCookieAuthString($user);
+			
+			if (strcmp($token, $check) != 0) {
+				Logging::logDebug("Login cookie found for user ".$userId.", but auth key did not match");
+				return FALSE;
+			}
+			Logging::logDebug("Stored authentication succeeded for user [".$user["id"]."] ".$user["name"]);
+			$this->doAuth($user, "cookie");
+		}
+		
+		private function getCookieAuthString($user) {
+			return md5($user["name"]."/".$user["password"]);
+		}
+		
+		public function storeCookie() {
+			$userId = $this->env->session()->param('user_id');
+			$user = $this->env->configuration()->getUser($userId);
+			$data = $userId.":".$this->getCookieAuthString($user);
+			$this->env->cookies()->add("login", $data, time()+60*60*24*30);
 		}
 		
 		public function authenticate($userId, $pw) {
@@ -85,6 +124,7 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
 			}
 			$this->doAuth($user, $auth);
+			return $user;
 		}
 		
 		public function getDefaultAuthenticationMethod() {

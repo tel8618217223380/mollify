@@ -83,7 +83,7 @@
 		}
 
 		public function getUser($id) {
-			return $this->db->query(sprintf("SELECT id, name, email, auth FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
+			return $this->db->query(sprintf("SELECT id, name, password, email, auth FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($id)))->firstRow();
 		}
 		
 		public function addUser($name, $pw, $email, $permission, $auth = NULL) {
