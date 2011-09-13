@@ -132,11 +132,11 @@ public class MollifyClient implements Client, SessionListener {
 			return;
 
 		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
-			public void login(String userName, String password,
+			public void login(String userName, String password, boolean remember,
 					final ConfirmationListener listener) {
 				logger.log(Level.INFO, "User login: " + userName);
 
-				service.authenticate(userName, password,
+				service.authenticate(userName, password, remember,
 						MollifyClient.PROTOCOL_VERSION,
 						new ResultListener<SessionInfo>() {
 							public void onFail(ServiceError error) {

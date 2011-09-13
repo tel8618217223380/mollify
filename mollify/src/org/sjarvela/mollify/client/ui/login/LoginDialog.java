@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -44,6 +45,7 @@ public class LoginDialog extends CenteredDialog {
 
 	private TextBox userName;
 	private PasswordTextBox password;
+	private CheckBox rememberMe;
 
 	public LoginDialog(TextProvider textProvider, DialogManager dialogManager,
 			LoginHandler loginHandler, ServiceProvider serviceProvider,
@@ -141,6 +143,11 @@ public class LoginDialog extends CenteredDialog {
 			panel.add(link);
 		}
 
+		rememberMe = new CheckBox(
+				textProvider.getText(Texts.loginDialogRememberMe));
+		rememberMe.setStylePrimaryName("mollify-login-dialog-remember-me");
+		panel.add(rememberMe);
+
 		return panel;
 	}
 
@@ -155,7 +162,7 @@ public class LoginDialog extends CenteredDialog {
 			return;
 
 		loginHandler.login(userName.getText(), password.getText(),
-				new ConfirmationListener() {
+				rememberMe.getValue(), new ConfirmationListener() {
 					public void onConfirm() {
 						LoginDialog.this.hide();
 					}

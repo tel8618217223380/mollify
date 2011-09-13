@@ -18,8 +18,8 @@ public interface SessionService {
 	void getSessionInfo(String protocolVersion,
 			ResultListener<SessionInfo> resultListener);
 
-	void authenticate(String userName, String password, String protocolVersion,
-			ResultListener<SessionInfo> resultListener);
+	void authenticate(String userName, String password, boolean remember,
+			String protocolVersion, ResultListener<SessionInfo> resultListener);
 
 	void logout(ResultListener<Boolean> resultListener);
 

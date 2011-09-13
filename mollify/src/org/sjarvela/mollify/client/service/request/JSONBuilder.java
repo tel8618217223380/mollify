@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -52,6 +53,11 @@ public class JSONBuilder {
 
 	public JSONBuilder add(String name, double d) {
 		result.put(name, new JSONNumber(d));
+		return this;
+	}
+
+	public JSONBuilder add(String name, boolean b) {
+		result.put(name, JSONBoolean.getInstance(b));
 		return this;
 	}
 
