@@ -382,7 +382,10 @@
 					$hierarchyQuery .= "(".$part."/";
 					$hierarchyQueryEnd .= ")*";
 				}
-				$hierarchyQuery .= $hierarchyQueryEnd."$#')";
+				if ($mysql)
+					$hierarchyQuery .= $hierarchyQueryEnd."$')";
+				else
+					$hierarchyQuery .= $hierarchyQueryEnd."$#')";
 			
 				if ($mysql) {
 					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
