@@ -373,7 +373,7 @@
 				if ($mysql)
 					$hierarchyQuery = "(item_id REGEXP '^".$rootId;
 				else
-					$hierarchyQuery = "REGEX(item_id, '#^".str_replace("\\", "/\\", str_replace("/", "//", $rootId));
+					$hierarchyQuery = "REGEX(item_id, '#^".str_replace("\\", "/\\", $rootId);
 				
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
@@ -417,7 +417,7 @@
 				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
 				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(item_id, \"#^".$parentId."[^/]+[/]?$#\")";
+				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(item_id, \"#^".str_replace("\\", "/\\", $parentId)."[^/]+[/]?$#\")";
 				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
