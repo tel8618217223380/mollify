@@ -1,5 +1,5 @@
 /**
-	Copyright (c) 2008- Samuli Järvelä
+	Copyright (c) 2008- Samuli Jï¿½rvelï¿½
 
 	All rights reserved. This program and the accompanying materials
 	are made available under the terms of the Eclipse Public License v1.0
@@ -64,13 +64,13 @@ function removeFolderUsers(id, users, success, fail) {
 	request("POST", 'configuration/folders/'+id+'/remove_users', success, fail, data);
 }
 
-function addUserFolder(user, id, name, success, fail) {
-	var data = JSON.stringify({id:id, name:name});
+function addUserFolder(user, id, name, pathPrefix, success, fail) {
+	var data = JSON.stringify({id:id, name:name, "path_prefix": pathPrefix});
 	request("POST", 'configuration/users/'+user+'/folders', success, fail, data);
 }
 
-function editUserFolder(user, id, name, success, fail) {
-	var data = JSON.stringify({name:name});
+function editUserFolder(user, id, name, pathPrefix, success, fail) {
+	var data = JSON.stringify({name:name, "path_prefix": pathPrefix});
 	request("PUT", 'configuration/users/'+user+'/folders/'+id, success, fail, data);
 }
 
