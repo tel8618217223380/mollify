@@ -7,7 +7,9 @@
 
 When Internet Explorer cannot open Mollify, and instead shows error like "Protocol error", this is due to IE not displaying the page in standards mode.
 
-http://stackoverflow.com/questions/3726357/why-does-ie9-switch-to-compatibility-mode-on-my-website
+To fix this, make sure you have following meta parameter in host page:
+
+{{{<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>}}}
 
 === How can I increase maximum file upload size? ===
 
