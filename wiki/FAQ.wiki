@@ -3,6 +3,12 @@
 
 = Frequently Asked Questions =
 
+=== Problems with Internet Explorer ===
+
+When Internet Explorer cannot open Mollify, and instead shows error like "Protocol error", this is due to IE not displaying the page in standards mode.
+
+http://stackoverflow.com/questions/3726357/why-does-ie9-switch-to-compatibility-mode-on-my-website
+
 === How can I increase maximum file upload size? ===
 
 Maximum file uload size is controlled by PHP, and can be changed in "php.ini" or ".htaccess" files. Settings involved are "`upload_max_filesize`", "`post_max_size`" and "`max_execution_time`". 
