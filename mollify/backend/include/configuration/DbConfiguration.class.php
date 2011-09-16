@@ -259,32 +259,22 @@
 			}
 			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
 
-			$l = $this->db->query(sprintf("SELECT f.id as id, uf.name as name, f.name as default_name, f.path as path FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
-			Logging::logDebug(Util::array2str($l));
+			$l = $this->db->query(sprintf("SELECT f.id as id, uf.name as name, f.name as default_name, f.path as path, uf.path_prefix as path_prefix FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
+			//Logging::logDebug(Util::array2str($l));
 			return $l;
 		}
 		
 		public function addUserFolders($userId, $folderIds) {
-			foreach($folderIds as $id) $this->addUserFolder($userId, $id, NULL);
+			foreach($folderIds as $id) $this->addUserFolder($userId, $id, NULL, NULL);
 		}
 		
-		public function addUserFolder($userId, $folderId, $name) {
-			if ($name != NULL) {
-				$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_folder")." (user_id, folder_id, name) VALUES ('%s', '%s', '%s')", $this->db->string($userId), $this->db->string($folderId), $this->db->string($name)));
-			} else {
-				$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_folder")." (user_id, folder_id, name) VALUES ('%s', '%s', NULL)", $this->db->string($userId), $this->db->string($folderId)));
-			}
-						
+		public function addUserFolder($userId, $folderId, $name, $pathPrefix = NULL) {
+			$this->db->update(sprintf("INSERT INTO ".$this->db->table("user_folder")." (user_id, folder_id, name, path_prefix) VALUES ('%s', '%s', %s, %s)", $this->db->string($userId), $this->db->string($folderId), $this->db->string($name, TRUE), $this->db->string($pathPrefix, TRUE)));	
 			return TRUE;
 		}
 	
-		public function updateUserFolder($userId, $folderId, $name) {
-			if ($name != NULL) {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name='%s' WHERE user_id='%s' AND folder_id='%s'", $this->db->string($name), $this->db->string($userId), $this->db->string($folderId)));
-			} else {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name = NULL WHERE user_id='%s' AND folder_id='%s'", $this->db->string($userId), $this->db->string($folderId)));
-			}
-	
+		public function updateUserFolder($userId, $folderId, $name, $pathPrefix = NULL) {
+			$this->db->update(sprintf("UPDATE ".$this->db->table("user_folder")." SET name = %s, path_prefix = %s WHERE user_id='%s' AND folder_id='%s'", $this->db->string($name, TRUE), $this->db->string($pathPrefix, TRUE), $this->db->string($userId), $this->db->string($folderId)));
 			return TRUE;
 		}
 		

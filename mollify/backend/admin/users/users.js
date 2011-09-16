@@ -95,12 +95,13 @@ function MollifyUsersConfigurationView() {
 			multiselect: false,
 			autowidth: false,
 			height: '100%',
-		   	colNames:['ID', 'Name', 'Default Name', 'Path'],
+		   	colNames:['ID', 'Name', 'Default Name', 'Path', "Group"],
 		   	colModel:[
 			   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:150, sortable:true, formatter:that.folderNameFormatter},
 		   		{name:'default_name',index:'name', width:150, sortable:true, formatter:that.defaultFolderNameFormatter},
 				{name:'path',index:'path',width:200, sortable:true},
+				{name:'path_prefix',index:'path_prefix',width:200, sortable:true},
 		   	],
 		   	sortname:'id',
 		   	sortorder:'asc',
@@ -658,13 +659,14 @@ function MollifyUsersConfigurationView() {
 				var useDefault = $("#use-default-folder-name").attr('checked');
 				var folder = $("#published-folder-list").val();
 				var name = useDefault ? null : $("#published-folder-name").val();
+				var pathPrefix = $("#published-folder-path-prefix").val();
 				
 				var onSuccess = function() {
 					$("#add-user-folder-dialog").dialog('close');
 					that.refreshUserFolders();
 				}
 				
-				addUserFolder(that.getSelectedUser(), folder, name, onSuccess, onServerError);
+				addUserFolder(that.getSelectedUser(), folder, name, pathPrefix, onSuccess, onServerError);
 			},
 			Cancel: function() {
 				$(this).dialog('close');
@@ -722,13 +724,14 @@ function MollifyUsersConfigurationView() {
 				
 				var useDefault = $("#edit-use-default-folder-name").attr('checked');
 				var name = useDefault ? null : $("#edit-published-folder-name").val();
+				var pathPrefix = $("#edit, published-folder-path-prefix").val();
 				
 				var onSuccess = function() {
 					$("#edit-user-folder-dialog").dialog('close');
 					that.refreshUserFolders();
 				}
 				
-				editUserFolder(that.getSelectedUser(), that.getSelectedUserFolder(), name, onSuccess, onServerError);
+				editUserFolder(that.getSelectedUser(), that.getSelectedUserFolder(), name, pathPrefix, onSuccess, onServerError);
 			},
 			Cancel: function() {
 				$(this).dialog('close');
@@ -742,6 +745,7 @@ function MollifyUsersConfigurationView() {
 		$("#edit-use-default-folder-name").click(onFolderOrDefaultChanged);
 		onFolderOrDefaultChanged();
 		if (selected.name) $("#edit-published-folder-name").val(selected.name);
+		$("#edit-published-folder-path-prefix").val(selected["path_prefix] ? selected["path_prefix"] : "");
 		
 		$("#edit-user-folder-dialog").dialog('open');
 	}
