@@ -35,7 +35,7 @@ public class RootFolder extends Folder {
 	public List<String> getGroupParts() {
 		if (!hasGroup())
 			return Collections.EMPTY_LIST;
-		return Arrays.asList(group.split("//"));
+		return Arrays.asList(group.split("/"));
 	}
 
 	public String getGroup() {

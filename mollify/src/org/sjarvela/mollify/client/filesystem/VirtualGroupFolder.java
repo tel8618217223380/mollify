@@ -30,7 +30,7 @@ public class VirtualGroupFolder extends Folder {
 		int level = this.getLevel();
 		if (f.getGroupParts().size() > level) {
 			String next = f.getGroupParts().get(level);
-			VirtualGroupFolder groupFolder = new VirtualGroupFolder(name,
+			VirtualGroupFolder groupFolder = new VirtualGroupFolder(next,
 					this.path + "/" + next);
 			groupFolder.add(f);
 			children.add(groupFolder);
@@ -40,10 +40,10 @@ public class VirtualGroupFolder extends Folder {
 	}
 
 	private int getLevel() {
-		int i = 0;
+		int i = -1;
 		int count = 0;
 		while (true) {
-			i = this.path.indexOf("/", i);
+			i = this.path.indexOf("/", i+1);
 			if (i < 0)
 				break;
 			count++;

@@ -146,7 +146,7 @@ public class LoginDialog extends CenteredDialog {
 		rememberMe = new CheckBox(
 				textProvider.getText(Texts.loginDialogRememberMe));
 		rememberMe.setStylePrimaryName("mollify-login-dialog-remember-me");
-//		panel.add(rememberMe);
+		panel.add(rememberMe);
 
 		return panel;
 	}
