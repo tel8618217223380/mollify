@@ -36,7 +36,6 @@ CREATE TABLE user_folder (
   user_id int(11) NOT NULL,
   folder_id int(11) NOT NULL,
   name varchar(255) NULL,
-  path_prefix varchar(255) NULL,
   PRIMARY KEY (user_id,folder_id),
   FOREIGN KEY(folder_id) REFERENCES folder(id),
   FOREIGN KEY(user_id) REFERENCES user(id)
