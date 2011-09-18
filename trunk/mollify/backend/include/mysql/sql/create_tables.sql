@@ -43,7 +43,6 @@ CREATE TABLE `{TABLE_PREFIX}user_folder` (
   `user_id` int(11) NOT NULL,
   `folder_id` int(11) NOT NULL,
   `name` varchar(255) NULL,
-  `path_prefix` varchar(255) NULL,
   PRIMARY KEY (`user_id`,`folder_id`),
   KEY `fk_uf_folder` (`folder_id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify user published folders';
