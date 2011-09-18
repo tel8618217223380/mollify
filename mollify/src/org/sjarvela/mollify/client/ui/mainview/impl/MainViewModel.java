@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -137,6 +138,15 @@ public class MainViewModel {
 		}
 
 		Folder currentFolder = getCurrentFolder();
+		if (currentFolder instanceof VirtualGroupFolder) {
+			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
+					((VirtualGroupFolder) currentFolder).getChildren(), null,
+					null);
+			onUpdateData(result);
+			resultListener.onSuccess(result);
+			return;
+		}
+
 		JavaScriptObject dataRequest = dataRequestProvider != null ? dataRequestProvider
 				.getDataRequest(currentFolder) : null;
 		fileServices.getFolderInfo(

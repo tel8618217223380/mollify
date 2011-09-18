@@ -96,10 +96,11 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 			}
 		});
 		int count = 0;
-		for (Folder dir : folders) {
-			if (dir.getId().equals(this.current.getId()))
+		for (Folder folder : folders) {
+			if (folder.getId() != null
+					&& folder.getId().equals(this.current.getId()))
 				continue;
-			addMenuAction(null, dir);
+			addMenuAction(null, folder);
 			count++;
 		}
 

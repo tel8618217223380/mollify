@@ -140,9 +140,13 @@
 			
 			$result["folders"] = array();
 			foreach($this->getRootFolders() as $id => $folder) {
+				$nameParts = explode("/", str_replace("\\", "/",$folder->name()));
+				$name = array_pop($nameParts);
+				
 				$result["folders"][] = array(
 					"id" => $folder->publicId(),
-					"name" => $folder->name(),
+					"name" => $name,
+					"group" => implode("/", $nameParts),
 					"parent_id" => NULL,
 					"root_id" => $folder->publicId(),
 					"path" => ""
