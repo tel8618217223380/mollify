@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -26,14 +27,29 @@ public abstract class FileSystemItem {
 	protected final String path;
 	protected final String parentId;
 
+	public static RootFolder createFrom(JsRootFolder folder) {
+		return new RootFolder(folder);
+	}
+	
 	public static File createFrom(JsFile file) {
 		return new File(file);
 	}
 
-	public static Folder createFrom(JsFolder dir) {
-		return new Folder(dir);
+	public static Folder createFrom(JsFolder folder) {
+		return new Folder(folder);
 	}
 
+	public static List<RootFolder> createFromRootFolders(JsArray<JsRootFolder> folders) {
+		List<RootFolder> result = new ArrayList();
+		for (int i = 0; i < folders.length(); i++) {
+			JsRootFolder folder = folders.get(i);
+			if (folder.getName() == null)
+				continue;
+			result.add(createFrom(folder));
+		}
+		return result;
+	}
+	
 	public static List<Folder> createFromFolders(JsArray<JsFolder> folders) {
 		List<Folder> result = new ArrayList();
 		for (int i = 0; i < folders.length(); i++) {

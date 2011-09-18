@@ -105,7 +105,7 @@ function CommentPlugin() {
 	}
 	
 	this.getListCellContent = function(item, data) {
-		if (item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
+		if (item.id == null || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
 		var counts = data["plugin-comment-count"];
 		if (!counts[item.id]) return "";
 		

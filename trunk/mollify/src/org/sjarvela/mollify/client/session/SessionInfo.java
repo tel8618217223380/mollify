@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.session;
 import java.util.Collections;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.RootFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.session.file.FileSystemInfo;
 import org.sjarvela.mollify.client.session.user.UserPermissionMode;
@@ -89,13 +89,13 @@ public class SessionInfo extends JavaScriptObject {
 		return this.filesystem;
 	}-*/;
 
-	public final List<Folder> getRootDirectories() {
-		if (getRootDirectoryList() == null)
+	public final List<RootFolder> getRootFolders() {
+		if (getRootFolderList() == null)
 			return Collections.EMPTY_LIST;
-		return Folder.createFromFolders(getRootDirectoryList());
+		return RootFolder.createFromRootFolders(getRootFolderList());
 	}
 
-	private final native JsArray getRootDirectoryList() /*-{
+	private final native JsArray getRootFolderList() /*-{
 		return this.folders;
 	}-*/;
 

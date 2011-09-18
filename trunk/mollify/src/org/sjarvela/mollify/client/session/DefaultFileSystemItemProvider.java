@@ -12,11 +12,15 @@ package org.sjarvela.mollify.client.session;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.RootFolder;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -47,13 +51,34 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	}
 
 	protected void updateRootFolders(SessionInfo session) {
-		this.roots = session.getRootDirectories();
+		this.roots = new ArrayList();
+
+		Map<String, VirtualGroupFolder> virtualRootsAdded = new HashMap();
+		for (RootFolder f : session.getRootFolders()) {
+			if (f.hasGroup()) {
+				String name = f.getGroupParts().get(0);
+				if (!virtualRootsAdded.containsKey(name)) {
+					VirtualGroupFolder groupFolder = new VirtualGroupFolder(
+							name, name);
+					groupFolder.add(f);
+
+					this.roots.add(groupFolder);
+					virtualRootsAdded.put(name, groupFolder);
+				} else {
+					virtualRootsAdded.get(name).add(f);
+				}
+			} else {
+				this.roots.add(f);
+			}
+		}
 	}
 
 	@Override
 	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
+		else if (parent instanceof VirtualGroupFolder)
+			listener.onSuccess(((VirtualGroupFolder) parent).getChildren());
 		else
 			fileSystemService.getFolders(parent, listener);
 	}
@@ -76,6 +101,10 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 			ResultListener<FolderInfo> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(new FolderInfo(FilePermission.None, roots,
+					Collections.EMPTY_LIST, null));
+		else if (parent instanceof VirtualGroupFolder)
+			listener.onSuccess(new FolderInfo(FilePermission.None,
+					((VirtualGroupFolder) parent).getChildren(),
 					Collections.EMPTY_LIST, null));
 		else
 			fileSystemService.getFolderInfo(parent, null, listener);
