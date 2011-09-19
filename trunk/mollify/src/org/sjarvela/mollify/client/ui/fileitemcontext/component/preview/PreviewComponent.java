@@ -40,6 +40,11 @@ public class PreviewComponent implements ItemContextSection {
 	}
 
 	@Override
+	public Comparable getIndex() {
+		return 4;
+	}
+
+	@Override
 	public String getTitle() {
 		return textProvider.getText(Texts.filePreviewTitle);
 	}

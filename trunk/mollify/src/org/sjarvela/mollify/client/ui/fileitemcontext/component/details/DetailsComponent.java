@@ -62,6 +62,11 @@ public class DetailsComponent implements ItemContextSection {
 	}
 
 	@Override
+	public Comparable getIndex() {
+		return null;
+	}
+
+	@Override
 	public String getTitle() {
 		return textProvider.getText(Texts.fileActionDetailsTitle);
 	}

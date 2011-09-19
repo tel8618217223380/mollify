@@ -21,9 +21,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NativeItemContextComponent implements ItemContextComponent {
-	static int index = 0;
+	static int idIndex = 0;
 
 	private final String html;
+	private final int componentIndex;
 
 	private final JavaScriptObject onInit;
 	private final JavaScriptObject onContextClose;
@@ -31,10 +32,16 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	private Widget component = null;
 
 	public NativeItemContextComponent(JavaScriptObject init,
-			JavaScriptObject contextClose, String html) {
+			JavaScriptObject contextClose, String html, Integer index) {
 		this.onInit = init;
 		this.onContextClose = contextClose;
 		this.html = html;
+		this.componentIndex = index;
+	}
+
+	@Override
+	public Comparable getIndex() {
+		return componentIndex;
 	}
 
 	@Override
@@ -47,7 +54,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 	private Widget createComponent() {
 		FlowPanel p = new FlowPanel();
 		p.setStyleName(StyleConstants.ITEM_CONTEXT_COMPONENT);
-		p.getElement().setId("item-component-" + index++);
+		p.getElement().setId("item-component-" + idIndex++);
 		p.getElement().setInnerHTML(html);
 		return p;
 	}

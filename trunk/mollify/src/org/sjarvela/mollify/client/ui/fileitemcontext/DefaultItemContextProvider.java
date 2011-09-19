@@ -29,7 +29,6 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextBui
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ItemContextComponentsBuilder;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.description.DescriptionComponent;
-import org.sjarvela.mollify.client.ui.fileitemcontext.component.details.DetailsComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.permissions.PermissionsComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.preview.PreviewComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
@@ -153,8 +152,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().filePreview())
 			contextComponents.add(createPreviewComponent());
-		if (item.isFile())
-			contextComponents.add(createDetailsComponent());
+		// if (item.isFile())
+		// contextComponents.add(createDetailsComponent());
 		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
 			contextComponents.add(createPermissionsComponent());
 	}
@@ -168,10 +167,6 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private ItemContextComponent createPreviewComponent() {
 		return new PreviewComponent(textProvider,
 				serviceProvider.getExternalService());
-	}
-
-	private ItemContextComponent createDetailsComponent() {
-		return new DetailsComponent(textProvider);
 	}
 
 	private ItemContextComponent createPermissionsComponent() {

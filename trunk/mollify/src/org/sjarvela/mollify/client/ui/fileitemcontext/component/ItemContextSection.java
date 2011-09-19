@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.component;
 
-
-
 public interface ItemContextSection extends ItemContextComponent {
 	String getTitle();
 

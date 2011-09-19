@@ -23,8 +23,8 @@ public class NativeItemContextSection extends NativeItemContextComponent
 
 	public NativeItemContextSection(String title, String html,
 			JavaScriptObject init, JavaScriptObject dispose,
-			JavaScriptObject open, JavaScriptObject close) {
-		super(init, dispose, html);
+			JavaScriptObject open, JavaScriptObject close, int index) {
+		super(init, dispose, html, index);
 		this.title = title;
 		onOpen = open;
 		onClose = close;
@@ -47,13 +47,15 @@ public class NativeItemContextSection extends NativeItemContextComponent
 
 	private final native JavaScriptObject invokeOpen() /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onOpen;
-		if (!cb) return;
+		if (!cb)
+			return;
 		cb();
 	}-*/;
 
 	private final native JavaScriptObject invokeClose() /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onClose;
-		if (!cb) return;
+		if (!cb)
+			return;
 		cb();
 	}-*/;
 
