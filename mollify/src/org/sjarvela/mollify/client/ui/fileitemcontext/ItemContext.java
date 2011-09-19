@@ -11,6 +11,8 @@
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,12 @@ public class ItemContext {
 	public ItemContext add(ItemContext other) {
 		List<ItemContextComponent> newComponents = new ArrayList(components);
 		newComponents.addAll(other.getComponents());
+		Collections.sort(newComponents, new Comparator<ItemContextComponent>() {
+			@Override
+			public int compare(ItemContextComponent a, ItemContextComponent b) {
+				return a.getIndex().compareTo(b.getIndex());
+			}
+		});
 
 		Map<ActionType, List<ContextActionItem>> newActions = new HashMap(
 				actions);

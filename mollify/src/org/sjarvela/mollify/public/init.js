@@ -201,3 +201,40 @@ function CommentPlugin() {
 		return that.env.texts().get(s);
 	}	
 }
+
+function ItemDetailsPlugin() {
+	var that = this;
+	
+	this.getPluginInfo = function() { return { id: "plugin-itemdetails" }; }
+	
+	this.initialize = function(env) {
+		that.env = env;
+		that.env.addItemContextProvider(that.getItemContext);
+	}
+		
+	this.getItemContext = function(item, details) {
+		return {
+			components : [{
+				type: "section",
+				title: that.t("fileActionDetailsTitle"),
+				html: "<div id='file-item-details'></div>",
+				on_init: that.onInit,
+				index: 5
+			}]
+		};
+	}
+	
+	this.onInit = function(id, c, item, details) {
+		//if (!details.itemdetails) return;
+		
+		$("#file-item-details").html("<div class='mollify-file-context-details-content'>foo</div>");
+	}
+		
+	this.url = function(p) {
+		return that.env.service().getPluginUrl("Comment")+"client/"+p;
+	}
+	
+	this.t = function(s) {
+		return that.env.texts().get(s);
+	}	
+}

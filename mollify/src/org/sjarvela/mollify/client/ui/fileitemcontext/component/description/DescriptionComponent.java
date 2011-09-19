@@ -70,6 +70,11 @@ public class DescriptionComponent implements ItemContextComponent,
 	}
 
 	@Override
+	public Comparable getIndex() {
+		return 2;
+	}
+
+	@Override
 	public Widget getComponent() {
 		if (component == null)
 			component = createContent();

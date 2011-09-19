@@ -23,4 +23,6 @@ public interface ItemContextComponent {
 			ItemDetails details);
 
 	void onContextClose();
+	
+	Comparable getIndex();
 }
