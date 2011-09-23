@@ -101,6 +101,11 @@
 			$this->env->cookies()->add("login", $data, time()+60*60*24*30);
 		}
 		
+		public function logout() {
+			if (!$this->env->cookies()->exists("login")) return;
+			$this->env->cookies()->add("login", "", time()-42000);
+		}
+		
 		public function authenticate($userId, $pw) {
 			$password = md5($pw);
 			
