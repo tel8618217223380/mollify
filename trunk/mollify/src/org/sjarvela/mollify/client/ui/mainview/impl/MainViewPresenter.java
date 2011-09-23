@@ -26,6 +26,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -519,6 +520,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	@Override
 	public void onSearch(final String text) {
+		if (model.getCurrentFolder() instanceof VirtualGroupFolder) {
+			return; // TODO support this
+		}
 		view.showProgress();
 
 		fileSystemService.search(model.getCurrentFolder(), text,
@@ -560,13 +564,13 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	private native void toggle(boolean open) /*-{
-		$wnd.$("#mollify-mainview-slidebar").stop().animate({
-			'width' : open ? "300px" : "0px"
-		}, 200);
-		$wnd.$("#mollify-main-lower-content").stop().animate({
-			'marginRight' : open ? "300px" : "0px"
-		}, 200);
-	}-*/;
+												$wnd.$("#mollify-mainview-slidebar").stop().animate({
+												'width' : open ? "300px" : "0px"
+												}, 200);
+												$wnd.$("#mollify-main-lower-content").stop().animate({
+												'marginRight' : open ? "300px" : "0px"
+												}, 200);
+												}-*/;
 
 	@Override
 	public List<FileSystemItem> getSelectedItems() {
@@ -628,7 +632,9 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	public JavaScriptObject getDataRequest(Folder folder) {
 		if (!ViewType.list.equals(view.getViewType()))
 			return null;
-		return pluginEnvironment.getFileListExt().getDataRequest(folder,
-				((FileListWithExternalColumns) view.getFileWidget()).getColumns());
+		return pluginEnvironment.getFileListExt().getDataRequest(
+				folder,
+				((FileListWithExternalColumns) view.getFileWidget())
+						.getColumns());
 	}
 }

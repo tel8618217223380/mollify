@@ -91,8 +91,20 @@ public class DefaultViewManager implements ViewManager {
 	}
 
 	public void openDownloadUrl(String url) {
-		setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
+		if (isBrowser())
+			openUrlInNewWindow(url);
+		else
+			setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
 	}
+
+	private native boolean isBrowser() /*-{
+		return (navigator.userAgent.match(/Android/i)
+				|| navigator.userAgent.match(/webOS/i)
+				|| navigator.userAgent.match(/iPhone/i)
+				|| navigator.userAgent.match(/iPod/i)
+				|| navigator.userAgent.match(/iPad/i) || navigator.userAgent
+				.match(/Opera Mobi/i));
+	}-*/;
 
 	public void openUrlInNewWindow(String url) {
 		Window.open(url, "_blank", "");
@@ -158,7 +170,7 @@ public class DefaultViewManager implements ViewManager {
 	/* UTILITIES */
 
 	private native void setFrameUrl(String id, String url) /*-{
-		$doc.getElementById(id).src=url;
+		$doc.getElementById(id).src = url;
 	}-*/;
 
 }

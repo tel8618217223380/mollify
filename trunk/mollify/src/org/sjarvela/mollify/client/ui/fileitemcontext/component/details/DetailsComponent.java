@@ -63,7 +63,7 @@ public class DetailsComponent implements ItemContextSection {
 
 	@Override
 	public Comparable getIndex() {
-		return null;
+		return 2;
 	}
 
 	@Override

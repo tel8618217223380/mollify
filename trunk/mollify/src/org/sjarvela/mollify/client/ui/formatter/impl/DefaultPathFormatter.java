@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.formatter.impl;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
 
@@ -32,7 +33,9 @@ public class DefaultPathFormatter implements PathFormatter {
 
 	@Override
 	public String format(FileSystemItem item) {
-		return fileSystemItemProvider.getRootFolder(item.getRootId()).getName()
+		Folder rootFolder = fileSystemItemProvider.getRootFolder(item
+				.getRootId());
+		return (rootFolder == null ? "" : rootFolder.getName())
 				+ sessionProvider.getSession().getFileSystemInfo()
 						.getFolderSeparator() + item.getParentPath();
 	}
