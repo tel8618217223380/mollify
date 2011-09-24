@@ -474,7 +474,8 @@
 			if (!$range)
 				$this->env->events()->onEvent(FileEvent::download($file));
 
-			$this->env->response()->download($name, $file->extension(), $file->read($range), $size, $range);						
+			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);						
 		}
 
 		public function view($file) {

@@ -49,8 +49,8 @@
 			$this->listeners[] = $l;
 		}
 		
-		public function download($filename, $type, $stream, $size = NULL, $range = NULL) {
-			$this->output->downloadBinary($filename, $type, $stream, $size, $range);
+		public function download($filename, $type, $mobile, $stream, $size = NULL, $range = NULL) {
+			$this->output->downloadBinary($filename, $type, $mobile, $stream, $size, $range);
 			$this->notifyResponse();
 		}
 
