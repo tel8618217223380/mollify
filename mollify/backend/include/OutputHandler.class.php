@@ -94,7 +94,7 @@
 			}
 		}
 		
-		public function downloadBinary($filename, $type, $stream, $size = NULL, $range = NULL) {
+		public function downloadBinary($filename, $type, $mobile, $stream, $size = NULL, $range = NULL) {
 			if ($range) {
 				$start = $range[0];
 				$end = $range[1];
@@ -110,9 +110,11 @@
 			} else {
 				if ($size) header("Content-Length: ".$size);
 				header("Cache-Control: public, must-revalidate");
-				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
-				header("Content-Type: application/download");
+				if (!$mobile) {
+					header("Content-Type: application/force-download");	// mobile browsers don't like these
+					header("Content-Type: application/download");
+				}
 				header("Content-Disposition: attachment; filename=\"".$filename."\";");
 				header("Content-Transfer-Encoding: binary");
 				header("Pragma: hack");

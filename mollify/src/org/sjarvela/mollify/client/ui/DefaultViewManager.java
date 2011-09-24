@@ -91,19 +91,23 @@ public class DefaultViewManager implements ViewManager {
 	}
 
 	public void openDownloadUrl(String url) {
-		if (isBrowser())
-			openUrlInNewWindow(url);
-		else
+		if (isBrowser()) {
+			logger.log(Level.INFO, "Downloading for mobile browser");
+			openUrlInNewWindow(url + (url.indexOf("?") >= 0 ? "&" : "?")
+					+ "m=1");
+		} else
 			setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
 	}
 
 	private native boolean isBrowser() /*-{
-		return (navigator.userAgent.match(/Android/i)
+		if (navigator.userAgent.match(/Android/i)
 				|| navigator.userAgent.match(/webOS/i)
 				|| navigator.userAgent.match(/iPhone/i)
 				|| navigator.userAgent.match(/iPod/i)
-				|| navigator.userAgent.match(/iPad/i) || navigator.userAgent
-				.match(/Opera Mobi/i));
+				|| navigator.userAgent.match(/iPad/i)
+				|| navigator.userAgent.match(/Opera Mobi/i))
+			return true;
+		return false;
 	}-*/;
 
 	public void openUrlInNewWindow(String url) {
