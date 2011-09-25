@@ -38,4 +38,12 @@ public class JsObjBuilder {
 			JavaScriptObject value) /*-{
 		obj[name] = value;
 	}-*/;
+	
+	public void add(JavaScriptObject o) {
+		addO(obj, o);
+	}
+
+	private native void addO(JavaScriptObject obj, JavaScriptObject o) /*-{
+		for (var k in o) obj[k] = o[k];
+	}-*/;
 }

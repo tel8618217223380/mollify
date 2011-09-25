@@ -233,7 +233,7 @@
 			return FALSE;
 		}
 
-		public function details($item) {
+		public function details($item, $data) {
 			$this->assertRights($item, Authentication::RIGHTS_READ, "details");
 			
 			$details = $item->details();
@@ -477,7 +477,7 @@
 				$this->env->events()->onEvent(FileEvent::download($file));
 
 			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);						
+			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);
 		}
 
 		public function view($file) {

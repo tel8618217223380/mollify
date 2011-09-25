@@ -50,7 +50,7 @@ import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
 import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
 import org.sjarvela.mollify.client.ui.editor.impl.DefaultFileEditorFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemContextProvider;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.filesystem.DefaultFileSystemActionHandlerFactory;
@@ -106,7 +106,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(Client.class).to(MollifyClient.class);
 		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
 		bind(PluginEnvironment.class).to(DefaultPluginEnvironment.class);
-		bind(ItemContextProvider.class).to(DefaultItemContextProvider.class);
+		bind(ItemContextHandler.class).to(DefaultItemContextProvider.class);
 		bind(SearchResultDialogFactory.class).to(
 				DefaultSearchResultDialogFactory.class);
 		bind(PathFormatter.class).to(DefaultPathFormatter.class);

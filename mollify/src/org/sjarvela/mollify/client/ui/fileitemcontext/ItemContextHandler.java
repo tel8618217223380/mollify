@@ -10,6 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
 public interface ItemContextHandler extends ItemContextProvider {
+	JavaScriptObject getItemContextRequestData(FileSystemItem item);
+
 	void addItemContextProvider(ItemContextProvider itemDetailsProvider);
 }

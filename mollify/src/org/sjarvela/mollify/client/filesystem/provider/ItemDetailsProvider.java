@@ -14,7 +14,9 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public interface ItemDetailsProvider {
-	public void getItemDetails(FileSystemItem item,
+	public void getItemDetails(FileSystemItem item, JavaScriptObject data,
 			ResultListener<ItemDetails> listener);
 }

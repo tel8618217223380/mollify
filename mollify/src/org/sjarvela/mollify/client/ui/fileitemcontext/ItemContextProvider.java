@@ -13,8 +13,12 @@ package org.sjarvela.mollify.client.ui.fileitemcontext;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 public interface ItemContextProvider {
 
 	ItemContext getItemContext(FileSystemItem item, ItemDetails details);
+
+	JavaScriptObject getItemContextRequestData(FileSystemItem item);
 
 }

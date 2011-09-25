@@ -20,8 +20,6 @@
 				"request-id": "core-file-modified",
 				"default-title-key": "fileListColumnTitleLastModified",
 				"sort": function(i1, i2, sort, data) {
-					if (i1.is_file && !i2.is_file) return 1;
-					if (!i1.is_file && i2.is_file) return -1;
 					if (!i1.is_file && !i2.is_file) return 0;
 					if (!data || !data["core-file-modified"]) return 0;
 					
@@ -132,7 +130,7 @@ function CommentPlugin() {
 		return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 	}
 	
-	this.getItemContext = function(item, details) {
+	this.getItemContext = function(item) {
 		return {
 			components : [{
 				type: "custom",
@@ -222,26 +220,27 @@ function CommentPlugin() {
 	}	
 }
 
-function ItemDetailsPlugin() {
+function ItemDetailsPlugin(s) {
+	var spec = s;
 	var that = this;
 	
 	this.getPluginInfo = function() { return { id: "plugin-itemdetails" }; }
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.env.addItemContextProvider(that.getItemContext);
-	}
-		
-	this.getItemContext = function(item, details) {
-		return {
-			components : [{
-				type: "section",
-				title: that.t("fileActionDetailsTitle"),
-				html: "<div id='file-item-details'></div>",
-				on_init: that.onInit,
-				index: 5
-			}]
-		};
+		that.env.addItemContextProvider(function(item) {
+			return {
+				components : [{
+					type: "section",
+					title: that.t("fileActionDetailsTitle"),
+					html: "<div id='file-item-details'></div>",
+					on_init: that.onInit,
+					index: 5
+				}]
+			}
+		}, function(item) {
+			return {foo:"bar"};
+		});
 	}
 	
 	this.onInit = function(id, c, item, details) {

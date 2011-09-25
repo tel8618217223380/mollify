@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceProvider;
@@ -35,6 +36,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.component.preview.PreviewC
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent.Action;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,6 +59,14 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
+	}
+
+	@Override
+	public JavaScriptObject getItemContextRequestData(FileSystemItem item) {
+		JsObjBuilder data = new JsObjBuilder();
+		for (ItemContextProvider provider : providers)
+			data.add(provider.getItemContextRequestData(item));
+		return data.create();
 	}
 
 	@Override

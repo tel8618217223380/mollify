@@ -118,13 +118,14 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 						.param("h", "1")).listener(resultListener).get();
 	}
 
-	public void getItemDetails(FileSystemItem item,
+	public void getItemDetails(FileSystemItem item, JavaScriptObject dataObj,
 			ResultListener<ItemDetails> resultListener) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Get details: " + item.getId());
 
+		String data = new JSONBuilder().object("data", dataObj).toString();
 		request().url(serviceUrl().fileItem(item).action(FileAction.details))
-				.listener(resultListener).get();
+				.data(data).listener(resultListener).post();
 	}
 
 	public void rename(FileSystemItem item, String newName,

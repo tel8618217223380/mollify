@@ -109,9 +109,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	}
 
 	@Override
-	public void getItemDetails(FileSystemItem item,
+	public void getItemDetails(FileSystemItem item, JavaScriptObject data,
 			ResultListener<ItemDetails> listener) {
-		service.getItemDetails(item,
+		service.getItemDetails(item, data,
 				resultListenerFactory.createListener(listener));
 	}
 

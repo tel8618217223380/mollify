@@ -113,7 +113,7 @@ public class DemoFileService implements FileSystemService {
 		listener.onSuccess(true);
 	}
 
-	public void getItemDetails(FileSystemItem item,
+	public void getItemDetails(FileSystemItem item, JavaScriptObject d,
 			ResultListener<ItemDetails> listener) {
 		if (item.isFile())
 			listener.onSuccess(data.getFileDetails((File) item));
