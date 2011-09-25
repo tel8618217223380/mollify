@@ -161,7 +161,7 @@ public class MockFileSystemService implements FileSystemService {
 		resultListener.onSuccess(true);
 	}
 
-	public void getItemDetails(FileSystemItem item,
+	public void getItemDetails(FileSystemItem item, JavaScriptObject d,
 			ResultListener<ItemDetails> listener) {
 		// TODO Auto-generated method stub
 

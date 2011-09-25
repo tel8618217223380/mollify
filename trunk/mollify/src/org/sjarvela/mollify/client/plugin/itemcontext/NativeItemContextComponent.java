@@ -28,12 +28,14 @@ public class NativeItemContextComponent implements ItemContextComponent {
 
 	private final JavaScriptObject onInit;
 	private final JavaScriptObject onContextClose;
+	private final JavaScriptObject onRequest;
 
 	private Widget component = null;
 
-	public NativeItemContextComponent(JavaScriptObject init,
+	public NativeItemContextComponent(JavaScriptObject init, JavaScriptObject request,
 			JavaScriptObject contextClose, String html, Integer index) {
 		this.onInit = init;
+		this.onRequest = request;
 		this.onContextClose = contextClose;
 		this.html = html;
 		this.componentIndex = index;

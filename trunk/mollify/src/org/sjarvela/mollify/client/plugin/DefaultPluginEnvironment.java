@@ -25,7 +25,6 @@ import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -36,7 +35,7 @@ import com.google.inject.Singleton;
 public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
-	private final ItemContextProvider itemContextProvider;
+	private final ItemContextHandler itemContextHandler;
 	private final SessionProvider sessionProvider;
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
@@ -49,12 +48,12 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
-			ItemContextProvider itemContextProvider,
+			ItemContextHandler itemContextProvider,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
 			DialogManager dialogManager, TextProvider textProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
-		this.itemContextProvider = itemContextProvider;
+		this.itemContextHandler = itemContextProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
@@ -80,9 +79,9 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.uploader = new NativeUploader(uploader);
 	}
 
-	public void addItemContextProvider(JavaScriptObject dp) {
-		((ItemContextHandler) itemContextProvider)
-				.addItemContextProvider(new NativeItemContextProvider(dp));
+	public void addItemContextProvider(JavaScriptObject dp, JavaScriptObject rq) {
+		itemContextHandler
+				.addItemContextProvider(new NativeItemContextProvider(dp, rq));
 	}
 
 	public void addListColumnSpec(JavaScriptObject spec) {
@@ -126,58 +125,58 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	private native JavaScriptObject createNativeEnv(DefaultPluginEnvironment e,
 			JavaScriptObject fv, String pluginBaseUrl) /*-{
-														var env = {};
+		var env = {};
 
-														env.addResponseProcessor = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addResponseProcessor = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addUploader = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addUploader = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addUploader(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addEventHandler = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addEventHandler = function(cb) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
 
-														env.addItemContextProvider = function(cb) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-														}
+		env.addItemContextProvider = function(cb, cb2) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(cb,cb2);
+		}
 
-														env.addListColumnSpec = function(s) {
-														e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
-														}
+		env.addListColumnSpec = function(s) {
+			e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::addListColumnSpec(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
+		}
 
-														env.session = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
-														}
+		env.session = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getSession()();
+		}
 
-														env.service = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
-														}
+		env.service = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getService()();
+		}
 
-														env.dialog = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
-														}
+		env.dialog = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getDialogManager()();
+		}
 
-														env.texts = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
-														}
+		env.texts = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getTextProvider()();
+		}
 
-														env.log = function() {
-														return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
-														}
+		env.log = function() {
+			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
+		}
 
-														env.fileview = function() {
-														return fv;
-														}
+		env.fileview = function() {
+			return fv;
+		}
 
-														env.pluginUrl = function(id) {
-														return pluginBaseUrl + id + "/";
-														}
+		env.pluginUrl = function(id) {
+			return pluginBaseUrl + id + "/";
+		}
 
-														return env;
-														}-*/;
+		return env;
+	}-*/;
 
 	@Override
 	public FileUploadDialogFactory getCustomUploader() {

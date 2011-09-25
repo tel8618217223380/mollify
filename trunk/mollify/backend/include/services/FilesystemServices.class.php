@@ -190,6 +190,9 @@
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
+				case 'details':
+					$this->response()->success($this->env->filesystem()->details($item, isset($this->request->data["data"]) ? $this->request->data["data"] : null));
+					return;
 				case 'move':
 					$data = $this->request->data;
 					if (!isset($data['id'])) throw $this->invalidRequestException();

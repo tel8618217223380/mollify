@@ -38,8 +38,28 @@ public class FileListExt {
 
 	public GridComparator getComparator(String columnId, SortOrder sort,
 			JsObj data) {
-		return new NativeFileListComparator(customColumnSpecs.get(columnId),
-				sort, data);
+		final NativeFileListComparator comparator = new NativeFileListComparator(
+				customColumnSpecs.get(columnId), sort, data);
+		return new GridComparator<FileSystemItem>() {
+			@Override
+			public int compare(FileSystemItem i1, FileSystemItem i2) {
+				if (i1.isFile() && !i2.isFile())
+					return 1;
+				if (!i1.isFile() && i2.isFile())
+					return -1;
+				return comparator.compare(i1, i2);
+			}
+
+			@Override
+			public String getColumnId() {
+				return comparator.getColumnId();
+			}
+
+			@Override
+			public SortOrder getSort() {
+				return comparator.getSort();
+			}
+		};
 	}
 
 	public GridColumn getColumn(String id, String titleKey,

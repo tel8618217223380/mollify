@@ -30,9 +30,10 @@ import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextCallback;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -42,7 +43,7 @@ public class ItemContextPresenter implements ActionListener,
 	private final ItemContextPopupComponent popup;
 	private final ItemDetailsProvider itemDetailsProvider;
 	private final DropBox dropBox;
-	private final ItemContextProvider itemContextProvider;
+	private final ItemContextHandler itemContextHandler;
 	private final DialogManager dialogManager;
 
 	private FileSystemActionHandler fileSystemActionHandler;
@@ -53,12 +54,12 @@ public class ItemContextPresenter implements ActionListener,
 
 	public ItemContextPresenter(ItemContextPopupComponent popup,
 			ItemDetailsProvider itemDetailsProvider, TextProvider textProvider,
-			DropBox dropBox, ItemContextProvider itemContextProvider,
+			DropBox dropBox, ItemContextHandler itemContextHandler,
 			DialogManager dialogManager) {
 		this.popup = popup;
 		this.itemDetailsProvider = itemDetailsProvider;
 		this.dropBox = dropBox;
-		this.itemContextProvider = itemContextProvider;
+		this.itemContextHandler = itemContextHandler;
 		this.dialogManager = dialogManager;
 
 		popup.addCloseHandler(new CloseHandler<PopupPanel>() {
@@ -86,7 +87,10 @@ public class ItemContextPresenter implements ActionListener,
 
 		popup.getName().setText(item.getName());
 
-		itemDetailsProvider.getItemDetails(item,
+		JavaScriptObject data = itemContextHandler
+				.getItemContextRequestData(item);
+
+		itemDetailsProvider.getItemDetails(item, data,
 				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
 						popup.hide();
@@ -116,7 +120,7 @@ public class ItemContextPresenter implements ActionListener,
 
 		this.components = new ArrayList();
 		if (details != null) {
-			components = popup.setup(itemContextProvider.getItemContext(item,
+			components = popup.setup(itemContextHandler.getItemContext(item,
 					details));
 		}
 

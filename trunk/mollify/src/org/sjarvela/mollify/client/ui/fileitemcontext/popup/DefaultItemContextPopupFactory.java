@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextProvider;
+import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextGlue;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPopupComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl.ItemContextPresenter;
@@ -28,20 +28,20 @@ import com.google.inject.Singleton;
 public class DefaultItemContextPopupFactory implements ItemContextPopupFactory {
 	private final TextProvider textProvider;
 	private final ItemDetailsProvider detailsProvider;
-	private final ItemContextProvider itemContextProvider;
+	private final ItemContextHandler itemContextHandler;
 	private final DialogManager dialogManager;
-	private SessionProvider sessionProvider;
+	private final SessionProvider sessionProvider;
 
 	@Inject
 	public DefaultItemContextPopupFactory(DialogManager dialogManager,
 			ItemDetailsProvider detailsProvider, TextProvider textProvider,
 			SessionProvider sessionProvider,
-			ItemContextProvider itemContextProvider) {
+			ItemContextHandler itemContextHandler) {
 		this.dialogManager = dialogManager;
 		this.detailsProvider = detailsProvider;
 		this.textProvider = textProvider;
 		this.sessionProvider = sessionProvider;
-		this.itemContextProvider = itemContextProvider;
+		this.itemContextHandler = itemContextHandler;
 	}
 
 	public ItemContextPopup createPopup(DropBox dropBox) {
@@ -52,7 +52,7 @@ public class DefaultItemContextPopupFactory implements ItemContextPopupFactory {
 						.getDefaultPermissionMode().hasWritePermission(),
 				actionDelegator);
 		ItemContextPresenter presenter = new ItemContextPresenter(popup,
-				detailsProvider, textProvider, dropBox, itemContextProvider,
+				detailsProvider, textProvider, dropBox, itemContextHandler,
 				dialogManager);
 		return new ItemContextGlue(popup, presenter, actionDelegator);
 	}

@@ -30,9 +30,18 @@ import com.google.gwt.core.client.JsArray;
 
 public class NativeItemContextProvider implements ItemContextProvider {
 	private final JavaScriptObject dp;
+	private final JavaScriptObject rq;
 
-	public NativeItemContextProvider(JavaScriptObject dp) {
+	public NativeItemContextProvider(JavaScriptObject dp, JavaScriptObject rq) {
 		this.dp = dp;
+		this.rq = rq;
+	}
+
+	@Override
+	public JavaScriptObject getItemContextRequestData(FileSystemItem item) {
+		if (rq == null)
+			return null;
+		return invokeNativeRequestDataCallback(item.asJs());
 	}
 
 	@Override
@@ -59,12 +68,14 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			if ("section".equals(type))
 				components.add(new NativeItemContextSection(c
 						.getString("title"), c.getString("html"), c
-						.getObject("on_init"), c.getObject("on_context_close"),
-						c.getObject("on_open"), c.getObject("on_close"), index));
+						.getObject("on_init"), c.getObject("on_request"), c
+						.getObject("on_context_close"), c.getObject("on_open"),
+						c.getObject("on_close"), index));
 			else if ("custom".equals(type))
 				components.add(new NativeItemContextComponent(c
-						.getObject("on_init"), c.getObject("on_context_close"),
-						c.getString("html"), index));
+						.getObject("on_init"), c.getObject("on_request"), c
+						.getObject("on_context_close"), c.getString("html"),
+						index));
 			else
 				throw new RuntimeException("Invalid component type: " + type);
 		}
@@ -106,10 +117,16 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			actions.put(type, list);
 	}
 
+	private final native JavaScriptObject invokeNativeRequestDataCallback(
+			JavaScriptObject item) /*-{
+		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::rq;
+		return cb(item);
+	}-*/;
+
 	private final native JavaScriptObject invokeNativeProvider(
-			JavaScriptObject item, JavaScriptObject details) /*-{
+			JavaScriptObject item, JavaScriptObject d) /*-{
 		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::dp;
-		return cb(item, details);
+		return cb(item, d);
 	}-*/;
 
 }

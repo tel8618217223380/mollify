@@ -22,9 +22,10 @@ public class NativeItemContextSection extends NativeItemContextComponent
 	private final JavaScriptObject onClose;
 
 	public NativeItemContextSection(String title, String html,
-			JavaScriptObject init, JavaScriptObject dispose,
-			JavaScriptObject open, JavaScriptObject close, int index) {
-		super(init, dispose, html, index);
+			JavaScriptObject init, JavaScriptObject onRequest,
+			JavaScriptObject dispose, JavaScriptObject open,
+			JavaScriptObject close, int index) {
+		super(init, dispose, onRequest, html, index);
 		this.title = title;
 		onOpen = open;
 		onClose = close;
