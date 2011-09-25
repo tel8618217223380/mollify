@@ -44,7 +44,7 @@ public class NativeTextProvider {
 		}
 
 		o.formatInternalTime = function(s) {
-			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatInternalTime(Ljava/lang/String;)(s);
+			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatInternalTime(Ljava/lang/String;)(''+s);
 		}
 
 		o.locale = locale;

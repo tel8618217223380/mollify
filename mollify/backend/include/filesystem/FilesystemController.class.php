@@ -32,10 +32,12 @@
 			require_once("FilesystemItem.class.php");
 			require_once("BaseSearcher.class.php");
 			require_once("FilesystemSearcher.class.php");
+			require_once("CoreFileDataProvider.class.php");
 			
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
 			$this->registerSearcher(new FileSystemSearcher($this->env));
+			$this->registerDataRequestPlugin(new CoreFileDataProvider($this->env));
 			
 			FileEvent::register($this->env->events());
 		}
