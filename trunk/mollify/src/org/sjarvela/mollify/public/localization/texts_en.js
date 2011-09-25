@@ -121,6 +121,7 @@ fileListColumnTitleSelect: "",
 fileListColumnTitleName: "Name",
 fileListColumnTitleType: "Type",
 fileListColumnTitleSize: "Size",
+fileListColumnTitleLastModified: "Last Modified",
 fileListDirectoryType: "Folder",
 
 errorMessageRequestFailed: "Request failed",

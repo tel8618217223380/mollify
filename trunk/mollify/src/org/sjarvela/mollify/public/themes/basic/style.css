@@ -792,6 +792,10 @@ td#mollify-filelist-column-size {
 	padding-left: 6px;
 }
 
+.mollify-filelist-column-file-modified {
+	width: 125px;
+}
+
 .mollify-filelist th {
 	color: #494949;
 	border-bottom: 2px solid #AAAAAA;

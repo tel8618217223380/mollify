@@ -138,11 +138,20 @@
 		}
 		
 		private function authenticateLDAP($user, $pw) {
-			$conn = @ldap_connect($this->env->settings()->setting("ldap_server"));
+			$server = $this->env->settings()->setting("ldap_server");
+			$connString = $this->env->settings()->setting("ldap_conn_string");
+			if (strpos($connString, "[USER]") === FALSE) {
+				$connString = $user["name"].$connString;
+			} else {
+				$connString = str_replace("[USER]", $user["name"], $connString);
+			}
+			Logging::logDebug("Authenticating with LDAP (server ".$server."): ".$connString);
+			
+			$conn = @ldap_connect($server);
 			if (!$conn)
 				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to LDAP server");
-	
-			$bind = @ldap_bind($conn, $user["name"]."@".$this->env->settings()->setting("ldap_fqdn"), $pw);
+			
+			$bind = @ldap_bind($conn, $connString, $pw);
 			if (!$bind) {
 				Logging::logDebug("LDAP error: ".ldap_error($conn));
 				throw new ServiceException("AUTHENTICATION_FAILED");

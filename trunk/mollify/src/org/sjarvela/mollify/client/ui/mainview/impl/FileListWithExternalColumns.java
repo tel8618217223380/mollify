@@ -82,7 +82,7 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 						id,
 						titleKey,
 						col.hasValue("sortable") ? col.getBoolean("sortable")
-								: false);
+								: true);
 			}
 			if (column != null)
 				c.add(column);
@@ -110,7 +110,7 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 	public void sortColumn(String columnId, SortOrder sort) {
 		setComparator(isCoreColumn(columnId) ? new DefaultFileItemComparator(
 				columnId, sort) : pluginEnv.getFileListExt().getComparator(
-				columnId, sort));
+				columnId, sort, data));
 	}
 
 	private boolean isCoreColumn(String columnId) {

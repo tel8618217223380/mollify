@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.plugin.filelist;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
@@ -19,21 +20,23 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class NativeFileListComparator implements GridComparator<FileSystemItem> {
 	private final SortOrder sort;
 	private final NativeColumnSpec colSpec;
+	private final JsObj data;
 
-	public NativeFileListComparator(NativeColumnSpec colSpec, SortOrder sort) {
+	public NativeFileListComparator(NativeColumnSpec colSpec, SortOrder sort, JsObj data) {
 		this.colSpec = colSpec;
 		this.sort = sort;
+		this.data = data;
 	}
 
 	@Override
 	public int compare(FileSystemItem i1, FileSystemItem i2) {
 		return invokeSortCallback(colSpec.getSortCallback(), i1.asJs(),
-				i2.asJs(), sort.getCompareFactor());
+				i2.asJs(), sort.getCompareFactor(), data);
 	}
 
 	protected static native final int invokeSortCallback(JavaScriptObject cb,
-			JavaScriptObject i1, JavaScriptObject i2, int f) /*-{
-		return cb(i1, i2, f);
+			JavaScriptObject i1, JavaScriptObject i2, int f, JavaScriptObject data) /*-{
+		return cb(i1, i2, f, data);
 	}-*/;
 
 	@Override
