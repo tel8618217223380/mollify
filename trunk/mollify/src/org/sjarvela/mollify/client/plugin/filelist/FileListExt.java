@@ -69,10 +69,11 @@ public class FileListExt {
 
 			NativeColumnSpec colSpec = ((NativeGridColumn) c).getColSpec();
 			if (!colSpec.hasDataRequest())
-				continue;
-			rq.obj(colSpec.getRequestId(),
-					invokeDataRequestCallback(colSpec.getDataRequestCallback(),
-							i.asJs()));
+				rq.obj(colSpec.getRequestId(), JavaScriptObject.createObject());
+			else
+				rq.obj(colSpec.getRequestId(),
+						invokeDataRequestCallback(
+								colSpec.getDataRequestCallback(), i.asJs()));
 		}
 		return rq.create();
 	}

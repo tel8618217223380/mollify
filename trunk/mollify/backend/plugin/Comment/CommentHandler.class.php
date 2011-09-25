@@ -44,11 +44,11 @@
 			$this->getDao()->addComment($user, $item, time(), $comment);
 		}
 		
-		public function getRequestKey() {
-			return "plugin-comment-count";
+		public function getRequestKeys() {
+			return array("plugin-comment-count");
 		}
 		
-		public function getRequestData($parent, $items, $result, $dataRequest) {
+		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
 			$counts = $this->getDao()->getCommentCountForChildren($parent);
 			$result = array();
 			foreach($counts as $id=>$c) {

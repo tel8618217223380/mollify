@@ -90,8 +90,11 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 
 	@Override
 	public Folder getRootFolder(String id) {
+		if (id == null)
+			return null;
+
 		for (Folder f : roots)
-			if (f.getId() != null && f.getId().equals(id))
+			if (id.equals(f.getId()))
 				return f;
 		return null;
 	}

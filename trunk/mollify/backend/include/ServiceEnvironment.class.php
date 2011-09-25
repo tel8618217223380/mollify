@@ -105,6 +105,10 @@
 		public function request() {
 			return $this->request;
 		}
+		
+		public function formatTimestampInternal($ts) {
+			return date($this->filesystem()->datetimeFormat(), $ts);
+		}
 
 		public function notificator() {
 			if ($this->notificator == NULL)

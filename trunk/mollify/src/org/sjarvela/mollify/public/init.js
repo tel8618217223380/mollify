@@ -14,6 +14,16 @@
 		
 		this.setup = function(e) {
 			t.env = e;
+			
+			t.env.addListColumnSpec({
+				"id": "file-modified",
+				"request-id": "core-file-modified",
+				"default-title-key": "fileListColumnTitleModified",
+				"content": function(item, data) {
+					if (!item.id || !item.is_file || !data || !data["core-file-modified"] || !data["core-file-modified"][item.id]) return "";
+					return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
+				}
+			});
 		}
 		
 		this.getSettings = function() {

@@ -275,11 +275,13 @@
 			
 			if ($data != NULL) {
 				foreach($this->env->filesystem()->getDataRequestPlugins() as $plugin) {
-					$key = $plugin->getRequestKey();
-					if (!array_key_exists($key, $data)) continue;
-					
-					$d = $plugin->getRequestData($item, $items, $result, $data[$key]);
-					if ($d != NULL) $requestDataResult[$key] = $d;
+					$requested = array();
+					foreach($plugin->getRequestKeys() as $k) {
+						if (!array_key_exists($k, $data)) continue;
+						
+						$d = $plugin->getRequestData($item, $items, $result, $k, $data[$k]);
+						if ($d != NULL) $requestDataResult[$k] = $d;
+					}
 				}
 			}
 			$result["data"] = $requestDataResult;
