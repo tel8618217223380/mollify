@@ -36,9 +36,10 @@ public class FileListExt {
 				defaultTitleKey, contentCb, sortCb, dataRequestCb, onRenderCb));
 	}
 
-	public GridComparator getComparator(String columnId, SortOrder sort) {
+	public GridComparator getComparator(String columnId, SortOrder sort,
+			JsObj data) {
 		return new NativeFileListComparator(customColumnSpecs.get(columnId),
-				sort);
+				sort, data);
 	}
 
 	public GridColumn getColumn(String id, String titleKey,

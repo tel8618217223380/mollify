@@ -41,7 +41,7 @@
 			"mime_types" => array(),
 			"authentication_methods" => array("pw"),
 			"ldap_server" => NULL,
-			"ldap_fqdn" => NULL,
+			"ldap_conn_string" => NULL,
 			"upload_temp_dir" => NULL,
 			"enable_thumbnails" => TRUE,
 			"enable_folder_protection" => FALSE,

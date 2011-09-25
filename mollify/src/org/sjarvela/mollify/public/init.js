@@ -18,7 +18,17 @@
 			t.env.addListColumnSpec({
 				"id": "file-modified",
 				"request-id": "core-file-modified",
-				"default-title-key": "fileListColumnTitleModified",
+				"default-title-key": "fileListColumnTitleLastModified",
+				"sort": function(i1, i2, sort, data) {
+					if (i1.is_file && !i2.is_file) return 1;
+					if (!i1.is_file && i2.is_file) return -1;
+					if (!i1.is_file && !i2.is_file) return 0;
+					if (!data || !data["core-file-modified"]) return 0;
+					
+					var ts1 = data["core-file-modified"][i1.id] ? data["core-file-modified"][i1.id] * 1 : 0;
+					var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
+					return ((ts1 > ts2) ? 1 : -1) * sort;
+				},
 				"content": function(item, data) {
 					if (!item.id || !item.is_file || !data || !data["core-file-modified"] || !data["core-file-modified"][item.id]) return "";
 					return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
