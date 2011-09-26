@@ -228,7 +228,11 @@ function ItemDetailsPlugin(s) {
 	
 	this.initialize = function(env) {
 		that.env = env;
+		that.configured = that.spec && that.spec.length > 0;
+		
 		that.env.addItemContextProvider(function(item) {
+			if (!that.configured || !that.getApplicableSpec(item)) return null;
+			
 			return {
 				components : [{
 					type: "section",
@@ -239,11 +243,20 @@ function ItemDetailsPlugin(s) {
 				}]
 			}
 		}, function(item) {
-			return {foo:"bar"};
+			if (!that.configured) return null;
+			return that.getApplicableSpec(item);
 		});
 	}
 	
+	this.getApplicableSpec = function(item) {
+		var ext = item.extension.toLower().trim();
+		if (ext.length == 0 || !that.settings[ext])
+			return that.spec["*"];
+		return that.spec[ext];
+	}
+	
 	this.onInit = function(id, c, item, details) {
+		if (!that.configured) return false;
 		//if (!details.itemdetails) return;
 		
 		$("#file-item-details").html("<div class='mollify-file-context-details-content'>foo</div>");

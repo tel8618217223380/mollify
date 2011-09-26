@@ -12,15 +12,15 @@
 	
 	class ItemDetails extends PluginBase {
 		public function setup() {
-			$this->env->filesystem()->registerDetailsPlugin($this);
+			$this->env->filesystem()->registerDetailsPlugin("itemdetails", $this);
 		}
 		
-		public function getItemDetails($item, $details) {
-			return array("itemdetails" => $this->getDetailsData($item));
-		}
-		
-		private function getDetailsData($item) {
-			return array();
+		public function getItemDetails($item, $details, $data) {
+			if ($data == NULL) return FALSE;
+			return array(
+				"size" => $item->size(),
+				"last-modified" => $this->env->formatTimestampInternal($item->lastModified())
+			);
 		}
 				
 		public function __toString() {

@@ -49,8 +49,8 @@
 			$this->filesystems[$id] = $factory;
 		}
 
-		public function registerDetailsPlugin($plugin) {
-			$this->detailsPlugins[] = $plugin;
+		public function registerDetailsPlugin($key, $plugin) {
+			$this->detailsPlugins[$key] = $plugin;
 		}
 
 		public function registerDataRequestPlugin($plugin) {
@@ -240,12 +240,11 @@
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
 			
-			foreach($this->detailsPlugins as $p) {
-				$l = $p->getItemDetails($item, $details);
+			foreach($this->detailsPlugins as $k=>$p) {
+				$d = ($data != NULL and isset($data[$k])) ? $data[$k] : NULL;
+				$l = $p->getItemDetails($item, $details, $d);
 				if (!$l) continue;
-				
-				foreach($l as $k=>$v)
-					$details[$k] = $v;
+				$details[$k] = $l;
 			}
 			return $details;
 		}
