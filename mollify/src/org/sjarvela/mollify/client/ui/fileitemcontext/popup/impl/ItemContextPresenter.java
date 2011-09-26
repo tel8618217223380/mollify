@@ -139,9 +139,11 @@ public class ItemContextPresenter implements ActionListener,
 			popup.hide();
 			Object param = null;
 			if (action.equals(FileSystemAction.view))
-				param = ((FileDetails) details).getFileView();
+				param = ((FileDetails) details).getFileViewerEditor()
+						.getJsObj("view");
 			else if (action.equals(FileSystemAction.edit))
-				param = ((FileDetails) details).getFileEdit();
+				param = ((FileDetails) details).getFileViewerEditor()
+						.getJsObj("edit");
 			fileSystemActionHandler.onAction(item, (FileSystemAction) action,
 					popup, param);
 			return;
