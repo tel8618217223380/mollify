@@ -40,6 +40,7 @@ public class JsObjBuilder {
 	}-*/;
 	
 	public void add(JavaScriptObject o) {
+		if (o == null) return;
 		addO(obj, o);
 	}
 
