@@ -43,16 +43,8 @@ public class FileDetails extends ItemDetails {
 		return DateTime.getInstance().getInternalFormat().parse(string);
 	}
 
-	public final native String getFilePreview() /*-{
-		return this.preview;
-	}-*/;
-
-	public final native JsObj getFileView() /*-{
-		return this.view;
-	}-*/;
-
-	public final native JsObj getFileEdit() /*-{
-		return this.edit;
+	public final native JsObj getFileViewerEditor() /*-{
+		return this.fileviewereditor;
 	}-*/;
 
 	private final native String getLastAccessedString() /*-{

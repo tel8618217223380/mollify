@@ -71,7 +71,9 @@ public class PreviewComponent implements ItemContextSection {
 	}
 
 	private boolean hasPreview() {
-		return this.details != null && this.details.getFilePreview() != null;
+		return this.details != null
+				&& this.details.getFileViewerEditor() != null
+				&& this.details.getFileViewerEditor().hasValue("preview");
 	}
 
 	@Override
@@ -80,19 +82,22 @@ public class PreviewComponent implements ItemContextSection {
 			return;
 		initalized = true;
 
-		service.get(details.getFilePreview(), new ResultListener<JsObj>() {
-			@Override
-			public void onFail(ServiceError error) {
-				component.getElement().setInnerHTML(
-						error.getType().getMessage(textProvider));
-			}
+		service.get(this.details.getFileViewerEditor().getAsString("preview"),
+				new ResultListener<JsObj>() {
+					@Override
+					public void onFail(ServiceError error) {
+						component.getElement().setInnerHTML(
+								error.getType().getMessage(textProvider));
+					}
 
-			@Override
-			public void onSuccess(JsObj result) {
-				component.removeStyleDependentName(StyleConstants.LOADING);
-				component.getElement().setInnerHTML(result.getString("html"));
-			}
-		});
+					@Override
+					public void onSuccess(JsObj result) {
+						component
+								.removeStyleDependentName(StyleConstants.LOADING);
+						component.getElement().setInnerHTML(
+								result.getString("html"));
+					}
+				});
 	}
 
 	@Override

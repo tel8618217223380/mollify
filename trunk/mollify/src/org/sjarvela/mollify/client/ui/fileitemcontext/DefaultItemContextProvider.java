@@ -118,12 +118,14 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 			ItemContextActionTypeBuilder actions) {
 		if (item.isFile()) {
 			FileDetails d = details.cast();
-			if (d.getFileView() != null
+			if (d.getFileViewerEditor() != null
+					&& d.getFileViewerEditor().hasValue("view")
 					&& sessionProvider.getSession().getFeatures().fileView()) {
 				actions.add(FileSystemAction.view,
 						textProvider.getText(Texts.fileActionViewTitle));
 			}
-			if (d.getFileEdit() != null
+			if (d.getFileViewerEditor() != null
+					&& d.getFileViewerEditor().hasValue("edit")
 					&& sessionProvider.getSession().getFeatures().fileEdit()) {
 				actions.add(FileSystemAction.edit,
 						textProvider.getText(Texts.fileActionEditTitle));

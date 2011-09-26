@@ -268,17 +268,31 @@ function ItemDetailsPlugin(detailsSpec) {
 			html += that.getItemRow(k, s[k], details.itemdetails[k]);
 		$("#file-item-details").html(html+"</div>");
 	}
+
+	this.onOpen = function() {
+	}
 	
 	this.getItemRow = function(dataKey, rowSpec, rowData) {
 		if (!rowData) return "";
-		var title = dataKey;
+		var title = that.getTitle(dataKey, rowSpec);
 		var value = that.formatData(dataKey, rowData);
 		return "<div class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value'>"+value+"</div></div>";
+	}
+	
+	this.getTitle = function(dataKey, rowSpec) {
+		if (rowSpec.title) return that.t(rowSpec.title);
+		
+		if (dataKey == 'size') return that.t('fileItemContextDataSize');
+		if (dataKey == 'last-modified') return that.t('fileItemContextDataLastModified');
+		
+		//TODO default title?
+		return dataKey;
 	}
 	
 	this.formatData = function(key, data) {
 		if (key == 'size') return that.env.texts().formatSize(data);
 		if (key == 'last-modified') return that.env.texts().formatInternalTime(data);
+		
 		//TODO plugin formatters
 		return data;
 	}
