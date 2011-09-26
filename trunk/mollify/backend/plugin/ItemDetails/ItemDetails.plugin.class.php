@@ -16,7 +16,8 @@
 		}
 		
 		public function getItemDetails($item, $details, $data) {
-			if ($data == NULL) return FALSE;
+			Logging::logDebug("DETAILS ".Util::array2str($data));
+			//if ($data == NULL) return FALSE;
 			return array(
 				"size" => $item->size(),
 				"last-modified" => $this->env->formatTimestampInternal($item->lastModified())

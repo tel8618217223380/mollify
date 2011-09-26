@@ -191,7 +191,8 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'details':
-					$this->response()->success($this->env->filesystem()->details($item, isset($this->request->data["data"]) ? $this->request->data["data"] : null));
+					$data = isset($this->request->data["data"]) ? $this->request->data["data"] : null;
+					$this->response()->success($this->env->filesystem()->details($item, $data));
 					return;
 				case 'move':
 					$data = $this->request->data;

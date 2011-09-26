@@ -220,18 +220,16 @@ function CommentPlugin() {
 	}	
 }
 
-function ItemDetailsPlugin(s) {
-	var spec = s;
+function ItemDetailsPlugin(detailsSpec) {
 	var that = this;
 	
 	this.getPluginInfo = function() { return { id: "plugin-itemdetails" }; }
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.configured = that.spec && that.spec.length > 0;
 		
 		that.env.addItemContextProvider(function(item) {
-			if (!that.configured || !that.getApplicableSpec(item)) return null;
+			if (!detailsSpec || !that.getApplicableSpec(item)) return null;
 			
 			return {
 				components : [{
@@ -243,33 +241,46 @@ function ItemDetailsPlugin(s) {
 				}]
 			}
 		}, function(item) {
-			if (!that.configured) return null;
-			return that.getApplicableSpec(item);
+			if (!detailsSpec) return null;
+			var spec = that.getApplicableSpec(item);
+			if (!spec) return null;
+			
+			var result = { itemdetails: [] };
+			for (var k in spec)
+				result.itemdetails.push(k);
+			return result;
 		});
 	}
 	
 	this.getApplicableSpec = function(item) {
-		var ext = item.extension.toLower().trim();
-		if (ext.length == 0 || !that.settings[ext])
-			return that.spec["*"];
-		return that.spec[ext];
+		var ext = item.extension.toLowerCase().trim();
+		if (ext.length == 0 || !detailsSpec[ext])
+			return detailsSpec["*"];
+		return detailsSpec[ext];
 	}
 	
 	this.onInit = function(id, c, item, details) {
-		if (!that.configured || !details.itemdetails) return false;
+		if (!detailsSpec || !details.itemdetails) return false;
 		
 		var s = that.getApplicableSpec(item);
 		var html = "<div class='mollify-file-context-details-content'>";
 		for (var k in s)
-			html += that.getItemRow(s[k], details.itemdetails[k]);
+			html += that.getItemRow(k, s[k], details.itemdetails[k]);
 		$("#file-item-details").html(html+"</div>");
 	}
 	
-	this.getItemRow = function(rowSpec, rowData) {
+	this.getItemRow = function(dataKey, rowSpec, rowData) {
 		if (!rowData) return "";
-		var title = 'foo';
-		var value = rowData;
+		var title = dataKey;
+		var value = that.formatData(dataKey, rowData);
 		return "<div class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value'>"+value+"</div></div>";
+	}
+	
+	this.formatData = function(key, data) {
+		if (key == 'size') return that.env.texts().formatSize(data);
+		if (key == 'last-modified') return that.env.texts().formatInternalTime(data);
+		//TODO plugin formatters
+		return data;
 	}
 		
 	this.url = function(p) {
