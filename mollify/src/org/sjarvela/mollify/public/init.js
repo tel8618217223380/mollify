@@ -256,10 +256,20 @@ function ItemDetailsPlugin(s) {
 	}
 	
 	this.onInit = function(id, c, item, details) {
-		if (!that.configured) return false;
-		//if (!details.itemdetails) return;
+		if (!that.configured || !details.itemdetails) return false;
 		
-		$("#file-item-details").html("<div class='mollify-file-context-details-content'>foo</div>");
+		var s = that.getApplicableSpec(item);
+		var html = "<div class='mollify-file-context-details-content'>";
+		for (var k in s)
+			html += that.getItemRow(s[k], details.itemdetails[k]);
+		$("#file-item-details").html(html+"</div>");
+	}
+	
+	this.getItemRow = function(rowSpec, rowData) {
+		if (!rowData) return "";
+		var title = 'foo';
+		var value = rowData;
+		return "<div class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value'>"+value+"</div></div>";
 	}
 		
 	this.url = function(p) {
