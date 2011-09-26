@@ -40,7 +40,7 @@ public class NativeTextProvider {
 		}
 
 		o.formatSize = function(s) {
-			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatSize(I)(s);
+			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::formatSize(I)(s*1);
 		}
 
 		o.formatInternalTime = function(s) {
