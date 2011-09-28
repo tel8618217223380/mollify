@@ -124,7 +124,7 @@
 				if (strcasecmp("LDAP", $auth) == 0) {
 					$this->authenticateLDAP($user, $pw);
 				} else {
-					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
+					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$auth);
 				}
 			}
 			$this->doAuth($user, $auth);
