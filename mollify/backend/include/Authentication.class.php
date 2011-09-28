@@ -123,7 +123,6 @@
 				// handle other authentications
 				if (strcasecmp("LDAP", $auth) == 0) {
 					$this->authenticateLDAP($user, $pw);
-					$this->env->session()->param('auth', "ldap");
 				} else {
 					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
 				}
