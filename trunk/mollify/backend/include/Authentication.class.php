@@ -124,9 +124,9 @@
 				if (strcasecmp("LDAP", $auth) == 0) {
 					$this->authenticateLDAP($user, $pw);
 					$this->env->session()->param('auth', "ldap");
-					return;
-				} 
-				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
+				} else {
+					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$user["auth"]);
+				}
 			}
 			$this->doAuth($user, $auth);
 			return $user;
