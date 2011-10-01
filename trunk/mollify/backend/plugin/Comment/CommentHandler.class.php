@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli Järvelä
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -30,10 +30,10 @@
 				$this->getDao()->moveComments($e->item(), $e->info());
 		}
 		
-		public function getItemDetails($item, $details) {
-			return array("comments" => array(
+		public function getItemDetails($item, $details, $data) {
+			return array(
 				"count" => $this->getDao()->getCommentCount($item)
-			));
+			);
 		}
 
 		public function getComments($item) {

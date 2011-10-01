@@ -28,7 +28,7 @@
 			
 			$this->handler = new CommentHandler($this->env);
 			$this->env->events()->register("filesystem/", $this->handler);
-			$this->env->filesystem()->registerDetailsPlugin($this->handler);
+			$this->env->filesystem()->registerDetailsPlugin("plugin-comment", $this->handler);
 			$this->env->filesystem()->registerDataRequestPlugin($this->handler);
 		}
 		
