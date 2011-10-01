@@ -61,7 +61,7 @@
 			$this->env->events()->onEvent(SessionEvent::login($this->env->request()->ip()));
 			
 			$sessionInfo = $this->getSessionInfo($this->request->data("protocol_version"));
-			if ($this->request->data("remember"))
+			if ($this->request->hasData("remember") and strcmp($this->request->data("remember"), "1") === 0)
 				$this->env->authentication()->storeCookie();
 
 			$this->response()->success($sessionInfo);

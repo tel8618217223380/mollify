@@ -29,7 +29,7 @@
 			require_once("FileViewerEditorController.class.php");
 			
 			$this->controller = new FileViewerEditorController($this, $view, $preview, $edit);
-			$this->env->filesystem()->registerDetailsPlugin($this->controller);
+			$this->env->filesystem()->registerDetailsPlugin("fileviewereditor", $this->controller);
 		}
 		
 		public function getController() {

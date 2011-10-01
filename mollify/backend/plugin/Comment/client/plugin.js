@@ -34,9 +34,9 @@ function CommentPlugin() {
 	}
 	
 	this.onInit = function(id, c, item, details) {
-		if (!details.comments) return;
+		if (!details["plugin-comments"]) return;
 		
-		$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details.comments.count+"</div></div></div>");
+		$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details["plugin-comments"].count+"</div></div></div>");
 		
 		$("#details-comments-content").hover(
 			function () { $(this).addClass("hover"); }, 
