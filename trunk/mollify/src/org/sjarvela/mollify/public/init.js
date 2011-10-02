@@ -3,6 +3,7 @@
 		var t = this;
 		this.settings = {};
 		this.plugins = [];
+		this.pluginsById = {};
 
 		this.init = function(s) {
 			t.settings = s;
@@ -42,8 +43,18 @@
 			return t.plugins;
 		}
 		
+		this.getPlugin = function(id) {
+			return t.pluginsById[id];
+		}
+
+		this.hasPlugin = function(id) {
+			return !!t.pluginsById[id];
+		}
+		
 		this.registerPlugin = function(p) {
 			t.plugins.push(p);
+			var id = p.getPluginInfo().id;
+			if (id) t.pluginsById[id] = p;
 		}
 
 		this.importScript = function(url) {
@@ -120,6 +131,12 @@ function CommentPlugin() {
 				});
 			}
 		});
+		
+		if (mollify.hasPlugin("plugin-itemdetails"))
+			mollify.getPlugin("plugin-itemdetails").addDetailsSpec({
+				key: "comments-count",
+				title: "commentsDetailsCount"
+			});
 	}
 	
 	this.getListCellContent = function(item, data) {
@@ -222,6 +239,7 @@ function CommentPlugin() {
 
 function ItemDetailsPlugin(detailsSpec) {
 	var that = this;
+	that.specs = {};
 	
 	this.getPluginInfo = function() { return { id: "plugin-itemdetails" }; }
 	
@@ -252,6 +270,11 @@ function ItemDetailsPlugin(detailsSpec) {
 		});
 	}
 	
+	this.addDetailsSpec = function(s) {
+		if (!s || !s.key) return;
+		that.specs[s.key] = s;
+	}
+	
 	this.getApplicableSpec = function(item) {
 		var ext = item.extension.toLowerCase().trim();
 		if (ext.length == 0 || !detailsSpec[ext])
@@ -264,7 +287,7 @@ function ItemDetailsPlugin(detailsSpec) {
 		
 		var s = that.getApplicableSpec(item);
 		var html = "<div class='mollify-file-context-details-content'>";
-		for (var k in s)
+		for (k in s)
 			html += that.getItemRow(k, s[k], details.itemdetails[k]);
 		$("#file-item-details").html(html+"</div>");
 	}
@@ -285,7 +308,10 @@ function ItemDetailsPlugin(detailsSpec) {
 		if (dataKey == 'size') return that.t('fileItemContextDataSize');
 		if (dataKey == 'last-modified') return that.t('fileItemContextDataLastModified');
 		
-		//TODO default title?
+		if (that.specs[dataKey]) {
+			var spec = that.specs[dataKey];
+			if (spec.title) return that.t(spec.title);
+		}
 		return dataKey;
 	}
 	
@@ -293,7 +319,11 @@ function ItemDetailsPlugin(detailsSpec) {
 		if (key == 'size') return that.env.texts().formatSize(data);
 		if (key == 'last-modified') return that.env.texts().formatInternalTime(data);
 		
-		//TODO plugin formatters
+		if (that.specs[key]) {
+			var spec = that.specs[key];
+			if (spec.formatter) return spec.formatter(data);
+		}
+
 		return data;
 	}
 		

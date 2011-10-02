@@ -19,6 +19,16 @@
 			$this->env = $env;
 		}
 		
+		public function setupDetails($detailsPlugin) {
+			$detailsPlugin->registerDetailsProvider("comments-count", $this);
+		}
+		
+		public function getDetail($item, $key) {
+			if (strcmp("comments-count", $key) === 0)
+				return $this->getDao()->getCommentCount($item);
+			return NULL;
+		}
+		
 		public function onEvent($e) {
 			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
 			$type = $e->subType();

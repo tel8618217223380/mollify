@@ -30,6 +30,8 @@
 			$this->env->events()->register("filesystem/", $this->handler);
 			$this->env->filesystem()->registerDetailsPlugin("plugin-comment", $this->handler);
 			$this->env->filesystem()->registerDataRequestPlugin($this->handler);
+			if ($this->env->plugins()->hasPlugin("ItemDetails"))
+				$this->handler->setupDetails($this->env->plugins()->getPlugin("ItemDetails"));
 		}
 		
 		public function getHandler() {
