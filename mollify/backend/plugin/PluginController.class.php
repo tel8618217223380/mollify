@@ -50,6 +50,10 @@
 			return $this->plugins[$id];
 		}
 		
+		public function hasPlugin($id) {
+			return $this->plugins[$id];
+		}
+		
 		public function getSessionInfo() {
 			$result = array();
 			foreach($this->plugins as $id => $p) {
