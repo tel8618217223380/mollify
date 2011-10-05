@@ -276,7 +276,7 @@ function ItemDetailsPlugin(detailsSpec) {
 	}
 	
 	this.getApplicableSpec = function(item) {
-		var ext = item.extension.toLowerCase().trim();
+		var ext = item.is_file ? item.extension.toLowerCase().trim() : "[folder]";
 		if (ext.length == 0 || !detailsSpec[ext])
 			return detailsSpec["*"];
 		return detailsSpec[ext];

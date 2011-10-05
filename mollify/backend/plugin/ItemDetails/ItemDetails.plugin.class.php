@@ -36,7 +36,7 @@
 		
 		private function getData($item, $key) {
 			if (strcmp($key, "size") === 0)
-				return $item->size();
+				return $item->isFile() ? $item->size() : NULL;
 			if (strcmp($key, "last-modified") === 0)
 				return $this->env->formatTimestampInternal($item->lastModified());
 			if (array_key_exists($key, $this->detailProviders)) {
