@@ -88,9 +88,6 @@ mainViewOptionsListTooltip: "List",
 mainViewOptionsGridSmallTooltip: "Small Icons",
 mainViewOptionsGridLargeTooltip: "Large Icons",
 
-fileItemContextDataSize: "Size",
-fileDetailsLabelLastModified: "Last modified",
-
 fileDetailsAddDescription: "Add description",
 fileDetailsEditDescription: "Edit",
 fileDetailsApplyDescription: "Apply",
@@ -330,5 +327,8 @@ searchResultsNoMatchesFound: "No matches found.",
 searchResultListColumnTitlePath: "Path",
 searchResultsTooltipMatches: "Matches:",
 searchResultsTooltipMatchName: "Name",
-searchResultsTooltipMatchDescription: "Description"
+searchResultsTooltipMatchDescription: "Description",
+
+fileItemContextDataSize: "Size",
+fileItemContextDataLastModified: "Last modified",
 })})();

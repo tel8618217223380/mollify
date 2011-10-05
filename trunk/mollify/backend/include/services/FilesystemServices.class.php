@@ -328,6 +328,10 @@
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
+				case 'details':
+					$data = isset($this->request->data["data"]) ? $this->request->data["data"] : null;
+					$this->response()->success($this->env->filesystem()->details($item, $data));
+					return;
 				case 'info':
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
 					$this->response()->success($this->getFolderInfo($item, $includeHierarchy, $this->request->data["data"]));

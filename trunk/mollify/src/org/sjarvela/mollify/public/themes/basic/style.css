@@ -1194,6 +1194,9 @@ td#mollify-filelist-column-size {
 
 .mollify-file-context-details-content {
 	width: 305px;
+	float: left;
+	padding-bottom: 4px;
+	padding-top: 2px;
 }
 
 .mollify-file-context-details-row {
@@ -1201,6 +1204,7 @@ td#mollify-filelist-column-size {
 	float: left;
 	clear: left;
 	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .mollify-file-context-details-row-label {
