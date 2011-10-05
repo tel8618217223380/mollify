@@ -88,9 +88,8 @@ mainViewOptionsListTooltip: "List",
 mainViewOptionsGridSmallTooltip: "Small Icons",
 mainViewOptionsGridLargeTooltip: "Large Icons",
 
-fileDetailsLabelLastAccessed: "Last accessed",
+fileItemContextDataSize: "Size",
 fileDetailsLabelLastModified: "Last modified",
-fileDetailsLabelLastChanged: "Last changed",
 
 fileDetailsAddDescription: "Add description",
 fileDetailsEditDescription: "Edit",
