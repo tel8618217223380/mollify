@@ -22,15 +22,28 @@ And following into client settings:
 		"service-path": "backend/",
 		"plugins": [
 			new ItemDetailsPlugin({
-				[DETAILS CONFIGURATION]
+				...
 			})
 		]
 	});
 }}}
 
+For configuration, see below.
+
 = Item details configuration =
 
-Details shown for files or folders can be configured by the type. For example:
+Details shown for files or folders can be configured by the type, with following format:
+
+{{{
+			new ItemDetailsPlugin({
+				[TYPE] : [DETAILS CONFIGURATION],
+				...
+			})
+}}}
+
+
+
+For example:
 
 {{{
 <script type="text/javascript">
