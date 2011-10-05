@@ -2,4 +2,5 @@
 commentsDialogTitle: "Comments",
 commentsDialogNoComments: "No comments",
 commentsDialogAddButton: "Add",
+commentsDetailsCount: "Comments"
 })})();

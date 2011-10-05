@@ -18,6 +18,7 @@ import org.sjarvela.mollify.client.FileView;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.ui.ViewListener;
@@ -209,7 +210,7 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 
 	@Override
 	public void onIconClicked(FileSystemItem item, Element e) {
-		if (item.equals(Folder.Parent))
+		if (item.equals(Folder.Parent) || (item instanceof VirtualGroupFolder))
 			return;
 
 		view.showItemContext(item, e);

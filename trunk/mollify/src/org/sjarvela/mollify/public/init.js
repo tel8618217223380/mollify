@@ -299,7 +299,7 @@ function ItemDetailsPlugin(detailsSpec) {
 		if (!rowData) return "";
 		var title = that.getTitle(dataKey, rowSpec);
 		var value = that.formatData(dataKey, rowData);
-		return "<div class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value'>"+value+"</div></div>";
+		return "<div id='mollify-file-context-details-row-"+dataKey+"' class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value-container'><div class='mollify-file-context-details-row-value'>"+value+"</div></div></div>";
 	}
 	
 	this.getTitle = function(dataKey, rowSpec) {
