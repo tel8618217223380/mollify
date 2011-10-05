@@ -35,16 +35,30 @@ For configuration, see below.
 Details shown for files or folders can be configured by the type, with following format:
 
 {{{
-			new ItemDetailsPlugin({
-				[TYPE] : [DETAILS CONFIGURATION],
-				...
-			})
+	new ItemDetailsPlugin({
+		[TYPE] : {
+			[DATA_KEY] : [CONFIGURATION],
+			...
+		},
+		...
+	})
 }}}
 
+The type can be:
+ * file extension, like "`png`" or "`pdf`"
+ * "`[folder]`" for folders
+ * "`*`" for default configuration
 
+Data key is the id of the data displayed. Mollify provides following built-in data keys:
+ * "`last-modified`" : Time of the last modification
+ * "`size`" : Size of the file
+
+Some plugins may provide more data keys.
+
+Configuration can override following:
+ * "`title`" : Localization key of the title text
 
 For example:
-
 {{{
 <script type="text/javascript">
 	mollify.init({
