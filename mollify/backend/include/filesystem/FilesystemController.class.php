@@ -437,7 +437,7 @@
 				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
 		}
 
-		public function download($file, $range = NULL) {
+		public function download($file, $mobile, $range = NULL) {
 			if (!$range)
 				Logging::logDebug('download ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "download");
@@ -475,7 +475,6 @@
 			if (!$range)
 				$this->env->events()->onEvent(FileEvent::download($file));
 
-			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);
 		}
 
@@ -511,6 +510,8 @@
 			
 			// flash uploader (uploads one file at a time)
 			if (isset($_FILES['uploader-flash'])) {
+				if (!isset($_FILES['uploader-flash']['tmp_name'])) throw new ServiceException("UPLOAD_FAILED");
+				
 				$this->upload($folder, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
 				return;
 			}
@@ -551,7 +552,7 @@
 			$this->env->events()->onEvent(FileEvent::upload($targetItem));
 		}
 		
-		public function downloadAsZip($items) {
+		public function downloadAsZip($items, $mobile) {
 			$this->env->features()->assertFeature("zip_download");
 			
 			if (is_array($items)) {
@@ -576,7 +577,7 @@
 				$this->env->events()->onEvent(FileEvent::download($item));
 			}
 			
-			$this->env->response()->download($name, "zip", $zip->stream());	
+			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
 		}
 		
 		public function search($parent, $text) {

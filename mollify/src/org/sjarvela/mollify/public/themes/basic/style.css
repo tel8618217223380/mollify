@@ -1192,8 +1192,15 @@ td#mollify-filelist-column-size {
 	margin-top: 12px;
 }
 
+.mollify-file-context-details-content {
+	width: 305px;
+}
+
 .mollify-file-context-details-row {
 	width: 100%;
+	float: left;
+	clear: left;
+	padding-top: 2px;
 }
 
 .mollify-file-context-details-row-label {
@@ -1201,21 +1208,19 @@ td#mollify-filelist-column-size {
 	padding-top: 1px;
 	padding-bottom: 1px;
 	padding-left: 15px;
+	float: left;
 }
 
-.mollify-file-context-details-row-value {
-	float: right;
+.mollify-file-context-details-row-value-container {
+	float: left;
 	padding-top: 1px;
 	padding-bottom: 1px;
 	padding-right: 6px;
+	float: right;
 }
 
-.mollify-file-context-details-row-label-modified, .mollify-file-context-details-row-value-modified {
-	padding-top: 5px;
-}
+.mollify-file-context-details-row-value {
 
-.mollify-file-context-details-row-label-accessed, .mollify-file-context-details-row-value-accessed {
-	padding-bottom: 6px;
 }
 
 .mollify-file-context-buttons, .mollify-directory-context-buttons {
