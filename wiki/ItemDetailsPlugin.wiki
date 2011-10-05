@@ -1,0 +1,53 @@
+#summary Item details plugin
+
+= Introduction =
+
+Item details plugin is built-in plugin that provides details section in the file or folder popup.
+
+= Configuration =
+
+Register plugin by adding following into configuration.php (or merge into existing plugins array):
+
+{{{
+	$PLUGINS = array(
+		"ItemDetails" => array()
+	);
+}}}
+
+And following into client settings:
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"service-path": "backend/",
+		"plugins": [
+			new ItemDetailsPlugin({
+				[DETAILS CONFIGURATION]
+			})
+		]
+	});
+}}}
+
+= Item details configuration =
+
+Details shown for files or folders can be configured by the type. For example:
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"service-path": "backend/",
+		"plugins": [
+			new ItemDetailsPlugin({
+				"pdf": {
+					"size" : {}
+				},
+				"*": {
+					"last-modified" : {},
+					"size": {}
+				}
+			})
+		]
+	});
+}}}
+
+This configuration will show last modification stamp and size for all files, except for pdf files only size.
