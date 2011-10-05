@@ -23,8 +23,10 @@
 			if ($this->path[0] === 'items' and $this->env->features->isFeatureEnabled("public_links")) {
 				$this->env->filesystem()->allowFilesystems = TRUE;
 				$item = $this->item($this->path[1]);
+				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+				
 				$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
-				$this->env->filesystem()->download($item);
+				$this->env->filesystem()->download($item, $mobile);
 				return;
 			}
 			throw $this->invalidRequestException();

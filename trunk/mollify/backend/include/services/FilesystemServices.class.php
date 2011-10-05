@@ -27,12 +27,13 @@
 				$itemIds = $this->env->session()->param("zip_items");
 				$this->env->session()->removeParam("zip_items");
 				if (count($itemIds) < 1) throw $this->invalidRequestException();
+				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				
 				$items = array();
 				foreach($itemIds as $id)
 					$items[] = $this->item($id);
 
-				$this->env->filesystem()->downloadAsZip($items);
+				$this->env->filesystem()->downloadAsZip($items, $mobile);
 				return;
 			}
 
@@ -127,10 +128,11 @@
 				
 		private function processGetFile($item) {
 			if (count($this->path) == 1) {
+				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				if (isset($_SERVER['HTTP_RANGE'])) {
-					$this->env->filesystem()->download($item, $_SERVER['HTTP_RANGE']);
+					$this->env->filesystem()->download($item, $mobile, $_SERVER['HTTP_RANGE']);
 				} else {
-					$this->env->filesystem()->download($item);
+					$this->env->filesystem()->download($item, $mobile);
 				}
 				return;
 			}
@@ -149,7 +151,8 @@
 					$this->env->filesystem()->view($item);
 					return;
 				case 'zip':
-					$this->env->filesystem()->downloadAsZip($item);
+					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+					$this->env->filesystem()->downloadAsZip($item, $mobile);
 					return;
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
@@ -229,7 +232,8 @@
 			
 			switch (strtolower($this->path[1])) {
 				case 'zip':
-					$this->env->filesystem()->downloadAsZip($item);
+					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+					$this->env->filesystem()->downloadAsZip($item, $mobile);
 					return;
 				case 'info':
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
