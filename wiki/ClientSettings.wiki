@@ -60,6 +60,9 @@ Mollify provides following columns:
  * 'size': File size
  * 'file-modified': Last modification time
 
+Following plugins provide more column data:
+  * [http://code.google.com/p/mollify/wiki/CommentsPlugin#File_list_columns Comments]
+
 Column settings accepts following settings:
  * 'title': Text key (in localization file) shown in the column title. If not provided, default title used
  * 'sortable': Is column sortable
