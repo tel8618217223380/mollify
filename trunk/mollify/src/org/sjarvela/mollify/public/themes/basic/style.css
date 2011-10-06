@@ -21,6 +21,58 @@ body {
 	font-size: 8pt;
 }
 
+#item-details-exif {
+	padding-left: 0;
+	float: left;
+	width: 330px;
+	overflow: scroll;
+	max-height: 120px;
+	margin-left: 13px;
+	padding-top: 2px;
+	margin-top: 2px;
+}
+
+#mollify-file-item-details-row-exif {
+	width: 350px;
+	float: left;
+}
+
+#mollify-file-item-details-row-exif .mollify-file-item-details-row-value-container {
+	float: left;
+	clear: both;
+}
+
+#item-details-exif-values {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#item-details-exif-values td.exif-section {
+	font-weight: bold;
+	color: #9b9b9b;
+	padding-right: 6px;
+	padding-left: 4px;
+}
+
+#item-details-exif-values tr.exif-row-section-first td.exif-section, #item-details-exif-values tr.exif-row-section-first td.exif-key {
+	background-color: #eee;
+}
+
+#item-details-exif-values td.exif-key {
+	color: #626262;
+	font-weight: bold;
+}
+
+#item-details-exif-values td.exif-value {
+	background-color: #fdfdfd;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+	padding-right: 6px;
+	white-space:nowrap;
+	font: 11px "Courier New", Courier, mono;
+}
+
 #mollify, .mollify-header, .mollify-header-container, .mollify-bubble-popup td, .mollify-directory-list-item-dropdown, .mollify-userlist, .mollify-folderlist, .mollify-userfolderlist, .mollify-configuration-dialog-menu, .mollify-permission-list {
 	margin: 0;
 	padding: 0;
@@ -1193,7 +1245,7 @@ td#mollify-filelist-column-size {
 }
 
 #mollify-file-item-details-content {
-	width: 305px;
+	min-width: 305px;
 	float: left;
 	padding-bottom: 4px;
 	padding-top: 2px;
@@ -2867,3 +2919,4 @@ input.mollify-header-search-field {
 	margin-right: 8px;
 	padding-left: 22px;
 }
+
