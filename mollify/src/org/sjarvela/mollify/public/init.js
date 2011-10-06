@@ -348,8 +348,11 @@ function ItemDetailsPlugin(conf, sp) {
 	this.getTitle = function(dataKey, rowSpec) {
 		if (rowSpec.title) return rowSpec.title;
 		if (rowSpec["title-key"]) return that.t(rowSpec["title-key"]);
-		
+
+		if (dataKey == 'name') return that.t('fileItemContextDataName');
 		if (dataKey == 'size') return that.t('fileItemContextDataSize');
+		if (dataKey == 'path') return that.t('fileItemContextDataPath');
+		if (dataKey == 'extension') return that.t('fileItemContextDataExtension');
 		if (dataKey == 'last-modified') return that.t('fileItemContextDataLastModified');
 		
 		if (that.specs[dataKey]) {
@@ -385,12 +388,20 @@ function ExifDetails() {
 	var t = this;
 	
 	this.formatExif = function(d) {
-		return "<div class='exif'>TODO</div>";
+		var html = "<div id='item-details-exif'><table id='item-details-exif-values'>";
+		for (var s in d) {
+			var first = true;
+			for (var k in d[s]) {
+				html += '<tr class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-section">'+(first?s:'')+'</td><td class="exif-key">'+k+'</td><td class="exif-value">'+d[s][k]+'</td></tr>';
+				first = false;
+			}
+		}
+		return html + "</table></div>";
 	}
 	
 	return {
 		key: "exif",
-		"title-key": "itemDetailsExif",
+		"title-key": "fileItemDetailsExif",
 		formatter: t.formatExif
 	}
 }
