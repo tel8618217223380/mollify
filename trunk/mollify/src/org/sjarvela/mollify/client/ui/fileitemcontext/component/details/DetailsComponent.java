@@ -138,7 +138,7 @@ public class DetailsComponent implements ItemContextSection {
 	}
 
 	@Override
-	public void onOpen() {
+	public void onOpen(FileSystemItem item, ItemDetails details) {
 	}
 
 	@Override

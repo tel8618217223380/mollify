@@ -1,6 +1,7 @@
 (function(){
 	window.mollify = new function(){
 		var t = this;
+		t.time = new Date().getTime();
 		this.settings = {};
 		this.plugins = [];
 		this.pluginsById = {};
@@ -72,6 +73,7 @@
 		}
 		
 		this.loadContent = function(id, url, cb) {
+			url = url + (strpos(url, "?") ? "&" : "?") + "_="+mollify.time;
 			$("#"+id).load(url, function() {
 				t.localize(id);
 				if (cb) cb();
@@ -105,6 +107,19 @@
 	}
 })();
 
+function strpos (haystack, needle, offset) {
+    // Finds position of first occurrence of a string within another  
+    // 
+    // version: 1109.2015
+    // discuss at: http://phpjs.org/functions/strpos
+    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Onno Marsman    
+    // +   bugfixed by: Daniel Esteban
+    // +   improved by: Brett Zamir (http://brett-zamir.me)
+    var i = (haystack + '').indexOf(needle, (offset || 0));
+    return i === -1 ? false : i;
+}
+
 function CommentPlugin() {
 	var that = this;
 	
@@ -135,7 +150,7 @@ function CommentPlugin() {
 		if (mollify.hasPlugin("plugin-itemdetails"))
 			mollify.getPlugin("plugin-itemdetails").addDetailsSpec({
 				key: "comments-count",
-				title: "commentsDetailsCount"
+				"title-key": "commentsDetailsCount"
 			});
 	}
 	
@@ -237,29 +252,50 @@ function CommentPlugin() {
 	}	
 }
 
-function ItemDetailsPlugin(detailsSpec) {
+function ItemDetailsPlugin(conf, sp) {
 	var that = this;
 	that.specs = {};
+	that.typeConfs = false;
 	
 	this.getPluginInfo = function() { return { id: "plugin-itemdetails" }; }
 	
 	this.initialize = function(env) {
 		that.env = env;
 		
+		if (sp) {
+			for (var i=0; i<sp.length;i++)
+				that.addDetailsSpec(sp[i]);
+		}
+		if (conf) {
+			that.typeConfs = {};
+			
+			for (var t in conf) {
+				var parts = t.split(",");
+				var c = conf[t];
+				for (var i=0; i < parts.length; i++) {
+					var p = parts[i].trim();
+					if (p.length > 0)
+						that.typeConfs[p] = c;
+				}
+			}
+		}
+		
 		that.env.addItemContextProvider(function(item) {
-			if (!detailsSpec || !that.getApplicableSpec(item)) return null;
+			if (!that.typeConfs || !that.getApplicableSpec(item)) return null;
 			
 			return {
 				components : [{
 					type: "section",
 					title: that.t("fileActionDetailsTitle"),
-					html: "<div id='file-item-details'></div>",
+					html: "<div id='file-item-details' class='loading'></div>",
 					on_init: that.onInit,
+					on_open: that.onOpen,
+					on_dispose: function() { that.loaded = false; },
 					index: 5
 				}]
 			}
 		}, function(item) {
-			if (!detailsSpec) return null;
+			if (!that.typeConfs) return null;
 			var spec = that.getApplicableSpec(item);
 			if (!spec) return null;
 			
@@ -270,47 +306,56 @@ function ItemDetailsPlugin(detailsSpec) {
 		});
 	}
 	
+	this.onOpen = function(item, details) {
+		if (that.loaded) return;
+		that.loaded = true;
+		
+		mollify.loadContent("file-item-details", that.url("content.html"), function() {
+			$("#file-item-details").removeClass("loading");
+			var s = that.getApplicableSpec(item);
+			var data = [];
+			for (var k in s) {
+				var rowSpec = s[k];
+				var rowData = details.itemdetails[k];
+				if (!rowData) continue;
+				
+				data.push({key:k, title:that.getTitle(k, rowSpec), value: that.formatData(k, rowData)});
+			}
+			$("#item-details-template").tmpl(data).appendTo("#mollify-file-item-details-content");
+		});
+	}
+	
 	this.addDetailsSpec = function(s) {
 		if (!s || !s.key) return;
 		that.specs[s.key] = s;
 	}
 	
 	this.getApplicableSpec = function(item) {
-		var ext = item.is_file ? item.extension.toLowerCase().trim() : "[folder]";
-		if (ext.length == 0 || !detailsSpec[ext])
-			return detailsSpec["*"];
-		return detailsSpec[ext];
+		var ext = item.is_file ? item.extension.toLowerCase().trim() : "";
+		if (ext.length == 0 || !that.typeConfs[ext]) {
+			ext = item.is_file ? "[file]" : "[folder]";
+			if (!that.typeConfs[ext])
+				return that.typeConfs["*"];
+		}
+		return that.typeConfs[ext];
 	}
 	
 	this.onInit = function(id, c, item, details) {
-		if (!detailsSpec || !details.itemdetails) return false;
-		
-		var s = that.getApplicableSpec(item);
-		var html = "<div class='mollify-file-context-details-content'>";
-		for (k in s)
-			html += that.getItemRow(k, s[k], details.itemdetails[k]);
-		$("#file-item-details").html(html+"</div>");
-	}
-
-	this.onOpen = function() {
-	}
-	
-	this.getItemRow = function(dataKey, rowSpec, rowData) {
-		if (!rowData) return "";
-		var title = that.getTitle(dataKey, rowSpec);
-		var value = that.formatData(dataKey, rowData);
-		return "<div id='mollify-file-context-details-row-"+dataKey+"' class='mollify-file-context-details-row'><div class='mollify-file-context-details-row-label'>"+title+"</div><div class='mollify-file-context-details-row-value-container'><div class='mollify-file-context-details-row-value'>"+value+"</div></div></div>";
+		if (!that.typeConfs || !details.itemdetails) return false;
+		that.loaded = false;
 	}
 	
 	this.getTitle = function(dataKey, rowSpec) {
-		if (rowSpec.title) return that.t(rowSpec.title);
+		if (rowSpec.title) return rowSpec.title;
+		if (rowSpec["title-key"]) return that.t(rowSpec["title-key"]);
 		
 		if (dataKey == 'size') return that.t('fileItemContextDataSize');
 		if (dataKey == 'last-modified') return that.t('fileItemContextDataLastModified');
 		
 		if (that.specs[dataKey]) {
 			var spec = that.specs[dataKey];
-			if (spec.title) return that.t(spec.title);
+			if (spec.title) return spec.title;
+			if (spec["title-key"]) return that.t(spec["title-key"]);
 		}
 		return dataKey;
 	}
@@ -328,10 +373,24 @@ function ItemDetailsPlugin(detailsSpec) {
 	}
 		
 	this.url = function(p) {
-		return that.env.service().getPluginUrl("Comment")+"client/"+p;
+		return that.env.service().getPluginUrl("ItemDetails")+"client/"+p;
 	}
 	
 	this.t = function(s) {
 		return that.env.texts().get(s);
-	}	
+	}
+}
+
+function ExifDetails() {
+	var t = this;
+	
+	this.formatExif = function(d) {
+		return "<div class='exif'>TODO</div>";
+	}
+	
+	return {
+		key: "exif",
+		"title-key": "itemDetailsExif",
+		formatter: t.formatExif
+	}
 }

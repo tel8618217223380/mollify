@@ -1178,7 +1178,7 @@ td#mollify-filelist-column-size {
 	width: 100%;
 }
 
-.mollify-file-context-details-content, .mollify-file-context-preview-content, .mollify-item-context-section-content {
+#mollify-file-item-details-content, .mollify-file-context-preview-content, .mollify-item-context-section-content {
 	width: 100%;
 	border-left: 1px;
 	background-color: #f5f5f5;
@@ -1192,14 +1192,14 @@ td#mollify-filelist-column-size {
 	margin-top: 12px;
 }
 
-.mollify-file-context-details-content {
+#mollify-file-item-details-content {
 	width: 305px;
 	float: left;
 	padding-bottom: 4px;
 	padding-top: 2px;
 }
 
-.mollify-file-context-details-row {
+.mollify-file-item-details-row {
 	width: 100%;
 	float: left;
 	clear: left;
@@ -1207,7 +1207,7 @@ td#mollify-filelist-column-size {
 	padding-bottom: 2px;
 }
 
-.mollify-file-context-details-row-label {
+.mollify-file-item-details-row-label {
 	font-weight: bold;
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -1215,7 +1215,7 @@ td#mollify-filelist-column-size {
 	float: left;
 }
 
-.mollify-file-context-details-row-value-container {
+.mollify-file-item-details-row-value-container {
 	float: left;
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -1223,7 +1223,7 @@ td#mollify-filelist-column-size {
 	float: right;
 }
 
-.mollify-file-context-details-row-value {
+.mollify-file-item-details-row-value {
 
 }
 

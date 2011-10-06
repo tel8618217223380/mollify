@@ -121,7 +121,7 @@ public class ItemContextPresenter implements ActionListener,
 		this.components = new ArrayList();
 		if (details != null) {
 			components = popup.setup(itemContextHandler.getItemContext(item,
-					details));
+					details), item, details);
 		}
 
 		this.details = details;
@@ -139,11 +139,11 @@ public class ItemContextPresenter implements ActionListener,
 			popup.hide();
 			Object param = null;
 			if (action.equals(FileSystemAction.view))
-				param = ((FileDetails) details).getFileViewerEditor()
-						.getJsObj("view");
+				param = ((FileDetails) details).getFileViewerEditor().getJsObj(
+						"view");
 			else if (action.equals(FileSystemAction.edit))
-				param = ((FileDetails) details).getFileViewerEditor()
-						.getJsObj("edit");
+				param = ((FileDetails) details).getFileViewerEditor().getJsObj(
+						"edit");
 			fileSystemActionHandler.onAction(item, (FileSystemAction) action,
 					popup, param);
 			return;

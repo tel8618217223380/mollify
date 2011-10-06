@@ -14,7 +14,20 @@
 		private $detailProviders = array();
 		
 		public function setup() {
+			foreach($this->getSettings() as $p)
+				$this->initProvider($p);
+
 			$this->env->filesystem()->registerDetailsPlugin("itemdetails", $this);
+		}
+		
+		private function initProvider($p) {
+			$cls = "providers/".$p.".class.php";
+			$path = dirname(__FILE__).DIRECTORY_SEPARATOR.$cls;
+			if (!file_exists($path)) throw new ServiceException("INVALID_CONFIGURATION", "Provider not found: ".$p);
+			
+			require_once($cls);
+			$provider = new $p();
+			$this->registerDetailsProvider($p->getDataKeys(), $p);
 		}
 		
 		public function registerDetailsProvider($keys, $p) {
@@ -35,15 +48,30 @@
 		}
 		
 		private function getData($item, $key) {
+			if (strcmp($key, "name") === 0)
+				return $item->name();
+			if (strcmp($key, "path") === 0)
+				return $item->path();
 			if (strcmp($key, "size") === 0)
 				return $item->isFile() ? $item->size() : NULL;
+			if (strcmp($key, "extension") === 0)
+				return $item->isFile() ? $item->extension() : NULL;
 			if (strcmp($key, "last-modified") === 0)
 				return $this->env->formatTimestampInternal($item->lastModified());
+			if (strcmp($key, "exif") === 0)
+				return $this->getExif($item);
+				
 			if (array_key_exists($key, $this->detailProviders)) {
 				$provider = $this->detailProviders[$key];
 				return $provider->getDetail($item, $key);
 			}
 			return NULL;
+		}
+		
+		public function getExif($item) {				
+			$exif = exif_read_data($item->internalPath(), 0, true);
+			if (!$exif) return NULL;
+			return $exif;
 		}
 				
 		public function __toString() {

@@ -18,6 +18,8 @@ import java.util.Map;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -106,19 +108,20 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		if (pointerPos > (container.getAbsoluteLeft() + container
 				.getOffsetWidth()))
 			pointerPos = 30; // TODO is there a better way to set default pos
-		
+
 		pointer.getElement().getStyle()
 				.setLeft((double) pointerPos, Style.Unit.PX);
 	}
 
-	public List<ItemContextComponent> setup(ItemContext itemContext) {
+	public List<ItemContextComponent> setup(ItemContext itemContext,
+			FileSystemItem item, ItemDetails details) {
 		List<ItemContextComponent> contextComponents = new ArrayList(
 				itemContext.getComponents());
 		this.components.clear();
 		this.componentsPanel.clear();
 
 		for (ItemContextComponent c : contextComponents)
-			addComponent(c);
+			addComponent(c, item, details);
 
 		setupActions(itemContext.getActions());
 
@@ -226,9 +229,11 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 			buttons.add(actionsButton);
 	}
 
-	private void addComponent(ItemContextComponent c) {
+	private void addComponent(ItemContextComponent c, FileSystemItem item,
+			ItemDetails details) {
 		if (c instanceof ItemContextSection) {
-			Widget section = createSection((ItemContextSection) c);
+			Widget section = createSection((ItemContextSection) c, item,
+					details);
 			components.put(c, section);
 			componentsPanel.add(section);
 		} else {
@@ -236,7 +241,8 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		}
 	}
 
-	private Widget createSection(final ItemContextSection section) {
+	private Widget createSection(final ItemContextSection section,
+			final FileSystemItem item, final ItemDetails details) {
 		DisclosurePanel s = new DisclosurePanel(section.getTitle());
 		s.setOpen(false);
 		s.addStyleName(StyleConstants.ITEM_CONTEXT_SECTION);
@@ -246,7 +252,7 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		s.addOpenHandler(new OpenHandler<DisclosurePanel>() {
 			@Override
 			public void onOpen(OpenEvent<DisclosurePanel> event) {
-				section.onOpen();
+				section.onOpen(item, details);
 			}
 		});
 		s.addCloseHandler(new CloseHandler<DisclosurePanel>() {
