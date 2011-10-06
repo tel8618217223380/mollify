@@ -58,6 +58,7 @@ Mollify provides following columns:
  * 'name': File or folder name
  * 'type': File or folder type description
  * 'size': File size
+ * 'file-modified': Last modification time
 
 Column settings accepts following settings:
  * 'title': Text key (in localization file) shown in the column title. If not provided, default title used
