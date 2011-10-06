@@ -10,6 +10,8 @@
 
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -37,8 +39,8 @@ public class NativeItemContextSection extends NativeItemContextComponent
 	}
 
 	@Override
-	public void onOpen() {
-		invokeOpen();
+	public void onOpen(FileSystemItem item, ItemDetails details) {
+		invokeOpen(item.asJs(), details);
 	}
 
 	@Override
@@ -46,11 +48,11 @@ public class NativeItemContextSection extends NativeItemContextComponent
 		invokeClose();
 	}
 
-	private final native JavaScriptObject invokeOpen() /*-{
+	private final native JavaScriptObject invokeOpen(JavaScriptObject item, JavaScriptObject details) /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onOpen;
 		if (!cb)
 			return;
-		cb();
+		cb(item, details);
 	}-*/;
 
 	private final native JavaScriptObject invokeClose() /*-{

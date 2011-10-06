@@ -319,5 +319,11 @@ retrieveUrlFailed: "Die Datei konnte nicht geladen werden.",
 
 searchResultsDialogTitle: "Suchergebnis",
 searchResultsNoMatchesFound: "Keine Resultate gefunden.",
-searchResultListColumnTitlePath: "Pfad"
+searchResultListColumnTitlePath: "Pfad",
+
+loginDialogRememberMe: "Erinnere dich an mich",
+
+mainViewOptionsListTooltip: "Liste",
+mainViewOptionsGridSmallTooltip: "kleine Symbole",
+mainViewOptionsGridLargeTooltip: "große Symbole",
 })})();
