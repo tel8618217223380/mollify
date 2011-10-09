@@ -19,7 +19,7 @@
 		private $allowedUploadTypes;
 		private $permissionCache = array();
 		private $folderCache = array();
-		private $detailsPlugins = array();
+		private $contextPlugins = array();
 		private $dataRequestPlugins = array();
 		private $searchers = array();
 		private $filesystems = array();
@@ -37,7 +37,7 @@
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
 			$this->registerSearcher(new FileSystemSearcher($this->env));
-			$this->registerDataRequestPlugin(new CoreFileDataProvider($this->env));
+			$this->registerDataRequestPlugin(array("core-file-modified"), new CoreFileDataProvider($this->env));
 			
 			FileEvent::register($this->env->events());
 		}
@@ -49,12 +49,13 @@
 			$this->filesystems[$id] = $factory;
 		}
 
-		public function registerDetailsPlugin($key, $plugin) {
-			$this->detailsPlugins[$key] = $plugin;
+		public function registerItemContextPlugin($key, $plugin) {
+			$this->contextPlugins[$key] = $plugin;
 		}
 
-		public function registerDataRequestPlugin($plugin) {
-			$this->dataRequestPlugins[] = $plugin;
+		public function registerDataRequestPlugin($keys, $plugin) {
+			foreach($keys as $key)
+				$this->dataRequestPlugins[$key] = $plugin;
 		}
 		
 		public function getDataRequestPlugins() {
@@ -240,9 +241,9 @@
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
 			
-			foreach($this->detailsPlugins as $k=>$p) {
+			foreach($this->contextPlugins as $k=>$p) {
 				$d = ($data != NULL and isset($data[$k])) ? $data[$k] : NULL;
-				$l = $p->getItemDetails($item, $details, $d);
+				$l = $p->getItemContextData($item, $details, $k, $d);
 				if (!$l) continue;
 				$details[$k] = $l;
 			}
@@ -369,7 +370,7 @@
 			
 			foreach($items as $item) {
 				if ($item->isFile())
-					$this->copy($item, $folder->fileWithName($item->name()));
+					$this->copy($item, $folder->createFile($item->name()));
 				else
 					$this->copy($item, $folder->folderWithName($item->name()));
 			}
@@ -529,6 +530,7 @@
 		
 		private function upload($folder, $name, $origin) {
 			$target = $folder->createFile($name);
+			if ($target->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
 			Logging::logDebug('uploading to ['.$target.']');
 			
 			$src = @fopen($origin, "rb");
@@ -545,7 +547,7 @@
 			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 
-			$targetItem = $folder->fileWithName($name, TRUE);
+			$targetItem = $folder->createFile($name);
 			if (Logging::isDebug()) Logging::logDebug("Upload from $src ($name) to ".$targetItem->id());
 			$targetItem->write($stream);
 			

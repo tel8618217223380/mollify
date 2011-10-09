@@ -17,7 +17,7 @@
 			foreach($this->getSettings() as $p)
 				$this->initProvider($p);
 
-			$this->env->filesystem()->registerDetailsPlugin("itemdetails", $this);
+			$this->env->filesystem()->registerItemContextPlugin("itemdetails", $this);
 		}
 		
 		private function initProvider($p) {
@@ -38,7 +38,7 @@
 				$this->detailProviders[$keys] = $p;
 		}
 		
-		public function getItemDetails($item, $details, $data) {
+		public function getItemContextData($item, $details, $k, $data) {
 			if (!$data) return FALSE;
 			
 			$result = array();

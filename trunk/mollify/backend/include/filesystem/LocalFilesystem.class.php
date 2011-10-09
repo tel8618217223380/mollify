@@ -281,17 +281,19 @@
 		}
 		
 		public function createFile($folder, $name) {
-			return $this->itemWithPath($this->publicPath(self::joinPath($this->localPath($folder), $name)), TRUE);
+			$target = self::joinPath($this->localPath($folder), $name);
+			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS");
+			return $this->itemWithPath($this->publicPath($target), TRUE);
 		}
 
-		public function fileWithName($folder, $name, $nonExisting = FALSE) {
+		public function fileWithName($folder, $name) {
 			$path = self::joinPath($this->localPath($folder), $name);
-			return $this->itemWithPath($this->publicPath($path), $nonExisting);
+			return $this->itemWithPath($this->publicPath($path));
 		}
 
-		public function folderWithName($folder, $name, $nonExisting = FALSE) {
+		public function folderWithName($folder, $name) {
 			$path = self::joinPath($this->localPath($folder), $name.DIRECTORY_SEPARATOR);
-			return $this->itemWithPath($this->publicPath($path), $nonExisting);
+			return $this->itemWithPath($this->publicPath($path));
 		}
 		
 		public function size($file) {

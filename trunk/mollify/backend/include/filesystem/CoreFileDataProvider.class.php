@@ -16,11 +16,7 @@
 		public function __construct($env) {
 			$this->env = $env;
 		}
-		
-		public function getRequestKeys() {
-			return array("core-file-modified");
-		}
-		
+				
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
 			$result = array();
 			foreach($items as $i) {

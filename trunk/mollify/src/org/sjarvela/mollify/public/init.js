@@ -127,7 +127,30 @@ function CommentPlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.env.addItemContextProvider(that.getItemContext);
+		that.env.addItemContextProvider(function(item) {
+			return {
+				components : [{
+					type: "custom",
+					html: "",
+					on_init: function(id, c, item, details) {
+						if (!details["plugin-comment"]) return;
+						
+						$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details["plugin-comment"].count+"</div></div></div>");
+						
+						$("#details-comments-content").hover(
+							function () { $(this).addClass("hover"); }, 
+							function () { $(this).removeClass("hover"); }
+						);
+						$("#details-comments-content").click(function() {
+							c.close();
+							that.openComments(item);
+						});
+					}
+				}]
+			};
+		}, function(item) {
+			return {"plugin-comment":["count"]};
+		});
 		
 		mollify.importCss(that.url("style.css"));
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
@@ -160,31 +183,6 @@ function CommentPlugin() {
 		if (!counts[item.id]) return "";
 		
 		return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
-	}
-	
-	this.getItemContext = function(item) {
-		return {
-			components : [{
-				type: "custom",
-				html: "",
-				on_init: that.onInit
-			}]
-		};
-	}
-	
-	this.onInit = function(id, c, item, details) {
-		if (!details.comments) return;
-		
-		$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details.comments.count+"</div></div></div>");
-		
-		$("#details-comments-content").hover(
-			function () { $(this).addClass("hover"); }, 
-			function () { $(this).removeClass("hover"); }
-		);
-		$("#details-comments-content").click(function() {
-			c.close();
-			that.openComments(item);
-		});
 	}
 	
 	this.openComments = function(item) {
@@ -392,16 +390,39 @@ function ExifDetails() {
 		for (var s in d) {
 			var first = true;
 			for (var k in d[s]) {
-				html += '<tr class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-section">'+(first?s:'')+'</td><td class="exif-key">'+k+'</td><td class="exif-value">'+d[s][k]+'</td></tr>';
+				var v = t.formatValue(s, k, d[s][k]);
+				if (!v) continue;
+				
+				html += '<tr id="exif-row-'+s+'-'+k+'" class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-section">'+(first?s:'')+'</td><td class="exif-key">'+k+'</td><td class="exif-value">'+v+'</td></tr>';
 				first = false;
 			}
 		}
 		return html + "</table></div>";
 	}
 	
+	this.formatValue = function(section, key, value) {
+		if (section == 'FILE' && key == 'SectionsFound') return false;
+		//TODO format values?
+		return value;
+	}
+	
 	return {
 		key: "exif",
 		"title-key": "fileItemDetailsExif",
 		formatter: t.formatExif
+	}
+}
+
+function SharePlugin() {
+	var that = this;
+	
+	this.getPluginInfo = function() { return { id: "plugin_share" }; }
+	
+	this.initialize = function(env) {
+		that.env = env;
+		that.env.addItemContextProvider(that.getItemContext);
+		
+//		mollify.importCss(that.url("style.css"));
+//		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 	}
 }

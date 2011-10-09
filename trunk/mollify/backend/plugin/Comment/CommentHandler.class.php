@@ -16,17 +16,17 @@
 		private $env;
 		
 		public function __construct($env) {
-			$this->env = $env;
+			$this->env = $env;			
 		}
-		
-		public function setupDetails($detailsPlugin) {
-			$detailsPlugin->registerDetailsProvider("comments-count", $this);
-		}
-		
+				
 		public function getDetail($item, $key) {
-			if (strcmp("comments-count", $key) === 0)
-				return $this->getDao()->getCommentCount($item);
-			return NULL;
+			return $this->getDao()->getCommentCount($item);
+		}
+		
+		public function getItemContextData($item, $details, $key, $data) {
+			return array(
+				"count" => $this->getDao()->getCommentCount($item)
+			);
 		}
 		
 		public function onEvent($e) {
@@ -39,12 +39,6 @@
 			else if ($type === FileEvent::MOVE or $type === FileEvent::RENAME)
 				$this->getDao()->moveComments($e->item(), $e->info());
 		}
-		
-		public function getItemDetails($item, $details, $data) {
-			return array(
-				"count" => $this->getDao()->getCommentCount($item)
-			);
-		}
 
 		public function getComments($item) {
 			return $this->getDao()->getComments($item);
@@ -53,11 +47,7 @@
 		public function addComment($user, $item, $comment) {
 			$this->getDao()->addComment($user, $item, time(), $comment);
 		}
-		
-		public function getRequestKeys() {
-			return array("plugin-comment-count");
-		}
-		
+				
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
 			$counts = $this->getDao()->getCommentCountForChildren($parent);
 			$result = array();

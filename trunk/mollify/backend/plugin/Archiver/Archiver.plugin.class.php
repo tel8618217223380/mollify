@@ -15,10 +15,10 @@
 	class Archiver extends PluginBase {
 		public function setup() {
 			$this->addService("archive", "ArchiverServices");
-			$this->env->filesystem()->registerDetailsPlugin("plugin-archiver", $this);	
+			$this->env->filesystem()->registerItemContextPlugin("plugin-archiver", $this);	
 		}
 		
-		public function getItemDetails($item, $details, $data) {
+		public function getItemContextData($item, $details, $key, $data) {
 			if (!$item->isFile()) return FALSE;
 			
 			$ext = $item->extension();
