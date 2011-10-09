@@ -209,11 +209,9 @@
 					
 					if (isset($data['folder'])) {
 						$folder = $this->item($data['folder'], FALSE);
-						$to = $folder->fileWithName($item->name());
-						if ($to->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
+						$to = $folder->createFile($item->name());
 					} else {
-						$to = $item->parent()->fileWithName($data['name']);
-						if ($to->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
+						$to = $item->parent()->createFile($data['name']);
 					}
 					$this->env->filesystem()->copy($item, $to);
 					break;
@@ -282,14 +280,11 @@
 			$result["permission"] = $this->env->filesystem()->permission($item);
 			
 			if ($data != NULL) {
-				foreach($this->env->filesystem()->getDataRequestPlugins() as $plugin) {
-					$requested = array();
-					foreach($plugin->getRequestKeys() as $k) {
-						if (!array_key_exists($k, $data)) continue;
-						
-						$d = $plugin->getRequestData($item, $items, $result, $k, $data[$k]);
-						if ($d != NULL) $requestDataResult[$k] = $d;
-					}
+				foreach($this->env->filesystem()->getDataRequestPlugins() as $key => $plugin) {
+					if (!array_key_exists($key, $data)) continue;
+					
+					$d = $plugin->getRequestData($item, $items, $result, $key, $data[$key]);
+					if ($d != NULL) $requestDataResult[$key] = $d;
 				}
 			}
 			$result["data"] = $requestDataResult;

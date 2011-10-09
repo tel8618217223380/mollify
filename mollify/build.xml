@@ -219,6 +219,7 @@
 				<exclude name="dav/" />
 				<exclude name="plugin/S3/" />
 				<exclude name="plugin/Plupload/" />
+				<exclude name="plugin/Share/" />
 			</fileset>
 		</copy>
 		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />

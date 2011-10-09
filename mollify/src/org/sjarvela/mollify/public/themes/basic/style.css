@@ -54,8 +54,8 @@ body {
 	padding-left: 4px;
 }
 
-#item-details-exif-values tr.exif-row-section-first td.exif-section, #item-details-exif-values tr.exif-row-section-first td.exif-key {
-	background-color: #eee;
+#item-details-exif-values tr.exif-row-section-first td.exif-section, #item-details-exif-values tr.exif-row-section-first td.exif-key, #item-details-exif-values tr.exif-row-section-first td.exif-value {
+	border-top: 1px dotted #dadada;
 }
 
 #item-details-exif-values td.exif-key {
@@ -845,7 +845,7 @@ td#mollify-filelist-column-size {
 }
 
 .mollify-filelist-column-file-modified {
-	width: 125px;
+	width: 145px;
 }
 
 .mollify-filelist th {

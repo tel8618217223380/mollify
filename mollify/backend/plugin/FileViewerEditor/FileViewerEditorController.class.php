@@ -69,7 +69,7 @@
 				$this->editors[$t] = $cls;
 		}
 		
-		public function getItemDetails($item, $details, $data) {
+		public function getItemContextData($item, $details, $key, $data) {
 			if (!$item->isFile()) return FALSE;
 			$type = strtolower($item->extension());
 			

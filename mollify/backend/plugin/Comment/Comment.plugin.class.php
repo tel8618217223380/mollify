@@ -28,10 +28,14 @@
 			
 			$this->handler = new CommentHandler($this->env);
 			$this->env->events()->register("filesystem/", $this->handler);
-			$this->env->filesystem()->registerDetailsPlugin("plugin-comment", $this->handler);
-			$this->env->filesystem()->registerDataRequestPlugin($this->handler);
-			if ($this->env->plugins()->hasPlugin("ItemDetails"))
-				$this->handler->setupDetails($this->env->plugins()->getPlugin("ItemDetails"));
+
+			$this->env->filesystem()->registerDataRequestPlugin(array("plugin-comment-count"), $this->handler);
+			$this->env->filesystem()->registerItemContextPlugin("plugin-comment", $this->handler);
+
+			if ($this->env->plugins()->hasPlugin("ItemDetails")) {
+				$dp = $this->env->plugins()->getPlugin("ItemDetails");
+				$dp->registerDetailsProvider("plugin-comments", $this->handler);
+			}
 		}
 		
 		public function getHandler() {
