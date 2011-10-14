@@ -26,7 +26,7 @@ function NotificatorListView() {
 		   	colNames:['ID', 'Name'],
 		   	colModel:[
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
-			   	{name:'name',index:'name',width:150, sortable:true},
+			   	{name:'name',index:'name',width:150, sortable:true}
 		   	],
 		   	sortname:'id',
 		   	sortorder:'desc',
@@ -38,22 +38,44 @@ function NotificatorListView() {
 		getEventTypes(that.refreshTypes, onServerError);
 	}
 	
-	this.refreshTypes = function(types) {
-		that.types = types;
-		getUsers(that.refreshUsers, onServerError);
+	this.groupFormatter = function(name, options, u) {
+		if (u.is_group == "1") return "Group";
+		return "User";
 	}
 	
-	this.refreshUsers = function(users) {
-		that.users = users;
-		that.usersById = [];
-		for (var i=0; i < users.length; i++) {
-			that.usersById[users[i].id] = users[i];	
+	this.refreshTypes = function(types) {
+		that.types = types;
+		getUsersAndGroups(that.refreshUsersAndGroups, onServerError);
+	}
+	
+	this.refreshUsersAndGroups = function(result) {
+		that.users = {};
+		that.groups = {};
+		that.usersandgroups = {};
+		
+		for (var i=0; i < result.users.length; i++) {
+			user = result.users[i];
+			that.users[user.id] = user;
+			that.usersandgroups[user.id] = user;
+		}
+		for (var i=0; i < result.groups.length; i++) {
+			group = result.groups[i];
+			that.groups[group.id] = group;
+			that.usersandgroups[group.id] = group;
 		}
 		that.onRefresh();
 	}
 	
 	this.getUser = function(id) {
-		return that.usersById[id];
+		return that.users[id];
+	}
+
+	this.getUserOrGroup = function(id) {
+		return that.usersandgroups[id];
+	}
+	
+	this.getGroup = function(id) {
+		return that.groups[id];
 	}
 	
 	this.onRefresh = function() {
@@ -178,8 +200,8 @@ function NotificatorListView() {
 		
 		var html = "<div class='notification-details-value notification-recipients'><table id='notification-recipient-list' class='details-table'><tr><th class='col-recipient-name'>Name</th><th class='col-recipient-email'>Email</th></tr>";
 		for (var i=0; i < d.recipients.length; i++) {
-			var u = that.getUser(d.recipients[i]);
-			html += "<tr><td class='col-recipient-name'>"+u.name+"</td><td class='col-recipient-email'>"+u.email+"</td></tr>";
+			var u = that.getUserOrGroup(d.recipients[i]);
+			html += "<tr><td class='col-recipient-name'>"+u.name+((u.is_group == "1") ? " (Group)" : "")+"</td><td class='col-recipient-email'>"+(u.is_group == "1") ? "-" : u.email+"</td></tr>";
 		}
 		return html + "</table></div>"
 	}
@@ -398,10 +420,11 @@ function NotificatorListView() {
 				multiselect: true,
 				autowidth: true,
 				height: '150px',
-			   	colNames:['Name', 'Email'],
+			   	colNames:['Name', 'Email', ''],
 			   	colModel:[
 				   	{name:'name',index:'name',width:200, sortable:true},
 				   	{name:'email',index:'email',width:150, sortable:true},
+				   	{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 			   	],
 			   	sortname:'name',
 			   	sortorder:'desc'
@@ -411,10 +434,11 @@ function NotificatorListView() {
 				datatype: "local",
 				autowidth: true,
 				multiselect: true,
-			   	colNames:['Name', 'Email'],
+			   	colNames:['Name', 'Email', ''],
 			   	colModel:[
 				   	{name:'name',index:'name',width:200, sortable:true},
 				   	{name:'email',index:'email',width:150, sortable:true},
+				   	{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 			   	],
 			   	sortname:'name',
 			   	sortorder:'desc'
@@ -457,7 +481,7 @@ function NotificatorListView() {
 					selected.jqGrid('delRowData', u);
 				} else {
 					if (!inArray(u, selected.jqGrid('getDataIDs')))
-						selected.jqGrid('addRowData', u, that.getUser(u));
+						selected.jqGrid('addRowData', u, that.getUserOrGroup(u));
 				}
 			}
 		}
@@ -482,8 +506,8 @@ function NotificatorListView() {
 		var available = $("#notification-recipients-available-list");
 		available.jqGrid('clearGridData');
 		
-		for (var i=0; i < that.users.length; i++) {
-			var u = that.users[i];
+		for (var i=0; i < that.usersangroups.length; i++) {
+			var u = that.usersandgroups[i];
 
 			if (inArray(u.id, recipients))
 				selected.jqGrid('addRowData', u.id, u);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli Jï¿½rvelï¿½
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -113,10 +113,10 @@ function MollifyPublishedFoldersConfigurationView() {
 		
 		that.onFolderSelectionChanged();
 		
-		getUsersAndFolders(that.refreshUsersAndFolders, onServerError);
+		getUsersAndGroups(that.refreshUsersAndGroups, onServerError);
 	}
 	
-	this.refreshUsersAndFolders = function(result) {
+	this.refreshUsersAndGroups = function(result) {
 		that.users = {};
 		that.groups = {};
 		

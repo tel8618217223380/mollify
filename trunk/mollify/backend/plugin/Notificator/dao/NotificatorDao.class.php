@@ -86,13 +86,14 @@
 					$recipientIds = array();
 				}
 				if ($row["ntf_rcp_usr_is_group"] === 1) {
-					foreach($this->env->configuration()->getGroupUsers($row["ntf_rcp_usr_id"]) as $u) {
-						if (in_array($u["id"], $recipientIds) continue;
+					$users = $this->env->configuration()->getGroupUsers($row["ntf_rcp_usr_id"]);
+					foreach($users as $u) {
+						if (in_array($u["id"], $recipientIds)) continue;
 						$recipients[] = array("id" => $u["id"], "name" => $u["name"], "email" => $u["email"]);
 						$recipientIds[] = $u["id"];
 					}
 				} else {
-					if (in_array($row["ntf_rcp_usr_id"], $recipientIds) continue;
+					if (in_array($row["ntf_rcp_usr_id"], $recipientIds)) continue;
 					$recipients[] = array("id" => $row["ntf_rcp_usr_id"], "name" => $row["ntf_rcp_usr_name"], "email" => $row["ntf_rcp_usr_email"]);
 					$recipientIds[] = $row["ntf_rcp_usr_id"];
 				}

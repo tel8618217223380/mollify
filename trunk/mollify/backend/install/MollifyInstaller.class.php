@@ -64,6 +64,8 @@
 		public function registerFilesystem($id, $fs) {}
 		
 		public function registerDataRequestPlugin($p) {}
+
+		public function registerItemContextPlugin($p) {}
 		
 		public function onError($e) {
 			Logging::logException($e);
