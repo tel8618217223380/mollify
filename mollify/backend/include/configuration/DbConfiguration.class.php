@@ -143,7 +143,7 @@
 		}
 
 		public function getGroupUsers($id) {
-			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode as permission_mode FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
+			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
 		}
 
 		public function addGroupUsers($groupId, $userIds) {
