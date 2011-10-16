@@ -23,7 +23,9 @@ And following into client settings:
 		"plugins": [
 			new ItemDetailsPlugin({
 				...
-			})
+			},
+			[...]
+			)
 		]
 	});
 }}}
@@ -41,7 +43,10 @@ Details shown for files or folders can be configured by the type, with following
 			...
 		},
 		...
-	})
+	}, [
+		DATA_SPEC,
+		...
+	])
 }}}
 
 The type can be:
@@ -58,7 +63,8 @@ Data key is the id of the data displayed. Mollify provides following built-in da
 Some plugins may provide more data keys.
 
 Configuration can override following:
- * "`title`" : Localization key of the title text
+ * "`title`": Title text
+ * "`title-key`" : Localization key of the title text
 
 For example:
 {{{
