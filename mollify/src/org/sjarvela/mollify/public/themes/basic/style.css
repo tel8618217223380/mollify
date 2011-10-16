@@ -478,6 +478,8 @@ td.GJLWQD-DCD.GJLWQD-DEE .mollify-filelist-item-size, td.GJLWQD-DCD.GJLWQD-DED .
 	background-color: transparent;
 	color: #fffeff;
 	margin-bottom: 11px;
+	border-style: none;
+	border-width: 0;
 }
 
 .mollify-header-username:hover {
@@ -2458,6 +2460,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 input.mollify-header-search-field {
 	float: left;
 	border-style: none;
+	border-width: 0;
 	width: 150px;
 	height: 17px;
 	margin: 2px;

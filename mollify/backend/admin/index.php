@@ -32,8 +32,8 @@
 		<script type="text/javascript" src="../resources/jquery.jqGrid.min.js"></script>
 		<script type="text/javascript" src="../resources/jquery.tools.min.js"></script>
 		<script type="text/javascript" src="resources/service.js"></script>
-		<?php if (file_exists("settings.js")) { ?><script type="text/javascript" src="settings.js"></script><?php } ?>
 		<script type="text/javascript" src="resources/main.js"></script>
+		<?php if (file_exists("settings.js")) { ?><script type="text/javascript" src="settings.js"></script><?php } ?>		
 	</head>	
 	
 	<body id="page-admin">

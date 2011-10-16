@@ -22,6 +22,7 @@
 		public function processPost() {
 			if (!$this->request->hasParam("id")) throw $this->invalidRequestException();
 			
+			$this->env->filesystem()->allowFilesystems = TRUE;
 			$folder = $this->item($this->request->param("id"));
 			Logging::logDebug("Public upload to: ".$folder->id());
 			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
