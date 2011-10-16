@@ -7,6 +7,9 @@
   * Implemented issue 302
   * Added exif information for image files
 
+=== Plupload plugin version 1.0.4 ===
+  * Added support for public upload plugin. No functional changes (ie. if public upload plugin is not enabled, no need to update from 1.0.3)
+
 === Version 1.8.4 ===
   * New [ItemDetailsPlugin item details plugin]
   * Fixes sqlite error in Windows environments
