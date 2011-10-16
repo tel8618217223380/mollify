@@ -10,17 +10,24 @@
 	 * this entire header must remain intact.
 	 */
 	
+	require_once("PluploadHandler.class.php");
+	
 	class Plupload extends PluginBase {
 		private $handler;
-				
+		
 		public function setup() {
 			$this->addService("plupload", "PluploadServices");
+			$this->handler = new PluploadHandler($this->env);	
+		}
+		
+		public function getHandler() {
+			return $this->handler;
+		}
+		
+		public function uploadTo($folder) {
+			$this->handler->uploadTo($folder, $this->env->filesystem()->getUploadTempDir(), $this->env->filesystem());
 		}
 				
-		//public function getClientPlugin() {
-		//	return "client/plugin.js";
-		//}
-		
 		public function __toString() {
 			return "PluploadPlugin";
 		}
