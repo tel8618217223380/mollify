@@ -8,11 +8,28 @@
 	this entire header must remain intact.
 */
 
+(function(){
+window.mollify = new function() {
+	this.admin = new function() {
+		var t = this;
+		
+		this.settings = {
+			"date-format" : "mm/dd/yy",
+			"datetime-format" : "mm/dd/yy hh.MM t"
+		}
+		
+		this.init = function(s) {
+			if (!s) return;
+			for (var k in s) t.settings[k] = s[k];
+		}
+	}
+}
+})();
+
 var session = null;
-var loadedScripts = new Array();
+var loadedScripts = [];
 var controller = null;
 var controllers = {};
-var settings = createSettings();
 var plugins = {};
 
 var views = [
@@ -53,8 +70,8 @@ function buildMenu() {
 	}
 	
 	// custom views
-	if (settings.views) {
-		var customViews = [{header:"Custom", id:'menu-header-custom', views: settings.views}];
+	if (getSettings().views) {
+		var customViews = [{header:"Custom", id:'menu-header-custom', views: getSettings().views}];
 		html += createMenuItems(customViews, 'custom/');
 	}
 	
@@ -125,6 +142,7 @@ function onSession(session) {
 
 function showVersion() {
 	$("#mollify-version").html("Version "+session.version);
+	if (getSettings()["disable-version-check"] === true) return;
 	
 	$.getJSON("http://www.mollify.org/latest.php?jsoncallback=?", function(result) {
 		if (!result || !result.version) return;
@@ -191,7 +209,7 @@ function getSession() {
 }
 
 function getSettings() {
-	return settings;
+	return mollify.admin.settings;
 }
 
 function notify(msg) {
@@ -233,11 +251,11 @@ function enableButton(id, enabled) {
 }
 
 function getDateFormat() {
-	return settings.dateFormat;
+	return getSettings()["date-format"];
 }
 
 function getDateTimeFormat() {
-	return settings.dateTimeFormat;
+	return getSettings()["datetime-format"];
 }
 
 function formatDate(d) {
@@ -269,16 +287,6 @@ function parseInternalTime(time) {
 
 function formatInternalTime(time) {
 	return time.format('yymmddHHMMss', time);
-}
-	
-function createSettings() {
-	var settings = {};
-	
-	if (window.customSettings) settings = window.customSettings;
-	if (!settings.dateFormat) settings.dateFormat = "mm/dd/yy";
-	if (!settings.dateTimeFormat) settings.dateTimeFormat = "mm/dd/yy hh.MM t";
-	
-	return settings;
 }
 
 function initWidgets() {

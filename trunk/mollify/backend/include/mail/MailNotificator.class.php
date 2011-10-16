@@ -41,7 +41,7 @@
 					$headers .= PHP_EOL.$this->getBccHeaders($validRecipients);
 				}
 				
-				mail($toAddress, $subject, wordwrap($message), $headers);
+				mail($toAddress, $subject, str_replace("\n", "\r\n", wordwrap($message)), $headers);
 			}
 		}
 

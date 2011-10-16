@@ -23,8 +23,9 @@ import org.sjarvela.mollify.client.ui.common.Tooltip;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 public class FolderSelector extends FlowPanel implements FolderListener {
 	private final FolderModelProvider folderModelProvider;
@@ -33,7 +34,7 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 	private final List<FolderListener> listeners = new ArrayList();
 
 	private final FolderListItem homeItem;
-	private final Button upButton;
+	private final Widget upButton;
 
 	public FolderSelector(TextProvider textProvider,
 			FolderModelProvider folderModelProvider,
@@ -51,8 +52,8 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 		this.listeners.add(listener);
 	}
 
-	private Button createUpButton() {
-		final Button button = new Button(
+	private Label createUpButton() {
+		final Label button = new Label(
 				textProvider.getText(Texts.mainViewParentDirButtonTitle));
 		button.setStyleName(StyleConstants.FOLDER_SELECTOR_BUTTON);
 		button.getElement().setId(StyleConstants.FOLDER_SELECTOR_BUTTON_UP);

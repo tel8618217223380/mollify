@@ -107,6 +107,12 @@
 	}
 })();
 
+if(typeof String.prototype.trim !== 'function') {
+  String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g, ''); 
+  }
+}
+
 function strpos (haystack, needle, offset) {
     // Finds position of first occurrence of a string within another  
     // 
