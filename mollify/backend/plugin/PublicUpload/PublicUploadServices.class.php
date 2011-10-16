@@ -20,12 +20,15 @@
 		}
 		
 		public function processPost() {
-			if (!$this->request->hasParam("id")) throw $this->invalidRequestException();
+			if (!$this->env->plugins()->hasPlugin("Plupload") or !$this->request->hasParam("id")) throw $this->invalidRequestException();
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$folder = $this->item($this->request->param("id"));
 			Logging::logDebug("Public upload to: ".$folder->id());
 			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
-			$this->env->filesystem()->uploadTo($folder);
+			
+			$p = $this->env->plugins()->getPlugin("Plupload");
+			$p->uploadTo($folder);
 		}
 	}
+?>
