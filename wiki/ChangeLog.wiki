@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.4.1 ===
+  * Fixed mail send issue on Windows servers
+  * Fixed issue 301
+  * Implemented issue 302
+  * Added exif information for image files
+
 === Version 1.8.4 ===
   * New [ItemDetailsPlugin item details plugin]
   * Fixes sqlite error in Windows environments
