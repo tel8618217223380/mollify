@@ -171,11 +171,11 @@ When LDAP authentication is enabled, this setting is used for finding to LDAP se
 
 == LDAP connection string (`ldap_conn_string`) ==
 
-When LDAP authentication is enabled, this setting is used for authenticating user. By default, user name is added in the beginning of the given connection string, otherwise the place must be marked with "[USER]".
+When LDAP authentication is enabled, this setting is used for authenticating user. By default, user name is added in the beginning of the given connection string, otherwise the place must be marked with "`[USER]`".
 
 For example, if user "john.doe" is logging in
-  * connection string "@domain.com" would authenticate with "john.doe@domain.com"
-  * connection string "uid=[USER],ou=organization,dc=domain,dc=net" would authenticate with "uid=john.doe,ou=organization,dc=domain,dc=net"
+  * connection string "`@domain.com`" would authenticate with "`john.doe@domain.com`"
+  * connection string "`uid=[USER],ou=organization,dc=domain,dc=net`" would authenticate with "`uid=john.doe,ou=organization,dc=domain,dc=net`"
 
 {{{
 	$SETTINGS = array(
