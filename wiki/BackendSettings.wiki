@@ -35,6 +35,7 @@ $SETTINGS = array(
 	"ldap_fqdn" => NULL,
 	"upload_temp_dir" => NULL,
 	"enable_thumbnails" => TRUE,
+	"enable_folder_protection" => FALSE,				// enable folder protection
 );
 }}}
 
@@ -103,5 +104,9 @@ Enable email notifications from any component or plugin (by default disabled). S
 == Mail notificator class (`mail_notificator_class`) ==
 
 Define the class responsible for sending the emails. This setting allows changing the default mail sender, for example, to match server requirements.
+
+== Enable folder protection (`enable_folder_protection`) ==
+
+Enable folder protection which prevents browser access to stored files.
 
 * More setting descriptions coming soon *
