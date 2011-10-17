@@ -22,8 +22,8 @@ $SETTINGS = array(
 	"mail_notificator_class" => "mail/MailNotificator.class.php",	// mail notificator class
 	"enable_retrieve_url" => FALSE,					// enable URL retrieve
 	"url_retriever_class" => "UrlRetriever.class.php",		// URL retriever implementation
-	"enable_zip_download" => FALSE,
-	"zipper" => "ZipArchive",
+	"enable_zip_download" => FALSE,					// enable zip downloads
+	"zipper" => "ZipArchive",					// zip implementation
 	"allowed_file_upload_types" => array(),
 	"firebug_logging" => FALSE,
 	"mail_notification_from" => "Admin",
@@ -112,6 +112,14 @@ Enable url retrieve, which allows adding remote file directly to Mollify (by def
 == URL retriever class (`url_retriever_class`) ==
 
 Define the URL retriever implementation. If default implementation is not sufficient, custom retriever can be defined with this setting.
+
+== Enable zip downloads (`enable_zip_downloads`) ==
+
+Enable zip downloads, which allows downloading entire folders or file collections (by default disabled).
+
+== Zipper implementation (`zipper`) ==
+
+Define the zipper implementation, possible values are "ZipArchive" (default), "Native" and "Raw". Option "ZipArchive" uses PHP zip library (ZipArchive), "Native" uses underlying OS functions (gzip, bzip, rar etc) and "Raw" uses pure PHP zip implementation.
 
 == Enable folder protection (`enable_folder_protection`) ==
 
