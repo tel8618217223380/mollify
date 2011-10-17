@@ -107,6 +107,6 @@ Define the class responsible for sending the emails. This setting allows changin
 
 == Enable folder protection (`enable_folder_protection`) ==
 
-Enable folder protection which prevents browser access to stored files.
+Enable folder protection which prevents browser access to stored files. When enabled, htaccess file from "backend/include/apache" will be copied to the folder root.
 
 * More setting descriptions coming soon *
