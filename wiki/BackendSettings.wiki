@@ -20,15 +20,14 @@ $SETTINGS = array(
 	"enable_public_links" => FALSE,					// enable public links
 	"enable_mail_notification" => FALSE,				// enable email notification
 	"mail_notificator_class" => "mail/MailNotificator.class.php",	// mail notificator class
+	"mail_notification_from" => "Admin",				// mail notification sender
 	"enable_retrieve_url" => FALSE,					// enable URL retrieve
 	"url_retriever_class" => "UrlRetriever.class.php",		// URL retriever implementation
 	"enable_zip_download" => FALSE,					// enable zip downloads
 	"zipper" => "ZipArchive",					// zip implementation
-	"allowed_file_upload_types" => array(),
-	"firebug_logging" => FALSE,
-	"mail_notification_from" => "Admin",
-	"new_folder_permission_mask" => 0755,
-	"convert_filenames" => FALSE,
+	"allowed_file_upload_types" => array(),				// allowed file upload types
+	"new_folder_permission_mask" => 0755,				// new folder permission mask
+	"convert_filenames" => FALSE,					// convert filesystem filenames
 	"datetime_format" => "d.m.Y H:i:s",
 	"authentication_methods" => array("pw"),
 	"ldap_server" => NULL,
@@ -105,6 +104,10 @@ Enable email notifications from any component or plugin (by default disabled). S
 
 Define the class responsible for sending the emails. This setting allows changing the default mail sender, for example, to match server requirements.
 
+== Mail notification sender (`mail_notification_from`) ==
+
+Define notification sender address (and optionally also name) used in mail notifications (for example "admin@yourhost.com", "Administrator <admin@yourhost.com>"). If no value is given (default), mail is sent with system default.
+
 == Enable URL retrieve (`enable_url_retrieve`) ==
 
 Enable url retrieve, which allows adding remote file directly to Mollify (by default disabled). See also setting "Mail notificator class"
@@ -120,6 +123,14 @@ Enable zip downloads, which allows downloading entire folders or file collection
 == Zipper implementation (`zipper`) ==
 
 Define the zipper implementation, possible values are "ZipArchive" (default), "Native" and "Raw". Option "ZipArchive" uses PHP zip library (ZipArchive), "Native" uses underlying OS functions (gzip, bzip, rar etc) and "Raw" uses pure PHP zip implementation.
+
+== Folder permission mask (`new_folder_permission_mask`) ==
+
+Define the OS permission mask for the folders created. By default mask 0755 is used (read+write+execute permissions for the user owner, and read+execute for group and other), but on some server configurations other mask might be required.
+
+== Convert filesystem filenames (`convert_filenames`) ==
+
+Mollify uses UTF-8 internally, and filesystems that support this charset work fine without any conversions. Some servers may operate on different charset, and then conversion is required. With value TRUE, Mollify will try to guess the conversion needed, otherwise the OS charset has to be defined here.
 
 == Enable folder protection (`enable_folder_protection`) ==
 
