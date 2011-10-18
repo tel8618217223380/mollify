@@ -164,8 +164,6 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		if (item.isFile()
 				&& sessionProvider.getSession().getFeatures().filePreview())
 			contextComponents.add(createPreviewComponent());
-		// if (item.isFile())
-		// contextComponents.add(createDetailsComponent());
 		if (sessionProvider.getSession().getDefaultPermissionMode().isAdmin())
 			contextComponents.add(createPermissionsComponent());
 	}
@@ -180,10 +178,6 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		return new PreviewComponent(textProvider,
 				serviceProvider.getExternalService());
 	}
-
-	// private ItemContextComponent createDetailsComponent() {
-	// return new DetailsComponent(textProvider);
-	// }
 
 	private ItemContextComponent createPermissionsComponent() {
 		return new PermissionsComponent(textProvider,

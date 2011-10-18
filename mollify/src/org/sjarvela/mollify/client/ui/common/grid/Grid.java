@@ -435,10 +435,14 @@ public abstract class Grid<T> extends FlexTable {
 
 		case Event.ONMOUSEOVER:
 			this.getRowFormatter().addStyleName(row,
+					"mollify-filelist-row-hover");
+			this.getRowFormatter().addStyleName(row,
 					rowStyles.get(row) + "-" + StyleConstants.HOVER);
 			break;
 
 		case Event.ONMOUSEOUT:
+			this.getRowFormatter().removeStyleName(row,
+					"mollify-filelist-row-hover");
 			this.getRowFormatter().removeStyleName(row,
 					rowStyles.get(row) + "-" + StyleConstants.HOVER);
 			break;

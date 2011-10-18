@@ -43,7 +43,7 @@
 	cursor: pointer;
 }
 
-.mollify-filelist-row-file-even-hover .filelist-item-comment-count-none, .mollify-filelist-row-file-odd-hover .filelist-item-comment-count-none, .mollify-filelist-row-directory-even-hover .filelist-item-comment-count-none, .mollify-filelist-row-directory-odd-hover .filelist-item-comment-count-none {
+.mollify-filelist-row-hover .filelist-item-comment-count-none {
 	background: url(comment_add.png) no-repeat;
 	height: 16px;
 	width: 20px;
