@@ -1,5 +1,6 @@
 /* @override 
 	http://localhost:8888/mollify/dev/backend/plugin/comment/client/style.css
+	http://localhost:8888/mollify/test/dev/backend/plugin/Comment/client/style.css
 */
 
 .mollify-filelist-column-comment-count {
@@ -38,6 +39,14 @@
 	font-weight: bold;
 	background: url(comment.png) no-repeat;
 	padding-left: 18px;
+	float: right;
+	cursor: pointer;
+}
+
+.mollify-filelist-row-file-even-hover .filelist-item-comment-count-none, .mollify-filelist-row-file-odd-hover .filelist-item-comment-count-none, .mollify-filelist-row-directory-even-hover .filelist-item-comment-count-none, .mollify-filelist-row-directory-odd-hover .filelist-item-comment-count-none {
+	background: url(comment_add.png) no-repeat;
+	height: 16px;
+	width: 20px;
 	float: right;
 	cursor: pointer;
 }

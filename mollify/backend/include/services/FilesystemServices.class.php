@@ -284,7 +284,7 @@
 					if (!array_key_exists($key, $data)) continue;
 					
 					$d = $plugin->getRequestData($item, $items, $result, $key, $data[$key]);
-					if ($d != NULL) $requestDataResult[$key] = $d;
+					if ($d !== NULL) $requestDataResult[$key] = $d;
 				}
 			}
 			$result["data"] = $requestDataResult;

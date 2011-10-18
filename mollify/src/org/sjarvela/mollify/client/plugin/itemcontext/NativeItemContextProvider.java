@@ -62,7 +62,16 @@ public class NativeItemContextProvider implements ItemContextProvider {
 		JsArray<JsObj> componentList = r.getArray("components");
 		for (int i = 0; i < componentList.length(); i++) {
 			JsObj c = componentList.get(i);
-			String type = c.getString("type").trim().toLowerCase();
+
+			String type;
+			if (!c.hasValue("type")) {
+				if (c.hasValue("title"))
+					type = "section";
+				else
+					type = "custom";
+			} else {
+				type = c.getString("type").trim().toLowerCase();
+			}
 			Integer index = c.hasValue("index") ? c.getInt("index") : 1000 + i;
 
 			if ("section".equals(type))

@@ -34,7 +34,7 @@
 			if (!isset($data["comment"]) or strlen($data["comment"]) == 0) throw $this->invalidRequestException("No data");
 			
 			$this->handler()->addComment($this->env->authentication()->getUserId(), $item, $data["comment"]);
-			$this->response()->success(array());
+			$this->response()->success(array("count" => $this->handler()->getCommentCount($item)));
 		}
 		
 		private function handler() {
