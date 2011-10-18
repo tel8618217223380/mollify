@@ -113,7 +113,7 @@ if(typeof String.prototype.trim !== 'function') {
   }
 }
 
-function strpos (haystack, needle, offset) {
+function strpos(haystack, needle, offset) {
     // Finds position of first occurrence of a string within another  
     // 
     // version: 1109.2015
@@ -136,7 +136,6 @@ function CommentPlugin() {
 		that.env.addItemContextProvider(function(item) {
 			return {
 				components : [{
-					type: "custom",
 					html: "",
 					on_init: function(id, c, item, details) {
 						if (!details["plugin-comment"]) return;
@@ -168,11 +167,13 @@ function CommentPlugin() {
 			"content": that.getListCellContent,
 			"request": function(parent) { return {}; },
 			"on-render": function() {
-				$(".filelist-item-comment-count").click(function(e) {
+				var onclick = function(e) {
 					var id = e.target.id.substring(19);
 					var item = that.env.fileview().item(id);
 					that.openComments(item);
-				});
+				}
+				$(".filelist-item-comment-count").click(onclick);
+				$(".filelist-item-comment-count-none").click(onclick);
 			}
 		});
 		
@@ -184,9 +185,11 @@ function CommentPlugin() {
 	}
 	
 	this.getListCellContent = function(item, data) {
-		if (item.id == null || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
+		if (!item.id || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
 		var counts = data["plugin-comment-count"];
-		if (!counts[item.id]) return "";
+
+		if (!counts[item.id])
+			return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count-none'></div>";
 		
 		return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 	}
@@ -228,6 +231,7 @@ function CommentPlugin() {
 		
 		that.env.service().post("comment/"+item.id, { comment: comment }, function(result) {
 			d.close();
+			$("#item-comment-count-"+item.id).html(result.count).removeClass("filelist-item-comment-count-none").addClass("filelist-item-comment-count");
 		},	function(code, error) {
 			alert(error);
 		});
@@ -289,7 +293,6 @@ function ItemDetailsPlugin(conf, sp) {
 			
 			return {
 				components : [{
-					type: "section",
 					title: that.t("fileActionDetailsTitle"),
 					html: "<div id='file-item-details' class='loading'></div>",
 					on_init: that.onInit,
@@ -426,9 +429,17 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.env.addItemContextProvider(that.getItemContext);
-		
-//		mollify.importCss(that.url("style.css"));
-//		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
+		that.env.addItemContextProvider(function(item) {
+			return {
+				components : [{
+					html: "<div id='file-item-share'></div>",
+					on_init: function(id, c, item, details) {
+						if (!that.typeConfs || !details.itemdetails) return false;
+						that.loaded = false;
+					},
+					index: 6
+				}]
+			}
+		});
 	}
 }

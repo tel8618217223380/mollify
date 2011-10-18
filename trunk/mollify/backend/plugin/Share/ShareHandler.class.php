@@ -10,26 +10,22 @@
 	 * this entire header must remain intact.
 	 */
 	
-	require_once("dao/CommentDao.class.php");
+	require_once("dao/ShareDao.class.php");
 	
-	class CommentHandler {
+	class ShareHandler {
 		private $env;
 		
 		public function __construct($env) {
 			$this->env = $env;			
 		}
 				
-		public function getDetail($item, $key) {
-			return $this->getDao()->getCommentCount($item);
-		}
-		
 		public function getItemContextData($item, $details, $key, $data) {
 			return array(
 				"count" => $this->getDao()->getCommentCount($item)
 			);
 		}
 		
-		public function onEvent($e) {
+		/*public function onEvent($e) {
 			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
 			$type = $e->subType();
 			if (!in_array($type, array(FileEvent::MOVE, FileEvent::RENAME, FileEvent::DELETE))) return;
@@ -38,31 +34,10 @@
 				$this->getDao()->deleteComments($e->item());
 			else if ($type === FileEvent::MOVE or $type === FileEvent::RENAME)
 				$this->getDao()->moveComments($e->item(), $e->info());
-		}
-		
-		public function getCommentCount($item) {
-			return $this->getDao()->getCommentCount($item);
-		}
-
-		public function getComments($item) {
-			return $this->getDao()->getComments($item);
-		}
-		
-		public function addComment($user, $item, $comment) {
-			$this->getDao()->addComment($user, $item, time(), $comment);
-		}
-				
-		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
-			$counts = $this->getDao()->getCommentCountForChildren($parent);
-			$result = array();
-			foreach($counts as $id=>$c) {
-				$result[$this->env->filesystem()->item($id)->publicId()] = $c;
-			} 
-			return $result;
-		}
+		}*/
 		
 		private function getDao() {
-			return new CommentDao($this->env);
+			return new ShareDao($this->env);
 		}
 				
 		public function __toString() {
