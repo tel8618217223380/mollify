@@ -26,6 +26,8 @@ And following into client settings:
 	});
 }}}
 
+*NOTE* Comments plugin requires installation via Mollify update util.
+
 = File list columns =
 
 Comments plugin provides comments count column with column id `comment-count`. For example:
