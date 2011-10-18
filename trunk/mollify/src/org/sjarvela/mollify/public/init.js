@@ -231,7 +231,8 @@ function CommentPlugin() {
 		
 		that.env.service().post("comment/"+item.id, { comment: comment }, function(result) {
 			d.close();
-			$("#item-comment-count-"+item.id).html(result.count).removeClass("filelist-item-comment-count-none").addClass("filelist-item-comment-count");
+			document.getElementById("item-comment-count-"+item.id).innerHTML = result.count;
+			$("#item-comment-count-"+item.id).removeClass("filelist-item-comment-count-none").addClass("filelist-item-comment-count");
 		},	function(code, error) {
 			alert(error);
 		});
