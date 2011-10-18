@@ -51,7 +51,7 @@
 		}
 		
 		public function hasPlugin($id) {
-			return $this->plugins[$id];
+			return isset($this->plugins[$id]);
 		}
 		
 		public function getSessionInfo() {
