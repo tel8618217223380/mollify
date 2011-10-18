@@ -26,7 +26,7 @@ And following into client settings:
 	});
 }}}
 
-*NOTE* Comments plugin requires installation via Mollify update util.
+*NOTE* After configuration is done, comments plugin requires installation via Mollify update util.
 
 = File list columns =
 
