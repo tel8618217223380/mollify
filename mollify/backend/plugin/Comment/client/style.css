@@ -47,6 +47,7 @@
 	background: url(comment_add.png) no-repeat;
 	height: 16px;
 	width: 20px;
+	padding-left: 10px;
 	float: right;
 	cursor: pointer;
 }

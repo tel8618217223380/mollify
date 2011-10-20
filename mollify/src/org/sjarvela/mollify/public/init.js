@@ -67,17 +67,20 @@
 			link.attr({
 		    	type: 'text/css',
 		    	rel: 'stylesheet',
-		    	href: url
+		    	href: t.urlWithParam(url, "_="+mollify.time)
 			});
 			$("head").append(link);
 		}
 		
 		this.loadContent = function(id, url, cb) {
-			url = url + (strpos(url, "?") ? "&" : "?") + "_="+mollify.time;
-			$("#"+id).load(url, function() {
+			$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
 				t.localize(id);
 				if (cb) cb();
 			});
+		}
+		
+		this.urlWithParam = function(url, param) {
+			return url + (strpos(url, "?") ? "&" : "?") + param;
 		}
 		
 		this.localize = function(id) {
@@ -172,8 +175,9 @@ function CommentPlugin() {
 					var item = that.env.fileview().item(id);
 					that.openComments(item);
 				}
-				$(".filelist-item-comment-count").click(onclick);
-				$(".filelist-item-comment-count-none").click(onclick);
+				var msg = that.t("commentsFileListAddTitle");
+				$(".filelist-item-comment-count").click(onclick).simpletip({content: msg});
+				$(".filelist-item-comment-count-none").click(onclick).simpletip({content: msg});
 			}
 		});
 		
