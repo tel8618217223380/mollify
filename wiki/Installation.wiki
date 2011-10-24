@@ -29,7 +29,7 @@
 	 * [ConfigurationMySql MySQL Database]
 	 * [ConfigurationSQLite SQLite Database]
 	 
-	For additional options, see instructions on [ConfigurationAdditionalOptions additional configuration options].
+	For additional options, see additional settings on [ClientSettings client] and [BackendSettings backend].
 
 
 = 4. Modifying Installation =
