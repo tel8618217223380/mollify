@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.4.2 ===
+  * Added group support in notifications plugin (issue 302)
+  * Fixed issue 304
+
 === Version 1.8.4.1 ===
   * Fixed mail send issue on Windows servers
   * Fixed issue 301
