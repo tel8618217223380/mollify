@@ -1,6 +1,6 @@
 #summary All available client settings
 
-Following settings are available in client (and their default values):
+Following settings are available in client (and their default values), used in index.html etc:
 
 {{{
 <script type="text/javascript">
@@ -31,6 +31,10 @@ Expose file links creates invisible file download links into the page, which mak
 == Show default login page (`show-login`) ==
 
 To use custom login page, the default login page can be disabled with this setting.
+
+== Default view mode (`default-view-mode`) ==
+
+View mode selected when Mollify is launched, options are "`list`" (default), "`small-icon`" and "`large-icon`".
 
 * More setting descriptions coming soon *
 
