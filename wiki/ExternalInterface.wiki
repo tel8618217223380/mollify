@@ -1,0 +1,34 @@
+#summary External interface
+
+= Introduction =
+
+Mollify external interface is utility script for controlling Mollify outside, for example when integrating it into existing site.
+
+
+= Functions =
+
+authenticate($userId)
+isAuthenticated()
+getUserId()
+getUsername()
+isAuthenticationRequired() 
+getAllUsers()
+getUser($id)
+addUser($name, $pw, $email, $defaultPermission)
+removeUser($id)
+addFolder($name, $path)
+addUserFolder($userId, $folderId, $name)
+addItemPermission($id, $permission, $userId)
+
+= Example = 
+
+Following example shows how to make user logged in (only need to resolve Mollify user id somehow):
+{{{
+<?php 
+        set_include_path("backend/".PATH_SEPARATOR.get_include_path()); 
+        require_once("external/MollifyExternalInterface.class.php"); 
+        $mollify = MollifyExternalInterface(); 
+        $mollifyUserId = GET_MOLLIFY_USER_ID_SOMEHOW(); 
+        $mollify->authenticate($mollifyUserId); 
+?>
+}}}
