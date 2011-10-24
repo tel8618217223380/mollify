@@ -77,7 +77,7 @@
 		}
 		
 		public function addUser($name, $pw, $email, $defaultPermission = "RO") {
-			return $this->configuration->addUser($name, md5($pw), $email, $defaultPermission);
+			return $this->configuration->addUser($name, $pw, $email, $defaultPermission);
 		}
 		
 		public function removeUser($id) {
