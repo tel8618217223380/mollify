@@ -85,7 +85,7 @@
 					$recipients = array();
 					$recipientIds = array();
 				}
-				if ($row["ntf_rcp_usr_is_group"] === 1) {
+				if ($row["ntf_rcp_usr_is_group"] == 1) {
 					$users = $this->env->configuration()->getGroupUsers($row["ntf_rcp_usr_id"]);
 					foreach($users as $u) {
 						if (in_array($u["id"], $recipientIds)) continue;

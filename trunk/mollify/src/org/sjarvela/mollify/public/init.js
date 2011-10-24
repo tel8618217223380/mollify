@@ -175,9 +175,8 @@ function CommentPlugin() {
 					var item = that.env.fileview().item(id);
 					that.openComments(item);
 				}
-				var msg = that.t("commentsFileListAddTitle");
-				$(".filelist-item-comment-count").click(onclick).simpletip({content: msg});
-				$(".filelist-item-comment-count-none").click(onclick).simpletip({content: msg});
+//				var tooltip = "<div class='filelist-item-comment-tooltip mollify-tooltip'>" + that.t("commentsFileListAddTitle") + "</div>";
+				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(onclick);//.simpletip({content: tooltip, fixed: true, position: 'left'});
 			}
 		});
 		

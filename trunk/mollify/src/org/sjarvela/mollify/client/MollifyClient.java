@@ -33,6 +33,7 @@ import org.sjarvela.mollify.client.ui.login.LoginDialog;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -118,8 +119,24 @@ public class MollifyClient implements Client, SessionListener {
 		if (session.isAuthenticationRequired() && !session.isAuthenticated())
 			openLogin(session);
 		else
-			viewManager.openView(mainViewFactory.createMainView(
-					fileViewDelegate).getViewWidget());
+			openMainView();
+	}
+
+	private void openMainView() {
+		GWT.runAsync(new RunAsyncCallback() {
+			@Override
+			public void onSuccess() {
+				viewManager.openView(mainViewFactory.createMainView(
+						fileViewDelegate).getViewWidget());
+			}
+
+			@Override
+			public void onFailure(Throwable reason) {
+				logger.log(Level.SEVERE, "Error loading application", reason);
+				viewManager.showPlainError("Error loading application: "
+						+ reason.getMessage());
+			}
+		});
 	}
 
 	public void onSessionEnded() {
@@ -132,8 +149,8 @@ public class MollifyClient implements Client, SessionListener {
 			return;
 
 		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
-			public void login(String userName, String password, boolean remember,
-					final ConfirmationListener listener) {
+			public void login(String userName, String password,
+					boolean remember, final ConfirmationListener listener) {
 				logger.log(Level.INFO, "User login: " + userName);
 
 				service.authenticate(userName, password, remember,
