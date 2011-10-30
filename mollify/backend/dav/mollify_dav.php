@@ -18,6 +18,15 @@
 		public function addListener($l) {}
 	}
 	
+	function checkUploadSize() {
+		global $MAX_FILE_SIZE;
+		if (!isset($_SERVER['CONTENT_LENGTH']) or !isset($MAX_FILE_SIZE)) return;
+		
+		$size = $_SERVER['CONTENT_LENGTH'];
+		if ($size > Util::inBytes($MAX_FILE_SIZE))
+			throw new Sabre_DAV_Exception_Forbidden();
+	}
+	
 	class Mollify_DAV_Root extends Sabre_DAV_Directory {
 		private $controller;
 		private $roots;
@@ -64,8 +73,7 @@
 			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create file");
 			$file = $this->folder->createFile($name);
 			if ($data != NULL) {
-				if (isset($MAX_FILE_SIZE) and strlen($data) > Util::inBytes($MAX_FILE_SIZE))
-					throw new Sabre_DAV_Exception_Forbidden();
+				checkUploadSize();
 				$file->put($data);
 			}
 			return $file;
@@ -114,6 +122,7 @@
 		}
 		
 		public function put($data) {
+			if ($data != NULL) checkUploadSize();
 			$this->controller->assertRights($this->file, Authentication::RIGHTS_WRITE, "put");
 	        $this->file->put($data);
 		}
