@@ -7,6 +7,7 @@
 	$ENABLE_BROWSER = FALSE;
 	$ENABLE_TEMPORARY_FILE_FILTER = TRUE;
 	$BASIC_AUTH = FALSE;
+	//$MAX_FILE_SIZE = "10M";
 	
 	require_once("mollify_dav.php");
 ?>

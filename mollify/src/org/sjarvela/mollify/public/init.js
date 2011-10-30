@@ -110,6 +110,10 @@
 	}
 })();
 
+function isArray(o) {
+	return Object.prototype.toString.call(o) === '[object Array]';
+}
+
 if(typeof String.prototype.trim !== 'function') {
   String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g, ''); 
@@ -234,8 +238,10 @@ function CommentPlugin() {
 		
 		that.env.service().post("comment/"+item.id, { comment: comment }, function(result) {
 			d.close();
-			document.getElementById("item-comment-count-"+item.id).innerHTML = result.count;
-			$("#item-comment-count-"+item.id).removeClass("filelist-item-comment-count-none").addClass("filelist-item-comment-count");
+			
+			var e = document.getElementById("item-comment-count-"+item.id);
+			e.innerHTML = result.count;
+			e.setAttribute('class', 'filelist-item-comment-count');
 		},	function(code, error) {
 			alert(error);
 		});
@@ -365,6 +371,7 @@ function ItemDetailsPlugin(conf, sp) {
 		if (dataKey == 'path') return that.t('fileItemContextDataPath');
 		if (dataKey == 'extension') return that.t('fileItemContextDataExtension');
 		if (dataKey == 'last-modified') return that.t('fileItemContextDataLastModified');
+		if (dataKey == 'image-size') return that.t('fileItemContextDataImageSize');
 		
 		if (that.specs[dataKey]) {
 			var spec = that.specs[dataKey];
@@ -377,6 +384,7 @@ function ItemDetailsPlugin(conf, sp) {
 	this.formatData = function(key, data) {
 		if (key == 'size') return that.env.texts().formatSize(data);
 		if (key == 'last-modified') return that.env.texts().formatInternalTime(data);
+		if (key == 'image-size') return that.t('fileItemContextDataImageSizePixels', [data]);
 		
 		if (that.specs[key]) {
 			var spec = that.specs[key];
@@ -390,8 +398,8 @@ function ItemDetailsPlugin(conf, sp) {
 		return that.env.service().getPluginUrl("ItemDetails")+"client/"+p;
 	}
 	
-	this.t = function(s) {
-		return that.env.texts().get(s);
+	this.t = function(s, p) {
+		return that.env.texts().get(s, p);
 	}
 }
 

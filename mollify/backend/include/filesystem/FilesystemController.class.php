@@ -37,8 +37,10 @@
 			$this->env = $env;
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
 			$this->registerSearcher(new FileSystemSearcher($this->env));
-			$this->registerDataRequestPlugin(array("core-file-modified"), new CoreFileDataProvider($this->env));
 			
+			$coreData = new CoreFileDataProvider($this->env);
+			$coreData->init($this);
+						
 			FileEvent::register($this->env->events());
 		}
 		

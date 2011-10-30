@@ -77,6 +77,23 @@
 			
 			return $result->firstRow();
 		}
+
+		public function getUserByNameOrEmail($name) {
+			$result = $this->db->query(sprintf("SELECT id, name, password, a1password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
+			$matches = $result->count();
+			
+			if ($matches === 0) {
+				Logging::logError("No user found with name or email[".$name."]");
+				return NULL;
+			}
+			
+			if ($matches > 1) {
+				Logging::logError("Duplicate user found with name or email [".$name."]");
+				return FALSE;
+			}
+			
+			return $result->firstRow();
+		}
 		
 		public function getAllUsers() {
 			return $this->db->query("SELECT id, name, email, auth, permission_mode, is_group FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();

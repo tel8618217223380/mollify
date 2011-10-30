@@ -331,8 +331,10 @@ searchResultsTooltipMatchDescription: "Description",
 
 fileItemContextDataName: "Name",
 fileItemContextDataPath: "Path",
-fileItemContextDataSize: "Size",
+fileItemContextDataSize: "File size",
 fileItemContextDataExtension: "Extension",
 fileItemContextDataLastModified: "Last modified",
-fileItemDetailsExif: "Image information"
+fileItemDetailsExif: "Image information",
+fileItemContextDataImageSize: "Image size",
+fileItemContextDataImageSizePixels: "{0} pixels"
 })})();

@@ -16,11 +16,16 @@
 		public function __construct($env) {
 			$this->env = $env;
 		}
+		
+		public function init($c) {
+			$c->registerDataRequestPlugin(array("core-file-modified"), $this);
+		}
 				
-		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
+		public function getRequestData($parent, $items, $result, $key, $requestData) {
 			$result = array();
 			foreach($items as $i) {
-				$result[$i->publicId()] = $this->env->formatTimestampInternal($i->lastModified());
+				if (strcmp("core-file-modified", $key) === 0)
+					$result[$i->publicId()] = $this->env->formatTimestampInternal($i->lastModified());
 			} 
 			return $result;
 		}
