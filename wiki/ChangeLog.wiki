@@ -1,6 +1,16 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.4.3 ===
+  * Fixed issue 311 (requires WebDAV plugin 1.5)
+
+=== WebDAV plugin version 1.5 ===
+  * Adds support for authenticating with email
+  * Adds support for setting max file upload size
+
+=== Plupload plugin version 1.0.5 ===
+  * Updates Plupload to version 1.5.1
+
 === Version 1.8.4.2 ===
   * Added group support in notifications plugin (issue 302)
   * Fixed issue 304
