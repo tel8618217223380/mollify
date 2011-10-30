@@ -23,4 +23,6 @@ public interface TextProvider {
 
 	String getLocale();
 
+	String getText(String id, String... params);
+
 }

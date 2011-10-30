@@ -90,6 +90,11 @@ public class DefaultTextProvider implements TextProvider {
 		return replaceParams(getText(id), params);
 	}
 
+	@Override
+	public String getText(String id, String... params) {
+		return replaceParams(getText(id), params);
+	}
+
 	private String replaceParams(String v, String... params) {
 		for (int i = 0; i < params.length; i++)
 			v = v.replaceAll("\\{" + i + "\\}", params[i]);

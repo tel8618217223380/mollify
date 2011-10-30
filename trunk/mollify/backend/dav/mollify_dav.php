@@ -4,6 +4,7 @@
 	
 	require_once("configuration.php");
 	require_once("include/Logging.class.php");
+	require_once("include/Util.class.php");
 		
 	global $SETTINGS, $CONFIGURATION_TYPE;
 	Logging::initialize($SETTINGS);
@@ -62,7 +63,11 @@
 		public function createFile($name, $data = null) {
 			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "create file");
 			$file = $this->folder->createFile($name);
-			if ($data != NULL) $file->put($data);
+			if ($data != NULL) {
+				if (isset($MAX_FILE_SIZE) and strlen($data) > Util::inBytes($MAX_FILE_SIZE))
+					throw new Sabre_DAV_Exception_Forbidden();
+				$file->put($data);
+			}
 			return $file;
 		}
 
@@ -151,7 +156,7 @@
 				die();
 			}
 			
-			$user = $env->configuration()->getUserByName($result[0]);
+			$user = $env->configuration()->getUserByNameOrEmail($result[0]);
 			if (!$user or strcmp($user["password"], md5($result[1])) != 0) {
 				Logging::logDebug("DAV authentication failure");
 				$auth->requireLogin();
@@ -172,7 +177,7 @@
 				die();
 			}
 			
-			$user = $env->configuration()->getUserByName($username);
+			$user = $env->configuration()->getUserByNameOrEmail($username);
 			
 			if (!$user or !$auth->validateA1($user["a1password"])) {
 				Logging::logDebug("DAV digest authentication failure");
@@ -190,10 +195,8 @@
 		if ($ENABLE_TEMPORARY_FILE_FILTER) $dav->addPlugin(new Sabre_DAV_TemporaryFileFilterPlugin('temp'));
 		$dav->addPlugin(new Sabre_DAV_Mount_Plugin());
 		$dav->exec();
-	} catch (ServiceException $e) {
-		Logging::logException($e);
 	} catch (Exception $e) {
 		Logging::logException($e);
-		throw $e;
+		throw new Sabre_DAV_Exception_BadRequest();
 	}
 ?>

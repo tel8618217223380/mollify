@@ -13,8 +13,10 @@ package org.sjarvela.mollify.client.plugin;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.util.DateTime;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class NativeTextProvider {
@@ -35,8 +37,10 @@ public class NativeTextProvider {
 			String locale) /*-{
 		var o = {};
 
-		o.get = function(s) {
-			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::getText(Ljava/lang/String;)(s);
+		o.get = function(s, p) {
+			if (!p || !$wnd.isArray(p))
+				return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::getText(Ljava/lang/String;)(s);
+			return tp.@org.sjarvela.mollify.client.plugin.NativeTextProvider::getText(Ljava/lang/String;Lcom/google/gwt/core/client/JsArrayString;)(s, p);
 		}
 
 		o.formatSize = function(s) {
@@ -54,6 +58,11 @@ public class NativeTextProvider {
 
 	public String getText(String id) {
 		return textProvider.getText(id);
+	}
+
+	public String getText(String id, JsArrayString params) {
+		return textProvider.getText(id,
+				JsUtil.asList(params).toArray(new String[0]));
 	}
 
 	public String formatInternalTime(String timeString) {

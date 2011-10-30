@@ -2924,3 +2924,6 @@ input.mollify-header-search-field {
 	padding-left: 22px;
 }
 
+#text-editor {
+	font-family: Fixed, monospace;
+}
