@@ -58,6 +58,7 @@ The type can be:
 Data key is the id of the data displayed. Mollify provides following built-in data keys:
  * "`last-modified`" : Time of the last modification
  * "`size`" : Size of the file
+ * "`image-size`" : Size of the image (in pixels)
  * "`exif`" : Image exif data (see example below on how to register exif renderer)
 
 Some plugins may provide more data keys.
