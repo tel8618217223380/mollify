@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -11,11 +11,7 @@
 	 */
 
 	class Thumbnail {
-		function generate($item) {
-			//Logging::logDebug("Creating thumbnail for ".$item->internalPath());
-			$MAX_THUMB_WIDTH = 200;
-			$MAX_THUMB_HEIGHT = 200;
-	
+		function generate($item, $maxWidth = 200, $maxHeight = 200) {
 			$img = null;
 			$ext = $item->extension();
 
@@ -33,7 +29,7 @@
 	
 			$w = imagesx($img);
 			$h = imagesy($img);
-			$s = min($MAX_THUMB_WIDTH/$w, $MAX_THUMB_HEIGHT/$h);
+			$s = min($maxWidth/$w, $maxHeight/$h);
 			if ($s >= 1) {
 				Logging::logDebug("Skipping thumbnail, image smaller than thumbnail");
 				return FALSE;

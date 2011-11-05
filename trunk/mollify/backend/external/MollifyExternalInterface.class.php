@@ -47,7 +47,12 @@
 			$this->session->initialize($env);
 			$this->authentication = new Authentication($env);
 		}
-		
+
+		public function logout() {
+			$this->authentication->logout();
+			$this->session->reset();
+		}
+				
 		public function authenticate($userId) {
 			$this->authentication->doAuth($this->getUser($userId));
 		}
