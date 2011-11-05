@@ -1,6 +1,9 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.4.4 ===
+  * Thumbnails used in previewing images
+
 === Version 1.8.4.3 ===
   * Fixed issue 310 (requires WebDAV plugin 1.5)
   * Added new details info: image size (see http://code.google.com/p/mollify/wiki/ItemDetailsPlugin "`image-size`")
