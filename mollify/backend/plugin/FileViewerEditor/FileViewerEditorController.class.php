@@ -153,7 +153,7 @@
 		}
 				
 		public function getContentUrl($item) {
-			return $this->getServiceUrl("view", array($item->publicId(), "content"), TRUE);
+			return $this->getServiceUrl("view", array($this->getUrlId($item->publicId()), "content"), TRUE);
 		}
 
 		public function response() {
@@ -165,13 +165,13 @@
 		}
 		
 		public function getViewServiceUrl($item, $p, $fullUrl = FALSE) {
-			$path = array($item->publicId());
+			$path = array($this->getUrlId($item->publicId()));
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("view", $path, $fullUrl);
 		}
 
 		public function getEditServiceUrl($item, $p, $fullUrl = FALSE) {
-			$path = array($item->publicId());
+			$path = array($this->getUrlId($item->publicId()));
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("edit", $path, $fullUrl);
 		}
@@ -179,11 +179,13 @@
 		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
 			$url = $this->plugin->env()->getServiceUrl($id, $path, $fullUrl);
 			
+			$url .= (strpos($url, '?') === FALSE) ? "?" : "&";
 			if ($this->plugin->env()->session()->isActive()) {
 				$s = $this->plugin->env()->session()->getSessionInfo();
-				$url .= '?session='.$s["session_id"];
+				
+				$url .= 'session='.$s["session_id"];
 			} else {
-				$url .= '?nosession=1';
+				$url .= 'nosession=1';
 			}
 			return $url;
 		}
@@ -217,6 +219,10 @@
 			$s = $this->plugin->getSettings();
 			if (!isset($s[$editorId])) return array();
 			return $s[$editorId];
+		}
+		
+		public function getUrlId($id) {
+			return strtr($id, '+/=', '-_,');
 		}
 
 		private function getSetting($name) {

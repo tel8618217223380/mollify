@@ -144,8 +144,14 @@
 
 					if ($this->env->settings()->setting("enable_thumbnails", TRUE)) {
 						require_once("include/Thumbnail.class.php");
+						$maxWidth = 200;
+						$maxHeight = 200;
+						if ($this->env->request()->hasParam("mw") and $this->env->request()->hasParam("mh")) {
+							$maxWidth = intval($this->env->request()->param("mw"));
+							$maxHeight = intval($this->env->request()->param("mh"));
+						}
 						$t = new Thumbnail();
-						if ($t->generate($item)) die();
+						if ($t->generate($item, $maxWidth, $maxHeight)) die();
 					}
 					
 					$this->env->filesystem()->view($item);
