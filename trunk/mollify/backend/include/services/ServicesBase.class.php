@@ -75,13 +75,8 @@
 		
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
 		
-		protected function item($id, $convert = TRUE) {
-			$i = $convert ? $this->convertItemId($id) : $id;
-			return $this->env->filesystem()->item(base64_decode($i));
-		}
-		
-		protected function convertItemId($id) {
-			return strtr(urldecode($id), '-_,', '+/=');
+		protected function item($id) {
+			return $this->env->filesystem()->item($id);
 		}
 		
 		protected function invalidRequestException($details = NULL) {

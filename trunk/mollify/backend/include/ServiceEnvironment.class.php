@@ -147,6 +147,8 @@
 		
 		public function getService($request) {
 			$path = $request->path();
+			if (count($path) === 0) throw new ServiceException("Empty request");
+			
 			$id = $path[0];
 			if (!array_key_exists($id, $this->services)) throw new ServiceException("Unknown service '".$id."'");
 			

@@ -29,16 +29,8 @@
 			return $this->id;
 		}
 		
-		public function publicId() {
-			return base64_encode($this->id());
-		}
-
 		public function rootId() {
 			return $this->rootId;
-		}
-
-		public function publicRootId() {
-			return base64_encode($this->rootId());
 		}
 		
 		public function exists() {
@@ -63,6 +55,10 @@
 		
 		public function name() {
 			return $this->name;
+		}
+
+		public function location() {
+			return $this->filesystem->itemLocation($this->path);
 		}
 		
 		public function path() {
@@ -112,9 +108,9 @@
 		public function data() {
 			$p = $this->parent();
 			return array(
-				"id" => $this->publicId(),
-				"root_id" => $this->publicRootId(),
-				"parent_id" => $p != NULL ? $p->publicId() : "",
+				"id" => $this->id,
+				"root_id" => $this->rootId(),
+				"parent_id" => ($p != NULL) ? $p->id() : "",
 				"name" => $this->name,
 				"path" => $this->path,
 				"is_file" => $this->isFile()

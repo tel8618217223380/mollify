@@ -19,7 +19,7 @@
 		}
 		
 		private function getImageContentUrl($item) {
-			return $this->env->getServiceUrl("filesystem", array($item->publicId(), "thumbnail"), TRUE);
+			return $this->env->getServiceUrl("filesystem", array($item->id(), "thumbnail"), TRUE);
 		}
 	}
 ?>

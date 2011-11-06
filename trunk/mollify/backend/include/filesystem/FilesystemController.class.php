@@ -23,6 +23,7 @@
 		private $dataRequestPlugins = array();
 		private $searchers = array();
 		private $filesystems = array();
+		private $idProvider;
 		
 		public $allowFilesystems = FALSE;
 
@@ -33,8 +34,11 @@
 			require_once("BaseSearcher.class.php");
 			require_once("FilesystemSearcher.class.php");
 			require_once("CoreFileDataProvider.class.php");
+			require_once("ItemIdProvider.class.php");
 			
 			$this->env = $env;
+			$this->idProvider = new ItemIdProvider($env);
+			
 			$this->allowedUploadTypes = $env->settings()->setting('allowed_file_upload_types', TRUE);
 			$this->registerSearcher(new FileSystemSearcher($this->env));
 			
@@ -45,6 +49,10 @@
 		}
 		
 		public function initialize() {}
+		
+		public function itemIdProvider() {
+			return $this->idProvider;
+		}
 		
 		public function registerFilesystem($id, $factory) {
 			Logging::logDebug("Filesystem registered: ".$id);
@@ -90,10 +98,7 @@
 			
 			foreach($folderDefs as $folderDef) {
 				if (array_key_exists($folderDef['id'], $list)) continue;
-				
-				$root = $this->filesystem($folderDef, !$all)->root();
-				if (!$all and !$root->exists()) throw new ServiceException("DIR_DOES_NOT_EXIST", 'root id:'.$folderDef['id']);
-				if (!$this->allowFilesystems and !$this->env->authentication()->hasReadRights($this->permission($root))) continue;
+				if (!$this->isFolderValid($folderDef, !$all)) continue;
 				
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
 					$this->env->session()->reset();
@@ -108,6 +113,13 @@
 			}
 			
 			return $list;
+		}
+		
+		private function isFolderValid($folderDef, $mustExist = TRUE) {
+			$root = $this->filesystem($folderDef, $mustExist)->root();
+			if ($mustExist and !$root->exists()) throw new ServiceException("DIR_DOES_NOT_EXIST", 'root id:'.$folderDef['id']);
+			if (!$this->allowFilesystems and !$this->env->authentication()->hasReadRights($this->permission($root))) return FALSE;
+			return TRUE;
 		}
 		
 		private function createFilesystem($folderDef) {
@@ -143,17 +155,19 @@
 				"allowed_file_upload_types" => $this->allowedFileUploadTypes()
 			);
 			
+			$this->itemIdProvider()->loadRoots();
+			
 			$result["folders"] = array();
 			foreach($this->getRootFolders() as $id => $folder) {
 				$nameParts = explode("/", str_replace("\\", "/",$folder->name()));
 				$name = array_pop($nameParts);
 				
 				$result["folders"][] = array(
-					"id" => $folder->publicId(),
+					"id" => $folder->id(),
 					"name" => $name,
 					"group" => implode("/", $nameParts),
 					"parent_id" => NULL,
-					"root_id" => $folder->publicId(),
+					"root_id" => $folder->id(),
 					"path" => ""
 				);
 			}
@@ -172,28 +186,26 @@
 		}
 		
 		public function item($id, $nonexisting = FALSE) {
-			$parts = explode(":".DIRECTORY_SEPARATOR, $id);
-			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item id: ".$id);
+			$location = $this->itemIdProvider()->getLocation($id);
+			$parts = explode(":".DIRECTORY_SEPARATOR, $location);
+			if (count($parts) != 2) throw new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
-			if (strpos($path, "../") != FALSE or strpos($path, "..\\") != FALSE) throw new ServiceException("INVALID_REQUEST");
+			if (strpos($path, "../") != FALSE or strpos($path, "..\\") != FALSE) new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
 			
 			if (array_key_exists($filesystemId, $this->folderCache)) {
 				$folderDef = $this->folderCache[$filesystemId];
 			} else {
-				if (!$this->isFolderValid($filesystemId)) throw new ServiceException("UNAUTHORIZED");
 				$folderDef = $this->env->configuration()->getFolder($filesystemId);
+				if (!$folderDef or !$this->isFolderValid($folderDef)) throw new ServiceException("UNAUTHORIZED");
+				
 				$this->folderCache[$filesystemId] = $folderDef;
 			}
 			
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
 		}
-		
-		private function isFolderValid($id) {
-			return array_key_exists($id, $this->getFolderDefs($this->allowFilesystems));
-		}
-		
+				
 		public function assertFilesystem($folderDef) {
 			$this->filesystem($folderDef, TRUE);
 		}
@@ -215,7 +227,8 @@
 			//make sure folder permissions are fetched into cache
 			$this->fetchPermissions($folder);
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "items");
-
+			$this->itemIdProvider()->load($folder);
+			
 			$list = array();
 			foreach($folder->items() as $i) {
 				if (!$this->isItemVisible($i)) continue;
@@ -342,15 +355,10 @@
 		public function rename($item, $name) {
 			Logging::logDebug('rename from ['.$item->path().'] to ['.$name.']');
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "rename");
-			
 			$to = $item->rename($name);
 			
-			if ($this->env->features()->isFeatureEnabled("descriptions"))
-				$this->env->configuration()->moveItemDescription($item, $to);
-				
-			$this->env->configuration()->moveItemPermissions($item, $to);
-			
 			$this->env->events()->onEvent(FileEvent::rename($item, $to));
+			$this->idProvider->move($item, $to);
 		}
 
 		public function copy($item, $to) {
@@ -386,13 +394,9 @@
 			$this->assertRights($to, Authentication::RIGHTS_WRITE, "move");
 
 			$to = $item->move($to);
-			
-			if ($this->env->features()->isFeatureEnabled("descriptions"))
-				$this->env->configuration()->moveItemDescription($item, $to);
-				
-			$this->env->configuration()->moveItemPermissions($item, $to);
-			
-			$this->env->events()->onEvent(FileEvent::move($item, $to));			
+						
+			$this->env->events()->onEvent(FileEvent::move($item, $to));
+			$this->idProvider->move($item, $to);
 		}
 		
 		public function moveItems($items, $to) {
@@ -418,6 +422,7 @@
 			$this->env->configuration()->removeItemPermissions($item);
 			
 			$this->env->events()->onEvent(FileEvent::delete($item));
+			$this->idProvider->delete($item->id());
 		}
 		
 		public function deleteItems($items) {
@@ -606,7 +611,7 @@
 			$result = array();
 			
 			foreach($parent->items() as $item) {
-				$id = $item->publicId();
+				$id = $item->id();
 				
 				foreach($this->searchers as $searcher) {
 					$match = $searcher->match($data[$searcher->key()], $item, $text);

@@ -26,6 +26,11 @@ CREATE TABLE item_description (
   description varchar(512) NOT NULL,
   PRIMARY KEY (item_id)
 );
+CREATE TABLE item_id (
+  `id` char(13) NOT NULL,
+  `path` char(255) NOT NULL,
+  PRIMARY KEY (id)
+);
 CREATE TABLE item_permission (
   user_id int(11) NULL DEFAULT 0,
   item_id char(255) NOT NULL,
