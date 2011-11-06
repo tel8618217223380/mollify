@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -13,7 +13,7 @@
 	require_once("install/sqlite/SQLiteInstaller.class.php");
 	
 	class SQLiteUpdater extends SQLiteInstaller {
-		private static $versionHistory = array("1_7_10", "1_8", "1_8_1");
+		private static $versionHistory = array("1_7_10", "1_8", "1_8_1", "1_8_3", "1_8_5");
 		
 		public function __construct($type, $settingsVar) {
 			parent::__construct($type, $settingsVar, "update");

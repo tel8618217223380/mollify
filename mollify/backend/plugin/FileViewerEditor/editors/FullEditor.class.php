@@ -41,7 +41,7 @@
 								type: "POST",
 								processData: false,
 								contentType: "text/plain",
-								url: "'.$this->getServiceUrl("filesystem", array($item->publicId(), 
+								url: "'.$this->getServiceUrl("filesystem", array($item->id(), 
 "content"), TRUE).'",
 								data: data,
 								success: function(result) {

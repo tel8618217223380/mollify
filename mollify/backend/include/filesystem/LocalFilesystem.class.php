@@ -74,7 +74,7 @@
 		public function details($item) {
 			$datetimeFormat = $this->filesystemInfo->datetimeFormat();
 			
-			$details = array("id" => $item->publicId());
+			$details = array("id" => $item->id());
 			if ($item->isFile()) {
 				$path = $this->localPath($item);
 				$details["last_changed"] = date($datetimeFormat, filectime($path));
@@ -98,6 +98,7 @@
 			
 			$items = scandir($parentPath);
 			if (!$items) throw new ServiceException("INVALID_PATH", $parent->id());
+			
 			$ignored = $this->ignoredItems($this->publicPath($parentPath));
 				
 			$result = array();
@@ -183,7 +184,7 @@
 
 			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
 			
-			return $this->itemWithPath($this->publicPath($new));
+			return $this->createItem($item->id(), $this->publicPath($new));
 		}
 
 		public function copy($item, $to) {			
@@ -227,9 +228,7 @@
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
 			if (!rename($item->internalPath(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			if ($item->isFile())
-				return $to->fileWithName($item->name());
-			return $to->folderWithName($item->name());
+			return $this->createItem($item->id(), $this->publicPath($target));
 		}
 		
 		public function delete($item) {

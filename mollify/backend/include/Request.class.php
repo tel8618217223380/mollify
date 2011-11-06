@@ -32,7 +32,7 @@
 			$p = stripos($this->uri, "?");
 			if ($p) $this->uri = trim(substr($this->uri, 0, $p), "/");
 			
-			$this->parts = explode("/", $this->uri);
+			$this->parts = strlen($this->uri) > 0 ? explode("/", $this->uri) : array();
 			$this->params = array();
 			$this->data = NULL;
 			
@@ -60,6 +60,7 @@
 		private function getUri() {
 			$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
 			$pos = strpos($uri, "/r.php/");
+			if ($pos === FALSE) return "";
 			return trim(substr($uri, $pos + 7), "/");
 		}
 		

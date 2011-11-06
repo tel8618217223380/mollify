@@ -70,7 +70,7 @@
 		public function details($item) {
 			$hdr = $this->s3->getObjectHeaders($this->bucketId, $item->path());
 
-			$details = array("id" => $item->publicId());
+			$details = array("id" => $item->id());
 			if ($item->isFile()) {
 				$details["last_changed"] = date($this->env->filesystem()->datetimeFormat(), strtotime($hdr["last-modified"]));
 			}

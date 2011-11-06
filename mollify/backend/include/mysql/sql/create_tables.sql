@@ -26,6 +26,11 @@ CREATE TABLE `{TABLE_PREFIX}folder` (
   PRIMARY KEY (`id`)
 ) COLLATE utf8_general_ci COMMENT = 'Mollify published folders';
 
+CREATE TABLE `{TABLE_PREFIX}item_id` (
+  `id` char(13) NOT NULL UNIQUE,
+  `path` char(255) NOT NULL UNIQUE
+) COLLATE utf8_general_ci COMMENT = 'Mollify item ids';
+
 CREATE TABLE `{TABLE_PREFIX}item_description` (
   `item_id` char(255) NOT NULL,
   `description` varchar(512) NOT NULL,

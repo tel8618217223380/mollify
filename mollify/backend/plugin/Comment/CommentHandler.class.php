@@ -31,13 +31,9 @@
 		
 		public function onEvent($e) {
 			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
-			$type = $e->subType();
-			if (!in_array($type, array(FileEvent::MOVE, FileEvent::RENAME, FileEvent::DELETE))) return;
-			
+			$type = $e->subType();			
 			if ($type === FileEvent::DELETE)
 				$this->getDao()->deleteComments($e->item());
-			else if ($type === FileEvent::MOVE or $type === FileEvent::RENAME)
-				$this->getDao()->moveComments($e->item(), $e->info());
 		}
 		
 		public function getCommentCount($item) {
@@ -56,7 +52,7 @@
 			$counts = $this->getDao()->getCommentCountForChildren($parent);
 			$result = array();
 			foreach($counts as $id=>$c) {
-				$result[$this->env->filesystem()->item($id)->publicId()] = $c;
+				$result[$this->env->filesystem()->item($id)->id()] = $c;
 			} 
 			return $result;
 		}

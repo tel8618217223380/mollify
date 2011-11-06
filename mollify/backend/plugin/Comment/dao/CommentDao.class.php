@@ -24,14 +24,14 @@
 
 		public function getCommentCountForChildren($parent) {
 			$db = $this->env->configuration()->db();
-			$parentId = $db->string($parent->id());
+			$parentId = $db->string($parent->location());
 			
 			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
-				$itemFilter = "item_id REGEXP '^".$parentId."[^/]+[/]?$'";
+				$itemFilter = "select id from ".$db->table("item_id")." where path REGEXP '^".$parentId."[^/]+[/]?$'";
 			} else {
-				$itemFilter = "REGEX(item_id, \"#^".$parentId."[^/]+[/]?$#\")";
+				$itemFilter = "select id from ".$db->table("item_id")." where REGEX(path, \"#^".$parentId."[^/]+[/]?$#\")";
 			}
-			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where ".$itemFilter." group by item_id")->valueMap("item_id", "count");
+			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where item_id in (".$itemFilter.") group by item_id")->valueMap("item_id", "count");
 		}
 		
 		public function getComments($item) {
@@ -48,17 +48,9 @@
 		public function deleteComments($item) {
 			$db = $this->env->configuration()->db();
 			if ($item->isFile())
-				return $db->update("DELETE FROM ".$db->table("comment")." WHERE `item_id` = ".$db->string($item->id(), TRUE));
+				return $db->update("DELETE FROM ".$db->table("comment")." WHERE item_id = ".$db->string($item->id(), TRUE));
 			else
-				return $db->update(sprintf("DELETE FROM ".$db->table("comment")." WHERE `item_id` like '%s%%'", $db->string($item->id())));
-		}
-
-		public function moveComments($item, $to) {
-			$db = $this->env->configuration()->db();
-			if ($item->isFile())
-				return $db->update("UPDATE ".$db->table("comment")." SET `item_id` = ".$db->string($to->id(), TRUE) ." where `item_id` = ".$db->string($item->id(), TRUE));
-			else
-				return $db->update(sprintf("UPDATE ".$db->table("comment")." SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $to->id(), strlen($item->id())+1, $item->id()));
+				return $db->update(sprintf("DELETE FROM ".$db->table("comment")." WHERE item_id in (select id from ".$db->table("item_id")." where path like '%s%%')", $db->string($item->id())));
 		}
 						
 		public function __toString() {

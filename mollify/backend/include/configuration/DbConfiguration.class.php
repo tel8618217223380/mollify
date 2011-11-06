@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -277,7 +277,6 @@
 			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
 
 			$l = $this->db->query(sprintf("SELECT f.id as id, uf.name as name, f.name as default_name, f.path as path FROM ".$userFolderTable." uf, ".$folderTable." f, ".$userTable." u WHERE %s AND f.id = uf.folder_id AND u.id = uf.user_id ORDER BY u.is_group asc", $userQuery))->rows();
-			Logging::logDebug(Util::array2str($l));
 			return $l;
 		}
 		
@@ -347,19 +346,7 @@
 			$query = "SELECT item_id, description from ".$this->db->table("item_description")." where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
-		
-		function moveItemDescription($from, $to) {
-			$fromId = $this->itemId($from);
-			
-			if (!$from->isFile()) {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $this->itemId($to), strlen($fromId)+1, $fromId));
-			} else {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET item_id='%s' WHERE item_id='%s'", $this->itemId($to), $fromId));
-			}
-			
-			return TRUE;
-		}
-					
+							
 		function getItemPermission($item, $userId) {
 			$mysql = $this->isMySql();
 			$table = $this->db->table("item_permission");
@@ -384,16 +371,16 @@
 			$query = sprintf("SELECT permission, user_id, 1 AS 'category', %s AS 'subcategory' FROM ".$table." WHERE item_id = '%s' AND %s", $subcategoryQuery, $id, $userQuery);
 					
 			if ($item->isFile() or !$item->isRoot()) {
-				$parentId = $this->itemId($item->parent());
-				$rootId = $this->itemId($item->root());
+				$parentLocation = $item->parent()->location();
+				$rootLocation = $item->root()->location();
 				
 				if ($mysql)
-					$hierarchyQuery = "(item_id REGEXP '^".$rootId;
+					$hierarchyQuery = "(i.path REGEXP '^".$rootLocation;
 				else
-					$hierarchyQuery = "REGEX(item_id, '#^".str_replace("\\", "\\\\", $rootId);
+					$hierarchyQuery = "REGEX(i.path, '#^".str_replace("\\", "\\\\", $rootLocation);
 				
 				$hierarchyQueryEnd = "";
-				$parts = preg_split("/\//", substr($parentId, strlen($rootId)), -1, PREG_SPLIT_NO_EMPTY);
+				$parts = preg_split("/\//", substr($parentLocation, strlen($rootLocation)), -1, PREG_SPLIT_NO_EMPTY);
 				//Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
 					$hierarchyQuery .= "(".$part."/";
@@ -405,11 +392,11 @@
 					$hierarchyQuery .= $hierarchyQueryEnd."$#')";
 			
 				if ($mysql) {
-					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(item_id)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
+					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(i.path)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
 				} else {
-					$subcategoryQuery = sprintf("((%s - LENGTH(item_id)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentId), $userId);
+					$subcategoryQuery = sprintf("((%s - LENGTH(i.path)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentId), $userId);
 				}
-				$query = sprintf("SELECT permission, user_id, case when item_id = '%s' then 1 else 2 end AS category, %s AS subcategory FROM ".$table." WHERE (item_id = '%s' OR %s) AND %s", $id, $subcategoryQuery, $id, $hierarchyQuery, $userQuery);
+				$query = sprintf("SELECT permission, user_id, case when i.id = '%s' then 1 else 2 end AS category, %s AS subcategory FROM ".$table." p, ".$this->db->table("item_id")." i WHERE p.item_id = i.id AND (i.id = '%s' OR %s) AND %s", $id, $subcategoryQuery, $id, $hierarchyQuery, $userQuery);
 			}
 			
 			$query = "SELECT permission FROM (".$query.") as u ORDER BY u.category ASC, u.subcategory ASC, u.permission DESC";
@@ -420,7 +407,7 @@
 		}
 		
 		public function getAllItemPermissions($parent, $userId) {
-			$parentId = $this->itemId($parent);
+			$parentLocation = $parent->location();
 			$table = $this->db->table("item_permission");
 			$userIds = array($userId);
 			if ($this->env->authentication()->hasUserGroups()) {
@@ -431,16 +418,16 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
 			if ($this->isMySql()) {
-				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and item_id REGEXP '^".$parentId."[^/]+[/]?$'";
-				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/]+[/]?$'";
+				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s p, ".$this->db->table("item_id")." i where p.item_id = i.id and %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(item_id, \"#^".str_replace("\\", "\\\\", $parentId)."[^/]+[/]?$#\")";
-				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/]+[/]?$#\")";
+				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s p, ".$this->db->table("item_id")." i where p.item_id = i.id and %s and i.path in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
 			$all = $this->db->query($query)->rows();
 			$all[] = array(
-				"item_id" => $parentId,
+				"item_id" => $parent->id(),
 				"permission" => $this->getItemPermission($parent, $userId)
 			);
 			$k = array();
@@ -488,7 +475,7 @@
 			
 			foreach($list as $item) {
 				$permission = $this->db->string(strtolower($item["permission"]));
-				$id = $this->db->string(base64_decode($item["item_id"]));
+				$id = $this->db->string($item["item_id"]);
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 				
@@ -514,7 +501,7 @@
 		private function updateItemPermissionValues($list) {
 			foreach($list as $item) {
 				$permission = $this->db->string(strtolower($item["permission"]));
-				$id = $this->db->string(base64_decode($item["item_id"]));
+				$id = $this->db->string($item["item_id"]);
 				$user = '0';
 				if ($item["user_id"] != NULL) $user = $this->db->string($item["user_id"]);
 			
@@ -526,7 +513,7 @@
 	
 		private function removeItemPermissionValues($list) {
 			foreach($list as $item) {
-				$id = $this->db->string(base64_decode($item["item_id"]));
+				$id = $this->db->string($item["item_id"]);
 				$user = "user_id = '0'";
 				if ($item["user_id"] != NULL) $user = sprintf("user_id = '%s'", $this->db->string($item["user_id"]));
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s' AND %s", $id, $user));
@@ -543,20 +530,7 @@
 			}
 			return TRUE;
 		}
-		
-		function moveItemPermissions($from, $to) {
-			$fromId = $this->itemId($from);
-			$toId = $this->itemId($to);
-			
-			if (!$from->isFile()) {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET item_id=CONCAT('%s', SUBSTR(item_id, %d)) WHERE item_id like '%s%%'", $toId, strlen($fromId)+1, $fromId));
-			} else {
-				$this->db->update(sprintf("UPDATE ".$this->db->table("item_permission")." SET item_id='%s' WHERE item_id='%s'", $toId, $fromId));
-			}
-					
-			return TRUE;
-		}
-		
+				
 		private function itemId($item) {
 			return $this->db->string($item->id());
 		}

@@ -31,8 +31,8 @@
 			return $this->env->getViewServiceUrl($item, array("data", $p), $fullUrl);
 		}
 				
-		public function getServiceUrl($id, $path, $fullUrl = FALSE) {
-			return $this->env->getServiceUrl($id, $path, $fullUrl);
+		public function getServiceUrl($id, $path, $fullUrl = FALSE, $session = TRUE) {
+			return $this->env->getServiceUrl($id, $path, $fullUrl, $session);
 		}
 		
 		public function getContentUrl($item) {

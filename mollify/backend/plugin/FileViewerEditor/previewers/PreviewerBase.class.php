@@ -30,11 +30,11 @@
 		}
 		
 		public function getUrl($item) {
-			return $this->env->getServiceUrl("preview", array($item->publicId(), "info"));
+			return $this->env->getServiceUrl("preview", array($item->id(), "info"));
 		}
 				
 		public function getContentUrl($item) {
-			return $this->env->getServiceUrl("preview", array($item->publicId(), "content"), TRUE);
+			return $this->env->getServiceUrl("preview", array($item->id(), "content"), TRUE);
 		}
 		
 		public function getSettings() {
