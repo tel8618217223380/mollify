@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -10,22 +10,27 @@
 	 * this entire header must remain intact.
 	 */
 
-	require_once("install/MollifyInstaller.class.php");
+	require_once("install/MollifyInstallProcessor.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/mysql/DatabaseUtil.class.php");
 	require_once("install/sqlite/SQLiteInstallUtil.class.php");
 	
-	class SQLiteInstaller extends MollifyInstaller {
+	class SQLiteInstaller {
+		protected $processor;
 		private $configured;
 		protected $db;
 
-		public function __construct($type, $settingsVar, $pageRoot = "install") {
-			parent::__construct($pageRoot, $type, $settingsVar);
+		public function __construct($settings, $type = "install") {
+			$this->processor = new MollifyInstallProcessor($type, "sqlite", $settings);
 			
 			global $DB_FILE;
 			$this->configured = isset($DB_FILE);
 			$this->db = $this->createDB($DB_FILE);
 			$this->dbUtil = new DatabaseUtil($this->db);
+		}
+		
+		public function processor() {
+			return $this->processor;
 		}
 
 		private function createDB($file) {			
@@ -85,14 +90,38 @@
 		
 		public function db() {
 			return $this->db;
-		}		
+		}
+		
+		public function hasError() {
+			return $this->processor->hasError();
+		}
+
+		public function hasErrorDetails() {
+			return $this->processor->hasErrorDetails();
+		}
+		
+		public function error() {
+			return $this->processor->error();
+		}
+
+		public function errorDetails() {
+			return $this->processor->errorDetails();
+		}
+
+		public function data($name = NULL) {
+			return $this->processor->data($name);
+		}
+
+		public function action() {
+			return $this->processor->action();
+		}
 
 		public function process() {
 			$this->checkSystem();
 			$this->checkInstalled();
 			$this->checkConfiguration();
 
-			$phase = $this->phase();
+			$phase = $this->processor->phase();
 			if ($phase == NULL) $phase = 'db';
 			Logging::logDebug("Installer phase: [".$phase."]");	
 			
@@ -101,23 +130,23 @@
 		
 		private function checkSystem() {
 			if (!function_exists('sqlite_open')) {
-				$this->setError("SQLite not detected", "Mollify cannot be installed to this system when SQLite is not available. Check your system configuration or choose different configuration type.");
-				$this->showPage("install_error");
+				$this->processor->setError("SQLite not detected", "Mollify cannot be installed to this system when SQLite is not available. Check your system configuration or choose different configuration type.");
+				$this->processor->showPage("install_error");
 			}
 		}
 		
 		private function checkInstalled() {
 			if (!$this->isInstalled()) return;
 			
-			$this->createEnvironment();
-			if (!$this->authentication()->isAdmin()) die("Mollify Installer requires administrator user");
+			$this->processor->createEnvironment();
+			if (!$this->processor->authentication()->isAdmin()) die("Mollify Installer requires administrator user");
 			
-			$this->showPage("installed");
+			$this->processor->showPage("installed");
 		}
 		
 		private function checkConfiguration() {
 			if (!$this->isConfigured())
-				$this->showPage("configuration");
+				$this->processor->showPage("configuration");
 
 			try {
 				$this->db->connect(FALSE);
@@ -132,7 +161,7 @@
 		}
 		
 		private function onPhase($phase) {
-			$this->setPhase($phase);
+			$this->processor->setPhase($phase);
 			
 			switch ($phase) {
 				case 'db':
@@ -142,7 +171,7 @@
 					$this->onPhaseAdmin();
 					break;
 				case 'success':
-					$this->showPage("success");
+					$this->processor->showPage("success");
 					break;
 				default:
 					Logging::logError("Invalid installer phase: ".$phase);
@@ -153,14 +182,14 @@
 		// PHASES
 				
 		private function onPhaseDatabase() {
-			if ($this->action() === 'continue_db') {
-				$this->clearAction();
+			if ($this->processor->action() === 'continue_db') {
+				$this->processor->clearAction();
 				
 				if (!$this->db->databaseExists()) {
 					try {
 						$this->dbUtil->createDatabase();
 					} catch (ServiceException $e) {
-						$this->setError("Unable to create database", '<code>'.$e->details().'</code>');
+						$this->processor->setError("Unable to create database", '<code>'.$e->details().'</code>');
 						$this->onPhase('db');
 					}
 				}
@@ -168,13 +197,13 @@
 				$this->onPhase('admin');
 			}
 			
-			$this->showPage("database");
+			$this->processor->showPage("database");
 		}
 		
 		private function onPhaseAdmin() {
-			if ($this->action() === 'install')
+			if ($this->processor->action() === 'install')
 				$this->install();
-			$this->showPage("admin");
+			$this->processor->showPage("admin");
 		}
 		
 		private function install() {
@@ -184,22 +213,22 @@
 				$this->util()->execCreateTables();
 				$this->util()->execInsertParams();
 			} catch (ServiceException $e) {
-				$this->setError("Could not install", '<code>'.$e->details().'</code>');
-				$this->showPage("install_error");
+				$this->processor->setError("Could not install", '<code>'.$e->details().'</code>');
+				$this->processor->showPage("install_error");
 			}
 
 			try {
 				$this->util()->createAdminUser($this->data("name"), $this->data("password"));
 			} catch (ServiceException $e) {
-				$this->setError("Could not create admin user", '<code>'.$e->details().'</code>');
-				$this->showPage("install_error");
+				$this->processor->setError("Could not create admin user", '<code>'.$e->details().'</code>');
+				$this->processor->showPage("install_error");
 			}
 			
 			try {
 				$this->db->commit();
 			} catch (ServiceException $e) {
-				$this->setError("Could not install", '<code>'.$e->details().'</code>');
-				$this->showPage("install_error");
+				$this->processor->setError("Could not install", '<code>'.$e->details().'</code>');
+				$this->processor->showPage("install_error");
 			}
 			
 			$this->onPhase('success');

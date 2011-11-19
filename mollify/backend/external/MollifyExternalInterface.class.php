@@ -45,7 +45,7 @@
 			$env = new ExternalEnv($this->session, $this->configuration);
 			$this->configuration->initialize($env);
 			$this->session->initialize($env);
-			$this->authentication = new Authentication($env);
+			$this->authentication = $env->authentication();
 		}
 
 		public function logout() {
@@ -105,18 +105,32 @@
 	class ExternalEnv {
 		private $configuration;
 		private $session;
+		private $authentication;
 		
 		public function __construct($session, $configuration) {
 			$this->configuration = $configuration;
 			$this->session = $session;
+			$this->authentication = new Authentication($this);
 		}
 		
 		public function configuration() {
 			return $this->configuration;
 		}
 
+		public function authentication() {
+			return $this->authentication;
+		}
+
 		public function session() {
 			return $this->session;
+		}
+
+		public function features() {
+			return $this;
+		}
+
+		public function isFeatureEnabled() {
+			return TRUE;
 		}
 
 		public function events() {

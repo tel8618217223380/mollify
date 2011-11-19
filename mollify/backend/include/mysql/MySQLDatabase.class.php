@@ -32,6 +32,10 @@
 			$this->socket = $socket;
 		}
 		
+		public function type() {
+			return "mysql";
+		}
+		
 		public function host() {
 			return $this->host;
 		}

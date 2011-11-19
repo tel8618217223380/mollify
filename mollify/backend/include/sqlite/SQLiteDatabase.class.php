@@ -19,6 +19,10 @@
 			$this->file = $file;
 		}
 		
+		public function type() {
+			return "sqlite";
+		}
+		
 		public function databaseExists() {
 			return file_exists($this->file);
 		}

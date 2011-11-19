@@ -10,13 +10,44 @@
 	 * this entire header must remain intact.
 	 */
 	
-	require_once("install/MollifyInstaller.class.php");
+	require_once("install/MollifyInstallProcessor.class.php");
 	
-	class DefaultInstaller extends MollifyInstaller {
-		public function __construct() {
-			parent::__construct("", "", array());			
+	class DefaultInstaller {
+		private $page;
+		private $processor;
+		
+		public function __construct($page) {
+			$this->page = $page; 
+			$this->processor = new MollifyInstallProcessor("install", NULL, array());
 		}
 		
-		public function isConfigured() { return FALSE; }
+		public function process() {
+			$this->processor->showPage($this->page);
+		}
+		
+		public function hasError() {
+			return $this->processor->hasError();
+		}
+
+		public function hasErrorDetails() {
+			return $this->processor->hasErrorDetails();
+		}
+		
+		public function error() {
+			return $this->processor->error();
+		}
+
+		public function errorDetails() {
+			return $this->processor->errorDetails();
+		}
+		
+		public function data($name = NULL) {
+			return $this->processor->data($name);
+		}
+		
+		public function action() {
+			return $this->processor->action();
+		}
+
 	}
 ?>

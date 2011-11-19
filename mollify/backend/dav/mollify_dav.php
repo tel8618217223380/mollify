@@ -93,6 +93,11 @@
 			return $this->folder->name();
 		}
 		
+		public function setName($name) {
+			$this->controller->assertRights($this->folder, Authentication::RIGHTS_WRITE, "rename");
+			$this->folder->rename($name);
+		}
+		
 		public function getLastModified() {
 			return $this->folder->lastModified();
 		}

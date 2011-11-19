@@ -11,7 +11,7 @@
 	 */
 
 	$MAIN_PAGE = "update";
-	$updater = NULL;
+	$installer = NULL;
 	
 	set_include_path(realpath('../').PATH_SEPARATOR.get_include_path());
 	chdir("..");
@@ -32,25 +32,25 @@
 		$installer->onError($e);
 		showError($e);
 	}
-
-	function isValidConfigurationType($type) {
-		$TYPES = array("mysql","sqlite");
-		return in_array(strtolower($type), $TYPES);
-	}
 		
 	function createUpdater($type, $settings) {
 		if (!isset($type) or !isValidConfigurationType($type)) die();
 		
+		require_once("update/UpdateController.class.php");
 		switch (strtolower($type)) {
 			case 'mysql':
 				require_once("update/mysql/MySQLUpdater.class.php");
-				return new MySQLUpdater($type, $settings);
+				return new UpdateController(new MySQLUpdater($settings));
 			case 'sqlite':
 				require_once("update/sqlite/SQLiteUpdater.class.php");
-				return new SQLiteUpdater($type, $settings);
+				return new UpdateController(new SQLiteUpdater($settings));
 			default:
 				die("Unsupported updater type: ".$type);
 		}
+	}
+	
+	function isValidConfigurationType($type) {
+		return in_array(strtolower($type), array("mysql","sqlite"));
 	}
 	
 	function showError($e) {
