@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -14,46 +14,42 @@
 	$installer = NULL;
 	
 	set_include_path(realpath('../').PATH_SEPARATOR.get_include_path());
+	require_once("MollifyInstallProcessor.class.php");
+	require_once("install/DefaultInstaller.class.php");
+
 	chdir("..");
-
 	if (!file_exists("configuration.php")) {
-		require_once("install/DefaultInstaller.class.php");
-		$installer = new DefaultInstaller();
-		showInstructions("configuration_create");
+		$installer = new DefaultInstaller("instructions_configuration_create");
+	} else {
+		@include("configuration.php");
+		global $SETTINGS, $CONFIGURATION_TYPE;
+		if (!isset($CONFIGURATION_TYPE) or !isValidConfigurationType($CONFIGURATION_TYPE))
+			$installer = new DefaultInstaller("instructions_configuration_type");
 	}
+	
+	if (!$installer)
+		$installer = createInstaller($SETTINGS, $CONFIGURATION_TYPE);
 
-	@include("configuration.php");
-	global $SETTINGS, $CONFIGURATION_TYPE;
-	if (!isset($CONFIGURATION_TYPE) or !isValidConfigurationType($CONFIGURATION_TYPE))
-		showInstructions("configuration_type");
-
-	$installer = createInstaller($CONFIGURATION_TYPE, $SETTINGS);
 	try {
 		$installer->process();
 	} catch (Exception $e) {
 		$installer->onError($e);
 	}
-
-	function isValidConfigurationType($type) {
-		$TYPES = array("mysql","sqlite");
-		return in_array(strtolower($type), $TYPES);
-	}
 	
-	function showInstructions($page, $type = '') {
-		require("install/".($type === '' ? '' : $type."/")."page_instructions_".$page.".php");
-		die();
-	}
-	
-	function createInstaller($type, $settings) {
+	function createInstaller($settings, $type) {
 		switch (strtolower($type)) {
 			case 'mysql':
 				require_once("install/mysql/MySQLInstaller.class.php");
-				return new MySQLInstaller($type, $settings);
+				return new MySQLInstaller($settings);
 			case 'sqlite':
 				require_once("install/sqlite/SQLiteInstaller.class.php");
-				return new SQLiteInstaller($type, $settings);
+				return new SQLiteInstaller($settings);
 			default:
 				die("Invalid configuration type");
 		}
+	}
+	
+	function isValidConfigurationType($type) {
+		return in_array(strtolower($type), array("mysql","sqlite"));
 	}
 ?>

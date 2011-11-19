@@ -32,6 +32,10 @@
 			$this->socket = $socket;
 		}
 		
+		public function type() {
+			return "mysql";
+		}
+		
 		public function host() {
 			return $this->host;
 		}
@@ -179,10 +183,14 @@
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".mysqli_error($this->db));
 		}
-		
-		public function string($s) {
-			return mysqli_real_escape_string($this->db, $s);
+				
+		public function string($s, $quote = FALSE) {
+			if ($s === NULL) return 'NULL';
+			$r = mysqli_real_escape_string($this->db, $s);
+			if ($quote) return "'".$r."'";
+			return $r;
 		}
+
 	}
 	
 	class MySQLIResult {
@@ -206,6 +214,15 @@
 			$list = array();
 			while ($row = mysqli_fetch_assoc($this->result)) {
 				$list[] = $row;
+			}
+			mysqli_free_result($this->result);
+			return $list;
+		}
+		
+		public function values($col) {
+			$list = array();
+			while ($row = mysqli_fetch_assoc($this->result)) {
+				$list[] = $row[$col];
 			}
 			mysqli_free_result($this->result);
 			return $list;
