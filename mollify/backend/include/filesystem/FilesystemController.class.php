@@ -599,6 +599,7 @@
 					$m = array_merge($m, $this->searchRecursive($data, $root, $text));
 				}
 			} else {
+				$this->itemIdProvider()->load($parent, TRUE);
 				$data = array();
 				foreach($this->searchers as $searcher)
 					$data[$searcher->key()] = $searcher->preData($parent, $text);

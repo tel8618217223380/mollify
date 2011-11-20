@@ -34,6 +34,25 @@
 					return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
 				}
 			});
+			t.env.addListColumnSpec({
+				"id": "item-description",
+				"request-id": "core-item-description",
+				"default-title-key": "fileListColumnTitleDescription",
+				"sort": function(i1, i2, sort, data) {
+					if (!i1.is_file && !i2.is_file) return 0;
+					if (!data || !data["core-item-description"]) return 0;
+					
+					var d1 = data["core-item-description"][i1.id] ? data["core-item-description"][i1.id] : '';
+					var d2 = data["core-item-description"][i2.id] ? data["core-item-description"][i2.id] : '';
+					return ((d1 > d2) ? 1 : -1) * sort;
+				},
+				"content": function(item, data) {
+					if (!item.id || !data || !data["core-item-description"] || !data["core-item-description"][item.id]) return "";
+					var desc = data["core-item-description"][item.id];
+					var stripped = desc.replace(/<\/?[^>]+(>|$)/g, '');
+					return '<div class="item-description-container" title="'+stripped+'">'+desc+'</div>';
+				}
+			});
 		}
 		
 		this.getSettings = function() {

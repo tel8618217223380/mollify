@@ -851,6 +851,19 @@ td#mollify-filelist-column-size {
 	width: 145px;
 }
 
+.mollify-filelist-column-item-description {
+	width: 145px;
+	max-width: 145px;
+}
+
+.item-description-container {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;	
+}
+
 .mollify-filelist th {
 	color: #494949;
 	border-bottom: 2px solid #AAAAAA;

@@ -343,7 +343,7 @@
 		}
 		
 		public function findItemsWithDescription($parent, $text) {
-			$query = "SELECT item_id, description from ".$this->db->table("item_description")." where item_id like '".$this->itemId($parent)."%' and description like '%".$this->db->string($text)."%'";			
+			$query = "SELECT item_id, description from ".$this->db->table("item_description")." d, ".$this->db->table("item_id")." i where d.item_id = i.id AND i.path like '".$parent->location()."%' and description like '%".$this->db->string($text)."%'";			
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 							
