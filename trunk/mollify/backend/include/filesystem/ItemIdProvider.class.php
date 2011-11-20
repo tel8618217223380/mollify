@@ -47,13 +47,17 @@
 		 		$this->cache[$r["path"]] = $r["id"];
 	 	}
 	 	
-	 	public function load($parent) {
+	 	public function load($parent, $recursive = FALSE) {
 		 	$db = $this->env->configuration()->db();
 		 	
-			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
-				$pathFilter = "path REGEXP '^".$db->string($this->itemPath($parent))."[^/]+[/]?$'";
-			} else {
-				$pathFilter = "REGEX(path, \"#^".$db->string($this->itemPath($parent))."[^/]+[/]?$#\")";
+		 	if ($recursive) {
+			 	$pathFilter = "path like '".$db->string($this->itemPath($parent))."%'";
+		 	} else {
+				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+					$pathFilter = "path REGEXP '^".$db->string($this->itemPath($parent))."[^/]+[/]?$'";
+				} else {
+					$pathFilter = "REGEX(path, \"#^".$db->string($this->itemPath($parent))."[^/]+[/]?$#\")";
+				}
 			}
 
 		 	$query = "select id, path from ".$db->table("item_id")." where ".$pathFilter;

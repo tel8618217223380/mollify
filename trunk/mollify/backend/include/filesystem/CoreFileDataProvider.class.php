@@ -18,7 +18,7 @@
 		}
 		
 		public function init($c) {
-			$c->registerDataRequestPlugin(array("core-file-modified"), $this);
+			$c->registerDataRequestPlugin(array("core-file-modified", "core-item-description"), $this);
 		}
 				
 		public function getRequestData($parent, $items, $result, $key, $requestData) {
@@ -26,6 +26,9 @@
 			foreach($items as $i) {
 				if (strcmp("core-file-modified", $key) === 0)
 					$result[$i->id()] = $this->env->formatTimestampInternal($i->lastModified());
+				if (strcmp("core-item-description", $key) === 0)
+					$result[$i->id()] = $this->env->filesystem()->description($i);
+
 			} 
 			return $result;
 		}
