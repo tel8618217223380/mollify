@@ -1,10 +1,12 @@
 #summary Items in next release
 
-Items included in release 1.8.4.4
+Items included in release 1.8.5
 
  * Issue 77
+ * Rewritten item id strategy
+ * Description column
 
-Items included in release 1.8.5
+Items included in release 1.8.6
 
  * Share plugin
 
