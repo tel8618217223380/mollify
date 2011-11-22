@@ -12,7 +12,7 @@
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationFactory.class.php");
 	require_once("include/Settings.class.php");
-	require_once("Sabre/autoload.php");
+	require_once("Sabre.includes.php");
 	
 	class VoidResponseHandler {
 		public function addListener($l) {}
