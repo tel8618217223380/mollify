@@ -106,6 +106,7 @@
 		
 		public function values($formatter) {
 			$values = array(
+				"ip" => $this->ip(),
 				"event_type" => $this->typeId(),
 				"event_main_type" => $this->type,
 				"event_sub_type" => $this->subType,
