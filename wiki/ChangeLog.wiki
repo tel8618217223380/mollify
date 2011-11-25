@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.5.1 ===
+Released 2011/11/25
+  * Fixed issue 327
+
 === WebDAV plugin version 1.6 ===
 Released 2011/11/25
   * Updated SabreDAV into version 1.5.4
