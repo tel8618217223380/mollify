@@ -418,11 +418,11 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
 			if ($this->isMySql()) {
-				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/]+[/]?$'";
-				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s p, ".$this->db->table("item_id")." i where p.item_id = i.id and %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/]+[/]?$'";
+				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." where ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/]+[/]?$#\")";
-				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s p, ".$this->db->table("item_id")." i where p.item_id = i.id and %s and i.path in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/]+[/]?$#\")";
+				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
 			$all = $this->db->query($query)->rows();
