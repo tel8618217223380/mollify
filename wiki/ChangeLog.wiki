@@ -2,6 +2,12 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.8.4.4 ===
+Released 2011/11/25
+  * Internal item id strategy rewritten: items have unique generated id's instead of path encoded id's. This makes id's more secure (does not reveal any structure), static (id does not change when item is renamed or moved) and shorter (better for urls)
+  * Fixed issue 77
+  * Added description column
+
+=== Version 1.8.4.4 ===
   * Thumbnails used in previewing images
 
 === Version 1.8.4.3 ===
