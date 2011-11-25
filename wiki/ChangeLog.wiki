@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 1.8.4.4 ===
+=== Version 1.8.5 ===
 Released 2011/11/25
   * Internal item id strategy rewritten: items have unique generated id's instead of path encoded id's. This makes id's more secure (does not reveal any structure), static (id does not change when item is renamed or moved) and shorter (better for urls)
   * Fixed issue 77
