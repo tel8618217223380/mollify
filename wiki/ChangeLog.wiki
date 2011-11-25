@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== WebDAV plugin version 1.6 ===
+Released 2011/11/25
+  * Updated SabreDAV into version 1.5.4
+  * Added support for folder renaming
+
 === Version 1.8.5 ===
 Released 2011/11/25
   * Internal item id strategy rewritten: items have unique generated id's instead of path encoded id's. This makes id's more secure (does not reveal any structure), static (id does not change when item is renamed or moved) and shorter (better for urls)
