@@ -63,6 +63,7 @@ Mollify provides following columns:
  * 'type': File or folder type description
  * 'size': File size
  * 'file-modified': Last modification time
+ * 'item-description': Item description
 
 Following plugins provide more column data:
   * [http://code.google.com/p/mollify/wiki/CommentsPlugin#File_list_columns Comments]
