@@ -422,7 +422,7 @@
 			$this->env->configuration()->removeItemPermissions($item);
 			
 			$this->env->events()->onEvent(FileEvent::delete($item));
-			$this->idProvider->delete($item->id());
+			$this->idProvider->delete($item);
 		}
 		
 		public function deleteItems($items) {

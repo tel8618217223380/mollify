@@ -80,7 +80,7 @@
 		public function delete($item) {
 			$db = $this->env->configuration()->db();
 			if ($item->isFile())
-				return $db->update("DELETE FROM ".$db->table("item_id")." WHERE path = ".$db->string($this->itemPath($item), TRUE));
+				return $db->update("DELETE FROM ".$db->table("item_id")." WHERE id = ".$db->string($item->id(), TRUE));
 			else
 				return $db->update(sprintf("DELETE FROM ".$db->table("item_id")." WHERE path like '%s%%'", $db->string($this->itemPath($item))));
 		}

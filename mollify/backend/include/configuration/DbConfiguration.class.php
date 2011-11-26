@@ -335,7 +335,7 @@
 	
 		function removeItemDescription($item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $item->location()));
 			} else {
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
 			}
@@ -524,7 +524,7 @@
 
 		function removeItemPermissions($item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $this->itemId($item)));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $item->location()));
 			} else {
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s'", $this->itemId($item)));
 			}
