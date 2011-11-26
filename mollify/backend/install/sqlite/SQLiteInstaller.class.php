@@ -38,7 +38,7 @@
 			return new MollifySQLiteDatabase($file);
 		}
 		
-		protected function util() {
+		public function util() {
 			require_once("install/sqlite/SQLiteInstallUtil.class.php");
 			return new SQLiteInstallUtil($this->db);
 		}

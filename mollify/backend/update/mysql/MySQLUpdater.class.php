@@ -13,7 +13,6 @@
 	require_once("install/mysql/MySQLInstaller.class.php");
 	
 	class MySQLUpdater extends MySQLInstaller {
-		private $controller;
 		
 		public function __construct($settings) {
 			parent::__construct($settings, "update");
