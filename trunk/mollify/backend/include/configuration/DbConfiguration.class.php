@@ -392,9 +392,9 @@
 					$hierarchyQuery .= $hierarchyQueryEnd."$#')";
 			
 				if ($mysql) {
-					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(i.path)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentId), $userId);
+					$subcategoryQuery = sprintf("(((%s - CHAR_LENGTH(i.path)) * 10) + IF(user_id = '%s', 0, IF(user_id = '0', 2, 1)))", strlen($parentLocation), $userId);
 				} else {
-					$subcategoryQuery = sprintf("((%s - LENGTH(i.path)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentId), $userId);
+					$subcategoryQuery = sprintf("((%s - LENGTH(i.path)) * 10) + (case when user_id = '%s' then 0 when user_id = '0' then 2 else 1 end)", strlen($parentLocation), $userId);
 				}
 				$query = sprintf("SELECT permission, user_id, case when i.id = '%s' then 1 else 2 end AS category, %s AS subcategory FROM ".$table." p, ".$this->db->table("item_id")." i WHERE p.item_id = i.id AND (i.id = '%s' OR %s) AND %s", $id, $subcategoryQuery, $id, $hierarchyQuery, $userQuery);
 			}

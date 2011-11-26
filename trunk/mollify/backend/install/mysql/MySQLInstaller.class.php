@@ -48,7 +48,7 @@
 			return $this->processor;
 		}
 		
-		protected function util() {
+		public function util() {
 			require_once("install/mysql/MySQLInstallUtil.class.php");
 			return new MySQLInstallUtil($this->db);
 		}
