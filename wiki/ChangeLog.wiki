@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Version 1.8.5.1 & 1.8.5.2===
+=== Version 1.8.5.2===
 Released 2011/11/26
   * Fixed issue 327
   * Fixed installer error
