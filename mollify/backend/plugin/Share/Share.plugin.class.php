@@ -24,12 +24,12 @@
 		}
 		
 		public function setup() {
-			$this->addService("comment", "CommentServices");
+			$this->addService("share", "ShareServices");
 			
 			$this->handler = new ShareHandler($this->env);
-			$this->env->events()->register("share/", $this->handler);
+			$this->env->events()->register("filesystem/", $this->handler);
 
-			$this->env->filesystem()->registerItemContextPlugin("share", $this);
+			$this->env->filesystem()->registerItemContextPlugin("plugin-share", $this->handler);
 		}
 				
 		public function getHandler() {
