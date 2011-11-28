@@ -465,12 +465,77 @@ function SharePlugin() {
 				components : [{
 					html: "<div id='file-item-share'></div>",
 					on_init: function(id, c, item, details) {
-						if (!that.typeConfs || !details.itemdetails) return false;
-						that.loaded = false;
+						if (!details["plugin-share"]) return;
+						
+						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/><div id='details-share-count'>"+details["plugin-share"].count+"</div></div></div>");
+						
+						$("#details-share-content").hover(
+							function () { $(this).addClass("hover"); }, 
+							function () { $(this).removeClass("hover"); }
+						);
+						$("#details-share-content").click(function() {
+							c.close();
+							that.openShares(item);
+						});
 					},
 					index: 6
 				}]
 			}
+		}, function(item) {
+			return {"plugin-share":[]};
 		});
+	}
+	
+	this.openShares = function(item) {
+		that.env.dialog().showDialog({
+			title: that.t("shareDialogTitle"),
+			html: "<div id='share-dialog-content' class='loading' />",
+			on_show: function(d) { that.onShowSharesDialog(d, item); }
+		});
+	}
+
+	this.onShowSharesDialog = function(d, item) {
+		mollify.loadContent("share-dialog-content", that.url("list.html"), function() {
+			d.setMinimumSizeToCurrent();
+			d.center();
+			
+			$("#share-item").html(item.name);
+			$("#share-dialog-content").removeClass("loading");
+
+			$("#share-dialog-add").click(function() { that.onAddShare(item); } );
+			$("#share-dialog-close").click(function() { d.close(); } );
+			
+			that.env.service().get("share/items/"+item.id, function(result) {
+				that.onShowShares(item, result);
+			},	function(code, error) {
+				alert(error);
+			});
+		});
+	}
+	
+	this.onShowShares = function(item, shares) {
+		if (shares.length == 0) {
+			$("#share-list").html("<message>"+that.t("shareDialogNoShares")+"</message>");
+			return;
+		}
+
+		$("#share-template").tmpl(shares).appendTo("#share-list");
+		mollify.localize("share-list");
+	}
+
+	this.onAddShare = function(item) {
+		that.env.service().post("share/items/"+item.id, { item: item.id }, function(result) {
+			that.onShowShares(item, result);
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+	
+	this.url = function(p) {
+		return that.env.service().getPluginUrl("Share")+"client/"+p;
+	}
+	
+	this.t = function(s, p) {
+		return that.env.texts().get(s, p);
 	}
 }
