@@ -14,9 +14,11 @@
 	
 	class ShareHandler {
 		private $env;
+		private $settings;
 		
-		public function __construct($env) {
-			$this->env = $env;			
+		public function __construct($env, $settings) {
+			$this->env = $env;
+			$this->settings = $settings;
 		}
 				
 		public function getItemContextData($item, $details, $key, $data) {
@@ -32,7 +34,47 @@
 		public function addShare($item) {
 			$this->dao()->addShare($this->GUID(), $item, $this->env->authentication()->getUserId(), time());
 		}
+		
+		public function processShareGet($id) {
+			$share = $this->dao()->getShare($id);
+			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			// TODO check validity
+			
+			$this->env->filesystem()->allowFilesystems = TRUE;
+			$item = $this->env->filesystem()->item($share["item_id"]);
+			if (!$item) throw new ServiceException("INVALID_REQUEST");
+
+			if ($item->isFile()) $this->processDownload($item);
+			else $this->processUploadPage($item);
+		}
+		
+		private function processDownload($file) {
+			$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
+			
+			$this->env->filesystem()->temporaryItemPermission($file, Authentication::PERMISSION_VALUE_READONLY);
+			$this->env->filesystem()->download($file, $mobile);
+		}
+
+		private function processUploadPage($folder) {
+			$uploader = $this->getUploader();
+			$uploader->showPage($folder);
+			die();
+		}
 				
+		private function getUploader() {
+			$uploader = "http";
+			if (isset($this->settings) and isset($this->settings["uploader"])) $uploader = $this->settings["uploader"];
+			
+			require_once($uploader."/PublicUploader.class.php");
+			return new PublicUploader($this->env);
+		}
+
+		public function processUpload($folder) {
+			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READONLY);
+			$uploader = $this->getUploader();
+			$uploader->uploadTo($folder);
+		}
+								
 		public function onEvent($e) {
 			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
 			$type = $e->subType();
