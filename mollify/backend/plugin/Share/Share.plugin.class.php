@@ -26,7 +26,7 @@
 		public function setup() {
 			$this->addService("share", "ShareServices");
 			
-			$this->handler = new ShareHandler($this->env);
+			$this->handler = new ShareHandler($this->env, $this->getSettings());
 			$this->env->events()->register("filesystem/", $this->handler);
 
 			$this->env->filesystem()->registerItemContextPlugin("plugin-share", $this->handler);

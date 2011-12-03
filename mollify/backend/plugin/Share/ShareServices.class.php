@@ -12,22 +12,32 @@
 
 	class ShareServices extends ServicesBase {		
 		protected function isValidPath($method, $path) {
-			return count($path) == 2;
-		}
-		
-		public function isAuthenticationRequired() {
 			return TRUE;
 		}
 		
+		public function isAuthenticationRequired() {
+			return FALSE;
+		}
+		
 		public function processGet() {
-			if (count($this->path) != 2 and strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
+			if (count($this->path) == 1) {
+				$this->processShareGet($this->path[0]);
+				return;
+			}
+			if (!$this->env->authentication()->isAuthenticated()) throw new ServiceException("UNAUTHORIZED");
+			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
 			
 			$item = $this->item($this->path[1]);
 			$this->response()->success($this->handler()->getShares($item));
 		}
 		
+		private function processShareGet($id) {
+			$this->handler()->processShareGet($id);
+		}
+		
 		public function processPost() {
-			if (count($this->path) != 2 and strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
+			if (!$this->env->authentication()->isAuthenticated()) throw new ServiceException("UNAUTHORIZED");
+			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
 			
 			$item = $this->item($this->path[1]);
 			$data = $this->request->data;

@@ -22,6 +22,11 @@
 			return $db->query("select count('id') from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->value(0);
 		}
 
+		public function getShare($id) {
+			$db = $this->env->configuration()->db();
+			return $db->query("select id, item_id from ".$db->table("share")." where id = ".$db->string($id, TRUE))->firstRow();
+		}
+
 		public function getShares($item, $userId) {
 			$db = $this->env->configuration()->db();
 			return $db->query("select id from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
