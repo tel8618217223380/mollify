@@ -45,7 +45,7 @@
 			if (!$item) throw new ServiceException("INVALID_REQUEST");
 
 			if ($item->isFile()) $this->processDownload($item);
-			else $this->processUploadPage($item);
+			else $this->processUploadPage($id, $item);
 		}
 		
 		private function processDownload($file) {
@@ -55,24 +55,36 @@
 			$this->env->filesystem()->download($file, $mobile);
 		}
 
-		private function processUploadPage($folder) {
+		private function processUploadPage($shareId, $folder) {
 			$uploader = $this->getUploader();
-			$uploader->showPage($folder);
+			$uploader->showPage($shareId, $folder);
 			die();
+		}
+		
+		public function processSharePost($id) {
+			$share = $this->dao()->getShare($id);
+			if (!$share) throw new ServiceException("INVALID_REQUEST");
+			// TODO check validity
+			
+			$this->env->filesystem()->allowFilesystems = TRUE;
+			$item = $this->env->filesystem()->item($share["item_id"]);
+			if (!$item or $item->isFile()) throw new ServiceException("INVALID_REQUEST");
+
+			$this->processUpload($id, $item);
 		}
 				
 		private function getUploader() {
 			$uploader = "http";
 			if (isset($this->settings) and isset($this->settings["uploader"])) $uploader = $this->settings["uploader"];
 			
-			require_once($uploader."/PublicUploader.class.php");
+			require_once("upload/".$uploader."/PublicUploader.class.php");
 			return new PublicUploader($this->env);
 		}
 
-		public function processUpload($folder) {
-			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READONLY);
+		public function processUpload($shareId, $folder) {
+			$this->env->filesystem()->temporaryItemPermission($folder, Authentication::PERMISSION_VALUE_READWRITE);
 			$uploader = $this->getUploader();
-			$uploader->uploadTo($folder);
+			$uploader->uploadTo($shareId, $folder);
 		}
 								
 		public function onEvent($e) {

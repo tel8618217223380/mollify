@@ -10,31 +10,23 @@
 	 * this entire header must remain intact.
 	 */
 
-	class ShareServices extends ServicesBase {		
+	class PublicShareServices extends ServicesBase {		
 		protected function isValidPath($method, $path) {
 			return TRUE;
 		}
 		
 		public function isAuthenticationRequired() {
-			return TRUE;
+			return FALSE;
 		}
 		
 		public function processGet() {
-			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
-			
-			$item = $this->item($this->path[1]);
-			$this->response()->success($this->handler()->getShares($item));
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			$this->handler()->processShareGet($this->path[0]);
 		}
-		
+				
 		public function processPost() {
-			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
-			
-			$item = $this->item($this->path[1]);
-			$data = $this->request->data;
-			//if (!isset($data["type"])) throw $this->invalidRequestException("No data");
-			
-			$this->handler()->addShare($item);
-			$this->response()->success($this->handler()->getShares($item));
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			$this->handler()->processSharePost($this->path[0]);
 		}
 		
 		private function handler() {
