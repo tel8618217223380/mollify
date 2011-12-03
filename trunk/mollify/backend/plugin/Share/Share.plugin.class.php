@@ -25,6 +25,7 @@
 		
 		public function setup() {
 			$this->addService("share", "ShareServices");
+			$this->addService("public", "PublicShareServices");
 			
 			$this->handler = new ShareHandler($this->env, $this->getSettings());
 			$this->env->events()->register("filesystem/", $this->handler);

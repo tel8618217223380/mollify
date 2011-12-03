@@ -24,7 +24,7 @@
 
 		public function getShare($id) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select id, item_id from ".$db->table("share")." where id = ".$db->string($id, TRUE))->firstRow();
+			return $db->query("select id, item_id from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE))->firstRow();
 		}
 
 		public function getShares($item, $userId) {
@@ -34,7 +34,7 @@
 		
 		public function addShare($id, $item, $userId, $time) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, item_id, user_id, created) VALUES (%s, %s, %s, %s)", $db->string($id, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time))));
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, item_id, user_id, created, active) VALUES (%s, %s, %s, %s, 1)", $db->string($id, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time))));
 		}
 		
 		public function deleteShares($item) {
