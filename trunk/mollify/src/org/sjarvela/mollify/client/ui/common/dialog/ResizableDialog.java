@@ -71,7 +71,7 @@ public abstract class ResizableDialog extends Dialog implements
 
 	public void setMinimumSizeToCurrent() {
 		setMinimumSize(getSizedElement().getClientWidth(), getSizedElement()
-				.getClientHeight());
+				.getClientHeight() + 20);
 	}
 
 	private Widget createResizeWidget() {

@@ -26,7 +26,6 @@
 			"zipper" => "ZipArchive",
 			"enable_change_password" => TRUE,
 			"enable_descriptions" => FALSE,
-			"enable_public_links" => FALSE,
 			"enable_mail_notification" => FALSE,
 			"enable_retrieve_url" => FALSE,
 			"allowed_file_upload_types" => array(),

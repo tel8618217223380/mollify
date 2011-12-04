@@ -21,7 +21,6 @@
 			"descriptions" => FALSE,
 			"administration" => FALSE,
 			"user_groups" => FALSE,
-			"public_links" => FALSE,
 			"mail_notification" => FALSE,
 			"retrieve_url" => FALSE,
 			"folder_protection" => FALSE
