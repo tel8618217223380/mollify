@@ -460,6 +460,10 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
+				
+		mollify.importCss(that.url("style.css"));
+		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
+		
 		that.env.addItemContextProvider(function(item) {
 			return {
 				components : [{
@@ -467,7 +471,7 @@ function SharePlugin() {
 					on_init: function(id, c, item, details) {
 						if (!details["plugin-share"]) return;
 						
-						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/><div id='details-share-count'>"+details["plugin-share"].count+"</div></div></div>");
+						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/>"+that.t('item-context-share-title')+"</div></div>");
 						
 						$("#details-share-content").hover(
 							function () { $(this).addClass("hover"); }, 
@@ -495,18 +499,18 @@ function SharePlugin() {
 	}
 
 	this.onShowSharesDialog = function(d, item) {
-		mollify.loadContent("share-dialog-content", that.url("list.html"), function() {
-			d.setMinimumSizeToCurrent();
-			d.center();
-			
-			$("#share-item").html(item.name);
+		mollify.loadContent("share-dialog-content", that.url("list.html"), function() {			
+			$("#share-item-path").html(item.path);
+			$("#share-item-name").html(item.name);
 			$("#share-dialog-content").removeClass("loading");
 
-			$("#share-dialog-add").click(function() { that.onAddShare(item); } );
+			$("#add-share-btn").click(function() { that.onAddShare(item); } );
 			$("#share-dialog-close").click(function() { d.close(); } );
 			
 			that.env.service().get("share/items/"+item.id, function(result) {
 				that.onShowShares(item, result);
+				d.setMinimumSizeToCurrent();
+				d.center();
 			},	function(code, error) {
 				alert(error);
 			});
@@ -515,15 +519,19 @@ function SharePlugin() {
 	
 	this.onShowShares = function(item, shares) {
 		if (shares.length == 0) {
-			$("#share-list").html("<message>"+that.t("shareDialogNoShares")+"</message>");
+			$("#share-items").html("<message>"+that.t("shareDialogNoShares")+"</message>");
 			return;
 		}
 
-		$("#share-template").tmpl(shares).appendTo("#share-list");
+		$("#share-template").tmpl(shares).appendTo("#share-items");
 		mollify.localize("share-list");
 	}
 
 	this.onAddShare = function(item) {
+		$("#share-items").addClass("minimized");
+		$("#share-context").removeClass("minimized");
+		return;
+		
 		that.env.service().post("share/items/"+item.id, { item: item.id }, function(result) {
 			that.onShowShares(item, result);
 		},	function(code, error) {
