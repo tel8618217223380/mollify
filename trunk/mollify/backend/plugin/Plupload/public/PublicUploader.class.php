@@ -21,14 +21,16 @@
 		}
 		
 		public function uploadTo($shareId, $folder) {
-			$this->env->filesystem()->uploadTo($folder);
-			$this->show($shareId, $folder, "success.php");
+			$p = $this->env->plugins()->getPlugin("Plupload");
+			$p->uploadTo($folder);
 		}
 		
 		private function show($shareId, $folder, $page) {
-			global $UPLOAD_URL, $RESOURCE_URL, $FOLDER_NAME;
+			global $UPLOAD_URL, $COMMON_RESOURCE_URL, $RESOURCE_URL, $FOLDER_NAME;
 			$UPLOAD_URL = $this->env->getServiceUrl("public", array($shareId), TRUE);
-			$RESOURCE_URL = $this->env->getPluginUrl("Share", "upload/http");
+			$RESOURCE_URL = $this->env->getPluginUrl("Plupload", "public/resources");
+			$COMMON_RESOURCE_URL = $this->env->getCommonResourcesUrl();
+			$PLUPLOAD_RESOURCE_URL = $this->env->getPluginUrl("Plupload", "client");
 			$FOLDER_NAME = $folder->name();
 			include($page);
 		}

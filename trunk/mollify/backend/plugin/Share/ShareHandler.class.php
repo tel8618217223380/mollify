@@ -74,10 +74,12 @@
 		}
 				
 		private function getUploader() {
-			$uploader = "http";
+			$uploader = FALSE;
 			if (isset($this->settings) and isset($this->settings["uploader"])) $uploader = $this->settings["uploader"];
 			
-			require_once("upload/".$uploader."/PublicUploader.class.php");
+			if (!$uploader) require_once("upload/http/PublicUploader.class.php");
+			else require_once($uploader."/PublicUploader.class.php");
+			
 			return new PublicUploader($this->env);
 		}
 
