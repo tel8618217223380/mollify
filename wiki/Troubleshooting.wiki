@@ -64,11 +64,13 @@ Once the debug client is installed, you should see the debug window. Recreate th
 
 = Most Common Errors =
 
-== Server error "Cannot modify header information" ==
+== Error "Cannot modify header information" or "Got malformed JSON response" ==
 
-Server error "Cannot modify header information, headers already sent" means PHP output is started prematurely before the Mollify session is initialized.
+Error "Cannot modify header information, headers already sent" means PHP output is started prematurely before the Mollify session is initialized.
 
-Usually this is due to following content in `configuration.php` file:
+Error "Got malformed JSON response" means response is received to the client, but it's format is not valid.
+
+Usually these are due to following content in `configuration.php` file:
   * there are extra characters outside php tags: spaces, line feeds, tabs etc.
   * the file has been saved in UTF-8 without BOM information
 
