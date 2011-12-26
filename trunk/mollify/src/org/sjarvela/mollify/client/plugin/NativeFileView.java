@@ -22,7 +22,7 @@ import com.google.gwt.core.client.JsArray;
 
 public class NativeFileView {
 	private final FileView fileView;
-
+ 
 	public NativeFileView(FileView fileView) {
 		this.fileView = fileView;
 	}

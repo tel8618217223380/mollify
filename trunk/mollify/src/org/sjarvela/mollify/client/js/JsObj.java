@@ -38,6 +38,10 @@ public class JsObj extends JavaScriptObject {
 		return this[name];
 	}-*/;
 
+	public final native JsArrayString getStringArray(String name) /*-{
+		return this[name];
+	}-*/;
+
 	public final native JavaScriptObject getObject(String name) /*-{
 		return this[name];
 	}-*/;
@@ -51,7 +55,8 @@ public class JsObj extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean hasValue(String name) /*-{
-		if (!this[name]) return false;
+		if (!this[name])
+			return false;
 		return true;
 	}-*/;
 
@@ -61,7 +66,8 @@ public class JsObj extends JavaScriptObject {
 
 	private final native JsArrayString getKeyList() /*-{
 		var result = [];
-		for (id in this) result.push(id);
+		for (id in this)
+			result.push(id);
 		return result;
 	}-*/;
 }

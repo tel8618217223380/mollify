@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client.ui.fileupload.http;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -25,6 +26,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.util.FileUtil;
+import org.sjarvela.mollify.client.util.StringUtil;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -47,7 +49,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	private static final String UPLOAD_ID_FIELD_NAME = "APC_UPLOAD_PROGRESS";
 
 	private final String uploadId;
-	private final Folder directory;
+	private final Folder folder;
 	private final TextProvider textProvider;
 	private final FileUploadService service;
 	private final FileSystemInfo info;
@@ -71,7 +73,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		this.listener = listener;
 		this.dialogManager = dialogManager;
 		this.uploadId = service.getFileUploadId();
-		this.directory = directory;
+		this.folder = directory;
 		this.textProvider = textProvider;
 		this.service = service;
 		this.allowedFileTypes = info.getAllowedFileUploadTypes();
@@ -89,7 +91,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 				textProvider.getText(Texts.fileUploadDialogUploadButton),
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						form.submit();
+						onUpload();
 					}
 				}, StyleConstants.FILE_UPLOAD_DIALOG_BUTTON_UPLOAD);
 
@@ -103,6 +105,21 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 				}, StyleConstants.DIALOG_BUTTON_CANCEL));
 
 		return buttons;
+	}
+
+	protected void onUpload() {
+		if (!checkMaxSize())
+			return;
+		if (getLastUploader().getFilename().length() < 1)
+			return;
+		if (!verifyFileTypes())
+			return;
+		checkExisting(getFileNames(), new Callback() {
+			@Override
+			public void onCallback() {
+				form.submit();
+			}
+		});
 	}
 
 	@Override
@@ -158,7 +175,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 						listener.onUploadFinished();
 					}
 				}));
-		form.setAction(this.service.getUploadUrl(directory));
+		form.setAction(this.service.getUploadUrl(folder));
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
@@ -225,15 +242,32 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	}
 
 	private boolean onStartUpload() {
-		if (!checkMaxSize())
-			return false;
-		if (getLastUploader().getFilename().length() < 1)
-			return false;
-		if (!verifyFileTypes())
-			return false;
-
 		this.setVisible(false);
 		return true;
+	}
+
+	private void checkExisting(List<String> filenames, final Callback cb) {
+		service.checkFiles(folder, filenames,
+				new ResultListener<List<String>>() {
+					@Override
+					public void onSuccess(List<String> existing) {
+						if (existing.isEmpty()) {
+							cb.onCallback();
+							return;
+						}
+
+						dialogManager.showInfo(textProvider
+								.getText(Texts.infoDialogErrorTitle),
+								textProvider.getText(
+										Texts.fileUploadFileExists,
+										StringUtil.toStringList(existing, ", ")));
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						dialogManager.showError(error);
+					}
+				});
 	}
 
 	private boolean checkMaxSize() {
@@ -270,7 +304,8 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 	private native float getFilesize(String id) /*-{
 		var e = $doc.getElementById(id);
-		if (!e || !e.files || !e.files[0]) return -1;
+		if (!e || !e.files || !e.files[0])
+			return -1;
 		return e.files[0].fileSize;
 	}-*/;
 

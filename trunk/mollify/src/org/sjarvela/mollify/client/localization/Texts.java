@@ -240,6 +240,8 @@ public enum Texts implements ResourceId {
 	fileUploadTotalProgressTitle,
 
 	fileUploadDialogSelectFileTypesDescription,
+	
+	fileUploadFileExists,
 
 	createFolderDialogTitle,
 

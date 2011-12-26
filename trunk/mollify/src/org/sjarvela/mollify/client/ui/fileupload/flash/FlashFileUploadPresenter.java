@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
@@ -23,7 +24,9 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.util.FileUtil;
+import org.sjarvela.mollify.client.util.StringUtil;
 import org.swfupload.client.File;
 import org.swfupload.client.SWFUpload;
 import org.swfupload.client.SWFUpload.ButtonAction;
@@ -64,10 +67,18 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 	private Timer progressTimer = null;
 	private boolean updateProgress = true;
 
+	private final FileUploadService service;
+	private final Folder folder;
+	private final DialogManager dialogManager;
+
 	public FlashFileUploadPresenter(SessionInfo session,
 			FileUploadService service, ResultListener listener,
-			String uploaderSrc, Folder directory, FlashFileUploadDialog dialog,
-			TextProvider textProvider) {
+			String uploaderSrc, Folder folder, FlashFileUploadDialog dialog,
+			TextProvider textProvider, DialogManager dialogManager) {
+		this.service = service;
+		this.folder = folder;
+		this.dialogManager = dialogManager;
+
 		flashLoadTimer = new Timer() {
 			@Override
 			public void run() {
@@ -81,7 +92,7 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 		this.textProvider = textProvider;
 		this.allowedTypes = session.getFileSystemInfo()
 				.getAllowedFileUploadTypes();
-		this.uploader = createUploader(session, service, uploaderSrc, directory);
+		this.uploader = createUploader(session, service, uploaderSrc, folder);
 	}
 
 	protected void onLoadFailed() {
@@ -197,7 +208,38 @@ public class FlashFileUploadPresenter implements UploadStartHandler,
 			startDemoMode();
 			return;
 		}
-		startUpload();
+
+		checkExisting(uploadModel.getFileNames(), new Callback() {
+			@Override
+			public void onCallback() {
+				startUpload();
+			}
+		});
+	}
+
+	private void checkExisting(List<String> filenames, final Callback cb) {
+		service.checkFiles(folder, filenames,
+				new ResultListener<List<String>>() {
+					@Override
+					public void onSuccess(List<String> existing) {
+						if (existing.isEmpty()) {
+							cb.onCallback();
+							return;
+						}
+
+						dialogManager.showInfo(
+								textProvider
+										.getText(Texts.infoDialogErrorTitle),
+								textProvider.getText(
+										Texts.fileUploadFileExists,
+										StringUtil.toStringList(existing, ", ")));
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						dialogManager.showError(error);
+					}
+				});
 	}
 
 	protected void startDemoMode() {

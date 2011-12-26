@@ -165,6 +165,7 @@ fileUploadDialogAddFileButton: "+",
 fileUploadDialogAddFilesButton: "Add file(s)...",
 fileUploadDialogRemoveFileButton: "-",
 fileUploadDialogInfoTitle: "Details",
+fileUploadFileExists: "Following files already exist in the folder: {0}",
 
 fileUploadProgressTitle: "Uploading file",
 fileUploadProgressPleaseWait: "Please wait...",
