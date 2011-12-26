@@ -182,7 +182,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		if (VALUE_FILE_UPLOADER_FLASH.equalsIgnoreCase(param))
 			uploaderFactory = new FlashFileUploadDialogFactory(textProvider,
 					urlResolver, env.getFileUploadService(), sessionProvider,
-					settings);
+					settings, dialogManager);
 		else
 			uploaderFactory = new HttpFileUploadDialogFactory(env,
 					textProvider, env.getFileUploadService(), sessionProvider,

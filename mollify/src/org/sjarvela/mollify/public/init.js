@@ -499,8 +499,7 @@ function SharePlugin() {
 	}
 
 	this.onShowSharesDialog = function(d, item) {
-		mollify.loadContent("share-dialog-content", that.url("list.html"), function() {			
-			$("#share-item-path").html(item.path);
+		mollify.loadContent("share-dialog-content", that.url("content.html"), function() {
 			$("#share-item-name").html(item.name);
 			$("#share-dialog-content").removeClass("loading");
 

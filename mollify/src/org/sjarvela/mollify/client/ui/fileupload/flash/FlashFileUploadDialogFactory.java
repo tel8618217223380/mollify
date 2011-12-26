@@ -20,6 +20,7 @@ import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
@@ -33,14 +34,16 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 	private final String uploaderSrc;
 	private final String uploaderStyle;
 	private final UrlResolver urlProvider;
+	private final DialogManager dialogManager;
 
 	public FlashFileUploadDialogFactory(TextProvider textProvider,
 			UrlResolver urlProvider, FileUploadService fileUploadService,
-			SessionProvider sessionProvider, ClientSettings settings) {
+			SessionProvider sessionProvider, ClientSettings settings, DialogManager dialogManager) {
 		this.textProvider = textProvider;
 		this.urlProvider = urlProvider;
 		this.service = fileUploadService;
 		this.sessionProvider = sessionProvider;
+		this.dialogManager = dialogManager;
 
 		this.uploaderSrc = getSourceUrl(settings
 				.getString(PARAM_FLASH_UPLOADER_SRC));
@@ -62,7 +65,7 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 				actionDelegator, uploaderStyle);
 		FlashFileUploadPresenter presenter = new FlashFileUploadPresenter(
 				session, service, listener, uploaderSrc, directory, dialog,
-				textProvider);
+				textProvider, dialogManager);
 		if (service instanceof DemoFileUploadHandler)
 			presenter.setDemoMode();
 		new FlashFileUploadGlue(dialog, presenter, actionDelegator);

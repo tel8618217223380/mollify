@@ -264,6 +264,16 @@
 			}
 			return $details;
 		}
+		
+		public function checkExisting($folder, $files) {
+			$existing = array();
+			
+			foreach($files as $file) {
+				$f = $folder->fileWithName($file);
+				if ($f->exists()) $existing[] = $file;
+			}
+			return $existing;
+		}
 
 		public function datetimeFormat() {
 			return "YmdHis";

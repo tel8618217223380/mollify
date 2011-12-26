@@ -337,6 +337,11 @@
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
 					$this->response()->success($this->getFolderInfo($item, $includeHierarchy, $this->request->data["data"]));
 					return;
+				case 'check':
+					if (!isset($this->request->data["files"])) throw $this->invalidRequestException();
+					$existing = $this->env->filesystem()->checkExisting($item, $this->request->data["files"]);
+					$this->response()->success(array("ok" => (count($existing) == 0), "existing" => $existing));
+					return;
 				case 'files':
 					$this->env->filesystem()->uploadTo($item);
 					$this->response()->html(json_encode(array("result" => TRUE)));

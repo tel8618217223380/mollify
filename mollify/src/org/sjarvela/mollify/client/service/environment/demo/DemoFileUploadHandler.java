@@ -10,6 +10,9 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
@@ -45,6 +48,12 @@ public class DemoFileUploadHandler implements FileUploadService {
 				listener.onSuccess(null);
 			}
 		};
+	}
+
+	@Override
+	public void checkFiles(Folder folder, List<String> filenames,
+			ResultListener<List<String>> l) {
+		l.onSuccess(Collections.EMPTY_LIST);
 	}
 
 }

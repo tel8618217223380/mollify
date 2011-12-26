@@ -112,4 +112,11 @@ public class UploadModel {
 		return (((double) bytesComplete / (double) bytesTotal) * 100d);
 	}
 
+	public List<String> getFileNames() {
+		List<String> result = new ArrayList();
+		for (File f : files)
+			result.add(f.getName());
+		return result;
+	}
+
 }
