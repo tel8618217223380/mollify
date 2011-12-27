@@ -185,7 +185,7 @@
 
 			if (!rename($old, $new)) throw new ServiceException("REQUEST_FAILED", "Failed to rename [".$item->id()."]");
 			
-			return $this->createItem($item->id(), $this->publicPath($new));
+			return $this->createItem($item->id(), $this->publicPath($this->filesystemInfo->env()->convertCharset($new)));
 		}
 
 		public function copy($item, $to) {			
@@ -224,12 +224,12 @@
 		} 
 		
 		public function move($item, $to) {			
-			$target = self::joinPath($to->internalPath(), $item->name());
+			$target = self::joinPath($to->internalPath(), $this->filesystemInfo->env()->convertCharset($item->name(), FALSE));
 			if (!$item->isFile()) $target = self::folderPath($target);
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
 			if (!rename($item->internalPath(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			return $this->createItem($item->id(), $this->publicPath($target));
+			return $this->createItem($item->id(), $this->publicPath($this->filesystemInfo->env()->convertCharset($target)));
 		}
 		
 		public function delete($item) {
@@ -270,30 +270,30 @@
 		}
 		
 		public function createFolder($folder, $name) {
-			$path = self::folderPath(self::joinPath($this->localPath($folder), $name));
+			$path = self::folderPath(self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE)));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
 			if (!mkdir($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE))) {
 				throw new ServiceException("CANNOT_CREATE_FOLDER", $folder->id()."/".$name);
 			} else {
 				chmod($path, $this->filesystemInfo->setting("new_folder_permission_mask", TRUE));
 			}
-			return $this->itemWithPath($this->publicPath($path));
+			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 		
 		public function createFile($folder, $name) {
-			$target = self::joinPath($this->localPath($folder), $name);
+			$target = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS");
-			return $this->itemWithPath($this->publicPath($target), TRUE);
+			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($target)));
 		}
 
 		public function fileWithName($folder, $name) {
-			$path = self::joinPath($this->localPath($folder), $name);
-			return $this->itemWithPath($this->publicPath($path));
+			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
+			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 
 		public function folderWithName($folder, $name) {
-			$path = self::joinPath($this->localPath($folder), $name.DIRECTORY_SEPARATOR);
-			return $this->itemWithPath($this->publicPath($path));
+			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE).DIRECTORY_SEPARATOR);
+			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 		
 		public function size($file) {
