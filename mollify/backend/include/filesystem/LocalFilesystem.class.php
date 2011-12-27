@@ -106,10 +106,11 @@
 				if (substr($name, 0, 1) == '.') continue;
 				if (in_array(strtolower($name), $ignored)) continue;
 				
+				$nativePath = self::joinPath($parentPath, $name);
 				$itemName = $this->filesystemInfo->env()->convertCharset($name);
-				$path = $this->filesystemInfo->env()->convertCharset(self::joinPath($parentPath, $name));
-
-				if (!is_dir($path)) {	
+				$path = $this->filesystemInfo->env()->convertCharset($nativePath);
+				
+				if (!is_dir($nativePath)) {	
 					$p = $this->publicPath($path);
 					$result[] = new File($this->itemId($p), $this->rootId(), $p, $itemName, $this);
 				} else {
@@ -170,7 +171,7 @@
 			if ($item->path() === '') return NULL;
 			
 			$path = $this->localPath($item);
-			return $this->itemWithPath($this->publicPath(self::folderPath(dirname($path))));
+			return $this->itemWithPath($this->publicPath(self::folderPath($this->filesystemInfo->env()->convertCharset(dirname($path)))));
 		}
 
 		public function rename($item, $name) {
