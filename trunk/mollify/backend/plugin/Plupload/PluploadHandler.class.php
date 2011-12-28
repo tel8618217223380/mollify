@@ -38,8 +38,8 @@
 			$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 			$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
 		
-			// Clean the fileName for security reasons
-			$fileName = preg_replace('/[\x20\._-]+/', '', $fileName);
+			// remove slashes (/ and \) and quotes (" and ')
+			$fileName = preg_replace('/[\x47\x92\x34\x39]+/', '', $fileName);
 			
 			// Make sure the fileName is unique but only if chunking is disabled
 			if ($chunks < 2 && file_exists($targetDir.DIRECTORY_SEPARATOR.$fileName)) {
