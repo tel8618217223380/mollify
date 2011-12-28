@@ -31,10 +31,18 @@
 			return $this->dao()->getShares($item, $this->env->authentication()->getUserId());
 		}
 
-		public function addShare($item) {
-			$this->dao()->addShare($this->GUID(), $item, $this->env->authentication()->getUserId(), time());
+		public function addShare($item, $name, $active) {
+			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), time(), $active);
+		}
+
+		public function editShare($id, $name, $active) {
+			$this->dao()->editShare($id, $name, $active);
 		}
 		
+		public function deleteShare($id) {
+			$this->dao()->deleteShare($id);
+		}
+				
 		public function processShareGet($id) {
 			$share = $this->dao()->getShare($id);
 			if (!$share) throw new ServiceException("INVALID_REQUEST");

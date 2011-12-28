@@ -33,6 +33,16 @@ public class DemoExternalService implements ExternalService {
 	}
 
 	@Override
+	public void del(String path, ResultListener listener) {
+		listener.onSuccess(true);
+	}
+
+	@Override
+	public void put(String path, String data, ResultListener listener) {
+		listener.onSuccess(true);
+	}
+
+	@Override
 	public void post(String path, String data, ResultListener listener) {
 		listener.onSuccess(true);
 	}

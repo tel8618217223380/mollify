@@ -24,17 +24,27 @@
 
 		public function getShare($id) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select id, item_id from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE))->firstRow();
+			return $db->query("select id, name, item_id, active from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE))->firstRow();
 		}
 
 		public function getShares($item, $userId) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select id from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
+			return $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
 		}
 		
-		public function addShare($id, $item, $userId, $time) {
+		public function addShare($id, $item, $name, $userId, $time, $active = TRUE) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, item_id, user_id, created, active) VALUES (%s, %s, %s, %s, 1)", $db->string($id, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time))));
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, created, active) VALUES (%s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time)), ($active ? "1" : "0")));
+		}
+		
+		public function editShare($id, $name, $time, $active = TRUE) {
+			$db = $this->env->configuration()->db();
+			$db->update(sprintf("UPDATE ".$db->table("share")." SET (name = %s, active = %s) WHERE id=%s", $db->string($name, TRUE),($active ? "1" : "0"), $db->string($id, TRUE)));
+		}
+
+		public function deleteShare($id) {
+			$db = $this->env->configuration()->db();
+			return $db->update("DELETE FROM ".$db->table("share")." WHERE id = ".$db->string($id, TRUE));
 		}
 		
 		public function deleteShares($item) {
