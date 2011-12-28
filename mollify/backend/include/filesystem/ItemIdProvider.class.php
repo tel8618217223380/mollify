@@ -37,9 +37,9 @@
 		 	$db = $this->env->configuration()->db();
 		 	
 			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
-				$pathFilter = "path REGEXP '^.:/$'";
+				$pathFilter = "path REGEXP '^.:[/\\\\]$'";
 			} else {
-				$pathFilter = "REGEX(path, \"#^.:/$#\")";
+				$pathFilter = "REGEX(path, \"#^.:[/\\\\]$#\")";
 			}
 
 		 	$query = "select id, path from ".$db->table("item_id")." where ".$pathFilter;
@@ -54,9 +54,9 @@
 			 	$pathFilter = "path like '".$db->string($this->itemPath($parent))."%'";
 		 	} else {
 				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
-					$pathFilter = "path REGEXP '^".$db->string($this->itemPath($parent))."[^/]+[/]?$'";
+					$pathFilter = "path REGEXP '^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$'";
 				} else {
-					$pathFilter = "REGEX(path, \"#^".$db->string($this->itemPath($parent))."[^/]+[/]?$#\")";
+					$pathFilter = "REGEX(path, \"#^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$#\")";
 				}
 			}
 
@@ -67,7 +67,7 @@
 	 	
 	 	private function getOrCreateItemId($p) {
 		 	$db = $this->env->configuration()->db();
-			$query = "select id from ".$db->table("item_id")." where path=".$db->string($p,TRUE);
+			$query = "select id from ".$db->table("item_id")." where path=".$db->string($p, TRUE);
 			$result = $db->query($query);
 			
 			if ($result->count() === 1) return $result->value(0);
@@ -82,7 +82,7 @@
 			if ($item->isFile())
 				return $db->update("DELETE FROM ".$db->table("item_id")." WHERE id = ".$db->string($item->id(), TRUE));
 			else
-				return $db->update(sprintf("DELETE FROM ".$db->table("item_id")." WHERE path like '%s%%'", $db->string($this->itemPath($item))));
+				return $db->update(sprintf("DELETE FROM ".$db->table("item_id")." WHERE path like '%s%%'", $db->string(str_replace("\\", "\\\\", $this->itemPath($item)))));
 		}
 
 		public function move($item, $to) {
@@ -91,7 +91,9 @@
 				return $db->update("UPDATE ".$db->table("item_id")." SET path = ".$db->string($this->itemPath($to), TRUE) ." where path = ".$db->string($this->itemPath($item), TRUE));
 			else {
 				$path = $this->itemPath($item);
-				return $db->update(sprintf("UPDATE ".$db->table("item_id")." SET path=CONCAT('%s', SUBSTR(path, %d)) WHERE path like '%s%%'", $to->id(), strlen($path)+1, $path));
+				$len = mb_strlen($path, "UTF-8");
+
+				return $db->update(sprintf("UPDATE ".$db->table("item_id")." SET path=CONCAT('%s', SUBSTR(path, %d)) WHERE path like '%s%%'", $db->string($this->itemPath($to)), $len+1, $db->string(str_replace("\\", "\\\\", $path))));
 			}
 		}
 		

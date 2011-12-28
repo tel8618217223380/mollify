@@ -24,12 +24,12 @@
 
 		public function getCommentCountForChildren($parent) {
 			$db = $this->env->configuration()->db();
-			$parentId = $db->string($parent->location());
+			$parentLocation = $db->string(str_replace("\\", "\\\\", $parent->location()));
 			
 			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
-				$itemFilter = "select id from ".$db->table("item_id")." where path REGEXP '^".$parentId."[^/]+[/]?$'";
+				$itemFilter = "select id from ".$db->table("item_id")." where path REGEXP '^".$parentLocation."[^/\\\\]+[/\\\\]?$'";
 			} else {
-				$itemFilter = "select id from ".$db->table("item_id")." where REGEX(path, \"#^".$parentId."[^/]+[/]?$#\")";
+				$itemFilter = "select id from ".$db->table("item_id")." where REGEX(path, \"#^".$parentLocation."[^/\\\\]+[/\\\\]?$#\")";
 			}
 			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where item_id in (".$itemFilter.") group by item_id")->valueMap("item_id", "count");
 		}

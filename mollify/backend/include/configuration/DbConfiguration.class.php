@@ -375,7 +375,7 @@
 				$rootLocation = $item->root()->location();
 				
 				if ($mysql)
-					$hierarchyQuery = "(i.path REGEXP '^".$rootLocation;
+					$hierarchyQuery = "(i.path REGEXP '^".str_replace("\\", "\\\\", $rootLocation);
 				else
 					$hierarchyQuery = "REGEX(i.path, '#^".str_replace("\\", "\\\\", $rootLocation);
 				
@@ -383,7 +383,7 @@
 				$parts = preg_split("/\//", substr($parentLocation, strlen($rootLocation)), -1, PREG_SPLIT_NO_EMPTY);
 				//Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
-					$hierarchyQuery .= "(".$part."/";
+					$hierarchyQuery .= "(".$part.DIRECTORY_SEPARATOR;
 					$hierarchyQueryEnd .= ")*";
 				}
 				if ($mysql)
@@ -418,10 +418,10 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
 			if ($this->isMySql()) {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/]+[/]?$'";
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and i.path REGEXP '^".str_replace("\\", "\\\\", $parentLocation)."[^/\\\\]+[/\\\\]?$'";
 				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/]+[/]?$#\")";
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/\\\\]+[/\\\\]?$#\")";
 				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
