@@ -17,9 +17,13 @@ public interface ExternalService {
 
 	void get(String path, ResultListener listener);
 
+	void put(String path, String data, ResultListener resultListener);
+
 	void post(String path, String data, ResultListener resultListener);
 
 	void post(String data, ResultListener resultListener);
+
+	void del(String path, ResultListener listener);
 
 	String getPluginUrl(String id);
 }

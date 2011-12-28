@@ -25,16 +25,35 @@
 			$item = $this->item($this->path[1]);
 			$this->response()->success($this->handler()->getShares($item));
 		}
-		
+
+		public function processDelete() {
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			
+			$id = $this->path[0];
+			$this->handler()->deleteShare($id);
+			$this->response()->success(array());
+		}
+				
 		public function processPost() {
 			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
 			
 			$item = $this->item($this->path[1]);
 			$data = $this->request->data;
-			//if (!isset($data["type"])) throw $this->invalidRequestException("No data");
+			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->addShare($item);
+			$this->handler()->addShare($item, $data["name"], isset($data["enabled"]) ? $data["enabled"] : TRUE);
 			$this->response()->success($this->handler()->getShares($item));
+		}
+		
+		public function processPut() {
+			if (count($this->path) != 1) throw $this->invalidRequestException();
+			
+			$id = $this->path[0];
+			$data = $this->request->data;
+			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
+			
+			$this->handler()->editShare($id, $data["name"], isset($data["enabled"]) ? $data["enabled"] : TRUE);
+			$this->response()->success(array());
 		}
 		
 		private function handler() {

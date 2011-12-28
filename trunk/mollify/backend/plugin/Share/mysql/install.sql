@@ -1,6 +1,7 @@
 CREATE TABLE `{TABLE_PREFIX}share` (
   `id` char(32) NOT NULL,
   `item_id` char(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created` bigint(11) NOT NULL,
   `active` TINYINT(1) NOT NULL,

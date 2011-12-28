@@ -30,8 +30,18 @@ public class ExternalServiceAdapter implements ExternalService {
 	}
 
 	@Override
+	public void put(String path, String data, ResultListener resultListener) {
+		service.put(path, data, resultListener);
+	}
+
+	@Override
 	public void post(String path, String data, ResultListener listener) {
 		service.post(path, data, listenerFactory.createListener(listener));
+	}
+
+	@Override
+	public void del(String path, ResultListener listener) {
+		service.del(path, listener);
 	}
 
 	@Override

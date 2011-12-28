@@ -507,7 +507,8 @@ function SharePlugin() {
 			$("#share-dialog-close").click(function() { d.close(); } );
 			
 			that.env.service().get("share/items/"+item.id, function(result) {
-				that.onShowShares(item, result);
+				that.refreshShares(item, result);
+				that.updateShareList(item);
 				d.setMinimumSizeToCurrent();
 				d.center();
 			},	function(code, error) {
@@ -516,28 +517,114 @@ function SharePlugin() {
 		});
 	}
 	
-	this.onShowShares = function(item, shares) {
-		if (shares.length == 0) {
+	this.refreshShares = function(item, shares) {
+		that.shares = shares;
+		that.shareIds = [];
+		
+		for (var i=0, j=shares.length; i<j; i++)
+			that.shareIds.push(shares[i].id);
+	}
+	
+	this.getShare = function(id) {
+		return that.shares[that.shareIds.indexOf(id)];
+	}
+	
+	this.updateShareList = function(item) {
+		$("#share-items").empty();
+		
+		if (that.shares.length == 0) {
 			$("#share-items").html("<message>"+that.t("shareDialogNoShares")+"</message>");
 			return;
 		}
 
-		$("#share-template").tmpl(shares).appendTo("#share-items");
+		$("#share-template").tmpl(that.shares).appendTo("#share-items");
 		mollify.localize("share-list");
+
+		$(".share-edit").click(function(e) {
+			var p = $(this).parent(".item-share")[0];
+			var id = p.id.substring(6);
+			that.onEditShare(item, that.getShare(id));
+		});
+		$(".share-remove").click(function(e) {
+			var p = $(this).parent(".item-share")[0];
+			var id = p.id.substring(6);
+			that.removeShare(item, id);
+		});
+	}
+	
+	this.closeAddEdit = function() {
+		$("#share-items").removeClass("minimized");
+		$("#share-context").addClass("minimized");
+		$(".addedit-share-toolbar-option").hide();
+		$("#add-share-btn").show();
 	}
 
 	this.onAddShare = function(item) {
 		$("#share-items").addClass("minimized");
 		$("#share-context").removeClass("minimized");
-		return;
+		$(".addedit-share-toolbar-option").hide();
+		$("#add-share-title").show();
+
+		$("#share-addedit-btn-ok").click(function() {
+			var name = $("#share-general-name").val();
+			that.closeAddEdit();
+			that.addShare(item, name || '', true);
+		});
 		
-		that.env.service().post("share/items/"+item.id, { item: item.id }, function(result) {
-			that.onShowShares(item, result);
+		$("#share-addedit-btn-cancel").click(function() {
+			that.closeAddEdit();
+		});
+	}
+	
+	this.onEditShare = function(item, share) {
+		$("#share-items").addClass("minimized");
+		$("#share-context").removeClass("minimized");
+		$(".addedit-share-toolbar-option").hide();
+		$("#edit-share-title").show();
+		$("#share-general-name").val(share.name);
+		
+		$("#share-addedit-btn-ok").click(function() {
+			var name = $("#share-general-name").val();
+			that.closeAddEdit();
+			that.editShare(item, id, name || '', true);
+		});
+		
+		$("#share-addedit-btn-cancel").click(function() {
+			that.closeAddEdit();
+		});
+	}
+	
+	this.addShare = function(item, name, enabled) {
+		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, enabled: enabled }, function(result) {
+			that.refreshShares(item, result);
+			that.updateShareList(item);
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+
+	this.editShare = function(item, id, name, enabled) {
+		that.env.service().put("share/"+id, { id: id, name: name, enabled: enabled }, function(result) {
+			var share = that.getShare(id);
+			share.name = name;
+			share.active = enabled;
+			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);
 		});
 	}
 	
+	this.removeShare = function(item, id) {
+		that.env.service().del("share/"+id, function(result) {
+			var i = that.shareIds.indexOf(id);
+			that.shareIds.splice(i-1,i);
+			that.shares.splice(i-1,i);
+			that.updateShareList(item);
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+		
 	this.url = function(p) {
 		return that.env.service().getPluginUrl("Share")+"client/"+p;
 	}
