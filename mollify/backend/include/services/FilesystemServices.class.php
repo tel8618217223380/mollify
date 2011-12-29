@@ -164,11 +164,7 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$all = $this->env->filesystem()->allPermissions($item);
-					$list = array();
-					foreach($all as $p)
-						$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
-					$this->response()->success($list);
+					$this->response()->success($this->env->filesystem()->allPermissions($item));
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -261,11 +257,7 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$all = $this->env->filesystem()->allPermissions($item);
-					$list = array();
-					foreach($all as $p)
-						$list[] = array("item_id" => base64_encode($p["item_id"]), "user_id" => $p["user_id"], "is_group" => $p["is_group"], "permission" => $p["permission"]);
-					$this->response()->success($list);
+					$this->response()->success($this->env->filesystem()->allPermissions($item));
 					break;
 				default:
 					throw $this->invalidRequestException();

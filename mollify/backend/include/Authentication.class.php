@@ -37,10 +37,11 @@
 		public function check() {
 			if (!$this->isAuthenticationRequired()) return;
 			if ($this->isAuthenticated()) {
-				if ($this->env->session()->hasParam('auth') and strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
-				if (strcasecmp($this->env->session()->param('username'), $_SERVER["REMOTE_USER"]) == 0) return;
+				if (!$this->env->session()->hasParam('auth') or strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
+				if (isset($_SERVER["REMOTE_USER"]) and strcasecmp($this->env->session()->param('username'), $_SERVER["REMOTE_USER"]) == 0) return;
 
 				// remote user has changed, reset old session
+				$this->env->session()->removeParam('auth');
 				$this->env->session()->removeParam('user_id');
 				$this->env->session()->removeParam('username');
 				$this->env->session()->removeParam('default_permission');
