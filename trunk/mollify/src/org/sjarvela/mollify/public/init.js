@@ -617,8 +617,8 @@ function SharePlugin() {
 	this.removeShare = function(item, id) {
 		that.env.service().del("share/"+id, function(result) {
 			var i = that.shareIds.indexOf(id);
-			that.shareIds.splice(i-1,i);
-			that.shares.splice(i-1,i);
+			that.shareIds.splice(i,i+1);
+			that.shares.splice(i,i+1);
 			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);
