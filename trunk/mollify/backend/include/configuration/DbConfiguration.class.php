@@ -242,7 +242,7 @@
 			$this->db->update(sprintf("INSERT INTO ".$this->db->table("folder")." (name, path) VALUES ('%s', '%s')", $this->db->string($name), $this->db->string($path)));
 			return $this->db->lastId();
 		}
-	
+
 		public function updateFolder($id, $name, $path) {
 			$this->db->update(sprintf("UPDATE ".$this->db->table("folder")." SET name='%s', path='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($path), $this->db->string($id)));
 			return TRUE;
@@ -250,13 +250,14 @@
 		
 		public function removeFolder($id) {
 			$rootItem = $this->env->filesystem()->filesystemFromId($id, FALSE)->root();
+			$rootLocation = str_replace("'", "\'", $rootItem->location());
 			$rootId = $this->itemId($rootItem);
 			$folderId = $this->db->string($id);
 			
 			$this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE folder_id='%s'", $folderId));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id like '%s%%'", $rootId));
-			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id like '%s%%'", $rootId));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
+			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $rootLocation));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("folder")." WHERE id='%s'", $folderId));
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST","Invalid delete folder request, folder ".$rootId." not found");
@@ -335,7 +336,7 @@
 	
 		function removeItemDescription($item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $item->location()));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $item->location())));
 			} else {
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
 			}
@@ -343,7 +344,7 @@
 		}
 		
 		public function findItemsWithDescription($parent, $text) {
-			$query = "SELECT item_id, description from ".$this->db->table("item_description")." d, ".$this->db->table("item_id")." i where d.item_id = i.id AND i.path like '".$parent->location()."%' and description like '%".$this->db->string($text)."%'";			
+			$query = "SELECT item_id, description from ".$this->db->table("item_description")." d, ".$this->db->table("item_id")." i where d.item_id = i.id AND i.path like '".str_replace("'", "\'", $parent->location())."%' and description like '%".$this->db->string($text)."%'";			
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 							
@@ -375,15 +376,15 @@
 				$rootLocation = $item->root()->location();
 				
 				if ($mysql)
-					$hierarchyQuery = "(i.path REGEXP '^".str_replace("\\", "\\\\", $rootLocation);
+					$hierarchyQuery = "(i.path REGEXP '^".str_replace("'", "\'", str_replace("\\", "\\\\", $rootLocation));
 				else
-					$hierarchyQuery = "REGEX(i.path, '#^".str_replace("\\", "\\\\", $rootLocation);
+					$hierarchyQuery = "REGEX(i.path, '#^".str_replace("'", "\'", str_replace("\\", "\\\\", $rootLocation));
 				
 				$hierarchyQueryEnd = "";
 				$parts = preg_split("/\//", substr($parentLocation, strlen($rootLocation)), -1, PREG_SPLIT_NO_EMPTY);
 				//Logging::logDebug(Util::array2str($parts));
 				foreach($parts as $part) {
-					$hierarchyQuery .= "(".$part.DIRECTORY_SEPARATOR;
+					$hierarchyQuery .= "(".str_replace("'", "\'", $part).DIRECTORY_SEPARATOR;
 					$hierarchyQueryEnd .= ")*";
 				}
 				if ($mysql)
@@ -407,7 +408,7 @@
 		}
 		
 		public function getAllItemPermissions($parent, $userId) {
-			$parentLocation = $parent->location();
+			$parentLocation = str_replace("'", "\'", str_replace("\\", "\\\\", $parent->location()));
 			$table = $this->db->table("item_permission");
 			$userIds = array($userId);
 			if ($this->env->authentication()->hasUserGroups()) {
@@ -418,10 +419,10 @@
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
 
 			if ($this->isMySql()) {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and i.path REGEXP '^".str_replace("\\", "\\\\", $parentLocation)."[^/\\\\]+[/\\\\]?$'";
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and i.path REGEXP '^".$parentLocation."[^/\\\\]+[/\\\\]?$'";
 				$query = sprintf("SELECT item_id, permission, (IF(user_id = '%s', 1, IF(user_id = '0', 3, 2))) as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			} else {
-				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and REGEX(i.path, \"#^".str_replace("\\", "\\\\", $parentLocation)."[^/\\\\]+[/\\\\]?$#\")";
+				$itemFilter = "SELECT distinct item_id from ".$table." p, ".$this->db->table("item_id")." i where p.item_id = i.id and ".$userQuery." and REGEX(i.path, \"#^".$parentLocation."[^/\\\\]+[/\\\\]?$#\")";
 				$query = sprintf("SELECT item_id, permission, case when user_id = '%s' then 1 when user_id = '0' then 3 else 2 end as ind from %s where %s and item_id in (%s) order by item_id asc, ind asc, permission desc", $userId, $table, $userQuery, $itemFilter);
 			}			
 			
@@ -524,7 +525,7 @@
 
 		function removeItemPermissions($item) {
 			if (!$item->isFile()) {
-				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", $item->location()));
+				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id in (select id from ".$this->db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $item->location())));
 			} else {
 				$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE item_id='%s'", $this->itemId($item)));
 			}
