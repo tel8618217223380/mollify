@@ -1,4 +1,11 @@
-/* @override http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325070257912 */
+/* @override 
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325070257912
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325275389577
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325276199148
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325276642947
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325277530254
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325277709839
+*/
 
 #details-share {
 	float: right;
@@ -28,7 +35,44 @@
 }
 
 .item-share {
+	cursor: pointer;
 	height: 45px;
+	border-bottom: 1px dotted #adadad;
+}
+
+.item-share-hover {
+	background-color: #f5f5f5;
+}
+
+.share-info {
+	padding-top: 8px;
+	padding-left: 11px;
+	float: left;
+}
+
+.share-name {
+	padding-top: 2px;
+	font-size: 16px;
+	width: 282px;	
+}
+
+.item-share-hover .share-name {
+	padding-top: 0px;
+}
+
+.share-instructions {
+	display: none;
+	color: #c7c7c7;
+}
+
+.item-share-hover .share-instructions {
+	display: block;
+}
+
+.share-actions {
+	float: right;
+	padding-right: 8px;
+	padding-top: 14px;
 }
 
 .context-group {
@@ -78,23 +122,21 @@
 	height: 0px;
 }
 
-.share-edit {
-	width: 15px;
-	height: 15px;
-	background-color: #f56a7b;
-	position: relative;
+.item-share-hover .share-edit {
+	width: 16px;
+	height: 16px;
 	float: left;
-	left: 300px;
+	cursor: pointer;
+	background-image: url(edit.png);
 }
 
-.share-remove {
-	width: 15px;
-	height: 15px;
-	background-color: #f6df81;
-	position: relative;
+.item-share-hover .share-remove {
+	width: 16px;
+	height: 16px;
 	float: left;
-	left: 300px;
 	margin-left: 8px;
+	cursor: pointer;
+	background-image: url(remove.png);
 }
 
 #share-context {
@@ -118,9 +160,26 @@
 	font-weight: bold;
 	font-size: 12px;
 	padding-top: 9px;
-	padding-left: 4px;
+	padding-left: 35px;
 	color: #515151;
 	cursor: pointer;
+	background: url(plus.png) no-repeat 6px 6px;
+	height: 18px;
+}
+
+#add-share-title, #edit-share-title {
+	font-weight: bold;
+	font-size: 12px;
+	padding-top: 7px;
+	padding-left: 4px;
+	color: #515151;
+}
+
+.no-share-items {
+	font-size: 23px;
+	color: #c6c6c6;
+	text-align: center;
+	margin-top: 73px;
 }
 
 #details-share:hover {

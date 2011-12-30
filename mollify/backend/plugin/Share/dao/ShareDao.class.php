@@ -39,7 +39,7 @@
 		
 		public function editShare($id, $name, $time, $active = TRUE) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("share")." SET (name = %s, active = %s) WHERE id=%s", $db->string($name, TRUE),($active ? "1" : "0"), $db->string($id, TRUE)));
+			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s WHERE id=%s", $db->string($name, TRUE),($active ? "1" : "0"), $db->string($id, TRUE)));
 		}
 
 		public function deleteShare($id) {

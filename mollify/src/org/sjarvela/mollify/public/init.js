@@ -533,13 +533,17 @@ function SharePlugin() {
 		$("#share-items").empty();
 		
 		if (that.shares.length == 0) {
-			$("#share-items").html("<message>"+that.t("shareDialogNoShares")+"</message>");
+			$("#share-items").html('<div class="no-share-items">'+that.t("shareDialogNoShares")+'</div>');
 			return;
 		}
 
 		$("#share-template").tmpl(that.shares).appendTo("#share-items");
 		mollify.localize("share-list");
 
+		$(".item-share").hover(
+			function() { $(this).addClass("item-share-hover"); },
+			function() { $(this).removeClass("item-share-hover"); }
+		);
 		$(".share-edit").click(function(e) {
 			var p = $(this).parent(".item-share")[0];
 			var id = p.id.substring(6);
@@ -564,11 +568,17 @@ function SharePlugin() {
 		$("#share-context").removeClass("minimized");
 		$(".addedit-share-toolbar-option").hide();
 		$("#add-share-title").show();
+		
+		$("#share-general-name").val('');
+		$('#share-general-active').attr('checked', true);
 
 		$("#share-addedit-btn-ok").click(function() {
 			var name = $("#share-general-name").val();
+			var active = $("#share-general-active").is(":checked");
+			
+			$("#share-items").empty().addClass("loading");
 			that.closeAddEdit();
-			that.addShare(item, name || '', true);
+			that.addShare(item, name || '', active);
 		});
 		
 		$("#share-addedit-btn-cancel").click(function() {
@@ -581,12 +591,17 @@ function SharePlugin() {
 		$("#share-context").removeClass("minimized");
 		$(".addedit-share-toolbar-option").hide();
 		$("#edit-share-title").show();
+		
 		$("#share-general-name").val(share.name);
+		$("#share-general-active").attr("checked", share.active);
 		
 		$("#share-addedit-btn-ok").click(function() {
 			var name = $("#share-general-name").val();
+			var active = $("#share-general-active").is(":checked");
+			
+			$("#share-items").empty().addClass("loading");
 			that.closeAddEdit();
-			that.editShare(item, id, name || '', true);
+			that.editShare(item, share.id, name || '', active);
 		});
 		
 		$("#share-addedit-btn-cancel").click(function() {

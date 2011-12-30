@@ -22,7 +22,7 @@
 					<div id="addedit-share-content">
 						<!--div id="title-general" class="context-group"><text key="shareDialogShareGeneralTitle" /></div-->
 						<div id="title-name" class="option-title"><text key="shareDialogShareNameTitle" /></div><input id="share-general-name" type="text" class="option-value"></input>
-						<div id="title-enabled" class="option-title"><text key="shareDialogShareEnabledTitle" /></div><input id="share-general-enabled" type="checkbox" class="option-value"></input>
+						<div id="title-active" class="option-title"><text key="shareDialogShareActiveTitle" /></div><input id="share-general-active" type="checkbox" class="option-value"></input>
 						
 						<!--div id="title-protection" class="context-group"><text key="shareDialogShareProtectionTitle" /></div>
 						<input id="share-protection-none" type="radio" class="share-protection-option" value="none"><text key="shareDialogShareNoProtectionTitle" /></input>
@@ -60,8 +60,13 @@
 
 <script id="share-template" type="text/x-jquery-tmpl"> 
 	<div id="share-${id}" class="item-share">
-		<div class="share-info">${name}</div>
-		<div class="share-edit"></div>
-		<div class="share-remove"></div>
+		<div class="share-info">
+			<div class="share-name">${name}</div>
+			<div class="share-instructions"><text key="shareDialogItemInstructions" /></div>
+		</div>
+		<div class="share-actions">
+			<div class="share-edit"></div>
+			<div class="share-remove"></div>
+		</div>
 	</div>
 </script>
