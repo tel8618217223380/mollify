@@ -41,7 +41,7 @@
 			$data = $this->request->data;
 			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->addShare($item, $data["name"], isset($data["enabled"]) ? $data["enabled"] : TRUE);
+			$this->handler()->addShare($item, $data["name"], isset($data["active"]) ? $data["active"] : TRUE);
 			$this->response()->success($this->handler()->getShares($item));
 		}
 		
@@ -52,7 +52,7 @@
 			$data = $this->request->data;
 			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->editShare($id, $data["name"], isset($data["enabled"]) ? $data["enabled"] : TRUE);
+			$this->handler()->editShare($id, $data["name"], isset($data["active"]) ? $data["active"] : TRUE);
 			$this->response()->success(array());
 		}
 		
