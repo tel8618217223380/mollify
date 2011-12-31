@@ -29,7 +29,13 @@
 
 		public function getShares($item, $userId) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
+			$list = $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
+			
+			$res = array();
+			foreach($list as $s) {
+				$res[] = array("id" => $s["id"], "name" => $s["name"], "active" => ($s["active"] == 1));
+			}
+			return $res;
 		}
 		
 		public function addShare($id, $item, $name, $userId, $time, $active = TRUE) {

@@ -536,38 +536,58 @@ function SharePlugin() {
 			$("#share-items").html('<div class="no-share-items">'+that.t("shareDialogNoShares")+'</div>');
 			return;
 		}
-
-		$("#share-template").tmpl(that.shares).appendTo("#share-items");
+		
+		var opt = {
+			name : function() {
+				if (!this.data.name || this.data.name.length == 0)
+					return '<text key="shareDialogUnnamedShareTitle" />';
+				return this.data.name;
+			},
+			nameClass : function() {
+				var c = "share-name";
+				if (!this.data.name || this.data.name.length == 0)
+					c = c + " item-share-unnamed";
+				if (!this.data.active)
+					c = c + " item-share-inactive";
+				return c;
+			}
+		};
+		
+		$("#share-template").tmpl(that.shares, opt).appendTo("#share-items");
 		mollify.localize("share-list");
 
 		$(".item-share").hover(
 			function() { $(this).addClass("item-share-hover"); },
 			function() { $(this).removeClass("item-share-hover"); }
 		);
-		$(".share-edit").click(function(e) {
-			var p = $(this).parent(".item-share")[0];
+		
+		var idFunction = function(i, f) {
+			var p = $(i).parentsUntil(".item-share").parent()[0];
 			var id = p.id.substring(6);
-			that.onEditShare(item, that.getShare(id));
+			f(item, id);
+		}
+		$(".share-edit").click(function(e) {
+			idFunction(this, that.onEditShare);
 		});
 		$(".share-remove").click(function(e) {
-			var p = $(this).parent(".item-share")[0];
-			var id = p.id.substring(6);
-			that.removeShare(item, id);
+			idFunction(this, that.removeShare);
 		});
 	}
 	
 	this.closeAddEdit = function() {
 		$("#share-items").removeClass("minimized");
 		$("#share-context").addClass("minimized");
-		$(".addedit-share-toolbar-option").hide();
+		$(".share-context-toolbar-option").hide();
 		$("#add-share-btn").show();
 	}
 
 	this.onAddShare = function(item) {
 		$("#share-items").addClass("minimized");
 		$("#share-context").removeClass("minimized");
-		$(".addedit-share-toolbar-option").hide();
+		$(".share-context-toolbar-option").hide();
 		$("#add-share-title").show();
+		$("#share-context-addedit-template").tmpl({}).appendTo($("#share-context-content").empty());
+		mollify.localize("share-context-content");
 		
 		$("#share-general-name").val('');
 		$('#share-general-active').attr('checked', true);
@@ -576,7 +596,7 @@ function SharePlugin() {
 			var name = $("#share-general-name").val();
 			var active = $("#share-general-active").is(":checked");
 			
-			$("#share-items").empty().addClass("loading");
+			$("#share-items").empty().append('<div class="loading"/>');
 			that.closeAddEdit();
 			that.addShare(item, name || '', active);
 		});
@@ -586,11 +606,15 @@ function SharePlugin() {
 		});
 	}
 	
-	this.onEditShare = function(item, share) {
+	this.onEditShare = function(item, id) {
+		var share = that.getShare(id);
+		
 		$("#share-items").addClass("minimized");
 		$("#share-context").removeClass("minimized");
-		$(".addedit-share-toolbar-option").hide();
+		$(".share-context-toolbar-option").hide();
 		$("#edit-share-title").show();
+		$("#share-context-addedit-template").tmpl({}).appendTo($("#share-context-content").empty());
+		mollify.localize("share-context-content");
 		
 		$("#share-general-name").val(share.name);
 		$("#share-general-active").attr("checked", share.active);
@@ -599,7 +623,7 @@ function SharePlugin() {
 			var name = $("#share-general-name").val();
 			var active = $("#share-general-active").is(":checked");
 			
-			$("#share-items").empty().addClass("loading");
+			$("#share-items").empty().append('<div class="loading"/>')
 			that.closeAddEdit();
 			that.editShare(item, share.id, name || '', active);
 		});
