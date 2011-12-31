@@ -1,10 +1,4 @@
 /* @override 
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325070257912
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325275389577
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325276199148
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325276642947
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325277530254
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325277709839
 */
 
 #details-share {
@@ -120,6 +114,12 @@
 #share-items.minimized {
 	position: relative;
 	height: 0px;
+}
+
+#share-items .loading {
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.06) url(wait.gif) no-repeat 50% 50%;
 }
 
 .item-share-hover .share-edit {
