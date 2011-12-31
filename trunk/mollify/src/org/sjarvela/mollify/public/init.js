@@ -609,8 +609,8 @@ function SharePlugin() {
 		});
 	}
 	
-	this.addShare = function(item, name, enabled) {
-		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, enabled: enabled }, function(result) {
+	this.addShare = function(item, name, active) {
+		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, active: active }, function(result) {
 			that.refreshShares(item, result);
 			that.updateShareList(item);
 		},	function(code, error) {
@@ -618,11 +618,11 @@ function SharePlugin() {
 		});
 	}
 
-	this.editShare = function(item, id, name, enabled) {
-		that.env.service().put("share/"+id, { id: id, name: name, enabled: enabled }, function(result) {
+	this.editShare = function(item, id, name, active) {
+		that.env.service().put("share/"+id, { id: id, name: name, active: active }, function(result) {
 			var share = that.getShare(id);
 			share.name = name;
-			share.active = enabled;
+			share.active = active;
 			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);
