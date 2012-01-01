@@ -549,13 +549,16 @@ function SharePlugin() {
 				if (!this.data.active)
 					c = c + " item-share-inactive";
 				if (!this.data.name || this.data.name.length == 0)
-					c = c + " share-name-unnamed";
+					c = c + " item-share-unnamed";
 				return c;
 			},
-			instructionsKey : function() {
+			linkTitleKey : function() {
 				if (!this.data.active)
-					return 'shareDialogItemInactiveInstructionsTitle';
-				return 'shareDialogItemInstructionsTitle';
+					return 'shareDialogItemInactiveLinkTitle';
+				return 'shareDialogItemLinkTitle';
+			},
+			link : function() {
+				return that.url(this.data.id);
 			}
 		};
 		
@@ -565,16 +568,21 @@ function SharePlugin() {
 		$(".item-share").hover(
 			function() { $(this).addClass("item-share-hover"); },
 			function() { $(this).removeClass("item-share-hover"); }
-		).click(function() {
-			idFunction(this, that.onClickShare);
-			return false;
-		});
+		);
 		
 		var idFunction = function(i, f) {
 			var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
 			var id = p.id.substring(6);
 			f(item, id);
 		};
+		$(".share-link-toggle-title").click(function() {
+			var t = this;
+			idFunction(this, function(item, id) {
+				if (!that.getShare(id).active) return;
+				$(t).parent().toggleClass("open");
+			});
+			return false;
+		});
 		$(".share-edit").click(function(e) {
 			idFunction(this, that.onEditShare);
 			return false;
@@ -599,12 +607,6 @@ function SharePlugin() {
 		$("#"+toolbarId).show();
 		$("#"+contentTemplateId).tmpl({}).appendTo($("#share-context-content").empty());
 		mollify.localize("share-context-content");
-	}
-
-	this.onClickShare = function(item, id) {
-		that.openContext('share-link-title', 'share-context-link-template');
-		
-		var share = that.getShare(id);
 	}
 	
 	this.onAddShare = function(item) {
@@ -672,8 +674,8 @@ function SharePlugin() {
 	this.removeShare = function(item, id) {
 		that.env.service().del("share/"+id, function(result) {
 			var i = that.shareIds.indexOf(id);
-			that.shareIds.splice(i,i+1);
-			that.shares.splice(i,i+1);
+			that.shareIds.splice(i,i);
+			that.shares.splice(i,i);
 			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);
