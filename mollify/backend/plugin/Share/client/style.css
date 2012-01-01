@@ -1,4 +1,7 @@
 /* @override 
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325425380197
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325425941374
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325428448498
 */
 
 #details-share {
@@ -17,6 +20,7 @@
 	font-weight: bold;
 	font-size: 13px;
 	margin-bottom: 4px;
+	width: 350px;
 }
 
 #share-list {
@@ -29,6 +33,7 @@
 }
 
 .item-share {
+	width: 100%;
 	cursor: pointer;
 	height: 45px;
 	border-bottom: 1px dotted #adadad;
@@ -56,11 +61,16 @@
 
 .share-instructions {
 	display: none;
-	color: #c7c7c7;
+	color: #728cb0;
+	padding-top: 2px;
 }
 
 .item-share-hover .share-instructions {
 	display: block;
+}
+
+.item-share-inactive .share-instructions {
+	color: #9e9e9e;
 }
 
 .share-actions {
@@ -108,7 +118,7 @@
 	position: relative;
 	height: 100%;
 	overflow: auto;
-	width: 350px;
+	width: 100%;
 }
 
 #share-items.minimized {
@@ -122,21 +132,38 @@
 	background: rgba(0,0,0,0.06) url(wait.gif) no-repeat 50% 50%;
 }
 
-.item-share-hover .share-edit {
+.item-share .share-edit {
+	width: 16px;
+	height: 16px;
+	float: left;	
+}
+
+.item-share .share-remove {
 	width: 16px;
 	height: 16px;
 	float: left;
+	margin-left: 8px;
+}
+
+.item-share-hover .share-edit {
 	cursor: pointer;
 	background-image: url(edit.png);
 }
 
 .item-share-hover .share-remove {
-	width: 16px;
-	height: 16px;
-	float: left;
 	margin-left: 8px;
 	cursor: pointer;
 	background-image: url(remove.png);
+}
+
+.item-share-inactive {
+	color: #aeaeae;
+	background-color: #ececec;
+	cursor: default;
+}
+
+.item-share-hover.item-share-inactive {
+	background-color: #dfe1e1;
 }
 
 #share-context {
@@ -150,10 +177,14 @@
 	margin-top: -30px;
 }
 
-#addedit-share-toolbar {
-	background-color: #e5e5e5;
+#share-context-toolbar {
+	background-color: #c9cfde;
 	width: 100%;
 	height: 30px;
+}
+
+.share-dialog-buttons {
+	margin-right: 13px;
 }
 
 #add-share-btn {

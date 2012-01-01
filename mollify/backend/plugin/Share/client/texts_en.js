@@ -1,4 +1,16 @@
 (function(){ mollify.texts.add('en', {
+itemContextShareTitle: 'Share',
 shareDialogTitle: "Shares",
-shareDetailsCount: "Comments"
+shareDialogShareFileTitle: "Download link for",
+shareDialogShareFolderTitle: 'Upload link for',
+shareDialogUnnamedShareTitle: 'Unnamed',
+shareDialogItemInstructionsTitle: 'Click to show link',
+shareDialogItemInactiveInstructionsTitle: 'Inactive',
+shareDialogShareAddButton: 'Add new...',
+shareDialogShareAddTitle: 'Add new',
+shareDialogShareNameTitle: 'Name (optional):',
+shareDialogShareLinkTitle: 'Link',
+shareDialogShareActiveTitle: 'Active:',
+shareDialogSave: 'Save',
+shareDialogCancel: 'Cancel',
 })})();
