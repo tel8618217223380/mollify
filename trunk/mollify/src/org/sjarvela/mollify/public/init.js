@@ -471,7 +471,7 @@ function SharePlugin() {
 					on_init: function(id, c, item, details) {
 						if (!details["plugin-share"]) return;
 						
-						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/>"+that.t('item-context-share-title')+"</div></div>");
+						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/>"+that.t('itemContextShareTitle')+"</div></div>");
 						
 						$("#details-share-content").hover(
 							function () { $(this).addClass("hover"); }, 
@@ -500,6 +500,7 @@ function SharePlugin() {
 
 	this.onShowSharesDialog = function(d, item) {
 		mollify.loadContent("share-dialog-content", that.url("content.html"), function() {
+			$("#share-item-title").html(that.t(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle'));
 			$("#share-item-name").html(item.name);
 			$("#share-dialog-content").removeClass("loading");
 
@@ -543,13 +544,18 @@ function SharePlugin() {
 					return '<text key="shareDialogUnnamedShareTitle" />';
 				return this.data.name;
 			},
-			nameClass : function() {
-				var c = "share-name";
-				if (!this.data.name || this.data.name.length == 0)
-					c = c + " item-share-unnamed";
+			itemClass : function() {
+				var c = "item-share";
 				if (!this.data.active)
 					c = c + " item-share-inactive";
+				if (!this.data.name || this.data.name.length == 0)
+					c = c + " share-name-unnamed";
 				return c;
+			},
+			instructionsKey : function() {
+				if (!this.data.active)
+					return 'shareDialogItemInactiveInstructionsTitle';
+				return 'shareDialogItemInstructionsTitle';
 			}
 		};
 		
@@ -559,18 +565,23 @@ function SharePlugin() {
 		$(".item-share").hover(
 			function() { $(this).addClass("item-share-hover"); },
 			function() { $(this).removeClass("item-share-hover"); }
-		);
+		).click(function() {
+			idFunction(this, that.onClickShare);
+			return false;
+		});
 		
 		var idFunction = function(i, f) {
-			var p = $(i).parentsUntil(".item-share").parent()[0];
+			var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
 			var id = p.id.substring(6);
 			f(item, id);
-		}
+		};
 		$(".share-edit").click(function(e) {
 			idFunction(this, that.onEditShare);
+			return false;
 		});
 		$(".share-remove").click(function(e) {
 			idFunction(this, that.removeShare);
+			return false;
 		});
 	}
 	
@@ -580,14 +591,24 @@ function SharePlugin() {
 		$(".share-context-toolbar-option").hide();
 		$("#add-share-btn").show();
 	}
-
-	this.onAddShare = function(item) {
+	
+	this.openContext = function(toolbarId, contentTemplateId) {
 		$("#share-items").addClass("minimized");
 		$("#share-context").removeClass("minimized");
 		$(".share-context-toolbar-option").hide();
-		$("#add-share-title").show();
-		$("#share-context-addedit-template").tmpl({}).appendTo($("#share-context-content").empty());
+		$("#"+toolbarId).show();
+		$("#"+contentTemplateId).tmpl({}).appendTo($("#share-context-content").empty());
 		mollify.localize("share-context-content");
+	}
+
+	this.onClickShare = function(item, id) {
+		that.openContext('share-link-title', 'share-context-link-template');
+		
+		var share = that.getShare(id);
+	}
+	
+	this.onAddShare = function(item) {
+		that.openContext('add-share-title', 'share-context-addedit-template');
 		
 		$("#share-general-name").val('');
 		$('#share-general-active').attr('checked', true);
@@ -607,14 +628,9 @@ function SharePlugin() {
 	}
 	
 	this.onEditShare = function(item, id) {
-		var share = that.getShare(id);
+		that.openContext('edit-share-title', 'share-context-addedit-template');
 		
-		$("#share-items").addClass("minimized");
-		$("#share-context").removeClass("minimized");
-		$(".share-context-toolbar-option").hide();
-		$("#edit-share-title").show();
-		$("#share-context-addedit-template").tmpl({}).appendTo($("#share-context-content").empty());
-		mollify.localize("share-context-content");
+		var share = that.getShare(id);
 		
 		$("#share-general-name").val(share.name);
 		$("#share-general-active").attr("checked", share.active);
