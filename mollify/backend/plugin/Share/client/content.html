@@ -12,7 +12,7 @@
 	<tr height="97%">
 		<td align='left' style='vertical-align: top'>
 			<div id="share-list">
-				<div id="share-items"></div>
+				<div id="share-items"><div class="loading"></div></div>
 				<div id="share-context" class="minimized">
 					<div id="share-context-toolbar">
 						<div id="add-share-btn" class="share-context-toolbar-option"><text key="shareDialogShareAddButton" /></div>
@@ -45,11 +45,17 @@
 	<div id="share-${id}" class="${$item.itemClass()}">
 		<div class="share-info">
 			<div class="share-name">{{html $item.name()}}</div>
-			<div class="share-instructions"><text key="${$item.instructionsKey()}" /></div>
 		</div>
 		<div class="share-actions">
 			<div class="share-edit"></div>
 			<div class="share-remove"></div>
+		</div>
+		<div class="share-link-toggle">
+			<div class="share-link-toggle-title"><text key="${$item.linkTitleKey()}" /></div>
+			<div class="share-link-content">
+				<div class="share-link-instructions"><text key="shareDialogShareLinkInstructions" /></div>
+				<div class="share-link"><input type="text" readonly="yes" value="${$item.link()}"></input></div>
+			</div>
 		</div>
 	</div>
 </script>
