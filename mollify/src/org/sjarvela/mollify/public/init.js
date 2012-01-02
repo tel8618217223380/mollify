@@ -558,7 +558,7 @@ function SharePlugin() {
 				return 'shareDialogItemLinkTitle';
 			},
 			link : function() {
-				return that.url(this.data.id);
+				return that.env.service().getUrl("public/"+this.data.id);
 			}
 		};
 		
