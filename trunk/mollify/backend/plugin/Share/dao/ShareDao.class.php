@@ -29,7 +29,7 @@
 
 		public function getShares($item, $userId) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->rows();
+			$list = $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
 			
 			$res = array();
 			foreach($list as $s) {
