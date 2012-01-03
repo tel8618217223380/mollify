@@ -32,9 +32,8 @@
 			$list = $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
 			
 			$res = array();
-			foreach($list as $s) {
+			foreach($list as $s)
 				$res[] = array("id" => $s["id"], "name" => $s["name"], "active" => ($s["active"] == 1));
-			}
 			return $res;
 		}
 		
@@ -43,9 +42,9 @@
 			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, created, active) VALUES (%s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time)), ($active ? "1" : "0")));
 		}
 		
-		public function editShare($id, $name, $time, $active = TRUE) {
+		public function editShare($id, $name, $active) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s WHERE id=%s", $db->string($name, TRUE),($active ? "1" : "0"), $db->string($id, TRUE)));
+			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($id, TRUE)));
 		}
 
 		public function deleteShare($id) {
