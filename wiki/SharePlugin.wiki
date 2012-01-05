@@ -1,0 +1,45 @@
+#summary Share plugin
+
+= Introduction =
+
+Share plugin is built-in plugin that provides possibility to share any file or folder.
+
+= Configuration =
+
+Share plugin has one parameter, public uploader (optional). Configure plugin by adding following into configuration.php (or merge into existing plugins array):
+
+{{{
+	$PLUGINS = array(
+		"Share" => array(
+			"uploader" => "PATH_TO_PUBLIC_UPLOADER"
+		)
+	);
+}}}
+
+And following into client settings:
+
+{{{
+<script type="text/javascript">
+	mollify.init({
+		"service-path": "backend/",
+		"plugins": [
+			new SharePlugin()
+		]
+	});
+}}}
+
+*NOTE* After configuration is done, share plugin requires installation via Mollify update util.
+
+= Public uploader =
+
+By default, folder link will open basic HTML file uploader. With setting "uploader" the uploader can be changed.
+
+Plupload plugin (since version 1.0.6) supports public uploader. Configure it with following setting:
+
+{{{
+	$PLUGINS = array(
+		"Share" => array(
+			"uploader" => "plugin/Plupload/public"
+		)
+	);
+}}}
