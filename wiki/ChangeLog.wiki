@@ -1,6 +1,15 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.6 ===
+Released 2012/1/3
+  * Added new plugin Share, replaces old public link feature
+  * Improved support for charset conversion on non-UTF8 environments
+  * Fixed issue 332
+  * Fixed issue 334
+  * Fixed issue 338
+  * Fixed issue 340
+
 === Version 1.8.5.3 ===
 Released 2011/11/26
   * Fixed issue 327
