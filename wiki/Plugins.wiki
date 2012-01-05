@@ -50,9 +50,9 @@ See [NotificatorPlugin]
 
 See [ArchiverPlugin]
 
-== Public upload ==
+== Share ==
 
-See [PublicUploadPlugin]
+See [SharePlugin]
 
 == Comments ==
 
