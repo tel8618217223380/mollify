@@ -74,6 +74,10 @@ Usually these are due to following content in `configuration.php` file:
   * there are extra characters outside php tags: spaces, line feeds, tabs etc.
   * the file has been saved in UTF-8 without BOM information
 
+== Error `Parse error: syntax error, unexpected '{'` ==
+
+Error "`Parse error: syntax error, unexpected '{'`" occurs when PHP version is lower than the minimum required.
+
 == Timezone error in log, or file popup does not work properly ==
 
 Mollify uses PHP date function to get file modification timestamp, but if PHP timezone has not been set, this function will cause an error.
@@ -108,9 +112,7 @@ and following client setting into the index.html (merge into your existing setti
 
 == Filenames have corrupted chars, or file upload/download does not work with special chars ==
 
-Mollify operates on UTF-8, so all the data handled must be in UTF-8.
-
-First make sure your Mollify web page is set to display UTF-8 content, with following tag in head section: 
+Mollify operates on UTF-8, so all the data handled must be in UTF-8. First make sure your Mollify web page is set to display UTF-8 content, with following tag in head section: 
 
 {{{<meta http-equiv="content-type" content="text/html; charset=UTF-8">}}}
 
