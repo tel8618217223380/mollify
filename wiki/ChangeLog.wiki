@@ -1,9 +1,17 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Plupload plugin version 1.0.5 ===
+Released 2012/1/5
+  * Adds support for public upload with Share plugin
+  * Fixed error that removes non-ASCII chars in uploaded filename
+
+=== Version 1.8.6.1 ===
+Released 2012/1/5
+  * Added new plugin Share, replaces old public link feature (see [http://code.google.com/p/mollify/wiki/SharePlugin])
+
 === Version 1.8.6 ===
 Released 2012/1/3
-  * Added new plugin Share, replaces old public link feature (see [http://code.google.com/p/mollify/wiki/SharePlugin])
   * Improved support for charset conversion on non-UTF8 environments
   * Fixed issue 332
   * Fixed issue 334
