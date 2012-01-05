@@ -1,7 +1,7 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
-=== Plupload plugin version 1.0.5 ===
+=== Plupload plugin version 1.0.6 ===
 Released 2012/1/5
   * Adds support for public upload with Share plugin
   * Fixed error that removes non-ASCII chars in uploaded filename
