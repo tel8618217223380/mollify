@@ -106,6 +106,20 @@ and following client setting into the index.html (merge into your existing setti
 	</script>
 }}}
 
+== Filenames have corrupted chars, or file upload/download does not work with special chars ==
+
+Mollify operates on UTF-8, so all the data handled must be in UTF-8.
+
+First make sure your Mollify web page is set to display UTF-8 content, with following tag in head section: 
+
+{{{<meta http-equiv="content-type" content="text/html; charset=UTF-8">}}}
+
+If this is correct, then most likely your filesystem does not operate on UTF-8 (usually Windows). In this case you need to configure charset conversion:
+
+1) If you are using MySQL, make sure the charset used is UTF-8. If not sure, you can add following variable: {{{$DB_CHARSET = "utf8";}}}
+
+2) Setup conversion as instructed in [http://code.google.com/p/mollify/wiki/BackendSettings#Convert_filesystem_filenames_(_convert_filenames_)]
+
 == Downloaded files are corrupted ==
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
