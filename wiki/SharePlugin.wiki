@@ -6,7 +6,12 @@ Share plugin is built-in plugin that provides possibility to share any file or f
 
 = Configuration =
 
-Share plugin has one parameter, public uploader (optional). Configure plugin by adding following into configuration.php (or merge into existing plugins array):
+Share plugin has following settings:
+  * uploader
+
+Uploader setting is optional. If this setting is defined, all events with matching id will be logged (wildcard match is done automatically). To log all events, leave this setting out.
+
+Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
 	$PLUGINS = array(
@@ -30,7 +35,7 @@ And following into client settings:
 
 *NOTE* After configuration is done, share plugin requires installation via Mollify update util.
 
-= Public uploader =
+= Uploader setting =
 
 By default, folder link will open basic HTML file uploader. With setting "uploader" the uploader can be changed.
 
