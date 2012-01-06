@@ -343,8 +343,22 @@
 			return TRUE;
 		}
 		
-		public function findItemsWithDescription($parent, $text) {
-			$query = "SELECT item_id, description from ".$this->db->table("item_description")." d, ".$this->db->table("item_id")." i where d.item_id = i.id AND i.path like '".str_replace("'", "\'", $parent->location())."%' and description like '%".$this->db->string($text)."%'";			
+		public function findItemsWithDescription($parent, $text = FALSE, $recursive = FALSE) {
+			$p = $this->db->string(str_replace("\\", "\\\\", str_replace("'", "\'", $parent->location())));
+			
+		 	if ($recursive) {
+			 	$pathFilter = "i.path like '".$p."%'";
+		 	} else {
+				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+					$pathFilter = "i.path REGEXP '^".$p."[^/\\\\]+[/\\\\]?$'";
+				} else {
+					$pathFilter = "REGEX(i.path, \"#^".$p."[^/\\\\]+[/\\\\]?$#\")";
+				}
+			}
+			
+			$query = "SELECT item_id, description from ".$this->db->table("item_description")." d, ".$this->db->table("item_id")." i where d.item_id = i.id AND ".$pathFilter;
+			if ($text) $query .= " and description like '%".$this->db->string($text)."%'";
+			
 			return $this->db->query($query)->valueMap("item_id", "description");
 		}
 							

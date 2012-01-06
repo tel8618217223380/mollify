@@ -23,6 +23,8 @@
 	
 		protected $env;
 		
+		private $cachedDefaultPermission = FALSE;
+		
 		public function __construct($env) {
 			$this->env = $env;
 		}
@@ -164,7 +166,6 @@
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
 			$this->env->session()->param('username', $user["name"]);
-			$this->env->session()->param('default_permission', $this->env->configuration()->getDefaultPermission($user["id"]));
 			if ($auth != NULL) $this->env->session()->param('auth', $auth);
 		}
 		
@@ -207,8 +208,11 @@
 		}
 		
 		public function getDefaultPermission() {
-			if (!$this->isAuthenticated()) return $this->env->configuration()->getDefaultPermission();
-			return $this->env->session()->param('default_permission');
+			if (!$this->cachedDefaultPermission) {
+				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission();
+				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->getUserId());
+			}
+			return $this->cachedDefaultPermission;
 		}
 		
 		public function assertRights($permissions, $required, $desc = "Unknown item/action") {

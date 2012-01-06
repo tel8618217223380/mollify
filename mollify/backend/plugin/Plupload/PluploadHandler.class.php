@@ -39,7 +39,7 @@
 			$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
 		
 			// remove slashes (/ and \) and quotes (" and ')
-			$fileName = preg_replace('/[\x47\x92\x34\x39]+/', '', $fileName);
+			$fileName = preg_replace("/[\47\92\34\39]+/", "", $fileName);
 			
 			// Make sure the fileName is unique but only if chunking is disabled
 			if ($chunks < 2 && file_exists($targetDir.DIRECTORY_SEPARATOR.$fileName)) {

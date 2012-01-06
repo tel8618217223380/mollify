@@ -30,7 +30,7 @@
 		
 		public function preData($parent, $text) {
 			if (!$this->searchDescriptions) return NULL;
-			$descMatches = $this->env->configuration()->findItemsWithDescription($parent, $text);
+			$descMatches = $this->env->configuration()->findItemsWithDescription($parent, $text, TRUE);
 			//Logging::logDebug(Util::array2str($descMatches));
 			return $descMatches;
 		}
