@@ -67,7 +67,8 @@
 			'wav' => "audio/wav",
 			'divx' => "video/divx",
 			'avi' => "video/divx",
-			'mkv' => "video/divx"
+			'mkv' => "video/divx",
+			'pdf' => "application/pdf"
         );
         
         private $mimeTypes;

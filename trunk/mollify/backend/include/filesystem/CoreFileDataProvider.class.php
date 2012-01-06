@@ -23,13 +23,15 @@
 				
 		public function getRequestData($parent, $items, $result, $key, $requestData) {
 			$result = array();
-			foreach($items as $i) {
-				if (strcmp("core-file-modified", $key) === 0)
+			if (strcmp("core-file-modified", $key) === 0) {
+				foreach($items as $i) {
 					$result[$i->id()] = $this->env->formatTimestampInternal($i->lastModified());
-				if (strcmp("core-item-description", $key) === 0)
-					$result[$i->id()] = $this->env->filesystem()->description($i);
-
+				
+				}
+			} else if (strcmp("core-item-description", $key) === 0) {
+				$result = $this->env->configuration()->findItemsWithDescription($parent);
 			} 
+			
 			return $result;
 		}
 				
