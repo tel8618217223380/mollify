@@ -8,7 +8,7 @@ Released 2012/1/5
 
 === Version 1.8.6.1 ===
 Released 2012/1/5
-  * Added new plugin Share, replaces old public link feature (see [http://code.google.com/p/mollify/wiki/SharePlugin])
+  * Added new plugin Share, replaces old public link feature and public upload plugin (see [http://code.google.com/p/mollify/wiki/SharePlugin])
 
 === Version 1.8.6 ===
 Released 2012/1/3
