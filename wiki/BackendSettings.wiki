@@ -17,7 +17,6 @@ $SETTINGS = array(
 	"enable_folder_actions" => TRUE,				// enable folder actions
 	"enable_change_password" => TRUE,				// enable change password
 	"enable_descriptions" => FALSE,					// enable descriptions
-	"enable_public_links" => FALSE,					// enable public links
 	"enable_mail_notification" => FALSE,				// enable email notification
 	"mail_notificator_class" => "mail/MailNotificator.class.php",	// mail notificator class
 	"mail_notification_from" => "Admin",				// mail notification sender
@@ -90,10 +89,6 @@ By default, changing password is enabled, but setting this to FALSE you can prev
 == Enable descriptions(`enable_descriptions`) ==
 
 Enable file and folder descriptions (by default disabled).
-
-== Enable public links (`enable_public_links`) ==
-
-Enable public links, which allow downloading files without user account (by default disabled). When enabled, there will be a new option in the context popup actions menu for getting the link.
 
 == Enable email notification (`enable_email_notification`) ==
 
