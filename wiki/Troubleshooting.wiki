@@ -90,6 +90,12 @@ To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mol
 	);
 }}}
 
+== Error `Could not resolve host` ==
+
+Some features, like sharing file links, requires the public URL to access the resources. If possible, Mollify will try to resolve this, but in some cases this information is not available.
+
+In this case, you need to define this manually with setting "host public address", see http://code.google.com/p/mollify/wiki/BackendSettings#Host_public_address_(_host_public_address_)
+
 == Some operations, like rename or editing descriptions, don't work ==
 
 Mollify uses REST HTTP protocol for the requests, which means all HTTP methods (ie. GET, PUT, POST and DELETE) must be supported by the web server. If these are not supported, many operations will fail (error in the server log indicate protocol error or missing resource).
