@@ -74,7 +74,7 @@ Usually these are due to following content in `configuration.php` file:
   * there are extra characters outside php tags: spaces, line feeds, tabs etc.
   * the file has been saved in UTF-8 without BOM information
 
-== Error `Parse error: syntax error, unexpected '{'` ==
+== Error "`Parse error: syntax error, unexpected '{'`" ==
 
 Error "`Parse error: syntax error, unexpected '{'`" occurs when PHP version is lower than the minimum required.
 
@@ -90,7 +90,7 @@ To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mol
 	);
 }}}
 
-== Error `Could not resolve host` ==
+== Error "`Cannot resolve host`" ==
 
 Some features, like sharing file links, requires the public URL to access the resources. If possible, Mollify will try to resolve this, but in some cases this information is not available.
 
