@@ -9,14 +9,14 @@ Share plugin is built-in plugin that provides possibility to share any file or f
 Share plugin has following settings:
   * uploader
 
-Uploader setting is optional. If this setting is defined, all events with matching id will be logged (wildcard match is done automatically). To log all events, leave this setting out.
+Uploader setting is optional. If this setting is defined, the given uploader is used for folder share links. See chapter "Uploader setting" for more info.
 
 Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
 	$PLUGINS = array(
 		"Share" => array(
-			"uploader" => "PATH_TO_PUBLIC_UPLOADER"
+			"uploader" => "PATH_TO_PUBLIC_UPLOADER"		// optional
 		)
 	);
 }}}
