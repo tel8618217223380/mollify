@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Plupload plugin version 1.0.8 ===
+Released 2012/1/19
+  * Fixed uploaded filename cleaning issue
+
 === Plupload plugin version 1.0.7 ===
 Released 2012/1/14
   * Fixed uploaded filename cleaning issue
