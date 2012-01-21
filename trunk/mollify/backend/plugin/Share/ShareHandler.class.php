@@ -31,8 +31,8 @@
 			return $this->dao()->getShares($item, $this->env->authentication()->getUserId());
 		}
 
-		public function addShare($item, $name, $active) {
-			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), time(), $active);
+		public function addShare($item, $name, $expirationTs, $active) {
+			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), $expirationTs, time(), $active);
 		}
 
 		public function editShare($id, $name, $active) {
@@ -44,7 +44,7 @@
 		}
 				
 		public function processShareGet($id) {
-			$share = $this->dao()->getShare($id);
+			$share = $this->dao()->getShare($id, time());
 			if (!$share) throw new ServiceException("INVALID_REQUEST");
 			// TODO check validity
 			

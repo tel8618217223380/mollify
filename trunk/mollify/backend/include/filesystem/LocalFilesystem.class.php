@@ -72,7 +72,7 @@
 		}
 		
 		public function details($item) {
-			$datetimeFormat = $this->filesystemInfo->datetimeFormat();
+			$datetimeFormat = $this->internalTimestampFormat();
 			
 			$details = array("id" => $item->id());
 			if ($item->isFile()) {

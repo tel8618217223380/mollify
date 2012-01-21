@@ -24,7 +24,23 @@
 		public function isAuthenticationRequired() {
 			return TRUE;
 		}
+		
+		public function internalTimestampFormat() {
+			return "YmdHis";
+		}
+		
+		public function formatTimestampInternal($ts) {
+			return date($this->internalTimestampFormat(), $ts);
+		}
 
+		public function createTimestampFromInternal($val) {
+			$str = "".$val;
+			$str = sprintf("%s-%s-%s %s:%s:%s", substr($val, 0, 4), substr($val, 4, 2), substr($val, 6, 2), substr($val, 8, 2), substr($val, 10, 2), substr($val, 12, 2));
+			$ts = strtotime($str);
+			Logging::logDebug("ts ".$val." => ".date("Y-m-d H:i:s", $ts));
+			return $ts;
+		}
+		
 		public function getSupportedFeatures() {
 			return array('change_password', 'descriptions', 'administration', 'user_groups', 'permission_inheritance');
 		}

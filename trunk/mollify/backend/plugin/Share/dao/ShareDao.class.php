@@ -22,9 +22,12 @@
 			return $db->query("select count('id') from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE))->value(0);
 		}
 
-		public function getShare($id) {
+		public function getShare($id, $mustBeValidAfter = NULL) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select id, name, item_id, active from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE))->firstRow();
+			$query = "select id, name, item_id, active from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE);
+			if ($mustBeValidAfter)
+				$query .= ' and (expiration is not null or expiration >= '.$db->string($this->formatTimestampInternal($mustBeValidAfter));
+			return $db->query($query)->firstRow();
 		}
 
 		public function getShares($item, $userId) {
@@ -37,14 +40,14 @@
 			return $res;
 		}
 		
-		public function addShare($id, $item, $name, $userId, $time, $active = TRUE) {
+		public function addShare($id, $item, $name, $userId, $time, $expirationTime, $active = TRUE) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, created, active) VALUES (%s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string(date('YmdHis', $time)), ($active ? "1" : "0")));
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string(date('YmdHis', $time)), ($active ? "1" : "0")));
 		}
 		
-		public function editShare($id, $name, $active) {
+		public function editShare($id, $name, $expirationTime, $active) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($id, TRUE)));
+			$db->update(sprintf("UPDATE ".$db->table("share")." SET name = %s, active = %s, expiration = %s WHERE id=%s", $db->string($name, TRUE), ($active ? "1" : "0"), $db->string($expirationTime), $db->string($id, TRUE)));
 		}
 
 		public function deleteShare($id) {

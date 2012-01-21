@@ -72,7 +72,7 @@
 
 			$details = array("id" => $item->id());
 			if ($item->isFile()) {
-				$details["last_changed"] = date($this->env->filesystem()->datetimeFormat(), strtotime($hdr["last-modified"]));
+				$details["last_changed"] = date($this->internalTimestampFormat(), strtotime($hdr["last-modified"]));
 			}
 			return $details;
 		}
