@@ -39,9 +39,11 @@
 			
 			$item = $this->item($this->path[1]);
 			$data = $this->request->data;
-			if (!isset($data["name"])) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->addShare($item, $data["name"], isset($data["active"]) ? $data["active"] : TRUE);
+			if (!isset($data["name"])) throw $this->invalidRequestException("No data");			
+			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
+			
+			$this->handler()->addShare($item, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE);
 			$this->response()->success($this->handler()->getShares($item));
 		}
 		

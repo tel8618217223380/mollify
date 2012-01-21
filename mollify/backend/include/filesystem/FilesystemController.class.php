@@ -274,10 +274,6 @@
 			}
 			return $existing;
 		}
-
-		public function datetimeFormat() {
-			return "YmdHis";
-		}
 		
 		public function env() {
 			return $this->env;

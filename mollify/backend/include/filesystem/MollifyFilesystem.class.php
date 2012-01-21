@@ -98,6 +98,10 @@
 		protected function itemWithPath($path) {
 			return $this->createItem($this->itemId($path), $path);
 		}
+		
+		protected function internalTimestampFormat() {
+			return $this->filesystemInfo->env()->configuration()->internalTimestampFormat();
+		}
 
 		public function __toString() {
 			return get_class($this)." (".$this->id.") ".$this->name;
