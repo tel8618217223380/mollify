@@ -10,9 +10,9 @@
 	 * this entire header must remain intact.
 	 */
 
-	class CommentServices extends ServicesBase {		
+	class CommentServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) == 1;
+			return TRUE;
 		}
 		
 		public function isAuthenticationRequired() {
@@ -35,6 +35,16 @@
 			
 			$this->handler()->addComment($this->env->authentication()->getUserId(), $item, $data["comment"]);
 			$this->response()->success(array("count" => $this->handler()->getCommentCount($item)));
+		}
+		
+		public function processDelete() {
+			if (count($this->path) != 2) throw $this->invalidRequestException();
+			
+			$item = $this->item($this->path[0]);
+			$id = $this->path[1];
+			
+			$this->handler()->removeComment($item, $id);
+			$this->response()->success($this->handler()->getComments($item));
 		}
 		
 		private function handler() {

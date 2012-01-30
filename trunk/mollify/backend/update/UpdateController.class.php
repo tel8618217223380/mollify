@@ -136,7 +136,7 @@
 
 				for ($i = $indexFrom; $i <= $indexTo; $i++) {
 					$stepTo = $versionHistory[$i];
-					$this->installer->util()->updateVersionStep($stepFrom, $stepTo);
+					$this->installer->util()->updatePluginVersionStep($id, $stepFrom, $stepTo);
 					$stepFrom = $stepTo;
 				}
 				return "Plugin ".$id." updated to ".$this->versionString($current);

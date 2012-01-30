@@ -32,8 +32,8 @@ public abstract class Dialog extends DialogBox {
 	private final List<ViewListener> viewListeners = new ArrayList();
 	private final List<DialogMoveListener> dialogMoveListeners = new ArrayList();
 
-	public Dialog(String title, String style) {
-		super(false, true);
+	public Dialog(String title, String style, boolean modal) {
+		super(false, modal);
 		this.setStylePrimaryName(StyleConstants.DIALOG);
 		if (style != null)
 			this.addStyleDependentName(style);

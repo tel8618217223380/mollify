@@ -106,9 +106,10 @@ public class NativeDialogManager {
 		String title = spec.getString("title");
 		String style = spec.hasValue("style") ? "custom" : spec
 				.getString("style");
+		boolean modal = spec.hasValue("modal") ? spec.getBoolean("modal") : true;
 		final JavaScriptObject cb = spec.getJsObj("on_show");
 
-		dialogManager.showCustomDialog(title, style, new HTML(html),
+		dialogManager.showCustomDialog(title, style, modal, new HTML(html),
 				new CustomDialogListener() {
 					@Override
 					public void onShow(CustomContentDialog d) {

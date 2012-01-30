@@ -45,6 +45,8 @@ retrieveUrlNotFound: "Resource not found: {0}",
 retrieveUrlNotAuthorized: "Unauthorized resource: {0}",
 
 shortDateTimeFormat: "M/d/yyyy h:mm:ss a",
+shortDateFormat: "M/d/yyyy",
+timeFormat: "h:mm:ss a",
 
 pleaseWait: "Please wait...",
 

@@ -32,7 +32,8 @@
 		}
 
 		public function addShare($item, $name, $expirationTs, $active) {
-			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), $expirationTs, time(), $active);
+			$created = $this->env->configuration()->formatTimestampInternal(time());
+			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), $expirationTs, $created, $active);
 		}
 
 		public function editShare($id, $name, $active) {

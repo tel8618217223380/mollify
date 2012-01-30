@@ -63,7 +63,7 @@ public class SearchResultDialog extends ResizableDialog implements
 			DefaultItemContextPopupFactory itemContextPopupFactory,
 			FileSystemActionHandler fileSystemActionHandler, DropBox dropBox) {
 		super(textProvider.getText(Texts.searchResultsDialogTitle),
-				"search-results");
+				"search-results", true);
 		this.result = result;
 
 		this.textProvider = textProvider;

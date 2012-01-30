@@ -61,7 +61,7 @@
 </script>
 
 <script id="share-context-addedit-template" type="text/x-jquery-tmpl">
-	<!--div id="title-general" class="context-group"><text key="shareDialogShareGeneralTitle" /></div-->
+	<div id="title-general" class="context-group"><text key="shareDialogShareGeneralTitle" /></div>
 	<div id="title-name" class="option-title"><text key="shareDialogShareNameTitle" /></div><input id="share-general-name" type="text" class="option-value"></input>
 	<div id="title-active" class="option-title"><text key="shareDialogShareActiveTitle" /></div><input id="share-general-active" type="checkbox" class="option-value"></input>
 	
@@ -70,9 +70,8 @@
 	<input id="share-protection-pw" type="radio" class="share-protection-option" value="pw" title="pw"><text key="shareDialogSharePwProtectionTitle" /></input>
 	<input id="share-protection-pw-value" type="text" class="option-value"></input-->
 	
-	<!--div id="title-validity"><text key="shareDialogShareValidityTitle" /></div>
-	<input id="share-validity-expirationdate" type="checkbox">Expires at</input>
-	<input id="share-validity-expirationdate-value" type="text"></input-->
+	<div id="title-validity" class="context-group"><text key="shareDialogShareValidityTitle" /></div>
+	<div id="title-expiration" class="option-title"><text key="shareDialogShareExpirationTitle" /></div><input id="share-validity-expirationdate-value" class="option-value" type="text"></input><input id="share-validity-expirationtime-value" class="option-value" type="text"></input>
 	
 	<div id="context-buttons">
 		<button id="share-addedit-btn-ok"><text key="shareDialogSave" /></button>

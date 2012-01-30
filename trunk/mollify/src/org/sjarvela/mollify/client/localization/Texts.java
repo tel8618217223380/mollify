@@ -141,8 +141,6 @@ public enum Texts implements ResourceId {
 
 	fileActionEditTitle,
 
-	fileActionPublicLinkTitle,
-
 	filePreviewTitle,
 
 	fileDetailsActionsTitle,

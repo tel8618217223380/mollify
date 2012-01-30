@@ -50,10 +50,11 @@
 			
 			$this->settings = new Settings($this->settingsVar);
 			$this->session = new Session($this->settings);
-			$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
 			$this->authentication = new InstallerAuthentication($this);
-			$this->features = new Features($this->configuration, $this->settings);
 			$this->plugins = new PluginController($this);
+			$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
+			$this->configuration->initialize($this);
+			$this->features = new Features($this->configuration, $this->settings);
 			
 			$this->plugins->setup();
 			$this->session->initialize($this);

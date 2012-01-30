@@ -44,7 +44,7 @@ public class FileViewer extends ResizableDialog {
 	public FileViewer(TextProvider textProvider, ViewManager viewManager,
 			ExternalService service, String title, String embeddedUrl,
 			String fullUrl) {
-		super(title, StyleConstants.FILE_VIEWER);
+		super(title, StyleConstants.FILE_VIEWER, true);
 
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;

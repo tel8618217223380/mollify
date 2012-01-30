@@ -33,8 +33,8 @@ public abstract class ResizableDialog extends Dialog implements
 	private int contentWidth = -1;
 	private int contentHeight = -1;
 
-	public ResizableDialog(String title, String style) {
-		super(title, style);
+	public ResizableDialog(String title, String style, boolean modal) {
+		super(title, style, modal);
 	}
 
 	@Override
