@@ -70,8 +70,8 @@ public class DefaultDialogManager implements DialogManager {
 	}
 
 	@Override
-	public CustomContentDialog showCustomDialog(String title, String style,
+	public CustomContentDialog showCustomDialog(String title, String style, boolean modal,
 			HTML html, CustomDialogListener listener) {
-		return new DefaultCustomContentDialog(title, style, html, listener);
+		return new DefaultCustomContentDialog(title, style, modal, html, listener);
 	}
 }

@@ -32,7 +32,7 @@ public interface DialogManager {
 
 	WaitDialog openWaitDialog(String title, String message);
 
-	CustomContentDialog showCustomDialog(String title, String style, HTML html,
-			CustomDialogListener listener);
+	CustomContentDialog showCustomDialog(String title, String style,
+			boolean modal, HTML html, CustomDialogListener listener);
 
 }

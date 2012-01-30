@@ -55,7 +55,7 @@ public class JsObj extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean hasValue(String name) /*-{
-		if (!this[name])
+		if (this[name] == undefined)
 			return false;
 		return true;
 	}-*/;

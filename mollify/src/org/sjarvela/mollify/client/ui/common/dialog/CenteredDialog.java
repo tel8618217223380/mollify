@@ -11,9 +11,12 @@
 package org.sjarvela.mollify.client.ui.common.dialog;
 
 public abstract class CenteredDialog extends Dialog {
-
 	public CenteredDialog(String title, String style) {
-		super(title, style);
+		this(title, style, true);
+	}
+	
+	public CenteredDialog(String title, String style, boolean modal) {
+		super(title, style, modal);
 	}
 
 	protected void initialize() {

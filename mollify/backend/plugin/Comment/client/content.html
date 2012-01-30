@@ -30,8 +30,9 @@
 
 <script id="comment-template" type="text/x-jquery-tmpl"> 
 	<div class="comment-content">
-		<div class="comment-header">
+		<div id="comment-${id}" class="comment-header">
 			<div class="comment-user">${username}</div>
+			{{if remove}}<div class="comment-remove-action"><text key="commentsDialogRemoveComment" /></div>{{/if}}
 			<div class="comment-time">${time}</div>
 		</div>
 		<div class="comment-text">{{html comment}}</div>

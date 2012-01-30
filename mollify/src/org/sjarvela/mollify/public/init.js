@@ -53,6 +53,10 @@
 					return '<div class="item-description-container" title="'+stripped+'">'+desc+'</div>';
 				}
 			});
+			
+			$.datepicker.setDefaults({
+				dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
+			});
 		}
 		
 		this.getSettings = function() {
@@ -109,6 +113,46 @@
 			});
 		}
 		
+		this.formatDate = function(d) {
+			return $.datepicker.formatDate(getDateFormat(), d);
+		}
+
+		this.formatDateTime = function(time, fmt) {
+			return time.format(fmt);
+		}
+
+		this.parseDate = function(dateFmt, date, time) {
+			if (!date || date.length == 0) return null;
+			
+			var t = $.datepicker.parseDate(dateFmt, date);
+			if (!time || time.length < 5) {
+				t.setHours("00");
+				t.setMinutes("00");
+				t.setSeconds("00");
+			} else {
+				//TODO timeFmt
+				t.setHours(time.substring(0,2));
+				t.setMinutes(time.substring(3,5));
+				t.setSeconds(time.length > 6 ? time.substring(7,9) : "00");
+			}
+			return t;
+		}
+
+		this.parseInternalTime = function(time) {
+			var ts = new Date();
+			ts.setYear(time.substring(0,4));
+			ts.setMonth(time.substring(4,6) - 1);
+			ts.setDate(time.substring(6,8));
+			ts.setHours(time.substring(8,10));
+			ts.setMinutes(time.substring(10,12));
+			ts.setSeconds(time.substring(12,14));
+			return ts;
+		}
+
+		this.formatInternalTime = function(time) {
+			return time.format('yymmddHHMMss', time);
+		}
+		
 		this.texts = new function(){
 			var tt = this;
 			this.locale = '';
@@ -134,9 +178,9 @@ function isArray(o) {
 }
 
 if(typeof String.prototype.trim !== 'function') {
-  String.prototype.trim = function() {
-    return this.replace(/^\s+|\s+$/g, ''); 
-  }
+	String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, ''); 
+	}
 }
 
 function strpos(haystack, needle, offset) {
@@ -266,18 +310,35 @@ function CommentPlugin() {
 		});
 	}
 	
+	this.onRemoveComment = function(item, id) {		
+		that.env.service().del("comment/"+item.id+"/"+id, function(result) {
+			that.onShowComments(item, result);
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+	
 	this.onShowComments = function(item, comments) {
 		if (comments.length == 0) {
 			$("#comments-list").html("<message>"+that.t("commentsDialogNoComments")+"</message>");
 			return;
 		}
 		
-		for (var i=0; i<comments.length; i++) {
+		var isAdmin = that.env.session().isAdmin();
+		var userId = that.env.session().info()['user_id'];
+		
+		for (var i=0,j=comments.length; i<j; i++) {
 			comments[i].time = that.env.texts().formatInternalTime(comments[i].time);
 			comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
+			comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
 		}
 
 		$("#comment-template").tmpl(comments).appendTo("#comments-list");
+		mollify.localize("comments-list");
+		$(".comment-remove-action").click(function() {
+			var id = $(this).parent().attr('id').substring(8);
+			that.onRemoveComment(item, id);
+		});
 	}
 	
 	this.url = function(p) {
@@ -492,6 +553,7 @@ function SharePlugin() {
 	
 	this.openShares = function(item) {
 		that.env.dialog().showDialog({
+			modal: false,
 			title: that.t("shareDialogTitle"),
 			html: "<div id='share-dialog-content' class='loading' />",
 			on_show: function(d) { that.onShowSharesDialog(d, item); }
@@ -607,6 +669,7 @@ function SharePlugin() {
 		$("#"+toolbarId).show();
 		$("#"+contentTemplateId).tmpl({}).appendTo($("#share-context-content").empty());
 		mollify.localize("share-context-content");
+		$("#share-validity-expirationdate-value").datepicker();
 	}
 	
 	this.onAddShare = function(item) {
@@ -618,10 +681,11 @@ function SharePlugin() {
 		$("#share-addedit-btn-ok").click(function() {
 			var name = $("#share-general-name").val();
 			var active = $("#share-general-active").is(":checked");
+			var expiration = mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
 			
 			$("#share-items").empty().append('<div class="loading"/>');
 			that.closeAddEdit();
-			that.addShare(item, name || '', active);
+			that.addShare(item, name || '', expiration, active);
 		});
 		
 		$("#share-addedit-btn-cancel").click(function() {
@@ -640,10 +704,11 @@ function SharePlugin() {
 		$("#share-addedit-btn-ok").click(function() {
 			var name = $("#share-general-name").val();
 			var active = $("#share-general-active").is(":checked");
+			var expiration = mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
 			
 			$("#share-items").empty().append('<div class="loading"/>')
 			that.closeAddEdit();
-			that.editShare(item, share.id, name || '', active);
+			that.editShare(item, share.id, name || '', expiration, active);
 		});
 		
 		$("#share-addedit-btn-cancel").click(function() {
@@ -651,8 +716,8 @@ function SharePlugin() {
 		});
 	}
 	
-	this.addShare = function(item, name, active) {
-		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, active: active }, function(result) {
+	this.addShare = function(item, name, expiration, active) {
+		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, expiration: expiration, active: active }, function(result) {
 			that.refreshShares(item, result);
 			that.updateShareList(item);
 		},	function(code, error) {
@@ -660,11 +725,12 @@ function SharePlugin() {
 		});
 	}
 
-	this.editShare = function(item, id, name, active) {
-		that.env.service().put("share/"+id, { id: id, name: name, active: active }, function(result) {
+	this.editShare = function(item, id, name, expiration, active) {
+		that.env.service().put("share/"+id, { id: id, name: name, expiration: expiration, active: active }, function(result) {
 			var share = that.getShare(id);
 			share.name = name;
 			share.active = active;
+			share.expiration = expiration;
 			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);
@@ -674,8 +740,8 @@ function SharePlugin() {
 	this.removeShare = function(item, id) {
 		that.env.service().del("share/"+id, function(result) {
 			var i = that.shareIds.indexOf(id);
-			that.shareIds.splice(i,i);
-			that.shares.splice(i,i);
+			that.shareIds.splice(i, 1);
+			that.shares.splice(i, 1);
 			that.updateShareList(item);
 		},	function(code, error) {
 			alert(error);

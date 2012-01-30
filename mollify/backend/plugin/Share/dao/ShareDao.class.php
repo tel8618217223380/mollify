@@ -32,17 +32,17 @@
 
 		public function getShares($item, $userId) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select id, name, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
+			$list = $db->query("select id, name, expiration, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
 			
 			$res = array();
 			foreach($list as $s)
-				$res[] = array("id" => $s["id"], "name" => $s["name"], "active" => ($s["active"] == 1));
+				$res[] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1));
 			return $res;
 		}
 		
-		public function addShare($id, $item, $name, $userId, $time, $expirationTime, $active = TRUE) {
+		public function addShare($id, $item, $name, $userId, $expirationTime, $time, $active = TRUE) {
 			$db = $this->env->configuration()->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string(date('YmdHis', $time)), ($active ? "1" : "0")));
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0")));
 		}
 		
 		public function editShare($id, $name, $expirationTime, $active) {

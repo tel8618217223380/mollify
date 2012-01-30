@@ -68,7 +68,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 			FileUploadService service, FileSystemInfo info,
 			FileUploadListener listener, DialogManager dialogManager) {
 		super(textProvider.getText(Texts.fileUploadDialogTitle),
-				StyleConstants.FILE_UPLOAD_DIALOG);
+				StyleConstants.FILE_UPLOAD_DIALOG, true);
 		this.info = info;
 		this.listener = listener;
 		this.dialogManager = dialogManager;

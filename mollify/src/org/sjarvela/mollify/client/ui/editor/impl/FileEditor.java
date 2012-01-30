@@ -43,7 +43,7 @@ public class FileEditor extends ResizableDialog {
 	public FileEditor(TextProvider textProvider, ViewManager viewManager,
 			DialogManager dialogManager, ExternalService service, String title,
 			String embeddedUrl, String fullUrl) {
-		super(title, "mollify-file-editor");
+		super(title, "mollify-file-editor", true);
 
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;

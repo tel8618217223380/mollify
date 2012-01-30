@@ -19,9 +19,9 @@ public class DefaultCustomContentDialog extends ResizableDialog implements
 		CustomContentDialog {
 	private final Widget content;
 
-	public DefaultCustomContentDialog(String title, String style,
+	public DefaultCustomContentDialog(String title, String style, boolean modal,
 			Widget content, final CustomDialogListener listener) {
-		super(title, style);
+		super(title, style, modal);
 		this.content = content;
 
 		this.addViewListener(new ViewListener() {

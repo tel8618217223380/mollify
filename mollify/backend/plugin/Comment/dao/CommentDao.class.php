@@ -36,13 +36,20 @@
 		
 		public function getComments($item) {
 			$db = $this->env->configuration()->db();
-			return $db->query("select u.id as user_id, u.name as username, c.time as time, c.comment as comment from ".$db->table("comment")." c, ".$db->table("user")." u where c.`item_id` = ".$db->string($item->id(), TRUE)." and u.id = c.user_id order by time desc")->rows();
+			return $db->query("select c.id as id, u.id as user_id, u.name as username, c.time as time, c.comment as comment from ".$db->table("comment")." c, ".$db->table("user")." u where c.`item_id` = ".$db->string($item->id(), TRUE)." and u.id = c.user_id order by time desc")->rows();
 		}
 		
 		public function addComment($userId, $item, $time, $comment) {
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("comment")." (user_id, item_id, time, comment) VALUES (%s, %s, %s, %s)", $db->string($userId, TRUE), $db->string($item->id(), TRUE), $db->string(date('YmdHis', $time)), $db->string($comment, TRUE)));
 			return $db->lastId();
+		}
+		
+		public function removeComment($item, $id, $userId = NULL) {
+			$db = $this->env->configuration()->db();
+			$userRestriction = "";
+			if ($userId != NULL) $userRestriction = " and user_id=".$db->string($userId, TRUE);
+			return $db->update("DELETE FROM ".$db->table("comment")." WHERE item_id = ".$db->string($item->id(), TRUE)." and id=".$db->string($id, TRUE).$userRestriction);
 		}
 		
 		public function deleteComments($item) {

@@ -47,7 +47,13 @@
 		public function addComment($user, $item, $comment) {
 			$this->getDao()->addComment($user, $item, time(), $comment);
 		}
-				
+		
+		public function removeComment($item, $commentId) {
+			$user = $this->env->authentication()->getUserId();
+			if ($this->env->authentication()->isAdmin()) $user = NULL;
+			$this->getDao()->removeComment($item, $commentId, $user);
+		}
+						
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
 			$counts = $this->getDao()->getCommentCountForChildren($parent);
 			$result = array();

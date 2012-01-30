@@ -137,10 +137,6 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		if (item.isFile() || !((Folder) item).isRoot())
 			actions.add(Action.addToDropbox, textProvider
 					.getText(Texts.mainViewSelectActionAddToDropbox));
-		if (item.isFile()
-				&& sessionProvider.getSession().getFeatures().publicLinks())
-			actions.add(FileSystemAction.publicLink,
-					textProvider.getText(Texts.fileActionPublicLinkTitle));
 		actions.addSeparator();
 		if (writable)
 			actions.add(FileSystemAction.rename,
