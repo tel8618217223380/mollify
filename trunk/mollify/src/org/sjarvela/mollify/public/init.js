@@ -335,7 +335,12 @@ function CommentPlugin() {
 
 		$("#comment-template").tmpl(comments).appendTo("#comments-list");
 		mollify.localize("comments-list");
-		$(".comment-remove-action").click(function() {
+		$(".comment-content").hover(
+			function () { $(this).addClass("hover"); }, 
+			function () { $(this).removeClass("hover"); }
+		);
+		$(".comment-remove-action").click(function(e) {
+			e.preventDefault();
 			var id = $(this).parent().attr('id').substring(8);
 			that.onRemoveComment(item, id);
 		});
@@ -521,12 +526,13 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-				
+		that.clip = false;
+		
 		mollify.importCss(that.url("style.css"));
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 		
 		that.env.addItemContextProvider(function(item) {
-			return {
+			/*return {
 				components : [{
 					html: "<div id='file-item-share'></div>",
 					on_init: function(id, c, item, details) {
@@ -545,7 +551,20 @@ function SharePlugin() {
 					},
 					index: 6
 				}]
-			}
+			}*/
+			return {
+				actions: {
+					secondary: [
+						{ title: "-" },
+						{
+							title: that.t('itemContextShareMenuTitle'),
+							callback: function(item) {
+								that.openShares(item);
+							}
+						}
+					]
+				}
+			};
 		}, function(item) {
 			return {"plugin-share":[]};
 		});
@@ -628,7 +647,16 @@ function SharePlugin() {
 		mollify.localize("share-list");
 
 		$(".item-share").hover(
-			function() { $(this).addClass("item-share-hover"); },
+			function() {
+				var el = $(this);
+				el.addClass("item-share-hover");
+				
+				var id = el.attr('id');
+				var clip = new ZeroClipboard.Client();
+				clip.addEventListener('onComplete', function(c,t) { alert("copied "+t); });
+				clip.setText(that.env.service().getUrl("public/"+id));
+				clip.glue("share-copy-"+id);
+			},
 			function() { $(this).removeClass("item-share-hover"); }
 		);
 		
@@ -639,9 +667,23 @@ function SharePlugin() {
 		};
 		$(".share-link-toggle-title").click(function() {
 			var t = this;
-			idFunction(this, function(item, id) {
+			idFunction(t, function(item, id) {
 				if (!that.getShare(id).active) return;
-				$(t).parent().toggleClass("open");
+				
+				var linkContainer = $(t).parent();
+				var open = linkContainer.hasClass("open");
+				if (!open) $(".share-link-toggle").removeClass("open");
+				linkContainer.toggleClass("open");
+				
+				/*if (that.clip) {
+					that.clip.destroy();
+				}
+				that.clip = new ZeroClipboard.Client();
+				that.clip.addEventListener('onComplete', function(c,t) { alert("copied "+t); });
+
+				var link = that.env.service().getUrl("public/"+id);
+				that.clip.setText(link);
+				that.clip.glue("share-copy-"+id);*/
 			});
 			return false;
 		});
@@ -747,7 +789,7 @@ function SharePlugin() {
 			alert(error);
 		});
 	}
-		
+	
 	this.url = function(p) {
 		return that.env.service().getPluginUrl("Share")+"client/"+p;
 	}

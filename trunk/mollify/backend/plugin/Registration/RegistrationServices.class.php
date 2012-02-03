@@ -62,7 +62,7 @@
 			
 			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
 			
-			$this->notify($name, $email, $key);
+			$this->notify($name, $email, $key, $password);
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
 			$this->response()->success(array());
 		}
@@ -187,10 +187,10 @@
 			}
 		}
 		
-		private function notify($name, $email, $key) {
+		private function notify($name, $email, $key, $password) {
 			require_once("Messages.php");
 			$link = $this->env->getPluginUrl("Registration")."?confirm=".urlencode($email)."&key=".$key;
-			$values = array("name" => $name, "email" => $email, "link" => $link);
+			$values = array("name" => $name, "email" => $email, "link" => $link, "password" => $password);
 			
 			$subject = Util::replaceParams($REGISTRATION_NOTIFICATION_SUBJECT, $values);
 			$msg = Util::replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
