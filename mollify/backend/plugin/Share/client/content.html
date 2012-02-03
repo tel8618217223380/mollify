@@ -50,13 +50,16 @@
 			<div class="share-edit"></div>
 			<div class="share-remove"></div>
 		</div>
-		<div class="share-link-toggle">
+		<div id="share-link-copy-container" style="position:relative">
+			<div id="share-copy-${id}" class="share-link-copy"><text key="shareDialogShareLinkCopyToClipboard" /></div>
+		</div>
+		<!--div class="share-link-toggle">
 			<div class="share-link-toggle-title"><text key="${$item.linkTitleKey()}" /></div>
 			<div class="share-link-content">
 				<div class="share-link-instructions"><text key="shareDialogShareLinkInstructions" /></div>
 				<div class="share-link"><input type="text" readonly="yes" value="${$item.link()}"></input></div>
 			</div>
-		</div>
+		</div-->
 	</div>
 </script>
 

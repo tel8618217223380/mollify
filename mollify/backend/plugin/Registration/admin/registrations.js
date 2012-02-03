@@ -160,7 +160,7 @@ function PendingRegistrationsView() {
 }
 
 function register(username, email, password, success, fail) {
-	var data = JSON.stringify({name:username, password:generate_md5(password), email:email});
+	var data = JSON.stringify({name:username, password:Base64.encode(password), email:email});
 	request("POST", 'registration/create', success, fail, data);
 }
 

@@ -32,7 +32,7 @@
 	<div class="comment-content">
 		<div id="comment-${id}" class="comment-header">
 			<div class="comment-user">${username}</div>
-			{{if remove}}<div class="comment-remove-action"><text key="commentsDialogRemoveComment" /></div>{{/if}}
+			{{if remove}}<a class="comment-remove-action" href="#"><text key="commentsDialogRemoveComment" /></a>{{/if}}
 			<div class="comment-time">${time}</div>
 		</div>
 		<div class="comment-text">{{html comment}}</div>
