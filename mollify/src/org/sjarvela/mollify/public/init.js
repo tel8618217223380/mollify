@@ -526,7 +526,8 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.clip = false;
+		that.clip = new ZeroClipboard.Client();
+		that.clip.setHandCursor(true);
 		
 		mollify.importCss(that.url("style.css"));
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
@@ -574,7 +575,7 @@ function SharePlugin() {
 		that.env.dialog().showDialog({
 			modal: false,
 			title: that.t("shareDialogTitle"),
-			html: "<div id='share-dialog-content' class='loading' />",
+			html: "<div id='share-dialog-content' class='loading'></div>",
 			on_show: function(d) { that.onShowSharesDialog(d, item); }
 		});
 	}
@@ -648,16 +649,23 @@ function SharePlugin() {
 
 		$(".item-share").hover(
 			function() {
+				$(".item-share").removeClass("item-share-hover");
+				
 				var el = $(this);
+				var id = el.attr('id').substring(6);
 				el.addClass("item-share-hover");
 				
-				var id = el.attr('id');
-				var clip = new ZeroClipboard.Client();
-				clip.addEventListener('onComplete', function(c,t) { alert("copied "+t); });
-				clip.setText(that.env.service().getUrl("public/"+id));
-				clip.glue("share-copy-"+id);
+				that.clip.setText(that.env.service().getUrl("public/"+id));
+				var copyEl = $("#share-copy-"+id)[0];
+				if (that.clip.div) {
+					//that.clip.receiveEvent('mouseout', null);
+					that.clip.reposition(copyEl);
+				} else {
+					that.clip.glue(copyEl);
+				}
 			},
-			function() { $(this).removeClass("item-share-hover"); }
+			function() {
+			}
 		);
 		
 		var idFunction = function(i, f) {
@@ -670,20 +678,10 @@ function SharePlugin() {
 			idFunction(t, function(item, id) {
 				if (!that.getShare(id).active) return;
 				
-				var linkContainer = $(t).parent();
+				var linkContainer = $(t).next();
 				var open = linkContainer.hasClass("open");
-				if (!open) $(".share-link-toggle").removeClass("open");
+				if (!open) $(".share-link-content").removeClass("open");
 				linkContainer.toggleClass("open");
-				
-				/*if (that.clip) {
-					that.clip.destroy();
-				}
-				that.clip = new ZeroClipboard.Client();
-				that.clip.addEventListener('onComplete', function(c,t) { alert("copied "+t); });
-
-				var link = that.env.service().getUrl("public/"+id);
-				that.clip.setText(link);
-				that.clip.glue("share-copy-"+id);*/
 			});
 			return false;
 		});

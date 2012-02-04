@@ -1,4 +1,17 @@
-/* @override http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325446193706 */
+/* @override 
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325446193706
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328362003072
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328362689420
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363570532
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363779849
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328364360214
+*/
+
+#share-dialog-content.loading {
+	width: 400px;
+	height: 350px;
+	background: url(wait.gif) no-repeat 50% 50%;
+}
 
 #details-share {
 	float: right;
@@ -54,15 +67,25 @@
 	font-size: 16px;	
 }
 
-.share-link-toggle {
-	color: #728cb0;
-	margin-left: 0;
-	clear: both;
-	padding: 2px 20px 4px 13px;
+.share-link-copy-container {
+	float: left;
+	clear: left;
+	margin-left: 8px;
+	height: 20px;
+	margin-top: 5px;
+	color: #6776ae;
 }
 
-.share-link-toggle .share-link-toggle-title {
+.share-link-toggle-title {
+	float: left;
+	margin-top: 5px;
+	margin-left: 8px;
+	color: #6776ae;
+}
+
+.share-link-toggle-title, .share-link-copy-container {
 	visibility: hidden;
+	cursor: pointer;
 }
 
 .share-link-content {
@@ -91,15 +114,15 @@
 	cursor: text;
 }
 
-.item-share-hover .share-link-toggle-title, .share-link-toggle.open .share-link-toggle-title {
+.item-share-hover .share-link-toggle-title, .item-share-hover .share-link-copy-container, .share-link-content.open {
 	visibility: visible;
 }
 
-.share-link-toggle.open .share-link-content {
+.share-link-content.open {
 	display: block;
 }
 
-.share-link-toggle.open {
+.share-link-content.open {
 	height: auto;
 }
 
