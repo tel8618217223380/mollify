@@ -48,6 +48,10 @@
 			return $this->processor;
 		}
 		
+		public function onError($e) {
+			$this->processor->onError($e);
+		}
+		
 		public function util() {
 			require_once("install/mysql/MySQLInstallUtil.class.php");
 			return new MySQLInstallUtil($this->db);
