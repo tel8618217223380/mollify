@@ -5,6 +5,8 @@
 	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363570532
 	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363779849
 	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328364360214
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328385345613
+	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328385734242
 */
 
 #share-dialog-content.loading {
@@ -89,24 +91,26 @@
 }
 
 .share-link-content {
-	margin-top: 7px;
-	border: 1px solid #d5d5d5;
-	background-color: #f5f7f7;
-	padding: 8px;
 	float: left;
-	width: 100%;
 	display: none;
-	margin-bottom: 6px;
+	width: 100%;
+	clear: both;
+}
+
+.share-link-container {
+	padding-left: 8px;
+	padding-right: 12px;
+	padding-bottom: 8px;
 }
 
 .share-link-instructions {
 	color: #4e4e4e;
 	font-weight: bold;
+	display: none;
 }
 
 .share-link {
-	margin-top: 4px;
-	padding-right: 6px;
+	margin-top: 0px;
 }
 
 .share-link input {
@@ -114,8 +118,23 @@
 	cursor: text;
 }
 
-.item-share-hover .share-link-toggle-title, .item-share-hover .share-link-copy-container, .share-link-content.open {
+.share-link-copy-container {
+	display: block;
+	width: auto;
+}
+
+.item-share-hover .share-link-toggle-title, .item-share-hover .share-link-copy-container {
 	visibility: visible;
+}
+
+.share-link-content.open {
+	display: block;
+}
+
+.share-link-copy-container.hidden {
+	visibility: hidden;
+	width: 0px;
+	margin-left: 4px;
 }
 
 .share-link-content.open {

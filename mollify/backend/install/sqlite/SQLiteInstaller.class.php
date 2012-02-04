@@ -32,6 +32,10 @@
 		public function processor() {
 			return $this->processor;
 		}
+		
+		public function onError($e) {
+			$this->processor->onError($e);
+		}
 
 		private function createDB($file) {			
 			require_once("include/sqlite/SQLiteDatabase.class.php");

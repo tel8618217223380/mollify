@@ -526,8 +526,16 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.clip = new ZeroClipboard.Client();
-		that.clip.setHandCursor(true);
+		that.testclip = new ZeroClipboard.Client();
+		that.testclip.addEventListener('load', function(client) {
+			that.testclip.hide();
+			$(".share-link-copy-container").removeClass("hidden");
+			
+			that.clip = new ZeroClipboard.Client();
+			that.clip.setHandCursor(true);
+		});
+
+		that.clip = false;
 		
 		mollify.importCss(that.url("style.css"));
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
@@ -588,6 +596,7 @@ function SharePlugin() {
 
 			$("#add-share-btn").click(function() { that.onAddShare(item); } );
 			$("#share-dialog-close").click(function() { d.close(); } );
+			that.testclip.glue("clip-test");
 			
 			that.env.service().get("share/items/"+item.id, function(result) {
 				that.refreshShares(item, result);
@@ -646,6 +655,19 @@ function SharePlugin() {
 		
 		$("#share-template").tmpl(that.shares, opt).appendTo("#share-items");
 		mollify.localize("share-list");
+		
+		var initClipboard = function(id) {
+			if (!that.clip) return;
+			
+			that.clip.setText(that.env.service().getUrl("public/"+id));
+			var el = $("#share-copy-"+id);
+			if (that.clip.div) {
+				//that.clip.receiveEvent('mouseout', null);
+				that.clip.reposition(el[0]);
+			} else {
+				that.clip.glue(el[0]);
+			}
+		}
 
 		$(".item-share").hover(
 			function() {
@@ -655,18 +677,12 @@ function SharePlugin() {
 				var id = el.attr('id').substring(6);
 				el.addClass("item-share-hover");
 				
-				that.clip.setText(that.env.service().getUrl("public/"+id));
-				var copyEl = $("#share-copy-"+id)[0];
-				if (that.clip.div) {
-					//that.clip.receiveEvent('mouseout', null);
-					that.clip.reposition(copyEl);
-				} else {
-					that.clip.glue(copyEl);
-				}
+				initClipboard(id);
 			},
 			function() {
 			}
 		);
+		initClipboard(that.shares[0].id);
 		
 		var idFunction = function(i, f) {
 			var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
@@ -674,15 +690,10 @@ function SharePlugin() {
 			f(item, id);
 		};
 		$(".share-link-toggle-title").click(function() {
-			var t = this;
-			idFunction(t, function(item, id) {
-				if (!that.getShare(id).active) return;
-				
-				var linkContainer = $(t).next();
-				var open = linkContainer.hasClass("open");
-				if (!open) $(".share-link-content").removeClass("open");
-				linkContainer.toggleClass("open");
-			});
+			var linkContainer = $(this).next();
+			var open = linkContainer.hasClass("open");
+			if (!open) $(".share-link-content").removeClass("open");
+			linkContainer.toggleClass("open");
 			return false;
 		});
 		$(".share-edit").click(function(e) {
