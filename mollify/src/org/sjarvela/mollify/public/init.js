@@ -111,6 +111,16 @@
 				var key = $(this).attr('key');
 				$(this).text(t.env.texts().get(key));
 			});
+			
+			$("#"+id+" .localized").each(function(){
+				var key = $(this).attr('title-key');
+				if (key)
+					$(this).attr("title", t.env.texts().get(key));
+				
+				key = $(this).attr('text-key');
+				if (key)
+					$(this).text(t.env.texts().get(key));
+			});
 		}
 		
 		this.formatDate = function(d) {
@@ -528,14 +538,21 @@ function SharePlugin() {
 		that.env = env;
 		that.testclip = new ZeroClipboard.Client();
 		that.testclip.addEventListener('load', function(client) {
+			console.log("Clipboard support detected");
 			that.testclip.hide();
-			$(".share-link-copy-container").removeClass("hidden");
 			
 			that.clip = new ZeroClipboard.Client();
 			that.clip.setHandCursor(true);
+			that.clip.setCSSEffects(false);
+			that.clip.addEventListener('onMouseOver', function() { that.onClipMouse(true); });
+			that.clip.addEventListener('onMouseOut', function() { that.onClipMouse(false); });
+			that.clip.addEventListener('onComplete', that.onClipClick);
+			
+			if (that.shares.length > 0) $(".share-link-copy-container").removeClass("hidden");
 		});
 
 		that.clip = false;
+		that.hoverId = false;
 		
 		mollify.importCss(that.url("style.css"));
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
@@ -643,11 +660,6 @@ function SharePlugin() {
 					c = c + " item-share-unnamed";
 				return c;
 			},
-			linkTitleKey : function() {
-				if (!this.data.active)
-					return 'shareDialogItemInactiveLinkTitle';
-				return 'shareDialogItemLinkTitle';
-			},
 			link : function() {
 				return that.env.service().getUrl("public/"+this.data.id);
 			}
@@ -656,13 +668,21 @@ function SharePlugin() {
 		$("#share-template").tmpl(that.shares, opt).appendTo("#share-items");
 		mollify.localize("share-list");
 		
+		if (that.clip) $(".share-link-copy-container").removeClass("hidden");
+		else console.log("Clipboard support not detected");
+		
 		var initClipboard = function(id) {
 			if (!that.clip) return;
+			if (!that.getShare(id).active) {
+				that.clip.setText("");
+				that.clip.hide();
+				return;
+			}
 			
+			that.clip.show();
 			that.clip.setText(that.env.service().getUrl("public/"+id));
 			var el = $("#share-copy-"+id);
 			if (that.clip.div) {
-				//that.clip.receiveEvent('mouseout', null);
 				that.clip.reposition(el[0]);
 			} else {
 				that.clip.glue(el[0]);
@@ -676,13 +696,14 @@ function SharePlugin() {
 				var el = $(this);
 				var id = el.attr('id').substring(6);
 				el.addClass("item-share-hover");
+				that.hoverId = id;
 				
 				initClipboard(id);
 			},
 			function() {
 			}
 		);
-		initClipboard(that.shares[0].id);
+		//initClipboard(that.shares[0].id);
 		
 		var idFunction = function(i, f) {
 			var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
@@ -690,12 +711,19 @@ function SharePlugin() {
 			f(item, id);
 		};
 		$(".share-link-toggle-title").click(function() {
+			var id = $(this).parent()[0].id.substring(6);
+			if (!that.getShare(id).active) return;
+			
 			var linkContainer = $(this).next();
 			var open = linkContainer.hasClass("open");
 			if (!open) $(".share-link-content").removeClass("open");
 			linkContainer.toggleClass("open");
 			return false;
-		});
+		}).hover(
+			function() { $(this).addClass("hover"); },
+			function() { $(this).removeClass("hover"); }
+		);
+		
 		$(".share-edit").click(function(e) {
 			idFunction(this, that.onEditShare);
 			return false;
@@ -704,6 +732,21 @@ function SharePlugin() {
 			idFunction(this, that.removeShare);
 			return false;
 		});
+	}
+	
+	this.onClipMouse = function(over) {
+		if (!that.hoverId) return;
+		
+		if (over) $("#share-copy-"+that.hoverId).addClass("hover");
+		else $("#share-copy-"+that.hoverId).removeClass("hover");
+	}
+
+	this.onClipClick = function() {
+		if (!that.hoverId) return;
+		
+		var el = $("#share-copy-"+that.hoverId);
+		el.addClass("click");
+		window.setTimeout(function() { el.removeClass("click"); }, 200);
 	}
 	
 	this.closeAddEdit = function() {
