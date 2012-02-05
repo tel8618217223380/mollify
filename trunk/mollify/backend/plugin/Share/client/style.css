@@ -37,6 +37,7 @@
 #share-list {
 	position: relative;
 	height: 250px;
+	width: 400px;
 	margin: 8px;
 	border: 3px solid #b1b1b1;
 	padding: 2px;
@@ -72,10 +73,18 @@
 .share-link-copy-container {
 	float: left;
 	clear: left;
-	margin-left: 8px;
+	margin-left: 12px;
 	height: 20px;
 	margin-top: 5px;
 	color: #6776ae;
+}
+
+.share-link-copy.hover, .share-link-toggle-title.hover {
+	text-decoration: underline;
+}
+
+.share-link-copy.click {
+	background-color: #e7e7e7;
 }
 
 .share-link-toggle-title {
@@ -83,6 +92,13 @@
 	margin-top: 5px;
 	margin-left: 8px;
 	color: #6776ae;
+}
+
+.share-inactive-title {
+	float: left;
+	font-style: italic;
+	margin-top: 5px;
+	margin-left: 8px;
 }
 
 .share-link-toggle-title, .share-link-copy-container {
@@ -131,7 +147,7 @@
 	display: block;
 }
 
-.share-link-copy-container.hidden {
+.share-link-copy-container.hidden, .item-share-inactive .share-link-copy-container {
 	visibility: hidden;
 	width: 0px;
 	margin-left: 4px;

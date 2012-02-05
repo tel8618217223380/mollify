@@ -36,8 +36,8 @@
 			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), $expirationTs, $created, $active);
 		}
 
-		public function editShare($id, $name, $active) {
-			$this->dao()->editShare($id, $name, $active);
+		public function editShare($id, $name, $expirationTs, $active) {
+			$this->dao()->editShare($id, $name, $expirationTs, $active);
 		}
 		
 		public function deleteShare($id) {
