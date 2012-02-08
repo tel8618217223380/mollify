@@ -216,6 +216,13 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 		view.showItemContext(item, e);
 	}
 
+	@Override
+	public void onMenuClicked(FileSystemItem item, Element e) {
+		if (item.equals(Folder.Parent) || (item instanceof VirtualGroupFolder))
+			return;
+		view.showItemMenu(item, e);
+	}
+
 	public void onColumnSorted(String columnId, SortOrder sort) {
 		presenter.setListOrder(columnId, sort);
 	}

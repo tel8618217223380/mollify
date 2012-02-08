@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +47,19 @@ public class NativeItemContextProvider implements ItemContextProvider {
 
 	@Override
 	public ItemContext getItemContext(FileSystemItem item, ItemDetails details) {
-		return convert(item, invokeNativeProvider(item.asJs(), details));
+		return convert(item, invokeNativeProvider(item.asJs(), details), true);
 	}
 
-	private ItemContext convert(FileSystemItem item, JavaScriptObject result) {
+	@Override
+	public ItemContext getItemActions(FileSystemItem item, ItemDetails details) {
+		return convert(item, invokeNativeProvider(item.asJs(), details), false);
+	}
+
+	private ItemContext convert(FileSystemItem item, JavaScriptObject result,
+			boolean components) {
 		JsObj r = result.cast();
-		return new ItemContext(createComponents(r), createActions(r));
+		return new ItemContext(components ? createComponents(r)
+				: Collections.EMPTY_LIST, createActions(r));
 	}
 
 	private List<ItemContextComponent> createComponents(JsObj r) {

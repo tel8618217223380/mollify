@@ -39,4 +39,7 @@ public class ContextPopupHandler<T> {
 		}
 	}
 
+	public void onOpenItemMenu(T t, Element parent) {
+		contextPopup.showMenu(t, parent);
+	}
 }

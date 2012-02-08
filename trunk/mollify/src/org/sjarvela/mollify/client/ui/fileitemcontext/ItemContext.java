@@ -48,15 +48,19 @@ public class ItemContext {
 		return actions;
 	}
 
-	public ItemContext add(ItemContext other) {
+	public ItemContext add(ItemContext other, boolean comp) {
 		List<ItemContextComponent> newComponents = new ArrayList(components);
-		newComponents.addAll(other.getComponents());
-		Collections.sort(newComponents, new Comparator<ItemContextComponent>() {
-			@Override
-			public int compare(ItemContextComponent a, ItemContextComponent b) {
-				return a.getIndex().compareTo(b.getIndex());
-			}
-		});
+		if (comp) {
+			newComponents.addAll(other.getComponents());
+			Collections.sort(newComponents,
+					new Comparator<ItemContextComponent>() {
+						@Override
+						public int compare(ItemContextComponent a,
+								ItemContextComponent b) {
+							return a.getIndex().compareTo(b.getIndex());
+						}
+					});
+		}
 
 		Map<ActionType, List<ContextActionItem>> newActions = new HashMap(
 				actions);

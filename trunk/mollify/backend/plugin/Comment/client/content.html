@@ -13,7 +13,7 @@
 					<div id='new-comment-text'>
 						<textarea id='comments-dialog-add-text' />
 					</div>
-					<a id='comments-dialog-add' class='mollify-actionlink'><text key="commentsDialogAddButton" /></a>
+					<a id='comments-dialog-add' class='mollify-actionlink localized' text-key="commentsDialogAddButton"></a>
 				</div>
 			</div>
 		</td>
@@ -22,7 +22,7 @@
 	<tr height='1%'>
 		<td align='right'>
 			<div class='comments-dialog-buttons'>
-				<button id='comments-dialog-close' class='gwt-Button comments-dialog-button' type='button'><text key="dialogCloseButton" /></button>
+				<button id='comments-dialog-close' class='gwt-Button comments-dialog-button localized' text-key="dialogCloseButton" type='button'></button>
 			</div>
 		</td>
 	</tr>
@@ -32,7 +32,7 @@
 	<div class="comment-content">
 		<div id="comment-${id}" class="comment-header">
 			<div class="comment-user">${username}</div>
-			{{if remove}}<a class="comment-remove-action" href="#"><text key="commentsDialogRemoveComment" /></a>{{/if}}
+			{{if remove}}<a class="comment-remove-action localized" text-key="commentsDialogRemoveComment" href="#"></a>{{/if}}
 			<div class="comment-time">${time}</div>
 		</div>
 		<div class="comment-text">{{html comment}}</div>

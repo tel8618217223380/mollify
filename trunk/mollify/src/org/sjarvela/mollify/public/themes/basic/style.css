@@ -891,9 +891,21 @@ td#mollify-filelist-column-size {
 	margin-top: 5px;
 }
 
+.mollify-filelist-item-name-panel {
+	float: left;
+}
+
 .mollify-filelist-row-directory-even-hover td div.mollify-filelist-item-name-hover, .mollify-filelist-row-directory-odd-hover td div.mollify-filelist-item-name-hover, .hover .mollify-filelist-item-name {
 	text-decoration: underline;
 	color: #292c34;
+}
+
+.mollify-filelist-row-item-menu {
+	float:  right;
+	width: 20px;
+	height: 15px;
+	background-color: red;
+	cursor: pointer;
 }
 
 .mollify-filelist-row-file-even td, .mollify-filelist-row-file-odd td {
@@ -995,6 +1007,7 @@ td#mollify-filelist-column-size {
 	cursor: pointer;
 	overflow: hidden;
 	padding-bottom: 2px;
+	float: left;
 }
 
 .mollify-filelist-row-directory-even .mollify-filelist-item-name, .mollify-filelist-row-directory-odd .mollify-filelist-item-name {

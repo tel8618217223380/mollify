@@ -107,11 +107,6 @@
 		}
 		
 		this.localize = function(id) {
-			$("#"+id+" text").each(function(){
-				var key = $(this).attr('key');
-				$(this).text(t.env.texts().get(key));
-			});
-			
 			$("#"+id+" .localized").each(function(){
 				var key = $(this).attr('title-key');
 				if (key)
@@ -160,6 +155,7 @@
 		}
 
 		this.formatInternalTime = function(time) {
+			if (!time) return null;
 			return time.format('yymmddHHMMss', time);
 		}
 		
@@ -330,7 +326,7 @@ function CommentPlugin() {
 	
 	this.onShowComments = function(item, comments) {
 		if (comments.length == 0) {
-			$("#comments-list").html("<message>"+that.t("commentsDialogNoComments")+"</message>");
+			$("#comments-list").html("<span class='message'>"+that.t("commentsDialogNoComments")+"</span>");
 			return;
 		}
 		
@@ -343,7 +339,7 @@ function CommentPlugin() {
 			comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
 		}
 
-		$("#comment-template").tmpl(comments).appendTo("#comments-list");
+		$("#comment-template").tmpl(comments).appendTo($("#comments-list").empty());
 		mollify.localize("comments-list");
 		$(".comment-content").hover(
 			function () { $(this).addClass("hover"); }, 
@@ -811,7 +807,7 @@ function SharePlugin() {
 	}
 	
 	this.addShare = function(item, name, expiration, active) {
-		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, expiration: expiration, active: active }, function(result) {
+		that.env.service().post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.formatInternalTime(expiration), active: active }, function(result) {
 			that.refreshShares(item, result);
 			that.updateShareList(item);
 		},	function(code, error) {
@@ -820,7 +816,7 @@ function SharePlugin() {
 	}
 
 	this.editShare = function(item, id, name, expiration, active) {
-		that.env.service().put("share/"+id, { id: id, name: name, expiration: expiration, active: active }, function(result) {
+		that.env.service().put("share/"+id, { id: id, name: name, expiration: mollify.formatInternalTime(expiration), active: active }, function(result) {
 			var share = that.getShare(id);
 			share.name = name;
 			share.active = active;

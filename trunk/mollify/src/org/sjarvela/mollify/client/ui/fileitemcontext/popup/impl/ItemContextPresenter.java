@@ -26,6 +26,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextCallback;
@@ -34,6 +35,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -120,8 +122,9 @@ public class ItemContextPresenter implements ActionListener,
 
 		this.components = new ArrayList();
 		if (details != null) {
-			components = popup.setup(itemContextHandler.getItemContext(item,
-					details), item, details);
+			components = popup.setup(
+					itemContextHandler.getItemContext(item, details), item,
+					details);
 		}
 
 		this.details = details;
@@ -166,5 +169,39 @@ public class ItemContextPresenter implements ActionListener,
 	@Override
 	public void close() {
 		popup.hide();
+	}
+
+	public void showMenu(final FileSystemItem t, final Element parent) {
+		this.item = t;
+		
+		JavaScriptObject data = itemContextHandler
+				.getItemContextRequestData(item);
+
+		itemDetailsProvider.getItemDetails(t, data,
+				new ResultListener<ItemDetails>() {
+					public void onFail(ServiceError error) {
+						popup.hide();
+
+						if (error.getDetails() != null
+								&& (error.getDetails().startsWith(
+										"PHP error #2048") || error
+										.getDetails()
+										.contains(
+												"It is not safe to rely on the system's timezone settings"))) {
+							dialogManager
+									.showInfo("ERROR",
+											"Mollify configuration error, PHP timezone information missing.");
+							return;
+						}
+						dialogManager.showError(error);
+					}
+
+					public void onSuccess(ItemDetails details) {
+						DropdownPopupMenu<FileSystemItem> menu = popup
+								.createMenu(t, parent, itemContextHandler
+										.getItemActions(t, details));
+						menu.showPopup();
+					}
+				});
 	}
 }

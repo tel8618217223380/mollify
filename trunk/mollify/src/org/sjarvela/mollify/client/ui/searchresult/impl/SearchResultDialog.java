@@ -89,6 +89,10 @@ public class SearchResultDialog extends ResizableDialog implements
 			}
 
 			@Override
+			public void onMenuClicked(FileSystemItem item, Element e) {
+			}
+
+			@Override
 			public void onColumnSorted(String columnId, SortOrder sort) {
 				list.setComparator(createComparator(columnId, sort));
 			}

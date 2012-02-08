@@ -1,6 +1,7 @@
 /* @override 
 	http://localhost:8888/mollify/dev/backend/plugin/comment/client/style.css
 	http://localhost:8888/mollify/test/dev/backend/plugin/Comment/client/style.css
+	http://localhost:8888/mollify/test/dev/backend/plugin/Comment/client/style.css?_=1328445262938
 */
 
 .mollify-filelist-column-comment-count {
@@ -93,7 +94,7 @@
 	margin-right: 4px;
 }
 
-#comments-list message {
+#comments-list .message {
 	font-size: 12px;
 	color: #cacaca;
 	font-style: italic;
@@ -118,6 +119,22 @@
 	clear: left;
 	padding-top: 4px;
 	font-family: "Courier New", Courier, mono;
+}
+
+.comment-remove-action {
+	visibility: hidden;
+	font-size: 9px;
+	padding-left: 8px;
+	text-decoration: none;
+	color: #949bb3;
+}
+
+.comment-remove-action:hover {
+	text-decoration: underline;
+}
+
+.comment-content.hover .comment-remove-action {
+	visibility: visible;
 }
 
 #new-comment {

@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.permissions;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
@@ -46,6 +47,10 @@ public class PermissionEditorGlue {
 
 			@Override
 			public void onIconClicked(FileItemUserPermission t, Element e) {
+			}
+
+			@Override
+			public void onMenuClicked(FileSystemItem item, Element e) {
 			}
 
 			@Override
