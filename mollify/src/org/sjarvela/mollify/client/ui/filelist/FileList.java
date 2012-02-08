@@ -101,7 +101,7 @@ public class FileList extends Grid<FileSystemItem> implements
 	}
 
 	protected FlowPanel createFolderNameWidget(final Folder folder) {
-		FlowPanel panel = new FlowPanel();
+		final FlowPanel panel = new FlowPanel();
 		panel.getElement().setId("item-" + folder.getId());
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(folder));
@@ -111,22 +111,23 @@ public class FileList extends Grid<FileSystemItem> implements
 		HoverDecorator.decorate(icon);
 		panel.add(icon);
 
-		final Widget nameWidget = createNameWidget(folder,
+		final Label nameWidget = createNameWidget(folder,
 				!folder.equals(Folder.Parent));
-		icon.addClickHandler(new ClickHandler() {
+		ClickHandler clickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				FileList.this.onIconClicked(folder,
-						getWidget(folder, COLUMN_ID_NAME).getElement());
+				FileList.this.onIconClicked(folder, panel.getElement());
 			}
-		});
+		};
+		nameWidget.addClickHandler(clickHandler);
+		icon.addClickHandler(clickHandler);
 
 		panel.add(nameWidget);
 		return panel;
 	}
 
 	protected FlowPanel createFileNameWidget(final File file) {
-		FlowPanel panel = new FlowPanel();
+		final FlowPanel panel = new FlowPanel();
 		panel.getElement().setId("item-" + file.getId());
 		panel.setStyleName(StyleConstants.FILE_LIST_ITEM_NAME_PANEL);
 		panel.add(createSelector(file));
@@ -135,17 +136,33 @@ public class FileList extends Grid<FileSystemItem> implements
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_FILE_ICON);
 		HoverDecorator.decorate(icon);
 
-		final Widget nameWidget = createNameWidget(file, true);
-		icon.addClickHandler(new ClickHandler() {
+		final Label nameWidget = createNameWidget(file, true);
+		ClickHandler clickHandler = new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				FileList.this.onIconClicked(file,
-						getWidget(file, COLUMN_ID_NAME).getElement());
+				FileList.this.onIconClicked(file, panel.getElement());
+			}
+		};
+		nameWidget.addClickHandler(clickHandler);
+		icon.addClickHandler(clickHandler);
+
+		final Label menu = new Label();
+		menu.setStyleName("mollify-filelist-row-item-menu");
+		HoverDecorator.decorate(menu);
+		menu.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				FileList.this.onMenuClicked(file, menu.getElement());
 			}
 		});
 
 		panel.add(icon);
 		panel.add(nameWidget);
+		panel.add(menu);
 		return panel;
+	}
+
+	protected void onMenuClicked(FileSystemItem item, Element e) {
+		for (GridListener listener : listeners)
+			listener.onMenuClicked(item, e);
 	}
 
 	public void onIconClicked(FileSystemItem item, Element e) {
@@ -176,13 +193,8 @@ public class FileList extends Grid<FileSystemItem> implements
 			updateSelection(item);
 	}
 
-	private Widget createNameWidget(final FileSystemItem item, boolean draggable) {
+	private Label createNameWidget(final FileSystemItem item, boolean draggable) {
 		DraggableFileSystemItem itemWidget = new DraggableFileSystemItem(item);
-		itemWidget.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				FileList.this.onClick(item, COLUMN_ID_NAME);
-			}
-		});
 		if (draggable && dragAndDropManager != null)
 			dragAndDropManager.getController(FileSystemItem.class)
 					.makeDraggable(itemWidget);

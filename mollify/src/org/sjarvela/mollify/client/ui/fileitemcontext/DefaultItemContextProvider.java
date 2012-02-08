@@ -72,7 +72,26 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	public ItemContext getItemContext(FileSystemItem item, ItemDetails details) {
 		ItemContext context = createContext(item, details);
 		for (ItemContextProvider provider : providers)
-			context = context.add(provider.getItemContext(item, details));
+			context = context.add(provider.getItemContext(item, details), true);
+		return context;
+	}
+
+	@Override
+	public ItemContext getItemActions(FileSystemItem item, ItemDetails details) {
+		ItemContextBuilder contextBuilder = ItemContext.def();
+
+		boolean writable = isWritable(item, details);
+		createSecondaryActions(
+				item,
+				contextBuilder.actions().type(ItemContext.ActionType.Secondary),
+				writable);
+
+		ItemContext context = contextBuilder.create();
+
+		for (ItemContextProvider provider : providers)
+			context = context
+					.add(provider.getItemContext(item, details), false);
+
 		return context;
 	}
 

@@ -26,6 +26,7 @@ import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
 import org.sjarvela.mollify.client.ui.common.MultiActionButton;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
+import org.sjarvela.mollify.client.ui.common.popup.DropdownPopupMenu;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextAction;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionItem;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ContextActionSeparator;
@@ -35,6 +36,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContext.ActionType;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextComponent;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -227,6 +229,37 @@ public class ItemContextPopupComponent extends ContextPopupComponent {
 		}
 		if (!items.isEmpty())
 			buttons.add(actionsButton);
+	}
+
+	public DropdownPopupMenu<FileSystemItem> createMenu(FileSystemItem fsi,
+			Element parent, ItemContext itemContext) {
+		DropdownPopupMenu menu = new DropdownPopupMenu<FileSystemItem>(
+				actionListener, parent, null);
+		int index = 0;
+		List<ContextActionItem> items = itemContext.getActions().get(
+				ActionType.Secondary);
+		for (ContextActionItem item : items) {
+			boolean first = (index == 0);
+			boolean last = (index == (items.size() - 1));
+
+			if (item instanceof ContextAction) {
+				menu.addAction(((ContextAction) item).getAction(),
+						((ContextAction) item).getTitle());
+			} else if (item instanceof ContextActionSeparator) {
+				if (!first && !last)
+					menu.addSeparator();
+			} else if (item instanceof ContextCallbackAction) {
+				final ContextCallbackAction action = (ContextCallbackAction) item;
+				menu.addCallbackAction(action.getTitle(), null, new Callback() {
+					@Override
+					public void onCallback() {
+						actionListener.onAction(Action.callback, action);
+					}
+				});
+			}
+			index++;
+		}
+		return menu;
 	}
 
 	private void addComponent(ItemContextComponent c, FileSystemItem item,

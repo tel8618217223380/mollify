@@ -51,7 +51,7 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	}
 
 	public void addCallbackAction(T item, String id, final Callback callback) {
-		Label label = createMenuItemWidget(id, item.toString());
+		Label label = createMenuItemWidget(id, item);
 		label.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -74,9 +74,13 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 	public void setActionVisible(FileSystemAction action, boolean visible) {
 		items.get(action).setVisible(visible);
 	}
+	
+	protected Label createMenuItemWidget(final ResourceId action, T t) {
+		return createMenuItemWidget(action, t.toString());
+	}
 
-	protected Label createMenuItemWidget(final ResourceId action, T item) {
-		Label label = createMenuItemWidget(action.name(), item.toString());
+	protected Label createMenuItemWidget(final ResourceId action, String title) {
+		Label label = createMenuItemWidget(action.name(), title);
 
 		if (action != null)
 			label.addClickHandler(new ClickHandler() {
@@ -86,6 +90,10 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 				}
 			});
 		return label;
+	}
+	
+	protected Label createMenuItemWidget(String id, T t) {
+		return createMenuItemWidget(id, t.toString());
 	}
 
 	protected Label createMenuItemWidget(String id, String title) {
@@ -119,6 +127,13 @@ public class DropdownPopupMenu<T> extends DropdownPopup {
 		super.removeAllMenuItems();
 		items.clear();
 		itemsEnabled.clear();
+	}
+
+	public void addAction(ResourceId action, String title) {
+		Widget itemWidget = createMenuItemWidget(action, title);
+		items.put(action, itemWidget);
+		itemsEnabled.put(action, true);
+		addItem(itemWidget);
 	}
 
 }

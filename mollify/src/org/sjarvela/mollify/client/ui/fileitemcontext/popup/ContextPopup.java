@@ -24,4 +24,6 @@ public interface ContextPopup<T> {
 	void setPopupPositioner(PopupPositioner positioner);
 
 	void update(T t, Element parent);
+	
+	void showMenu(T t, Element parent);
 }

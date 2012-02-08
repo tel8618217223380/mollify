@@ -65,4 +65,9 @@ public class ItemContextGlue implements ItemContextPopup {
 		popup.setPositioner(positioner);
 	}
 
+	@Override
+	public void showMenu(FileSystemItem t, Element parent) {
+		presenter.showMenu(t, parent);
+	}
+
 }

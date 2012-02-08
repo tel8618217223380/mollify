@@ -12,6 +12,8 @@ package org.sjarvela.mollify.client.ui.common.grid;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+
 import com.google.gwt.dom.client.Element;
 
 public interface GridListener<T> {
@@ -24,4 +26,6 @@ public interface GridListener<T> {
 	void onSelectionChanged(List<T> selected);
 
 	void onRendered();
+
+	void onMenuClicked(FileSystemItem item, Element e);
 }

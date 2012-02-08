@@ -576,4 +576,8 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		return viewType;
 	}
 
+	public void showItemMenu(FileSystemItem item, Element e) {
+		itemContextHandler.onOpenItemMenu(item, e);
+	}
+
 }
