@@ -902,10 +902,17 @@ td#mollify-filelist-column-size {
 
 .mollify-filelist-row-item-menu {
 	float:  right;
-	width: 20px;
-	height: 15px;
-	background-color: red;
+	width: 16px;
+	height: 16px;
 	cursor: pointer;
+	visibility: hidden;
+	margin-left: 8px;
+	background: url(context_menu.png) no-repeat;
+	margin-top: 4px;
+}
+
+.mollify-filelist-row-directory-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-directory-even-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-even-hover .mollify-filelist-row-item-menu {
+	visibility: visible;
 }
 
 .mollify-filelist-row-file-even td, .mollify-filelist-row-file-odd td {
