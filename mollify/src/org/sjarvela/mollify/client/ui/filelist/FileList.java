@@ -109,10 +109,9 @@ public class FileList extends Grid<FileSystemItem> implements
 		final Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
 		HoverDecorator.decorate(icon);
-		panel.add(icon);
 
-		final Label nameWidget = createNameWidget(folder,
-				!folder.equals(Folder.Parent));
+		boolean parentOrRoot = folder.equals(Folder.Parent) || folder.isRoot();
+		final Label nameWidget = createNameWidget(folder, !parentOrRoot);
 		ClickHandler clickHandler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -122,7 +121,19 @@ public class FileList extends Grid<FileSystemItem> implements
 		nameWidget.addClickHandler(clickHandler);
 		icon.addClickHandler(clickHandler);
 
+		panel.add(icon);
 		panel.add(nameWidget);
+		if (!parentOrRoot) {
+			final Label menu = new Label();
+			menu.setStyleName("mollify-filelist-row-item-menu");
+			HoverDecorator.decorate(menu);
+			menu.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					FileList.this.onMenuClicked(folder, menu.getElement());
+				}
+			});
+			panel.add(menu);
+		}
 		return panel;
 	}
 
