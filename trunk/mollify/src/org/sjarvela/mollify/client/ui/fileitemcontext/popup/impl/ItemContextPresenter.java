@@ -173,14 +173,16 @@ public class ItemContextPresenter implements ActionListener,
 
 	public void showMenu(final FileSystemItem t, final Element parent) {
 		this.item = t;
-		
+
 		JavaScriptObject data = itemContextHandler
 				.getItemContextRequestData(item);
+
+		parent.addClassName("loading");
 
 		itemDetailsProvider.getItemDetails(t, data,
 				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
-						popup.hide();
+						parent.removeClassName("loading");
 
 						if (error.getDetails() != null
 								&& (error.getDetails().startsWith(
@@ -197,9 +199,18 @@ public class ItemContextPresenter implements ActionListener,
 					}
 
 					public void onSuccess(ItemDetails details) {
+						parent.removeClassName("loading");
+						parent.addClassName("open");
+
 						DropdownPopupMenu<FileSystemItem> menu = popup
 								.createMenu(t, parent, itemContextHandler
 										.getItemActions(t, details));
+						menu.addCloseHandler(new CloseHandler<PopupPanel>() {
+							@Override
+							public void onClose(CloseEvent<PopupPanel> event) {
+								parent.removeClassName("open");
+							}
+						});
 						menu.showPopup();
 					}
 				});
