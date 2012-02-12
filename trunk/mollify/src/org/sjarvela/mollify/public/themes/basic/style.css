@@ -908,11 +908,16 @@ td#mollify-filelist-column-size {
 	visibility: hidden;
 	margin-left: 8px;
 	background: url(context_menu.png) no-repeat;
-	margin-top: 4px;
+	margin-top: 3px;
 }
 
-.mollify-filelist-row-directory-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-directory-even-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-even-hover .mollify-filelist-row-item-menu {
+.mollify-filelist-row-directory-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-directory-even-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-odd-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-file-even-hover .mollify-filelist-row-item-menu, .mollify-filelist-row-item-menu.open {
 	visibility: visible;
+}
+
+.mollify-filelist-row-item-menu.loading {
+	visibility: visible;
+	background: url(wait2.gif) no-repeat;
 }
 
 .mollify-filelist-row-file-even td, .mollify-filelist-row-file-odd td {
