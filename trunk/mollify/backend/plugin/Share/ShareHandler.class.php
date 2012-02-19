@@ -43,11 +43,10 @@
 		public function deleteShare($id) {
 			$this->dao()->deleteShare($id);
 		}
-				
+		
 		public function processShareGet($id) {
-			$share = $this->dao()->getShare($id, time());
-			if (!$share) throw new ServiceException("INVALID_REQUEST");
-			// TODO check validity
+			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
+			if (!$share) $this->showInvalidSharePage();
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($share["item_id"]);
@@ -55,6 +54,11 @@
 
 			if ($item->isFile()) $this->processDownload($item);
 			else $this->processUploadPage($id, $item);
+		}
+		
+		private function showInvalidSharePage() {
+			include("pages/InvalidShare.php");
+			die();
 		}
 		
 		private function processDownload($file) {
@@ -72,8 +76,7 @@
 		
 		public function processSharePost($id) {
 			$share = $this->dao()->getShare($id);
-			if (!$share) throw new ServiceException("INVALID_REQUEST");
-			// TODO check validity
+			if (!$share) $this->showInvalidSharePage();
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
 			$item = $this->env->filesystem()->item($share["item_id"]);

@@ -109,17 +109,21 @@ public class FileList extends Grid<FileSystemItem> implements
 		final Label icon = new Label();
 		icon.setStyleName(StyleConstants.FILE_LIST_ROW_DIRECTORY_ICON);
 		HoverDecorator.decorate(icon);
-
-		boolean parentOrRoot = folder.equals(Folder.Parent) || folder.isRoot();
-		final Label nameWidget = createNameWidget(folder, !parentOrRoot);
-		ClickHandler clickHandler = new ClickHandler() {
+		icon.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				FileList.this.onIconClicked(folder, panel.getElement());
 			}
-		};
-		nameWidget.addClickHandler(clickHandler);
-		icon.addClickHandler(clickHandler);
+		});
+
+		boolean parentOrRoot = folder.equals(Folder.Parent) || folder.isRoot();
+		final Label nameWidget = createNameWidget(folder, !parentOrRoot);
+		nameWidget.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				FileList.this.onClick(folder, COLUMN_ID_NAME);
+			}
+		});
 
 		panel.add(icon);
 		panel.add(nameWidget);
