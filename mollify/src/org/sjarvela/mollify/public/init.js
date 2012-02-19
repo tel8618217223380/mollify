@@ -54,9 +54,9 @@
 				}
 			});
 			
-			$.datepicker.setDefaults({
-				dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
-			});
+			//$.datepicker.setDefaults({
+			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
+			//});
 		}
 		
 		this.getSettings = function() {
@@ -118,15 +118,15 @@
 			});
 		}
 		
-		this.formatDate = function(d) {
+		/*this.formatDate = function(d) {
 			return $.datepicker.formatDate(getDateFormat(), d);
-		}
+		}*/
 
 		this.formatDateTime = function(time, fmt) {
 			return time.format(fmt);
 		}
 
-		this.parseDate = function(dateFmt, date, time) {
+		/*this.parseDate = function(dateFmt, date, time) {
 			if (!date || date.length == 0) return null;
 			
 			var t = $.datepicker.parseDate(dateFmt, date);
@@ -141,7 +141,7 @@
 				t.setSeconds(time.length > 6 ? time.substring(7,9) : "00");
 			}
 			return t;
-		}
+		}*/
 
 		this.parseInternalTime = function(time) {
 			var ts = new Date();
@@ -532,20 +532,23 @@ function SharePlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		that.testclip = new ZeroClipboard.Client();
-		that.testclip.addEventListener('load', function(client) {
-			console.log("Clipboard support detected");
-			that.testclip.hide();
-			
-			that.clip = new ZeroClipboard.Client();
-			that.clip.setHandCursor(true);
-			that.clip.setCSSEffects(false);
-			that.clip.addEventListener('onMouseOver', function() { that.onClipMouse(true); });
-			that.clip.addEventListener('onMouseOut', function() { that.onClipMouse(false); });
-			that.clip.addEventListener('onComplete', that.onClipClick);
-			
-			if (that.shares.length > 0) $(".share-link-copy-container").removeClass("hidden");
-		});
+		
+		if (window.ZeroClipboard) {
+			that.testclip = new ZeroClipboard.Client();
+			that.testclip.addEventListener('load', function(client) {
+				console.log("Clipboard support detected");
+				that.testclip.hide();
+				
+				that.clip = new ZeroClipboard.Client();
+				that.clip.setHandCursor(true);
+				that.clip.setCSSEffects(false);
+				that.clip.addEventListener('onMouseOver', function() { that.onClipMouse(true); });
+				that.clip.addEventListener('onMouseOut', function() { that.onClipMouse(false); });
+				that.clip.addEventListener('onComplete', that.onClipClick);
+				
+				if (that.shares.length > 0) $(".share-link-copy-container").removeClass("hidden");
+			});
+		}
 
 		that.clip = false;
 		that.hoverId = false;
@@ -609,7 +612,7 @@ function SharePlugin() {
 
 			$("#add-share-btn").click(function() { that.onAddShare(item); } );
 			$("#share-dialog-close").click(function() { d.close(); } );
-			that.testclip.glue("clip-test");
+			if (that.testclip) that.testclip.glue("clip-test");
 			
 			that.env.service().get("share/items/"+item.id, function(result) {
 				that.refreshShares(item, result);
@@ -759,7 +762,7 @@ function SharePlugin() {
 		$("#"+toolbarId).show();
 		$("#"+contentTemplateId).tmpl({}).appendTo($("#share-context-content").empty());
 		mollify.localize("share-context-content");
-		$("#share-validity-expirationdate-value").datepicker();
+		//$("#share-validity-expirationdate-value").datepicker();
 	}
 	
 	this.onAddShare = function(item) {
@@ -771,7 +774,7 @@ function SharePlugin() {
 		$("#share-addedit-btn-ok").click(function() {
 			var name = $("#share-general-name").val();
 			var active = $("#share-general-active").is(":checked");
-			var expiration = mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
+			var expiration = null;//mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
 			
 			$("#share-items").empty().append('<div class="loading"/>');
 			that.closeAddEdit();

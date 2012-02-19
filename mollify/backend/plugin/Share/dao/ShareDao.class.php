@@ -26,7 +26,7 @@
 			$db = $this->env->configuration()->db();
 			$query = "select id, name, item_id, active from ".$db->table("share")." where active=1 and id = ".$db->string($id, TRUE);
 			if ($mustBeValidAfter)
-				$query .= ' and (expiration is not null or expiration >= '.$db->string($this->formatTimestampInternal($mustBeValidAfter));
+				$query .= ' and (expiration is null or expiration >= '.$db->string($mustBeValidAfter).')';
 			return $db->query($query)->firstRow();
 		}
 
