@@ -9,7 +9,7 @@ Plupload itself (as well as Mollify Plupload plugin) is released under GPLv2 lic
 
 = Installation =
 
-1) Copy plugin folder into backend plugins folder
+1) Copy Plupload plugin folder into backend plugins folder
 
 2) Register plugin in backend configuration.php
 {{{
@@ -17,7 +17,7 @@ $PLUGINS = array(
 	"Plupload" => array()
 );
 }}}	
-3) Register client plugin in host page:
+3) Register client plugin in host page (ie. index.html):
 
    a) Add required javascript libraries (make sure they are imported only once):
 {{{
