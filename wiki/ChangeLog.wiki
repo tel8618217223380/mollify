@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Plupload plugin version 1.0.9 ===
+Released 2012/2/24
+  * For Mollify 1.8.6.2
+
 === Version 1.8.6.2 ===
 Released 2012/2/24
   * Quick access menu in file list
