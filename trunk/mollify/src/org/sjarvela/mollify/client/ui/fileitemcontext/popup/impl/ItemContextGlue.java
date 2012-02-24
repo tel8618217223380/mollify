@@ -69,5 +69,4 @@ public class ItemContextGlue implements ItemContextPopup {
 	public void showMenu(FileSystemItem t, Element parent) {
 		presenter.showMenu(t, parent);
 	}
-
 }
