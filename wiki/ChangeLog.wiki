@@ -4,7 +4,7 @@
 === Version 1.8.6.2 ===
 Released 2012/2/24
   * Quick access menu in file list
-  * New functionality in Share plugin: "Copy to clipboard" for share url (note, this needs adding ZeroClipboard lib, see example host page in package)
+  * New functionality in Share plugin: "Copy to clipboard" for share url (Note! ZeroClipboard lib is required, see example host page in package)
   * Ability to remove comments
   * Fixed issue 362
   * Fixed issue 363
