@@ -1,0 +1,32 @@
+<div id="plupload-container">
+	<div id="plupload-content" style="display:none">
+		<div id="plupload-header">
+			<span id="plupload-header-text" class="localized" text-key="pluploadHeaderSelectFiles"></span>
+			<button id="plupload-select-button" class="gwt-Button plupload-button localized" text-key="pluploadSelectFilesButton"></button>
+		</div>
+		<div id="plupload-files"></div>
+		<div id="plupload-footer-select">
+		    <button id="plupload-upload-button" class="gwt-Button plupload-button localized" text-key="pluploadStartUploadButton"></button>
+		    <button id="plupload-cancel-select-button" class="gwt-Button plupload-button localized" text-key="pluploadCancelButton"></button>
+	    </div>
+		<div id="plupload-footer-upload" style="display:none">
+			<div id="plupload-total-progress"><div id="plupload-total-progress-bar" style="width:0%;"></div></div>
+		    <button id="plupload-cancel-upload-button" class="gwt-Button plupload-button localized" text-key="pluploadCancelButton" href="#"></button>
+	    </div>
+    </div>
+</div>
+
+<script id="plupload-files-empty" type="text/x-jquery-tmpl"> 
+	<div id="plupload-no-files-text" class="localized" text-key="pluploadNoFilesSelected"></div>
+</script>
+
+<script id="plupload-file-template" type="text/x-jquery-tmpl"> 
+	<div id="${id}" class="plupload-file">
+		<div class="plupload-file-data">
+			<div class="plupload-file-name">${name}</div>
+			<div class="plupload-file-size">${$item.formatSize(size)}</div><div id="${id}-progress" class="plupload-file-progress" style="display:none"></div>
+		</div>
+		<div class="plupload-file-remove"></div>
+	</div>
+</script>
+
