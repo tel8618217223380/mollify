@@ -199,7 +199,7 @@
 						
 						if ($userId === 'current') {
 							if (!isset($pw['old'])) throw $this->invalidRequestException();
-							$userId = $this->env->authentication()->getUserId();
+							$userId = $this->env->session()->userId();
 							
 							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
 						}

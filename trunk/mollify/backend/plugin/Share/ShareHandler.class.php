@@ -23,17 +23,17 @@
 				
 		public function getItemContextData($item, $details, $key, $data) {
 			return array(
-				"count" => $this->dao()->getShareCount($item, $this->env->authentication()->getUserId())
+				"count" => $this->dao()->getShareCount($item, $this->env->session()->userId())
 			);
 		}
 		
 		public function getShares($item) {
-			return $this->dao()->getShares($item, $this->env->authentication()->getUserId());
+			return $this->dao()->getShares($item, $this->env->session()->userId());
 		}
 
 		public function addShare($item, $name, $expirationTs, $active) {
 			$created = $this->env->configuration()->formatTimestampInternal(time());
-			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->authentication()->getUserId(), $expirationTs, $created, $active);
+			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active);
 		}
 
 		public function editShare($id, $name, $expirationTs, $active) {

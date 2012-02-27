@@ -287,8 +287,8 @@
 			$userTable = $this->db->table("user");
 			
 			$userIds = array($userId);
-			if ($includeGroupFolders and $this->env->authentication()->hasUserGroups()) {
-				foreach($this->env->authentication()->getUserGroups() as $g)
+			if ($includeGroupFolders and $this->env->session()->hasUserGroups()) {
+				foreach($this->env->session()->userGroups() as $g)
 					$userIds[] = $g['id'];
 			}
 			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
@@ -385,8 +385,8 @@
 			
 			$userQuery = sprintf("(user_id = '%s')", $userId);
 			$userIds = array(0, $userId);
-			if ($this->env->authentication()->hasUserGroups()) {
-				foreach($this->env->authentication()->getUserGroups() as $g)
+			if ($this->env->session()->hasUserGroups()) {
+				foreach($this->env->session()->userGroups() as $g)
 					$userIds[] = $g['id'];
 			}
 			$userQuery = sprintf("(user_id in (%s))", $this->db->arrayString($userIds));
@@ -441,8 +441,8 @@
 			$parentLocation = str_replace("'", "\'", str_replace("\\", "\\\\", $parent->location()));
 			$table = $this->db->table("item_permission");
 			$userIds = array($userId);
-			if ($this->env->authentication()->hasUserGroups()) {
-				foreach($this->env->authentication()->getUserGroups() as $g)
+			if ($this->env->session()->hasUserGroups()) {
+				foreach($this->env->session()->userGroups() as $g)
 					$userIds[] = $g['id'];
 			}
 			$userIds[] = "0";

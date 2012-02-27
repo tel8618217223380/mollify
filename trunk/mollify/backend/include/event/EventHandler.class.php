@@ -33,7 +33,15 @@
 		}
 		
 		public function onEvent($e) {
-			$e->setUser($this->env->authentication()->isAuthenticated() ? $this->env->authentication()->getUserInfo() : NULL);
+			if ($this->env->authentication()->isAuthenticated()) {
+				$e->setUser(array(
+					'user_id' => $this->env->session()->userId(),
+					'username' => $this->env->session()->username(),
+				));
+			} else {
+				$e->setUser(NULL);
+			}
+
 			$e->setIp($this->env->request()->ip());
 			
 			if (Logging::isDebug()) Logging::logDebug("EVENT HANDLER: onEvent: '".$e->type()."'");

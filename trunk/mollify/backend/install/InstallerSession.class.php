@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -23,7 +23,7 @@
 			parent::initialize($env);
 			if ($this->env->authentication()->isAdmin())
 				return;
-			session_destroy();
+			//session_destroy();
 		}
 	}
 ?>

@@ -33,7 +33,7 @@
 			$data = $this->request->data;
 			if (!isset($data["comment"]) or strlen($data["comment"]) == 0) throw $this->invalidRequestException("No data");
 			
-			$this->handler()->addComment($this->env->authentication()->getUserId(), $item, $data["comment"]);
+			$this->handler()->addComment($this->env->session()->userId(), $item, $data["comment"]);
 			$this->response()->success(array("count" => $this->handler()->getCommentCount($item)));
 		}
 		

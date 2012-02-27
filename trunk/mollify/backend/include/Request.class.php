@@ -57,6 +57,12 @@
 			}
 		}
 		
+		public function getSessionId() {
+			if ($this->hasParam("session")) return $this->param("session");
+			if (isset($_SERVER['HTTP_MOLLIFY_SESSION'])) return $_SERVER['HTTP_MOLLIFY_SESSION'];
+			return NULL;
+		}
+		
 		private function getUri() {
 			$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
 			$pos = strpos($uri, "/r.php/");

@@ -21,6 +21,7 @@
 		private $configuration;
 		private $plugins;
 		private $features;
+		private $cookies;
 		
 		private $error = NULL;
 		private $errorDetails = NULL;
@@ -41,7 +42,7 @@
 			require_once("include/Settings.class.php");
 			require_once("include/Features.class.php");
 			require_once("include/Util.class.php");
-			require_once("include/Session.class.php");
+			require_once("include/session/Session.class.php");
 			require_once("include/event/EventHandler.class.php");
 			require_once("InstallerAuthentication.class.php");
 			require_once("include/ConfigurationFactory.class.php");
@@ -55,9 +56,10 @@
 			$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
 			$this->configuration->initialize($this);
 			$this->features = new Features($this->configuration, $this->settings);
+			$this->cookies = new Cookie($this->settings);
 			
 			$this->plugins->setup();
-			$this->session->initialize($this);
+			$this->session->initialize($this, NULL);
 		}
 		
 		public function registerFilesystem($id, $fs) {}
@@ -69,7 +71,11 @@
 		public function onError($e) {
 			Logging::logException($e);
 		}
-		
+
+		public function cookies() {
+			return $this->cookies;
+		}
+				
 		public function session() {
 			return $this->session;
 		}

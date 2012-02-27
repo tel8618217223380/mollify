@@ -25,6 +25,10 @@
 			return $_COOKIE[$this->getName($name)];
 		}
 		
+		function remove($name) {
+			$this->add($name, "", time()-42000);
+		}
+		
 		function exists($name) {
 			return isset($_COOKIE[$this->getName($name)]);
 		}

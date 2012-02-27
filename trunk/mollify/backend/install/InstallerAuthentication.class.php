@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -15,11 +15,6 @@
 	class InstallerAuthentication extends Authentication {
 		public function __construct($env) {
 			parent::__construct($env);
-		}
-		
-		public function getDefaultPermission() {
-			if ($this->env->session()->hasParam('default_permission')) return $this->env->session()->param('default_permission');
-			return parent::getDefaultPermission();
 		}
 	}
 ?>
