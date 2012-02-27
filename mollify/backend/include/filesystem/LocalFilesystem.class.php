@@ -43,9 +43,15 @@
 		public function type() {
 			return MollifyFilesystem::TYPE_LOCAL;
 		}
-		
+
+		public function createItemWithInternalPath($id, $path) {
+			if (strpos($path, $this->rootPath) === FALSE)
+				throw new ServiceException("INVALID_REQUEST", "Illegal filesystem (".$this->rootPath.") for path: ".$path);
+			return $this->createItem($id, $this->publicPath($path));
+		}
+				
 		public function createItem($id, $path) {
-			if (strlen($path) > 0 and strpos("..", $path) != FALSE)
+			if (strlen($path) > 0 and strpos($path, "..") != FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
 			$fullPath = self::joinPath($this->rootPath, $path);
@@ -229,7 +235,7 @@
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS", "Failed to move [".$item->id()."] to [".$to->id()."], target already exists (".$target.")");
 			if (!rename($item->internalPath(), $target)) throw new ServiceException("REQUEST_FAILED", "Failed to move [".$item->id()."] to ".$target);
 			
-			return $this->createItem($item->id(), $this->publicPath($this->filesystemInfo->env()->convertCharset($target)));
+			return $to->filesystem()->createItemWithInternalPath($item->id(), $this->filesystemInfo->env()->convertCharset($target));
 		}
 		
 		public function delete($item) {

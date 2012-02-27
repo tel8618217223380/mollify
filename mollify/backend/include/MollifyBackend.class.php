@@ -12,7 +12,7 @@
 
 
 	require_once("include/event/EventHandler.class.php");
-	require_once("include/Session.class.php");
+	require_once("include/session/Session.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
 	require_once("include/configuration/UserEvent.class.php");
@@ -34,10 +34,10 @@
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
 			$this->environment->addService("events", "EventServices");
-			if (Logging::isDebug()) {
+			/*if (Logging::isDebug()) {
 				$this->environment->addService("debug", "DebugServices");
 				$this->environment->response()->addListener($this);
-			}
+			}*/
 			
 			UserEvent::register($this->environment->events());
 			
@@ -45,9 +45,9 @@
 		}
 		
 		public function onResponseSent() {
-			if (!$this->environment->request()) return;
-			$path = $this->environment->request()->path();
-			if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
+			//if (!$this->environment->request()) return;
+			//$path = $this->environment->request()->path();
+			/*if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
 			
 			if (!$this->environment->session()->hasParam("debug_info"))
 				$debug = array();
@@ -59,7 +59,7 @@
 				unset($debug[0]);
 				$debug = array_values($debug);
 			}
-			$this->environment->session()->param("debug_info", $debug);
+			$this->environment->session()->param("debug_info", $debug);*/
 		}
 		
 		public function env() {
@@ -71,7 +71,7 @@
 			$service = $this->environment->getService($request);
 
 			if (!$service->isAuthenticated()) {
-				$this->environment->session()->reset();
+				$this->environment->session()->end();
 				throw new ServiceException("UNAUTHORIZED");
 			}
 			

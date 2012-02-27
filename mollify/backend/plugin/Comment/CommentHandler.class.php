@@ -49,7 +49,7 @@
 		}
 		
 		public function removeComment($item, $commentId) {
-			$user = $this->env->authentication()->getUserId();
+			$user = $this->env->session()->userId();
 			if ($this->env->authentication()->isAdmin()) $user = NULL;
 			$this->getDao()->removeComment($item, $commentId, $user);
 		}

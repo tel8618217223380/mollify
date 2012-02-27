@@ -40,13 +40,10 @@
 			if (!$this->isAuthenticationRequired()) return;
 			if ($this->isAuthenticated()) {
 				if (!$this->env->session()->hasParam('auth') or strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
-				if (isset($_SERVER["REMOTE_USER"]) and strcasecmp($this->env->session()->param('username'), $_SERVER["REMOTE_USER"]) == 0) return;
+				if (isset($_SERVER["REMOTE_USER"]) and strcasecmp($this->env->session()->username(), $_SERVER["REMOTE_USER"]) == 0) return;
 
-				// remote user has changed, reset old session
-				$this->env->session()->removeParam('auth');
-				$this->env->session()->removeParam('user_id');
-				$this->env->session()->removeParam('username');
-				$this->env->session()->removeParam('default_permission');
+				// remote user has changed, end session
+				$this->env->session()->end();
 			}
 			
 			Logging::logDebug("No authenticated session active");
@@ -98,15 +95,14 @@
 		}
 		
 		public function storeCookie() {
-			$userId = $this->env->session()->param('user_id');
-			$user = $this->env->configuration()->getUser($userId);
-			$data = $userId.":".$this->getCookieAuthString($user);
+			$user = $this->env->session()->user();
+			$data = $user["id"].":".$this->getCookieAuthString($user);
 			$this->env->cookies()->add("login", $data, time()+60*60*24*30);
 		}
 		
 		public function logout() {
 			if (!$this->env->cookies()->exists("login")) return;
-			$this->env->cookies()->add("login", "", time()-42000);
+			$this->env->cookies()->remove("login");
 		}
 		
 		public function authenticate($userId, $pw) {
@@ -162,11 +158,7 @@
 		}
 
 		public function doAuth($user, $auth = NULL) {
-			$this->env->session()->param('user_id', $user["id"]);
-			if ($this->env->features()->isFeatureEnabled('user_groups'))
-				$this->env->session()->param('groups', $this->env->configuration()->getUsersGroups($user["id"]));
-			$this->env->session()->param('username', $user["name"]);
-			if ($auth != NULL) $this->env->session()->param('auth', $auth);
+			$this->env->session()->start($user, array("auth" => $auth));
 		}
 		
 		public function realm() {
@@ -174,43 +166,17 @@
 		}
 		
 		public function isAuthenticated() {
-			return $this->env->session()->hasParam('user_id');
+			return $this->env->session()->isActive();
 		}
 
 		public function isAuthenticationRequired() {
 			return $this->env->configuration()->isAuthenticationRequired();
 		}
-
-		public function getUserId() {
-			if (!$this->isAuthenticated()) return NULL;
-			return $this->env->session()->param('user_id');
-		}
-
-		public function getUsername() {
-			if (!$this->isAuthenticated()) return NULL;
-			return $this->env->session()->param('username');
-		}
-		
-		public function getUserGroups() {
-			return $this->env->session()->param('groups');
-		}
-		
-		public function hasUserGroups() {
-			return $this->env->session()->hasParam("groups");
-		}
-		
-		public function getUserInfo() {
-			return array(
-				'user_id' => $this->getUserId(),
-				'username' => $this->getUsername(),
-				'default_permission' => $this->getDefaultPermission()
-			);
-		}
 		
 		public function getDefaultPermission() {
 			if (!$this->cachedDefaultPermission) {
 				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission();
-				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->getUserId());
+				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->env->session()->userId());
 			}
 			return $this->cachedDefaultPermission;
 		}

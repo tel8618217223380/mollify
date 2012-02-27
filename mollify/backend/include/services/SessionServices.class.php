@@ -32,7 +32,7 @@
 		public function processGet() {
 			if ($this->path[0] === 'logout') {
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
-				$this->env->session()->reset();
+				$this->env->session()->end();
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -44,7 +44,7 @@
 			if ($this->path[0] === 'logout') {
 				$this->env->authentication()->logout();
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
-				$this->env->session()->reset();
+				$this->env->session()->end();
 				$this->response()->success(TRUE);
 				return;
 			}
@@ -78,10 +78,11 @@
 			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo(), "plugin_base_url" => $this->env->getPluginBaseUrl());
 			
 			if (!$auth->isAuthenticationRequired() or $auth->isAuthenticated()) {
+				$info["default_permission"] = $this->env->authentication()->getDefaultPermission();
+				
 				$info = array_merge(
 					$info,
 					$this->env->session()->getSessionInfo(),
-					$this->env->authentication()->getUserInfo(),
 					$this->env->filesystem()->getSessionInfo()
 				);
 			}

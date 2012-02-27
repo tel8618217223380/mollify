@@ -90,7 +90,7 @@
 		
 		private function getFolderDefs($all = FALSE) {
 			if (!$all)
-				$folderDefs = $this->env->configuration()->getUserFolders($this->env->authentication()->getUserId(), TRUE);
+				$folderDefs = $this->env->configuration()->getUserFolders($this->env->session()->userId(), TRUE);
 			else
 				$folderDefs = $this->env->configuration()->getFolders();
 
@@ -101,11 +101,11 @@
 				if (!$this->isFolderValid($folderDef, !$all)) continue;
 				
 				if (!isset($folderDef["name"]) and !isset($folderDef["default_name"])) {
-					$this->env->session()->reset();
+					$this->env->session()->end();
 					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a name (".$folderDef['id'].")");
 				}
 				if (!isset($folderDef["path"])) {
-					$this->env->session()->reset();
+					$this->env->session()->end();
 					throw new ServiceException("INVALID_CONFIGURATION", "Folder definition does not have a path (".$folderDef['id'].")");
 				}
 				
@@ -303,7 +303,7 @@
 		
 		public function fetchPermissions($folder) {
 			if ($this->env->authentication()->isAdmin()) return;
-			$permissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->authentication()->getUserId());
+			$permissions = $this->env->configuration()->getAllItemPermissions($folder, $this->env->session()->userId());
 
 			$this->permissionCacheFolders[] = $folder->id();
 			foreach($permissions as $id => $p)
@@ -319,7 +319,7 @@
 				$permission = $this->permissionCache[$item->id()];
 				Logging::logDebug("Permission cache get [".$item->id()."]=".$permission);
 			} else {
-				$permission = $this->env->configuration()->getItemPermission($item, $this->env->authentication()->getUserId());
+				$permission = $this->env->configuration()->getItemPermission($item, $this->env->session()->userId());
 				if (!$permission) return $this->env->authentication()->getDefaultPermission();
 				
 				$this->permissionCache[$item->id()] = $permission;
@@ -423,7 +423,6 @@
 			
 			if ($this->env->features()->isFeatureEnabled("descriptions"))
 				$this->env->configuration()->removeItemDescription($item);
-				
 			
 			$this->env->configuration()->removeItemPermissions($item);
 			
@@ -448,7 +447,7 @@
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 			
 			if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()))
-				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->authentication()->getUserId());
+				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->session()->userId());
 		}
 
 		public function download($file, $mobile, $range = NULL) {
@@ -568,12 +567,36 @@
 		}
 		
 		public function downloadAsZip($items, $mobile) {
+			$zip = $this->createZip($items);
+			$name = "items.zip";
+			if (!is_array($items)) $name = $item->name().".zip";
+			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
+		}
+		
+		public function storeZip($items) {
+			$id = uniqid();
+			$zip = $this->createZip($items);
+			$this->env->session()->param("zip_"+$id, $zip->filename());
+			return $id;
+		}
+		
+		public function downloadStoredZip($id, $mobile) {
+			$filename = $this->env->session()->param("zip_"+$id);
+			if (!file_exists($filename))
+				throw new ServiceException("INVALID_REQUEST", "Stored zip does not exist");
+
+			$handle = @fopen($filename, "rb");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
+			$this->env->response()->download("items.zip", "zip", $mobile, $handle);
+		}
+		
+		private function createZip($items) {
 			$this->env->features()->assertFeature("zip_download");
 			
 			if (is_array($items)) {
 				$this->assertRights($items, Authentication::RIGHTS_READ, "download as zip");
 				
-				$name = "items.zip";
 				$zip = $this->zipper();
 				foreach($items as $item) {
 					$item->addToZip($zip);
@@ -583,8 +606,7 @@
 			} else {
 				$item = $items;
 				$this->assertRights($item, Authentication::RIGHTS_READ, "download as zip");
-				
-				$name = $item->name().".zip";
+
 				$zip = $this->zipper();
 				$item->addToZip($zip);
 				$zip->finish();
@@ -592,7 +614,7 @@
 				$this->env->events()->onEvent(FileEvent::download($item));
 			}
 			
-			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
+			return $zip;
 		}
 		
 		public function search($parent, $text) {

@@ -123,11 +123,8 @@
 		}
 										
 		public function initialize($request = NULL) {
-			$sessionId = NULL;
-			if ($request != NULL and $request->hasParam("session")) $sessionId = $request->param("session");
-			$this->request = $request;
-			
-			$this->session->initialize($this, $sessionId);
+			$this->request = $request;			
+			$this->session->initialize($this, $request);
 			$this->configuration->initialize($this);
 			$this->filesystem->initialize();
 			$this->authentication->initialize();

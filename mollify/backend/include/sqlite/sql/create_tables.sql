@@ -27,8 +27,8 @@ CREATE TABLE item_description (
   PRIMARY KEY (item_id)
 );
 CREATE TABLE item_id (
-  `id` char(13) NOT NULL,
-  `path` char(255) NOT NULL,
+  id char(13) NOT NULL,
+  path char(255) NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE item_permission (
@@ -58,4 +58,19 @@ CREATE TABLE event_log (
   type varchar(128) NOT NULL,
   item varchar(512) NULL,
   details varchar(1024) NULL
+);
+CREATE TABLE session (
+  id char(32) NOT NULL,
+  user_id int(11) NOT NULL,
+  time bigint(11) NOT NULL,
+  last_access bigint(11) NOT NULL,
+  ip varchar(128) NULL,
+  PRIMARY KEY (id)
+);
+CREATE TABLE session_data (
+  session_id char(32) NOT NULL,
+  name char(64) NOT NULL,
+  value varchar(128) NULL,
+  PRIMARY KEY (session_id,name),
+  FOREIGN KEY(session_id) REFERENCES session(id)
 );

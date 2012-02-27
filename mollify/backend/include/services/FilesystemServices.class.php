@@ -22,18 +22,11 @@
 				$this->processGetUpload();
 				return;
 			}
-			if ($this->path[0] === 'items' and count($this->path) == 2 and $this->path[1] === 'zip') {
-				if (!$this->env->session()->hasParam("zip_items")) throw $this->invalidRequestException();
-				$itemIds = $this->env->session()->param("zip_items");
-				$this->env->session()->removeParam("zip_items");
-				if (count($itemIds) < 1) throw $this->invalidRequestException();
+			
+			if ($this->path[0] === 'zip' and count($this->path) == 2) {		
 				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
-				
-				$items = array();
-				foreach($itemIds as $id)
-					$items[] = $this->item($id);
-
-				$this->env->filesystem()->downloadAsZip($items, $mobile);
+				$id = $this->path[1];
+				$this->env->filesystem()->downloadStoredZip($id);
 				return;
 			}
 
@@ -118,8 +111,15 @@
 					$this->response()->success(TRUE);
 					return;
 				case 'zip':
-					$this->env->session()->param("zip_items", $data['items']);
-					$this->response()->success(TRUE);
+					$itemIds = $data['items'];
+					if (count($itemIds) < 1) throw $this->invalidRequestException();
+				
+					$items = array();
+					foreach($itemIds as $id)
+						$items[] = $this->item($id);
+
+					$zipId = $this->env->filesystem()->storeZip($items);
+					$this->response()->success(array("id" => $zipId));
 					return;
 				default:
 					throw $this->invalidRequestException();
