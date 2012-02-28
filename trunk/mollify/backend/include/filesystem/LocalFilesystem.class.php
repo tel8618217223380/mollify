@@ -324,7 +324,7 @@
 			while (!feof($s)) {
 				set_time_limit(0);
 				fwrite($handle, fread($s, 1024));
-			}			
+			}
 			fclose($handle);
 		}
 		

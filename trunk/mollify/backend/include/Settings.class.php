@@ -45,7 +45,8 @@
 			"upload_temp_dir" => NULL,
 			"enable_thumbnails" => TRUE,
 			"enable_folder_protection" => FALSE,
-			"debug" => FALSE
+			"debug" => FALSE,
+			"debug_log" => NULL
 		);
 		
 		function __construct($settings) {

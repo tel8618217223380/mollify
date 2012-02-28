@@ -34,10 +34,10 @@
 			$this->environment->addService("configuration", "ConfigurationServices");
 			$this->environment->addService("filesystem", "FilesystemServices");
 			$this->environment->addService("events", "EventServices");
-			/*if (Logging::isDebug()) {
+			if (Logging::isDebug()) {
 				$this->environment->addService("debug", "DebugServices");
 				$this->environment->response()->addListener($this);
-			}*/
+			}
 			
 			UserEvent::register($this->environment->events());
 			
@@ -45,21 +45,26 @@
 		}
 		
 		public function onResponseSent() {
-			//if (!$this->environment->request()) return;
-			//$path = $this->environment->request()->path();
-			/*if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
+			if (!$this->settings->hasSetting("debug_log") or !$this->environment->request()) return;
+			$path = $this->environment->request()->path();
+			if (count($path) > 0 and (strcasecmp($path[0], "debug") == 0)) return;
 			
-			if (!$this->environment->session()->hasParam("debug_info"))
-				$debug = array();
-			else
-				$debug = $this->environment->session()->param("debug_info");
-			
-			$debug[] = Logging::getTrace();
-			while (count($debug) > 5) {
-				unset($debug[0]);
-				$debug = array_values($debug);
+			$log = $this->settings->setting("debug_log");
+			$handle = @fopen($log, "a");
+			if (!$handle) {
+				Logging::logError("Could not write to log file: ".$log);
+				return;
 			}
-			$this->environment->session()->param("debug_info", $debug);*/
+			
+			$trace = Logging::getTrace();
+			try {
+				foreach($trace as $d)
+					fwrite($handle, Util::toString($d));
+				fclose($handle);
+			} catch (Exception $e) {
+				Logging::logError("Could not write to log file: ".$log);
+				Logging::logException($e);
+			}
 		}
 		
 		public function env() {
