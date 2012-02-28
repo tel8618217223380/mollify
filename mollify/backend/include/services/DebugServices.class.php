@@ -24,20 +24,32 @@
 		}
 
 		public function processGet() {
-			if (!$this->env->session()->hasParam("debug_info"))
-				$this->response()->html("<html><body><h1>Mollify Debug</h1><p>No debug info available</p></body></html>");
+			if (!$this->env->settings()->hasSetting("debug_log"))
+				$this->response()->html("<html><body><h1>Mollify Debug</h1><p>No debug log file specified in configuration.php.</p><p>Add setting <code>debug_log</code> with absolute path to the log file. NOTE! PHP must have read and write permissions to this file.</body></html>");
+			else if (!file_exists($this->env->settings()->setting("debug_log")))
+				$this->response()->html("<html><body><h1>Mollify Debug</h1><p>Debug log file not found (<code>".$this->env->settings()->setting("debug_log")."</code>).</p><p>This means that either no log has been generated (log is emptied after viewed by this viewer), or PHP has no read/write permissions to this file.</p></body></html>");
 			else
 				$this->response()->html($this->getDebugHtml());
 		}
 		
 		private function getDebugHtml() {
+			$log = $this->env->settings()->setting("debug_log");
 			$html = "<html><body><h1>Mollify Debug</h1><p>";
 			
-			foreach($this->env->session()->param("debug_info") as $d)
-				$html .= "<p><code>".htmlspecialchars(Util::toString($d), ENT_QUOTES)."</code></p>";
+			$handle = @fopen($log, "rb");
+			if (!$handle) {
+				$html .= "Cannot read log file ".$log;
+				return $html;
+			}
+
+			$html .= "<p><code>";
+			while (!feof($handle)) {
+				$html .= htmlspecialchars(fread($handle, 1024), ENT_QUOTES);
+			}
+			fclose($handle);
+			unlink($log);
 			
-			$html .= "</body></html>";
-			return $html;
+			return $html."</code></p></body></html>";
 		}
 		
 		public function __toString() {
