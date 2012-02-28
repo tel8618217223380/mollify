@@ -72,6 +72,10 @@
 			Logging::logException($e);
 		}
 
+		public function settings() {
+			return $this->settings;
+		}
+		
 		public function cookies() {
 			return $this->cookies;
 		}
