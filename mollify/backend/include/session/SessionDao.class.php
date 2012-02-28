@@ -59,6 +59,16 @@
 			$db = $this->env->configuration()->db();
 			$db->update(sprintf("UPDATE ".$db->table("session")." set last_access=%s where id=%s", $db->string($time), $db->string($id, TRUE)));
 		}
+		
+		public function removeAllSessionBefore($time) {
+			$db = $this->env->configuration()->db();
+			$ids = $db->query(sprintf("select id from ".$db->table("session")." where last_access < %s", $db->string($time)))->values("id");
+			if (count($ids) == 0) return;
+			
+			$idList = $db->arrayString($ids);
+			$db->update(sprintf("DELETE FROM ".$db->table("session_data")." where session_id in %s", $db->string($idList)));
+			$db->update(sprintf("DELETE FROM ".$db->table("session")." where id in %s", $db->string($idList)));
+		}
 								
 		public function __toString() {
 			return "SessionDao";
