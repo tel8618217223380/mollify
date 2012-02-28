@@ -61,6 +61,10 @@
 			$key = str_replace(".", "", uniqid("", TRUE));
 			
 			$db->update(sprintf("INSERT INTO ".$db->table("pending_registrations")." (`name`, `password`, `email`, `key`, `time`) VALUES (%s, %s, %s, %s, %s)", $db->string($name, TRUE), $db->string($password, TRUE), $db->string($email, TRUE), $db->string($key, TRUE), $time));
+			$registration["id"] = $db->lastId();
+			
+			if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
+			if (function_exists("onRegisterCustomData")) onRegisterCustomData($registration);
 			
 			$this->notify($name, $email, $key, $password);
 			$this->env->events()->onEvent(RegistrationEvent::registered($name, $email));
@@ -119,6 +123,9 @@
 			$db->update("DELETE from ".$db->table("pending_registrations")." where `id`=".$db->string($registration['id'],TRUE));
 			
 			$this->addUserProperties($id, $registration['name'], $plugin);
+			
+			if (file_exists("plugin/Registration/custom/CustomRegistrationHandler.php")) include("custom/CustomRegistrationHandler.php");
+			if (function_exists("onConfirmCustomData")) onConfirmCustomData($registration, $id);
 			
 			$this->env->events()->onEvent(RegistrationEvent::confirmed($id, $registration['name']));
 			$this->response()->success(array());

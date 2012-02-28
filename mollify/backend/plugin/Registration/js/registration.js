@@ -27,8 +27,8 @@ function getSessionInfo(success, fail) {
 	request("GET", 'session/info/'+protocolVersion, success, fail);
 }
 
-function register(name, pw, email, success, fail) {
-	var data = JSON.stringify({name:name, password:Base64.encode(pw), email:email});
+function register(name, pw, email, additionalData, success, fail) {
+	var data = JSON.stringify({name:name, password:Base64.encode(pw), email:email, data: additionalData});
 	request("POST", 'registration/create', success, fail, data);
 }
 

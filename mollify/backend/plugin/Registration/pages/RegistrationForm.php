@@ -57,6 +57,9 @@
 				<input type="text" id="email-field" class="registration-field"></input>
 				<div id="email-hint" class="registration-field-hint"></div>
 			</div>
+<?php
+	if (file_exists("custom/CustomRegistrationFields.php")) include("custom/CustomRegistrationFields.php");
+?>
 			<div class="buttons">
 				<a id="register-button" href="#" class="btn">Register</a>
 			</div>
