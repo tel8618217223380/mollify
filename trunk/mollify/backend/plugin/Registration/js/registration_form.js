@@ -60,7 +60,11 @@ function onRegister() {
 		return;
 	}
 	
-	register(name, pw, email, onRegistered, onError);
+	if (window.onValidateCustomFields) window.onValidateCustomFields();
+	var additionalData = null;
+	if (window.getCustomRegistrationData) additionalData = window.getCustomRegistrationData();
+	
+	register(name, pw, email, additionalData, onRegistered, onError);
 }
 
 function onRegistered(response) {
