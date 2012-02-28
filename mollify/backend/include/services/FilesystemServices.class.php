@@ -26,7 +26,7 @@
 			if ($this->path[0] === 'zip' and count($this->path) == 2) {		
 				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				$id = $this->path[1];
-				$this->env->filesystem()->downloadStoredZip($id);
+				$this->env->filesystem()->downloadStoredZip($id, $mobile);
 				return;
 			}
 

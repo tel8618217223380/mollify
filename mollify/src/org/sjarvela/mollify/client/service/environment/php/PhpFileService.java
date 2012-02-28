@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.environment.php.PhpService.RequestType;
@@ -261,16 +262,17 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			itemArray.add(item.getId());
 
 		request().url(serviceUrl().item("items"))
-				.listener(new ResultListener<Boolean>() {
+				.listener(new ResultListener<JavaScriptObject>() {
 					@Override
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
 					}
 
 					@Override
-					public void onSuccess(Boolean result) {
-						listener.onSuccess(serviceUrl().item("items")
-								.action(FileAction.zip).build());
+					public void onSuccess(JavaScriptObject res) {
+						JsObj o = res.cast();
+						listener.onSuccess(serviceUrl().action(FileAction.zip)
+								.item(o.getString("id")).build());
 					}
 				}).data(data.toString()).post();
 	}

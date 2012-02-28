@@ -576,14 +576,18 @@
 		public function storeZip($items) {
 			$id = uniqid();
 			$zip = $this->createZip($items);
-			$this->env->session()->param("zip_"+$id, $zip->filename());
+			$this->env->session()->param("zip_".$id, $zip->filename());
 			return $id;
 		}
 		
 		public function downloadStoredZip($id, $mobile) {
-			$filename = $this->env->session()->param("zip_"+$id);
+			$p = "zip_".$id;
+			if (!$this->env->session()->hasParam($p))
+				throw new ServiceException("INVALID_REQUEST", "Stored zip id does not exist: ".$p);
+			
+			$filename = $this->env->session()->param($p);
 			if (!file_exists($filename))
-				throw new ServiceException("INVALID_REQUEST", "Stored zip does not exist");
+				throw new ServiceException("INVALID_REQUEST", "Stored zip file does not exist");
 
 			$handle = @fopen($filename, "rb");
 			if (!$handle)
