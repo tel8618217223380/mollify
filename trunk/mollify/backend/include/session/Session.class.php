@@ -46,6 +46,7 @@
 				$sessionData = $this->dao->getSession($id, $this->env->configuration()->formatTimestampInternal($expiration));
 				if ($sessionData == NULL) {
 					$this->env->cookies()->remove("session");
+					$this->removeAllExpiredSessions();
 					throw new ServiceException("INVALID_REQUEST", "Invalid session");
 				}
 				$this->id = $id;
@@ -127,10 +128,16 @@
 		}
 		
 		public function end() {
-			if ($this->isActive()) {
+			if ($this->isActive())
 				$this->dao->removeSession($this->id);
-			}
-			$this->env->cookies()->remove("session");
+			if ($this->env->cookies()->hasCookie("session"))
+				$this->env->cookies()->remove("session");
+			$this->removeAllExpiredSessions();
+		}
+		
+		public function removeAllExpiredSessions() {
+			$expiration = $this->getLastValidSessionTime(time());
+			$sessionData = $this->dao->removeAllSessionBefore($this->env->configuration()->formatTimestampInternal($expiration));
 		}
 
 		public function hasParam($param) {
