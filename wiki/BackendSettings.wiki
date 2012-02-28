@@ -116,7 +116,9 @@ Enable zip downloads, which allows downloading entire folders or file collection
 
 == Zipper implementation (`zipper`) ==
 
-Define the zipper implementation, possible values are "ZipArchive" (default), "Native" and "Raw". Option "ZipArchive" uses PHP zip library (ZipArchive), "Native" uses underlying OS functions (gzip, bzip, rar etc) and "Raw" uses pure PHP zip implementation.
+Define the zipper implementation, possible values are "`ZipArchive`" (default), "`Native`" and "`Raw`". 
+
+Option "`ZipArchive`" uses PHP zip library called `ZipArchive`, "`Native`" uses underlying OS functions (gzip, bzip, rar etc) and "`Raw`" uses pure PHP zip implementation.
 
 == Folder permission mask (`new_folder_permission_mask`) ==
 
