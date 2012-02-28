@@ -57,7 +57,7 @@
 			if (strcmp($key, "extension") === 0)
 				return $item->isFile() ? $item->extension() : NULL;
 			if (strcmp($key, "last-modified") === 0)
-				return $this->env->formatTimestampInternal($item->lastModified());
+				return $this->env->configuration()->formatTimestampInternal($item->lastModified());
 			if (strcmp($key, "image-size") === 0) {
 				$size = getimagesize($item->internalPath());
 				return $size == NULL ? NULL : $size[0]."x".$size[1];

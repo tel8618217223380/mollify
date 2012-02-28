@@ -249,7 +249,7 @@
 			return FALSE;
 		}
 
-		public function details($item, $data) {
+		public function details($item, $data = NULL) {
 			$this->assertRights($item, Authentication::RIGHTS_READ, "details");
 			
 			$details = $item->details();
