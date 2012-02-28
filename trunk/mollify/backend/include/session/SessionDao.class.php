@@ -24,7 +24,7 @@
 		
 		public function getSessionData($id) {
 			$db = $this->env->configuration()->db();
-			return $db->query(sprintf("select name, value from ".$db->table("session_data")." where session_id = %s", $db->string($id, TRUE)))->rows();
+			return $db->query(sprintf("select name, value from ".$db->table("session_data")." where session_id = %s", $db->string($id, TRUE)))->valueMap("name", "value");
 		}
 		
 		public function addSession($id, $userId, $ip, $time) {
@@ -44,8 +44,9 @@
 
 		public function addOrSetSessionData($id, $name, $value) {
 			$db = $this->env->configuration()->db();
+			$idStr = $db->string($id, TRUE);
 			
-			$count = $db->update(sprintf("UPDATE ".$db->table("session_data")." set value=%s where session_id=%s and name=%s", $db->string($id, TRUE), $db->string($value, TRUE), $db->string($name, TRUE)));
+			$count = $db->update(sprintf("UPDATE ".$db->table("session_data")." set value=%s where session_id=%s and name=%s", $db->string($value, TRUE), $idStr, $db->string($name, TRUE)));
 			if ($count === 0) $db->update(sprintf("INSERT INTO ".$db->table("session_data")." (session_id, name, value) VALUES (%s, %s, %s)", $idStr, $db->string($name, TRUE), $db->string($value, TRUE)));
 		}
 		
@@ -65,9 +66,9 @@
 			$ids = $db->query(sprintf("select id from ".$db->table("session")." where last_access < %s", $db->string($time)))->values("id");
 			if (count($ids) == 0) return;
 			
-			$idList = $db->arrayString($ids);
-			$db->update(sprintf("DELETE FROM ".$db->table("session_data")." where session_id in %s", $db->string($idList)));
-			$db->update(sprintf("DELETE FROM ".$db->table("session")." where id in %s", $db->string($idList)));
+			$idList = $db->arrayString($ids, TRUE);
+			$db->update(sprintf("DELETE FROM ".$db->table("session_data")." where session_id in (%s)", $idList));
+			$db->update(sprintf("DELETE FROM ".$db->table("session")." where id in (%s)", $idList));
 		}
 								
 		public function __toString() {

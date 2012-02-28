@@ -36,7 +36,9 @@
 			
 			$id = NULL;
 			if ($rq != NULL) $id = $rq->getSessionId();
-			if ($id == NULL and $this->env->cookies()->exists("session"))
+
+			$cookie = $this->env->cookies()->exists("session");
+			if ($id == NULL and $cookie)
 				$id = $this->env->cookies()->get("session");
 
 			if ($id != NULL) {
@@ -60,7 +62,10 @@
 			
 				// extend session time
 				$this->dao->updateSessionTime($this->id, $this->env->configuration()->formatTimestampInternal($time));
-				$this->env->cookies()->add("session", $id, $this->getSessionExpirationTime($time));
+				
+				// check if cookie is for same id
+				if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
+					$this->setCookie($time);
 			}
 		}
 		
@@ -86,15 +91,9 @@
 			if (!$this->isActive()) return NULL;
 			return $this->userGroups;
 		}
-				
-		private function getSessionExpirationTime($from = NULL) {
-			$added = 60*60;
-			if (!$from) return time() + $added;
-			return $from + $added;
-		}
 
 		private function getLastValidSessionTime($from = NULL) {
-			$removed = 60*60;
+			$removed = $this->env->settings()->setting("session_time", TRUE);
 			if (!$from) return time() - $removed;
 			return $from - $removed;
 		}
@@ -109,7 +108,12 @@
 			$time = time();
 			$this->dao->addSession($this->id, $this->user["id"], $this->env->request()->ip(), $this->env->configuration()->formatTimestampInternal($time));
 			if ($data and count($data) > 0) $this->dao->addSessionData($this->id, $data);
-			$this->env->cookies()->add("session", $this->id, $this->getSessionExpirationTime($time));
+			$this->setCookie($time);
+		}
+		
+		private function setCookie($from) {
+			// set session cookie last 10 years
+			$this->env->cookies()->add("session", $this->id, $from + 60*60*24*30*12*10);
 		}
 		
 		public function isActive() {
@@ -130,7 +134,7 @@
 		public function end() {
 			if ($this->isActive())
 				$this->dao->removeSession($this->id);
-			if ($this->env->cookies()->hasCookie("session"))
+			if ($this->env->cookies()->exists("session"))
 				$this->env->cookies()->remove("session");
 			$this->removeAllExpiredSessions();
 		}
@@ -151,7 +155,9 @@
 			$this->dao->addOrSetSessionData($this->id, $param, $value);
 		}
 		
-		public function log() {}
+		public function log() {
+			Logging::logDebug("SESSION: is_active=".$this->isActive().", data=".Util::array2str($this->data));
+		}
 
 		public function __toString() {
 			return "Session";

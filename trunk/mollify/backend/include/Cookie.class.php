@@ -17,7 +17,7 @@
 			$this->settings = $settings;
 		}
 		
-		function add($name, $val, $expire) {
+		function add($name, $val, $expire = NULL) {
 			setcookie($this->getName($name), $val, $expire, "/");
 		}
 		
