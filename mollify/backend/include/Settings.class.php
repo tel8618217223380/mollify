@@ -17,6 +17,7 @@
 			"email_login" => FALSE,
 			"host_public_address" => NULL,
 			"session_name" => NULL,
+			"session_time" => 7200,
 			"timezone" => NULL,
 			"enable_limited_http_methods" => FALSE,
 			"enable_file_upload" => TRUE,
