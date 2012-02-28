@@ -237,6 +237,7 @@ public class FileGrid extends Composite {
 	public void selectAll() {
 		clearSelected();
 		for (final FileSystemItem item : this.items) {
+			if (!canSelect(item)) continue;
 			selected.add(item);
 			widgets.get(item).select(true);
 		}

@@ -93,6 +93,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	private ActionToggleButton largeGridViewButton;
 	private ActionToggleButton smallGridViewButton;
 	private ActionToggleButtonGroup viewTypeGroup;
+	private SelectController selectController;
 
 	public enum ViewType {
 		list, gridSmall, gridLarge
@@ -159,6 +160,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 		fileListView = fileListViewFactory.create(type);
 		for (GridListener l : listListeners)
 			fileListView.addListener(l);
+		fileListView.setSelectController(selectController);
 
 		listPanel.clear();
 		listPanel.add(fileListView.getWidget());
@@ -525,6 +527,7 @@ public class DefaultMainView extends Composite implements PopupPositioner,
 	}
 
 	public void setListSelectController(SelectController controller) {
+		this.selectController = controller;
 		fileListView.setSelectController(controller);
 	}
 
