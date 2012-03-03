@@ -2,6 +2,7 @@
 #labels Phase-Deploy,Featured
 
 === Version 1.8.7 ===
+Released 2012/3/3
   * Rewritten session management, removes the dependency on PHP sessions
   * Support for customized registration forms
   * Fixed issue 305
