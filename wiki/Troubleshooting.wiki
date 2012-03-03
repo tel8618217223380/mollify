@@ -16,7 +16,7 @@ Modify script "backend/check.php" and enable the script as instructed in the fil
 {{{
 	$SETTINGS = array(
 		"debug" => TRUE,
-		"debug_log" => "/mollify/debug.log",
+		"debug_log" => "/mollify/debug.log", // CHANGE THIS
 	);
 }}}
 If you have other settings already, add this to the same list, for example:
@@ -25,7 +25,7 @@ If you have other settings already, add this to the same list, for example:
 		"enable_file_upload" => TRUE,
 		"enable_zip_download" => TRUE,
 		"debug" => TRUE,
-		"debug_log" => "/mollify/debug.log",
+		"debug_log" => "/mollify/debug.log", //CHANGE THIS
 	);
 }}}
 The debug log file must be located in a folder where PHP has read and write permissions.
@@ -35,6 +35,7 @@ The debug log file must be located in a folder where PHP has read and write perm
 4. Open url in your browser: http://yourhost/backend/r.php/debug
 
 NOTE! Debug url requires admin user.
+
 NOTE! Debug log is emptied every time the url is opened.
 
 5. Copy the debug info and attach into error report
