@@ -1,0 +1,9 @@
+#title {
+	font: normal 16px sans-serif;
+	font-weight: bold;
+}
+
+.plupload_header_content {
+	background: none;
+	padding-left:8px;
+}
