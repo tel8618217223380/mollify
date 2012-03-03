@@ -21,7 +21,7 @@
 			if (!$this->installer->isInstalled()) die();
 
 			$this->installer->processor()->createEnvironment();
-			if (!$this->installer->processor()->authentication()->isAdmin()) die("Mollify Updater requires administrator user");
+			//if (!$this->installer->processor()->authentication()->isAdmin()) die("Mollify Updater requires administrator user");
 			
 			if ($this->installer->isCurrentVersionInstalled() and $this->arePluginsUptodate()) $this->installer->processor()->showPage("current_installed");
 			
