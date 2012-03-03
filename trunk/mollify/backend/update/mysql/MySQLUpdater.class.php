@@ -19,7 +19,7 @@
 		}
 		
 		public function getVersionHistory() {
-			return array("0_9_5", "1_0_0", "1_5_0", "1_5_4", "1_6_0", "1_7_8", "1_7_10", "1_8_1", "1_8_5");
+			return array("0_9_5", "1_0_0", "1_5_0", "1_5_4", "1_6_0", "1_7_8", "1_7_10", "1_8_1", "1_8_5", "1_8_7");
 		}
 		
 		public function updateVersionStep($from, $to) {

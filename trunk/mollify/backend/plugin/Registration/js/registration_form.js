@@ -60,7 +60,9 @@ function onRegister() {
 		return;
 	}
 	
-	if (window.onValidateCustomFields) window.onValidateCustomFields();
+	if (window.onValidateCustomFields) {
+		if (!window.onValidateCustomFields()) return;
+	}
 	var additionalData = null;
 	if (window.getCustomRegistrationData) additionalData = window.getCustomRegistrationData();
 	

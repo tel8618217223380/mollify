@@ -41,32 +41,34 @@
 			if ($id == NULL and $cookie)
 				$id = $this->env->cookies()->get("session");
 
-			if ($id != NULL) {
-				$time = time();
-				$expiration = $this->getLastValidSessionTime($time);
-				
-				$sessionData = $this->dao->getSession($id, $this->env->configuration()->formatTimestampInternal($expiration));
-				if ($sessionData == NULL) {
-					$this->env->cookies()->remove("session");
-					$this->removeAllExpiredSessions();
-					throw new ServiceException("INVALID_REQUEST", "Invalid session");
-				}
-				$this->id = $id;
-				$this->session = $sessionData;
-				$this->data = $this->dao->getSessionData($id);
-				
-				// load user data
-				$this->user = $this->env->configuration()->getUser($sessionData["user_id"]);
-				if ($this->env->features()->isFeatureEnabled('user_groups'))
-					$this->userGroups = $this->env->configuration()->getUsersGroups($this->user["id"]);
+			// no session found
+			if ($id == NULL) return;
 			
-				// extend session time
-				$this->dao->updateSessionTime($this->id, $this->env->configuration()->formatTimestampInternal($time));
-				
-				// check if cookie is for same id
-				if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
-					$this->setCookie($time);
+			$time = time();
+			$expiration = $this->getLastValidSessionTime($time);
+			
+			$sessionData = $this->dao->getSession($id, $this->env->configuration()->formatTimestampInternal($expiration));
+			if ($sessionData == NULL) {
+				$this->env->cookies()->remove("session");
+				$this->removeAllExpiredSessions();
+				return;
 			}
+			
+			$this->id = $id;
+			$this->session = $sessionData;
+			$this->data = $this->dao->getSessionData($id);
+			
+			// load user data
+			$this->user = $this->env->configuration()->getUser($sessionData["user_id"]);
+			if ($this->env->features()->isFeatureEnabled('user_groups'))
+				$this->userGroups = $this->env->configuration()->getUsersGroups($this->user["id"]);
+		
+			// extend session time
+			$this->dao->updateSessionTime($this->id, $this->env->configuration()->formatTimestampInternal($time));
+			
+			// check if cookie is for same id
+			if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
+				$this->setCookie($time);
 		}
 		
 		public function user() {
