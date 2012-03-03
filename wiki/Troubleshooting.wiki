@@ -11,11 +11,12 @@ If none of those help with your problem, do following steps before reporting new
 
 Modify script "backend/check.php" and enable the script as instructed in the file. Open url in your browser: http://yourhost/backend/check.php. If the script tells that file is OK, continue with other steps. Otherwise correct the problem as instructed, and try again.
 
-2. Enable server side logging by adding following setting in configuration.php:
+2. Enable server side logging by adding following settings in configuration.php:
 
 {{{
 	$SETTINGS = array(
-		"debug" => TRUE
+		"debug" => TRUE,
+		"debug_log" => "/mollify/debug.log",
 	);
 }}}
 If you have other settings already, add this to the same list, for example:
@@ -23,19 +24,22 @@ If you have other settings already, add this to the same list, for example:
 	$SETTINGS = array(
 		"enable_file_upload" => TRUE,
 		"enable_zip_download" => TRUE,
-		"debug" => TRUE
+		"debug" => TRUE,
+		"debug_log" => "/mollify/debug.log",
 	);
 }}}
+The debug log file must be located in a folder where PHP has read and write permissions.
 
 3. Recreate the error situation
 
 4. Open url in your browser: http://yourhost/backend/r.php/debug
 
-NOTE! Debug url works only when admin user has logged in, so it will not help you to solve login problems. For those you need to access the server error log to get the debug log.
+NOTE! Debug url requires admin user.
+NOTE! Debug log is emptied every time the url is opened.
 
 5. Copy the debug info and attach into error report
 
-NOTE! Once the logs are reported, remember to remove server side logging option as it generates lots of log entries.
+NOTE! Once the logs are reported, remember to disable server side debug logging option as it generates lots of log entries.
 
 === Client side debugging ===
 
