@@ -21,12 +21,14 @@
 	
 	class TemporarySession extends Session {
 		public function __construct() {
-			parent::__construct(FALSE);	// don't use cookie
+			parent::__construct(FALSE);	// don't use cookies
 		}
 		
 		protected function getDao() {
-			return $this;	// override session persistence functions
+			return $this;
 		}
+		
+		// override session DAO persistence functions ->
 
 		public function getSession($id, $lastValid = NULL) {
 			return NULL;
@@ -185,8 +187,7 @@
 		$settings = new Settings($SETTINGS);
 		$factory = new ConfigurationFactory();
 		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
-		$session = new TemporarySession();
-		$env = new ServiceEnvironment($session, new VoidResponseHandler(), $conf, $settings);
+		$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
 		$env->initialize(new Request(FALSE));
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
