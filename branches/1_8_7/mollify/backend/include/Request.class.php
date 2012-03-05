@@ -15,6 +15,7 @@
 		const METHOD_PUT = 'put';
 		const METHOD_POST = 'post';
 		const METHOD_DELETE = 'delete';
+		const METHOD_PROPFIND = 'propfind';
 		
 		private $method;
 		private $uri;
@@ -35,9 +36,13 @@
 			$this->parts = strlen($this->uri) > 0 ? explode("/", $this->uri) : array();
 			$this->params = array();
 			$this->data = NULL;
-			
+			$this->initMethod();
+		}
+		
+		private function initMethod() {
 			switch($this->method) {
 				case self::METHOD_GET:
+				case self::METHOD_PROPFIND:
 					$this->params = $_GET;
 					break;
 				case self::METHOD_POST:

@@ -12,10 +12,41 @@
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/ConfigurationFactory.class.php");
 	require_once("include/Settings.class.php");
+	require_once("include/Request.class.php");
 	require_once("Sabre.includes.php");
 	
 	class VoidResponseHandler {
 		public function addListener($l) {}
+	}
+	
+	class TemporarySession extends Session {
+		public function __construct() {
+			parent::__construct(FALSE);	// don't use cookie
+		}
+		
+		protected function getDao() {
+			return $this;	// override session persistence functions
+		}
+
+		public function getSession($id, $lastValid = NULL) {
+			return NULL;
+		}
+		
+		public function getSessionData($id) {
+			return array();
+		}
+		
+		public function addSession($id, $userId, $ip, $time) {}
+
+		public function addSessionData($id, $data) {}
+
+		public function addOrSetSessionData($id, $name, $value) {}
+		
+		public function removeSession($id) {}
+		
+		public function updateSessionTime($id, $time) {}
+		
+		public function removeAllSessionBefore($time) {}
 	}
 	
 	function checkUploadSize() {
@@ -154,10 +185,9 @@
 		$settings = new Settings($SETTINGS);
 		$factory = new ConfigurationFactory();
 		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
-		$backend = new MollifyBackend($settings, $conf, new VoidResponseHandler());
-		
-		$env = $backend->env();
-		$env->initialize();
+		$session = new TemporarySession();
+		$env = new ServiceEnvironment($session, new VoidResponseHandler(), $conf, $settings);
+		$env->initialize(new Request(FALSE));
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
 			$auth = new Sabre_HTTP_BasicAuth();
