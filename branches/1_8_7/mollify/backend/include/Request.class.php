@@ -23,7 +23,6 @@
 		private $params = array();
 		private $ip;
 		private $raw;
-		private $data = NULL;
 		
 		public function __construct($limitedHttpMethods, $raw = FALSE) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
@@ -41,6 +40,8 @@
 		}
 		
 		private function initData() {
+			$this->data = NULL;
+			
 			switch($this->method) {
 				case self::METHOD_GET:
 				case self::METHOD_PROPFIND:
