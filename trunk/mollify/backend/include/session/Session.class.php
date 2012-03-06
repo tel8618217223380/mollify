@@ -37,7 +37,7 @@
 			$id = NULL;
 			if ($rq != NULL) $id = $rq->getSessionId();
 
-			$cookie = $this->env->cookies()->exists("session");
+			$cookie = ($this->useCookie and $this->env->cookies()->exists("session"));
 			if ($id == NULL and $cookie)
 				$id = $this->env->cookies()->get("session");
 
@@ -136,7 +136,7 @@
 		public function end() {
 			if ($this->isActive())
 				$this->dao->removeSession($this->id);
-			if ($this->env->cookies()->exists("session"))
+			if ($this->useCookie and $this->env->cookies()->exists("session"))
 				$this->env->cookies()->remove("session");
 			$this->removeAllExpiredSessions();
 		}

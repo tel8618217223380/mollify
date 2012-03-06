@@ -62,7 +62,7 @@ public class SessionInfo extends JavaScriptObject {
 		return this.user_id;
 	}-*/;
 
-	public final native String getLoggedUser() /*-{
+	public final native String getUser() /*-{
 		return this.username;
 	}-*/;
 
