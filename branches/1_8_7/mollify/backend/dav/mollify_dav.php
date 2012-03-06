@@ -188,7 +188,7 @@
 		$factory = new ConfigurationFactory();
 		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
 		$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
-		$env->initialize(new Request(FALSE));
+		$env->initialize(new Request(FALSE, TRUE));
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
 			$auth = new Sabre_HTTP_BasicAuth();

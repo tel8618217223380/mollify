@@ -20,13 +20,16 @@
 		private $method;
 		private $uri;
 		private $parts;
-		private $params;
+		private $params = array();
 		private $ip;
+		private $raw;
+		private $data = NULL;
 		
-		public function __construct($limitedHttpMethods) {
+		public function __construct($limitedHttpMethods, $raw = FALSE) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = $this->getUri();
 			$this->ip = $_SERVER['REMOTE_ADDR'];
+			$this->raw = $raw;
 			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
 			
@@ -34,12 +37,10 @@
 			if ($p) $this->uri = trim(substr($this->uri, 0, $p), "/");
 			
 			$this->parts = strlen($this->uri) > 0 ? explode("/", $this->uri) : array();
-			$this->params = array();
-			$this->data = NULL;
-			$this->initMethod();
+			$this->initData();
 		}
 		
-		private function initMethod() {
+		private function initData() {
 			switch($this->method) {
 				case self::METHOD_GET:
 				case self::METHOD_PROPFIND:
@@ -48,7 +49,7 @@
 				case self::METHOD_POST:
 				case self::METHOD_PUT:
 					$this->params = $_REQUEST;
-					if (!isset($this->params['format']) or $this->params['format'] != 'binary') {
+					if (!$this->raw and (!isset($this->params['format']) or $this->params['format'] != 'binary')) {
 						$data = file_get_contents("php://input");
 						if ($data and strlen($data) > 0)
 							$this->data = json_decode($data, TRUE);
