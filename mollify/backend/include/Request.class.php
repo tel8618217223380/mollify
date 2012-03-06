@@ -15,17 +15,20 @@
 		const METHOD_PUT = 'put';
 		const METHOD_POST = 'post';
 		const METHOD_DELETE = 'delete';
+		const METHOD_PROPFIND = 'propfind';
 		
 		private $method;
 		private $uri;
 		private $parts;
-		private $params;
+		private $params = array();
 		private $ip;
+		private $raw;
 		
-		public function __construct($limitedHttpMethods) {
+		public function __construct($limitedHttpMethods, $raw = FALSE) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = $this->getUri();
 			$this->ip = $_SERVER['REMOTE_ADDR'];
+			$this->raw = $raw;
 			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
 			
@@ -33,17 +36,21 @@
 			if ($p) $this->uri = trim(substr($this->uri, 0, $p), "/");
 			
 			$this->parts = strlen($this->uri) > 0 ? explode("/", $this->uri) : array();
-			$this->params = array();
+			$this->initData();
+		}
+		
+		private function initData() {
 			$this->data = NULL;
 			
 			switch($this->method) {
 				case self::METHOD_GET:
+				case self::METHOD_PROPFIND:
 					$this->params = $_GET;
 					break;
 				case self::METHOD_POST:
 				case self::METHOD_PUT:
 					$this->params = $_REQUEST;
-					if (!isset($this->params['format']) or $this->params['format'] != 'binary') {
+					if (!$this->raw and (!isset($this->params['format']) or $this->params['format'] != 'binary')) {
 						$data = file_get_contents("php://input");
 						if ($data and strlen($data) > 0)
 							$this->data = json_decode($data, TRUE);
