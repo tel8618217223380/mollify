@@ -10,41 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import java.util.List;
-
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
-import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface MainView {
 
-	void setUsername(String user);
-
-	// Widget getViewWidget();
-
-	void hideButtons();
-
-	void showAddButton(boolean show);
-	
-	void showProgress();
-
-	void hideProgress();
-	
-	void clear();
-
-	void refresh();
-
-	ViewType getViewType();
-
-	void setData(List<FileSystemItem> allItems, JsObj data);
-
-	void sortColumn(String columnId, SortOrder sort);
-
-	void selectAll();
-
-	void selectNone();
-
-
+	Widget getViewWidget();
 
 }
