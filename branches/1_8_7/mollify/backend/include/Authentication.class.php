@@ -79,9 +79,11 @@
 			}
 			$userId = $parts[0];
 			$token = $parts[1];
-			$user = $this->env->configuration()->getUser($userId);
-			$check = $this->getCookieAuthString($user);
 			
+			$user = $this->env->configuration()->getUser($userId);
+			if ($user == NULL) return FALSE;
+			
+			$check = $this->getCookieAuthString($user);
 			if (strcmp($token, $check) != 0) {
 				Logging::logDebug("Login cookie found for user ".$userId.", but auth key did not match");
 				return FALSE;

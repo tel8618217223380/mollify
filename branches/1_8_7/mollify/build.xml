@@ -229,6 +229,13 @@
 			<fileset dir="${build.dir}/${public.module.name}" />
 		</copy>
 
+		<java failonerror="true" jar="${lib.dir}/yuicompressor-2.4.7.jar">
+			<arg value="${target.dir}/mollify/client/init.js" />
+			<arg value="-o" />
+			<arg value="${target.dir}/mollify/client/init.js" />
+			<arg value="--charset utf-8" />
+		</java>
+		
 		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}" />
 
 		<delete dir="${target.dir}" />
