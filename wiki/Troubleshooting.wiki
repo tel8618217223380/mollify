@@ -133,6 +133,12 @@ If this is correct, then most likely your filesystem does not operate on UTF-8 (
 
 2) Setup conversion as instructed in [http://code.google.com/p/mollify/wiki/BackendSettings#Convert_filesystem_filenames_(_convert_filenames_)]
 
+== GoDaddy hosting and error "No input file specified" ==
+
+1) Enter the Godaddy Hosting Control Center
+2) Choose settings-file extensions management-default extensions
+3) In the table that is presented edit ".php" Runs under "PHP 5.2.x" (instead of "PHP 5.2.x FastCGI")
+
 == Downloaded files are corrupted ==
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
