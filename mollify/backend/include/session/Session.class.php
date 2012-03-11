@@ -13,6 +13,7 @@
 	class Session {
 		const EVENT_TYPE_SESSION = "session";
 		
+		protected $useCookie;
 		protected $id = NULL;
 		protected $env;
 		protected $dao;
@@ -21,13 +22,14 @@
 		protected $user = NULL;
 		protected $userGroups = NULL;
 		
-		public function __construct($settings) {}
+		public function __construct($useCookie) {
+			$this->useCookie = $useCookie;
+		}
 		
 		public function initialize($env, $rq) {
 			$this->env = $env;
-			require_once("SessionDao.class.php");
-			$this->dao = new SessionDao($env);
-						
+			$this->dao = $this->getDao();
+									
 			if ($env != NULL and $env->events() != NULL) {
 				require_once("include/event/SessionEvent.class.php");
 				SessionEvent::register($env->events());
@@ -69,6 +71,11 @@
 			// check if cookie is for same id
 			if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
 				$this->setCookie($time);
+		}
+		
+		protected function getDao() {
+			require_once("SessionDao.class.php");
+			return new SessionDao($this->env);
 		}
 		
 		public function user() {
@@ -114,6 +121,8 @@
 		}
 		
 		private function setCookie($from) {
+			if (!$this->useCookie) return;
+			
 			// set session cookie last 10 years
 			$this->env->cookies()->add("session", $this->id, $from + 60*60*24*30*12*10);
 		}
@@ -158,7 +167,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("SESSION: is_active=".$this->isActive().", data=".Util::array2str($this->data));
+			Logging::logDebug("SESSION: is_active=".$this->isActive().", user=".Util::array2str($this->user).", data=".Util::array2str($this->data));
 		}
 
 		public function __toString() {

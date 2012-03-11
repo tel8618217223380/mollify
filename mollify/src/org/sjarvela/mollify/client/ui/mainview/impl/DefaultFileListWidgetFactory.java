@@ -15,7 +15,7 @@ import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 
@@ -44,9 +44,8 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 		if (ViewType.list.equals(type)) {
 			if (experimental)
 				return new CellTableFileList(textProvider);
-			return new FileListWithExternalColumns(textProvider,
-					dragAndDropManager, pluginEnvironment,
-					settings.getJsObj("list-view-columns"));
+			return new FileListWithExternalColumns(textProvider, dragAndDropManager,
+					pluginEnvironment, settings.getJsObj("list-view-columns"));
 		}
 		return new FileGridWidget(thumbnails, service,
 				ViewType.gridSmall.equals(type));

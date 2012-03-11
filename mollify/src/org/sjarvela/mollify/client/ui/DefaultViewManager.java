@@ -10,18 +10,14 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.App;
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -42,8 +38,6 @@ public class DefaultViewManager implements ViewManager {
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private Map<String, JavaScriptObject> views = new HashMap();
-
 	private final RootPanel rootPanel;
 	private final Panel hiddenPanel;
 
@@ -55,19 +49,6 @@ public class DefaultViewManager implements ViewManager {
 		this.rootPanel.getElement().getStyle()
 				.setProperty("position", "relative");
 		this.hiddenPanel = createHiddenFrame();
-	}
-
-	@Override
-	public void registerView(String name, JavaScriptObject view) {
-		views.put(name, view);
-	}
-
-	@Override
-	public JsObj getViewHandler(String name) {
-		JavaScriptObject v = views.get(name);
-		if (v == null)
-			return null;
-		return v.cast();
 	}
 
 	public RootPanel getRootPanel() {

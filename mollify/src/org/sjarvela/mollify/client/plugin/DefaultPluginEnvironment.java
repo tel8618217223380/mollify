@@ -23,7 +23,6 @@ import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
@@ -42,19 +41,16 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
 	private final FileListExt fileListInterface;
-	private final ViewManager viewManager;
 
 	private FileUploadDialogFactory uploader = null;
 	private List<Plugin> plugins;
-	private NativeViewManager nativeViewManager;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
 			ItemContextHandler itemContextProvider,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
-			DialogManager dialogManager, TextProvider textProvider,
-			ViewManager viewManager) {
+			DialogManager dialogManager, TextProvider textProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		this.itemContextHandler = itemContextProvider;
@@ -62,10 +58,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
-		this.viewManager = viewManager;
 		this.fileListInterface = new FileListExt(textProvider);
-		
-		this.nativeViewManager = new NativeViewManager(viewManager);
 	}
 
 	@Override
@@ -112,10 +105,6 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	protected JavaScriptObject getService() {
 		return new NativeService(serviceProvider.getExternalService()).asJs();
-	};
-
-	protected JavaScriptObject getViewManager() {
-		return nativeViewManager.asJs();
 	};
 
 	protected JavaScriptObject getDialogManager() {
@@ -176,10 +165,6 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 		env.log = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
-		}
-
-		env.viewmanager = function() {
-			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getViewManager()();
 		}
 
 		env.fileview = function() {

@@ -33,6 +33,7 @@ import org.sjarvela.mollify.client.ui.login.LoginDialog;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -48,8 +49,8 @@ public class MollifyClient implements Client, SessionListener {
 
 	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
-	private final SessionManager sessionManager;
 	private final MainViewFactory mainViewFactory;
+	private final SessionManager sessionManager;
 	private final SessionService service;
 	private final TextProvider textProvider;
 	private final ClientSettings settings;
@@ -122,7 +123,20 @@ public class MollifyClient implements Client, SessionListener {
 	}
 
 	private void openMainView() {
-		mainViewFactory.openMainView();
+		GWT.runAsync(new RunAsyncCallback() {
+			@Override
+			public void onSuccess() {
+				viewManager.openView(mainViewFactory.createMainView(
+						fileViewDelegate).getViewWidget());
+			}
+
+			@Override
+			public void onFailure(Throwable reason) {
+				logger.log(Level.SEVERE, "Error loading application", reason);
+				viewManager.showPlainError("Error loading application: "
+						+ reason.getMessage());
+			}
+		});
 	}
 
 	public void onSessionEnded() {

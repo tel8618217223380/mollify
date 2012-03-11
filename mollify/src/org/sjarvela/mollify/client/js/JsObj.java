@@ -70,9 +70,4 @@ public class JsObj extends JavaScriptObject {
 			result.push(id);
 		return result;
 	}-*/;
-
-	public final native void call(String f) /*-{
-		if (!this[f]) return;
-		this[f]();
-	}-*/;
 }
