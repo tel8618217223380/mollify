@@ -160,6 +160,9 @@
 					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 					$this->env->filesystem()->downloadAsZip($item, $mobile);
 					return;
+				case 'view':
+					$this->env->filesystem()->view($item);
+					die();
 				case 'details':
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;

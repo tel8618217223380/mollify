@@ -54,6 +54,9 @@
 				}
 			});
 			
+			t.env.viewmanager().registerView("loginview", new LoginView());
+			t.env.viewmanager().registerView("mainview", new MainView());
+			
 			//$.datepicker.setDefaults({
 			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 			//});
@@ -200,6 +203,14 @@ function strpos(haystack, needle, offset) {
     // +   improved by: Brett Zamir (http://brett-zamir.me)
     var i = (haystack + '').indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
+}
+
+function LoginView() {
+	var that = this;
+}
+
+function MainView() {
+	var that = this;
 }
 
 function CommentPlugin() {

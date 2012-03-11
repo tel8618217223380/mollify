@@ -68,7 +68,8 @@
 			'divx' => "video/divx",
 			'avi' => "video/divx",
 			'mkv' => "video/divx",
-			'pdf' => "application/pdf"
+			'pdf' => "application/pdf",
+			'jpg' => 'image/jpeg'
         );
         
         private $mimeTypes;
@@ -157,8 +158,8 @@
 		}
 		
 		private function getMime($type) {
-			if (in_array($type, $this->mimeTypes)) return $this->mimeTypes[$type];
-			if (in_array($type, $this->defaultMimeTypes)) return $this->defaultMimeTypes[$type];
+			if (array_key_exists($type, $this->mimeTypes)) return $this->mimeTypes[$type];
+			if (array_key_exists($type, $this->defaultMimeTypes)) return $this->defaultMimeTypes[$type];
 			return 'application/octet-stream';
 		}
 		
