@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui;
 
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 
@@ -21,6 +22,8 @@ import com.google.gwt.user.client.ui.Widget;
 public interface ViewManager {
 
 	void registerView(String name, JavaScriptObject view);
+
+	JsObj getViewHandler(String name);
 
 	/* old -> */
 	void openView(Widget view);

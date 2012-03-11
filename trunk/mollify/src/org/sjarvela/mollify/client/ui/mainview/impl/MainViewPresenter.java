@@ -41,19 +41,17 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
-import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
-import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
+import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
 import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
 import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
@@ -84,7 +82,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ViewManager viewManager;
-	private final DropBox dropBox;
+	// TODO private final DropBox dropBox;
 	private final EventDispatcher eventDispatcher;
 	private final SearchResultDialogFactory searchResultDialogFactory;
 
@@ -102,8 +100,8 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory,
-			DropBox dropBox, boolean exposeFileUrls,
-			SessionService sessionService, EventDispatcher eventDispatcher,
+			boolean exposeFileUrls, SessionService sessionService,
+			EventDispatcher eventDispatcher,
 			SearchResultDialogFactory searchResultDialogFactory,
 			PluginEnvironment pluginEnvironment) {
 		this.dialogManager = dialogManager;
@@ -122,41 +120,37 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.createFolderDialogFactory = createFolderDialogFactory;
-		this.dropBox = dropBox;
 		this.exposeFileUrls = exposeFileUrls;
 		this.eventDispatcher = eventDispatcher;
 		this.searchResultDialogFactory = searchResultDialogFactory;
 
-		//TODO this.view.getItemContext().setActionHandler(fileSystemActionHandler);
+		// TODO
+		// this.view.getItemContext().setActionHandler(fileSystemActionHandler);
 
-		//TODO this.view.getFolderSelector().addListener(this);
-		/*TODO this.view
-				.setListSelectController(new SelectController<FileSystemItem>() {
-					@Override
-					public boolean isSelectable(FileSystemItem t) {
-						if (t.isFile())
-							return true;
-						if (Folder.Parent.equals(t))
-							return false;
-						if (((Folder) t).isRoot())
-							return false;
-						return true;
-					}
+		// TODO this.view.getFolderSelector().addListener(this);
+		/*
+		 * TODO this.view .setListSelectController(new
+		 * SelectController<FileSystemItem>() {
+		 * 
+		 * @Override public boolean isSelectable(FileSystemItem t) { if
+		 * (t.isFile()) return true; if (Folder.Parent.equals(t)) return false;
+		 * if (((Folder) t).isRoot()) return false; return true; }
+		 * 
+		 * });
+		 */
 
-				});*/
-		
 		this.setListOrder(FileList.COLUMN_ID_NAME, SortOrder.asc);
 
 		if (model.getSession().isAuthenticationRequired())
 			view.setUsername(model.getSession().getUser());
 
-		//TODO view.addSearchListener(this);
+		// TODO view.addSearchListener(this);
 		model.setRequestDataProvider(this);
 	}
 
 	public void initialize() {
-		//TODO if (exposeFileUrls)
-		//	viewManager.getHiddenPanel().add(view.createFileUrlContainer());
+		// TODO if (exposeFileUrls)
+		// viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
 		if (!model.hasFolder())
 			changeToRootFolder(model.getRootFolders().size() == 1 ? model
@@ -169,7 +163,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			String columnId, Element e) {
 		if (columnId.equals(FileList.COLUMN_ID_NAME)) {
 			if (item.isFile()) {
-				//TODO view.showItemContext(item, e);
+				// TODO view.showItemContext(item, e);
 			} else {
 				view.showProgress();
 
@@ -244,7 +238,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		for (File f : files)
 			urls.put(f.getName(),
 					fileSystemService.getDownloadUrl(f, sessionId));
-		//TODO view.refreshFileUrls(urls);
+		// TODO view.refreshFileUrls(urls);
 	}
 
 	@Override
@@ -476,12 +470,12 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onToggleSelectMode() {
-		//TODO view.setSelectMode(view.selectModeButton().isDown());
+		// TODO view.setSelectMode(view.selectModeButton().isDown());
 	}
 
 	public void onFileSystemItemSelectionChanged(List<FileSystemItem> selected) {
 		model.setSelected(selected);
-		//TODO view.updateFileSelection(selected);
+		// TODO view.updateFileSelection(selected);
 	}
 
 	public void onSelectAll() {
@@ -533,7 +527,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 				new ResultListener<SearchResult>() {
 					@Override
 					public void onSuccess(SearchResult result) {
-						//TODO view.clearSearchField();
+						// TODO view.clearSearchField();
 						view.hideProgress();
 						onShowSearchResult(text, result);
 					}
@@ -547,16 +541,17 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
-		if (result.getMatchCount() == 0)
-			dialogManager.showInfo(
-					textProvider.getText(Texts.searchResultsDialogTitle),
-					textProvider.getText(Texts.searchResultsNoMatchesFound));
-		else
-			searchResultDialogFactory.show(dropBox, criteria, result);
+		//TODO
+//		if (result.getMatchCount() == 0)
+//			dialogManager.showInfo(
+//					textProvider.getText(Texts.searchResultsDialogTitle),
+//					textProvider.getText(Texts.searchResultsNoMatchesFound));
+//		else
+//			searchResultDialogFactory.show(dropBox, criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {
-		dropBox.addItems(getSelectedItems());
+		//TODO dropBox.addItems(getSelectedItems());
 		view.selectNone();
 	}
 
@@ -613,7 +608,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private void setViewType(ViewType type) {
 		view.showProgress();
-		//TODO view.setViewType(type);
+		// TODO view.setViewType(type);
 		reload();
 	}
 
@@ -637,9 +632,10 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		if (!ViewType.list.equals(view.getViewType()))
 			return null;
 		return null;
-		/*TODO return pluginEnvironment.getFileListExt().getDataRequest(
-				folder,
-				((FileListWithExternalColumns) view.getFileWidget())
-						.getColumns());*/
+		/*
+		 * TODO return pluginEnvironment.getFileListExt().getDataRequest(
+		 * folder, ((FileListWithExternalColumns) view.getFileWidget())
+		 * .getColumns());
+		 */
 	}
 }

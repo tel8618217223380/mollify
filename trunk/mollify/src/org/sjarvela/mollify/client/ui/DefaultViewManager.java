@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.App;
+import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -59,6 +60,14 @@ public class DefaultViewManager implements ViewManager {
 	@Override
 	public void registerView(String name, JavaScriptObject view) {
 		views.put(name, view);
+	}
+
+	@Override
+	public JsObj getViewHandler(String name) {
+		JavaScriptObject v = views.get(name);
+		if (v == null)
+			return null;
+		return v.cast();
 	}
 
 	public RootPanel getRootPanel() {

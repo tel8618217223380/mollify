@@ -46,6 +46,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 
 	private FileUploadDialogFactory uploader = null;
 	private List<Plugin> plugins;
+	private NativeViewManager nativeViewManager;
 
 	@Inject
 	public DefaultPluginEnvironment(EventDispatcher eventDispatcher,
@@ -63,6 +64,8 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.fileListInterface = new FileListExt(textProvider);
+		
+		this.nativeViewManager = new NativeViewManager(viewManager);
 	}
 
 	@Override
@@ -112,7 +115,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 	};
 
 	protected JavaScriptObject getViewManager() {
-		return new NativeViewManager(viewManager).asJs();
+		return nativeViewManager.asJs();
 	};
 
 	protected JavaScriptObject getDialogManager() {

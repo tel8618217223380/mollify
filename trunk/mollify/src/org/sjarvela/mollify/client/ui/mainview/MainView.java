@@ -12,25 +12,34 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
-import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 public interface MainView {
 
+	public enum Action implements ResourceId {
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl, listView, gridViewSmall, gridViewLarge;
+	};
+
+	public enum ViewType {
+		list, gridSmall, gridLarge
+	};
+
 	void setUsername(String user);
 
+	void render();
 	// Widget getViewWidget();
 
 	void hideButtons();
 
 	void showAddButton(boolean show);
-	
+
 	void showProgress();
 
 	void hideProgress();
-	
+
 	void clear();
 
 	void refresh();
@@ -44,7 +53,6 @@ public interface MainView {
 	void selectAll();
 
 	void selectNone();
-
 
 
 }
