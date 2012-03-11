@@ -569,7 +569,7 @@
 		public function downloadAsZip($items, $mobile) {
 			$zip = $this->createZip($items);
 			$name = "items.zip";
-			if (!is_array($items)) $name = $item->name().".zip";
+			if (!is_array($items)) $name = $items->name().".zip";
 			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
 		}
 		
