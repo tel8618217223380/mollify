@@ -158,7 +158,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("SESSION: is_active=".$this->isActive().", data=".Util::array2str($this->data));
+			Logging::logDebug("SESSION: is_active=".$this->isActive().", user=".Util::array2str($this->user).", data=".Util::array2str($this->data));
 		}
 
 		public function __toString() {
