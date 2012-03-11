@@ -25,7 +25,7 @@
 			$result = array();
 			if (strcmp("core-file-modified", $key) === 0) {
 				foreach($items as $i) {
-					$result[$i->id()] = $this->env->formatTimestampInternal($i->lastModified());
+					$result[$i->id()] = $this->env->configuration()->formatTimestampInternal($i->lastModified());
 				
 				}
 			} else if (strcmp("core-item-description", $key) === 0) {
