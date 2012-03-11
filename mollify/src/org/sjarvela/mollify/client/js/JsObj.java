@@ -72,7 +72,21 @@ public class JsObj extends JavaScriptObject {
 	}-*/;
 
 	public final native void call(String f) /*-{
-		if (!this[f]) return;
+		if (!this[f])
+			return;
 		this[f]();
+	}-*/;
+
+	// TODO object[] params
+	public final native void call(String f, String param) /*-{
+		if (!this[f])
+			return;
+		this[f].call(this, param);
+	}-*/;
+
+	public final native void call(String f, JavaScriptObject param) /*-{
+		if (!this[f])
+			return;
+		this[f].call(this, param);
 	}-*/;
 }

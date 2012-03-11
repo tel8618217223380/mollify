@@ -70,6 +70,11 @@ public class DefaultViewManager implements ViewManager {
 		return v.cast();
 	}
 
+	@Override
+	public void render(ViewHandler view) {
+		view.getView().call("render", "mollify");
+	}
+
 	public RootPanel getRootPanel() {
 		return rootPanel;
 	}

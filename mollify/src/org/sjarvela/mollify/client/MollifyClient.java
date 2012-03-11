@@ -13,23 +13,18 @@ package org.sjarvela.mollify.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
-import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
-import org.sjarvela.mollify.client.session.LoginHandler;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.login.LoginDialog;
+import org.sjarvela.mollify.client.ui.login.LoginViewHandler;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.gwt.core.client.GWT;
@@ -37,7 +32,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class MollifyClient implements Client, SessionListener {
+public class MollifyClient implements Client {
 	private static Logger logger = Logger.getLogger(MollifyClient.class
 			.getName());
 
@@ -51,29 +46,41 @@ public class MollifyClient implements Client, SessionListener {
 	private final SessionManager sessionManager;
 	private final MainViewFactory mainViewFactory;
 	private final SessionService service;
-	private final TextProvider textProvider;
 	private final ClientSettings settings;
-	private final ServiceProvider serviceProvider;
 	private final PluginSystem pluginSystem;
 	private final FileViewDelegate fileViewDelegate;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
-			ServiceProvider serviceProvider, TextProvider textProvider,
-			ClientSettings settings, PluginSystem pluginSystem) {
+			ServiceProvider serviceProvider, ClientSettings settings,
+			PluginSystem pluginSystem) {
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
 		this.sessionManager = sessionManager;
-		this.serviceProvider = serviceProvider;
-		this.textProvider = textProvider;
 		this.settings = settings;
 		this.pluginSystem = pluginSystem;
 		this.service = serviceProvider.getSessionService();
 		this.fileViewDelegate = new FileViewDelegate();
 
-		sessionManager.addSessionListener(this);
+		sessionManager.addSessionListener(new SessionListener() {
+			@Override
+			public void onSessionStarted(SessionInfo session) {
+				logger.log(Level.FINE, "Session started, authenticated: "
+						+ session.isAuthenticated());
+				if (session.isAuthenticationRequired()
+						&& !session.isAuthenticated())
+					openLogin(session);
+				else
+					openMainView();
+			}
+
+			@Override
+			public void onSessionEnded() {
+				start();
+			}
+		});
 	}
 
 	public void start() {
@@ -112,21 +119,8 @@ public class MollifyClient implements Client, SessionListener {
 				});
 	}
 
-	public void onSessionStarted(SessionInfo session) {
-		logger.log(Level.FINE,
-				"Session started, authenticated: " + session.isAuthenticated());
-		if (session.isAuthenticationRequired() && !session.isAuthenticated())
-			openLogin(session);
-		else
-			openMainView();
-	}
-
 	private void openMainView() {
 		mainViewFactory.openMainView();
-	}
-
-	public void onSessionEnded() {
-		start();
 	}
 
 	private void openLogin(SessionInfo session) {
@@ -134,36 +128,7 @@ public class MollifyClient implements Client, SessionListener {
 		if (!settings.getBool(PARAM_SHOW_LOGIN, true))
 			return;
 
-		new LoginDialog(textProvider, dialogManager, new LoginHandler() {
-			public void login(String userName, String password,
-					boolean remember, final ConfirmationListener listener) {
-				logger.log(Level.INFO, "User login: " + userName);
-
-				service.authenticate(userName, password, remember,
-						MollifyClient.PROTOCOL_VERSION,
-						new ResultListener<SessionInfo>() {
-							public void onFail(ServiceError error) {
-								if (ServiceErrorType.AUTHENTICATION_FAILED
-										.equals(error)) {
-									showLoginError();
-									return;
-								}
-								dialogManager.showError(error);
-							}
-
-							public void onSuccess(SessionInfo session) {
-								listener.onConfirm();
-								sessionManager.setSession(session);
-							}
-						});
-			}
-		}, serviceProvider, session.getFeatures().lostPassword());
+		new LoginViewHandler(viewManager, dialogManager, service,
+				sessionManager);
 	}
-
-	private void showLoginError() {
-		String title = textProvider.getText(Texts.loginDialogTitle);
-		String msg = textProvider.getText(Texts.loginDialogLoginFailedMessage);
-		dialogManager.showInfo(title, msg);
-	}
-
 }

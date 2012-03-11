@@ -25,6 +25,8 @@ public interface ViewManager {
 
 	JsObj getViewHandler(String name);
 
+	void render(ViewHandler view);
+
 	/* old -> */
 	void openView(Widget view);
 
