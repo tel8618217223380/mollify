@@ -228,7 +228,7 @@
 		<copy todir="${target.dir}/mollify/client">
 			<fileset dir="${build.dir}/${public.module.name}" />
 		</copy>
-
+		
 		<java failonerror="true" fork="true" jar="${lib.dir}/yuicompressor-2.4.7.jar">
 			<arg value="${target.dir}/mollify/client/init.js" />
 			<arg value="-o" />
