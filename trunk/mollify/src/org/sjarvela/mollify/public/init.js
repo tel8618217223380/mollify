@@ -1,17 +1,26 @@
 (function(){
 	window.mollify = new function(){
+		var defaults = {
+			"template-url": "client/templates/",
+			"service-path": "backend/"
+		};
 		var t = this;
 		t.time = new Date().getTime();
 		this.settings = {};
+		this.uiProcessors = {};
 		this.plugins = [];
 		this.pluginsById = {};
 
 		this.init = function(s) {
-			t.settings = s;
+			t.settings = $.extend({}, s, defaults);
+			
 			if (s.plugins) {
-				for (var i=0; i < s.plugins.length; i++)
+				for (var i=0, j=s.plugins.length; i < j; i++)
 					t.registerPlugin(s.plugins[i]);
 			}
+			
+			t.uiProcessors['localize'] = t.localize;
+			t.uiProcessors['hintbox'] = t.hintbox;
 		}
 		
 		this.setup = function(e) {
@@ -54,8 +63,8 @@
 				}
 			});
 			
-			t.env.viewmanager().registerView("loginview", new LoginView());
-			t.env.viewmanager().registerView("mainview", new MainView());
+			t.env.views().registerView("login", new LoginView());
+			t.env.views().registerView("mainview", new MainView());
 			
 			//$.datepicker.setDefaults({
 			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
@@ -98,11 +107,18 @@
 			$("head").append(link);
 		}
 		
-		this.loadContent = function(id, url, cb) {
+		this.loadContent = function(id, url, cb, process) {
 			$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
-				t.localize(id);
+				if (process) $.each(process, function(i, k) {
+					if (t.uiProcessors[k]) t.uiProcessors[k](id);
+				});
 				if (cb) cb();
 			});
+		}
+		
+		this.templateUrl = function(name) {
+			var base = t.getSettings()["template-url"] || 'client/templates/';
+			return base + name;
 		}
 		
 		this.urlWithParam = function(url, param) {
@@ -110,7 +126,7 @@
 		}
 		
 		this.localize = function(id) {
-			$("#"+id+" .localized").each(function(){
+			$("#"+id+" .localized").each(function() {
 				var key = $(this).attr('title-key');
 				if (key)
 					$(this).attr("title", t.env.texts().get(key));
@@ -118,6 +134,20 @@
 				key = $(this).attr('text-key');
 				if (key)
 					$(this).text(t.env.texts().get(key));
+			});
+		}
+		
+		this.hintbox = function(id) {
+			$("#"+id+" .hintbox").each(function() {
+				var hint = t.env.texts().get($(this).attr('hint-key'));
+				var $this = $(this);
+				
+				$this.blur(function() {
+					if (this.value === '') $this.val(hint).addClass('hint');
+				}).focus(function() {
+					if ($this.val() === hint && $this.hasClass('hint'))
+						$this.val('').removeClass('hint');
+      			}).blur();
 			});
 		}
 		
@@ -207,6 +237,19 @@ function strpos(haystack, needle, offset) {
 
 function LoginView() {
 	var that = this;
+	
+	this.init = function(listener) {
+		that.listener = listener;
+	}
+	
+	this.render = function(id) {
+		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox']);
+		//that.listener.onLogin("foo", "bar", false);
+	}
+	
+	this.onLoad = function() {
+		if (mollify.env.session().info().features['lost_password']) $("#login-lost-password").show();
+	}
 }
 
 function MainView() {

@@ -178,7 +178,7 @@ public class DefaultPluginEnvironment implements PluginEnvironment {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getLogger()();
 		}
 
-		env.viewmanager = function() {
+		env.views = function() {
 			return e.@org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment::getViewManager()();
 		}
 

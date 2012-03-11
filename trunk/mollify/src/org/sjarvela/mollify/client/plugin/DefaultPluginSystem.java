@@ -108,7 +108,7 @@ public class DefaultPluginSystem implements PluginSystem {
 		if (!plugins || plugins.length == 0)
 			return;
 
-		for ( var i = 0; i < plugins.length; i++) {
+		for (var i=0, j=plugins.length; i < j; i++) {
 			var plugin = plugins[i];
 			if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo())
 				continue;
