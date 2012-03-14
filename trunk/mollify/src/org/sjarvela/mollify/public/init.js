@@ -87,6 +87,14 @@
 			return !!t.pluginsById[id];
 		}
 		
+		this.hasFeature = function(id) {
+			return t.env.session().info().features[id];
+		}
+		
+		this.locale = function() {
+			return t.env.texts().locale;
+		}
+		
 		this.registerPlugin = function(p) {
 			t.plugins.push(p);
 			var id = p.getPluginInfo().id;
@@ -138,15 +146,31 @@
 		}
 		
 		this.hintbox = function(id) {
-			$("#"+id+" .hintbox").each(function() {
-				var hint = t.env.texts().get($(this).attr('hint-key'));
+			$("#"+id+" .hintbox").wrap('<div class="hintbox-container" />').each(function() {
 				var $this = $(this);
+				var hint = t.env.texts().get($this.attr('hint-key'));
+				
+				var $hintvalue = $('<div class="hintbox-value">'+hint+'</div>').insertAfter($this);
+				var h = $this.outerHeight();
+				$hintvalue.css({
+					width: $this.width(),
+					height: h,
+					left: 0,
+					top: 0-h
+				});
+				
+				$p = $this.parent();
+				$.each($this.attr('class').split(/\s+/), function(i, cl) {
+					if (cl !== 'hintbox') {
+						$p.addClass(cl);
+						$this.removeClass(cl);
+					}
+				});
 				
 				$this.blur(function() {
-					if (this.value === '') $this.val(hint).addClass('hint');
+					if (this.value === '') $hintvalue.show();
 				}).focus(function() {
-					if ($this.val() === hint && $this.hasClass('hint'))
-						$this.val('').removeClass('hint');
+					$hintvalue.hide();
       			}).blur();
 			});
 		}
@@ -244,11 +268,20 @@ function LoginView() {
 	
 	this.render = function(id) {
 		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox']);
-		//that.listener.onLogin("foo", "bar", false);
 	}
 	
 	this.onLoad = function() {
-		if (mollify.env.session().info().features['lost_password']) $("#login-lost-password").show();
+		if (mollify.hasFeatures('lost_password')) $("#login-lost-password").show();
+		$("#login-button").click(that.onLogin);
+	}
+	
+	this.onLogin = function() {
+		var username = $("#login-name").val();
+		var password = $("#login-password").val();
+		var remember = $("#login-remember").attr('checked');
+		
+		if (!username || !password || username.length < 1 || password.length < 1) return;
+		that.listener.onLogin(username, password, remember);
 	}
 }
 
