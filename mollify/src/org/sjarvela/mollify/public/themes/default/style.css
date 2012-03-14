@@ -1,0 +1,14 @@
+.hintbox-container {
+	float: left;
+	overflow: hidden;
+}
+
+input.hintbox {
+	background-color: transparent;
+}
+
+.hintbox-value {
+	position: relative;
+	text-overflow: clip;
+	z-index: -1;
+}
