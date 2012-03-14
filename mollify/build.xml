@@ -233,7 +233,6 @@
 			<arg value="${target.dir}/mollify/client/init.js" />
 			<arg value="-o" />
 			<arg value="${target.dir}/mollify/client/init.js" />
-			<arg value="--charset utf-8" />
 		</java>
 		
 		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}" />
