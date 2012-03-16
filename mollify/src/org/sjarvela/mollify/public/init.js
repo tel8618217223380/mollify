@@ -146,33 +146,33 @@
 		}
 		
 		this.hintbox = function(id) {
-			$("#"+id+" .hintbox").wrap('<div class="hintbox-container" />').each(function() {
+			$("#"+id+" input.hintbox").each(function() {
+				var $this = $(this);
+				var hint = t.env.texts().get($this.attr('hint-key'));
+				$this.attr("placeholder", hint).removeAttr("hint-key");
+			}).placeholder();
+			/*$("#"+id+" input.hintbox").wrap('<div class="hintbox-container" />').each(function() {
 				var $this = $(this);
 				var hint = t.env.texts().get($this.attr('hint-key'));
 				
 				var $hintvalue = $('<div class="hintbox-value">'+hint+'</div>').insertAfter($this);
-				var h = $this.outerHeight();
+				var h = $this.outerHeight(true);
 				$hintvalue.css({
 					width: $this.width(),
 					height: h,
 					left: 0,
-					top: 0-h
+					top: 0
 				});
 				
 				$p = $this.parent();
-				$.each($this.attr('class').split(/\s+/), function(i, cl) {
-					if (cl !== 'hintbox') {
-						$p.addClass(cl);
-						$this.removeClass(cl);
-					}
-				});
+				$p.css("height", h+2);
 				
 				$this.blur(function() {
 					if (this.value === '') $hintvalue.show();
 				}).focus(function() {
 					$hintvalue.hide();
       			}).blur();
-			});
+			});*/
 		}
 		
 		/*this.formatDate = function(d) {
@@ -271,7 +271,7 @@ function LoginView() {
 	}
 	
 	this.onLoad = function() {
-		if (mollify.hasFeatures('lost_password')) $("#login-lost-password").show();
+		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
 		$("#login-button").click(that.onLogin);
 	}
 	

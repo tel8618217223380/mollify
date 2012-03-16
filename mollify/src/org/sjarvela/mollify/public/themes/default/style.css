@@ -1,14 +1,47 @@
-.hintbox-container {
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+#mollify {
 	float: left;
-	overflow: hidden;
+	width: 100%;
 }
 
-input.hintbox {
-	background-color: transparent;
-}
-
-.hintbox-value {
+#login-main {
+	width: 100%;
 	position: relative;
-	text-overflow: clip;
-	z-index: -1;
+}
+
+.login-field, .login-link, #login-button {
+	float: left;
+	clear: both;
+}
+
+#login-button {
+
+}
+
+#login-data {
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.5);
+	width: 400px;
+	height: 300px;
+	margin: 80px auto;
+	background-color: #E9EAEE;
+	background-image: url(mollify.png) no-repeat;
+	position: relative;
+}
+
+input.login-field {
+	width: 200px;
+	height: 30px;
+	margin: 10px;
+	border-radius: 3px;
+	border: 1px solid #DFDFDF;
+	background-color: #ffffff;
 }
