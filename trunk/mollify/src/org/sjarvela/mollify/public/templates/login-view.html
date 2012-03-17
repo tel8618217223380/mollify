@@ -3,10 +3,17 @@
 		<input id="login-name" type="text" class="login-field text-field hintbox" hint-key="loginViewUsernameTitle"></input>
 		<input id="login-password" type="password" class="login-field text-field hintbox" hint-key="loginViewPasswordTitle"></input>
 		<label id="login-remember" class="login-field center"><input id="login-remember-cb" type="checkbox" /><span class="localized" text-key="loginViewRememberMe"></span></label>
-		<a id="login-button" class="localized button center" text-key="loginViewLoginAction"></a>
+		<a id="login-button" class="localized button button-blue center" text-key="loginViewLoginAction"></a>
 		<div id="login-links" class="center">
-			<a href="javascript:void(0)" id="login-forgot-password" class="login-link localized" text-key="loginViewForgotPassword"></a>
-			<a href="javascript:void(0)" id="login-register" class="login-link localized" text-key="loginViewRegister"></a>
+			<a href="javascript:void(0)" id="login-forgot-password" class="login-link link localized bubble-action" text-key="loginViewForgotPassword"></a>
+			<div id="login-forgot-password-bubble" style="display:none">
+				<div id="login-forgot-password-content" class="bubble-content">
+					<span class="localized" text-key="loginViewForgotPassword"></span>
+					<input id="login-forgot-email" type="text" class="text-field"></input>
+					<a id="login-forgot-button" class="localized button button-small" text-key="loginViewForgotPasswordAction"></a>
+				</div>
+			</div>
+			<a href="javascript:void(0)" id="login-register" class="login-link link localized" text-key="loginViewRegister" style="display:none"></a>
 		</div>
 	</div>
 </div>

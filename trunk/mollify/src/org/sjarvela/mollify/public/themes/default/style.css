@@ -6,6 +6,9 @@ html, body {
 #mollify {
 	float: left;
 	width: 100%;
+}
+
+#mollify, .bubble-content {
 	font-size: 12px;
 	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
@@ -32,6 +35,26 @@ a.button {
 	text-shadow:1px 1px 0px #ffffff;
 }
 
+a.button-small {
+	font-size:12px;
+	font-weight:normal;
+	padding:6px 12px;
+}
+
+a.button-blue {
+	-moz-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	color:#ffffff;
+	text-shadow:1px 1px 0px #287ace;
+	background-color:#79bbff;
+	border:1px solid #469df5;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #4197ee) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #4197ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#4197ee');
+	background-color:#79bbff;
+}
+
 a.button:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
 	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
@@ -39,9 +62,20 @@ a.button:hover {
 	background-color:#dfdfdf;
 }
 
+a.button-blue:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4197ee), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #4197ee 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4197ee', endColorstr='#79bbff');
+	background-color:#4197ee;
+}
+
 a.button:active {
 	position:relative;
 	top:1px;
+}
+
+a.link {
+	color: #1111ff;
 }
 
 #login-main {
@@ -65,7 +99,6 @@ a.button:active {
 	clear: both;
 }
 
-
 #login-data {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -83,15 +116,19 @@ a.button:active {
 	position: relative;
 }
 
+input.text-field {
+	border-radius: 3px;
+	border: 1px solid #DFDFDF;
+	background-color: #ffffff;
+	height: 18px;
+}
+
 input.login-field.text-field {
 	font-size: 18px;
 	width: 200px;
 	height: 30px;
 	margin-top: 10px;
 	margin-left: 100px;
-	border-radius: 3px;
-	border: 1px solid #DFDFDF;
-	background-color: #ffffff;
 	text-align: center;
 }
 
@@ -104,17 +141,265 @@ input.login-field.text-field {
 	margin-bottom: 20px;
 }
 
-#login-button {
-
-}
-
-#login-links {
-
-}
-
-.login-link {
+a.login-link {
 	float: left;
 	margin-top: 10px;
 	font-size: 10px;
-	color: #111111;
+	color: #aaaaaa;
+}
+
+#login-register {
+	margin-left: 20px;
+}
+
+/*
+* qTip2 - Pretty powerful tooltips
+* http://craigsworks.com/projects/qtip2/
+*
+* Version: nightly
+* Copyright 2009-2010 Craig Michael Thompson - http://craigsworks.com
+*
+* Dual licensed under MIT or GPLv2 licenses
+*   http://en.wikipedia.org/wiki/MIT_License
+*   http://en.wikipedia.org/wiki/GNU_General_Public_License
+*
+* Date: Sat Mar  3 09:04:15.0000000000 2012
+*/
+
+/* Core qTip styles */
+.ui-tooltip, .qtip{
+	position: absolute;
+	left: -28000px;
+	top: -28000px;
+	display: none;
+
+	max-width: 280px;
+	min-width: 50px;
+	
+	font-size: 10.5px;
+	line-height: 12px;
+}
+
+	/* Fluid class for determining actual width in IE */
+	.ui-tooltip-fluid{
+		display: block;
+		visibility: hidden;
+		position: static !important;
+		float: left !important;
+	}
+
+	.ui-tooltip-content{
+		position: relative;
+		padding: 5px 9px;
+		overflow: hidden;
+
+		border: 1px solid #000001;
+
+		text-align: left;
+		word-wrap: break-word;
+		overflow: hidden;
+	}
+
+	.ui-tooltip-titlebar{
+		position: relative;
+		min-height: 14px;
+		padding: 5px 35px 5px 10px;
+		overflow: hidden;
+
+		border: 1px solid #000001;
+		border-width: 1px 1px 0;
+
+		font-weight: bold;
+	}
+
+	.ui-tooltip-titlebar + .ui-tooltip-content{ border-top-width: 0px !important; }
+
+		/*! Default close button class */
+		.ui-tooltip-titlebar .ui-state-default{
+			position: absolute;
+			right: 4px;
+			top: 50%;
+			margin-top: -9px;
+
+			cursor: pointer;
+			outline: medium none;
+
+			border-width: 1px;
+			border-style: solid;
+		}
+		
+		* html .ui-tooltip-titlebar .ui-state-default{ top: 16px; } /* IE fix */
+
+		.ui-tooltip-titlebar .ui-icon,
+		.ui-tooltip-icon .ui-icon{
+			display: block;
+			text-indent: -1000em;
+		}
+
+		.ui-tooltip-icon, .ui-tooltip-icon .ui-icon{
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+			border-radius: 3px;
+		}
+
+			.ui-tooltip-icon .ui-icon{
+				width: 18px;
+				height: 14px;
+
+				text-align: center;
+				text-indent: 0;
+				font: normal bold 10px/13px Tahoma,sans-serif;
+
+				color: inherit;
+				background: transparent none no-repeat -100em -100em;
+			}
+
+
+/* Applied to 'focused' tooltips e.g. most recently displayed/interacted with */
+.ui-tooltip-focus{
+
+}
+
+/* Applied on hover of tooltips i.e. added/removed on mouseenter/mouseleave respectively */
+.ui-tooltip-hover{
+	
+}
+
+
+/*! Default tooltip style */
+.ui-tooltip-default .ui-tooltip-titlebar,
+.ui-tooltip-default .ui-tooltip-content{
+	border-color: #F1D031;
+	background-color: #FFFFA3;
+	color: #555;
+}
+
+	.ui-tooltip-default .ui-tooltip-titlebar{
+		background-color: #FFEF93;
+	}
+
+	.ui-tooltip-default .ui-tooltip-icon{
+		border-color: #CCC;
+		background: #F1F1F1;
+		color: #777;
+	}
+	
+	.ui-tooltip-default .ui-tooltip-titlebar .ui-state-hover{
+		border-color: #AAA;
+		color: #111;
+	}
+
+/*! Light tooltip style */
+.ui-tooltip-light .ui-tooltip-titlebar,
+.ui-tooltip-light .ui-tooltip-content{
+	border-color: #E2E2E2;
+	color: #454545;
+}
+
+	.ui-tooltip-light .ui-tooltip-content{
+		background-color: white;
+	}
+
+	.ui-tooltip-light .ui-tooltip-titlebar{
+		background-color: #f1f1f1;
+	}
+
+*! Add shadows to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE6+, Safari 2+ */
+.ui-tooltip-shadow{
+	-webkit-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+	box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+}
+
+	.ui-tooltip-shadow .ui-tooltip-titlebar,
+	.ui-tooltip-shadow .ui-tooltip-content{
+		filter: progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3);
+		-ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Color='gray', Direction=135, Strength=3)";
+
+		_margin-bottom: -3px; /* IE6 */
+		.margin-bottom: -3px; /* IE7 */
+	}
+
+
+/*! Add rounded corners to your tooltips in: FF3+, Chrome 2+, Opera 10.6+, IE9+, Safari 2+ */
+.ui-tooltip-rounded,
+.ui-tooltip-rounded .ui-tooltip-content,
+.ui-tooltip-tipsy,
+.ui-tooltip-tipsy .ui-tooltip-content,
+.ui-tooltip-youtube,
+.ui-tooltip-youtube .ui-tooltip-content{
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.ui-tooltip-rounded .ui-tooltip-titlebar,
+.ui-tooltip-tipsy .ui-tooltip-titlebar,
+.ui-tooltip-youtube .ui-tooltip-titlebar{
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.ui-tooltip-rounded .ui-tooltip-titlebar + .ui-tooltip-content,
+.ui-tooltip-tipsy .ui-tooltip-titlebar + .ui-tooltip-content,
+.ui-tooltip-youtube .ui-tooltip-titlebar + .ui-tooltip-content{
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+}
+
+/* Tipped style */
+.ui-tooltip-tipped{
+
+}
+	
+	.ui-tooltip-tipped .ui-tooltip-titlebar,
+	.ui-tooltip-tipped .ui-tooltip-content{
+		border: 3px solid #959FA9;
+
+		filter: none; -ms-filter: none;
+	}
+
+	.ui-tooltip-tipped .ui-tooltip-titlebar{
+		background: #3A79B8;
+		background-image: -moz-linear-gradient(top, #3A79B8, #2E629D);
+		background-image: -webkit-gradient(linear, left top, left bottom, from(#3A79B8), to(#2E629D));
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D);
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A79B8,endColorstr=#2E629D)";
+
+		color: white;
+		font-weight: normal;
+		font-family: serif;
+
+		border-bottom-width: 0;
+		-moz-border-radius: 3px 3px 0 0;
+		-webkit-border-radius: 3px 3px 0 0;
+		border-radius: 3px 3px 0 0;
+	}
+	
+	.ui-tooltip-tipped .ui-tooltip-content{
+		background-color: #F9F9F9;
+		color: #454545;
+
+		-moz-border-radius: 0 0 3px 3px;
+		-webkit-border-radius: 0 0 3px 3px;
+		border-radius: 0 0 3px 3px;
+	}
+
+	.ui-tooltip-tipped .ui-tooltip-icon{
+		border: 2px solid #285589;
+		background: #285589;
+	}
+		
+		.ui-tooltip-tipped .ui-tooltip-icon .ui-icon{
+			background-color: #FBFBFB;
+			color: #555;
+		}
+		
+/* IE9 fix - removes all filters */
+.ui-tooltip:not(.ie9haxors) div.ui-tooltip-content,
+.ui-tooltip:not(.ie9haxors) div.ui-tooltip-titlebar{
+	filter: none;
+	-ms-filter: none;
 }
