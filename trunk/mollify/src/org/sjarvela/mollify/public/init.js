@@ -7,7 +7,7 @@
 		var t = this;
 		t.time = new Date().getTime();
 		this.settings = {};
-		this.uiProcessors = {};
+
 		this.plugins = [];
 		this.pluginsById = {};
 
@@ -17,14 +17,13 @@
 			if (s.plugins) {
 				for (var i=0, j=s.plugins.length; i < j; i++)
 					t.registerPlugin(s.plugins[i]);
-			}
-			
-			t.uiProcessors['localize'] = t.localize;
-			t.uiProcessors['hintbox'] = t.hintbox;
+			}			
 		}
 		
 		this.setup = function(e) {
 			t.env = e;
+			
+			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
 			t.env.addListColumnSpec({
 				"id": "file-modified",
@@ -118,7 +117,7 @@
 		this.loadContent = function(id, url, cb, process) {
 			$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
 				if (process) $.each(process, function(i, k) {
-					if (t.uiProcessors[k]) t.uiProcessors[k](id);
+					if (t.ui[k]) t.ui[k](id);
 				});
 				if (cb) cb();
 			});
@@ -133,47 +132,43 @@
 			return url + (strpos(url, "?") ? "&" : "?") + param;
 		}
 		
-		this.localize = function(id) {
-			$("#"+id+" .localized").each(function() {
-				var key = $(this).attr('title-key');
-				if (key)
-					$(this).attr("title", t.env.texts().get(key));
-				
-				key = $(this).attr('text-key');
-				if (key)
-					$(this).text(t.env.texts().get(key));
-			});
+		this.ui = {
+			hintbox : function(id) {
+				$("input.hintbox", "#"+id).each(function() {
+					var $this = $(this);
+					var hint = t.env.texts().get($this.attr('hint-key'));
+					$this.attr("placeholder", hint).removeAttr("hint-key");
+				}).placeholder();
+			},
+			
+			button : function(id) {
+				//$("button, a.button", "#"+id).button();
+			},
+
+			localize : function(id) {
+				$(".localized", "#"+id).each(function() {
+					var key = $(this).attr('title-key');
+					if (key)
+						$(this).attr("title", t.env.texts().get(key));
+					
+					key = $(this).attr('text-key');
+					if (key)
+						$(this).text(t.env.texts().get(key));
+				});
+			},
+			
+			center : function(id) {
+				$(".center", "#"+id).each(function() {
+					var $this = $(this);
+					var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
+					$this.css({
+						position: "relative",
+						left: x
+					});
+				});
+			}
 		}
 		
-		this.hintbox = function(id) {
-			$("#"+id+" input.hintbox").each(function() {
-				var $this = $(this);
-				var hint = t.env.texts().get($this.attr('hint-key'));
-				$this.attr("placeholder", hint).removeAttr("hint-key");
-			}).placeholder();
-			/*$("#"+id+" input.hintbox").wrap('<div class="hintbox-container" />').each(function() {
-				var $this = $(this);
-				var hint = t.env.texts().get($this.attr('hint-key'));
-				
-				var $hintvalue = $('<div class="hintbox-value">'+hint+'</div>').insertAfter($this);
-				var h = $this.outerHeight(true);
-				$hintvalue.css({
-					width: $this.width(),
-					height: h,
-					left: 0,
-					top: 0
-				});
-				
-				$p = $this.parent();
-				$p.css("height", h+2);
-				
-				$this.blur(function() {
-					if (this.value === '') $hintvalue.show();
-				}).focus(function() {
-					$hintvalue.hide();
-      			}).blur();
-			});*/
-		}
 		
 		/*this.formatDate = function(d) {
 			return $.datepicker.formatDate(getDateFormat(), d);
@@ -216,7 +211,7 @@
 			return time.format('yymmddHHMMss', time);
 		}
 		
-		this.texts = new function(){
+		this.texts = new function() {
 			var tt = this;
 			this.locale = '';
 			this.values = null;
@@ -267,7 +262,7 @@ function LoginView() {
 	}
 	
 	this.render = function(id) {
-		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox']);
+		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox', "center"]);
 	}
 	
 	this.onLoad = function() {
