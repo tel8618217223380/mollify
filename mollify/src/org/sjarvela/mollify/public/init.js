@@ -166,6 +166,49 @@
 						left: x
 					});
 				});
+			},
+			
+			bubble: function(id, cl) {
+				$(".bubble-action", "#"+id).each(function() {
+					var $this = $(this);
+					var actionId = $this.attr('id');
+					if (!actionId) return;
+					
+					var content = $("#" + actionId + '-bubble');
+					if (!content || content.length == 0) return;
+
+					var html = content.html();
+					content.remove();
+					
+					$this.qtip({
+						content: html,
+						position: {
+							my: 'top center',
+							at: 'bottom center'
+						},
+						show: 'click',
+						hide: {
+							delay: 200,
+							fixed: true,
+							event: 'click mouseleave'
+						},
+						style: {
+							tip: true,
+							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+						},
+						events: {
+							render: function(e, api) {
+								if (!cl || !cl.onRenderBubble) return;
+								cl.onRenderBubble(actionId, api);
+							},
+							visible: function(e, api) {
+								if (!cl || !cl.onShowBubble) return;
+								cl.onShowBubble(actionId, api);
+							}
+
+						}
+					});
+				});
 			}
 		}
 		
@@ -262,12 +305,28 @@ function LoginView() {
 	}
 	
 	this.render = function(id) {
-		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox', "center"]);
+		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox']);
 	}
 	
 	this.onLoad = function() {
 		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
+		if (mollify.hasFeature('registration')) $("#login-register").show();
+		
+		mollify.ui.center("login-data");
+		mollify.ui.bubble("login-data", that);
 		$("#login-button").click(that.onLogin);
+	}
+	
+	this.onRenderBubble = function(id, bubble) {
+		if (id === 'login-forgot-password') {
+			$("#login-forgot-button").click(function() { alert("lost"); });
+		}
+	}
+	
+	this.onShowBubble = function(id, bubble) {
+		if (id === 'login-forgot-password') {
+			$("#login-forgot-email").val("").focus();
+		}
 	}
 	
 	this.onLogin = function() {
