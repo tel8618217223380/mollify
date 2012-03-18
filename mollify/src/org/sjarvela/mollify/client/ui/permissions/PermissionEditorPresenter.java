@@ -20,7 +20,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ResultCallback;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -29,6 +28,7 @@ import org.sjarvela.mollify.client.session.file.FilePermission;
 import org.sjarvela.mollify.client.session.user.User;
 import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.session.user.UserGroup;
+import org.sjarvela.mollify.client.ui.ConfirmationListener;
 import org.sjarvela.mollify.client.ui.Formatter;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.grid.SelectionMode;
@@ -209,7 +209,7 @@ public class PermissionEditorPresenter implements FileItemUserPermissionHandler 
 								public void onConfirm() {
 									openSelectItemDialog();
 								}
-							}, null);
+							});
 		else
 			openSelectItemDialog();
 	}

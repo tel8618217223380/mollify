@@ -11,7 +11,7 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
@@ -25,11 +25,11 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	private final FileSystemService service;
 	private final boolean experimental;
 	private final ClientSettings settings;
-	private final PluginEnvironment pluginEnvironment;
+	private final ClientInterface pluginEnvironment;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager, ClientSettings settings,
-			FileSystemService service, PluginEnvironment pluginEnvironment) {
+			FileSystemService service, ClientInterface pluginEnvironment) {
 		this.textProvider = textProvider;
 		this.dragAndDropManager = dragAndDropManager;
 		this.settings = settings;

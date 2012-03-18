@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewManager {
 
-	void registerView(String name, JavaScriptObject view);
+	void setViewHandlers(JavaScriptObject handlers);
 
 	JsObj getViewHandler(String name);
 

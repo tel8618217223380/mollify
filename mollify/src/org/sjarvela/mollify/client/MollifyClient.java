@@ -48,7 +48,6 @@ public class MollifyClient implements Client {
 	private final SessionService service;
 	private final ClientSettings settings;
 	private final PluginSystem pluginSystem;
-	private final FileViewDelegate fileViewDelegate;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
@@ -62,7 +61,6 @@ public class MollifyClient implements Client {
 		this.settings = settings;
 		this.pluginSystem = pluginSystem;
 		this.service = serviceProvider.getSessionService();
-		this.fileViewDelegate = new FileViewDelegate();
 
 		sessionManager.addSessionListener(new SessionListener() {
 			@Override
@@ -104,14 +102,13 @@ public class MollifyClient implements Client {
 										+ pluginsInitialized);
 
 						if (!pluginsInitialized) {
-							pluginSystem.setup(fileViewDelegate, session,
-									new Callback() {
-										@Override
-										public void onCallback() {
-											pluginsInitialized = true;
-											sessionManager.setSession(session);
-										}
-									});
+							pluginSystem.setup(session, new Callback() {
+								@Override
+								public void onCallback() {
+									pluginsInitialized = true;
+									sessionManager.setSession(session);
+								}
+							});
 						} else {
 							sessionManager.setSession(session);
 						}

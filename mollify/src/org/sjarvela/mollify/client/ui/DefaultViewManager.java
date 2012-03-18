@@ -10,8 +10,6 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +40,7 @@ public class DefaultViewManager implements ViewManager {
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private Map<String, JavaScriptObject> views = new HashMap();
+	private JsObj viewHandlers = null;
 
 	private final RootPanel rootPanel;
 	private final Panel hiddenPanel;
@@ -58,16 +56,15 @@ public class DefaultViewManager implements ViewManager {
 	}
 
 	@Override
-	public void registerView(String name, JavaScriptObject view) {
-		views.put(name, view);
+	public void setViewHandlers(JavaScriptObject handlers) {
+		this.viewHandlers = handlers.cast();
 	}
 
 	@Override
 	public JsObj getViewHandler(String name) {
-		JavaScriptObject v = views.get(name);
-		if (v == null)
+		if (!viewHandlers.hasValue(name))
 			return null;
-		return v.cast();
+		return viewHandlers.getJsObj(name);
 	}
 
 	@Override

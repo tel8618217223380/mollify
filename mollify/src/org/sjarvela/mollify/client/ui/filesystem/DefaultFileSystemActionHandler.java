@@ -27,11 +27,11 @@ import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.ui.ConfirmationListener;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -106,7 +106,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							fileSystemService.delete(items,
 									createListener(items, action, cb));
 						}
-					}, source);
+					});
 		} else if (FileSystemAction.copy.equals(action)) {
 			if (folder == null) {
 				itemSelectorFactory.openFolderSelector(textProvider
@@ -326,7 +326,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 							public void onConfirm() {
 								delete(file);
 							}
-						}, source);
+						});
 			} else {
 				dialogManager.showInfo("ERROR",
 						"Unsupported action:" + action.name());
@@ -389,7 +389,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler,
 						public void onConfirm() {
 							delete(folder);
 						}
-					}, source);
+					});
 		} else {
 			dialogManager.showInfo("ERROR",
 					"Unsupported action:" + action.name());
