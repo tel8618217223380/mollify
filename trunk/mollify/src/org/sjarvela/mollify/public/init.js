@@ -6,18 +6,17 @@
 		};
 		var t = this;
 		t.time = new Date().getTime();
+		
 		this.settings = {};
+		this.plugins = {};
 
-		this.plugins = [];
-		this.pluginsById = {};
-
-		this.init = function(s) {
-			t.settings = $.extend({}, s, defaults);
+		this.init = function(s, p) {
+			if (p) {
+				for (var i=0, j=p.length; i < j; i++)
+					t.registerPlugin(p[i]);
+			}
 			
-			if (s.plugins) {
-				for (var i=0, j=s.plugins.length; i < j; i++)
-					t.registerPlugin(s.plugins[i]);
-			}			
+			t.settings = $.extend({}, s, defaults);
 		}
 		
 		this.setup = function(e) {
@@ -62,28 +61,31 @@
 				}
 			});
 			
-			t.env.views().registerView("login", new LoginView());
-			t.env.views().registerView("mainview", new MainView());
+			t.views = {
+				login : new LoginView(),
+				mainview : new MainView(),
+				
+				dialogs : new DialogHandler()
+			}
+			t.env.views().registerHandlers(t.views);		
+			
+			for (var id in t.plugins)
+				t.plugins[id].initialize(t.env);
+				
+			t.templates.load("dialogs.html");
 			
 			//$.datepicker.setDefaults({
 			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 			//});
 		}
-		
-		this.getSettings = function() {
-			return t.settings;
-		}
 
-		this.getPlugins = function() {
-			return t.plugins;
+		this.plugins = function(id) {
+			if (!def(id)) return t.plugins;
+			return t.plugins[id];
 		}
 		
-		this.getPlugin = function(id) {
-			return t.pluginsById[id];
-		}
-
 		this.hasPlugin = function(id) {
-			return !!t.pluginsById[id];
+			return !!t.plugins[id];
 		}
 		
 		this.hasFeature = function(id) {
@@ -91,45 +93,60 @@
 		}
 		
 		this.locale = function() {
-			return t.env.texts().locale;
+			return t.texts.locale;
 		}
 		
 		this.registerPlugin = function(p) {
-			t.plugins.push(p);
-			var id = p.getPluginInfo().id;
-			if (id) t.pluginsById[id] = p;
-		}
-
-		this.importScript = function(url) {
-			$.getScript(url);
-		}
-		
-		this.importCss = function(url) {
-			var link = $("<link>");
-			link.attr({
-		    	type: 'text/css',
-		    	rel: 'stylesheet',
-		    	href: t.urlWithParam(url, "_="+mollify.time)
-			});
-			$("head").append(link);
-		}
-		
-		this.loadContent = function(id, url, cb, process) {
-			$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
-				if (process) $.each(process, function(i, k) {
-					if (t.ui[k]) t.ui[k](id);
-				});
-				if (cb) cb();
-			});
-		}
-		
-		this.templateUrl = function(name) {
-			var base = t.getSettings()["template-url"] || 'client/templates/';
-			return base + name;
+			var id = p.id;
+			if (!id) return;
+			t.plugins[id] = p;
 		}
 		
 		this.urlWithParam = function(url, param) {
 			return url + (strpos(url, "?") ? "&" : "?") + param;
+		}
+		
+		this.noncachedUrl = function(url) {
+			return t.urlWithParam(url, "_="+t.time);
+		}
+		
+		this.templates = {
+			url : function(name) {
+				var base = t.settings["template-url"] || 'client/templates/';
+				return t.noncachedUrl(base + name);
+			},
+			
+			load : function(name, cb) {
+				$.get(t.templates.url(name), function(h) {
+					$("body").append(h);
+					if (cb) cb();
+				});
+			}
+		}
+		
+		this.dom = {
+			importScript : function(url) {
+				$.getScript(url);
+			},
+			
+			importCss : function(url) {
+				var link = $("<link>");
+				link.attr({
+			    	type: 'text/css',
+			    	rel: 'stylesheet',
+			    	href: t.noncachedUrl(url)
+				});
+				$("head").append(link);
+			},
+			
+			loadContent : function(id, url, cb, process) {
+				$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
+					if (process) $.each(process, function(i, k) {
+						if (t.ui[k]) t.ui[k](id);
+					});
+					if (cb) cb();
+				});
+			}
 		}
 		
 		this.ui = {
@@ -205,7 +222,6 @@
 								if (!cl || !cl.onShowBubble) return;
 								cl.onShowBubble(actionId, api);
 							}
-
 						}
 					});
 				});
@@ -284,6 +300,10 @@ if(typeof String.prototype.trim !== 'function') {
 	}
 }
 
+function def(o) {
+	return (typeof(o) != 'undefined');
+}
+
 function strpos(haystack, needle, offset) {
     // Finds position of first occurrence of a string within another  
     // 
@@ -297,6 +317,33 @@ function strpos(haystack, needle, offset) {
     return i === -1 ? false : i;
 }
 
+function DialogHandler() {
+	this.info = function(spec) {
+		$("#mollify-tmpl-dialog-info").tmpl(spec).dialog({ modal: true, resizable: false });
+	}
+	
+	this.error = function(spec) {
+		alert("error");
+	}
+	
+	this.confirmation = function(spec) {
+		alert("confirm");
+	}
+	
+	this.wait = function(spec) {
+		alert("wait");
+		return {
+			close: function() {
+				alert("close wait");
+			}
+		};
+	}
+	
+	this.custom = function(spec) {
+		alert("custom");
+	}
+}
+
 function LoginView() {
 	var that = this;
 	
@@ -305,7 +352,7 @@ function LoginView() {
 	}
 	
 	this.render = function(id) {
-		mollify.loadContent(id, mollify.templateUrl("login-view.html"), that.onLoad, ['localize', 'hintbox']);
+		mollify.dom.loadContent(id, mollify.templates.url("login-view.html"), that.onLoad, ['localize', 'hintbox']);
 	}
 	
 	this.onLoad = function() {
@@ -319,7 +366,7 @@ function LoginView() {
 	
 	this.onRenderBubble = function(id, bubble) {
 		if (id === 'login-forgot-password') {
-			$("#login-forgot-button").click(function() { alert("lost"); });
+			$("#login-forgot-button").click(function() { that.onRecoverPassword($("#login-forgot-email").val()); });
 		}
 	}
 	
@@ -336,6 +383,13 @@ function LoginView() {
 		
 		if (!username || !password || username.length < 1 || password.length < 1) return;
 		that.listener.onLogin(username, password, remember);
+	}
+	
+	this.onRecoverPassword = function(email) {
+		mollify.views.dialogs.info({
+			title: "testi",
+			message: "testi notifikaatio"
+		});
 	}
 }
 

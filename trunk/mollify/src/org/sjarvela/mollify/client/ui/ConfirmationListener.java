@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.service;
+package org.sjarvela.mollify.client.ui;
 
 public interface ConfirmationListener {
 	public void onConfirm();

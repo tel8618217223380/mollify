@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.ClientSettings;
@@ -64,7 +64,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final SearchResultDialogFactory searchResultDialogFactory;
 	private final FileSystemActionHandlerFactory fileSystemActionHandlerFactory;
 	private final ItemContextPopupFactory itemContextPopupFactory;
-	private final PluginEnvironment pluginEnvironment;
+	private final ClientInterface pluginEnvironment;
 
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
@@ -80,7 +80,7 @@ public class DefaultMainViewFactory implements MainViewFactory,
 			SearchResultDialogFactory searchResultDialogFactory,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
 			ItemContextPopupFactory itemContextPopupFactory,
-			PluginEnvironment pluginEnvironment) {
+			ClientInterface pluginEnvironment) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;

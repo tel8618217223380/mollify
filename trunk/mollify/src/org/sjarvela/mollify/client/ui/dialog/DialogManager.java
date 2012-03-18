@@ -10,13 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.ConfirmationListener;
 
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.core.client.JavaScriptObject;
 
 public interface DialogManager {
+
+	void setHandler(JavaScriptObject h);
 
 	void showError(ServiceError error);
 
@@ -25,14 +26,11 @@ public interface DialogManager {
 	void showInfo(String title, String text, String info);
 
 	void showConfirmationDialog(String title, String message, String style,
-			ConfirmationListener listener, Widget source);
+			ConfirmationListener listener);
 
 	void showInputDialog(String title, String message, String defaultValue,
 			InputListener listener);
 
 	WaitDialog openWaitDialog(String title, String message);
-
-	CustomContentDialog showCustomDialog(String title, String style,
-			boolean modal, HTML html, CustomDialogListener listener);
 
 }

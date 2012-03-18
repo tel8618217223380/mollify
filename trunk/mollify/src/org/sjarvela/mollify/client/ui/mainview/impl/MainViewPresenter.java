@@ -31,7 +31,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.plugin.PluginEnvironment;
+import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -88,7 +88,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 
 	private final boolean exposeFileUrls;
 
-	private final PluginEnvironment pluginEnvironment;
+	private final ClientInterface pluginEnvironment;
 
 	public MainViewPresenter(DialogManager dialogManager,
 			ViewManager viewManager, SessionManager sessionManager,
@@ -103,7 +103,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			boolean exposeFileUrls, SessionService sessionService,
 			EventDispatcher eventDispatcher,
 			SearchResultDialogFactory searchResultDialogFactory,
-			PluginEnvironment pluginEnvironment) {
+			ClientInterface pluginEnvironment) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;

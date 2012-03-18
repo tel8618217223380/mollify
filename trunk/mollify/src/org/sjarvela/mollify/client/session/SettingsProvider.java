@@ -46,9 +46,9 @@ public class SettingsProvider {
 	}
 
 	private native JsObj getSettings() /*-{
-		if (!$wnd.mollify || !$wnd.mollify.getSettings)
+		if (!$wnd.mollify || !$wnd.mollify.settings)
 			return null;
-		return $wnd.mollify.getSettings();
+		return $wnd.mollify.settings;
 	}-*/;
 
 	public String getParameter(String name) {
