@@ -26,7 +26,7 @@
 			
 			$user = $this->getUser($data['email']);
 			if (!$user) {
-				$this->response()->fail(101, "NO_SUCH_USER");
+				$this->response()->fail(301, "NO_SUCH_USER");
 				return;
 			}
 			
