@@ -14,9 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.MollifyClient;
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
+import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
@@ -28,20 +32,22 @@ public class LoginViewHandler {
 	private static Logger logger = Logger.getLogger(LoginViewHandler.class
 			.getName());
 
-	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final SessionService service;
 	private final NativeLoginView view;
-
 	private final SessionManager sessionManager;
+	private final ExternalService resetPasswordService;
+	private final TextProvider textProvider;
 
 	public LoginViewHandler(ViewManager viewManager,
 			DialogManager dialogManager, SessionService service,
-			SessionManager sessionManager) {
-		this.viewManager = viewManager;
+			ExternalService resetPasswordService,
+			SessionManager sessionManager, TextProvider textProvider) {
 		this.dialogManager = dialogManager;
 		this.service = service;
+		this.resetPasswordService = resetPasswordService;
 		this.sessionManager = sessionManager;
+		this.textProvider = textProvider;
 		this.view = new NativeLoginView(viewManager.getViewHandler("login"));
 
 		view.init(new LoginViewListener() {
@@ -50,103 +56,15 @@ public class LoginViewHandler {
 					boolean remember) {
 				LoginViewHandler.this.onLogin(username, password, remember);
 			}
+
+			@Override
+			public void onResetPassword(String email) {
+				LoginViewHandler.this.onResetPassword(email);
+			}
 		});
 
-		this.viewManager.render(this.view);
-
-		// this.setModal(false);
-		// this.addViewListener(new ViewListener() {
-		// public void onShow() {
-		// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-		// public void execute() {
-		// userName.setFocus(true);
-		// }
-		// });
-		// }
-		// });
-		//
-		// initialize();
+		viewManager.render(this.view);
 	}
-
-	// @Override
-	// protected Widget createButtons() {
-	// HorizontalPanel buttons = new HorizontalPanel();
-	// buttons.addStyleName(StyleConstants.LOGIN_DIALOG_BUTTONS);
-	// buttons.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-	//
-	// buttons.add(createButton(
-	// textProvider.getText(Texts.loginDialogLoginButton),
-	// new ClickHandler() {
-	// public void onClick(ClickEvent event) {
-	// onLogin();
-	// }
-	// }, StyleConstants.LOGIN_DIALOG_BUTTON_LOGIN));
-	//
-	// buttons.add(createButton(
-	// textProvider.getText(Texts.dialogCancelButton),
-	// new ClickHandler() {
-	// public void onClick(ClickEvent event) {
-	// LoginDialog.this.hide();
-	// }
-	// }, StyleConstants.DIALOG_BUTTON_CANCEL));
-	//
-	// return buttons;
-	// }
-
-	// @Override
-	// protected Widget createContent() {
-	// KeyPressHandler loginHandler = new KeyPressHandler() {
-	// public void onKeyPress(KeyPressEvent event) {
-	// if (event.getCharCode() == 13)
-	// onLogin();
-	// }
-	// };
-	//
-	// VerticalPanel panel = new VerticalPanel();
-	// panel.setStyleName(StyleConstants.LOGIN_DIALOG_CONTENT);
-	//
-	// Label usernameTitle = new Label(
-	// textProvider.getText(Texts.loginDialogUsername));
-	// usernameTitle.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_TITLE);
-	// panel.add(usernameTitle);
-	//
-	// userName = new TextBox();
-	// userName.setStyleName(StyleConstants.LOGIN_DIALOG_USERNAME_VALUE);
-	// userName.addKeyPressHandler(loginHandler);
-	// panel.add(userName);
-	//
-	// Label passwordTitle = new Label(
-	// textProvider.getText(Texts.loginDialogPassword));
-	// passwordTitle.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_TITLE);
-	// panel.add(passwordTitle);
-	//
-	// password = new PasswordTextBox();
-	// password.setStyleName(StyleConstants.LOGIN_DIALOG_PASSWORD_VALUE);
-	// password.addKeyPressHandler(loginHandler);
-	// panel.add(password);
-	//
-	// if (showResetPassword) {
-	// final ActionLink link = createLink(
-	// textProvider.getText(Texts.loginDialogResetPassword), null,
-	// StyleConstants.LOGIN_DIALOG_BUTTON_RESET_PASSWORD);
-	// link.setClickHandler(new ClickHandler() {
-	// @Override
-	// public void onClick(ClickEvent event) {
-	// new ResetPasswordPopup(textProvider, link.getElement(),
-	// serviceProvider.getExternalService("lostpassword"),
-	// dialogManager).showPopup();
-	// }
-	// });
-	// panel.add(link);
-	// }
-	//
-	// rememberMe = new CheckBox(
-	// textProvider.getText(Texts.loginDialogRememberMe));
-	// rememberMe.setStylePrimaryName("mollify-login-dialog-remember-me");
-	// panel.add(rememberMe);
-	//
-	// return panel;
-	// }
 
 	private void onLogin(String username, String password, boolean remember) {
 		if (username == null || username.length() < 1)
@@ -164,8 +82,8 @@ public class LoginViewHandler {
 				MollifyClient.PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {
 					public void onFail(ServiceError error) {
-						if (ServiceErrorType.AUTHENTICATION_FAILED
-								.equals(error)) {
+						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
+								.getType())) {
 							view.showLoginError();
 							return;
 						}
@@ -176,5 +94,34 @@ public class LoginViewHandler {
 						sessionManager.setSession(session);
 					}
 				});
+	}
+
+	protected void onResetPassword(String email) {
+		if (email == null || email.length() == 0)
+			return;
+
+		String data = new JSONBuilder("email", email).toString();
+
+		resetPasswordService.post(data, new ResultListener() {
+			@Override
+			public void onFail(ServiceError error) {
+				if (error.getError().getCode() == 301) {
+					view.showResetPasswordFailed();
+				} else if (error.getType().equals(
+						ServiceErrorType.REQUEST_FAILED)) {
+					dialogManager.showInfo(
+							textProvider.getText(Texts.resetPasswordPopupTitle),
+							textProvider
+									.getText(Texts.resetPasswordPopupResetFailed));
+				} else {
+					dialogManager.showError(error);
+				}
+			}
+
+			@Override
+			public void onSuccess(Object result) {
+				view.showResetPasswordSuccess();
+			}
+		});
 	}
 }

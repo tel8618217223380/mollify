@@ -21,7 +21,9 @@
 		
 		this.setup = function(e) {
 			t.env = e;
-			
+			t.ui.texts = t.env.texts();
+			t.service = t.env.service();
+
 			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
 			t.env.addListColumnSpec({
@@ -67,7 +69,7 @@
 				
 				dialogs : new DialogHandler()
 			}
-			t.env.views().registerHandlers(t.views);		
+			t.env.views().registerHandlers(t.views);
 			
 			for (var id in t.plugins)
 				t.plugins[id].initialize(t.env);
@@ -142,7 +144,7 @@
 			loadContent : function(id, url, cb, process) {
 				$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
 					if (process) $.each(process, function(i, k) {
-						if (t.ui[k]) t.ui[k](id);
+						if (t.ui.handlers[k]) t.ui.handlers[k](id);
 					});
 					if (cb) cb();
 				});
@@ -150,81 +152,85 @@
 		}
 		
 		this.ui = {
-			hintbox : function(id) {
-				$("input.hintbox", "#"+id).each(function() {
-					var $this = $(this);
-					var hint = t.env.texts().get($this.attr('hint-key'));
-					$this.attr("placeholder", hint).removeAttr("hint-key");
-				}).placeholder();
-			},
-			
-			button : function(id) {
-				//$("button, a.button", "#"+id).button();
-			},
-
-			localize : function(id) {
-				$(".localized", "#"+id).each(function() {
-					var key = $(this).attr('title-key');
-					if (key)
-						$(this).attr("title", t.env.texts().get(key));
-					
-					key = $(this).attr('text-key');
-					if (key)
-						$(this).text(t.env.texts().get(key));
-				});
-			},
-			
-			center : function(id) {
-				$(".center", "#"+id).each(function() {
-					var $this = $(this);
-					var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
-					$this.css({
-						position: "relative",
-						left: x
+			handlers : {
+				hintbox : function(id) {
+					$("input.hintbox", "#"+id).each(function() {
+						var $this = $(this);
+						var hint = t.env.texts().get($this.attr('hint-key'));
+						$this.attr("placeholder", hint).removeAttr("hint-key");
+					}).placeholder();
+				},
+	
+				localize : function(id) {
+					$(".localized", "#"+id).each(function() {
+						var key = $(this).attr('title-key');
+						if (key)
+							$(this).attr("title", t.env.texts().get(key));
+						
+						key = $(this).attr('text-key');
+						if (key)
+							$(this).text(t.env.texts().get(key));
 					});
-				});
-			},
-			
-			bubble: function(id, cl) {
-				$(".bubble-action", "#"+id).each(function() {
-					var $this = $(this);
-					var actionId = $this.attr('id');
-					if (!actionId) return;
-					
-					var content = $("#" + actionId + '-bubble');
-					if (!content || content.length == 0) return;
-
-					var html = content.html();
-					content.remove();
-					
-					$this.qtip({
-						content: html,
-						position: {
-							my: 'top center',
-							at: 'bottom center'
-						},
-						show: 'click',
-						hide: {
-							delay: 200,
-							fixed: true,
-							event: 'click mouseleave'
-						},
-						style: {
-							tip: true,
-							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-						},
-						events: {
-							render: function(e, api) {
-								if (!cl || !cl.onRenderBubble) return;
-								cl.onRenderBubble(actionId, api);
+				},
+				
+				center : function(id) {
+					$(".center", "#"+id).each(function() {
+						var $this = $(this);
+						var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
+						$this.css({
+							position: "relative",
+							left: x
+						});
+					});
+				},
+				
+				bubble: function(id, cl) {
+					$(".bubble-action", "#"+id).each(function() {
+						var $this = $(this);
+						var actionId = $this.attr('id');
+						if (!actionId) return;
+						
+						var content = $("#" + actionId + '-bubble');
+						if (!content || content.length == 0) return;
+	
+						var html = content.html();
+						content.remove();
+						
+						$this.qtip({
+							content: html,
+							position: {
+								my: 'top center',
+								at: 'bottom center'
 							},
-							visible: function(e, api) {
-								if (!cl || !cl.onShowBubble) return;
-								cl.onShowBubble(actionId, api);
+							show: 'click',
+							hide: {
+								delay: 200,
+								fixed: true,
+								event: 'click mouseleave'
+							},
+							style: {
+								tip: true,
+								classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+							},
+							events: {
+								render: function(e, api) {
+									if (!cl || !cl.onRenderBubble) return;
+									cl.onRenderBubble(actionId, api);
+								},
+								visible: function(e, api) {
+									if (!cl || !cl.onShowBubble) return;
+									cl.onShowBubble(actionId, api);
+								}
 							}
-						}
+						});
 					});
-				});
+				}
+			},
+			
+			window : {
+				open : function(url) {
+					window.open(url);
+				}
 			}
 		}
 		
@@ -318,8 +324,12 @@ function strpos(haystack, needle, offset) {
 }
 
 function DialogHandler() {
+	var dialogDefaults = {
+		title: "Mollify"
+	}
+	
 	this.info = function(spec) {
-		$("#mollify-tmpl-dialog-info").tmpl(spec).dialog({ modal: true, resizable: false });
+		$("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({ modal: true, resizable: false });
 	}
 	
 	this.error = function(spec) {
@@ -331,16 +341,23 @@ function DialogHandler() {
 	}
 	
 	this.wait = function(spec) {
-		alert("wait");
+		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
+		var wait = $("#mollify-tmpl-wait").tmpl($.extend(spec, dialogDefaults)).appendTo($(trg)).show();
 		return {
 			close: function() {
-				alert("close wait");
+				wait.remove();
 			}
 		};
 	}
 	
 	this.custom = function(spec) {
 		alert("custom");
+	}
+	
+	this.notification = function(spec) {
+		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
+		var notification = $("#mollify-tmpl-notification").tmpl($.extend(spec, dialogDefaults)).hide().appendTo($(trg)).fadeIn(300);
+		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
 	}
 }
 
@@ -356,17 +373,39 @@ function LoginView() {
 	}
 	
 	this.onLoad = function() {
+		$(window).resize(that.onResize);
+		that.onResize();
+	
 		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
 		if (mollify.hasFeature('registration')) $("#login-register").show();
 		
-		mollify.ui.center("login-data");
-		mollify.ui.bubble("login-data", that);
+		mollify.ui.handlers.center("login-data");
+		mollify.ui.handlers.bubble("login-data", that);
+		$("#login-name, #login-password").bind('keypress', function(e) {
+			if ((e.keyCode || e.which) == 13) that.onLogin();
+		});
 		$("#login-button").click(that.onLogin);
+		$("#login-register").click(function() { mollify.ui.window.open(mollify.service.getPluginUrl("registration")); });
+		$("#login-name").focus();
+	}
+	
+	this.onResize = function() {
+		var h = $(window).height();
+		$("#login-main").height(h);
+		
+		$data = $("#login-data");
+		$data.css('margin-top', (h / 2) - ($data.height() / 2));
 	}
 	
 	this.onRenderBubble = function(id, bubble) {
 		if (id === 'login-forgot-password') {
-			$("#login-forgot-button").click(function() { that.onRecoverPassword($("#login-forgot-email").val()); });
+			$("#login-forgot-button").click(function() {
+				var email = $("#login-forgot-email").val();
+				if (!email) return;
+				bubble.hide();
+				that.wait = mollify.views.dialogs.wait();
+				//that.listener.onResetPassword(email);
+			});
 		}
 	}
 	
@@ -381,20 +420,58 @@ function LoginView() {
 		var password = $("#login-password").val();
 		var remember = $("#login-remember").attr('checked');
 		
-		if (!username || !password || username.length < 1 || password.length < 1) return;
+		if (!username || username.length < 1) {
+			$("#login-name").focus();
+			return;
+		}
+		if (!password || password.length < 1) {
+			$("#login-password").focus();
+			return;
+		}
+		that.wait = mollify.views.dialogs.wait();
 		that.listener.onLogin(username, password, remember);
 	}
 	
-	this.onRecoverPassword = function(email) {
+	this.showLoginError = function() {
+		that.wait.close();
+		
+		mollify.views.dialogs.notification({
+			target: "login-main",
+			message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
+		});
+	}
+	
+	this.onResetPasswordSuccess = function() {
+		that.wait.close();
+		
+		mollify.views.dialogs.notification({
+			target: "login-main",
+			message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
+		});
+	}
+	
+	this.onResetPasswordFailed = function() {
+		that.wait.close();
+		
 		mollify.views.dialogs.info({
-			title: "testi",
-			message: "testi notifikaatio"
+			message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
 		});
 	}
 }
 
 function MainView() {
 	var that = this;
+	
+	this.init = function(listener) {
+		that.listener = listener;
+	}
+	
+	this.render = function(id) {
+		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that.onLoad, ['localize']);
+	}
+	
+	this.onLoad = function() {
+	}
 }
 
 function CommentPlugin() {

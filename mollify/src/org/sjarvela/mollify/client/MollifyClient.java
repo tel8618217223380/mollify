@@ -13,6 +13,7 @@ package org.sjarvela.mollify.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
@@ -48,18 +49,22 @@ public class MollifyClient implements Client {
 	private final SessionService service;
 	private final ClientSettings settings;
 	private final PluginSystem pluginSystem;
+	private final ServiceProvider serviceProvider;
+	private final TextProvider textProvider;
 
 	@Inject
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
 			ServiceProvider serviceProvider, ClientSettings settings,
-			PluginSystem pluginSystem) {
+			PluginSystem pluginSystem, TextProvider textProvider) {
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
 		this.sessionManager = sessionManager;
+		this.serviceProvider = serviceProvider;
 		this.settings = settings;
 		this.pluginSystem = pluginSystem;
+		this.textProvider = textProvider;
 		this.service = serviceProvider.getSessionService();
 
 		sessionManager.addSessionListener(new SessionListener() {
@@ -126,6 +131,7 @@ public class MollifyClient implements Client {
 			return;
 
 		new LoginViewHandler(viewManager, dialogManager, service,
-				sessionManager);
+				serviceProvider.getExternalService("lostpassword"),
+				sessionManager, textProvider);
 	}
 }
