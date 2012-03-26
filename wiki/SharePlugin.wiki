@@ -52,3 +52,13 @@ Plupload plugin (since version 1.0.6) supports public uploader. Configure it wit
 		)
 	);
 }}}
+
+
+= Enabling Clipboard =
+
+In your mollify page, add a link to the script and initialize it using the following to allow copy on click functionality:
+
+{{{
+  <script type="text/javascript" language="javascript" src="client/include/ZeroClipboard.js"></script>
+  <script> ZeroClipboard.setMoviePath('client/include/ZeroClipboard.swf'); </script>
+}}}
