@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.7.3 ===
+Released 2012/3/28
+  * Updated External interface
+  * Added/updated languages: Finnish, Italian, French
+
 === Version 1.8.7.2 ===
 Released 2012/3/11
   * Fixed issue 375
