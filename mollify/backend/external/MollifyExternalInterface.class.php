@@ -18,6 +18,10 @@
 		global $SETTINGS, $CONFIGURATION_TYPE;
 		return new MollifyExternalInterface($SETTINGS, $CONFIGURATION_TYPE);
 	}
+
+	class VoidResponseHandler {
+		public function addListener($l) {}
+	}
 	
 	class MollifyExternalInterface {
 		private $configuration;
@@ -27,30 +31,32 @@
 		
 		public function __construct($settingsVar, $configurationId) {
 			require_once("include/Settings.class.php");
-			require_once("include/Session.class.php");
+			require_once("include/session/Session.class.php");
 			require_once("include/ServiceEnvironment.class.php");
 			require_once("include/Util.class.php");
 			require_once("include/ConfigurationFactory.class.php");
 			require_once("include/Logging.class.php");
 			require_once("include/Version.info.php");
+			require_once("include/Cookie.class.php");
+			require_once("include/Features.class.php");
+			require_once("include/Request.class.php");
 		
 			Logging::initialize($settingsVar);
 
 			$this->settings = new Settings($settingsVar);
-			$this->session = new Session($this->settings);
+			$this->session = new Session(TRUE);
 			
 			$factory = new ConfigurationFactory();
 			$this->configuration = $factory->createConfiguration($configurationId, $this->settings);
-			
-			$env = new ExternalEnv($this->session, $this->configuration);
-			$this->configuration->initialize($env);
-			$this->session->initialize($env);
+
+			$env = new ServiceEnvironment($this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
+			$env->initialize(new Request(FALSE, TRUE));
 			$this->authentication = $env->authentication();
 		}
 
 		public function logout() {
 			$this->authentication->logout();
-			$this->session->reset();
+			$this->session->end();
 		}
 				
 		public function authenticate($userId) {
@@ -62,11 +68,11 @@
 		} 
 		
 		public function getUserId() {
-			return $this->authentication->getUserId();
+			return $this->session->userId();
 		}
 
 		public function getUsername() {
-			return $this->authentication->getUsername();
+			return $this->session->username();
 		}
 
 		public function isAuthenticationRequired() { 
@@ -99,42 +105,6 @@
 		
 		public function addItemPermission($id, $permission, $userId) {
 			return $this->configuration->addItemPermission($id, $permission, $userId);
-		}
-	}
-	
-	class ExternalEnv {
-		private $configuration;
-		private $session;
-		private $authentication;
-		
-		public function __construct($session, $configuration) {
-			$this->configuration = $configuration;
-			$this->session = $session;
-			$this->authentication = new Authentication($this);
-		}
-		
-		public function configuration() {
-			return $this->configuration;
-		}
-
-		public function authentication() {
-			return $this->authentication;
-		}
-
-		public function session() {
-			return $this->session;
-		}
-
-		public function features() {
-			return $this;
-		}
-
-		public function isFeatureEnabled() {
-			return TRUE;
-		}
-
-		public function events() {
-			return NULL;
 		}
 	}
 ?>

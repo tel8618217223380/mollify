@@ -536,7 +536,7 @@ function SharePlugin() {
 		if (window.ZeroClipboard) {
 			that.testclip = new ZeroClipboard.Client();
 			that.testclip.addEventListener('load', function(client) {
-				console.log("Clipboard support detected");
+				//console.log("Clipboard support detected");
 				that.testclip.hide();
 				
 				that.clip = new ZeroClipboard.Client();
@@ -668,7 +668,7 @@ function SharePlugin() {
 		mollify.localize("share-list");
 		
 		if (that.clip) $(".share-link-copy-container").removeClass("hidden");
-		else console.log("Clipboard support not detected");
+		//else console.log("Clipboard support not detected");
 		
 		var initClipboard = function(id) {
 			if (!that.clip) return;
