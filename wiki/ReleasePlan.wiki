@@ -1,15 +1,5 @@
 #summary Items in next release
 
-Items included in release 1.8.5
+Items included in release 2.0
 
- * Issue 77
- * Rewritten item id strategy
- * Description column
-
-Items included in release 1.8.6
-
- * Share plugin
-
-Items included in release 1.9
-
- * Not planned yet
+ * Rewritten UI (with modular structure that allows customizing all parts) and new design
