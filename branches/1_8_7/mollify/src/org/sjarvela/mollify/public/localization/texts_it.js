@@ -6,7 +6,7 @@ zeroDigit: "0",
 plusSign: "+",
 minusSign: "-",
 
-fileSizeFormat: "#,#",
+fileSizeFormat: "#.#",
 sizeInBytes: "{0} bytes",
 sizeOneByte: "1 byte",
 sizeOneKilobyte: "1 KB",

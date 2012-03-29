@@ -55,6 +55,9 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 
 		List<GridColumn> c = new ArrayList();
 		for (String id : columnSetup.getKeys()) {
+			if (id == null || id.startsWith("_"))
+				continue;
+
 			JsObj col = columnSetup.getJsObj(id);
 			String titleKey = col.getString("title");
 
