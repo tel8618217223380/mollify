@@ -1,7 +1,7 @@
 (function(){ mollify.texts.set('fi', {
 
-decimalSeparator: ".",
-groupingSeparator: ",",
+decimalSeparator: ",",
+groupingSeparator: ".",
 zeroDigit: "0",
 plusSign: "+",
 minusSign: "-",
