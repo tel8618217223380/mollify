@@ -1,10 +1,17 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.7.4 ===
+Released 2012/3/31
+  * Added initial support for guest mode
+  * Fixed issue with filenames with dot as last character
+  * Fixed issue 383
+  * Fixed issue 379
+
 === Version 1.8.7.3 ===
 Released 2012/3/28
   * Updated External interface
-  * Added/updated languages: Finnish, Italian, French
+  * Added/updated languages: Finnish, Italian, French, Turkish
 
 === Version 1.8.7.2 ===
 Released 2012/3/11
