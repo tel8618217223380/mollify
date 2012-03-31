@@ -51,7 +51,7 @@
 		}
 				
 		public function createItem($id, $path) {
-			if (strlen($path) > 0 and strpos($path, "..") != FALSE)
+			if (strlen($path) > 0 and (strpos($path, "..\\") != FALSE or strpos($path, "../") != FALSE))
 				throw new ServiceException("INVALID_REQUEST", "Illegal path: ".$path);
 			
 			$fullPath = self::joinPath($this->rootPath, $path);
