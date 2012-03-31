@@ -1,4 +1,4 @@
 <?php
 	$VERSION = "1.8.7.4";
-	$REVISION = 1475;
+	$REVISION = 1499;
 ?>

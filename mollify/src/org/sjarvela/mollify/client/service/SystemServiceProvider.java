@@ -60,6 +60,11 @@ public class SystemServiceProvider implements ServiceProvider,
 		return new ExternalServiceAdapter(env.getExternalService(name), this);
 	}
 
+	@Override
+	public void setSessionId(String id) {
+		env.setSessionId(id);
+	}
+
 	public <T> ResultListener createListener(
 			final ResultListener<T> resultListener) {
 		return new ResultListener<T>() {

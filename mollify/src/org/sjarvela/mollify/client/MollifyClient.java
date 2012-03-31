@@ -84,6 +84,11 @@ public class MollifyClient implements Client, SessionListener {
 				"Host page location: " + GWT.getHostPageBaseURL());
 		logger.log(Level.INFO, "Module name: " + GWT.getModuleName());
 		logger.log(Level.INFO, "Module location: " + GWT.getModuleBaseURL());
+		
+		if (settings.getBool("guest-mode", false)) {
+			logger.log(Level.INFO, "Guest mode enabled");
+			serviceProvider.setSessionId("guest");
+		}
 
 		service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
 				new ResultListener<SessionInfo>() {

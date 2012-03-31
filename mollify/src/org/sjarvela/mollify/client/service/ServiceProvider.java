@@ -22,4 +22,6 @@ public interface ServiceProvider {
 	ExternalService getExternalService();
 	
 	ExternalService getExternalService(String name);
+
+	void setSessionId(String id);
 }

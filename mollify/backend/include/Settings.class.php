@@ -45,6 +45,8 @@
 			"upload_temp_dir" => NULL,
 			"enable_thumbnails" => TRUE,
 			"enable_folder_protection" => FALSE,
+			"enable_guest_mode" => FALSE,
+			"guest_user_id" => FALSE,
 			"debug" => FALSE,
 			"debug_log" => NULL
 		);

@@ -33,6 +33,7 @@ public class HttpRequestHandler extends
 
 	public HttpRequestHandler(
 			boolean limitedHttpMethods,
+			String sessionId,
 			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method,
 			final String url, int timeout, String data,
 			final HttpRequestResponseListener listener) {
@@ -45,7 +46,10 @@ public class HttpRequestHandler extends
 
 		if (limitedHttpMethods)
 			this.setHeader("mollify-http-method", method.name());
-
+		
+		if (sessionId != null)
+			this.setHeader("mollify-session-id", sessionId);
+		
 		setCallback(new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
 				logger.log(Level.SEVERE, "Request error", exception);
