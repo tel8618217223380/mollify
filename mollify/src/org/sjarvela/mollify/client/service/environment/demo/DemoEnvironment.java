@@ -77,4 +77,8 @@ public class DemoEnvironment implements ServiceEnvironment {
 		return externalServiceHandler;
 	}
 
+	@Override
+	public void setSessionId(String id) {
+	}
+
 }

@@ -1,30 +1,21 @@
 (function(){
 	window.mollify = new function(){
-		var defaults = {
-			"template-url": "client/templates/",
-			"service-path": "backend/"
-		};
 		var t = this;
 		t.time = new Date().getTime();
-		
 		this.settings = {};
-		this.plugins = {};
+		this.plugins = [];
+		this.pluginsById = {};
 
-		this.init = function(s, p) {
-			if (p) {
-				for (var i=0, j=p.length; i < j; i++)
-					t.registerPlugin(p[i]);
+		this.init = function(s) {
+			t.settings = s;
+			if (s.plugins) {
+				for (var i=0; i < s.plugins.length; i++)
+					t.registerPlugin(s.plugins[i]);
 			}
-			
-			t.settings = $.extend({}, s, defaults);
 		}
 		
 		this.setup = function(e) {
 			t.env = e;
-			t.ui.texts = t.env.texts();
-			t.service = t.env.service();
-
-			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
 			t.env.addListColumnSpec({
 				"id": "file-modified",
@@ -63,177 +54,69 @@
 				}
 			});
 			
-			t.views = {
-				login : new LoginView(),
-				mainview : new MainView(),
-				
-				dialogs : new DialogHandler()
-			}
-			t.env.views().registerHandlers(t.views);
-			
-			for (var id in t.plugins)
-				t.plugins[id].initialize(t.env);
-				
-			t.templates.load("dialogs.html");
-			
 			//$.datepicker.setDefaults({
 			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 			//});
 		}
+		
+		this.getSettings = function() {
+			return t.settings;
+		}
 
-		this.plugins = function(id) {
-			if (!def(id)) return t.plugins;
-			return t.plugins[id];
+		this.getPlugins = function() {
+			return t.plugins;
 		}
 		
+		this.getPlugin = function(id) {
+			return t.pluginsById[id];
+		}
+
 		this.hasPlugin = function(id) {
-			return !!t.plugins[id];
-		}
-		
-		this.hasFeature = function(id) {
-			return t.env.session().info().features[id];
-		}
-		
-		this.locale = function() {
-			return t.texts.locale;
+			return !!t.pluginsById[id];
 		}
 		
 		this.registerPlugin = function(p) {
-			var id = p.id;
-			if (!id) return;
-			t.plugins[id] = p;
+			t.plugins.push(p);
+			var id = p.getPluginInfo().id;
+			if (id) t.pluginsById[id] = p;
+		}
+
+		this.importScript = function(url) {
+			$.getScript(url);
+		}
+		
+		this.importCss = function(url) {
+			var link = $("<link>");
+			link.attr({
+		    	type: 'text/css',
+		    	rel: 'stylesheet',
+		    	href: t.urlWithParam(url, "_="+mollify.time)
+			});
+			$("head").append(link);
+		}
+		
+		this.loadContent = function(id, url, cb) {
+			$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
+				t.localize(id);
+				if (cb) cb();
+			});
 		}
 		
 		this.urlWithParam = function(url, param) {
 			return url + (strpos(url, "?") ? "&" : "?") + param;
 		}
 		
-		this.noncachedUrl = function(url) {
-			return t.urlWithParam(url, "_="+t.time);
-		}
-		
-		this.templates = {
-			url : function(name) {
-				var base = t.settings["template-url"] || 'client/templates/';
-				return t.noncachedUrl(base + name);
-			},
-			
-			load : function(name, cb) {
-				$.get(t.templates.url(name), function(h) {
-					$("body").append(h);
-					if (cb) cb();
-				});
-			}
-		}
-		
-		this.dom = {
-			importScript : function(url) {
-				$.getScript(url);
-			},
-			
-			importCss : function(url) {
-				var link = $("<link>");
-				link.attr({
-			    	type: 'text/css',
-			    	rel: 'stylesheet',
-			    	href: t.noncachedUrl(url)
-				});
-				$("head").append(link);
-			},
-			
-			loadContent : function(id, url, cb, process) {
-				$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
-					if (process) $.each(process, function(i, k) {
-						if (t.ui.handlers[k]) t.ui.handlers[k](id);
-					});
-					if (cb) cb();
-				});
-			}
-		}
-		
-		this.ui = {
-			handlers : {
-				hintbox : function(id) {
-					$("input.hintbox", "#"+id).each(function() {
-						var $this = $(this);
-						var hint = t.env.texts().get($this.attr('hint-key'));
-						$this.attr("placeholder", hint).removeAttr("hint-key");
-					}).placeholder();
-				},
-	
-				localize : function(id) {
-					$(".localized", "#"+id).each(function() {
-						var key = $(this).attr('title-key');
-						if (key)
-							$(this).attr("title", t.env.texts().get(key));
-						
-						key = $(this).attr('text-key');
-						if (key)
-							$(this).text(t.env.texts().get(key));
-					});
-				},
+		this.localize = function(id) {
+			$("#"+id+" .localized").each(function(){
+				var key = $(this).attr('title-key');
+				if (key)
+					$(this).attr("title", t.env.texts().get(key));
 				
-				center : function(id) {
-					$(".center", "#"+id).each(function() {
-						var $this = $(this);
-						var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
-						$this.css({
-							position: "relative",
-							left: x
-						});
-					});
-				},
-				
-				bubble: function(id, cl) {
-					$(".bubble-action", "#"+id).each(function() {
-						var $this = $(this);
-						var actionId = $this.attr('id');
-						if (!actionId) return;
-						
-						var content = $("#" + actionId + '-bubble');
-						if (!content || content.length == 0) return;
-	
-						var html = content.html();
-						content.remove();
-						
-						$this.qtip({
-							content: html,
-							position: {
-								my: 'top center',
-								at: 'bottom center'
-							},
-							show: 'click',
-							hide: {
-								delay: 200,
-								fixed: true,
-								event: 'click mouseleave'
-							},
-							style: {
-								tip: true,
-								classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-							},
-							events: {
-								render: function(e, api) {
-									if (!cl || !cl.onRenderBubble) return;
-									cl.onRenderBubble(actionId, api);
-								},
-								visible: function(e, api) {
-									if (!cl || !cl.onShowBubble) return;
-									cl.onShowBubble(actionId, api);
-								}
-							}
-						});
-					});
-				}
-			},
-			
-			window : {
-				open : function(url) {
-					window.open(url);
-				}
-			}
+				key = $(this).attr('text-key');
+				if (key)
+					$(this).text(t.env.texts().get(key));
+			});
 		}
-		
 		
 		/*this.formatDate = function(d) {
 			return $.datepicker.formatDate(getDateFormat(), d);
@@ -276,7 +159,7 @@
 			return time.format('yymmddHHMMss', time);
 		}
 		
-		this.texts = new function() {
+		this.texts = new function(){
 			var tt = this;
 			this.locale = '';
 			this.values = null;
@@ -306,10 +189,6 @@ if(typeof String.prototype.trim !== 'function') {
 	}
 }
 
-function def(o) {
-	return (typeof(o) != 'undefined');
-}
-
 function strpos(haystack, needle, offset) {
     // Finds position of first occurrence of a string within another  
     // 
@@ -321,157 +200,6 @@ function strpos(haystack, needle, offset) {
     // +   improved by: Brett Zamir (http://brett-zamir.me)
     var i = (haystack + '').indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
-}
-
-function DialogHandler() {
-	var dialogDefaults = {
-		title: "Mollify"
-	}
-	
-	this.info = function(spec) {
-		$("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({ modal: true, resizable: false });
-	}
-	
-	this.error = function(spec) {
-		alert("error");
-	}
-	
-	this.confirmation = function(spec) {
-		alert("confirm");
-	}
-	
-	this.wait = function(spec) {
-		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
-		var wait = $("#mollify-tmpl-wait").tmpl($.extend(spec, dialogDefaults)).appendTo($(trg)).show();
-		return {
-			close: function() {
-				wait.remove();
-			}
-		};
-	}
-	
-	this.custom = function(spec) {
-		alert("custom");
-	}
-	
-	this.notification = function(spec) {
-		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
-		var notification = $("#mollify-tmpl-notification").tmpl($.extend(spec, dialogDefaults)).hide().appendTo($(trg)).fadeIn(300);
-		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
-	}
-}
-
-function LoginView() {
-	var that = this;
-	
-	this.init = function(listener) {
-		that.listener = listener;
-	}
-	
-	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("login-view.html"), that.onLoad, ['localize', 'hintbox']);
-	}
-	
-	this.onLoad = function() {
-		$(window).resize(that.onResize);
-		that.onResize();
-	
-		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
-		if (mollify.hasFeature('registration')) $("#login-register").show();
-		
-		mollify.ui.handlers.center("login-data");
-		mollify.ui.handlers.bubble("login-data", that);
-		$("#login-name, #login-password").bind('keypress', function(e) {
-			if ((e.keyCode || e.which) == 13) that.onLogin();
-		});
-		$("#login-button").click(that.onLogin);
-		$("#login-register").click(function() { mollify.ui.window.open(mollify.service.getPluginUrl("registration")); });
-		$("#login-name").focus();
-	}
-	
-	this.onResize = function() {
-		var h = $(window).height();
-		$("#login-main").height(h);
-		
-		$data = $("#login-data");
-		$data.css('margin-top', (h / 2) - ($data.height() / 2));
-	}
-	
-	this.onRenderBubble = function(id, bubble) {
-		if (id === 'login-forgot-password') {
-			$("#login-forgot-button").click(function() {
-				var email = $("#login-forgot-email").val();
-				if (!email) return;
-				bubble.hide();
-				that.wait = mollify.views.dialogs.wait();
-				//that.listener.onResetPassword(email);
-			});
-		}
-	}
-	
-	this.onShowBubble = function(id, bubble) {
-		if (id === 'login-forgot-password') {
-			$("#login-forgot-email").val("").focus();
-		}
-	}
-	
-	this.onLogin = function() {
-		var username = $("#login-name").val();
-		var password = $("#login-password").val();
-		var remember = $("#login-remember").attr('checked');
-		
-		if (!username || username.length < 1) {
-			$("#login-name").focus();
-			return;
-		}
-		if (!password || password.length < 1) {
-			$("#login-password").focus();
-			return;
-		}
-		that.wait = mollify.views.dialogs.wait();
-		that.listener.onLogin(username, password, remember);
-	}
-	
-	this.showLoginError = function() {
-		that.wait.close();
-		
-		mollify.views.dialogs.notification({
-			target: "login-main",
-			message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
-		});
-	}
-	
-	this.onResetPasswordSuccess = function() {
-		that.wait.close();
-		
-		mollify.views.dialogs.notification({
-			target: "login-main",
-			message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
-		});
-	}
-	
-	this.onResetPasswordFailed = function() {
-		that.wait.close();
-		
-		mollify.views.dialogs.info({
-			message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
-		});
-	}
-}
-
-function MainView() {
-	var that = this;
-	
-	this.init = function(listener) {
-		that.listener = listener;
-	}
-	
-	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that.onLoad, ['localize']);
-	}
-	
-	this.onLoad = function() {
-	}
 }
 
 function CommentPlugin() {
@@ -808,7 +536,7 @@ function SharePlugin() {
 		if (window.ZeroClipboard) {
 			that.testclip = new ZeroClipboard.Client();
 			that.testclip.addEventListener('load', function(client) {
-				console.log("Clipboard support detected");
+				//console.log("Clipboard support detected");
 				that.testclip.hide();
 				
 				that.clip = new ZeroClipboard.Client();
@@ -940,7 +668,7 @@ function SharePlugin() {
 		mollify.localize("share-list");
 		
 		if (that.clip) $(".share-link-copy-container").removeClass("hidden");
-		else console.log("Clipboard support not detected");
+		//else console.log("Clipboard support not detected");
 		
 		var initClipboard = function(id) {
 			if (!that.clip) return;

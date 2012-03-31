@@ -14,12 +14,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.App;
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -40,8 +38,6 @@ public class DefaultViewManager implements ViewManager {
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private JsObj viewHandlers = null;
-
 	private final RootPanel rootPanel;
 	private final Panel hiddenPanel;
 
@@ -53,23 +49,6 @@ public class DefaultViewManager implements ViewManager {
 		this.rootPanel.getElement().getStyle()
 				.setProperty("position", "relative");
 		this.hiddenPanel = createHiddenFrame();
-	}
-
-	@Override
-	public void setViewHandlers(JavaScriptObject handlers) {
-		this.viewHandlers = handlers.cast();
-	}
-
-	@Override
-	public JsObj getViewHandler(String name) {
-		if (!viewHandlers.hasValue(name))
-			return null;
-		return viewHandlers.getJsObj(name);
-	}
-
-	@Override
-	public void render(ViewHandler view) {
-		view.getView().call("render", "mollify");
 	}
 
 	public RootPanel getRootPanel() {

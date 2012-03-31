@@ -29,7 +29,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

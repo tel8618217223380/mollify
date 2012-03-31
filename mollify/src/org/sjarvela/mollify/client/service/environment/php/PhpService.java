@@ -31,6 +31,7 @@ public class PhpService {
 	private final int requestTimeout;
 	private final boolean limitedHttpMethods;
 	protected final ResponseProcessor responseProcessor;
+	private String sessionId = null;
 
 	enum RequestType {
 		filesystem, session, configuration
@@ -73,7 +74,7 @@ public class PhpService {
 
 	public PhpRequestBuilder request() {
 		return new PhpRequestBuilder(limitedHttpMethods, responseProcessor)
-				.timeout(requestTimeout);
+				.timeout(requestTimeout).sessionId(sessionId);
 	}
 
 	public UrlBuilder serviceUrl() {
@@ -82,6 +83,10 @@ public class PhpService {
 
 	public UrlBuilder pluginUrl(String name) {
 		return new UrlBuilder().baseUrl(getPath(rootUrl, "plugin")).item(name);
+	}
+
+	public void setSessionId(String id) {
+		this.sessionId = id;
 	}
 
 }

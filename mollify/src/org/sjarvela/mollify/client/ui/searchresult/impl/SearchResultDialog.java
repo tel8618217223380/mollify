@@ -32,7 +32,7 @@ import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ContextPopupHandler;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.DefaultItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopup;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;

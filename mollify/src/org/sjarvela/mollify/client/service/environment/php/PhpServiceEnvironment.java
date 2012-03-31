@@ -35,15 +35,21 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 
 	public void initialize(UrlResolver urlResolver, ClientSettings settings,
 			ResponseProcessor responseProcessor) {
-		service = new PhpService(urlResolver, settings
-				.getString(PARAM_SERVICE_PATH), settings.getInt(PARAM_TIMEOUT,
-				DEFAULT_REQUEST_TIMEOUT), settings.getBool(
-				SERVER_LIMITED_HTTP_METHODS, false), responseProcessor);
+		service = new PhpService(urlResolver,
+				settings.getString(PARAM_SERVICE_PATH), settings.getInt(
+						PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT),
+				settings.getBool(SERVER_LIMITED_HTTP_METHODS, false),
+				responseProcessor);
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);
 		settingsHandler = new PhpConfigurationService(service);
 		externalService = new PhpExternalService(service);
+	}
+
+	@Override
+	public void setSessionId(String id) {
+		service.setSessionId(id);
 	}
 
 	@Override

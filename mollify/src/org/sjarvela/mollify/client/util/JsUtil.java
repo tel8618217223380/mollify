@@ -43,14 +43,6 @@ public class JsUtil {
 			result.set(index++, o);
 		return result;
 	}
-	
-	public static JsArray asJsArray(JavaScriptObject... list) {
-		JsArray a = JsArray.createArray().cast();
-		int index = 0;
-		for (JavaScriptObject o : list)
-			a.set(index++, o);
-		return a;
-	}
 
 	public static String asJsonString(Map<String, JavaScriptObject> data) {
 		return asJsonString(data, new ArrayList(data.keySet()));

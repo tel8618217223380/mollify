@@ -22,7 +22,7 @@
 		
 		function __construct($settings, $configuration, $responseHandler) {
 			$this->settings = $settings;
-			$this->session = new Session($settings);
+			$this->session = new Session(TRUE);
 			$this->configuration = $configuration;
 			$this->environment = new ServiceEnvironment($this->session, $responseHandler, $this->configuration, $settings);
 			$this->setup();
@@ -71,7 +71,7 @@
 			return $this->environment;
 		}
 		
-		public function processRequest($request) {
+		public function processRequest($request) {			
 			$this->environment->initialize($request);
 			$service = $this->environment->getService($request);
 

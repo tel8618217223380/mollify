@@ -11,17 +11,17 @@
 package org.sjarvela.mollify.client.filesystem.upload;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 public class FileUploadFactory implements FileUploadDialogFactory {
 
 	private final FileUploadDialogFactory def;
-	private final ClientInterface pluginEnv;
+	private final PluginEnvironment pluginEnv;
 
 	public FileUploadFactory(FileUploadDialogFactory def,
-			ClientInterface pluginEnv) {
+			PluginEnvironment pluginEnv) {
 		this.def = def;
 		this.pluginEnv = pluginEnv;
 	}

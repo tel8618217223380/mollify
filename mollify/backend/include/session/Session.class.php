@@ -26,6 +26,10 @@
 			$this->useCookie = $useCookie;
 		}
 		
+		public function useCookie($u) {
+			$this->useCookie($u);
+		}
+		
 		public function initialize($env, $rq) {
 			$this->env = $env;
 			$this->dao = $this->getDao();
@@ -37,31 +41,39 @@
 			}
 			
 			$id = NULL;
-			if ($rq != NULL) $id = $rq->getSessionId();
-
-			$cookie = ($this->useCookie and $this->env->cookies()->exists("session"));
-			if ($id == NULL and $cookie)
-				$id = $this->env->cookies()->get("session");
-
-			// no session found
-			if ($id == NULL) return;
-			
+			$cookie = FALSE;
 			$time = time();
-			$expiration = $this->getLastValidSessionTime($time);
+			if ($rq != NULL) $id = $rq->getSessionId();
 			
-			$sessionData = $this->dao->getSession($id, $this->env->configuration()->formatTimestampInternal($expiration));
-			if ($sessionData == NULL) {
-				$this->env->cookies()->remove("session");
-				$this->removeAllExpiredSessions();
-				return;
+			// initialize guest mode
+			if ($id === "guest" and $this->env->features()->isFeatureEnabled("guest_mode")) {
+				$user = $this->env->settings()->setting("guest_user_id", TRUE);
+				if (!$user) throw new ServiceException("INVALID_REQUEST", "No guest user defined");
+				Logging::logDebug("Guest session: ".$user);
+				$this->session = array("user_id" => $user);
+			} else {			
+				$cookie = ($this->useCookie and $this->env->cookies()->exists("session"));
+				if ($id == NULL and $cookie)
+					$id = $this->env->cookies()->get("session");
+	
+				// no session found
+				if ($id == NULL) return;
+
+				$expiration = $this->getLastValidSessionTime($time);				
+				$sessionData = $this->dao->getSession($id, $this->env->configuration()->formatTimestampInternal($expiration));
+				if ($sessionData == NULL) {
+					$this->env->cookies()->remove("session");
+					$this->removeAllExpiredSessions();
+					return;
+				}
+				
+				$this->session = $sessionData;
+				$this->data = $this->dao->getSessionData($id);
 			}
-			
 			$this->id = $id;
-			$this->session = $sessionData;
-			$this->data = $this->dao->getSessionData($id);
 			
 			// load user data
-			$this->user = $this->env->configuration()->getUser($sessionData["user_id"]);
+			$this->user = $this->env->configuration()->getUser($this->session["user_id"]);
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->userGroups = $this->env->configuration()->getUsersGroups($this->user["id"]);
 		

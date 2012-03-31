@@ -17,7 +17,7 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
@@ -29,14 +29,14 @@ import org.sjarvela.mollify.client.ui.filelist.FileList;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileListWithExternalColumns extends FileList implements FileWidget {
-	private final ClientInterface pluginEnv;
+	private final PluginEnvironment pluginEnv;
 	private final JsObj columnSetup;
 
 	private JsObj data = null;
 
 	public FileListWithExternalColumns(TextProvider textProvider,
 			DragAndDropManager dragAndDropManager,
-			final ClientInterface pluginEnvironment, final JsObj columnSetup) {
+			final PluginEnvironment pluginEnvironment, final JsObj columnSetup) {
 		super(textProvider, dragAndDropManager);
 		this.pluginEnv = pluginEnvironment;
 		this.columnSetup = columnSetup;
@@ -55,6 +55,9 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 
 		List<GridColumn> c = new ArrayList();
 		for (String id : columnSetup.getKeys()) {
+			if (id == null || id.startsWith("_"))
+				continue;
+
 			JsObj col = columnSetup.getJsObj(id);
 			String titleKey = col.getString("title");
 

@@ -18,9 +18,9 @@ import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadFactory;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.DefaultClientInterface;
+import org.sjarvela.mollify.client.plugin.DefaultPluginEnvironment;
 import org.sjarvela.mollify.client.plugin.DefaultPluginSystem;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
@@ -105,7 +105,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(PluginSystem.class).to(DefaultPluginSystem.class);
 		bind(Client.class).to(MollifyClient.class);
 		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
-		bind(ClientInterface.class).to(DefaultClientInterface.class);
+		bind(PluginEnvironment.class).to(DefaultPluginEnvironment.class);
 		bind(ItemContextHandler.class).to(DefaultItemContextProvider.class);
 		bind(SearchResultDialogFactory.class).to(
 				DefaultSearchResultDialogFactory.class);
@@ -175,7 +175,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 	FileUploadDialogFactory getFileUploadDialogFactory(ServiceEnvironment env,
 			ClientSettings settings, TextProvider textProvider,
 			UrlResolver urlResolver, SessionProvider sessionProvider,
-			DialogManager dialogManager, ClientInterface pluginEnv) {
+			DialogManager dialogManager, PluginEnvironment pluginEnv) {
 		String param = settings.getString(PARAM_FILE_UPLOADER);
 
 		FileUploadDialogFactory uploaderFactory;
