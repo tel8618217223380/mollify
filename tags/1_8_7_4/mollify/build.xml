@@ -1,0 +1,378 @@
+<project name="Mollify" default="compile">
+	<property file="build.properties" />
+
+	<property name="project.name" value="Mollify" />
+	<property name="public.module.name" value="org.sjarvela.Mollify" />
+	<property name="module.name" value="org.sjarvela.mollify.DevelopmentClient" />
+	<property name="deploy.package.name" value="mollify_${mollify.version}" />
+	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}" />
+
+	<property name="lib.dir" location="${root.dir}/lib" />
+	<property name="build.dir" location="${root.dir}/build" />
+	<property name="test.build.dir" location="${root.dir}/test/build" />
+	<property name="test.report.dir" location="${build.dir}/test" />
+	<property name="src.dir" location="${root.dir}/src" />
+	<property name="test.src.dir" location="${root.dir}/test" />
+	<property name="test.run.dir" location="${root.dir}/testrun" />
+
+	<condition property="gwt.jvm.arg" value="-d32 -XstartOnFirstThread -Xmx512m" else="-Xmx512m -Xss1024k">
+		<os name="Mac OS X" />
+	</condition>
+
+	<path id="gwt-user.classpath">
+		<pathelement location="${gwt.sdk.location}/gwt-user.jar" />
+	</path>
+
+	<path id="gwt-dev.classpath">
+		<fileset dir="${gwt.sdk.location}" includes="gwt-dev*.jar" />
+	</path>
+
+	<path id="compile.classpath">
+		<pathelement path="${java.class.path}/" />
+		<path refid="gwt-user.classpath" />
+		<path refid="gwt-dev.classpath" />
+		<pathelement location="${src.dir}" />
+		<pathelement location="${build.dir}" />
+		<pathelement location="${lib.dir}/aopalliance.jar" />
+		<pathelement location="${lib.dir}/gin.jar" />
+		<pathelement location="${lib.dir}/guice.jar" />
+		<pathelement location="${lib.dir}/guice-assistedinject.jar" />
+		<pathelement location="${lib.dir}/javax.inject.jar" />
+		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
+		<pathelement location="${lib.dir}/junit-4.6.jar" />
+		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
+		<pathelement location="${lib.dir}/gwt-dnd-r1015.jar" />
+	</path>
+
+	<path id="test.src.path" path="${test.src.dir}" />
+
+	<path id="test.classpath">
+		<path refid="compile.classpath" />
+		<path refid="test.src.path" />
+		<pathelement location="${test.build.dir}" />
+	</path>
+
+	<patternset id="compiler.resources">
+		<include name="**/?*.xml" />
+	</patternset>
+
+	<target name="init">
+		<tstamp />
+		<filter token="projectName" value="${project.name}" />
+	</target>
+
+	<target name="clean" description="Cleans the entire GWT build">
+		<delete dir="${build.dir}" />
+		<delete dir="${test.build.dir}" />
+		<delete dir="${deploy.dir}" />
+
+		<delete>
+			<fileset dir="${src.dir}" includes="**/*.class" />
+			<fileset dir="${test.src.dir}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<target name="init-prod">
+		<property name="gwt.style" value="OBF" />
+		<property name="gwt.module" value="org.sjarvela.mollify.Client" />
+	</target>
+
+	<target name="init-dev">
+		<property name="gwt.style" value="DETAILED" />
+		<property name="gwt.module" value="org.sjarvela.mollify.DevelopmentClient" />
+	</target>
+
+	<target name="init-demo">
+		<property name="gwt.style" value="DETAILED" />
+		<property name="gwt.module" value="org.sjarvela.mollify.DemoClient" />
+	</target>
+
+	<target name="do-compile" depends="init, compile.prod">
+		<echo>Platform: ${os.name}</echo>
+
+		<java classpathref="compile.classpath" failonerror="true" classname="com.google.gwt.dev.Compiler" fork="true">
+			<jvmarg line="${gwt.jvm.arg}" />
+			<arg value="-war" />
+			<arg value="${build.dir}" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
+			<arg value="-localWorkers" />
+			<arg value="2" />
+			<arg value="-style" />
+			<arg value="${gwt.style}" />
+			<arg value="${gwt.module}" />
+		</java>
+	</target>
+
+	<target name="deploy-viewers">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${root.dir}/backend/plugin/FileViewerEditor/viewers/">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/viewer_flowplayer.zip" basedir="${target.dir}" includes="FlowPlayer/**" />
+		<zip destfile="${deploy.dir}/viewer_jplayer.zip" basedir="${target.dir}" includes="JPlayer/**" />
+		<zip destfile="${deploy.dir}/viewer_textfile.zip" basedir="${target.dir}" includes="TextFile/**" />
+		<zip destfile="${deploy.dir}/viewer_zoho.zip" basedir="${target.dir}" includes="Zoho/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="deploy-editors">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${root.dir}/backend/plugin/FileViewerEditor/editors/">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/editor_ck.zip" basedir="${target.dir}" includes="CKEditor/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="deploy-dav">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/dav/" />
+		<mkdir dir="${target.dir}/dav/data/" />
+		<mkdir dir="${target.dir}/dav/temp/" />
+		
+		<copy todir="${target.dir}/dav/">
+			<fileset dir="${root.dir}/backend/dav/">
+				<exclude name="**/.svn" />
+				<exclude name="data/**" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="${deploy.dir}/plugin_webdav_1.2.zip" basedir="${target.dir}" includes="dav/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+	
+	<target name="deploy-plugins">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/Plupload/" />
+		<mkdir dir="${target.dir}/S3/" />
+		
+		<copy todir="${target.dir}/Plupload/">
+			<fileset dir="${root.dir}/backend/plugin/Plupload">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+
+		<copy todir="${target.dir}/S3/">
+			<fileset dir="${root.dir}/backend/plugin/S3">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${deploy.dir}/plugin_plupload.zip" basedir="${target.dir}" includes="Plupload/**" />
+		<zip destfile="${deploy.dir}/plugin_s3.zip" basedir="${target.dir}" includes="S3/**" />
+		
+		<delete dir="${target.dir}" />
+	</target>
+	
+	<target name="do-deploy">
+		<property name="target.dir" location="${deploy.dir}/temp" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${deploy.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.dir}/mollify" />
+
+		<!-- 1. Binaries -->
+
+		<!-- backend -->
+		<copy todir="${target.dir}/mollify/backend">
+			<fileset dir="${root.dir}/backend">
+				<exclude name="**/.svn" />
+				<exclude name="configuration.php" />
+				<exclude name="db.*" />
+				<exclude name="index.html" />
+				<exclude name="admin/settings.js" />
+				<exclude name="admin/custom/**" />
+				<exclude name="plugin/FileViewerEditor/viewers/FlowPlayer/" />
+				<exclude name="plugin/FileViewerEditor/viewers/JPlayer/" />
+				<exclude name="plugin/FileViewerEditor/viewers/TextFile/" />
+				<exclude name="plugin/FileViewerEditor/viewers/Zoho/" />
+				<exclude name="plugin/FileViewerEditor/editors/CKEditor/" />
+				<exclude name="dav/" />
+				<exclude name="plugin/S3/" />
+				<exclude name="plugin/Plupload/" />
+			</fileset>
+		</copy>
+		<copy file="${root.dir}/backend/example/example_host_page.html" tofile="${target.dir}/mollify/index.html" />
+		<copy file="${root.dir}/ReadMe.txt" todir="${target.dir}/mollify" />
+
+		<!-- client -->
+		<copy todir="${target.dir}/mollify/client">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
+		
+		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}" />
+
+		<delete dir="${target.dir}" />
+
+		<!-- 2. Sources -->
+		<property name="target.src.dir" location="${target.dir}/mollify-src" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${target.src.dir}/backend" />
+		<mkdir dir="${target.src.dir}/client" />
+
+		<copy todir="${target.src.dir}/backend">
+			<fileset dir="${root.dir}/backend">
+				<exclude name="configuration.php" />
+				<exclude name="index.html" />
+				<exclude name="**/.svn" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+		<copy todir="${target.src.dir}/client">
+			<fileset dir="${root.dir}">
+				<exclude name="**/.svn" />
+				<exclude name="**/*.class" />
+				<exclude name="backend/" />
+				<exclude name="tomcat/" />
+				<exclude name="war/" />
+				<exclude name="www-test/" />
+				<exclude name="build.properties" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${deploy.dir}/${deploy.src.package.name}.zip" basedir="${target.dir}" />
+
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="compile" depends="init-dev, do-compile">
+	</target>
+
+	<target name="deploy" depends="init-prod, do-compile, do-deploy">
+	</target>
+
+	<target name="deploy-dev" depends="init-dev, do-compile">
+		<property name="target.dir" location="${deploy.dir}/debug-client" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
+
+		<zip destfile="${deploy.dir}/${deploy.package.name}_debug.zip" basedir="${target.dir}" />
+
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="deploy-demo" depends="init-demo, do-compile">
+		<property name="target.dir" location="${deploy.dir}/demo" />
+
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${build.dir}/${public.module.name}" />
+		</copy>
+	</target>
+
+	<target name="run" depends="compile.prod">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode" classpathref="compile.classpath">
+			<jvmarg value="-Xmx256M" />
+			<arg value="-noserver" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
+			<arg value="-startupUrl" />
+			<arg value="${hosted.page.url}" />
+			<arg value="${module.name}" />
+		</java>
+	</target>
+
+	<target name="compile.prod">
+		<mkdir dir="${build.dir}" />
+		<javac destdir="${build.dir}" classpathref="compile.classpath" srcdir="${src.dir}" failonerror="true" fork="true" debuglevel="lines,vars,source" source="1.5" target="1.5" />
+	</target>
+
+	<target name="compile.tests" depends="init-dev">
+		<delete dir="${test.run.dir}" />
+		<mkdir dir="${test.build.dir}" />
+
+		<javac destdir="${test.build.dir}" debug="on" nowarn="off" memorymaximumsize="128m" fork="true">
+			<compilerarg line="" />
+			<classpath refid="test.classpath" />
+			<classpath location="${test.build.dir}" />
+			<src refid="test.src.path" />
+		</javac>
+
+		<copy todir="${test.build.dir}">
+			<fileset dir="${test.src.dir}">
+				<patternset refid="compiler.resources" />
+				<type type="file" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test" depends="init-dev, compile.prod, compile.tests, test.web, test.hosted" />
+	<!-- do-compile -->
+
+	<macrodef name="test-macro">
+		<attribute name="extragwtargs" default="" />
+		<attribute name="outputbase" />
+
+		<sequential>
+			<mkdir dir="@{outputbase}/out" />
+			<mkdir dir="@{outputbase}/gen" />
+			<mkdir dir="@{outputbase}/reports" />
+
+			<junit printsummary="yes" fork="yes" showoutput="true" maxmemory="256m" haltonerror="true" failureproperty="junit.failure" dir="@{outputbase}">
+				<jvmarg line="${gwt.jvm.arg}" />
+				<formatter type="brief" />
+				<formatter type="xml" />
+				<sysproperty key="gwt.args" value="@{extragwtargs} -gen gen -out out" />
+				<classpath refid="test.classpath" />
+
+				<batchtest todir="@{outputbase}/reports">
+					<fileset dir="${test.build.dir}">
+						<include name="org/sjarvela/**/*Test.class" />
+						<exclude name="org/sjarvela/mollify/AllTests.class" />
+					</fileset>
+				</batchtest>
+			</junit>
+
+			<junitreport todir="@{outputbase}/reports">
+				<fileset dir="@{outputbase}/reports" />
+				<report todir="@{outputbase}/reports/html" />
+			</junitreport>
+
+			<fail if="junit.failure" message="Tests failed. See reports in @{outputbase}/reports" />
+		</sequential>
+	</macrodef>
+
+	<target name="test.web" depends="">
+		<test-macro extragwtargs="-web -style PRETTY" outputbase="${test.run.dir}/web" />
+	</target>
+
+	<target name="test.hosted" depends="">
+		<test-macro outputbase="${test.run.dir}/hosted" />
+	</target>
+</project>
