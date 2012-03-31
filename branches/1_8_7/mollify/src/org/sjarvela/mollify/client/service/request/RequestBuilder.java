@@ -28,6 +28,7 @@ public class RequestBuilder {
 	private int timeout = 0;
 	private String data = null;
 	private HttpRequestResponseListener listener = null;
+	private String sessionId = null;
 
 	public RequestBuilder(boolean limitedHttpMethods) {
 		this.limitedHttpMethods = limitedHttpMethods;
@@ -58,13 +59,18 @@ public class RequestBuilder {
 		return this;
 	}
 
+	public RequestBuilder sessionId(String sessionId) {
+		this.sessionId = sessionId;
+		return this;
+	}
+
 	public void send(
 			org.sjarvela.mollify.client.service.request.RequestBuilder.Method method) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "REQUEST (" + method.name() + "): " + url
 					+ (data != null ? (" [" + data + "]") : ""));
-		new HttpRequestHandler(limitedHttpMethods, method, url, timeout, data,
-				listener).process();
+		new HttpRequestHandler(limitedHttpMethods, sessionId, method, url,
+				timeout, data, listener).process();
 	}
 
 	public void get() {

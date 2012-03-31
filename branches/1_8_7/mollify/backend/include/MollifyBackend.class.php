@@ -71,7 +71,7 @@
 			return $this->environment;
 		}
 		
-		public function processRequest($request) {
+		public function processRequest($request) {			
 			$this->environment->initialize($request);
 			$service = $this->environment->getService($request);
 

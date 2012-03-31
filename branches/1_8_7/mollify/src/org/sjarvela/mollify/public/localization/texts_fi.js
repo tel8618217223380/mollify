@@ -9,10 +9,10 @@ minusSign: "-",
 fileSizeFormat: "#.#",
 sizeInBytes: "{0} tavua",
 sizeOneByte: "1 tavu",
-sizeOneKilobyte: "1 kB",
-sizeInKilobytes: "{0} kB",
-sizeInMegabytes: "{0} MB",
-sizeInGigabytes: "{0} GB",
+sizeOneKilobyte: "1 kt",
+sizeInKilobytes: "{0} kt",
+sizeInMegabytes: "{0} Mt",
+sizeInGigabytes: "{0} Gt",
 
 confirmFileDeleteMessage: "Oletko varma että haluat poistaa tiedoston \"{0}\"?",
 confirmDirectoryDeleteMessage: "Oletko varma että haluat poistaa kansion \"{0}\" ja kaikki sen alla olevat tiedostot ja kansiot?",
@@ -281,4 +281,5 @@ fileItemContextDataLastModified: "Muokattu viimeksi",
 fileItemDetailsExif: "Kuvatiedot",
 fileItemContextDataImageSize: "Kuvan koko",
 fileItemContextDataImageSizePixels: "{0} pikseliä"
+
 })})();
