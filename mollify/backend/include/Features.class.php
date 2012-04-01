@@ -23,7 +23,8 @@
 			"user_groups" => FALSE,
 			"mail_notification" => FALSE,
 			"retrieve_url" => FALSE,
-			"folder_protection" => FALSE
+			"folder_protection" => FALSE,
+			"guest_mode" => FALSE
 		);
 		
 		private $defaultValues = array();

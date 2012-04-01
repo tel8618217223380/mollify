@@ -66,7 +66,7 @@
 		
 		public function getSessionId() {
 			if ($this->hasParam("session")) return $this->param("session");
-			if (isset($_SERVER['HTTP_MOLLIFY_SESSION'])) return $_SERVER['HTTP_MOLLIFY_SESSION'];
+			if (isset($_SERVER['HTTP_MOLLIFY_SESSION_ID'])) return $_SERVER['HTTP_MOLLIFY_SESSION_ID'];
 			return NULL;
 		}
 		

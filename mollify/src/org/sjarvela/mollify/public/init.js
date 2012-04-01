@@ -142,9 +142,10 @@
 			},
 			
 			loadContent : function(id, url, cb, process) {
-				$("#"+id).load(t.urlWithParam(url, "_="+mollify.time), function() {
+				var $target = $("#"+id);
+				$target.load(t.urlWithParam(url, "_="+mollify.time), function() {
 					if (process) $.each(process, function(i, k) {
-						if (t.ui.handlers[k]) t.ui.handlers[k](id);
+						if (t.ui.handlers[k]) t.ui.handlers[k]($target);
 					});
 					if (cb) cb();
 				});
@@ -153,16 +154,16 @@
 		
 		this.ui = {
 			handlers : {
-				hintbox : function(id) {
-					$("input.hintbox", "#"+id).each(function() {
+				hintbox : function(p) {
+					p.find("input.hintbox").each(function() {
 						var $this = $(this);
 						var hint = t.env.texts().get($this.attr('hint-key'));
 						$this.attr("placeholder", hint).removeAttr("hint-key");
 					}).placeholder();
 				},
 	
-				localize : function(id) {
-					$(".localized", "#"+id).each(function() {
+				localize : function(p) {
+					p.find(".localized").each(function() {
 						var key = $(this).attr('title-key');
 						if (key)
 							$(this).attr("title", t.env.texts().get(key));
@@ -173,8 +174,8 @@
 					});
 				},
 				
-				center : function(id) {
-					$(".center", "#"+id).each(function() {
+				center : function(p) {
+					p.find(".center").each(function() {
 						var $this = $(this);
 						var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
 						$this.css({
@@ -184,8 +185,8 @@
 					});
 				},
 				
-				bubble: function(id, cl) {
-					$(".bubble-action", "#"+id).each(function() {
+				bubble: function(p, cl) {
+					p.find(".bubble-action").each(function() {
 						var $this = $(this);
 						var actionId = $this.attr('id');
 						if (!actionId) return;
@@ -329,7 +330,14 @@ function DialogHandler() {
 	}
 	
 	this.info = function(spec) {
-		$("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({ modal: true, resizable: false });
+		var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
+			modal: true,
+			resizable: false,
+			height: 'auto',
+			minHeight: 50
+		});
+		mollify.ui.handlers.localize(dlg);
+		$("#mollify-info-dialog-close-button").click(function() { dlg.dialog('close'); });
 	}
 	
 	this.error = function(spec) {
@@ -341,22 +349,18 @@ function DialogHandler() {
 	}
 	
 	this.wait = function(spec) {
-		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
-		var wait = $("#mollify-tmpl-wait").tmpl($.extend(spec, dialogDefaults)).appendTo($(trg)).show();
+		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
+		var w = $("#mollify-tmpl-wait").tmpl($.extend(spec, dialogDefaults)).appendTo($trg).show();
 		return {
 			close: function() {
-				wait.remove();
+				w.remove();
 			}
 		};
 	}
 	
-	this.custom = function(spec) {
-		alert("custom");
-	}
-	
 	this.notification = function(spec) {
-		var trg = (spec && spec.target) ? ("#"+spec.target) : "body";
-		var notification = $("#mollify-tmpl-notification").tmpl($.extend(spec, dialogDefaults)).hide().appendTo($(trg)).fadeIn(300);
+		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
+		var notification = $("#mollify-tmpl-notification").tmpl($.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
 		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
 	}
 }
@@ -377,15 +381,20 @@ function LoginView() {
 		that.onResize();
 	
 		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
-		if (mollify.hasFeature('registration')) $("#login-register").show();
+		if (mollify.hasFeature('registration')) {
+			$("#login-register").click(function() {
+				mollify.ui.window.open(mollify.service.getPluginUrl("registration"));
+			});
+			$("#login-register").show();
+		}
 		
-		mollify.ui.handlers.center("login-data");
-		mollify.ui.handlers.bubble("login-data", that);
+		var $data = $("#login-data");
+		mollify.ui.handlers.center($data);
+		mollify.ui.handlers.bubble($data, that);
 		$("#login-name, #login-password").bind('keypress', function(e) {
 			if ((e.keyCode || e.which) == 13) that.onLogin();
 		});
 		$("#login-button").click(that.onLogin);
-		$("#login-register").click(function() { mollify.ui.window.open(mollify.service.getPluginUrl("registration")); });
 		$("#login-name").focus();
 	}
 	
@@ -400,11 +409,14 @@ function LoginView() {
 	this.onRenderBubble = function(id, bubble) {
 		if (id === 'login-forgot-password') {
 			$("#login-forgot-button").click(function() {
+				mollify.views.dialogs.info({message:'tt'});
+				return;
+				
 				var email = $("#login-forgot-email").val();
 				if (!email) return;
 				bubble.hide();
-				that.wait = mollify.views.dialogs.wait();
-				//that.listener.onResetPassword(email);
+				that.wait = mollify.views.dialogs.wait({target: "login-main"});
+				that.listener.onResetPassword(email);
 			});
 		}
 	}
@@ -428,7 +440,7 @@ function LoginView() {
 			$("#login-password").focus();
 			return;
 		}
-		that.wait = mollify.views.dialogs.wait();
+		that.wait = mollify.views.dialogs.wait({target: "login-main"});
 		that.listener.onLogin(username, password, remember);
 	}
 	
@@ -808,7 +820,7 @@ function SharePlugin() {
 		if (window.ZeroClipboard) {
 			that.testclip = new ZeroClipboard.Client();
 			that.testclip.addEventListener('load', function(client) {
-				console.log("Clipboard support detected");
+				//console.log("Clipboard support detected");
 				that.testclip.hide();
 				
 				that.clip = new ZeroClipboard.Client();
@@ -940,7 +952,7 @@ function SharePlugin() {
 		mollify.localize("share-list");
 		
 		if (that.clip) $(".share-link-copy-container").removeClass("hidden");
-		else console.log("Clipboard support not detected");
+		//else console.log("Clipboard support not detected");
 		
 		var initClipboard = function(id) {
 			if (!that.clip) return;

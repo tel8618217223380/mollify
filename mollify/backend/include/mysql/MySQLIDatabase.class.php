@@ -22,7 +22,7 @@
 		private $db = NULL;
 		
 		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
-			Logging::logDebug("MySQL DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
+			Logging::logDebug("MySQLI DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;
 			$this->user = $user;
 			$this->pw = $pw;

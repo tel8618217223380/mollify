@@ -36,4 +36,6 @@ public interface ServiceEnvironment {
 
 	ExternalService getExternalService(String name);
 
+	void setSessionId(String id);
+
 }

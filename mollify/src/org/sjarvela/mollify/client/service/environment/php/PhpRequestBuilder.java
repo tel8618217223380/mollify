@@ -57,4 +57,8 @@ public class PhpRequestBuilder extends RequestBuilder {
 					responseProcessor, resultListener));
 	}
 
+	public PhpRequestBuilder sessionId(String sessionId) {
+		return (PhpRequestBuilder) super.sessionId(sessionId);
+	}
+
 }
