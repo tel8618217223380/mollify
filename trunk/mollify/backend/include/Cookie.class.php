@@ -11,7 +11,7 @@
 	 */
 
 	class Cookie {
-		private $settings;
+		private $settings = NULL;
 		
 		function __construct($settings) {
 			$this->settings = $settings;
@@ -34,7 +34,7 @@
 		}
 		
 		private function getName($n) {
-			$id = $this->settings->setting("session_name");
+			$id = $this->settings ? $this->settings->setting("session_name") : FALSE;
 			if (!$id) $id = "app";
 			return "mollify_".$id."_".$n;
 		}

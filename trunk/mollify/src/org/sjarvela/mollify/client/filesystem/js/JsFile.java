@@ -39,6 +39,7 @@ public class JsFile extends JavaScriptObject {
 	}-*/;
 
 	public final native String getExtension() /*-{
+		if (!this.extension) return "";
 		return this.extension;
 	}-*/;
 
