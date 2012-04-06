@@ -511,7 +511,7 @@ function NotificatorListView() {
 	this.onRemoveNotification = function() {
 		var id = that.getSelectedNotification();
 		if (id == null) return;
-		removeNotification(id, that.refresh, onServerError);
+		removeNotification(id, that.onRefresh, onServerError);
 	}
 }
 
@@ -534,5 +534,5 @@ function editNotification(id, prop, success, fail) {
 }
 
 function removeNotification(id, success, fail) {
-	request("DELETE", 'notificator/list/'+id, success, fail, data);
+	request("DELETE", 'notificator/list/'+id, success, fail, {});
 }
