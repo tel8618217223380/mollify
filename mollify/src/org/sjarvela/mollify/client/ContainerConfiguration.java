@@ -18,9 +18,9 @@ import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadFactory;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.plugin.DefaultClientInterface;
 import org.sjarvela.mollify.client.plugin.DefaultPluginSystem;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.plugin.PluginSystem;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
@@ -43,10 +43,6 @@ import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DefaultRenameDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.RenameDialogFactory;
-import org.sjarvela.mollify.client.ui.dnd.DefaultDragAndDropManager;
-import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
-import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
-import org.sjarvela.mollify.client.ui.dropbox.impl.DefaultDropBoxFactory;
 import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
 import org.sjarvela.mollify.client.ui.editor.impl.DefaultFileEditorFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.DefaultItemContextProvider;
@@ -98,7 +94,7 @@ public class ContainerConfiguration extends AbstractGinModule {
 				DefaultPermissionEditorViewFactory.class);
 		bind(FileViewerFactory.class).to(DefaultFileViewerFactory.class);
 		bind(FileEditorFactory.class).to(DefaultFileEditorFactory.class);
-		bind(DropBoxFactory.class).to(DefaultDropBoxFactory.class);
+		// bind(DropBoxFactory.class).to(DefaultDropBoxFactory.class);
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
 		bind(EventDispatcher.class).to(DefaultEventDispatcher.class);
@@ -164,11 +160,13 @@ public class ContainerConfiguration extends AbstractGinModule {
 		return new SystemServiceProvider(env, viewManager, sessionManager);
 	}
 
-	@Provides
-	@Singleton
-	DragAndDropManager getDragAndDropManager(ViewManager viewManager) {
-		return new DefaultDragAndDropManager(viewManager.getRootPanel());
-	}
+	/*
+	 * @Provides
+	 * 
+	 * @Singleton DragAndDropManager getDragAndDropManager(ViewManager
+	 * viewManager) { return new
+	 * DefaultDragAndDropManager(viewManager.getRootPanel()); }
+	 */
 
 	@Provides
 	@Singleton

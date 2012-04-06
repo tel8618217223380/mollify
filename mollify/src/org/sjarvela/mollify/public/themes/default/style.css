@@ -1,5 +1,12 @@
 @import url(plugins.css);
 
+@font-face {
+  font-family: 'MollifyPlainText';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Signika'), local('Signika-Regular'), url('Signika.woff') format('woff');
+}
+
 html, body {
 	margin: 0;
 	padding: 0;
@@ -10,9 +17,9 @@ html, body {
 	width: 100%;
 }
 
-#mollify, .bubble-content, .ui-widget {
+#mollify, .bubble-content, .ui-widget, a.button, input {
 	font-size: 12px;
-	font-family: "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	font-family: 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
 
 a.button {
@@ -29,7 +36,6 @@ a.button {
 	border:1px solid #dcdcdc;
 	display:inline-block;
 	color:#777777;
-	font-family:arial;
 	font-size:15px;
 	font-weight:bold;
 	padding:6px 24px;

@@ -4,21 +4,15 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
+import org.sjarvela.mollify.client.ui.NativeView;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 
-public class NativeMainView implements MainView {
-	private final JsObj viewHandler;
-
+public class NativeMainView extends NativeView implements MainView {
 	public NativeMainView(JsObj viewHandler) {
-		this.viewHandler = viewHandler;
+		super(viewHandler);
 	}
 	
-	@Override
-	public void render() {
-		viewHandler.call("render");
-	}
-
 	@Override
 	public void setUsername(String user) {
 		// TODO Auto-generated method stub

@@ -86,7 +86,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	private final EventDispatcher eventDispatcher;
 	private final SearchResultDialogFactory searchResultDialogFactory;
 
-	private final boolean exposeFileUrls;
+	// private final boolean exposeFileUrls;
 
 	private final ClientInterface pluginEnvironment;
 
@@ -100,8 +100,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			CreateFolderDialogFactory createFolderDialogFactory,
-			boolean exposeFileUrls, SessionService sessionService,
-			EventDispatcher eventDispatcher,
+			SessionService sessionService, EventDispatcher eventDispatcher,
 			SearchResultDialogFactory searchResultDialogFactory,
 			ClientInterface pluginEnvironment) {
 		this.dialogManager = dialogManager;
@@ -120,7 +119,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.passwordDialogFactory = passwordDialogFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.createFolderDialogFactory = createFolderDialogFactory;
-		this.exposeFileUrls = exposeFileUrls;
+		// this.exposeFileUrls = exposeFileUrls;
 		this.eventDispatcher = eventDispatcher;
 		this.searchResultDialogFactory = searchResultDialogFactory;
 
@@ -228,18 +227,18 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		view.setData(allItems, model.getData());
 		view.showAddButton(model.getFolderPermission().canWrite());
 		view.refresh();
-		if (exposeFileUrls)
-			refreshFileUrls(model.getFiles());
+//		if (exposeFileUrls)
+//			refreshFileUrls(model.getFiles());
 	}
 
-	private void refreshFileUrls(List<File> files) {
-		String sessionId = sessionManager.getSession().getSessionId();
-		Map<String, String> urls = new HashMap();
-		for (File f : files)
-			urls.put(f.getName(),
-					fileSystemService.getDownloadUrl(f, sessionId));
-		// TODO view.refreshFileUrls(urls);
-	}
+//	private void refreshFileUrls(List<File> files) {
+//		String sessionId = sessionManager.getSession().getSessionId();
+//		Map<String, String> urls = new HashMap();
+//		for (File f : files)
+//			urls.put(f.getName(),
+//					fileSystemService.getDownloadUrl(f, sessionId));
+//		// TODO view.refreshFileUrls(urls);
+//	}
 
 	@Override
 	public void onMoveToParentFolder() {
@@ -541,17 +540,17 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
-		//TODO
-//		if (result.getMatchCount() == 0)
-//			dialogManager.showInfo(
-//					textProvider.getText(Texts.searchResultsDialogTitle),
-//					textProvider.getText(Texts.searchResultsNoMatchesFound));
-//		else
-//			searchResultDialogFactory.show(dropBox, criteria, result);
+		// TODO
+		// if (result.getMatchCount() == 0)
+		// dialogManager.showInfo(
+		// textProvider.getText(Texts.searchResultsDialogTitle),
+		// textProvider.getText(Texts.searchResultsNoMatchesFound));
+		// else
+		// searchResultDialogFactory.show(dropBox, criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {
-		//TODO dropBox.addItems(getSelectedItems());
+		// TODO dropBox.addItems(getSelectedItems());
 		view.selectNone();
 	}
 

@@ -42,7 +42,7 @@ public class SearchResultFileList extends FileList {
 
 	public SearchResultFileList(TextProvider textProvider,
 			PathFormatter formatter) {
-		super(textProvider, null);
+		super(textProvider);
 		this.formatter = formatter;
 		setSelectionMode(SelectionMode.Multi);
 	}

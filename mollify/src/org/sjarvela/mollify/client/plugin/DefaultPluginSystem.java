@@ -10,10 +10,8 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,8 +29,8 @@ public class DefaultPluginSystem implements PluginSystem {
 	private static Logger logger = Logger.getLogger(DefaultPluginSystem.class
 			.getName());
 
-	private final List<Plugin> plugins = new ArrayList();
-	private final Map<String, Plugin> pluginsById = new HashMap();
+	// private final List<Plugin> plugins = new ArrayList();
+	// private final Map<String, Plugin> pluginsById = new HashMap();
 	private final ClientInterface pluginEnv;
 
 	@Inject
@@ -86,7 +84,8 @@ public class DefaultPluginSystem implements PluginSystem {
 	}
 
 	private native void initLib(JavaScriptObject env) /*-{
-		if (!$wnd.mollify) return;
+		if (!$wnd.mollify)
+			return;
 		$wnd.mollify.setup(env);
 	}-*/;
 

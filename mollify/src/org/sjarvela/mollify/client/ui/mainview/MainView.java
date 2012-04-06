@@ -29,7 +29,6 @@ public interface MainView {
 
 	void setUsername(String user);
 
-	void render();
 	// Widget getViewWidget();
 
 	void hideButtons();

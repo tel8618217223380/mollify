@@ -14,13 +14,12 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
-import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
 
 public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 
 	private final TextProvider textProvider;
-	private final DragAndDropManager dragAndDropManager;
+	// private final DragAndDropManager dragAndDropManager;
 	private final boolean thumbnails;
 	private final FileSystemService service;
 	private final boolean experimental;
@@ -28,10 +27,10 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 	private final ClientInterface pluginEnvironment;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
-			DragAndDropManager dragAndDropManager, ClientSettings settings,
-			FileSystemService service, ClientInterface pluginEnvironment) {
+			ClientSettings settings, FileSystemService service,
+			ClientInterface pluginEnvironment) {
 		this.textProvider = textProvider;
-		this.dragAndDropManager = dragAndDropManager;
+		// this.dragAndDropManager = dragAndDropManager;
 		this.settings = settings;
 		this.service = service;
 		this.pluginEnvironment = pluginEnvironment;
@@ -45,8 +44,7 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 			if (experimental)
 				return new CellTableFileList(textProvider);
 			return new FileListWithExternalColumns(textProvider,
-					dragAndDropManager, pluginEnvironment,
-					settings.getJsObj("list-view-columns"));
+					pluginEnvironment, settings.getJsObj("list-view-columns"));
 		}
 		return new FileGridWidget(thumbnails, service,
 				ViewType.gridSmall.equals(type));
