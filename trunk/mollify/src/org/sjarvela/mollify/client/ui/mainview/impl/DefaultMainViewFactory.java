@@ -28,11 +28,8 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
 import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
-import org.sjarvela.mollify.client.ui.dropbox.DropBoxFactory;
 import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
-import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 import org.sjarvela.mollify.client.ui.password.PasswordDialog;
 import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
@@ -45,8 +42,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultMainViewFactory implements MainViewFactory,
 		CreateFolderDialogFactory {
-	private static final String SETTING_EXPOSE_FILE_LINKS = "expose-file-links";
-	private static final String SETTING_DEFAULT_VIEW_MODE = "default-view-mode";
+	// private static final String SETTING_EXPOSE_FILE_LINKS =
+	// "expose-file-links";
+	// private static final String SETTING_DEFAULT_VIEW_MODE =
+	// "default-view-mode";
 
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
@@ -57,8 +56,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final PermissionEditorViewFactory permissionEditorViewFactory;
 	private final FileUploadDialogFactory fileUploadDialogFactory;
 	private final PasswordDialogFactory passwordDialogFactory;
-	private final DropBoxFactory dropBoxFactory;
-	private final DragAndDropManager dragAndDropManager;
+	// private final DropBoxFactory dropBoxFactory;
+	// private final DragAndDropManager dragAndDropManager;
 	private final ClientSettings settings;
 	private final EventDispatcher eventDispatcher;
 	private final SearchResultDialogFactory searchResultDialogFactory;
@@ -67,16 +66,20 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final ClientInterface pluginEnvironment;
 
 	@Inject
-	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
-			TextProvider textProvider, ViewManager viewManager,
-			DialogManager dialogManager, ServiceProvider serviceProvider,
-			SessionManager sessionManager, ClientSettings settings,
+	public DefaultMainViewFactory(
+			EventDispatcher eventDispatcher,
+			TextProvider textProvider,
+			ViewManager viewManager,
+			DialogManager dialogManager,
+			ServiceProvider serviceProvider,
+			SessionManager sessionManager,
+			ClientSettings settings,
 			FileSystemItemProvider fileSystemItemProvider,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
 			PasswordDialogFactory passwordDialogFactory,
-			DropBoxFactory dropBoxFactory,
-			DragAndDropManager dragAndDropManager,
+			// DropBoxFactory dropBoxFactory,
+			// DragAndDropManager dragAndDropManager,
 			SearchResultDialogFactory searchResultDialogFactory,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
 			ItemContextPopupFactory itemContextPopupFactory,
@@ -92,8 +95,8 @@ public class DefaultMainViewFactory implements MainViewFactory,
 		this.permissionEditorViewFactory = permissionEditorViewFactory;
 		this.fileUploadDialogFactory = fileUploadDialogFactory;
 		this.passwordDialogFactory = passwordDialogFactory;
-		this.dropBoxFactory = dropBoxFactory;
-		this.dragAndDropManager = dragAndDropManager;
+		// this.dropBoxFactory = dropBoxFactory;
+		// this.dragAndDropManager = dragAndDropManager;
 		this.searchResultDialogFactory = searchResultDialogFactory;
 		this.fileSystemActionHandlerFactory = fileSystemActionHandlerFactory;
 		this.itemContextPopupFactory = itemContextPopupFactory;
@@ -110,23 +113,21 @@ public class DefaultMainViewFactory implements MainViewFactory,
 				fileSystemItemProvider);
 		FileSystemActionHandler fileSystemActionHandler = fileSystemActionHandlerFactory
 				.create();
-		boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
-				false);
-		// ViewType defaultViewType = getDefaultViewType();
+		// boolean exposeFileUrls = settings.getBool(SETTING_EXPOSE_FILE_LINKS,
+		// false);
 
-		// ActionDelegator actionDelegator = new ActionDelegator();
-		MainView view = new NativeMainView(
+		NativeMainView view = new NativeMainView(
 				viewManager.getViewHandler("mainview"));
 		new MainViewPresenter(dialogManager, viewManager, sessionManager,
 				model, view, serviceProvider.getConfigurationService(),
 				fileSystemService, textProvider, fileSystemActionHandler,
 				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this, exposeFileUrls,
+				fileUploadDialogFactory, this,
 				serviceProvider.getSessionService(), eventDispatcher,
 				searchResultDialogFactory, pluginEnvironment);
 		// TODO MainViewGlue glue = new MainViewGlue(view, presenter,
 		// fileSystemActionHandler, actionDelegator);
-		view.render();
+		viewManager.render(view);
 	}
 
 	// public MainView createMainView(FileViewDelegate fileViewDelegate) {

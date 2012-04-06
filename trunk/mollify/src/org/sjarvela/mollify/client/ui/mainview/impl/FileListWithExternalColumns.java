@@ -22,7 +22,6 @@ import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
-import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
@@ -35,9 +34,8 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 	private JsObj data = null;
 
 	public FileListWithExternalColumns(TextProvider textProvider,
-			DragAndDropManager dragAndDropManager,
 			final ClientInterface pluginEnvironment, final JsObj columnSetup) {
-		super(textProvider, dragAndDropManager);
+		super(textProvider);
 		this.pluginEnv = pluginEnvironment;
 		this.columnSetup = columnSetup;
 		super.initialize();

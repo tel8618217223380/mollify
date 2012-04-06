@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-package org.sjarvela.mollify.client.ui.dnd;
+/*package org.sjarvela.mollify.client.ui.dnd;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,4 +36,4 @@ public class DefaultDragAndDropManager implements DragAndDropManager {
 		dragController.setBehaviorDragStartSensitivity(3);
 		dragControllers.put(content, dragController);
 	}
-}
+}*/

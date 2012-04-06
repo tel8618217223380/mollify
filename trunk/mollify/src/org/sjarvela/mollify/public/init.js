@@ -149,6 +149,10 @@
 					});
 					if (cb) cb();
 				});
+			},
+			
+			template : function(id, data, opt) {
+				return $("#"+id).tmpl(data, opt);
 			}
 		}
 		
@@ -350,7 +354,7 @@ function DialogHandler() {
 	
 	this.wait = function(spec) {
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
-		var w = $("#mollify-tmpl-wait").tmpl($.extend(spec, dialogDefaults)).appendTo($trg).show();
+		var w = mollify.dom.template("mollify-tmpl-wait", $.extend(spec, dialogDefaults)).appendTo($trg).show();
 		return {
 			close: function() {
 				w.remove();
@@ -360,7 +364,7 @@ function DialogHandler() {
 	
 	this.notification = function(spec) {
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
-		var notification = $("#mollify-tmpl-notification").tmpl($.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
+		var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
 		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
 	}
 }
@@ -396,6 +400,9 @@ function LoginView() {
 		});
 		$("#login-button").click(that.onLogin);
 		$("#login-name").focus();
+		
+		//		mollify.views.dialogs.info({message:'tt'});
+		//		return;
 	}
 	
 	this.onResize = function() {
@@ -408,12 +415,10 @@ function LoginView() {
 	
 	this.onRenderBubble = function(id, bubble) {
 		if (id === 'login-forgot-password') {
-			$("#login-forgot-button").click(function() {
-				mollify.views.dialogs.info({message:'tt'});
-				return;
-				
+			$("#login-forgot-button").click(function() {				
 				var email = $("#login-forgot-email").val();
 				if (!email) return;
+				
 				bubble.hide();
 				that.wait = mollify.views.dialogs.wait({target: "login-main"});
 				that.listener.onResetPassword(email);
@@ -430,7 +435,7 @@ function LoginView() {
 	this.onLogin = function() {
 		var username = $("#login-name").val();
 		var password = $("#login-password").val();
-		var remember = $("#login-remember").attr('checked');
+		var remember = $("#login-remember-cb").is(':checked');
 		
 		if (!username || username.length < 1) {
 			$("#login-name").focus();
@@ -483,6 +488,9 @@ function MainView() {
 	}
 	
 	this.onLoad = function() {
+		// TODO default view mode
+		// TODO expose file urls
+		mollify.dom.template("mollify-tmpl-main-username", mollify.env.session(), mollify).appendTo("#mainview-user");
 	}
 }
 
