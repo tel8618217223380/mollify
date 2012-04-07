@@ -91,9 +91,9 @@
 		}
 		
 		this.hasFeature = function(id) {
-			return t.env.session().info().features[id];
+			return t.env.session().features[id];
 		}
-		
+
 		this.locale = function() {
 			return t.texts.locale;
 		}
@@ -488,9 +488,16 @@ function MainView() {
 	}
 	
 	this.onLoad = function() {
+		$(window).resize(that.onResize);
+		that.onResize();
+		
 		// TODO default view mode
 		// TODO expose file urls
 		mollify.dom.template("mollify-tmpl-main-username", mollify.env.session(), mollify).appendTo("#mainview-user");
+	}
+	
+	this.onResize = function() {
+		$("#mainview-main").height($(window).height());
 	}
 }
 

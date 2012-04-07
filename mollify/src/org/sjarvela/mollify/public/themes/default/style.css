@@ -1,10 +1,31 @@
+/* @override http://localhost:8888/mollify/test/dev/client/themes/default/style.css */
+
 @import url(plugins.css);
+
+/*@font-face {
+  font-family: 'MollifyPlainText';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Signika'), local('Signika-Regular'), url('Signika.woff') format('woff');
+}*/
 
 @font-face {
   font-family: 'MollifyPlainText';
   font-style: normal;
   font-weight: 400;
-  src: local('Signika'), local('Signika-Regular'), url('Signika.woff') format('woff');
+  src: local('Open Sans'), local('OpenSans'), url('OpenSans.woff') format('woff');
+}
+@font-face {
+  font-family: 'MollifyPlainText';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('OpenSans_Semibold.woff') format('woff');
+}
+@font-face {
+  font-family: 'MollifyPlainText';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('OpenSans_Bold.woff') format('woff');
 }
 
 html, body {
@@ -216,6 +237,11 @@ input.login-field.text-field {
 #login-remember {
 	margin-top: 20px;
 	margin-bottom: 20px;
+	margin-right: 15px;
+}
+
+#login-links {
+	margin-right: 15px;
 }
 
 a.login-link {
@@ -227,4 +253,58 @@ a.login-link {
 
 #login-register {
 	margin-left: 20px;
+}
+
+#mainview-main {
+	float: left;
+	width: 100%;
+	height: 100%;
+	background-color: #f1ecdc;
+}
+
+#mainview-header {
+	float: left;
+	width: 100%;	
+}
+
+#mainview-logo {
+	float: left;
+	width: 85px;
+	height: 62px;
+	background: url(images/mollify.png) no-repeat;
+	margin-top: 10px;
+	margin-left: 48px;
+}
+
+#mainview-header-tools {
+	float: right;
+	margin-top: 8px;
+	margin-right: 48px;
+}
+
+#mainview-user {
+}
+
+#mainview-search {
+	clear: both;
+}
+
+#mainview-content-container {
+	position: absolute;
+	left: 48px;
+	right: 48px;
+	top: 80px;
+	bottom: 20px;
+}
+
+#mainview-content {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	background-color: #ffffff;
+	width: 100%;
+	height: 100%;
 }

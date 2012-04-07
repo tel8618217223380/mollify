@@ -1,17 +1,19 @@
 <div id="mainview-main">
 	<div id="mainview-header">
 		<div id="mainview-logo"></div>
-		<div id="mainview-user"></div>
-		<div id="mainview-toolbar">
-			<div id="mainview-search"></div>
+		<div id="mainview-header-tools">
+			<div id="mainview-user"></div>
+			<div id="mainview-search">TODO</div>
 		</div>
 	</div>
 
 	<div id="mainview-root-folders">
 	</div>
 
-	<div id="mainview-content">
-		<div id="mainview-filelist">
+	<div id="mainview-content-container">
+		<div id="mainview-content">
+			<div id="mainview-filelist">
+			</div>
 		</div>
 	</div>
 	
@@ -23,5 +25,7 @@
 </div>
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
-	<span>${username}</span>
+	{{if authenticated}}
+	<div id="mollify-username-dropdown" class="hover-dropdown"><span>${username}</span></div>
+	{{/if}}
 </script>
