@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-import org.sjarvela.mollify.client.ResourceId;
+/*import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -107,4 +107,4 @@ public class FileComponent extends FlowPanel {
 		addStyleDependentName(StyleConstants.CANCEL);
 	}
 
-}
+}*/

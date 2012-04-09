@@ -18,7 +18,6 @@ import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
-import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -26,7 +25,7 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public interface FileSystemService extends ItemDetailsProvider {
+public interface FileSystemService {
 
 	void getFolders(JsFolder parent, ResultListener<List<JsFolder>> listener);
 

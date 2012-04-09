@@ -26,7 +26,7 @@ public class JsFilesystemItem extends JavaScriptObject {
 		return this.path;
 	}-*/;
 
-	public boolean isFile() {
-		return false;
+	public final boolean isFile() {
+		return this instanceof JsFile;
 	}
 }

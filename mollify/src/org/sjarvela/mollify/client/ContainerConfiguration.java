@@ -14,7 +14,6 @@ import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
-import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
@@ -115,11 +114,11 @@ public class ContainerConfiguration extends AbstractGinModule {
 		return new UrlResolver(GWT.getHostPageBaseURL(), GWT.getModuleBaseURL());
 	}
 
-	@Provides
-	@Singleton
-	ItemDetailsProvider getItemDetailsProvider(ServiceEnvironment env) {
-		return env.getFileSystemService();
-	}
+	// @Provides
+	// @Singleton
+	// ItemDetailsProvider getItemDetailsProvider(ServiceEnvironment env) {
+	// return env.getFileSystemService();
+	// }
 
 	@Provides
 	@Singleton
@@ -136,14 +135,6 @@ public class ContainerConfiguration extends AbstractGinModule {
 			ViewManager viewManager, SessionManager sessionManager) {
 		return new SystemServiceProvider(env, viewManager, sessionManager);
 	}
-
-	/*
-	 * @Provides
-	 * 
-	 * @Singleton DragAndDropManager getDragAndDropManager(ViewManager
-	 * viewManager) { return new
-	 * DefaultDragAndDropManager(viewManager.getRootPanel()); }
-	 */
 
 	// @Provides
 	// @Singleton

@@ -11,6 +11,7 @@ import org.sjarvela.mollify.client.ui.NativeView;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -72,8 +73,16 @@ public class NativeMainView extends NativeView implements MainView {
 	@Override
 	public void setData(List<JsFolder> folderHierarchy,
 			List<JsFilesystemItem> allItems, boolean canWrite, JsObj data) {
-		// TODO Auto-generated method stub
-
+		viewHandler.call(
+				"data",
+				new JsObjBuilder()
+						.obj("folder-list",
+								JsUtil.asJsArray(folderHierarchy,
+										JsFolder.class))
+						.obj("items",
+								JsUtil.asJsArray(allItems,
+										JsFilesystemItem.class))
+						.obj("data", data).create());
 	}
 
 	@Override
