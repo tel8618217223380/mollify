@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.http;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
@@ -307,7 +307,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		if (!e || !e.files || !e.files[0])
 			return -1;
 		return e.files[0].fileSize;
-	}-*/;
+	}-;
 
 	private boolean verifyFileTypes() {
 		if (allowedFileTypes.isEmpty())
@@ -362,3 +362,4 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	}
 
 }
+*/

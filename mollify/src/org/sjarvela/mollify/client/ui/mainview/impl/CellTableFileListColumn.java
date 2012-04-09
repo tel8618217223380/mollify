@@ -10,21 +10,21 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.user.cellview.client.Column;
-
-public class CellTableFileListColumn extends
-		Column<FileSystemItem, FileSystemItem> {
-
-	public CellTableFileListColumn(Cell<FileSystemItem> cell) {
-		super(cell);
-	}
-
-	@Override
-	public FileSystemItem getValue(FileSystemItem item) {
-		return item;
-	}
-
-}
+//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+//
+//import com.google.gwt.cell.client.Cell;
+//import com.google.gwt.user.cellview.client.Column;
+//
+//public class CellTableFileListColumn extends
+//		Column<FileSystemItem, FileSystemItem> {
+//
+//	public CellTableFileListColumn(Cell<FileSystemItem> cell) {
+//		super(cell);
+//	}
+//
+//	@Override
+//	public FileSystemItem getValue(FileSystemItem item) {
+//		return item;
+//	}
+//
+//}

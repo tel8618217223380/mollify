@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextContainer;
@@ -75,7 +75,7 @@ public class NativeItemContextComponent implements ItemContextComponent {
 			c.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::closeContainer(Lorg/sjarvela/mollify/client/ui/fileitemcontext/ItemContextContainer;)(container);
 		}
 		return o;
-	}-*/;
+	}-;
 
 	public void closeContainer(ItemContextContainer container) {
 		container.close();
@@ -94,12 +94,12 @@ public class NativeItemContextComponent implements ItemContextComponent {
 			return;
 		var ret = cb(elementId, container, item, details);
 		return !(ret == false);
-	}-*/;
+	}-;
 
 	private final native JavaScriptObject invokeContextClose() /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextComponent::onContextClose;
 		if (!cb)
 			return;
 		cb();
-	}-*/;
-}
+	}-;
+}*/

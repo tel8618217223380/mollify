@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.List;
+/*import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -260,4 +260,4 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	public void openUploader(boolean forceBasic) {
 		presenter.openUploadDialog();
 	}
-}
+}*/

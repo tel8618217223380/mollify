@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.folderselector;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+/*import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -76,4 +76,4 @@ public class FolderListItem extends FlowPanel {
 	public void addDropdownTooltip(Tooltip tooltip) {
 		button.addDropdownTooltip(tooltip);
 	}
-}
+}*/

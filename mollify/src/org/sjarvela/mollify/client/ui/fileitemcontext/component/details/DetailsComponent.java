@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.component.details;
 
-import java.util.Arrays;
+/*import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,3 +149,4 @@ public class DetailsComponent implements ItemContextSection {
 	public void onContextClose() {
 	}
 }
+*/

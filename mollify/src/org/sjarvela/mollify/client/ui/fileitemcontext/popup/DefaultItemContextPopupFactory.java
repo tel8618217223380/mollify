@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
+/*import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
@@ -56,4 +56,4 @@ public class DefaultItemContextPopupFactory implements ItemContextPopupFactory {
 				dialogManager);
 		return new ItemContextGlue(popup, presenter, actionDelegator);
 	}
-}
+}*/

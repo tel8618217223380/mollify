@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.Collections;
+/*import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -264,4 +264,4 @@ public class CellTableFileList implements FileWidget, CellListener {
 	public void sortColumn(String columnId, SortOrder sort) {
 		// TODO Auto-generated method stub
 	}
-}
+}*/

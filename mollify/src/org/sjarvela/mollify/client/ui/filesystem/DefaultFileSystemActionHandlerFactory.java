@@ -20,10 +20,6 @@ import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.dialog.RenameDialogFactory;
-import org.sjarvela.mollify.client.ui.editor.FileEditorFactory;
-import org.sjarvela.mollify.client.ui.itemselector.ItemSelectorFactory;
-import org.sjarvela.mollify.client.ui.viewer.FileViewerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,31 +32,29 @@ public class DefaultFileSystemActionHandlerFactory implements
 	private final FileSystemService fileSystemService;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	private final ViewManager windowManager;
-	private final ItemSelectorFactory itemSelectorFactory;
-	private final RenameDialogFactory renameDialogFactory;
+	// private final ItemSelectorFactory itemSelectorFactory;
+	// private final RenameDialogFactory renameDialogFactory;
 	private final SessionProvider sessionProvider;
-	private final FileViewerFactory fileViewerFactory;
+	// private final FileViewerFactory fileViewerFactory;
 	private final EventDispatcher eventDispatcher;
-	private final FileEditorFactory fileEditorFactory;
+
+	// private final FileEditorFactory fileEditorFactory;
 
 	@Inject
 	public DefaultFileSystemActionHandlerFactory(
 			EventDispatcher eventDispatcher, TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
-			ItemSelectorFactory itemSelectorFactory,
-			RenameDialogFactory renameDialogFactory,
-			FileViewerFactory fileViewerFactory,
-			FileEditorFactory fileEditorFactory, ServiceEnvironment env,
+			ServiceEnvironment env,
 			FileSystemItemProvider fileSystemItemProvider,
 			SessionProvider sessionProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
-		this.itemSelectorFactory = itemSelectorFactory;
-		this.renameDialogFactory = renameDialogFactory;
-		this.fileViewerFactory = fileViewerFactory;
-		this.fileEditorFactory = fileEditorFactory;
+		// this.itemSelectorFactory = itemSelectorFactory;
+		// this.renameDialogFactory = renameDialogFactory;
+		// this.fileViewerFactory = fileViewerFactory;
+		// this.fileEditorFactory = fileEditorFactory;
 		this.fileSystemService = env.getFileSystemService();
 		this.fileSystemItemProvider = fileSystemItemProvider;
 		this.sessionProvider = sessionProvider;
@@ -69,10 +63,8 @@ public class DefaultFileSystemActionHandlerFactory implements
 	@Inject
 	public FileSystemActionHandler create() {
 		return new DefaultFileSystemActionHandler(eventDispatcher,
-				textProvider, windowManager, dialogManager,
-				itemSelectorFactory, renameDialogFactory, fileViewerFactory,
-				fileEditorFactory, fileSystemService, fileSystemItemProvider,
-				sessionProvider.getSession());
+				textProvider, windowManager, dialogManager, fileSystemService,
+				fileSystemItemProvider, sessionProvider.getSession());
 	}
 
 }

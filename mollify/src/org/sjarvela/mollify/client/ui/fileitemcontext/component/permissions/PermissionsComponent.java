@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.component.permissions;
 
-import org.sjarvela.mollify.client.ResourceId;
+/*import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -88,4 +88,4 @@ public class PermissionsComponent implements ItemContextComponent,
 	@Override
 	public void onContextClose() {
 	}
-}
+}*/

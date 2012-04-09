@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -265,4 +265,4 @@ public class FileList extends Grid<FileSystemItem> implements
 	public String getColumnStyle(GridColumn column) {
 		return StyleConstants.FILE_LIST_COLUMN_PREFIX + column.getId();
 	}
-}
+}*/

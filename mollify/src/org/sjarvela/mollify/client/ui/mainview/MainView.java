@@ -13,7 +13,9 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
@@ -27,11 +29,11 @@ public interface MainView {
 		list, gridSmall, gridLarge
 	};
 
-	void setUsername(String user);
+	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
 
 	// Widget getViewWidget();
 
-	void hideButtons();
+	void showNoPublishedFolders();
 
 	void showAddButton(boolean show);
 
@@ -41,17 +43,17 @@ public interface MainView {
 
 	void clear();
 
-	void refresh();
+	// void refresh();
 
 	ViewType getViewType();
 
-	void setData(List<FileSystemItem> allItems, JsObj data);
+	void setData(List<JsFolder> folderHierarchy,
+			List<JsFilesystemItem> allItems, boolean canWrite, JsObj data);
 
 	void sortColumn(String columnId, SortOrder sort);
 
 	void selectAll();
 
 	void selectNone();
-
 
 }

@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.filesystem.handler;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 public interface RenameHandler {
 	public void rename(FileSystemItem item, String newName);
-}
+}*/

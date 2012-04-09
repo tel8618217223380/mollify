@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-import org.sjarvela.mollify.client.filesystem.File;
+/*import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.ui.common.grid.GridComparator;
@@ -67,4 +67,4 @@ public class DefaultFileItemComparator implements
 		return "";
 	}
 
-}
+}*/

@@ -10,36 +10,36 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-import java.util.List;
-
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.ui.StyleConstants;
-import org.sjarvela.mollify.client.ui.common.HoverDecorator;
-
-import com.google.gwt.user.client.ui.Label;
-
-public class DraggableFileSystemItem extends Label {
-
-	private final FileSystemItem source;
-	private List<FileSystemItem> allItems;
-
-	public DraggableFileSystemItem(FileSystemItem item) {
-		super(item.getName());
-		this.source = item;
-		setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
-		HoverDecorator.decorate(this);
-	}
-
-	public FileSystemItem getSourceItem() {
-		return source;
-	}
-
-	public void setItems(List<FileSystemItem> items) {
-		this.allItems = items;
-	}
-
-	public List<FileSystemItem> getItems() {
-		return allItems;
-	}
-
-}
+//import java.util.List;
+//
+//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+//import org.sjarvela.mollify.client.ui.StyleConstants;
+//import org.sjarvela.mollify.client.ui.common.HoverDecorator;
+//
+//import com.google.gwt.user.client.ui.Label;
+//
+//public class DraggableFileSystemItem extends Label {
+//
+//	private final FileSystemItem source;
+//	private List<FileSystemItem> allItems;
+//
+//	public DraggableFileSystemItem(FileSystemItem item) {
+//		super(item.getName());
+//		this.source = item;
+//		setStyleName(StyleConstants.FILE_LIST_ITEM_NAME);
+//		HoverDecorator.decorate(this);
+//	}
+//
+//	public FileSystemItem getSourceItem() {
+//		return source;
+//	}
+//
+//	public void setItems(List<FileSystemItem> items) {
+//		this.allItems = items;
+//	}
+//
+//	public List<FileSystemItem> getItems() {
+//		return allItems;
+//	}
+//
+//}

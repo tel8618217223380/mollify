@@ -10,31 +10,31 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-
-public class DemoSessionService implements SessionService {
-	private static final String VISIBLE_USERNAME = "Mollify Demo";
-
-	private final DemoData data;
-
-	public DemoSessionService(DemoData data) {
-		this.data = data;
-	}
-
-	public void authenticate(String userName, String password,
-			boolean remember, String protocolVersion,
-			ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
-	}
-
-	public void getSessionInfo(String protocolVersion,
-			ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo());
-	}
-
-	public void logout(ResultListener resultListener) {
-		resultListener.onSuccess(data.getSessionInfo());
-	}
-
-}
+//import org.sjarvela.mollify.client.service.SessionService;
+//import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+//
+//public class DemoSessionService implements SessionService {
+//	private static final String VISIBLE_USERNAME = "Mollify Demo";
+//
+//	private final DemoData data;
+//
+//	public DemoSessionService(DemoData data) {
+//		this.data = data;
+//	}
+//
+//	public void authenticate(String userName, String password,
+//			boolean remember, String protocolVersion,
+//			ResultListener resultListener) {
+//		resultListener.onSuccess(data.getSessionInfo(VISIBLE_USERNAME));
+//	}
+//
+//	public void getSessionInfo(String protocolVersion,
+//			ResultListener resultListener) {
+//		resultListener.onSuccess(data.getSessionInfo());
+//	}
+//
+//	public void logout(ResultListener resultListener) {
+//		resultListener.onSuccess(data.getSessionInfo());
+//	}
+//
+//}

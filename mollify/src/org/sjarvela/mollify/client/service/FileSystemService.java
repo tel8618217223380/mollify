@@ -12,12 +12,12 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -28,53 +28,53 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public interface FileSystemService extends ItemDetailsProvider {
 
-	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
+	void getFolders(JsFolder parent, ResultListener<List<JsFolder>> listener);
 
-	void getFolderInfo(Folder parent, JavaScriptObject data,
-			ResultListener<FolderInfo> listener);
+	void getFolderInfo(JsFolder parent, JavaScriptObject data,
+			ResultListener<JsFolderInfo> listener);
 
 	void getFolderInfoWithHierarchy(String id,
-			ResultListener<FolderHierarchyInfo> listener);
+			ResultListener<JsFolderHierarchyInfo> listener);
 
-	void rename(FileSystemItem item, String newName,
+	void rename(JsFilesystemItem item, String newName,
 			ResultListener<Boolean> listener);
 
-	void copy(FileSystemItem item, Folder directory,
+	void copy(JsFilesystemItem item, JsFolder directory,
 			ResultListener<Boolean> listener);
 
-	void copy(List<FileSystemItem> items, Folder directory,
+	void copy(List<JsFilesystemItem> items, JsFolder directory,
 			ResultListener<Boolean> listener);
 
-	void copyWithName(File file, String name, ResultListener listener);
+	void copyWithName(JsFile file, String name, ResultListener listener);
 
-	void move(FileSystemItem file, Folder toDirectory,
+	void move(JsFilesystemItem file, JsFolder toDirectory,
 			ResultListener<Boolean> listener);
 
-	void move(List<FileSystemItem> items, Folder directory,
+	void move(List<JsFilesystemItem> items, JsFolder directory,
 			ResultListener<Boolean> listener);
 
-	void delete(FileSystemItem item, ResultListener<Boolean> listener);
+	void delete(JsFilesystemItem item, ResultListener<Boolean> listener);
 
-	void delete(List<FileSystemItem> items, ResultListener<Boolean> listener);
+	void delete(List<JsFilesystemItem> items, ResultListener<Boolean> listener);
 
-	void createFolder(Folder parentFolder, String folderName,
+	void createFolder(JsFolder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener);
 
-	String getDownloadUrl(File file);
+	String getDownloadUrl(JsFile file);
 
-	String getDownloadUrl(File file, String sessionId);
+	String getDownloadUrl(JsFile file, String sessionId);
 
-	String getDownloadAsZipUrl(FileSystemItem item);
+	String getDownloadAsZipUrl(JsFilesystemItem item);
 
-	void getDownloadAsZipUrl(List<FileSystemItem> items,
+	void getDownloadAsZipUrl(List<JsFilesystemItem> items,
 			ResultListener<String> listener);
 
-	void setItemDescription(FileSystemItem item, String description,
+	void setItemDescription(JsFilesystemItem item, String description,
 			ResultListener listener);
 
-	void removeItemDescription(FileSystemItem item, ResultListener listener);
+	void removeItemDescription(JsFilesystemItem item, ResultListener listener);
 
-	void getItemPermissions(FileSystemItem item,
+	void getItemPermissions(JsFilesystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache fileSystemItemCache);
 
@@ -83,13 +83,13 @@ public interface FileSystemService extends ItemDetailsProvider {
 			List<FileItemUserPermission> removedPermissions,
 			ResultListener resultListener);
 
-	String getPublicLink(File file);
+	String getPublicLink(JsFile file);
 
-	void retrieveUrl(Folder folder, String url, ResultListener listener);
+	void retrieveUrl(JsFolder folder, String url, ResultListener listener);
 
-	void search(Folder parent, String text,
+	void search(JsFolder parent, String text,
 			ResultListener<SearchResult> listener);
 
-	String getThumbnailUrl(FileSystemItem item);
+	String getThumbnailUrl(JsFilesystemItem item);
 
 }

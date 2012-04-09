@@ -38,12 +38,14 @@ public class JsUtil {
 	public static <T extends JavaScriptObject> JsArray<T> asJsArray(
 			List<T> list, Class<T> t) {
 		JsArray<T> result = JsArray.createArray().cast();
+		if (list == null)
+			return result;
 		int index = 0;
 		for (T o : list)
 			result.set(index++, o);
 		return result;
 	}
-	
+
 	public static JsArray asJsArray(JavaScriptObject... list) {
 		JsArray a = JsArray.createArray().cast();
 		int index = 0;

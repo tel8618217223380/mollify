@@ -12,7 +12,7 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
@@ -39,12 +39,12 @@ public class FileUploadServiceAdapter implements FileUploadService {
 				resultListenerFactory.createListener(listener));
 	}
 
-	public String getUploadUrl(Folder folder) {
+	public String getUploadUrl(JsFolder folder) {
 		return service.getUploadUrl(folder);
 	}
 
 	@Override
-	public void checkFiles(Folder folder, List<String> filenames,
+	public void checkFiles(JsFolder folder, List<String> filenames,
 			ResultListener<List<String>> l) {
 		service.checkFiles(folder, filenames, l);
 	}

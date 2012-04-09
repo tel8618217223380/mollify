@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-import java.util.List;
+/*import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -134,4 +134,4 @@ public class PermissionEditorGlue {
 		view.getRemovePermissionButton().setEnabled(selected);
 	}
 
-}
+}*/

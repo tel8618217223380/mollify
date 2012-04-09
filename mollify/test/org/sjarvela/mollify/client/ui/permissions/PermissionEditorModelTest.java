@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-import java.util.Arrays;
+/*import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -215,4 +215,4 @@ public class PermissionEditorModelTest extends GWTTestCase implements Callback {
 		assertTrue(callbackCalled);
 	}
 
-}
+}*/

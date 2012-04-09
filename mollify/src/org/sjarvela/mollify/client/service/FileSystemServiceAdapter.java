@@ -12,13 +12,13 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
@@ -37,85 +37,86 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		this.resultListenerFactory = resultListenerFactory;
 	}
 
-	public void copy(FileSystemItem item, Folder directory,
+	public void copy(JsFilesystemItem item, JsFolder directory,
 			ResultListener<Boolean> listener) {
 		service.copy(item, directory,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void copy(List<FileSystemItem> items, Folder folder,
+	public void copy(List<JsFilesystemItem> items, JsFolder folder,
 			ResultListener<Boolean> listener) {
 		service.copy(items, folder,
 				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public void copyWithName(File file, String name, ResultListener listener) {
+	public void copyWithName(JsFile file, String name, ResultListener listener) {
 		service.copyWithName(file, name,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void createFolder(Folder parentFolder, String folderName,
+	public void createFolder(JsFolder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener) {
 		service.createFolder(parentFolder, folderName,
 				resultListenerFactory.createListener(resultListener));
 	}
 
-	public void delete(FileSystemItem item, ResultListener<Boolean> listener) {
+	public void delete(JsFilesystemItem item, ResultListener<Boolean> listener) {
 		service.delete(item, resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public void delete(List<FileSystemItem> items,
+	public void delete(List<JsFilesystemItem> items,
 			ResultListener<Boolean> listener) {
 		service.delete(items, listener);
 	}
 
-	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
+	public void getFolders(JsFolder parent,
+			ResultListener<List<JsFolder>> listener) {
 		service.getFolders(parent,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void getFolderInfo(Folder parent, JavaScriptObject data,
-			ResultListener<FolderInfo> listener) {
+	public void getFolderInfo(JsFolder parent, JavaScriptObject data,
+			ResultListener<JsFolderInfo> listener) {
 		service.getFolderInfo(parent, data,
 				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
 	public void getFolderInfoWithHierarchy(String id,
-			ResultListener<FolderHierarchyInfo> listener) {
+			ResultListener<JsFolderHierarchyInfo> listener) {
 		service.getFolderInfoWithHierarchy(id,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public String getDownloadAsZipUrl(FileSystemItem item) {
+	public String getDownloadAsZipUrl(JsFilesystemItem item) {
 		return service.getDownloadAsZipUrl(item);
 	}
 
-	public String getDownloadUrl(File file) {
+	public String getDownloadUrl(JsFile file) {
 		return service.getDownloadUrl(file);
 	}
 
 	@Override
-	public String getDownloadUrl(File file, String sessionId) {
+	public String getDownloadUrl(JsFile file, String sessionId) {
 		return service.getDownloadUrl(file, sessionId);
 	}
 
 	@Override
-	public void getDownloadAsZipUrl(List<FileSystemItem> items,
+	public void getDownloadAsZipUrl(List<JsFilesystemItem> items,
 			ResultListener<String> listener) {
 		service.getDownloadAsZipUrl(items, listener);
 	}
 
 	@Override
-	public void getItemDetails(FileSystemItem item, JavaScriptObject data,
+	public void getItemDetails(JsFilesystemItem item, JavaScriptObject data,
 			ResultListener<ItemDetails> listener) {
 		service.getItemDetails(item, data,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void getItemPermissions(FileSystemItem item,
+	public void getItemPermissions(JsFilesystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache fileSystemItemCache) {
 		service.getItemPermissions(item,
@@ -123,32 +124,32 @@ public class FileSystemServiceAdapter implements FileSystemService {
 				userCache, fileSystemItemCache);
 	}
 
-	public void move(FileSystemItem file, Folder toDirectory,
+	public void move(JsFilesystemItem file, JsFolder toDirectory,
 			ResultListener<Boolean> listener) {
 		service.move(file, toDirectory,
 				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public void move(List<FileSystemItem> items, Folder folder,
+	public void move(List<JsFilesystemItem> items, JsFolder folder,
 			ResultListener<Boolean> listener) {
 		service.move(items, folder,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void removeItemDescription(FileSystemItem item,
+	public void removeItemDescription(JsFilesystemItem item,
 			ResultListener listener) {
 		service.removeItemDescription(item,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void rename(FileSystemItem item, String newName,
+	public void rename(JsFilesystemItem item, String newName,
 			ResultListener<Boolean> listener) {
 		service.rename(item, newName,
 				resultListenerFactory.createListener(listener));
 	}
 
-	public void setItemDescription(FileSystemItem item, String description,
+	public void setItemDescription(JsFilesystemItem item, String description,
 			ResultListener listener) {
 		service.setItemDescription(item, description, listener);
 	}
@@ -164,25 +165,25 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	}
 
 	@Override
-	public String getPublicLink(File file) {
+	public String getPublicLink(JsFile file) {
 		return service.getPublicLink(file);
 	}
 
 	@Override
-	public void retrieveUrl(Folder folder, String url, ResultListener listener) {
+	public void retrieveUrl(JsFolder folder, String url, ResultListener listener) {
 		service.retrieveUrl(folder, url,
 				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public void search(Folder parent, String text,
+	public void search(JsFolder parent, String text,
 			ResultListener<SearchResult> listener) {
 		service.search(parent, text,
 				resultListenerFactory.createListener(listener));
 	}
 
 	@Override
-	public String getThumbnailUrl(FileSystemItem item) {
+	public String getThumbnailUrl(JsFilesystemItem item) {
 		return service.getThumbnailUrl(item);
 	}
 

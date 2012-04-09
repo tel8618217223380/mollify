@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.FileView;
@@ -93,5 +93,5 @@ public class NativeFileView {
 		}
 
 		return o;
-	}-*/;
-}
+	}-;
+}*/

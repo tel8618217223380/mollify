@@ -9,10 +9,10 @@
  */
 
 package org.sjarvela.mollify.client.filesystem.handler;
-
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-
-public interface DeleteHandler {
-	public void delete(FileSystemItem item, ResultListener listener);
-}
+//
+//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+//import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+//
+//public interface DeleteHandler {
+//	public void delete(FileSystemItem item, ResultListener listener);
+//}

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.folderselector;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -136,4 +136,4 @@ public class FolderSelector extends FlowPanel implements FolderListener {
 		for (FolderListener listener : listeners)
 			listener.onMoveToParentFolder();
 	}
-}
+}*/

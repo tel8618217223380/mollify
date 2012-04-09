@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.itemselector;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -318,4 +318,4 @@ public class SelectItemDialog extends CenteredDialog implements
 		dialogManager.showError(error);
 		this.hide();
 	}
-}
+}*/

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -279,4 +279,4 @@ public class FileGrid extends Composite {
 	public void setSelectController(SelectController selectController) {
 		this.selectController = selectController;
 	}
-}
+}*/

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.popup;
 
-import org.sjarvela.mollify.client.Callback;
+/*import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.ui.StyleConstants;
@@ -77,4 +77,4 @@ public class DropdownButton extends ActionButton {
 		menu.addCallbackAction(title, id, callback);
 	}
 
-}
+}*/

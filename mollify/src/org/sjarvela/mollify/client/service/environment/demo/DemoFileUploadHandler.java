@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-import java.util.Collections;
+/*import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.Folder;
@@ -57,3 +57,4 @@ public class DemoFileUploadHandler implements FileUploadService {
 	}
 
 }
+*/

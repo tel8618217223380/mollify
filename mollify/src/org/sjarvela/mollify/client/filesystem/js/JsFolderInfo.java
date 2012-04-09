@@ -10,8 +10,11 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import java.util.List;
+
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.file.FilePermission;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -20,12 +23,24 @@ public class JsFolderInfo extends JavaScriptObject {
 	protected JsFolderInfo() {
 	}
 
-	public final native JsArray<JsFolder> getFolders() /*-{
+	public List<JsFolder> getFolders() {
+		return JsUtil.asList(getFolderList(), JsFolder.class);
+	}
+
+	public List<JsFile> getFiles() {
+		return JsUtil.asList(getFileList(), JsFile.class);
+	}
+
+	public final native JsArray<JsFolder> getFolderList() /*-{
 		return this.folders;
 	}-*/;
 
-	public final native JsArray<JsFile> getFiles() /*-{
+	public final native JsArray<JsFile> getFileList() /*-{
 		return this.files;
+	}-*/;
+
+	public final native JsObj getData() /*-{
+		return this.data;
 	}-*/;
 
 	public final FilePermission getPermission() {
@@ -39,17 +54,24 @@ public class JsFolderInfo extends JavaScriptObject {
 	public static JsFolderInfo create(JsArray<JsFolder> folders,
 			JsArray<JsFile> files) {
 		JsFolderInfo result = JsFolderInfo.createObject().cast();
-		result.putValues(folders, files);
+		result.putValues(folders, files, "no");
 		return result;
 	}
 
 	private final native void putValues(JsArray<JsFolder> folders,
-			JsArray<JsFile> files) /*-{
+			JsArray<JsFile> files, String permission) /*-{
 		this.folders = folders;
 		this.files = files;
+		this.permission = permission;
 	}-*/;
 
-	public final native JsObj getData() /*-{
-		return this.data;
-	}-*/;
+	public static JsFolderInfo create(List<JsFolder> folders,
+			List<JsFile> files, FilePermission permissions) {
+		JsFolderInfo result = JsFolderInfo.createObject().cast();
+		result.putValues(JsUtil.asJsArray(folders, JsFolder.class),
+				JsUtil.asJsArray(files, JsFile.class),
+				permissions.getStringValue());
+		return result;
+	}
+
 }
