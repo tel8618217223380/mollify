@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
@@ -109,12 +108,12 @@ public class FileSystemServiceAdapter implements FileSystemService {
 		service.getDownloadAsZipUrl(items, listener);
 	}
 
-	@Override
-	public void getItemDetails(JsFilesystemItem item, JavaScriptObject data,
-			ResultListener<ItemDetails> listener) {
-		service.getItemDetails(item, data,
-				resultListenerFactory.createListener(listener));
-	}
+	// @Override
+	// public void getItemDetails(JsFilesystemItem item, JavaScriptObject data,
+	// ResultListener<ItemDetails> listener) {
+	// service.getItemDetails(item, data,
+	// resultListenerFactory.createListener(listener));
+	// }
 
 	public void getItemPermissions(JsFilesystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,

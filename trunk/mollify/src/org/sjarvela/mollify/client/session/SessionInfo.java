@@ -23,23 +23,19 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
 public class SessionInfo extends JavaScriptObject {
-	public static SessionInfo create(boolean authenticationRequired,
-			boolean authenticated, String sessionName, String sessionId,
-			String userId, String user, UserPermissionMode permissionMode,
-			FeatureInfo settings, FileSystemInfo fileInfo,
-			JsArray<JsFolder> roots) {
-		SessionInfo result = SessionInfo.createObject().cast();
-		result.putValues(authenticationRequired, authenticated, sessionName,
-				sessionId, userId, user, permissionMode.getStringValue(),
-				settings, fileInfo, roots);
-		return result;
-	}
+	// public static SessionInfo create(boolean authenticationRequired,
+	// boolean authenticated, String sessionName, String sessionId,
+	// String userId, String user, UserPermissionMode permissionMode,
+	// FeatureInfo settings, FileSystemInfo fileInfo,
+	// JsArray<JsFolder> roots) {
+	// SessionInfo result = SessionInfo.createObject().cast();
+	// result.putValues(authenticationRequired, authenticated, sessionName,
+	// sessionId, userId, user, permissionMode.getStringValue(),
+	// settings, fileInfo, roots);
+	// return result;
+	// }
 
 	protected SessionInfo() {
-	}
-
-	public final String asString() {
-		return JsUtil.asJsonString(this);
 	}
 
 	public final native boolean isAuthenticationRequired() /*-{
@@ -120,4 +116,7 @@ public class SessionInfo extends JavaScriptObject {
 		this.folders = folders;
 	}-*/;
 
+	public final String asString() {
+		return JsUtil.asJsonString(this);
+	}
 }

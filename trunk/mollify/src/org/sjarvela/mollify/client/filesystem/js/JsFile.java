@@ -28,11 +28,6 @@ public class JsFile extends JsFilesystemItem {
 		return this.size;
 	}-*/;
 
-	@Override
-	public boolean isFile() {
-		return true;
-	}
-
 	public static JsFile create(String id, String rootId, String name,
 			String path, String parentId, String extension, long size) {
 		JsFile result = JsFile.createObject().cast();

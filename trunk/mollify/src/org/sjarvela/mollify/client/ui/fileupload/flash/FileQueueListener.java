@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-import org.swfupload.client.File;
-
-public interface FileQueueListener {
-
-	void onFileAdded(File file);
-
-	void onFileAddFailed(File file, int errorCode, String message);
-
-}
+//import org.swfupload.client.File;
+//
+//public interface FileQueueListener {
+//
+//	void onFileAdded(File file);
+//
+//	void onFileAddFailed(File file, int errorCode, String message);
+//
+//}

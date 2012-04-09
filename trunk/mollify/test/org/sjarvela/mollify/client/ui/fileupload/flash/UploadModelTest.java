@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-import java.util.Arrays;
+/*import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -71,4 +71,4 @@ public class UploadModelTest extends GWTTestCase {
 		assertFalse(model.hasNext());
 		assertNull(model.nextFile());
 	}
-}
+}*/

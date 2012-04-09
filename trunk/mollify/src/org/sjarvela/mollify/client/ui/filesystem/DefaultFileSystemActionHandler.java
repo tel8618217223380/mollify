@@ -38,7 +38,7 @@ import org.sjarvela.mollify.client.ui.dialog.InputListener;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	private final EventDispatcher eventDispatcher;
-	private final ViewManager windowManager;
+	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
 	// private final FileSystemItemProvider fileSystemItemProvider;
@@ -54,7 +54,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	public DefaultFileSystemActionHandler(
 			EventDispatcher eventDispatcher,
 			TextProvider textProvider,
-			ViewManager windowManager,
+			ViewManager viewManager,
 			DialogManager dialogManager,
 			// ItemSelectorFactory itemSelectorFactory,
 			// RenameDialogFactory renameDialogFactory,
@@ -64,7 +64,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
-		this.windowManager = windowManager;
+		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		// this.itemSelectorFactory = itemSelectorFactory;
 		// this.renameDialogFactory = renameDialogFactory;
@@ -176,7 +176,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 						@Override
 						public void onSuccess(String url) {
 							cb.onCallback();
-							windowManager.openDownloadUrl(url);
+							viewManager.openDownloadUrl(url);
 						}
 					});
 		}
@@ -242,10 +242,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			// file.getName()),
 			// fileSystemService.getPublicLink(file));
 		} else if (action.equals(FileSystemAction.download)) {
-			windowManager.openDownloadUrl(fileSystemService.getDownloadUrl(
-					file, session.getSessionId()));
+			viewManager.openDownloadUrl(fileSystemService.getDownloadUrl(file,
+					session.getSessionId()));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
-			windowManager.openDownloadUrl(fileSystemService
+			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(file));
 		} else if (action.equals(FileSystemAction.rename)) {
 			// renameDialogFactory.openRenameDialog(file, this, source);
@@ -328,7 +328,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 	private void onFolderAction(final JsFolder folder, FileSystemAction action) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
-			windowManager.openDownloadUrl(fileSystemService
+			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl(folder));
 		} else if (action.equals(FileSystemAction.rename)) {
 			// renameDialogFactory.openRenameDialog(folder, this, source);
