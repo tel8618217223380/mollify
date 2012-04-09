@@ -10,11 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+/*import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
 import org.sjarvela.mollify.client.service.UrlResolver;
-import org.sjarvela.mollify.client.service.environment.demo.DemoFileUploadHandler;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -38,7 +37,8 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 
 	public FlashFileUploadDialogFactory(TextProvider textProvider,
 			UrlResolver urlProvider, FileUploadService fileUploadService,
-			SessionProvider sessionProvider, ClientSettings settings, DialogManager dialogManager) {
+			SessionProvider sessionProvider, ClientSettings settings,
+			DialogManager dialogManager) {
 		this.textProvider = textProvider;
 		this.urlProvider = urlProvider;
 		this.service = fileUploadService;
@@ -56,9 +56,7 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		return urlProvider.getModuleUrl(FLASH_FILE_NAME, false);
 	}
 
-	public void openFileUploadDialog(Folder directory,
-			ResultListener listener) {
-
+	public void openFileUploadDialog(JsFolder directory, ResultListener listener) {
 		SessionInfo session = sessionProvider.getSession();
 		ActionDelegator actionDelegator = new ActionDelegator();
 		FlashFileUploadDialog dialog = new FlashFileUploadDialog(textProvider,
@@ -66,9 +64,9 @@ public class FlashFileUploadDialogFactory implements FileUploadDialogFactory {
 		FlashFileUploadPresenter presenter = new FlashFileUploadPresenter(
 				session, service, listener, uploaderSrc, directory, dialog,
 				textProvider, dialogManager);
-		if (service instanceof DemoFileUploadHandler)
-			presenter.setDemoMode();
+		// if (service instanceof DemoFileUploadHandler)
+		// presenter.setDemoMode();
 		new FlashFileUploadGlue(dialog, presenter, actionDelegator);
 	}
 
-}
+}*/

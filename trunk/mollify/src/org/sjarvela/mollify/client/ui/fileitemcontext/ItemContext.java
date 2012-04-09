@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -142,4 +142,4 @@ public class ItemContext {
 			list.add(new ContextActionSeparator());
 		}
 	}
-}
+}*/

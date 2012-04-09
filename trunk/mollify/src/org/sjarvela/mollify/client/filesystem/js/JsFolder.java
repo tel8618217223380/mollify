@@ -10,15 +10,13 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
-
-import com.google.gwt.core.client.JavaScriptObject;
-
-public class JsFolder extends JavaScriptObject {
-	public static JsFolder create(Folder folder) {
-		return create(folder.getId(), folder.getRootId(), folder.getName(),
-				folder.getParentId());
-	}
+public class JsFolder extends JsFilesystemItem {
+	public static JsFolder Empty = new JsFolder();
+	
+	// public static JsFolder create(Folder folder) {
+	// return create(folder.getId(), folder.getRootId(), folder.getName(),
+	// folder.getParentId());
+	// }
 
 	public static JsFolder create(String id, String rootId, String name,
 			String parentId) {
@@ -30,26 +28,6 @@ public class JsFolder extends JavaScriptObject {
 	protected JsFolder() {
 	}
 
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
-
-	public final native String getRootId() /*-{
-		return this.root_id;
-	}-*/;
-
-	public final native String getName() /*-{
-		return this.name;
-	}-*/;
-
-	public final native String getPath() /*-{
-		return this.path;
-	}-*/;
-
-	public final native String getParentId() /*-{
-		return this.parent_id;
-	}-*/;
-
 	private final native void putValues(String id, String rootId, String name,
 			String parentId) /*-{
 		this.id = id;
@@ -58,5 +36,13 @@ public class JsFolder extends JavaScriptObject {
 		this.parent_id = parentId;
 		this.is_file = false;
 	}-*/;
+
+	public boolean isRoot() {
+		return this.getId().equals(this.getRootId());
+	}
+
+	public boolean isEmpty() {
+		return this == Empty;
+	}
 
 }

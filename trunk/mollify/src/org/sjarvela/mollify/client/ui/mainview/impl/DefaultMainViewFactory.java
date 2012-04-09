@@ -12,36 +12,22 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
-import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
-import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
-import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
-import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialog;
-import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
-import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.fileitemcontext.popup.ItemContextPopupFactory;
-import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
-import org.sjarvela.mollify.client.ui.password.PasswordDialog;
-import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
-import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
-import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DefaultMainViewFactory implements MainViewFactory,
-		CreateFolderDialogFactory {
+public class DefaultMainViewFactory implements MainViewFactory {
 	// private static final String SETTING_EXPOSE_FILE_LINKS =
 	// "expose-file-links";
 	// private static final String SETTING_DEFAULT_VIEW_MODE =
@@ -50,56 +36,53 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
-	private final DialogManager dialogManager;
+	// private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
 	private final FileSystemItemProvider fileSystemItemProvider;
-	private final PermissionEditorViewFactory permissionEditorViewFactory;
-	private final FileUploadDialogFactory fileUploadDialogFactory;
-	private final PasswordDialogFactory passwordDialogFactory;
+	// private final PermissionEditorViewFactory permissionEditorViewFactory;
+	// private final FileUploadDialogFactory fileUploadDialogFactory;
+	// private final PasswordDialogFactory passwordDialogFactory;
 	// private final DropBoxFactory dropBoxFactory;
 	// private final DragAndDropManager dragAndDropManager;
-	private final ClientSettings settings;
+	// private final ClientSettings settings;
 	private final EventDispatcher eventDispatcher;
-	private final SearchResultDialogFactory searchResultDialogFactory;
+	// private final SearchResultDialogFactory searchResultDialogFactory;
 	private final FileSystemActionHandlerFactory fileSystemActionHandlerFactory;
-	private final ItemContextPopupFactory itemContextPopupFactory;
+	// private final ItemContextPopupFactory itemContextPopupFactory;
 	private final ClientInterface pluginEnvironment;
 
 	@Inject
-	public DefaultMainViewFactory(
-			EventDispatcher eventDispatcher,
-			TextProvider textProvider,
-			ViewManager viewManager,
-			DialogManager dialogManager,
-			ServiceProvider serviceProvider,
-			SessionManager sessionManager,
-			ClientSettings settings,
+	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
+			TextProvider textProvider, ViewManager viewManager,
+			// DialogManager dialogManager,
+			ServiceProvider serviceProvider, SessionManager sessionManager,
+			// ClientSettings settings,
 			FileSystemItemProvider fileSystemItemProvider,
-			PermissionEditorViewFactory permissionEditorViewFactory,
-			FileUploadDialogFactory fileUploadDialogFactory,
-			PasswordDialogFactory passwordDialogFactory,
+			// PermissionEditorViewFactory permissionEditorViewFactory,
+			// FileUploadDialogFactory fileUploadDialogFactory,
+			// PasswordDialogFactory passwordDialogFactory,
 			// DropBoxFactory dropBoxFactory,
 			// DragAndDropManager dragAndDropManager,
-			SearchResultDialogFactory searchResultDialogFactory,
+			// SearchResultDialogFactory searchResultDialogFactory,
 			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
-			ItemContextPopupFactory itemContextPopupFactory,
+			// ItemContextPopupFactory itemContextPopupFactory,
 			ClientInterface pluginEnvironment) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
-		this.dialogManager = dialogManager;
+		// this.dialogManager = dialogManager;
 		this.serviceProvider = serviceProvider;
 		this.sessionManager = sessionManager;
-		this.settings = settings;
+		// this.settings = settings;
 		this.fileSystemItemProvider = fileSystemItemProvider;
-		this.permissionEditorViewFactory = permissionEditorViewFactory;
-		this.fileUploadDialogFactory = fileUploadDialogFactory;
-		this.passwordDialogFactory = passwordDialogFactory;
+		// this.permissionEditorViewFactory = permissionEditorViewFactory;
+		// this.fileUploadDialogFactory = fileUploadDialogFactory;
+		// this.passwordDialogFactory = passwordDialogFactory;
 		// this.dropBoxFactory = dropBoxFactory;
 		// this.dragAndDropManager = dragAndDropManager;
-		this.searchResultDialogFactory = searchResultDialogFactory;
+		// this.searchResultDialogFactory = searchResultDialogFactory;
 		this.fileSystemActionHandlerFactory = fileSystemActionHandlerFactory;
-		this.itemContextPopupFactory = itemContextPopupFactory;
+		// this.itemContextPopupFactory = itemContextPopupFactory;
 		this.pluginEnvironment = pluginEnvironment;
 	}
 
@@ -118,13 +101,11 @@ public class DefaultMainViewFactory implements MainViewFactory,
 
 		NativeMainView view = new NativeMainView(
 				viewManager.getViewHandler("mainview"));
-		new MainViewPresenter(dialogManager, viewManager, sessionManager,
-				model, view, serviceProvider.getConfigurationService(),
-				fileSystemService, textProvider, fileSystemActionHandler,
-				permissionEditorViewFactory, passwordDialogFactory,
-				fileUploadDialogFactory, this,
+		new MainViewPresenter(viewManager, sessionManager, model, view,
+				serviceProvider.getConfigurationService(), fileSystemService,
+				textProvider, fileSystemActionHandler,
 				serviceProvider.getSessionService(), eventDispatcher,
-				searchResultDialogFactory, pluginEnvironment);
+				pluginEnvironment);
 		// TODO MainViewGlue glue = new MainViewGlue(view, presenter,
 		// fileSystemActionHandler, actionDelegator);
 		viewManager.render(view);
@@ -188,12 +169,12 @@ public class DefaultMainViewFactory implements MainViewFactory,
 	 * ViewType.gridLarge; } return ViewType.list; }
 	 */
 
-	public void openPasswordDialog(PasswordHandler handler) {
-		new PasswordDialog(textProvider, handler);
-	}
-
-	public void openCreateFolderDialog(Folder folder,
-			FolderHandler directoryHandler) {
-		new CreateFolderDialog(folder, textProvider, directoryHandler);
-	}
+	// public void openPasswordDialog(PasswordHandler handler) {
+	// new PasswordDialog(textProvider, handler);
+	// }
+	//
+	// public void openCreateFolderDialog(Folder folder,
+	// FolderHandler directoryHandler) {
+	// new CreateFolderDialog(folder, textProvider, directoryHandler);
+	// }
 }

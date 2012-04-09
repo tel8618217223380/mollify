@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.Arrays;
+/*import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -94,4 +94,4 @@ public class GridFileWidget extends Composite {
 			widget.removeStyleDependentName("hilighted");
 	}
 
-}
+}*/

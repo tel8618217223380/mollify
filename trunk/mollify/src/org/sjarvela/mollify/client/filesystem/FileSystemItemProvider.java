@@ -11,9 +11,11 @@
 package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FileSystemItemProvider extends FolderProvider {
-	void getFilesAndFolders(Folder parent,
-			ResultListener<FolderInfo> listener);
+	void getFilesAndFolders(JsFolder parent,
+			ResultListener<JsFolderInfo> listener);
 }

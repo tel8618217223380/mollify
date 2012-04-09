@@ -2,25 +2,41 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.ui.NativeView;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
+import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 public class NativeMainView extends NativeView implements MainView {
 	public NativeMainView(JsObj viewHandler) {
 		super(viewHandler);
 	}
-	
-	@Override
-	public void setUsername(String user) {
-		// TODO Auto-generated method stub
 
+	@Override
+	public void init(List<JsRootFolder> rootFolders, MainViewListener listener) {
+		JsObj p = new JsObjBuilder().obj("roots", JsArray.createArray())
+				.obj("listener", createJsListener(listener)).create();
+		viewHandler.call("init", p);
 	}
 
+	private native JavaScriptObject createJsListener(MainViewListener listener) /*-{
+		return {
+			onViewLoaded : function(u, p, r) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onViewLoaded()();
+			}
+		};
+	}-*/;
+
 	@Override
-	public void hideButtons() {
+	public void showNoPublishedFolders() {
 		// TODO Auto-generated method stub
 
 	}
@@ -33,24 +49,16 @@ public class NativeMainView extends NativeView implements MainView {
 
 	@Override
 	public void showProgress() {
-		// TODO Auto-generated method stub
-
+		viewHandler.call("showProgress");
 	}
 
 	@Override
 	public void hideProgress() {
-		// TODO Auto-generated method stub
-
+		viewHandler.call("hideProgress");
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void refresh() {
 		// TODO Auto-generated method stub
 
 	}
@@ -62,7 +70,8 @@ public class NativeMainView extends NativeView implements MainView {
 	}
 
 	@Override
-	public void setData(List<FileSystemItem> allItems, JsObj data) {
+	public void setData(List<JsFolder> folderHierarchy,
+			List<JsFilesystemItem> allItems, boolean canWrite, JsObj data) {
 		// TODO Auto-generated method stub
 
 	}

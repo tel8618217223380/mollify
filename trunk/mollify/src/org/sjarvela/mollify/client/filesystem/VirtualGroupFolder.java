@@ -10,12 +10,14 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 
-public class VirtualGroupFolder extends Folder {
-	List<Folder> children = new ArrayList();
+public class VirtualGroupFolder extends JsFolder {
+	List<JsFolder> children = new ArrayList();
 
 	public VirtualGroupFolder(String name, String path) {
 		super(null, null, name, path, null);
@@ -26,7 +28,7 @@ public class VirtualGroupFolder extends Folder {
 		return true;
 	}
 
-	public void add(RootFolder f) {
+	public void add(JsRootFolder f) {
 		int level = this.getLevel();
 		if (f.getGroupParts().size() > level) {
 			String next = f.getGroupParts().get(level);
@@ -43,7 +45,7 @@ public class VirtualGroupFolder extends Folder {
 		int i = -1;
 		int count = 0;
 		while (true) {
-			i = this.path.indexOf("/", i+1);
+			i = this.path.indexOf("/", i + 1);
 			if (i < 0)
 				break;
 			count++;
@@ -64,4 +66,4 @@ public class VirtualGroupFolder extends Folder {
 
 		return path.equals(((VirtualGroupFolder) obj).path);
 	}
-}
+}*/

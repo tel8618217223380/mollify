@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -138,12 +138,12 @@ public class NativeItemContextProvider implements ItemContextProvider {
 			JavaScriptObject item) /*-{
 		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::rq;
 		return cb(item);
-	}-*/;
+	}-;
 
 	private final native JavaScriptObject invokeNativeProvider(
 			JavaScriptObject item, JavaScriptObject d) /*-{
 		cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider::dp;
 		return cb(item, d);
-	}-*/;
+	}-;
 
-}
+}*/

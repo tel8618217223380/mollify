@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.component.preview;
 
-import org.sjarvela.mollify.client.filesystem.FileDetails;
+/*import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -107,4 +107,4 @@ public class PreviewComponent implements ItemContextSection {
 	@Override
 	public void onContextClose() {
 	}
-}
+}*/

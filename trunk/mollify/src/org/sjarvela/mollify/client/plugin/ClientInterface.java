@@ -10,17 +10,14 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import org.sjarvela.mollify.client.plugin.filelist.FileListExt;
-import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 public interface ClientInterface {
 
 	JavaScriptObject getJsEnv(String pluginBaseUrl);
 
-	FileUploadDialogFactory getCustomUploader();
+	// FileUploadDialogFactory getCustomUploader();
 
-	FileListExt getFileListExt();
+	// FileListExt getFileListExt();
 
 }

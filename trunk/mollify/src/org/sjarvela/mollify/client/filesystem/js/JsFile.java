@@ -10,36 +10,13 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-import org.sjarvela.mollify.client.filesystem.File;
-
-import com.google.gwt.core.client.JavaScriptObject;
-
-public class JsFile extends JavaScriptObject {
+public class JsFile extends JsFilesystemItem {
 	protected JsFile() {
 	}
 
-	public final native String getId() /*-{
-		return this.id;
-	}-*/;
-
-	public final native String getRootId() /*-{
-		return this.root_id;
-	}-*/;
-
-	public final native String getParentId() /*-{
-		return this.parent_id;
-	}-*/;
-
-	public final native String getName() /*-{
-		return this.name;
-	}-*/;
-
-	public final native String getPath() /*-{
-		return this.path;
-	}-*/;
-
 	public final native String getExtension() /*-{
-		if (!this.extension) return "";
+		if (!this.extension)
+			return "";
 		return this.extension;
 	}-*/;
 
@@ -50,6 +27,11 @@ public class JsFile extends JavaScriptObject {
 	private final native String getSizeString() /*-{
 		return this.size;
 	}-*/;
+
+	@Override
+	public boolean isFile() {
+		return true;
+	}
 
 	public static JsFile create(String id, String rootId, String name,
 			String path, String parentId, String extension, long size) {
@@ -71,10 +53,10 @@ public class JsFile extends JavaScriptObject {
 		this.is_file = true;
 	}-*/;
 
-	public static JavaScriptObject create(File file) {
-		return create(file.getId(), file.getRootId(), file.getName(),
-				file.getPath(), file.getParentId(), file.getExtension(),
-				file.getSize());
-	}
+	// public static JavaScriptObject create(File file) {
+	// return create(file.getId(), file.getRootId(), file.getName(),
+	// file.getPath(), file.getParentId(), file.getExtension(),
+	// file.getSize());
+	// }
 
 }

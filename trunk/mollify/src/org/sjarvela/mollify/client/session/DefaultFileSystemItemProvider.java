@@ -11,16 +11,11 @@
 package org.sjarvela.mollify.client.session;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderInfo;
-import org.sjarvela.mollify.client.filesystem.RootFolder;
-import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -32,7 +27,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
-	private List<Folder> roots = new ArrayList();
+	private List<JsFolder> roots = new ArrayList();
 
 	@Inject
 	public DefaultFileSystemItemProvider(SessionManager sessionManager,
@@ -53,62 +48,64 @@ public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	protected void updateRootFolders(SessionInfo session) {
 		this.roots = new ArrayList();
 
-		Map<String, VirtualGroupFolder> virtualRootsAdded = new HashMap();
-		for (RootFolder f : session.getRootFolders()) {
-			if (f.hasGroup()) {
-				String name = f.getGroupParts().get(0);
-				if (!virtualRootsAdded.containsKey(name)) {
-					VirtualGroupFolder groupFolder = new VirtualGroupFolder(
-							name, name);
-					groupFolder.add(f);
-
-					this.roots.add(groupFolder);
-					virtualRootsAdded.put(name, groupFolder);
-				} else {
-					virtualRootsAdded.get(name).add(f);
-				}
-			} else {
-				this.roots.add(f);
-			}
-		}
+		// TODO Map<String, VirtualGroupFolder> virtualRootsAdded = new
+		// HashMap();
+		// for (JsRootFolder f : session.getRootFolders()) {
+		// if (f.hasGroup()) {
+		// String name = f.getGroupParts().get(0);
+		// if (!virtualRootsAdded.containsKey(name)) {
+		// VirtualGroupFolder groupFolder = new VirtualGroupFolder(
+		// name, name);
+		// groupFolder.add(f);
+		//
+		// this.roots.add(groupFolder);
+		// virtualRootsAdded.put(name, groupFolder);
+		// } else {
+		// virtualRootsAdded.get(name).add(f);
+		// }
+		// } else {
+		// this.roots.add(f);
+		// }
+		// }
 	}
 
 	@Override
-	public void getFolders(Folder parent, ResultListener<List<Folder>> listener) {
+	public void getFolders(JsFolder parent,
+			ResultListener<List<JsFolder>> listener) {
 		if (parent.isEmpty())
 			listener.onSuccess(roots);
-		else if (parent instanceof VirtualGroupFolder)
-			listener.onSuccess(((VirtualGroupFolder) parent).getChildren());
+		// else if (parent instanceof VirtualGroupFolder)
+		// listener.onSuccess(((VirtualGroupFolder) parent).getChildren());
 		else
 			fileSystemService.getFolders(parent, listener);
 	}
 
 	@Override
-	public List<Folder> getRootFolders() {
+	public List<JsFolder> getRootFolders() {
 		return roots;
 	}
 
 	@Override
-	public Folder getRootFolder(String id) {
+	public JsFolder getRootFolder(String id) {
 		if (id == null)
 			return null;
 
-		for (Folder f : roots)
+		for (JsFolder f : roots)
 			if (id.equals(f.getId()))
 				return f;
 		return null;
 	}
 
 	@Override
-	public void getFilesAndFolders(Folder parent,
-			ResultListener<FolderInfo> listener) {
+	public void getFilesAndFolders(JsFolder parent,
+			ResultListener<JsFolderInfo> listener) {
 		if (parent.isEmpty())
-			listener.onSuccess(new FolderInfo(FilePermission.None, roots,
-					Collections.EMPTY_LIST, null));
-		else if (parent instanceof VirtualGroupFolder)
-			listener.onSuccess(new FolderInfo(FilePermission.None,
-					((VirtualGroupFolder) parent).getChildren(),
-					Collections.EMPTY_LIST, null));
+			listener.onSuccess(JsFolderInfo.create(roots, null,
+					FilePermission.None));
+		// TODO else if (parent instanceof VirtualGroupFolder)
+		// listener.onSuccess(new FolderInfo(FilePermission.None,
+		// ((VirtualGroupFolder) parent).getChildren(),
+		// Collections.EMPTY_LIST, null));
 		else
 			fileSystemService.getFolderInfo(parent, null, listener);
 	}

@@ -10,11 +10,11 @@
 
 package org.sjarvela.mollify.client.ui.editor;
 
-import org.sjarvela.mollify.client.filesystem.File;
-import org.sjarvela.mollify.client.js.JsObj;
-
-public interface FileEditorFactory {
-
-	void openFileEditor(File file, JsObj params);
-
-}
+//import org.sjarvela.mollify.client.filesystem.File;
+//import org.sjarvela.mollify.client.js.JsObj;
+//
+//public interface FileEditorFactory {
+//
+//	void openFileEditor(File file, JsObj params);
+//
+//}

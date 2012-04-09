@@ -13,8 +13,6 @@ package org.sjarvela.mollify.client.plugin;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.filelist.FileListExt;
-import org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
@@ -22,8 +20,6 @@ import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.fileitemcontext.ItemContextHandler;
-import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
@@ -33,33 +29,32 @@ import com.google.inject.Singleton;
 public class DefaultClientInterface implements ClientInterface {
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
-	private final ItemContextHandler itemContextHandler;
+	// private final ItemContextHandler itemContextHandler;
 	private final SessionProvider sessionProvider;
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
 	private final TextProvider textProvider;
-	private final FileListExt fileListInterface;
+	// private final FileListExt fileListInterface;
 	private final ViewManager viewManager;
 
-	private FileUploadDialogFactory uploader = null;
+	// private FileUploadDialogFactory uploader = null;
 	private NativeViewManager nativeViewManager;
 
 	@Inject
 	public DefaultClientInterface(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
-			ItemContextHandler itemContextProvider,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
 			DialogManager dialogManager, TextProvider textProvider,
 			ViewManager viewManager) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
-		this.itemContextHandler = itemContextProvider;
+		// this.itemContextHandler = itemContextProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
-		this.fileListInterface = new FileListExt(textProvider);
+		// this.fileListInterface = new FileListExt(textProvider);
 
 		this.nativeViewManager = new NativeViewManager(viewManager,
 				dialogManager);
@@ -75,26 +70,26 @@ public class DefaultClientInterface implements ClientInterface {
 	}
 
 	public void addUploader(JavaScriptObject uploader) {
-		this.uploader = new NativeUploader(uploader);
+		// this.uploader = new NativeUploader(uploader);
 	}
 
 	public void addItemContextProvider(JavaScriptObject dp, JavaScriptObject rq) {
-		itemContextHandler
-				.addItemContextProvider(new NativeItemContextProvider(dp, rq));
+		// itemContextHandler
+		// .addItemContextProvider(new NativeItemContextProvider(dp, rq));
 	}
 
 	public void addListColumnSpec(JavaScriptObject spec) {
-		fileListInterface.addListColumnSpec(spec);
+		// fileListInterface.addListColumnSpec(spec);
 	}
 
 	protected JavaScriptObject getSession() {
 		return new NativeSession(sessionProvider.getSession()).asJs();
 	}
 
-	@Override
-	public FileListExt getFileListExt() {
-		return fileListInterface;
-	}
+	// @Override
+	// public FileListExt getFileListExt() {
+	// return fileListInterface;
+	// }
 
 	@Override
 	public JavaScriptObject getJsEnv(String pluginBaseUrl) {
@@ -175,9 +170,9 @@ public class DefaultClientInterface implements ClientInterface {
 		return env;
 	}-*/;
 
-	@Override
-	public FileUploadDialogFactory getCustomUploader() {
-		return uploader;
-	}
+	// @Override
+	// public FileUploadDialogFactory getCustomUploader() {
+	// return uploader;
+	// }
 
 }

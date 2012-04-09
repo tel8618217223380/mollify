@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.plugin.filelist;
 
-import java.util.HashMap;
+/*import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +102,7 @@ public class FileListExt {
 	protected static native final JavaScriptObject invokeDataRequestCallback(
 			JavaScriptObject cb, JavaScriptObject i) /*-{
 		return cb(i);
-	}-*/;
+	}-;
 
 	public void onFileListRendered(GridColumn col) {
 		NativeGridColumn c = (NativeGridColumn) col;
@@ -113,5 +113,5 @@ public class FileListExt {
 
 	private static native void invokeRenderCallback(JavaScriptObject cb) /*-{
 		cb();
-	}-*/;
-}
+	}-;
+}*/

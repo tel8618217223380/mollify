@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.folderselector;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -127,4 +127,4 @@ public class FolderListMenu extends DropdownPopupMenu<Folder> implements
 		});
 		return label;
 	}
-}
+}*/

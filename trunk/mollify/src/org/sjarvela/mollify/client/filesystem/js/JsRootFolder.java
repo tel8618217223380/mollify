@@ -10,11 +10,45 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class JsRootFolder extends JsFolder {
+	// public static JsRootFolder create(RootFolder folder) {
+	// return create(folder.getId(), folder.getName(), folder.getGroup());
+	// }
+
+	public static final JsRootFolder create(String id, String name, String group) {
+		JsRootFolder result = JsFolder.createObject().cast();
+		result.putValues(id, id, name, null, group);
+		return result.cast();
+	};
+
+	private final native void putValues(String id, String rootId, String name,
+			String parentId, String group) /*-{
+		this.id = id;
+		this.root_id = rootId;
+		this.name = name;
+		this.parent_id = parentId;
+		this.is_file = false;
+		this.group = group;
+	}-*/;
+
 	protected JsRootFolder() {
 	}
 
 	public final native String getGroup() /*-{
 		return this.group;
 	}-*/;
+
+	public boolean hasGroup() {
+		return getGroup() != null && !getGroup().isEmpty();
+	}
+
+	public List<String> getGroupParts() {
+		if (!hasGroup())
+			return Collections.EMPTY_LIST;
+		return Arrays.asList(getGroup().split("/"));
+	}
 }

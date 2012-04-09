@@ -12,14 +12,14 @@ package org.sjarvela.mollify.client.filesystem.foldermodel;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public interface FolderProvider {
-	List<Folder> getRootFolders();
+	List<JsFolder> getRootFolders();
 
-	Folder getRootFolder(String id);
+	JsFolder getRootFolder(String id);
 
-	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
+	void getFolders(JsFolder parent, ResultListener<List<JsFolder>> listener);
 
 }

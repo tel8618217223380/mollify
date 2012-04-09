@@ -10,23 +10,23 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-import java.util.List;
-
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
-import org.sjarvela.mollify.client.session.user.UserBase;
-
-public interface PermissionEditorViewFactory {
-
-	void openPermissionEditor(FileSystemItem item);
-
-	void openAddFileItemUserPermissionDialog(
-			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			List<? extends UserBase> availableUsersOrGroups, boolean groups);
-
-	void openEditFileItemUserPermissionDialog(
-			FileItemUserPermissionHandler fileItemUserPermissionHandler,
-			FileItemUserPermission fileItemUserPermission, boolean groups);
-
-}
+//import java.util.List;
+//
+//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+//import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+//import org.sjarvela.mollify.client.session.file.FileItemUserPermissionHandler;
+//import org.sjarvela.mollify.client.session.user.UserBase;
+//
+//public interface PermissionEditorViewFactory {
+//
+//	void openPermissionEditor(FileSystemItem item);
+//
+//	void openAddFileItemUserPermissionDialog(
+//			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+//			List<? extends UserBase> availableUsersOrGroups, boolean groups);
+//
+//	void openEditFileItemUserPermissionDialog(
+//			FileItemUserPermissionHandler fileItemUserPermissionHandler,
+//			FileItemUserPermission fileItemUserPermission, boolean groups);
+//
+//}

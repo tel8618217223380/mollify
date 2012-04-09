@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin.filelist;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
@@ -62,5 +62,5 @@ public class NativeGridColumn implements GridColumn {
 		if (!cb)
 			return "";
 		return cb(i, data);
-	}-*/;
-}
+	}-;
+}*/

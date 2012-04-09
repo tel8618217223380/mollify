@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin.itemcontext;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.ui.fileitemcontext.component.ItemContextSection;
 
@@ -53,13 +53,13 @@ public class NativeItemContextSection extends NativeItemContextComponent
 		if (!cb)
 			return;
 		cb(item, details);
-	}-*/;
+	}-;
 
 	private final native JavaScriptObject invokeClose() /*-{
 		var cb = this.@org.sjarvela.mollify.client.plugin.itemcontext.NativeItemContextSection::onClose;
 		if (!cb)
 			return;
 		cb();
-	}-*/;
+	}-;
 
-}
+}*/

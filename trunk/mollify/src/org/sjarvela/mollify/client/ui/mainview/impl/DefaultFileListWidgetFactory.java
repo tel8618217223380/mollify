@@ -10,13 +10,13 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import org.sjarvela.mollify.client.localization.TextProvider;
+/*import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
+import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;*/
 
-public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
+/*public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 
 	private final TextProvider textProvider;
 	// private final DragAndDropManager dragAndDropManager;
@@ -50,4 +50,4 @@ public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 				ViewType.gridSmall.equals(type));
 	}
 
-}
+}*/

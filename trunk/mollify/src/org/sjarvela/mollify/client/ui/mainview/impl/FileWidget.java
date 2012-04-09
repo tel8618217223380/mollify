@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.List;
+/*import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -43,4 +43,4 @@ public interface FileWidget {
 
 	void sortColumn(String columnId, SortOrder sort);
 
-}
+}*/

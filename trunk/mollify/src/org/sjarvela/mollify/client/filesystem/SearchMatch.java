@@ -11,6 +11,7 @@
 package org.sjarvela.mollify.client.filesystem;
 
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 
@@ -20,13 +21,13 @@ public class SearchMatch extends JsObj {
 	protected SearchMatch() {
 	}
 
-	public final FileSystemItem getItem() {
+	public final JsFilesystemItem getItem() {
 		JsObj item = this.getJsObj("item");
 
 		if (item.getBoolean("is_file"))
-			return FileSystemItem.createFrom((JsFile) item.cast());
+			return (JsFile) item.cast();
 		else
-			return FileSystemItem.createFrom((JsFolder) item.cast());
+			return (JsFolder) item.cast();
 	}
 
 	public final JsArray getMatches() {

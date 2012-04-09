@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -132,4 +132,4 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 	public Widget getWidget() {
 		return this;
 	}
-}
+}*/

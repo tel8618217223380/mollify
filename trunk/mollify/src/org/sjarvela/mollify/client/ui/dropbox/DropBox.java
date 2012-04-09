@@ -12,9 +12,7 @@ package org.sjarvela.mollify.client.ui.dropbox;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-
-import com.google.gwt.user.client.ui.Widget;
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 
 public interface DropBox {
 
@@ -22,10 +20,10 @@ public interface DropBox {
 
 	// public void toggle(Coords position);
 
-	public void addItems(List<FileSystemItem> selectedItems);
+	public void addItems(List<JsFilesystemItem> items);
 
 	// public void close();
 
-	public Widget getWidget();
+//	public Widget getWidget();
 
 }

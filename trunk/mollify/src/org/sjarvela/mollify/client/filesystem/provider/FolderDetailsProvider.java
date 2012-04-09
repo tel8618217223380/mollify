@@ -9,14 +9,14 @@
  */
 
 package org.sjarvela.mollify.client.filesystem.provider;
-
-import org.sjarvela.mollify.client.filesystem.Folder;
-import org.sjarvela.mollify.client.filesystem.FolderDetails;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-
-public interface FolderDetailsProvider {
-
-	void getFolderDetails(Folder directory,
-			ResultListener<FolderDetails> resultListener);
-
-}
+//
+//import org.sjarvela.mollify.client.filesystem.Folder;
+//import org.sjarvela.mollify.client.filesystem.FolderDetails;
+//import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+//
+//public interface FolderDetailsProvider {
+//
+//	void getFolderDetails(JsFolder directory,
+//			ResultListener<FolderDetails> resultListener);
+//
+//}

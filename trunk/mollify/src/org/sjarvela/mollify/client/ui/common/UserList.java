@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common;
 
-import java.util.Arrays;
+/*import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -63,4 +63,4 @@ public class UserList extends Grid<User> implements GridDataProvider<User> {
 	public List<String> getRowStyles(User t) {
 		return ROW_STYLE;
 	}
-}
+}*/

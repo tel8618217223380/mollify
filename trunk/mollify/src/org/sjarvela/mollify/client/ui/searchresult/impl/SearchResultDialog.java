@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
-import java.util.List;
+/*import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
@@ -237,4 +237,4 @@ public class SearchResultDialog extends ResizableDialog implements
 			list.selectNone();
 		}
 	}
-}
+}*/

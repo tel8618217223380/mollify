@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-import org.sjarvela.mollify.client.ResourceId;
+/*import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.file.FilePermission;
@@ -212,4 +212,4 @@ public class PermissionEditorView extends CenteredDialog {
 		this.removeButton.setEnabled(false);
 		this.defaultPermission.setEnabled(itemDefined);
 	}
-}
+}*/
