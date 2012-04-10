@@ -69,7 +69,13 @@
 			'avi' => "video/divx",
 			'mkv' => "video/divx",
 			'pdf' => "application/pdf",
-			'jpg' => 'image/jpeg'
+			'jpg' => 'image/jpeg',
+			"doc" => "application/msword",
+			"docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			"xls" => "application/vnd.ms-excel",
+			"xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			"ppt" => "application/vnd.ms-powerpoint",
+			"pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation"
         );
         
         private $mimeTypes;
@@ -89,7 +95,9 @@
 			
 			if ($response->type() === 'json') {
 				header('Content-type: application/json');
-				echo json_encode($data);
+				$encoded = json_encode($data);
+				header('Content-length: '.strlen($encoded));
+				echo $encoded;
 			} else {
 				header('Content-type: text/html');
 				echo $data;
