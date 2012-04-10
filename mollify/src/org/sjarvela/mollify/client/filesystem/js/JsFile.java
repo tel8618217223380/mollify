@@ -10,7 +10,9 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-public class JsFile extends JsFilesystemItem {
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class JsFile extends JavaScriptObject {
 	protected JsFile() {
 	}
 
@@ -54,4 +56,27 @@ public class JsFile extends JsFilesystemItem {
 	// file.getSize());
 	// }
 
+	public final native String getId() /*-{
+		return this.id;
+	}-*/;
+
+	public final native String getRootId() /*-{
+		return this.root_id;
+	}-*/;
+
+	public final native String getParentId() /*-{
+		return this.parent_id;
+	}-*/;
+
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
+
+	public final native String getPath() /*-{
+		return this.path;
+	}-*/;
+
+	public final boolean isFile() {
+		return true;// this instanceof JsFile;
+	}
 }

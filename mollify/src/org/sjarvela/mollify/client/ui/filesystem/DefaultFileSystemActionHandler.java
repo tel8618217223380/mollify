@@ -78,9 +78,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	public void onAction(JsFilesystemItem item, FileSystemAction action,
 			Object param) {
 		if (item.isFile())
-			onFileAction((JsFile) item, action, param);
+			onFileAction((JsFile) item.cast(), action, param);
 		else
-			onFolderAction((JsFolder) item, action);
+			onFolderAction((JsFolder) item.cast(), action);
 	}
 
 	public void onAction(final List<JsFilesystemItem> items,
@@ -246,7 +246,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					session.getSessionId()));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
 			viewManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl(file));
+					.getDownloadAsZipUrl((JsFilesystemItem) file.cast()));
 		} else if (action.equals(FileSystemAction.rename)) {
 			// renameDialogFactory.openRenameDialog(file, this, source);
 		} else {
@@ -285,7 +285,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 								fileSystemService.copyWithName(
 										file,
 										name,
-										createListener(file,
+										createListener(
+												(JsFilesystemItem) file.cast(),
 												FileSystemAction.copy, null));
 							}
 						});
@@ -316,7 +317,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 						new ConfirmationListener() {
 							public void onConfirm() {
-								delete(file);
+								delete((JsFilesystemItem) file.cast());
 							}
 						});
 			} else {
@@ -329,7 +330,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	private void onFolderAction(final JsFolder folder, FileSystemAction action) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
 			viewManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl(folder));
+					.getDownloadAsZipUrl((JsFilesystemItem) folder.cast()));
 		} else if (action.equals(FileSystemAction.rename)) {
 			// renameDialogFactory.openRenameDialog(folder, this, source);
 		} else if (action.equals(FileSystemAction.copy)) {
@@ -378,7 +379,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
-							delete(folder);
+							delete((JsFilesystemItem) folder.cast());
 						}
 					});
 		} else {
@@ -395,29 +396,41 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	protected void copyFile(JsFile file, JsFolder toDirectory) {
 		if (toDirectory.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.copy(file, toDirectory,
-				createListener(file, FileSystemAction.copy, null));
+		fileSystemService.copy(
+				(JsFilesystemItem) file.cast(),
+				toDirectory,
+				createListener((JsFilesystemItem) file.cast(),
+						FileSystemAction.copy, null));
 	}
 
 	protected void moveFile(JsFile file, JsFolder toFolder) {
 		if (toFolder.getId().equals(file.getParentId()))
 			return;
-		fileSystemService.move(file, toFolder,
-				createListener(file, FileSystemAction.move, null));
+		fileSystemService.move(
+				(JsFilesystemItem) file.cast(),
+				toFolder,
+				createListener((JsFilesystemItem) file.cast(),
+						FileSystemAction.move, null));
 	}
 
 	protected void copyFolder(JsFolder folder, JsFolder toFolder) {
 		if (folder.equals(toFolder))
 			return;
-		fileSystemService.copy(folder, toFolder,
-				createListener(folder, FileSystemAction.copy, null));
+		fileSystemService.copy(
+				(JsFilesystemItem) folder.cast(),
+				toFolder,
+				createListener((JsFilesystemItem) folder.cast(),
+						FileSystemAction.copy, null));
 	}
 
 	protected void moveFolder(JsFolder folder, JsFolder toFolder) {
 		if (folder.equals(toFolder))
 			return;
-		fileSystemService.move(folder, toFolder,
-				createListener(folder, FileSystemAction.move, null));
+		fileSystemService.move(
+				(JsFilesystemItem) folder.cast(),
+				toFolder,
+				createListener((JsFilesystemItem) folder.cast(),
+						FileSystemAction.move, null));
 	}
 
 	private void delete(JsFilesystemItem item) {

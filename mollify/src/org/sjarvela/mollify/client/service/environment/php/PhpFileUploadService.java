@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -44,7 +45,8 @@ public class PhpFileUploadService extends PhpFileService implements
 	}
 
 	public String getUploadUrl(JsFolder folder) {
-		return serviceUrl().fileItem(folder).item("files").build();
+		return serviceUrl().fileItem((JsFilesystemItem) folder.cast())
+				.item("files").build();
 	}
 
 	@Override
@@ -52,8 +54,9 @@ public class PhpFileUploadService extends PhpFileService implements
 			final ResultListener<List<String>> listener) {
 		String data = new JSONBuilder().array("files", filenames).toString();
 
-		request().url(serviceUrl().fileItem(folder).item("check"))
-				.listener(new ResultListener<JsObj>() {
+		request()
+				.url(serviceUrl().fileItem((JsFilesystemItem) folder.cast())
+						.item("check")).listener(new ResultListener<JsObj>() {
 					@Override
 					public void onSuccess(JsObj result) {
 						if (!result.hasValue("existing")) {

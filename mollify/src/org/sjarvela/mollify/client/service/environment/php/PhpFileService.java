@@ -65,8 +65,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 				listener.onSuccess((List<JsFolder>) result);
 			}
 		};
-		request().url(serviceUrl().fileItem(parent).action(FileAction.folders))
-				.listener(resultListener).get();
+		request()
+				.url(serviceUrl().fileItem((JsFilesystemItem) parent.cast())
+						.action(FileAction.folders)).listener(resultListener)
+				.get();
 	}
 
 	public void getFolderInfo(final JsFolder parent, JavaScriptObject data,
@@ -88,8 +90,9 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		// }
 		// };
 
-		request().url(serviceUrl().fileItem(parent).action(FileAction.info))
-				.listener(listener)
+		request()
+				.url(serviceUrl().fileItem((JsFilesystemItem) parent.cast())
+						.action(FileAction.info)).listener(listener)
 				.data(new JSONBuilder().object("data", data).toString()).post();
 	}
 
@@ -158,8 +161,10 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 					+ name + "]");
 		String data = new JSONBuilder("name", name).toString();
 
-		request().url(serviceUrl().fileItem(file).action(FileAction.copy))
-				.data(data).listener(listener).post();
+		request()
+				.url(serviceUrl().fileItem((JsFilesystemItem) file.cast())
+						.action(FileAction.copy)).data(data).listener(listener)
+				.post();
 	}
 
 	public void copy(List<JsFilesystemItem> items, JsFolder folder,
@@ -232,18 +237,20 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 		String data = new JSONBuilder("name", folderName).toString();
 
 		request()
-				.url(serviceUrl().fileItem(parentFolder).action(
+				.url(serviceUrl().fileItem(
+						(JsFilesystemItem) parentFolder.cast()).action(
 						FileAction.folders)).data(data).listener(listener)
 				.post();
 	}
 
 	public String getDownloadUrl(JsFile file) {
-		return serviceUrl().fileItem(file).build();
+		return serviceUrl().fileItem((JsFilesystemItem) file.cast()).build();
 	}
 
 	@Override
 	public String getDownloadUrl(JsFile file, String sessionId) {
-		return serviceUrl().fileItem(file).build() + "?session=" + sessionId;
+		return serviceUrl().fileItem((JsFilesystemItem) file.cast()).build()
+				+ "?session=" + sessionId;
 	}
 
 	public String getDownloadAsZipUrl(JsFilesystemItem item) {
@@ -347,13 +354,15 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 	@Override
 	public String getPublicLink(JsFile file) {
-		return service.serviceUrl().item("public").item("items").fileItem(file)
-				.build();
+		return service.serviceUrl().item("public").item("items")
+				.fileItem((JsFilesystemItem) file.cast()).build();
 	}
 
 	@Override
 	public void retrieveUrl(JsFolder folder, String url, ResultListener listener) {
-		request().url(serviceUrl().fileItem(folder).item("retrieve"))
+		request()
+				.url(serviceUrl().fileItem((JsFilesystemItem) folder.cast())
+						.item("retrieve"))
 				.data(new JSONBuilder("url", url).toString())
 				.listener(listener).post();
 	}
@@ -363,7 +372,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			ResultListener<SearchResult> listener) {
 		UrlBuilder url = serviceUrl();
 		if (parent != null)
-			url.fileItem(parent);
+			url.fileItem((JsFilesystemItem) parent.cast());
 
 		request().url(url.item("search"))
 				.data(new JSONBuilder("text", text).toString())

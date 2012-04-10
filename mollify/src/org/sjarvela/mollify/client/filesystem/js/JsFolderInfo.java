@@ -23,11 +23,11 @@ public class JsFolderInfo extends JavaScriptObject {
 	protected JsFolderInfo() {
 	}
 
-	public List<JsFolder> getFolders() {
+	public final List<JsFolder> getFolders() {
 		return JsUtil.asList(getFolderList(), JsFolder.class);
 	}
 
-	public List<JsFile> getFiles() {
+	public final List<JsFile> getFiles() {
 		return JsUtil.asList(getFileList(), JsFile.class);
 	}
 

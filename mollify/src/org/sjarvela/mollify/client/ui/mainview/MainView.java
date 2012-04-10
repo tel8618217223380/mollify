@@ -13,11 +13,12 @@ package org.sjarvela.mollify.client.ui.mainview;
 import java.util.List;
 
 import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 public interface MainView {
 
@@ -48,7 +49,7 @@ public interface MainView {
 	ViewType getViewType();
 
 	void setData(List<JsFolder> folderHierarchy,
-			List<JsFilesystemItem> allItems, boolean canWrite, JsObj data);
+			List<JavaScriptObject> allItems, boolean canWrite, JsObj data);
 
 	void sortColumn(String columnId, SortOrder sort);
 

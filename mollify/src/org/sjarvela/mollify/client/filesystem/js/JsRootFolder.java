@@ -42,11 +42,11 @@ public class JsRootFolder extends JsFolder {
 		return this.group;
 	}-*/;
 
-	public boolean hasGroup() {
+	public final boolean hasGroup() {
 		return getGroup() != null && !getGroup().isEmpty();
 	}
 
-	public List<String> getGroupParts() {
+	public final List<String> getGroupParts() {
 		if (!hasGroup())
 			return Collections.EMPTY_LIST;
 		return Arrays.asList(getGroup().split("/"));

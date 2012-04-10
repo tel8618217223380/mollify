@@ -10,9 +10,11 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-public class JsFolder extends JsFilesystemItem {
-	public static JsFolder Empty = new JsFolder();
-	
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class JsFolder extends JavaScriptObject {
+	// public static JsFolder Empty = new JsFolder();
+
 	// public static JsFolder create(Folder folder) {
 	// return create(folder.getId(), folder.getRootId(), folder.getName(),
 	// folder.getParentId());
@@ -37,12 +39,35 @@ public class JsFolder extends JsFilesystemItem {
 		this.is_file = false;
 	}-*/;
 
-	public boolean isRoot() {
+	public final boolean isRoot() {
 		return this.getId().equals(this.getRootId());
 	}
 
-	public boolean isEmpty() {
-		return this == Empty;
+	public final boolean isEmpty() {
+		return false; // TODOthis == Empty;
 	}
 
+	public final native String getId() /*-{
+		return this.id;
+	}-*/;
+
+	public final native String getRootId() /*-{
+		return this.root_id;
+	}-*/;
+
+	public final native String getParentId() /*-{
+		return this.parent_id;
+	}-*/;
+
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
+
+	public final native String getPath() /*-{
+		return this.path;
+	}-*/;
+
+	public final boolean isFile() {
+		return false;// this instanceof JsFile;
+	}
 }
