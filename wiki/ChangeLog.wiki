@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.7.5 ===
+Released 2012/4/10
+  * Added default mime types for Word, PowerPoint and Excel documents
+  * Fixed issue 387
+  * Fixed issue 388
+
 === Version 1.8.7.4 ===
 Released 2012/3/31
   * Added initial support for guest mode
