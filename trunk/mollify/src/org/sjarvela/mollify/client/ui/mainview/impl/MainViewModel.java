@@ -42,7 +42,7 @@ public class MainViewModel {
 
 	private List<JsFile> files = new ArrayList();
 	private List<JsFolder> folders = new ArrayList();
-	private List<JsFilesystemItem> all = new ArrayList();
+	private List<JavaScriptObject> all = new ArrayList();
 	private List<JsFilesystemItem> selected = new ArrayList();
 	private FilePermission folderPermission = FilePermission.None;
 	private JsObj data;
@@ -93,7 +93,7 @@ public class MainViewModel {
 		return files;
 	}
 
-	public List<JsFilesystemItem> getAllItems() {
+	public List<JavaScriptObject> getAllItems() {
 		return all;
 	}
 

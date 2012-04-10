@@ -10,9 +10,7 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 
 import com.google.gwt.core.client.JsArray;
@@ -23,11 +21,7 @@ public class SearchMatch extends JsObj {
 
 	public final JsFilesystemItem getItem() {
 		JsObj item = this.getJsObj("item");
-
-		if (item.getBoolean("is_file"))
-			return (JsFile) item.cast();
-		else
-			return (JsFolder) item.cast();
+		return item.cast();
 	}
 
 	public final JsArray getMatches() {

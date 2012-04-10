@@ -5,7 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JsFilesystemItem extends JavaScriptObject {
 	protected JsFilesystemItem() {
 	}
-	
+
 	public final native String getId() /*-{
 		return this.id;
 	}-*/;
@@ -26,7 +26,7 @@ public class JsFilesystemItem extends JavaScriptObject {
 		return this.path;
 	}-*/;
 
-	public final boolean isFile() {
-		return this instanceof JsFile;
-	}
+	public final native boolean isFile() /*-{
+		return this.is_file;
+	}-*/;
 }

@@ -123,7 +123,7 @@ public class MainViewPresenter implements MainViewListener {
 
 		view.init(sessionManager.getSession().getRootFolders(), this);
 	}
-	
+
 	@Override
 	public void onViewLoaded() {
 		// TODO if (exposeFileUrls)
@@ -571,10 +571,6 @@ public class MainViewPresenter implements MainViewListener {
 				eventDispatcher.onEvent(event);
 			}
 		});
-	}
-
-	public List<JsFilesystemItem> getAllItems() {
-		return model.getAllItems();
 	}
 
 	public JsFolder getCurrentFolder() {

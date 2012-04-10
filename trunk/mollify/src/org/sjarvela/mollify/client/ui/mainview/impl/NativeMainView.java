@@ -2,7 +2,6 @@ package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -72,7 +71,7 @@ public class NativeMainView extends NativeView implements MainView {
 
 	@Override
 	public void setData(List<JsFolder> folderHierarchy,
-			List<JsFilesystemItem> allItems, boolean canWrite, JsObj data) {
+			List<JavaScriptObject> allItems, boolean canWrite, JsObj data) {
 		viewHandler.call(
 				"data",
 				new JsObjBuilder()
@@ -81,7 +80,7 @@ public class NativeMainView extends NativeView implements MainView {
 										JsFolder.class))
 						.obj("items",
 								JsUtil.asJsArray(allItems,
-										JsFilesystemItem.class))
+										JavaScriptObject.class))
 						.obj("data", data).create());
 	}
 
