@@ -169,7 +169,7 @@ function loadPlugin(list, i) {
 	};
 	loadScript("../plugin/"+id+"/admin/init.js", cb);
 }
-		
+
 function onSelectMenu(id) {
 	if (!controllers[id]) {
 		onError("Configuration view not defined: "+id);
