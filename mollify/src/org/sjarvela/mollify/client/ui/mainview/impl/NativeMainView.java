@@ -70,14 +70,19 @@ public class NativeMainView extends NativeView implements MainView {
 	}
 
 	@Override
-	public void setData(List<JsFolder> folderHierarchy,
-			List<JavaScriptObject> allItems, boolean canWrite, JsObj data) {
+	public void setFolder(List<JsFolder> folderHierarchy, boolean canWrite) {
+		viewHandler.call(
+				"folder",
+				new JsObjBuilder().obj("items",
+						JsUtil.asJsArray(folderHierarchy, JsFolder.class))
+						.create());
+	}
+
+	@Override
+	public void setData(List<JavaScriptObject> allItems, JsObj data) {
 		viewHandler.call(
 				"data",
 				new JsObjBuilder()
-						.obj("folder-list",
-								JsUtil.asJsArray(folderHierarchy,
-										JsFolder.class))
 						.obj("items",
 								JsUtil.asJsArray(allItems,
 										JavaScriptObject.class))

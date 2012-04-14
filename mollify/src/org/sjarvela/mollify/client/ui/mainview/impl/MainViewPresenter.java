@@ -129,11 +129,13 @@ public class MainViewPresenter implements MainViewListener {
 		// TODO if (exposeFileUrls)
 		// viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
-		if (!model.hasFolder())
-			changeToRootFolder(model.getRootFolders().size() == 1 ? model
-					.getRootFolders().get(0) : null);
-		if (model.getRootFolders().size() == 0)
-			view.showNoPublishedFolders();
+		if (!model.hasFolder()) {
+			if (model.getRootFolders().size() == 0)
+				view.showNoPublishedFolders();
+			else
+				changeToRootFolder(model.getRootFolders().size() == 1 ? model
+						.getRootFolders().get(0) : null);
+		}
 	}
 
 	public void onFileSystemItemSelected(final JsFilesystemItem item,
@@ -164,7 +166,7 @@ public class MainViewPresenter implements MainViewListener {
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToRootFolder(root, createFolderChangeListener());
+				model.changeToRootFolder(root, createFolderChangeListener(true));
 			}
 		});
 	}
@@ -174,7 +176,7 @@ public class MainViewPresenter implements MainViewListener {
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToSubfolder(folder, createFolderChangeListener());
+				model.changeToSubfolder(folder, createFolderChangeListener(true));
 			}
 		});
 	}
@@ -192,19 +194,20 @@ public class MainViewPresenter implements MainViewListener {
 			}
 
 			public void onSuccess(JsFolderInfo result) {
-				refreshView();
+				refreshView(false);
 			}
 		});
 	}
 
-	private void refreshView() {
+	private void refreshView(boolean folderChange) {
 		// List<FileSystemItem> allItems = new ArrayList(model.getAllItems());
 		// if (model.getFolderModel().canAscend())
 		// allItems.add(0, Folder.Parent);
 
-		view.setData(model.getFolderModel().getFolderList(),
-				model.getAllItems(), model.getFolderPermission().canWrite(),
-				model.getData());
+		if (folderChange)
+			view.setFolder(model.getFolderModel().getFolderList(), model
+					.getFolderPermission().canWrite());
+		view.setData(model.getAllItems(), model.getData());
 		// view.showAddButton(model.getFolderPermission().canWrite());
 		// view.refresh();
 		// if (exposeFileUrls)
@@ -358,8 +361,8 @@ public class MainViewPresenter implements MainViewListener {
 		});
 	}
 
-	private ResultListener createFolderChangeListener() {
-		return createListener(createRefreshCallback(),
+	private ResultListener createFolderChangeListener(boolean folderChange) {
+		return createListener(createRefreshCallback(folderChange),
 				createCurrentFolderChangedEventCallback());
 	}
 
@@ -373,10 +376,10 @@ public class MainViewPresenter implements MainViewListener {
 		};
 	}
 
-	private Callback createRefreshCallback() {
+	private Callback createRefreshCallback(final boolean folderChange) {
 		return new Callback() {
 			public void onCallback() {
-				refreshView();
+				refreshView(folderChange);
 			}
 		};
 	}
@@ -595,7 +598,7 @@ public class MainViewPresenter implements MainViewListener {
 		model.changeToFolder(id, new ResultListener() {
 			@Override
 			public void onSuccess(Object result) {
-				refreshView();
+				refreshView(true);
 			}
 
 			@Override
