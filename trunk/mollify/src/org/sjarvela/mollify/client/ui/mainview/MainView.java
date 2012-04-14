@@ -48,8 +48,9 @@ public interface MainView {
 
 	ViewType getViewType();
 
-	void setData(List<JsFolder> folderHierarchy,
-			List<JavaScriptObject> allItems, boolean canWrite, JsObj data);
+	void setFolder(List<JsFolder> folderHierarchy, boolean canWrite);
+
+	void setData(List<JavaScriptObject> allItems, JsObj data);
 
 	void sortColumn(String columnId, SortOrder sort);
 
