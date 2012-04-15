@@ -66,8 +66,10 @@ public class JsObj extends JavaScriptObject {
 
 	private final native JsArrayString getKeyList() /*-{
 		var result = [];
-		for (id in this)
+		for (id in this) {
+			if (id.substring(0, 1) == '_') continue;
 			result.push(id);
+		}
 		return result;
 	}-*/;
 }
