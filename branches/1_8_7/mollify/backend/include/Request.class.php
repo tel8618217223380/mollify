@@ -15,8 +15,6 @@
 		const METHOD_PUT = 'put';
 		const METHOD_POST = 'post';
 		const METHOD_DELETE = 'delete';
-		const METHOD_PROPFIND = 'propfind';
-		const METHOD_OPTIONS = 'options';
 		
 		private $method;
 		private $uri;
@@ -45,8 +43,6 @@
 			
 			switch($this->method) {
 				case self::METHOD_GET:
-				case self::METHOD_PROPFIND:
-				case self::METHOD_OPTIONS:
 					$this->params = $_GET;
 					break;
 				case self::METHOD_POST:
