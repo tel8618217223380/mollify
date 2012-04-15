@@ -16,7 +16,9 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
@@ -90,6 +92,10 @@ public class SearchResultDialog extends ResizableDialog implements
 
 			@Override
 			public void onMenuClicked(FileSystemItem item, Element e) {
+				if (item.equals(Folder.Parent)
+						|| (item instanceof VirtualGroupFolder))
+					return;
+				itemContextHandler.onOpenItemMenu(item, e);
 			}
 
 			@Override

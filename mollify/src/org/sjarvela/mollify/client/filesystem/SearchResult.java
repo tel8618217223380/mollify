@@ -27,6 +27,8 @@ public class SearchResult extends JsObj {
 	}
 
 	public final SearchMatch getMatch(String id) {
-		return this.getJsObj("matches").getJsObj(id).cast();
+		JsObj matches = this.getJsObj("matches");
+		if (matches.hasValue("id")) return null;
+		return matches.getJsObj(id).cast();
 	}
 }
