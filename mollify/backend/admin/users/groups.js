@@ -44,6 +44,7 @@ function MollifyUserGroupsConfigurationView() {
 		   		{name:'name',index:'name', width:200, sortable:true},
 		   		{name:'description',index:'description', width:300, sortable:true},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -65,6 +66,7 @@ function MollifyUserGroupsConfigurationView() {
 			   	{name:'id', index:'id', width:10, sortable:true, sorttype:"int"},
 		   		{name:'name', index:'name', width:10, sortable:true}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -88,6 +90,7 @@ function MollifyUserGroupsConfigurationView() {
 		   		{name:'default_name',index:'name', width:150, sortable:true, formatter:that.defaultFolderNameFormatter},
 				{name:'path',index:'path',width:200, sortable:true},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -104,6 +107,7 @@ function MollifyUserGroupsConfigurationView() {
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 		   		{name:'name',index:'name', width:200, sortable:true}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc'
 		});

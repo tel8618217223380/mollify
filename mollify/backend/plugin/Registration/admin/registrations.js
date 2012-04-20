@@ -32,6 +32,7 @@ function PendingRegistrationsView() {
 			   	{name:'key',index:'key',width:150, sortable:true},
 		   		{name:'time',index:'time', width:150, sortable:true, formatter:timeFormatter},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'desc',
 			onSelectRow: function(id){

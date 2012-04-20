@@ -28,6 +28,7 @@ function NotificatorListView() {
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 			   	{name:'name',index:'name',width:150, sortable:true}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'desc',
 			onSelectRow: function(id){
@@ -313,6 +314,7 @@ function NotificatorListView() {
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],
+			   	rowNum:9999,
 			   	sortname:'name',
 			   	sortorder:'desc'
 			});
@@ -325,6 +327,7 @@ function NotificatorListView() {
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],
+			   	rowNum:9999,
 			   	sortname:'name',
 			   	sortorder:'desc'
 			});
