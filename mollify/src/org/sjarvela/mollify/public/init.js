@@ -476,33 +476,6 @@ function LoginView() {
 	}
 }
 
-function MainView() {
-	var that = this;
-	
-	this.init = function(p) {
-		that.listener = p.listener;
-		//TODO p.roots
-	}
-	
-	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that.onLoad, ['localize']);
-	}
-	
-	this.onLoad = function() {
-		$(window).resize(that.onResize);
-		that.onResize();
-		
-		// TODO default view mode
-		// TODO expose file urls
-		mollify.dom.template("mollify-tmpl-main-username", mollify.env.session(), mollify).appendTo("#mainview-user");
-		that.listener.onViewLoaded();
-	}
-	
-	this.onResize = function() {
-		$("#mainview-main").height($(window).height());
-	}
-}
-
 function CommentPlugin() {
 	var that = this;
 	

@@ -13,7 +13,6 @@ import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 
 public class NativeMainView extends NativeView implements MainView {
 	public NativeMainView(JsObj viewHandler) {
@@ -22,7 +21,8 @@ public class NativeMainView extends NativeView implements MainView {
 
 	@Override
 	public void init(List<JsRootFolder> rootFolders, MainViewListener listener) {
-		JsObj p = new JsObjBuilder().obj("roots", JsArray.createArray())
+		JsObj p = new JsObjBuilder()
+				.obj("roots", JsUtil.asJsArray(rootFolders, JsRootFolder.class))
 				.obj("listener", createJsListener(listener)).create();
 		viewHandler.call("init", p);
 	}
@@ -31,20 +31,21 @@ public class NativeMainView extends NativeView implements MainView {
 		return {
 			onViewLoaded : function(u, p, r) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onViewLoaded()();
+			},
+			onRootFolderSelected : function(r) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onRootFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsRootFolder;)(r);
 			}
 		};
 	}-*/;
 
 	@Override
-	public void showNoPublishedFolders() {
-		// TODO Auto-generated method stub
-
+	public void showAllRoots() {
+		viewHandler.call("showAllRoots");
 	}
 
 	@Override
-	public void showAddButton(boolean show) {
-		// TODO Auto-generated method stub
-
+	public void showNoRoots() {
+		viewHandler.call("showNoRoots");
 	}
 
 	@Override
@@ -73,9 +74,11 @@ public class NativeMainView extends NativeView implements MainView {
 	public void setFolder(List<JsFolder> folderHierarchy, boolean canWrite) {
 		viewHandler.call(
 				"folder",
-				new JsObjBuilder().obj("items",
-						JsUtil.asJsArray(folderHierarchy, JsFolder.class))
-						.create());
+				new JsObjBuilder()
+						.obj("hierarchy",
+								JsUtil.asJsArray(folderHierarchy,
+										JsFolder.class))
+						.bool("canWrite", canWrite).create());
 	}
 
 	@Override

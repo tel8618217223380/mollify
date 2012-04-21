@@ -16,25 +16,26 @@ import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class FolderCache implements FolderProvider {
-	private final FolderProvider directoryProvider;
+	private final FolderProvider folderProvider;
 	private final Map<JsFolder, List<JsFolder>> cache = new HashMap();
 
 	public FolderCache(FolderProvider directoryProvider) {
-		this.directoryProvider = directoryProvider;
+		this.folderProvider = directoryProvider;
 	}
 
 	@Override
-	public List<JsFolder> getRootFolders() {
-		return directoryProvider.getRootFolders();
+	public List<JsRootFolder> getRootFolders() {
+		return folderProvider.getRootFolders();
 	}
 
 	@Override
-	public JsFolder getRootFolder(String id) {
-		return directoryProvider.getRootFolder(id);
+	public JsRootFolder getRootFolder(String id) {
+		return folderProvider.getRootFolder(id);
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class FolderCache implements FolderProvider {
 			return;
 		}
 
-		directoryProvider.getFolders(parent,
+		folderProvider.getFolders(parent,
 				new ResultListener<List<JsFolder>>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
