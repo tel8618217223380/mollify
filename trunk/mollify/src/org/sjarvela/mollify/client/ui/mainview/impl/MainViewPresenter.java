@@ -23,6 +23,7 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ConfigurationService;
@@ -131,11 +132,19 @@ public class MainViewPresenter implements MainViewListener {
 
 		if (!model.hasFolder()) {
 			if (model.getRootFolders().size() == 0)
-				view.showNoPublishedFolders();
+				view.showNoRoots();
+			else if (model.getRootFolders().size() == 1)
+				changeToRootFolder(model.getRootFolders().get(0));
 			else
-				changeToRootFolder(model.getRootFolders().size() == 1 ? model
-						.getRootFolders().get(0) : null);
+				view.showAllRoots();
+		} else {
+			refreshView(true);
 		}
+	}
+
+	@Override
+	public void onRootFolderSelected(JsRootFolder root) {
+		changeToRootFolder(root);
 	}
 
 	public void onFileSystemItemSelected(final JsFilesystemItem item,
@@ -176,7 +185,8 @@ public class MainViewPresenter implements MainViewListener {
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToSubfolder(folder, createFolderChangeListener(true));
+				model.changeToSubfolder(folder,
+						createFolderChangeListener(true));
 			}
 		});
 	}

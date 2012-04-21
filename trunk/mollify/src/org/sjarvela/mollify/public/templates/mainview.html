@@ -7,10 +7,10 @@
 		</div>
 	</div>
 
-	<div id="mainview-root-folders">
-	</div>
-
 	<div id="mainview-content-container">
+		<div id="mainview-root-folders">
+		</div>
+		
 		<div id="mainview-content">
 			<div id="mainview-filelist">
 			</div>
@@ -28,4 +28,30 @@
 	{{if authenticated}}
 	<div id="mollify-username-dropdown" class="hover-dropdown"><span>${username}</span></div>
 	{{/if}}
+</script>
+
+<script id="mollify-tmpl-main-rootfolder" type="text/x-jquery-tmpl">
+	<div id="mollify-root-${id}" class="mollify-rootfolder"><span>${name}</span></div>
+</script>
+
+<script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
+	<div id="mollify-folderview">
+		<div id="mollify-folderview-header">
+			<div id="mollify-folder-name">${name}</div>
+			<div id="mollify-folder-hierarchy">
+			</div>
+		</div>
+		<div id="mollify-folderview-items">
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
+	&gt;&nbsp;${name}&nbsp;
+</script>
+
+<script id="mollify-tmpl-main-listitem" type="text/x-jquery-tmpl">
+	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item type-${extension}">
+		<div class="mollify-filelist-item-title">${name}</div>
+	</div>
 </script>

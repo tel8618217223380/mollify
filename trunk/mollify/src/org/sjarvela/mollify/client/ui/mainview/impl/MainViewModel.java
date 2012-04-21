@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ResultCallback;
@@ -35,7 +36,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
-	private final List<JsFolder> rootFolders;
+	private final List<JsRootFolder> rootFolders;
 
 	private FolderInfoRequestDataProvider dataRequestProvider = null;
 	private FolderModel folderModel;
@@ -77,7 +78,7 @@ public class MainViewModel {
 		return folderModel;
 	}
 
-	public List<JsFolder> getRootFolders() {
+	public List<JsRootFolder> getRootFolders() {
 		return rootFolders;
 	}
 

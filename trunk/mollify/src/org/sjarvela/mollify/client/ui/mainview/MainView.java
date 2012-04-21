@@ -32,11 +32,9 @@ public interface MainView {
 
 	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
 
-	// Widget getViewWidget();
+	void showAllRoots();
 
-	void showNoPublishedFolders();
-
-	void showAddButton(boolean show);
+	void showNoRoots();
 
 	void showProgress();
 

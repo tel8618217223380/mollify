@@ -86,9 +86,9 @@ public class SessionInfo extends JavaScriptObject {
 	}-*/;
 
 	public final List<JsRootFolder> getRootFolders() {
-//		if (getRootFolderList() == null)
+		if (getRootFolderList() == null)
 			return Collections.EMPTY_LIST;
-//		return JsUtil.asList(getRootFolderList(), JsRootFolder.class);
+		return JsUtil.asList(getRootFolderList(), JsRootFolder.class);
 	}
 
 	private final native JsArray getRootFolderList() /*-{
