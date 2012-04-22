@@ -9,8 +9,7 @@
 
 	<div id="mainview-content-container">
 		<div id="mainview-content">
-			<div id="mainview-filelist">
-			</div>
+
 		</div>
 	</div>
 	
@@ -23,7 +22,7 @@
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
 	{{if authenticated}}
-	<div id="mollify-username-dropdown" class="hover-dropdown"><span>${username}</span></div>
+	<div id="mollify-username-dropdown"><span class="dropdown-title">${username}</span></div>
 	{{/if}}
 </script>
 
@@ -31,8 +30,7 @@
 	<div id="mollify-folderview">
 		<div id="mollify-folderview-header">
 			<div id="mollify-folder-name">${name}</div>
-			<div id="mollify-folder-hierarchy">
-			</div>
+			<div id="mollify-folder-hierarchy"></div>
 		</div>
 		<div id="mollify-folderview-items">
 		</div>
@@ -43,21 +41,23 @@
 	<span class="folder-hierarchy-separator">&nbsp;&gt;&nbsp;</span><span id="folder-hierarchy-item-${id}" class="folder-hierarchy-item">${name}</span>
 </script>
 
-<script id="mollify-tmpl-main-list" type="text/x-jquery-tmpl">
-	<div id="mollify-filelist">
+<script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">
+	<div id="${listId}" class="mollify-filelist">
+		<div id="${listId}-header" class="mollify-filelist-header">
+			<div class="mollify-filelist-header-icon-col"></div>
+			<div id="${listId}-header-cols" class="mollify-filelist-header-cols"></div>
+		</div>
+		<div id="${listId}-items" class="mollify-filelist-items"></div>
 	</div>
 </script>
 
-<script id="mollify-tmpl-main-listitem" type="text/x-jquery-tmpl">
-	{{if is_file}}
-	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item item-file type-${extension}">
+<script id="mollify-tmpl-filelist-headercol" type="text/x-jquery-tmpl">
+	<div class="mollify-filelist-col-header mollify-filelist-col-${id}">${$item.title($data)}</div>
+</script>
+
+<script id="mollify-tmpl-filelist-item" type="text/x-jquery-tmpl">
+	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item ${$item.typeClass($data)}">
 		<div class="mollify-filelist-item-icon"></div>
-		<div class="mollify-filelist-item-title">${name}</div>
+		{{html $item.cols($data)}}
 	</div>
-	{{else}}
-	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item item-folder">
-		<div class="mollify-filelist-item-icon"></div>
-		<div class="mollify-filelist-item-title">${name}</div>
-	</div>
-	{{/if}}
 </script>

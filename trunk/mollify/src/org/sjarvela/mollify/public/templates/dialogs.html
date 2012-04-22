@@ -16,3 +16,13 @@
 <script id="mollify-tmpl-wait" type="text/x-jquery-tmpl"> 
 	<div class="mollify-wait"></div>
 </script>
+
+<script id="mollify-tmpl-popupmenu" type="text/x-jquery-tmpl"> 
+	<div class="mollify-popupmenu">
+	{{tmpl(items) "#mollify-tmpl-popupmenu-item"}}
+	</div>
+</script>
+
+<script id="mollify-tmpl-popupmenu-item" type="text/x-jquery-tmpl"> 
+	<div class="mollify-popupmenu-item">${title}</div>
+</script>
