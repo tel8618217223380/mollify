@@ -23,7 +23,6 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
-import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ConfigurationService;
@@ -143,8 +142,13 @@ public class MainViewPresenter implements MainViewListener {
 	}
 
 	@Override
-	public void onRootFolderSelected(JsRootFolder root) {
-		changeToRootFolder(root);
+	public void onSubFolderSelected(JsFolder f) {
+		changeToFolderOnCurrentLevel(f);
+	}
+
+	@Override
+	public void onFolderSelected(int level, JsFolder f) {
+		changeToFolder(level, f);
 	}
 
 	public void onFileSystemItemSelected(final JsFilesystemItem item,
@@ -180,12 +184,23 @@ public class MainViewPresenter implements MainViewListener {
 		});
 	}
 
-	public void changeToFolder(final JsFolder folder) {
+	public void changeToFolderOnCurrentLevel(final JsFolder folder) {
 		view.showProgress();
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
 				model.changeToSubfolder(folder,
+						createFolderChangeListener(true));
+			}
+		});
+	}
+
+	public void changeToFolder(final int level, final JsFolder folder) {
+		view.showProgress();
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.changeToFolder(level, folder,
 						createFolderChangeListener(true));
 			}
 		});
@@ -242,18 +257,6 @@ public class MainViewPresenter implements MainViewListener {
 	// @Override
 	// public void execute() {
 	// model.moveToParentFolder(view.getViewType(),
-	// createFolderChangeListener());
-	// }
-	// });
-	// }
-
-	// @Override
-	// public void onChangeToFolder(final int level, final JsFolder folder) {
-	// view.showProgress();
-	// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-	// @Override
-	// public void execute() {
-	// model.changeToFolder(level, folder,
 	// createFolderChangeListener());
 	// }
 	// });
