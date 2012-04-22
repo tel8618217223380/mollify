@@ -1,9 +1,11 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
 public interface MainViewListener {
 	void onViewLoaded();
 
-	void onRootFolderSelected(JsRootFolder root);
+	void onSubFolderSelected(JsFolder f);
+
+	void onFolderSelected(int level, JsFolder f);
 }
