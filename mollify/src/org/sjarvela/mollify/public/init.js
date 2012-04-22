@@ -2,13 +2,18 @@
 	window.mollify = new function(){
 		var defaults = {
 			"template-url": "client/templates/",
-			"service-path": "backend/"
+			"service-path": "backend/",
+			"list-view-columns": {
+				"name": {},
+				"size": {}
+			}
 		};
 		var t = this;
 		t.time = new Date().getTime();
 		
 		this.settings = {};
 		this.plugins = {};
+		
 
 		this.init = function(s, p) {
 			if (p) {
@@ -26,10 +31,40 @@
 
 			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
-			t.env.addListColumnSpec({
+			t.ui.filelist.addColumn({
+				"id": "name",
+				"title-key": "fileListColumnTitleName",
+				"sort": function(i1, i2, sort, data) {
+					return ((i1.name > i2.name) ? 1 : -1) * sort;
+				},
+				"content": function(item, data) {
+					return '<span class="mollify-filelist-item-name-title">'+item.name+'</span><span class="mollify-filelist-quickmenu">x</span>';
+				}
+			});
+			t.ui.filelist.addColumn({
+				"id": "type",
+				"title-key": "fileListColumnTitleType",
+				"sort": function(i1, i2, sort, data) {
+					return ((i1.name > i2.name) ? 1 : -1) * sort;
+				},
+				"content": function(item, data) {
+					return item.extension;
+				}
+			});
+			t.ui.filelist.addColumn({
+				"id": "size",
+				"title-key": "fileListColumnTitleSize",
+				"sort": function(i1, i2, sort, data) {
+					return ((i1.size > i2.size) ? 1 : -1) * sort;
+				},
+				"content": function(item, data) {
+					return item.is_file ? t.env.texts().formatSize(item.size) : '';
+				}
+			});
+			t.ui.filelist.addColumn({
 				"id": "file-modified",
 				"request-id": "core-file-modified",
-				"default-title-key": "fileListColumnTitleLastModified",
+				"title-key": "fileListColumnTitleLastModified",
 				"sort": function(i1, i2, sort, data) {
 					if (!i1.is_file && !i2.is_file) return 0;
 					if (!data || !data["core-file-modified"]) return 0;
@@ -43,10 +78,10 @@
 					return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
 				}
 			});
-			t.env.addListColumnSpec({
+			t.ui.filelist.addColumn({
 				"id": "item-description",
 				"request-id": "core-item-description",
-				"default-title-key": "fileListColumnTitleDescription",
+				"title-key": "fileListColumnTitleDescription",
 				"sort": function(i1, i2, sort, data) {
 					if (!i1.is_file && !i2.is_file) return 0;
 					if (!data || !data["core-item-description"]) return 0;
@@ -157,6 +192,15 @@
 		}
 		
 		this.ui = {
+			filelist : {
+				columns : [],
+				addColumn : function(c) {
+					t.ui.filelist.columns.push(c);
+					if (t.settings["list-view-columns"][c.id])
+						t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
+				} 
+			},
+			
 			handlers : {
 				hintbox : function(p) {
 					p.find("input.hintbox").each(function() {
@@ -186,6 +230,14 @@
 							position: "relative",
 							left: x
 						});
+					});
+				},
+				
+				hover: function(p) {
+					p.find(".hoverable").hover(function() {
+						$(this).addClass("hover");
+					}, function() {
+						$(this).removeClass("hover");
 					});
 				},
 				
@@ -235,6 +287,52 @@
 			window : {
 				open : function(url) {
 					window.open(url);
+				}
+			},
+			
+			controls: {
+				hoverDropdown : function(e, items) {
+					var $e = $(e);
+					$e.addClass('hover-dropdown');
+					$e.hover(function() {
+						$(this).addClass("hover");
+					}, function() {
+						$(this).removeClass("hover");
+					});
+					$('<div class="mollify-dropdown-handle"></div>').click(function(){
+						mollify.ui.controls.popupmenu(items, {control: $e});
+					}).appendTo($e);
+				},
+				
+				popupmenu : function(items, p) {
+					var $e = $(p.control);
+					var html = mollify.dom.template("mollify-tmpl-popupmenu", {items:items}).html();
+					$e.qtip({
+						content: html,
+						position: {
+							my: p.positionMy || 'top right',
+							at: p.positionAt || 'bottom right'
+						},
+						show: 'click',
+						hide: {
+							delay: 200,
+							fixed: true,
+							event: 'mouseleave'
+						},
+						style: {
+							tip: false,
+							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+						},
+						events: {
+							render: function(e, api) {
+								$(".mollify-popupmenu-item").click(function() {
+									var item = items[$(this).index()];
+									api.destroy();
+									item.callback();
+								});
+							}
+						}
+					}).qtip('api').show();
 				}
 			}
 		}
