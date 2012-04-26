@@ -20,20 +20,21 @@ function MainView() {
 		
 		// TODO default view mode
 		// TODO expose file urls
-		var s = mollify.env.session();
+		var s = mollify.session.get();
 		mollify.dom.template("mollify-tmpl-main-username", s, mollify).appendTo("#mainview-user");
-		if (s.is_authenticated) {
-			mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), [
-				{title: 'foo', callback: function(item) { window.alert('foo'); }},
-				{title: 'bar', callback: function(item) { window.alert('bar'); }}
-			]);
-		}
+		if (s.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
 		
 		that.listener.onViewLoaded();
 	}
 	
 	this.onResize = function() {
 		$("#mainview-main").height($(window).height());
+	}
+	
+	this.sessionActions = function() {
+		return [
+			{'title-key': 'logout', callback: mollify.session.actions.logout}
+		];
 	}
 	
 	this.showAllRoots = function() {

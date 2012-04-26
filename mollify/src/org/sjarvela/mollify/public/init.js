@@ -13,7 +13,6 @@
 		
 		this.settings = {};
 		this.plugins = {};
-		
 
 		this.init = function(s, p) {
 			if (p) {
@@ -28,6 +27,7 @@
 			t.env = e;
 			t.ui.texts = t.env.texts();
 			t.service = t.env.service();
+			t.session = t.env.session;
 
 			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
@@ -126,7 +126,7 @@
 		}
 		
 		this.hasFeature = function(id) {
-			return t.env.session().features[id];
+			return t.session.get().features[id];
 		}
 
 		this.locale = function() {
@@ -306,7 +306,13 @@
 				
 				popupmenu : function(items, p) {
 					var $e = $(p.control);
-					var html = mollify.dom.template("mollify-tmpl-popupmenu", {items:items}).html();
+					var html = mollify.dom.template("mollify-tmpl-popupmenu", {items:items}, {
+						getTitle : function(i) {
+							if (i.title) return i.title;
+							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+							return "";
+						}
+					}).html();
 					$e.qtip({
 						content: html,
 						position: {

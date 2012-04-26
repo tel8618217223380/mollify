@@ -33,6 +33,7 @@ public class DefaultPluginSystem implements PluginSystem {
 	// private final Map<String, Plugin> pluginsById = new HashMap();
 	private final ClientInterface pluginEnv;
 
+	// TODO move this entire class into external js
 	@Inject
 	public DefaultPluginSystem(ClientInterface pluginEnv) {
 		this.pluginEnv = pluginEnv;
