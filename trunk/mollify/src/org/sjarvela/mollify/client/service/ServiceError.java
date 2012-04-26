@@ -10,7 +10,10 @@
 
 package org.sjarvela.mollify.client.service;
 
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.service.request.data.ErrorValue;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 public class ServiceError {
 	private final ServiceErrorType type;
@@ -43,6 +46,13 @@ public class ServiceError {
 
 	public ErrorValue getError() {
 		return error;
+	}
+
+	public JavaScriptObject asJs() {
+		return new JsObjBuilder().string("type", type.name())
+				.number("code", error.getCode())
+				.string("error", error.getError())
+				.string("details", error.getDetails()).create();
 	}
 
 	public String toString() {

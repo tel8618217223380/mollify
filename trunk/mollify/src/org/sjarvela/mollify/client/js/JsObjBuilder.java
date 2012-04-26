@@ -38,24 +38,35 @@ public class JsObjBuilder {
 		putB(obj, name, v);
 		return this;
 	}
-	
+
+	public JsObjBuilder number(String name, int n) {
+		putI(obj, name, n);
+		return this;
+	}
+
 	private native final void putO(JavaScriptObject obj, String name,
 			JavaScriptObject value) /*-{
 		obj[name] = value;
 	}-*/;
-	
+
 	private native final void putB(JavaScriptObject obj, String name,
 			boolean value) /*-{
 		obj[name] = value;
 	}-*/;
-	
+
+	private native final void putI(JavaScriptObject obj, String name, int value) /*-{
+		obj[name] = value;
+	}-*/;
+
 	public void add(JavaScriptObject o) {
-		if (o == null) return;
+		if (o == null)
+			return;
 		addO(obj, o);
 	}
 
 	private native void addO(JavaScriptObject obj, JavaScriptObject o) /*-{
-		for (var k in o) obj[k] = o[k];
+		for ( var k in o)
+			obj[k] = o[k];
 	}-*/;
 
 }
