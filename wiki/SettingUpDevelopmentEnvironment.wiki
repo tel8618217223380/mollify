@@ -10,7 +10,7 @@ This page describes how to set up Mollify development environment
 	Mollify development environment requires following components:
   	* JDK 1.6
   	* Eclipse IDE for Java EE 3.5 (http://www.eclipse.org/downloads/)
-  	* Google Web Toolkit 2.0.4 and Google Eclipse Plugin 3.5 (http://code.google.com/appengine/docs/java/tools/eclipse.html)
+  	* Google Web Toolkit and Google Eclipse Plugin (https://developers.google.com/eclipse/docs/download)
   	* PHP enabled web server, such as WAMP/MAMP/LAMP
 
 = 2. Component Installation =
@@ -21,7 +21,7 @@ This page describes how to set up Mollify development environment
 		
 === 2. Google Eclipse Plugin ===
 	
-		Follow installation instructions here: http://code.google.com/appengine/docs/java/tools/eclipse.html
+		Follow installation instructions here: https://developers.google.com/eclipse/docs/download
 		
 		Install components "Google Plugin for Eclipse" and "Google Web Toolkit SDK"
 	
@@ -94,8 +94,8 @@ This page describes how to set up Mollify development environment
 
 === Step 1: Setup Web Server ===
   	# Under your web server root, create a Mollify folder "mollify/dev"
-  	# From examples, copy host page into Mollify folder
-  	# Under Mollify folder, create folders "client" and "backend"
+  	# Setup Mollify into "mollify/dev" according to installation instructions
+  	# Before continuing, make sure the installation operates as it should
 
 === Step 2: Create Run Configuration ==
 	# Open run Configuration management by selecting Run -> Run Configurations...
@@ -107,24 +107,17 @@ This page describes how to set up Mollify development environment
 	# In the tab "GWT", add/remove modules so there are only "`DevelopmentClient`" and "`Client`"
 	# Apply changes, and run it once. Mollify will not start yet, but this forces Eclipse to build needed files under "war/org.sjarvela.mollify.App"
 
-=== Step 2: Setup Client in Web Server ===
-	From the Eclipse build folder ("war/org.sjarvela.mollify.App"), copy everything into web server client folder.
+=== Step 3: Setup Version Control ===
+	If you have version controlled working copy somewhere else, you should replace following folders into symbolic link pointing into your working copy:
+	- backend
+	- client/include
+	- client/localization
+	- client/themes
 
-=== Step 4: Setup Backend in Web Server ===
-	Either copy all backend files from svn copy into web server backend folder, or create a symbolic link replacing the created backend folder.
-
-	Latter should be used if backend is being developed, this way all the changes made reflect directly to the svn copy, and when new changes are updated from svn, there is no need to update manually.
-
-	Also, create a configuration.php just like in a regular installation.
-
-=== Step 5: Run the Application ===
+=== Step 4: Run the Application ===
 	To run Mollify, start up the run configuration created in step 2. This will open the development mode tool, copy the url it provides into your browser.
 
 	When run for the first time, browser needs to install the GWT plugin, just follow the instructions.
-
-== 3.4 Theme Development ==
-
-For developing themes, folders "include" and "themes" in web server client folder should be replaced with a symbolic link from the svn copy.
 
 = 4 Build script =
 
