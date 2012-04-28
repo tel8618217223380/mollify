@@ -109,9 +109,13 @@ This page describes how to set up Mollify development environment
 
 === Step 3: Setup Version Control ===
 	If you have version controlled working copy somewhere else, you should replace following folders into symbolic link pointing into your working copy:
+
 	- backend
+
 	- client/include
+
 	- client/localization
+
 	- client/themes
 
 === Step 4: Run the Application ===
@@ -124,14 +128,14 @@ This page describes how to set up Mollify development environment
 	Source root contains Ant build script (build.xml), which needs configuration specific properties file.
 
 	Example properties file is located under folder "examples" in source root. Copy this to the root folder of your svn copy (right next to build.xml), and edit the variables:
-	* *`gwt.sdk.location`* This is the absolute path to the GWT SDK. If you installed it via Eclipse, it is found under Eclipse plugins. For example `/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle.2.0.4_2.0.4.v201006301254/gwt-2.0.4`
+	* *`gwt.sdk.location`* This is the absolute path to the GWT SDK. If you installed it via Eclipse, it is found under Eclipse plugins. For example `/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle.n.n.n_n/gwt-n.n.n`
 	* *`root.dir`* This is the source root dir, where build.xml is located
 	* *`deploy.dir`* This is the deploy dir, where the deployment package is created
 	* *`mollify.version`* This is the version used for deployment package
 
 == 4.1. Targets ==
 	
-=== build ===
+=== compile ===
 
 	Simply compiles the sources into the build folder under the root.
 
@@ -139,4 +143,14 @@ This page describes how to set up Mollify development environment
 
 	Compiles sources and creates deploy packages, both installation and source packages.
 	
-	
+=== do-deploy ===
+
+	Creates deploy packages, both installation and source packages, using previously compiled client. Faster when only backend has been changed.
+
+=== deploy-plugins ===
+
+	Packages plugins that are not included in installation package.
+
+=== deploy-dav ===
+
+	Packages WebDAV plugin.
