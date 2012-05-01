@@ -88,6 +88,7 @@ public class SearchResultDialog extends ResizableDialog implements
 
 			@Override
 			public void onIconClicked(FileSystemItem item, Element e) {
+				itemContextHandler.onItemSelected(item, e);
 			}
 
 			@Override
