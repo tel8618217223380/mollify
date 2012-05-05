@@ -9,6 +9,7 @@ $SETTINGS = array(
 	"host_public_address" => NULL,					// host public address
 	"email_login" => FALSE,						// allow email login
 	"session_name" => NULL,						// Mollify session name
+	"session_time" => 7200,						// Mollify session time
 	"enable_limited_http_methods" => FALSE,				// limited HTTP methods
 	"support_output_buffer" => FALSE,				// support for output buffer
 	"mime_types" => array(),					// MIME types
