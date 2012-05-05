@@ -5,6 +5,7 @@ Following settings are available in backend (and their default values):
 {{{
 $SETTINGS = array(
 	"debug" => FALSE,						// debug mode
+	"debug_log" => NULL
 	"timezone" => NULL,						// server timezone
 	"host_public_address" => NULL,					// host public address
 	"email_login" => FALSE,						// allow email login
