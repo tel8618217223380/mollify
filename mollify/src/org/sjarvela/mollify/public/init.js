@@ -179,9 +179,7 @@
 			loadContent : function(id, url, cb, process) {
 				var $target = $("#"+id);
 				$target.load(t.urlWithParam(url, "_="+mollify.time), function() {
-					if (process) $.each(process, function(i, k) {
-						if (t.ui.handlers[k]) t.ui.handlers[k]($target);
-					});
+					if (process) t.ui.process($target, process);
 					if (cb) cb();
 				});
 			},
@@ -199,6 +197,12 @@
 					if (t.settings["list-view-columns"][c.id])
 						t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
 				} 
+			},
+			
+			process: function($e, ids) {
+				$.each(ids, function(i, k) {
+					if (t.ui.handlers[k]) t.ui.handlers[k]($e);
+				});
 			},
 			
 			handlers : {
@@ -306,13 +310,13 @@
 				
 				popupmenu : function(items, p) {
 					var $e = $(p.control);
-					var html = mollify.dom.template("mollify-tmpl-popupmenu", {items:items}, {
+					var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:items}, {
 						getTitle : function(i) {
 							if (i.title) return i.title;
 							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
 							return "";
 						}
-					}).html();
+					})).html();
 					$e.qtip({
 						content: html,
 						position: {

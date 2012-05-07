@@ -29,8 +29,18 @@
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
 	<div id="mollify-folderview">
 		<div id="mollify-folderview-header">
-			<div id="mollify-folder-name">${name}</div>
+			<div id="mollify-folder-name" class="mollify-folderview-title">${name}</div>
 			<div id="mollify-folder-hierarchy"></div>
+		</div>
+		<div id="mollify-folderview-items">
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-main-rootfolders" type="text/x-jquery-tmpl">
+	<div id="mollify-folderview" class="roots">
+		<div id="mollify-folderview-header">
+			<span class="mollify-folderview-title localized" text-key="mainViewRootsTitle"></span>
 		</div>
 		<div id="mollify-folderview-items">
 		</div>

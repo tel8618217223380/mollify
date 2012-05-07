@@ -35,6 +35,7 @@ function MollifyUploadsView() {
 				{name:'ip',index:'ip',width:150, sortable:true, formatter:notNullFormatter},
 				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'item',
 		   	sortorder:'asc',
 			onSelectRow: function(id){

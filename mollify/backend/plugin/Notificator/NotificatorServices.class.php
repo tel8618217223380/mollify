@@ -44,6 +44,14 @@
 			$this->response()->success($dao->addNotification($notification));
 		}
 
+		public function processDelete() {
+			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			
+			$id = $this->path[1];
+			$dao = $this->getDao();
+			$this->response()->success($dao->removeNotification($id));
+		}
+		
 		public function processPut() {
 			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
 			

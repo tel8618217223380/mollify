@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli J�rvel�
+ * Copyright (c) 2008- Samuli Järvelä
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,6 +31,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		   		{name:'name',index:'name', width:200, sortable:true},
 				{name:'path',index:'path',width:150, sortable:true},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -53,6 +54,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		   		{name:'name',index:'name', width:200, sortable:true},
 		   		{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -70,6 +72,7 @@ function MollifyPublishedFoldersConfigurationView() {
 		   		{name:'name',index:'name', width:200, sortable:true},
 		   		{name:'is_group',index:'is_group', width:50, sortable:true, formatter:that.groupFormatter}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc'
 		});
