@@ -10,6 +10,8 @@
 
 (function(){
 window.mollify = new function() {
+	this.time = new Date().getTime();
+	
 	this.admin = new function() {
 		var t = this;
 		
@@ -167,7 +169,7 @@ function loadPlugin(list, i) {
 	};
 	loadScript("../plugin/"+id+"/admin/init.js", cb);
 }
-		
+
 function onSelectMenu(id) {
 	if (!controllers[id]) {
 		onError("Configuration view not defined: "+id);
@@ -182,7 +184,7 @@ function loadScript(script, cb) {
 		if (cb) cb();
 		return;
 	}
-	$.getScript(script, function() {
+	$.getScript(script+"?_="+mollify.time, function() {
 		loadedScripts.push(script);
 		if (cb) cb();
 	});

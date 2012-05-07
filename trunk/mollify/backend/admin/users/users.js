@@ -67,6 +67,7 @@ function MollifyUsersConfigurationView() {
 		   	colModel: cols,
 		   	sortname:'id',
 		   	sortorder:'asc',
+		   	rowNum:9999,
 			onSelectRow: function(id){
 				that.onUserSelectionChanged();
 			}
@@ -83,6 +84,7 @@ function MollifyUsersConfigurationView() {
 		   		{name:'name',index:'name', width:200, sortable:true},
 		   		{name:'description',index:'description', width:300, sortable:true},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -102,6 +104,7 @@ function MollifyUsersConfigurationView() {
 		   		{name:'default_name',index:'name', width:150, sortable:true, formatter:that.defaultFolderNameFormatter},
 				{name:'path',index:'path',width:200, sortable:true},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'asc',
 			onSelectRow: function(id){

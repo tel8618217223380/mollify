@@ -72,10 +72,10 @@
 			return NULL;
 		}
 		
-		public function getExif($item) {				
+		public function getExif($item) {
 			$exif = exif_read_data($item->internalPath(), 0, true);
 			if (!$exif) return NULL;
-			return $exif;
+			return Util::convertArrayCharset($exif);
 		}
 				
 		public function __toString() {

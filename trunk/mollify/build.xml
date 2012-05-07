@@ -215,6 +215,7 @@
 				<exclude name="plugin/FileViewerEditor/viewers/JPlayer/" />
 				<exclude name="plugin/FileViewerEditor/viewers/TextFile/" />
 				<exclude name="plugin/FileViewerEditor/viewers/Zoho/" />
+				<exclude name="plugin/FileViewerEditor/viewers/FlexPaper/" />
 				<exclude name="plugin/FileViewerEditor/editors/CKEditor/" />
 				<exclude name="dav/" />
 				<exclude name="plugin/S3/" />

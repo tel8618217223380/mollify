@@ -28,6 +28,7 @@ function NotificatorListView() {
 			   	{name:'id',index:'id', width:60, sortable:true, sorttype:"int"},
 			   	{name:'name',index:'name',width:150, sortable:true}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'id',
 		   	sortorder:'desc',
 			onSelectRow: function(id){
@@ -313,6 +314,7 @@ function NotificatorListView() {
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],
+			   	rowNum:9999,
 			   	sortname:'name',
 			   	sortorder:'desc'
 			});
@@ -325,6 +327,7 @@ function NotificatorListView() {
 			   	colModel:[
 				   	{name:'name',index:'name',width:250, sortable:true},
 			   	],
+			   	rowNum:9999,
 			   	sortname:'name',
 			   	sortorder:'desc'
 			});
@@ -511,7 +514,7 @@ function NotificatorListView() {
 	this.onRemoveNotification = function() {
 		var id = that.getSelectedNotification();
 		if (id == null) return;
-		removeNotification(id, that.refresh, onServerError);
+		removeNotification(id, that.onRefresh, onServerError);
 	}
 }
 
@@ -534,5 +537,5 @@ function editNotification(id, prop, success, fail) {
 }
 
 function removeNotification(id, success, fail) {
-	request("DELETE", 'notificator/list/'+id, success, fail, data);
+	request("DELETE", 'notificator/list/'+id, success, fail, {});
 }

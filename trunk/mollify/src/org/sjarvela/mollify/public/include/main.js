@@ -38,7 +38,7 @@ function MainView() {
 	}
 	
 	this.showAllRoots = function() {
-		that.folder({ hierarchy: [], canWrite: false });
+		that.folder();
 		that.data({ items: that.roots });
 	}
 
@@ -59,11 +59,18 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
-		mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($("#mainview-content").empty());
-		that.setupHierarchy(p.hierarchy);
-		
-		//TODO canWrite
-		$("#mollify-folderview-items").addClass("loading");
+		var $t = $("#mainview-content").empty();
+		if (p) {
+			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($t);
+			that.setupHierarchy(p.hierarchy);
+			
+			//TODO canWrite
+			$("#mollify-folderview-items").addClass("loading");
+		} else {
+			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($t);
+			//TODO disable write
+		}
+		mollify.ui.process($t, ['localize']);
 	}
 	
 	this.setupHierarchy = function(h) {
@@ -97,6 +104,7 @@ function MainView() {
 
 function FileList(container, id, columns) {
 	var t = this;
+	t.minColWidth = 75;
 	t.$c = $("#"+container);
 	t.listId = 'mollify-filelist-'+id;
 	t.cols = [];
@@ -116,8 +124,32 @@ function FileList(container, id, columns) {
 		mollify.dom.template("mollify-tmpl-filelist-headercol", t.cols, {
 			title: function(c) {
 				return mollify.ui.texts.get(c['title-key']);
-			}
+			} 
 		}).appendTo(t.$h);
+		
+		t.$h.find(".mollify-filelist-col-header").each(function(i) {
+			if (i == (t.cols.length-1)) return;
+			var $t = $(this);
+			var ind = $t.index(); 
+			$t.resizable({
+				handles: "e",
+				minWidth: t.minColWidth,
+				//autoHide: true,
+				start: function(e, ui) {
+					var max = t.$c.width() - (t.cols.length * t.minColWidth);
+					$t.resizable("option", "maxWidth", max);
+				},
+				stop: function(e, ui) {
+					var w = $t.width();
+					$(".mollify-filelist-col-"+t.cols[ind].id).width(w);
+				}
+			});/*.draggable({
+				axis: "x",
+				helper: "clone",
+				revert: "invalid",
+				distance: 30
+			});*/
+		});
 		
 		t.items(items);
 	}

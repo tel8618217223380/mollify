@@ -38,7 +38,7 @@ html, body {
 	width: 100%;
 }
 
-#mollify, .bubble-content, .ui-widget, a.button, input {
+#mollify, .bubble-content, .ui-widget, a.button, input, .mollify-popupmenu {
 	font-size: 12px;
 	font-family: 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
@@ -330,7 +330,7 @@ a.login-link {
 	border-bottom: 1px solid #ececec;
 }
 
-#mollify-folder-name {
+#mollify-folder-name, .mollify-folderview-title {
 	font-weight: bold;
 	font-size: 21px;
 	margin-bottom: 4px;
@@ -371,6 +371,10 @@ a.login-link {
 
 mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
 	float: left;
+}
+
+.mollify-filelist-col-header.ui-resizable-resizing {
+	background: #eeeeee;
 }
 
 .mollify-filelist-col {

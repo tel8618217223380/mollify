@@ -38,6 +38,7 @@ function MollifyDownloadsView() {
 		   	colModel:[
 				{name:'item',index:'item',width:150, sortable:true}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'item',
 		   	sortorder:'asc',
 			onSelectRow: function(id){
@@ -57,6 +58,7 @@ function MollifyDownloadsView() {
 				{name:'ip',index:'ip',width:300, sortable:true},
 		   		{name:'time',index:'time', width:200, sortable:true, formatter:timeFormatter},
 		   	],
+		   	rowNum:9999,
 		   	sortname:'time',
 		   	sortorder:'asc',
 		});
@@ -76,6 +78,7 @@ function MollifyDownloadsView() {
 			   	colModel:[
 					{name:'name',index:'name',width:300, sortable:true},
 			   	],
+			   	rowNum:9999,
 			   	sortname:'user',
 			   	sortorder:'asc',
 			});

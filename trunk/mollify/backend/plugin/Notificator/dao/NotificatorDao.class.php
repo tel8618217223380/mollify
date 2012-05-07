@@ -149,6 +149,19 @@
 			
 			return TRUE;
 		}
+		
+		public function removeNotification($id) {
+			$db = $this->env->configuration()->db();
+			
+			$db->startTransaction();
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s'", $db->string($id)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s'", $db->string($id)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_user")." WHERE notification_id = '%s'", $db->string($id)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification")." where id=%s", $db->string($id)));
+			$db->commit();
+			
+			return TRUE;
+		}
 						
 		public function __toString() {
 			return "NotificatorDao";

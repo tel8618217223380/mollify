@@ -48,6 +48,7 @@ function MollifyEventsView() {
 				{name:'type',index:'type',width:150, sortable:true, formatter:typeFormatter},
 				{name:'item',index:'item',width:250, sortable:true, formatter:notNullFormatter}
 		   	],
+		   	rowNum:9999,
 		   	sortname:'time',
 		   	sortorder:'desc',
 			onSelectRow: function(id){

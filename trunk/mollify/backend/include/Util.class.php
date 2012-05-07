@@ -59,6 +59,15 @@
 			return $r."}";
 		}
 		
+		static function convertArrayCharset($a) {
+			$result = array();
+			foreach($a as $k=>$v) {
+				if (is_array($v)) $result[$k] = self::convertArrayCharset($v);
+				else $result[$k] = self::convertCharset($v);
+			}
+			return $result;
+		}
+		
 		static function convertCharset($v, $charset = NULL, $encode = TRUE) {
 			if (!$charset or $charset === NULL) {
 				if ($encode)
