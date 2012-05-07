@@ -51,6 +51,14 @@
 		public function removeAllSessionBefore($time) {}
 	}
 	
+	class Mollify_DAV_Request {
+		public function ip() { return $_SERVER['REMOTE_ADDR']; }
+		
+		public function getSessionId() { return NULL; }
+		
+		public function log() {}
+	}
+	
 	function checkUploadSize() {
 		global $MAX_FILE_SIZE;
 		if (!isset($_SERVER['CONTENT_LENGTH']) or !isset($MAX_FILE_SIZE)) return;
@@ -188,7 +196,7 @@
 		$factory = new ConfigurationFactory();
 		$conf = $factory->createConfiguration($CONFIGURATION_TYPE, $settings);
 		$env = new ServiceEnvironment(new TemporarySession(), new VoidResponseHandler(), $conf, $settings);
-		$env->initialize(new Request(FALSE, TRUE));
+		$env->initialize(new Mollify_DAV_Request());
 		
 		if (isset($BASIC_AUTH) and !$BASIC_AUTH) {
 			$auth = new Sabre_HTTP_BasicAuth();
