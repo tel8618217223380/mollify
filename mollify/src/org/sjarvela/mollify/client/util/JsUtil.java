@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.sjarvela.mollify.client.Callback;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
@@ -93,4 +95,9 @@ public class JsUtil {
 		return array;
 	}
 
+	public static native JavaScriptObject createJsCallback(Callback callback) /*-{
+		return function() {
+			callback.@org.sjarvela.mollify.client.Callback::onCallback()();
+		}
+	}-*/;
 }

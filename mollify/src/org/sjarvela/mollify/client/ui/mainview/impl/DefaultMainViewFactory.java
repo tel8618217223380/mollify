@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
 import com.google.inject.Inject;
@@ -36,7 +37,7 @@ public class DefaultMainViewFactory implements MainViewFactory {
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 	private final ViewManager viewManager;
-	// private final DialogManager dialogManager;
+	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
 	private final FileSystemItemProvider fileSystemItemProvider;
 	// private final PermissionEditorViewFactory permissionEditorViewFactory;
@@ -54,8 +55,8 @@ public class DefaultMainViewFactory implements MainViewFactory {
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
 			TextProvider textProvider, ViewManager viewManager,
-			// DialogManager dialogManager,
-			ServiceProvider serviceProvider, SessionManager sessionManager,
+			DialogManager dialogManager, ServiceProvider serviceProvider,
+			SessionManager sessionManager,
 			// ClientSettings settings,
 			FileSystemItemProvider fileSystemItemProvider,
 			// PermissionEditorViewFactory permissionEditorViewFactory,
@@ -70,7 +71,7 @@ public class DefaultMainViewFactory implements MainViewFactory {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
-		// this.dialogManager = dialogManager;
+		this.dialogManager = dialogManager;
 		this.serviceProvider = serviceProvider;
 		this.sessionManager = sessionManager;
 		// this.settings = settings;
@@ -101,9 +102,9 @@ public class DefaultMainViewFactory implements MainViewFactory {
 
 		NativeMainView view = new NativeMainView(
 				viewManager.getViewHandler("mainview"));
-		new MainViewPresenter(viewManager, sessionManager, model, view,
-				serviceProvider.getConfigurationService(), fileSystemService,
-				textProvider, fileSystemActionHandler,
+		new MainViewPresenter(viewManager, dialogManager, sessionManager,
+				model, view, serviceProvider.getConfigurationService(),
+				fileSystemService, textProvider, fileSystemActionHandler,
 				serviceProvider.getSessionService(), eventDispatcher,
 				pluginEnvironment);
 		// TODO MainViewGlue glue = new MainViewGlue(view, presenter,

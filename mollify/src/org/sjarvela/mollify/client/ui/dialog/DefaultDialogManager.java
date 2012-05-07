@@ -47,7 +47,7 @@ public class DefaultDialogManager implements DialogManager {
 	@Override
 	public void showInfo(String title, String text) {
 		JsObjBuilder spec = new JsObjBuilder().string("title", title).string(
-				"text", text);
+				"message", text);
 		this.handler.call("info", spec.create());
 	}
 
@@ -69,7 +69,7 @@ public class DefaultDialogManager implements DialogManager {
 
 	private native final JavaScriptObject createNativeListener(
 			ConfirmationListener listener) /*-{
-		var cb = function() {
+		return function() {
 			listener
 					.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm();
 		};

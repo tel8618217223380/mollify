@@ -93,12 +93,13 @@ function MainView() {
 		that.itemWidget.init(p.items, {
 			onFolderSelected : that.listener.onSubFolderSelected,
 			onMenuOpen : function(item, e) {
-				mollify.ui.controls.popupmenu([
-					{title: 'foo', callback: function(item) { window.alert('foo'); }},
-					{title: 'bar', callback: function(item) { window.alert('bar'); }}
-				], { control: e });
+				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
 			}
 		});
+	}
+	
+	this.showActionMenu = function(item, actions, c) {
+		mollify.ui.controls.popupmenu(actions, { control: c });
 	}
 }
 

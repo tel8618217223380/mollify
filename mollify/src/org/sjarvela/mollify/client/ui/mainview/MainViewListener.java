@@ -1,6 +1,9 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
+import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 public interface MainViewListener {
 	void onViewLoaded();
@@ -8,4 +11,6 @@ public interface MainViewListener {
 	void onSubFolderSelected(JsFolder f);
 
 	void onFolderSelected(int level, JsFolder f);
+
+	void getItemActions(JsFilesystemItem item, JavaScriptObject callback);
 }
