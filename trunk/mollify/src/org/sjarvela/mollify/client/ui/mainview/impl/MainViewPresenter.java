@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +19,16 @@ import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
+import org.sjarvela.mollify.client.js.JsObj;
+import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -34,10 +39,15 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
+import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
+import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
+import org.sjarvela.mollify.client.util.JsUtil;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -48,7 +58,7 @@ public class MainViewPresenter implements MainViewListener {
 
 	private final MainViewModel model;
 	private final MainView view;
-	// private final DialogManager dialogManager;
+	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
 	private final SessionService sessionService;
 
@@ -70,7 +80,8 @@ public class MainViewPresenter implements MainViewListener {
 	private final ClientInterface pluginEnvironment;
 
 	public MainViewPresenter(ViewManager viewManager,
-			SessionManager sessionManager, MainViewModel model, MainView view,
+			DialogManager dialogManager, SessionManager sessionManager,
+			MainViewModel model, MainView view,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
 			FileSystemActionHandler fileSystemActionHandler,
@@ -81,7 +92,7 @@ public class MainViewPresenter implements MainViewListener {
 			SessionService sessionService, EventDispatcher eventDispatcher,
 			// SearchResultDialogFactory searchResultDialogFactory,
 			ClientInterface pluginEnvironment) {
-		// this.dialogManager = dialogManager;
+		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
@@ -172,6 +183,81 @@ public class MainViewPresenter implements MainViewListener {
 		// });
 		// }
 		// }
+	}
+
+	@Override
+	public void getItemActions(final JsFilesystemItem item,
+			final JavaScriptObject callback) {
+		fileSystemService.getItemDetails(item, null,
+				new ResultListener<ItemDetails>() {
+					public void onFail(ServiceError error) {
+						// if (error.getDetails() != null
+						// && (error.getDetails().startsWith("PHP error #2048")
+						// || error
+						// .getDetails()
+						// .contains(
+						// "It is not safe to rely on the system's timezone settings")))
+						// {
+						// dialogManager
+						// .showInfo("ERROR",
+						// "Mollify configuration error, PHP timezone information missing.");
+						// return;
+						// }
+						// dialogManager.showError(error);
+					}
+
+					public void onSuccess(ItemDetails details) {
+						boolean writable = details.getFilePermission()
+								.canWrite();
+						List<JsObj> itemActions = getItemActions(item, writable);
+						call(callback,
+								JsUtil.asJsArray(itemActions, JsObj.class));
+					}
+				});
+
+	}
+
+	protected native void call(JavaScriptObject callback, JsArray itemActions) /*-{
+		callback(itemActions);
+	}-*/;
+
+	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable) {
+		List<JsObj> actions = new ArrayList();
+
+		if (item.isFile() || !((JsFolder) item.cast()).isRoot())
+			actions.add(createAction(item, Action.addToDropbox,
+					Texts.mainViewSelectActionAddToDropbox.name()));
+		// actions.addSeparator();
+		// if (writable)
+		// actions.add(FileSystemAction.rename,
+		// textProvider.getText(Texts.fileActionRenameTitle));
+		// actions.add(FileSystemAction.copy,
+		// textProvider.getText(Texts.fileActionCopyTitle));
+		// if (item.isFile())
+		// actions.add(FileSystemAction.copyHere,
+		// textProvider.getText(Texts.fileActionCopyHereTitle));
+		// if (writable)
+		// actions.add(FileSystemAction.move,
+		// textProvider.getText(Texts.fileActionMoveTitle));
+		// if (writable)
+		// actions.add(FileSystemAction.delete,
+		// textProvider.getText(Texts.fileActionDeleteTitle));
+
+		return actions;
+	}
+
+	private JsObj createAction(final JsFilesystemItem item,
+			final Action action, String titleKey) {
+		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
+			@Override
+			public void onCallback() {
+				dialogManager.showInfo("foo",
+						item.getName() + " " + action.name());
+				// fileSystemActionHandler.onAction(item, action, null);
+			}
+		});
+		return new JsObjBuilder().string("title", titleKey).obj("callback", cb)
+				.create();
 	}
 
 	public void changeToRootFolder(final JsFolder root) {

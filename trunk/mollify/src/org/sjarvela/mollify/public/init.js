@@ -337,9 +337,12 @@
 							render: function(e, api) {
 								$(".mollify-popupmenu-item").click(function() {
 									var item = items[$(this).index()];
-									api.destroy();
+									api.hide();
 									item.callback();
 								});
+							},
+							hide: function(e, api) {
+								api.destroy();
 							}
 						}
 					}).qtip('api').show();
@@ -449,7 +452,7 @@ function DialogHandler() {
 			minHeight: 50
 		});
 		mollify.ui.handlers.localize(dlg);
-		$("#mollify-info-dialog-close-button").click(function() { dlg.dialog('close'); });
+		dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });
 	}
 	
 	this.error = function(spec) {
