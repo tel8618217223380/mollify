@@ -31,6 +31,8 @@ public interface MainView {
 	};
 
 	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
+	
+	JavaScriptObject getDataRequest(JsFolder folder);
 
 	void showAllRoots();
 

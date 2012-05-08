@@ -10,6 +10,10 @@ function MainView() {
 			that.rootsById[p.roots[i].id] = p.roots[i];
 	}
 	
+	this.getDataRequest = function(folder) {
+		return that.itemWidget.getDataRequest(folder);
+	}
+	
 	this.render = function(id) {
 		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that.onLoad, ['localize']);
 	}
@@ -90,7 +94,7 @@ function MainView() {
 		
 		//TODO list/grid
 		that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
-		that.itemWidget.init(p.items, {
+		that.itemWidget.init(p.items, p.data, {
 			onFolderSelected : that.listener.onSubFolderSelected,
 			onMenuOpen : function(item, e) {
 				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
@@ -116,7 +120,7 @@ function FileList(container, id, columns) {
 		t.cols.push(col);
 	}
 	
-	this.init = function(items, p) {
+	this.init = function(items, data, p) {
 		t.p = p;
 		mollify.dom.template("mollify-tmpl-filelist", {listId: t.listId}).appendTo(t.$c.empty());
 		t.$l = $("#"+t.listId);
@@ -130,48 +134,66 @@ function FileList(container, id, columns) {
 		}).appendTo(t.$h);
 		
 		t.$h.find(".mollify-filelist-col-header").each(function(i) {
-			if (i == (t.cols.length-1)) return;
 			var $t = $(this);
+			var ind = $t.index();
+			var col = t.cols[ind];
+			
 			$t.css("min-width", t.minColWidth);
-			var ind = $t.index(); 
-			$t.resizable({
-				handles: "e",
-				minWidth: t.minColWidth,
-				//autoHide: true,
-				start: function(e, ui) {
-					var max = t.$c.width() - (t.cols.length * t.minColWidth);
-					$t.resizable("option", "maxWidth", max);
-				},
-				stop: function(e, ui) {
-					var w = $t.width();
-					$(".mollify-filelist-col-"+t.cols[ind].id).width(w);
-				}
-			});/*.draggable({
-				axis: "x",
-				helper: "clone",
-				revert: "invalid",
-				distance: 30
-			});*/
+			if (col.width) $t.css("width", col.width);
+						
+			if (i != (t.cols.length-1)) {
+				$t.resizable({
+					handles: "e",
+					minWidth: t.minColWidth,
+					//autoHide: true,
+					start: function(e, ui) {
+						var max = t.$c.width() - (t.cols.length * t.minColWidth);
+						$t.resizable("option", "maxWidth", max);
+					},
+					stop: function(e, ui) {
+						var w = $t.width();
+						$(".mollify-filelist-col-"+col.id).width(w);
+					}
+				});/*.draggable({
+					axis: "x",
+					helper: "clone",
+					revert: "invalid",
+					distance: 30
+				});*/
+			}
 		});
 		
-		t.items(items);
+		t.items(items, data);
 	}
 	
-	this.items = function(items) {
+	this.getDataRequest = function(item) {
+		var rq = {};
+		for (var i=0, j=t.cols.length; i<j; i++) {
+			var c = t.cols[i];
+			if (c['request-id']) rq[c['request-id']] = {};
+		}
+		return rq;
+	}
+	
+	this.items = function(items, data) {
 		t.items = items;
+		t.data = data;
 		
 		mollify.dom.template("mollify-tmpl-filelist-item", items, {
+			cols: t.cols,
 			typeClass : function(item) {
 				var c = item.is_file ? 'item-file' : 'item-folder';
 				if (item.is_file && item.extension) c += ' item-type-'+item.extension;
 				else if (!item.is_file && item.id == item.root_id) c += ' item-root-folder';
 				return c;
 			},
-			cols : function(item) {
-				var html = '';
-				for (var i=0, j=t.cols.length; i<j; i++)
-					html += t.columnContent(item, t.cols[i]);
-				return html;
+			col: function(item, col) {
+				return col.content(item, t.data);
+			},
+			itemColStyle: function(item, col) {
+				var style="min-width:"+t.minColWidth+"px";
+				if (col.width) style = style+";width:"+col.width+"px";
+				return style;
 			}
 		}).appendTo(t.$i.empty());
 		
@@ -189,23 +211,12 @@ function FileList(container, id, columns) {
 		
 		t.$i.find(".item-folder .mollify-filelist-item-name-title").click(function(e) {
 			e.preventDefault();
+			var i = $(this).tmplItem();
 			t.p.onFolderSelected($(this).tmplItem().data);
 		});
-
 	}
 	
 	this.removeHover = function() {
 		t.$i.find(".mollify-filelist-item.hover").removeClass('hover');
 	}
-	
-	this.columnContent = function(item, col) {
-		var content = col.content(item);
-		return '<div class="mollify-filelist-col mollify-filelist-col-'+col.id+'">' + content + '</div>';
-	}
-	
-	/*this.item = function(id) {
-		for (var i=0, j=t.items.length; i<j; i++)
-			if (t.items[i].id == id) return t.items[i];
-		return false;
-	}*/
 }

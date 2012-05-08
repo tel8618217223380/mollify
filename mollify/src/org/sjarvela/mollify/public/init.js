@@ -4,9 +4,9 @@
 			"template-url": "client/templates/",
 			"service-path": "backend/",
 			"list-view-columns": {
-				"name": {},
+				"name": { },
 				"size": {},
-				"file-modified": {}
+				"file-modified": { width: 150 }
 			}
 		};
 		var t = this;
