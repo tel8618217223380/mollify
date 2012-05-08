@@ -45,6 +45,11 @@ public class NativeMainView extends NativeView implements MainView {
 	}-*/;
 
 	@Override
+	public JavaScriptObject getDataRequest(JsFolder folder) {
+		return viewHandler.call("getDataRequest", folder);
+	}
+
+	@Override
 	public void showAllRoots() {
 		viewHandler.call("showAllRoots");
 	}

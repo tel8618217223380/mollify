@@ -68,6 +68,8 @@
 <script id="mollify-tmpl-filelist-item" type="text/x-jquery-tmpl">
 	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item ${$item.typeClass($data)}">
 		<div class="mollify-filelist-item-icon"></div>
-		{{html $item.cols($data)}}
+		{{each(c,col) $item.cols}}
+			<div class="mollify-filelist-col mollify-filelist-col-${col.id}" style="${$item.itemColStyle($data, col)}">{{html $item.col($data, col)}}</div>
+		{{/each}}
 	</div>
 </script>

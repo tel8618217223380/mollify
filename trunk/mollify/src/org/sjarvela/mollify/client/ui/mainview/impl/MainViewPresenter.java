@@ -53,7 +53,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 
-public class MainViewPresenter implements MainViewListener {
+public class MainViewPresenter implements MainViewListener,
+		FolderInfoRequestDataProvider {
 	private static Logger logger = Logger.getLogger(MainViewPresenter.class
 			.getName());
 
@@ -131,7 +132,7 @@ public class MainViewPresenter implements MainViewListener {
 		// this.setListOrder(FileList.COLUMN_ID_NAME, SortOrder.asc);
 
 		// TODO view.addSearchListener(this);
-		// model.setRequestDataProvider(this);
+		model.setRequestDataProvider(this);
 
 		view.init(sessionManager.getSession().getRootFolders(), this);
 	}
@@ -151,6 +152,11 @@ public class MainViewPresenter implements MainViewListener {
 		} else {
 			refreshView(true);
 		}
+	}
+
+	@Override
+	public JavaScriptObject getDataRequest(JsFolder folder) {
+		return view.getDataRequest(folder);
 	}
 
 	@Override
@@ -208,9 +214,12 @@ public class MainViewPresenter implements MainViewListener {
 					}
 
 					public void onSuccess(ItemDetails details) {
-						boolean writable = details.getFilePermission()
-								.canWrite();
-						List<JsObj> itemActions = getItemActions(item, writable);
+						boolean root = !item.isFile()
+								&& ((JsFolder) item.cast()).isRoot();
+						boolean writable = !root
+								&& details.getFilePermission().canWrite();
+						List<JsObj> itemActions = getItemActions(item,
+								writable, root);
 						call(callback,
 								JsUtil.asJsArray(itemActions, JsObj.class));
 					}
@@ -222,8 +231,8 @@ public class MainViewPresenter implements MainViewListener {
 		callback(itemActions);
 	}-*/;
 
-	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable) {
-		boolean root = !item.isFile() && ((JsFolder) item.cast()).isRoot();
+	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
+			boolean root) {
 		List<JsObj> actions = new ArrayList();
 
 		if (item.isFile() || !root)
