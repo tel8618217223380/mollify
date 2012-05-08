@@ -177,6 +177,27 @@ a.link {
 	float: right;
 }
 
+.mollify-popupmenu-item {
+	cursor: pointer;
+	padding: 4px;
+}
+
+.mollify-popupmenu-item:hover {
+	background: #eeeeee;
+}
+
+.mollify-popupmenu-separator {
+	width: 100%;
+	border-top: 1px #000000 solid;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	height: 1px;
+}
+
+.mollify-popupmenu-separator:first-child, .mollify-popupmenu-separator:last-child {
+	display: none;
+}
+
 #login-main {
 	width: 100%;
 	position: absolute;
@@ -382,6 +403,8 @@ mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols,
 	height: 22px;
 	line-height: 22px;
 	overflow: hidden;
+	margin-right: 4px;
+	vertical-align: middle;
 }
 
 .mollify-filelist-col-name {
@@ -389,12 +412,20 @@ mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols,
 }
 
 .mollify-filelist-quickmenu {
-	float: right;
+	display: inline-block;
 	width: 16px;
 	height: 16px;
 	background-color: #f4664e;
+	margin-left: 8px;
+	margin-bottom: 3px;
+	vertical-align: middle;
+	visibility: hidden;
 }
 
 .item-folder .mollify-filelist-item-icon {
 	background: url(images/folder.png) no-repeat 2px 2px;
+}
+
+.mollify-filelist-item.hover .mollify-filelist-quickmenu {
+	visibility: visible;
 }

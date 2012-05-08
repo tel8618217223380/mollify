@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -222,42 +223,57 @@ public class MainViewPresenter implements MainViewListener {
 	}-*/;
 
 	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable) {
+		boolean root = !item.isFile() && ((JsFolder) item.cast()).isRoot();
 		List<JsObj> actions = new ArrayList();
 
-		if (item.isFile() || !((JsFolder) item.cast()).isRoot())
+		if (item.isFile() || !root)
 			actions.add(createAction(item, Action.addToDropbox,
 					Texts.mainViewSelectActionAddToDropbox.name()));
-		// actions.addSeparator();
-		// if (writable)
-		// actions.add(FileSystemAction.rename,
-		// textProvider.getText(Texts.fileActionRenameTitle));
-		// actions.add(FileSystemAction.copy,
-		// textProvider.getText(Texts.fileActionCopyTitle));
-		// if (item.isFile())
-		// actions.add(FileSystemAction.copyHere,
-		// textProvider.getText(Texts.fileActionCopyHereTitle));
-		// if (writable)
-		// actions.add(FileSystemAction.move,
-		// textProvider.getText(Texts.fileActionMoveTitle));
-		// if (writable)
-		// actions.add(FileSystemAction.delete,
-		// textProvider.getText(Texts.fileActionDeleteTitle));
+		actions.add(createSeparator());
+		if (writable)
+			actions.add(createAction(item, FileSystemAction.rename,
+					Texts.fileActionRenameTitle.name()));
+		if (!root)
+			actions.add(createAction(item, FileSystemAction.copy,
+					Texts.fileActionCopyTitle.name()));
+		if (item.isFile())
+			actions.add(createAction(item, FileSystemAction.copyHere,
+					Texts.fileActionCopyHereTitle.name()));
+		if (writable)
+			actions.add(createAction(item, FileSystemAction.move,
+					Texts.fileActionMoveTitle.name()));
+		if (writable)
+			actions.add(createAction(item, FileSystemAction.delete,
+					Texts.fileActionDeleteTitle.name()));
 
 		return actions;
 	}
 
+	private JsObj createSeparator() {
+		return new JsObjBuilder().string("title", "-").create();
+	}
+
 	private JsObj createAction(final JsFilesystemItem item,
-			final Action action, String titleKey) {
+			final ResourceId action, String titleKey) {
 		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
 			@Override
 			public void onCallback() {
 				dialogManager.showInfo("foo",
 						item.getName() + " " + action.name());
-				// fileSystemActionHandler.onAction(item, action, null);
+				if (action instanceof FileSystemAction)
+					fileSystemActionHandler.onAction(item,
+							(FileSystemAction) action, null);
+				else
+					onItemAction(item, (Action) action);
 			}
 		});
 		return new JsObjBuilder().string("title", titleKey).obj("callback", cb)
 				.create();
+	}
+
+	protected void onItemAction(JsFilesystemItem item, Action action) {
+		// TODO Auto-generated method stub
+
 	}
 
 	public void changeToRootFolder(final JsFolder root) {

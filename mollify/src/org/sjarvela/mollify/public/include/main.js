@@ -99,7 +99,8 @@ function MainView() {
 	}
 	
 	this.showActionMenu = function(item, actions, c) {
-		mollify.ui.controls.popupmenu(actions, { control: c });
+		if (!actions) return;
+		mollify.ui.controls.popupmenu(actions, { control: c }, function() { that.itemWidget.removeHover(); });
 	}
 }
 
@@ -131,6 +132,7 @@ function FileList(container, id, columns) {
 		t.$h.find(".mollify-filelist-col-header").each(function(i) {
 			if (i == (t.cols.length-1)) return;
 			var $t = $(this);
+			$t.css("min-width", t.minColWidth);
 			var ind = $t.index(); 
 			$t.resizable({
 				handles: "e",
@@ -190,6 +192,10 @@ function FileList(container, id, columns) {
 			t.p.onFolderSelected($(this).tmplItem().data);
 		});
 
+	}
+	
+	this.removeHover = function() {
+		t.$i.find(".mollify-filelist-item.hover").removeClass('hover');
 	}
 	
 	this.columnContent = function(item, col) {
