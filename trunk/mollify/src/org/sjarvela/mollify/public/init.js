@@ -5,7 +5,8 @@
 			"service-path": "backend/",
 			"list-view-columns": {
 				"name": {},
-				"size": {}
+				"size": {},
+				"file-modified": {}
 			}
 		};
 		var t = this;
@@ -38,7 +39,7 @@
 					return ((i1.name > i2.name) ? 1 : -1) * sort;
 				},
 				"content": function(item, data) {
-					return '<span class="mollify-filelist-item-name-title">'+item.name+'</span><span class="mollify-filelist-quickmenu">x</span>';
+					return '<span class="mollify-filelist-item-name-title">'+item.name+'</span><span class="mollify-filelist-quickmenu"></span>';
 				}
 			});
 			t.ui.filelist.addColumn({
@@ -281,6 +282,9 @@
 								visible: function(e, api) {
 									if (!cl || !cl.onShowBubble) return;
 									cl.onShowBubble(actionId, api);
+								},
+								hide: function(e, api) {
+									api.destroy();
 								}
 							}
 						});
@@ -308,9 +312,12 @@
 					}).appendTo($e);
 				},
 				
-				popupmenu : function(items, p) {
+				popupmenu : function(items, p, onHide) {
 					var $e = $(p.control);
 					var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:items}, {
+						isSeparator : function(i) {
+							return i.title == '-';
+						},
 						getTitle : function(i) {
 							if (i.title) return i.title;
 							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
@@ -320,8 +327,9 @@
 					$e.qtip({
 						content: html,
 						position: {
-							my: p.positionMy || 'top right',
-							at: p.positionAt || 'bottom right'
+							my: p.positionMy || 'top left',
+							at: p.positionAt || 'bottom left',
+							container: p.container || $('#mainview-content')
 						},
 						show: 'click',
 						hide: {
@@ -335,13 +343,14 @@
 						},
 						events: {
 							render: function(e, api) {
-								$(".mollify-popupmenu-item").click(function() {
+								$(this).find(".mollify-popupmenu-item").click(function() {
 									var item = items[$(this).index()];
 									api.hide();
 									item.callback();
 								});
 							},
 							hide: function(e, api) {
+								if (onHide) onHide(api);
 								api.destroy();
 							}
 						}

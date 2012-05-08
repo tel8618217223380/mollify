@@ -19,10 +19,12 @@
 
 <script id="mollify-tmpl-popupmenu" type="text/x-jquery-tmpl">
 	<div class="mollify-popupmenu">
-	{{tmpl(items) "#mollify-tmpl-popupmenu-item"}}
+	{{each items}}
+		{{if $item.isSeparator($value)}}
+		<div class="mollify-popupmenu-separator"/>
+		{{else}}
+		<div class="mollify-popupmenu-item">${$item.getTitle($value)}</div>
+		{{/if}}
+	{{/each}}
 	</div>
-</script>
-
-<script id="mollify-tmpl-popupmenu-item" type="text/x-jquery-tmpl"> 
-	<div class="mollify-popupmenu-item">${$item.parent.getTitle($data)}</div>
 </script>
