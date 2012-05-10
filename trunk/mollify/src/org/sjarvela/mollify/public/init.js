@@ -4,7 +4,7 @@
 			"template-url": "client/templates/",
 			"service-path": "backend/",
 			"list-view-columns": {
-				"name": { },
+				"name": { width: 250 },
 				"size": {},
 				"file-modified": { width: 150 }
 			}
@@ -36,7 +36,7 @@
 				"id": "name",
 				"title-key": "fileListColumnTitleName",
 				"sort": function(i1, i2, sort, data) {
-					return ((i1.name > i2.name) ? 1 : -1) * sort;
+					return i1.name.toLowerCase().localeCompare(i2.name.toLowerCase()) * sort;
 				},
 				"content": function(item, data) {
 					return '<span class="mollify-filelist-item-name-title">'+item.name+'</span><span class="mollify-filelist-quickmenu"></span>';
@@ -46,7 +46,7 @@
 				"id": "type",
 				"title-key": "fileListColumnTitleType",
 				"sort": function(i1, i2, sort, data) {
-					return ((i1.name > i2.name) ? 1 : -1) * sort;
+					return i1.extension.toLowerCase().localeCompare(i2.extension.toLowerCase()) * sort;
 				},
 				"content": function(item, data) {
 					return item.extension;
@@ -56,7 +56,9 @@
 				"id": "size",
 				"title-key": "fileListColumnTitleSize",
 				"sort": function(i1, i2, sort, data) {
-					return ((i1.size > i2.size) ? 1 : -1) * sort;
+					var s1 = i1.is_file ? parseInt(i1.size) : 0;
+					var s2 = i2.is_file ? parseInt(i2.size) : 0;
+					return (s1-s2) * sort;
 				},
 				"content": function(item, data) {
 					return item.is_file ? t.env.texts().formatSize(item.size) : '';

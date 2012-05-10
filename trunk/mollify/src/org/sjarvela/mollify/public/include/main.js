@@ -104,7 +104,8 @@ function MainView() {
 	
 	this.showActionMenu = function(item, actions, c) {
 		if (!actions) return;
-		mollify.ui.controls.popupmenu(actions, { control: c }, function() { that.itemWidget.removeHover(); });
+		c.addClass("open");
+		mollify.ui.controls.popupmenu(actions, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
 	}
 }
 
@@ -114,6 +115,9 @@ function FileList(container, id, columns) {
 	t.$c = $("#"+container);
 	t.listId = 'mollify-filelist-'+id;
 	t.cols = [];
+	t.sortCol = false;
+	t.sortOrderAsc = true;
+	
 	for (var colId in columns) {
 		var col = mollify.ui.filelist.columns[colId];
 		if (!col) continue;
@@ -140,7 +144,11 @@ function FileList(container, id, columns) {
 			
 			$t.css("min-width", t.minColWidth);
 			if (col.width) $t.css("width", col.width);
-						
+			
+			$t.find(".mollify-filelist-col-header-title").click(function() {
+				t.onSortClick(col);
+			});
+			
 			if (i != (t.cols.length-1)) {
 				$t.resizable({
 					handles: "e",
@@ -162,8 +170,33 @@ function FileList(container, id, columns) {
 				});*/
 			}
 		});
-		
-		t.items(items, data);
+		t.items = items;
+		t.data = data;
+		t.onSortClick(t.cols[0]);
+	}
+	
+	this.onSortClick = function(col) {
+		if (col.id != t.sortCol.id) {
+			t.sortCol = col;
+			t.sortOrderAsc = true;
+		} else {
+			t.sortOrderAsc = !t.sortOrderAsc;
+		}
+		t.refreshSortIndicator();
+		t.sortItems(col, t.sortOrderAsc);
+	}
+	
+	this.sortItems = function(col, asc) {
+		var s = col.sort;
+		t.items.sort(function(a, b) {
+			return s(a, b, asc ? 1 : -1, t.data);
+		});
+		t.content(t.items, t.data);
+	}
+	
+	this.refreshSortIndicator = function() {
+		t.$h.find(".mollify-filelist-col-header").removeClass("sort-asc").removeClass("sort-desc");
+		$("#mollify-filelist-col-header-"+t.sortCol.id).addClass("sort-" + (t.sortOrderAsc ? "asc" : "desc"));
 	}
 	
 	this.getDataRequest = function(item) {
@@ -175,7 +208,7 @@ function FileList(container, id, columns) {
 		return rq;
 	}
 	
-	this.items = function(items, data) {
+	this.content = function(items, data) {
 		t.items = items;
 		t.data = data;
 		

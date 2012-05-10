@@ -62,7 +62,10 @@
 </script>
 
 <script id="mollify-tmpl-filelist-headercol" type="text/x-jquery-tmpl">
-	<div class="mollify-filelist-col mollify-filelist-col-header mollify-filelist-col-${id}">${$item.title($data)}</div>
+	<div id="mollify-filelist-col-header-${id}" class="mollify-filelist-col mollify-filelist-col-${id} mollify-filelist-col-header">
+		<div class="mollify-filelist-col-header-title">${$item.title($data)}</div>
+		<div class="mollify-filelist-col-sort-indicator"></div>
+	</div>
 </script>
 
 <script id="mollify-tmpl-filelist-item" type="text/x-jquery-tmpl">

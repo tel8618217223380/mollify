@@ -390,8 +390,30 @@ a.login-link {
 	background: url(images/mimetypes/empty.png) no-repeat;
 }
 
-mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
+#mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
 	float: left;
+}
+
+.mollify-filelist-col-header-title {
+	cursor: pointer;
+	float: left;
+}
+
+.mollify-filelist-col-sort-indicator {
+	height: 5px;
+	width: 5px;
+	float: left;
+	visibility: hidden;
+}
+
+.mollify-filelist-col-header.sort-asc .mollify-filelist-col-sort-indicator {
+	visibility: visible;
+	background: red;
+}
+
+.mollify-filelist-col-header.sort-desc .mollify-filelist-col-sort-indicator {
+	visibility: visible;
+	background: yellow;
 }
 
 .mollify-filelist-col-header.ui-resizable-resizing {
@@ -426,6 +448,6 @@ mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols,
 	background: url(images/folder.png) no-repeat 2px 2px;
 }
 
-.mollify-filelist-item.hover .mollify-filelist-quickmenu {
+.mollify-filelist-item.hover .mollify-filelist-quickmenu, .mollify-filelist-quickmenu.open {
 	visibility: visible;
 }
