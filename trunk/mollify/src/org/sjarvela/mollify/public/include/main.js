@@ -75,6 +75,7 @@ function MainView() {
 			//TODO disable write
 		}
 		mollify.ui.process($t, ['localize']);
+		that.initList();
 	}
 	
 	this.setupHierarchy = function(h) {
@@ -87,19 +88,19 @@ function MainView() {
 		});
 	}
 	
-	this.data = function(p) {
-		that.items = p.items;
-		
-		$("#mollify-folderview-items").removeClass("loading");
-		
-		//TODO list/grid
+	this.initList = function() {
 		that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
-		that.itemWidget.init(p.items, p.data, {
+		that.itemWidget.init({
 			onFolderSelected : that.listener.onSubFolderSelected,
 			onMenuOpen : function(item, e) {
 				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
 			}
 		});
+	}
+	
+	this.data = function(p) {
+		$("#mollify-folderview-items").removeClass("loading");
+		that.itemWidget.content(p.items, p.data);
 	}
 	
 	this.showActionMenu = function(item, actions, c) {
@@ -124,7 +125,7 @@ function FileList(container, id, columns) {
 		t.cols.push(col);
 	}
 	
-	this.init = function(items, data, p) {
+	this.init = function(p) {
 		t.p = p;
 		mollify.dom.template("mollify-tmpl-filelist", {listId: t.listId}).appendTo(t.$c.empty());
 		t.$l = $("#"+t.listId);
@@ -170,8 +171,8 @@ function FileList(container, id, columns) {
 				});*/
 			}
 		});
-		t.items = items;
-		t.data = data;
+		t.items = [];
+		t.data = {};
 		t.onSortClick(t.cols[0]);
 	}
 	
@@ -183,15 +184,14 @@ function FileList(container, id, columns) {
 			t.sortOrderAsc = !t.sortOrderAsc;
 		}
 		t.refreshSortIndicator();
-		t.sortItems(col, t.sortOrderAsc);
+		t.content(t.items, t.data);
 	}
 	
-	this.sortItems = function(col, asc) {
-		var s = col.sort;
+	this.sortItems = function() {
+		var s = t.sortCol.sort;
 		t.items.sort(function(a, b) {
-			return s(a, b, asc ? 1 : -1, t.data);
+			return s(a, b, t.sortOrderAsc ? 1 : -1, t.data);
 		});
-		t.content(t.items, t.data);
 	}
 	
 	this.refreshSortIndicator = function() {
@@ -211,6 +211,7 @@ function FileList(container, id, columns) {
 	this.content = function(items, data) {
 		t.items = items;
 		t.data = data;
+		t.sortItems();
 		
 		mollify.dom.template("mollify-tmpl-filelist-item", items, {
 			cols: t.cols,

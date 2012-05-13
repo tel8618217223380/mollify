@@ -401,19 +401,21 @@ a.login-link {
 
 .mollify-filelist-col-sort-indicator {
 	height: 5px;
-	width: 5px;
+	width: 10px;
 	float: left;
 	visibility: hidden;
+	margin-left: 4px;
+	margin-top: 6px;
 }
 
 .mollify-filelist-col-header.sort-asc .mollify-filelist-col-sort-indicator {
 	visibility: visible;
-	background: red;
+	background: url(images/sort-asc.png) no-repeat;
 }
 
 .mollify-filelist-col-header.sort-desc .mollify-filelist-col-sort-indicator {
 	visibility: visible;
-	background: yellow;
+	background: url(images/sort-desc.png) no-repeat;
 }
 
 .mollify-filelist-col-header.ui-resizable-resizing {
@@ -435,11 +437,11 @@ a.login-link {
 
 .mollify-filelist-quickmenu {
 	display: inline-block;
-	width: 16px;
-	height: 16px;
-	background-color: #f4664e;
+	width: 13px;
+	height: 13px;
+	background: url(images/circle_arrow_right.png) no-repeat;
+	margin-bottom: 2px;
 	margin-left: 8px;
-	margin-bottom: 3px;
 	vertical-align: middle;
 	visibility: hidden;
 }
