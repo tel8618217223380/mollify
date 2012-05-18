@@ -73,7 +73,7 @@
 			$this->id = $id;
 			
 			// load user data
-			$this->user = $this->env->configuration()->getUser($this->session["user_id"], time());
+			$this->user = $this->findSessionUser($this->session["user_id"]);
 			if (!$this->user) {
 				// user expired
 				$this->end();
@@ -90,6 +90,10 @@
 			// check if cookie is for same id
 			if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
 				$this->setCookie($time);
+		}
+		
+		protected function findSessionUser($id) {
+			return $this->env->configuration()->getUser($id, time());
 		}
 		
 		protected function getDao() {

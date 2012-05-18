@@ -9,21 +9,15 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-
-	require_once("include/Session.class.php");
 	
 	class InstallerSession extends Session {
-		private $settings;
-		
-		public function __construct($settings) {
-			$this->settings = $settings;
+		public function __construct($useCookie) {
+			parent::__construct($useCookie);
 		}
 		
-		public function initialize($env) {
-			parent::initialize($env);
-			if ($this->env->authentication()->isAdmin())
-				return;
-			//session_destroy();
+		protected function findSessionUser($id) {
+			$db = $this->env->configuration()->db();
+			return $db->query(sprintf("SELECT id, name, password, email, auth FROM ".$db->table("user")." WHERE id='%s'", $db->string($id)))->firstRow();
 		}
 	}
 ?>
