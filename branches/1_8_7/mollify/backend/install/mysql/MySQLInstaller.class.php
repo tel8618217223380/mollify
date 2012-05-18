@@ -39,7 +39,7 @@
 				$host = NULL;
 				$port = NULL;
 			}
-			if (!isset($engine)) $engine = "myisam";
+			if (!isset($engine)) $engine = "innodb";
 			
 			require_once("include/mysql/MySQLIDatabase.class.php");
 			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine);

@@ -73,7 +73,14 @@
 			$this->id = $id;
 			
 			// load user data
-			$this->user = $this->env->configuration()->getUser($this->session["user_id"]);
+			$this->user = $this->env->configuration()->getUser($this->session["user_id"], time());
+			if (!$this->user) {
+				// user expired
+				$this->end();
+				$this->id = NULL;
+				return;
+			}
+			
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->userGroups = $this->env->configuration()->getUsersGroups($this->user["id"]);
 		

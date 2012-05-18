@@ -8,6 +8,7 @@ CREATE TABLE `{TABLE_PREFIX}user` (
   `email` varchar(128) NULL,
   `auth` varchar(8) NULL,
   `is_group` TINYINT(1) NOT NULL,
+  `expiration` bigint(11) NULL,
   PRIMARY KEY (`id`)
 ) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Mollify users and groups';
 

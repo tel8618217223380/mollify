@@ -50,13 +50,15 @@ function MollifyUsersConfigurationView() {
 	   		{name:'email',index:'email', width:150, sortable:true},
 	   		{name:'auth',index:'auth', width:75, sortable:true, formatter:that.authFormatter},
 			{name:'permission_mode',index:'permission_mode',width:75, sortable:true, formatter:permissionModeFormatter},
+			{name:'expiration',index:'expiration', width:200, sortable:true, formatter:dateFormatter}
 	   	] : [
 		   	{name:'id',index:'id', width:20, sortable:true, sorttype:"int"},
 	   		{name:'name',index:'name', width:200, sortable:true},
 	   		{name:'email',index:'email', width:200, sortable:true},
 			{name:'permission_mode',index:'permission_mode',width:150, sortable:true, formatter:permissionModeFormatter},
+			{name:'expiration',index:'expiration', width:200, sortable:true, formatter:dateFormatter}
 	   	];
-	   	var colNames = that.auth_options ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode'] : ['ID', 'Name', 'E-mail', 'Permission Mode'];
+	   	var colNames = that.auth_options ? ['ID', 'Name', 'E-mail', 'Authentication', 'Permission Mode', "Expiration"] : ['ID', 'Name', 'E-mail', 'Permission Mode', "Expiration"];
 	   	
 		$("#users-list").jqGrid({        
 			datatype: "local",
@@ -152,6 +154,7 @@ function MollifyUsersConfigurationView() {
 		for(var i=0;i < users.length;i++) {
 			var user = users[i];
 			that.users[user.id] = user;
+			if (user.expiration) user.expiration = parseInternalTime(user.expiration);
 			grid.jqGrid('addRowData', user.id, user);
 		}
 		
@@ -353,6 +356,8 @@ function MollifyUsersConfigurationView() {
 			$("#button-generate-user-password").click(function() {
 				$("#password").val(generatePassword());
 			});
+			
+			$("#expiration-date").datepicker();
 		}
 		
 		var buttons = {
@@ -365,12 +370,23 @@ function MollifyUsersConfigurationView() {
 				var permission = $("#permission").val();
 				var auth = $("#auth").val();
 				if (auth == '-') auth = null;
-				
+				var expiration = $("#expiration-date").val();
+				if (expiration.length > 0) {
+					try {
+						expiration = parseDate(expiration);
+					} catch (e) {
+						alert("Invalid expiration date");
+						return;
+					}
+				} else {
+					expiration = null;
+				}
+		
 				onSuccess = function() {
 					$("#add-user-dialog").dialog('close');
 					that.refresh();
 				}
-				addUser(name, pw, email, permission, auth, onSuccess, onServerError);
+				addUser(name, pw, email, permission, auth, expiration, onSuccess, onServerError);
 			},
 			Cancel: function() {
 				$(this).dialog('close');
@@ -388,6 +404,7 @@ function MollifyUsersConfigurationView() {
 		$("#password").val("");
 		$("#permission").val("ro");
 		$("#auth").val("-");
+		$("#expiration-date").val("");
 		$("#add-user-dialog").dialog('open');
 	}
 	
@@ -424,6 +441,7 @@ function MollifyUsersConfigurationView() {
 				autoOpen: false,
 				title: "Edit User"
 			});
+			$("#edit-expiration-date").datepicker();
 		}
 		
 		var buttons = {
@@ -435,12 +453,23 @@ function MollifyUsersConfigurationView() {
 				var permission = $("#edit-permission").val();
 				var auth = $("#edit-auth").val();
 				if (auth == '-') auth = null;
+				var expiration = $("#edit-expiration-date").val();
+				if (expiration.length > 0) {
+					try {
+						expiration = parseDate(expiration);
+					} catch (e) {
+						alert("Invalid expiration date");
+						return;
+					}
+				} else {
+					expiration = null;
+				}
 				
 				onSuccess = function() {
 					$("#edit-user-dialog").dialog('close');
 					that.refresh();
 				}
-				editUser(id, name, email, permission, auth, onSuccess, onServerError);
+				editUser(id, name, email, permission, auth, expiration, onSuccess, onServerError);
 			},
 			Cancel: function() {
 				$(this).dialog('close');
@@ -460,6 +489,7 @@ function MollifyUsersConfigurationView() {
 		$("#edit-username").val(user.name);
 		$("#edit-email").val(user.email);
 		$("#edit-permission").val(user["permission_mode"].toLowerCase());
+		$("#edit-expiration-date").val(user["expiration"] ? formatDate(user["expiration"]) : "");
 		
 		$("#edit-user-dialog").dialog('open');
 	}

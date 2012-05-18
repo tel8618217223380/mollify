@@ -141,8 +141,13 @@
 				$auth = NULL;
 				//TODO verify auth
 				if (isset($user['auth']) and $user['auth'] != NULL) $auth = strtoupper($user['auth']);
+
+				$expiration = NULL;
+				//TODO validate time
+				if (isset($user['expiration']) and $user['expiration'] != NULL)
+					$expiration = $user['expiration'];
 				
-				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $auth);
+				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration, $auth);
 				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], $user['email']));
 				$this->response()->success(TRUE);
 				return;
@@ -182,8 +187,13 @@
 				if (isset($user['auth']))
 					$auth = strtoupper($user['auth']);
 				//TODO verify $auth
+				
+				$expiration = NULL;
+				//TODO validate time
+				if (isset($user['expiration']) and $user['expiration'] != NULL)
+					$expiration = $user['expiration'];
 
-				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $auth);
+				$this->env->configuration()->updateUser($userId, $user['name'], isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration, $auth);
 				$this->response()->success(TRUE);
 				return;
 			}
