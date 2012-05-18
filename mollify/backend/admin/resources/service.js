@@ -86,8 +86,8 @@ function getUsersAndGroups(success, fail) {
 	request("GET", 'configuration/usersgroups', success, fail);
 }
 
-function addUser(name, pw, email, permission, auth, success, fail) {
-	var data = JSON.stringify({name:name, password: Base64.encode(pw), email:email, "permission_mode":permission, "auth":auth});
+function addUser(name, pw, email, permission, auth, expiration, success, fail) {
+	var data = JSON.stringify({name:name, password: Base64.encode(pw), email:email, "permission_mode":permission, "auth":auth, "expiration":formatInternalTime(expiration)});
 	request("POST", 'configuration/users', success, fail, data);
 }
 
@@ -96,8 +96,8 @@ function changePassword(id, pw, success, fail) {
 	request("PUT", 'configuration/users/'+id+'/password', success, fail, data);
 }
 
-function editUser(id, name, email, permission, auth, success, fail) {
-	var data = JSON.stringify({name:name, email:email, "permission_mode":permission, "auth":auth});
+function editUser(id, name, email, permission, auth, expiration, success, fail) {
+	var data = JSON.stringify({name:name, email:email, "permission_mode":permission, "auth":auth, "expiration":formatInternalTime(expiration)});
 	request("PUT", 'configuration/users/'+id, success, fail, data);
 }
 

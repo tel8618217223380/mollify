@@ -13,7 +13,7 @@
 	require_once("DbConfiguration.class.php");
 
 	class SQLiteConfiguration extends DbConfiguration {
-		const VERSION = "1_8_7";
+		const VERSION = "1_8_8";
 		
 		public function __construct($settings) {
 			global $DB_FILE;
