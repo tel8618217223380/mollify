@@ -1,0 +1,31 @@
+1) Copy plugin folder (where this file is) into backend plugins folder
+
+2) Register plugin in backend configuration.php
+
+	$PLUGINS = array(
+		"Plupload" => array()
+	);
+	
+3) Register client plugin in host page:
+
+   a) Add required javascript libraries (make sure they are imported only once):
+
+		<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>   
+		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plugin.js"></script>
+		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/plupload.full.js"></script>
+		<script type="text/javascript" language="javascript" src="backend/plugin/Plupload/client/texts_en.js"></script>
+
+   b) Add any other needed Plupload libraries (for example Browserplus or Gears libs), see http://plupload.com
+   
+   c) Add plupload settings into client initialization (in host page, index.html etc), for example:
+   
+			mollify.init({
+				"service-path": "backend/",
+				"plupload": {
+					runtimes : 'gears,flash,silverlight,browserplus,html5',
+					max_file_size : '10mb',
+					chunk_size : '1mb'
+				}
+			});
+	
+	 For complete settings list, visit http://plupload.com
