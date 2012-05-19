@@ -73,7 +73,14 @@
 			$this->id = $id;
 			
 			// load user data
-			$this->user = $this->env->configuration()->getUser($this->session["user_id"]);
+			$this->user = $this->findSessionUser($this->session["user_id"]);
+			if (!$this->user) {
+				// user expired
+				$this->end();
+				$this->id = NULL;
+				return;
+			}
+			
 			if ($this->env->features()->isFeatureEnabled('user_groups'))
 				$this->userGroups = $this->env->configuration()->getUsersGroups($this->user["id"]);
 		
@@ -83,6 +90,10 @@
 			// check if cookie is for same id
 			if (!$cookie or strcmp($this->id, $this->env->cookies()->get("session")) != 0)
 				$this->setCookie($time);
+		}
+		
+		protected function findSessionUser($id) {
+			return $this->env->configuration()->getUser($id, time());
 		}
 		
 		protected function getDao() {

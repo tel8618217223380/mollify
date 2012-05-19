@@ -18,10 +18,11 @@
 		private $tablePrefix;
 		private $port;
 		private $socket;
+		private $engine;
 
 		private $db = NULL;
 		
-		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket) {
+		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket, $engine) {
 			Logging::logDebug("MySQLI DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;
 			$this->user = $user;
@@ -30,6 +31,7 @@
 			$this->tablePrefix = $tablePrefix;
 			$this->port = $port;
 			$this->socket = $socket;
+			$this->engine = $engine;
 		}
 		
 		public function type() {
@@ -145,6 +147,7 @@
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
 
 			$sql = str_replace('{TABLE_PREFIX}', (isset($this->tablePrefix) and $this->tablePrefix != '') ? $this->tablePrefix : '', $sql);
+			$sql = str_replace('{ENGINE}', (isset($this->engine) and $this->engine != '') ? $this->engine : '', $sql);
 			$this->queries($sql);
 		}
 		

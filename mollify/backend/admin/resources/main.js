@@ -265,6 +265,7 @@ function formatDate(d) {
 }
 
 function formatDateTime(time) {
+	if (!time) return "";
 	return time.format(getDateTimeFormat());
 }
 
@@ -288,6 +289,7 @@ function parseInternalTime(time) {
 }
 
 function formatInternalTime(time) {
+	if (!time) return null;
 	return time.format('yymmddHHMMss', time);
 }
 
@@ -426,6 +428,10 @@ function getValidSelections(list) {
 
 function timeFormatter(time, options, obj) {
 	return formatDateTime(time);
+}
+
+function dateFormatter(time, options, obj) {
+	return formatDate(time);
 }
 	
 function notNullFormatter(o, options, obj) {

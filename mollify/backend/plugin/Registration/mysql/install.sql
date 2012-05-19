@@ -6,6 +6,6 @@ CREATE TABLE `{TABLE_PREFIX}pending_registrations` (
   `key` char(64) NOT NULL,
   `time` bigint(11) NOT NULL,
   PRIMARY KEY (`id`)
-) COLLATE utf8_general_ci COMMENT = 'Pending user registrations';
+) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Pending user registrations';
 
 INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('plugin_Registration_version', '1_0');
