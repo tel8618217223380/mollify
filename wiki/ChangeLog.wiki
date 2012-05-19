@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.8 ===
+Released 2012/5/19
+  * Added support for user account expiration, issue 401
+  * Added support for MySQL engine selection, issue 397
+
 === Version 1.8.7.7 ===
 Released 2012/5/4
   * Fixed issue 398
