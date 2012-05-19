@@ -17,16 +17,19 @@ Before installing Mollify, you have to make following preparations:
 	$DB_HOST = "localhost"; //optional
 	$DB_DATABASE = "mollify"; //optional
 	$DB_TABLE_PREFIX = "mollify_"; //optional
+	$DB_ENGINE = "innodb"; //optional
 ?>
 }}}
 
-Values $DB_HOST, $DB_DATABASE and $DB_TABLE_PREFIX are optional. If these are not defined, it is assumed that MySQL server is running on localhost, database is called "mollify" and tables are accessed without name prefix.
+Values $DB_HOST, $DB_DATABASE, $DB_TABLE_PREFIX and $DB_ENGINE are optional. If these are not defined, it is assumed that MySQL server is running on localhost, database is called "mollify" and tables are accessed without name prefix.
 
 With localhost database, you can also provide socket for the connection:
 
 {{{
 	$DB_SOCKET = "/tmp/mysql5.sock";
 }}}
+
+Default MySQL engine used is InnoDB. With option $DB_ENGINE you can change this (NOTE used only on installation).
 
 = 2. Installation =
 
