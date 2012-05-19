@@ -17,7 +17,7 @@ Before installing Mollify, you have to make following preparations:
 	$DB_HOST = "localhost"; //optional
 	$DB_DATABASE = "mollify"; //optional
 	$DB_TABLE_PREFIX = "mollify_"; //optional
-	$DB_ENGINE = "innodb"; //optional
+	$DB_ENGINE = "innodb"; //optional, used only in installation
 ?>
 }}}
 
