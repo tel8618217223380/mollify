@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -43,4 +43,4 @@ public class CellTableFileListCell extends AbstractCell<FileSystemItem>
 		listener.onRender(id, value, sb);
 	}
 
-}*/
+}

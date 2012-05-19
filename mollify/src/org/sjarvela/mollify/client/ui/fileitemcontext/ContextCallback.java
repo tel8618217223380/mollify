@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-//
-//public interface ContextCallback {
-//	void onContextAction(FileSystemItem item);
-//}
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+
+public interface ContextCallback {
+	void onContextAction(FileSystemItem item);
+}

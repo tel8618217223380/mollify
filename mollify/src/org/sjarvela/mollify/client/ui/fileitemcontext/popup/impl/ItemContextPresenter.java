@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -215,4 +215,4 @@ public class ItemContextPresenter implements ActionListener,
 					}
 				});
 	}
-}*/
+}

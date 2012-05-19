@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderModel;
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
-import org.sjarvela.mollify.client.filesystem.js.JsFile;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
-import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
-import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ResultCallback;
@@ -29,22 +29,22 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.file.FilePermission;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class MainViewModel {
 	private final SessionInfo session;
 	private final FileSystemService fileServices;
-	private final List<JsRootFolder> rootFolders;
+	private final List<Folder> rootFolders;
 
 	private FolderInfoRequestDataProvider dataRequestProvider = null;
 	private FolderModel folderModel;
 
-	private List<JsFile> files = new ArrayList();
-	private List<JsFolder> folders = new ArrayList();
-	private List<JavaScriptObject> all = new ArrayList();
-	private List<JsFilesystemItem> selected = new ArrayList();
+	private List<File> files = new ArrayList();
+	private List<Folder> folders = new ArrayList();
+	private List<FileSystemItem> all = new ArrayList();
+	private List<FileSystemItem> selected = new ArrayList();
 	private FilePermission folderPermission = FilePermission.None;
 	private JsObj data;
 
@@ -78,11 +78,11 @@ public class MainViewModel {
 		return folderModel;
 	}
 
-	public List<JsRootFolder> getRootFolders() {
+	public List<Folder> getRootFolders() {
 		return rootFolders;
 	}
 
-	public List<JsFolder> getSubFolders() {
+	public List<Folder> getSubFolders() {
 		return folders;
 	}
 
@@ -90,11 +90,11 @@ public class MainViewModel {
 		return folderPermission;
 	}
 
-	public List<JsFile> getFiles() {
+	public List<File> getFiles() {
 		return files;
 	}
 
-	public List<JavaScriptObject> getAllItems() {
+	public List<FileSystemItem> getAllItems() {
 		return all;
 	}
 
@@ -102,21 +102,21 @@ public class MainViewModel {
 		return folderModel.getCurrentFolder() != null;
 	}
 
-	public JsFolder getCurrentFolder() {
+	public Folder getCurrentFolder() {
 		return folderModel.getCurrentFolder();
 	}
 
-	public void changeToRootFolder(JsFolder root, ResultListener resultListener) {
+	public void changeToRootFolder(Folder root, ResultListener resultListener) {
 		folderModel.setRootFolder(root);
 		refreshData(resultListener);
 	}
 
-	public void changeToSubfolder(JsFolder folder, ResultListener resultListener) {
+	public void changeToSubfolder(Folder folder, ResultListener resultListener) {
 		folderModel.descendIntoFolder(folder);
 		refreshData(resultListener);
 	}
 
-	public void changeToFolder(int level, JsFolder folder,
+	public void changeToFolder(int level, Folder folder,
 			ResultListener resultListener) {
 		folderModel.changeFolder(level, folder);
 		refreshData(resultListener);
@@ -128,22 +128,24 @@ public class MainViewModel {
 		refreshData(resultListener);
 	}
 
-	public void refreshData(ResultListener<JsFolderInfo> resultListener) {
+	public void refreshData(ResultListener<FolderInfo> resultListener) {
 		if (getCurrentFolder() == null) {
-			/*
-			 * TODO JsFolderInfo result = JsFolderInfo.create(rootFolders, null,
-			 * FilePermission.ReadOnly); onUpdateData(result);
-			 * resultListener.onSuccess(result); return;
-			 */
+			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
+					rootFolders, null, null);
+			onUpdateData(result);
+			resultListener.onSuccess(result);
+			return;
 		}
 
-		JsFolder currentFolder = getCurrentFolder();
-		/*
-		 * TODOif (currentFolder instanceof VirtualGroupFolder) { FolderInfo
-		 * result = new FolderInfo(FilePermission.ReadOnly,
-		 * ((VirtualGroupFolder) currentFolder).getChildren(), null, null);
-		 * onUpdateData(result); resultListener.onSuccess(result); return; }
-		 */
+		Folder currentFolder = getCurrentFolder();
+		if (currentFolder instanceof VirtualGroupFolder) {
+			FolderInfo result = new FolderInfo(FilePermission.ReadOnly,
+					((VirtualGroupFolder) currentFolder).getChildren(), null,
+					null);
+			onUpdateData(result);
+			resultListener.onSuccess(result);
+			return;
+		}
 
 		JavaScriptObject dataRequest = dataRequestProvider != null ? dataRequestProvider
 				.getDataRequest(currentFolder) : null;
@@ -151,23 +153,20 @@ public class MainViewModel {
 				currentFolder,
 				dataRequest,
 				createListener(resultListener,
-						new ResultCallback<JsFolderInfo>() {
-							public void onCallback(JsFolderInfo result) {
+						new ResultCallback<FolderInfo>() {
+							public void onCallback(FolderInfo result) {
 								onUpdateData(result);
 							}
 						}));
 	}
 
-	private void onUpdateData(JsFolderInfo info) {
+	private void onUpdateData(FolderInfo info) {
 		this.folders = info.getFolders();
-
-		List<JsFile> list = info.getFiles();
-		this.files = list != null ? list : Collections.EMPTY_LIST;
-
+		this.files = info.getFiles() != null ? info.getFiles()
+				: Collections.EMPTY_LIST;
 		this.data = info.getData();
 		this.folderPermission = info.getPermission();
-		
-		this.all = new ArrayList(this.folders);
+		this.all = new ArrayList(info.getFolders());
 		this.all.addAll(files);
 	}
 
@@ -185,11 +184,11 @@ public class MainViewModel {
 		};
 	}
 
-	public void setSelected(List<JsFilesystemItem> selected) {
+	public void setSelected(List<FileSystemItem> selected) {
 		this.selected = selected;
 	}
 
-	public List<JsFilesystemItem> getSelectedItems() {
+	public List<FileSystemItem> getSelectedItems() {
 		return this.selected;
 	}
 
@@ -199,10 +198,10 @@ public class MainViewModel {
 
 	public void changeToFolder(String id, final ResultListener listener) {
 		fileServices.getFolderInfoWithHierarchy(id,
-				new ResultListener<JsFolderHierarchyInfo>() {
+				new ResultListener<FolderHierarchyInfo>() {
 
 					@Override
-					public void onSuccess(JsFolderHierarchyInfo result) {
+					public void onSuccess(FolderHierarchyInfo result) {
 						folderModel.setFolderHierarchy(result.getHierarchy());
 						onUpdateData(result);
 					}

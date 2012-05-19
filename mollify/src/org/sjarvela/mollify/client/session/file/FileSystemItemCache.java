@@ -14,18 +14,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 public class FileSystemItemCache {
 
-	private final Map<String, JsFilesystemItem> itemsById = new HashMap();
+	private final Map<String, FileSystemItem> itemsById = new HashMap();
 
-	public FileSystemItemCache(List<JsFilesystemItem> items) {
-		for (JsFilesystemItem item : items)
+	public FileSystemItemCache(List<FileSystemItem> items) {
+		for (FileSystemItem item : items)
 			itemsById.put(item.getId(), item);
 	}
 
-	public JsFilesystemItem getItem(String itemId) {
+	public FileSystemItem getItem(String itemId) {
 		return itemsById.get(itemId);
 	}
 

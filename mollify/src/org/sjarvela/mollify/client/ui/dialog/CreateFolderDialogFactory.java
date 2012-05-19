@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-//import org.sjarvela.mollify.client.filesystem.Folder;
-//import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
-//
-//public interface CreateFolderDialogFactory {
-//
-//	void openCreateFolderDialog(Folder folder,
-//			FolderHandler directoryHandler);
-//
-//}
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
+
+public interface CreateFolderDialogFactory {
+
+	void openCreateFolderDialog(Folder folder,
+			FolderHandler directoryHandler);
+
+}

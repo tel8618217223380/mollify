@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.editor.impl;
 
-/*import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.ServiceProvider;
@@ -53,4 +53,4 @@ public class DefaultFileEditorFactory implements FileEditorFactory {
 		}
 	}
 
-}*/
+}

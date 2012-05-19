@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -118,7 +118,7 @@ public abstract class Grid<T> extends FlexTable {
 			var cell = $doc.createElement("th");
 			row.appendChild(cell);
 		}
-	}-;
+	}-*/;
 
 	private void initializeColumn(int index, GridColumn column) {
 		Element th = DOM.getChild(headerRow, index);
@@ -164,7 +164,7 @@ public abstract class Grid<T> extends FlexTable {
 		element.onclick = function() {
 			grid.@org.sjarvela.mollify.client.ui.common.grid.Grid::onColumnSortClick(Lorg/sjarvela/mollify/client/ui/common/grid/GridColumn;)(column);
 		};
-	}-;
+	}-*/;
 
 	protected void onColumnSortClick(GridColumn column) {
 		SortOrder sort = SortOrder.none;
@@ -515,4 +515,4 @@ public abstract class Grid<T> extends FlexTable {
 		return new Coords(cell.getAbsoluteLeft(), cell.getAbsoluteTop(),
 				cell.getOffsetWidth(), cell.getOffsetHeight());
 	}
-}*/
+}

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import java.util.List;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,11 +21,12 @@ import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
+import org.sjarvela.mollify.client.ui.ViewListener;
 import org.sjarvela.mollify.client.ui.action.ActionDelegator;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.Action;
 
 import com.google.gwt.dom.client.Element;
 
@@ -51,12 +52,12 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 				presenter.reload();
 			}
 		});
-		// TODO view.addFileListListener(this);
-		// view.addViewListener(new ViewListener() {
-		// public void onShow() {
-		// presenter.initialize();
-		// }
-		// });
+		view.addFileListListener(this);
+		view.addViewListener(new ViewListener() {
+			public void onShow() {
+				presenter.initialize();
+			}
+		});
 
 		initializeActions();
 	}
@@ -212,14 +213,14 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 		if (item.equals(Folder.Parent) || (item instanceof VirtualGroupFolder))
 			return;
 
-		// TODO view.showItemContext(item, e);
+		view.showItemContext(item, e);
 	}
 
 	@Override
 	public void onMenuClicked(FileSystemItem item, Element e) {
 		if (item.equals(Folder.Parent) || (item instanceof VirtualGroupFolder))
 			return;
-		// TODO view.showItemMenu(item, e);
+		view.showItemMenu(item, e);
 	}
 
 	public void onColumnSorted(String columnId, SortOrder sort) {
@@ -260,4 +261,4 @@ public class MainViewGlue implements GridListener<FileSystemItem>, FileView {
 	public void openUploader(boolean forceBasic) {
 		presenter.openUploadDialog();
 	}
-}*/
+}

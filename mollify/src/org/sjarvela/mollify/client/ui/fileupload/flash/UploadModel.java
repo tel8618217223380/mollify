@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.flash;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.swfupload.client.File;
@@ -120,4 +120,3 @@ public class UploadModel {
 	}
 
 }
-*/

@@ -12,13 +12,13 @@ package org.sjarvela.mollify.client.service;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderHierarchyInfo;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
-import org.sjarvela.mollify.client.filesystem.js.JsFile;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsFolderHierarchyInfo;
-import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
+import org.sjarvela.mollify.client.filesystem.provider.ItemDetailsProvider;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
 import org.sjarvela.mollify.client.session.file.FileSystemItemCache;
@@ -26,58 +26,55 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public interface FileSystemService {
+public interface FileSystemService extends ItemDetailsProvider {
 
-	void getFolders(JsFolder parent, ResultListener<List<JsFolder>> listener);
+	void getFolders(Folder parent, ResultListener<List<Folder>> listener);
 
-	void getFolderInfo(JsFolder parent, JavaScriptObject data,
-			ResultListener<JsFolderInfo> listener);
+	void getFolderInfo(Folder parent, JavaScriptObject data,
+			ResultListener<FolderInfo> listener);
 
 	void getFolderInfoWithHierarchy(String id,
-			ResultListener<JsFolderHierarchyInfo> listener);
+			ResultListener<FolderHierarchyInfo> listener);
 
-	void rename(JsFilesystemItem item, String newName,
+	void rename(FileSystemItem item, String newName,
 			ResultListener<Boolean> listener);
 
-	void copy(JsFilesystemItem item, JsFolder directory,
+	void copy(FileSystemItem item, Folder directory,
 			ResultListener<Boolean> listener);
 
-	void copy(List<JsFilesystemItem> items, JsFolder directory,
+	void copy(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener);
 
-	void copyWithName(JsFile file, String name, ResultListener listener);
+	void copyWithName(File file, String name, ResultListener listener);
 
-	void move(JsFilesystemItem file, JsFolder toDirectory,
+	void move(FileSystemItem file, Folder toDirectory,
 			ResultListener<Boolean> listener);
 
-	void move(List<JsFilesystemItem> items, JsFolder directory,
+	void move(List<FileSystemItem> items, Folder directory,
 			ResultListener<Boolean> listener);
 
-	void delete(JsFilesystemItem item, ResultListener<Boolean> listener);
+	void delete(FileSystemItem item, ResultListener<Boolean> listener);
 
-	void delete(List<JsFilesystemItem> items, ResultListener<Boolean> listener);
+	void delete(List<FileSystemItem> items, ResultListener<Boolean> listener);
 
-	void createFolder(JsFolder parentFolder, String folderName,
+	void createFolder(Folder parentFolder, String folderName,
 			ResultListener<Boolean> resultListener);
 
-	String getDownloadUrl(JsFile file);
+	String getDownloadUrl(File file);
 
-	String getDownloadUrl(JsFile file, String sessionId);
+	String getDownloadUrl(File file, String sessionId);
 
-	String getDownloadAsZipUrl(JsFilesystemItem item);
+	String getDownloadAsZipUrl(FileSystemItem item);
 
-	void getDownloadAsZipUrl(List<JsFilesystemItem> items,
+	void getDownloadAsZipUrl(List<FileSystemItem> items,
 			ResultListener<String> listener);
 
-	void setItemDescription(JsFilesystemItem item, String description,
+	void setItemDescription(FileSystemItem item, String description,
 			ResultListener listener);
 
-	void removeItemDescription(JsFilesystemItem item, ResultListener listener);
+	void removeItemDescription(FileSystemItem item, ResultListener listener);
 
-	void getItemDetails(JsFilesystemItem item, JavaScriptObject data,
-			ResultListener<ItemDetails> listener);
-
-	void getItemPermissions(JsFilesystemItem item,
+	void getItemPermissions(FileSystemItem item,
 			ResultListener<List<FileItemUserPermission>> resultListener,
 			UserCache userCache, FileSystemItemCache fileSystemItemCache);
 
@@ -86,13 +83,13 @@ public interface FileSystemService {
 			List<FileItemUserPermission> removedPermissions,
 			ResultListener resultListener);
 
-	String getPublicLink(JsFile file);
+	String getPublicLink(File file);
 
-	void retrieveUrl(JsFolder folder, String url, ResultListener listener);
+	void retrieveUrl(Folder folder, String url, ResultListener listener);
 
-	void search(JsFolder parent, String text,
+	void search(Folder parent, String text,
 			ResultListener<SearchResult> listener);
 
-	String getThumbnailUrl(JsFilesystemItem item);
+	String getThumbnailUrl(FileSystemItem item);
 
 }

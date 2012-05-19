@@ -15,44 +15,42 @@ import java.util.List;
 import java.util.Map;
 
 import org.sjarvela.mollify.client.filesystem.foldermodel.FolderProvider;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 
 public class FolderCache implements FolderProvider {
-	private final FolderProvider folderProvider;
-	private final Map<JsFolder, List<JsFolder>> cache = new HashMap();
+	private final FolderProvider directoryProvider;
+	private final Map<Folder, List<Folder>> cache = new HashMap();
 
 	public FolderCache(FolderProvider directoryProvider) {
-		this.folderProvider = directoryProvider;
+		this.directoryProvider = directoryProvider;
 	}
 
 	@Override
-	public List<JsRootFolder> getRootFolders() {
-		return folderProvider.getRootFolders();
+	public List<Folder> getRootFolders() {
+		return directoryProvider.getRootFolders();
 	}
 
 	@Override
-	public JsRootFolder getRootFolder(String id) {
-		return folderProvider.getRootFolder(id);
+	public Folder getRootFolder(String id) {
+		return directoryProvider.getRootFolder(id);
 	}
 
 	@Override
-	public void getFolders(final JsFolder parent,
-			final ResultListener<List<JsFolder>> listener) {
+	public void getFolders(final Folder parent,
+			final ResultListener<List<Folder>> listener) {
 		if (cache.containsKey(parent)) {
 			listener.onSuccess(cache.get(parent));
 			return;
 		}
 
-		folderProvider.getFolders(parent,
-				new ResultListener<List<JsFolder>>() {
+		directoryProvider.getFolders(parent,
+				new ResultListener<List<Folder>>() {
 					public void onFail(ServiceError error) {
 						listener.onFail(error);
 					}
 
-					public void onSuccess(List<JsFolder> result) {
+					public void onSuccess(List<Folder> result) {
 						cache.put(parent, result);
 						listener.onSuccess(result);
 					}

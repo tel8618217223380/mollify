@@ -10,14 +10,14 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileDetails;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
@@ -46,21 +46,22 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	private final TextProvider textProvider;
 	private final ServiceProvider serviceProvider;
 	private final DialogManager dialogManager;
-//	private final PermissionEditorViewFactory permissionEditorViewFactory;
+	private final PermissionEditorViewFactory permissionEditorViewFactory;
 
 	@Inject
 	public DefaultItemContextProvider(SessionProvider sessionProvider,
 			TextProvider textProvider, ServiceProvider serviceProvider,
-			DialogManager dialogManager) {
+			DialogManager dialogManager,
+			PermissionEditorViewFactory permissionEditorViewFactory) {
 		this.sessionProvider = sessionProvider;
 		this.textProvider = textProvider;
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
-//		this.permissionEditorViewFactory = permissionEditorViewFactory;
+		this.permissionEditorViewFactory = permissionEditorViewFactory;
 	}
 
 	@Override
-	public JavaScriptObject getItemContextRequestData(JsFilesystemItem item) {
+	public JavaScriptObject getItemContextRequestData(FileSystemItem item) {
 		JsObjBuilder data = new JsObjBuilder();
 		for (ItemContextProvider provider : providers)
 			data.add(provider.getItemContextRequestData(item));
@@ -68,7 +69,7 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	}
 
 	@Override
-	public ItemContext getItemContext(JsFilesystemItem item, ItemDetails details) {
+	public ItemContext getItemContext(FileSystemItem item, ItemDetails details) {
 		ItemContext context = createContext(item, details);
 		for (ItemContextProvider provider : providers)
 			context = context.add(provider.getItemContext(item, details), true);
@@ -76,7 +77,7 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	}
 
 	@Override
-	public ItemContext getItemActions(JsFilesystemItem item, ItemDetails details) {
+	public ItemContext getItemActions(FileSystemItem item, ItemDetails details) {
 		ItemContextBuilder contextBuilder = ItemContext.def();
 
 		boolean writable = isWritable(item, details);
@@ -94,14 +95,14 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		return context;
 	}
 
-	private ItemContext createContext(JsFilesystemItem item, ItemDetails details) {
+	private ItemContext createContext(FileSystemItem item, ItemDetails details) {
 		ItemContextBuilder context = ItemContext.def();
 		createComponents(item, context.components());
 		createActions(item, details, context.actions());
 		return context.create();
 	}
 
-	private void createActions(JsFilesystemItem item, ItemDetails details,
+	private void createActions(FileSystemItem item, ItemDetails details,
 			ItemContextActionsBuilder actions) {
 		boolean writable = isWritable(item, details);
 
@@ -113,15 +114,15 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 				actions.type(ItemContext.ActionType.Secondary), writable);
 	}
 
-	private boolean isWritable(JsFilesystemItem item, ItemDetails details) {
+	private boolean isWritable(FileSystemItem item, ItemDetails details) {
 		if (details == null)
 			return false;
-		if (!item.isFile() && ((JsFolder) item).isRoot())
+		if (!item.isFile() && ((Folder) item).isRoot())
 			return false;
 		return details.getFilePermission().canWrite();
 	}
 
-	private void createDownloadActions(JsFilesystemItem item,
+	private void createDownloadActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions) {
 		if (item.isFile())
 			actions.add(FileSystemAction.download,
@@ -131,8 +132,8 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 					textProvider.getText(Texts.fileActionDownloadZippedTitle));
 	}
 
-	private void createPrimaryActions(JsFilesystemItem item,
-			ItemDetails details, ItemContextActionTypeBuilder actions) {
+	private void createPrimaryActions(FileSystemItem item, ItemDetails details,
+			ItemContextActionTypeBuilder actions) {
 		if (item.isFile()) {
 			FileDetails d = details.cast();
 			if (d.getFileViewerEditor() != null
@@ -150,9 +151,9 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 		}
 	}
 
-	private void createSecondaryActions(JsFilesystemItem item,
+	private void createSecondaryActions(FileSystemItem item,
 			ItemContextActionTypeBuilder actions, boolean writable) {
-		if (item.isFile() || !((JsFolder) item).isRoot())
+		if (item.isFile() || !((Folder) item).isRoot())
 			actions.add(Action.addToDropbox, textProvider
 					.getText(Texts.mainViewSelectActionAddToDropbox));
 		actions.addSeparator();
@@ -172,7 +173,7 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 					textProvider.getText(Texts.fileActionDeleteTitle));
 	}
 
-	private void createComponents(JsFilesystemItem item,
+	private void createComponents(FileSystemItem item,
 			ItemContextComponentsBuilder contextComponents) {
 		contextComponents.add(createDescriptionComponent());
 		if (item.isFile()
@@ -202,4 +203,4 @@ public class DefaultItemContextProvider implements ItemContextHandler {
 	public void addItemContextProvider(ItemContextProvider itemContextProvider) {
 		providers.add(itemContextProvider);
 	}
-}*/
+}

@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.filesystem.foldermodel;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 public interface CurrentFolderProvider {
-	JsFolder getCurrentFolder();
+	Folder getCurrentFolder();
 }

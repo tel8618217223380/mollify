@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-/*import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -194,4 +194,4 @@ public class DemoFileService implements FileSystemService {
 	public String getThumbnailUrl(FileSystemItem item) {
 		return "http://www.mollify.org/images/mollify_logo.png";
 	}
-}*/
+}

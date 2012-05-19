@@ -10,24 +10,15 @@
 
 package org.sjarvela.mollify.client.ui;
 
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewManager {
-
-	void setViewHandlers(JavaScriptObject handlers);
-
-	JsObj getViewHandler(String name);
-
-	void render(ViewHandler view);
-
-	/* old -> */
+	
 	void openView(Widget view);
 
 	void empty();

@@ -27,12 +27,15 @@ public class NativeSession {
 	}
 
 	private native JavaScriptObject createJs(NativeSession s) /*-{
-		return $wnd.$.extend(
-			{
-				admin:s.@org.sjarvela.mollify.client.plugin.NativeSession::isAdmin()()
-			},
-			s.@org.sjarvela.mollify.client.plugin.NativeSession::session
-		);
+		var o = {};
+
+		o.info = function() {
+			return s.@org.sjarvela.mollify.client.plugin.NativeSession::session;
+		}
+		o.isAdmin = function() {
+			return s.@org.sjarvela.mollify.client.plugin.NativeSession::isAdmin()();
+		}
+		return o;
 	}-*/;
 
 	public boolean isAdmin() {

@@ -10,33 +10,33 @@
 
 package org.sjarvela.mollify.client.ui.common.popup;
 
-//import org.sjarvela.mollify.client.ui.folderselector.FolderListMenu;
-//
-//import com.google.gwt.event.dom.client.ClickEvent;
-//import com.google.gwt.event.dom.client.ClickHandler;
-//import com.google.gwt.user.client.ui.FocusWidget;
-//import com.google.gwt.user.client.ui.Label;
-//
-//public class PopupClickTrigger {
-//
-//	public PopupClickTrigger(FocusWidget button, final DropdownPopupMenu menu) {
-//		menu.addAutoHidePartner(button.getElement());
-//		button.addClickHandler(createClickHandler(menu));
-//	}
-//
-//	public PopupClickTrigger(Label label, FolderListMenu menu) {
-//		label.addClickHandler(createClickHandler(menu));
-//	}
-//
-//	private ClickHandler createClickHandler(final DropdownPopupMenu menu) {
-//		return new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				if (menu.isShowing())
-//					menu.hide();
-//				else
-//					menu.showPopup();
-//			}
-//		};
-//	}
-//
-//}
+import org.sjarvela.mollify.client.ui.folderselector.FolderListMenu;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Label;
+
+public class PopupClickTrigger {
+
+	public PopupClickTrigger(FocusWidget button, final DropdownPopupMenu menu) {
+		menu.addAutoHidePartner(button.getElement());
+		button.addClickHandler(createClickHandler(menu));
+	}
+
+	public PopupClickTrigger(Label label, FolderListMenu menu) {
+		label.addClickHandler(createClickHandler(menu));
+	}
+
+	private ClickHandler createClickHandler(final DropdownPopupMenu menu) {
+		return new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				if (menu.isShowing())
+					menu.hide();
+				else
+					menu.showPopup();
+			}
+		};
+	}
+
+}

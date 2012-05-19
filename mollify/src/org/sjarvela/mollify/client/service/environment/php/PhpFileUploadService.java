@@ -12,8 +12,7 @@ package org.sjarvela.mollify.client.service.environment.php;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadStatus;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -44,28 +43,24 @@ public class PhpFileUploadService extends PhpFileService implements
 				.format(DateTime.getInstance().currentTime());
 	}
 
-	public String getUploadUrl(JsFolder folder) {
-		return serviceUrl().fileItem((JsFilesystemItem) folder.cast())
-				.item("files").build();
+	public String getUploadUrl(Folder folder) {
+		return serviceUrl().fileItem(folder).item("files").build();
 	}
 
 	@Override
-	public void checkFiles(JsFolder folder, List<String> filenames,
+	public void checkFiles(Folder folder, List<String> filenames,
 			final ResultListener<List<String>> listener) {
 		String data = new JSONBuilder().array("files", filenames).toString();
 
-		request()
-				.url(serviceUrl().fileItem((JsFilesystemItem) folder.cast())
-						.item("check")).listener(new ResultListener<JsObj>() {
+		request().url(serviceUrl().fileItem(folder).item("check"))
+				.listener(new ResultListener<JsObj>() {
 					@Override
 					public void onSuccess(JsObj result) {
 						if (!result.hasValue("existing")) {
-							onFail(new ServiceError(
-									ServiceErrorType.INVALID_RESPONSE));
+							onFail(new ServiceError(ServiceErrorType.INVALID_RESPONSE));
 							return;
 						}
-						List<String> names = JsUtil.asList(result
-								.getStringArray("existing"));
+						List<String> names = JsUtil.asList(result.getStringArray("existing"));
 						listener.onSuccess(names);
 					}
 

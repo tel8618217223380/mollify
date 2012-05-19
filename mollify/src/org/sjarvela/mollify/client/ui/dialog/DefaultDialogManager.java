@@ -10,102 +10,68 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.localization.Texts;
+import org.sjarvela.mollify.client.service.ConfirmationListener;
 import org.sjarvela.mollify.client.service.ServiceError;
-import org.sjarvela.mollify.client.ui.ConfirmationListener;
+import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.ViewManager;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DefaultDialogManager implements DialogManager {
 	private final TextProvider textProvider;
-	private JsObj handler;
+	private final ViewManager viewManager;
 
 	@Inject
-	public DefaultDialogManager(TextProvider textProvider) {
+	public DefaultDialogManager(TextProvider textProvider,
+			ViewManager viewManager) {
 		this.textProvider = textProvider;
-	}
-
-	@Override
-	public void setHandler(JavaScriptObject h) {
-		this.handler = h.cast();
+		this.viewManager = viewManager;
 	}
 
 	@Override
 	public void showError(ServiceError error) {
-		JsObjBuilder spec = new JsObjBuilder().string("title",
-				textProvider.getText(Texts.infoDialogErrorTitle)).string(
-				"text", error.getType().getMessage(textProvider));
-		this.handler.call("error", spec.create());
+		new ErrorDialog(textProvider, error);
 	}
 
 	@Override
 	public void showInfo(String title, String text) {
-		JsObjBuilder spec = new JsObjBuilder().string("title", title).string(
-				"message", text);
-		this.handler.call("info", spec.create());
+		showInfo(title, text, null);
 	}
 
 	@Override
 	public void showInfo(String title, String text, String info) {
-		JsObjBuilder spec = new JsObjBuilder().string("title", title)
-				.string("text", text).string("info", info);
-		this.handler.call("details", spec.create());
+		new InfoDialog(textProvider, title, text, info,
+				StyleConstants.INFO_DIALOG_TYPE_INFO);
 	}
 
 	@Override
 	public void showConfirmationDialog(String title, String message,
-			String style, ConfirmationListener listener) {
-		JsObjBuilder spec = new JsObjBuilder().string("title", title)
-				.string("message", message).string("style", style)
-				.obj("callback", createNativeListener(listener));
-		this.handler.call("confirmation", spec.create());
+			String style, ConfirmationListener listener, Widget p) {
+		ConfirmationDialog confirmationDialog = new ConfirmationDialog(
+				textProvider, title, message, style, listener);
+		if (p != null)
+			viewManager.align(confirmationDialog, p);
 	}
-
-	private native final JavaScriptObject createNativeListener(
-			ConfirmationListener listener) /*-{
-		return function() {
-			listener
-					.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm();
-		};
-	}-*/;
 
 	@Override
 	public void showInputDialog(String title, String message,
 			String defaultValue, InputListener listener) {
-		JsObjBuilder spec = new JsObjBuilder().string("title", title)
-				.string("message", message).string("default", defaultValue)
-				.obj("callback", createNativeListener(listener));
-		this.handler.call("input", spec.create());
+		new InputDialog(textProvider, title, message, defaultValue, listener);
 	}
-
-	private native final JavaScriptObject createNativeListener(
-			InputListener listener) /*-{
-		return {
-			isAcceptable : function(i) {
-				return listener.@org.sjarvela.mollify.client.ui.dialog.InputListener::isInputAcceptable(Ljava/lang/String;)(i);
-			},
-			onInput : function(i) {
-				return listener.@org.sjarvela.mollify.client.ui.dialog.InputListener::onInput(Ljava/lang/String;)(i);
-			}
-		};
-	}-*/;
 
 	@Override
 	public WaitDialog openWaitDialog(String title, String message) {
-		JsObjBuilder spec = new JsObjBuilder().string("title", title).string(
-				"message", message);
-		final JsObj h = this.handler.call("wait", spec.create()).cast();
-		return new WaitDialog() {
-			@Override
-			public void close() {
-				h.call("close");
-			}
-		};
+		return new DefaultWaitDialog(textProvider, title, message);
+	}
+
+	@Override
+	public CustomContentDialog showCustomDialog(String title, String style, boolean modal,
+			HTML html, CustomDialogListener listener) {
+		return new DefaultCustomContentDialog(title, style, modal, html, listener);
 	}
 }

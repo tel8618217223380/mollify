@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.itemselector;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -48,4 +48,4 @@ public class DefaultItemSelectorFactory implements ItemSelectorFactory {
 				dialogManager, textProvider, title, message, actionTitle,
 				provider, listener);
 	}
-}*/
+}

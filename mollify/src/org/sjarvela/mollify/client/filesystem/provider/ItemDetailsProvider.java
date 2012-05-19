@@ -10,13 +10,13 @@
 
 package org.sjarvela.mollify.client.filesystem.provider;
 
-//import org.sjarvela.mollify.client.filesystem.ItemDetails;
-//import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-//import org.sjarvela.mollify.client.service.request.listener.ResultListener;
-//
-//import com.google.gwt.core.client.JavaScriptObject;
-//
-//public interface ItemDetailsProvider {
-//	public void getItemDetails(JsFilesystemItem item, JavaScriptObject data,
-//			ResultListener<ItemDetails> listener);
-//}
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
+public interface ItemDetailsProvider {
+	public void getItemDetails(FileSystemItem item, JavaScriptObject data,
+			ResultListener<ItemDetails> listener);
+}

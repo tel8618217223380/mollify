@@ -3,7 +3,7 @@
 
 	<property name="project.name" value="Mollify" />
 	<property name="public.module.name" value="org.sjarvela.Mollify" />
-	<property name="module.name" value="org.sjarvela.mollify.Client" />
+	<property name="module.name" value="org.sjarvela.mollify.DevelopmentClient" />
 	<property name="deploy.package.name" value="mollify_${mollify.version}" />
 	<property name="deploy.src.package.name" value="mollify-src_${mollify.version}" />
 
@@ -229,12 +229,6 @@
 		<copy todir="${target.dir}/mollify/client">
 			<fileset dir="${build.dir}/${public.module.name}" />
 		</copy>
-		
-		<java failonerror="true" fork="true" jar="${lib.dir}/yuicompressor-2.4.7.jar">
-			<arg value="${target.dir}/mollify/client/init.js" />
-			<arg value="-o" />
-			<arg value="${target.dir}/mollify/client/init.js" />
-		</java>
 		
 		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}" />
 

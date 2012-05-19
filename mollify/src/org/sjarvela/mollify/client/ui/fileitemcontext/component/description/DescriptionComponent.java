@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.component.description;
 
-/*import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -266,4 +266,4 @@ public class DescriptionComponent implements ItemContextComponent,
 		}
 		return true;
 	}
-}*/
+}

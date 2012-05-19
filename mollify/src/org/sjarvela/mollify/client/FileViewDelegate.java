@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.Folder;
@@ -58,4 +58,4 @@ public class FileViewDelegate implements FileView {
 		this.delegate = delegate;
 	}
 
-}*/
+}

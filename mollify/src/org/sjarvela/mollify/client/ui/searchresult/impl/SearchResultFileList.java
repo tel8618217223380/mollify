@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class SearchResultFileList extends FileList {
 
 	public SearchResultFileList(TextProvider textProvider,
 			PathFormatter formatter) {
-		super(textProvider);
+		super(textProvider, null);
 		this.formatter = formatter;
 		setSelectionMode(SelectionMode.Multi);
 	}
@@ -123,4 +123,4 @@ public class SearchResultFileList extends FileList {
 		}
 		return "<li>" + html + "</li>";
 	}
-}*/
+}

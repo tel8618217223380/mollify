@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.filelist;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +27,7 @@ import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.GridDataProvider;
 import org.sjarvela.mollify.client.ui.common.grid.GridListener;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,12 +42,13 @@ public class FileList extends Grid<FileSystemItem> implements
 	public static String COLUMN_ID_TYPE = "type";
 	public static String COLUMN_ID_SIZE = "size";
 
-	// private final DragAndDropManager dragAndDropManager;
+	private final DragAndDropManager dragAndDropManager;
 
 	private String typeTextFolder = "";
 	private String sizeTextFolder = "";
 
-	public FileList(TextProvider textProvider) {
+	public FileList(TextProvider textProvider,
+			DragAndDropManager dragAndDropManager) {
 		super(textProvider, StyleConstants.FILE_LIST_HEADER);
 
 		typeTextFolder = textProvider.getText(Texts.fileListDirectoryType);
@@ -54,7 +56,7 @@ public class FileList extends Grid<FileSystemItem> implements
 		setDataProvider(this);
 		setCustomSelection(true);
 
-		// this.dragAndDropManager = dragAndDropManager;
+		this.dragAndDropManager = dragAndDropManager;
 		this.addStyleName(StyleConstants.FILE_LIST);
 	}
 
@@ -208,9 +210,9 @@ public class FileList extends Grid<FileSystemItem> implements
 
 	private Label createNameWidget(final FileSystemItem item, boolean draggable) {
 		DraggableFileSystemItem itemWidget = new DraggableFileSystemItem(item);
-		// if (draggable && dragAndDropManager != null)
-		// dragAndDropManager.getController(FileSystemItem.class)
-		// .makeDraggable(itemWidget);
+		if (draggable && dragAndDropManager != null)
+			dragAndDropManager.getController(FileSystemItem.class)
+					.makeDraggable(itemWidget);
 		return itemWidget;
 	}
 
@@ -265,4 +267,4 @@ public class FileList extends Grid<FileSystemItem> implements
 	public String getColumnStyle(GridColumn column) {
 		return StyleConstants.FILE_LIST_COLUMN_PREFIX + column.getId();
 	}
-}*/
+}

@@ -12,16 +12,16 @@ package org.sjarvela.mollify.client;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 public interface FileView {
 
 	void refreshCurrentFolder();
 
-	List<JsFilesystemItem> getAllItems();
+	List<FileSystemItem> getAllItems();
 
-	JsFolder getCurrentFolder();
+	Folder getCurrentFolder();
 
 	void setCurrentFolder(String id);
 

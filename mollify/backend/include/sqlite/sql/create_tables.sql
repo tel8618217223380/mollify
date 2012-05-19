@@ -7,7 +7,8 @@ CREATE TABLE user (
   permission_mode char(2) NULL,
   email varchar(128) NULL,
   auth varchar(8) NULL,
-  is_group TINYINT(1) NOT NULL
+  is_group TINYINT(1) NOT NULL,
+  expiration bigint(11) NULL
 );
 CREATE TABLE user_group (
   user_id int(11) NOT NULL,
