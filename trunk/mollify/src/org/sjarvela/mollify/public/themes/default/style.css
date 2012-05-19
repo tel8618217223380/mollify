@@ -379,6 +379,10 @@ a.login-link {
 	background-color: #f6f6f6;
 }
 
+.mollify-filelist-item.ui-draggable-dragging {
+	background-color: transparent;
+}
+
 .mollify-filelist-header-icon-col, .mollify-filelist-item-icon {
 	float: left;
 	width: 16px;
@@ -452,4 +456,12 @@ a.login-link {
 
 .mollify-filelist-item.hover .mollify-filelist-quickmenu, .mollify-filelist-quickmenu.open {
 	visibility: visible;
+}
+
+.mollify-filelist-item.drophover .mollify-filelist-quickmenu, .mollify-filelist-item.ui-draggable-dragging .mollify-filelist-quickmenu {
+	visibility: hidden;
+}
+
+.mollify-filelist-item.drophover {
+	background: red;
 }

@@ -94,6 +94,11 @@ function MainView() {
 			onFolderSelected : that.listener.onSubFolderSelected,
 			onMenuOpen : function(item, e) {
 				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
+			},
+			canDrop : function(to, item) {
+				if (to.id == to.root_id || to.is_file) return false;
+				if (item.id == to.id) return false;
+				return true;
 			}
 		});
 	}
@@ -235,6 +240,14 @@ function FileList(container, id, columns) {
 			$(this).addClass("hover");
 		}, function() {
 			$(this).removeClass("hover");
+		}).draggable({
+			revert: "invalid",
+			distance: 10,
+			addClasses: false,
+			zIndex: 2700
+		}).droppable({
+			hoverClass: "drophover",
+			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 		});
 		
 		t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
