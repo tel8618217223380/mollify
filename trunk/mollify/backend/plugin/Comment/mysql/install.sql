@@ -5,6 +5,6 @@ CREATE TABLE `{TABLE_PREFIX}comment` (
   `time` bigint(11) NOT NULL,
   `comment` varchar(1024) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) COLLATE utf8_general_ci COMMENT = 'Comments';
+) ENGINE = '{ENGINE}' COLLATE utf8_general_ci COMMENT = 'Comments';
 
 INSERT INTO `{TABLE_PREFIX}parameter` (name, value) VALUES ('plugin_Comment_version', '1_0');

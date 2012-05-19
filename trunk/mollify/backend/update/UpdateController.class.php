@@ -191,6 +191,10 @@
 			return $result;
 		}
 		
+		public function onError($e) {
+			$this->installer->processor()->onError($e);
+		}
+		
 		public function hasError() {
 			return $this->installer->processor()->hasError();
 		}
