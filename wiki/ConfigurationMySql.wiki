@@ -31,6 +31,10 @@ With localhost database, you can also provide socket for the connection:
 
 Default MySQL engine used is InnoDB. With option $DB_ENGINE you can change this (NOTE used only on installation).
 
+{{{
+	$DB_ENGINE = "myisam";
+}}}
+
 = 2. Installation =
 
 Installing Mollify to MySQL database can be done with installer script. It does, however, require MYSQLI extension installed in the server. If this is not available, you have to install manually as described in chapter 2.2.
