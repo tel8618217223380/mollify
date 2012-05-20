@@ -383,6 +383,7 @@ a.login-link {
 
 .folder-hierarchy-item {
 	cursor: pointer;
+	color: #93a9cd;
 }
 
 .mollify-filelist-header, .mollify-filelist-item {
@@ -416,6 +417,11 @@ a.login-link {
 
 .mollify-filelist-item-icon {
 	background: url(images/mimetypes/empty.png) no-repeat;
+}
+
+.mollify-filelist-col-header {
+	font-weight: bold;
+	color: #333333;
 }
 
 #mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
@@ -497,15 +503,18 @@ a.login-link {
 	width: 200px;
 	height: 185px;
 	cursor: pointer;
-	margin: 4px;
+	margin: 6px;
 }
 
 .mollify-iconview-item.hover {
-	background: #eeeeee;
+	margin: 4px;
+	border: 2px solid #eeeeee;
 }
 
 .mollify-iconview-item.ui-draggable-dragging {
 	background-color: transparent;
+	border: none;
+	margin: 6px;
 }
 
 .mollify-iconview-item.drophover {
@@ -527,7 +536,7 @@ a.login-link {
 
 .mollify-iconview.iconview-small .mollify-iconview-item-icon {
 	width: 75px;
-	height: 75px;
+	height: 70px;
 	background: url(images/mimetypes64/empty.png) no-repeat 4px 7px;
 	margin-top: 4px;
 	margin-left: 13px;
