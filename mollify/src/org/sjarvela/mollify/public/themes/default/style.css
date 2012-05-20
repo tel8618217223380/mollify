@@ -500,6 +500,18 @@ a.login-link {
 	margin: 4px;
 }
 
+.mollify-iconview-item.hover {
+	background: #eeeeee;
+}
+
+.mollify-iconview-item.ui-draggable-dragging {
+	background-color: transparent;
+}
+
+.mollify-iconview-item.drophover {
+	background: red;
+}
+
 .mollify-iconview.iconview-small .mollify-iconview-item {
 	width: 100px;
 	height: 100px;
