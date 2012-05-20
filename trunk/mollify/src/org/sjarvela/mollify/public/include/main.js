@@ -117,6 +117,13 @@ function MainView() {
 				if (to.id == to.root_id || to.is_file) return false;
 				if (item.id == to.id) return false;
 				return true;
+			},
+			onClick: function(item) {
+				
+			},
+			onDblClick: function(item) {
+				if (item.is_file) return;
+				that.listener.onSubFolderSelected(item);
 			}
 		});
 	}
@@ -140,6 +147,8 @@ function IconView(container, id, cls) {
 	t.viewId = 'mollify-iconview-'+id;
 	
 	this.init = function(p) {
+		t.p = p;
+		
 		mollify.dom.template("mollify-tmpl-iconview", {viewId: t.viewId}).appendTo(t.$c.empty());
 		t.$l = $("#"+t.viewId);
 		if (cls) t.$l.addClass(cls);
@@ -157,6 +166,24 @@ function IconView(container, id, cls) {
 				return c;
 			}
 		}).appendTo(t.$l.empty());
+		
+		t.$l.find(".mollify-iconview-item").hover(function() {
+			$(this).addClass("hover");
+		}, function() {
+			$(this).removeClass("hover");
+		}).draggable({
+			revert: "invalid",
+			distance: 10,
+			addClasses: false,
+			zIndex: 2700
+		}).droppable({
+			hoverClass: "drophover",
+			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
+		}).single_double_click(function() {
+			t.p.onClick($(this).tmplItem().data);
+		},function() {
+			t.p.onDblClick($(this).tmplItem().data);
+		});
 	}
 }
 
@@ -303,7 +330,6 @@ function FileList(container, id, columns) {
 		
 		t.$i.find(".item-folder .mollify-filelist-item-name-title").click(function(e) {
 			e.preventDefault();
-			var i = $(this).tmplItem();
 			t.p.onFolderSelected($(this).tmplItem().data);
 		});
 	}
