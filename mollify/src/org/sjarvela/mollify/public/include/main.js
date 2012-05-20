@@ -105,7 +105,7 @@ function MainView() {
 		if (that.viewStyle == 0) {
 			that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
 		} else {
-			that.itemWidget = new IconView('mollify-folderview-items', 'main', that.viewStyle == 1 ? 'iconview-large' : 'iconview-small');
+			that.itemWidget = new IconView('mollify-folderview-items', 'main', that.viewStyle == 1 ? 'iconview-small' : 'iconview-large');
 		}
 		
 		that.itemWidget.init({
