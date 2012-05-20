@@ -9,7 +9,14 @@
 
 	<div id="mainview-content-container">
 		<div id="mainview-content">
-
+			<div id="mainview-content-area"></div>
+			<div id="mainview-content-footer">
+				<div id="mainview-viewstyle-options" class="mollify-radio">
+					<a id="mainview-viewstyle-list" href="javascript: void(0);" class="mainview-viewstyle-option">List</a>
+					<a id="mainview-viewstyle-large-icons" href="javascript: void(0);" class="mainview-viewstyle-option">Large icons</a>
+					<a id="mainview-viewstyle-small-icons" href="javascript: void(0);" class="mainview-viewstyle-option">Small icons</a>
+				</div>
+			</div>
 		</div>
 	</div>
 	
@@ -74,5 +81,17 @@
 		{{each(c,col) $item.cols}}
 			<div class="mollify-filelist-col mollify-filelist-col-${col.id}" style="${$item.itemColStyle($data, col)}">{{html $item.col($data, col)}}</div>
 		{{/each}}
+	</div>
+</script>
+
+<script id="mollify-tmpl-iconview" type="text/x-jquery-tmpl">
+	<div id="${viewId}" class="mollify-iconview">
+	</div>
+</script>
+
+<script id="mollify-tmpl-iconview-item" type="text/x-jquery-tmpl">
+	<div id="mollify-iconview-item-${id}" class="mollify-iconview-item ${$item.typeClass($data)}">
+		<div class="mollify-iconview-item-icon"></div>
+		<div class="mollify-iconview-item-title">${name}</div>
 	</div>
 </script>

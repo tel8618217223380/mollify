@@ -179,11 +179,12 @@
 				$("head").append(link);
 			},
 			
-			loadContent : function(id, url, cb, process) {
+			loadContent : function(id, url, handler, process) {
 				var $target = $("#"+id);
 				$target.load(t.urlWithParam(url, "_="+mollify.time), function() {
-					if (process) t.ui.process($target, process);
-					if (cb) cb();
+					if (process) t.ui.process($target, process, handler);
+					if (typeof handler === 'function') handler();
+					else if (handler.onLoad) handler.onLoad(id);
 				});
 			},
 			
@@ -199,17 +200,23 @@
 					t.ui.filelist.columns.push(c);
 					if (t.settings["list-view-columns"][c.id])
 						t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
-				} 
+				}
 			},
 			
-			process: function($e, ids) {
+			assign: function(h, id, c) {
+				if (!h || !id || !c) return;
+				if (!h.controls) h.controls = {};
+				h.controls[id] = c;
+			},
+			
+			process: function($e, ids, handler) {
 				$.each(ids, function(i, k) {
-					if (t.ui.handlers[k]) t.ui.handlers[k]($e);
+					if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
 				});
 			},
 			
 			handlers : {
-				hintbox : function(p) {
+				hintbox : function(p, h) {
 					p.find("input.hintbox").each(function() {
 						var $this = $(this);
 						var hint = t.env.texts().get($this.attr('hint-key'));
@@ -217,7 +224,7 @@
 					}).placeholder();
 				},
 	
-				localize : function(p) {
+				localize : function(p, h) {
 					p.find(".localized").each(function() {
 						var key = $(this).attr('title-key');
 						if (key)
@@ -229,7 +236,7 @@
 					});
 				},
 				
-				center : function(p) {
+				center : function(p, h) {
 					p.find(".center").each(function() {
 						var $this = $(this);
 						var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
@@ -248,48 +255,19 @@
 					});
 				},
 				
-				bubble: function(p, cl) {
+				bubble: function(p, h) {
 					p.find(".bubble-action").each(function() {
-						var $this = $(this);
-						var actionId = $this.attr('id');
-						if (!actionId) return;
-						
-						var content = $("#" + actionId + '-bubble');
-						if (!content || content.length == 0) return;
-	
-						var html = content.html();
-						content.remove();
-						
-						$this.qtip({
-							content: html,
-							position: {
-								my: 'top center',
-								at: 'bottom center'
-							},
-							show: 'click',
-							hide: {
-								delay: 200,
-								fixed: true,
-								event: 'click mouseleave'
-							},
-							style: {
-								tip: true,
-								classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-							},
-							events: {
-								render: function(e, api) {
-									if (!cl || !cl.onRenderBubble) return;
-									cl.onRenderBubble(actionId, api);
-								},
-								visible: function(e, api) {
-									if (!cl || !cl.onShowBubble) return;
-									cl.onShowBubble(actionId, api);
-								},
-								hide: function(e, api) {
-									api.destroy();
-								}
-							}
-						});
+						var $t = $(this);
+						var b = mollify.ui.controls.bubble($t, h);
+						mollify.ui.assign(h, $t.attr('id'), b);
+					});
+				},
+				
+				radio: function(p, h) {
+					p.find(".mollify-radio").each(function() {
+						var $t = $(this);
+						var r = mollify.ui.controls.radio($t, h);
+						mollify.ui.assign(h, $t.attr('id'), r);
 					});
 				}
 			},
@@ -357,6 +335,74 @@
 							}
 						}
 					}).qtip('api').show();
+				},
+				
+				bubble: function(e, h) {
+					var actionId = e.attr('id');
+					if (!actionId) return;
+					
+					var content = $("#" + actionId + '-bubble');
+					if (!content || content.length == 0) return;
+
+					var html = content.html();
+					content.remove();
+					
+					e.qtip({
+						content: html,
+						position: {
+							my: 'top center',
+							at: 'bottom center'
+						},
+						show: 'click',
+						hide: {
+							delay: 200,
+							fixed: true,
+							event: 'click mouseleave'
+						},
+						style: {
+							tip: true,
+							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+						},
+						events: {
+							render: function(e, api) {
+								if (!h || !h.onRenderBubble) return;
+								h.onRenderBubble(actionId, api);
+							},
+							visible: function(e, api) {
+								if (!h || !h.onShowBubble) return;
+								h.onShowBubble(actionId, api);
+							},
+							hide: function(e, api) {
+								//api.destroy();
+							}
+						}
+					});
+					return {};
+				},
+				
+				radio: function(e, h) {
+					var rid = e.attr('id');
+					var items = e.find("a");
+					
+					var select = function(item) {
+						items.removeClass("selected");
+						item.addClass("selected");
+					}
+					
+					items.click(function() {
+						var i = $(this);
+						var ind = items.index(i);
+						select(i);
+						
+						var id = i.attr('id');
+						if (h && rid && h.onRadioChanged) h.onRadioChanged(rid, id, ind);
+					});
+					
+					return {
+						set: function(ind) {
+							select($(items[ind]));
+						}
+					};
 				}
 			}
 		}
@@ -499,7 +545,7 @@ function LoginView() {
 	}
 	
 	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("login-view.html"), that.onLoad, ['localize', 'hintbox']);
+		mollify.dom.loadContent(id, mollify.templates.url("login-view.html"), that, ['localize', 'hintbox', 'bubble']);
 	}
 	
 	this.onLoad = function() {
@@ -516,7 +562,7 @@ function LoginView() {
 		
 		var $data = $("#login-data");
 		mollify.ui.handlers.center($data);
-		mollify.ui.handlers.bubble($data, that);
+		//mollify.ui.handlers.bubble($data, that);
 		$("#login-name, #login-password").bind('keypress', function(e) {
 			if ((e.keyCode || e.which) == 13) that.onLogin();
 		});
