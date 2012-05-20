@@ -1,5 +1,6 @@
 function MainView() {
 	var that = this;
+	this.viewStyle = 0;
 	
 	this.init = function(p) {
 		that.roots = p.roots;
@@ -15,7 +16,7 @@ function MainView() {
 	}
 	
 	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that.onLoad, ['localize']);
+		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that, ['localize', 'radio']);
 	}
 	
 	this.onLoad = function() {
@@ -28,7 +29,19 @@ function MainView() {
 		mollify.dom.template("mollify-tmpl-main-username", s, mollify).appendTo("#mainview-user");
 		if (s.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
 		
+		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
+		
 		that.listener.onViewLoaded();
+	}
+	
+	this.onRadioChanged = function(groupId, valueId, i) {
+		if (groupId == "mainview-viewstyle-options") that.onViewStyleChanged(valueId, i);
+	}
+	
+	this.onViewStyleChanged = function(id, i) {
+		that.viewStyle = i;
+		that.initList();
+		that.data(that.p);
 	}
 	
 	this.onResize = function() {
@@ -63,7 +76,7 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
-		var $t = $("#mainview-content").empty();
+		var $t = $("#mainview-content-area").empty();
 		if (p) {
 			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($t);
 			that.setupHierarchy(p.hierarchy);
@@ -89,7 +102,12 @@ function MainView() {
 	}
 	
 	this.initList = function() {
-		that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
+		if (that.viewStyle == 0) {
+			that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
+		} else {
+			that.itemWidget = new IconView('mollify-folderview-items', 'main', that.viewStyle == 1 ? 'iconview-large' : 'iconview-small');
+		}
+		
 		that.itemWidget.init({
 			onFolderSelected : that.listener.onSubFolderSelected,
 			onMenuOpen : function(item, e) {
@@ -104,6 +122,7 @@ function MainView() {
 	}
 	
 	this.data = function(p) {
+		that.p = p;
 		$("#mollify-folderview-items").removeClass("loading");
 		that.itemWidget.content(p.items, p.data);
 	}
@@ -112,6 +131,32 @@ function MainView() {
 		if (!actions) return;
 		c.addClass("open");
 		mollify.ui.controls.popupmenu(actions, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
+	}
+}
+
+function IconView(container, id, cls) {
+	var t = this;
+	t.$c = $("#"+container);
+	t.viewId = 'mollify-iconview-'+id;
+	
+	this.init = function(p) {
+		mollify.dom.template("mollify-tmpl-iconview", {viewId: t.viewId}).appendTo(t.$c.empty());
+		t.$l = $("#"+t.viewId);
+		if (cls) t.$l.addClass(cls);
+	}
+	
+	this.content = function(items, data) {
+		t.items = items;
+		t.data = data;
+		
+		mollify.dom.template("mollify-tmpl-iconview-item", items, {
+			typeClass : function(item) {
+				var c = item.is_file ? 'item-file' : 'item-folder';
+				if (item.is_file && item.extension) c += ' item-type-'+item.extension;
+				else if (!item.is_file && item.id == item.root_id) c += ' item-root-folder';
+				return c;
+			}
+		}).appendTo(t.$l.empty());
 	}
 }
 
