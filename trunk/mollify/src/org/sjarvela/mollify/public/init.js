@@ -311,7 +311,6 @@
 							at: p.positionAt || 'bottom left',
 							container: p.container || $('#mainview-content')
 						},
-						show: 'click',
 						hide: {
 							delay: 200,
 							fixed: true,

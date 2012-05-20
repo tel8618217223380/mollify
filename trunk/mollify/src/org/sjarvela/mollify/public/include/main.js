@@ -12,7 +12,7 @@ function MainView() {
 	}
 	
 	this.getDataRequest = function(folder) {
-		return that.itemWidget.getDataRequest(folder);
+		return that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {};
 	}
 	
 	this.render = function(id) {
@@ -118,11 +118,15 @@ function MainView() {
 				if (item.id == to.id) return false;
 				return true;
 			},
-			onClick: function(item) {
-				
+			onClick: function(item, t) {
+				if (!item.is_file && that.viewStyle == 0) {
+					that.listener.onSubFolderSelected(item);
+					return;
+				}
+				that.openItemContext(item, e);
 			},
 			onDblClick: function(item) {
-				if (item.is_file) return;
+				if (that.viewStyle == 0 || item.is_file) return;
 				that.listener.onSubFolderSelected(item);
 			}
 		});
@@ -138,6 +142,36 @@ function MainView() {
 		if (!actions) return;
 		c.addClass("open");
 		mollify.ui.controls.popupmenu(actions, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
+	}
+	
+	this.openItemContext = function(item, e) {
+		e.qtip({
+			content: "<div>foo</div>",
+			position: {
+				my: 'top center',
+				at: 'bottom center'
+			},
+			hide: {
+				delay: 200,
+				fixed: true,
+				event: 'click mouseleave'
+			},
+			style: {
+				tip: true,
+				classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+			},
+			events: {
+				render: function(e, api) {
+
+				},
+				visible: function(e, api) {
+
+				},
+				hide: function(e, api) {
+					api.destroy();
+				}
+			}
+		}).qtip('api').show();
 	}
 }
 
@@ -180,7 +214,8 @@ function IconView(container, id, cls) {
 			hoverClass: "drophover",
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 		}).single_double_click(function() {
-			t.p.onClick($(this).tmplItem().data);
+			var $t = $(this);
+			t.p.onClick($t.tmplItem().data, "");
 		},function() {
 			t.p.onDblClick($(this).tmplItem().data);
 		});
@@ -320,6 +355,15 @@ function FileList(container, id, columns) {
 		}).droppable({
 			hoverClass: "drophover",
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
+		}).click(function(e) {
+			e.preventDefault();
+			var $t = $(this);
+			var $col = $(e.srcElement).parentsUntil(".mollify-filelist-col");
+			
+			var clickType = "";
+//			if ($src.hasClass("mollify-filelist-item-icon")) clickType = "icon";
+			
+			t.p.onClick($t.tmplItem().data, clickType);
 		});
 		
 		t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
@@ -327,11 +371,15 @@ function FileList(container, id, columns) {
 			var $t = $(this);
 			t.p.onMenuOpen($t.tmplItem().data, $t);
 		});
-		
-		t.$i.find(".item-folder .mollify-filelist-item-name-title").click(function(e) {
+
+		/*t.$i.find(".mollify-filelist-item-name-title").click(function(e) {
+			e.preventDefault();
+			t.p.onClick($(this).tmplItem().data, "name");
+		});*/
+		/*t.$i.find(".item-folder .mollify-filelist-item-name-title").click(function(e) {
 			e.preventDefault();
 			t.p.onFolderSelected($(this).tmplItem().data);
-		});
+		});*/
 	}
 	
 	this.removeHover = function() {
