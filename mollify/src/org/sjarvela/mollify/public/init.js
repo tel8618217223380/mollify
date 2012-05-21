@@ -39,6 +39,7 @@
 					return i1.name.toLowerCase().localeCompare(i2.name.toLowerCase()) * sort;
 				},
 				"content": function(item, data) {
+					//TODO quick menu -> view controller
 					return '<span class="mollify-filelist-item-name-title">'+item.name+'</span><span class="mollify-filelist-quickmenu"></span>';
 				}
 			});

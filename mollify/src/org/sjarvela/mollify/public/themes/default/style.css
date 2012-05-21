@@ -363,15 +363,37 @@ a.login-link {
 }
 
 #mollify-folderview {
-	padding: 8px;
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
 }
 
 #mollify-folderview-header {
-	margin: 0 0 4px;
-	padding: 8px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 70px;
+	padding: 8px 0 0 8px;
 }
 
-#mollify-folderview-header, .mollify-filelist-header {
+#mollify-folderview.roots #mollify-folderview-header {
+	height: 40px;
+}
+
+#mollify-folderview-items {
+	position: absolute;
+	top: 70px;
+	left: 8px;
+	right: 8px;
+	bottom: 0;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.mollify-filelist-header {
 	border-bottom: 1px solid #ececec;
 }
 
@@ -408,7 +430,7 @@ a.login-link {
 	background-color: transparent;
 }
 
-.mollify-filelist-header-icon-col, .mollify-filelist-item-icon {
+.mollify-filelist-item-icon {
 	float: left;
 	width: 16px;
 	height: 16px;
@@ -465,6 +487,10 @@ a.login-link {
 	vertical-align: middle;
 }
 
+.mollify-filelist-col-icon {
+	width: 25px;
+}
+
 .mollify-filelist-col-name {
 	width: 200px;
 }
@@ -494,6 +520,10 @@ a.login-link {
 
 .mollify-filelist-item.drophover {
 	background: red;
+}
+
+.mollify-iconview {
+	float: left;
 }
 
 .mollify-iconview-item {

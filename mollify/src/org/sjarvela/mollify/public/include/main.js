@@ -119,11 +119,14 @@ function MainView() {
 				return true;
 			},
 			onClick: function(item, t) {
-				if (!item.is_file && that.viewStyle == 0) {
-					that.listener.onSubFolderSelected(item);
-					return;
+				console.log(t);
+				if (that.viewStyle == 0) {
+					if (!item.is_file && t == 'name') {
+						that.listener.onSubFolderSelected(item);
+						return;
+					}
 				}
-				that.openItemContext(item, e);
+				//that.openItemContext(item, e);
 			},
 			onDblClick: function(item) {
 				if (that.viewStyle == 0 || item.is_file) return;
@@ -357,13 +360,13 @@ function FileList(container, id, columns) {
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 		}).click(function(e) {
 			e.preventDefault();
+			
 			var $t = $(this);
-			var $col = $(e.srcElement).parentsUntil(".mollify-filelist-col");
+			var $src = $(e.srcElement);
+			if ($src.hasClass("mollify-filelist-quickmenu")) return;
 			
-			var clickType = "";
-//			if ($src.hasClass("mollify-filelist-item-icon")) clickType = "icon";
-			
-			t.p.onClick($t.tmplItem().data, clickType);
+			var i = $t.find(".mollify-filelist-col").index($src.closest(".mollify-filelist-col"));			
+			t.p.onClick($t.tmplItem().data, (i == 0 ? "icon" : t.cols[i-1].id));
 		});
 		
 		t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
