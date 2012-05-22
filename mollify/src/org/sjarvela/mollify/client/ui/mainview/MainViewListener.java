@@ -7,6 +7,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public interface MainViewListener {
 	void onViewLoaded();
+	
+	void onHomeSelected();
 
 	void onSubFolderSelected(JsFolder f);
 
