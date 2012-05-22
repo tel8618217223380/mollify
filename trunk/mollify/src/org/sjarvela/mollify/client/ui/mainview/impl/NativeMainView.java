@@ -32,6 +32,9 @@ public class NativeMainView extends NativeView implements MainView {
 			onViewLoaded : function(u, p, r) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onViewLoaded()();
 			},
+			onHomeSelected : function(f) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onHomeSelected()();
+			},
 			onSubFolderSelected : function(f) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onSubFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
 			},

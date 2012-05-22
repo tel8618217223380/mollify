@@ -158,6 +158,12 @@ public class MainViewPresenter implements MainViewListener,
 	public JavaScriptObject getDataRequest(JsFolder folder) {
 		return view.getDataRequest(folder);
 	}
+	
+	@Override
+	public void onHomeSelected() {
+		model.clear();
+		view.showAllRoots();
+	}
 
 	@Override
 	public void onSubFolderSelected(JsFolder f) {

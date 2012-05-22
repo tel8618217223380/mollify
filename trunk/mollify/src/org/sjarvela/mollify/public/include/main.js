@@ -22,7 +22,7 @@ function MainView() {
 	this.onLoad = function() {
 		$(window).resize(that.onResize);
 		that.onResize();
-		
+
 		// TODO default view mode
 		// TODO expose file urls
 		var s = mollify.session.get();
@@ -87,14 +87,16 @@ function MainView() {
 			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($t);
 			//TODO disable write
 		}
+		$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 		mollify.ui.process($t, ['localize']);
 		that.initList();
 	}
 	
 	this.setupHierarchy = function(h) {
-		var p = $("#mollify-folder-hierarchy").empty();
+		var p = $("#mollify-folder-hierarchy-items").empty();
 		
 		mollify.dom.template("mollify-tmpl-main-folder-hierarchy", h).appendTo(p);
+		$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
 		$(".folder-hierarchy-item").click(function() {
 			var index = p.find(".folder-hierarchy-item").index($(this));
 			that.listener.onFolderSelected(index+1, h[index]);
