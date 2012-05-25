@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.8.1 ===
+Released 2012/5/25
+  * Fixed security issue
+
 === Version 1.8.8 ===
 Released 2012/5/19
   * Added support for user account expiration, issue 401
