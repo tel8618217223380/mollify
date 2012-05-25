@@ -51,7 +51,7 @@
 		}
 				
 		public function createItem($id, $path) {
-			if (!self::isValidPath($path)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$path."]");
+			self::assertPath($path);
 			
 			$fullPath = self::joinPath($this->rootPath, $path);
 			$isFile = (strcasecmp(substr($fullPath, -1), DIRECTORY_SEPARATOR) != 0);
@@ -180,7 +180,7 @@
 		}
 
 		public function rename($item, $name) {
-			if (!self::isValidPath($name)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$name."]");
+			self::assertPath($name);
 			
 			$old = $this->localPath($item);
 			$new = self::joinPath(dirname($old), $this->filesystemInfo->env()->convertCharset($name, FALSE));
@@ -277,7 +277,7 @@
 		}
 		
 		public function createFolder($folder, $name) {
-			if (!self::isValidPath($name)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$name."]");
+			self::assertPath($name);
 			
 			$path = self::folderPath(self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE)));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
@@ -290,7 +290,7 @@
 		}
 		
 		public function createFile($folder, $name) {
-			if (!self::isValidPath($name)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$name."]");
+			self::assertPath($name);
 			
 			$target = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS");
@@ -298,14 +298,14 @@
 		}
 
 		public function fileWithName($folder, $name) {
-			if (!self::isValidPath($name)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$name."]");
+			self::assertPath($name);
 			
 			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
 			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 
 		public function folderWithName($folder, $name) {
-			if (!self::isValidPath($name)) throw new ServiceException("INVALID_REQUEST", "Invalid path [".$name."]");
+			self::assertPath($name);
 			
 			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE).DIRECTORY_SEPARATOR);
 			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
@@ -363,11 +363,10 @@
 			return "LOCAL (".$this->id.") ".$this->name."(".$this->rootPath.")";
 		}
 
-		public static function isValidPath($path) {
-			if (strlen($path) == 0) return true;
+		public static function assertPath($path) {
+			if (strlen($path) == 0) return;
 			if (strpos($path, "\\") !== FALSE or strpos($path, "/") !== FALSE)
-				return false;
-			return true;
+				throw new ServiceException("INVALID_REQUEST", "Invalid path [".$path."]");
 		}
 		
 		static function joinPath($item1, $item2) {
