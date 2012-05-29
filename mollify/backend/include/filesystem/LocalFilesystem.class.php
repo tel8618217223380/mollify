@@ -180,7 +180,7 @@
 		}
 
 		public function rename($item, $name) {
-			self::assertPath($name);
+			self::assertFilename($name);
 			
 			$old = $this->localPath($item);
 			$new = self::joinPath(dirname($old), $this->filesystemInfo->env()->convertCharset($name, FALSE));
@@ -277,7 +277,7 @@
 		}
 		
 		public function createFolder($folder, $name) {
-			self::assertPath($name);
+			self::assertFilename($name);
 			
 			$path = self::folderPath(self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE)));
 			if (file_exists($path)) throw new ServiceException("DIR_ALREADY_EXISTS", $folder->id()."/".$name);
@@ -290,7 +290,7 @@
 		}
 		
 		public function createFile($folder, $name) {
-			self::assertPath($name);
+			self::assertFilename($name);
 			
 			$target = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
 			if (file_exists($target)) throw new ServiceException("FILE_ALREADY_EXISTS");
@@ -298,14 +298,14 @@
 		}
 
 		public function fileWithName($folder, $name) {
-			self::assertPath($name);
+			self::assertFilename($name);
 			
 			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE));
 			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
 		}
 
 		public function folderWithName($folder, $name) {
-			self::assertPath($name);
+			self::assertFilename($name);
 			
 			$path = self::joinPath($this->localPath($folder), $this->filesystemInfo->env()->convertCharset($name, FALSE).DIRECTORY_SEPARATOR);
 			return $this->itemWithPath($this->publicPath($this->filesystemInfo->env()->convertCharset($path)));
@@ -363,9 +363,15 @@
 			return "LOCAL (".$this->id.") ".$this->name."(".$this->rootPath.")";
 		}
 
+		public static function assertFilename($name) {
+			if (strlen($name) == 0) return;
+			if (strpos($name, "\\") !== FALSE or strpos($name, "/") !== FALSE)
+				throw new ServiceException("INVALID_REQUEST", "Invalid name [".$name."]");
+		}
+
 		public static function assertPath($path) {
 			if (strlen($path) == 0) return;
-			if (strpos($path, "\\") !== FALSE or strpos($path, "/") !== FALSE)
+			if (strpos($path, "..\\") !== FALSE or strpos($path, "../") !== FALSE)
 				throw new ServiceException("INVALID_REQUEST", "Invalid path [".$path."]");
 		}
 		
