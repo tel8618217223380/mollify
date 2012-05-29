@@ -1,6 +1,10 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== WebDAV plugin version 1.8 ===
+Released 2012/5/29
+  * Fixed unsupported method errors (issue 389)
+
 === Version 1.8.8.1 ===
 Released 2012/5/25
   * Fixed security issue
