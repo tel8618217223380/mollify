@@ -141,6 +141,11 @@ If this is correct, then most likely your filesystem does not operate on UTF-8 (
 
 3) In the table that is presented edit ".php" Runs under "PHP 5.2.x" (instead of "PHP 5.2.x FastCGI")
 
+== Zero byte download with WebDAV ==
+
+1. Add "include 'Sabre/DAV/UUIDUtil.php';" in Sabre.includes.php 
+2. Ensure write access in both "temp" and "data" folder
+
 == Downloaded files are corrupted ==
 
 Make sure configuration.php does not have any characters outside <?php - ?> tags, including spaces or line feeds. These characters are interpreted as output, and will corrupt file downloads.
