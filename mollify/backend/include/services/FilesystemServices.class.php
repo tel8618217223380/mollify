@@ -334,7 +334,16 @@
 					return;
 				case 'check':
 					if (!isset($this->request->data["files"])) throw $this->invalidRequestException();
-					$existing = $this->env->filesystem()->checkExisting($item, $this->request->data["files"]);
+					$stripped = array();
+					foreach($this->request->data["files"] as $file) {
+						$p = strrpos($file, "/");
+						if ($p === FALSE) $p = -1;
+						$p = max($p, strrpos($file, "\\"));
+						
+						if ($p !== FALSE and $p >= 0) $stripped[] = substr($file, $p+1);
+						else $stripped[] = $file;
+					}
+					$existing = $this->env->filesystem()->checkExisting($item, $stripped);
 					$this->response()->success(array("ok" => (count($existing) == 0), "existing" => $existing));
 					return;
 				case 'files':
