@@ -192,7 +192,7 @@
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
-			if (strpos($path, "../") != FALSE or strpos($path, "..\\") != FALSE) new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
+			if (strpos($path, "../") !== FALSE or strpos($path, "..\\") !== FALSE) new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
 			
 			if (array_key_exists($filesystemId, $this->folderCache)) {
 				$folderDef = $this->folderCache[$filesystemId];
