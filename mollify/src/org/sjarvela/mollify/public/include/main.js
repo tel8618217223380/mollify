@@ -112,15 +112,12 @@ function MainView() {
 		
 		that.itemWidget.init({
 			onFolderSelected : that.listener.onSubFolderSelected,
-			onMenuOpen : function(item, e) {
-				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
-			},
 			canDrop : function(to, item) {
 				if (to.id == to.root_id || to.is_file) return false;
 				if (item.id == to.id) return false;
 				return true;
 			},
-			onClick: function(item, t) {
+			onClick: function(item, t, e) {
 				console.log(t);
 				if (that.viewStyle == 0) {
 					if (!item.is_file && t == 'name') {
@@ -128,11 +125,14 @@ function MainView() {
 						return;
 					}
 				}
-				//that.openItemContext(item, e);
+				that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 			},
 			onDblClick: function(item) {
 				if (that.viewStyle == 0 || item.is_file) return;
 				that.listener.onSubFolderSelected(item);
+			},
+			onRightClick: function(item, t, e) {
+				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
 			}
 		});
 	}
@@ -153,8 +153,8 @@ function MainView() {
 		e.qtip({
 			content: "<div>foo</div>",
 			position: {
-				my: 'top center',
-				at: 'bottom center'
+				my: that.viewStyle == 0 ? 'top left' : 'top center',
+				at: that.viewStyle == 0 ? 'bottom left' : 'bottom center',
 			},
 			hide: {
 				delay: 200,
@@ -220,10 +220,19 @@ function IconView(container, id, cls) {
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 		}).single_double_click(function() {
 			var $t = $(this);
-			t.p.onClick($t.tmplItem().data, "");
+			t.p.onClick($t.tmplItem().data, "", $t);
 		},function() {
 			t.p.onDblClick($(this).tmplItem().data);
+		}).attr('unselectable', 'on').css({
+		   '-moz-user-select':'none',
+		   '-webkit-user-select':'none',
+		   'user-select':'none',
+		   '-ms-user-select':'none'
 		});
+	}
+	
+	this.getItemContextElement = function(item) {
+		return t.$l.find("#mollify-iconview-item-"+item.id);
 	}
 }
 
@@ -348,7 +357,8 @@ function FileList(container, id, columns) {
 			}
 		}).appendTo(t.$i.empty());
 		
-		t.$i.find(".mollify-filelist-item").hover(function() {
+		var $items = t.$i.find(".mollify-filelist-item");
+		$items.hover(function() {
 			$(this).addClass("hover");
 		}, function() {
 			$(this).removeClass("hover");
@@ -362,20 +372,24 @@ function FileList(container, id, columns) {
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 		}).click(function(e) {
 			e.preventDefault();
-			
-			var $t = $(this);
-			var $src = $(e.srcElement);
-			if ($src.hasClass("mollify-filelist-quickmenu")) return;
-			
-			var i = $t.find(".mollify-filelist-col").index($src.closest(".mollify-filelist-col"));			
-			t.p.onClick($t.tmplItem().data, (i == 0 ? "icon" : t.cols[i-1].id));
+			t.onItemClick($(this), $(e.srcElement), true);
+			return false;
+		}).bind("contextmenu",function(e){
+			e.preventDefault();
+			t.onItemClick($(this), $(e.srcElement), false);
+			return false;
+		}).attr('unselectable', 'on').css({
+		   '-moz-user-select':'none',
+		   '-webkit-user-select':'none',
+		   'user-select':'none',
+		   '-ms-user-select':'none'
 		});
-		
-		t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
+
+		/*t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
 			e.preventDefault();
 			var $t = $(this);
 			t.p.onMenuOpen($t.tmplItem().data, $t);
-		});
+		});*/
 
 		/*t.$i.find(".mollify-filelist-item-name-title").click(function(e) {
 			e.preventDefault();
@@ -385,6 +399,19 @@ function FileList(container, id, columns) {
 			e.preventDefault();
 			t.p.onFolderSelected($(this).tmplItem().data);
 		});*/
+	}
+	
+	this.onItemClick = function($item, $el, left) {
+		var i = $item.find(".mollify-filelist-col").index($el.closest(".mollify-filelist-col"));
+		var colId = (i == 0 ? "icon" : t.cols[i-1].id);
+		if (left)
+			t.p.onClick($item.tmplItem().data, colId, $item);
+		else
+			t.p.onRightClick($item.tmplItem().data, colId, $item);
+	}
+	
+	this.getItemContextElement = function(item) {
+		return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-col-name");
 	}
 	
 	this.removeHover = function() {
