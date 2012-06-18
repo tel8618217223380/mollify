@@ -256,8 +256,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 							return;
 						}
 
-						dialogManager.showInfo(textProvider
-								.getText(Texts.infoDialogErrorTitle),
+						dialogManager.showInfo(
+								textProvider
+										.getText(Texts.infoDialogErrorTitle),
 								textProvider.getText(
 										Texts.fileUploadFileExists,
 										StringUtil.toStringList(existing, ", ")));
@@ -347,8 +348,14 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 	private List<String> getFileNames() {
 		List<String> result = new ArrayList();
-		for (FileUpload uploader : uploaders)
-			result.add(uploader.getFilename());
+		for (FileUpload uploader : uploaders) {
+			String filename = uploader.getFilename();
+			int lastSeparator = Math.max(filename.lastIndexOf("/"),
+					filename.lastIndexOf("\\"));
+			if (lastSeparator > 0)
+				filename = filename.substring(lastSeparator + 1);
+			result.add(filename);
+		}
 		return result;
 	}
 
