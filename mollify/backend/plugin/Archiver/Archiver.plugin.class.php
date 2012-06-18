@@ -25,7 +25,7 @@
 			// TODO tar etc
 			if (strcasecmp("zip", $ext) != 0) return FALSE;
 			
-			return array("plugin_archiver" => array("action_extract" => "archive/".$item->id()."/extract"));
+			return array("action_extract" => "archive/".$item->id()."/extract");
 		}
 		
 		public function getClientPlugin() {

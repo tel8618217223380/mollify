@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,9 +22,9 @@ function ArchiverPlugin() {
 	}
 	
 	this.getItemContext = function(item, details) {
-		if (!details["plugin_archiver"] || !details["plugin_archiver"]["action_extract"]) return null;
+		if (!details["plugin-archiver"] || !details["plugin-archiver"]["action_extract"]) return null;
 		
-		var extractServiceUrl = details["plugin_archiver"]["action_extract"];
+		var extractServiceUrl = details["plugin-archiver"]["action_extract"];
 		
 		return {
 			actions : {
