@@ -132,7 +132,7 @@ function MainView() {
 				that.listener.onSubFolderSelected(item);
 			},
 			onRightClick: function(item, t, e) {
-				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, e); });
+				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, that.itemWidget.getItemContextElement(item)); });
 			}
 		});
 	}
@@ -150,8 +150,9 @@ function MainView() {
 	}
 	
 	this.openItemContext = function(item, e) {
+		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", {}, {})).html();
 		e.qtip({
-			content: "<div>foo</div>",
+			content: html,
 			position: {
 				my: that.viewStyle == 0 ? 'top left' : 'top center',
 				at: that.viewStyle == 0 ? 'bottom left' : 'bottom center',
