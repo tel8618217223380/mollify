@@ -30,6 +30,7 @@ function MainView() {
 		if (s.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
+		that.initList();
 		
 		that.listener.onViewLoaded();
 	}
@@ -76,7 +77,7 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
-		var $t = $("#mainview-content-area").empty();
+		var $t = $("#mainview-content-area").empty();	//TODO don't clear the view
 		if (p) {
 			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($t);
 			that.setupHierarchy(p.hierarchy);
@@ -89,7 +90,7 @@ function MainView() {
 		}
 		$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 		mollify.ui.process($t, ['localize']);
-		that.initList();
+		that.initList();	//TODO don't clear the view
 	}
 	
 	this.setupHierarchy = function(h) {
