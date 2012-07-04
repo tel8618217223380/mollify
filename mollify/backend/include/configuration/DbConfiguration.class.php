@@ -60,9 +60,9 @@
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($username), $this->db->string($password)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, password, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($password)));
 			}
 			$matches = $result->count();
 			
@@ -82,7 +82,7 @@
 		public function getUserByName($username, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
-			$result = $this->db->query(sprintf("SELECT id, name, password, a1password, auth FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
+			$result = $this->db->query(sprintf("SELECT id, name, email, password, a1password, auth FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0".$expirationCriteria, $this->db->string($username)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
@@ -99,7 +99,7 @@
 		}
 
 		public function getUserByNameOrEmail($name) {
-			$result = $this->db->query(sprintf("SELECT id, name, password, a1password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
+			$result = $this->db->query(sprintf("SELECT id, name, email, password, a1password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($name)));
 			$matches = $result->count();
 			
 			if ($matches === 0) {
