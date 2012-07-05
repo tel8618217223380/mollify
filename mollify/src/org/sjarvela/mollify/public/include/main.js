@@ -77,20 +77,19 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
-		var $t = $("#mainview-content-area").empty();	//TODO don't clear the view
+		var $h = $("#mollify-folderview-header").empty();
 		if (p) {
-			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($t);
+			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($h);
 			that.setupHierarchy(p.hierarchy);
 			
 			//TODO canWrite
 			$("#mollify-folderview-items").addClass("loading");
 		} else {
-			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($t);
+			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
 			//TODO disable write
 		}
-		$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
-		mollify.ui.process($t, ['localize']);
-		that.initList();	//TODO don't clear the view
+		$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
+		mollify.ui.process($h, ['localize']);
 	}
 	
 	this.setupHierarchy = function(h) {
@@ -120,16 +119,16 @@ function MainView() {
 			},
 			onClick: function(item, t, e) {
 				console.log(t);
-				if (that.viewStyle == 0) {
+				/*if (that.viewStyle == 0) {
 					if (!item.is_file && t == 'name') {
 						that.listener.onSubFolderSelected(item);
 						return;
 					}
-				}
+				}*/
 				that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 			},
 			onDblClick: function(item) {
-				if (that.viewStyle == 0 || item.is_file) return;
+				if (item.is_file) return;
 				that.listener.onSubFolderSelected(item);
 			},
 			onRightClick: function(item, t, e) {
@@ -372,20 +371,29 @@ function FileList(container, id, columns) {
 		}).droppable({
 			hoverClass: "drophover",
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
-		}).click(function(e) {
-			e.preventDefault();
-			t.onItemClick($(this), $(e.srcElement), true);
-			return false;
 		}).bind("contextmenu",function(e){
 			e.preventDefault();
 			t.onItemClick($(this), $(e.srcElement), false);
 			return false;
+		}).single_double_click(function(e) {
+			//var $t = $(this);
+			//t.p.onClick($t.tmplItem().data, "", $t);
+			e.preventDefault();
+			t.onItemClick($(this), $(e.srcElement), true);
+		},function() {
+			t.p.onDblClick($(this).tmplItem().data);
 		}).attr('unselectable', 'on').css({
 		   '-moz-user-select':'none',
 		   '-webkit-user-select':'none',
 		   'user-select':'none',
 		   '-ms-user-select':'none'
 		});
+		
+		/*.click(function(e) {
+			e.preventDefault();
+			t.onItemClick($(this), $(e.srcElement), true);
+			return false;
+		})*/
 
 		/*t.$i.find(".mollify-filelist-quickmenu").click(function(e) {
 			e.preventDefault();
@@ -411,7 +419,7 @@ function FileList(container, id, columns) {
 		else
 			t.p.onRightClick($item.tmplItem().data, colId, $item);
 	}
-	
+		
 	this.getItemContextElement = function(item) {
 		return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-col-name");
 	}
