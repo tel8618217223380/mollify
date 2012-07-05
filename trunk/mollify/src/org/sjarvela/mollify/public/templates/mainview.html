@@ -9,7 +9,14 @@
 
 	<div id="mainview-content-container">
 		<div id="mainview-content">
-			<div id="mainview-content-area"></div>
+			<div id="mainview-content-area">
+				<div id="mollify-folderview">
+					<div id="mollify-folderview-header">
+					</div>
+					<div id="mollify-folderview-items">
+					</div>
+				</div>
+			</div>
 			<div id="mainview-content-footer">
 				<div id="mainview-viewstyle-options" class="mollify-radio">
 					<a id="mainview-viewstyle-list" href="javascript: void(0);" class="mainview-viewstyle-option">List</a>
@@ -34,27 +41,15 @@
 </script>
 
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
-	<div id="mollify-folderview">
-		<div id="mollify-folderview-header">
-			<div id="mollify-folder-name" class="mollify-folderview-title">${name}</div>
-			<div id="mollify-folder-hierarchy">
-				<div id="mollify-folder-hierarchy-root"></div>
-				<div id="mollify-folder-hierarchy-items"></div>
-			</div>
-		</div>
-		<div id="mollify-folderview-items">
-		</div>
+	<div id="mollify-folder-name" class="mollify-folderview-title">${name}</div>
+	<div id="mollify-folder-hierarchy">
+		<div id="mollify-folder-hierarchy-root"></div>
+		<div id="mollify-folder-hierarchy-items"></div>
 	</div>
 </script>
 
 <script id="mollify-tmpl-main-rootfolders" type="text/x-jquery-tmpl">
-	<div id="mollify-folderview" class="roots">
-		<div id="mollify-folderview-header">
-			<span class="mollify-folderview-title localized" text-key="mainViewRootsTitle"></span>
-		</div>
-		<div id="mollify-folderview-items">
-		</div>
-	</div>
+	<span class="mollify-folderview-title localized" text-key="mainViewRootsTitle"></span>
 </script>
 
 <script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
