@@ -118,13 +118,7 @@ function MainView() {
 				return true;
 			},
 			onClick: function(item, t, e) {
-				console.log(t);
-				/*if (that.viewStyle == 0) {
-					if (!item.is_file && t == 'name') {
-						that.listener.onSubFolderSelected(item);
-						return;
-					}
-				}*/
+				//console.log(t);
 				that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 			},
 			onDblClick: function(item) {
@@ -132,7 +126,7 @@ function MainView() {
 				that.listener.onSubFolderSelected(item);
 			},
 			onRightClick: function(item, t, e) {
-				that.listener.getItemActions(item, function(a) { that.showActionMenu(item, a, that.itemWidget.getItemContextElement(item)); });
+				that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
 			}
 		});
 	}
@@ -143,14 +137,23 @@ function MainView() {
 		that.itemWidget.content(p.items, p.data);
 	}
 	
-	this.showActionMenu = function(item, actions, c) {
-		if (!actions) return;
+	this.showActionMenu = function(item, c) {
+		//if (!actions) return;
 		c.addClass("open");
-		mollify.ui.controls.popupmenu(actions, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
+		var popup = mollify.ui.controls.popupmenu(false, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
+		
+		that.listener.getItemActions(item, function(a) {
+			if (!a) {
+				popup.hide();
+				return;
+			}
+			popup.items(a);
+			//that.showActionMenu(item, a, el);
+		});
 	}
 	
 	this.openItemContext = function(item, e) {
-		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", {}, {})).html();
+		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
 		e.qtip({
 			content: html,
 			position: {

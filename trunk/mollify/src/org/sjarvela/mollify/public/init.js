@@ -294,17 +294,21 @@
 				
 				popupmenu : function(items, p, onHide) {
 					var $e = $(p.control);
-					var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:items}, {
-						isSeparator : function(i) {
-							return i.title == '-';
-						},
-						getTitle : function(i) {
-							if (i.title) return i.title;
-							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-							return "";
-						}
-					})).html();
-					$e.qtip({
+					var createItems = function(itemList) {
+						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
+							isSeparator : function(i) {
+								return i.title == '-';
+							},
+							getTitle : function(i) {
+								if (i.title) return i.title;
+								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+								return "";
+							}
+						})).html();
+					};
+					var html = items ? createItems(items) : '<div class="loading"></div>';
+					
+					var tip = $e.qtip({
 						content: html,
 						position: {
 							my: p.positionMy || 'top left',
@@ -333,7 +337,19 @@
 								api.destroy();
 							}
 						}
-					}).qtip('api').show();
+					}).qtip('api');
+					tip.show();
+					
+					return {
+						hide: function() {
+							tip.hide();
+							if (onHide) onHide(tip);
+							tip.destroy();
+						},
+						items: function(items) {
+							tip.set('content.text', createItems(items));
+						}
+					};
 				},
 				
 				bubble: function(e, h) {
