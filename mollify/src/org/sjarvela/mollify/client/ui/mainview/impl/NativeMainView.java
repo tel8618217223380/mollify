@@ -43,6 +43,9 @@ public class NativeMainView extends NativeView implements MainView {
 			},
 			getItemActions : function(i, cb) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getItemActions(Lorg/sjarvela/mollify/client/filesystem/js/JsFilesystemItem;Lcom/google/gwt/core/client/JavaScriptObject;)(i, cb);
+			},
+			getItemDetails : function(i, cb) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getItemDetails(Lorg/sjarvela/mollify/client/filesystem/js/JsFilesystemItem;Lcom/google/gwt/core/client/JavaScriptObject;)(i, cb);
 			}
 		};
 	}-*/;

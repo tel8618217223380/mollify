@@ -15,4 +15,6 @@ public interface MainViewListener {
 	void onFolderSelected(int level, JsFolder f);
 
 	void getItemActions(JsFilesystemItem item, JavaScriptObject callback);
+	
+	void getItemDetails(JsFilesystemItem item, JavaScriptObject callback);
 }

@@ -343,8 +343,6 @@
 					return {
 						hide: function() {
 							tip.hide();
-							if (onHide) onHide(tip);
-							tip.destroy();
 						},
 						items: function(items) {
 							tip.set('content.text', createItems(items));
