@@ -230,11 +230,43 @@ public class MainViewPresenter implements MainViewListener,
 								JsUtil.asJsArray(itemActions, JsObj.class));
 					}
 				});
+	}
+	
+	@Override
+	public void getItemDetails(final JsFilesystemItem item, final JavaScriptObject callback) {
+		fileSystemService.getItemDetails(item, null,
+				new ResultListener<ItemDetails>() {
+					public void onFail(ServiceError error) {
+						// if (error.getDetails() != null
+						// && (error.getDetails().startsWith("PHP error #2048")
+						// || error
+						// .getDetails()
+						// .contains(
+						// "It is not safe to rely on the system's timezone settings")))
+						// {
+						// dialogManager
+						// .showInfo("ERROR",
+						// "Mollify configuration error, PHP timezone information missing.");
+						// return;
+						// }
+						// dialogManager.showError(error);
+					}
 
+					public void onSuccess(ItemDetails details) {
+						boolean root = !item.isFile()
+								&& ((JsFolder) item.cast()).isRoot();
+						boolean writable = !root
+								&& details.getFilePermission().canWrite();
+						List<JsObj> itemActions = getItemActions(item,
+								writable, root);
+						call(callback,
+								details, JsUtil.asJsArray(itemActions, JsObj.class));
+					}
+				});
 	}
 
-	protected native void call(JavaScriptObject callback, JsArray itemActions) /*-{
-		callback(itemActions);
+	protected native void call(JavaScriptObject callback, JavaScriptObject... o) /*-{
+		callback(o);
 	}-*/;
 
 	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,

@@ -138,7 +138,6 @@ function MainView() {
 	}
 	
 	this.showActionMenu = function(item, c) {
-		//if (!actions) return;
 		c.addClass("open");
 		var popup = mollify.ui.controls.popupmenu(false, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
 		
@@ -148,7 +147,6 @@ function MainView() {
 				return;
 			}
 			popup.items(a);
-			//that.showActionMenu(item, a, el);
 		});
 	}
 	
@@ -174,7 +172,16 @@ function MainView() {
 
 				},
 				visible: function(e, api) {
-
+					var $el = $("#mollify-itemcontext-"+item.id);
+					var $content = $el.find(".mollify-itemcontext-content");
+					
+					that.listener.getItemDetails(item, function(d) {
+						if (!d) {
+							api.hide();
+							return;
+						}
+						$content.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", {item:item, details:d}, {}));
+					});
 				},
 				hide: function(e, api) {
 					api.destroy();

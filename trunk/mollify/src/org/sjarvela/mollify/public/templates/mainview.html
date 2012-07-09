@@ -97,7 +97,22 @@
 </script>
 
 <script id="mollify-tmpl-main-itemcontext" type="text/x-jquery-tmpl">
-	<div class="mollify-itemcontext">
+	<div id="mollify-itemcontext-${id}" class="mollify-itemcontext">
 		<div class="mollify-itemcontext-title">${name}</div>
+		<div class="mollify-itemcontext-content loading">
+			
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-main-itemcontext-content" type="text/x-jquery-tmpl">
+	<div class="mollify-itemcontext-description">
+		desc
+	</div>
+	<div class="mollify-itemcontext-actions">
+		actions
+	</div>
+	<div class="mollify-itemcontext-details">
+		details
 	</div>
 </script>
