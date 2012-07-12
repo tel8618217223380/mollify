@@ -23,7 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public interface MainView {
 
 	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl, listView, gridViewSmall, gridViewLarge;
+		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl, listView, gridViewSmall, gridViewLarge, download;
 	};
 
 	public enum ViewType {
@@ -31,7 +31,7 @@ public interface MainView {
 	};
 
 	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
-	
+
 	JavaScriptObject getDataRequest(JsFolder folder);
 
 	void showAllRoots();

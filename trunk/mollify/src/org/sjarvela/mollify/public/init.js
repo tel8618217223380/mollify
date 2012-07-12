@@ -13,19 +13,18 @@
 		t.time = new Date().getTime();
 		
 		this.settings = {};
-		this.plugins = {};
 
 		this.init = function(s, p) {
 			if (p) {
 				for (var i=0, j=p.length; i < j; i++)
-					t.registerPlugin(p[i]);
+					t.plugins.register(p[i]);
 			}
 			
-			t.settings = $.extend({}, s, defaults);
+			t.settings = $.extend({}, defaults, s);
 		}
 		
-		this.setup = function(e) {
-			t.env = e;
+		this.setup = function(core, cb) {
+			t.env = core;
 			t.ui.texts = t.env.texts();
 			t.service = t.env.service();
 			t.session = t.env.session;
@@ -109,39 +108,62 @@
 			}
 			t.env.views().registerHandlers(t.views);
 			
-			for (var id in t.plugins)
-				t.plugins[id].initialize(t.env);
+			t.plugins.initialize(t.env);
 				
 			t.templates.load("dialogs.html");
 			
 			//$.datepicker.setDefaults({
 			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 			//});
-		}
-
-		this.plugins = function(id) {
-			if (!def(id)) return t.plugins;
-			return t.plugins[id];
+			if (cb) cb();
 		}
 		
-		this.hasPlugin = function(id) {
-			return !!t.plugins[id];
-		}
+		this.plugins = new function() {
+			var pl = this;
+			this.list = {};
+			this.info = {};
+			
+			this.register = function(p) {
+				var info = p.getPluginInfo();
+				if (!info) return;
+				var id = info.id;
+				if (!id) return;
+				
+				pl.list[id] = p;
+				pl.info[id] = info;
+			};
+			
+			this.initialize = function(core) {
+				for (var id in pl.list)
+					pl.list[id].initialize(core);
+			};
+			
+			this.get = function(id) {
+				if (!def(id)) return pl.list;
+				return pl.list[id];
+			};
+			
+			this.exists = function(id) {
+				return !!pl.list[id];
+			};
+			
+			this.url = function(id, p) {
+				return t.env.service().getPluginUrl(id)+"client/"+p;
+			};
+			
+			this.getItemContextData = function(d) {
+				return {};
+			}
+		};
 		
 		this.hasFeature = function(id) {
 			return t.session.get().features[id];
-		}
+		};
 
 		this.locale = function() {
 			return t.texts.locale;
-		}
-		
-		this.registerPlugin = function(p) {
-			var id = p.id;
-			if (!id) return;
-			t.plugins[id] = p;
-		}
-		
+		};
+				
 		this.urlWithParam = function(url, param) {
 			return url + (strpos(url, "?") ? "&" : "?") + param;
 		}
@@ -213,6 +235,10 @@
 				$.each(ids, function(i, k) {
 					if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
 				});
+			},
+			
+			hideAllPopups: function() {
+				$(".mollify-popup").qtip('hide');
 			},
 			
 			handlers : {
@@ -322,7 +348,7 @@
 						},
 						style: {
 							tip: false,
-							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
 						},
 						events: {
 							render: function(e, api) {
@@ -374,7 +400,7 @@
 						},
 						style: {
 							tip: true,
-							classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
 						},
 						events: {
 							render: function(e, api) {
@@ -660,11 +686,16 @@ function LoginView() {
 function CommentPlugin() {
 	var that = this;
 	
-	this.getPluginInfo = function() { return { id: "plugin-comment" }; }
+	this.getPluginInfo = function() {
+		return {
+			id: "plugin-comment",
+			itemContextData : that.getItemContextData
+		};
+	}
 	
-	this.initialize = function(env) {
-		that.env = env;
-		that.env.addItemContextProvider(function(item) {
+	this.initialize = function(core) {
+		that.core = core;
+		/*that.env.registerContextPlugin(function(item) {
 			return {
 				components : [{
 					html: "",
@@ -686,12 +717,36 @@ function CommentPlugin() {
 			};
 		}, function(item) {
 			return {"plugin-comment":["count"]};
+		});*/
+		
+		mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
+		mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
+		
+		mollify.ui.filelist.addColumn({
+			"id": "comment-count",
+			"request-id": "plugin-comment-count",
+			"title-key": "",
+			"sort": function(i1, i2, sort, data) {
+				if (!i1.is_file && !i2.is_file) return 0;
+				if (!data || !data["core-file-modified"]) return 0;
+				
+				var ts1 = data["core-file-modified"][i1.id] ? data["core-file-modified"][i1.id] * 1 : 0;
+				var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
+				return ((ts1 > ts2) ? 1 : -1) * sort;
+			},
+			"content": that.getListCellContent,
+			"request": function(parent) { return {}; },
+			"on-render": function() {
+				var onclick = function(e) {
+					var id = e.target.id.substring(19);
+					var item = that.env.fileview().item(id);
+					that.openComments(item);
+				}
+//				var tooltip = "<div class='filelist-item-comment-tooltip mollify-tooltip'>" + that.t("commentsFileListAddTitle") + "</div>";
+				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(onclick);//.simpletip({content: tooltip, fixed: true, position: 'left'});
+			}
 		});
-		
-		mollify.importCss(that.url("style.css"));
-		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
-		
-		env.addListColumnSpec({
+		/*env.addListColumnSpec({
 			"id": "comment-count",
 			"request-id": "plugin-comment-count",
 			"default-title-key": "",
@@ -712,8 +767,12 @@ function CommentPlugin() {
 			mollify.getPlugin("plugin-itemdetails").addDetailsSpec({
 				key: "comments-count",
 				"title-key": "commentsDetailsCount"
-			});
-	}
+			});*/
+	};
+	
+	this.getItemContextData = function(item, data) {
+		
+	};
 	
 	this.getListCellContent = function(item, data) {
 		if (!item.id || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
@@ -807,16 +866,14 @@ function CommentPlugin() {
 		});
 	}
 	
-	this.url = function(p) {
-		return that.env.service().getPluginUrl("Comment")+"client/"+p;
-	}
+	/*
 	
 	this.t = function(s) {
 		return that.env.texts().get(s);
-	}	
+	}	*/
 }
 
-function ItemDetailsPlugin(conf, sp) {
+/*function ItemDetailsPlugin(conf, sp) {
 	var that = this;
 	that.specs = {};
 	that.typeConfs = false;
@@ -1012,26 +1069,6 @@ function SharePlugin() {
 		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 		
 		that.env.addItemContextProvider(function(item) {
-			/*return {
-				components : [{
-					html: "<div id='file-item-share'></div>",
-					on_init: function(id, c, item, details) {
-						if (!details["plugin-share"]) return;
-						
-						$("#"+id).html("<div id='details-share'><div id='details-share-content'><div id='details-share-icon'/>"+that.t('itemContextShareTitle')+"</div></div>");
-						
-						$("#details-share-content").hover(
-							function () { $(this).addClass("hover"); }, 
-							function () { $(this).removeClass("hover"); }
-						);
-						$("#details-share-content").click(function() {
-							c.close();
-							that.openShares(item);
-						});
-					},
-					index: 6
-				}]
-			}*/
 			return {
 				actions: {
 					secondary: [
@@ -1303,4 +1340,4 @@ function SharePlugin() {
 	this.t = function(s, p) {
 		return that.env.texts().get(s, p);
 	}
-}
+}*/

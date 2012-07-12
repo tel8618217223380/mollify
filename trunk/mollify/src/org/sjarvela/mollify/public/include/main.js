@@ -35,6 +35,10 @@ function MainView() {
 		that.listener.onViewLoaded();
 	}
 	
+	this.unload = function() {
+		
+	}
+	
 	this.onRadioChanged = function(groupId, valueId, i) {
 		if (groupId == "mainview-viewstyle-options") that.onViewStyleChanged(valueId, i);
 	}
@@ -165,7 +169,7 @@ function MainView() {
 			},
 			style: {
 				tip: true,
-				classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+				classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
 			},
 			events: {
 				render: function(e, api) {
@@ -180,7 +184,8 @@ function MainView() {
 							api.hide();
 							return;
 						}
-						$content.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", {item:item, details:d}, {}));
+						var pluginData = {};//that.getItemDetailsPluginData(d);
+						$content.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", {item:item, details:d, plugins: pluginData}, {}));
 					});
 				},
 				hide: function(e, api) {
@@ -188,7 +193,7 @@ function MainView() {
 				}
 			}
 		}).qtip('api').show();
-	}
+	};
 }
 
 function IconView(container, id, cls) {
@@ -271,7 +276,10 @@ function FileList(container, id, columns) {
 		
 		mollify.dom.template("mollify-tmpl-filelist-headercol", t.cols, {
 			title: function(c) {
-				return mollify.ui.texts.get(c['title-key']);
+				var k = c['title-key'];
+				if (!k) return "";
+				
+				return mollify.ui.texts.get(k);
 			} 
 		}).appendTo(t.$h);
 		

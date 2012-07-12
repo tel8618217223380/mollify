@@ -92,13 +92,8 @@ public class DefaultClientInterface implements ClientInterface {
 		return new NativeSession(sessionProvider.getSession()).asJs();
 	}
 
-	// @Override
-	// public FileListExt getFileListExt() {
-	// return fileListInterface;
-	// }
-
 	@Override
-	public JavaScriptObject getJsEnv(String pluginBaseUrl) {
+	public JavaScriptObject asJs(String pluginBaseUrl) {
 		return createNativeEnv(this, pluginBaseUrl, getTextProvider(),
 				getService(), getViewManager(), getLogger(),
 				getSessionActions());
@@ -142,14 +137,6 @@ public class DefaultClientInterface implements ClientInterface {
 		env.addEventHandler = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
 		}
-
-		//		env.addItemContextProvider = function(cb, cb2) {
-		//			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addItemContextProvider(Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(cb,cb2);
-		//		}
-
-		//		env.addListColumnSpec = function(s) {
-		//			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addListColumnSpec(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
-		//		}
 
 		env.session = {
 			get : function() {

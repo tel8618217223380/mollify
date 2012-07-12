@@ -255,12 +255,13 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
-			
+			$details["plugins"] = array();
+
 			foreach($this->contextPlugins as $k=>$p) {
 				$d = ($data != NULL and isset($data[$k])) ? $data[$k] : NULL;
 				$l = $p->getItemContextData($item, $details, $k, $d);
 				if (!$l) continue;
-				$details[$k] = $l;
+				$details["plugins"][$k] = $l;
 			}
 			return $details;
 		}
