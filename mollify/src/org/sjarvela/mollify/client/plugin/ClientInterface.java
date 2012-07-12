@@ -14,10 +14,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public interface ClientInterface {
 
-	JavaScriptObject getJsEnv(String pluginBaseUrl);
-
-	// FileUploadDialogFactory getCustomUploader();
-
-	// FileListExt getFileListExt();
+	JavaScriptObject asJs(String pluginBaseUrl);
 
 }

@@ -43,6 +43,8 @@ public class DefaultViewManager implements ViewManager {
 	private final RootPanel rootPanel;
 	private final Panel hiddenPanel;
 
+	private ViewHandler activeView;
+
 	@Inject
 	public DefaultViewManager() {
 		this.rootPanel = RootPanel.get(App.MOLLIFY_PANEL_ID);
@@ -67,7 +69,12 @@ public class DefaultViewManager implements ViewManager {
 
 	@Override
 	public void render(ViewHandler view) {
+		if (activeView != null) {
+			activeView.getView().call("unload");
+			activeView = null;
+		}
 		view.getView().call("render", "mollify");
+		activeView = view;
 	}
 
 	public RootPanel getRootPanel() {
@@ -78,14 +85,14 @@ public class DefaultViewManager implements ViewManager {
 		return hiddenPanel;
 	}
 
-	public void openView(Widget view) {
-		empty();
-		hiddenPanel.clear();
-
-		createDownloadFrame(hiddenPanel);
-		rootPanel.add(hiddenPanel);
-		rootPanel.insert(view, 0);
-	}
+//	public void openView(Widget view) {
+//		empty();
+//		hiddenPanel.clear();
+//
+//		createDownloadFrame(hiddenPanel);
+//		rootPanel.add(hiddenPanel);
+//		rootPanel.insert(view, 0);
+//	}
 
 	public void empty() {
 		rootPanel.clear();

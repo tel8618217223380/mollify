@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.PluginSystem;
+import org.sjarvela.mollify.client.plugin.AppInterface;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -48,7 +48,7 @@ public class MollifyClient implements Client {
 	private final MainViewFactory mainViewFactory;
 	private final SessionService service;
 	private final ClientSettings settings;
-	private final PluginSystem pluginSystem;
+	private final AppInterface pluginSystem;
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 
@@ -56,7 +56,7 @@ public class MollifyClient implements Client {
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
 			ServiceProvider serviceProvider, ClientSettings settings,
-			PluginSystem pluginSystem, TextProvider textProvider) {
+			AppInterface pluginSystem, TextProvider textProvider) {
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;

@@ -26,7 +26,7 @@
 		public function __construct($limitedHttpMethods, $raw = FALSE) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = $this->getUri();
-			$this->ip = $_SERVER['REMOTE_ADDR'];
+			$this->ip = $this->getIp();
 			$this->raw = $raw;
 			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
@@ -36,6 +36,15 @@
 			
 			$this->parts = strlen($this->uri) > 0 ? explode("/", $this->uri) : array();
 			$this->initData();
+		}
+		
+		private function getIp() {
+			$headers = apache_request_headers();
+			
+			if (array_key_exists('X-Forwarded-For', $headers))
+				return $headers['X-Forwarded-For'].' via '.$_SERVER["REMOTE_ADDR"];
+			
+			return $_SERVER["REMOTE_ADDR"];
 		}
 		
 		private function initData() {

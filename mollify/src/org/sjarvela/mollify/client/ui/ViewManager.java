@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public interface ViewManager {
 
@@ -27,7 +26,7 @@ public interface ViewManager {
 	void render(ViewHandler view);
 
 	/* old -> */
-	void openView(Widget view);
+	// void openView(Widget view);
 
 	void empty();
 

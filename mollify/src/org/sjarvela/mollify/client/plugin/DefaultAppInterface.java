@@ -10,14 +10,9 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -25,69 +20,77 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DefaultPluginSystem implements PluginSystem {
-	private static Logger logger = Logger.getLogger(DefaultPluginSystem.class
+public class DefaultAppInterface implements AppInterface {
+	private static Logger logger = Logger.getLogger(DefaultAppInterface.class
 			.getName());
 
 	// private final List<Plugin> plugins = new ArrayList();
 	// private final Map<String, Plugin> pluginsById = new HashMap();
-	private final ClientInterface pluginEnv;
+	private final ClientInterface clientInterface;
 
 	// TODO move this entire class into external js
 	@Inject
-	public DefaultPluginSystem(ClientInterface pluginEnv) {
-		this.pluginEnv = pluginEnv;
+	public DefaultAppInterface(ClientInterface clientInterface) {
+		this.clientInterface = clientInterface;
 	}
 
 	@Override
 	public void setup(final SessionInfo session, final Callback onReady) {
-		Map<String, String> externalPluginScripts = getExternalPluginScripts(session);
-		if (externalPluginScripts.isEmpty()) {
-			init(session, onReady);
-		} else {
-			new JQueryScriptLoader().load(externalPluginScripts,
-					new Callback() {
-						@Override
-						public void onCallback() {
-							init(session, onReady);
-						}
-					});
-		}
+		init(session, onReady);
+		// Map<String, String> externalPluginScripts =
+		// getExternalPluginScripts(session);
+		// if (externalPluginScripts.isEmpty()) {
+		// init(session, onReady);
+		// } else {
+		// new JQueryScriptLoader().load(externalPluginScripts,
+		// new Callback() {
+		// @Override
+		// public void onCallback() {
+		// init(session, onReady);
+		// }
+		// });
+		// }
 	}
 
-	private Map<String, String> getExternalPluginScripts(SessionInfo session) {
-		logger.log(Level.INFO, "Initializing client plugins from session");
-		JavaScriptObject pluginsObj = session.getPlugins();
-		if (pluginsObj == null)
-			return Collections.EMPTY_MAP;
-
-		Map<String, String> result = new HashMap();
-		JsObj plugins = pluginsObj.cast();
-		for (String id : plugins.getKeys()) {
-			if (id == null || id.length() == 0 || id.startsWith("_"))
-				continue;
-			logger.log(Level.INFO, "Initializing client plugin " + id);
-			JsObj plugin = plugins.getJsObj(id).cast();
-
-			if (plugin.hasValue("client_plugin"))
-				result.put(id, plugin.getString("client_plugin"));
-		}
-		return result;
-	}
+	// private Map<String, String> getExternalPluginScripts(SessionInfo session)
+	// {
+	// logger.log(Level.INFO, "Initializing client plugins from session");
+	// JavaScriptObject pluginsObj = session.getPlugins();
+	// if (pluginsObj == null)
+	// return Collections.EMPTY_MAP;
+	//
+	// Map<String, String> result = new HashMap();
+	// JsObj plugins = pluginsObj.cast();
+	// for (String id : plugins.getKeys()) {
+	// if (id == null || id.length() == 0 || id.startsWith("_"))
+	// continue;
+	// logger.log(Level.INFO, "Initializing client plugin " + id);
+	// JsObj plugin = plugins.getJsObj(id).cast();
+	//
+	// if (plugin.hasValue("client_plugin"))
+	// result.put(id, plugin.getString("client_plugin"));
+	// }
+	// return result;
+	// }
 
 	private void init(SessionInfo session, Callback onReady) {
-		JavaScriptObject env = pluginEnv.getJsEnv(session.getPluginBaseUrl());
-		initLib(env);
+		JavaScriptObject env = clientInterface.asJs(session.getPluginBaseUrl());
+		initLib(env, onReady);
 		// setupPlugins();
 		// initializePlugins(env);
 		// pluginEnv.onPluginsInitialized(plugins);
-		onReady.onCallback();
+		// onReady.onCallback();
 	}
 
-	private native void initLib(JavaScriptObject env) /*-{
+	private native void initLib(JavaScriptObject env, Callback cb) /*-{
 		if (!$wnd.mollify)
 			return;
-		$wnd.mollify.setup(env);
+		$wnd.mollify
+				.setup(
+						env,
+						function() {
+							cb.@org.sjarvela.mollify.client.Callback::onCallback()();
+						});
 	}-*/;
 
 	// private void initializePlugins(JavaScriptObject env) {

@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.plugin;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.session.SessionInfo;
 
-public interface PluginSystem {
+public interface AppInterface {
 
 	void setup(SessionInfo session, Callback onReady);
 

@@ -48,7 +48,6 @@ import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -158,7 +157,7 @@ public class MainViewPresenter implements MainViewListener,
 	public JavaScriptObject getDataRequest(JsFolder folder) {
 		return view.getDataRequest(folder);
 	}
-	
+
 	@Override
 	public void onHomeSelected() {
 		model.clear();
@@ -231,9 +230,10 @@ public class MainViewPresenter implements MainViewListener,
 					}
 				});
 	}
-	
+
 	@Override
-	public void getItemDetails(final JsFilesystemItem item, final JavaScriptObject callback) {
+	public void getItemDetails(final JsFilesystemItem item,
+			final JavaScriptObject callback) {
 		fileSystemService.getItemDetails(item, null,
 				new ResultListener<ItemDetails>() {
 					public void onFail(ServiceError error) {
@@ -259,8 +259,8 @@ public class MainViewPresenter implements MainViewListener,
 								&& details.getFilePermission().canWrite();
 						List<JsObj> itemActions = getItemActions(item,
 								writable, root);
-						call(callback,
-								details, JsUtil.asJsArray(itemActions, JsObj.class));
+						call(callback, details,
+								JsUtil.asJsArray(itemActions, JsObj.class));
 					}
 				});
 	}
@@ -274,9 +274,11 @@ public class MainViewPresenter implements MainViewListener,
 		List<JsObj> actions = new ArrayList();
 
 		if (item.isFile() || !root)
-			actions.add(createAction(item, Action.addToDropbox,
-					Texts.mainViewSelectActionAddToDropbox.name()));
+			actions.add(createAction(item, Action.download,
+					Texts.fileActionDownloadTitle.name()));
+
 		actions.add(createSeparator());
+
 		if (writable)
 			actions.add(createAction(item, FileSystemAction.rename,
 					Texts.fileActionRenameTitle.name()));
@@ -293,6 +295,11 @@ public class MainViewPresenter implements MainViewListener,
 			actions.add(createAction(item, FileSystemAction.delete,
 					Texts.fileActionDeleteTitle.name()));
 
+		if (item.isFile() || !root) {
+			actions.add(createSeparator());
+			actions.add(createAction(item, Action.addToDropbox,
+					Texts.mainViewSelectActionAddToDropbox.name()));
+		}
 		return actions;
 	}
 
