@@ -123,6 +123,13 @@ function MainView() {
 			},
 			onClick: function(item, t, e) {
 				//console.log(t);
+				if (that.viewStyle == 0 && t != 'icon') {
+					var col = mollify.ui.filelist.columns[t];
+					if (col["on-click"]) {
+						col["on-click"](item);
+						return;
+					}
+				}
 				that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 			},
 			onDblClick: function(item) {
@@ -375,6 +382,11 @@ function FileList(container, id, columns) {
 				return style;
 			}
 		}).appendTo(t.$i.empty());
+		
+		for (var i=0,j=t.cols.length; i<j; i++) {
+			var col = t.cols[i];
+			if (col["on-render"]) col["on-render"]();
+		}
 		
 		var $items = t.$i.find(".mollify-filelist-item");
 		$items.hover(function() {

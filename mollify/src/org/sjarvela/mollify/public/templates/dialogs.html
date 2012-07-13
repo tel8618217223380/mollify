@@ -17,6 +17,17 @@
 	<div class="mollify-wait"></div>
 </script>
 
+<script id="mollify-tmpl-dialog-custom" type="text/x-jquery-tmpl">
+	<div class="mollify-dialog dialog-custom" title="${title}">
+		<div class="mollify-dialog-content">{{html $item.getContent()}}</div>
+		<div class="mollify-dialog-buttons">
+			{{each buttons}}
+			<a id="mollify-custom-dialog-button-${id}" class="button button-small">${$item.getButtonTitle($value)}</a>
+			{{/each}}
+		</div>
+	</div>
+</script>
+
 <script id="mollify-tmpl-popupmenu" type="text/x-jquery-tmpl">
 	<div class="mollify-popupmenu">
 	{{each items}}
