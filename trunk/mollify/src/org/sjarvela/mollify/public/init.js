@@ -100,13 +100,13 @@
 				}
 			});
 			
-			t.views = {
+			t.ui.views = {
 				login : new LoginView(),
 				mainview : new MainView(),
 				
 				dialogs : new DialogHandler()
 			}
-			t.env.views().registerHandlers(t.views);
+			t.env.views().registerHandlers(t.ui.views);
 			
 			t.plugins.initialize(t.env);
 				
@@ -173,13 +173,21 @@
 		}
 		
 		this.templates = {
+			loaded: [],
+			
 			url : function(name) {
 				var base = t.settings["template-url"] || 'client/templates/';
 				return t.noncachedUrl(base + name);
 			},
 			
-			load : function(name, cb) {
-				$.get(t.templates.url(name), function(h) {
+			load : function(name, url, cb) {
+				if (t.templates.loaded.indexOf(name) >= 0) {
+					if (cb) cb();
+					return;
+				}
+				
+				$.get(url ? url : t.templates.url(name), function(h) {
+					t.templates.loaded.push(name);
 					$("body").append(h);
 					if (cb) cb();
 				});
@@ -538,7 +546,7 @@ function strpos(haystack, needle, offset) {
 function DialogHandler() {
 	var dialogDefaults = {
 		title: "Mollify"
-	}
+	};
 	
 	this.info = function(spec) {
 		var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
@@ -549,15 +557,15 @@ function DialogHandler() {
 		});
 		mollify.ui.handlers.localize(dlg);
 		dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });
-	}
+	};
 	
 	this.error = function(spec) {
 		alert("error");
-	}
+	};
 	
 	this.confirmation = function(spec) {
 		alert("confirm");
-	}
+	};
 	
 	this.wait = function(spec) {
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
@@ -567,13 +575,50 @@ function DialogHandler() {
 				w.remove();
 			}
 		};
-	}
+	};
 	
 	this.notification = function(spec) {
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
 		var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
 		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
-	}
+	};
+	
+	this.custom = function(spec) {
+		var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(spec, dialogDefaults), {
+			getContent: function() {
+				if (spec.html) return spec.html;
+				if (spec.content) {
+					var c = spec.content;
+					if (typeof c === 'string') return c;
+					return $("<div/>").append(c).html();
+				}
+				return "";
+			},
+			getButtonTitle: function(b) {
+				if (b["title"]) return b["title"];
+				if (b["title-key"]) return mollify.ui.texts.get(b["title-key"]);
+				return "";
+			}
+		}).dialog({
+			modal: true,
+			resizable: false,
+			height: 'auto',
+			minHeight: 50
+		});
+		mollify.ui.handlers.localize(dlg);
+		var h = {
+			close: function() {
+				dlg.dialog('destroy');
+				dlg.remove();
+			}
+		};
+		dlg.find(".button").click(function(e) {
+			e.preventDefault();
+			if (spec["on-button"]) spec["on-button"](e, h);
+		});
+		if (spec["on-show"]) spec["on-show"](h);
+		return h;
+	};
 }
 
 function LoginView() {
@@ -627,7 +672,7 @@ function LoginView() {
 				if (!email) return;
 				
 				bubble.hide();
-				that.wait = mollify.views.dialogs.wait({target: "login-main"});
+				that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
 				that.listener.onResetPassword(email);
 			});
 		}
@@ -652,14 +697,14 @@ function LoginView() {
 			$("#login-password").focus();
 			return;
 		}
-		that.wait = mollify.views.dialogs.wait({target: "login-main"});
+		that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
 		that.listener.onLogin(username, password, remember);
 	}
 	
 	this.showLoginError = function() {
 		that.wait.close();
 		
-		mollify.views.dialogs.notification({
+		mollify.ui.views.dialogs.notification({
 			target: "login-main",
 			message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
 		});
@@ -668,7 +713,7 @@ function LoginView() {
 	this.onResetPasswordSuccess = function() {
 		that.wait.close();
 		
-		mollify.views.dialogs.notification({
+		mollify.ui.views.dialogs.notification({
 			target: "login-main",
 			message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
 		});
@@ -677,7 +722,7 @@ function LoginView() {
 	this.onResetPasswordFailed = function() {
 		that.wait.close();
 		
-		mollify.views.dialogs.info({
+		mollify.ui.views.dialogs.info({
 			message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
 		});
 	}
@@ -736,14 +781,11 @@ function CommentPlugin() {
 			},
 			"content": that.getListCellContent,
 			"request": function(parent) { return {}; },
-			"on-render": function() {
-				var onclick = function(e) {
-					var id = e.target.id.substring(19);
-					var item = that.env.fileview().item(id);
-					that.openComments(item);
-				}
-//				var tooltip = "<div class='filelist-item-comment-tooltip mollify-tooltip'>" + that.t("commentsFileListAddTitle") + "</div>";
-				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(onclick);//.simpletip({content: tooltip, fixed: true, position: 'left'});
+/*			"on-render": function() {
+				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(that.onListCellClick);
+			},*/
+			"on-click": function(item) {
+				that.openComments(item);
 			}
 		});
 		/*env.addListColumnSpec({
@@ -774,6 +816,14 @@ function CommentPlugin() {
 		
 	};
 	
+	/*this.onListCellClick = function(e) {
+		e.preventDefault();
+		var id = e.target.id.substring(19);
+		var item = that.env.fileview().item(id);
+		that.openComments(item);
+		return false;
+	};*/
+	
 	this.getListCellContent = function(item, data) {
 		if (!item.id || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
 		var counts = data["plugin-comment-count"];
@@ -785,33 +835,34 @@ function CommentPlugin() {
 	}
 	
 	this.openComments = function(item) {
-		that.env.dialog().showDialog({
-			title: that.t("commentsDialogTitle"),
-			html: "<div id='comments-dialog-content' class='loading' />",
-			on_show: function(d) { that.onShowCommentsDialog(d, item); }
+		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
+			mollify.ui.views.dialogs.custom({
+				"title": mollify.ui.texts.get("commentsDialogTitle"),
+				"content": mollify.dom.template("comments-content-template", item),
+				"on-show": function(d) { that.onShowCommentsDialog(d, item); },
+				"on-button": function(id, d) {
+					d.close();
+				},
+				buttons: [
+					{id: 'close', "title-key":'dialogCloseButton'}
+				]
+			});			
 		});
 	}
 
-	this.onShowCommentsDialog = function(d, item) {
-		mollify.loadContent("comments-dialog-content", that.url("content.html"), function() {
-			d.setMinimumSizeToCurrent();
-			d.center();
-			
-			$("#comments-item").html(item.name);
-			$("#comments-dialog-content").removeClass("loading");
-			$("#comments-dialog-content .mollify-actionlink").hover(
-				function () { $(this).addClass("mollify-actionlink-hover"); }, 
-				function () { $(this).removeClass("mollify-actionlink-hover"); }
-			);
+	this.onShowCommentsDialog = function(d, item) {	
+		$("#comments-list").removeClass("loading");
+		/*$("#comments-dialog-content .mollify-actionlink").hover(
+			function () { $(this).addClass("mollify-actionlink-hover"); }, 
+			function () { $(this).removeClass("mollify-actionlink-hover"); }
+		);*/
 
-			$("#comments-dialog-add").click(function() { that.onAddComment(d, item); } );
-			$("#comments-dialog-close").click(function() { d.close(); } );
-			
-			that.env.service().get("comment/"+item.id, function(result) {
-				that.onShowComments(item, result);
-			},	function(code, error) {
-				alert(error);
-			});
+		$("#comments-dialog-add").click(function() { that.onAddComment(d, item); } );
+		
+		mollify.service.get("comment/"+item.id, function(result) {
+			that.onShowComments(item, result);
+		}, function(code, error) {
+			alert(error);
 		});
 	}
 	
@@ -819,7 +870,7 @@ function CommentPlugin() {
 		var comment = $("#comments-dialog-add-text").val();
 		if (!comment || comment.length == 0) return;
 		
-		that.env.service().post("comment/"+item.id, { comment: comment }, function(result) {
+		mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
 			d.close();
 			
 			var e = document.getElementById("item-comment-count-"+item.id);
@@ -831,7 +882,7 @@ function CommentPlugin() {
 	}
 	
 	this.onRemoveComment = function(item, id) {		
-		that.env.service().del("comment/"+item.id+"/"+id, function(result) {
+		mollify.service.del("comment/"+item.id+"/"+id, function(result) {
 			that.onShowComments(item, result);
 		},	function(code, error) {
 			alert(error);
@@ -840,27 +891,28 @@ function CommentPlugin() {
 	
 	this.onShowComments = function(item, comments) {
 		if (comments.length == 0) {
-			$("#comments-list").html("<span class='message'>"+that.t("commentsDialogNoComments")+"</span>");
+			$("#comments-list").html("<span class='message'>"+mollify.ui.texts.get("commentsDialogNoComments")+"</span>");
 			return;
 		}
 		
-		var isAdmin = that.env.session().isAdmin();
-		var userId = that.env.session().info()['user_id'];
+		var isAdmin = mollify.session.isAdmin();
+		var userId = mollify.session.info()['user_id'];
 		
 		for (var i=0,j=comments.length; i<j; i++) {
-			comments[i].time = that.env.texts().formatInternalTime(comments[i].time);
+			comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
 			comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
 			comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
 		}
 
-		$("#comment-template").tmpl(comments).appendTo($("#comments-list").empty());
-		mollify.localize("comments-list");
+		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
+		//mollify.localize("comments-list");
 		$(".comment-content").hover(
 			function () { $(this).addClass("hover"); }, 
 			function () { $(this).removeClass("hover"); }
 		);
 		$(".comment-remove-action").click(function(e) {
 			e.preventDefault();
+			//TODO tmpl.data
 			var id = $(this).parent().attr('id').substring(8);
 			that.onRemoveComment(item, id);
 		});
