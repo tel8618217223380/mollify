@@ -24,8 +24,6 @@ public class DefaultAppInterface implements AppInterface {
 	private static Logger logger = Logger.getLogger(DefaultAppInterface.class
 			.getName());
 
-	// private final List<Plugin> plugins = new ArrayList();
-	// private final Map<String, Plugin> pluginsById = new HashMap();
 	private final ClientInterface clientInterface;
 
 	// TODO move this entire class into external js
@@ -36,20 +34,8 @@ public class DefaultAppInterface implements AppInterface {
 
 	@Override
 	public void setup(final SessionInfo session, final Callback onReady) {
-		init(session, onReady);
-		// Map<String, String> externalPluginScripts =
-		// getExternalPluginScripts(session);
-		// if (externalPluginScripts.isEmpty()) {
-		// init(session, onReady);
-		// } else {
-		// new JQueryScriptLoader().load(externalPluginScripts,
-		// new Callback() {
-		// @Override
-		// public void onCallback() {
-		// init(session, onReady);
-		// }
-		// });
-		// }
+		JavaScriptObject env = clientInterface.asJs(session.getPluginBaseUrl());
+		initLib(env, onReady);
 	}
 
 	// private Map<String, String> getExternalPluginScripts(SessionInfo session)
@@ -73,15 +59,6 @@ public class DefaultAppInterface implements AppInterface {
 	// return result;
 	// }
 
-	private void init(SessionInfo session, Callback onReady) {
-		JavaScriptObject env = clientInterface.asJs(session.getPluginBaseUrl());
-		initLib(env, onReady);
-		// setupPlugins();
-		// initializePlugins(env);
-		// pluginEnv.onPluginsInitialized(plugins);
-		// onReady.onCallback();
-	}
-
 	private native void initLib(JavaScriptObject env, Callback cb) /*-{
 		if (!$wnd.mollify)
 			return;
@@ -92,42 +69,4 @@ public class DefaultAppInterface implements AppInterface {
 							cb.@org.sjarvela.mollify.client.Callback::onCallback()();
 						});
 	}-*/;
-
-	// private void initializePlugins(JavaScriptObject env) {
-	// logger.log(Level.INFO, "Initializing client plugins");
-	// for (Plugin p : plugins)
-	// p.initialize(env);
-	// }
-
-	// private native void setupPlugins() /*-{
-	// if (!$wnd.mollify || !$wnd.mollify.getPlugins)
-	// return;
-	//
-	// var plugins = $wnd.mollify.plugins();
-	// if (!plugins || plugins.length == 0)
-	// return;
-	//
-	// for (var i=0, j=plugins.length; i < j; i++) {
-	// var plugin = plugins[i];
-	// if (!plugin || !plugin.getPluginInfo || !plugin.getPluginInfo())
-	// continue;
-	// this.@org.sjarvela.mollify.client.plugin.DefaultPluginSystem::addPlugin(Lcom/google/gwt/core/client/JavaScriptObject;)(plugin);
-	// }
-	// }-*/;
-
-	// public void addPlugin(JavaScriptObject p) {
-	// if (p == null)
-	// return;
-	// Plugin plugin = p.cast();
-	// PluginInfo info = plugin.getPluginInfo();
-	// if (info == null) {
-	// logger.log(Level.INFO, "Plugin ignored, does not provide info");
-	// return;
-	// }
-	// plugins.add(plugin);
-	//
-	// String id = info.getId();
-	// logger.log(Level.INFO, "Plugin registered: " + id);
-	// pluginsById.put(id, plugin);
-	// };
 }
