@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
+import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
@@ -200,69 +201,71 @@ public class MainViewPresenter implements MainViewListener,
 	@Override
 	public void getItemActions(final JsFilesystemItem item,
 			final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(item, null,
-				new ResultListener<ItemDetails>() {
-					public void onFail(ServiceError error) {
-						// if (error.getDetails() != null
-						// && (error.getDetails().startsWith("PHP error #2048")
-						// || error
-						// .getDetails()
-						// .contains(
-						// "It is not safe to rely on the system's timezone settings")))
-						// {
-						// dialogManager
-						// .showInfo("ERROR",
-						// "Mollify configuration error, PHP timezone information missing.");
-						// return;
-						// }
-						// dialogManager.showError(error);
-					}
-
-					public void onSuccess(ItemDetails details) {
-						boolean root = !item.isFile()
-								&& ((JsFolder) item.cast()).isRoot();
-						boolean writable = !root
-								&& details.getFilePermission().canWrite();
-						List<JsObj> itemActions = getItemActions(item,
-								writable, root);
-						call(callback,
-								JsUtil.asJsArray(itemActions, JsObj.class));
-					}
-				});
+		fileSystemService.getItemDetails(
+				item,
+				null,
+				createItemDetailsListener(item,
+						new ResultCallback<ItemDetails>() {
+							@Override
+							public void onCallback(ItemDetails details) {
+								boolean root = !item.isFile()
+										&& ((JsFolder) item.cast()).isRoot();
+								boolean writable = !root
+										&& details.getFilePermission()
+												.canWrite();
+								List<JsObj> itemActions = getItemActions(item,
+										writable, root);
+								call(callback, JsUtil.asJsArray(itemActions,
+										JsObj.class));
+							}
+						}));
 	}
 
 	@Override
 	public void getItemDetails(final JsFilesystemItem item,
 			final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(item, null,
-				new ResultListener<ItemDetails>() {
-					public void onFail(ServiceError error) {
-						// if (error.getDetails() != null
-						// && (error.getDetails().startsWith("PHP error #2048")
-						// || error
-						// .getDetails()
-						// .contains(
-						// "It is not safe to rely on the system's timezone settings")))
-						// {
-						// dialogManager
-						// .showInfo("ERROR",
-						// "Mollify configuration error, PHP timezone information missing.");
-						// return;
-						// }
-						// dialogManager.showError(error);
-					}
+		fileSystemService.getItemDetails(
+				item,
+				null,
+				createItemDetailsListener(item,
+						new ResultCallback<ItemDetails>() {
+							@Override
+							public void onCallback(ItemDetails details) {
+								boolean root = !item.isFile()
+										&& ((JsFolder) item.cast()).isRoot();
+								boolean writable = !root
+										&& details.getFilePermission()
+												.canWrite();
+								List<JsObj> itemActions = getItemActions(item,
+										writable, root);
+								call(callback, details, JsUtil.asJsArray(
+										itemActions, JsObj.class));
+							}
+						}));
+	}
 
-					public void onSuccess(ItemDetails details) {
-						boolean root = !item.isFile()
-								&& ((JsFolder) item.cast()).isRoot();
-						boolean writable = !root
-								&& details.getFilePermission().canWrite();
-						List<JsObj> itemActions = getItemActions(item,
-								writable, root);
-						call(callback, details,
-								JsUtil.asJsArray(itemActions, JsObj.class));
-					}
-				});
+	private ResultListener<ItemDetails> createItemDetailsListener(
+			final JsFilesystemItem item,
+			final ResultCallback<ItemDetails> callback) {
+		return new ResultListener<ItemDetails>() {
+			public void onFail(ServiceError error) {
+				if (error.getDetails() != null
+						&& (error.getDetails().startsWith("PHP error #2048") || error
+								.getDetails()
+								.contains(
+										"It is not safe to rely on the system's timezone settings"))) {
+					dialogManager
+							.showInfo("ERROR",
+									"Mollify configuration error, PHP timezone information missing.");
+					return;
+				}
+				dialogManager.showError(error);
+			}
+
+			public void onSuccess(ItemDetails details) {
+				callback.onCallback(details);
+			}
+		};
 	}
 
 	protected native void call(JavaScriptObject callback, JavaScriptObject... o) /*-{

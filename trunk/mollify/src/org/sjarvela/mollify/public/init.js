@@ -895,8 +895,8 @@ function CommentPlugin() {
 			return;
 		}
 		
-		var isAdmin = mollify.session.isAdmin();
-		var userId = mollify.session.info()['user_id'];
+		var isAdmin = mollify.session.admin;
+		var userId = mollify.session['user_id'];
 		
 		for (var i=0,j=comments.length; i<j; i++) {
 			comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);

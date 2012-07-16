@@ -107,8 +107,10 @@ function MainView() {
 		});
 	}
 	
+	this.isListView = function() { return that.viewStyle == 0; }
+	
 	this.initList = function() {
-		if (that.viewStyle == 0) {
+		if (that.isListView()) {
 			that.itemWidget = new FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
 		} else {
 			that.itemWidget = new IconView('mollify-folderview-items', 'main', that.viewStyle == 1 ? 'iconview-small' : 'iconview-large');
@@ -123,14 +125,16 @@ function MainView() {
 			},
 			onClick: function(item, t, e) {
 				//console.log(t);
-				if (that.viewStyle == 0 && t != 'icon') {
+				if (that.isListView() && t != 'icon') {
 					var col = mollify.ui.filelist.columns[t];
 					if (col["on-click"]) {
 						col["on-click"](item);
 						return;
 					}
 				}
-				that.openItemContext(item, that.itemWidget.getItemContextElement(item));
+				var showContext = (!that.isListView() || t=='name');
+				if (showContext)
+					that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 			},
 			onDblClick: function(item) {
 				if (item.is_file) return;
@@ -153,11 +157,11 @@ function MainView() {
 		var popup = mollify.ui.controls.popupmenu(false, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
 		
 		that.listener.getItemActions(item, function(a) {
-			if (!a) {
+			if (!a || !a[0]) {
 				popup.hide();
 				return;
 			}
-			popup.items(a);
+			popup.items(a[0]);
 		});
 	}
 	
@@ -166,8 +170,8 @@ function MainView() {
 		e.qtip({
 			content: html,
 			position: {
-				my: that.viewStyle == 0 ? 'top left' : 'top center',
-				at: that.viewStyle == 0 ? 'bottom left' : 'bottom center',
+				my: that.isListView() ? 'top left' : 'top center',
+				at: that.isListView() ? 'bottom left' : 'bottom center',
 			},
 			hide: {
 				delay: 200,
