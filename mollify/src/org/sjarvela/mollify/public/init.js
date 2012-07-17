@@ -27,7 +27,7 @@
 			t.env = core;
 			t.ui.texts = t.env.texts();
 			t.service = t.env.service();
-			t.session = t.env.session;
+			t.session = t.env.session.get();
 
 			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
@@ -912,9 +912,8 @@ function CommentPlugin() {
 		);
 		$(".comment-remove-action").click(function(e) {
 			e.preventDefault();
-			//TODO tmpl.data
-			var id = $(this).parent().attr('id').substring(8);
-			that.onRemoveComment(item, id);
+			var comment = $(this).tmplItem().data
+			that.onRemoveComment(item, comment.id);
 		});
 	}
 	

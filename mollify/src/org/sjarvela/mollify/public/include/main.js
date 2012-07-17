@@ -245,6 +245,11 @@ function IconView(container, id, cls) {
 		}).droppable({
 			hoverClass: "drophover",
 			accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
+		}).bind("contextmenu",function(e){
+			e.preventDefault();
+			var $t = $(this);
+			t.p.onRightClick($t.tmplItem().data, "", $t);
+			return false;
 		}).single_double_click(function() {
 			var $t = $(this);
 			t.p.onClick($t.tmplItem().data, "", $t);
@@ -260,6 +265,10 @@ function IconView(container, id, cls) {
 	
 	this.getItemContextElement = function(item) {
 		return t.$l.find("#mollify-iconview-item-"+item.id);
+	}
+	
+	this.removeHover = function() {
+		t.$l.find(".mollify-iconview-item.hover").removeClass('hover');
 	}
 }
 
