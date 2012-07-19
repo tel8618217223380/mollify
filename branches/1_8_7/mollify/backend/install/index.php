@@ -38,6 +38,9 @@
 	
 	function createInstaller($settings, $type) {
 		switch (strtolower($type)) {
+			case 'pdo':
+				require_once("install/pdo/PDOInstaller.class.php");
+				return new PDOInstaller($settings);
 			case 'mysql':
 				require_once("install/mysql/MySQLInstaller.class.php");
 				return new MySQLInstaller($settings);
@@ -50,6 +53,6 @@
 	}
 	
 	function isValidConfigurationType($type) {
-		return in_array(strtolower($type), array("mysql","sqlite"));
+		return in_array(strtolower($type), array("pdo", "mysql","sqlite"));
 	}
 ?>
