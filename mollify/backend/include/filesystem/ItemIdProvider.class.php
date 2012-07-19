@@ -36,7 +36,7 @@
 	 	public function loadRoots() {
 		 	$db = $this->env->configuration()->db();
 		 	
-			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+			if ($this->env->configuration()->isMySql()) {
 				$pathFilter = "path REGEXP '^.:[/\\\\]$'";
 			} else {
 				$pathFilter = "REGEX(path, \"#^.:[/\\\\]$#\")";
@@ -53,7 +53,7 @@
 		 	if ($recursive) {
 			 	$pathFilter = "path like '".$db->string($this->itemPath($parent))."%'";
 		 	} else {
-				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+				if ($this->env->configuration()->isMySql()) {
 					$pathFilter = "path REGEXP '^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$'";
 				} else {
 					$pathFilter = "REGEX(path, \"#^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$#\")";

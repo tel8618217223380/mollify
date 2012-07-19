@@ -572,7 +572,7 @@
 			return $this->db->string($item->id());
 		}
 		
-		private function isMySql() {
+		public function isMySql() {
 			return strcasecmp($this->getType(), 'mysql') == 0;
 		}
 		
