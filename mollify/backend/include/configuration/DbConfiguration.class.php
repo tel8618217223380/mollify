@@ -51,7 +51,7 @@
 		}
 		
 		public function getInstalledVersion() {
-			return $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'")->value(0);
+			return $this->db->query("SELECT value FROM ".$this->db->table("parameter")." WHERE name='version'")->value();
 		}
 		
 		public function checkProtocolVersion($version) {}
@@ -127,9 +127,9 @@
 		
 		public function addUser($name, $pw, $email, $permission, $expiration, $auth = NULL) {
 			if (isset($email) and strlen($email) > 0)
-				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value(0);
+				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') and is_group=0", $this->db->string($name), $this->db->string($email)))->value();
 			else
-				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0", $this->db->string($name)))->value(0);
+				$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=0", $this->db->string($name)))->value();
 			
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate user found with name [".$name."] or email [".$email."]");
@@ -201,7 +201,7 @@
 		}
 		
 		public function addUserGroup($name, $description) {
-			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=1", $this->db->string($name)))->value(0);
+			$matches = $this->db->query(sprintf("SELECT count(id) FROM ".$this->db->table("user")." WHERE name='%s' and is_group=1", $this->db->string($name)))->value();
 			if ($matches > 0)
 				throw new ServiceException("INVALID_REQUEST", "Duplicate group found with name [".$name."]");
 
@@ -222,7 +222,7 @@
 		}
 
 		public function getPassword($userId) {
-			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id=%s", $this->db->string($userId)))->value(0);
+			return $this->db->query(sprintf("SELECT password FROM ".$this->db->table("user")." WHERE id=%s", $this->db->string($userId)))->value();
 		}
 	
 		public function changePassword($id, $new) {
@@ -333,7 +333,7 @@
 		}
 		
 		public function getDefaultPermission($userId = "") {
-			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value(0));
+			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value());
 			$this->env->authentication()->assertPermissionValue($mode);
 			return $mode;
 		}
@@ -341,13 +341,13 @@
 		function getItemDescription($item) {
 			$result = $this->db->query(sprintf("SELECT description FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $this->itemId($item)));
 			if ($result->count() < 1) return NULL;
-			return $result->value(0);
+			return $result->value();
 		}
 				
 		function setItemDescription($item, $description) {
 			$id = $this->itemId($item);
 			$desc = $this->db->string($description);
-			$exists = $this->db->query(sprintf("SELECT COUNT(item_id) FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $id))->value(0) > 0;
+			$exists = $this->db->query(sprintf("SELECT COUNT(item_id) FROM ".$this->db->table("item_description")." WHERE item_id='%s'", $id))->value() > 0;
 			
 			if ($exists)
 				$this->db->update(sprintf("UPDATE ".$this->db->table("item_description")." SET description='%s' WHERE item_id='%s'", $desc, $id));
@@ -440,7 +440,7 @@
 			
 			$result = $this->db->query($query);
 			if ($result->count() < 1) return NULL;
-			return $result->value(0);
+			return $result->value();
 		}
 		
 		public function getAllItemPermissions($parent, $userId) {
