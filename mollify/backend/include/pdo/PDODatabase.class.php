@@ -235,7 +235,7 @@
 			return $ret[$val];
 		}
 		
-		public function value($r, $f=0) {
+		public function value($r=0, $f=0) {
 			$rows = $this->getRows();
 			if (!$rows) return NULL;
 			if (count($rows) <= $r) return NULL;
