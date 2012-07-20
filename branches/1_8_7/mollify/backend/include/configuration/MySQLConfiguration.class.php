@@ -39,8 +39,8 @@
 				$socket = NULL;
 			}
 			
-			require_once("include/mysql/MySQLDatabase.class.php");
-			$this->db = new MySQLDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix, $port, $socket);
+			require_once("include/mysql/MySQLIDatabase.class.php");
+			$this->db = new MySQLIDatabase($host, $DB_USER, $DB_PASSWORD, $database, $tablePrefix, $port, $socket);
 			
 			$this->db->connect();
 			if (isset($DB_CHARSET)) $this->db->setCharset($DB_CHARSET);

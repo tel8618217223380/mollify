@@ -235,10 +235,13 @@
 			return $ret[$val];
 		}
 		
-		public function value($i) {
-			$row = $this->firstRow();
-			if (!$row) return NULL;
-			return $row[$i];
+		public function value($r, $f=0) {
+			$rows = $this->getRows();
+			if (!$rows) return NULL;
+			if (count($rows) <= $r) return NULL;
+			
+			$row = $rows[$r];
+			return $row[$f];
 		}
 		
 		public function free() {

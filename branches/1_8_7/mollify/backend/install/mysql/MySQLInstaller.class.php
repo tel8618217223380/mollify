@@ -67,7 +67,10 @@
 				return FALSE;
 			
 			try {
-				if (!$this->db->isConnected()) $this->db->connect(FALSE);
+				if (!$this->db->isConnected()) {
+					mysqli_report(MYSQLI_REPORT_ALL);
+					$this->db->connect(FALSE);
+				}
 			} catch (ServiceException $e) {
 				return FALSE;
 			}
