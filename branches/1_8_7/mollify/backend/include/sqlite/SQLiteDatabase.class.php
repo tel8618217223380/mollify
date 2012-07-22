@@ -142,7 +142,7 @@
 				
 		public function rows() {
 			$list = array();
-			while ($row = sqlite_fetch_array($this->result, SQLITE_ASSOC)) {
+			while ($row = sqlite_fetch_array($this->result, SQLITE_BOTH)) {
 				$list[] = $row;
 			}
 			return $list;
@@ -177,9 +177,10 @@
 			return $ret;
 		}
 		
-		public function value($i) {
-			$ret = sqlite_fetch_array($this->result);
-			return $ret[$i];
+		public function value($r=0, $f=0) {
+			$rows = $this->rows();
+			$row = $rows[$r];
+			return $row[$f];
 		}
 		
 		public function free() {
