@@ -1,6 +1,14 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.9 ===
+Released 2012/7/22
+  * Added initial support for PDO DB interface (with MySQL or SQLite)
+  * Deprecated old MySQL interface (ext/mysql), replaced by MySQLI (ext/mysqli)
+  * Fixed issue 381
+  * Added issue 410
+  * Fixed issue 414
+
 === Version 1.8.8.3 ===
 Released 2012/6/18
   * Updated archiver plugin
