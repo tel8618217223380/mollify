@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.AppInterface;
+import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SessionService;
@@ -48,7 +48,7 @@ public class MollifyClient implements Client {
 	private final MainViewFactory mainViewFactory;
 	private final SessionService service;
 	private final ClientSettings settings;
-	private final AppInterface pluginSystem;
+	private final ClientInterface client;
 	private final ServiceProvider serviceProvider;
 	private final TextProvider textProvider;
 
@@ -56,14 +56,14 @@ public class MollifyClient implements Client {
 	public MollifyClient(ViewManager viewManager, DialogManager dialogManager,
 			MainViewFactory mainViewFactory, SessionManager sessionManager,
 			ServiceProvider serviceProvider, ClientSettings settings,
-			AppInterface pluginSystem, TextProvider textProvider) {
+			ClientInterface client, TextProvider textProvider) {
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.mainViewFactory = mainViewFactory;
 		this.sessionManager = sessionManager;
 		this.serviceProvider = serviceProvider;
 		this.settings = settings;
-		this.pluginSystem = pluginSystem;
+		this.client = client;
 		this.textProvider = textProvider;
 		this.service = serviceProvider.getSessionService();
 
@@ -112,7 +112,7 @@ public class MollifyClient implements Client {
 										+ pluginsInitialized);
 
 						if (!pluginsInitialized) {
-							pluginSystem.setup(session, new Callback() {
+							client.setup(session, new Callback() {
 								@Override
 								public void onCallback() {
 									pluginsInitialized = true;

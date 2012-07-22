@@ -10,10 +10,11 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import org.sjarvela.mollify.client.Callback;
+import org.sjarvela.mollify.client.session.SessionInfo;
 
 public interface ClientInterface {
 
-	JavaScriptObject asJs(String pluginBaseUrl);
+	void setup(SessionInfo session, Callback onReady);
 
 }

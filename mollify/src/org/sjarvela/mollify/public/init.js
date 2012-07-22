@@ -27,7 +27,15 @@
 			t.env = core;
 			t.ui.texts = t.env.texts();
 			t.service = t.env.service();
-			t.session = t.env.session.get();
+			t.session = {};
+			
+			core.addEventHandler(function(e) {
+				if (e.type == 'SESSION_START') {
+					t.session = core.session.get();
+				} else if (e.type == 'SESSION_END') {
+					t.session = {};
+				}
+			});
 
 			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 			
@@ -157,7 +165,7 @@
 		};
 		
 		this.hasFeature = function(id) {
-			return t.session.get().features[id];
+			return t.session.features && t.session.features[id];
 		};
 
 		this.locale = function() {
@@ -425,6 +433,58 @@
 						}
 					});
 					return {};
+				},
+
+				dynamicBubble: function(e, c, h) {
+					var bubbleHtml = function(c) {
+						if (!c) return "";
+						if (typeof(c) === 'string') return c;
+						return $("<div/>").append(c).html();
+					};
+					var html = c ? bubbleHtml(c) : '<div class="loading"></div>';
+					
+					var tip = e.qtip({
+						content: html,
+						position: {
+							my: 'top center',
+							at: 'bottom center'
+						},
+						hide: {
+							delay: 200,
+							fixed: true,
+							event: 'click mouseleave'
+						},
+						style: {
+							tip: true,
+							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+						},
+						events: {
+							render: function(e, api) {
+								if (!h || !h.onRenderBubble) return;
+								h.onRenderBubble(api);
+							},
+							visible: function(e, api) {
+								if (!h || !h.onShowBubble) return;
+								h.onShowBubble(api);
+							},
+							hide: function(e, api) {
+								api.destroy();
+							}
+						}
+					}).qtip('api');
+					tip.show();
+					
+					return {
+						show: function() {
+							tip.show();	
+						},
+						hide: function() {
+							tip.hide();
+						},
+						content: function(c) {
+							tip.set('content.text', bubbleHtml(c));
+						}
+					};
 				},
 				
 				radio: function(e, h) {
@@ -785,7 +845,7 @@ function CommentPlugin() {
 				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(that.onListCellClick);
 			},*/
 			"on-click": function(item) {
-				that.openComments(item);
+				that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
 			}
 		});
 		/*env.addListColumnSpec({
@@ -834,9 +894,26 @@ function CommentPlugin() {
 		return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 	}
 	
-	this.openComments = function(item) {
+	this.showCommentsBubble = function(item, e) {
+		var bubble = mollify.ui.controls.dynamicBubble(e);
+		
 		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
-			mollify.ui.views.dialogs.custom({
+			bubble.content(mollify.dom.template("comments-content-template", item));
+			$("#comments-list").removeClass("loading");
+			/*$("#comments-dialog-content .mollify-actionlink").hover(
+				function () { $(this).addClass("mollify-actionlink-hover"); }, 
+				function () { $(this).removeClass("mollify-actionlink-hover"); }
+			);*/
+	
+			$("#comments-dialog-add").click(function() { that.onAddComment(bubble, item); } );
+			
+			mollify.service.get("comment/"+item.id, function(result) {
+				that.onShowComments(item, result);
+			}, function(code, error) {
+				alert(error);
+			});
+			
+			/*mollify.ui.views.dialogs.custom({
 				"title": mollify.ui.texts.get("commentsDialogTitle"),
 				"content": mollify.dom.template("comments-content-template", item),
 				"on-show": function(d) { that.onShowCommentsDialog(d, item); },
@@ -846,7 +923,7 @@ function CommentPlugin() {
 				buttons: [
 					{id: 'close', "title-key":'dialogCloseButton'}
 				]
-			});			
+			});*/
 		});
 	}
 

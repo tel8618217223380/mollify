@@ -27,15 +27,18 @@ public class NativeSession {
 	}
 
 	private native JavaScriptObject createJs(NativeSession s) /*-{
-		return $wnd.$.extend(
-			{
-				admin:s.@org.sjarvela.mollify.client.plugin.NativeSession::isAdmin()()
-			},
-			s.@org.sjarvela.mollify.client.plugin.NativeSession::session
-		);
+		return $wnd.$
+				.extend(
+						{
+							admin : s.@org.sjarvela.mollify.client.plugin.NativeSession::isAdmin()()
+						},
+						s.@org.sjarvela.mollify.client.plugin.NativeSession::session);
 	}-*/;
 
 	public boolean isAdmin() {
+		if (session == null || !session.isAuthenticated())
+			return false;
+
 		UserPermissionMode permissionMode = session.getDefaultPermissionMode();
 		return permissionMode.isAdmin();
 	}
