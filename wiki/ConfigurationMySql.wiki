@@ -1,13 +1,17 @@
 #summary Configuration for MySQL
 #labels Phase-Deploy
 
-= 1. Preparations =
+= 1. Requirements =
 
-Before installing Mollify, you have to make following preparations:
+Mollify requires MySQL database with mysqli or PDO interface installed.
 
-1) Create MySQL user and database for Mollify, and grant the new user CREATE/INSERT/UPDATE/DELETE rights for the created database.
+= 2. Preparations =
 
-2) Create configuration.php as in following example:
+Before installing Mollify, you have to create MySQL user and database for Mollify, and grant the new user CREATE/INSERT/UPDATE/DELETE rights for the created database.
+
+= 3. Configuration ==
+
+== 3.1. MySQL database interface ==
 
 {{{
 <?php
@@ -35,16 +39,28 @@ Default MySQL engine used is InnoDB. With option $DB_ENGINE you can change this 
 	$DB_ENGINE = "myisam";
 }}}
 
-= 2. Installation =
+== 3.2. PDO database interface ==
 
-Installing Mollify to MySQL database can be done with installer script. It does, however, require MYSQLI extension installed in the server. If this is not available, you have to install manually as described in chapter 2.2.
+Alternatively you can use PDO database interface, for example:
 
-== 2.1. Installation with Installer ==
+{{{
+<?php
+	$CONFIGURATION_TYPE = 'pdo';
+	$PDO_STRING = 'mysql:host=localhost;dbname=mollify';
+	$DB_USER = "mollify";
+	$DB_PASSWORD = "mollify";
+	$DB_TABLE_PREFIX = "mollify_"; //optional
+?>
+}}}
+
+= 4. Installation =
+
+== 4.1. Installation with Installer ==
 Start installation by opening following page into your browser: "`http://[URL_TO_MOLLIFY_BACKEND_DIR]/install/`", where `[URL_TO_MOLLIFY_BACKEND_DIR]` is the mollify backend folder where, for example, configuration.php and r.php are located.
 
 Installer will check your configuration and system, and guide you through the installation.
 
-== 2.2. Manual Installation ==
+== 4.2. Manual Installation ==
 
 Database tables can be created manually by running script "`/include/mysql/sql/create_tables_[VERSION].sql`". For required parameters, run "`/include/mysql/sql/params_[VERSION].sql`" as well.
 
@@ -58,6 +74,6 @@ To be able to log into Mollify, you must create first admin user manually with f
 
 where `[USER_NAME]` is freely selectable user name, and `[PASSWORD]` an MD5 hashed password.
 
-= 3. Finishing Installation =
+= 5. Finishing Installation =
 
 After Mollify installation is over, open administration utility to configure users and published folders at `http://[URL_TO_MOLLIFY_BACKEND_DIR]/admin`
