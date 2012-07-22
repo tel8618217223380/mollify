@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-/*package org.sjarvela.mollify.client.ui.mainview.impl;
+package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,4 +66,4 @@ public class FileItemDragController implements DragController {
 		this.dataProvider = dataProvider;
 	}
 
-}*/
+}

@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-/*package org.sjarvela.mollify.client.ui.dnd;
+package org.sjarvela.mollify.client.ui.dnd;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 
@@ -18,4 +18,4 @@ public interface DragAndDropManager {
 
 	PickupDragController getController(Class c);
 
-}*/
+}

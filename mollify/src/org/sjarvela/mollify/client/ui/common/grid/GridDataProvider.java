@@ -10,12 +10,12 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-//import java.util.List;
-//
-//public interface GridDataProvider<T> {
-//	GridData getData(T t, GridColumn column);
-//
-//	List<String> getRowStyles(T t);
-//
-//	String getColumnStyle(GridColumn column);
-//}
+import java.util.List;
+
+public interface GridDataProvider<T> {
+	GridData getData(T t, GridColumn column);
+
+	List<String> getRowStyles(T t);
+
+	String getColumnStyle(GridColumn column);
+}

@@ -15,26 +15,26 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 public class FolderModel implements CurrentFolderProvider {
-	private Stack<JsFolder> folders;
+	private Stack<Folder> folders;
 
 	public FolderModel() {
-		folders = new Stack<JsFolder>();
+		folders = new Stack<Folder>();
 	}
 
-	public JsFolder getRootFolder() {
+	public Folder getRootFolder() {
 		return folders.firstElement();
 	}
 
-	public void setRootFolder(JsFolder folder) {
+	public void setRootFolder(Folder folder) {
 		this.folders.clear();
 		if (folder != null)
 			this.folders.add(folder);
 	}
 
-	public JsFolder getCurrentFolder() {
+	public Folder getCurrentFolder() {
 		if (folders.isEmpty())
 			return null;
 		return folders.lastElement();
@@ -44,19 +44,19 @@ public class FolderModel implements CurrentFolderProvider {
 		return folders.size();
 	}
 
-	public ListIterator<JsFolder> getFolders() {
+	public ListIterator<Folder> getFolders() {
 		return this.folders.listIterator();
 	}
 
-	public List<JsFolder> getFolderList() {
-		return Arrays.asList(this.folders.toArray(new JsFolder[0]));
+	public List<Folder> getFolderList() {
+		return Arrays.asList(this.folders.toArray(new Folder[0]));
 	}
 
-	public void descendIntoFolder(JsFolder folder) {
+	public void descendIntoFolder(Folder folder) {
 		this.folders.add(folder);
 	}
 
-	public JsFolder ascend() {
+	public Folder ascend() {
 		return this.folders.pop();
 	}
 
@@ -68,7 +68,7 @@ public class FolderModel implements CurrentFolderProvider {
 		return this.folders.size() == 0;
 	}
 
-	public void changeFolder(int level, JsFolder folder) {
+	public void changeFolder(int level, Folder folder) {
 		if (level < 1 || level > (getLevels() + 1))
 			throw new RuntimeException("Invalid folder (" + folder.getName()
 					+ ") at level " + level);
@@ -81,9 +81,9 @@ public class FolderModel implements CurrentFolderProvider {
 		descendIntoFolder(folder);
 	}
 
-	public void setFolderHierarchy(List<JsFolder> hierarchy) {
+	public void setFolderHierarchy(List<Folder> hierarchy) {
 		folders.clear();
-		for (JsFolder f : hierarchy)
+		for (Folder f : hierarchy)
 			descendIntoFolder(f);
 	}
 

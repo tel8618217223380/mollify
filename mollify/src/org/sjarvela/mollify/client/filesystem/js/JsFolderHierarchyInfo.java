@@ -10,22 +10,33 @@
 
 package org.sjarvela.mollify.client.filesystem.js;
 
-import java.util.List;
+import org.sjarvela.mollify.client.session.file.FilePermission;
 
-import org.sjarvela.mollify.client.util.JsUtil;
-
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public class JsFolderHierarchyInfo extends JsFolderInfo {
+public class JsFolderHierarchyInfo extends JavaScriptObject {
 	protected JsFolderHierarchyInfo() {
 	}
-	
-	public final List<JsFolder> getHierarchy() {
-		return JsUtil.asList(getHierarchyList(), JsFolder.class);
+
+	public final native JsArray<JsFolder> getFolders() /*-{
+		return this.folders;
+	}-*/;
+
+	public final native JsArray<JsFolder> getHierarchy() /*-{
+		return this.hierarchy;
+	}-*/;
+
+	public final native JsArray<JsFile> getFiles() /*-{
+		return this.files;
+	}-*/;
+
+	public final FilePermission getPermission() {
+		return FilePermission.fromString(getPermissionString());
 	}
 
-	public final native JsArray<JsFolder> getHierarchyList() /*-{
-		return this.hierarchy;
+	private final native String getPermissionString() /*-{
+		return this.permission;
 	}-*/;
 
 	public static JsFolderHierarchyInfo create(JsArray<JsFolder> folders,

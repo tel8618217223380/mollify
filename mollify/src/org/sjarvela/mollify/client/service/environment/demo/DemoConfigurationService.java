@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-/*import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FolderDef;
@@ -102,4 +102,4 @@ public class DemoConfigurationService implements ConfigurationService {
 	public String getAdministrationUrl() {
 		return "http://www.mollify.org";
 	}
-}*/
+}

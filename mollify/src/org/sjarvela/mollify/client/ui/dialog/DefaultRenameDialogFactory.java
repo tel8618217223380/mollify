@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
@@ -38,4 +38,4 @@ public class DefaultRenameDialogFactory implements RenameDialogFactory {
 		if (parent != null)
 			viewManager.align(renameDialog, parent);
 	}
-}*/
+}

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.plugin;
 
-/*import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
@@ -42,7 +42,7 @@ public class NativeUploader implements FileUploadDialogFactory {
 			uploader.@org.sjarvela.mollify.client.plugin.NativeUploader::onFail(Lorg/sjarvela/mollify/client/service/request/listener/ResultListener;Ljava/lang/String;)(listener,d);
 		};
 		return o;
-	}-;
+	}-*/;
 
 	protected void onSuccess(ResultListener listener) {
 		listener.onSuccess(null);
@@ -58,5 +58,5 @@ public class NativeUploader implements FileUploadDialogFactory {
 			JavaScriptObject listener) /*-{
 		if (cb)
 			cb(folder, listener);
-	}-
-}*/
+	}-*/;
+}

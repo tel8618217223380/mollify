@@ -29,14 +29,14 @@
 			$query = "select path from ".$db->table("item_id")." where id=".$db->string($id,TRUE);
 			$result = $db->query($query);
 			
-			if ($result->count() === 1) return $result->value(0);
+			if ($result->count() === 1) return $result->value(0, "path");
 			throw new ServiceException("No item id found ".$id);
 	 	}
 
 	 	public function loadRoots() {
 		 	$db = $this->env->configuration()->db();
 		 	
-			if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+			if ($this->env->configuration()->isMySql()) {
 				$pathFilter = "path REGEXP '^.:[/\\\\]$'";
 			} else {
 				$pathFilter = "REGEX(path, \"#^.:[/\\\\]$#\")";
@@ -53,7 +53,7 @@
 		 	if ($recursive) {
 			 	$pathFilter = "path like '".$db->string($this->itemPath($parent))."%'";
 		 	} else {
-				if (strcasecmp("mysql", $this->env->configuration()->getType()) == 0) {
+				if ($this->env->configuration()->isMySql()) {
 					$pathFilter = "path REGEXP '^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$'";
 				} else {
 					$pathFilter = "REGEX(path, \"#^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$#\")";
@@ -70,7 +70,7 @@
 			$query = "select id from ".$db->table("item_id")." where path=".$db->string($p, TRUE);
 			$result = $db->query($query);
 			
-			if ($result->count() === 1) return $result->value(0);
+			if ($result->count() === 1) return $result->value(0, "id");
 
 			$id = uniqid("");
 			$db->update(sprintf("INSERT INTO ".$db->table("item_id")." (id, path) VALUES (%s,%s)", $db->string($id, TRUE), $db->string($p, TRUE)));

@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.searchresult.impl;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
@@ -45,4 +45,4 @@ public class SearchResultsComparator extends DefaultFileItemComparator {
 		return item1.isFile() ? getSizeCompare(item1, item2) : 0;
 	}
 
-}*/
+}

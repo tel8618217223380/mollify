@@ -14,10 +14,50 @@
 	<inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="com.google.gwt.logging.Logging"/>
+	<inherits name="org.swfupload.SWFUpload"/>
 	<inherits name="com.google.gwt.inject.Inject"/>
+	<inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
 	
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
-	<!-- set-property name="gwt.logging.enabled" value="FALSE"/-->
+	<set-property name="gwt.logging.enabled" value="FALSE"/>
 	<set-configuration-property name="user.agent.runtimeWarning" value="false" />
+	
+	<!--extend-property name="locale" values="en"/>
+	<extend-property name="locale" values="es"/>
+	<extend-property name="locale" values="de"/>
+	<extend-property name="locale" values="dk"/>
+	<extend-property name="locale" values="id"/>
+	<extend-property name="locale" values="it"/>
+	<extend-property name="locale" values="fr"/>
+	<extend-property name="locale" values="nl"/>
+	<extend-property name="locale" values="fi"/>
+	<extend-property name="locale" values="pt"/>
+	<extend-property name="locale" values="pl"/>
+	<extend-property name="locale" values="sr"/>
+	<extend-property name="locale" values="kr"/>
+	<extend-property name="locale" values="tr"/>
+	<extend-property name="locale" values="br"/>
+	<extend-property name="locale" values="zh"/>
+	<extend-property name="locale" values="ru"/-->
+	
+	<define-property name="demo" values="true,false" />
+	<property-provider name="demo">
+		<![CDATA[
+			var demo = __gwt_getMetaProperty("demo");
+			if (demo == null) return "false";
+			return demo; 
+		]]>
+	</property-provider>
+	<set-property name="demo" value="false"/>
+	
+	<replace-with class="org.sjarvela.mollify.client.service.environment.demo.DemoEnvironment">
+		<when-type-is class="org.sjarvela.mollify.client.service.environment.ServiceEnvironment"/>
+		<when-property-is name="demo" value="true"/>
+	</replace-with>
+
+	<replace-with class="org.sjarvela.mollify.client.service.environment.php.PhpServiceEnvironment">
+		<when-type-is class="org.sjarvela.mollify.client.service.environment.ServiceEnvironment"/>
+		<when-property-is name="demo" value="false"/>
+	</replace-with>	
 </module>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008- Samuli Järvelä
+ * Copyright (c) 2008- Samuli J√§rvel√§
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,25 +19,33 @@ function ArchiverPlugin() {
 		that.env = env;
 		that.env.addItemContextProvider(that.getItemContext);
 		$.getScript(that.env.pluginUrl("Archiver") + "client/texts_" + that.env.texts().locale + ".js");
-	}
+	};
 	
 	this.getItemContext = function(item, details) {
-		if (!details["plugin_archiver"] || !details["plugin_archiver"]["action_extract"]) return null;
+		if (!details["plugin-archiver"]) return null;
+		var archiver = details["plugin-archiver"];
+		if (!archiver["action_extract"] && !archiver["action_compress"]) return null;
 		
-		var extractServiceUrl = details["plugin_archiver"]["action_extract"];
+		var actions = [{ title: "-" }];
+		if (archiver["action_extract"]) {
+			actions.push({
+				title: that.env.texts().get("plugin_archiver_extractAction"),
+				callback: function(item) { that.onExtract(archiver["action_extract"], false); }
+			});
+		}
+		if (archiver["action_compress"]) {
+			actions.push({
+				title: that.env.texts().get("plugin_archiver_compressAction"),
+				callback: function(item) { that.onCompress(archiver["action_compress"], false); }
+			});
+		}		
 		
 		return {
 			actions : {
-				secondary: [
-					{ title: "-" },
-					{
-						title: that.env.texts().get("plugin_archiver_extractAction"),
-						callback: function(item) { that.onExtract(extractServiceUrl, false); }
-					}
-				]
+				secondary: actions
 			}
 		}
-	}
+	};
 	
 	this.onExtract = function(url, allowOverwrite) {
 		var wd = that.env.dialog().showWait(that.env.texts().get("pleaseWait"));
@@ -59,6 +67,30 @@ function ArchiverPlugin() {
 					return;
 				}
 				alert("Extract error: "+code+"/"+error);
+			}
+		);
+	};
+	
+	this.onCompress = function(url, allowOverwrite) {
+		var wd = that.env.dialog().showWait(that.env.texts().get("pleaseWait"));
+		var params = { overwrite: allowOverwrite };
+		
+		that.env.service().post(url, params,
+			function(result) {
+				wd.close();
+				that.env.fileview().refresh();
+			},
+			function(code, error) {
+				wd.close();
+				if (code == 204) {
+					that.env.dialog().showConfirmation({
+						title: that.env.texts().get("plugin_archiver_compressFileAlreadyExistsTitle"),
+						message: that.env.texts().get("plugin_archiver_compressFileAlreadyExistsMessage"),
+						on_confirm: function() { that.onCompress(url, true); }
+					});
+					return;
+				}
+				alert("Compress error: "+code+"/"+error);
 			}
 		);
 	}

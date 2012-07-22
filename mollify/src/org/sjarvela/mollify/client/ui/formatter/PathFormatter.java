@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.formatter;
 
-//import org.sjarvela.mollify.client.filesystem.FileSystemItem;
-//
-//public interface PathFormatter {
-//	String format(FileSystemItem item);
-//}
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+
+public interface PathFormatter {
+	String format(FileSystemItem item);
+}

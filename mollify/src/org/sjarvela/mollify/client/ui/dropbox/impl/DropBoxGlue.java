@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-/*package org.sjarvela.mollify.client.ui.dropbox.impl;
+package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import java.util.List;
 
@@ -143,4 +143,4 @@ public class DropBoxGlue implements DropBox, DropController {
 	public void onPreviewDrop(DragContext context) throws VetoDragException {
 	}
 
-}*/
+}

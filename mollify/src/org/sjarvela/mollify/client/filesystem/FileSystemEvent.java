@@ -10,34 +10,31 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.event.Event;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class FileSystemEvent {
 
-	public static Event createEvent(JsFilesystemItem item,
-			FileSystemAction action) {
-		return Event.create(getEventString(action), JsUtil.asJsArray(item));
+	public static Event createEvent(FileSystemItem item, FileSystemAction action) {
+		return Event.create(getEventString(action), createItemList(Arrays
+				.asList(item)));
 	}
 
-	public static Event createEvent(List<JsFilesystemItem> items,
+	public static Event createEvent(List<FileSystemItem> items,
 			FileSystemAction action) {
-		return Event.create(getEventString(action),
-				JsUtil.asJsArray(items, JsFilesystemItem.class));
+		return Event.create(getEventString(action), createItemList(items));
 	}
 
-	// private static JavaScriptObject createItemList(List<JsFilesystemItem>
-	// items) {
-	// JavaScriptObject a = JavaScriptObject.createArray();
-	// for (JsFilesystemItem item : items)
-	// add(a, item.asJs());
-	// return a;
-	// }
+	private static JavaScriptObject createItemList(List<FileSystemItem> items) {
+		JavaScriptObject a = JavaScriptObject.createArray();
+		for (FileSystemItem item : items)
+			add(a, item.asJs());
+		return a;
+	}
 
 	private static native void add(JavaScriptObject a, JavaScriptObject item) /*-{
 		a.push(item);

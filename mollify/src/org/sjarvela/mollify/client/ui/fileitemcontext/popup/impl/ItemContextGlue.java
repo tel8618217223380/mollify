@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup.impl;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.ui.action.ActionListenerDelegator;
 import org.sjarvela.mollify.client.ui.common.popup.PopupPositioner;
@@ -69,4 +69,4 @@ public class ItemContextGlue implements ItemContextPopup {
 	public void showMenu(FileSystemItem t, Element parent) {
 		presenter.showMenu(t, parent);
 	}
-}*/
+}

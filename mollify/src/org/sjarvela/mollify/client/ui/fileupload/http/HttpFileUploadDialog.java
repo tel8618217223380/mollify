@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.http;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
@@ -256,8 +256,9 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 							return;
 						}
 
-						dialogManager.showInfo(textProvider
-								.getText(Texts.infoDialogErrorTitle),
+						dialogManager.showInfo(
+								textProvider
+										.getText(Texts.infoDialogErrorTitle),
 								textProvider.getText(
 										Texts.fileUploadFileExists,
 										StringUtil.toStringList(existing, ", ")));
@@ -307,7 +308,7 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 		if (!e || !e.files || !e.files[0])
 			return -1;
 		return e.files[0].fileSize;
-	}-;
+	}-*/;
 
 	private boolean verifyFileTypes() {
 		if (allowedFileTypes.isEmpty())
@@ -347,8 +348,14 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 
 	private List<String> getFileNames() {
 		List<String> result = new ArrayList();
-		for (FileUpload uploader : uploaders)
-			result.add(uploader.getFilename());
+		for (FileUpload uploader : uploaders) {
+			String filename = uploader.getFilename();
+			int lastSeparator = Math.max(filename.lastIndexOf("/"),
+					filename.lastIndexOf("\\"));
+			if (lastSeparator > 0)
+				filename = filename.substring(lastSeparator + 1);
+			result.add(filename);
+		}
 		return result;
 	}
 
@@ -362,4 +369,3 @@ public class HttpFileUploadDialog extends Dialog implements SubmitHandler {
 	}
 
 }
-*/

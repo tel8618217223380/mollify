@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-/*import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -91,4 +91,4 @@ public class ItemPermissionList extends Grid<FileItemUserPermission> implements
 		this.filePermissionFormatter = filePermissionFormatter;
 	}
 
-}*/
+}

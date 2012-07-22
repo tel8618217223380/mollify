@@ -14,15 +14,17 @@ import java.util.List;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+
+import com.google.gwt.user.client.ui.Widget;
 
 public interface FileSystemActionHandler {
 
-	void onAction(JsFilesystemItem item, FileSystemAction action, Object param);
+	void onAction(FileSystemItem item, FileSystemAction action, Widget source, Object param);
 
-	void onAction(List<JsFilesystemItem> items, FileSystemAction action,
-			JsFolder folder, Callback actionCallback);
+	void onAction(List<FileSystemItem> items, FileSystemAction action,
+			Folder folder, Widget source, Callback actionCallback);
 
 	void addListener(FileSystemActionListener fileSystemActionListener);
 

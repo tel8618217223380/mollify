@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
@@ -28,4 +28,4 @@ public interface GridListener<T> {
 	void onRendered();
 
 	void onMenuClicked(FileSystemItem item, Element e);
-}*/
+}

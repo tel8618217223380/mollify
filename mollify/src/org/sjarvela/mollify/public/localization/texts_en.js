@@ -56,11 +56,10 @@ permissionModeReadOnly: "Read only",
 permissionModeNone: "No rights",
 
 loginDialogTitle: "Login",
-loginDialogUsername: "Username",
-loginDialogPassword: "Password",
+loginDialogUsername: "Username:",
+loginDialogPassword: "Password:",
 loginDialogRememberMe: "Remember me",
 loginDialogResetPassword: "Forgot password?",
-loginDialogRegister: "Register",
 loginDialogLoginButton: "Log in",
 loginDialogLoginFailedMessage: "Login failed, user name or password was incorrect.",
 

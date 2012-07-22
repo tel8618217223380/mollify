@@ -11,27 +11,27 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
+import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
-import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.FolderInfo;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
+import org.sjarvela.mollify.client.filesystem.VirtualGroupFolder;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsFolderInfo;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.js.JsObjBuilder;
+import org.sjarvela.mollify.client.filesystem.handler.FolderHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -39,27 +39,37 @@ import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
+import org.sjarvela.mollify.client.session.user.PasswordHandler;
 import org.sjarvela.mollify.client.ui.ViewManager;
+import org.sjarvela.mollify.client.ui.common.grid.SelectController;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
+import org.sjarvela.mollify.client.ui.dialog.CreateFolderDialogFactory;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
-import org.sjarvela.mollify.client.ui.mainview.MainView;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
-import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
-import org.sjarvela.mollify.client.util.JsUtil;
+import org.sjarvela.mollify.client.ui.dialog.InputListener;
+import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
+import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.filelist.FileList;
+import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
+import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
+import org.sjarvela.mollify.client.ui.password.PasswordDialogFactory;
+import org.sjarvela.mollify.client.ui.permissions.PermissionEditorViewFactory;
+import org.sjarvela.mollify.client.ui.searchresult.SearchResultDialogFactory;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 
-public class MainViewPresenter implements MainViewListener,
+public class MainViewPresenter implements FolderListener, PasswordHandler,
+		DragDataProvider<FileSystemItem>, SearchListener,
 		FolderInfoRequestDataProvider {
 	private static Logger logger = Logger.getLogger(MainViewPresenter.class
 			.getName());
 
 	private final MainViewModel model;
-	private final MainView view;
+	private final DefaultMainView view;
 	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
 	private final SessionService sessionService;
@@ -68,32 +78,33 @@ public class MainViewPresenter implements MainViewListener,
 	private final ConfigurationService configurationService;
 	private final FileSystemActionHandler fileSystemActionHandler;
 	private final TextProvider textProvider;
-	// private final PermissionEditorViewFactory permissionEditorViewFactory;
-	// private final PasswordDialogFactory passwordDialogFactory;
-	// private final FileUploadDialogFactory fileUploadDialogFactory;
-	// private final CreateFolderDialogFactory createFolderDialogFactory;
+	private final PermissionEditorViewFactory permissionEditorViewFactory;
+	private final PasswordDialogFactory passwordDialogFactory;
+	private final FileUploadDialogFactory fileUploadDialogFactory;
+	private final CreateFolderDialogFactory createFolderDialogFactory;
 	private final ViewManager viewManager;
-	// TODO private final DropBox dropBox;
+	private final DropBox dropBox;
 	private final EventDispatcher eventDispatcher;
-	// private final SearchResultDialogFactory searchResultDialogFactory;
+	private final SearchResultDialogFactory searchResultDialogFactory;
 
-	// private final boolean exposeFileUrls;
+	private final boolean exposeFileUrls;
 
-	private final ClientInterface pluginEnvironment;
+	private final PluginEnvironment pluginEnvironment;
 
-	public MainViewPresenter(ViewManager viewManager,
-			DialogManager dialogManager, SessionManager sessionManager,
-			MainViewModel model, MainView view,
+	public MainViewPresenter(DialogManager dialogManager,
+			ViewManager viewManager, SessionManager sessionManager,
+			MainViewModel model, DefaultMainView view,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
 			FileSystemActionHandler fileSystemActionHandler,
-			// PermissionEditorViewFactory permissionEditorViewFactory,
-			// PasswordDialogFactory passwordDialogFactory,
-			// FileUploadDialogFactory fileUploadDialogFactory,
-			// CreateFolderDialogFactory createFolderDialogFactory,
+			PermissionEditorViewFactory permissionEditorViewFactory,
+			PasswordDialogFactory passwordDialogFactory,
+			FileUploadDialogFactory fileUploadDialogFactory,
+			CreateFolderDialogFactory createFolderDialogFactory,
+			DropBox dropBox, boolean exposeFileUrls,
 			SessionService sessionService, EventDispatcher eventDispatcher,
-			// SearchResultDialogFactory searchResultDialogFactory,
-			ClientInterface pluginEnvironment) {
+			SearchResultDialogFactory searchResultDialogFactory,
+			PluginEnvironment pluginEnvironment) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
@@ -106,261 +117,91 @@ public class MainViewPresenter implements MainViewListener,
 		this.view = view;
 		this.textProvider = textProvider;
 		this.fileSystemActionHandler = fileSystemActionHandler;
-		// this.permissionEditorViewFactory = permissionEditorViewFactory;
-		// this.passwordDialogFactory = passwordDialogFactory;
-		// this.fileUploadDialogFactory = fileUploadDialogFactory;
-		// this.createFolderDialogFactory = createFolderDialogFactory;
-		// this.exposeFileUrls = exposeFileUrls;
+		this.permissionEditorViewFactory = permissionEditorViewFactory;
+		this.passwordDialogFactory = passwordDialogFactory;
+		this.fileUploadDialogFactory = fileUploadDialogFactory;
+		this.createFolderDialogFactory = createFolderDialogFactory;
+		this.dropBox = dropBox;
+		this.exposeFileUrls = exposeFileUrls;
 		this.eventDispatcher = eventDispatcher;
-		// this.searchResultDialogFactory = searchResultDialogFactory;
+		this.searchResultDialogFactory = searchResultDialogFactory;
 
-		// TODO
-		// this.view.getItemContext().setActionHandler(fileSystemActionHandler);
+		this.view.getItemContext().setActionHandler(fileSystemActionHandler);
 
-		// TODO this.view.getFolderSelector().addListener(this);
-		/*
-		 * TODO this.view .setListSelectController(new
-		 * SelectController<FileSystemItem>() {
-		 * 
-		 * @Override public boolean isSelectable(FileSystemItem t) { if
-		 * (t.isFile()) return true; if (Folder.Parent.equals(t)) return false;
-		 * if (((Folder) t).isRoot()) return false; return true; }
-		 * 
-		 * });
-		 */
+		this.view.getFolderSelector().addListener(this);
+		this.view
+				.setListSelectController(new SelectController<FileSystemItem>() {
+					@Override
+					public boolean isSelectable(FileSystemItem t) {
+						if (t.isFile())
+							return true;
+						if (Folder.Parent.equals(t))
+							return false;
+						if (((Folder) t).isRoot())
+							return false;
+						return true;
+					}
 
-		// this.setListOrder(FileList.COLUMN_ID_NAME, SortOrder.asc);
+				});
+		this.setListOrder(FileList.COLUMN_ID_NAME, SortOrder.asc);
 
-		// TODO view.addSearchListener(this);
+		if (model.getSession().isAuthenticationRequired())
+			view.getUsername().setText(model.getSession().getLoggedUser());
+
+		view.addSearchListener(this);
 		model.setRequestDataProvider(this);
-
-		view.init(sessionManager.getSession().getRootFolders(), this);
 	}
 
-	@Override
-	public void onViewLoaded() {
-		// TODO if (exposeFileUrls)
-		// viewManager.getHiddenPanel().add(view.createFileUrlContainer());
+	public void initialize() {
+		if (exposeFileUrls)
+			viewManager.getHiddenPanel().add(view.createFileUrlContainer());
 
-		if (!model.hasFolder()) {
-			if (model.getRootFolders().size() == 0)
-				view.showNoRoots();
-			else if (model.getRootFolders().size() == 1)
-				changeToRootFolder(model.getRootFolders().get(0));
-			else
-				view.showAllRoots();
-		} else {
-			refreshView(true);
-		}
+		if (!model.hasFolder())
+			changeToRootFolder(model.getRootFolders().size() == 1 ? model
+					.getRootFolders().get(0) : null);
+		if (model.getRootFolders().size() == 0)
+			view.hideButtons();
 	}
 
-	@Override
-	public JavaScriptObject getDataRequest(JsFolder folder) {
-		return view.getDataRequest(folder);
-	}
-
-	@Override
-	public void onHomeSelected() {
-		model.clear();
-		view.showAllRoots();
-	}
-
-	@Override
-	public void onSubFolderSelected(JsFolder f) {
-		changeToFolderOnCurrentLevel(f);
-	}
-
-	@Override
-	public void onFolderSelected(int level, JsFolder f) {
-		changeToFolder(level, f);
-	}
-
-	public void onFileSystemItemSelected(final JsFilesystemItem item,
+	public void onFileSystemItemSelected(final FileSystemItem item,
 			String columnId, Element e) {
-		// if (columnId.equals(FileList.COLUMN_ID_NAME)) {
-		// if (item.isFile()) {
-		// // TODO view.showItemContext(item, e);
-		// } else {
-		// view.showProgress();
-		//
-		// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-		// @Override
-		// public void execute() {
-		// Folder folder = (Folder) item;
-		//
-		// if (folder == Folder.Parent)
-		// onMoveToParentFolder();
-		// else
-		// changeToFolder(folder);
-		// }
-		// });
-		// }
-		// }
-	}
+		if (columnId.equals(FileList.COLUMN_ID_NAME)) {
+			if (item.isFile()) {
+				view.showItemContext(item, e);
+			} else {
+				view.showProgress();
 
-	@Override
-	public void getItemActions(final JsFilesystemItem item,
-			final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(
-				item,
-				null,
-				createItemDetailsListener(item,
-						new ResultCallback<ItemDetails>() {
-							@Override
-							public void onCallback(ItemDetails details) {
-								boolean root = !item.isFile()
-										&& ((JsFolder) item.cast()).isRoot();
-								boolean writable = !root
-										&& details.getFilePermission()
-												.canWrite();
-								List<JsObj> itemActions = getItemActions(item,
-										writable, root);
-								call(callback, JsUtil.asJsArray(itemActions,
-										JsObj.class));
-							}
-						}));
-	}
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+					@Override
+					public void execute() {
+						Folder folder = (Folder) item;
 
-	@Override
-	public void getItemDetails(final JsFilesystemItem item,
-			final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(
-				item,
-				null,
-				createItemDetailsListener(item,
-						new ResultCallback<ItemDetails>() {
-							@Override
-							public void onCallback(ItemDetails details) {
-								boolean root = !item.isFile()
-										&& ((JsFolder) item.cast()).isRoot();
-								boolean writable = !root
-										&& details.getFilePermission()
-												.canWrite();
-								List<JsObj> itemActions = getItemActions(item,
-										writable, root);
-								call(callback, details, JsUtil.asJsArray(
-										itemActions, JsObj.class));
-							}
-						}));
-	}
-
-	private ResultListener<ItemDetails> createItemDetailsListener(
-			final JsFilesystemItem item,
-			final ResultCallback<ItemDetails> callback) {
-		return new ResultListener<ItemDetails>() {
-			public void onFail(ServiceError error) {
-				if (error.getDetails() != null
-						&& (error.getDetails().startsWith("PHP error #2048") || error
-								.getDetails()
-								.contains(
-										"It is not safe to rely on the system's timezone settings"))) {
-					dialogManager
-							.showInfo("ERROR",
-									"Mollify configuration error, PHP timezone information missing.");
-					return;
-				}
-				dialogManager.showError(error);
+						if (folder == Folder.Parent)
+							onMoveToParentFolder();
+						else
+							changeToFolder(folder);
+					}
+				});
 			}
-
-			public void onSuccess(ItemDetails details) {
-				callback.onCallback(details);
-			}
-		};
-	}
-
-	protected native void call(JavaScriptObject callback, JavaScriptObject... o) /*-{
-		callback(o);
-	}-*/;
-
-	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
-			boolean root) {
-		List<JsObj> actions = new ArrayList();
-
-		if (item.isFile() || !root)
-			actions.add(createAction(item, Action.download,
-					Texts.fileActionDownloadTitle.name()));
-
-		actions.add(createSeparator());
-
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.rename,
-					Texts.fileActionRenameTitle.name()));
-		if (!root)
-			actions.add(createAction(item, FileSystemAction.copy,
-					Texts.fileActionCopyTitle.name()));
-		if (item.isFile())
-			actions.add(createAction(item, FileSystemAction.copyHere,
-					Texts.fileActionCopyHereTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.move,
-					Texts.fileActionMoveTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.delete,
-					Texts.fileActionDeleteTitle.name()));
-
-		if (item.isFile() || !root) {
-			actions.add(createSeparator());
-			actions.add(createAction(item, Action.addToDropbox,
-					Texts.mainViewSelectActionAddToDropbox.name()));
 		}
-		return actions;
 	}
 
-	private JsObj createSeparator() {
-		return new JsObjBuilder().string("title", "-").create();
-	}
-
-	private JsObj createAction(final JsFilesystemItem item,
-			final ResourceId action, String titleKey) {
-		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
-			@Override
-			public void onCallback() {
-				dialogManager.showInfo("foo",
-						item.getName() + " " + action.name());
-				if (action instanceof FileSystemAction)
-					fileSystemActionHandler.onAction(item,
-							(FileSystemAction) action, null);
-				else
-					onItemAction(item, (Action) action);
-			}
-		});
-		return new JsObjBuilder().string("title", titleKey).obj("callback", cb)
-				.create();
-	}
-
-	protected void onItemAction(JsFilesystemItem item, Action action) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void changeToRootFolder(final JsFolder root) {
+	public void changeToRootFolder(final Folder root) {
 		view.showProgress();
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToRootFolder(root, createFolderChangeListener(true));
+				model.changeToRootFolder(root, createFolderChangeListener());
 			}
 		});
 	}
 
-	public void changeToFolderOnCurrentLevel(final JsFolder folder) {
+	public void changeToFolder(final Folder folder) {
 		view.showProgress();
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToSubfolder(folder,
-						createFolderChangeListener(true));
-			}
-		});
-	}
-
-	public void changeToFolder(final int level, final JsFolder folder) {
-		view.showProgress();
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute() {
-				model.changeToFolder(level, folder,
-						createFolderChangeListener(true));
+				model.changeToSubfolder(folder, createFolderChangeListener());
 			}
 		});
 	}
@@ -371,58 +212,67 @@ public class MainViewPresenter implements MainViewListener,
 
 	public void reload() {
 		view.showProgress();
-		model.refreshData(new ResultListener<JsFolderInfo>() {
+		model.refreshData(new ResultListener<FolderInfo>() {
 			public void onFail(ServiceError error) {
 				view.hideProgress();
 				onError(error, false);
 			}
 
-			public void onSuccess(JsFolderInfo result) {
-				refreshView(false);
+			public void onSuccess(FolderInfo result) {
+				refreshView();
 			}
 		});
 	}
 
-	private void refreshView(boolean folderChange) {
-		// List<FileSystemItem> allItems = new ArrayList(model.getAllItems());
-		// if (model.getFolderModel().canAscend())
-		// allItems.add(0, Folder.Parent);
+	private void refreshView() {
+		List<FileSystemItem> allItems = new ArrayList(model.getAllItems());
+		if (model.getFolderModel().canAscend())
+			allItems.add(0, Folder.Parent);
 
-		if (folderChange)
-			view.setFolder(model.getFolderModel().getFolderList(), model
-					.getFolderPermission().canWrite());
-		view.setData(model.getAllItems(), model.getData());
-		// view.showAddButton(model.getFolderPermission().canWrite());
-		// view.refresh();
-		// if (exposeFileUrls)
-		// refreshFileUrls(model.getFiles());
+		view.getFileWidget().setContent(allItems, model.getData());
+		view.setAddButtonVisible(model.getFolderPermission().canWrite());
+		view.refresh();
+		if (exposeFileUrls)
+			refreshFileUrls(model.getFiles());
 	}
 
-	// private void refreshFileUrls(List<File> files) {
-	// String sessionId = sessionManager.getSession().getSessionId();
-	// Map<String, String> urls = new HashMap();
-	// for (File f : files)
-	// urls.put(f.getName(),
-	// fileSystemService.getDownloadUrl(f, sessionId));
-	// // TODO view.refreshFileUrls(urls);
-	// }
+	private void refreshFileUrls(List<File> files) {
+		String sessionId = sessionManager.getSession().getSessionId();
+		Map<String, String> urls = new HashMap();
+		for (File f : files)
+			urls.put(f.getName(),
+					fileSystemService.getDownloadUrl(f, sessionId));
+		view.refreshFileUrls(urls);
+	}
 
-	// @Override
-	// public void onMoveToParentFolder() {
-	// if (!model.getFolderModel().canAscend())
-	// return;
-	// view.showProgress();
-	// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-	// @Override
-	// public void execute() {
-	// model.moveToParentFolder(view.getViewType(),
-	// createFolderChangeListener());
-	// }
-	// });
-	// }
+	@Override
+	public void onMoveToParentFolder() {
+		if (!model.getFolderModel().canAscend())
+			return;
+		view.showProgress();
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.moveToParentFolder(view.getViewType(),
+						createFolderChangeListener());
+			}
+		});
+	}
+
+	@Override
+	public void onChangeToFolder(final int level, final Folder folder) {
+		view.showProgress();
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				model.changeToFolder(level, folder,
+						createFolderChangeListener());
+			}
+		});
+	}
 
 	public void onError(ServiceError error, boolean reload) {
-		// TODO dialogManager.showError(error);
+		dialogManager.showError(error);
 
 		if (reload)
 			reload();
@@ -434,87 +284,85 @@ public class MainViewPresenter implements MainViewListener,
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		// TODO
-		// fileUploadDialogFactory.openFileUploadDialog(model.getCurrentFolder(),
-		// createReloadListener("Upload"));
+		fileUploadDialogFactory.openFileUploadDialog(model.getCurrentFolder(),
+				createReloadListener("Upload"));
 	}
 
 	public void openNewFolderDialog() {
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		// TODO createFolderDialogFactory.openCreateFolderDialog(
-		// model.getCurrentFolder(), new FolderHandler() {
-		// public void createFolder(Folder parentFolder,
-		// String folderName) {
-		// fileSystemService.createFolder(parentFolder,
-		// folderName,
-		// createReloadListener("Create folder"));
-		// }
-		// });
+		createFolderDialogFactory.openCreateFolderDialog(
+				model.getCurrentFolder(), new FolderHandler() {
+					public void createFolder(Folder parentFolder,
+							String folderName) {
+						fileSystemService.createFolder(parentFolder,
+								folderName,
+								createReloadListener("Create folder"));
+					}
+				});
 	}
 
 	public void retrieveFromUrl() {
 		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
 			return;
 
-		// TODO
-		// dialogManager.showInputDialog(
-		// textProvider.getText(Texts.retrieveUrlTitle),
-		// textProvider.getText(Texts.retrieveUrlMessage), "",
-		// new InputListener() {
-		// @Override
-		// public void onInput(String url) {
-		// retrieveUrl(url);
-		// }
-		//
-		// @Override
-		// public boolean isInputAcceptable(String input) {
-		// return input.length() > 0
-		// && input.toLowerCase().startsWith("http");
-		// }
-		// });
+		dialogManager.showInputDialog(
+				textProvider.getText(Texts.retrieveUrlTitle),
+				textProvider.getText(Texts.retrieveUrlMessage), "",
+				new InputListener() {
+					@Override
+					public void onInput(String url) {
+						retrieveUrl(url);
+					}
+
+					@Override
+					public boolean isInputAcceptable(String input) {
+						return input.length() > 0
+								&& input.toLowerCase().startsWith("http");
+					}
+				});
 	}
 
 	private void retrieveUrl(final String url) {
-		// final WaitDialog waitDialog = dialogManager.openWaitDialog("",
-		// textProvider.getText(Texts.pleaseWait));
+		final WaitDialog waitDialog = dialogManager.openWaitDialog("",
+				textProvider.getText(Texts.pleaseWait));
 
 		fileSystemService.retrieveUrl(model.getCurrentFolder(), url,
 				new ResultListener() {
 					@Override
 					public void onSuccess(Object result) {
-						// waitDialog.close();
+						waitDialog.close();
 						logger.log(Level.INFO, "URL retrieve complete");
 						reload();
 					}
 
 					@Override
 					public void onFail(ServiceError error) {
-						// TODO waitDialog.close();
+						waitDialog.close();
 
-						// if (error.getError().getCode() == 301)
-						// dialogManager.showInfo(textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider.getText(
-						// Texts.retrieveUrlNotFound, url));
-						// else if (error.getError().getCode() == 302)
-						// dialogManager.showInfo(
-						// textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider
-						// .getText(
-						// Texts.retrieveUrlNotAuthorized,
-						// url));
-						// else if (ServiceErrorType.REQUEST_FAILED.equals(error
-						// .getType()))
-						// dialogManager.showInfo(textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider
-						// .getText(Texts.retrieveUrlFailed),
-						// error.getDetails());
-						// else
-						// dialogManager.showError(error);
+						if (error.getError().getCode() == 301)
+							dialogManager.showInfo(textProvider
+									.getText(Texts.retrieveUrlTitle),
+									textProvider.getText(
+											Texts.retrieveUrlNotFound, url));
+						else if (error.getError().getCode() == 302)
+							dialogManager.showInfo(
+									textProvider
+											.getText(Texts.retrieveUrlTitle),
+									textProvider
+											.getText(
+													Texts.retrieveUrlNotAuthorized,
+													url));
+						else if (ServiceErrorType.REQUEST_FAILED.equals(error
+								.getType()))
+							dialogManager.showInfo(textProvider
+									.getText(Texts.retrieveUrlTitle),
+									textProvider
+											.getText(Texts.retrieveUrlFailed),
+									error.getDetails());
+						else
+							dialogManager.showError(error);
 					}
 				});
 	}
@@ -533,8 +381,8 @@ public class MainViewPresenter implements MainViewListener,
 		});
 	}
 
-	private ResultListener createFolderChangeListener(boolean folderChange) {
-		return createListener(createRefreshCallback(folderChange),
+	private ResultListener createFolderChangeListener() {
+		return createListener(createRefreshCallback(),
 				createCurrentFolderChangedEventCallback());
 	}
 
@@ -548,10 +396,10 @@ public class MainViewPresenter implements MainViewListener,
 		};
 	}
 
-	private Callback createRefreshCallback(final boolean folderChange) {
+	private Callback createRefreshCallback() {
 		return new Callback() {
 			public void onCallback() {
-				refreshView(folderChange);
+				refreshView();
 			}
 		};
 	}
@@ -584,7 +432,7 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	public void changePassword() {
-		// passwordDialogFactory.openPasswordDialog(this);
+		passwordDialogFactory.openPasswordDialog(this);
 	}
 
 	public void changePassword(String oldPassword, String newPassword) {
@@ -593,33 +441,31 @@ public class MainViewPresenter implements MainViewListener,
 					public void onFail(ServiceError error) {
 						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
 								.getType())) {
-							// TODO
-							// dialogManager.showInfo(
-							// textProvider
-							// .getText(Texts.passwordDialogTitle),
-							// textProvider
-							// .getText(Texts.passwordDialogOldPasswordIncorrect));
+							dialogManager.showInfo(
+									textProvider
+											.getText(Texts.passwordDialogTitle),
+									textProvider
+											.getText(Texts.passwordDialogOldPasswordIncorrect));
 						} else {
 							onError(error, false);
 						}
 					}
 
 					public void onSuccess(Object result) {
-						// TODO
-						// dialogManager.showInfo(
-						// textProvider.getText(Texts.passwordDialogTitle),
-						// textProvider
-						// .getText(Texts.passwordDialogPasswordChangedSuccessfully));
+						dialogManager.showInfo(
+								textProvider.getText(Texts.passwordDialogTitle),
+								textProvider
+										.getText(Texts.passwordDialogPasswordChangedSuccessfully));
 					}
 				});
 	}
 
 	public void setListOrder(String columnId, SortOrder sort) {
-		view.sortColumn(columnId, sort);
+		view.getFileWidget().sortColumn(columnId, sort);
 	}
 
 	public void onEditItemPermissions() {
-		// permissionEditorViewFactory.openPermissionEditor(null);
+		permissionEditorViewFactory.openPermissionEditor(null);
 	}
 
 	public void onOpenAdministration() {
@@ -628,12 +474,12 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	public void onToggleSelectMode() {
-		// TODO view.setSelectMode(view.selectModeButton().isDown());
+		view.setSelectMode(view.selectModeButton().isDown());
 	}
 
-	public void onFileSystemItemSelectionChanged(List<JsFilesystemItem> selected) {
+	public void onFileSystemItemSelectionChanged(List<FileSystemItem> selected) {
 		model.setSelected(selected);
-		// TODO view.updateFileSelection(selected);
+		view.updateFileSelection(selected);
 	}
 
 	public void onSelectAll() {
@@ -646,7 +492,7 @@ public class MainViewPresenter implements MainViewListener,
 
 	public void onCopySelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.copy, null, new Callback() {
+				FileSystemAction.copy, null, null, new Callback() {
 					@Override
 					public void onCallback() {
 						view.selectNone();
@@ -656,7 +502,7 @@ public class MainViewPresenter implements MainViewListener,
 
 	public void onMoveSelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.move, null, new Callback() {
+				FileSystemAction.move, null, null, new Callback() {
 					@Override
 					public void onCallback() {
 						view.selectNone();
@@ -666,7 +512,7 @@ public class MainViewPresenter implements MainViewListener,
 
 	public void onDeleteSelected() {
 		fileSystemActionHandler.onAction(model.getSelectedItems(),
-				FileSystemAction.delete, null, new Callback() {
+				FileSystemAction.delete, null, null, new Callback() {
 					@Override
 					public void onCallback() {
 						view.selectNone();
@@ -674,42 +520,41 @@ public class MainViewPresenter implements MainViewListener,
 				});
 	}
 
-	// @Override
-	// public void onSearch(final String text) {
-	// // if (model.getCurrentFolder() instanceof VirtualGroupFolder) {
-	// // return; // TODO support this
-	// // }
-	// view.showProgress();
-	//
-	// fileSystemService.search(model.getCurrentFolder(), text,
-	// new ResultListener<SearchResult>() {
-	// @Override
-	// public void onSuccess(SearchResult result) {
-	// // TODO view.clearSearchField();
-	// view.hideProgress();
-	// onShowSearchResult(text, result);
-	// }
-	//
-	// @Override
-	// public void onFail(ServiceError error) {
-	// view.hideProgress();
-	// // TODO dialogManager.showError(error);
-	// }
-	// });
-	// }
+	@Override
+	public void onSearch(final String text) {
+		if (model.getCurrentFolder() instanceof VirtualGroupFolder) {
+			return; // TODO support this
+		}
+		view.showProgress();
+
+		fileSystemService.search(model.getCurrentFolder(), text,
+				new ResultListener<SearchResult>() {
+					@Override
+					public void onSuccess(SearchResult result) {
+						view.clearSearchField();
+						view.hideProgress();
+						onShowSearchResult(text, result);
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						view.hideProgress();
+						dialogManager.showError(error);
+					}
+				});
+	}
 
 	protected void onShowSearchResult(String criteria, SearchResult result) {
-		// TODO
-		// if (result.getMatchCount() == 0)
-		// dialogManager.showInfo(
-		// textProvider.getText(Texts.searchResultsDialogTitle),
-		// textProvider.getText(Texts.searchResultsNoMatchesFound));
-		// else
-		// searchResultDialogFactory.show(dropBox, criteria, result);
+		if (result.getMatchCount() == 0)
+			dialogManager.showInfo(
+					textProvider.getText(Texts.searchResultsDialogTitle),
+					textProvider.getText(Texts.searchResultsNoMatchesFound));
+		else
+			searchResultDialogFactory.show(dropBox, criteria, result);
 	}
 
 	public void onAddSelectedToDropbox() {
-		// TODO dropBox.addItems(getSelectedItems());
+		dropBox.addItems(getSelectedItems());
 		view.selectNone();
 	}
 
@@ -729,10 +574,10 @@ public class MainViewPresenter implements MainViewListener,
 		}, 200);
 	}-*/;
 
-	// @Override
-	// public List<JsFilesystemItem> getSelectedItems() {
-	// return model.getSelectedItems();
-	// }
+	@Override
+	public List<FileSystemItem> getSelectedItems() {
+		return model.getSelectedItems();
+	}
 
 	public void onListRendered() {
 		view.hideProgress();
@@ -748,7 +593,11 @@ public class MainViewPresenter implements MainViewListener,
 		});
 	}
 
-	public JsFolder getCurrentFolder() {
+	public List<FileSystemItem> getAllItems() {
+		return model.getAllItems();
+	}
+
+	public Folder getCurrentFolder() {
 		return model.getCurrentFolder();
 	}
 
@@ -762,7 +611,7 @@ public class MainViewPresenter implements MainViewListener,
 
 	private void setViewType(ViewType type) {
 		view.showProgress();
-		// TODO view.setViewType(type);
+		view.setViewType(type);
 		reload();
 	}
 
@@ -770,26 +619,24 @@ public class MainViewPresenter implements MainViewListener,
 		model.changeToFolder(id, new ResultListener() {
 			@Override
 			public void onSuccess(Object result) {
-				refreshView(true);
+				refreshView();
 			}
 
 			@Override
 			public void onFail(ServiceError error) {
-				// TODO dialogManager.showError(error);
+				dialogManager.showError(error);
 			}
 
 		});
 	}
 
-	// @Override
-	// public JavaScriptObject getDataRequest(JsFolder folder) {
-	// if (!ViewType.list.equals(view.getViewType()))
-	// return null;
-	// return null;
-	// /*
-	// * TODO return pluginEnvironment.getFileListExt().getDataRequest(
-	// * folder, ((FileListWithExternalColumns) view.getFileWidget())
-	// * .getColumns());
-	// */
-	// }
+	@Override
+	public JavaScriptObject getDataRequest(Folder folder) {
+		if (!ViewType.list.equals(view.getViewType()))
+			return null;
+		return pluginEnvironment.getFileListExt().getDataRequest(
+				folder,
+				((FileListWithExternalColumns) view.getFileWidget())
+						.getColumns());
+	}
 }

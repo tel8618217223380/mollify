@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.testutil;
 
-/*import java.util.Collections;
+import java.util.Collections;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.File;
@@ -211,4 +211,4 @@ public class MockFileSystemService implements FileSystemService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-}*/
+}

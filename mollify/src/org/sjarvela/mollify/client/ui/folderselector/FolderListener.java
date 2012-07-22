@@ -10,10 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.folderselector;
 
-//import org.sjarvela.mollify.client.filesystem.Folder;
-//
-//public interface FolderListener {
-//	public void onChangeToFolder(int level, Folder folder);
-//
-//	public void onMoveToParentFolder();
-//}
+import org.sjarvela.mollify.client.filesystem.Folder;
+
+public interface FolderListener {
+	public void onChangeToFolder(int level, Folder folder);
+
+	public void onMoveToParentFolder();
+}

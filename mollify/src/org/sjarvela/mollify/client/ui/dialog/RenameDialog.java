@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-/*import org.sjarvela.mollify.client.filesystem.File;
+import org.sjarvela.mollify.client.filesystem.File;
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 import org.sjarvela.mollify.client.localization.TextProvider;
@@ -140,4 +140,4 @@ public class RenameDialog extends CenteredDialog {
 		this.hide();
 		renameHandler.rename(item, newName);
 	}
-}*/
+}

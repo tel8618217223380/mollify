@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -79,4 +79,4 @@ public class FileGridWidget implements FileWidget {
 	public void sortColumn(String columnId, SortOrder sort) {
 		// TODO Auto-generated method stub
 	}
-}*/
+}

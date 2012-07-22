@@ -10,27 +10,28 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.localization.TextProvider;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.session.ClientSettings;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;*/
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
+import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainView.ViewType;
 
-/*public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
+public class DefaultFileListWidgetFactory implements FileListWidgetFactory {
 
 	private final TextProvider textProvider;
-	// private final DragAndDropManager dragAndDropManager;
+	private final DragAndDropManager dragAndDropManager;
 	private final boolean thumbnails;
 	private final FileSystemService service;
 	private final boolean experimental;
 	private final ClientSettings settings;
-	private final ClientInterface pluginEnvironment;
+	private final PluginEnvironment pluginEnvironment;
 
 	public DefaultFileListWidgetFactory(TextProvider textProvider,
-			ClientSettings settings, FileSystemService service,
-			ClientInterface pluginEnvironment) {
+			DragAndDropManager dragAndDropManager, ClientSettings settings,
+			FileSystemService service, PluginEnvironment pluginEnvironment) {
 		this.textProvider = textProvider;
-		// this.dragAndDropManager = dragAndDropManager;
+		this.dragAndDropManager = dragAndDropManager;
 		this.settings = settings;
 		this.service = service;
 		this.pluginEnvironment = pluginEnvironment;
@@ -43,11 +44,11 @@ import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;*/
 		if (ViewType.list.equals(type)) {
 			if (experimental)
 				return new CellTableFileList(textProvider);
-			return new FileListWithExternalColumns(textProvider,
+			return new FileListWithExternalColumns(textProvider, dragAndDropManager,
 					pluginEnvironment, settings.getJsObj("list-view-columns"));
 		}
 		return new FileGridWidget(thumbnails, service,
 				ViewType.gridSmall.equals(type));
 	}
 
-}*/
+}

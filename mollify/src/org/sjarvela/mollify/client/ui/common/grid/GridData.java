@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.common.grid;
 
-/*public abstract class GridData {
+public abstract class GridData {
 	public static class Text extends GridData {
 		String text;
 
@@ -51,4 +51,4 @@ package org.sjarvela.mollify.client.ui.common.grid;
 	}
 
 	public abstract void applyTo(int row, int col, Grid grid);
-}*/
+}

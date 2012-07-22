@@ -1,6 +1,6 @@
 package org.sjarvela.mollify.client.filesystem;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.js.JsObj;
@@ -39,4 +39,4 @@ public class FolderInfo {
 	public JsObj getData() {
 		return data;
 	}
-}*/
+}

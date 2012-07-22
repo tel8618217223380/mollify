@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.fileupload.http;
 
-/*import org.sjarvela.mollify.client.filesystem.Folder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 import org.sjarvela.mollify.client.filesystem.upload.FileUploadListener;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileUploadService;
@@ -48,4 +48,4 @@ public class HttpFileUploadDialogFactory implements FileUploadDialogFactory {
 				fileUploadHandler, dialogManager).center();
 	}
 
-}*/
+}

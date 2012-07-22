@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
@@ -78,4 +78,4 @@ public class DefaultPermissionEditorViewFactory implements
 				fileItemUserPermissionHandler, fileItemUserPermission, groups);
 	}
 
-}*/
+}

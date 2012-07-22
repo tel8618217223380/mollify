@@ -10,32 +10,34 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
+import org.sjarvela.mollify.client.plugin.PluginEnvironment;
 import org.sjarvela.mollify.client.ui.common.grid.DefaultGridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridColumn;
 import org.sjarvela.mollify.client.ui.common.grid.GridData;
 import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
+import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.filelist.DefaultFileItemComparator;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 
 import com.google.gwt.user.client.ui.Widget;
 
 public class FileListWithExternalColumns extends FileList implements FileWidget {
-	private final ClientInterface pluginEnv;
+	private final PluginEnvironment pluginEnv;
 	private final JsObj columnSetup;
 
 	private JsObj data = null;
 
 	public FileListWithExternalColumns(TextProvider textProvider,
-			final ClientInterface pluginEnvironment, final JsObj columnSetup) {
-		super(textProvider);
+			DragAndDropManager dragAndDropManager,
+			final PluginEnvironment pluginEnvironment, final JsObj columnSetup) {
+		super(textProvider, dragAndDropManager);
 		this.pluginEnv = pluginEnvironment;
 		this.columnSetup = columnSetup;
 		super.initialize();
@@ -132,4 +134,4 @@ public class FileListWithExternalColumns extends FileList implements FileWidget 
 	public Widget getWidget() {
 		return this;
 	}
-}*/
+}

@@ -16,11 +16,11 @@
 		private $handler;
 		
 		public function version() {
-			return "1_1";
+			return "1_2";
 		}
 
 		public function versionHistory() {
-			return array("1_0", "1_1");
+			return array("1_0", "1_1", "1_2");
 		}
 		
 		public function setup() {

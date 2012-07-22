@@ -10,8 +10,8 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext.popup;
 
-//import org.sjarvela.mollify.client.ui.dropbox.DropBox;
-//
-//public interface ItemContextPopupFactory {
-//	ItemContextPopup createPopup(DropBox dropBox);
-//}
+import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+
+public interface ItemContextPopupFactory {
+	ItemContextPopup createPopup(DropBox dropBox);
+}

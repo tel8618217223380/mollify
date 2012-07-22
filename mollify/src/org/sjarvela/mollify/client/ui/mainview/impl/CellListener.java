@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -24,4 +24,4 @@ public interface CellListener {
 
 	void onRender(String id, FileSystemItem value, SafeHtmlBuilder sb);
 
-}*/
+}

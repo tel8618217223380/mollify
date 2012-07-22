@@ -14,11 +14,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.App;
-import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.ui.common.dialog.Dialog;
 import org.sjarvela.mollify.client.util.JsUtil;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -38,12 +38,8 @@ public class DefaultViewManager implements ViewManager {
 	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
 	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
-	private JsObj viewHandlers = null;
-
 	private final RootPanel rootPanel;
 	private final Panel hiddenPanel;
-
-	private ViewHandler activeView;
 
 	@Inject
 	public DefaultViewManager() {
@@ -55,28 +51,6 @@ public class DefaultViewManager implements ViewManager {
 		this.hiddenPanel = createHiddenFrame();
 	}
 
-	@Override
-	public void setViewHandlers(JavaScriptObject handlers) {
-		this.viewHandlers = handlers.cast();
-	}
-
-	@Override
-	public JsObj getViewHandler(String name) {
-		if (!viewHandlers.hasValue(name))
-			return null;
-		return viewHandlers.getJsObj(name);
-	}
-
-	@Override
-	public void render(ViewHandler view) {
-		if (activeView != null) {
-			activeView.getView().call("unload");
-			activeView = null;
-		}
-		view.getView().call("render", "mollify");
-		activeView = view;
-	}
-
 	public RootPanel getRootPanel() {
 		return rootPanel;
 	}
@@ -85,14 +59,14 @@ public class DefaultViewManager implements ViewManager {
 		return hiddenPanel;
 	}
 
-//	public void openView(Widget view) {
-//		empty();
-//		hiddenPanel.clear();
-//
-//		createDownloadFrame(hiddenPanel);
-//		rootPanel.add(hiddenPanel);
-//		rootPanel.insert(view, 0);
-//	}
+	public void openView(Widget view) {
+		empty();
+		hiddenPanel.clear();
+
+		createDownloadFrame(hiddenPanel);
+		rootPanel.add(hiddenPanel);
+		rootPanel.insert(view, 0);
+	}
 
 	public void empty() {
 		rootPanel.clear();
@@ -117,7 +91,7 @@ public class DefaultViewManager implements ViewManager {
 	}
 
 	public void openDownloadUrl(String url) {
-		if (isMobile()) {
+		if (isBrowser()) {
 			logger.log(Level.INFO, "Downloading for mobile browser");
 			openUrlInNewWindow(url + (url.indexOf("?") >= 0 ? "&" : "?")
 					+ "m=1");
@@ -125,7 +99,7 @@ public class DefaultViewManager implements ViewManager {
 			setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
 	}
 
-	private native boolean isMobile() /*-{
+	private native boolean isBrowser() /*-{
 		if (navigator.userAgent.match(/Android/i)
 				|| navigator.userAgent.match(/webOS/i)
 				|| navigator.userAgent.match(/iPhone/i)
@@ -171,31 +145,31 @@ public class DefaultViewManager implements ViewManager {
 		rootPanel.add(new HTML(errorHtml.toString()));
 	}
 
-	// @Override
-	// public void align(Dialog dialog, Widget p) {
-	// if (LogConfiguration.loggingIsEnabled())
-	// logger.log(
-	// Level.INFO,
-	// "Align: p=[" + p.getAbsoluteTop() + ","
-	// + p.getAbsoluteLeft() + "/" + p.getOffsetWidth()
-	// + "x" + p.getOffsetHeight() + "] root=["
-	// + rootPanel.getAbsoluteTop() + ","
-	// + rootPanel.getAbsoluteLeft() + "/"
-	// + rootPanel.getOffsetWidth() + "x"
-	// + rootPanel.getOffsetHeight() + "/"
-	// + rootPanel.getElement().getClientWidth() + "x"
-	// + rootPanel.getElement().getClientHeight() + "]");
-	// int top = (p.getAbsoluteTop() + p.getOffsetHeight() / 2)
-	// - (int) (dialog.getOffsetHeight() * 0.75d);
-	// top = Math.max(40, top);
-	//
-	// int maxBottom = rootPanel.getAbsoluteTop()
-	// + rootPanel.getElement().getClientHeight() - 40;
-	// if (maxBottom > 0 && top + dialog.getOffsetHeight() > maxBottom) {
-	// top = Math.max(40, maxBottom - dialog.getOffsetHeight());
-	// }
-	// dialog.setPopupPosition(dialog.getAbsoluteLeft(), top);
-	// }
+	@Override
+	public void align(Dialog dialog, Widget p) {
+		if (LogConfiguration.loggingIsEnabled())
+			logger.log(
+					Level.INFO,
+					"Align: p=[" + p.getAbsoluteTop() + ","
+							+ p.getAbsoluteLeft() + "/" + p.getOffsetWidth()
+							+ "x" + p.getOffsetHeight() + "] root=["
+							+ rootPanel.getAbsoluteTop() + ","
+							+ rootPanel.getAbsoluteLeft() + "/"
+							+ rootPanel.getOffsetWidth() + "x"
+							+ rootPanel.getOffsetHeight() + "/"
+							+ rootPanel.getElement().getClientWidth() + "x"
+							+ rootPanel.getElement().getClientHeight() + "]");
+		int top = (p.getAbsoluteTop() + p.getOffsetHeight() / 2)
+				- (int) (dialog.getOffsetHeight() * 0.75d);
+		top = Math.max(40, top);
+
+		int maxBottom = rootPanel.getAbsoluteTop()
+				+ rootPanel.getElement().getClientHeight() - 40;
+		if (maxBottom > 0 && top + dialog.getOffsetHeight() > maxBottom) {
+			top = Math.max(40, maxBottom - dialog.getOffsetHeight());
+		}
+		dialog.setPopupPosition(dialog.getAbsoluteLeft(), top);
+	}
 
 	/* UTILITIES */
 

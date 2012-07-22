@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
-/*import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -114,9 +114,9 @@ public class MainViewHeader extends FlowPanel {
 
 		var t = open ? (t + h) + "px" : t + "px";
 		$wnd.$("#header-lower-toggle").stop().animate({'top':t}, 200);
-	}-;
+	}-*/;
 
 	public int getTotalHeight() {
 		return upper.getOffsetHeight() + lower.getOffsetHeight();
 	}
-}*/
+}

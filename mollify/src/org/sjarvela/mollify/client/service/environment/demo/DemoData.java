@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.service.environment.demo;
 
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,4 +157,4 @@ public class DemoData {
 				FilePermission.ReadWrite, preview, view);
 	}
 
-}*/
+}

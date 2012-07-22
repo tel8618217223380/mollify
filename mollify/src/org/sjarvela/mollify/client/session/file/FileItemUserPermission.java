@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.session.file;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.session.file.js.JsFileItemUserPermission;
 import org.sjarvela.mollify.client.session.user.UserBase;
 import org.sjarvela.mollify.client.session.user.UserCache;
@@ -21,7 +21,7 @@ import org.sjarvela.mollify.client.session.user.UserCache;
 import com.google.gwt.core.client.JsArray;
 
 public class FileItemUserPermission {
-	private final JsFilesystemItem item;
+	private final FileSystemItem item;
 	private final UserBase userOrGroup;
 	private final FilePermission permission;
 
@@ -33,10 +33,12 @@ public class FileItemUserPermission {
 		for (JsFileItemUserPermission jsPermission : permissions) {
 			UserBase userOrGroup = jsPermission.isDefault() ? null : userCache
 					.getById(jsPermission.getUserOrGroupId());
-			JsFilesystemItem item = itemCache.getItem(jsPermission.getItemId());
+			FileSystemItem item = itemCache.getItem(jsPermission.getItemId());
 			FilePermission permission = jsPermission.getPermission();
 
-			result.add(new FileItemUserPermission(item, userOrGroup, permission));
+			result
+					.add(new FileItemUserPermission(item, userOrGroup,
+							permission));
 		}
 		return result;
 	}
@@ -55,14 +57,14 @@ public class FileItemUserPermission {
 				userOrGroup == null ? null : userOrGroup.getId(), permission);
 	}
 
-	public FileItemUserPermission(JsFilesystemItem item, UserBase userOrGroup,
+	public FileItemUserPermission(FileSystemItem item, UserBase userOrGroup,
 			FilePermission permission) {
 		this.item = item;
 		this.userOrGroup = userOrGroup;
 		this.permission = permission;
 	}
 
-	public JsFilesystemItem getFileSystemItem() {
+	public FileSystemItem getFileSystemItem() {
 		return item;
 	}
 

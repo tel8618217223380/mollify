@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.sjarvela.mollify.client.Callback;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
@@ -40,20 +38,10 @@ public class JsUtil {
 	public static <T extends JavaScriptObject> JsArray<T> asJsArray(
 			List<T> list, Class<T> t) {
 		JsArray<T> result = JsArray.createArray().cast();
-		if (list == null)
-			return result;
 		int index = 0;
 		for (T o : list)
 			result.set(index++, o);
 		return result;
-	}
-
-	public static JsArray asJsArray(JavaScriptObject... list) {
-		JsArray a = JsArray.createArray().cast();
-		int index = 0;
-		for (JavaScriptObject o : list)
-			a.set(index++, o);
-		return a;
 	}
 
 	public static String asJsonString(Map<String, JavaScriptObject> data) {
@@ -95,9 +83,4 @@ public class JsUtil {
 		return array;
 	}
 
-	public static native JavaScriptObject createJsCallback(Callback callback) /*-{
-		return function() {
-			callback.@org.sjarvela.mollify.client.Callback::onCallback()();
-		}
-	}-*/;
 }

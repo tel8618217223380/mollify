@@ -10,52 +10,10 @@
 
 package org.sjarvela.mollify.client.ui.mainview;
 
-import java.util.List;
-
-import org.sjarvela.mollify.client.ResourceId;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
-import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
-
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface MainView {
 
-	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, slideBar, addToDropbox, retrieveUrl, listView, gridViewSmall, gridViewLarge, download;
-	};
-
-	public enum ViewType {
-		list, gridSmall, gridLarge
-	};
-
-	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
-
-	JavaScriptObject getDataRequest(JsFolder folder);
-
-	void showAllRoots();
-
-	void showNoRoots();
-
-	void showProgress();
-
-	void hideProgress();
-
-	void clear();
-
-	// void refresh();
-
-	ViewType getViewType();
-
-	void setFolder(List<JsFolder> folderHierarchy, boolean canWrite);
-
-	void setData(List<JavaScriptObject> allItems, JsObj data);
-
-	void sortColumn(String columnId, SortOrder sort);
-
-	void selectAll();
-
-	void selectNone();
+	Widget getViewWidget();
 
 }

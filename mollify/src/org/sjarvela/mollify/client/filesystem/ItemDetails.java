@@ -34,4 +34,11 @@ public class ItemDetails extends JavaScriptObject {
 		return this.permission;
 	}-*/;
 
+	public final native void setDescription(String description) /*-{
+		this.description = description;
+	}-*/;
+
+	public final native void removeDescription() /*-{
+		this.description = null;
+	}-*/;
 }

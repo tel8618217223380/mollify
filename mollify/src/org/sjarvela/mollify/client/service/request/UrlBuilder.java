@@ -13,7 +13,7 @@ package org.sjarvela.mollify.client.service.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.service.environment.php.ActionId;
 import org.sjarvela.mollify.client.service.request.UrlParam.Encoding;
 import org.sjarvela.mollify.client.util.Base64;
@@ -32,7 +32,7 @@ public class UrlBuilder {
 		return this;
 	}
 
-	public UrlBuilder fileItem(JsFilesystemItem item) {
+	public UrlBuilder fileItem(FileSystemItem item) {
 		items.add(convertItemId(item.getId()));
 		return this;
 	}

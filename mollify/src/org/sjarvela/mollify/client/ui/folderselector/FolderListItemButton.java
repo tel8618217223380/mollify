@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.folderselector;
 
-/*import org.sjarvela.mollify.client.ui.StyleConstants;
+import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.Tooltip;
 import org.sjarvela.mollify.client.ui.common.TooltipTarget;
@@ -138,4 +138,4 @@ public class FolderListItemButton extends FlowPanel {
 			}
 		});
 	}
-}*/
+}

@@ -192,7 +192,7 @@
 			
 			$filesystemId = $parts[0];
 			$path = $parts[1];
-			if (strpos($path, "../") != FALSE or strpos($path, "..\\") != FALSE) new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
+			if (strpos($path, "../") !== FALSE or strpos($path, "..\\") !== FALSE) new ServiceException("INVALID_CONFIGURATION", "Invalid item location: ".$location);
 			
 			if (array_key_exists($filesystemId, $this->folderCache)) {
 				$folderDef = $this->folderCache[$filesystemId];
@@ -255,13 +255,12 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
-			$details["plugins"] = array();
-
+			
 			foreach($this->contextPlugins as $k=>$p) {
 				$d = ($data != NULL and isset($data[$k])) ? $data[$k] : NULL;
 				$l = $p->getItemContextData($item, $details, $k, $d);
 				if (!$l) continue;
-				$details["plugins"][$k] = $l;
+				$details[$k] = $l;
 			}
 			return $details;
 		}

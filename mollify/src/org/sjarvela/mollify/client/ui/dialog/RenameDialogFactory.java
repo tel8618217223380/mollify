@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dialog;
 
-/*import org.sjarvela.mollify.client.filesystem.FileSystemItem;
+import org.sjarvela.mollify.client.filesystem.FileSystemItem;
 import org.sjarvela.mollify.client.filesystem.handler.RenameHandler;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -20,4 +20,4 @@ public interface RenameDialogFactory {
 	void openRenameDialog(FileSystemItem item, RenameHandler handler,
 			Widget parent);
 
-}*/
+}

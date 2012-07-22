@@ -69,7 +69,6 @@
 			}
 			
 			$this->installer->processor()->setData("updates", $updates);
-			$this->installer->processor()->session()->end();
 			$this->installer->processor()->showPage("success");
 		}
 		

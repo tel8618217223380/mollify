@@ -8,7 +8,7 @@
  * this entire header must remain intact.
  */
 
-/*package org.sjarvela.mollify.client.ui.dropbox.impl;
+package org.sjarvela.mollify.client.ui.dropbox.impl;
 
 import org.sjarvela.mollify.client.filesystem.foldermodel.CurrentFolderProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -55,4 +55,4 @@ public class DefaultDropBoxFactory implements DropBoxFactory {
 				dragAndDropManager);
 	}
 
-}*/
+}

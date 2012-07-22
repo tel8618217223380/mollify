@@ -10,16 +10,16 @@
 
 package org.sjarvela.mollify.client.ui.permissions;
 
-//import java.util.Comparator;
-//
-//import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
-//
-//public class PermissionComparator implements Comparator<FileItemUserPermission> {
-//
-//	@Override
-//	public int compare(FileItemUserPermission p1, FileItemUserPermission p2) {
-//		return p1.getUserOrGroup().getName().compareToIgnoreCase(
-//				p2.getUserOrGroup().getName());
-//	}
-//
-//}
+import java.util.Comparator;
+
+import org.sjarvela.mollify.client.session.file.FileItemUserPermission;
+
+public class PermissionComparator implements Comparator<FileItemUserPermission> {
+
+	@Override
+	public int compare(FileItemUserPermission p1, FileItemUserPermission p2) {
+		return p1.getUserOrGroup().getName().compareToIgnoreCase(
+				p2.getUserOrGroup().getName());
+	}
+
+}

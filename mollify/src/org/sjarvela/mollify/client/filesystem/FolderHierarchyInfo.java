@@ -10,7 +10,7 @@
 
 package org.sjarvela.mollify.client.filesystem;
 
-/*import java.util.List;
+import java.util.List;
 
 import org.sjarvela.mollify.client.session.file.FilePermission;
 
@@ -26,4 +26,4 @@ public class FolderHierarchyInfo extends FolderInfo {
 	public List<Folder> getHierarchy() {
 		return hierarchy;
 	}
-}*/
+}

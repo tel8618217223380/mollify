@@ -10,16 +10,16 @@
 
 package org.sjarvela.mollify.client.ui.fileitemcontext;
 
-//public abstract class ContextCallbackAction implements ContextActionItem,
-//		ContextCallback {
-//	String title;
-//
-//	public ContextCallbackAction(String title) {
-//		this.title = title;
-//	}
-//
-//	public String getTitle() {
-//		return title;
-//	}
-//
-//}
+public abstract class ContextCallbackAction implements ContextActionItem,
+		ContextCallback {
+	String title;
+
+	public ContextCallbackAction(String title) {
+		this.title = title;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+}

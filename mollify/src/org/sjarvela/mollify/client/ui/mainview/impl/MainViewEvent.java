@@ -11,15 +11,17 @@
 package org.sjarvela.mollify.client.ui.mainview.impl;
 
 import org.sjarvela.mollify.client.event.Event;
-import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.Folder;
 
 public class MainViewEvent {
-	public static Event onCurrentFolderChanged(JsFolder folder) {
-		return Event.create("MAINVIEW_CURRENT_FOLDER_CHANGED", folder);
+	public static Event onCurrentFolderChanged(Folder folder) {
+		return Event.create("MAINVIEW_CURRENT_FOLDER_CHANGED",
+				folder != null ? folder.asJs() : null);
 	}
 
-	public static Event onFileListReady(JsFolder folder) {
-		return Event.create("MAINVIEW_FILE_LIST_READY", folder);
+	public static Event onFileListReady(Folder folder) {
+		return Event.create("MAINVIEW_FILE_LIST_READY",
+				folder != null ? folder.asJs() : null);
 	}
 
 }
