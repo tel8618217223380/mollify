@@ -22,8 +22,9 @@
 
 		private $db = NULL;
 		
-		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket, $engine) {
-			Logging::logDebug("MySQLI DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
+		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket, $engine = NULL) {
+			Logging::logDebug("MySQLi DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
+
 			$this->host = $host;
 			$this->user = $user;
 			$this->pw = $pw;
@@ -71,7 +72,6 @@
 		}
 		
 		public function connect($selectDb = TRUE) {
-			mysqli_report(MYSQLI_REPORT_ALL);
 			try {
 				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database, $this->port, $this->socket);
 				else $db = @mysqli_connect($this->host, $this->user, $this->pw, "", $this->port, $this->socket);
@@ -186,7 +186,19 @@
 			if (!$result)
 				throw new ServiceException("INVALID_CONFIGURATION", "Error rollbacking transaction: ".mysqli_error($this->db));
 		}
-				
+
+		public function arrayString($a, $quote = FALSE) {
+			$result = '';
+			$first = TRUE;
+			foreach($a as $s) {
+				if (!$first) $result .= ',';
+				if ($quote) $result .= "'".$s."'";
+				else $result .= $s;
+				$first = FALSE;
+			}
+			return $result;
+		}
+		
 		public function string($s, $quote = FALSE) {
 			if ($s === NULL) return 'NULL';
 			$r = mysqli_real_escape_string($this->db, $s);
@@ -215,7 +227,7 @@
 				
 		public function rows() {
 			$list = array();
-			while ($row = mysqli_fetch_assoc($this->result)) {
+			while ($row = mysqli_fetch_array($this->result)) {
 				$list[] = $row;
 			}
 			mysqli_free_result($this->result);
@@ -242,9 +254,22 @@
 			return $ret[$val];
 		}
 		
-		public function value($i) {
-			$ret = $this->rows();
-			return $ret[$i];
+		public function value($r=0, $f=0) {
+			$rows = $this->rows();
+			$row = $rows[$r];
+			return $row[$f];
+		}
+		
+		public function valueMap($keyCol, $valueCol = NULL) {
+			$list = array();
+			while ($row = mysqli_fetch_assoc($this->result)) {
+				if ($valueCol == NULL)
+					$list[$row[$keyCol]] = $row;
+				else
+					$list[$row[$keyCol]] = $row[$valueCol];
+			}
+			mysqli_free_result($this->result);
+			return $list;
 		}
 		
 		public function free() {
