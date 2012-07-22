@@ -31,7 +31,6 @@ import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
@@ -75,11 +74,10 @@ public class MainViewPresenter implements MainViewListener,
 	private final ViewManager viewManager;
 	// TODO private final DropBox dropBox;
 	private final EventDispatcher eventDispatcher;
+
 	// private final SearchResultDialogFactory searchResultDialogFactory;
 
 	// private final boolean exposeFileUrls;
-
-	private final ClientInterface pluginEnvironment;
 
 	public MainViewPresenter(ViewManager viewManager,
 			DialogManager dialogManager, SessionManager sessionManager,
@@ -91,16 +89,13 @@ public class MainViewPresenter implements MainViewListener,
 			// PasswordDialogFactory passwordDialogFactory,
 			// FileUploadDialogFactory fileUploadDialogFactory,
 			// CreateFolderDialogFactory createFolderDialogFactory,
-			SessionService sessionService, EventDispatcher eventDispatcher,
-			// SearchResultDialogFactory searchResultDialogFactory,
-			ClientInterface pluginEnvironment) {
+			SessionService sessionService, EventDispatcher eventDispatcher) {
 		this.dialogManager = dialogManager;
 		this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;
 		this.sessionService = sessionService;
-		this.pluginEnvironment = pluginEnvironment;
 
 		this.model = model;
 		this.view = view;

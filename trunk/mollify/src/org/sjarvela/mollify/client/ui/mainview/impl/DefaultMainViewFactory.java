@@ -15,7 +15,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -49,8 +48,8 @@ public class DefaultMainViewFactory implements MainViewFactory {
 	private final EventDispatcher eventDispatcher;
 	// private final SearchResultDialogFactory searchResultDialogFactory;
 	private final FileSystemActionHandlerFactory fileSystemActionHandlerFactory;
+
 	// private final ItemContextPopupFactory itemContextPopupFactory;
-	private final ClientInterface pluginEnvironment;
 
 	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
@@ -65,9 +64,7 @@ public class DefaultMainViewFactory implements MainViewFactory {
 			// DropBoxFactory dropBoxFactory,
 			// DragAndDropManager dragAndDropManager,
 			// SearchResultDialogFactory searchResultDialogFactory,
-			FileSystemActionHandlerFactory fileSystemActionHandlerFactory,
-			// ItemContextPopupFactory itemContextPopupFactory,
-			ClientInterface pluginEnvironment) {
+			FileSystemActionHandlerFactory fileSystemActionHandlerFactory) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
@@ -84,7 +81,6 @@ public class DefaultMainViewFactory implements MainViewFactory {
 		// this.searchResultDialogFactory = searchResultDialogFactory;
 		this.fileSystemActionHandlerFactory = fileSystemActionHandlerFactory;
 		// this.itemContextPopupFactory = itemContextPopupFactory;
-		this.pluginEnvironment = pluginEnvironment;
 	}
 
 	@Override
@@ -105,8 +101,7 @@ public class DefaultMainViewFactory implements MainViewFactory {
 		new MainViewPresenter(viewManager, dialogManager, sessionManager,
 				model, view, serviceProvider.getConfigurationService(),
 				fileSystemService, textProvider, fileSystemActionHandler,
-				serviceProvider.getSessionService(), eventDispatcher,
-				pluginEnvironment);
+				serviceProvider.getSessionService(), eventDispatcher);
 		// TODO MainViewGlue glue = new MainViewGlue(view, presenter,
 		// fileSystemActionHandler, actionDelegator);
 		viewManager.render(view);

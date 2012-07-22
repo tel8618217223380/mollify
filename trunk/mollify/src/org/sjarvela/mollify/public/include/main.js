@@ -25,9 +25,9 @@ function MainView() {
 
 		// TODO default view mode
 		// TODO expose file urls
-		var s = mollify.session.get();
-		mollify.dom.template("mollify-tmpl-main-username", s, mollify).appendTo("#mainview-user");
-		if (s.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
+
+		mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mainview-user");
+		if (mollify.session.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 		that.initList();
@@ -54,8 +54,9 @@ function MainView() {
 	}
 	
 	this.sessionActions = function() {
+		//TODO get session actions
 		return [
-			{'title-key': 'logout', callback: mollify.session.actions.logout}
+			{'title-key': 'logout', callback: null}
 		];
 	}
 	

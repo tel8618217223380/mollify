@@ -18,8 +18,6 @@ import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.plugin.DefaultClientInterface;
-import org.sjarvela.mollify.client.plugin.DefaultAppInterface;
-import org.sjarvela.mollify.client.plugin.AppInterface;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
 import org.sjarvela.mollify.client.service.UrlResolver;
@@ -74,10 +72,9 @@ public class ContainerConfiguration extends AbstractGinModule {
 		bind(SessionManager.class).to(DefaultSessionManager.class);
 		bind(PasswordGenerator.class).to(DefaultPasswordGenerator.class);
 		bind(EventDispatcher.class).to(DefaultEventDispatcher.class);
-		bind(AppInterface.class).to(DefaultAppInterface.class);
+		bind(ClientInterface.class).to(DefaultClientInterface.class);
 		bind(Client.class).to(MollifyClient.class);
 		bind(ResponseInterceptor.class).to(DefaultResponseInterceptor.class);
-		bind(ClientInterface.class).to(DefaultClientInterface.class);
 		// bind(ItemContextHandler.class).to(DefaultItemContextProvider.class);
 		// bind(SearchResultDialogFactory.class).to(
 		// DefaultSearchResultDialogFactory.class);
