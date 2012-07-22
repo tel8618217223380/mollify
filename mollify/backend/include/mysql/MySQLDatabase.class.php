@@ -201,8 +201,8 @@
 			return $ret;
 		}
 		
-		public function value($i) {
-			$ret = mysql_result($this->result, $i);
+		public function value($r=0, $f=0) {
+			$ret = mysql_result($this->result, $r, $f);
 			mysql_free_result($this->result);
 			return $ret;
 		}

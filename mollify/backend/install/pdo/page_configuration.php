@@ -19,14 +19,14 @@
 	<?php pageHeader("Mollify Installation", "init"); ?>
 	
 	<body id="page-mysql-configuration">
-		<?php pageBody("Installation", "MySQL Database Configuration"); ?>
+		<?php pageBody("Installation", "PDO Database Configuration"); ?>
 		<?php if ($installer->action() === 'continue') { ?>
 		<div class="error">
 			<div class="title">	
 				No database configuration found.
 			</div>
 			<div class="details">
-				MySQL database configuration is missing or it is not complete. Make sure that the configuration is done according to the instructions below. At minimum, database user and password must be defined.
+				PDO database configuration is missing or it is not complete. Make sure that the configuration is done according to the instructions below. At minimum, database user and password must be defined.
 			</div>
 		</div>
 		<?php } ?>
@@ -35,28 +35,22 @@
 			<p>
 				Installer needs the database connection information defined in the configuration file "<code>configuration.php</code>":
 				<ul>
-					<li>Host name (optional, by default "localhost")</li>
-					<li>Database name (optional, by default "mollify")</li>
+					<li>PDO connection string (see <a href="http://www.php.net/manual/en/pdo.connections.php">http://www.php.net/manual/en/pdo.connections.php</a>)</li>
 					<li>User</li>
 					<li>Password</li>
-					<li>Port (optional)</li>
-					<li>Socket (optional, use ONLY with localhost DB)</li>
 					<li>Table prefix (optional)</li>
 				</ul>
 				
 				For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation">Installation instructions</a>.
 			</p>
 			<p>	
-				An example configuration:
+				An example configuration when connecting to MySQL server with PDO:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">mysql</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PORT = &quot;<span class="value">3306</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_SOCKET = &quot;<span class="value">/tmp/mysql5.sock</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">pdo</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$PDO_STRING = &quot;<span class="value">mysql:host=localhost;dbname=mollify</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[DB_USERNAME]</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[DB_PASSWORD]</span>&quot;;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
 					?&gt;
 				</div>

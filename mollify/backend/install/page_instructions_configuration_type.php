@@ -52,6 +52,7 @@
 				<ul>
 					<li>"<code>mysql</code>" for MySQL</li>
 					<li>"<code>sqlite</code>" for SQLite</li>
+					<li>"<code>pdo</code>" for PDO (supports MySQL and SQLite)</li>
 				</ul>
 				
 				When this is added, click "Continue". For more information about the installation, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.

@@ -14,7 +14,10 @@
 		public function createConfiguration($id, $settings) {
 			if (!$id) throw new ServiceException("INVALID_CONFIGURATION", "No configuration defined");
 			
-			if (!$id or strcasecmp($id, 'mysql') == 0) {
+			if (strcasecmp($id, 'pdo') == 0) {
+				require_once("configuration/PDOConfiguration.class.php");
+				return new PDOConfiguration($settings);
+			} else if (strcasecmp($id, 'mysql') == 0) {
 				require_once("configuration/MySQLConfiguration.class.php");
 				return new MySQLConfiguration($settings);
 			} else if (strcasecmp($id, 'postgresql') == 0) {

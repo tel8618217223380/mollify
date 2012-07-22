@@ -12,37 +12,28 @@
 
 	require_once("install/MollifyInstallProcessor.class.php");
 	require_once("include/ServiceEnvironment.class.php");
-	require_once("include/mysql/DatabaseUtil.class.php");
-	require_once("install/mysql/MySQLInstallUtil.class.php");
+	require_once("include/pdo/DatabaseUtil.class.php");
+	require_once("install/pdo/PDOInstallUtil.class.php");
 	
-	class MySQLInstaller {
+	class PDOInstaller {
 		protected $processor;
 		private $configured;
 		protected $db;
 
 		public function __construct($settings, $type = "install") {
-			$this->processor = new MollifyInstallProcessor($type, "mysql", $settings);
+			$this->processor = new MollifyInstallProcessor($type, "pdo", $settings);
 			
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT, $DB_ENGINE;
-			$this->configured = isset($DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET, $DB_ENGINE);
+			global $PDO_STRING, $DB_USER, $DB_PASSWORD, $DB_TABLE_PREFIX;
+			$this->configured = isset($PDO_STRING, $DB_USER, $DB_PASSWORD);
+			$this->db = $this->createDB($PDO_STRING, $DB_USER, $DB_PASSWORD, $DB_TABLE_PREFIX);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 
-		private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine) {
-			if (!isset($host)) $host = "localhost";
-			if (!isset($database)) $database = "mollify";
+		private function createDB($str, $user, $password, $tablePrefix) {
 			if (!isset($tablePrefix)) $tablePrefix = "";
-			if (!isset($port)) $port = NULL;
-			if (!isset($socket)) $socket = NULL;
-			else {
-				$host = NULL;
-				$port = NULL;
-			}
-			if (!isset($engine)) $engine = "innodb";
 			
-			require_once("include/mysql/MySQLIDatabase.class.php");
-			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine);
+			require_once("include/pdo/PDODatabase.class.php");
+			return new PDODatabase($str, $user, $password, $tablePrefix);
 		}
 		
 		public function processor() {
@@ -54,8 +45,8 @@
 		}
 		
 		public function util() {
-			require_once("install/mysql/MySQLInstallUtil.class.php");
-			return new MySQLInstallUtil($this->db);
+			require_once("install/pdo/PDOInstallUtil.class.php");
+			return new PDOInstallUtil($this->db);
 		}
 		
 		public function isConfigured() {
@@ -67,23 +58,20 @@
 				return FALSE;
 			
 			try {
-				if (!$this->db->isConnected()) {
-					mysqli_report(MYSQLI_REPORT_ALL);
-					$this->db->connect(FALSE);
-				}
+				if (!$this->db->isConnected()) $this->db->connect(FALSE);
 			} catch (ServiceException $e) {
 				return FALSE;
 			}
 
-			if (!$this->db->databaseExists())
-				return FALSE;
+			//if (!$this->db->databaseExists())
+			//	return FALSE;
 			
-			try {
+			/*try {
 				$this->db->selectDb();
 			} catch (ServiceException $e) {
 				Logging::logDebug('Mollify not installed');
 				return FALSE;
-			}
+			}*/
 			
 			try {
 				$ver = $this->dbUtil->installedVersion();
@@ -113,7 +101,7 @@
 		}
 
 		public function currentVersion() {
-			return MySQLConfiguration::VERSION;
+			return PDOConfiguration::VERSION;
 		}
 		
 		public function db() {
@@ -157,7 +145,9 @@
 		}
 		
 		private function checkSystem() {
-			if (!function_exists('mysql_connect')) {
+			//TODO
+			
+			/*if (!function_exists('mysql_connect')) {
 				$this->processor->setError("MySQL not detected", "Mollify cannot be installed to this system when MySQL is not available. Check your system configuration or choose different configuration type.");
 				$this->processor->showPage("install_error");
 			}
@@ -165,7 +155,7 @@
 			if (!function_exists('mysqli_multi_query')) {
 				$this->processor->setError("MySQL Improved (mysqli) not detected", "Mollify installer cannot continue without <a href='http://www.php.net/manual/en/mysqli.overview.php' target='_blank'>MySQL Improved</a> installed. Either check your configuration to install or enable this, or install Mollify manually (see instructions <a href='http://code.google.com/p/mollify/wiki/ConfigurationMySql' target='_blank'>here</a>).");
 				$this->processor->showPage("install_error");
-			}
+			}*/
 		}
 		
 		private function checkInstalled() {
@@ -250,13 +240,6 @@
 		}
 		
 		private function install() {
-			try {
-				$this->db->selectDb();
-			} catch (ServiceException $e) {
-				$this->processor->setError("Could not select database", '<code>'.$e->details().'</code>');
-				$this->processor->showPage("install_error");
-			}
-			
 			$this->db->startTransaction();
 			
 			try {

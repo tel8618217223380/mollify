@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Copyright (c) 2008- Samuli JŠrvelŠ
+	 * Copyright (c) 2008- Samuli JÃ¤rvelÃ¤
 	 *
 	 * All rights reserved. This program and the accompanying materials
 	 * are made available under the terms of the Eclipse Public License v1.0
@@ -38,6 +38,9 @@
 		
 		require_once("update/UpdateController.class.php");
 		switch (strtolower($type)) {
+			case 'pdo':
+				require_once("update/pdo/PDOUpdater.class.php");
+				return new UpdateController(new PDOUpdater($settings));
 			case 'mysql':
 				require_once("update/mysql/MySQLUpdater.class.php");
 				return new UpdateController(new MySQLUpdater($settings));
@@ -50,7 +53,7 @@
 	}
 	
 	function isValidConfigurationType($type) {
-		return in_array(strtolower($type), array("mysql","sqlite"));
+		return in_array(strtolower($type), array("pdo", "mysql","sqlite"));
 	}
 	
 	function showError($e) {
