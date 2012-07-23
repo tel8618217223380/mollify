@@ -159,8 +159,14 @@
 				return t.env.service().getPluginUrl(id)+"client/"+p;
 			};
 			
-			this.getItemContextData = function(d) {
-				return {};
+			this.getItemContextData = function(item, d) {
+				var data = {};
+				for (var id in pl.list) {
+					var plugin = pl.list[id];
+					var pluginData = plugin.getItemContextData(item, d);
+					if (pluginData) data[id] = pluginData;
+				}
+				return data;
 			}
 		};
 		
@@ -348,6 +354,14 @@
 							}
 						})).html();
 					};
+					var initItems = function(l, api) {
+						var $items = api.elements.content.find(".mollify-popupmenu-item");
+						$items.click(function() {
+							var item = l[$(this).index()];
+							api.hide();
+							item.callback();
+						});
+					};
 					var html = items ? createItems(items) : '<div class="loading"></div>';
 					
 					var tip = $e.qtip({
@@ -368,11 +382,7 @@
 						},
 						events: {
 							render: function(e, api) {
-								$(this).find(".mollify-popupmenu-item").click(function() {
-									var item = items[$(this).index()];
-									api.hide();
-									item.callback();
-								});
+								initItems(items, api);
 							},
 							hide: function(e, api) {
 								if (onHide) onHide(api);
@@ -388,6 +398,7 @@
 						},
 						items: function(items) {
 							tip.set('content.text', createItems(items));
+							initItems(items, tip);
 						}
 					};
 				},
@@ -450,9 +461,9 @@
 							at: 'bottom center'
 						},
 						hide: {
-							delay: 200,
+							delay: 1000,
 							fixed: true,
-							event: 'click mouseleave'
+							event: 'mouseleave'
 						},
 						style: {
 							tip: true,
@@ -481,6 +492,7 @@
 						hide: function() {
 							tip.hide();
 						},
+						close: this.hide,
 						content: function(c) {
 							tip.set('content.text', bubbleHtml(c));
 						}
@@ -873,7 +885,11 @@ function CommentPlugin() {
 	};
 	
 	this.getItemContextData = function(item, data) {
-		
+		return {
+			actions: [
+				{ title: 'foo', callback: function() { alert("foo"); } }
+			]
+		};
 	};
 	
 	/*this.onListCellClick = function(e) {
@@ -924,22 +940,6 @@ function CommentPlugin() {
 					{id: 'close', "title-key":'dialogCloseButton'}
 				]
 			});*/
-		});
-	}
-
-	this.onShowCommentsDialog = function(d, item) {	
-		$("#comments-list").removeClass("loading");
-		/*$("#comments-dialog-content .mollify-actionlink").hover(
-			function () { $(this).addClass("mollify-actionlink-hover"); }, 
-			function () { $(this).removeClass("mollify-actionlink-hover"); }
-		);*/
-
-		$("#comments-dialog-add").click(function() { that.onAddComment(d, item); } );
-		
-		mollify.service.get("comment/"+item.id, function(result) {
-			that.onShowComments(item, result);
-		}, function(code, error) {
-			alert(error);
 		});
 	}
 	

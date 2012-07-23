@@ -194,29 +194,6 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	@Override
-	public void getItemActions(final JsFilesystemItem item,
-			final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(
-				item,
-				null,
-				createItemDetailsListener(item,
-						new ResultCallback<ItemDetails>() {
-							@Override
-							public void onCallback(ItemDetails details) {
-								boolean root = !item.isFile()
-										&& ((JsFolder) item.cast()).isRoot();
-								boolean writable = !root
-										&& details.getFilePermission()
-												.canWrite();
-								List<JsObj> itemActions = getItemActions(item,
-										writable, root);
-								call(callback, JsUtil.asJsArray(itemActions,
-										JsObj.class));
-							}
-						}));
-	}
-
-	@Override
 	public void getItemDetails(final JsFilesystemItem item,
 			final JavaScriptObject callback) {
 		fileSystemService.getItemDetails(
@@ -319,8 +296,8 @@ public class MainViewPresenter implements MainViewListener,
 					onItemAction(item, (Action) action);
 			}
 		});
-		return new JsObjBuilder().string("title", titleKey).obj("callback", cb)
-				.create();
+		return new JsObjBuilder().string("group", "core")
+				.string("title", titleKey).obj("callback", cb).create();
 	}
 
 	protected void onItemAction(JsFilesystemItem item, Action action) {
