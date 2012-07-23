@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,12 +34,13 @@ public class DefaultViewManager implements ViewManager {
 	private static Logger logger = Logger.getLogger(DefaultViewManager.class
 			.getName());
 
-	private static final String MOLLIFY_HIDDEN_PANEL_ID = "mollify-hidden-panel";
-	private static final String FILEMANAGER_DOWNLOAD_FRAME_ID = "mollify-download-frame";
+	private static final String HIDDEN_PANEL_ID = "mollify-hidden-panel";
+	private static final String DOWNLOAD_FRAME_ID = "mollify-download-frame";
 
 	private JsObj viewHandlers = null;
 
 	private final RootPanel rootPanel;
+	private final Panel contentPanel;
 	private final Panel hiddenPanel;
 
 	private ViewHandler activeView;
@@ -52,7 +52,12 @@ public class DefaultViewManager implements ViewManager {
 			throw new RuntimeException("No placeholder found for Mollify");
 		this.rootPanel.getElement().getStyle()
 				.setProperty("position", "relative");
-		this.hiddenPanel = createHiddenFrame();
+		this.contentPanel = new FlowPanel();
+		this.contentPanel.getElement().setId("mollify-content");
+		this.hiddenPanel = createHiddenPanel();
+
+		this.rootPanel.add(contentPanel);
+		this.rootPanel.add(hiddenPanel);
 	}
 
 	@Override
@@ -73,7 +78,7 @@ public class DefaultViewManager implements ViewManager {
 			activeView.getView().call("unload");
 			activeView = null;
 		}
-		view.getView().call("render", "mollify");
+		view.getView().call("render", "mollify-content");
 		activeView = view;
 	}
 
@@ -85,35 +90,32 @@ public class DefaultViewManager implements ViewManager {
 		return hiddenPanel;
 	}
 
-//	public void openView(Widget view) {
-//		empty();
-//		hiddenPanel.clear();
-//
-//		createDownloadFrame(hiddenPanel);
-//		rootPanel.add(hiddenPanel);
-//		rootPanel.insert(view, 0);
-//	}
+	// public void openView(Widget view) {
+	// empty();
+	// hiddenPanel.clear();
+	//
+	// createDownloadFrame(hiddenPanel);
+	// rootPanel.add(hiddenPanel);
+	// rootPanel.insert(view, 0);
+	// }
 
 	public void empty() {
 		rootPanel.clear();
 		rootPanel.getElement().setInnerHTML("");
 	}
 
-	private Panel createHiddenFrame() {
+	private Panel createHiddenPanel() {
 		Panel panel = new FlowPanel();
-		panel.getElement().setId(MOLLIFY_HIDDEN_PANEL_ID);
+		panel.getElement().setId(HIDDEN_PANEL_ID);
 		panel.getElement()
 				.setAttribute("style",
 						"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
-		return panel;
-	}
-
-	private void createDownloadFrame(Widget panel) {
 		Element downloadFrame = DOM.createIFrame();
 		downloadFrame
-				.setAttribute("style", "visibility:collapse; height: 0px;");
-		downloadFrame.setId(FILEMANAGER_DOWNLOAD_FRAME_ID);
+				.setAttribute("style", "visibility:collapse; height: 0px; overflow: hidden;");
+		downloadFrame.setId(DOWNLOAD_FRAME_ID);
 		panel.getElement().appendChild(downloadFrame);
+		return panel;
 	}
 
 	public void openDownloadUrl(String url) {
@@ -122,7 +124,7 @@ public class DefaultViewManager implements ViewManager {
 			openUrlInNewWindow(url + (url.indexOf("?") >= 0 ? "&" : "?")
 					+ "m=1");
 		} else
-			setFrameUrl(FILEMANAGER_DOWNLOAD_FRAME_ID, url);
+			setFrameUrl(DOWNLOAD_FRAME_ID, url);
 	}
 
 	private native boolean isMobile() /*-{

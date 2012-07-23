@@ -249,7 +249,7 @@ public class MainViewPresenter implements MainViewListener,
 		List<JsObj> actions = new ArrayList();
 
 		if (item.isFile() || !root)
-			actions.add(createAction(item, Action.download,
+			actions.add(createAction(item, FileSystemAction.download,
 					Texts.fileActionDownloadTitle.name()));
 
 		actions.add(createSeparator());
@@ -287,11 +287,9 @@ public class MainViewPresenter implements MainViewListener,
 		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
 			@Override
 			public void onCallback() {
-				dialogManager.showInfo("foo",
-						item.getName() + " " + action.name());
 				if (action instanceof FileSystemAction)
 					fileSystemActionHandler.onAction(item,
-							(FileSystemAction) action, null);
+							(FileSystemAction) action);
 				else
 					onItemAction(item, (Action) action);
 			}
@@ -301,8 +299,7 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	protected void onItemAction(JsFilesystemItem item, Action action) {
-		// TODO Auto-generated method stub
-
+		dialogManager.showInfo(item.getName(), action.name());
 	}
 
 	public void changeToRootFolder(final JsFolder root) {

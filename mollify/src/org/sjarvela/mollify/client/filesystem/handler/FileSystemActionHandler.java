@@ -19,7 +19,7 @@ import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
 public interface FileSystemActionHandler {
 
-	void onAction(JsFilesystemItem item, FileSystemAction action, Object param);
+	void onAction(JsFilesystemItem item, FileSystemAction action);
 
 	void onAction(List<JsFilesystemItem> items, FileSystemAction action,
 			JsFolder folder, Callback actionCallback);
