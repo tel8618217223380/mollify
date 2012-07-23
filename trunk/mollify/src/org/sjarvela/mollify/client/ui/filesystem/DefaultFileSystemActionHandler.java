@@ -75,10 +75,9 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 		this.session = session;
 	}
 
-	public void onAction(JsFilesystemItem item, FileSystemAction action,
-			Object param) {
+	public void onAction(JsFilesystemItem item, FileSystemAction action) {
 		if (item.isFile())
-			onFileAction((JsFile) item.cast(), action, param);
+			onFileAction((JsFile) item.cast(), action);
 		else
 			onFolderAction((JsFolder) item.cast(), action);
 	}
@@ -227,13 +226,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 		return true;
 	}
 
-	private void onFileAction(final JsFile file, FileSystemAction action,
-			Object param) {
+	private void onFileAction(final JsFile file, FileSystemAction action) {
 		if (action.equals(FileSystemAction.view)) {
-			JsObj viewParams = (JsObj) param;
 			// fileViewerFactory.openFileViewer(file, viewParams);
 		} else if (action.equals(FileSystemAction.edit)) {
-			JsObj viewParams = (JsObj) param;
 			// fileEditorFactory.openFileEditor(file, viewParams);
 		} else if (action.equals(FileSystemAction.publicLink)) {
 			// dialogManager.showInfo(
