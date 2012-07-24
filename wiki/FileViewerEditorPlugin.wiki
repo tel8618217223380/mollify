@@ -108,7 +108,7 @@ Configuration:
 
 === !FlowPlayer ===
 
-Provides video player for flv and f4v files, and uses [http://flowplayer.org/ FlowPlayer] by Flowplayer Ltd. See `ReadMe.txt` in the package.
+Provides video player for mp4, flv and f4v files, and uses [http://flowplayer.org/ FlowPlayer] by Flowplayer Ltd. See `ReadMe.txt` in the package.
 
 Configuration:
 {{{
