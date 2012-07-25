@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -39,25 +40,25 @@ public class DefaultViewManager implements ViewManager {
 
 	private JsObj viewHandlers = null;
 
-	private final RootPanel rootPanel;
-	private final Panel contentPanel;
+	private final RootPanel contentPanel;
+	// private final Panel contentPanel;
 	private final Panel hiddenPanel;
 
 	private ViewHandler activeView;
 
 	@Inject
 	public DefaultViewManager() {
-		this.rootPanel = RootPanel.get(App.MOLLIFY_PANEL_ID);
-		if (this.rootPanel == null)
+		this.contentPanel = RootPanel.get(App.CONTENT_PANEL_ID);
+		if (this.contentPanel == null)
 			throw new RuntimeException("No placeholder found for Mollify");
-		this.rootPanel.getElement().getStyle()
+		this.contentPanel.getElement().getStyle()
 				.setProperty("position", "relative");
-		this.contentPanel = new FlowPanel();
-		this.contentPanel.getElement().setId("mollify-content");
+		// this.contentPanel = new FlowPanel();
+		// this.contentPanel.getElement().setId("mollify-content");
 		this.hiddenPanel = createHiddenPanel();
 
-		this.rootPanel.add(contentPanel);
-		this.rootPanel.add(hiddenPanel);
+		// this.rootPanel.add(contentPanel);
+		Document.get().getBody().appendChild(hiddenPanel.getElement());
 	}
 
 	@Override
@@ -78,12 +79,12 @@ public class DefaultViewManager implements ViewManager {
 			activeView.getView().call("unload");
 			activeView = null;
 		}
-		view.getView().call("render", "mollify-content");
+		view.getView().call("render", "mollify");
 		activeView = view;
 	}
 
 	public RootPanel getRootPanel() {
-		return rootPanel;
+		return contentPanel;
 	}
 
 	public Panel getHiddenPanel() {
@@ -100,8 +101,8 @@ public class DefaultViewManager implements ViewManager {
 	// }
 
 	public void empty() {
-		rootPanel.clear();
-		rootPanel.getElement().setInnerHTML("");
+		contentPanel.clear();
+		contentPanel.getElement().setInnerHTML("");
 	}
 
 	private Panel createHiddenPanel() {
@@ -111,8 +112,8 @@ public class DefaultViewManager implements ViewManager {
 				.setAttribute("style",
 						"visibility:collapse; width: 0px; height: 0px; overflow: hidden;");
 		Element downloadFrame = DOM.createIFrame();
-		downloadFrame
-				.setAttribute("style", "visibility:collapse; height: 0px; overflow: hidden;");
+		downloadFrame.setAttribute("style",
+				"visibility:collapse; height: 0px; overflow: hidden;");
 		downloadFrame.setId(DOWNLOAD_FRAME_ID);
 		panel.getElement().appendChild(downloadFrame);
 		return panel;
@@ -144,7 +145,7 @@ public class DefaultViewManager implements ViewManager {
 
 	public void showPlainError(String error) {
 		empty();
-		rootPanel.add(new HTML(error));
+		contentPanel.add(new HTML(error));
 	}
 
 	public void showErrorInMainView(String title, ServiceError error) {
@@ -170,7 +171,7 @@ public class DefaultViewManager implements ViewManager {
 		}
 		errorHtml.append("</span>");
 
-		rootPanel.add(new HTML(errorHtml.toString()));
+		contentPanel.add(new HTML(errorHtml.toString()));
 	}
 
 	// @Override

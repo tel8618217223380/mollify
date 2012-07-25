@@ -27,7 +27,7 @@ function MainView() {
 		// TODO expose file urls
 
 		mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mainview-user");
-		if (mollify.session.authenticated) mollify.ui.controls.hoverDropdown($('#mollify-username-dropdown'), that.sessionActions());
+		if (mollify.session.authenticated) mollify.ui.controls.hoverDropdown({element: $('#mollify-username-dropdown'), items: that.sessionActions()});
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 		that.initList();
@@ -155,7 +155,7 @@ function MainView() {
 	
 	this.showActionMenu = function(item, c) {
 		c.addClass("open");
-		var popup = mollify.ui.controls.popupmenu(false, { control: c }, function() { c.removeClass("open"); that.itemWidget.removeHover(); });
+		var popup = mollify.ui.controls.popupmenu({ element: c, onHide: function() { c.removeClass("open"); that.itemWidget.removeHover(); }});
 		
 		that.getItemActions(item, function(a) {
 			if (!a) {
@@ -174,20 +174,23 @@ function MainView() {
 			}
 			var coreActions = a[1];
 			var pluginData = mollify.plugins.getItemContextData(item, a[0]);
-			
-			var list = coreActions;
-			if (pluginData) {
-				for (var id in pluginData) {
-					var pd = pluginData[id];
-					if (pd.actions) {
-						list.push({title:"-"});
-						$.merge(list, pd.actions);
-					}
-				}
-			}
-			cb(list);
+			cb(that.addPluginActions(a[1], pluginData));
 		});
 	};
+	
+	this.addPluginActions = function(actions, pluginData) {
+		var list = actions;
+		if (pluginData) {
+			for (var id in pluginData) {
+				var pd = pluginData[id];
+				if (pd.actions) {
+					list.push({title:"-"});
+					$.merge(list, pd.actions);
+				}
+			}
+		}
+		return list;
+	}
 	
 	this.openItemContext = function(item, e) {
 		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
@@ -198,9 +201,9 @@ function MainView() {
 				at: that.isListView() ? 'bottom left' : 'bottom center',
 			},
 			hide: {
-				delay: 200,
+				delay: 1000,
 				fixed: true,
-				event: 'click mouseleave'
+				event: 'mouseleave'
 			},
 			style: {
 				tip: true,
@@ -211,16 +214,17 @@ function MainView() {
 
 				},
 				visible: function(e, api) {
+					var $t = $(this);
 					var $el = $("#mollify-itemcontext-"+item.id);
 					var $content = $el.find(".mollify-itemcontext-content");
 					
-					that.listener.getItemDetails(item, function(d) {
-						if (!d) {
+					that.listener.getItemDetails(item, function(a) {
+						if (!a) {
 							api.hide();
 							return;
 						}
-						var pluginData = {};//that.getItemDetailsPluginData(d);
-						$content.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", {item:item, details:d, plugins: pluginData}, {}));
+						
+						that.renderItemContext(api, $content, item, a);
 					});
 				},
 				hide: function(e, api) {
@@ -228,6 +232,24 @@ function MainView() {
 				}
 			}
 		}).qtip('api').show();
+	};
+	
+	this.renderItemContext = function(tip, $e, item, d) {
+		var pluginData = mollify.plugins.getItemContextData(item, d[0]);
+		var actions = that.addPluginActions(d[1], pluginData);	//TODO remove primary actions
+		var o = {item:item, details:d[0], plugins: pluginData};
+		
+		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
+		mollify.ui.process($e, ["localize"]);
+		
+		mollify.ui.controls.hoverDropdown({
+			element: $e.find("#mollify-itemcontext-secondary-actions"),
+			items: actions,
+			hideDelay: 0,
+			onItem: function() {
+				tip.hide();
+			}
+		});
 	};
 }
 

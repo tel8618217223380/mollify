@@ -327,8 +327,8 @@
 			},
 			
 			controls: {
-				hoverDropdown : function(e, items) {
-					var $e = $(e);
+				hoverDropdown : function(a) {
+					var $e = $(a.element);
 					$e.addClass('hover-dropdown');
 					$e.hover(function() {
 						$(this).addClass("hover");
@@ -336,12 +336,12 @@
 						$(this).removeClass("hover");
 					});
 					$('<div class="mollify-dropdown-handle"></div>').click(function(){
-						mollify.ui.controls.popupmenu(items, {control: $e});
+						mollify.ui.controls.popupmenu(a);
 					}).appendTo($e);
 				},
 				
-				popupmenu : function(items, p, onHide) {
-					var $e = $(p.control);
+				popupmenu : function(a) {
+					var $e = $(a.element);
 					var createItems = function(itemList) {
 						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
 							isSeparator : function(i) {
@@ -359,22 +359,24 @@
 						$items.click(function() {
 							var item = l[$(this).index()];
 							api.hide();
+							if (a.onItem) a.onItem(api, item);
 							item.callback();
 						});
 					};
-					var html = items ? createItems(items) : '<div class="loading"></div>';
+					var html = a.items ? createItems(a.items) : '<div class="loading"></div>';
 					
 					var tip = $e.qtip({
 						content: html,
 						position: {
-							my: p.positionMy || 'top left',
-							at: p.positionAt || 'bottom left',
-							container: p.container || $('#mainview-content')
+							my: a.positionMy || 'top left',
+							at: a.positionAt || 'bottom left',
+							container: a.container || $('#mainview-content')
 						},
 						hide: {
-							delay: 200,
-							fixed: true,
-							event: 'mouseleave'
+							target: a.hideTarget || false,
+							delay: a.hideDelay || 200,
+							fixed: a.hideFixed || true,
+							event: a.hideEvent || 'mouseleave'
 						},
 						style: {
 							tip: false,
@@ -382,10 +384,10 @@
 						},
 						events: {
 							render: function(e, api) {
-								initItems(items, api);
+								initItems(a.items, api);
 							},
 							hide: function(e, api) {
-								if (onHide) onHide(api);
+								if (a.onHide) a.onHide(api);
 								api.destroy();
 							}
 						}

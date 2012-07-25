@@ -106,13 +106,20 @@
 </script>
 
 <script id="mollify-tmpl-main-itemcontext-content" type="text/x-jquery-tmpl">
-	<div class="mollify-itemcontext-description">
-		desc
+	{{if description}}
+	<div id="mollify-itemcontext-description">
+		${description}
 	</div>
-	<div class="mollify-itemcontext-actions">
-		actions
-	</div>
+	{{/if}}
 	<div class="mollify-itemcontext-details">
 		details
+	</div>
+	<div id="mollify-itemcontext-actions">
+		<div id="mollify-itemcontext-primary-actions">
+			<a id="mollify-itemcontext-primary-actions-button" class="localized button button-blue" text-key="primaryAction"></a>
+		</div>
+		<div id="mollify-itemcontext-secondary-actions">
+			<span class="dropdown-title localized" text-key="secondaryActions"></span>
+		</div>
 	</div>
 </script>
