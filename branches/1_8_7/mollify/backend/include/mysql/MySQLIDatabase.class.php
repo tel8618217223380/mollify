@@ -71,6 +71,8 @@
 		}
 		
 		public function connect($selectDb = TRUE) {
+			mysqli_report(MYSQLI_REPORT_ERROR);
+			
 			try {
 				if ($selectDb) $db = @mysqli_connect($this->host, $this->user, $this->pw, $this->database, $this->port, $this->socket);
 				else $db = @mysqli_connect($this->host, $this->user, $this->pw, "", $this->port, $this->socket);
