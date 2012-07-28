@@ -242,12 +242,16 @@ function MainView() {
 		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
 		mollify.ui.process($e, ["localize"]);
 		
-		mollify.ui.controls.hoverDropdown({
+		var actions = mollify.ui.controls.hoverDropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
 			items: actions,
 			hideDelay: 0,
+			style: 'submenu',
 			onItem: function() {
 				tip.hide();
+			},
+			onBlur: function(dd) {
+				dd.hide();
 			}
 		});
 	};
