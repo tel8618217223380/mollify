@@ -364,6 +364,8 @@
 						});
 					};
 					var html = a.items ? createItems(a.items) : '<div class="loading"></div>';
+					var cls = 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped';
+					if (a.style) cls = cls + " " + a.style;
 					
 					var tip = $e.qtip({
 						content: html,
@@ -380,15 +382,21 @@
 						},
 						style: {
 							tip: false,
-							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+							classes: cls
 						},
 						events: {
 							render: function(e, api) {
 								initItems(a.items, api);
 							},
+							show: function(e, api) {
+								if (a.onShow) a.onShow(api);
+							},
 							hide: function(e, api) {
 								if (a.onHide) a.onHide(api);
 								api.destroy();
+							},
+							blur: function(e, api) {
+								if (a.onBlur) a.onBlur(api);
 							}
 						}
 					}).qtip('api');

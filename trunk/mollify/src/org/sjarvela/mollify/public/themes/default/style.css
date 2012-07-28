@@ -621,3 +621,7 @@ a.login-link {
 .mollify-iconview.iconview-small .mollify-iconview-item.item-folder .mollify-iconview-item-icon {
 	background: url(images/mimetypes64/folder.png) no-repeat 5px 10px;
 }
+
+.submenu {
+    z-index: 10000000 !important;
+}
