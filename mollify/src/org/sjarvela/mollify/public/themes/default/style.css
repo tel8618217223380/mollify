@@ -38,7 +38,7 @@ html, body {
 	width: 100%;
 }
 
-#mollify, .bubble-content, .ui-widget, a.button, input, .mollify-popupmenu {
+#mollify, .bubble-content, .ui-widget, a.button, input, .mollify-popupmenu, .mollify-popup {
 	font-size: 12px;
 	font-family: 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
@@ -620,6 +620,15 @@ a.login-link {
 
 .mollify-iconview.iconview-small .mollify-iconview-item.item-folder .mollify-iconview-item-icon {
 	background: url(images/mimetypes64/folder.png) no-repeat 5px 10px;
+}
+
+.mollify-itemcontext-popup {
+	max-width: 500px;
+}
+
+.mollify-itemcontext {
+	width: 500px;
+	height: 300px;
 }
 
 .submenu {
