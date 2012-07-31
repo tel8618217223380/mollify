@@ -193,4 +193,10 @@ For example, if user "john.doe" is logging in
 	);
 }}}
 
-* More setting descriptions coming soon *
+== Upload temporary directory (`upload_temp_dir`) ==
+
+Define the temporary directory used for custom file uploaders. By default the OS temp dir is used.
+
+== Enable thumbnails (`enable_thumbnails`) ==
+
+Enable thumbnails support. This feature is used by, for example, icon view and image preview to show smaller image preview.
