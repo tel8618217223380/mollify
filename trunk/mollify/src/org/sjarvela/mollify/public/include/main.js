@@ -134,8 +134,10 @@ function MainView() {
 					}
 				}
 				var showContext = (!that.isListView() || t=='name');
-				if (showContext)
-					that.openItemContext(item, that.itemWidget.getItemContextElement(item));
+				if (showContext) {
+					if (that.itemContext) that.itemContext.hide();
+					else that.openItemContext(item, that.itemWidget.getItemContextElement(item));
+				}
 			},
 			onDblClick: function(item) {
 				if (item.is_file) return;
@@ -194,7 +196,7 @@ function MainView() {
 	
 	this.openItemContext = function(item, e) {
 		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
-		e.qtip({
+		that.itemContext = e.qtip({
 			content: html,
 			position: {
 				my: that.isListView() ? 'top left' : 'top center',
@@ -207,7 +209,7 @@ function MainView() {
 			},
 			style: {
 				tip: true,
-				classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+				classes: 'mollify-itemcontext-popup mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
 			},
 			events: {
 				render: function(e, api) {
@@ -228,10 +230,13 @@ function MainView() {
 					});
 				},
 				hide: function(e, api) {
+					that.itemContext = false;
 					api.destroy();
 				}
 			}
-		}).qtip('api').show();
+		}).qtip('api');
+		
+		that.itemContext.show();
 	};
 	
 	this.renderItemContext = function(tip, $e, item, d) {
@@ -330,6 +335,7 @@ function FileList(container, id, columns) {
 	t.cols = [];
 	t.sortCol = false;
 	t.sortOrderAsc = true;
+	t.colWidths = {};
 	
 	for (var colId in columns) {
 		var col = mollify.ui.filelist.columns[colId];
@@ -376,7 +382,8 @@ function FileList(container, id, columns) {
 					},
 					stop: function(e, ui) {
 						var w = $t.width();
-						$(".mollify-filelist-col-"+col.id).width(w);
+						t.colWidths[col.id] = w;
+						t.updateColWidth(col.id, w);
 					}
 				});/*.draggable({
 					axis: "x",
@@ -389,6 +396,14 @@ function FileList(container, id, columns) {
 		t.items = [];
 		t.data = {};
 		t.onSortClick(t.cols[0]);
+	}
+
+	this.updateColWidths = function() {
+		for (var colId in t.colWidths) t.updateColWidth(colId, t.colWidths[colId]);
+	}
+		
+	this.updateColWidth = function(id, w) {
+		$(".mollify-filelist-col-"+id).width(w);
 	}
 	
 	this.onSortClick = function(col) {
@@ -502,6 +517,8 @@ function FileList(container, id, columns) {
 			e.preventDefault();
 			t.p.onFolderSelected($(this).tmplItem().data);
 		});*/
+		
+		t.updateColWidths();
 	}
 	
 	this.onItemClick = function($item, $el, left) {
