@@ -532,6 +532,30 @@
 							select($(items[ind]));
 						}
 					};
+				},
+				
+				editableLabel: function(o) {
+					var $e = $(o.element);
+					var id = $e.attr('id');
+					var originalValue = o.value || $e.html();
+					if (!id) return;
+					
+					var $label = $("<label></label>").appendTo($e.empty()).html(originalValue);
+					var $editor = $("<input></input>").appendTo($e).val(originalValue);
+      
+					$editor.hide().bind("blur", function() {
+						var v = $editor.val();
+						if (o.isvalid && !o.isvalid(v)) return;
+						
+						$editor.hide();
+						$label.show();
+			            if (o.onedit) o.onedit(v);
+					});
+					
+					$label.bind("click", function() {
+						$label.hide();
+						$editor.show().focus();
+					});
 				}
 			}
 		}
