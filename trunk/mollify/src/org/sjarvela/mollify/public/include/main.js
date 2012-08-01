@@ -240,12 +240,21 @@ function MainView() {
 	};
 	
 	this.renderItemContext = function(tip, $e, item, d) {
-		var pluginData = mollify.plugins.getItemContextData(item, d[0]);
+		var details = d[0];
+		var showDescription = mollify.session.features.descriptions && !!details.description;
+		//TODO permissions to edit descriptions
+		var descriptionEditable = showDescription && mollify.session.admin;
+		
+		var pluginData = mollify.plugins.getItemContextData(item, details);
 		var actions = that.addPluginActions(d[1], pluginData);	//TODO remove primary actions
-		var o = {item:item, details:d[0], plugins: pluginData};
+		var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: pluginData};
 		
 		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
 		mollify.ui.process($e, ["localize"]);
+		
+		if (descriptionEditable) {
+			mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) { that.onDescription(item, desc); }});
+		}
 		
 		var actions = mollify.ui.controls.hoverDropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
@@ -260,6 +269,10 @@ function MainView() {
 			}
 		});
 	};
+	
+	this.onDescription = function(item, desc) {
+		alert(desc);
+	}
 }
 
 function IconView(container, id, cls) {
