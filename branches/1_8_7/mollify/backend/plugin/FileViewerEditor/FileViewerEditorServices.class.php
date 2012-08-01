@@ -33,7 +33,10 @@
 					return;
 				}
 				if ($this->path[1] === 'content') {
-					$this->env->filesystem()->view($item);
+					if (isset($_SERVER['HTTP_RANGE']))
+						$this->env->filesystem()->view($item, $_SERVER['HTTP_RANGE']);
+					else
+						$this->env->filesystem()->view($item);
 					return;
 				}
 			} else if ($this->id === 'edit') {

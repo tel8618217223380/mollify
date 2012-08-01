@@ -153,7 +153,7 @@
 		}
 				
 		public function getContentUrl($item) {
-			return $this->getServiceUrl("view", array($this->getUrlId($item->id()), "content"), TRUE);
+			return $this->getServiceUrl("view", array($this->getUrlId($item->id()), "content", $item->name()), TRUE);
 		}
 
 		public function response() {
@@ -177,7 +177,7 @@
 		}
 
 		public function getServiceUrl($id, $path, $fullUrl = FALSE, $session = TRUE) {
-			$url = $this->plugin->env()->getServiceUrl($id, $path, $fullUrl);
+			$url = rtrim($this->plugin->env()->getServiceUrl($id, $path, $fullUrl),"/");
 			
 			if ($session) {
 				$url .= (strpos($url, '?') === FALSE) ? "?" : "&";
