@@ -111,7 +111,11 @@
 		${description}
 	</div>
 	{{/if}}
-	<div class="mollify-itemcontext-details">
+	<div id="mollify-itemcontext-details">
+		<div id="mollify-itemcontext-details-selectors">
+		</div>
+		<div id="mollify-itemcontext-details-content">
+		</div>
 	</div>
 	<div id="mollify-itemcontext-actions">
 		<div id="mollify-itemcontext-primary-actions">
@@ -120,5 +124,11 @@
 		<div id="mollify-itemcontext-secondary-actions">
 			<span class="dropdown-title localized" text-key="secondaryActions"></span>
 		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-main-itemcontext-details-section" type="text/x-jquery-tmpl">
+	<div id="mollify-itemcontext-details-${id}" class="mollify-itemcontext-details">
+		foo
 	</div>
 </script>
