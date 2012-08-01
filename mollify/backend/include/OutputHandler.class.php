@@ -131,16 +131,30 @@
 				header("Pragma: hack");
 			}
 
-			Logging::logDebug("Sending $filename ($size)");			
+			Logging::logDebug("Sending $filename ($size)");
 			if ($range) fseek($stream, $range[0]);
-
 			$this->doSendBinary($stream);
 		}
 
-		public function sendBinary($filename, $type, $stream, $size = NULL) {
-			if ($size) header("Content-Length: ".$size);
-			header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+		public function sendBinary($filename, $type, $stream, $size = NULL, $range = NULL) {
+			if ($range) {
+				$start = $range[0];
+				$end = $range[1];
+				$size = $range[2];
+				
+				if ($start > 0 || $end < ($size - 1))
+					header('HTTP/1.1 206 Partial Content');
+				header("Cache-Control:");
+				header("Cache-Control: public");
+				header('Accept-Ranges: bytes');
+				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
+				header('Content-Length: '.($end - $start + 1));
+			} else {
+				if ($size) header("Content-Length: ".$size);
+				header("Content-Type: ".$this->getMime(trim(strtolower($type))));
+			}
 			
+			if ($range) fseek($stream, $range[0]);
 			$this->doSendBinary($stream);
 		}
 		

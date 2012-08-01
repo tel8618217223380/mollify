@@ -491,10 +491,36 @@
 			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);
 		}
 
-		public function view($file) {
-			Logging::logDebug('view ['.$file->id().']');
+		public function view($file, $range = NULL) {
+			if (!$range)
+				Logging::logDebug('view ['.$file->id().']');
 			$this->assertRights($file, Authentication::RIGHTS_READ, "view");
-			$this->env->events()->onEvent(FileEvent::view($file));
+			
+			$size = $file->size();
+			if ($range != NULL) {
+				list($unit, $range) = explode('=', $range, 2);
+				
+				if ($unit == 'bytes') {
+					$pos = strpos(",", $range);
+					if ($pos != false) {
+						if ($pos === 0) $range = NULL;
+						else if ($pos >= 0) $range = substr($range, 0, $pos);
+					}
+				} else {
+					$range = NULL;
+				}
+			}
+			
+			if ($range != NULL) {
+				list($start, $end) = explode('-', $range, 2);
+
+				$end = (empty($end)) ? ($size - 1) : min(abs(intval($end)),($size - 1));
+				$start = (empty($start) || $end < abs(intval($start))) ? 0 : max(abs(intval($start)),0);
+				$range = array($start, $end, $size);
+				Logging::logDebug("View range ".$start."-".$end);
+			}
+			if (!$range)
+				$this->env->events()->onEvent(FileEvent::view($file));
 			$this->env->response()->send($file->name(), $file->extension(), $file->read(), $file->size());
 		}
 		

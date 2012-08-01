@@ -1,4 +1,4 @@
 <?php
-	$VERSION = "1.8.9.2";
-	$REVISION = 1608;
+	$VERSION = "1.8.9.3";
+	$REVISION = 1610;
 ?>
