@@ -537,25 +537,54 @@
 				editableLabel: function(o) {
 					var $e = $(o.element);
 					var id = $e.attr('id');
-					var originalValue = o.value || $e.html();
+					var originalValue = o.value || $e.html().trim();
 					if (!id) return;
 					
-					var $label = $("<label></label>").appendTo($e.empty()).html(originalValue);
-					var $editor = $("<input></input>").appendTo($e).val(originalValue);
-      
-					$editor.hide().bind("blur", function() {
+					$e.addClass("editable-label").hover(function() {
+						$e.addClass("hover");
+					}, function() {
+						$e.removeClass("hover");
+					});
+					
+					var $label = $("<label></label>").appendTo($e.empty());
+					var $editor = $("<input></input>").appendTo($e);
+					var ctrl = {
+						value: function(v) {
+							originalValue = v;
+							$label.html(originalValue);
+							$editor.val(originalValue);	
+						}
+					};
+					ctrl.value(originalValue);
+					
+					var onFinish = function() {
 						var v = $editor.val();
 						if (o.isvalid && !o.isvalid(v)) return;
 						
 						$editor.hide();
 						$label.show();
-			            if (o.onedit) o.onedit(v);
+			            if (originalValue != v) {
+			            	if (o.onedit) o.onedit(v);
+			            	ctrl.value(v);
+			            }
+					};
+					var onCancel = function() {
+						$editor.hide();
+						$label.show();
+						ctrl.value(originalValue);
+					};
+      
+					$editor.hide().bind("blur", onFinish).keyup(function(e) {
+						if (e.which == 13) onFinish();
+						else if (e.which == 27) onCancel();
 					});
 					
 					$label.bind("click", function() {
 						$label.hide();
 						$editor.show().focus();
 					});
+					
+					return ctrl;
 				}
 			}
 		}
@@ -920,10 +949,18 @@ function CommentPlugin() {
 	
 	this.getItemContextData = function(item, data) {
 		return {
+			details: {
+				"title-key": "pluginCommentContextTitle",
+				"on-render": function(e) { that.renderItemContextDetails(item, e); }
+			},
 			actions: [
 				{ title: 'foo', callback: function() { alert("foo"); } }
 			]
 		};
+	};
+	
+	this.renderItemContextDetails = function(item, $e) {
+		$e.html("comments: "+item.name);
 	};
 	
 	/*this.onListCellClick = function(e) {

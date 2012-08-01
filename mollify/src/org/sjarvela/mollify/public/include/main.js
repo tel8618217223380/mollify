@@ -256,6 +256,25 @@ function MainView() {
 			mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) { that.onDescription(item, desc); }});
 		}
 		
+		if (pluginData) {
+			var $selectors = $("#mollify-itemcontext-details-selectors");
+			var $content = $("#mollify-itemcontext-details-content");
+			var onSelectDetails = function(id) {
+				pluginData[id].details["on-render"]($content.empty());
+			};
+			for (var id in pluginData) {
+				var data = pluginData[id];
+				if (!data.details) continue;
+				var title = data.details.title ? data.details.title : (data.details["title-key"] ? mollify.ui.texts.get(data.details["title-key"]) : id);
+				var selector = $('<span class="mollify-itemcontext-details-selector">'+title+'</span>').appendTo($selectors).click(function() { onSelectDetails(id); });
+			}
+			$e.find(".mollify-itemcontext-details-selector").hover(function() {
+				$(this).addClass("hover");
+			}, function() {
+				$(this).removeClass("hover");
+			})
+		}
+		
 		var actions = mollify.ui.controls.hoverDropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
 			items: actions,
