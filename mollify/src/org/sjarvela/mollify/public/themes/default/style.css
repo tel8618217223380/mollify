@@ -623,12 +623,19 @@ a.login-link {
 }
 
 .mollify-itemcontext-popup {
-	max-width: 500px;
+	min-width: 500px;
 }
 
 .mollify-itemcontext {
-	width: 500px;
 	height: 300px;
+}
+
+#mollify-itemcontext-details {
+	height: 200px;
+}
+
+#mollify-itemcontext-details-selectors {
+	height: 20px;
 }
 
 .submenu {
