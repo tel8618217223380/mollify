@@ -951,7 +951,7 @@ function CommentPlugin() {
 		return {
 			details: {
 				"title-key": "pluginCommentContextTitle",
-				"on-render": function(e) { that.renderItemContextDetails(item, e); }
+				"on-render": function(e, cache) { that.renderItemContextDetails(item, e, cache); }
 			},
 			actions: [
 				{ title: 'foo', callback: function() { alert("foo"); } }
@@ -959,8 +959,40 @@ function CommentPlugin() {
 		};
 	};
 	
-	this.renderItemContextDetails = function(item, $e) {
-		$e.html("comments: "+item.name);
+	this.renderItemContextDetails = function(item, $e, cache) {
+		$e.addClass("loading");
+		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
+			$e.removeClass("loading");
+			if (!cache.comments) {	
+				that.loadComments(item, function(item, comments) {
+					cache.comments = comments;
+					that.renderComments(item, comments, {element: $e.empty(), contentTemplate: 'comments-context-content-template'});
+				});
+			} else {
+				that.renderComments(item, cache.comments, {element: $e.empty(), contentTemplate: 'comments-context-content-template'});	
+			}
+		});
+	};
+	
+	this.renderComments = function(item, comments, o) {
+		mollify.dom.template(o.contentTemplate, item).appendTo(o.element);
+		
+		if (comments.length == 0) {
+			$("#comments-list").html('<span class="message">'+mollify.ui.texts.get("commentsDialogNoComments")+'</span>');
+			return;
+		}
+		
+		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
+
+		$(".comment-content").hover(
+			function () { $(this).addClass("hover"); }, 
+			function () { $(this).removeClass("hover"); }
+		);
+		$(".comment-remove-action").click(function(e) {
+			e.preventDefault();
+			var comment = $(this).tmplItem().data
+			that.onRemoveComment(item, comment.id);
+		});
 	};
 	
 	/*this.onListCellClick = function(e) {
@@ -986,19 +1018,13 @@ function CommentPlugin() {
 		
 		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
 			bubble.content(mollify.dom.template("comments-content-template", item));
-			$("#comments-list").removeClass("loading");
 			/*$("#comments-dialog-content .mollify-actionlink").hover(
 				function () { $(this).addClass("mollify-actionlink-hover"); }, 
 				function () { $(this).removeClass("mollify-actionlink-hover"); }
 			);*/
 	
 			$("#comments-dialog-add").click(function() { that.onAddComment(bubble, item); } );
-			
-			mollify.service.get("comment/"+item.id, function(result) {
-				that.onShowComments(item, result);
-			}, function(code, error) {
-				alert(error);
-			});
+			that.loadComments(item, that.onShowComments);
 			
 			/*mollify.ui.views.dialogs.custom({
 				"title": mollify.ui.texts.get("commentsDialogTitle"),
@@ -1012,7 +1038,23 @@ function CommentPlugin() {
 				]
 			});*/
 		});
-	}
+	};
+	
+	this.loadComments = function(item, cb) {
+		mollify.service.get("comment/"+item.id, function(comments) {
+			var userId = mollify.session['user_id'];
+			var isAdmin = mollify.session.admin;
+			
+			for (var i=0,j=comments.length; i<j; i++) {
+				comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
+				comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
+				comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
+			}
+			cb(item, comments);
+		}, function(code, error) {
+			alert(error);
+		});
+	};
 	
 	this.onAddComment = function(d, item) {
 		var comment = $("#comments-dialog-add-text").val();
@@ -1038,18 +1080,11 @@ function CommentPlugin() {
 	}
 	
 	this.onShowComments = function(item, comments) {
+		$("#comments-list").removeClass("loading");
+		
 		if (comments.length == 0) {
 			$("#comments-list").html("<span class='message'>"+mollify.ui.texts.get("commentsDialogNoComments")+"</span>");
 			return;
-		}
-		
-		var isAdmin = mollify.session.admin;
-		var userId = mollify.session['user_id'];
-		
-		for (var i=0,j=comments.length; i<j; i++) {
-			comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
-			comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
-			comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
 		}
 
 		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());

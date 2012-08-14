@@ -205,11 +205,16 @@ function MainView() {
 			hide: {
 				delay: 1000,
 				fixed: true,
-				event: 'mouseleave'
+				event: ''//'mouseleave'
 			},
 			style: {
-				tip: true,
-				classes: 'mollify-itemcontext-popup mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+				widget: false,
+				tip: {
+					corner: true,
+					width: 20,
+					height: 20
+				},
+				classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped mollify-itemcontext-popup mollify-popup'
 			},
 			events: {
 				render: function(e, api) {
@@ -253,26 +258,34 @@ function MainView() {
 		mollify.ui.process($e, ["localize"]);
 		
 		if (descriptionEditable) {
-			mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) { that.onDescription(item, desc); }});
+			mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) {
+				that.onDescription(item, desc);
+			}});
 		}
 		
 		if (pluginData) {
 			var $selectors = $("#mollify-itemcontext-details-selectors");
 			var $content = $("#mollify-itemcontext-details-content");
 			var onSelectDetails = function(id) {
-				pluginData[id].details["on-render"]($content.empty());
+				pluginData[id].details["on-render"]($content.empty(), cache[id]);
 			};
+			var firstPlugin = false;
+			var cache = {};
 			for (var id in pluginData) {
 				var data = pluginData[id];
 				if (!data.details) continue;
+				
+				if (!firstPlugin) firstPlugin = id;
+				cache[id] = {};
 				var title = data.details.title ? data.details.title : (data.details["title-key"] ? mollify.ui.texts.get(data.details["title-key"]) : id);
-				var selector = $('<span class="mollify-itemcontext-details-selector">'+title+'</span>').appendTo($selectors).click(function() { onSelectDetails(id); });
+				var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {title:title, data: data}).appendTo($selectors).click(function() { onSelectDetails(id); });
 			}
 			$e.find(".mollify-itemcontext-details-selector").hover(function() {
 				$(this).addClass("hover");
 			}, function() {
 				$(this).removeClass("hover");
-			})
+			});
+			if (firstPlugin) onSelectDetails(firstPlugin);
 		}
 		
 		var actions = mollify.ui.controls.hoverDropdown({
@@ -290,8 +303,11 @@ function MainView() {
 	};
 	
 	this.onDescription = function(item, desc) {
-		alert(desc);
-	}
+		//TODO validate
+		mollify.service.put("filesystem/"+item.id+"/description/", {description: desc}, function(result) {},function(code, error) {
+			alert(error);
+		});
+	};
 }
 
 function IconView(container, id, cls) {

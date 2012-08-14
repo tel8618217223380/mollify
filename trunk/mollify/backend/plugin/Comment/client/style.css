@@ -72,12 +72,16 @@
 	font-size: 12px;
 }
 
-#comments-list {
+#comments-list.comments-content {
 	min-width: 450px;
 	min-height: 250px;
 	max-height: 250px;
 	margin: 4px 0 4px 4px;
 	overflow: auto;
+}
+
+#comments-list.comments-context-content {
+	height: 100%;
 }
 
 .comments-dialog-buttons {

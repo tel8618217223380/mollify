@@ -1,5 +1,19 @@
+<script id="comments-context-content-template" type="text/x-jquery-tmpl">
+	<div id="comments-content-${id}" class="comments-context-content">
+		<div id='comments-list'></div>
+		<div id='new-comment'>
+			<div id='new-comment-content'>
+				<div id='new-comment-text'>
+					<textarea id='comments-dialog-add-text' />
+				</div>
+				<a id='comments-dialog-add' class='mollify-actionlink localized' text-key="commentsDialogAddButton"></a>
+			</div>
+		</div>
+	</div>
+</script>
+
 <script id="comments-content-template" type="text/x-jquery-tmpl">
-	<div id="comments-content-${id}">
+	<div id="comments-content-${id}" class="comments-content">
 		<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>
 			<tr height='99%'>
 				<td align='left' style='vertical-align: top'>
