@@ -78,7 +78,7 @@ Example configuration (the default):
 <script type="text/javascript">
 	mollify.init({
 		"list-view-columns": {
-			"name": {title:"fileListColumnTitleType"},
+			"name": {title:"fileListColumnTitleName"},
 			"type": {title:"fileListColumnTitleType"},
 			"size": {title:"fileListColumnTitleSize"}
 		}
