@@ -54,9 +54,9 @@
 			$this->assertUniqueNameAndEmail($registration['name'], $registration['email']);
 
 			$db = $this->env->configuration()->db();
-			$name = $registration['name'];
+			$name = trim($registration['name']);
 			$password = base64_decode($registration['password']);
-			$email = $registration['email'];
+			$email = trim($registration['email']);
 			$time = date('YmdHis', time());
 			$key = str_replace(".", "", uniqid("", TRUE));
 			

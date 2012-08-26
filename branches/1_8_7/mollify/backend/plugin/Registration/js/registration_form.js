@@ -51,6 +51,11 @@ function onRegister() {
 		$("#email-field").addClass("invalid");
 		$("#email-hint").html("Enter your email");
 	}
+	if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(email))){
+		$("#email-field").addClass("invalid");
+		$("#email-hint").html("Invalid email address.");
+		return;
+	}
 	if (name.length == 0 || pw.length == 0 || confirmPw.length == 0 || email.length == 0) return;
 	
 	if (pw != confirmPw) {
