@@ -16,7 +16,7 @@ function MainView() {
 	}
 	
 	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that, ['localize', 'radio']);
+		mollify.dom.loadContent(id, mollify.templates.url("mainview.html"), that, ['localize', 'radio', "hintbox"]);
 	}
 	
 	this.onLoad = function() {
@@ -56,7 +56,7 @@ function MainView() {
 	this.sessionActions = function() {
 		//TODO get session actions
 		return [
-			{'title-key': 'logout', callback: null}
+			{'title-key': 'logout', callback: function() { } }
 		];
 	}
 	

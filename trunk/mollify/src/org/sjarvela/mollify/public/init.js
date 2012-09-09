@@ -269,7 +269,7 @@
 						var $this = $(this);
 						var hint = t.env.texts().get($this.attr('hint-key'));
 						$this.attr("placeholder", hint).removeAttr("hint-key");
-					}).placeholder();
+					});//.placeholder();
 				},
 	
 				localize : function(p, h) {
@@ -329,15 +329,38 @@
 			controls: {
 				hoverDropdown : function(a) {
 					var $e = $(a.element);
-					$e.addClass('hover-dropdown');
-					$e.hover(function() {
+					$e.addClass('dropdown');
+					
+					var createItems = function(itemList) {
+						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
+							isSeparator : function(i) {
+								return i.title == '-';
+							},
+							getTitle : function(i) {
+								if (i.title) return i.title;
+								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+								return "";
+							}
+						})).html();
+					};
+					var initItems = function(l) {
+						var $items = $e.find(".dropdown-item");
+						$items.click(function() {
+							var item = l[$(this).index()];
+							if (a.onItem) a.onItem(item);
+							if (item.callback) item.callback();
+						});
+					};
+					$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown();
+					initItems(a.items);
+					/*$e.hover(function() {
 						$(this).addClass("hover");
 					}, function() {
 						$(this).removeClass("hover");
-					});
-					$('<div class="mollify-dropdown-handle"></div>').click(function(){
+					});*/
+					/*$('<div class="mollify-dropdown-handle"></div>').click(function(){
 						mollify.ui.controls.popupmenu(a);
-					}).appendTo($e);
+					}).appendTo($e);*/
 				},
 				
 				popupmenu : function(a) {
