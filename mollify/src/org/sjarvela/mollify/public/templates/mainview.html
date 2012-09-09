@@ -1,11 +1,28 @@
 <div id="mainview-main">
-	<div id="mainview-header">
+	<div id="mainview-header" class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+        <div class="container-fluid">
+	        <div id="mainview-logo"></div>
+	        <div id="mainview-header-tools" class="nav-collapse collapse">
+	        	<ul id="mainview-user" class="nav pull-right">
+	        	</ul>
+	        	<div id="mainview-search" class="input-append pull-right">
+		        	<input id="mainview-search-input" class="hintbox" type="text" hint-key="mainviewSearch">
+		        	<button class="btn" type="button"><i class="icon-search"></i></button>
+		        </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+	<!--div id="mainview-header">
 		<div id="mainview-logo"></div>
 		<div id="mainview-header-tools">
 			<div id="mainview-user"></div>
 			<div id="mainview-search">TODO</div>
 		</div>
-	</div>
+	</div-->
 
 	<div id="mainview-content-container">
 		<div id="mainview-content">
@@ -36,7 +53,9 @@
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
 	{{if authenticated}}
-	<div id="mollify-username-dropdown"><span class="dropdown-title">${username}</span></div>
+	<li id="mollify-username-dropdown" class="dropdown">
+		<a href="#" class="dropdown-toggle">${username} <b class="caret"></b></a>
+	</li>
 	{{/if}}
 </script>
 

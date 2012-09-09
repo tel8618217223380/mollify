@@ -13,19 +13,26 @@
   font-family: 'MollifyPlainText';
   font-style: normal;
   font-weight: 400;
-  src: local('Open Sans'), local('OpenSans'), url('fonts/OpenSans.woff') format('woff');
+  src: local('Open Sans'), local('OpenSans'), url('font/OpenSans.woff') format('woff');
 }
 @font-face {
   font-family: 'MollifyPlainText';
   font-style: normal;
   font-weight: 600;
-  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('fonts/OpenSans_Semibold.woff') format('woff');
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url('font/OpenSans_Semibold.woff') format('woff');
 }
 @font-face {
   font-family: 'MollifyPlainText';
   font-style: normal;
   font-weight: 700;
-  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('fonts/OpenSans_Bold.woff') format('woff');
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('font/OpenSans_Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'proxima-nova';
+  src: url('font/proximanova-webfont.eot');
+  src: url('font/proximanova-webfont.eot?#iefix') format('embedded-opentype'), url('font/proximanova-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 html, body {
@@ -38,12 +45,12 @@ html, body {
 	width: 100%;
 }
 
-#mollify, .bubble-content, .ui-widget, a.button, input, .mollify-popupmenu, .mollify-popup {
+#mollify, a.button, input, .mollify-popupmenu, .mollify-popup {
 	font-size: 12px;
-	font-family: 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
+	font-family: 'proxima-nova', 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
 
-a.button {
+/*a.button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -106,7 +113,7 @@ a.button:active {
 
 a.link {
 	color: #1111ff;
-}
+}*/
 
 .mollify-notification {
 	background-color: rgba(0,0,0,0.5)
@@ -243,7 +250,7 @@ a.link {
 	position: relative;
 }
 
-input.text-field {
+/*input.text-field {
 	border-radius: 3px;
 	border: 1px solid #DFDFDF;
 	background-color: #ffffff;
@@ -257,7 +264,7 @@ input.login-field.text-field {
 	margin-top: 10px;
 	margin-left: 100px;
 	text-align: center;
-}
+}*/
 
 #login-name {
 	margin-top: 100px;
@@ -307,7 +314,7 @@ a.login-link {
 
 #mainview-header-tools {
 	float: right;
-	margin-top: 8px;
+	margin-top: 20px;
 	margin-right: 48px;
 }
 
@@ -315,7 +322,11 @@ a.login-link {
 }
 
 #mainview-search {
-	clear: both;
+	margin-top: 4px;
+}
+
+#mainview-search-input {
+	width: 150px;
 }
 
 #mainview-content-container {
