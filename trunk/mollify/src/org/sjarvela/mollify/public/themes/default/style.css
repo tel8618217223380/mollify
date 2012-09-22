@@ -38,10 +38,14 @@
 html, body {
 	margin: 0;
 	padding: 0;
+	background-color: #ffffff;
+}
+
+body {
+
 }
 
 #mollify {
-	float: left;
 	width: 100%;
 }
 
@@ -132,12 +136,11 @@ a.link {
 	height: 100px;
 }
 
-.ui-widget-overlay {
+/*.ui-widget-overlay {
 	background-color: rgba(252, 252, 252, .9);
 }
 
 .ui-dialog.ui-widget-content {
-	/*border: 6px solid rgba(82, 82, 82, 0.7);*/
 	border: 4px solid #959FA9;
 	background: #EEE;
 	color: #333;
@@ -199,7 +202,7 @@ a.link {
 	margin-top: 2px;
 	margin-bottom: 2px;
 	height: 1px;
-}
+}*/
 
 .mollify-popupmenu-separator:first-child, .mollify-popupmenu-separator:last-child {
 	display: none;
@@ -292,10 +295,12 @@ a.login-link {
 }
 
 #mainview-main {
-	float: left;
-	width: 100%;
-	height: 100%;
-	background-color: #f1ecdc;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #fffff;
 }
 
 #mainview-header {
@@ -329,15 +334,14 @@ a.login-link {
 	width: 150px;
 }
 
-#mainview-content-container {
-	position: absolute;
-	left: 48px;
-	right: 48px;
-	top: 80px;
-	bottom: 20px;
-}
+/*#mainview-content-container {
+	background-color: #ffffff;
+}*/
 
-#mainview-content {
+/*#mainview-content {
+	-webkit-box-shadow: inset 0 8px 6px -6px black;
+	   -moz-box-shadow: inset 0 8px 6px -6px black;
+	        box-shadow: inset 0 8px 6px -6px black;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -356,6 +360,14 @@ a.login-link {
 	left: 0px;
 	right: 0px;
 	bottom: 30px;
+}*/
+
+#mainview-content {
+	position: absolute;
+	top: 72px;
+	left: 0;
+	right: 0;
+	bottom: 0px;
 }
 
 #mainview-content-footer {
@@ -365,28 +377,120 @@ a.login-link {
 	bottom: 0px;
 	height: 30px;
 	background: #eeeeee;
-	-webkit-border-bottom-right-radius: 4px;
+	/*-webkit-border-bottom-right-radius: 4px;
 	-webkit-border-bottom-left-radius: 4px;
 	-moz-border-radius-bottomright: 4px;
 	-moz-border-radius-bottomleft: 4px;
 	border-bottom-right-radius: 4px;
-	border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;*/
+}
+
+#mainview-rootlist {
+	top: 67px;
+  width: 128px;
+  margin: 20px 0 0;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+#mainview-rootlist > li > a {
+  display: block;
+  *width: 190px;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+}
+#mainview-rootlist > li:first-child > a {
+   border-top-left-radius: 6px;
+   border-top-right-radius: 6px;
+   -moz-border-top-left-radius: 6px;
+   -moz-border-top-right-radius: 6px;
+   -webkit-border-top-left-radius: 6px;
+   -webkit-border-top-right-radius: 6px;
+}
+#mainview-rootlist > li:last-child > a {
+   border-bottom-left-radius: 6px;
+   border-bottom-right-radius: 6px;
+   -moz-border-bottom-left-radius: 6px;
+   -moz-border-bottom-right-radius: 6px;
+   -webkit-border-bottom-left-radius: 6px;
+   -webkit-border-bottom-right-radius: 6px;
+}
+#mainview-rootlist > .active > a {
+  position: relative;
+  z-index: 2;
+  padding: 9px 15px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+
+.icon-chevron-right {
+	float: right;
+	margin-top: 2px;
+	margin-right: -6px;
+	opacity: .25;
+}
+
+@media (min-width: 1200px) {
+	#folder-list {
+		width: 178px;
+	}
+}
+
+@media (max-width: 980px) {
+  /* When affixed, space properly */
+  #mainview-rootlist {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 980px) {
+  #mainview-rootlist {
+  }
+}
+
+@media (max-width: 767px) {
+  #mainview-rootlist {
+    width: auto;
+    margin-bottom: 20px;
+  }
+  #mainview-rootlist.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+	
 }
 
 #mollify-folderview {
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	right: 8px;
-	bottom: 8px;
+	position: relative;
 }
 
 #mollify-folderview-header {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	padding: 8px 0 8px 8px;
+	padding-top: 15px;
+	float: left;
+	clear: both;
+}
+
+#mollify-folder-name, #mollify-folder-hierarchy {
+	clear: both;
+	float: left;
+	margin-bottom: 0px;
+}
+
+#mollify-folder-hierarchy {
+	font-size: 14px;
 }
 
 #mollify-folderview.roots #mollify-folderview-header {
@@ -395,10 +499,10 @@ a.login-link {
 
 #mollify-folderview-items {
 	position: absolute;
-	top: 100px;
+	top: 120px;
 	left: 8px;
 	right: 8px;
-	bottom: 0;
+	bottom: 30px;
 	overflow: hidden;
 	overflow-y: auto;
 }
@@ -421,17 +525,19 @@ a.login-link {
 
 #mollify-folder-name, .mollify-folderview-title {
 	font-weight: bold;
-	font-size: 21px;
-	margin-bottom: 4px;
+	font-size: 18px;
+	margin: 0;
+	padding: 0px 0px 0px 8px;
+	border: none;
 }
 
-#mollify-folder-hierarchy-root {
+#folder-hierarchy-item-root > li > a {
 	width: 15px;
 	height: 15px;
 	background: url(images/home.png) no-repeat 0 1px;
-	margin-right: 2px;
+	/*margin-right: 2px;
 	float: left;
-	cursor: pointer;
+	cursor: pointer;*/
 }
 
 #mollify-folder-hierarchy-items {
@@ -453,7 +559,6 @@ a.login-link {
 }
 
 .mollify-filelist-items {
-	padding-top: 4px;
 	position: absolute;
 	top: 25px;
 	bottom: 0;
@@ -539,6 +644,10 @@ a.login-link {
 
 .mollify-filelist-col-name {
 	width: 200px;
+}
+
+.mollify-filelist-col-file-modified {
+	color: #949494;
 }
 
 .mollify-filelist-quickmenu {

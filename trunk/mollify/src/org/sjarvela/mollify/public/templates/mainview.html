@@ -1,39 +1,34 @@
-<div id="mainview-main">
-	<div id="mainview-header" class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-        <div class="container-fluid">
-	        <div id="mainview-logo"></div>
-	        <div id="mainview-header-tools" class="nav-collapse collapse">
-	        	<ul id="mainview-user" class="nav pull-right">
-	        	</ul>
-	        	<div id="mainview-search" class="input-append pull-right">
-		        	<input id="mainview-search-input" class="hintbox" type="text" hint-key="mainviewSearch">
-		        	<button class="btn" type="button"><i class="icon-search"></i></button>
-		        </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-	<!--div id="mainview-header">
-		<div id="mainview-logo"></div>
-		<div id="mainview-header-tools">
-			<div id="mainview-user"></div>
-			<div id="mainview-search">TODO</div>
-		</div>
-	</div-->
-
-	<div id="mainview-content-container">
-		<div id="mainview-content">
-			<div id="mainview-content-area">
-				<div id="mollify-folderview">
-					<div id="mollify-folderview-header">
-					</div>
-					<div id="mollify-folderview-items">
-					</div>
+<div id="mainview-header" class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<div id="mainview-logo"></div>
+			<div id="mainview-header-tools" class="nav-collapse collapse">
+				<ul id="mainview-user" class="nav pull-right"></ul>
+				<div id="mainview-search" class="input-append pull-right">
+					<input id="mainview-search-input" class="hintbox" type="text" hint-key="mainviewSearch">
+					<button class="btn" type="button"><i class="icon-search"></i></button>
 				</div>
 			</div>
+		</div>
+	</div>
+</div>
+
+<div id="mainview-main" class="container">
+		<!--div id="mainview-content">
+			<div id="mainview-content-area"-->
+	<div id="mainview-content" class="row">
+		<div class="span2" class="well">
+			<ul id="mainview-rootlist" class="nav nav-list affix">
+	        </ul>
+		</div>
+		
+		<div id="mollify-folderview" class="span10">
+			<div id="mollify-folderview-header">
+			</div>
+			
+			<div id="mollify-folderview-items">
+			</div>
+			
 			<div id="mainview-content-footer">
 				<div id="mainview-viewstyle-options" class="mollify-radio">
 					<a id="mainview-viewstyle-list" href="javascript: void(0);" class="mainview-viewstyle-option">List</a>
@@ -43,12 +38,14 @@
 			</div>
 		</div>
 	</div>
+		<!--/div>
+	</div>
 	
 	<div id="mainview-dropbox">
 	</div>
 	
 	<div id="mainview-footer">
-	</div>
+	</div-->
 </div>
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
@@ -59,12 +56,15 @@
 	{{/if}}
 </script>
 
+<script id="mollify-tmpl-main-root-list" type="text/x-jquery-tmpl">
+	<li id="mainview-rootlist-item-${id}" class="mainview-rootlist-item" ><a href="javascript: void(0);"><i class="icon-chevron-right"></i> ${name}</a></li>
+</script>
+
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
-	<div id="mollify-folder-name" class="mollify-folderview-title">${name}</div>
-	<div id="mollify-folder-hierarchy">
-		<div id="mollify-folder-hierarchy-root"></div>
-		<div id="mollify-folder-hierarchy-items"></div>
+	<div id="mollify-folder-hierarchy" class="breadcrumb">
+		<!--span class="folder-hierarchy-separator">&nbsp;&gt;&nbsp;</span><span id="folder-hierarchy-item-${id}" class="folder-hierarchy-item">${name}</span-->
 	</div>
+	<div id="mollify-folder-name" class="mollify-folderview-title page-header"><h2>${name}</h2></div>
 </script>
 
 <script id="mollify-tmpl-main-rootfolders" type="text/x-jquery-tmpl">
@@ -72,7 +72,7 @@
 </script>
 
 <script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
-	<span class="folder-hierarchy-separator">&nbsp;&gt;&nbsp;</span><span id="folder-hierarchy-item-${id}" class="folder-hierarchy-item">${name}</span>
+	<li id="folder-hierarchy-item-${id}" class="folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
 </script>
 
 <script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">
