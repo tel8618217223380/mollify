@@ -28,6 +28,11 @@ function MainView() {
 
 		mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mainview-user");
 		if (mollify.session.authenticated) mollify.ui.controls.hoverDropdown({element: $('#mollify-username-dropdown'), items: that.sessionActions()});
+		mollify.dom.template("mollify-tmpl-main-root-list", that.roots).appendTo("#mainview-rootlist");
+		$(".mainview-rootlist-item").click(function() {
+			var root = $(this).tmplItem().data;
+			that.listener.onFolderSelected(1, root);
+		});
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 		that.initList();
@@ -50,7 +55,7 @@ function MainView() {
 	}
 	
 	this.onResize = function() {
-		$("#mainview-main").height($(window).height());
+		$("#mollify-folderview").height($(window).height()-$("#mainview-header").height());
 	}
 	
 	this.sessionActions = function() {
@@ -82,6 +87,9 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
+		$(".mainview-rootlist-item").removeClass("active");
+		$("#mainview-rootlist-item-"+p.hierarchy[0].id).addClass("active");
+		
 		var $h = $("#mollify-folderview-header").empty();
 		if (p) {
 			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($h);
@@ -98,13 +106,15 @@ function MainView() {
 	}
 	
 	this.setupHierarchy = function(h) {
-		var p = $("#mollify-folder-hierarchy-items").empty();
+		var items = $.merge([{id: 'root', name: ''}], h);
 		
-		mollify.dom.template("mollify-tmpl-main-folder-hierarchy", h).appendTo(p);
+		var p = $("#mollify-folder-hierarchy").empty();
+		
+		mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items).appendTo(p);
 		$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
 		$(".folder-hierarchy-item").click(function() {
 			var index = p.find(".folder-hierarchy-item").index($(this));
-			that.listener.onFolderSelected(index+1, h[index]);
+			that.listener.onFolderSelected(index, h[index-1]);
 		});
 	}
 	
