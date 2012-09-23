@@ -206,6 +206,9 @@
 			return $r;
 		}
 
+		public function lastId() {
+			return mysqli_insert_id($this->db);
+		}
 	}
 	
 	class MySQLIResult {

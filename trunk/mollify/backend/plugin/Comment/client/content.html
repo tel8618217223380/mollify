@@ -1,50 +1,40 @@
 <script id="comments-context-content-template" type="text/x-jquery-tmpl">
 	<div id="comments-content-${id}" class="comments-context-content">
-		<div id='comments-list'></div>
 		<div id='new-comment'>
-			<div id='new-comment-content'>
-				<div id='new-comment-text'>
-					<textarea id='comments-dialog-add-text' />
-				</div>
-				<a id='comments-dialog-add' class='mollify-actionlink localized' text-key="commentsDialogAddButton"></a>
+			<div id='new-comment-text'>
+				<textarea rows="1" id='comments-dialog-add-text' />
 			</div>
+			<a id='comments-dialog-add' class='link localized' text-key="commentsDialogAddButton"></a>
 		</div>
+		<div id='comments-list'></div>
 	</div>
 </script>
 
 <script id="comments-content-template" type="text/x-jquery-tmpl">
 	<div id="comments-content-${id}" class="comments-content">
-		<table cellspacing=0 cellpadding=0 style='width:100%; height:100%'>
-			<tr height='99%'>
-				<td align='left' style='vertical-align: top'>
-					<div id='comments-item'>${name}</div>
-					<div id='comments-list' class="loading"></div>
-				</td>
-			</tr>
-			
-			<tr height='1%'>
-				<td>
-					<div id='new-comment'>
-						<div id='new-comment-content'>
-							<div id='new-comment-text'>
-								<textarea id='comments-dialog-add-text' />
-							</div>
-							<a id='comments-dialog-add' class='mollify-actionlink localized' text-key="commentsDialogAddButton"></a>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<div id='comments-list' class="loading"></div>
+		<div id='new-comment'>
+			<div id='new-comment-content'>
+				<div id='new-comment-text'>
+					<textarea id='comments-dialog-add-text' />
+				</div>
+				<a id='comments-dialog-add' class='link localized' text-key="commentsDialogAddButton"></a>
+			</div>
+		</div>
 	</div>
 </script>
 
 <script id="comment-template" type="text/x-jquery-tmpl"> 
-	<div class="comment-content">
-		<div id="comment-${id}" class="comment-header">
+	<div id="comment-${id}" class="comment-content">
+		<div class="comment-header">
 			<div class="comment-user">${username}</div>
-			{{if remove}}<a class="comment-remove-action localized" text-key="commentsDialogRemoveComment" href="#"></a>{{/if}}
 			<div class="comment-time">${time}</div>
 		</div>
+		{{if remove}}
+		<div class="comment-tools">
+			<a class="link comment-remove-action" href="#"><i class="icon-remove"></i></a>
+		</div>
+		{{/if}}
 		<div class="comment-text">{{html comment}}</div>
 	</div>
 </script>
