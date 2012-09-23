@@ -27,7 +27,7 @@ function MainView() {
 		// TODO expose file urls
 
 		mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mainview-user");
-		if (mollify.session.authenticated) mollify.ui.controls.hoverDropdown({element: $('#mollify-username-dropdown'), items: that.sessionActions()});
+		if (mollify.session.authenticated) mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.sessionActions()});
 		mollify.dom.template("mollify-tmpl-main-root-list", that.roots).appendTo("#mainview-rootlist");
 		$(".mainview-rootlist-item").click(function() {
 			var root = $(this).tmplItem().data;
@@ -206,7 +206,37 @@ function MainView() {
 	
 	this.openItemContext = function(item, e) {
 		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
-		that.itemContext = e.qtip({
+		e.popover({
+			title: item.name,
+			html: true,
+			placement: 'bottom',
+			trigger: 'manual',
+			template: '<div class="popover mollify-itemcontext-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
+			content: html,
+			manualout: true,
+			onshow: function($t) {
+				var closeButton = $('<button type="button" class="close">×</button>').click(function(){
+					e.popover('destroy');
+				});
+				$t.find('.popover-title').append(closeButton);
+				var $el = $("#mollify-itemcontext-"+item.id);
+				var $content = $el.find(".mollify-itemcontext-content");
+				
+				that.listener.getItemDetails(item, function(a) {
+					if (!a) {
+						$t.hide();
+						return;
+					}
+					
+					that.renderItemContext($t, $content, item, a);
+				});
+			},
+			onhide: function($t) {
+				//e.popover('destroy');
+			}
+		});
+		e.popover('show');
+		/*that.itemContext = e.qtip({
 			content: html,
 			position: {
 				my: that.isListView() ? 'top left' : 'top center',
@@ -251,7 +281,7 @@ function MainView() {
 			}
 		}).qtip('api');
 		
-		that.itemContext.show();
+		that.itemContext.show();*/
 	};
 	
 	this.renderItemContext = function(tip, $e, item, d) {
@@ -277,6 +307,8 @@ function MainView() {
 			var $selectors = $("#mollify-itemcontext-details-selectors");
 			var $content = $("#mollify-itemcontext-details-content");
 			var onSelectDetails = function(id) {
+				$(".mollify-itemcontext-details-selector").removeClass("active");
+				$("#mollify-itemcontext-details-selector-"+id).addClass("active");
 				pluginData[id].details["on-render"]($content.empty(), cache[id]);
 			};
 			var firstPlugin = false;
@@ -288,17 +320,17 @@ function MainView() {
 				if (!firstPlugin) firstPlugin = id;
 				cache[id] = {};
 				var title = data.details.title ? data.details.title : (data.details["title-key"] ? mollify.ui.texts.get(data.details["title-key"]) : id);
-				var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {title:title, data: data}).appendTo($selectors).click(function() { onSelectDetails(id); });
+				var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {id: id, title:title, data: data}).appendTo($selectors).click(function() { onSelectDetails(id); });
 			}
-			$e.find(".mollify-itemcontext-details-selector").hover(function() {
+			/*$e.find(".mollify-itemcontext-details-selector").hover(function() {
 				$(this).addClass("hover");
 			}, function() {
 				$(this).removeClass("hover");
-			});
+			});*/
 			if (firstPlugin) onSelectDetails(firstPlugin);
 		}
 		
-		var actions = mollify.ui.controls.hoverDropdown({
+		var actions = mollify.ui.controls.dropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
 			items: actions,
 			hideDelay: 0,

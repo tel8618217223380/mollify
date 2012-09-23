@@ -280,7 +280,7 @@
 						
 						key = $(this).attr('text-key');
 						if (key)
-							$(this).text(t.env.texts().get(key));
+							$(this).prepend("<span>"+t.env.texts().get(key)+"</span>");
 					});
 				},
 				
@@ -327,7 +327,7 @@
 			},
 			
 			controls: {
-				hoverDropdown : function(a) {
+				dropdown : function(a) {
 					var $e = $(a.element);
 					$e.addClass('dropdown');
 					
@@ -533,12 +533,12 @@
 				},
 				
 				radio: function(e, h) {
-					var rid = e.attr('id');
-					var items = e.find("a");
+					var rid = e.addClass("btn-group").attr('id');
+					var items = e.find("button");
 					
 					var select = function(item) {
-						items.removeClass("selected");
-						item.addClass("selected");
+						items.removeClass("active");
+						item.addClass("active");
 					}
 					
 					items.click(function() {
@@ -984,7 +984,7 @@ function CommentPlugin() {
 	
 	this.renderItemContextDetails = function(item, $e, cache) {
 		$e.addClass("loading");
-		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
+		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 			$e.removeClass("loading");
 			if (!cache.comments) {	
 				that.loadComments(item, function(item, comments) {
@@ -1000,13 +1000,23 @@ function CommentPlugin() {
 	this.renderComments = function(item, comments, o) {
 		mollify.dom.template(o.contentTemplate, item).appendTo(o.element);
 		
+		$("#comments-dialog-add").click(function() {
+			var comment = $("#comments-dialog-add-text").val();
+			if (!comment || comment.length == 0) return;
+			that.onAddComment(item, comment, function() {
+				//TODO refresh comments
+				$("#comments-dialog-add-text").val("");
+			});
+		} );
+		
 		if (comments.length == 0) {
 			$("#comments-list").html('<span class="message">'+mollify.ui.texts.get("commentsDialogNoComments")+'</span>');
 			return;
 		}
 		
 		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
-
+		mollify.ui.handlers.localize(o.element);
+		
 		$(".comment-content").hover(
 			function () { $(this).addClass("hover"); }, 
 			function () { $(this).removeClass("hover"); }
@@ -1039,14 +1049,14 @@ function CommentPlugin() {
 	this.showCommentsBubble = function(item, e) {
 		var bubble = mollify.ui.controls.dynamicBubble(e);
 		
-		mollify.templates.load("comments-content", mollify.plugins.url("Comment", "content.html"), function() {
+		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 			bubble.content(mollify.dom.template("comments-content-template", item));
 			/*$("#comments-dialog-content .mollify-actionlink").hover(
 				function () { $(this).addClass("mollify-actionlink-hover"); }, 
 				function () { $(this).removeClass("mollify-actionlink-hover"); }
 			);*/
 	
-			$("#comments-dialog-add").click(function() { that.onAddComment(bubble, item); } );
+			$("#comments-dialog-add").click(function() { that.onAddComment(item, bubble.close); } );
 			that.loadComments(item, that.onShowComments);
 			
 			/*mollify.ui.views.dialogs.custom({
@@ -1079,12 +1089,11 @@ function CommentPlugin() {
 		});
 	};
 	
-	this.onAddComment = function(d, item) {
-		var comment = $("#comments-dialog-add-text").val();
-		if (!comment || comment.length == 0) return;
+	this.onAddComment = function(item, comment, cb) {
+
 		
 		mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
-			d.close();
+			if (cb) cb();
 			
 			var e = document.getElementById("item-comment-count-"+item.id);
 			e.innerHTML = result.count;
@@ -1111,7 +1120,7 @@ function CommentPlugin() {
 		}
 
 		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
-		//mollify.localize("comments-list");
+		//mollify.ui.handlers.localize("comments-content-"+item.id);
 		$(".comment-content").hover(
 			function () { $(this).addClass("hover"); }, 
 			function () { $(this).removeClass("hover"); }

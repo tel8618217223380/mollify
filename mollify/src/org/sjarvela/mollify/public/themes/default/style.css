@@ -49,7 +49,7 @@ body {
 	width: 100%;
 }
 
-#mollify, a.button, input, .mollify-popupmenu, .mollify-popup {
+#mollify, a.button, input, .mollify-popupmenu, .mollify-popup, .mollify-itemcontext-popover {
 	font-size: 12px;
 	font-family: 'proxima-nova', 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
@@ -677,6 +677,10 @@ a.login-link {
 	background: red;
 }
 
+.mollify-filelist-header-cols > .mollify-filelist-col-header {
+	color: #000000;
+}
+
 .mollify-iconview {
 	float: left;
 }
@@ -747,17 +751,35 @@ a.login-link {
 }
 
 .mollify-itemcontext {
-	height: 300px;
+}
+
+.mollify-itemcontext-popover {
+	width: 500px;
 }
 
 #mollify-itemcontext-details {
-	height: 200px;
+	position: relative;
+	height: 300px;
 }
 
-#mollify-itemcontext-details-selectors {
+
+#mollify-itemcontext-details-content, .mollify-itemcontext-details-selector.active {
+	background-color: #fbfbfb;
+}
+
+#mollify-itemcontext-details-content {
+	height: 240px;
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+	padding: 4px;
+	overflow-y: scroll;
+}
+
+/*#mollify-itemcontext-details-selectors {
 	height: 20px;
-}
+}*/
 
-.submenu {
+/*.submenu {
     z-index: 10000000 !important;
-}
+}*/

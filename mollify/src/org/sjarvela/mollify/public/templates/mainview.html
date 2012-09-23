@@ -31,9 +31,9 @@
 			
 			<div id="mainview-content-footer">
 				<div id="mainview-viewstyle-options" class="mollify-radio">
-					<a id="mainview-viewstyle-list" href="javascript: void(0);" class="mainview-viewstyle-option">List</a>
-					<a id="mainview-viewstyle-small-icons" href="javascript: void(0);" class="mainview-viewstyle-option">Small icons</a>
-					<a id="mainview-viewstyle-large-icons" href="javascript: void(0);" class="mainview-viewstyle-option">Large icons</a>
+					<button id="mainview-viewstyle-list" class="btn mainview-viewstyle-option"><i class="icon-list-ul"></i></a>
+					<button id="mainview-viewstyle-small-icons" class="btn mainview-viewstyle-option"><i class="icon-th"></i></a>
+					<button id="mainview-viewstyle-large-icons" class="btn mainview-viewstyle-option"><i class="icon-th-large"></i></a>
 				</div>
 			</div>
 		</div>
@@ -117,9 +117,7 @@
 
 <script id="mollify-tmpl-main-itemcontext" type="text/x-jquery-tmpl">
 	<div id="mollify-itemcontext-${id}" class="mollify-itemcontext">
-		<div class="mollify-itemcontext-title">${name}</div>
 		<div class="mollify-itemcontext-content loading">
-			
 		</div>
 	</div>
 </script>
@@ -130,18 +128,20 @@
 		${description}
 	</div>
 	{{/if}}
-	<div id="mollify-itemcontext-details">
-		<div id="mollify-itemcontext-details-selectors">
+	<div id="mollify-itemcontext-actions" class="btn-toolbar">
+		<div class="btn-group">
+			<button id="mollify-itemcontext-primary-actions-button" class="localized btn btn-primary" text-key="primaryAction"></button>
 		</div>
-		<div id="mollify-itemcontext-details-content">
+		<div class="btn-group">
+			<li id="mollify-itemcontext-secondary-actions" class="dropdown">
+				<button class="btn dropdown-toggle localized" text-key="secondaryActions">&nbsp;<b class="caret"></b></button>
+			</li>
 		</div>
 	</div>
-	<div id="mollify-itemcontext-actions">
-		<div id="mollify-itemcontext-primary-actions">
-			<a id="mollify-itemcontext-primary-actions-button" class="localized button button-blue" text-key="primaryAction"></a>
-		</div>
-		<div id="mollify-itemcontext-secondary-actions">
-			<span class="dropdown-title localized" text-key="secondaryActions"></span>
+	<div id="mollify-itemcontext-details">
+		<ul id="mollify-itemcontext-details-selectors" class="nav nav-tabs">
+		</ul>
+		<div id="mollify-itemcontext-details-content">
 		</div>
 	</div>
 </script>
@@ -153,5 +153,5 @@
 </script>
 
 <script id="mollify-tmpl-main-itemcontext-details-selector" type="text/x-jquery-tmpl">
-	<span class="mollify-itemcontext-details-selector">${title}</span>
+	<li id="mollify-itemcontext-details-selector-${id}" class="mollify-itemcontext-details-selector"><a href="javascript: void(0);">${title}</a></li>
 </script>
