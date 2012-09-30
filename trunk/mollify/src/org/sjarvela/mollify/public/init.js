@@ -365,7 +365,48 @@
 				
 				popupmenu : function(a) {
 					var $e = $(a.element);
+					var pos = $e.offset();
+					var $mnu = $('<div class="mollify-popupmenu" style="position: absolute; top: '+(pos.top + $e.outerHeight())+'px; left:'+pos.left+'px;"></div>');
+					var hidePopup = function() {
+						if (a.onHide) a.onHide();
+						$mnu.remove();
+					};
 					var createItems = function(itemList) {
+						var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
+							isSeparator : function(i) {
+								return i.title == '-';
+							},
+							getTitle : function(i) {
+								if (i.title) return i.title;
+								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+								return "";
+							}
+						}).css("display", "block");
+						return items;
+					};
+					var initItems = function(l) {
+						var $items = $mnu.find(".dropdown-item");
+						$items.click(function() {
+							hidePopup();
+							var item = l[$(this).index()];
+							if (a.onItem) a.onItem(item);
+							if (item.callback) item.callback();
+						});
+					};
+					
+					if (!a.items) $mnu.addClass("loading");
+					$mnu.append(createItems(a.items));
+					if (a.style) $mnu.addClass(a.style);
+					$("#mollify").append($mnu).on('click', hidePopup);
+					
+					return {
+						hide: hidePopup,
+						items: function(items) {
+							$mnu.empty().removeClass("loading").append(createItems(items));
+							initItems(items);
+						}
+					};
+					/*var createItems = function(itemList) {
 						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
 							isSeparator : function(i) {
 								return i.title == '-';
@@ -433,7 +474,7 @@
 							tip.set('content.text', createItems(items));
 							initItems(items, tip);
 						}
-					};
+					};*/
 				},
 				
 				bubble: function(e, h) {
