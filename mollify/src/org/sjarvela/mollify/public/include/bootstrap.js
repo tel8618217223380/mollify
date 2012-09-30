@@ -785,7 +785,7 @@
         eventIn = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
         eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
         this.$element.on(eventIn + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-        if (!this.options.manualout) this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+        if (!this.options.manualout) this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))	//mollify
       }
 
       this.options.selector ?

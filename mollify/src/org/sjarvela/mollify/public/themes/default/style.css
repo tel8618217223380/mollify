@@ -776,6 +776,11 @@ a.login-link {
 	overflow-y: scroll;
 }
 
+li.dropdown-item {
+	font-family: "Arial";
+	font-size: 14px;
+}
+
 /*#mollify-itemcontext-details-selectors {
 	height: 20px;
 }*/
