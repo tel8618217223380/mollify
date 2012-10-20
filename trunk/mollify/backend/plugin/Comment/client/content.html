@@ -1,16 +1,18 @@
 <script id="comments-context-content-template" type="text/x-jquery-tmpl">
 	<div id="comments-content-${id}" class="comments-context-content">
-		<div id='new-comment'>
-			<div id='new-comment-text'>
-				<textarea rows="1" id='comments-dialog-add-text' />
+		<div id='new-comment-container'>
+			<div id='new-comment'>
+				<div id='new-comment-text'>
+					<textarea rows="1" id='comments-dialog-add-text' />
+				</div>
+				<a id='comments-dialog-add' class='link localized' text-key="commentsDialogAddButton"></a>
 			</div>
-			<a id='comments-dialog-add' class='link localized' text-key="commentsDialogAddButton"></a>
 		</div>
 		<div id='comments-list'></div>
 	</div>
 </script>
 
-<script id="comments-content-template" type="text/x-jquery-tmpl">
+<script id="comments-popup-content-template" type="text/x-jquery-tmpl">
 	<div id="comments-content-${id}" class="comments-content">
 		<div id='comments-list' class="loading"></div>
 		<div id='new-comment'>
@@ -26,15 +28,14 @@
 
 <script id="comment-template" type="text/x-jquery-tmpl"> 
 	<div id="comment-${id}" class="comment-content">
-		<div class="comment-header">
-			<div class="comment-user">${username}</div>
-			<div class="comment-time">${time}</div>
-		</div>
 		{{if remove}}
 		<div class="comment-tools">
 			<a class="link comment-remove-action" href="#"><i class="icon-remove"></i></a>
 		</div>
 		{{/if}}
-		<div class="comment-text">{{html comment}}</div>
+		<blockquote>
+			<p class="comment-text">{{html comment}}</p>
+			<small class="comment-info">${username} ${time}</small>
+		</blockquote>
 	</div>
 </script>

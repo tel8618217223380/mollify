@@ -16,7 +16,7 @@ import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 public enum FileSystemAction implements ResourceId {
 	download, rename, copy, copyHere, move, delete, upload, details, create_folder, download_as_zip, set_description, remove_description, get_item_permissions, view, edit, publicLink;
 
-	public boolean isApplicableToDirectory() {
+	public boolean isApplicableToFolder() {
 		return (this.equals(upload) || this.equals(create_folder)
 				|| this.equals(move) || this.equals(rename)
 				|| this.equals(delete) || this.equals(download_as_zip)
@@ -31,6 +31,6 @@ public enum FileSystemAction implements ResourceId {
 	public boolean isApplicable(JsFilesystemItem item) {
 		if (item.isFile())
 			return isApplicableToFile();
-		return isApplicableToDirectory();
+		return isApplicableToFolder();
 	}
 }

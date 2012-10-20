@@ -520,15 +520,19 @@
 					return {};
 				},
 
-				dynamicBubble: function(e, c, h) {
+				dynamicBubble: function(o) {
+					//e, c, h
+					var e = o.element;
+					//var handler = o.handler;
+					
 					var bubbleHtml = function(c) {
 						if (!c) return "";
 						if (typeof(c) === 'string') return c;
 						return $("<div/>").append(c).html();
 					};
-					var html = c ? bubbleHtml(c) : '<div class="loading"></div>';
+					var html = o.content ? bubbleHtml(o.content) : '<div class="loading"></div>';
 					
-					var tip = e.qtip({
+					/*var tip = e.qtip({
 						content: html,
 						position: {
 							my: 'top center',
@@ -557,20 +561,45 @@
 							}
 						}
 					}).qtip('api');
-					tip.show();
-					
-					return {
+					tip.show();*/
+					var $tip = false;
+					var api = {
 						show: function() {
-							tip.show();	
+							e.popover('show');
 						},
 						hide: function() {
-							tip.hide();
+							e.popover('hide');
 						},
 						close: this.hide,
 						content: function(c) {
-							tip.set('content.text', bubbleHtml(c));
+							//var $t = e.popover('tip');
+							var $c = $tip.find('.popover-content');
+							$c.html(bubbleHtml(c));
 						}
 					};
+					e.popover({
+						title: o.title ? o.title : false,
+						html: true,
+						placement: 'bottom',
+						trigger: 'manual',
+						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
+						content: html,
+						manualout: true,
+						onshow: function($t) {
+							$tip = $t;
+							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
+								e.popover('destroy');
+							});
+							$t.find('.popover-title').append(closeButton);
+							if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
+						},
+						onhide: function($t) {
+							//e.popover('destroy');
+						}
+					});
+					e.popover('show');
+					
+					return api;
 				},
 				
 				radio: function(e, h) {
@@ -727,6 +756,15 @@ if(typeof String.prototype.trim !== 'function') {
 
 function def(o) {
 	return (typeof(o) != 'undefined');
+}
+
+if (!Array.prototype.indexOf) { 
+    Array.prototype.indexOf = function(obj, start) {
+         for (var i = (start || 0), j = this.length; i < j; i++) {
+             if (this[i] === obj) { return i; }
+         }
+         return -1;
+    }
 }
 
 function strpos(haystack, needle, offset) {
@@ -1018,7 +1056,7 @@ function CommentPlugin() {
 				"on-render": function(e, cache) { that.renderItemContextDetails(item, e, cache); }
 			},
 			actions: [
-				{ title: 'foo', callback: function() { alert("foo"); } }
+				{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }
 			]
 		};
 	};
@@ -1088,10 +1126,10 @@ function CommentPlugin() {
 	}
 	
 	this.showCommentsBubble = function(item, e) {
-		var bubble = mollify.ui.controls.dynamicBubble(e);
+		var bubble = mollify.ui.controls.dynamicBubble({element:e});
 		
 		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
-			bubble.content(mollify.dom.template("comments-content-template", item));
+			bubble.content(mollify.dom.template("comments-popup-content-template", item));
 			/*$("#comments-dialog-content .mollify-actionlink").hover(
 				function () { $(this).addClass("mollify-actionlink-hover"); }, 
 				function () { $(this).removeClass("mollify-actionlink-hover"); }

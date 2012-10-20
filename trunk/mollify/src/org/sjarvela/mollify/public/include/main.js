@@ -92,7 +92,7 @@ function MainView() {
 		
 		var $h = $("#mollify-folderview-header").empty();
 		if (p) {
-			mollify.dom.template("mollify-tmpl-main-folder", p.hierarchy[p.hierarchy.length-1]).appendTo($h);
+			mollify.dom.template("mollify-tmpl-main-folder", {canWrite: p.canWrite, folder: p.hierarchy[p.hierarchy.length-1]}).appendTo($h);
 			that.setupHierarchy(p.hierarchy);
 			
 			//TODO canWrite
@@ -202,8 +202,15 @@ function MainView() {
 			}
 		}
 		return list;
-	}
-	
+	};
+
+	this.findPrimaryAction = function(actions) {
+		if (!actions) return -1;
+		for (var i=0,j=actions.length; i<j; i++)
+			if (actions[i].id == 'download') return i;
+		return -1;
+	};
+		
 	this.openItemContext = function(item, e) {
 		var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
 		e.popover({
@@ -291,7 +298,20 @@ function MainView() {
 		var descriptionEditable = showDescription && mollify.session.admin;
 		
 		var pluginData = mollify.plugins.getItemContextData(item, details);
-		var actions = that.addPluginActions(d[1], pluginData);	//TODO remove primary actions
+		var secondaryActions = that.addPluginActions(d[1], pluginData);
+		var primaryActionIndex = that.findPrimaryAction(secondaryActions);
+		var primaryAction = false;
+		
+		if (primaryActionIndex >= 0) {
+			primaryAction = secondaryActions[primaryActionIndex];
+			secondaryActions.splice(primaryActionIndex,1);
+			var i=0;
+			while(true) {
+				if (secondaryActions.length == i || secondaryActions[i].type == 'action') break;
+				i++;
+			}
+			if (i > 0) secondaryActions.splice(0,i);
+		}
 		var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: pluginData};
 		
 		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
@@ -301,6 +321,15 @@ function MainView() {
 			mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) {
 				that.onDescription(item, desc);
 			}});
+		}
+		
+		if (primaryAction) {
+			$("#mollify-itemcontext-primary-actions-button").click(function() {
+				tip.hide();
+				primaryAction.callback();
+			});
+		} else {
+			$("#mollify-itemcontext-primary-actions-button").hide();
 		}
 		
 		if (pluginData) {
@@ -332,7 +361,7 @@ function MainView() {
 		
 		var actions = mollify.ui.controls.dropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
-			items: actions,
+			items: secondaryActions,
 			hideDelay: 0,
 			style: 'submenu',
 			onItem: function() {
