@@ -279,7 +279,8 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	private JsObj createSeparator() {
-		return new JsObjBuilder().string("title", "-").create();
+		return new JsObjBuilder().string("type", "separator")
+				.string("title", "-").create();
 	}
 
 	private JsObj createAction(final JsFilesystemItem item,
@@ -294,7 +295,8 @@ public class MainViewPresenter implements MainViewListener,
 					onItemAction(item, (Action) action);
 			}
 		});
-		return new JsObjBuilder().string("group", "core")
+		return new JsObjBuilder().string("type", "action")
+				.string("group", "core").string("id", action.name())
 				.string("title", titleKey).obj("callback", cb).create();
 	}
 
