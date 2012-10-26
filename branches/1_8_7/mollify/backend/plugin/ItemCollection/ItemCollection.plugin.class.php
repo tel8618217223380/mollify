@@ -10,35 +10,27 @@
 	 * this entire header must remain intact.
 	 */
 	
-	require_once("ShareHandler.class.php");
+	require_once("ItemCollectionHandler.class.php");
+	require_once("ItemCollectionServices.class.php");
 	
-	class Share extends PluginBase {
+	class ItemCollection extends PluginBase {
 		private $handler;
 		
 		public function version() {
-			return "1_2";
+			return "1_0";
 		}
 
 		public function versionHistory() {
-			return array("1_0", "1_1", "1_2");
+			return array("1_0");
 		}
 		
 		public function setup() {
-			$this->addService("share", "ShareServices");
-			$this->addService("public", "PublicShareServices");
+			$this->env->features()->addFeature("itemcollection");
+			$this->addService("itemcollections", "ItemCollectionServices");
 			
-			$this->handler = new ShareHandler($this->env, $this->getSettings());
+			$this->handler = new ItemCollectionHandler($this->env, $this->getSettings());
 			$this->env->events()->register("filesystem/", $this->handler);
-
-			$this->env->filesystem()->registerItemContextPlugin("plugin-share", $this->handler);
-		}
-		
-		public function registerHandler($type, $handler) {
-			$this->handler->registerHandler($type, $handler);
-		}
-
-		public function deleteSharesForItem($itemId) {
-			$this->handler->deleteSharesForItem($itemId);
+			if ($this->env->plugins()->hasPlugin("Share")) $this->env->plugins()->getPlugin("Share")->registerHandler("ic", $this->handler);
 		}
 				
 		public function getHandler() {
@@ -46,7 +38,7 @@
 		}
 				
 		public function __toString() {
-			return "SharePlugin";
+			return "ItemCollectionPlugin";
 		}
 	}
 ?>

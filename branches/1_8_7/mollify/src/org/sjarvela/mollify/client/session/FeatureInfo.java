@@ -106,4 +106,8 @@ public class FeatureInfo extends JavaScriptObject {
 		this.lost_password = true;
 		this.retrieve_url = true;
 	}-*/;
+
+	public final native boolean has(String id) /*-{
+		return this[id];
+	}-*/;
 }
