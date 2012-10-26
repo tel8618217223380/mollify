@@ -116,4 +116,8 @@ public class DropBoxPresenter {
 		};
 	}
 
+	public List<FileSystemItem> getItems() {
+		return items;
+	}
+
 }

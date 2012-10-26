@@ -66,7 +66,11 @@
 		public function isAuthenticated() {
 			return $this->authentication->isAuthenticated();
 		} 
-		
+
+		public function isAdmin() {
+			return $this->authentication->isAdmin();
+		}
+				
 		public function getUserId() {
 			return $this->session->userId();
 		}

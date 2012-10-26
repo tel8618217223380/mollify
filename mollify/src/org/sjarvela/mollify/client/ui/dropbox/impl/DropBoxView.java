@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.action.ActionListener;
+import org.sjarvela.mollify.client.ui.common.ActionButton;
 import org.sjarvela.mollify.client.ui.common.HoverDecorator;
 import org.sjarvela.mollify.client.ui.common.popup.DropdownButton;
 import org.sjarvela.mollify.client.ui.formatter.PathFormatter;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxView extends FlowPanel {
 	enum Actions implements ResourceId {
-		clear, remove, copy, move, delete, copyHere, moveHere, downloadAsZip
+		clear, remove, copy, move, delete, copyHere, moveHere, downloadAsZip, store, showStored
 	};
 
 	private final ActionListener actionListener;
@@ -95,6 +96,15 @@ public class DropBoxView extends FlowPanel {
 			actionsButton.addSeparator();
 			actionsButton.addAction(Actions.downloadAsZip,
 					textProvider.getText(Texts.fileActionDownloadZippedTitle));
+		}
+		if (session.getFeatures().has("itemcollection")) {
+			actionsButton.addSeparator();
+			actionsButton.addAction(Actions.store, "TODO add");
+			
+			ActionButton open = new ActionButton("TODO", "");
+			open.setAction(actionListener, Actions.showStored);
+			actions.add(open);
+			//actionsButton.addAction(Actions.showStored, "TODO open");
 		}
 		actions.add(actionsButton);
 

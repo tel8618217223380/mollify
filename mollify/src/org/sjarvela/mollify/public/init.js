@@ -202,6 +202,106 @@ function strpos(haystack, needle, offset) {
     return i === -1 ? false : i;
 }
 
+function ItemCollectionPlugin() {
+	var that = this;
+	
+	this.getPluginInfo = function() { return { id: "plugin-itemcollection" }; }
+	
+	this.initialize = function(env) {
+		that.env = env;
+	}
+	
+	this.add = function(items) {
+		that.env.dialog().showInput({
+			title: "TODOtitle",
+			message: "TODOname",
+			defaultValue: "",
+			on_input: function(n) { that.onAdd(n, items); },
+			input_validator: function(n) { return true; }
+		});
+	}
+	
+	this.onAdd = function(name, items) {
+		that.env.service().post("itemcollections", {name: name, items: items}, function(result) {
+			that.open();
+		},	function(code, error) {
+			alert(error);
+		});
+	};
+	
+	this.open = function() {
+		that.env.service().get("itemcollections", function(result) {
+			that.env.dialog().showDialog({
+				title: that.t("citemCollectionsDialogTitle"),
+				html: "<div id='itemcollections-dialog-content' class='loading' />",
+				on_show: function(d) { that.onShowItemCollectionsDialog(d, result); }
+			});
+		},	function(code, error) {
+			alert(error);
+		});
+	};
+	
+	this.onShowItemCollectionsDialog = function(d, list) {
+		mollify.loadContent("itemcollections-dialog-content", that.url("content.html"), function() {
+			d.setMinimumSizeToCurrent();
+			d.center();
+			$("#itemcollections-dialog-close").click(function() { d.close(); } );
+			that.updateCollectionList($("#itemcollection-list-items"), list, d);
+		});
+	};
+	
+	this.updateCollectionList = function($e, list, d) {
+		if (!list || list.length == 0) {
+			$e.empty().html('<div class="no-collections">'+that.t("itemCollectionsDialogNoCollections")+'</div>');
+			return;
+		}
+		
+		$("#itemcollection-template").tmpl(list).appendTo($e.empty());
+		mollify.localize($e.attr("id"));
+
+		if (mollify.hasPlugin("plugin_share")) $(".itemcollection-share").show();
+		
+		$(".item-share").hover(
+			function() {
+				$(this).addClass("hover");
+			},
+			function() {
+				$(this).removeClass("hover");
+			}
+		).click(function() {
+			var ic = $(this).tmplItem().data;
+			$("#itemcollectionitem-template").tmpl(ic.items).appendTo($("#itemcollection-items").empty());
+		});
+
+		$(".itemcollection-share").click(function(e) {
+			var ic = $(this).tmplItem().data;
+			d.close();
+			mollify.getPlugin("plugin_share").openShares({id:"ic_"+ic.id, name: ic.name, shareTitle: "TODO item collection"});
+		});
+				
+		$(".itemcollection-remove").click(function(e) {
+			var ic = $(this).tmplItem().data;
+			that.removeCollection(ic, function(){ d.close(); });
+		});
+	};
+	
+	this.removeCollection = function(ic, cb) {
+		that.env.service().del("itemcollections/"+ic.id, function(result) {
+			cb();
+		},	function(code, error) {
+			alert(error);
+		});
+	}
+	
+	this.url = function(p) {
+		return that.env.service().getPluginUrl("ItemCollection")+"client/"+p;
+	}
+	
+	this.t = function(s) {
+		return that.env.texts().get(s);
+	}
+};
+
 function CommentPlugin() {
 	var that = this;
 	
@@ -606,7 +706,8 @@ function SharePlugin() {
 
 	this.onShowSharesDialog = function(d, item) {
 		mollify.loadContent("share-dialog-content", that.url("content.html"), function() {
-			$("#share-item-title").html(that.t(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle'));
+			var title = item.shareTitle ? item.shareTitle : that.t(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle');
+			$("#share-item-title").html(title);
 			$("#share-item-name").html(item.name);
 			$("#share-dialog-content").removeClass("loading");
 

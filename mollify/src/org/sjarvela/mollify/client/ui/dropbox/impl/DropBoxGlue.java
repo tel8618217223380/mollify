@@ -10,6 +10,7 @@
 
 package org.sjarvela.mollify.client.ui.dropbox.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.filesystem.FileSystemItem;
@@ -20,10 +21,13 @@ import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DropBoxView.Actions;
 import org.sjarvela.mollify.client.ui.filelist.DraggableFileSystemItem;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.VetoDragException;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DropBoxGlue implements DropBox, DropController {
@@ -99,7 +103,43 @@ public class DropBoxGlue implements DropBox, DropController {
 						presenter.onDownloadAsZip();
 					}
 				});
+
+		actionDelegator.setActionHandler(Actions.store,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						add(asJs(presenter.getItems()));
+					}
+				});
+
+		actionDelegator.setActionHandler(Actions.showStored,
+				new VoidActionHandler() {
+					@Override
+					public void onAction() {
+						open();
+					}
+				});
 	}
+
+	protected JsArray<JavaScriptObject> asJs(List<FileSystemItem> items) {
+		List<JavaScriptObject> result = new ArrayList();
+		for (FileSystemItem item : items) {
+			result.add(item.asJs());
+		}
+		return JsUtil.asJsArray(result, JavaScriptObject.class);
+	}
+
+	private native void add(JsArray<JavaScriptObject> items) /*-{
+		if (!$wnd.mollify.hasPlugin("plugin-itemcollection"))
+			return;
+		$wnd.mollify.getPlugin("plugin-itemcollection").add(items);
+	}-*/;
+
+	private native void open() /*-{
+		if (!$wnd.mollify.hasPlugin("plugin-itemcollection"))
+			return;
+		$wnd.mollify.getPlugin("plugin-itemcollection").open();
+	}-*/;
 
 	@Override
 	public Widget getWidget() {
