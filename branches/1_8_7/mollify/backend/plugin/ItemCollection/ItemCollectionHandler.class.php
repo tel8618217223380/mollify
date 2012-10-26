@@ -11,6 +11,7 @@
 	 */
 	
 	require_once("dao/ItemCollectionDao.class.php");
+	require_once("include/configuration/UserEvent.class.php");
 	
 	class ItemCollectionHandler {
 		private $env;
@@ -23,9 +24,11 @@
 		
 		public function processGetShare($id, $share) {
 			$ic = $this->dao()->getItemCollection($id);
-			if (!$ic) die("No collection found");
-			
-			die("IC ".$ic["name"]);
+			if (!$ic) {
+				Logging::logDebug("Ignoring share request, no item collection found with id ".$id);
+				die();
+			}
+			$this->env->filesystem()->downloadAsZip($ic["items"]);
 		}
 		
 		public function getUserItemCollections() {
@@ -47,11 +50,13 @@
 		}
 
 		public function onEvent($e) {
-			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $e->type()) != 0) return;
-			$type = $e->subType();
+			$type = $e->type();
+			$subType = $e->subType();
 			
-			if ($type === FileEvent::DELETE)
+			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $type) == 0 and $subType === FileEvent::DELETE)
 				$this->dao()->deleteCollectionItems($e->item());
+			else if (strcmp(UserEvent::EVENT_TYPE_USER, $type) == 0 and $subType === UserEvent::USER_REMOVE)
+				$this->dao()->deleteUserItemCollections($e->id());
 		}
 		
 		public function __toString() {
