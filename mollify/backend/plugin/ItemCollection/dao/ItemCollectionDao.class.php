@@ -26,7 +26,7 @@
 			foreach($list as $c) {
 				$items[] = $c["item_id"];
 			}
-			return array("id" => $list[0]["id"], "name" => $list[0]["name"], "items" => $items);
+			return array("id" => $list[0]["id"], "name" => $list[0]["name"], "items" => $this->items($items));
 		}
 		
 		public function getUserItemCollections($userId) {
@@ -42,13 +42,13 @@
 				if ($prev == NULL) $prev = $c;
 				
 				if (strcmp($prev["id"], $c["id"]) != 0) {
-					$res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $items);
+					$res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $this->items($items));
 					$items = array();
 				}
 				$items[] = $c["item_id"];
 				$prev = $c;
 			}
-			if (count($items) > 0) $res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $items);
+			if (count($items) > 0) $res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $this->items($items));
 			return $res;
 		}
 		
@@ -79,10 +79,31 @@
 			$db->commit();
 			return TRUE;
 		}
+		
+		public function deleteUserItemCollections($userId) {
+			$db = $this->env->configuration()->db();
+			
+			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE))->values("id");
+			if (count($list) == 0) return FALSE;
+			
+			$db->startTransaction();
+			$db->update("DELETE FROM ".$db->table("itemcollection")." WHERE id in (".$db->arrayString($list, TRUE).")");
+			$db->update("DELETE FROM ".$db->table("itemcollection_item")." WHERE collection_id in (".$db->arrayString($list, TRUE).")");
+			$db->commit();
+			return TRUE;
+		}
 
 		public function deleteCollectionItems($item) {
 			$db = $this->env->configuration()->db();
 			return $db->update("DELETE FROM ".$db->table("itemcollection_item")." WHERE item_id = ".$db->string($item->id(), TRUE));
+		}
+		
+		private function items($list) {
+			$result = array();
+			foreach($list as $id) {
+				$result[] = $this->env->filesystem()->item($id);
+			}
+			return $result;
 		}
 		
 		public function __toString() {

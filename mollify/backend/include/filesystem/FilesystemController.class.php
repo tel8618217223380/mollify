@@ -592,7 +592,7 @@
 			$this->env->events()->onEvent(FileEvent::upload($targetItem));
 		}
 		
-		public function downloadAsZip($items, $mobile) {
+		public function downloadAsZip($items, $mobile = FALSE) {
 			$zip = $this->createZip($items);
 			$name = "items.zip";
 			if (!is_array($items)) $name = $items->name().".zip";

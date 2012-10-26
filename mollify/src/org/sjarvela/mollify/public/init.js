@@ -209,6 +209,9 @@ function ItemCollectionPlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
+		
+		mollify.importCss(that.url("style.css"));
+		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 	}
 	
 	this.add = function(items) {
@@ -245,6 +248,8 @@ function ItemCollectionPlugin() {
 		mollify.loadContent("itemcollections-dialog-content", that.url("content.html"), function() {
 			d.setMinimumSizeToCurrent();
 			d.center();
+
+			$("#itemcollections-dialog-content").removeClass("loading");
 			$("#itemcollections-dialog-close").click(function() { d.close(); } );
 			that.updateCollectionList($("#itemcollection-list-items"), list, d);
 		});
@@ -256,20 +261,26 @@ function ItemCollectionPlugin() {
 			return;
 		}
 		
+		that.selected = false;
 		$("#itemcollection-template").tmpl(list).appendTo($e.empty());
 		mollify.localize($e.attr("id"));
 
 		if (mollify.hasPlugin("plugin_share")) $(".itemcollection-share").show();
 		
-		$(".item-share").hover(
+		$(".itemcollection").hover(
 			function() {
 				$(this).addClass("hover");
+				
 			},
 			function() {
 				$(this).removeClass("hover");
 			}
 		).click(function() {
+			$(".itemcollection").removeClass("selected");
+			$(this).addClass("selected");
+			
 			var ic = $(this).tmplItem().data;
+			that.selected = ic;
 			$("#itemcollectionitem-template").tmpl(ic.items).appendTo($("#itemcollection-items").empty());
 		});
 

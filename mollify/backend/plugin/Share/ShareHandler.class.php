@@ -74,7 +74,10 @@
 		}
 		
 		private function processCustomGet($type, $id, $share) {
-			if(!array_key_exists($type, $this->customShareHandlers)) die("No handler ".$type);
+			if(!array_key_exists($type, $this->customShareHandlers)) {
+				Logging::logError("No custom share handler found: ".$type);
+				die();
+			}
 			$handler = $this->customShareHandlers[$type];
 			$handler->processGetShare($id, $share);
 		}
