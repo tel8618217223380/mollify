@@ -211,13 +211,12 @@ function ItemCollectionPlugin() {
 		that.env = env;
 		
 		mollify.importCss(that.url("style.css"));
-		mollify.importScript(that.url("texts_" + that.env.texts().locale + ".js"));
 	}
 	
 	this.add = function(items) {
 		that.env.dialog().showInput({
-			title: "TODOtitle",
-			message: "TODOname",
+			title: that.t("itemCollectionsDialogNewTitle"),
+			message: that.t("itemCollectionsDialogNewMessage"),
 			defaultValue: "",
 			on_input: function(n) { that.onAdd(n, items); },
 			input_validator: function(n) { return true; }
@@ -235,7 +234,7 @@ function ItemCollectionPlugin() {
 	this.open = function() {
 		that.env.service().get("itemcollections", function(result) {
 			that.env.dialog().showDialog({
-				title: that.t("citemCollectionsDialogTitle"),
+				title: that.t("itemCollectionsDialogTitle"),
 				html: "<div id='itemcollections-dialog-content' class='loading' />",
 				on_show: function(d) { that.onShowItemCollectionsDialog(d, result); }
 			});
@@ -270,12 +269,12 @@ function ItemCollectionPlugin() {
 		$(".itemcollection").hover(
 			function() {
 				$(this).addClass("hover");
-				
 			},
 			function() {
 				$(this).removeClass("hover");
 			}
-		).click(function() {
+		).click(function(e) {
+			e.preventDefault();
 			$(".itemcollection").removeClass("selected");
 			$(this).addClass("selected");
 			
@@ -284,13 +283,15 @@ function ItemCollectionPlugin() {
 			$("#itemcollectionitem-template").tmpl(ic.items).appendTo($("#itemcollection-items").empty());
 		});
 
-		$(".itemcollection-share").click(function(e) {
+		$(".itemcollection-action-share").click(function(e) {
+			e.preventDefault();
 			var ic = $(this).tmplItem().data;
 			d.close();
-			mollify.getPlugin("plugin_share").openShares({id:"ic_"+ic.id, name: ic.name, shareTitle: "TODO item collection"});
+			mollify.getPlugin("plugin_share").openShares({id:"ic_"+ic.id, name: ic.name, shareTitle: that.t("itemCollectionTitle")});
+			return false;
 		});
 				
-		$(".itemcollection-remove").click(function(e) {
+		$(".itemcollection-action-remove").click(function(e) {
 			var ic = $(this).tmplItem().data;
 			that.removeCollection(ic, function(){ d.close(); });
 		});
