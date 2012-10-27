@@ -19,7 +19,7 @@
 
 		public function getItemCollection($id) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id")->rows();
+			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id order by ici.item_index asc")->rows();
 			if (count($list) == 0) return FALSE;
 			
 			$items = array();
@@ -31,7 +31,7 @@
 		
 		public function getUserItemCollections($userId) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by created asc")->rows();
+			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by ic.created asc, ici.item_index asc")->rows();
 			
 			$res = array();
 			$id = FALSE;
@@ -59,9 +59,10 @@
 			$cid = $db->lastId();
 			
 			$itemIds = array();
+			$ind = 0;
 			foreach($items as $i) {
 				if (in_array($i["id"], $itemIds)) continue;
-				$db->update(sprintf("INSERT INTO ".$db->table("itemcollection_item")." (collection_id, item_id) VALUES (%s, %s)", $db->string($cid, TRUE), $db->string($i["id"], TRUE)));
+				$db->update(sprintf("INSERT INTO ".$db->table("itemcollection_item")." (collection_id, item_id, item_index) VALUES (%s, %s, %s)", $db->string($cid, TRUE), $db->string($i["id"], TRUE), $db->string($ind++)));
 				$itemIds[] = $i["id"];
 			}
 			$db->commit();

@@ -98,13 +98,14 @@ public class DropBoxView extends FlowPanel {
 					textProvider.getText(Texts.fileActionDownloadZippedTitle));
 		}
 		if (session.getFeatures().has("itemcollection")) {
-			actionsButton.addSeparator();
-			actionsButton.addAction(Actions.store, "TODO add");
+			actions.addStyleName("multi");
 			
-			ActionButton open = new ActionButton("TODO", "");
+			actionsButton.addSeparator();
+			actionsButton.addAction(Actions.store, textProvider.getText("dropboxStoreCollectionAction"));
+			
+			ActionButton open = new ActionButton(textProvider.getText("dropboxOpenStoredCollectionsButton"), "dropboxOpenStoredCollectionsButton");
 			open.setAction(actionListener, Actions.showStored);
 			actions.add(open);
-			//actionsButton.addAction(Actions.showStored, "TODO open");
 		}
 		actions.add(actionsButton);
 

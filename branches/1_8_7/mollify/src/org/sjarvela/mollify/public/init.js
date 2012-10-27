@@ -209,8 +209,7 @@ function ItemCollectionPlugin() {
 	
 	this.initialize = function(env) {
 		that.env = env;
-		
-		mollify.importCss(that.url("style.css"));
+		that.rootsById = false;
 	}
 	
 	this.add = function(items) {
@@ -232,10 +231,17 @@ function ItemCollectionPlugin() {
 	};
 	
 	this.open = function() {
+		if (!that.rootsById) {
+			that.rootsById = {};
+			var roots = that.env.session().info().folders;
+			for (var i=0; i<roots.length;i++) that.rootsById[roots[i].id] = roots[i];
+		}
+		
 		that.env.service().get("itemcollections", function(result) {
 			that.env.dialog().showDialog({
 				title: that.t("itemCollectionsDialogTitle"),
 				html: "<div id='itemcollections-dialog-content' class='loading' />",
+				style: "itemCollectionDialog",
 				on_show: function(d) { that.onShowItemCollectionsDialog(d, result); }
 			});
 		},	function(code, error) {
@@ -256,7 +262,8 @@ function ItemCollectionPlugin() {
 	
 	this.updateCollectionList = function($e, list, d) {
 		if (!list || list.length == 0) {
-			$e.empty().html('<div class="no-collections">'+that.t("itemCollectionsDialogNoCollections")+'</div>');
+			$e.empty().html('<div class="no-collections-msg">'+that.t("itemCollectionsDialogNoCollections")+'</div>');
+			$("#itemcollection-items > .empty-message").hide();
 			return;
 		}
 		
@@ -280,7 +287,13 @@ function ItemCollectionPlugin() {
 			
 			var ic = $(this).tmplItem().data;
 			that.selected = ic;
-			$("#itemcollectionitem-template").tmpl(ic.items).appendTo($("#itemcollection-items").empty());
+			
+			var opt = {
+				root : function() {
+					return that.rootsById[this.data["root_id"]].name;
+				}
+			};
+			$("#itemcollectionitem-template").tmpl(ic.items, opt).appendTo($("#itemcollection-items").empty());
 		});
 
 		$(".itemcollection-action-share").click(function(e) {
