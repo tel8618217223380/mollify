@@ -17,7 +17,7 @@
 		
 		public function processGet() {
 			$this->env->authentication()->check();
-			$state = (!$this->env->authentication()->isAuthenticationRequired() or $this->env->authentication()->isAuthenticated());
+			$state = ($this->env->authentication()->isAuthenticated());
 			$this->response()->success($state);
 		}
 		

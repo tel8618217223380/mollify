@@ -54,18 +54,16 @@ public class App implements EntryPoint {
 	}
 
 	protected void doInit() {
-		Container container = null;
-
 		try {
-			container = (Container) GWT.create(Container.class);
-			container.getClient().start();
+			Client client = GWT.create(Client.class);
+			client.start();
 		} catch (RuntimeException e) {
 			logger.log(Level.SEVERE, "Error initializing application", e);
 
-			if (container != null)
-				container.getViewManager().showPlainError(
-						"Unexpected error: " + e.getMessage());
-
+			RootPanel panel = RootPanel.get(App.CONTENT_PANEL_ID);
+			panel.clear();
+			panel.getElement().setInnerHTML(
+					"Unexpected error: " + e.getMessage());
 			throw e;
 		}
 	}

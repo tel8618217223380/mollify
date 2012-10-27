@@ -75,9 +75,9 @@
 			$this->env->configuration()->checkProtocolVersion($protocolVersion);
 			
 			$auth = $this->env->authentication();
-			$info = array("authentication_required" => $auth->isAuthenticationRequired(), "authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo(), "plugin_base_url" => $this->env->getPluginBaseUrl());
+			$info = array("authenticated" => $auth->isAuthenticated(), "features" => $this->env->features()->getFeatures(), "plugins" => $this->env->plugins()->getSessionInfo(), "plugin_base_url" => $this->env->getPluginBaseUrl());
 			
-			if (!$auth->isAuthenticationRequired() or $auth->isAuthenticated()) {
+			if ($auth->isAuthenticated()) {
 				$info["default_permission"] = $this->env->authentication()->getDefaultPermission();
 				
 				$info = array_merge(

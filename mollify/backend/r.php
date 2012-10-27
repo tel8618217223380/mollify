@@ -22,7 +22,7 @@
 	function globalErrorHandler($errno, $errstr, $errfile, $errline) {
 		global $responseHandler;
 		$info = "PHP error #".$errno.", ".$errstr." (".$errfile.":".$errline.")";
-		Logging::logError($info);
+		Logging::logError($info."\n".Util::array2str(debug_backtrace()));
 		if ($responseHandler == NULL) $responseHandler = new ResponseHandler(new OutputHandler());
 		$responseHandler->unknownServerError($info);
 		die();
@@ -32,6 +32,7 @@
 	function globalExceptionHandler($e) {
 		global $responseHandler;
 		Logging::logException($e);
+		Logging::logDebug(Util::array2str(debug_backtrace()));
 		if ($responseHandler == NULL) $responseHandler = new ResponseHandler(new OutputHandler());
 		$responseHandler->unknownServerError($e->getMessage());
 		die();
@@ -40,19 +41,16 @@
 	
 	require_once("configuration.php");
 	
-	global $SETTINGS, $CONFIGURATION_TYPE, $VERSION, $ENABLE_AMAZON_S3_MODE, $AMAZON_S3_SETTINGS;
+	global $SETTINGS, $VERSION;
 	Logging::initialize($SETTINGS, $VERSION);
 
 	require_once("include/MollifyBackend.class.php");
-	require_once("include/ConfigurationFactory.class.php");
 	require_once("include/Settings.class.php");
 		
 	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime_types', array()), isSetting($SETTINGS, 'support_output_buffer')));
 	try {
 		$settings = new Settings($SETTINGS);
-		$config = getConfiguration($CONFIGURATION_TYPE, $settings);
-		$backend = new MollifyBackend($settings, $config, $responseHandler);
-		
+		$backend = new MollifyBackend($settings, getDB($settings), $responseHandler);
 		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
@@ -63,9 +61,10 @@
 		$responseHandler->unknownServerError($e->getMessage());
 	}
 	
-	function getConfiguration($id, $settings) {
-		$f = new ConfigurationFactory();
-		return $f->createConfiguration($id, $settings);
+	function getDB($settings) {
+		require_once("db/DBConnectionFactory.class.php");
+		$f = new DBConnectionFactory();
+		return $f->createConnection($settings);
 	}
 
 	function getSetting($settings, $name, $def) {

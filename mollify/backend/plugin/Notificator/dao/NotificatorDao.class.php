@@ -18,13 +18,13 @@
 		}
 		
 		public function getAllNotifications() {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$result = $db->query("select id, name from ".$db->table("notificator_notification")." order by id asc")->rows();
 			return $result;
 		}
 
 		public function getNotification($id) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$query = "select ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_user.id as ntf_usr_id, ntf_user.name as ntf_usr_name, ntf_user.email as ntf_usr_email, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
@@ -61,7 +61,7 @@
 		}
 
 		public function findNotifications($typeId, $userId) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_user.id as ntf_usr_id, ntf_user.name as ntf_usr_name, ntf_user.email as ntf_usr_email, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
@@ -106,28 +106,28 @@
 		}
 		
 		public function addNotification($data) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("notificator_notification")." (name) VALUES ('%s')", $db->string($data["name"])));
 			return $db->lastId();
 			return TRUE;
 		}
 
 		public function editNotificationName($id, $name) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$affected = $db->update(sprintf("UPDATE ".$db->table("notificator_notification")." SET name = '%s' where id=%s", $db->string($name), $db->string($id)));
 			if ($affected != 1) throw new ServiceException("REQUEST_FAILED", "Invalid update for id=".$id);
 			return TRUE;
 		}
 
 		public function editNotificationMessage($id, $title, $message) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$affected = $db->update(sprintf("UPDATE ".$db->table("notificator_notification")." SET message_title = '%s', message = '%s' where id=%s", $db->string($title), $db->string($message), $db->string($id)));
 			if ($affected != 1) throw new ServiceException("REQUEST_FAILED", "Invalid update for id=".$id);
 			return TRUE;
 		}
 
 		public function editNotificationEvents($id, $events) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$db->startTransaction();
 			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s'", $db->string($id)));
@@ -139,7 +139,7 @@
 		}
 
 		public function editNotificationRecipients($id, $recipients) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$db->startTransaction();
 			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s'", $db->string($id)));
@@ -151,7 +151,7 @@
 		}
 		
 		public function removeNotification($id) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$db->startTransaction();
 			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s'", $db->string($id)));

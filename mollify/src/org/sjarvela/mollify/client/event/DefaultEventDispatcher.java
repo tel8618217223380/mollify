@@ -11,14 +11,10 @@
 package org.sjarvela.mollify.client.event;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class DefaultEventDispatcher implements EventDispatcher {
 	private JavaScriptObject callbacks = JavaScriptObject.createArray();
 
-	@Inject
 	public DefaultEventDispatcher() {
 	}
 
@@ -28,11 +24,13 @@ public class DefaultEventDispatcher implements EventDispatcher {
 	}
 
 	public native void addEventHandler(JavaScriptObject cb) /*-{
-		this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks.push(cb);
+		this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks
+				.push(cb);
 	}-*/;
 
 	private native void handleEvent(Event event) /*-{
-		for (i=0; i < this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks.length; i++)
-			this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks[i](event);
+		for (i = 0; i < this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks.length; i++)
+			this.@org.sjarvela.mollify.client.event.DefaultEventDispatcher::callbacks[i]
+					(event);
 	}-*/;
 }

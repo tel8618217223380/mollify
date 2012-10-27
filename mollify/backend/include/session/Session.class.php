@@ -37,7 +37,6 @@
 			if ($env != NULL and $env->events() != NULL) {
 				require_once("include/event/SessionEvent.class.php");
 				SessionEvent::register($env->events());
-				if (!$env->configuration()->isAuthenticationRequired()) return;
 			}
 			
 			$id = NULL;

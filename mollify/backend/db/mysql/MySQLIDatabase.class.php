@@ -22,6 +22,34 @@
 
 		private $db = NULL;
 		
+		public static function createFromConf($conf) {
+			if (!isset($conf["user"]) or !isset($conf["password"])) throw new ServiceException("INVALID_CONFIGURATION", "No MySQL db user information defined");
+			
+			if (isset($conf["host"])) $host = $conf["host"];
+			else $host = "localhost";
+			
+			if (isset($conf["database"])) $database = $conf["database"];
+			else $database = "mollify";
+
+			if (isset($conf["table_prefix"])) $tablePrefix = $conf["table_prefix"];
+			else $tablePrefix = "";
+			
+			if (isset($conf["port"])) $port = $conf["port"];
+			else $port = NULL;
+
+			if (isset($conf["socket"])) {
+				$socket = $conf["socket"];
+				$port = NULL;
+			} else {
+				$socket = NULL;
+			}
+			
+			$db = new MySQLIDatabase($host, $conf["user"], $conf["password"], $database, $tablePrefix, $port, $socket);
+			$db->connect();
+			if (isset($conf["charset"])) $db->setCharset($conf["charset"]);
+			return $db;
+		}
+		
 		public function __construct($host, $user, $pw, $database, $tablePrefix, $port, $socket, $engine = NULL) {
 			Logging::logDebug("MySQLi DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 
@@ -208,6 +236,10 @@
 
 		public function lastId() {
 			return mysqli_insert_id($this->db);
+		}
+		
+		public function __toString() {
+			return "MySQLIDatabase";
 		}
 	}
 	

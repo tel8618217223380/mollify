@@ -18,9 +18,7 @@ import org.sjarvela.mollify.client.formatting.Formatting;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.inject.Singleton;
 
-@Singleton
 public class DefaultTextProvider implements TextProvider {
 	private static Logger logger = Logger.getLogger(DefaultTextProvider.class
 			.getName());
@@ -41,7 +39,8 @@ public class DefaultTextProvider implements TextProvider {
 	private final native void initTexts() /*-{
 		this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::texts = {}
 
-		if (!$wnd.mollify || !$wnd.mollify.texts || !$wnd.mollify.texts.values || typeof($wnd.mollify.texts.values) != "object") {
+		if (!$wnd.mollify || !$wnd.mollify.texts || !$wnd.mollify.texts.values
+				|| typeof ($wnd.mollify.texts.values) != "object") {
 			@org.sjarvela.mollify.client.localization.DefaultTextProvider::invalidLocalizationError()();
 			return;
 		}
@@ -61,7 +60,9 @@ public class DefaultTextProvider implements TextProvider {
 		var value = map != null ? map[key] : null;
 
 		if (value == null || !map.hasOwnProperty(key))
-			return "[" + this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale + ":" + key + "]";
+			return "["
+					+ this.@org.sjarvela.mollify.client.localization.DefaultTextProvider::locale
+					+ ":" + key + "]";
 
 		return String(value);
 	}-*/;

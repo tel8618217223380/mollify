@@ -22,10 +22,12 @@
 		}
 		
 		public function setup() {
-			global $PLUGINS;
-			if (!isset($PLUGINS) or !is_array($PLUGINS)) return;
+			if (!$this->env->settings()->hasSetting("plugins")) return;
 			
-			foreach($PLUGINS as $p => $settings)
+			$plugins = $this->env->settings()->setting("plugins");
+			if (!is_array($plugins)) throw new ServiceException("INVALID_CONFIGURATION");
+			
+			foreach($plugins as $p => $settings)
 				$this->addPlugin($p, $settings);
 			
 			foreach($this->plugins as $id => $p)

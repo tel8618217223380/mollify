@@ -1068,10 +1068,10 @@ function CommentPlugin() {
 			if (!cache.comments) {	
 				that.loadComments(item, function(item, comments) {
 					cache.comments = comments;
-					that.renderComments(item, comments, {element: $e.empty(), contentTemplate: 'comments-context-content-template'});
+					that.renderComments(item, comments, {element: $e.empty(), contentTemplate: 'comments-template'});
 				});
 			} else {
-				that.renderComments(item, cache.comments, {element: $e.empty(), contentTemplate: 'comments-context-content-template'});	
+				that.renderComments(item, cache.comments, {element: $e.empty(), contentTemplate: 'comments-template'});	
 			}
 		});
 	};
@@ -1126,10 +1126,10 @@ function CommentPlugin() {
 	}
 	
 	this.showCommentsBubble = function(item, e) {
-		var bubble = mollify.ui.controls.dynamicBubble({element:e});
+		var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name});
 		
 		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
-			bubble.content(mollify.dom.template("comments-popup-content-template", item));
+			bubble.content(mollify.dom.template("comments-template", item));
 			/*$("#comments-dialog-content .mollify-actionlink").hover(
 				function () { $(this).addClass("mollify-actionlink-hover"); }, 
 				function () { $(this).removeClass("mollify-actionlink-hover"); }

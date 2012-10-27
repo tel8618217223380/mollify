@@ -29,14 +29,15 @@
 		
 		private $defaultValues = array();
 		
-		private static $featuresControlledByConfiguration = array("change_password", "descriptions", "administration", "user_groups");
-		
-		function __construct($configuration, $settings) {
-			$configurationFeatures = $configuration->getSupportedFeatures();
-			
+		function __construct($settings) {			
 			foreach ($this->features as $f=>$k) {
 				$enabled = FALSE;
-				$configControlled = in_array($f, self::$featuresControlledByConfiguration);
+				if ($settings->hasSetting("enable_".$f))
+					$enabled = $settings->setting("enable_".$f);
+				else
+					$enabled = TRUE;	//TODO event_logging = FALSE
+				
+				/*$configControlled = FALSE;
 				
 				if ($configControlled) {
 					$configSupported = in_array($f, $configurationFeatures);
@@ -49,7 +50,7 @@
 						$enabled = $configuration->featureEnabledByDefault($f, FALSE);					
 				} else {
 					$enabled = $settings->setting("enable_".$f, TRUE);
-				}
+				}*/
 				$this->features[$f] = $enabled;
 			}
 		}

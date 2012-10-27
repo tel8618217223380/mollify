@@ -28,13 +28,10 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class DefaultClientInterface implements ClientInterface {
-	private static Logger logger = Logger.getLogger(DefaultClientInterface.class
-			.getName());
+	private static Logger logger = Logger
+			.getLogger(DefaultClientInterface.class.getName());
 
 	private final EventDispatcher eventDispatcher;
 	private final ResponseInterceptor responseInterceptor;
@@ -51,7 +48,6 @@ public class DefaultClientInterface implements ClientInterface {
 	private final NativeViewManager nativeViewManager;
 
 	// TODO move this entire class into external js
-	@Inject
 	public DefaultClientInterface(EventDispatcher eventDispatcher,
 			ResponseInterceptor responseInterceptor,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
@@ -102,14 +98,11 @@ public class DefaultClientInterface implements ClientInterface {
 	private native void initApp(JavaScriptObject i, Callback cb) /*-{
 		if (!$wnd.mollify)
 			return;
-		$wnd.mollify
-				.setup(
-						i,
-						function() {
-							cb.@org.sjarvela.mollify.client.Callback::onCallback()();
-						});
+		$wnd.mollify.setup(i, function() {
+			cb.@org.sjarvela.mollify.client.Callback::onCallback()();
+		});
 	}-*/;
-	
+
 	public void addResponseProcessor(JavaScriptObject rp) {
 		responseInterceptor.addProcessor(new NativeResponseProcessor(rp));
 	}
@@ -144,10 +137,10 @@ public class DefaultClientInterface implements ClientInterface {
 		return new NativeLogger().asJs();
 	};
 
-	private native JavaScriptObject createNativeInterface(DefaultClientInterface e,
-			String pluginBaseUrl, JavaScriptObject textProvider,
-			JavaScriptObject service, JavaScriptObject viewManager,
-			JavaScriptObject logger) /*-{
+	private native JavaScriptObject createNativeInterface(
+			DefaultClientInterface e, String pluginBaseUrl,
+			JavaScriptObject textProvider, JavaScriptObject service,
+			JavaScriptObject viewManager, JavaScriptObject logger) /*-{
 		var env = {};
 
 		env.addResponseProcessor = function(cb) {

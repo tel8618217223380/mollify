@@ -18,15 +18,11 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ConfirmationListener;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class DefaultDialogManager implements DialogManager {
 	private final TextProvider textProvider;
 	private JsObj handler;
 
-	@Inject
 	public DefaultDialogManager(TextProvider textProvider) {
 		this.textProvider = textProvider;
 	}

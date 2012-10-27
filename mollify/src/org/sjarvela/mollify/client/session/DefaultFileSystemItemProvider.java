@@ -22,15 +22,10 @@ import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.file.FilePermission;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class DefaultFileSystemItemProvider implements FileSystemItemProvider {
 	private final FileSystemService fileSystemService;
 	private List<JsRootFolder> roots = new ArrayList();
 
-	@Inject
 	public DefaultFileSystemItemProvider(SessionManager sessionManager,
 			ServiceEnvironment env) {
 		sessionManager.addSessionListener(new SessionListener() {

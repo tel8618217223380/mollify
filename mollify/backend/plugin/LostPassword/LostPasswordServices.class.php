@@ -41,7 +41,7 @@
 		}
 		
 		private function getUser($email) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$query = "select `id`, `name` from ".$db->table("user")." where `email`=".$db->string($email,TRUE);
 			$result = $db->query($query);
 			if ($result->count() != 1) return NULL;

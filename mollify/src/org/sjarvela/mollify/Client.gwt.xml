@@ -14,10 +14,14 @@
 	<inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="com.google.gwt.logging.Logging"/>
-	<inherits name="com.google.gwt.inject.Inject"/>
+	<!-- inherits name="com.google.gwt.inject.Inject"/-->
 	
 	<entry-point class='org.sjarvela.mollify.client.App'/>
 	
 	<!-- set-property name="gwt.logging.enabled" value="FALSE"/-->
 	<set-configuration-property name="user.agent.runtimeWarning" value="false" />
+	
+	<replace-with class="org.sjarvela.mollify.client.MollifyClient">
+    <when-type-is class="org.sjarvela.mollify.client.Client"/>
+    </replace-with>
 </module>
