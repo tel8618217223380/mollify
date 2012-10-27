@@ -3006,11 +3006,12 @@ input.mollify-header-search-field {
 
 #itemcollection-list {
 	width: 330px;
-	height: 100%;
+	height: 270px;
 	position: relative;
 	border: 3px solid #b1b1b1;
 	padding: 2px;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .itemcollection {
@@ -3043,12 +3044,9 @@ input.mollify-header-search-field {
 
 #itemcollection-items-container {
 	width: 340px;
-	height: 100%;
+	height: 276px;
 	border: 1px solid #b1b1b1;
 	overflow: auto;	
-}
-
-#itemcollection-items {
 }
 
 #itemcollection-items > .empty-message, #itemcollection-list-items > .no-collections-msg {
