@@ -21,7 +21,21 @@
 		
 		public function processGet() {
 			if (count($this->path) != 0) throw $this->invalidRequestException();
-			$this->response()->success($this->handler()->getUserItemCollections());
+			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
+		}
+		
+		private function convert($collections) {
+			$result = array();
+			foreach($collections as $c)
+				$result[] = array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["items"]));
+			return $result;
+		}
+
+		private function convertItems($items) {
+			$result = array();
+			foreach($items as $i)
+				$result[] = $i->data();
+			return $result;
 		}
 
 		public function processDelete() {
@@ -43,7 +57,7 @@
 			if (strlen($name) == 0 or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
 			
 			$this->handler()->addUserItemCollection($name, $items);
-			$this->response()->success(TRUE);
+			$this->response()->success(array());
 		}
 		
 		private function handler() {

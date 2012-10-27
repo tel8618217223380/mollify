@@ -14,8 +14,10 @@
 			</div>
 		</td>
 		<td width="50%">
-			<div id="itemcollection-items">
-				<div class="empty-message localized" text-key="itemCollectionsItemsListEmpty"></div>
+			<div id="itemcollection-items-container">
+				<div id="itemcollection-items">
+					<div class="empty-message localized" text-key="itemCollectionsItemsListEmpty"></div>
+				</div>
 			</div>
 		</td>
 	</tr>
@@ -43,7 +45,7 @@
 <script id="itemcollectionitem-template" type="text/x-jquery-tmpl">
 	<div id="itemcollectionitem-${id}" class="itemcollectionitem">
 		<div class="itemcollectionitem-info">
-			<div class="itemcollectionitem-name">${path} ${name}</div>
+			<div class="itemcollectionitem-name">${path} (${$item.root()})</div>
 		</div>
 	</div>
 </script>

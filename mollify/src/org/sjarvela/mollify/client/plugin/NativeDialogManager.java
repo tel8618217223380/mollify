@@ -104,9 +104,10 @@ public class NativeDialogManager {
 		JsObj spec = s.cast();
 		String html = spec.hasValue("html") ? spec.getString("html") : "";
 		String title = spec.getString("title");
-		String style = spec.hasValue("style") ? "custom" : spec
-				.getString("style");
-		boolean modal = spec.hasValue("modal") ? spec.getBoolean("modal") : true;
+		String style = spec.hasValue("style") ? spec.getString("style")
+				: "custom";
+		boolean modal = spec.hasValue("modal") ? spec.getBoolean("modal")
+				: true;
 		final JavaScriptObject cb = spec.getJsObj("on_show");
 
 		dialogManager.showCustomDialog(title, style, modal, new HTML(html),
