@@ -340,5 +340,15 @@ fileItemContextDataExtension: "Extension",
 fileItemContextDataLastModified: "Last modified",
 fileItemDetailsExif: "Image information",
 fileItemContextDataImageSize: "Image size",
-fileItemContextDataImageSizePixels: "{0} pixels"
+fileItemContextDataImageSizePixels: "{0} pixels",
+
+itemCollectionTitle: "Item collection",
+itemCollectionsDialogNewTitle: "Store item collection",
+itemCollectionsDialogNewMessage: "Enter the name for the collection:",
+itemCollectionsDialogTitle: "Stored item collections",
+itemCollectionsItemsListEmpty: "Select item collection from the list",
+itemCollectionsDialogShareTitle: "Share",
+itemCollectionsDialogRemoveTitle: "Remove",
+itemCollectionsTitleCollections: "Item collections:",
+itemCollectionsTitleItems: "Items:"
 })})();
