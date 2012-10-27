@@ -23,7 +23,7 @@
 			if (count($this->path) != 1 or $this->path[0] != 'list') throw $this->invalidRequestException();
 			$this->env->authentication()->assertAdmin();
 			
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$result = $db->query("select `id`, `name`, `email`, `key`, `time` from ".$db->table("pending_registrations")." order by id asc")->rows();
 			$this->response()->success($result);
 		}
@@ -33,7 +33,7 @@
 			$this->env->authentication()->assertAdmin();
 			
 			$id = $this->path[1];
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
 			$this->response()->success(array());
 		}
@@ -53,7 +53,7 @@
 			if (!isset($registration['name']) or !isset($registration['password']) or !isset($registration['email'])) throw $this->invalidRequestException();
 			$this->assertUniqueNameAndEmail($registration['name'], $registration['email']);
 
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$name = $registration['name'];
 			$password = base64_decode($registration['password']);
 			$email = $registration['email'];
@@ -72,7 +72,7 @@
 		}
 
 		private function assertUniqueNameAndEmail($name, $email) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$query = "select count(id) from ".$db->table("pending_registrations")." where name=".$db->string($name,TRUE)." or email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
 			if ($count > 0) throw new ServiceException("REQUEST_FAILED", "User already registered with same name or email");
@@ -87,7 +87,7 @@
 			if (!isset($confirmation['email']) or !isset($confirmation['key'])) throw $this->invalidRequestException();
 			$this->assertEmailNotRegistered($confirmation['email']);
 			
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `email`=".$db->string($confirmation['email'],TRUE)." and `key`=".$db->string($confirmation['key'],TRUE);
 			$result = $db->query($query);
 			
@@ -96,7 +96,7 @@
 		}
 		
 		private function assertEmailNotRegistered($email) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$query = "select count(id) from ".$db->table("user")." where email=".$db->string($email,TRUE);
 			$count = $db->query($query)->value(0);
@@ -106,7 +106,7 @@
 		private function processConfirmById($id) {
 			$this->env->authentication()->assertAdmin();
 			
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$query = "select `id`, `name`, `password`, `email` from ".$db->table("pending_registrations")." where `id`=".$db->string($id,TRUE);
 			$result = $db->query($query);
 			
@@ -115,7 +115,7 @@
 		}
 		
 		private function confirm($registration) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$plugin = $this->env->plugins()->getPlugin("Registration");
 			$permission = $plugin->getSetting("permission", Authentication::PERMISSION_VALUE_READONLY);
 			

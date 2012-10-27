@@ -21,10 +21,6 @@ import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class DefaultFileSystemActionHandlerFactory implements
 		FileSystemActionHandlerFactory {
 	private final TextProvider textProvider;
@@ -40,7 +36,6 @@ public class DefaultFileSystemActionHandlerFactory implements
 
 	// private final FileEditorFactory fileEditorFactory;
 
-	@Inject
 	public DefaultFileSystemActionHandlerFactory(
 			EventDispatcher eventDispatcher, TextProvider textProvider,
 			ViewManager windowManager, DialogManager dialogManager,
@@ -60,7 +55,6 @@ public class DefaultFileSystemActionHandlerFactory implements
 		this.sessionProvider = sessionProvider;
 	}
 
-	@Inject
 	public FileSystemActionHandler create() {
 		return new DefaultFileSystemActionHandler(eventDispatcher,
 				textProvider, windowManager, dialogManager, fileSystemService,

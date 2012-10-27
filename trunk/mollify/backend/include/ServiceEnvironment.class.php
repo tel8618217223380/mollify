@@ -26,6 +26,8 @@
 		private $services = array();
 		private $serviceControllerPaths = array();
 		
+		private $db;
+		
 		private $session;
 		private $authentication;
 		private $responseHandler;
@@ -37,13 +39,14 @@
 		private $notificator = NULL;
 		private $urlRetriever = NULL;
 		
-		public function __construct($session, $responseHandler, $configuration, $settings) {
+		public function __construct($db, $session, $responseHandler, $configuration, $settings) {
+			$this->db = $db;
 			$this->session = $session;
 			$this->responseHandler = $responseHandler;
 			$this->configuration = $configuration;
 			$this->settings = $settings;
 			$this->cookies = new Cookie($settings);
-			$this->features = new Features($configuration, $settings);
+			$this->features = new Features($settings);
 			$this->authentication = new Authentication($this);
 			$this->eventHandler = new EventHandler($this);
 			$this->filesystem = new FilesystemController($this);
@@ -60,6 +63,10 @@
 		private function createUrlRetriever() {
 			require_once($this->settings->setting("url_retriever_class", TRUE));
 			return new UrlRetriever($this);
+		}
+		
+		public function db() {
+			return $this->db;
 		}
 		
 		public function session() {

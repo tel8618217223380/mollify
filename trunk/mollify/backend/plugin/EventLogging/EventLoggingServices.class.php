@@ -37,7 +37,7 @@
 			$data = $this->request->data;
 			if (!isset($data)) throw $this->invalidRequestException();
 			
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$query = "from ".$db->table("event_log")." where 1=1";
 			
 			if (isset($data['start_time'])) {
@@ -70,7 +70,7 @@
 			$data = $this->request->data;
 			if (!isset($data)) throw $this->invalidRequestException();
 			
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			if (!$events) {
 				$query = "select distinct item ";

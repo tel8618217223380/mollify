@@ -17,10 +17,6 @@ import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.event.EventDispatcher;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class DefaultSessionManager implements SessionManager {
 	private static Logger logger = Logger.getLogger(DefaultSessionManager.class
 			.getName());
@@ -30,7 +26,6 @@ public class DefaultSessionManager implements SessionManager {
 
 	private SessionInfo session = null;
 
-	@Inject
 	public DefaultSessionManager(EventDispatcher eventDispatcher) {
 		this.eventDispatcher = eventDispatcher;
 	}

@@ -37,7 +37,6 @@
 		}
 		
 		public function check() {
-			if (!$this->isAuthenticationRequired()) return;
 			if ($this->isAuthenticated()) {
 				if (!$this->env->session()->hasParam('auth') or strcasecmp("remote", $this->env->session()->param('auth')) != 0) return;
 				if (isset($_SERVER["REMOTE_USER"]) and strcasecmp($this->env->session()->username(), $_SERVER["REMOTE_USER"]) == 0) return;
@@ -170,10 +169,6 @@
 		public function isAuthenticated() {
 			return $this->env->session()->isActive();
 		}
-
-		public function isAuthenticationRequired() {
-			return $this->env->configuration()->isAuthenticationRequired();
-		}
 		
 		public function getDefaultPermission() {
 			if (!$this->cachedDefaultPermission) {
@@ -214,7 +209,7 @@
 		}
 		
 		public function log() {
-			Logging::logDebug("AUTH: is_authentication_required=".$this->isAuthenticationRequired().", is_authenticated=".$this->isAuthenticated());
+			Logging::logDebug("AUTH: is_authenticated=".$this->isAuthenticated());
 		}
 		
 		public function __toString() {

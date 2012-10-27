@@ -13,9 +13,6 @@ package org.sjarvela.mollify.client.service.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Singleton;
-
-@Singleton
 public class DefaultResponseInterceptor implements ResponseInterceptor {
 	private List<ResponseProcessor> processors = new ArrayList();
 

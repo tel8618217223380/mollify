@@ -75,10 +75,6 @@
 			return $this->session->username();
 		}
 
-		public function isAuthenticationRequired() { 
-			return $this->authentication->isAuthenticationRequired(); 
-		} 
-
 		public function getAllUsers() {
 			return $this->configuration->getAllUsers();
 		}

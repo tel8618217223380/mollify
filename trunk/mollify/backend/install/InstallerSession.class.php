@@ -16,7 +16,7 @@
 		}
 		
 		protected function findSessionUser($id) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			return $db->query(sprintf("SELECT id, name, password, email, auth FROM ".$db->table("user")." WHERE id='%s'", $db->string($id)))->firstRow();
 		}
 	}

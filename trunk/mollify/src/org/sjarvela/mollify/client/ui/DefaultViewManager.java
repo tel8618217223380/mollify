@@ -27,10 +27,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-@Singleton
 public class DefaultViewManager implements ViewManager {
 	private static Logger logger = Logger.getLogger(DefaultViewManager.class
 			.getName());
@@ -46,7 +43,6 @@ public class DefaultViewManager implements ViewManager {
 
 	private ViewHandler activeView;
 
-	@Inject
 	public DefaultViewManager() {
 		this.contentPanel = RootPanel.get(App.CONTENT_PANEL_ID);
 		if (this.contentPanel == null)

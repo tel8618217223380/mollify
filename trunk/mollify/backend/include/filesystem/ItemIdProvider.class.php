@@ -25,7 +25,7 @@
 	 	}
 	 	
 	 	public function getLocation($id) {
-		 	$db = $this->env->configuration()->db();
+		 	$db = $this->env->db();
 			$query = "select path from ".$db->table("item_id")." where id=".$db->string($id,TRUE);
 			$result = $db->query($query);
 			
@@ -34,9 +34,9 @@
 	 	}
 
 	 	public function loadRoots() {
-		 	$db = $this->env->configuration()->db();
+		 	$db = $this->env->db();
 		 	
-			if ($this->env->configuration()->isMySql()) {
+			if (strcmp("mysql", $this->env->db()->type()) == 0) {
 				$pathFilter = "path REGEXP '^.:[/\\\\]$'";
 			} else {
 				$pathFilter = "REGEX(path, \"#^.:[/\\\\]$#\")";
@@ -48,12 +48,12 @@
 	 	}
 	 	
 	 	public function load($parent, $recursive = FALSE) {
-		 	$db = $this->env->configuration()->db();
+		 	$db = $this->env->db();
 		 	
 		 	if ($recursive) {
 			 	$pathFilter = "path like '".$db->string($this->itemPath($parent))."%'";
 		 	} else {
-				if ($this->env->configuration()->isMySql()) {
+				if (strcmp("mysql", $db->type()) == 0) {
 					$pathFilter = "path REGEXP '^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$'";
 				} else {
 					$pathFilter = "REGEX(path, \"#^".$db->string(str_replace("\\", "\\\\", $this->itemPath($parent)))."[^/\\\\]+[/\\\\]?$#\")";
@@ -66,7 +66,7 @@
 	 	}
 	 	
 	 	private function getOrCreateItemId($p) {
-		 	$db = $this->env->configuration()->db();
+		 	$db = $this->env->db();
 			$query = "select id from ".$db->table("item_id")." where path=".$db->string($p, TRUE);
 			$result = $db->query($query);
 			
@@ -78,7 +78,7 @@
 	 	}
 	 	
 		public function delete($item) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			if ($item->isFile())
 				return $db->update("DELETE FROM ".$db->table("item_id")." WHERE id = ".$db->string($item->id(), TRUE));
 			else
@@ -86,7 +86,7 @@
 		}
 
 		public function move($item, $to) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			if ($item->isFile())
 				return $db->update("UPDATE ".$db->table("item_id")." SET path = ".$db->string($this->itemPath($to), TRUE) ." where path = ".$db->string($this->itemPath($item), TRUE));
 			else {
@@ -99,6 +99,10 @@
 		
 		private function itemPath($i) {
 			return $i->location();
+		}
+		
+		public function __toString() {
+			return "ItemIdProvider";
 		}
 	 }
 ?>

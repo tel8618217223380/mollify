@@ -23,10 +23,6 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class DefaultMainViewFactory implements MainViewFactory {
 	// private static final String SETTING_EXPOSE_FILE_LINKS =
 	// "expose-file-links";
@@ -51,7 +47,6 @@ public class DefaultMainViewFactory implements MainViewFactory {
 
 	// private final ItemContextPopupFactory itemContextPopupFactory;
 
-	@Inject
 	public DefaultMainViewFactory(EventDispatcher eventDispatcher,
 			TextProvider textProvider, ViewManager viewManager,
 			DialogManager dialogManager, ServiceProvider serviceProvider,

@@ -15,16 +15,17 @@
 	require_once("include/session/Session.class.php");
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("include/Util.class.php");
+	require_once("include/configuration/ConfigurationDao.class.php");
 	require_once("include/configuration/UserEvent.class.php");
 
 	class MollifyBackend {
 		private $environment;
 		
-		function __construct($settings, $configuration, $responseHandler) {
+		function __construct($settings, $db, $responseHandler) {
 			$this->settings = $settings;
 			$this->session = new Session($settings);
-			$this->configuration = $configuration;
-			$this->environment = new ServiceEnvironment($this->session, $responseHandler, $this->configuration, $settings);
+			$this->configuration = new ConfigurationDao($db);
+			$this->environment = new ServiceEnvironment($db, $this->session, $responseHandler, $this->configuration, $settings);
 			$this->setup();
 		}
 	

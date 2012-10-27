@@ -25,7 +25,7 @@
 			$type = $e->typeId();
 			$username = $this->getUser($e);
 						
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("event_log")." (time, user, ip, type, item, details) VALUES (%s, %s, %s, '%s', %s, %s)", $time, $db->string($username, TRUE), $db->string($e->ip(), TRUE), $db->string($type), $db->string($item, TRUE), $db->string($details, TRUE)));
 		}
 		
