@@ -36,19 +36,11 @@
 			</div>
 		</div>
 	</div>
-		<!--/div>
-	</div>
-	
-	<div id="mainview-dropbox">
-	</div>
-	
-	<div id="mainview-footer">
-	</div-->
 </div>
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
 	{{if authenticated}}
-	<li id="mollify-username-dropdown" class="dropdown">
+	<li id="mollify-username-dropdown">
 		<a href="#" class="dropdown-toggle">${username} <b class="caret"></b></a>
 	</li>
 	{{/if}}
@@ -59,7 +51,7 @@
 </script>
 
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
-	<div id="mollify-folder-tools"></div>
+	<div id="mollify-folder-tools" class="btn-toolbar"></div>
 	<div id="mollify-folder-hierarchy" class="breadcrumb">
 		<!--span class="folder-hierarchy-separator">&nbsp;&gt;&nbsp;</span><span id="folder-hierarchy-item-${id}" class="folder-hierarchy-item">${name}</span-->
 	</div>
@@ -67,13 +59,28 @@
 </script>
 
 <script id="mollify-tmpl-main-foldertools-action" type="text/x-jquery-tmpl">
-	<button class="btn btn-flat foldertool">
-		{{if icon}}
-		<i class="${icon}"></i>
-		{{else}}
-		${$item.title()}
-		{{/if}}
-	</button>
+	<div class="btn-group">
+	{{if dropdown}}
+		<li>
+			<button class="btn btn-flat foldertool dropdown-toggle">
+			{{if icon}}
+			<i class="${icon}"></i>
+			{{else}}
+			${$item.title()}
+			{{/if}}
+			&nbsp;<b class="caret"></b>
+			</button>
+		</li>
+	{{else}}
+		<button class="btn btn-flat foldertool">
+			{{if icon}}
+			<i class="${icon}"></i>
+			{{else}}
+			${$item.title()}
+			{{/if}}
+		</button>
+	{{/if}}
+	</div>
 </script>
 
 <script id="mollify-tmpl-main-createfolder-bubble" type="text/x-jquery-tmpl">
@@ -146,10 +153,9 @@
 	{{/if}}
 	<div id="mollify-itemcontext-actions" class="btn-toolbar">
 		<div id="mollify-itemcontext-primary-actions" class="btn-group">
-			<!--button id="mollify-itemcontext-primary-actions-button" class="btn btn-primary"></button-->
 		</div>
 		<div class="btn-group">
-			<li id="mollify-itemcontext-secondary-actions" class="dropdown">
+			<li id="mollify-itemcontext-secondary-actions">
 				<button class="btn dropdown-toggle localized" text-key="secondaryActions">&nbsp;<b class="caret"></b></button>
 			</li>
 		</div>

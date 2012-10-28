@@ -34,7 +34,7 @@ function MainView() {
 			var root = $(this).tmplItem().data;
 			that.listener.onFolderSelected(1, root);
 		});
-		$("#mainview-main").click(mollify.ui.hideAllPopups);
+		$("body").click(mollify.ui.hideAllPopups);
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 		that.initList();
@@ -112,6 +112,18 @@ function MainView() {
 					 return false;
 				});
 				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(that.onUpload);
+				
+				var actionsElement = mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($t);
+				mollify.ui.controls.dropdown({
+					element: actionsElement.find("li"),
+					items: [{title:"t"}],
+					hideDelay: 0,
+					style: 'submenu',
+					onItem: function() {
+					},
+					onBlur: function(dd) {
+					}
+				});
 			}
 			mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($t).click(that.listener.onRefresh);
 			$("#mollify-folderview-items").addClass("loading");

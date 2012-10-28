@@ -245,8 +245,7 @@
 						buttons: [
 							{ id:0, "title-key": "upload" }
 						],
-						"on-button": function(e, d) {
-							alert(e);
+						"on-button": function(btn, d) {
 							d.close();
 						}
 					});
@@ -894,21 +893,22 @@ function DialogHandler() {
 				if (b["title-key"]) return mollify.ui.texts.get(b["title-key"]);
 				return "";
 			}
-		}).modal({
+		});
+		mollify.ui.handlers.localize(dlg);
+		dlg.on('hidden', function() { dlg.remove(); }).modal({
 			backdrop: true,
 			show: true,
 			keyboard: true
 		});
-		mollify.ui.handlers.localize(dlg);
 		var h = {
 			close: function() {
-				dlg.dialog('destroy');
-				dlg.remove();
+				dlg.modal('hide');
 			}
 		};
-		dlg.find(".button").click(function(e) {
+		dlg.find(".btn").click(function(e) {
 			e.preventDefault();
-			if (spec["on-button"]) spec["on-button"](e, h);
+			var btn = $(this).tmplItem().data;
+			if (spec["on-button"]) spec["on-button"](btn, h);
 		});
 		if (spec["on-show"]) spec["on-show"](h);
 		return h;
