@@ -169,6 +169,11 @@ public class MainViewPresenter implements MainViewListener,
 	public void onFolderSelected(int level, JsFolder f) {
 		changeToFolder(level, f);
 	}
+	
+	@Override
+	public void onRefresh() {
+		this.reload();
+	}
 
 	public void onFileSystemItemSelected(final JsFilesystemItem item,
 			String columnId, Element e) {
@@ -297,7 +302,7 @@ public class MainViewPresenter implements MainViewListener,
 		});
 		return new JsObjBuilder().string("type", "action")
 				.string("group", "core").string("id", action.name())
-				.string("title", titleKey).obj("callback", cb).create();
+				.string("title-key", titleKey).obj("callback", cb).create();
 	}
 
 	protected void onItemAction(JsFilesystemItem item, Action action) {
