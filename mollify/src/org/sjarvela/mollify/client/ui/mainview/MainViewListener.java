@@ -15,6 +15,8 @@ public interface MainViewListener {
 	void onFolderSelected(int level, JsFolder f);
 	
 	void onRefresh();
+	
+	void onCreateFolder(String name);
 
 	void getItemDetails(JsFilesystemItem item, JavaScriptObject callback);
 }

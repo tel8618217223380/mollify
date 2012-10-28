@@ -19,22 +19,11 @@ public class NativeLoginView extends NativeView implements LoginView {
 		return {
 			onLogin : function(u, p, r) {
 				listener.@org.sjarvela.mollify.client.ui.login.LoginViewListener::onLogin(Ljava/lang/String;Ljava/lang/String;Z)(u, p, r);
-			},
-			onResetPassword : function(email) {
-				listener.@org.sjarvela.mollify.client.ui.login.LoginViewListener::onResetPassword(Ljava/lang/String;)(email);
 			}
 		};
 	}-*/;
 
 	public void showLoginError() {
 		viewHandler.call("showLoginError");
-	}
-
-	public void showResetPasswordSuccess() {
-		viewHandler.call("showResetPasswordSuccess");
-	}
-
-	public void showResetPasswordFailed() {
-		viewHandler.call("showResetPasswordFailed");
 	}
 }

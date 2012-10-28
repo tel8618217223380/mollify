@@ -89,11 +89,11 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
-		that.currentFolder = p.hierarchy[p.hierarchy.length-1];
-		var currentRoot = p.hierarchy[0];
+		that.currentFolder = p ? p.hierarchy[p.hierarchy.length-1] : false;
+		var currentRoot = p ? p.hierarchy[0] : false;
 		
 		$(".mainview-rootlist-item").removeClass("active");
-		$("#mainview-rootlist-item-"+currentRoot.id).addClass("active");
+		if (currentRoot) $("#mainview-rootlist-item-"+currentRoot.id).addClass("active");
 		
 		var $h = $("#mollify-folderview-header").empty();
 		if (p) {
@@ -108,8 +108,20 @@ function MainView() {
 			$t = $("#mollify-folder-tools");
 			if (p.canWrite) {
 				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function(){
-					 that.onCreateFolder($(this));
-					 return false;
+					 mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
+					 	onRenderBubble: function(b) {
+					 		var $i = $("#mainview-createfolder-name-input");
+					 		$("#mainview-createfolder-button").click(function(){
+						 		var name = $i.val();
+						 		if (!name) return;
+						 		
+						 		b.hide();
+						 		that.listener.onCreateFolder(name);
+					 		});
+					 		$i.focus();
+						}
+					}});
+					return false;
 				});
 				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(that.onUpload);
 				
@@ -129,18 +141,9 @@ function MainView() {
 			$("#mollify-folderview-items").addClass("loading");
 		} else {
 			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
-			//TODO disable write
 		}
 		$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 		mollify.ui.process($h, ['localize']);
-	};
-	
-	this.onCreateFolder = function($e) {
-		var bubble = mollify.ui.controls.dynamicBubble({element: $e, content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
-			onRenderBubble: function(b) {
-				$("#mainview-createfolder-name-input").focus();
-			}
-		}});
 	};
 	
 	this.onUpload = function() {

@@ -14,13 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.MollifyClient;
-import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.localization.Texts;
-import org.sjarvela.mollify.client.service.ExternalService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
-import org.sjarvela.mollify.client.service.request.JSONBuilder;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
@@ -36,18 +32,13 @@ public class LoginViewHandler {
 	private final SessionService service;
 	private final NativeLoginView view;
 	private final SessionManager sessionManager;
-	private final ExternalService resetPasswordService;
-	private final TextProvider textProvider;
 
 	public LoginViewHandler(ViewManager viewManager,
 			DialogManager dialogManager, SessionService service,
-			ExternalService resetPasswordService,
-			SessionManager sessionManager, TextProvider textProvider) {
+			SessionManager sessionManager) {
 		this.dialogManager = dialogManager;
 		this.service = service;
-		this.resetPasswordService = resetPasswordService;
 		this.sessionManager = sessionManager;
-		this.textProvider = textProvider;
 		this.view = new NativeLoginView(viewManager.getViewHandler("login"));
 
 		view.init(new LoginViewListener() {
@@ -55,11 +46,6 @@ public class LoginViewHandler {
 			public void onLogin(String username, String password,
 					boolean remember) {
 				LoginViewHandler.this.onLogin(username, password, remember);
-			}
-
-			@Override
-			public void onResetPassword(String email) {
-				LoginViewHandler.this.onResetPassword(email);
 			}
 		});
 
@@ -96,32 +82,32 @@ public class LoginViewHandler {
 				});
 	}
 
-	protected void onResetPassword(String email) {
-		if (email == null || email.length() == 0)
-			return;
-
-		String data = new JSONBuilder("email", email).toString();
-
-		resetPasswordService.post(data, new ResultListener() {
-			@Override
-			public void onFail(ServiceError error) {
-				if (error.getError().getCode() == 301) {
-					view.showResetPasswordFailed();
-				} else if (error.getType().equals(
-						ServiceErrorType.REQUEST_FAILED)) {
-					dialogManager.showInfo(
-							textProvider.getText(Texts.resetPasswordPopupTitle),
-							textProvider
-									.getText(Texts.resetPasswordPopupResetFailed));
-				} else {
-					dialogManager.showError(error);
-				}
-			}
-
-			@Override
-			public void onSuccess(Object result) {
-				view.showResetPasswordSuccess();
-			}
-		});
-	}
+	// protected void onResetPassword(String email) {
+	// if (email == null || email.length() == 0)
+	// return;
+	//
+	// String data = new JSONBuilder("email", email).toString();
+	//
+	// resetPasswordService.post(data, new ResultListener() {
+	// @Override
+	// public void onFail(ServiceError error) {
+	// if (error.getError().getCode() == 301) {
+	// view.showResetPasswordFailed();
+	// } else if (error.getType().equals(
+	// ServiceErrorType.REQUEST_FAILED)) {
+	// dialogManager.showInfo(
+	// textProvider.getText(Texts.resetPasswordPopupTitle),
+	// textProvider
+	// .getText(Texts.resetPasswordPopupResetFailed));
+	// } else {
+	// dialogManager.showError(error);
+	// }
+	// }
+	//
+	// @Override
+	// public void onSuccess(Object result) {
+	// view.showResetPasswordSuccess();
+	// }
+	// });
+	// }
 }

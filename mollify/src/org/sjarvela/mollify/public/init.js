@@ -838,6 +838,8 @@ function strpos(haystack, needle, offset) {
 }
 
 function DialogHandler() {
+	var that = this;
+	
 	var dialogDefaults = {
 		title: "Mollify"
 	};
@@ -858,7 +860,18 @@ function DialogHandler() {
 	};
 	
 	this.confirmation = function(spec) {
-		alert("confirm");
+		that.custom({
+			title: spec.title,
+			content: spec.message,
+			buttons: [
+				{ id: "yes", "title-key": "yes" },
+				{ id: "no", "title-key": "no" }
+			],
+			"on-button": function(btn, d) {
+				d.close();
+				if (spec.callback && btn.id === 'yes') spec.callback();
+			}
+		});
 	};
 	
 	this.wait = function(spec) {
@@ -878,7 +891,7 @@ function DialogHandler() {
 	};
 	
 	this.custom = function(spec) {
-		var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(spec, dialogDefaults), {
+		var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
 			getContent: function() {
 				if (spec.html) return spec.html;
 				if (spec.content) {
