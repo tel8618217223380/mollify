@@ -238,6 +238,21 @@
 		}
 		
 		this.ui = {
+			uploader : {
+				open : function(f) {
+					mollify.ui.views.dialogs.custom({
+						html: "foo",
+						buttons: [
+							{ id:0, "title-key": "upload" }
+						],
+						"on-button": function(e, d) {
+							alert(e);
+							d.close();
+						}
+					});
+				}
+			},
+			
 			filelist : {
 				columns : [],
 				addColumn : function(c) {
@@ -260,7 +275,9 @@
 			},
 			
 			hideAllPopups: function() {
-				$(".mollify-popup").qtip('hide');
+				//$(".mollify-popup").qtip('hide');
+				if (t.ui.activePopup) t.ui.activePopup.hide();
+				t.ui.activePopup = false;
 			},
 			
 			handlers : {
@@ -304,9 +321,9 @@
 				},
 				
 				bubble: function(p, h) {
-					p.find(".bubble-action").each(function() {
+					p.find(".bubble-trigger").each(function() {
 						var $t = $(this);
-						var b = mollify.ui.controls.bubble($t, h);
+						var b = mollify.ui.controls.bubble({element:$t, handler: h});
 						mollify.ui.assign(h, $t.attr('id'), b);
 					});
 				},
@@ -370,6 +387,7 @@
 					var hidePopup = function() {
 						if (a.onHide) a.onHide();
 						$mnu.remove();
+						t.ui.activePopup = false;
 					};
 					var createItems = function(itemList) {
 						var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
@@ -399,13 +417,16 @@
 					if (a.style) $mnu.addClass(a.style);
 					$("#mollify").append($mnu).on('click', hidePopup);
 					
-					return {
+					var api = {
 						hide: hidePopup,
 						items: function(items) {
 							$mnu.empty().removeClass("loading").append(createItems(items));
 							initItems(items);
 						}
 					};
+					if (t.ui.activePopup) t.ui.activePopup.hide();
+					t.ui.activePopup = api;
+					return api;
 					/*var createItems = function(itemList) {
 						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
 							isSeparator : function(i) {
@@ -477,7 +498,8 @@
 					};*/
 				},
 				
-				bubble: function(e, h) {
+				bubble: function(o) {
+					var e = o.element;
 					var actionId = e.attr('id');
 					if (!actionId) return;
 					
@@ -487,7 +509,7 @@
 					var html = content.html();
 					content.remove();
 					
-					e.qtip({
+					/*e.qtip({
 						content: html,
 						position: {
 							my: 'top center',
@@ -517,7 +539,37 @@
 							}
 						}
 					});
-					return {};
+					return {};*/
+					var $tip = false;
+					var rendered = false;
+					var api = {
+						hide: function() {
+							e.popover('hide');
+						},
+						close: this.hide
+					};
+					e.popover({
+						title: false,
+						html: true,
+						placement: 'bottom',
+						trigger: 'click',
+						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+						content: html,
+						onshow: function($t) {
+							$tip = $t;
+							if (t.ui.activePopup) t.ui.activePopup.hide();
+							t.ui.activePopup = api;
+							if (!rendered) {
+								if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
+								rendered = true;
+							}
+							if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
+						},
+						onhide: function($t) {
+							t.ui.activePopup = false;
+							//e.popover('destroy');
+						}
+					});
 				},
 
 				dynamicBubble: function(o) {
@@ -568,9 +620,12 @@
 							e.popover('show');
 						},
 						hide: function() {
-							e.popover('hide');
+							e.popover('destroy');
 						},
 						close: this.hide,
+						getContent: function() {
+							return $tip.find('.popover-content');	
+						},
 						content: function(c) {
 							//var $t = e.popover('tip');
 							var $c = $tip.find('.popover-content');
@@ -582,11 +637,13 @@
 						html: true,
 						placement: 'bottom',
 						trigger: 'manual',
-						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
+						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>',
 						content: html,
 						manualout: true,
 						onshow: function($t) {
 							$tip = $t;
+							if (t.ui.activePopup) t.ui.activePopup.hide();
+							t.ui.activePopup = api;
 							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
 								e.popover('destroy');
 							});
@@ -594,6 +651,7 @@
 							if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
 						},
 						onhide: function($t) {
+							t.ui.activePopup = false;
 							//e.popover('destroy');
 						}
 					});
@@ -836,11 +894,10 @@ function DialogHandler() {
 				if (b["title-key"]) return mollify.ui.texts.get(b["title-key"]);
 				return "";
 			}
-		}).dialog({
-			modal: true,
-			resizable: false,
-			height: 'auto',
-			minHeight: 50
+		}).modal({
+			backdrop: true,
+			show: true,
+			keyboard: true
 		});
 		mollify.ui.handlers.localize(dlg);
 		var h = {

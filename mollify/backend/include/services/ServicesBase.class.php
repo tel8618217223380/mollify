@@ -29,8 +29,12 @@
 		protected function init() {}
 
 		public function isAuthenticated() {
-			if (!$this->env->authentication()->isAuthenticated()) return FALSE;
-			if ($this->isAdminRequired() and !$this->env->authentication()->isAdmin()) return FALSE;
+			if ($this->isAuthenticationRequired() and !$this->env->authentication()->isAuthenticated()) return FALSE;
+			if ($this->isAuthenticationRequired() and $this->isAdminRequired() and !$this->env->authentication()->isAdmin()) return FALSE;
+			return TRUE;
+		}
+		
+		protected function isAuthenticationRequired() {
 			return TRUE;
 		}
 		

@@ -14,10 +14,6 @@ function init(path) {
 };
 
 function onSession(session) {
-	if (!session["authentication_required"]) {
-		onError({error:"Configuration Error", details:"Current Mollify configuration does not require authentication, and registration is disabled"});
-		return;
-	}
 	if (!session.features["registration"]) {
 		onError({error:"Configuration Error", details:"Registration plugin not installed"});
 		return;

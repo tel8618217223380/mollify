@@ -13,6 +13,8 @@ public interface MainViewListener {
 	void onSubFolderSelected(JsFolder f);
 
 	void onFolderSelected(int level, JsFolder f);
+	
+	void onRefresh();
 
 	void getItemDetails(JsFilesystemItem item, JavaScriptObject callback);
 }

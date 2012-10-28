@@ -1,5 +1,6 @@
 function MainView() {
 	var that = this;
+	this.currentFolder = false;
 	this.viewStyle = 0;
 	
 	this.init = function(p) {
@@ -33,6 +34,7 @@ function MainView() {
 			var root = $(this).tmplItem().data;
 			that.listener.onFolderSelected(1, root);
 		});
+		$("#mainview-main").click(mollify.ui.hideAllPopups);
 		
 		that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 		that.initList();
@@ -87,15 +89,31 @@ function MainView() {
 	}
 	
 	this.folder = function(p) {
+		that.currentFolder = p.hierarchy[p.hierarchy.length-1];
+		var currentRoot = p.hierarchy[0];
+		
 		$(".mainview-rootlist-item").removeClass("active");
-		$("#mainview-rootlist-item-"+p.hierarchy[0].id).addClass("active");
+		$("#mainview-rootlist-item-"+currentRoot.id).addClass("active");
 		
 		var $h = $("#mollify-folderview-header").empty();
 		if (p) {
-			mollify.dom.template("mollify-tmpl-main-folder", {canWrite: p.canWrite, folder: p.hierarchy[p.hierarchy.length-1]}).appendTo($h);
+			mollify.dom.template("mollify-tmpl-main-folder", {canWrite: p.canWrite, folder: that.currentFolder}).appendTo($h);
 			that.setupHierarchy(p.hierarchy);
 			
-			//TODO canWrite
+			var opt = {
+				title: function() {
+					return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
+				}
+			};
+			$t = $("#mollify-folder-tools");
+			if (p.canWrite) {
+				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function(){
+					 that.onCreateFolder($(this));
+					 return false;
+				});
+				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(that.onUpload);
+			}
+			mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($t).click(that.listener.onRefresh);
 			$("#mollify-folderview-items").addClass("loading");
 		} else {
 			mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
@@ -103,7 +121,19 @@ function MainView() {
 		}
 		$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 		mollify.ui.process($h, ['localize']);
-	}
+	};
+	
+	this.onCreateFolder = function($e) {
+		var bubble = mollify.ui.controls.dynamicBubble({element: $e, content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
+			onRenderBubble: function(b) {
+				$("#mainview-createfolder-name-input").focus();
+			}
+		}});
+	};
+	
+	this.onUpload = function() {
+		mollify.ui.uploader.open(that.currentFolder);
+	};
 	
 	this.setupHierarchy = function(h) {
 		var items = $.merge([{id: 'root', name: ''}], h);
@@ -116,9 +146,9 @@ function MainView() {
 			var index = p.find(".folder-hierarchy-item").index($(this));
 			that.listener.onFolderSelected(index, h[index-1]);
 		});
-	}
+	};
 	
-	this.isListView = function() { return that.viewStyle == 0; }
+	this.isListView = function() { return that.viewStyle == 0; };
 	
 	this.initList = function() {
 		if (that.isListView()) {
@@ -204,11 +234,12 @@ function MainView() {
 		return list;
 	};
 
-	this.findPrimaryAction = function(actions) {
-		if (!actions) return -1;
+	this.getPrimaryActions = function(actions) {
+		if (!actions) return [];
+		var result = [];
 		for (var i=0,j=actions.length; i<j; i++)
-			if (actions[i].id == 'download') return i;
-		return -1;
+			if (actions[i].id == 'download') result.push(actions[i]);
+		return result;
 	};
 		
 	this.openItemContext = function(item, e) {
@@ -222,6 +253,9 @@ function MainView() {
 			content: html,
 			manualout: true,
 			onshow: function($t) {
+				if (mollify.ui.activePopup) t.ui.activePopup.hide();
+				mollify.ui.activePopup = { hide: function() { e.popover('destroy'); } };
+				
 				var closeButton = $('<button type="button" class="close">×</button>').click(function(){
 					e.popover('destroy');
 				});
@@ -239,6 +273,7 @@ function MainView() {
 				});
 			},
 			onhide: function($t) {
+				mollify.ui.activePopup = false;
 				//e.popover('destroy');
 			}
 		});
@@ -298,11 +333,10 @@ function MainView() {
 		var descriptionEditable = showDescription && mollify.session.admin;
 		
 		var pluginData = mollify.plugins.getItemContextData(item, details);
-		var secondaryActions = that.addPluginActions(d[1], pluginData);
-		var primaryActionIndex = that.findPrimaryAction(secondaryActions);
-		var primaryAction = false;
+		var actions = that.addPluginActions(d[1], pluginData);
+		var primaryActions = that.getPrimaryActions(actions);
 		
-		if (primaryActionIndex >= 0) {
+		/*if (primaryActionIndex >= 0) {
 			primaryAction = secondaryActions[primaryActionIndex];
 			secondaryActions.splice(primaryActionIndex,1);
 			var i=0;
@@ -311,7 +345,7 @@ function MainView() {
 				i++;
 			}
 			if (i > 0) secondaryActions.splice(0,i);
-		}
+		}*/
 		var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: pluginData};
 		
 		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
@@ -323,13 +357,23 @@ function MainView() {
 			}});
 		}
 		
-		if (primaryAction) {
-			$("#mollify-itemcontext-primary-actions-button").click(function() {
-				tip.hide();
-				primaryAction.callback();
-			});
+		if (primaryActions) {
+			var $c = $("#mollify-itemcontext-primary-actions");
+			
+			var opt = {
+				title: function() {
+					return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
+				}
+			};
+			for (var i=0; i<primaryActions.length;i++) {
+				var action = primaryActions[i];
+				mollify.dom.template("mollify-tmpl-main-itemcontext-primaryaction", action, opt).appendTo($c).click(function() {
+					tip.hide();
+					action.callback();
+				});
+			}
 		} else {
-			$("#mollify-itemcontext-primary-actions-button").hide();
+			//$("#mollify-itemcontext-primary-actions").hide();
 		}
 		
 		if (pluginData) {
@@ -361,7 +405,7 @@ function MainView() {
 		
 		var actions = mollify.ui.controls.dropdown({
 			element: $e.find("#mollify-itemcontext-secondary-actions"),
-			items: secondaryActions,
+			items: actions,
 			hideDelay: 0,
 			style: 'submenu',
 			onItem: function() {
