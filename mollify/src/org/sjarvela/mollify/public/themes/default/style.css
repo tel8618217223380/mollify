@@ -500,6 +500,7 @@ a.login-link {
 
 .btn.foldertool {
 	height: 37px;
+	margin-right: 4px;
 }
 
 #mollify-folder-name, #mollify-folder-hierarchy {
