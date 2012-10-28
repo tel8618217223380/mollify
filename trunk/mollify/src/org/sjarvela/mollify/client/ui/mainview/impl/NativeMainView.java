@@ -41,6 +41,9 @@ public class NativeMainView extends NativeView implements MainView {
 			onRefresh : function() {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onRefresh()();
 			},
+			onCreateFolder : function(n) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onCreateFolder(Ljava/lang/String;)(n);
+			},
 			onFolderSelected : function(l, f) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onFolderSelected(ILorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(l, f);
 			},

@@ -171,7 +171,6 @@ public class MollifyClient implements Client {
 			return;
 
 		new LoginViewHandler(viewManager, dialogManager, service,
-				serviceProvider.getExternalService("lostpassword"),
-				sessionManager, textProvider);
+				sessionManager);
 	}
 }

@@ -169,10 +169,16 @@ public class MainViewPresenter implements MainViewListener,
 	public void onFolderSelected(int level, JsFolder f) {
 		changeToFolder(level, f);
 	}
-	
+
 	@Override
 	public void onRefresh() {
 		this.reload();
+	}
+
+	@Override
+	public void onCreateFolder(String name) {
+		fileSystemService.createFolder(model.getCurrentFolder(), name,
+				createReloadListener("Create folder"));
 	}
 
 	public void onFileSystemItemSelected(final JsFilesystemItem item,
@@ -398,36 +404,12 @@ public class MainViewPresenter implements MainViewListener,
 	// }
 
 	public void onError(ServiceError error, boolean reload) {
-		// TODO dialogManager.showError(error);
+		dialogManager.showError(error);
 
 		if (reload)
 			reload();
 		else
 			reset();
-	}
-
-	public void openUploadDialog() {
-		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
-			return;
-
-		// TODO
-		// fileUploadDialogFactory.openFileUploadDialog(model.getCurrentFolder(),
-		// createReloadListener("Upload"));
-	}
-
-	public void openNewFolderDialog() {
-		if (!model.hasFolder() || model.getCurrentFolder().isEmpty())
-			return;
-
-		// TODO createFolderDialogFactory.openCreateFolderDialog(
-		// model.getCurrentFolder(), new FolderHandler() {
-		// public void createFolder(Folder parentFolder,
-		// String folderName) {
-		// fileSystemService.createFolder(parentFolder,
-		// folderName,
-		// createReloadListener("Create folder"));
-		// }
-		// });
 	}
 
 	public void retrieveFromUrl() {
