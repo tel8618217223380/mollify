@@ -30,6 +30,7 @@
 			
 			$this->handler = new ItemCollectionHandler($this->env, $this->getSettings());
 			$this->env->events()->register("filesystem/", $this->handler);
+			$this->env->events()->register("user/", $this->handler);
 			if ($this->env->plugins()->hasPlugin("Share")) $this->env->plugins()->getPlugin("Share")->registerHandler("ic", $this->handler);
 		}
 				

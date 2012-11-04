@@ -1,13 +1,12 @@
 CREATE TABLE itemcollection (
-  id bigint(11) NOT NULL auto_increment,
+  id INTEGER PRIMARY KEY,
   name varchar(255) NOT NULL,
   user_id int(11) NOT NULL,
-  created bigint(11) NOT NULL,
-  PRIMARY KEY (id)
+  created bigint(11) NOT NULL
 );
 
 CREATE TABLE itemcollection_item (
-  collection_id char(32) NOT NULL,
+  collection_id INTEGER NOT NULL,
   item_id varchar(128) NOT NULL,
   item_index int(4) NOT NULL,
   PRIMARY KEY (collection_id,item_id),

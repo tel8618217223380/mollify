@@ -19,7 +19,7 @@
 
 		public function getItemCollection($id) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id order by ici.item_index asc")->rows();
+			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id order by ici.item_index asc")->rows();
 			if (count($list) == 0) return FALSE;
 			
 			$items = array();
@@ -31,7 +31,7 @@
 		
 		public function getUserItemCollections($userId) {
 			$db = $this->env->configuration()->db();
-			$list = $db->query("select ic.id, ic.name, ici.item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by ic.created asc, ici.item_index asc")->rows();
+			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by ic.created asc, ici.item_index asc")->rows();
 			
 			$res = array();
 			$id = FALSE;
