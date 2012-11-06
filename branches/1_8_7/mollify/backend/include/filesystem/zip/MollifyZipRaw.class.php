@@ -17,9 +17,10 @@
 		private $name;
 		private $zip;
 		
-		function __construct($env) {
+		function __construct($env, $name = FALSE) {
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
+			$this->name = $name ? $name : uniqid('Mollify', true);
+			$this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$name.'zip';
 			$this->zip = new zipfile();
 		}
 		
@@ -42,21 +43,25 @@
 		}
 		
 		public function finish() {
-			file_put_contents($this->name, $this->zip->file());
+			file_put_contents($this->path, $this->zip->file());
 		}
 		
 		public function stream() {
-			if (!file_exists($this->name))
+			if (!file_exists($this->path))
 				return 0;
 			
-			$handle = @fopen($this->name, "rb");
+			$handle = @fopen($this->path, "rb");
 			if (!$handle)
-				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->path);
 			return $handle;
 		}
 		
-		public function filename() {
+		public function name() {
 			return $this->name;
+		}
+		
+		public function filename() {
+			return $this->path;
 		}
 	}
 ?>

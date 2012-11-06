@@ -28,7 +28,41 @@
 				Logging::logDebug("Ignoring share request, no item collection found with id ".$id);
 				die();
 			}
-			$this->env->filesystem()->downloadAsZip($ic["items"]);
+			if (!$this->env->request()->hasParam("ac")) {
+				$resourcesUrl = $this->env->getCommonResourcesUrl();
+				include("pages/prepare.php");
+				die();
+			}
+			$type = $this->env->request()->param("ac");
+			if (strcmp("prepare", $type) == 0) {
+				$zip = $this->env->filesystem()->createZip($ic["items"], "ic_".uniqid());
+				$this->env->response()->success(array("id" => $zip->name()));
+			} else if (strcmp("download", $type) == 0) {
+				if (!$this->env->request()->hasParam("id")) {
+					Logging::logDebug("Ignoring share request, no zip id provider");
+					die();
+				}
+				
+				$id = urldecode($this->env->request()->param("id"));
+				$file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$id.'zip';
+				if (!file_exists($file)) {
+					Logging::logDebug("Zip file missing ".$file);
+					die();
+				}
+				$handle = @fopen($file, "rb");
+				if (!$handle)
+					throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$file);
+				
+				$name = $ic["name"];
+				if (!$name or strlen($name) == 0) $name = "items";
+				
+				$this->env->response()->download($name.".zip", "zip", FALSE, $handle);
+				$handle->close();
+				unlink($file);
+			} else {
+				Logging::logDebug("Ignoring share request, invalid share action ".$type);
+			}
+			die();
 		}
 		
 		public function getUserItemCollections() {
@@ -55,8 +89,13 @@
 			
 			if (strcmp(FilesystemController::EVENT_TYPE_FILE, $type) == 0 and $subType === FileEvent::DELETE)
 				$this->dao()->deleteCollectionItems($e->item());
-			else if (strcmp(UserEvent::EVENT_TYPE_USER, $type) == 0 and $subType === UserEvent::USER_REMOVE)
-				$this->dao()->deleteUserItemCollections($e->id());
+			else if (strcmp(UserEvent::EVENT_TYPE_USER, $type) == 0 and $subType === UserEvent::USER_REMOVE) {
+				$ids = $this->dao()->deleteUserItemCollections($e->id());
+				if ($this->env->plugins()->hasPlugin("Share") and count($ids) > 0) {
+					foreach($ids as $id)
+						$this->env->plugins()->getPlugin("Share")->deleteSharesForItem("ic_".$id);
+				}
+			}
 		}
 		
 		public function __toString() {

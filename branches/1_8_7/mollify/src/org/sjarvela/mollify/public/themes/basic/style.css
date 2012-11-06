@@ -2378,8 +2378,12 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 #dropboxOpenStoredCollectionsButton {
-	margin-left: 20px;
+	margin-left: 15px;
 	width: 130px;
+	height: 23px;
+	background: #F5F9F9;
+	background-image: none;
+	border: 1px solid #929494;
 }
 
 #mollify-dropbox-actions-button {
@@ -2389,7 +2393,7 @@ select.mollify-fileitem-user-permission-dialog-user, select.mollify-fileitem-use
 }
 
 .mollify-dropbox-actions.multi > #mollify-dropbox-actions-button {
-	margin-left: 40px;
+	margin-left: 45px;
 }
 
 #mollify-dropbox-actions-button:hover {
@@ -3079,7 +3083,9 @@ input.mollify-header-search-field {
 .itemcollectionitem {
 	float: left;
 	width: 100%;
-	height: 20px;
+	min-height: 20px;
+	border-bottom: 1px dotted #dfdfdf;
+	padding: 4px;
 }
 
 .itemcollectionitem-name {

@@ -13,17 +13,19 @@
 	class MollifyZipArchive implements MollifyZip {
 		private $env;
 		private $name;
+		private $path;
 		private $zip;
 		
-		function __construct($env) {
+		function __construct($env, $name = FALSE) {
 			if (!class_exists('ZipArchive'))
 				throw new ServiceException("INVALID_CONFIGURATION", "ZipArchive lib not installed");
 				
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
+			$this->name = $name ? $name : uniqid('Mollify', true);
+			$this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$name.'zip';
 			$this->zip = new ZipArchive();
-			if ($this->zip->open($this->name, ZIPARCHIVE::CREATE) !== TRUE)
-				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->name);
+			if ($this->zip->open($this->path, ZIPARCHIVE::CREATE) !== TRUE)
+				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->path);
 		}
 		
 		public function acceptFolders() {
@@ -39,14 +41,18 @@
 		}
 		
 		public function stream() {
-			$handle = @fopen($this->name, "rb");
+			$handle = @fopen($this->path, "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
 			return $handle;
 		}
-		
-		public function filename() {
+
+		public function name() {
 			return $this->name;
+		}
+				
+		public function filename() {
+			return $this->path;
 		}
 	}
 ?>

@@ -70,12 +70,14 @@
 		
 		private $env;
 		private $name;
+		private $path;
 		private $cmd;
 		private $files = array();
 		
-		function __construct($env) {
+		function __construct($env, $name = FALSE) {
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
+			$this->name = $name ? $name : uniqid('Mollify', true);
+			$this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$name.'zip';
 			$this->cmd = self::command('application/zip');
 			if ($this->cmd == NULL) throw new ServiceException("INVALID_CONFIGURATION", "No native zip library found");
 		}
@@ -145,7 +147,7 @@
 				chdir($common_path);
 			}
 			
-			$cmd = $this->cmd['cmd'].' '.$this->cmd['argc'].' '.escapeshellarg($this->name).' '.$argc;
+			$cmd = $this->cmd['cmd'].' '.$this->cmd['argc'].' '.escapeshellarg($this->path).' '.$argc;
 			
 			exec($cmd, $o, $c);
 			
@@ -154,7 +156,7 @@
 			
 			$this->opened = false;
 			
-			if (file_exists($this->name)) {
+			if (file_exists($this->path)) {
 				return true;
 			} else {
 				// Unable to create archive
@@ -163,17 +165,21 @@
 		}
 		
 		public function stream() {
-			if (!file_exists($this->name))
+			if (!file_exists($this->path))
 				return 0;
 			
-			$handle = @fopen($this->name, "rb");
+			$handle = @fopen($this->path, "rb");
 			if (!$handle)
-				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->path);
 			return $handle;
 		}
 		
-		public function filename() {
+		public function name() {
 			return $this->name;
+		}
+		
+		public function filename() {
+			return $this->path;
 		}
 	}
 ?>
