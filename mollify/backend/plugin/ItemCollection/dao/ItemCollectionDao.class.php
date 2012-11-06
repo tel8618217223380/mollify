@@ -85,13 +85,13 @@
 			$db = $this->env->configuration()->db();
 			
 			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE))->values("id");
-			if (count($list) == 0) return FALSE;
+			if (count($list) == 0) return $list;
 			
 			$db->startTransaction();
 			$db->update("DELETE FROM ".$db->table("itemcollection")." WHERE id in (".$db->arrayString($list, TRUE).")");
 			$db->update("DELETE FROM ".$db->table("itemcollection_item")." WHERE collection_id in (".$db->arrayString($list, TRUE).")");
 			$db->commit();
-			return TRUE;
+			return $list;
 		}
 
 		public function deleteCollectionItems($item) {

@@ -596,7 +596,8 @@
 			$zip = $this->createZip($items);
 			$name = "items.zip";
 			if (!is_array($items)) $name = $items->name().".zip";
-			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
+			$this->env->response()->download($name, "zip", $mobile, $zip->stream());
+			unlink($zip->filename());
 		}
 		
 		public function storeZip($items) {
@@ -617,17 +618,18 @@
 
 			$handle = @fopen($filename, "rb");
 			if (!$handle)
-				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$filename);
 			$this->env->response()->download("items.zip", "zip", $mobile, $handle);
+			unlink($filename);
 		}
 		
-		private function createZip($items) {
+		public function createZip($items, $name = FALSE) {
 			$this->env->features()->assertFeature("zip_download");
 			
 			if (is_array($items)) {
 				$this->assertRights($items, Authentication::RIGHTS_READ, "download as zip");
 				
-				$zip = $this->zipper();
+				$zip = $this->zipper($name);
 				foreach($items as $item) {
 					$item->addToZip($zip);
 					$this->env->events()->onEvent(FileEvent::download($item));
@@ -687,19 +689,19 @@
 			return $result;
 		}
 		
-		public function zipper() {
+		public function zipper($name = FALSE) {
 			require_once('zip/MollifyZip.class.php');
 			$zipper = $this->setting("zipper", TRUE);
 			
 			if (strcasecmp($zipper, "ziparchive") === 0) {
 				require_once('zip/MollifyZipArchive.class.php');
-				return new MollifyZipArchive($this->env);
+				return new MollifyZipArchive($this->env, $name);
 			} else if (strcasecmp($zipper, "native") === 0) {
 				require_once('zip/MollifyZipNative.class.php');
-				return new MollifyZipNative($this->env);
+				return new MollifyZipNative($this->env, $name);
 			} else if (strcasecmp($zipper, "raw") === 0) {
 				require_once('zip/MollifyZipRaw.class.php');
-				return new MollifyZipRaw($this->env);
+				return new MollifyZipRaw($this->env, $name);
 			}
 			
 			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported zipper configured: ".$zipper);

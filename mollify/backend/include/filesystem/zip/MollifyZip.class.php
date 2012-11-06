@@ -19,6 +19,8 @@
 		
 		function stream();
 		
+		function name();
+		
 		function filename();
 	}
 ?>
