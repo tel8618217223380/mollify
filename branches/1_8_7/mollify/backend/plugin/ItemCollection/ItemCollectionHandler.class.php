@@ -28,6 +28,11 @@
 				Logging::logDebug("Ignoring share request, no item collection found with id ".$id);
 				die();
 			}
+			if (count($ic["items"]) == 0) {
+				$resourcesUrl = $this->env->getCommonResourcesUrl();
+				include("pages/empty.php");
+				die();
+			}
 			if (!$this->env->request()->hasParam("ac")) {
 				$resourcesUrl = $this->env->getCommonResourcesUrl();
 				include("pages/prepare.php");
@@ -35,6 +40,9 @@
 			}
 			$type = $this->env->request()->param("ac");
 			if (strcmp("prepare", $type) == 0) {
+				foreach($ic["items"] as $item)
+					$this->env->filesystem()->temporaryItemPermission($item, Authentication::PERMISSION_VALUE_READONLY);
+				
 				$zip = $this->env->filesystem()->createZip($ic["items"], "ic_".uniqid());
 				$this->env->response()->success(array("id" => $zip->name()));
 			} else if (strcmp("download", $type) == 0) {
