@@ -14,10 +14,13 @@
 		<script>
 			$(document).ready(function() {
 				var loc = window.location;
+				var mobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent));
 				$.get(loc+"?ac=prepare", function(r) {
 					$("#itemcollection-preparing").hide();
 					$("#itemcollection-downloading").show();
-					window.location = loc + "?ac=download&id="+encodeURIComponent(r.result.id);
+					var url = loc + "?ac=download&id="+encodeURIComponent(r.result.id);
+					if (mobile) url = url + "&m=1";
+					window.location = url;
 				});
 			});
 		</script>

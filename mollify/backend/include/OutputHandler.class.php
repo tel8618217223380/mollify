@@ -120,15 +120,15 @@
 				header('Content-Length: '.($end - $start + 1));
 			} else {
 				if ($size) header("Content-Length: ".$size);
-				header("Cache-Control: public, must-revalidate");
+				if (!$mobile) header("Cache-Control: public, must-revalidate");
 				header("Content-Type: application/octet-stream");
 				if (!$mobile) {
 					header("Content-Type: application/force-download");	// mobile browsers don't like these
 					header("Content-Type: application/download");
 				}
-				header("Content-Disposition: attachment; filename=\"".$filename."\";");
-				header("Content-Transfer-Encoding: binary");
-				header("Pragma: hack");
+				header("Content-Disposition: attachment; filename=\"".$filename."\"");
+				if (!$mobile) header("Content-Transfer-Encoding: binary");
+				if (!$mobile) header("Pragma: hack");
 			}
 
 			Logging::logDebug("Sending $filename ($size)");

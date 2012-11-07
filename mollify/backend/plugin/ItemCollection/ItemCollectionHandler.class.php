@@ -51,6 +51,7 @@
 					die();
 				}
 				
+				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				$id = urldecode($this->env->request()->param("id"));
 				$file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$id.'zip';
 				if (!file_exists($file)) {
@@ -64,8 +65,8 @@
 				$name = $ic["name"];
 				if (!$name or strlen($name) == 0) $name = "items";
 				
-				$this->env->response()->download($name.".zip", "zip", FALSE, $handle);
-				$handle->close();
+				$this->env->response()->download($name.".zip", "zip", $mobile, $handle, filesize($file));
+				fclose($handle);
 				unlink($file);
 			} else {
 				Logging::logDebug("Ignoring share request, invalid share action ".$type);
