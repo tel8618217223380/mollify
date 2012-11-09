@@ -874,6 +874,24 @@ function DialogHandler() {
 		});
 	};
 	
+	this.input = function(spec) {
+		that.custom({
+			title: spec.title,
+			html: spec.message + '<input id="">',
+			buttons: [
+				{ id: "yes", "title-key": "yes" },
+				{ id: "no", "title-key": "no" }
+			],
+			"on-button": function(btn, d) {
+				d.close();
+				if (spec.callback && btn.id === 'yes') spec.callback();
+			},
+			"on-show": function() {
+				
+			}
+		});
+	};
+	
 	this.wait = function(spec) {
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
 		var w = mollify.dom.template("mollify-tmpl-wait", $.extend(spec, dialogDefaults)).appendTo($trg).show();

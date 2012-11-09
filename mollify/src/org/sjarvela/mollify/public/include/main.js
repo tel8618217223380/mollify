@@ -364,6 +364,11 @@ function MainView() {
 		var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: pluginData};
 		
 		$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
+		$e.click(function(e){
+			// prevent from closing the popup when clicking the popup itself
+			e.preventDefault();
+			return false;
+		});
 		mollify.ui.process($e, ["localize"]);
 		
 		if (descriptionEditable) {
@@ -701,6 +706,7 @@ function FileList(container, id, columns) {
 	
 	this.onItemClick = function($item, $el, left) {
 		var i = $item.find(".mollify-filelist-col").index($el.closest(".mollify-filelist-col"));
+		if (i<0) return;
 		var colId = (i == 0 ? "icon" : t.cols[i-1].id);
 		if (left)
 			t.p.onClick($item.tmplItem().data, colId, $item);

@@ -14,14 +14,12 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 
 public enum FileSystemAction implements ResourceId {
-	download, rename, copy, copyHere, move, delete, upload, details, create_folder, download_as_zip, set_description, remove_description, get_item_permissions, view, edit, publicLink;
+	download, rename, copy, copyHere, move, delete, upload, create_folder, download_as_zip, get_item_permissions;
 
 	public boolean isApplicableToFolder() {
 		return (this.equals(upload) || this.equals(create_folder)
 				|| this.equals(move) || this.equals(rename)
-				|| this.equals(delete) || this.equals(download_as_zip)
-				|| this.equals(set_description) || this
-					.equals(remove_description));
+				|| this.equals(delete) || this.equals(download_as_zip));
 	}
 
 	public boolean isApplicableToFile() {
