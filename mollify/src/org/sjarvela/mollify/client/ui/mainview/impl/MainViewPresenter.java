@@ -49,6 +49,7 @@ import org.sjarvela.mollify.client.ui.dialog.InputListener;
 import org.sjarvela.mollify.client.ui.dialog.WaitDialog;
 import org.sjarvela.mollify.client.ui.dnd.DragDataProvider;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.dropbox.DropboxListener;
 import org.sjarvela.mollify.client.ui.filelist.FileList;
 import org.sjarvela.mollify.client.ui.fileupload.FileUploadDialogFactory;
 import org.sjarvela.mollify.client.ui.folderselector.FolderListener;
@@ -96,7 +97,7 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 			MainViewModel model, DefaultMainView view,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
-			FileSystemActionHandler fileSystemActionHandler,
+			final FileSystemActionHandler fileSystemActionHandler,
 			PermissionEditorViewFactory permissionEditorViewFactory,
 			PasswordDialogFactory passwordDialogFactory,
 			FileUploadDialogFactory fileUploadDialogFactory,
@@ -127,6 +128,16 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 		this.searchResultDialogFactory = searchResultDialogFactory;
 
 		this.view.getItemContext().setActionHandler(fileSystemActionHandler);
+
+		dropBox.addListener(new DropboxListener() {
+			@Override
+			public void onAddItem() {
+				if (!slidebarVisible) {
+					slidebarVisible = true;
+					toggle(true);
+				}
+			};
+		});
 
 		this.view.getFolderSelector().addListener(this);
 		this.view
@@ -469,9 +480,19 @@ public class MainViewPresenter implements FolderListener, PasswordHandler,
 	}
 
 	public void onOpenAdministration() {
+		if (callNativeOpener(configurationService.getAdministrationUrl()))
+			return;
 		viewManager.openUrlInNewWindow(configurationService
 				.getAdministrationUrl());
 	}
+
+	private native boolean callNativeOpener(String url) /*-{
+		if ($wnd.openAdminUtil) {
+			$wnd.openAdminUtil(url);
+			return true;
+		}
+		return false;
+	}-*/;
 
 	public void onToggleSelectMode() {
 		view.setSelectMode(view.selectModeButton().isDown());

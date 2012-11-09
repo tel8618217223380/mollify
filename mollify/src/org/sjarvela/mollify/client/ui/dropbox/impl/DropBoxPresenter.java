@@ -34,7 +34,7 @@ public class DropBoxPresenter {
 		this.session = session;
 		this.fileItemActionHandler = actionHandler;
 		this.currentFolderProvider = currentFolderProvider;
-		
+
 		refreshContent();
 	}
 
@@ -81,25 +81,25 @@ public class DropBoxPresenter {
 	}
 
 	public void onCopyItems() {
-		fileItemActionHandler.onAction(items, FileSystemAction.copy, null, view
-				.getActionButton(), createSuccessCallback());
+		fileItemActionHandler.onAction(items, FileSystemAction.copy, null,
+				view.getActionButton(), createSuccessCallback());
 	}
 
 	public void onCopyHereItems() {
 		fileItemActionHandler.onAction(items, FileSystemAction.copy,
-				currentFolderProvider.getCurrentFolder(), view
-						.getActionButton(), createSuccessCallback());
+				currentFolderProvider.getCurrentFolder(),
+				view.getActionButton(), createSuccessCallback());
 	}
 
 	public void onMoveItems() {
-		fileItemActionHandler.onAction(items, FileSystemAction.move, null, view
-				.getActionButton(), createSuccessCallback());
+		fileItemActionHandler.onAction(items, FileSystemAction.move, null,
+				view.getActionButton(), createSuccessCallback());
 	}
 
 	public void onMoveHereItems() {
 		fileItemActionHandler.onAction(items, FileSystemAction.move,
-				currentFolderProvider.getCurrentFolder(), view
-						.getActionButton(), createSuccessCallback());
+				currentFolderProvider.getCurrentFolder(),
+				view.getActionButton(), createSuccessCallback());
 	}
 
 	public void onDownloadAsZip() {

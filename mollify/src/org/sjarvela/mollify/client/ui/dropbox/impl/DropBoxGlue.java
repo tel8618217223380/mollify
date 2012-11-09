@@ -19,6 +19,7 @@ import org.sjarvela.mollify.client.ui.action.ActionHandler;
 import org.sjarvela.mollify.client.ui.action.VoidActionHandler;
 import org.sjarvela.mollify.client.ui.dnd.DragAndDropManager;
 import org.sjarvela.mollify.client.ui.dropbox.DropBox;
+import org.sjarvela.mollify.client.ui.dropbox.DropboxListener;
 import org.sjarvela.mollify.client.ui.dropbox.impl.DropBoxView.Actions;
 import org.sjarvela.mollify.client.ui.filelist.DraggableFileSystemItem;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DropBoxGlue implements DropBox, DropController {
 	private final DropBoxView view;
 	private final DropBoxPresenter presenter;
+	private final List<DropboxListener> listeners = new ArrayList();
 
 	public DropBoxGlue(ActionDelegator actionDelegator, DropBoxView view,
 			final DropBoxPresenter presenter,
@@ -161,8 +163,16 @@ public class DropBoxGlue implements DropBox, DropController {
 	}
 
 	@Override
+	public void addListener(DropboxListener dropboxListener) {
+		this.listeners.add(dropboxListener);
+	}
+
+	@Override
 	public void addItems(List<FileSystemItem> items) {
 		presenter.onDropItems(items);
+		for (DropboxListener listener : listeners) {
+			listener.onAddItem();
+		}
 	}
 
 	@Override
