@@ -99,11 +99,14 @@ public class DropBoxView extends FlowPanel {
 		}
 		if (session.getFeatures().has("itemcollection")) {
 			actions.addStyleName("multi");
-			
+
 			actionsButton.addSeparator();
-			actionsButton.addAction(Actions.store, textProvider.getText("dropboxStoreCollectionAction"));
-			
-			ActionButton open = new ActionButton(textProvider.getText("dropboxOpenStoredCollectionsButton"), "dropboxOpenStoredCollectionsButton");
+			actionsButton.addAction(Actions.store,
+					textProvider.getText("dropboxStoreCollectionAction"));
+
+			ActionButton open = new ActionButton(
+					textProvider.getText("dropboxOpenStoredCollectionsButton"),
+					"dropboxOpenStoredCollectionsButton");
 			open.setAction(actionListener, Actions.showStored);
 			actions.add(open);
 		}
@@ -189,4 +192,5 @@ public class DropBoxView extends FlowPanel {
 	public void setActionsEnabled(boolean enabled) {
 		actionsButton.setEnabled(enabled);
 	}
+
 }

@@ -28,4 +28,6 @@ public interface DropBox {
 
 	public Widget getWidget();
 
+	public void addListener(DropboxListener dropboxListener);
+
 }
