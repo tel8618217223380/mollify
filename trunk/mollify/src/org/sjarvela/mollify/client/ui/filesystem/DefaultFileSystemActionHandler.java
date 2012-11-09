@@ -40,37 +40,20 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
-	// private final FileSystemItemProvider fileSystemItemProvider;
 	private final TextProvider textProvider;
-	// private final ItemSelectorFactory itemSelectorFactory;
-	// private final RenameDialogFactory renameDialogFactory;
-	// private final FileViewerFactory fileViewerFactory;
-	// private final FileEditorFactory fileEditorFactory;
 	private final SessionInfo session;
 
 	private final List<FileSystemActionListener> listeners = new ArrayList();
 
-	public DefaultFileSystemActionHandler(
-			EventDispatcher eventDispatcher,
-			TextProvider textProvider,
-			ViewManager viewManager,
-			DialogManager dialogManager,
-			// ItemSelectorFactory itemSelectorFactory,
-			// RenameDialogFactory renameDialogFactory,
-			// FileViewerFactory fileViewerFactory,
-			// FileEditorFactory fileEditorFactory,
-			FileSystemService fileSystemService,
+	public DefaultFileSystemActionHandler(EventDispatcher eventDispatcher,
+			TextProvider textProvider, ViewManager viewManager,
+			DialogManager dialogManager, FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
 		this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
-		// this.itemSelectorFactory = itemSelectorFactory;
-		// this.renameDialogFactory = renameDialogFactory;
-		// this.fileViewerFactory = fileViewerFactory;
-		// this.fileEditorFactory = fileEditorFactory;
 		this.fileSystemService = fileSystemService;
-		// this.fileSystemItemProvider = fileSystemItemProvider;
 		this.session = session;
 	}
 
@@ -226,23 +209,29 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	}
 
 	private void onFileAction(final JsFile file, FileSystemAction action) {
-		if (action.equals(FileSystemAction.view)) {
-			// fileViewerFactory.openFileViewer(file, viewParams);
-		} else if (action.equals(FileSystemAction.edit)) {
-			// fileEditorFactory.openFileEditor(file, viewParams);
-		} else if (action.equals(FileSystemAction.publicLink)) {
-			// dialogManager.showInfo(
-			// textProvider.getText(Texts.filePublicLinkTitle),
-			// textProvider.getText(Texts.publicLinkMessage,
-			// file.getName()),
-			// fileSystemService.getPublicLink(file));
-		} else if (action.equals(FileSystemAction.download)) {
+		if (action.equals(FileSystemAction.download)) {
 			viewManager.openDownloadUrl(fileSystemService.getDownloadUrl(file,
 					session.getSessionId()));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
 			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl((JsFilesystemItem) file.cast()));
 		} else if (action.equals(FileSystemAction.rename)) {
+			dialogManager.showInputDialog(
+					textProvider.getText(Texts.renameDialogTitleFile),
+					textProvider.getText(Texts.renameDialogNewName,
+							file.getName()), file.getName(),
+					new InputListener() {
+						@Override
+						public boolean isInputAcceptable(String input) {
+							return !input.isEmpty()
+									&& !file.getName().equals(input);
+						}
+
+						@Override
+						public void onInput(String name) {
+							rename((JsFilesystemItem) file.cast(), name);
+						}
+					});
 			// renameDialogFactory.openRenameDialog(file, this, source);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
