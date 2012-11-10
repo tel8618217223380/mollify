@@ -1,4 +1,4 @@
-window.mollify = new function() {
+(function($){window.mollify = new function() {
 	var defaults = {
 		"template-url": "client/templates/",
 		"service-path": "backend/",
@@ -120,6 +120,7 @@ window.mollify = new function() {
 			
 		t.templates.load("dialogs.html");
 		
+		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader();
 		//$.datepicker.setDefaults({
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});
@@ -247,6 +248,8 @@ window.mollify = new function() {
 	}
 	
 	this.ui = {
+		uploader : false,
+		
 		filelist : {
 			columns : [],
 			addColumn : function(c) {
@@ -872,7 +875,7 @@ $.extend(true, mollify, {
 			};
 			
 			this.custom = function(spec) {
-				var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
+				var $dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
 					getContent: function() {
 						if (spec.html) return spec.html;
 						if (spec.content) {
@@ -888,20 +891,23 @@ $.extend(true, mollify, {
 						return "";
 					}
 				});
-				mollify.ui.handlers.localize(dlg);
-				dlg.on('hidden', function() { dlg.remove(); }).modal({
+				if (spec.element) $dlg.find(".modal-body").append(spec.element);
+				
+				mollify.ui.handlers.localize($dlg);
+				$dlg.on('hidden', function() { $dlg.remove(); }).modal({
 					backdrop: !!spec.backdrop,
 					show: true,
 					keyboard: true
 				});
 				var h = {
 					close: function() {
-						dlg.modal('hide');
+						$dlg.modal('hide');
 					}
 				};
-				dlg.find(".btn").click(function(e) {
+				$dlg.find(".btn").click(function(e) {
 					e.preventDefault();
-					var btn = $(this).tmplItem().data;
+					var data = $(this).tmplItem().data;
+					var btn = data.buttons[$(this).index()];
 					if (spec["on-button"]) spec["on-button"](btn, h);
 				});
 				if (spec["on-show"]) spec["on-show"](h);
@@ -1748,6 +1754,10 @@ function SharePlugin() {
 		return that.env.texts().get(s, p);
 	}
 }*/
+
+})(window.jQuery);
+
+/* Common */
 
 function isArray(o) {
 	return Object.prototype.toString.call(o) === '[object Array]';

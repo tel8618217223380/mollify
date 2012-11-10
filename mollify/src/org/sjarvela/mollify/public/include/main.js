@@ -1,7 +1,7 @@
 /**
 /* Main view
 /**/
-$.extend(true, mollify, {
+(function($){$.extend(true, mollify, {
 	view : {
 		MainView : function () {
 			var that = this;
@@ -730,5 +730,4 @@ $.extend(true, mollify, {
 			}
 		}
 	}
-});
-
+});})(window.jQuery);
