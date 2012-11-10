@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -52,7 +51,7 @@ public interface MainView {
 
 	void setData(List<JavaScriptObject> allItems, JsObj data);
 
-	void sortColumn(String columnId, SortOrder sort);
+	// void sortColumn(String columnId, SortOrder sort);
 
 	void selectAll();
 

@@ -39,7 +39,6 @@ import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
@@ -572,15 +571,12 @@ public class MainViewPresenter implements MainViewListener,
 				});
 	}
 
-	public void setListOrder(String columnId, SortOrder sort) {
-		view.sortColumn(columnId, sort);
-	}
-
 	public void onEditItemPermissions() {
 		// permissionEditorViewFactory.openPermissionEditor(null);
 	}
 
 	public void onOpenAdministration() {
+		//TODO ulkoista
 		viewManager.openUrlInNewWindow(configurationService
 				.getAdministrationUrl());
 	}
