@@ -875,7 +875,10 @@ $.extend(true, mollify, {
 			};
 			
 			this.custom = function(spec) {
-				var $dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
+				var s = spec;
+				if (s['title-key']) s.title = mollify.ui.texts.get(s['title-key']);
+				
+				var $dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, s), {
 					getContent: function() {
 						if (spec.html) return spec.html;
 						if (spec.content) {

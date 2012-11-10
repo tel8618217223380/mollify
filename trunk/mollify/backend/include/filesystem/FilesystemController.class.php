@@ -517,16 +517,16 @@
 			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 			
-			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-flash']))
-				throw new ServiceException("NO_UPLOAD_DATA");
-			
 			if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
 			
-			// flash uploader (uploads one file at a time)
-			if (isset($_FILES['uploader-flash'])) {
-				if (!isset($_FILES['uploader-flash']['tmp_name'])) throw new ServiceException("UPLOAD_FAILED");
+			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-html5']))
+				throw new ServiceException("NO_UPLOAD_DATA");
+			
+			// html5 uploader (uploads one file at a time)
+			if (isset($_FILES['uploader-html5'])) {
+				if (!isset($_FILES['uploader-html5']['tmp_name'])) throw new ServiceException("UPLOAD_FAILED");
 				
-				$this->upload($folder, $_FILES['uploader-flash']['name'], $_FILES['uploader-flash']['tmp_name']);
+				$this->upload($folder, $_FILES['uploader-html5']['name'][0], $_FILES['uploader-html5']['tmp_name'][0]);
 				return;
 			}
 	
