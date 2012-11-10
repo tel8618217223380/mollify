@@ -30,7 +30,6 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ConfirmationListener;
-import org.sjarvela.mollify.client.ui.StyleConstants;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
@@ -73,7 +72,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					Texts.confirmMultipleItemDeleteMessage,
 					String.valueOf(items.size()));
 			dialogManager.showConfirmationDialog(title, message,
-					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
 							fileSystemService.delete(items,
@@ -298,7 +296,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				String message = textProvider.getText(
 						Texts.confirmFileDeleteMessage, file.getName());
 				dialogManager.showConfirmationDialog(title, message,
-						StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 						new ConfirmationListener() {
 							public void onConfirm() {
 								delete((JsFilesystemItem) file.cast());
@@ -360,7 +357,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			String message = textProvider.getText(
 					Texts.confirmDirectoryDeleteMessage, folder.getName());
 			dialogManager.showConfirmationDialog(title, message,
-					StyleConstants.CONFIRMATION_DIALOG_TYPE_DELETE,
 					new ConfirmationListener() {
 						public void onConfirm() {
 							delete((JsFilesystemItem) folder.cast());

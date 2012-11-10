@@ -56,9 +56,9 @@ public class DefaultDialogManager implements DialogManager {
 
 	@Override
 	public void showConfirmationDialog(String title, String message,
-			String style, ConfirmationListener listener) {
+			ConfirmationListener listener) {
 		JsObjBuilder spec = new JsObjBuilder().string("title", title)
-				.string("message", message).string("style", style)
+				.string("message", message)
 				.obj("callback", createNativeListener(listener));
 		this.handler.call("confirmation", spec.create());
 	}

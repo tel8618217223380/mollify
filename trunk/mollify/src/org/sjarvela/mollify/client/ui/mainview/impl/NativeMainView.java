@@ -7,7 +7,6 @@ import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.ui.NativeView;
-import org.sjarvela.mollify.client.ui.common.grid.SortOrder;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
 import org.sjarvela.mollify.client.util.JsUtil;
@@ -110,12 +109,6 @@ public class NativeMainView extends NativeView implements MainView {
 								JsUtil.asJsArray(allItems,
 										JavaScriptObject.class))
 						.obj("data", data).create());
-	}
-
-	@Override
-	public void sortColumn(String columnId, SortOrder sort) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

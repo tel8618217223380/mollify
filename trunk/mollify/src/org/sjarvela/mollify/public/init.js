@@ -120,7 +120,7 @@
 			
 		t.templates.load("dialogs.html");
 		
-		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader();
+		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader(t.env);
 		//$.datepicker.setDefaults({
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});

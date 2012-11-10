@@ -1,7 +1,8 @@
 (function($){$.extend(true, mollify, {
 	plugin : {
-		MollifyUploader : function() {
+		MollifyUploader : function(env) {
 			var t = this;
+			this.env = env;
 			
 			this.open = function(folder) {
 				var $d = mollify.dom.template("mollify-tmpl-uploader-dlg");
@@ -20,7 +21,7 @@
 			};
 			
 			this.onOpen = function($d, dlg, folder) {
-				var $form = $d.find(".mollify-uploader-form");
+				var $form = $d.find(".mollify-uploader-form").attr("action", t.env.service.url("filesystem/"+folder.id));
 				$form.append(mollify.dom.template("mollify-tmpl-uploader-file"));
 			};
 			
