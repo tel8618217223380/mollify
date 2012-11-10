@@ -12,17 +12,24 @@
 						{ id:0, "title-key": "upload" },
 						{ id:1, "title-key": "cancel" }
 					],
-					"on-button": function(btn, d) {
+					"on-button": function(btn, dlg) {
 						if (btn.id == 1)
-							d.close();
+							dlg.close();
+						else t.onUpload($d, dlg,folder);
 					},
 					"on-show": function(dlg) { t.onOpen($d, dlg, folder); }
 				});
 			};
 			
 			this.onOpen = function($d, dlg, folder) {
-				var $form = $d.find(".mollify-uploader-form").attr("action", t.env.service.url("filesystem/"+folder.id));
+				var $form = $d.find(".mollify-uploader-form").attr("action", mollify.service.url("filesystem/"+folder.id));
 				$form.append(mollify.dom.template("mollify-tmpl-uploader-file"));
+			};
+			
+			this.onUpload = function($d, dlg, folder) {
+				//TODO check if there are files
+				var $form = $d.find(".mollify-uploader-form");
+				$form.submit();
 			};
 			
 			return {

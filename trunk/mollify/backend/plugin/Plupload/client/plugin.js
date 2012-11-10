@@ -205,7 +205,7 @@ function PluploadPlugin() {
 	}
 	
 	this.url = function(p) {
-		var url = that.env.service().getPluginUrl("Plupload")+"client/";
+		var url = that.env.service.pluginUrl("Plupload")+"client/";
 		if (!p) return url;
 		return url + p;
 	}

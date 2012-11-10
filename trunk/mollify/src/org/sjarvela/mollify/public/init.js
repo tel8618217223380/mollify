@@ -153,7 +153,7 @@
 		};
 		
 		this.url = function(id, p) {
-			return t.env.service().getPluginUrl(id)+"client/"+p;
+			return t.service.pluginUrl(id)+"client/"+p;
 		};
 		
 		this.getItemContextData = function(item, d) {
@@ -940,7 +940,7 @@ $.extend(true, mollify, {
 				if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
 				if (mollify.hasFeature('registration')) {
 					$("#login-register").click(function() {
-						mollify.ui.window.open(mollify.service.getPluginUrl("registration"));
+						mollify.ui.window.open(mollify.service.pluginUrl("registration"));
 					});
 					$("#login-register").show();
 				}
