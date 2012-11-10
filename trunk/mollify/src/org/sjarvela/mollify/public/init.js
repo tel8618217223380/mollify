@@ -1,1101 +1,80 @@
-(function(){
-	window.mollify = new function(){
-		var defaults = {
-			"template-url": "client/templates/",
-			"service-path": "backend/",
-			"list-view-columns": {
-				"name": { width: 250 },
-				"size": {},
-				"file-modified": { width: 150 }
-			}
-		};
-		var t = this;
-		t.time = new Date().getTime();
-		
-		this.settings = {};
-
-		this.init = function(s, p) {
-			if (p) {
-				for (var i=0, j=p.length; i < j; i++)
-					t.plugins.register(p[i]);
-			}
-			
-			t.settings = $.extend({}, defaults, s);
+window.mollify = new function() {
+	var defaults = {
+		"template-url": "client/templates/",
+		"service-path": "backend/",
+		"list-view-columns": {
+			"name": { width: 250 },
+			"size": {},
+			"file-modified": { width: 150 }
 		}
-		
-		this.setup = function(core, cb) {
-			t.env = core;
-			t.ui.texts = t.env.texts();
-			t.service = t.env.service();
-			t.session = {};
-			
-			core.addEventHandler(function(e) {
-				if (e.type == 'SESSION_START') {
-					t.session = core.session.get();
-				} else if (e.type == 'SESSION_END') {
-					t.session = {};
-				}
-			});
-
-			if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
-			
-			t.ui.filelist.addColumn({
-				"id": "name",
-				"title-key": "fileListColumnTitleName",
-				"sort": function(i1, i2, sort, data) {
-					return i1.name.toLowerCase().localeCompare(i2.name.toLowerCase()) * sort;
-				},
-				"content": function(item, data) {
-					return item.name;
-				}
-			});
-			t.ui.filelist.addColumn({
-				"id": "type",
-				"title-key": "fileListColumnTitleType",
-				"sort": function(i1, i2, sort, data) {
-					return i1.extension.toLowerCase().localeCompare(i2.extension.toLowerCase()) * sort;
-				},
-				"content": function(item, data) {
-					return item.extension;
-				}
-			});
-			t.ui.filelist.addColumn({
-				"id": "size",
-				"title-key": "fileListColumnTitleSize",
-				"sort": function(i1, i2, sort, data) {
-					var s1 = i1.is_file ? parseInt(i1.size) : 0;
-					var s2 = i2.is_file ? parseInt(i2.size) : 0;
-					return (s1-s2) * sort;
-				},
-				"content": function(item, data) {
-					return item.is_file ? t.env.texts().formatSize(item.size) : '';
-				}
-			});
-			t.ui.filelist.addColumn({
-				"id": "file-modified",
-				"request-id": "core-file-modified",
-				"title-key": "fileListColumnTitleLastModified",
-				"sort": function(i1, i2, sort, data) {
-					if (!i1.is_file && !i2.is_file) return 0;
-					if (!data || !data["core-file-modified"]) return 0;
-					
-					var ts1 = data["core-file-modified"][i1.id] ? data["core-file-modified"][i1.id] * 1 : 0;
-					var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
-					return ((ts1 > ts2) ? 1 : -1) * sort;
-				},
-				"content": function(item, data) {
-					if (!item.id || !item.is_file || !data || !data["core-file-modified"] || !data["core-file-modified"][item.id]) return "";
-					return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
-				}
-			});
-			t.ui.filelist.addColumn({
-				"id": "item-description",
-				"request-id": "core-item-description",
-				"title-key": "fileListColumnTitleDescription",
-				"sort": function(i1, i2, sort, data) {
-					if (!i1.is_file && !i2.is_file) return 0;
-					if (!data || !data["core-item-description"]) return 0;
-					
-					var d1 = data["core-item-description"][i1.id] ? data["core-item-description"][i1.id] : '';
-					var d2 = data["core-item-description"][i2.id] ? data["core-item-description"][i2.id] : '';
-					return ((d1 > d2) ? 1 : -1) * sort;
-				},
-				"content": function(item, data) {
-					if (!item.id || !data || !data["core-item-description"] || !data["core-item-description"][item.id]) return "";
-					var desc = data["core-item-description"][item.id];
-					var stripped = desc.replace(/<\/?[^>]+(>|$)/g, '');
-					return '<div class="item-description-container" title="'+stripped+'">'+desc+'</div>';
-				}
-			});
-			
-			t.ui.views = {
-				login : new LoginView(),
-				mainview : new MainView(),
-				
-				dialogs : new DialogHandler()
-			}
-			t.env.views().registerHandlers(t.ui.views);
-			
-			t.plugins.initialize(t.env);
-				
-			t.templates.load("dialogs.html");
-			
-			//$.datepicker.setDefaults({
-			//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
-			//});
-			if (cb) cb();
-		}
-		
-		this.plugins = new function() {
-			var pl = this;
-			this.list = {};
-			this.info = {};
-			
-			this.register = function(p) {
-				var info = p.getPluginInfo();
-				if (!info) return;
-				var id = info.id;
-				if (!id) return;
-				
-				pl.list[id] = p;
-				pl.info[id] = info;
-			};
-			
-			this.initialize = function(core) {
-				for (var id in pl.list)
-					pl.list[id].initialize(core);
-			};
-			
-			this.get = function(id) {
-				if (!def(id)) return pl.list;
-				return pl.list[id];
-			};
-			
-			this.exists = function(id) {
-				return !!pl.list[id];
-			};
-			
-			this.url = function(id, p) {
-				return t.env.service().getPluginUrl(id)+"client/"+p;
-			};
-			
-			this.getItemContextData = function(item, d) {
-				var data = {};
-				for (var id in pl.list) {
-					var plugin = pl.list[id];
-					var pluginData = plugin.getItemContextData(item, d);
-					if (pluginData) data[id] = pluginData;
-				}
-				return data;
-			}
-		};
-		
-		this.hasFeature = function(id) {
-			return t.session.features && t.session.features[id];
-		};
-
-		this.locale = function() {
-			return t.texts.locale;
-		};
-				
-		this.urlWithParam = function(url, param) {
-			return url + (strpos(url, "?") ? "&" : "?") + param;
-		}
-		
-		this.noncachedUrl = function(url) {
-			return t.urlWithParam(url, "_="+t.time);
-		}
-		
-		this.templates = {
-			loaded: [],
-			
-			url : function(name) {
-				var base = t.settings["template-url"] || 'client/templates/';
-				return t.noncachedUrl(base + name);
-			},
-			
-			load : function(name, url, cb) {
-				if (t.templates.loaded.indexOf(name) >= 0) {
-					if (cb) cb();
-					return;
-				}
-				
-				$.get(url ? url : t.templates.url(name), function(h) {
-					t.templates.loaded.push(name);
-					$("body").append(h);
-					if (cb) cb();
-				});
-			}
-		}
-		
-		this.dom = {
-			importScript : function(url) {
-				$.getScript(url);
-			},
-			
-			importCss : function(url) {
-				var link = $("<link>");
-				link.attr({
-			    	type: 'text/css',
-			    	rel: 'stylesheet',
-			    	href: t.noncachedUrl(url)
-				});
-				$("head").append(link);
-			},
-			
-			loadContent : function(id, url, handler, process) {
-				var $target = $("#"+id);
-				$target.load(t.urlWithParam(url, "_="+mollify.time), function() {
-					if (process) t.ui.process($target, process, handler);
-					if (typeof handler === 'function') handler();
-					else if (handler.onLoad) handler.onLoad(id);
-				});
-			},
-			
-			template : function(id, data, opt) {
-				return $("#"+id).tmpl(data, opt);
-			}
-		}
-		
-		this.ui = {
-			uploader : {
-				open : function(f) {
-					mollify.ui.views.dialogs.custom({
-						html: "foo",
-						buttons: [
-							{ id:0, "title-key": "upload" }
-						],
-						"on-button": function(btn, d) {
-							d.close();
-						}
-					});
-				}
-			},
-			
-			filelist : {
-				columns : [],
-				addColumn : function(c) {
-					t.ui.filelist.columns.push(c);
-					if (t.settings["list-view-columns"][c.id])
-						t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
-				}
-			},
-			
-			assign: function(h, id, c) {
-				if (!h || !id || !c) return;
-				if (!h.controls) h.controls = {};
-				h.controls[id] = c;
-			},
-			
-			process: function($e, ids, handler) {
-				$.each(ids, function(i, k) {
-					if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
-				});
-			},
-			
-			hideAllPopups: function() {
-				//$(".mollify-popup").qtip('hide');
-				if (t.ui.activePopup) t.ui.activePopup.hide();
-				t.ui.activePopup = false;
-			},
-			
-			handlers : {
-				hintbox : function(p, h) {
-					p.find("input.hintbox").each(function() {
-						var $this = $(this);
-						var hint = t.env.texts().get($this.attr('hint-key'));
-						$this.attr("placeholder", hint).removeAttr("hint-key");
-					});//.placeholder();
-				},
-	
-				localize : function(p, h) {
-					p.find(".localized").each(function() {
-						var key = $(this).attr('title-key');
-						if (key)
-							$(this).attr("title", t.env.texts().get(key));
-						
-						key = $(this).attr('text-key');
-						if (key)
-							$(this).prepend("<span>"+t.env.texts().get(key)+"</span>");
-					});
-				},
-				
-				center : function(p, h) {
-					p.find(".center").each(function() {
-						var $this = $(this);
-						var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
-						$this.css({
-							position: "relative",
-							left: x
-						});
-					});
-				},
-				
-				hover: function(p) {
-					p.find(".hoverable").hover(function() {
-						$(this).addClass("hover");
-					}, function() {
-						$(this).removeClass("hover");
-					});
-				},
-				
-				bubble: function(p, h) {
-					p.find(".bubble-trigger").each(function() {
-						var $t = $(this);
-						var b = mollify.ui.controls.bubble({element:$t, handler: h});
-						mollify.ui.assign(h, $t.attr('id'), b);
-					});
-				},
-				
-				radio: function(p, h) {
-					p.find(".mollify-radio").each(function() {
-						var $t = $(this);
-						var r = mollify.ui.controls.radio($t, h);
-						mollify.ui.assign(h, $t.attr('id'), r);
-					});
-				}
-			},
-			
-			window : {
-				open : function(url) {
-					window.open(url);
-				}
-			},
-			
-			controls: {
-				dropdown : function(a) {
-					var $e = $(a.element);
-					$e.addClass('dropdown');
-					
-					var createItems = function(itemList) {
-						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
-							isSeparator : function(i) {
-								return i.title == '-';
-							},
-							getTitle : function(i) {
-								if (i.title) return i.title;
-								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-								return "";
-							}
-						})).html();
-					};
-					var initItems = function(l) {
-						var $items = $e.find(".dropdown-item");
-						$items.click(function() {
-							var item = l[$(this).index()];
-							if (a.onItem) a.onItem(item);
-							if (item.callback) item.callback();
-						});
-					};
-					$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown();
-					initItems(a.items);
-					/*$e.hover(function() {
-						$(this).addClass("hover");
-					}, function() {
-						$(this).removeClass("hover");
-					});*/
-					/*$('<div class="mollify-dropdown-handle"></div>').click(function(){
-						mollify.ui.controls.popupmenu(a);
-					}).appendTo($e);*/
-				},
-				
-				popupmenu : function(a) {
-					var $e = $(a.element);
-					var pos = $e.offset();
-					var $mnu = $('<div class="mollify-popupmenu" style="position: absolute; top: '+(pos.top + $e.outerHeight())+'px; left:'+pos.left+'px;"></div>');
-					var hidePopup = function() {
-						if (a.onHide) a.onHide();
-						$mnu.remove();
-						t.ui.activePopup = false;
-					};
-					var createItems = function(itemList) {
-						var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
-							isSeparator : function(i) {
-								return i.title == '-';
-							},
-							getTitle : function(i) {
-								if (i.title) return i.title;
-								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-								return "";
-							}
-						}).css("display", "block");
-						return items;
-					};
-					var initItems = function(l) {
-						var $items = $mnu.find(".dropdown-item");
-						$items.click(function() {
-							hidePopup();
-							var item = l[$(this).index()];
-							if (a.onItem) a.onItem(item);
-							if (item.callback) item.callback();
-						});
-					};
-					
-					if (!a.items) $mnu.addClass("loading");
-					$mnu.append(createItems(a.items));
-					if (a.style) $mnu.addClass(a.style);
-					$("#mollify").append($mnu).on('click', hidePopup);
-					
-					var api = {
-						hide: hidePopup,
-						items: function(items) {
-							$mnu.empty().removeClass("loading").append(createItems(items));
-							initItems(items);
-						}
-					};
-					if (t.ui.activePopup) t.ui.activePopup.hide();
-					t.ui.activePopup = api;
-					return api;
-					/*var createItems = function(itemList) {
-						return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
-							isSeparator : function(i) {
-								return i.title == '-';
-							},
-							getTitle : function(i) {
-								if (i.title) return i.title;
-								if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-								return "";
-							}
-						})).html();
-					};
-					var initItems = function(l, api) {
-						var $items = api.elements.content.find(".mollify-popupmenu-item");
-						$items.click(function() {
-							var item = l[$(this).index()];
-							api.hide();
-							if (a.onItem) a.onItem(api, item);
-							item.callback();
-						});
-					};
-					var html = a.items ? createItems(a.items) : '<div class="loading"></div>';
-					var cls = 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped';
-					if (a.style) cls = cls + " " + a.style;
-					
-					var tip = $e.qtip({
-						content: html,
-						position: {
-							my: a.positionMy || 'top left',
-							at: a.positionAt || 'bottom left',
-							container: a.container || $('#mainview-content')
-						},
-						hide: {
-							target: a.hideTarget || false,
-							delay: a.hideDelay || 200,
-							fixed: a.hideFixed || true,
-							event: a.hideEvent || 'mouseleave'
-						},
-						style: {
-							tip: false,
-							classes: cls
-						},
-						events: {
-							render: function(e, api) {
-								initItems(a.items, api);
-							},
-							show: function(e, api) {
-								if (a.onShow) a.onShow(api);
-							},
-							hide: function(e, api) {
-								if (a.onHide) a.onHide(api);
-								api.destroy();
-							},
-							blur: function(e, api) {
-								if (a.onBlur) a.onBlur(api);
-							}
-						}
-					}).qtip('api');
-					tip.show();
-					
-					return {
-						hide: function() {
-							tip.hide();
-						},
-						items: function(items) {
-							tip.set('content.text', createItems(items));
-							initItems(items, tip);
-						}
-					};*/
-				},
-				
-				bubble: function(o) {
-					var e = o.element;
-					var actionId = e.attr('id');
-					if (!actionId) return;
-					
-					var content = $("#" + actionId + '-bubble');
-					if (!content || content.length == 0) return;
-
-					var html = content.html();
-					content.remove();
-					
-					/*e.qtip({
-						content: html,
-						position: {
-							my: 'top center',
-							at: 'bottom center'
-						},
-						show: 'click',
-						hide: {
-							delay: 200,
-							fixed: true,
-							event: 'click mouseleave'
-						},
-						style: {
-							tip: true,
-							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-						},
-						events: {
-							render: function(e, api) {
-								if (!h || !h.onRenderBubble) return;
-								h.onRenderBubble(actionId, api);
-							},
-							visible: function(e, api) {
-								if (!h || !h.onShowBubble) return;
-								h.onShowBubble(actionId, api);
-							},
-							hide: function(e, api) {
-								//api.destroy();
-							}
-						}
-					});
-					return {};*/
-					var $tip = false;
-					var rendered = false;
-					var api = {
-						hide: function() {
-							e.popover('hide');
-						},
-						close: this.hide
-					};
-					e.popover({
-						title: false,
-						html: true,
-						placement: 'bottom',
-						trigger: 'click',
-						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
-						content: html,
-						onshow: function($t) {
-							$tip = $t;
-							if (t.ui.activePopup) t.ui.activePopup.hide();
-							t.ui.activePopup = api;
-							if (!rendered) {
-								if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
-								rendered = true;
-							}
-							if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
-						},
-						onhide: function($t) {
-							t.ui.activePopup = false;
-							//e.popover('destroy');
-						}
-					});
-				},
-
-				dynamicBubble: function(o) {
-					//e, c, h
-					var e = o.element;
-					//var handler = o.handler;
-					
-					var bubbleHtml = function(c) {
-						if (!c) return "";
-						if (typeof(c) === 'string') return c;
-						return $("<div/>").append(c).html();
-					};
-					var html = o.content ? bubbleHtml(o.content) : '<div class="loading"></div>';
-					
-					/*var tip = e.qtip({
-						content: html,
-						position: {
-							my: 'top center',
-							at: 'bottom center'
-						},
-						hide: {
-							delay: 1000,
-							fixed: true,
-							event: 'mouseleave'
-						},
-						style: {
-							tip: true,
-							classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-						},
-						events: {
-							render: function(e, api) {
-								if (!h || !h.onRenderBubble) return;
-								h.onRenderBubble(api);
-							},
-							visible: function(e, api) {
-								if (!h || !h.onShowBubble) return;
-								h.onShowBubble(api);
-							},
-							hide: function(e, api) {
-								api.destroy();
-							}
-						}
-					}).qtip('api');
-					tip.show();*/
-					var $tip = false;
-					var api = {
-						show: function() {
-							e.popover('show');
-						},
-						hide: function() {
-							e.popover('destroy');
-						},
-						close: this.hide,
-						getContent: function() {
-							return $tip.find('.popover-content');	
-						},
-						content: function(c) {
-							//var $t = e.popover('tip');
-							var $c = $tip.find('.popover-content');
-							$c.html(bubbleHtml(c));
-						}
-					};
-					e.popover({
-						title: o.title ? o.title : false,
-						html: true,
-						placement: 'bottom',
-						trigger: 'manual',
-						template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>',
-						content: html,
-						manualout: true,
-						onshow: function($t) {
-							$tip = $t;
-							if (t.ui.activePopup) t.ui.activePopup.hide();
-							t.ui.activePopup = api;
-							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
-								e.popover('destroy');
-							});
-							$t.find('.popover-title').append(closeButton);
-							if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
-						},
-						onhide: function($t) {
-							t.ui.activePopup = false;
-							//e.popover('destroy');
-						}
-					});
-					e.popover('show');
-					
-					return api;
-				},
-				
-				radio: function(e, h) {
-					var rid = e.addClass("btn-group").attr('id');
-					var items = e.find("button");
-					
-					var select = function(item) {
-						items.removeClass("active");
-						item.addClass("active");
-					}
-					
-					items.click(function() {
-						var i = $(this);
-						var ind = items.index(i);
-						select(i);
-						
-						var id = i.attr('id');
-						if (h && rid && h.onRadioChanged) h.onRadioChanged(rid, id, ind);
-					});
-					
-					return {
-						set: function(ind) {
-							select($(items[ind]));
-						}
-					};
-				},
-				
-				editableLabel: function(o) {
-					var $e = $(o.element);
-					var id = $e.attr('id');
-					var originalValue = o.value || $e.html().trim();
-					if (!id) return;
-					
-					$e.addClass("editable-label").hover(function() {
-						$e.addClass("hover");
-					}, function() {
-						$e.removeClass("hover");
-					});
-					
-					var $label = $("<label></label>").appendTo($e.empty());
-					var $editor = $("<input></input>").appendTo($e);
-					var ctrl = {
-						value: function(v) {
-							originalValue = v;
-							$label.html(originalValue);
-							$editor.val(originalValue);	
-						}
-					};
-					ctrl.value(originalValue);
-					
-					var onFinish = function() {
-						var v = $editor.val();
-						if (o.isvalid && !o.isvalid(v)) return;
-						
-						$editor.hide();
-						$label.show();
-			            if (originalValue != v) {
-			            	if (o.onedit) o.onedit(v);
-			            	ctrl.value(v);
-			            }
-					};
-					var onCancel = function() {
-						$editor.hide();
-						$label.show();
-						ctrl.value(originalValue);
-					};
-      
-					$editor.hide().bind("blur", onFinish).keyup(function(e) {
-						if (e.which == 13) onFinish();
-						else if (e.which == 27) onCancel();
-					});
-					
-					$label.bind("click", function() {
-						$label.hide();
-						$editor.show().focus();
-					});
-					
-					return ctrl;
-				}
-			}
-		}
-		
-		
-		/*this.formatDate = function(d) {
-			return $.datepicker.formatDate(getDateFormat(), d);
-		}*/
-
-		this.formatDateTime = function(time, fmt) {
-			return time.format(fmt);
-		}
-
-		/*this.parseDate = function(dateFmt, date, time) {
-			if (!date || date.length == 0) return null;
-			
-			var t = $.datepicker.parseDate(dateFmt, date);
-			if (!time || time.length < 5) {
-				t.setHours("00");
-				t.setMinutes("00");
-				t.setSeconds("00");
-			} else {
-				//TODO timeFmt
-				t.setHours(time.substring(0,2));
-				t.setMinutes(time.substring(3,5));
-				t.setSeconds(time.length > 6 ? time.substring(7,9) : "00");
-			}
-			return t;
-		}*/
-
-		this.parseInternalTime = function(time) {
-			var ts = new Date();
-			ts.setYear(time.substring(0,4));
-			ts.setMonth(time.substring(4,6) - 1);
-			ts.setDate(time.substring(6,8));
-			ts.setHours(time.substring(8,10));
-			ts.setMinutes(time.substring(10,12));
-			ts.setSeconds(time.substring(12,14));
-			return ts;
-		}
-
-		this.formatInternalTime = function(time) {
-			if (!time) return null;
-			return time.format('yymmddHHMMss', time);
-		}
-		
-		this.texts = new function() {
-			var tt = this;
-			this.locale = '';
-			this.values = null;
-			
-			this.set = function(id, values) {
-				tt.locale = id;
-				tt.values = values;
-			}
-			
-			this.add = function(id, values) {
-				//TODO handle different locale
-				for (v in values) {
-					tt.values[v] = values[v];
-				}
-			}
-		}
-	}
-})();
-
-function isArray(o) {
-	return Object.prototype.toString.call(o) === '[object Array]';
-}
-
-if(typeof String.prototype.trim !== 'function') {
-	String.prototype.trim = function() {
-		return this.replace(/^\s+|\s+$/g, ''); 
-	}
-}
-
-function def(o) {
-	return (typeof(o) != 'undefined');
-}
-
-if (!Array.prototype.indexOf) { 
-    Array.prototype.indexOf = function(obj, start) {
-         for (var i = (start || 0), j = this.length; i < j; i++) {
-             if (this[i] === obj) { return i; }
-         }
-         return -1;
-    }
-}
-
-function strpos(haystack, needle, offset) {
-    // Finds position of first occurrence of a string within another  
-    // 
-    // version: 1109.2015
-    // discuss at: http://phpjs.org/functions/strpos
-    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Onno Marsman    
-    // +   bugfixed by: Daniel Esteban
-    // +   improved by: Brett Zamir (http://brett-zamir.me)
-    var i = (haystack + '').indexOf(needle, (offset || 0));
-    return i === -1 ? false : i;
-}
-
-function DialogHandler() {
-	var that = this;
-	
-	var dialogDefaults = {
-		title: "Mollify"
 	};
+	var t = this;
+	t.time = new Date().getTime();
 	
-	this.info = function(spec) {
-		var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
-			modal: true,
-			resizable: false,
-			height: 'auto',
-			minHeight: 50
-		});
-		mollify.ui.handlers.localize(dlg);
-		dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });
-	};
-	
-	this.error = function(spec) {
-		alert("error");
-	};
-	
-	this.confirmation = function(spec) {
-		that.custom({
-			title: spec.title,
-			content: spec.message,
-			buttons: [
-				{ id: "yes", "title-key": "yes" },
-				{ id: "no", "title-key": "no" }
-			],
-			"on-button": function(btn, d) {
-				d.close();
-				if (spec.callback && btn.id === 'yes') spec.callback();
-			}
-		});
-	};
-	
-	this.input = function(spec) {
-		that.custom({
-			title: spec.title,
-			html: spec.message + '<input id="">',
-			buttons: [
-				{ id: "yes", "title-key": "yes" },
-				{ id: "no", "title-key": "no" }
-			],
-			"on-button": function(btn, d) {
-				d.close();
-				if (spec.callback && btn.id === 'yes') spec.callback();
-			},
-			"on-show": function() {
-				
-			}
-		});
-	};
-	
-	this.wait = function(spec) {
-		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
-		var w = mollify.dom.template("mollify-tmpl-wait", $.extend(spec, dialogDefaults)).appendTo($trg).show();
-		return {
-			close: function() {
-				w.remove();
-			}
-		};
-	};
-	
-	this.notification = function(spec) {
-		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
-		var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
-		setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
-	};
-	
-	this.custom = function(spec) {
-		var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
-			getContent: function() {
-				if (spec.html) return spec.html;
-				if (spec.content) {
-					var c = spec.content;
-					if (typeof c === 'string') return c;
-					return $("<div/>").append(c).html();
-				}
-				return "";
-			},
-			getButtonTitle: function(b) {
-				if (b["title"]) return b["title"];
-				if (b["title-key"]) return mollify.ui.texts.get(b["title-key"]);
-				return "";
-			}
-		});
-		mollify.ui.handlers.localize(dlg);
-		dlg.on('hidden', function() { dlg.remove(); }).modal({
-			backdrop: true,
-			show: true,
-			keyboard: true
-		});
-		var h = {
-			close: function() {
-				dlg.modal('hide');
-			}
-		};
-		dlg.find(".btn").click(function(e) {
-			e.preventDefault();
-			var btn = $(this).tmplItem().data;
-			if (spec["on-button"]) spec["on-button"](btn, h);
-		});
-		if (spec["on-show"]) spec["on-show"](h);
-		return h;
-	};
-}
+	this.settings = {};
 
-function LoginView() {
-	var that = this;
-	
-	this.init = function(listener) {
-		that.listener = listener;
-	}
-	
-	this.render = function(id) {
-		mollify.dom.loadContent(id, mollify.templates.url("login-view.html"), that, ['localize', 'hintbox', 'bubble']);
-	}
-	
-	this.onLoad = function() {
-		$(window).resize(that.onResize);
-		that.onResize();
-	
-		if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
-		if (mollify.hasFeature('registration')) {
-			$("#login-register").click(function() {
-				mollify.ui.window.open(mollify.service.getPluginUrl("registration"));
-			});
-			$("#login-register").show();
+	this.init = function(s, p) {
+		if (p) {
+			for (var i=0, j=p.length; i < j; i++)
+				t.plugins.register(p[i]);
 		}
 		
-		var $data = $("#login-data");
-		mollify.ui.handlers.center($data);
-		//mollify.ui.handlers.bubble($data, that);
-		$("#login-name, #login-password").bind('keypress', function(e) {
-			if ((e.keyCode || e.which) == 13) that.onLogin();
+		t.settings = $.extend({}, defaults, s);
+	}
+	
+	this.setup = function(core, cb) {
+		t.hiddenInd = 0;
+		t.env = core;
+		t.ui.texts = t.env.texts();
+		t.service = t.env.service();
+		t.session = {};
+		
+		core.addEventHandler(function(e) {
+			if (e.type == 'SESSION_START') {
+				t.session = core.session.get();
+			} else if (e.type == 'SESSION_END') {
+				t.session = {};
+			}
 		});
-		$("#login-button").click(that.onLogin);
-		$("#login-name").focus();
-		
-		//		mollify.views.dialogs.info({message:'tt'});
-		//		return;
-	}
-	
-	this.onResize = function() {
-		var h = $(window).height();
-		$("#login-main").height(h);
-		
-		$data = $("#login-data");
-		$data.css('margin-top', (h / 2) - ($data.height() / 2));
-	}
-	
-	this.onRenderBubble = function(id, bubble) {
-		if (id === 'login-forgot-password') {
-			$("#login-forgot-button").click(function() {				
-				var email = $("#login-forgot-email").val();
-				if (!email) return;
-				
-				bubble.hide();
-				that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
-				that.listener.onResetPassword(email);
-			});
-		}
-	}
-	
-	this.onShowBubble = function(id, bubble) {
-		if (id === 'login-forgot-password') {
-			$("#login-forgot-email").val("").focus();
-		}
-	}
-	
-	this.onLogin = function() {
-		var username = $("#login-name").val();
-		var password = $("#login-password").val();
-		var remember = $("#login-remember-cb").is(':checked');
-		
-		if (!username || username.length < 1) {
-			$("#login-name").focus();
-			return;
-		}
-		if (!password || password.length < 1) {
-			$("#login-password").focus();
-			return;
-		}
-		that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
-		that.listener.onLogin(username, password, remember);
-	}
-	
-	this.showLoginError = function() {
-		that.wait.close();
-		
-		mollify.ui.views.dialogs.notification({
-			target: "login-main",
-			message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
-		});
-	}
-	
-	this.onResetPasswordSuccess = function() {
-		that.wait.close();
-		
-		mollify.ui.views.dialogs.notification({
-			target: "login-main",
-			message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
-		});
-	}
-	
-	this.onResetPasswordFailed = function() {
-		that.wait.close();
-		
-		mollify.ui.views.dialogs.info({
-			message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
-		});
-	}
-}
 
-function CommentPlugin() {
-	var that = this;
-	
-	this.getPluginInfo = function() {
-		return {
-			id: "plugin-comment",
-			itemContextData : that.getItemContextData
-		};
-	}
-	
-	this.initialize = function(core) {
-		that.core = core;
-		/*that.env.registerContextPlugin(function(item) {
-			return {
-				components : [{
-					html: "",
-					on_init: function(id, c, item, details) {
-						if (!details["plugin-comment"]) return;
-						
-						$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details["plugin-comment"].count+"</div></div></div>");
-						
-						$("#details-comments-content").hover(
-							function () { $(this).addClass("hover"); }, 
-							function () { $(this).removeClass("hover"); }
-						);
-						$("#details-comments-content").click(function() {
-							c.close();
-							that.openComments(item);
-						});
-					}
-				}]
-			};
-		}, function(item) {
-			return {"plugin-comment":["count"]};
-		});*/
+		if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 		
-		mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
-		mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
-		
-		mollify.ui.filelist.addColumn({
-			"id": "comment-count",
-			"request-id": "plugin-comment-count",
-			"title-key": "",
+		t.ui.filelist.addColumn({
+			"id": "name",
+			"title-key": "fileListColumnTitleName",
+			"sort": function(i1, i2, sort, data) {
+				return i1.name.toLowerCase().localeCompare(i2.name.toLowerCase()) * sort;
+			},
+			"content": function(item, data) {
+				return item.name;
+			}
+		});
+		t.ui.filelist.addColumn({
+			"id": "type",
+			"title-key": "fileListColumnTitleType",
+			"sort": function(i1, i2, sort, data) {
+				return i1.extension.toLowerCase().localeCompare(i2.extension.toLowerCase()) * sort;
+			},
+			"content": function(item, data) {
+				return item.extension;
+			}
+		});
+		t.ui.filelist.addColumn({
+			"id": "size",
+			"title-key": "fileListColumnTitleSize",
+			"sort": function(i1, i2, sort, data) {
+				var s1 = i1.is_file ? parseInt(i1.size) : 0;
+				var s2 = i2.is_file ? parseInt(i2.size) : 0;
+				return (s1-s2) * sort;
+			},
+			"content": function(item, data) {
+				return item.is_file ? t.env.texts().formatSize(item.size) : '';
+			}
+		});
+		t.ui.filelist.addColumn({
+			"id": "file-modified",
+			"request-id": "core-file-modified",
+			"title-key": "fileListColumnTitleLastModified",
 			"sort": function(i1, i2, sort, data) {
 				if (!i1.is_file && !i2.is_file) return 0;
 				if (!data || !data["core-file-modified"]) return 0;
@@ -1104,207 +83,1202 @@ function CommentPlugin() {
 				var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
 				return ((ts1 > ts2) ? 1 : -1) * sort;
 			},
-			"content": that.getListCellContent,
-			"request": function(parent) { return {}; },
-/*			"on-render": function() {
-				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(that.onListCellClick);
-			},*/
-			"on-click": function(item) {
-				that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+			"content": function(item, data) {
+				if (!item.id || !item.is_file || !data || !data["core-file-modified"] || !data["core-file-modified"][item.id]) return "";
+				return t.env.texts().formatInternalTime(data["core-file-modified"][item.id]);
 			}
 		});
-		/*env.addListColumnSpec({
-			"id": "comment-count",
-			"request-id": "plugin-comment-count",
-			"default-title-key": "",
-			"content": that.getListCellContent,
-			"request": function(parent) { return {}; },
-			"on-render": function() {
-				var onclick = function(e) {
-					var id = e.target.id.substring(19);
-					var item = that.env.fileview().item(id);
-					that.openComments(item);
-				}
-//				var tooltip = "<div class='filelist-item-comment-tooltip mollify-tooltip'>" + that.t("commentsFileListAddTitle") + "</div>";
-				$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(onclick);//.simpletip({content: tooltip, fixed: true, position: 'left'});
-			}
-		});
-		
-		if (mollify.hasPlugin("plugin-itemdetails"))
-			mollify.getPlugin("plugin-itemdetails").addDetailsSpec({
-				key: "comments-count",
-				"title-key": "commentsDetailsCount"
-			});*/
-	};
-	
-	this.getItemContextData = function(item, data) {
-		return {
-			details: {
-				"title-key": "pluginCommentContextTitle",
-				"on-render": function(e, cache) { that.renderItemContextDetails(item, e, cache); }
+		t.ui.filelist.addColumn({
+			"id": "item-description",
+			"request-id": "core-item-description",
+			"title-key": "fileListColumnTitleDescription",
+			"sort": function(i1, i2, sort, data) {
+				if (!i1.is_file && !i2.is_file) return 0;
+				if (!data || !data["core-item-description"]) return 0;
+				
+				var d1 = data["core-item-description"][i1.id] ? data["core-item-description"][i1.id] : '';
+				var d2 = data["core-item-description"][i2.id] ? data["core-item-description"][i2.id] : '';
+				return ((d1 > d2) ? 1 : -1) * sort;
 			},
-			actions: [
-				{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }
-			]
+			"content": function(item, data) {
+				if (!item.id || !data || !data["core-item-description"] || !data["core-item-description"][item.id]) return "";
+				var desc = data["core-item-description"][item.id];
+				var stripped = desc.replace(/<\/?[^>]+(>|$)/g, '');
+				return '<div class="item-description-container" title="'+stripped+'">'+desc+'</div>';
+			}
+		});
+		
+		t.ui.views = {
+			login : new mollify.view.LoginView(),
+			mainview : new mollify.view.MainView(),
+			
+			dialogs : new mollify.view.DialogHandler()
+		}
+		t.env.views().registerHandlers(t.ui.views);
+		
+		t.plugins.initialize(t.env);
+			
+		t.templates.load("dialogs.html");
+		
+		//$.datepicker.setDefaults({
+		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
+		//});
+		if (cb) cb();
+	}
+	
+	this.plugins = new function() {
+		var pl = this;
+		this.list = {};
+		
+		this.register = function(p) {
+			var id = p.id;
+			if (!id) return;
+			
+			pl.list[id] = p;
 		};
-	};
-	
-	this.renderItemContextDetails = function(item, $e, cache) {
-		$e.addClass("loading");
-		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
-			$e.removeClass("loading");
-			if (!cache.comments) {	
-				that.loadComments(item, function(item, comments) {
-					cache.comments = comments;
-					that.renderComments(item, comments, {element: $e.empty(), contentTemplate: 'comments-template'});
-				});
-			} else {
-				that.renderComments(item, cache.comments, {element: $e.empty(), contentTemplate: 'comments-template'});	
-			}
-		});
-	};
-	
-	this.renderComments = function(item, comments, o) {
-		mollify.dom.template(o.contentTemplate, item).appendTo(o.element);
 		
-		$("#comments-dialog-add").click(function() {
-			var comment = $("#comments-dialog-add-text").val();
-			if (!comment || comment.length == 0) return;
-			that.onAddComment(item, comment, function() {
-				//TODO refresh comments
-				$("#comments-dialog-add-text").val("");
+		this.initialize = function(core) {
+			for (var id in pl.list)
+				pl.list[id].initialize(core);
+		};
+		
+		this.get = function(id) {
+			if (!def(id)) return pl.list;
+			return pl.list[id];
+		};
+		
+		this.exists = function(id) {
+			return !!pl.list[id];
+		};
+		
+		this.url = function(id, p) {
+			return t.env.service().getPluginUrl(id)+"client/"+p;
+		};
+		
+		this.getItemContextData = function(item, d) {
+			var data = {};
+			for (var id in pl.list) {
+				var plugin = pl.list[id];
+				var pluginData = plugin.itemContextData(item, d);
+				if (pluginData) data[id] = pluginData;
+			}
+			return data;
+		}
+	};
+	
+	this.hasFeature = function(id) {
+		return t.session.features && t.session.features[id];
+	};
+
+	this.locale = function() {
+		return t.texts.locale;
+	};
+			
+	this.urlWithParam = function(url, param) {
+		return url + (strpos(url, "?") ? "&" : "?") + param;
+	}
+	
+	this.noncachedUrl = function(url) {
+		return t.urlWithParam(url, "_="+t.time);
+	}
+	
+	this.templates = {
+		loaded: [],
+		
+		url : function(name) {
+			var base = t.settings["template-url"] || 'client/templates/';
+			return t.noncachedUrl(base + name);
+		},
+		
+		load : function(name, url, cb) {
+			if (t.templates.loaded.indexOf(name) >= 0) {
+				if (cb) cb();
+				return;
+			}
+			
+			$.get(url ? url : t.templates.url(name), function(h) {
+				t.templates.loaded.push(name);
+				$("body").append(h);
+				if (cb) cb();
 			});
-		} );
-		
-		if (comments.length == 0) {
-			$("#comments-list").html('<span class="message">'+mollify.ui.texts.get("commentsDialogNoComments")+'</span>');
-			return;
 		}
-		
-		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
-		mollify.ui.handlers.localize(o.element);
-		
-		$(".comment-content").hover(
-			function () { $(this).addClass("hover"); }, 
-			function () { $(this).removeClass("hover"); }
-		);
-		$(".comment-remove-action").click(function(e) {
-			e.preventDefault();
-			var comment = $(this).tmplItem().data
-			that.onRemoveComment(item, comment.id);
-		});
-	};
-	
-	/*this.onListCellClick = function(e) {
-		e.preventDefault();
-		var id = e.target.id.substring(19);
-		var item = that.env.fileview().item(id);
-		that.openComments(item);
-		return false;
-	};*/
-	
-	this.getListCellContent = function(item, data) {
-		if (!item.id || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
-		var counts = data["plugin-comment-count"];
-
-		if (!counts[item.id])
-			return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count-none'></div>";
-		
-		return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 	}
 	
-	this.showCommentsBubble = function(item, e) {
-		var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name});
+	this.dom = {
+		hiddenLoaded : [],
 		
-		mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
-			bubble.content(mollify.dom.template("comments-template", item));
-			/*$("#comments-dialog-content .mollify-actionlink").hover(
-				function () { $(this).addClass("mollify-actionlink-hover"); }, 
-				function () { $(this).removeClass("mollify-actionlink-hover"); }
-			);*/
-	
-			$("#comments-dialog-add").click(function() { that.onAddComment(item, bubble.close); } );
-			that.loadComments(item, that.onShowComments);
-			
-			/*mollify.ui.views.dialogs.custom({
-				"title": mollify.ui.texts.get("commentsDialogTitle"),
-				"content": mollify.dom.template("comments-content-template", item),
-				"on-show": function(d) { that.onShowCommentsDialog(d, item); },
-				"on-button": function(id, d) {
-					d.close();
-				},
-				buttons: [
-					{id: 'close', "title-key":'dialogCloseButton'}
-				]
-			});*/
-		});
-	};
-	
-	this.loadComments = function(item, cb) {
-		mollify.service.get("comment/"+item.id, function(comments) {
-			var userId = mollify.session['user_id'];
-			var isAdmin = mollify.session.admin;
-			
-			for (var i=0,j=comments.length; i<j; i++) {
-				comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
-				comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
-				comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
+		importScript : function(url) {
+			$.getScript(url);
+		},
+		
+		importCss : function(url) {
+			var link = $("<link>");
+			link.attr({
+		    	type: 'text/css',
+		    	rel: 'stylesheet',
+		    	href: t.noncachedUrl(url)
+			});
+			$("head").append(link);
+		},
+
+		loadContent : function(contentId, url, cb) {
+			if (t.dom.hiddenLoaded.indexOf(contentId) >= 0) {
+				if (cb) cb();
+				return;
 			}
-			cb(item, comments);
-		}, function(code, error) {
-			alert(error);
-		});
-	};
-	
-	this.onAddComment = function(item, comment, cb) {
-
+			var id = 'mollify-tmp-'+(t.hiddenInd++);
+			$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(t.urlWithParam(url, "_="+mollify.time), function() {
+				t.dom.hiddenLoaded.push(contentId);
+				if (cb) cb();
+			});
+		},
+					
+		loadContentInto : function($target, url, handler, process) {
+			$target.load(t.urlWithParam(url, "_="+mollify.time), function() {
+				if (process) t.ui.process($target, process, handler);
+				if (typeof handler === 'function') handler();
+				else if (handler.onLoad) handler.onLoad($target);
+			});
+		},
 		
-		mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
-			if (cb) cb();
-			
-			var e = document.getElementById("item-comment-count-"+item.id);
-			e.innerHTML = result.count;
-			e.setAttribute('class', 'filelist-item-comment-count');
-		},	function(code, error) {
-			alert(error);
-		});
-	}
-	
-	this.onRemoveComment = function(item, id) {		
-		mollify.service.del("comment/"+item.id+"/"+id, function(result) {
-			that.onShowComments(item, result);
-		},	function(code, error) {
-			alert(error);
-		});
-	}
-	
-	this.onShowComments = function(item, comments) {
-		$("#comments-list").removeClass("loading");
-		
-		if (comments.length == 0) {
-			$("#comments-list").html("<span class='message'>"+mollify.ui.texts.get("commentsDialogNoComments")+"</span>");
-			return;
+		template : function(id, data, opt) {
+			return $("#"+id).tmpl(data, opt);
 		}
-
-		mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
-		//mollify.ui.handlers.localize("comments-content-"+item.id);
-		$(".comment-content").hover(
-			function () { $(this).addClass("hover"); }, 
-			function () { $(this).removeClass("hover"); }
-		);
-		$(".comment-remove-action").click(function(e) {
-			e.preventDefault();
-			var comment = $(this).tmplItem().data
-			that.onRemoveComment(item, comment.id);
-		});
 	}
 	
-	/*
+	this.ui = {
+		filelist : {
+			columns : [],
+			addColumn : function(c) {
+				t.ui.filelist.columns.push(c);
+				if (t.settings["list-view-columns"][c.id])
+					t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
+			}
+		},
+		
+		assign: function(h, id, c) {
+			if (!h || !id || !c) return;
+			if (!h.controls) h.controls = {};
+			h.controls[id] = c;
+		},
+		
+		process: function($e, ids, handler) {
+			$.each(ids, function(i, k) {
+				if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
+			});
+		},
+		
+		hideAllPopups: function() {
+			//$(".mollify-popup").qtip('hide');
+			if (t.ui.activePopup) t.ui.activePopup.hide();
+			t.ui.activePopup = false;
+		},
+		
+		handlers : {
+			hintbox : function(p, h) {
+				p.find("input.hintbox").each(function() {
+					var $this = $(this);
+					var hint = t.env.texts().get($this.attr('hint-key'));
+					$this.attr("placeholder", hint).removeAttr("hint-key");
+				});//.placeholder();
+			},
+
+			localize : function(p, h) {
+				p.find(".localized").each(function() {
+					var key = $(this).attr('title-key');
+					if (key)
+						$(this).attr("title", t.env.texts().get(key));
+					
+					key = $(this).attr('text-key');
+					if (key)
+						$(this).prepend("<span>"+t.env.texts().get(key)+"</span>");
+				});
+			},
+			
+			center : function(p, h) {
+				p.find(".center").each(function() {
+					var $this = $(this);
+					var x = ($this.parent().width() - $this.outerWidth(true)) / 2;
+					$this.css({
+						position: "relative",
+						left: x
+					});
+				});
+			},
+			
+			hover: function(p) {
+				p.find(".hoverable").hover(function() {
+					$(this).addClass("hover");
+				}, function() {
+					$(this).removeClass("hover");
+				});
+			},
+			
+			bubble: function(p, h) {
+				p.find(".bubble-trigger").each(function() {
+					var $t = $(this);
+					var b = mollify.ui.controls.bubble({element:$t, handler: h});
+					mollify.ui.assign(h, $t.attr('id'), b);
+				});
+			},
+			
+			radio: function(p, h) {
+				p.find(".mollify-radio").each(function() {
+					var $t = $(this);
+					var r = mollify.ui.controls.radio($t, h);
+					mollify.ui.assign(h, $t.attr('id'), r);
+				});
+			}
+		},
+		
+		window : {
+			open : function(url) {
+				window.open(url);
+			}
+		},
+		
+		controls: {
+			dropdown : function(a) {
+				var $e = $(a.element);
+				$e.addClass('dropdown');
+				
+				var createItems = function(itemList) {
+					return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
+						isSeparator : function(i) {
+							return i.title == '-';
+						},
+						getTitle : function(i) {
+							if (i.title) return i.title;
+							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+							return "";
+						}
+					})).html();
+				};
+				var initItems = function(l) {
+					var $items = $e.find(".dropdown-item");
+					$items.click(function() {
+						var item = l[$(this).index()];
+						if (a.onItem) a.onItem(item);
+						if (item.callback) item.callback();
+					});
+				};
+				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown();
+				initItems(a.items);
+				/*$e.hover(function() {
+					$(this).addClass("hover");
+				}, function() {
+					$(this).removeClass("hover");
+				});*/
+				/*$('<div class="mollify-dropdown-handle"></div>').click(function(){
+					mollify.ui.controls.popupmenu(a);
+				}).appendTo($e);*/
+			},
+			
+			popupmenu : function(a) {
+				var $e = $(a.element);
+				var pos = $e.offset();
+				var $mnu = $('<div class="mollify-popupmenu" style="position: absolute; top: '+(pos.top + $e.outerHeight())+'px; left:'+pos.left+'px;"></div>');
+				var hidePopup = function() {
+					if (a.onHide) a.onHide();
+					$mnu.remove();
+					t.ui.activePopup = false;
+				};
+				var createItems = function(itemList) {
+					var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
+						isSeparator : function(i) {
+							return i.title == '-';
+						},
+						getTitle : function(i) {
+							if (i.title) return i.title;
+							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+							return "";
+						}
+					}).css("display", "block");
+					return items;
+				};
+				var initItems = function(l) {
+					var $items = $mnu.find(".dropdown-item");
+					$items.click(function() {
+						hidePopup();
+						var item = l[$(this).index()];
+						if (a.onItem) a.onItem(item);
+						if (item.callback) item.callback();
+					});
+				};
+				
+				if (!a.items) $mnu.addClass("loading");
+				$mnu.append(createItems(a.items));
+				if (a.style) $mnu.addClass(a.style);
+				$("#mollify").append($mnu).on('click', hidePopup);
+				
+				var api = {
+					hide: hidePopup,
+					items: function(items) {
+						$mnu.empty().removeClass("loading").append(createItems(items));
+						initItems(items);
+					}
+				};
+				if (t.ui.activePopup) t.ui.activePopup.hide();
+				t.ui.activePopup = api;
+				return api;
+				/*var createItems = function(itemList) {
+					return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
+						isSeparator : function(i) {
+							return i.title == '-';
+						},
+						getTitle : function(i) {
+							if (i.title) return i.title;
+							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
+							return "";
+						}
+					})).html();
+				};
+				var initItems = function(l, api) {
+					var $items = api.elements.content.find(".mollify-popupmenu-item");
+					$items.click(function() {
+						var item = l[$(this).index()];
+						api.hide();
+						if (a.onItem) a.onItem(api, item);
+						item.callback();
+					});
+				};
+				var html = a.items ? createItems(a.items) : '<div class="loading"></div>';
+				var cls = 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped';
+				if (a.style) cls = cls + " " + a.style;
+				
+				var tip = $e.qtip({
+					content: html,
+					position: {
+						my: a.positionMy || 'top left',
+						at: a.positionAt || 'bottom left',
+						container: a.container || $('#mainview-content')
+					},
+					hide: {
+						target: a.hideTarget || false,
+						delay: a.hideDelay || 200,
+						fixed: a.hideFixed || true,
+						event: a.hideEvent || 'mouseleave'
+					},
+					style: {
+						tip: false,
+						classes: cls
+					},
+					events: {
+						render: function(e, api) {
+							initItems(a.items, api);
+						},
+						show: function(e, api) {
+							if (a.onShow) a.onShow(api);
+						},
+						hide: function(e, api) {
+							if (a.onHide) a.onHide(api);
+							api.destroy();
+						},
+						blur: function(e, api) {
+							if (a.onBlur) a.onBlur(api);
+						}
+					}
+				}).qtip('api');
+				tip.show();
+				
+				return {
+					hide: function() {
+						tip.hide();
+					},
+					items: function(items) {
+						tip.set('content.text', createItems(items));
+						initItems(items, tip);
+					}
+				};*/
+			},
+			
+			bubble: function(o) {
+				var e = o.element;
+				var actionId = e.attr('id');
+				if (!actionId) return;
+				
+				var content = $("#" + actionId + '-bubble');
+				if (!content || content.length == 0) return;
+
+				var html = content.html();
+				content.remove();
+				
+				/*e.qtip({
+					content: html,
+					position: {
+						my: 'top center',
+						at: 'bottom center'
+					},
+					show: 'click',
+					hide: {
+						delay: 200,
+						fixed: true,
+						event: 'click mouseleave'
+					},
+					style: {
+						tip: true,
+						classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+					},
+					events: {
+						render: function(e, api) {
+							if (!h || !h.onRenderBubble) return;
+							h.onRenderBubble(actionId, api);
+						},
+						visible: function(e, api) {
+							if (!h || !h.onShowBubble) return;
+							h.onShowBubble(actionId, api);
+						},
+						hide: function(e, api) {
+							//api.destroy();
+						}
+					}
+				});
+				return {};*/
+				var $tip = false;
+				var rendered = false;
+				var api = {
+					hide: function() {
+						e.popover('hide');
+					},
+					close: this.hide
+				};
+				e.popover({
+					title: false,
+					html: true,
+					placement: 'bottom',
+					trigger: 'click',
+					template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+					content: html,
+					onshow: function($t) {
+						$tip = $t;
+						if (t.ui.activePopup) t.ui.activePopup.hide();
+						t.ui.activePopup = api;
+						if (!rendered) {
+							if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
+							rendered = true;
+						}
+						if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
+					},
+					onhide: function($t) {
+						t.ui.activePopup = false;
+						//e.popover('destroy');
+					}
+				});
+			},
+
+			dynamicBubble: function(o) {
+				//e, c, h
+				var e = o.element;
+				//var handler = o.handler;
+				
+				var bubbleHtml = function(c) {
+					if (!c) return "";
+					if (typeof(c) === 'string') return c;
+					return $("<div/>").append(c).html();
+				};
+				var html = o.content ? bubbleHtml(o.content) : '<div class="loading"></div>';
+				
+				/*var tip = e.qtip({
+					content: html,
+					position: {
+						my: 'top center',
+						at: 'bottom center'
+					},
+					hide: {
+						delay: 1000,
+						fixed: true,
+						event: 'mouseleave'
+					},
+					style: {
+						tip: true,
+						classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
+					},
+					events: {
+						render: function(e, api) {
+							if (!h || !h.onRenderBubble) return;
+							h.onRenderBubble(api);
+						},
+						visible: function(e, api) {
+							if (!h || !h.onShowBubble) return;
+							h.onShowBubble(api);
+						},
+						hide: function(e, api) {
+							api.destroy();
+						}
+					}
+				}).qtip('api');
+				tip.show();*/
+				var $tip = false;
+				var api = {
+					show: function() {
+						e.popover('show');
+					},
+					hide: function() {
+						e.popover('destroy');
+					},
+					close: this.hide,
+					getContent: function() {
+						return $tip.find('.popover-content');	
+					},
+					content: function(c) {
+						//var $t = e.popover('tip');
+						var $c = $tip.find('.popover-content');
+						$c.html(bubbleHtml(c));
+					}
+				};
+				e.popover({
+					title: o.title ? o.title : false,
+					html: true,
+					placement: 'bottom',
+					trigger: 'manual',
+					template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>',
+					content: html,
+					manualout: true,
+					onshow: function($t) {
+						$tip = $t;
+						if (t.ui.activePopup) t.ui.activePopup.hide();
+						t.ui.activePopup = api;
+						var closeButton = $('<button type="button" class="close">×</button>').click(function(){
+							e.popover('destroy');
+						});
+						$t.find('.popover-title').append(closeButton);
+						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
+					},
+					onhide: function($t) {
+						t.ui.activePopup = false;
+						//e.popover('destroy');
+					}
+				});
+				e.popover('show');
+				
+				return api;
+			},
+			
+			radio: function(e, h) {
+				var rid = e.addClass("btn-group").attr('id');
+				var items = e.find("button");
+				
+				var select = function(item) {
+					items.removeClass("active");
+					item.addClass("active");
+				}
+				
+				items.click(function() {
+					var i = $(this);
+					var ind = items.index(i);
+					select(i);
+					
+					var id = i.attr('id');
+					if (h && rid && h.onRadioChanged) h.onRadioChanged(rid, id, ind);
+				});
+				
+				return {
+					set: function(ind) {
+						select($(items[ind]));
+					}
+				};
+			},
+			
+			editableLabel: function(o) {
+				var $e = $(o.element);
+				var id = $e.attr('id');
+				var originalValue = o.value || $e.html().trim();
+				if (!id) return;
+				
+				$e.addClass("editable-label").hover(function() {
+					$e.addClass("hover");
+				}, function() {
+					$e.removeClass("hover");
+				});
+				
+				var $label = $("<label></label>").appendTo($e.empty());
+				var $editor = $("<input></input>").appendTo($e);
+				var ctrl = {
+					value: function(v) {
+						originalValue = v;
+						$label.html(originalValue);
+						$editor.val(originalValue);	
+					}
+				};
+				ctrl.value(originalValue);
+				
+				var onFinish = function() {
+					var v = $editor.val();
+					if (o.isvalid && !o.isvalid(v)) return;
+					
+					$editor.hide();
+					$label.show();
+		            if (originalValue != v) {
+		            	if (o.onedit) o.onedit(v);
+		            	ctrl.value(v);
+		            }
+				};
+				var onCancel = function() {
+					$editor.hide();
+					$label.show();
+					ctrl.value(originalValue);
+				};
+  
+				$editor.hide().bind("blur", onFinish).keyup(function(e) {
+					if (e.which == 13) onFinish();
+					else if (e.which == 27) onCancel();
+				});
+				
+				$label.bind("click", function() {
+					$label.hide();
+					$editor.show().focus();
+				});
+				
+				return ctrl;
+			}
+		}
+	}
 	
-	this.t = function(s) {
-		return that.env.texts().get(s);
-	}	*/
+	
+	/*this.formatDate = function(d) {
+		return $.datepicker.formatDate(getDateFormat(), d);
+	}*/
+
+	this.formatDateTime = function(time, fmt) {
+		return time.format(fmt);
+	}
+
+	/*this.parseDate = function(dateFmt, date, time) {
+		if (!date || date.length == 0) return null;
+		
+		var t = $.datepicker.parseDate(dateFmt, date);
+		if (!time || time.length < 5) {
+			t.setHours("00");
+			t.setMinutes("00");
+			t.setSeconds("00");
+		} else {
+			//TODO timeFmt
+			t.setHours(time.substring(0,2));
+			t.setMinutes(time.substring(3,5));
+			t.setSeconds(time.length > 6 ? time.substring(7,9) : "00");
+		}
+		return t;
+	}*/
+
+	this.parseInternalTime = function(time) {
+		var ts = new Date();
+		ts.setYear(time.substring(0,4));
+		ts.setMonth(time.substring(4,6) - 1);
+		ts.setDate(time.substring(6,8));
+		ts.setHours(time.substring(8,10));
+		ts.setMinutes(time.substring(10,12));
+		ts.setSeconds(time.substring(12,14));
+		return ts;
+	}
+
+	this.formatInternalTime = function(time) {
+		if (!time) return null;
+		return time.format('yymmddHHMMss', time);
+	}
+	
+	this.texts = new function() {
+		var tt = this;
+		this.locale = '';
+		this.values = null;
+		
+		this.set = function(id, values) {
+			tt.locale = id;
+			tt.values = values;
+		}
+		
+		this.add = function(id, values) {
+			//TODO handle different locale
+			for (v in values) {
+				tt.values[v] = values[v];
+			}
+		}
+	}
 }
+
+/**
+/* Dialogs
+/**/
+$.extend(true, mollify, {
+	view : {
+		DialogHandler : function() {
+			var that = this;
+			
+			var dialogDefaults = {
+				title: "Mollify"
+			};
+			
+			this.info = function(spec) {
+				var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
+					modal: true,
+					resizable: false,
+					height: 'auto',
+					minHeight: 50
+				});
+				mollify.ui.handlers.localize(dlg);
+				dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });
+			};
+			
+			this.error = function(spec) {
+				alert("error");
+			};
+			
+			this.confirmation = function(spec) {
+				that.custom({
+					title: spec.title,
+					content: spec.message,
+					buttons: [
+						{ id: "yes", "title-key": "yes" },
+						{ id: "no", "title-key": "no" }
+					],
+					"on-button": function(btn, d) {
+						d.close();
+						if (spec.callback && btn.id === 'yes') spec.callback();
+					}
+				});
+			};
+			
+			this.input = function(spec) {
+				that.custom({
+					title: spec.title,
+					html: spec.message + '<input id="">',
+					buttons: [
+						{ id: "yes", "title-key": "yes" },
+						{ id: "no", "title-key": "no" }
+					],
+					"on-button": function(btn, d) {
+						d.close();
+						if (spec.callback && btn.id === 'yes') spec.callback();
+					},
+					"on-show": function() {
+						
+					}
+				});
+			};
+			
+			this.wait = function(spec) {
+				var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
+				var w = mollify.dom.template("mollify-tmpl-wait", $.extend(spec, dialogDefaults)).appendTo($trg).show();
+				return {
+					close: function() {
+						w.remove();
+					}
+				};
+			};
+			
+			this.notification = function(spec) {
+				var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
+				var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
+				setTimeout(function() {	notification.fadeOut(300); }, spec.time | 3000);
+			};
+			
+			this.custom = function(spec) {
+				var dlg = $("#mollify-tmpl-dialog-custom").tmpl($.extend(dialogDefaults, spec), {
+					getContent: function() {
+						if (spec.html) return spec.html;
+						if (spec.content) {
+							var c = spec.content;
+							if (typeof c === 'string') return c;
+							return $("<div/>").append(c.clone()).html();
+						}
+						return "";
+					},
+					getButtonTitle: function(b) {
+						if (b["title"]) return b["title"];
+						if (b["title-key"]) return mollify.ui.texts.get(b["title-key"]);
+						return "";
+					}
+				});
+				mollify.ui.handlers.localize(dlg);
+				dlg.on('hidden', function() { dlg.remove(); }).modal({
+					backdrop: !!spec.backdrop,
+					show: true,
+					keyboard: true
+				});
+				var h = {
+					close: function() {
+						dlg.modal('hide');
+					}
+				};
+				dlg.find(".btn").click(function(e) {
+					e.preventDefault();
+					var btn = $(this).tmplItem().data;
+					if (spec["on-button"]) spec["on-button"](btn, h);
+				});
+				if (spec["on-show"]) spec["on-show"](h);
+				return h;
+			};
+		}
+	}
+});
+
+/**
+/* Login view
+/**/
+$.extend(true, mollify, {
+	view : {
+		LoginView : function() {
+			var that = this;
+			
+			this.init = function(listener) {
+				that.listener = listener;
+			}
+			
+			this.render = function(id) {
+				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("login-view.html"), that, ['localize', 'hintbox', 'bubble']);
+			}
+			
+			this.onLoad = function() {
+				$(window).resize(that.onResize);
+				that.onResize();
+			
+				if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
+				if (mollify.hasFeature('registration')) {
+					$("#login-register").click(function() {
+						mollify.ui.window.open(mollify.service.getPluginUrl("registration"));
+					});
+					$("#login-register").show();
+				}
+				
+				var $data = $("#login-data");
+				mollify.ui.handlers.center($data);
+				//mollify.ui.handlers.bubble($data, that);
+				$("#login-name, #login-password").bind('keypress', function(e) {
+					if ((e.keyCode || e.which) == 13) that.onLogin();
+				});
+				$("#login-button").click(that.onLogin);
+				$("#login-name").focus();
+				
+				//		mollify.views.dialogs.info({message:'tt'});
+				//		return;
+			}
+			
+			this.onResize = function() {
+				var h = $(window).height();
+				$("#login-main").height(h);
+				
+				$data = $("#login-data");
+				$data.css('margin-top', (h / 2) - ($data.height() / 2));
+			}
+			
+			this.onRenderBubble = function(id, bubble) {
+				if (id === 'login-forgot-password') {
+					$("#login-forgot-button").click(function() {				
+						var email = $("#login-forgot-email").val();
+						if (!email) return;
+						
+						bubble.hide();
+						that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
+						that.listener.onResetPassword(email);
+					});
+				}
+			}
+			
+			this.onShowBubble = function(id, bubble) {
+				if (id === 'login-forgot-password') {
+					$("#login-forgot-email").val("").focus();
+				}
+			}
+			
+			this.onLogin = function() {
+				var username = $("#login-name").val();
+				var password = $("#login-password").val();
+				var remember = $("#login-remember-cb").is(':checked');
+				
+				if (!username || username.length < 1) {
+					$("#login-name").focus();
+					return;
+				}
+				if (!password || password.length < 1) {
+					$("#login-password").focus();
+					return;
+				}
+				that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
+				that.listener.onLogin(username, password, remember);
+			}
+			
+			this.showLoginError = function() {
+				that.wait.close();
+				
+				mollify.ui.views.dialogs.notification({
+					target: "login-main",
+					message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
+				});
+			}
+			
+			this.onResetPasswordSuccess = function() {
+				that.wait.close();
+				
+				mollify.ui.views.dialogs.notification({
+					target: "login-main",
+					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
+				});
+			}
+			
+			this.onResetPasswordFailed = function() {
+				that.wait.close();
+				
+				mollify.ui.views.dialogs.info({
+					message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
+				});
+			}
+		}
+	}
+});
+
+/**
+/* Comment plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		CommentPlugin: function() {
+			var that = this;
+			
+			this.initialize = function(core) {
+				that.core = core;
+				/*that.env.registerContextPlugin(function(item) {
+					return {
+						components : [{
+							html: "",
+							on_init: function(id, c, item, details) {
+								if (!details["plugin-comment"]) return;
+								
+								$("#"+id).html("<div id='details-comments'><div id='details-comments-content'><div id='details-comments-icon'/><div id='details-comment-count'>"+details["plugin-comment"].count+"</div></div></div>");
+								
+								$("#details-comments-content").hover(
+									function () { $(this).addClass("hover"); }, 
+									function () { $(this).removeClass("hover"); }
+								);
+								$("#details-comments-content").click(function() {
+									c.close();
+									that.openComments(item);
+								});
+							}
+						}]
+					};
+				}, function(item) {
+					return {"plugin-comment":["count"]};
+				});*/
+				
+				mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
+				mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
+				
+				mollify.ui.filelist.addColumn({
+					"id": "comment-count",
+					"request-id": "plugin-comment-count",
+					"title-key": "",
+					"sort": function(i1, i2, sort, data) {
+						if (!i1.is_file && !i2.is_file) return 0;
+						if (!data || !data["core-file-modified"]) return 0;
+						
+						var ts1 = data["core-file-modified"][i1.id] ? data["core-file-modified"][i1.id] * 1 : 0;
+						var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
+						return ((ts1 > ts2) ? 1 : -1) * sort;
+					},
+					"content": that.getListCellContent,
+					"request": function(parent) { return {}; },
+		/*			"on-render": function() {
+						$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(that.onListCellClick);
+					},*/
+					"on-click": function(item) {
+						that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+					}
+				});
+				/*env.addListColumnSpec({
+					"id": "comment-count",
+					"request-id": "plugin-comment-count",
+					"default-title-key": "",
+					"content": that.getListCellContent,
+					"request": function(parent) { return {}; },
+					"on-render": function() {
+						var onclick = function(e) {
+							var id = e.target.id.substring(19);
+							var item = that.env.fileview().item(id);
+							that.openComments(item);
+						}
+		//				var tooltip = "<div class='filelist-item-comment-tooltip mollify-tooltip'>" + that.t("commentsFileListAddTitle") + "</div>";
+						$(".filelist-item-comment-count,.filelist-item-comment-count-none").click(onclick);//.simpletip({content: tooltip, fixed: true, position: 'left'});
+					}
+				});
+				
+				if (mollify.hasPlugin("plugin-itemdetails"))
+					mollify.getPlugin("plugin-itemdetails").addDetailsSpec({
+						key: "comments-count",
+						"title-key": "commentsDetailsCount"
+					});*/
+			};
+			
+			this.renderItemContextDetails = function(item, $e, cache) {
+				$e.addClass("loading");
+				mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
+					$e.removeClass("loading");
+					if (!cache.comments) {	
+						that.loadComments(item, function(item, comments) {
+							cache.comments = comments;
+							that.renderComments(item, comments, {element: $e.empty(), contentTemplate: 'comments-template'});
+						});
+					} else {
+						that.renderComments(item, cache.comments, {element: $e.empty(), contentTemplate: 'comments-template'});	
+					}
+				});
+			};
+			
+			this.renderComments = function(item, comments, o) {
+				mollify.dom.template(o.contentTemplate, item).appendTo(o.element);
+				
+				$("#comments-dialog-add").click(function() {
+					var comment = $("#comments-dialog-add-text").val();
+					if (!comment || comment.length == 0) return;
+					that.onAddComment(item, comment, function() {
+						//TODO refresh comments
+						$("#comments-dialog-add-text").val("");
+					});
+				} );
+				
+				if (comments.length == 0) {
+					$("#comments-list").html('<span class="message">'+mollify.ui.texts.get("commentsDialogNoComments")+'</span>');
+					return;
+				}
+				
+				mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
+				mollify.ui.handlers.localize(o.element);
+				
+				$(".comment-content").hover(
+					function () { $(this).addClass("hover"); }, 
+					function () { $(this).removeClass("hover"); }
+				);
+				$(".comment-remove-action").click(function(e) {
+					e.preventDefault();
+					var comment = $(this).tmplItem().data
+					that.onRemoveComment(item, comment.id);
+				});
+			};
+			
+			/*this.onListCellClick = function(e) {
+				e.preventDefault();
+				var id = e.target.id.substring(19);
+				var item = that.env.fileview().item(id);
+				that.openComments(item);
+				return false;
+			};*/
+			
+			this.getListCellContent = function(item, data) {
+				if (!item.id || item.id.length == 0 || !data || !data["plugin-comment-count"]) return "";
+				var counts = data["plugin-comment-count"];
+		
+				if (!counts[item.id])
+					return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count-none'></div>";
+				
+				return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
+			}
+			
+			this.showCommentsBubble = function(item, e) {
+				var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name});
+				
+				mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
+					bubble.content(mollify.dom.template("comments-template", item));
+					/*$("#comments-dialog-content .mollify-actionlink").hover(
+						function () { $(this).addClass("mollify-actionlink-hover"); }, 
+						function () { $(this).removeClass("mollify-actionlink-hover"); }
+					);*/
+			
+					$("#comments-dialog-add").click(function() { that.onAddComment(item, bubble.close); } );
+					that.loadComments(item, that.onShowComments);
+					
+					/*mollify.ui.views.dialogs.custom({
+						"title": mollify.ui.texts.get("commentsDialogTitle"),
+						"content": mollify.dom.template("comments-content-template", item),
+						"on-show": function(d) { that.onShowCommentsDialog(d, item); },
+						"on-button": function(id, d) {
+							d.close();
+						},
+						buttons: [
+							{id: 'close', "title-key":'dialogCloseButton'}
+						]
+					});*/
+				});
+			};
+			
+			this.loadComments = function(item, cb) {
+				mollify.service.get("comment/"+item.id, function(comments) {
+					var userId = mollify.session['user_id'];
+					var isAdmin = mollify.session.admin;
+					
+					for (var i=0,j=comments.length; i<j; i++) {
+						comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
+						comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
+						comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
+					}
+					cb(item, comments);
+				}, function(code, error) {
+					alert(error);
+				});
+			};
+			
+			this.onAddComment = function(item, comment, cb) {
+				mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
+					if (cb) cb();
+					
+					var e = document.getElementById("item-comment-count-"+item.id);
+					e.innerHTML = result.count;
+					e.setAttribute('class', 'filelist-item-comment-count');
+				},	function(code, error) {
+					alert(error);
+				});
+			}
+			
+			this.onRemoveComment = function(item, id) {		
+				mollify.service.del("comment/"+item.id+"/"+id, function(result) {
+					that.onShowComments(item, result);
+				},	function(code, error) {
+					alert(error);
+				});
+			}
+			
+			this.onShowComments = function(item, comments) {
+				$("#comments-list").removeClass("loading");
+				
+				if (comments.length == 0) {
+					$("#comments-list").html("<span class='message'>"+mollify.ui.texts.get("commentsDialogNoComments")+"</span>");
+					return;
+				}
+		
+				mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
+				//mollify.ui.handlers.localize("comments-content-"+item.id);
+				$(".comment-content").hover(
+					function () { $(this).addClass("hover"); }, 
+					function () { $(this).removeClass("hover"); }
+				);
+				$(".comment-remove-action").click(function(e) {
+					e.preventDefault();
+					var comment = $(this).tmplItem().data
+					that.onRemoveComment(item, comment.id);
+				});
+			}
+			
+			/*
+			
+			this.t = function(s) {
+				return that.env.texts().get(s);
+			}	*/
+			
+			return {
+				id: "plugin-comment",
+				initialize: that.initialize,
+				itemContextData : function(item, data) {
+					return {
+						details: {
+							"title-key": "pluginCommentContextTitle",
+							"on-render": function(e, cache) { that.renderItemContextDetails(item, e, cache); }
+						},
+						actions: [
+							{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }
+						]
+					};
+				}
+			}
+		}
+	}
+});
 
 /*function ItemDetailsPlugin(conf, sp) {
 	var that = this;
@@ -1774,3 +1748,39 @@ function SharePlugin() {
 		return that.env.texts().get(s, p);
 	}
 }*/
+
+function isArray(o) {
+	return Object.prototype.toString.call(o) === '[object Array]';
+}
+
+if(typeof String.prototype.trim !== 'function') {
+	String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, ''); 
+	}
+}
+
+function def(o) {
+	return (typeof(o) != 'undefined');
+}
+
+if (!Array.prototype.indexOf) { 
+    Array.prototype.indexOf = function(obj, start) {
+         for (var i = (start || 0), j = this.length; i < j; i++) {
+             if (this[i] === obj) { return i; }
+         }
+         return -1;
+    }
+}
+
+function strpos(haystack, needle, offset) {
+    // Finds position of first occurrence of a string within another  
+    // 
+    // version: 1109.2015
+    // discuss at: http://phpjs.org/functions/strpos
+    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Onno Marsman    
+    // +   bugfixed by: Daniel Esteban
+    // +   improved by: Brett Zamir (http://brett-zamir.me)
+    var i = (haystack + '').indexOf(needle, (offset || 0));
+    return i === -1 ? false : i;
+}
