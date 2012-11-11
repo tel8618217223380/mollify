@@ -1,11 +1,11 @@
-<div id="mainview-header" class="navbar navbar-inverse navbar-fixed-top">
+<div id="mollify-mainview-header" class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<div id="mainview-logo"></div>
-			<div id="mainview-header-tools" class="nav-collapse collapse">
-				<ul id="mainview-user" class="nav pull-right"></ul>
-				<div id="mainview-search" class="input-append pull-right">
-					<input id="mainview-search-input" class="hintbox" type="text" hint-key="mainviewSearch">
+			<div id="mollify-mainview-logo"></div>
+			<div id="mollify-mainview-header-tools" class="nav-collapse collapse">
+				<ul id="mollify-mainview-user" class="nav pull-right"></ul>
+				<div id="mollify-mainview-search" class="input-append pull-right">
+					<input id="mollify-mainview-search-input" class="hintbox" type="text" hint-key="mainviewSearch">
 					<button class="btn" type="button"><i class="icon-search"></i></button>
 				</div>
 			</div>
@@ -13,10 +13,10 @@
 	</div>
 </div>
 
-<div id="mainview-main" class="container">
-	<div id="mainview-content" class="row">
+<div id="mollify-mainview-main" class="container">
+	<div id="mollify-mainview-content" class="row">
 		<div class="span2" class="well">
-			<ul id="mainview-rootlist" class="nav nav-list affix">
+			<ul id="mollify-mainview-rootlist" class="nav nav-list affix">
 	        </ul>
 		</div>
 		
@@ -27,11 +27,16 @@
 			<div id="mollify-folderview-items">
 			</div>
 			
-			<div id="mainview-content-footer">
-				<div id="mainview-viewstyle-options" class="mollify-radio">
-					<button id="mainview-viewstyle-list" class="btn mainview-viewstyle-option"><i class="icon-list-ul"></i></a>
-					<button id="mainview-viewstyle-small-icons" class="btn mainview-viewstyle-option"><i class="icon-th"></i></a>
-					<button id="mainview-viewstyle-large-icons" class="btn mainview-viewstyle-option"><i class="icon-th-large"></i></a>
+			<div id="mollify-mainview-content-footer">
+				<div id="mollify-mainview-progress" style="display:none">
+					<div class="progress progress-striped active">
+						<div class="bar" style="width: 0%;"></div>
+					</div>
+				</div>
+				<div id="mollify-mainview-viewstyle-options" class="mollify-radio">
+					<button id="mollify-mainview-viewstyle-list" class="btn mainview-viewstyle-option"><i class="icon-list-ul"></i></a>
+					<button id="mollify-mainview-viewstyle-small-icons" class="btn mainview-viewstyle-option"><i class="icon-th"></i></a>
+					<button id="mollify-mainview-viewstyle-large-icons" class="btn mainview-viewstyle-option"><i class="icon-th-large"></i></a>
 				</div>
 			</div>
 		</div>
@@ -47,7 +52,7 @@
 </script>
 
 <script id="mollify-tmpl-main-root-list" type="text/x-jquery-tmpl">
-	<li id="mainview-rootlist-item-${id}" class="mainview-rootlist-item" ><a href="javascript: void(0);"><i class="icon-chevron-right"></i> ${name}</a></li>
+	<li id="mollify-mainview-rootlist-item-${id}" class="mollify-mainview-rootlist-item" ><a href="javascript: void(0);"><i class="icon-chevron-right"></i> ${name}</a></li>
 </script>
 
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
@@ -84,9 +89,9 @@
 </script>
 
 <script id="mollify-tmpl-main-createfolder-bubble" type="text/x-jquery-tmpl">
-	<div id="mainview-createfolder-name" class="input-append pull-right">
-		<input id="mainview-createfolder-name-input" class="hintbox" type="text" hint-key="mainviewCreateFolderName">
-		<button id="mainview-createfolder-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
+	<div id="mollify-mainview-createfolder-name" class="input-append pull-right">
+		<input id="mollify-mainview-createfolder-name-input" class="hintbox" type="text" hint-key="mainviewCreateFolderName">
+		<button id="mollify-mainview-createfolder-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
 	</div>
 </script>
 
@@ -96,8 +101,8 @@
 		<div id="mollify-mainview-addfile-retrieve">
 			TODOretrieve
 			<div class="input-append pull-right">
-				<input id="mainview-addfile-retrieve-url-input" class="hintbox" type="text" hint-key="mainviewRetrieveUrlTitle">
-				<button id="mainview-addfile-retrieve-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
+				<input id="mollify-mainview-addfile-retrieve-url-input" class="hintbox" type="text" hint-key="mainviewRetrieveUrlTitle">
+				<button id="mollify-mainview-addfile-retrieve-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
 			</div>
 		</div>
 	</div>
@@ -108,7 +113,7 @@
 </script>
 
 <script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
-	<li id="folder-hierarchy-item-${id}" class="folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
+	<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
 </script>
 
 <script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">

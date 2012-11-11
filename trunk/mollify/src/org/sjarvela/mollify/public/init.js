@@ -121,6 +121,19 @@
 		t.templates.load("dialogs.html");
 		
 		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader(t.env);
+		
+		$("body").click(function(e) {
+			// hide popups when clicked outside
+			if (t.ui.activePopup) {
+				if (e && e.srcElement && t.ui.activePopup.element) {
+					var popupElement = t.ui.activePopup.element();
+					if (popupElement.has($(e.srcElement)).length > 0) return;
+				}
+				t.ui.activePopup.hide();
+			}
+			t.ui.activePopup = false;
+		});
+
 		//$.datepicker.setDefaults({
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});
@@ -270,17 +283,7 @@
 				if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
 			});
 		},
-		
-		hidePopupsWithEvent: function(e) {
-			//$(".mollify-popup").qtip('hide');
-			if (t.ui.activePopup) {
-				if (e && e.srcElement && t.ui.activePopup.containsElement)
-					if (t.ui.activePopup.containsElement(e.srcElement)) return;
-				t.ui.activePopup.hide();
-			}
-			t.ui.activePopup = false;
-		},
-		
+				
 		handlers : {
 			hintbox : function(p, h) {
 				p.find("input.hintbox").each(function() {
@@ -620,11 +623,12 @@
 					show: function() {
 						e.popover('show');
 					},
-					hide: function(evt) {
-						e.popover('destroy');
+					hide: function(dontDestroy) {
+						if (dontDestroy) $tip.hide();
+						else e.popover('destroy');
 					},
-					containsElement : function(e) {
-						return ($tip.has($(e)).length > 0);
+					element : function() {
+						return $tip;
 					},
 					close: this.hide,
 					getContent: function() {

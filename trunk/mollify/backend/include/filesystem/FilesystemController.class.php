@@ -517,16 +517,51 @@
 			$this->env->features()->assertFeature("file_upload");
 			$this->assertRights($folder, Authentication::RIGHTS_WRITE, "upload");
 			
-			if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
+			//if (Logging::isDebug()) Logging::logDebug("Upload to ".$folder->id().", FILES=".Util::array2str($_FILES));
 			
 			if (!isset($_FILES['uploader-http']) and !isset($_FILES['uploader-html5']))
 				throw new ServiceException("NO_UPLOAD_DATA");
 			
-			// html5 uploader (uploads one file at a time)
+			// html5 uploader
 			if (isset($_FILES['uploader-html5'])) {
-				if (!isset($_FILES['uploader-html5']['tmp_name'])) throw new ServiceException("UPLOAD_FAILED");
+				//if (!isset($_FILES['uploader-html5']['tmp_name'])) throw new ServiceException("UPLOAD_FAILED");
 				
-				$this->upload($folder, $_FILES['uploader-html5']['name'][0], $_FILES['uploader-html5']['tmp_name'][0]);
+		        $name = isset($_SERVER['HTTP_CONTENT_DISPOSITION']) ? rawurldecode(preg_replace('/(^[^"]+")|("$)/', '', $_SERVER['HTTP_CONTENT_DISPOSITION'])) : null;
+		        $type = isset($_SERVER['HTTP_CONTENT_DESCRIPTION']) ? $_SERVER['HTTP_CONTENT_DESCRIPTION'] : null;
+		        $range = isset($_SERVER['HTTP_CONTENT_RANGE']) ? preg_split('/[^0-9]+/', $_SERVER['HTTP_CONTENT_RANGE']) : null;
+		        $size =  $range ? $range[3] : null;
+		        $files = $_FILES['uploader-html5'];
+		        
+		        if (is_array($files['tmp_name'])) {
+		        	foreach ($files['tmp_name'] as $index => $value) {
+						if (isset($files['error'][$index]) && $files['error'][$index] != UPLOAD_ERR_OK)
+							throw new ServiceException("UPLOAD_FAILED", $files['error'][$index]);
+		        	}
+		        	
+		            foreach ($files['tmp_name'] as $index => $value) {
+		                $info[] = $this->upload(
+		                	$folder,
+		                	$name ? $name : $files['name'][$index],
+		                    $files['tmp_name'][$index],
+		                    $size ? $size : $files['size'][$index],
+		                    $type ? $type : $files['type'][$index],
+		                    $range
+		                );
+		            }
+		        } else {
+					if (isset($files['error']) && $files['error'] != UPLOAD_ERR_OK)
+						throw new ServiceException("UPLOAD_FAILED", $files['error']);
+				
+		            $info[] = $this->upload(
+		            	$folder,
+		            	$name ? name : (isset($files['name']) ? $files['name'] : null),
+		                isset($files['tmp_name']) ? $files['tmp_name'] : null,
+		                $size ? $size : (isset($files['size']) ? $files['size'] : $_SERVER['CONTENT_LENGTH']),
+		                $type ? $type : (isset($files['type']) ? $files['type'] : $_SERVER['CONTENT_TYPE']),
+		                $range
+		            );
+		        }
+				//$this->upload($folder, $_FILES['uploader-html5']['name'][0], $_FILES['uploader-html5']['tmp_name'][0]);
 				return;
 			}
 	
@@ -541,19 +576,47 @@
 			}
 		}
 		
-		private function upload($folder, $name, $origin) {
-			$target = $folder->createFile($name);
-			if ($target->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
-			Logging::logDebug('uploading to ['.$target.']');
+		private function upload($folder, $name, $origin, $size = NULL, $type = NULL, $range = NULL) {
+			$append = ($range != NULL);
+			//TODO check for max post size, range etc
+			$target = $folder->fileWithName($name);
+			if (!$append and $target->exists()) {
+				$target = $this->findFreeFileWithIndex($folder, $name);
+				$target = $folder->createFile($target->name());
+			}
 			
-			$src = @fopen($origin, "rb");
+			//if ($target->exists()) throw new ServiceException("FILE_ALREADY_EXISTS");
+			Logging::logDebug('uploading to ['.$target.'] file ['.$name.'],size='.$size.',type='.$type.',range='.$range);
+			$fromFile = ($origin && is_uploaded_file($origin));
+            
+            
+			if ($fromFile) {
+				$src = @fopen($origin, "rb");
+			} else {
+				$src = @fopen('php://input', 'r');
+			}
 			if (!$src)
-				throw new ServiceException("SAVING_FAILED", "Failed to read uploaded data");			
-			$target->write($src);
+				throw new ServiceException("SAVING_FAILED", "Failed to read uploaded data");
+			$target->write($src, $append);
 			fclose($src);
-			unlink($origin);
+			if ($fromFile) unlink($origin);
 			
+			// is finished?
+			//if ($size != NULL && $target->size() == $size) {
+			//}
+						
 			$this->env->events()->onEvent(FileEvent::upload($target));
+		}
+		
+		private function findFreeFileWithIndex($folder, $name) {
+			$index = 1;
+			while (TRUE) {
+				$file = $folder->fileWithName($name."(".$index.")");
+				if (!$file->exists()) return $file;
+				$index = $index + 1;
+				if ($index > 100) break;
+			}
+			throw new ServiceException("FILE_ALREADY_EXISTS");
 		}
 		
 		public function uploadFrom($folder, $name, $stream, $src = '[Unknown]') {
