@@ -67,7 +67,7 @@ public class DefaultDialogManager implements DialogManager {
 			ConfirmationListener listener) /*-{
 		return function() {
 			listener
-					.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm();
+					.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm()();
 		};
 	}-*/;
 

@@ -326,8 +326,8 @@
 			return $handle;
 		}
 		
-		public function write($item, $s) {
-			$handle = @fopen($this->localPath($item), "wb");
+		public function write($item, $s, $append = FALSE) {
+			$handle = @fopen($this->localPath($item), ($append ? "ab" : "wb"));
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open file for writing: ".$item->id());
 			while (!feof($s)) {

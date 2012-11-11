@@ -52,9 +52,9 @@
 					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 					dataType: 'json',
 					dropZone: $d.find(".mollify-uploader"),
-				    add: function (e, data) {
+				    /*add: function (e, data) {
 				        alert('Dropped: ' + data.files.length);
-				    },
+				    },*/
 				    send: function(e, data) {
 				    	if (data.files.length == 0) return false;
 					    console.log("send");
@@ -65,7 +65,7 @@
 						if (l.progress) l.progress(progress);
 				    },
 					done: function(e, data) {
-						console.log("done " + JSON.stringify(data));
+						//console.log("done " + JSON.stringify(data));
 						if (l.finished) l.finished();
 					}
 				});	

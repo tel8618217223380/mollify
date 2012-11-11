@@ -137,8 +137,8 @@
 			return $this->filesystem->read($this);
 		}
 		
-		public function write($s) {
-			return $this->filesystem->write($this, $s);
+		public function write($s, $append) {
+			return $this->filesystem->write($this, $s, $append);
 		}
 
 		public function put($content) {
