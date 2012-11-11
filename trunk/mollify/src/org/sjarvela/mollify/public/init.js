@@ -271,9 +271,13 @@
 			});
 		},
 		
-		hideAllPopups: function() {
+		hidePopupsWithEvent: function(e) {
 			//$(".mollify-popup").qtip('hide');
-			if (t.ui.activePopup) t.ui.activePopup.hide();
+			if (t.ui.activePopup) {
+				if (e && e.srcElement && t.ui.activePopup.containsElement)
+					if (t.ui.activePopup.containsElement(e.srcElement)) return;
+				t.ui.activePopup.hide();
+			}
 			t.ui.activePopup = false;
 		},
 		
@@ -616,8 +620,11 @@
 					show: function() {
 						e.popover('show');
 					},
-					hide: function() {
+					hide: function(evt) {
 						e.popover('destroy');
+					},
+					containsElement : function(e) {
+						return ($tip.has($(e)).length > 0);
 					},
 					close: this.hide,
 					getContent: function() {
@@ -639,6 +646,9 @@
 					manualout: true,
 					onshow: function($t) {
 						$tip = $t;
+						$tip.click(function(e){
+							//return false;
+						});
 						if (t.ui.activePopup) t.ui.activePopup.hide();
 						t.ui.activePopup = api;
 						var closeButton = $('<button type="button" class="close">×</button>').click(function(){

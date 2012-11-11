@@ -32,6 +32,9 @@
 					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 					dataType: 'json',
 					dropZone: $d.find(".mollify-uploader"),
+				    drop: function (e, data) {
+				        alert('Dropped: ' + data.files.length);
+				    },
 					progressall: function (e, data) {
 						var progress = parseInt(data.loaded / data.total * 100, 10);
 						console.log(progress);
@@ -39,35 +42,33 @@
 					done: function(e, data) {
 						
 					}
-				});
-				/*.html5_upload({
-					fieldName: 'uploader-html5[]',
-                    url: mollify.service.url("filesystem/"+folder.id+'/files/'),
-                    autostart: false,
-                    sendBoundary: window.FormData || $.browser.mozilla,
-                    onStart: function(event, total) {
-                    	alert(total);
-                        return true;
-
-                    },
-
-                    genName: function(file, number, total) {
-                        console.log("file "+file);
-                    },
-                    genStatus: function(progress, finished) {
-                        console.log("status "+progress);
-                    },
-                    genProgress: function(loaded, total) {
-                        console.log("progress " + loaded);
-                    },
-                    onFinishOne: function(event, response, name, number, total) {
-                        //alert(response);
-                        console.log("finished "+name);
-                    },
-                    onError: function(event, name, error) {
-                        alert('error while uploading file ' + name);
-                    }
-                });*/	
+				});	
+			};
+			
+			this.initWidget = function($e, folder, l) {
+				var $d = mollify.dom.template("mollify-tmpl-uploader-widget");
+				$e.append($d);
+				var $input = $d.find("input").fileupload({
+					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
+					dataType: 'json',
+					dropZone: $d.find(".mollify-uploader"),
+				    add: function (e, data) {
+				        alert('Dropped: ' + data.files.length);
+				    },
+				    send: function(e, data) {
+				    	if (data.files.length == 0) return false;
+					    console.log("send");
+					    if (l.start) l.start(data.files);
+				    },
+					progressall: function (e, data) {
+						var progress = parseInt(data.loaded / data.total * 100, 10);
+						if (l.progress) l.progress(progress);
+				    },
+					done: function(e, data) {
+						console.log("done " + JSON.stringify(data));
+						if (l.finished) l.finished();
+					}
+				});	
 			};
 			
 			this.onUpload = function($d, dlg, folder) {
@@ -84,6 +85,11 @@
 				open : function(folder) {
 					mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
 						t.open(folder);
+					});
+				},
+				initUploadWidget : function($e, folder, l) {
+					mollify.templates.load("mollify-uploader", mollify.templates.url("uploader.html"), function() {
+						t.initWidget($e, folder, l);
 					});
 				}
 			};
