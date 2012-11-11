@@ -39,7 +39,7 @@
 					var root = $(this).tmplItem().data;
 					that.listener.onFolderSelected(1, root);
 				});
-				$("body").click(mollify.ui.hideAllPopups);
+				$("body").click(mollify.ui.hidePopupsWithEvent);
 				
 				that.controls["mainview-viewstyle-options"].set(that.viewStyle);
 				that.initList();
@@ -128,7 +128,25 @@
 							}});
 							return false;
 						});
-						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(that.onUpload);
+						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(function() {
+							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
+							 	onRenderBubble: function(b) {
+							 		mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that.currentFolder, {
+								 		start: function() {
+									 		b.hide();
+								 		},
+								 		finished: function() {
+									 		console.log("finished");
+									 		that.listener.onRefresh();
+								 		}
+							 		});
+							 		if (!mollify.hasFeature('retrieve_url')) {
+								 		$("#mollify-mainview-addfile-retrieve").remove();
+							 		}
+								}
+							}});
+							return false;
+						});
 						
 						var actionsElement = mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($t);
 						mollify.ui.controls.dropdown({
