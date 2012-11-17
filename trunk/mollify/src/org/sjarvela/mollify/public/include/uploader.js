@@ -48,18 +48,32 @@
 			this.initWidget = function($e, folder, l) {
 				var $d = mollify.dom.template("mollify-tmpl-uploader-widget");
 				$e.append($d);
+				var uploadData = [];
+				var totalFiles = 0;
+				
 				var $input = $d.find("input").fileupload({
 					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 					dataType: 'json',
 					dropZone: $d.find(".mollify-uploader"),
 				    /*add: function (e, data) {
-				        alert('Dropped: ' + data.files.length);
+				    	$input.attr("disabled", "disabled");
+				        //alert('Dropped: ' + data.files.length);
+				        uploadData.push(data);
+				        totalFiles = totalFiles + data.files.length;
+				        console.log(totalFiles);
 				    },*/
-				    send: function(e, data) {
-				    	if (data.files.length == 0) return false;
-					    console.log("send");
-					    if (l.start) l.start(data.files);
-				    },
+				    /*send: function(e, data) {
+				    	//if (data.files.length == 0) return false;
+					    //if (l.start) l.start(data.files);
+				    },*/
+				    submit: function (e, data) {
+					    console.log("submit");
+					    var $this = $(this);
+					    if (l.start) l.start(data.files, function() {
+						    $this.fileupload('send', data);
+					    });
+        				return false;
+        			},
 					progressall: function (e, data) {
 						var progress = parseInt(data.loaded / data.total * 100, 10);
 						if (l.progress) l.progress(progress);
@@ -69,16 +83,6 @@
 						if (l.finished) l.finished();
 					}
 				});	
-			};
-			
-			this.onUpload = function($d, dlg, folder) {
-				//TODO check if there are files
-				//var $form = $d.find(".mollify-uploader-form");
-				//$form.submit();
-				var $input = $d.find("input");
-				if ($input.length == 0) return;
-				if (!$input[0].files || !$input[0].files.length == 0) return;
-				$input.triggerHandler('html5_upload.start');
 			};
 			
 			return {

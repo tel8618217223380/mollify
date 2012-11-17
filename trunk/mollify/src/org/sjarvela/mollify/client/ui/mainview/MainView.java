@@ -45,16 +45,14 @@ public interface MainView {
 
 	// void refresh();
 
-	ViewType getViewType();
+	//ViewType getViewType();
 
 	void setFolder(List<JsFolder> folderHierarchy, boolean canWrite);
 
 	void setData(List<JavaScriptObject> allItems, JsObj data);
 
-	// void sortColumn(String columnId, SortOrder sort);
+	/*void selectAll();
 
-	void selectAll();
-
-	void selectNone();
+	void selectNone();*/
 
 }

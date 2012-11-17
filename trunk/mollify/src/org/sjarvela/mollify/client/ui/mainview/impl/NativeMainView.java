@@ -84,12 +84,6 @@ public class NativeMainView extends NativeView implements MainView {
 	}
 
 	@Override
-	public ViewType getViewType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setFolder(List<JsFolder> folderHierarchy, boolean canWrite) {
 		viewHandler.call(
 				"folder",
@@ -109,18 +103,6 @@ public class NativeMainView extends NativeView implements MainView {
 								JsUtil.asJsArray(allItems,
 										JavaScriptObject.class))
 						.obj("data", data).create());
-	}
-
-	@Override
-	public void selectAll() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void selectNone() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

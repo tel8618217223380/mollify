@@ -44,6 +44,7 @@
 				that.initList();
 				
 				mollify.env.addEventHandler(that.onEvent);
+				that.uploadProgress = new mollify.view.main.UploadProgress($("#mollify-mainview-progress"));
 				
 				that.listener.onViewLoaded();
 			}
@@ -140,14 +141,16 @@
 							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 							 	onRenderBubble: function(b) {
 							 		mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that.currentFolder, {
-								 		start: function() {
+								 		start: function(files, ready) {
 									 		b.hide(true);
-									 		that.showProgress();
+									 		that.uploadProgress.show(ready);
+								 		},
+								 		progress: function(pr) {
+									 		that.uploadProgress.set(pr);
 								 		},
 								 		finished: function() {
 								 			b.hide();
-									 		console.log("finished");
-									 		that.hideProgress();
+									 		that.uploadProgress.hide();
 									 		that.listener.onRefresh();
 								 		}
 							 		});
@@ -178,18 +181,6 @@
 				}
 				$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 				mollify.ui.process($h, ['localize']);
-			};
-			
-			this.showUploadProgress = function() {
-				$("#mollify-mainview-progress").show().find(".bar").css("width", "0%");
-			};
-
-			this.setUploadProgress = function(progress, file) {
-				$("#mollify-mainview-progress").find(".bar").css("width", progress+"%");
-			};
-			
-			this.hideUploadProgress = function() {
-				$("#mollify-mainview-progress").hide();
 			};
 			
 			this.onUpload = function() {
@@ -492,6 +483,30 @@
 		},
 		
 		main : {
+			UploadProgress : function($e) {
+				var t = this;
+				t.$bar = $e.find(".bar");
+				
+				return {
+					show : function(cb) {
+						$e.css("bottom", "0px");
+						t.$bar.css("width", "0%");
+						$e.show().animate({"bottom": "30px"}, 500, cb);
+					},
+					set : function(progress, file) {
+						t.$bar.css("width", progress+"%");
+					},
+					hide : function(cb) {
+						setTimeout(function() {
+							$e.animate({"bottom": "0px"}, 500, function() {
+								t.$bar.css("width", "0%");
+								$e.hide();
+								if (cb) cb();
+							});
+						}, 1000);
+					}
+				}
+			},
 			IconView : function(container, id, cls) {
 				var t = this;
 				t.$c = $("#"+container);

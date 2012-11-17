@@ -13,7 +13,6 @@ package org.sjarvela.mollify.client.ui.filesystem;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemEvent;
@@ -64,7 +63,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	}
 
 	public void onAction(final List<JsFilesystemItem> items,
-			final FileSystemAction action, JsFolder folder, final Callback cb) {
+			final FileSystemAction action, JsFolder folder) {
 		if (FileSystemAction.delete.equals(action)) {
 			String title = textProvider
 					.getText(Texts.deleteFileConfirmationDialogTitle);
@@ -75,7 +74,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					new ConfirmationListener() {
 						public void onConfirm() {
 							fileSystemService.delete(items,
-									createListener(items, action, cb));
+									createListener(items, action));
 						}
 					});
 		} else if (FileSystemAction.copy.equals(action)) {
@@ -109,8 +108,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				return;
 			}
 
-			fileSystemService.copy(items, folder,
-					createListener(items, action, cb));
+			fileSystemService
+					.copy(items, folder, createListener(items, action));
 		} else if (FileSystemAction.move.equals(action)) {
 			if (folder == null) {
 				// itemSelectorFactory.openFolderSelector(textProvider
@@ -142,8 +141,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				return;
 			}
 
-			fileSystemService.move(items, folder,
-					createListener(items, action, cb));
+			fileSystemService
+					.move(items, folder, createListener(items, action));
 		} else if (action.equals(FileSystemAction.download_as_zip)) {
 			fileSystemService.getDownloadAsZipUrl(items,
 					new ResultListener<String>() {
@@ -154,7 +153,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 						@Override
 						public void onSuccess(String url) {
-							cb.onCallback();
 							viewManager.openDownloadUrl(url);
 						}
 					});
@@ -269,7 +267,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 										name,
 										createListener(
 												(JsFilesystemItem) file.cast(),
-												FileSystemAction.copy, null));
+												FileSystemAction.copy));
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
@@ -370,7 +368,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 	public void rename(JsFilesystemItem item, String newName) {
 		fileSystemService.rename(item, newName,
-				createListener(item, FileSystemAction.rename, null));
+				createListener(item, FileSystemAction.rename));
 	}
 
 	protected void copyFile(JsFile file, JsFolder toDirectory) {
@@ -380,7 +378,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				(JsFilesystemItem) file.cast(),
 				toDirectory,
 				createListener((JsFilesystemItem) file.cast(),
-						FileSystemAction.copy, null));
+						FileSystemAction.copy));
 	}
 
 	protected void moveFile(JsFile file, JsFolder toFolder) {
@@ -390,7 +388,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				(JsFilesystemItem) file.cast(),
 				toFolder,
 				createListener((JsFilesystemItem) file.cast(),
-						FileSystemAction.move, null));
+						FileSystemAction.move));
 	}
 
 	protected void copyFolder(JsFolder folder, JsFolder toFolder) {
@@ -400,7 +398,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				(JsFilesystemItem) folder.cast(),
 				toFolder,
 				createListener((JsFilesystemItem) folder.cast(),
-						FileSystemAction.copy, null));
+						FileSystemAction.copy));
 	}
 
 	protected void moveFolder(JsFolder folder, JsFolder toFolder) {
@@ -410,16 +408,16 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 				(JsFilesystemItem) folder.cast(),
 				toFolder,
 				createListener((JsFilesystemItem) folder.cast(),
-						FileSystemAction.move, null));
+						FileSystemAction.move));
 	}
 
 	private void delete(JsFilesystemItem item) {
 		fileSystemService.delete(item,
-				createListener(item, FileSystemAction.delete, null));
+				createListener(item, FileSystemAction.delete));
 	}
 
 	private ResultListener createListener(final JsFilesystemItem item,
-			final FileSystemAction action, final Callback cb) {
+			final FileSystemAction action) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				dialogManager.showError(error);
@@ -428,16 +426,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			public void onSuccess(Object result) {
 				eventDispatcher.onEvent(FileSystemEvent.createEvent(item,
 						action));
-
-				if (cb != null)
-					cb.onCallback();
 				onFileSystemEvent(action);
 			}
 		};
 	}
 
 	private ResultListener createListener(final List<JsFilesystemItem> items,
-			final FileSystemAction action, final Callback cb) {
+			final FileSystemAction action) {
 		return new ResultListener() {
 			public void onFail(ServiceError error) {
 				dialogManager.showError(error);
@@ -446,9 +441,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			public void onSuccess(Object result) {
 				eventDispatcher.onEvent(FileSystemEvent.createEvent(items,
 						action));
-
-				if (cb != null)
-					cb.onCallback();
 				onFileSystemEvent(action);
 			}
 		};
