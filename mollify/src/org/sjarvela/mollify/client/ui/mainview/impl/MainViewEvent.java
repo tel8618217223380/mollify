@@ -18,8 +18,4 @@ public class MainViewEvent {
 		return Event.create("MAINVIEW_CURRENT_FOLDER_CHANGED", folder);
 	}
 
-	public static Event onFileListReady(JsFolder folder) {
-		return Event.create("MAINVIEW_FILE_LIST_READY", folder);
-	}
-
 }

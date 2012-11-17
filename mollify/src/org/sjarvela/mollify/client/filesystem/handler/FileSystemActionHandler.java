@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.filesystem.handler;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
@@ -22,7 +21,7 @@ public interface FileSystemActionHandler {
 	void onAction(JsFilesystemItem item, FileSystemAction action);
 
 	void onAction(List<JsFilesystemItem> items, FileSystemAction action,
-			JsFolder folder, Callback actionCallback);
+			JsFolder folder);
 
 	void addListener(FileSystemActionListener fileSystemActionListener);
 
