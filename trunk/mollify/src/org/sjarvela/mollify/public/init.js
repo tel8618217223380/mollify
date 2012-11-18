@@ -121,6 +121,7 @@
 		t.templates.load("dialogs.html");
 		
 		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader(t.env);
+		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
 		
 		$("body").click(function(e) {
 			// hide popups when clicked outside
@@ -262,6 +263,8 @@
 	
 	this.ui = {
 		uploader : false,
+		
+		draganddrop : false,
 		
 		filelist : {
 			columns : [],
@@ -1781,6 +1784,78 @@ function SharePlugin() {
 }*/
 
 })(window.jQuery);
+
+(function($, mollify){
+mollify.MollifyHTML5DragAndDrop = function() {
+	var t = this;
+	t.cls = {
+		"dragged" : "dragged",
+	};
+	t.dragObj = false;
+	
+	return {
+		enableDrag : function($e, l) {
+			$e.attr("draggable","true").bind('dragstart', function(e) {
+				console.log("dragstart");
+				//this.style.opacity = '0.4';
+				t.dragObj = false;
+				if (l.onDragStart) {
+					t.dragObj = l.onDragStart($(this), e);
+					if (t.dragObj) $t.addClass("dragged");
+				}
+			}).bind('dragover', function(e) {
+				//console.log("dragover");
+				if (e.preventDefault) e.preventDefault();
+				e.originalEvent.dataTransfer.dropEffect = 'move';
+			}).bind('dragend', function(e) {
+				//console.log("dragend");
+				if (l.onDragEnd) l.onDragEnd($(this), e);
+				$t.removeClass("dragged");
+			});
+		},
+		enableDrop : function($e, l) {
+			$e.addClass("droppable").bind('drop', function(e) {
+				console.log("drop " + $(this).attr('id'));
+				if (e.stopPropagation) e.stopPropagation();
+				if (!l.canDrop || !l.onDrop) return;
+				var $t = $(this);
+				if (l.canDrop($t, e, t.dragObj)) {
+					l.onDrop($t, e, t.dragObj);
+					$t.removeClass("dragover");
+				}
+				t.dragObj = false;
+			}).bind('dragenter', function(e) {
+				if (!l.canDrop) return;
+				var $t = $(this);
+				//if (l.canDrop($(this), e, t.dragObj))
+				//console.log("dragenter droppable "+$t.attr('id'));
+				if (l.canDrop($t, e, t.dragObj)) {
+					console.log("dragover " + $t.attr('id'));
+					$t.addClass("dragover");
+				}
+			}).bind('dragleave', function(e) {
+				$(this).removeClass("dragover");
+			});
+		}
+	};
+};
+
+mollify.MollifyJQueryDragAndDrop = function() {
+	return {
+		enableDrag : function($e, l) {
+			$e.draggable({
+				revert: "invalid",
+				distance: 10,
+				addClasses: false,
+				zIndex: 2700,
+	            start: function(e) {
+	            	if (l.onDragStart) l.onDragStart($(this), e);
+	            }
+			});
+		}
+	};
+};
+})(window.jQuery, window.mollify);
 
 /* Common */
 
