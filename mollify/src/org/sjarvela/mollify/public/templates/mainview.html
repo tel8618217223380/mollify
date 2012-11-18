@@ -89,17 +89,20 @@
 </script>
 
 <script id="mollify-tmpl-main-createfolder-bubble" type="text/x-jquery-tmpl">
-	<div id="mollify-mainview-createfolder-name" class="input-append pull-right">
-		<input id="mollify-mainview-createfolder-name-input" class="hintbox" type="text" hint-key="mainviewCreateFolderName">
-		<button id="mollify-mainview-createfolder-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
+	<div id="mollify-mainview-createfolder-content">
+		<span id="mollify-mainview-createfolder-title" class="localized" text-key="mainviewCreateFolderTitle"></span>
+		<div id="mollify-mainview-createfolder-name" class="input-append pull-right">
+			<input id="mollify-mainview-createfolder-name-input" class="hintbox" type="text" hint-key="mainviewCreateFolderName">
+			<button id="mollify-mainview-createfolder-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>
+		</div>
 	</div>
 </script>
 
 <script id="mollify-tmpl-main-addfile-bubble" type="text/x-jquery-tmpl">
 	<div id="mollify-mainview-addfile">
-		<div id="mollify-mainview-addfile-upload"></div>
-		<div id="mollify-mainview-addfile-retrieve">
-			TODOretrieve
+		<div id="mollify-mainview-addfile-upload" class="mollify-mainview-addfile-section"></div>
+		<div id="mollify-mainview-addfile-retrieve" class="mollify-mainview-addfile-section">
+			<span id="mollify-mainview-addfile-retrieve-title" class="localized" text-key="mainviewRetrieveFileTitle"></span>
 			<div class="input-append pull-right">
 				<input id="mollify-mainview-addfile-retrieve-url-input" class="hintbox" type="text" hint-key="mainviewRetrieveUrlTitle">
 				<button id="mollify-mainview-addfile-retrieve-button" class="btn" type="button"><i class="icon-arrow-right"></i></button>

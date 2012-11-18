@@ -285,13 +285,13 @@
 		},
 				
 		handlers : {
-			hintbox : function(p, h) {
+			/*hintbox : function(p, h) {
 				p.find("input.hintbox").each(function() {
 					var $this = $(this);
 					var hint = t.env.texts().get($this.attr('hint-key'));
 					$this.attr("placeholder", hint).removeAttr("hint-key");
 				});//.placeholder();
-			},
+			},*/
 
 			localize : function(p, h) {
 				p.find(".localized").each(function() {
@@ -303,6 +303,11 @@
 					if (key)
 						$(this).prepend("<span>"+t.env.texts().get(key)+"</span>");
 				});
+				p.find("input.hintbox").each(function() {
+					var $this = $(this);
+					var hint = t.env.texts().get($this.attr('hint-key'));
+					$this.attr("placeholder", hint).removeAttr("hint-key");
+				});//.placeholder();
 			},
 			
 			center : function(p, h) {
@@ -655,10 +660,13 @@
 						});
 						if (t.ui.activePopup) t.ui.activePopup.hide();
 						t.ui.activePopup = api;
-						var closeButton = $('<button type="button" class="close">×</button>').click(function(){
-							e.popover('destroy');
-						});
-						$t.find('.popover-title').append(closeButton);
+						if (o.title) {
+							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
+								e.popover('destroy');
+							});
+							$t.find('.popover-title').append(closeButton);
+						}
+						mollify.ui.handlers.localize($tip);
 						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
 					},
 					onhide: function($t) {
@@ -947,7 +955,7 @@ $.extend(true, mollify, {
 			}
 			
 			this.render = function(id) {
-				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("login-view.html"), that, ['localize', 'hintbox', 'bubble']);
+				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("login-view.html"), that, ['localize', 'bubble']);
 			}
 			
 			this.onLoad = function() {
