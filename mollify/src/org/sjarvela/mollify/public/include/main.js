@@ -203,7 +203,7 @@
 				$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 				mollify.ui.process($h, ['localize']);
 				
-				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._currentFolder);
+				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite ? that._currentFolder : false);
 			};
 			
 			this.onUpload = function() {
@@ -260,7 +260,14 @@
 					},
 					onRightClick: function(item, t, e) {
 						that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
-					}
+					},
+					onNativeDrag: function (item, e) {
+						if (!item.is_file) return;
+						console.log("drag "+item.id);
+
+		                var url = mollify.service.url("filesystem/"+item.id);
+		                e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', item.name, url].join(':'));
+		            }
 				});
 			};
 			
@@ -541,7 +548,7 @@
 					mollify.dom.template("mollify-tmpl-iconview", {viewId: t.viewId}).appendTo(t.$c.empty());
 					t.$l = $("#"+t.viewId);
 					if (cls) t.$l.addClass(cls);
-				}
+				};
 				
 				this.content = function(items, data) {
 					t.items = items;
@@ -584,15 +591,15 @@
 					   'user-select':'none',
 					   '-ms-user-select':'none'
 					});
-				}
+				};
 				
 				this.getItemContextElement = function(item) {
 					return t.$l.find("#mollify-iconview-item-"+item.id);
-				}
+				};
 				
 				this.removeHover = function() {
 					t.$l.find(".mollify-iconview-item.hover").removeClass('hover');
-				}
+				};
 			},
 			
 			FileList: function(container, id, columns) {
@@ -609,7 +616,7 @@
 					var col = mollify.ui.filelist.columns[colId];
 					if (!col) continue;
 					t.cols.push(col);
-				}
+				};
 				
 				this.init = function(p) {
 					t.p = p;
@@ -664,15 +671,15 @@
 					t.items = [];
 					t.data = {};
 					t.onSortClick(t.cols[0]);
-				}
+				};
 			
 				this.updateColWidths = function() {
 					for (var colId in t.colWidths) t.updateColWidth(colId, t.colWidths[colId]);
-				}
+				};
 					
 				this.updateColWidth = function(id, w) {
 					$(".mollify-filelist-col-"+id).width(w);
-				}
+				};
 				
 				this.onSortClick = function(col) {
 					if (col.id != t.sortCol.id) {
@@ -683,19 +690,19 @@
 					}
 					t.refreshSortIndicator();
 					t.content(t.items, t.data);
-				}
+				};
 				
 				this.sortItems = function() {
 					var s = t.sortCol.sort;
 					t.items.sort(function(a, b) {
 						return s(a, b, t.sortOrderAsc ? 1 : -1, t.data);
 					});
-				}
+				};
 				
 				this.refreshSortIndicator = function() {
 					t.$h.find(".mollify-filelist-col-header").removeClass("sort-asc").removeClass("sort-desc");
 					$("#mollify-filelist-col-header-"+t.sortCol.id).addClass("sort-" + (t.sortOrderAsc ? "asc" : "desc"));
-				}
+				};
 				
 				this.getDataRequest = function(item) {
 					var rq = {};
@@ -704,7 +711,7 @@
 						if (c['request-id']) rq[c['request-id']] = {};
 					}
 					return rq;
-				}
+				};
 				
 				this.content = function(items, data) {
 					t.items = items;
@@ -739,31 +746,40 @@
 						$(this).addClass("hover");
 					}, function() {
 						$(this).removeClass("hover");
-					}).draggable({
-						revert: "invalid",
-						distance: 10,
-						addClasses: false,
-						zIndex: 2700
-					}).droppable({
-						hoverClass: "drophover",
-						accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 					}).bind("contextmenu",function(e){
 						e.preventDefault();
 						t.onItemClick($(this), $(e.srcElement), false);
 						return false;
 					}).single_double_click(function(e) {
-						//var $t = $(this);
-						//t.p.onClick($t.tmplItem().data, "", $t);
 						e.preventDefault();
 						t.onItemClick($(this), $(e.srcElement), true);
 					},function() {
 						t.p.onDblClick($(this).tmplItem().data);
-					}).attr('unselectable', 'on').css({
-					   '-moz-user-select':'none',
-					   '-webkit-user-select':'none',
-					   'user-select':'none',
-					   '-ms-user-select':'none'
 					});
+					
+					if (mollify.ui.draganddrop) {
+						mollify.ui.draganddrop.enableDrag($items, {
+							onDragStart : function($e, e) {
+								var item = $e.tmplItem().data;
+								if (Modernizr.draganddrop) t.p.onNativeDrag($e.tmplItem().data, e);
+								return {type:'filesystemitem', payload: item};
+							}
+						});
+						mollify.ui.draganddrop.enableDrop(t.$i.find(".mollify-filelist-item.item-folder"), {
+							canDrop : function($e, e, obj) {
+								if (!obj || obj.type != 'filesystemitem') return false;
+								var item = obj.payload;
+								var me = $e.tmplItem().data;
+								return t.p.canDrop ? t.p.canDrop(me, item) : false;
+							},
+							onDrop : function($e, e, obj) {
+								if (!obj || obj.type != 'filesystemitem') return;
+								var item = obj.payload;
+								var me = $e.tmplItem().data;
+								alert("dropped "+item.name+" on "+me.name);
+							}
+						});
+					}
 					
 					/*.click(function(e) {
 						e.preventDefault();
@@ -787,7 +803,7 @@
 					});*/
 					
 					t.updateColWidths();
-				}
+				};
 				
 				this.onItemClick = function($item, $el, left) {
 					var i = $item.find(".mollify-filelist-col").index($el.closest(".mollify-filelist-col"));
@@ -797,15 +813,15 @@
 						t.p.onClick($item.tmplItem().data, colId, $item);
 					else
 						t.p.onRightClick($item.tmplItem().data, colId, $item);
-				}
+				};
 					
 				this.getItemContextElement = function(item) {
 					return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-col-name");
-				}
+				};
 				
 				this.removeHover = function() {
 					t.$i.find(".mollify-filelist-item.hover").removeClass('hover');
-				}
+				};
 			}
 		}
 	}

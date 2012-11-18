@@ -142,22 +142,16 @@
 						done: function(e, data) {
 							if (h.finished) h.finished();
 						}
-					});
-					//t.$mainViewInput.fileupload('disable');
+					}).fileupload('disable');
 					t._initDropZoneEffects(h.dropElement);
 				},
 				setMainViewUploadFolder : function(f) {
 					if (!t.$mainViewInput) return;
 					if (!f) {
-						//t.$mainViewInput.fileupload('disable');
+						t.$mainViewInput.fileupload('disable');
 						return;
 					}
-					//t.$mainViewInput.fileupload('enable');
-					var options = {
-				    	'url' : mollify.service.url("filesystem/"+f.id+'/files/')
-				    };
-				    //if ($dropZone) options['dropZone'] = $dropZone;
-					t.$mainViewInput.fileupload('option', options);
+					t.$mainViewInput.fileupload('enable').fileupload('option', 'url', mollify.service.url("filesystem/"+f.id+'/files/'));
 				}
 			};
 		}
