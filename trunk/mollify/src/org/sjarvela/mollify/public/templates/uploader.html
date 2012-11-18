@@ -9,15 +9,14 @@
 </script>
 
 <script id="mollify-tmpl-uploader-widget" type="text/x-jquery-tmpl">
-	<div class="mollify-uploader">
+	<div id="mollify-uploader-widget">
+		<span class="mollify-uploader-widget-title localized" text-key="uploaderWidgetTitle"></span>
 		<div class="mollify-uploader-file-selector">
 			<form enctype="multipart/form-data">
-				<div class="row">
-					<span class="btn btn-success mollify-uploader-add">
-						<i class="icon-plus icon-white"></i>
-						<input type="file" class="mollify-uploader-input" name="uploader-html5[]" multiple="multiple"></input>
-					</span>
-				</div>
+				<span class="btn btn-success mollify-uploader-add">
+					<i class="icon-plus icon-white"></i>
+					<input type="file" class="mollify-uploader-input" name="uploader-html5[]" multiple="multiple"></input>
+				</span>
 			</form>
 		</div>
 	</div>

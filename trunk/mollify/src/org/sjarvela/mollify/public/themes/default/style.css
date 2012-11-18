@@ -303,6 +303,14 @@ a.login-link {
 	margin-left: 20px;
 }
 
+.mollify-bubble-popover {
+	width: auto;
+}
+
+.mollify-bubble-popover .popover-inner, .mollify-bubble-popover .popover-content {
+	float: left;	
+}
+
 #mollify-mainview-main {
 	position: absolute;
 	top: 0px;
@@ -310,6 +318,10 @@ a.login-link {
 	right: 0px;
 	bottom: 0px;
 	background-color: #fffff;
+}
+
+#mollify-mainview-main.in {
+     background: palegreen;
 }
 
 #mollify-mainview-header {
@@ -341,6 +353,43 @@ a.login-link {
 
 #mollify-mainview-search-input {
 	width: 150px;
+}
+
+#mollify-mainview-createfolder-content {
+	width: 355px;	
+}
+
+#mollify-mainview-createfolder-name-input {
+	width: 300px;
+}
+
+#mollify-mainview-addfile {
+	
+}
+
+.mollify-mainview-addfile-section {
+	float: left;
+	width: 300px;
+	clear:both;
+}
+
+#mollify-uploader-widget {
+	float: left;
+	width: 100%;
+}
+
+#mollify-uploader-widget.in {
+     background: palegreen;
+}
+
+.mollify-uploader-widget-title {
+	display: block;
+	float: left;	
+}
+
+.mollify-uploader-file-selector {
+	float: left;
+	clear:both;
 }
 
 /*#mainview-content-container {
