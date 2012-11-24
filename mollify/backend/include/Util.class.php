@@ -27,6 +27,12 @@
 		    return (float)$amount;
 		}
 		
+		public static function isMobile() {
+			require_once('Mobile_Detect.php');
+			$detect = new Mobile_Detect();
+			return $detect->isMobile();
+		}
+		
 		function base64_url_encode($input) {
 			return strtr(base64_encode($input), '+/=', '-_,');
 		}

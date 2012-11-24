@@ -9,7 +9,7 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
-
+	 
 	class Request {
 		const METHOD_GET = 'get';
 		const METHOD_PUT = 'put';

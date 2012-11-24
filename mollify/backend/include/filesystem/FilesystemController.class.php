@@ -488,7 +488,7 @@
 			if (!$range)
 				$this->env->events()->onEvent(FileEvent::download($file));
 
-			$this->env->response()->download($name, $file->extension(), $mobile, $file->read($range), $size, $range);
+			$this->env->response()->download($name, $file->extension(), Util::isMobile(), $file->read($range), $size, $range);
 		}
 
 		public function view($file, $range = NULL) {
@@ -596,7 +596,7 @@
 			$zip = $this->createZip($items);
 			$name = "items.zip";
 			if (!is_array($items)) $name = $items->name().".zip";
-			$this->env->response()->download($name, "zip", $mobile, $zip->stream());
+			$this->env->response()->download($name, "zip", Util::isMobile(), $zip->stream());
 			unlink($zip->filename());
 		}
 		
@@ -619,7 +619,7 @@
 			$handle = @fopen($filename, "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$filename);
-			$this->env->response()->download("items.zip", "zip", $mobile, $handle);
+			$this->env->response()->download("items.zip", "zip", Util::isMobile(), $handle);
 			unlink($filename);
 		}
 		
