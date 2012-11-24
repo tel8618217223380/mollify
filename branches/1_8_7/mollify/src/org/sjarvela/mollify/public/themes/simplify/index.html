@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+  Copyright (c) 2008- Samuli Järvelä
+ 
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+  this entire header must remain intact.
+ -->
+<html>
+<head>
+<title>Simplify theme for Mollify</title>		
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="client/themes/simplify/style_min.css">
+<!--[if lte IE 8]><link rel='stylesheet' type='text/css' href='client/themes/simplify/ie8.css'/><![endif]-->
+<!--[if lte IE 9]><link rel='stylesheet' type='text/css' href='client/themes/simplify/ie9.css'/><![endif]-->
+<script type="text/javascript" language="javascript" src="client/include/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="client/include/jquery.tmpl.min.js"></script>
+<script type="text/javascript" language="javascript" src="client/include/ZeroClipboard.js"></script>
+<script type="text/javascript" language="javascript" src="client/init.js"></script>
+<script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
+<script type="text/javascript">
+ZeroClipboard.setMoviePath('client/include/ZeroClipboard.swf');
+mollify.init({
+"service-path": "backend/",
+"limited-http-methods": true
+});
+</script>
+<!-- Sticky footer -->
+<script type="text/javascript">
+function positionFooter(){var e=$("#footer");if($(document.body).height()+e.height()<$(window).height()&&e.css("position")=="fixed"||$(document.body).height()<$(window).height()&&e.css("position")!="fixed"){e.css({position:"fixed",bottom:"0px"})}else{e.css({position:"static"})}}$(document).ready(function(){positionFooter();$(window).scroll(positionFooter);$(window).resize(positionFooter);$(window).load(positionFooter)})
+</script>
+<!-- End sticky footer -->
+<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
+</head>
+<body>
+<div id="mollify"></div>
+<div id="footer"><span class="footer-text">Lorem ipsum dot color &nbsp;//&nbsp; YOUR COMPANY NAME<br/>+00 (0) 2345 678 &nbsp;//&nbsp; info@yourdomain.com &nbsp;//&nbsp; www.yourdomain.com<br/><br/>
+<span class="footer-small">Lorem ipsum porta phasellus adipiscing odio, sagittis nisi et odio lorem hac! Ultricies lacus eros, ultricies.</span></span></div>
+<noscript><div id="noscript">Javascript is disabled.<br /><span class="noscript-p">For browsing on this page you should enable JavaScript in your browser or firewall.</span></div></noscript>
+</body>
+</html>
