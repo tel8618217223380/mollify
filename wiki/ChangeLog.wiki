@@ -1,6 +1,13 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 1.8.9.3 ===
+Released 2012/11/24
+  * Dropbox now opens when first file is added
+  * Added possibility to customize admin tool opening
+  * Added new plugin: ItemCollection
+  * Added new third party theme: simplify (by Mike T.)
+
 === Version 1.8.9.2 ===
 Released 2012/7/27
   * Fixed mysqli error: no index
