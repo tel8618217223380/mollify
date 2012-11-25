@@ -185,7 +185,7 @@
 						});
 						
 						var actionsElement = mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($t);
-						var folderActions = mollify.ui.controls.dropdown({
+						mollify.ui.controls.dropdown({
 							element: actionsElement.find("li"),
 							items: false,
 							hideDelay: 0,
@@ -194,16 +194,12 @@
 								if (items) return;
 								
 								that.getItemActions(that._currentFolder, function(a) {
-									/*if (!a) {
-										popup.hide();
+									if (!a) {
+										drp.hide();
 										return;
-									}*/
+									}
 									drp.items(a);
 								});
-							},
-							onItem: function() {
-							},
-							onBlur: function(dd) {
 							}
 						});
 					}

@@ -326,8 +326,8 @@
   * ========================= */
 
   var toggle = '[data-toggle=dropdown]'
-    , Dropdown = function (element, options) {
-    	element.options = options
+    , Dropdown = function (element, options) {	//mollify
+    	element.options = options	//mollify
         var $el = $(element).on('click.dropdown.data-api', this.toggle)
         $('html').on('click.dropdown.data-api', function () {
           $el.parent().removeClass('open')
@@ -353,8 +353,10 @@
 
       if (!isActive) {
         $parent.toggleClass('open')
-        if (this.options.onshow) this.options.onshow($parent)
+        if (this.options.onshow) this.options.onshow($parent)	//mollify
         $this.focus()
+      } else {
+	    if (this.options.onhide) this.options.onhide()	//mollify  
       }
 
       return false
