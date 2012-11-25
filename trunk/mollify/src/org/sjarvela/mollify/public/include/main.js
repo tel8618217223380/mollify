@@ -185,11 +185,22 @@
 						});
 						
 						var actionsElement = mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($t);
-						mollify.ui.controls.dropdown({
+						var folderActions = mollify.ui.controls.dropdown({
 							element: actionsElement.find("li"),
-							items: [{title:"t"}],
+							items: false,
 							hideDelay: 0,
 							style: 'submenu',
+							onShow: function(drp, items) {
+								if (items) return;
+								
+								that.getItemActions(that._currentFolder, function(a) {
+									/*if (!a) {
+										popup.hide();
+										return;
+									}*/
+									drp.items(a);
+								});
+							},
 							onItem: function() {
 							},
 							onBlur: function(dd) {
@@ -218,8 +229,8 @@
 				
 				mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items).appendTo(p);
 				$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
-				$(".folder-hierarchy-item").click(function() {
-					var index = p.find(".folder-hierarchy-item").index($(this));
+				$(".mollify-folder-hierarchy-item").click(function() {
+					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
 					that.listener.onFolderSelected(index, h[index-1]);
 				});
 			};
@@ -251,8 +262,7 @@
 						}
 						var showContext = (!that.isListView() || t=='name');
 						if (showContext) {
-							if (that.itemContext) that.itemContext.hide();
-							else that.openItemContext(item, that.itemWidget.getItemContextElement(item));
+							that.openItemContext(item, that.itemWidget.getItemContextElement(item));
 						}
 					},
 					onDblClick: function(item) {
@@ -326,6 +336,11 @@
 			};
 				
 			this.openItemContext = function(item, e) {
+				var popupId = "mainview-itemcontext-"+item.id;
+				if (mollify.ui.isActivePopup(popupId)) {
+					return;
+				}
+				
 				var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
 				e.popover({
 					title: item.name,
@@ -336,8 +351,7 @@
 					content: html,
 					manualout: true,
 					onshow: function($t) {
-						if (mollify.ui.activePopup) t.ui.activePopup.hide();
-						mollify.ui.activePopup = { hide: function() { e.popover('destroy'); } };
+						mollify.ui.activePopup({ id: popupId, hide: function() { e.popover('destroy'); } });
 						
 						var closeButton = $('<button type="button" class="close">×</button>').click(function(){
 							e.popover('destroy');
@@ -356,7 +370,7 @@
 						});
 					},
 					onhide: function($t) {
-						mollify.ui.activePopup = false;
+						mollify.ui.removeActivePopup(popupId);
 						//e.popover('destroy');
 					}
 				});
@@ -753,7 +767,9 @@
 						return false;
 					}).single_double_click(function(e) {
 						e.preventDefault();
+						e.stopPropagation();
 						t.onItemClick($(this), $(e.srcElement), true);
+						return false;
 					},function() {
 						t.p.onDblClick($(this).tmplItem().data);
 					});

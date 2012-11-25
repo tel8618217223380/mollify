@@ -73,10 +73,12 @@ public class DefaultDialogManager implements DialogManager {
 
 	@Override
 	public void showInputDialog(String title, String message,
-			String defaultValue, InputListener listener) {
+			String defaultValue, String yesTitle, String noTitle,
+			InputListener listener) {
 		JsObjBuilder spec = new JsObjBuilder().string("title", title)
 				.string("message", message).string("default", defaultValue)
-				.obj("callback", createNativeListener(listener));
+				.string("yesTitle", yesTitle).string("noTitle", noTitle)
+				.obj("handler", createNativeListener(listener));
 		this.handler.call("input", spec.create());
 	}
 

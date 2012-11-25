@@ -326,7 +326,8 @@
   * ========================= */
 
   var toggle = '[data-toggle=dropdown]'
-    , Dropdown = function (element) {
+    , Dropdown = function (element, options) {
+    	element.options = options
         var $el = $(element).on('click.dropdown.data-api', this.toggle)
         $('html').on('click.dropdown.data-api', function () {
           $el.parent().removeClass('open')
@@ -352,6 +353,7 @@
 
       if (!isActive) {
         $parent.toggleClass('open')
+        if (this.options.onshow) this.options.onshow($parent)
         $this.focus()
       }
 
@@ -426,7 +428,8 @@
     return this.each(function () {
       var $this = $(this)
         , data = $this.data('dropdown')
-      if (!data) $this.data('dropdown', (data = new Dropdown(this)))
+        , options = $.extend({}, $this.data(), typeof option == 'object' && option)	//mollify
+      if (!data) $this.data('dropdown', (data = new Dropdown(this, options)))
       if (typeof option == 'string') data[option].call($this)
     })
   }
@@ -883,7 +886,7 @@
           .addClass(placement)
           .addClass('in')
         
-        if (this.options.onshow) this.options.onshow($tip)
+        if (this.options.onshow) this.options.onshow($tip)	//mollify
       }
     }
 

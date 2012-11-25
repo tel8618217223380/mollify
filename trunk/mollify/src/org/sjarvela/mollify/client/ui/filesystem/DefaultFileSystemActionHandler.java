@@ -79,25 +79,25 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					});
 		} else if (FileSystemAction.copy.equals(action)) {
 			if (folder == null) {
-				// itemSelectorFactory.openFolderSelector(textProvider
-				// .getText(Texts.copyMultipleItemsTitle), textProvider
-				// .getText(Texts.copyMultipleItemsMessage,
-				// String.valueOf(items.size())), textProvider
-				// .getText(Texts.copyFileDialogAction),
-				// fileSystemItemProvider, new SelectItemHandler() {
-				// public void onSelect(FileSystemItem selected) {
-				// fileSystemService.copy(items,
-				// (Folder) selected,
-				// createListener(items, action, cb));
-				// }
-				//
-				// public boolean isItemAllowed(FileSystemItem item,
-				// List<Folder> path) {
-				// if (item.isFile())
-				// return false;
-				// return canCopyTo(items, (Folder) item);
-				// }
-				// }, source);
+				dialogManager.openFolderSelector(textProvider
+						.getText(Texts.copyMultipleItemsTitle), textProvider
+						.getText(Texts.copyMultipleItemsMessage,
+								String.valueOf(items.size())), textProvider
+						.getText(Texts.copyFileDialogAction),
+						new SelectFolderHandler() {
+							@Override
+							public void onSelect(JsFolder selected) {
+								fileSystemService.copy(items,
+										(JsFolder) selected,
+										createListener(items, action));
+
+							}
+
+							@Override
+							public boolean canSelect(JsFolder folder) {
+								return canCopyTo(items, folder);
+							}
+						});
 				return;
 			}
 
@@ -112,25 +112,25 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					.copy(items, folder, createListener(items, action));
 		} else if (FileSystemAction.move.equals(action)) {
 			if (folder == null) {
-				// itemSelectorFactory.openFolderSelector(textProvider
-				// .getText(Texts.moveMultipleItemsTitle), textProvider
-				// .getText(Texts.moveMultipleItemsMessage,
-				// String.valueOf(items.size())), textProvider
-				// .getText(Texts.moveFileDialogAction),
-				// fileSystemItemProvider, new SelectItemHandler() {
-				// public void onSelect(FileSystemItem selected) {
-				// fileSystemService.move(items,
-				// (Folder) selected,
-				// createListener(items, action, cb));
-				// }
-				//
-				// public boolean isItemAllowed(FileSystemItem item,
-				// List<Folder> path) {
-				// if (item.isFile())
-				// return false;
-				// return canMoveTo(items, (Folder) item);
-				// }
-				// }, source);
+				dialogManager.openFolderSelector(textProvider
+						.getText(Texts.moveMultipleItemsTitle), textProvider
+						.getText(Texts.moveMultipleItemsMessage,
+								String.valueOf(items.size())), textProvider
+						.getText(Texts.moveFileDialogAction),
+						new SelectFolderHandler() {
+							@Override
+							public void onSelect(JsFolder selected) {
+								fileSystemService.move(items,
+										(JsFolder) selected,
+										createListener(items, action));
+
+							}
+
+							@Override
+							public boolean canSelect(JsFolder folder) {
+								return canMoveTo(items, folder);
+							}
+						});
 				return;
 			}
 
@@ -216,6 +216,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					textProvider.getText(Texts.renameDialogTitleFile),
 					textProvider.getText(Texts.renameDialogNewName,
 							file.getName()), file.getName(),
+					textProvider.getText(Texts.renameDialogRenameButton),
+					textProvider.getText(Texts.dialogCancelButton),
 					new InputListener() {
 						@Override
 						public boolean isInputAcceptable(String input) {
@@ -228,7 +230,6 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 							rename((JsFilesystemItem) file.cast(), name);
 						}
 					});
-			// renameDialogFactory.openRenameDialog(file, this, source);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
 				dialogManager.openFolderSelector(
@@ -241,6 +242,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 							public void onSelect(JsFolder selected) {
 								copyFile(file, selected);
 							}
+
 							@Override
 							public boolean canSelect(JsFolder folder) {
 								return canCopyTo(
@@ -252,6 +254,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 						textProvider.getText(Texts.copyHereDialogTitle),
 						textProvider.getText(Texts.copyHereDialogMessage,
 								file.getName()), file.getName(),
+						textProvider.getText(Texts.copyFileDialogAction),
+						textProvider.getText(Texts.dialogCancelButton),
 						new InputListener() {
 							@Override
 							public boolean isInputAcceptable(String input) {
@@ -270,23 +274,23 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
-				// itemSelectorFactory.openFolderSelector(
-				// textProvider.getText(Texts.moveFileDialogTitle),
-				// textProvider.getText(Texts.moveFileMessage,
-				// file.getName()),
-				// textProvider.getText(Texts.moveFileDialogAction),
-				// fileSystemItemProvider, new SelectItemHandler() {
-				// public void onSelect(FileSystemItem selected) {
-				// moveFile(file, (Folder) selected);
-				// }
-				//
-				// public boolean isItemAllowed(JsFilesystemItem item,
-				// List<Folder> path) {
-				// if (item.isFile())
-				// return false;
-				// return canMoveTo(file, (JsFolder) item);
-				// }
-				// }, source);
+				dialogManager.openFolderSelector(
+						textProvider.getText(Texts.moveFileDialogTitle),
+						textProvider.getText(Texts.moveFileMessage,
+								file.getName()),
+						textProvider.getText(Texts.moveFileDialogAction),
+						new SelectFolderHandler() {
+							@Override
+							public void onSelect(JsFolder selected) {
+								moveFile(file, selected);
+							}
+
+							@Override
+							public boolean canSelect(JsFolder folder) {
+								return canMoveTo(
+										(JsFilesystemItem) file.cast(), folder);
+							}
+						});
 			} else if (action.equals(FileSystemAction.delete)) {
 				String title = textProvider
 						.getText(Texts.deleteFileConfirmationDialogTitle);
@@ -310,44 +314,60 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl((JsFilesystemItem) folder.cast()));
 		} else if (action.equals(FileSystemAction.rename)) {
-			// renameDialogFactory.openRenameDialog(folder, this, source);
-		} else if (action.equals(FileSystemAction.copy)) {
-			// itemSelectorFactory.openFolderSelector(
-			// textProvider.getText(Texts.copyDirectoryDialogTitle),
-			// textProvider.getText(Texts.copyDirectoryMessage,
-			// folder.getName()),
-			// textProvider.getText(Texts.copyDirectoryDialogAction),
-			// fileSystemItemProvider, new SelectItemHandler() {
-			// public void onSelect(FileSystemItem selected) {
-			// copyFolder(folder, (Folder) selected);
-			// }
-			//
-			// public boolean isItemAllowed(FileSystemItem candidate,
-			// List<Folder> path) {
-			// if (candidate.isFile())
-			// return false;
-			// return canCopyTo(folder, (Folder) candidate);
-			// }
-			// }, source);
+			dialogManager.showInputDialog(
+					textProvider.getText(Texts.renameDialogTitleDirectory),
+					textProvider.getText(Texts.renameDialogNewName,
+							folder.getName()), folder.getName(),
+					textProvider.getText(Texts.renameDialogRenameButton),
+					textProvider.getText(Texts.dialogCancelButton),
+					new InputListener() {
+						@Override
+						public boolean isInputAcceptable(String input) {
+							return !input.isEmpty()
+									&& !folder.getName().equals(input);
+						}
 
+						@Override
+						public void onInput(String name) {
+							rename((JsFilesystemItem) folder.cast(), name);
+						}
+					});
+		} else if (action.equals(FileSystemAction.copy)) {
+			dialogManager.openFolderSelector(
+					textProvider.getText(Texts.copyDirectoryDialogTitle),
+					textProvider.getText(Texts.copyDirectoryMessage,
+							folder.getName()),
+					textProvider.getText(Texts.copyDirectoryDialogAction),
+					new SelectFolderHandler() {
+						@Override
+						public void onSelect(JsFolder selected) {
+							copyFolder(folder, selected);
+						}
+
+						@Override
+						public boolean canSelect(JsFolder selected) {
+							return canCopyTo((JsFilesystemItem) folder.cast(),
+									selected);
+						}
+					});
 		} else if (action.equals(FileSystemAction.move)) {
-			// itemSelectorFactory.openFolderSelector(
-			// textProvider.getText(Texts.moveDirectoryDialogTitle),
-			// textProvider.getText(Texts.moveDirectoryMessage,
-			// folder.getName()),
-			// textProvider.getText(Texts.moveDirectoryDialogAction),
-			// fileSystemItemProvider, new SelectItemHandler() {
-			// public void onSelect(FileSystemItem selected) {
-			// moveFolder(folder, (Folder) selected);
-			// }
-			//
-			// public boolean isItemAllowed(FileSystemItem candidate,
-			// List<Folder> path) {
-			// if (candidate.isFile())
-			// return false;
-			// return canMoveTo(folder, (Folder) candidate);
-			// }
-			// }, source);
+			dialogManager.openFolderSelector(
+					textProvider.getText(Texts.moveDirectoryDialogTitle),
+					textProvider.getText(Texts.moveDirectoryMessage,
+							folder.getName()),
+					textProvider.getText(Texts.moveDirectoryDialogAction),
+					new SelectFolderHandler() {
+						@Override
+						public void onSelect(JsFolder selected) {
+							moveFolder(folder, selected);
+						}
+
+						@Override
+						public boolean canSelect(JsFolder selected) {
+							return canMoveTo((JsFilesystemItem) folder.cast(),
+									selected);
+						}
+					});
 		} else if (action.equals(FileSystemAction.delete)) {
 			String title = textProvider
 					.getText(Texts.deleteDirectoryConfirmationDialogTitle);
