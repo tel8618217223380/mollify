@@ -379,6 +379,7 @@
 				var $e = $(a.element);
 				var $mnu = false;
 				var popupId = false;
+				var popupItems = a.items;
 				$e.addClass('dropdown');
 				var hidePopup = function() {
 					if (!$mnu) return;
@@ -414,19 +415,21 @@
 						$mnu = createItems(items);
 						$e.removeClass("loading").append($mnu);
 						initItems(items);
+						popupItems = items;
 					}
 				};
 				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown({
 					onshow: function($p) {
 						if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
 						popupId = t.ui.activePopup(api);
-						if (!a.items) $mnu.addClass("loading");
-						if (a.onShow) a.onShow(api);
+						if (!popupItems) $mnu.addClass("loading");
+						if (a.onShow) a.onShow(api, popupItems);
+					},
+					onhide: function() {
+						hidePopup();
 					}
 				});
 				initItems(a.items);
-				
-				return api;
 				/*$e.hover(function() {
 					$(this).addClass("hover");
 				}, function() {
@@ -442,6 +445,7 @@
 				var $e = $(a.element);
 				var pos = $e.offset();
 				var $mnu = $('<div class="mollify-popupmenu" style="position: absolute; top: '+(pos.top + $e.outerHeight())+'px; left:'+pos.left+'px;"></div>');
+				var popupitems = a.items;
 				var hidePopup = function() {
 					if (a.onHide) a.onHide();
 					$mnu.remove();
@@ -480,6 +484,7 @@
 					items: function(items) {
 						$mnu.empty().removeClass("loading").append(createItems(items));
 						initItems(items);
+						items
 					}
 				};
 				popupId = t.ui.activePopup(api);
