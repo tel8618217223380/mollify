@@ -18,11 +18,9 @@ import java.util.logging.Logger;
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ResultCallback;
-import org.sjarvela.mollify.client.event.Event;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
-import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
@@ -41,11 +39,11 @@ import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
-import org.sjarvela.mollify.client.ui.mainview.MainView.ViewType;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -175,8 +173,11 @@ public class MainViewPresenter implements MainViewListener,
 												.canWrite();
 								List<JsObj> itemActions = getItemActions(item,
 										writable, root);
-								call(callback, details, JsUtil.asJsArray(
-										itemActions, JsObj.class));
+								JsArray<JsObj> actions = JsUtil.asJsArray(
+										itemActions, JsObj.class);
+								call2(callback, details, actions);
+								// call2(callback, details, JsUtil.asJsArray(
+								// itemActions, JsObj.class));
 							}
 						}));
 	}
@@ -205,8 +206,13 @@ public class MainViewPresenter implements MainViewListener,
 		};
 	}
 
-	protected native void call(JavaScriptObject callback, JavaScriptObject... o) /*-{
+	protected native void call(JavaScriptObject callback, JavaScriptObject o) /*-{
 		callback(o);
+	}-*/;
+
+	protected native void call2(JavaScriptObject callback, JavaScriptObject o1,
+			JavaScriptObject o2) /*-{
+		callback([o1, o2]);
 	}-*/;
 
 	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
@@ -388,48 +394,31 @@ public class MainViewPresenter implements MainViewListener,
 		// });
 	}
 
-	/*private void retrieveUrl(final String url) {
-		// final WaitDialog waitDialog = dialogManager.openWaitDialog("",
-		// textProvider.getText(Texts.pleaseWait));
-
-		fileSystemService.retrieveUrl(model.getCurrentFolder(), url,
-				new ResultListener() {
-					@Override
-					public void onSuccess(Object result) {
-						// waitDialog.close();
-						logger.log(Level.INFO, "URL retrieve complete");
-						reload();
-					}
-
-					@Override
-					public void onFail(ServiceError error) {
-						// TODO waitDialog.close();
-
-						// if (error.getError().getCode() == 301)
-						// dialogManager.showInfo(textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider.getText(
-						// Texts.retrieveUrlNotFound, url));
-						// else if (error.getError().getCode() == 302)
-						// dialogManager.showInfo(
-						// textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider
-						// .getText(
-						// Texts.retrieveUrlNotAuthorized,
-						// url));
-						// else if (ServiceErrorType.REQUEST_FAILED.equals(error
-						// .getType()))
-						// dialogManager.showInfo(textProvider
-						// .getText(Texts.retrieveUrlTitle),
-						// textProvider
-						// .getText(Texts.retrieveUrlFailed),
-						// error.getDetails());
-						// else
-						// dialogManager.showError(error);
-					}
-				});
-	}*/
+	/*
+	 * private void retrieveUrl(final String url) { // final WaitDialog
+	 * waitDialog = dialogManager.openWaitDialog("", //
+	 * textProvider.getText(Texts.pleaseWait));
+	 * 
+	 * fileSystemService.retrieveUrl(model.getCurrentFolder(), url, new
+	 * ResultListener() {
+	 * 
+	 * @Override public void onSuccess(Object result) { // waitDialog.close();
+	 * logger.log(Level.INFO, "URL retrieve complete"); reload(); }
+	 * 
+	 * @Override public void onFail(ServiceError error) { // TODO
+	 * waitDialog.close();
+	 * 
+	 * // if (error.getError().getCode() == 301) //
+	 * dialogManager.showInfo(textProvider // .getText(Texts.retrieveUrlTitle),
+	 * // textProvider.getText( // Texts.retrieveUrlNotFound, url)); // else if
+	 * (error.getError().getCode() == 302) // dialogManager.showInfo( //
+	 * textProvider // .getText(Texts.retrieveUrlTitle), // textProvider //
+	 * .getText( // Texts.retrieveUrlNotAuthorized, // url)); // else if
+	 * (ServiceErrorType.REQUEST_FAILED.equals(error // .getType())) //
+	 * dialogManager.showInfo(textProvider // .getText(Texts.retrieveUrlTitle),
+	 * // textProvider // .getText(Texts.retrieveUrlFailed), //
+	 * error.getDetails()); // else // dialogManager.showError(error); } }); }
+	 */
 
 	private ResultListener createReloadListener(final String operation) {
 		return createListener(new Callback() {
@@ -449,15 +438,15 @@ public class MainViewPresenter implements MainViewListener,
 		return createListener(createRefreshCallback(folderChange));
 	}
 
-//	private Callback createCurrentFolderChangedEventCallback() {
-//		return new Callback() {
-//			@Override
-//			public void onCallback() {
-//				eventDispatcher.onEvent(MainViewEvent
-//						.onCurrentFolderChanged(model.getCurrentFolder()));
-//			}
-//		};
-//	}
+	// private Callback createCurrentFolderChangedEventCallback() {
+	// return new Callback() {
+	// @Override
+	// public void onCallback() {
+	// eventDispatcher.onEvent(MainViewEvent
+	// .onCurrentFolderChanged(model.getCurrentFolder()));
+	// }
+	// };
+	// }
 
 	private Callback createRefreshCallback(final boolean folderChange) {
 		return new Callback() {
@@ -564,45 +553,35 @@ public class MainViewPresenter implements MainViewListener,
 	// });
 	// }
 
-
-	/*boolean slidebarVisible = false;
-
-	public void onToggleSlidebar() {
-		toggle(!slidebarVisible);
-		slidebarVisible = !slidebarVisible;
-	}
-
-	private native void toggle(boolean open) /*-{
-		$wnd.$("#mollify-mainview-slidebar").stop().animate({
-			'width' : open ? "300px" : "0px"
-		}, 200);
-		$wnd.$("#mollify-main-lower-content").stop().animate({
-			'marginRight' : open ? "300px" : "0px"
-		}, 200);
-	}-*/;
+	/*
+	 * boolean slidebarVisible = false;
+	 * 
+	 * public void onToggleSlidebar() { toggle(!slidebarVisible);
+	 * slidebarVisible = !slidebarVisible; }
+	 * 
+	 * private native void toggle(boolean open) /*-{
+	 * $wnd.$("#mollify-mainview-slidebar").stop().animate({ 'width' : open ?
+	 * "300px" : "0px" }, 200);
+	 * $wnd.$("#mollify-main-lower-content").stop().animate({ 'marginRight' :
+	 * open ? "300px" : "0px" }, 200); }-
+	 */;
 
 	// @Override
 	// public List<JsFilesystemItem> getSelectedItems() {
 	// return model.getSelectedItems();
 	// }
 
-	/*public JsFolder getCurrentFolder() {
-		return model.getCurrentFolder();
-	}
-
-	public void onShowListView() {
-		setViewType(ViewType.list);
-	}
-
-	public void onShowGridView(boolean small) {
-		setViewType(small ? ViewType.gridSmall : ViewType.gridLarge);
-	}
-
-	private void setViewType(ViewType type) {
-		view.showProgress();
-		// TODO view.setViewType(type);
-		reload();
-	}*/
+	/*
+	 * public JsFolder getCurrentFolder() { return model.getCurrentFolder(); }
+	 * 
+	 * public void onShowListView() { setViewType(ViewType.list); }
+	 * 
+	 * public void onShowGridView(boolean small) { setViewType(small ?
+	 * ViewType.gridSmall : ViewType.gridLarge); }
+	 * 
+	 * private void setViewType(ViewType type) { view.showProgress(); // TODO
+	 * view.setViewType(type); reload(); }
+	 */
 
 	// @Override
 	// public JavaScriptObject getDataRequest(JsFolder folder) {

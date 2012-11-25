@@ -10,22 +10,29 @@
 
 package org.sjarvela.mollify.client.plugin;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
+import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFactory;
+import org.sjarvela.mollify.client.filesystem.js.JsFolder;
+import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
+import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
+import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionProvider;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
+import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -46,6 +53,7 @@ public class DefaultClientInterface implements ClientInterface {
 
 	// private FileUploadDialogFactory uploader = null;
 	private final NativeViewManager nativeViewManager;
+	private final FileSystemItemProvider filesystemItemProvider;
 
 	// TODO move this entire class into external js
 	public DefaultClientInterface(EventDispatcher eventDispatcher,
@@ -53,7 +61,8 @@ public class DefaultClientInterface implements ClientInterface {
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
 			DialogManager dialogManager, TextProvider textProvider,
 			ViewManager viewManager,
-			FileSystemActionHandlerFactory actionHandlerFactory) {
+			FileSystemActionHandlerFactory actionHandlerFactory,
+			FileSystemItemProvider filesystemItemProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.responseInterceptor = responseInterceptor;
 		// this.itemContextHandler = itemContextProvider;
@@ -61,6 +70,7 @@ public class DefaultClientInterface implements ClientInterface {
 		this.serviceProvider = serviceProvider;
 		this.dialogManager = dialogManager;
 		this.textProvider = textProvider;
+		this.filesystemItemProvider = filesystemItemProvider;
 		// this.viewManager = viewManager;//
 		// this.fileListInterface = new FileListExt(textProvider);
 		this.actionHandler = actionHandlerFactory.create();
@@ -137,6 +147,32 @@ public class DefaultClientInterface implements ClientInterface {
 		return new NativeLogger().asJs();
 	};
 
+	protected void getFolders(JsFolder parent, final JavaScriptObject cb) {
+		if (parent == null) {
+			invokeCb(cb,
+					JsUtil.asJsArray(filesystemItemProvider.getRootFolders(),
+							JsRootFolder.class));
+			return;
+		}
+		filesystemItemProvider.getFolders(parent,
+				new ResultListener<List<JsFolder>>() {
+					@Override
+					public void onSuccess(List<JsFolder> result) {
+						invokeCb(cb, JsUtil.asJsArray(result, JsFolder.class));
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						dialogManager.showError(error);
+					}
+				});
+	};
+
+	private native void invokeCb(JavaScriptObject cb, JavaScriptObject r) /*-{
+		if (cb)
+			cb(r);
+	}-*/;
+
 	private native JavaScriptObject createNativeInterface(
 			DefaultClientInterface e, String pluginBaseUrl,
 			JavaScriptObject textProvider, JavaScriptObject service,
@@ -149,6 +185,14 @@ public class DefaultClientInterface implements ClientInterface {
 
 		env.addEventHandler = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		}
+
+		env.filesystem = function() {
+			return {
+				folders : function(p, cb) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::getFolders(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(p, cb);
+				}
+			};
 		}
 
 		env.session = {
