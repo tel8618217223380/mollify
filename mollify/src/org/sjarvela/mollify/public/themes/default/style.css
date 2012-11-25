@@ -911,3 +911,49 @@ li.dropdown-item {
 	direction: ltr;
 	cursor: pointer;
 }
+
+.mollify-folderselector-tree {
+	margin-top: 18px;
+	width: 512px;
+	height: 300px;
+	overflow: auto;
+	border: 1px solid black;
+	padding: 8px;
+}
+
+.mollify-folderselector-folder {
+	display: inline-block;
+	float: left;
+	clear: both;
+}
+
+.mollify-folderselector-folder.selected > .mollify-folderselector-folder-name {
+	background-color: #dacee0;
+}
+
+.mollify-folderselector-folder-indentation {
+	float: left;
+	display: inline-block;
+}
+
+.mollify-folderselector-folder-indentation-step {
+	float: left;
+	width: 20px;
+	height: 10px;
+	display: inline-block;
+}
+
+.mollify-folderselector-folder-indicator {
+	float: left;
+	display: inline-block;
+	margin-right: 8px;
+	width: 10px;
+	height: 20px;
+}
+
+.mollify-folderselector-folder-name {
+	display: inline-block;
+	float: left;
+	white-space: nowrap;
+	cursor: pointer;
+}

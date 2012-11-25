@@ -12,6 +12,7 @@ package org.sjarvela.mollify.client.ui.dialog;
 
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ConfirmationListener;
+import org.sjarvela.mollify.client.ui.filesystem.SelectFolderHandler;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -32,5 +33,8 @@ public interface DialogManager {
 			InputListener listener);
 
 	WaitDialog openWaitDialog(String title, String message);
+
+	void openFolderSelector(String title, String message, String actionTitle,
+			SelectFolderHandler handler);
 
 }

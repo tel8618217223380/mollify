@@ -62,7 +62,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 			}
 
 			public void onSuccess(JsArray result) {
-				listener.onSuccess((List<JsFolder>) result);
+				listener.onSuccess(JsUtil.asList(result, JsFolder.class));
 			}
 		};
 		request()

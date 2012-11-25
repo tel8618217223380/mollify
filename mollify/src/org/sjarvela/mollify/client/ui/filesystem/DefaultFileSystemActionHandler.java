@@ -231,23 +231,22 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			// renameDialogFactory.openRenameDialog(file, this, source);
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
-				// itemSelectorFactory.openFolderSelector(
-				// textProvider.getText(Texts.copyFileDialogTitle),
-				// textProvider.getText(Texts.copyFileMessage,
-				// file.getName()),
-				// textProvider.getText(Texts.copyFileDialogAction),
-				// fileSystemItemProvider, new SelectItemHandler() {
-				// public void onSelect(FileSystemItem selected) {
-				// copyFile(file, (Folder) selected);
-				// }
-				//
-				// public boolean isItemAllowed(FileSystemItem item,
-				// List<Folder> path) {
-				// if (item.isFile())
-				// return false;
-				// return canCopyTo(file, (Folder) item);
-				// }
-				// }, source);
+				dialogManager.openFolderSelector(
+						textProvider.getText(Texts.copyFileDialogTitle),
+						textProvider.getText(Texts.copyFileMessage,
+								file.getName()),
+						textProvider.getText(Texts.copyFileDialogAction),
+						new SelectFolderHandler() {
+							@Override
+							public void onSelect(JsFolder selected) {
+								copyFile(file, selected);
+							}
+							@Override
+							public boolean canSelect(JsFolder folder) {
+								return canCopyTo(
+										(JsFilesystemItem) file.cast(), folder);
+							}
+						});
 			} else if (FileSystemAction.copyHere.equals(action)) {
 				dialogManager.showInputDialog(
 						textProvider.getText(Texts.copyHereDialogTitle),

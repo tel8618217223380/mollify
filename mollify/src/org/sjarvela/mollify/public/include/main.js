@@ -119,6 +119,7 @@
 			};
 		
 			this.onFolderSelected = function(f) {
+				mollify.ui._hideActivePopup();
 				that.listener.onSubFolderSelected(f);
 			};
 			

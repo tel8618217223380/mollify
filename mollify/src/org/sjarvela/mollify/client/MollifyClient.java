@@ -96,7 +96,7 @@ public class MollifyClient implements Client {
 		this.client = new DefaultClientInterface(eventDispatcher,
 				responseInterceptor, sessionManager, serviceProvider,
 				dialogManager, textProvider, viewManager,
-				fileSystemActionHandlerFactory);
+				fileSystemActionHandlerFactory, fileSystemItemProvider);
 		this.service = serviceProvider.getSessionService();
 
 		sessionManager.addSessionListener(new SessionListener() {

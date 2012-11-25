@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.ui.ConfirmationListener;
+import org.sjarvela.mollify.client.ui.filesystem.SelectFolderHandler;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -66,8 +67,7 @@ public class DefaultDialogManager implements DialogManager {
 	private native final JavaScriptObject createNativeListener(
 			ConfirmationListener listener) /*-{
 		return function() {
-			listener
-					.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm()();
+			listener.@org.sjarvela.mollify.client.ui.ConfirmationListener::onConfirm()();
 		};
 	}-*/;
 
@@ -104,4 +104,25 @@ public class DefaultDialogManager implements DialogManager {
 			}
 		};
 	}
+
+	@Override
+	public void openFolderSelector(String title, String message,
+			String actionTitle, SelectFolderHandler handler) {
+		JsObjBuilder spec = new JsObjBuilder().string("title", title)
+				.string("message", message).string("actionTitle", actionTitle)
+				.obj("handler", createNativeHandler(handler));
+		this.handler.call("folderSelector", spec.create());
+	}
+
+	private native final JavaScriptObject createNativeHandler(
+			SelectFolderHandler handler) /*-{
+		return {
+			onSelect : function(f) {
+				handler.@org.sjarvela.mollify.client.ui.filesystem.SelectFolderHandler::onSelect(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
+			},
+			canSelect : function(f) {
+				return handler.@org.sjarvela.mollify.client.ui.filesystem.SelectFolderHandler::canSelect(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
+			}
+		};
+	}-*/;
 }

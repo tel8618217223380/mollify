@@ -28,6 +28,7 @@
 		t.ui.texts = t.env.texts();
 		t.service = t.env.service();
 		t.session = {};
+		t.filesystem = core.filesystem();
 		
 		core.addEventHandler(function(e) {
 			if (e.type == 'SESSION_START') {
@@ -112,7 +113,7 @@
 			login : new mollify.view.LoginView(),
 			mainview : new mollify.view.MainView(),
 			
-			dialogs : new mollify.view.DialogHandler()
+			dialogs : new mollify.view.DialogHandler(t.filesystem)
 		}
 		t.env.views().registerHandlers(t.ui.views);
 		
@@ -130,9 +131,8 @@
 					var popupElement = t.ui.activePopup.element();
 					if (popupElement.has($(e.srcElement)).length > 0) return;
 				}
-				t.ui.activePopup.hide();
+				t.ui._hideActivePopup();
 			}
-			t.ui.activePopup = false;
 		});
 
 		//$.datepicker.setDefaults({
@@ -262,6 +262,11 @@
 	}
 	
 	this.ui = {
+		_hideActivePopup : function() {
+			if (t.ui.activePopup) t.ui.activePopup.hide();
+			t.ui.activePopup = false;	
+		},
+		
 		uploader : false,
 		
 		draganddrop : false,
@@ -828,7 +833,7 @@
 /**/
 $.extend(true, mollify, {
 	view : {
-		DialogHandler : function() {
+		DialogHandler : function(fs) {
 			var that = this;
 			
 			var dialogDefaults = {
@@ -938,8 +943,80 @@ $.extend(true, mollify, {
 					var btn = data.buttons[$(this).index()];
 					if (spec["on-button"]) spec["on-button"](btn, h);
 				});
-				if (spec["on-show"]) spec["on-show"](h);
+				if (spec["on-show"]) spec["on-show"](h, $dlg);
 				return h;
+			};
+			
+			this.folderSelector = function(spec) {
+				var selectedFolder = false;
+				var content = $("#mollify-tmpl-dialog-folderselector").tmpl({message: spec.message});
+				var $selector = false;
+				var loaded = {};
+				
+				var load = function($e, parent) {
+					if (loaded[parent ? parent.id : "root"]) return;
+					
+					$selector.addClass("loading");
+					fs.folders(parent, function(l) {
+						$selector.removeClass("loading");
+						loaded[parent ? parent.id : "root"] = true;
+						
+						if (!l || l.length == 0) {
+							if ($e) $e.find(".mollify-folderselector-folder-indicator").empty();
+							return;
+						}
+						
+						var level = 0;
+						var levels = [];
+						if (parent) {
+							var matches = parent.path.match(/\//g);
+							if (matches) level = matches.length + 1;
+							else level = 1;
+							
+							//generate array for template to iterate
+							for(var i=0;i<level;i++) levels.push({});
+						}
+						var c = $("#mollify-tmpl-dialog-folderselector-folder").tmpl(l, {levels:levels});
+						if ($e) {
+							$e.after(c);
+							$e.addClass("loaded");
+							if ($e) $e.find(".mollify-folderselector-folder-indicator").empty().append('<i class="icon-caret-down">');
+						} else {
+							$selector.append(c);
+						}
+					});
+				};
+				
+				that.custom({
+					title: spec.title,
+					content: content,
+					buttons: [
+						{ id: "action", "title": spec.actionTitle },
+						{ id: "cancel", "title-key": "dialogCancel" }
+					],
+					"on-button": function(btn, d) {
+						if (btn.id === 'action') {
+							if (!selectedFolder || !spec.handler || !spec.handler.canSelect(selectedFolder)) return;	
+						}
+						d.close();
+						if (btn.id === 'action') spec.handler.onSelect(selectedFolder);
+						
+					},
+					"on-show": function(h, $dlg) {
+						$selector = $dlg.find(".mollify-folderselector-tree");
+						$selector.on("click", ".mollify-folderselector-folder", function(e) {
+							var $e = $(this);
+							var p = $(this).tmplItem().data;
+							if (spec.handler.canSelect(p)) {
+								selectedFolder = p;
+								$(".mollify-folderselector-folder").removeClass("selected");
+								$e.addClass("selected");
+							}
+							load($e, p);
+						});
+						load(null, null);
+					}
+				});
 			};
 		}
 	}
@@ -1788,34 +1865,26 @@ function SharePlugin() {
 (function($, mollify){
 mollify.MollifyHTML5DragAndDrop = function() {
 	var t = this;
-	t.cls = {
-		"dragged" : "dragged",
-	};
 	t.dragObj = false;
 	
 	return {
 		enableDrag : function($e, l) {
 			$e.attr("draggable","true").bind('dragstart', function(e) {
-				console.log("dragstart");
-				//this.style.opacity = '0.4';
 				t.dragObj = false;
 				if (l.onDragStart) {
 					t.dragObj = l.onDragStart($(this), e);
 					if (t.dragObj) $t.addClass("dragged");
 				}
 			}).bind('dragover', function(e) {
-				//console.log("dragover");
 				if (e.preventDefault) e.preventDefault();
 				e.originalEvent.dataTransfer.dropEffect = 'move';
 			}).bind('dragend', function(e) {
-				//console.log("dragend");
 				if (l.onDragEnd) l.onDragEnd($(this), e);
 				$t.removeClass("dragged");
 			});
 		},
 		enableDrop : function($e, l) {
 			$e.addClass("droppable").bind('drop', function(e) {
-				console.log("drop " + $(this).attr('id'));
 				if (e.stopPropagation) e.stopPropagation();
 				if (!l.canDrop || !l.onDrop) return;
 				var $t = $(this);
@@ -1827,10 +1896,7 @@ mollify.MollifyHTML5DragAndDrop = function() {
 			}).bind('dragenter', function(e) {
 				if (!l.canDrop) return;
 				var $t = $(this);
-				//if (l.canDrop($(this), e, t.dragObj))
-				//console.log("dragenter droppable "+$t.attr('id'));
 				if (l.canDrop($t, e, t.dragObj)) {
-					console.log("dragover " + $t.attr('id'));
 					$t.addClass("dragover");
 				}
 			}).bind('dragleave', function(e) {
