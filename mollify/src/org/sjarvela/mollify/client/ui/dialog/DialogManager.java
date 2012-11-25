@@ -30,7 +30,7 @@ public interface DialogManager {
 			ConfirmationListener listener);
 
 	void showInputDialog(String title, String message, String defaultValue,
-			InputListener listener);
+			String yesTitle, String noTitle, InputListener listener);
 
 	WaitDialog openWaitDialog(String title, String message);
 

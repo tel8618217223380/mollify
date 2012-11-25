@@ -126,12 +126,12 @@
 		
 		$("body").click(function(e) {
 			// hide popups when clicked outside
-			if (t.ui.activePopup) {
-				if (e && e.srcElement && t.ui.activePopup.element) {
-					var popupElement = t.ui.activePopup.element();
+			if (t.ui._activePopup) {
+				if (e && e.srcElement && t.ui._activePopup.element) {
+					var popupElement = t.ui._activePopup.element();
 					if (popupElement.has($(e.srcElement)).length > 0) return;
 				}
-				t.ui._hideActivePopup();
+				t.ui.hideActivePopup();
 			}
 		});
 
@@ -262,9 +262,23 @@
 	}
 	
 	this.ui = {
-		_hideActivePopup : function() {
-			if (t.ui.activePopup) t.ui.activePopup.hide();
-			t.ui.activePopup = false;	
+		hideActivePopup : function() {
+			if (t.ui._activePopup) t.ui._activePopup.hide();
+			t.ui._activePopup = false;
+		},
+		activePopup : function(p) {
+			if (p==undefined) return t.ui._activePopup;
+			if (t.ui._activePopup) t.ui._activePopup.hide();
+			t.ui._activePopup = p;
+			if (!t.ui._activePopup.id) t.ui._activePopup.id = new Date().getTime();
+			return t.ui._activePopup.id;
+		},
+		isActivePopup : function(id) {
+			return (t.ui._activePopup && t.ui._activePopup.id == id);
+		},
+		removeActivePopup : function(id) {
+			if (!t.ui.isActivePopup(id)) return;
+			t.ui._activePopup = false;
 		},
 		
 		uploader : false,
@@ -363,10 +377,17 @@
 		controls: {
 			dropdown : function(a) {
 				var $e = $(a.element);
+				var $mnu = false;
+				var popupId = false;
 				$e.addClass('dropdown');
-				
+				var hidePopup = function() {
+					if (!$mnu) return;
+					if (a.onHide) a.onHide();
+					$mnu.parent().removeClass("open");
+					t.ui.removeActivePopup(popupId);
+				};
 				var createItems = function(itemList) {
-					return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
+					var i = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
 						isSeparator : function(i) {
 							return i.title == '-';
 						},
@@ -375,7 +396,8 @@
 							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
 							return "";
 						}
-					})).html();
+					});
+					return i;
 				};
 				var initItems = function(l) {
 					var $items = $e.find(".dropdown-item");
@@ -385,8 +407,26 @@
 						if (item.callback) item.callback();
 					});
 				};
-				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown();
+				var api = {
+					hide: hidePopup,
+					items: function(items) {
+						$mnu.remove();
+						$mnu = createItems(items);
+						$e.removeClass("loading").append($mnu);
+						initItems(items);
+					}
+				};
+				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown({
+					onshow: function($p) {
+						if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
+						popupId = t.ui.activePopup(api);
+						if (!a.items) $mnu.addClass("loading");
+						if (a.onShow) a.onShow(api);
+					}
+				});
 				initItems(a.items);
+				
+				return api;
 				/*$e.hover(function() {
 					$(this).addClass("hover");
 				}, function() {
@@ -398,13 +438,14 @@
 			},
 			
 			popupmenu : function(a) {
+				var popupId = false;
 				var $e = $(a.element);
 				var pos = $e.offset();
 				var $mnu = $('<div class="mollify-popupmenu" style="position: absolute; top: '+(pos.top + $e.outerHeight())+'px; left:'+pos.left+'px;"></div>');
 				var hidePopup = function() {
 					if (a.onHide) a.onHide();
 					$mnu.remove();
-					t.ui.activePopup = false;
+					t.ui.removeActivePopup(popupId);
 				};
 				var createItems = function(itemList) {
 					var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
@@ -432,7 +473,7 @@
 				if (!a.items) $mnu.addClass("loading");
 				$mnu.append(createItems(a.items));
 				if (a.style) $mnu.addClass(a.style);
-				$("#mollify").append($mnu).on('click', hidePopup);
+				$("#mollify").append($mnu);//.on('click', hidePopup);
 				
 				var api = {
 					hide: hidePopup,
@@ -441,8 +482,7 @@
 						initItems(items);
 					}
 				};
-				if (t.ui.activePopup) t.ui.activePopup.hide();
-				t.ui.activePopup = api;
+				popupId = t.ui.activePopup(api);
 				return api;
 				/*var createItems = function(itemList) {
 					return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
@@ -574,8 +614,7 @@
 					content: html,
 					onshow: function($t) {
 						$tip = $t;
-						if (t.ui.activePopup) t.ui.activePopup.hide();
-						t.ui.activePopup = api;
+						t.ui.activePopup(api);
 						if (!rendered) {
 							if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
 							rendered = true;
@@ -583,7 +622,7 @@
 						if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
 					},
 					onhide: function($t) {
-						t.ui.activePopup = false;
+						t.ui._activePopup = false;
 						//e.popover('destroy');
 					}
 				});
@@ -666,8 +705,7 @@
 						$tip.click(function(e){
 							//return false;
 						});
-						if (t.ui.activePopup) t.ui.activePopup.hide();
-						t.ui.activePopup = api;
+						t.ui.activePopup(api);
 						if (o.title) {
 							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
 								e.popover('destroy');
@@ -678,7 +716,7 @@
 						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
 					},
 					onhide: function($t) {
-						t.ui.activePopup = false;
+						t.ui._activePopup = false;
 						//e.popover('destroy');
 					}
 				});
@@ -871,19 +909,26 @@ $.extend(true, mollify, {
 			};
 			
 			this.input = function(spec) {
+				var $input = false;
 				that.custom({
 					title: spec.title,
-					html: spec.message + '<input id="">',
+					content: $("#mollify-tmpl-dialog-input").tmpl({message: spec.message}),
 					buttons: [
-						{ id: "yes", "title-key": "yes" },
-						{ id: "no", "title-key": "no" }
+						{ id: "yes", "title": spec.yesTitle },
+						{ id: "no", "title": spec.noTitle }
 					],
 					"on-button": function(btn, d) {
+						if (btn.id === 'yes') {
+							if (!spec.handler || !spec.handler.isAcceptable) return;
+							if (!spec.handler.isAcceptable($input.val())) return;
+						}
 						d.close();
-						if (spec.callback && btn.id === 'yes') spec.callback();
+						if (btn.id === 'yes') spec.handler.onInput($input.val());
 					},
-					"on-show": function() {
-						
+					"on-show": function(h, $dlg) {
+						$input = $dlg.find(".mollify-inputdialog-input");
+						if (spec.default) $input.val(spec.default);
+						$input.focus();
 					}
 				});
 			};
@@ -976,13 +1021,16 @@ $.extend(true, mollify, {
 							//generate array for template to iterate
 							for(var i=0;i<level;i++) levels.push({});
 						}
-						var c = $("#mollify-tmpl-dialog-folderselector-folder").tmpl(l, {levels:levels});
+						var c = $("#mollify-tmpl-dialog-folderselector-folder").tmpl(l, {cls:(level == 0 ? 'root' : ''),levels:levels});
 						if ($e) {
 							$e.after(c);
 							$e.addClass("loaded");
-							if ($e) $e.find(".mollify-folderselector-folder-indicator").empty().append('<i class="icon-caret-down">');
+							if ($e) $e.find(".mollify-folderselector-folder-indicator").find("i").removeClass("icon-caret-right").addClass("icon-caret-down");
 						} else {
 							$selector.append(c);
+						}
+						if (!parent && l.length == 1) {
+							load($(c[0]), l[0]);
 						}
 					});
 				};
@@ -1004,6 +1052,12 @@ $.extend(true, mollify, {
 					},
 					"on-show": function(h, $dlg) {
 						$selector = $dlg.find(".mollify-folderselector-tree");
+						$selector.on("click", ".mollify-folderselector-folder-indicator", function(e) {
+							var $e = $(this).parent();
+							var p = $e.tmplItem().data;
+							load($e, p);
+							return false;
+						});
 						$selector.on("click", ".mollify-folderselector-folder", function(e) {
 							var $e = $(this);
 							var p = $(this).tmplItem().data;
@@ -1012,7 +1066,6 @@ $.extend(true, mollify, {
 								$(".mollify-folderselector-folder").removeClass("selected");
 								$e.addClass("selected");
 							}
-							load($e, p);
 						});
 						load(null, null);
 					}

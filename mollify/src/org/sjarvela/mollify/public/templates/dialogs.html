@@ -35,17 +35,23 @@
 	</div>
 </script>
 
+<script id="mollify-tmpl-dialog-input" type="text/x-jquery-tmpl">
+	<div class="mollify-inputdialog">
+		<div class="mollify-inputdialog-message">{{html $item.data.message}}</div>
+		<input class="mollify-inputdialog-input">
+	</div>
+</script>
+
 <script id="mollify-tmpl-dialog-folderselector" type="text/x-jquery-tmpl">
 	<div class="mollify-folderselector">
 		<div class="mollify-folderselector-message">{{html $item.data.message}}</div>
-		<div class="mollify-folderselector-tree">
-			<div class="mollify-folderselector-tree-content"></div>
+		<div class="mollify-folderselector-tree well well-large">
 		</div>
 	</div>
 </script>
 
 <script id="mollify-tmpl-dialog-folderselector-folder" type="text/x-jquery-tmpl">
-	<div class="mollify-folderselector-folder">
+	<div class="mollify-folderselector-folder ${$item.cls}">
 		<div class="mollify-folderselector-folder-indentation">
 			{{each $item.levels}}
 			<div class="mollify-folderselector-folder-indentation-step"></div>
