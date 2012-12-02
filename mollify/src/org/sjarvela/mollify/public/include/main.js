@@ -111,11 +111,11 @@
 			};
 				
 			this.showProgress = function() {
-				console.log("showProgress");
+				$("#mollify-folderview-items").addClass("loading");
 			};
 		
 			this.hideProgress = function() {
-				console.log("hideProgress");
+				$("#mollify-folderview-items").removeClass("loading");
 			};
 		
 			this.onFolderSelected = function(f) {
@@ -213,20 +213,24 @@
 				
 				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite ? that._currentFolder : false);
 			};
-			
-			this.onUpload = function() {
-				mollify.ui.uploader.open(that.currentFolder);
-			};
-			
+						
 			this.setupHierarchy = function(h) {
-				var items = $.merge([{id: 'root', name: ''}], h);
+				var items = h;//$.merge([{id: 'root', name: ''}], h);
 				
-				var p = $("#mollify-folder-hierarchy").empty();
+				var p = $("#mollify-folder-hierarchy");
 				
 				mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items).appendTo(p);
-				$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
+				//$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
+				var rootItems = [{'title-key':"foo", callback: function(){}}];
+				mollify.ui.controls.dropdown({
+					element: $("#mollify-folder-hierarchy-item-root"),
+					items: rootItems,
+					hideDelay: 0,
+					style: 'submenu'
+				});
 				$(".mollify-folder-hierarchy-item").click(function() {
 					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
+					if (index == 0) return false;
 					that.listener.onFolderSelected(index, h[index-1]);
 				});
 			};
@@ -362,7 +366,7 @@
 								return;
 							}
 							
-							that.renderItemContext($t, $content, item, a);
+							that.renderItemContext(popupId, $t, $content, item, a);
 						});
 					},
 					onhide: function($t) {
@@ -419,7 +423,7 @@
 				that.itemContext.show();*/
 			};
 			
-			this.renderItemContext = function(tip, $e, item, d) {
+			this.renderItemContext = function(popupId, tip, $e, item, d) {
 				var details = d[0];
 				var showDescription = mollify.session.features.descriptions && !!details.description;
 				//TODO permissions to edit descriptions
@@ -503,6 +507,7 @@
 				
 				var actions = mollify.ui.controls.dropdown({
 					element: $e.find("#mollify-itemcontext-secondary-actions"),
+					parentPopupId: popupId,
 					items: actions,
 					hideDelay: 0,
 					style: 'submenu',
