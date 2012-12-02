@@ -268,7 +268,10 @@
 		},
 		activePopup : function(p) {
 			if (p==undefined) return t.ui._activePopup;
-			if (t.ui._activePopup) t.ui._activePopup.hide();
+			if (t.ui._activePopup) {
+				if (p.parentPopupId && t.ui._activePopup.id == p.parentPopupId) return;
+				t.ui._activePopup.hide();
+			}
 			t.ui._activePopup = p;
 			if (!t.ui._activePopup.id) t.ui._activePopup.id = new Date().getTime();
 			return t.ui._activePopup.id;
@@ -418,9 +421,11 @@
 						popupItems = items;
 					}
 				};
+				if (a.parentPopupId) api.parentPopupId = a.parentPopupId;
 				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown({
 					onshow: function($p) {
 						if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
+						//if (!a.parentPopupId)
 						popupId = t.ui.activePopup(api);
 						if (!popupItems) $mnu.addClass("loading");
 						if (a.onShow) a.onShow(api, popupItems);

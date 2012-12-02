@@ -148,6 +148,9 @@ a.link {
 
 .mollify-wait, .loading {
 	background: url(images/wait.gif) no-repeat center center;
+}
+
+.mollify-wait {
 	width: 100px;
 	height: 100px;
 }
