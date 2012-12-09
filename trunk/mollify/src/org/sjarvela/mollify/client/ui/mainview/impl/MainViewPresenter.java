@@ -34,6 +34,7 @@ import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
+import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
@@ -182,6 +183,13 @@ public class MainViewPresenter implements MainViewListener,
 						}));
 	}
 
+	@Override
+	public void getSessionActions(JavaScriptObject callback) {
+		List<JsObj> sessionActions = getSessionActions();
+		JsArray<JsObj> actions = JsUtil.asJsArray(sessionActions, JsObj.class);
+		call(callback, actions);
+	}
+
 	private ResultListener<ItemDetails> createItemDetailsListener(
 			final JsFilesystemItem item,
 			final ResultCallback<ItemDetails> callback) {
@@ -212,8 +220,65 @@ public class MainViewPresenter implements MainViewListener,
 
 	protected native void call2(JavaScriptObject callback, JavaScriptObject o1,
 			JavaScriptObject o2) /*-{
-		callback([o1, o2]);
+		callback([ o1, o2 ]);
 	}-*/;
+
+	private List<JsObj> getSessionActions() {
+		List<JsObj> actions = new ArrayList();
+		SessionInfo session = sessionManager.getSession();
+		if (!session.isAuthenticated())
+			return actions;
+
+		actions.add(createAction("session-changepassword",
+				Texts.mainViewChangePasswordTitle.name(),
+				JsUtil.createJsCallback(new Callback() {
+					@Override
+					public void onCallback() {
+						view.onChangePassword();
+					}
+				})));
+
+		actions.add(createSeparator());
+
+		if (session.getDefaultPermissionMode().isAdmin()) {
+			actions.add(createAction("session-openadmin",
+					Texts.mainViewAdministrationTitle.name(),
+					JsUtil.createJsCallback(new Callback() {
+						@Override
+						public void onCallback() {
+							view.onOpenAdminUtil();
+						}
+					})));
+
+			actions.add(createSeparator());
+		}
+
+		actions.add(createAction("session-logout",
+				Texts.mainViewLogoutButtonTitle.name(),
+				JsUtil.createJsCallback(new Callback() {
+					@Override
+					public void onCallback() {
+						sessionService.logout(new ResultListener<Boolean>() {
+							@Override
+							public void onSuccess(Boolean result) {
+								sessionManager.endSession();
+							}
+
+							@Override
+							public void onFail(ServiceError error) {
+								onError(error, false);
+							}
+						});
+					}
+				})));
+
+		return actions;
+	}
+
+	private JsObj createAction(String id, String titleKey, JavaScriptObject cb) {
+		return new JsObjBuilder().string("type", "action").string("id", id)
+				.string("title-key", titleKey).obj("callback", cb).create();
+	}
 
 	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
 			boolean root) {

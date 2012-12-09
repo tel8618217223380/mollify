@@ -19,4 +19,6 @@ public interface MainViewListener {
 	void onCreateFolder(String name);
 
 	void getItemDetails(JsFilesystemItem item, JavaScriptObject callback);
+	
+	void getSessionActions(JavaScriptObject callback);
 }
