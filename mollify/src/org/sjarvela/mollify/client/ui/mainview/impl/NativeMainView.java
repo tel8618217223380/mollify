@@ -51,6 +51,9 @@ public class NativeMainView extends NativeView implements MainView {
 			},
 			getSessionActions : function(cb) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getSessionActions(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+			},
+			onChangePassword : function(o, n, cb) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onChangePassword(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(o,n,cb);
 			}
 		};
 	}-*/;
@@ -92,8 +95,8 @@ public class NativeMainView extends NativeView implements MainView {
 	}
 
 	@Override
-	public void onOpenAdminUtil() {
-		viewHandler.call("openAdminUtil");
+	public void onOpenAdminUtil(String url) {
+		viewHandler.call("openAdminUtil", url);
 	}
 
 	@Override

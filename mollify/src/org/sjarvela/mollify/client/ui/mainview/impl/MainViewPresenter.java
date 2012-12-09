@@ -32,6 +32,7 @@ import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.service.ConfigurationService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
+import org.sjarvela.mollify.client.service.ServiceErrorType;
 import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
@@ -158,6 +159,33 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	@Override
+	public void onChangePassword(String oldPassword, String newPassword,
+			final JavaScriptObject callback) {
+		configurationService.changePassword(oldPassword, newPassword,
+				new ResultListener<Boolean>() {
+
+					@Override
+					public void onSuccess(Boolean result) {
+						call(callback, null);
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						if (ServiceErrorType.AUTHENTICATION_FAILED.equals(error
+								.getType())) {
+							dialogManager.showInfo(
+									textProvider
+											.getText(Texts.passwordDialogTitle),
+									textProvider
+											.getText(Texts.passwordDialogOldPasswordIncorrect));
+						} else {
+							onError(error, false);
+						}
+					}
+				});
+	}
+
+	@Override
 	public void getItemDetails(final JsFilesystemItem item,
 			final JavaScriptObject callback) {
 		fileSystemService.getItemDetails(
@@ -229,16 +257,18 @@ public class MainViewPresenter implements MainViewListener,
 		if (!session.isAuthenticated())
 			return actions;
 
-		actions.add(createAction("session-changepassword",
-				Texts.mainViewChangePasswordTitle.name(),
-				JsUtil.createJsCallback(new Callback() {
-					@Override
-					public void onCallback() {
-						view.onChangePassword();
-					}
-				})));
+		if (session.getFeatures().changePassword()) {
+			actions.add(createAction("session-changepassword",
+					Texts.mainViewChangePasswordTitle.name(),
+					JsUtil.createJsCallback(new Callback() {
+						@Override
+						public void onCallback() {
+							view.onChangePassword();
+						}
+					})));
 
-		actions.add(createSeparator());
+			actions.add(createSeparator());
+		}
 
 		if (session.getDefaultPermissionMode().isAdmin()) {
 			actions.add(createAction("session-openadmin",
@@ -246,7 +276,8 @@ public class MainViewPresenter implements MainViewListener,
 					JsUtil.createJsCallback(new Callback() {
 						@Override
 						public void onCallback() {
-							view.onOpenAdminUtil();
+							view.onOpenAdminUtil(configurationService
+									.getAdministrationUrl());
 						}
 					})));
 
@@ -534,19 +565,19 @@ public class MainViewPresenter implements MainViewListener,
 		};
 	}
 
-	public void logout() {
-		sessionService.logout(new ResultListener<Boolean>() {
-			@Override
-			public void onSuccess(Boolean result) {
-				sessionManager.endSession();
-			}
-
-			@Override
-			public void onFail(ServiceError error) {
-				onError(error, false);
-			}
-		});
-	}
+	// public void logout() {
+	// sessionService.logout(new ResultListener<Boolean>() {
+	// @Override
+	// public void onSuccess(Boolean result) {
+	// sessionManager.endSession();
+	// }
+	//
+	// @Override
+	// public void onFail(ServiceError error) {
+	// onError(error, false);
+	// }
+	// });
+	// }
 
 	/*
 	 * public void changePassword(String oldPassword, String newPassword) {
@@ -568,11 +599,11 @@ public class MainViewPresenter implements MainViewListener,
 	 * permissionEditorViewFactory.openPermissionEditor(null); }
 	 */
 
-	public void onOpenAdministration() {
-		// TODO ulkoista
-		viewManager.openUrlInNewWindow(configurationService
-				.getAdministrationUrl());
-	}
+	// public void onOpenAdministration() {
+	// // TODO ulkoista
+	// viewManager.openUrlInNewWindow(configurationService
+	// .getAdministrationUrl());
+	// }
 
 	/*
 	 * public void onSelectAll() { view.selectAll(); }

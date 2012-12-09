@@ -211,7 +211,7 @@
 							if (!isset($pw['old'])) throw $this->invalidRequestException();
 							$userId = $this->env->session()->userId();
 							
-							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("UNAUTHORIZED");
+							if ($pw['old'] != $this->env->configuration()->getPassword($userId)) throw new ServiceException("AUTHENTICATION_FAILED");
 						}
 						
 						$this->response()->success($this->env->configuration()->changePassword($userId, base64_decode($pw['new'])));

@@ -13,12 +13,15 @@ public interface MainViewListener {
 	void onSubFolderSelected(JsFolder f);
 
 	void onFolderSelected(int level, JsFolder f);
-	
+
 	void onRefresh();
-	
+
 	void onCreateFolder(String name);
 
 	void getItemDetails(JsFilesystemItem item, JavaScriptObject callback);
-	
+
 	void getSessionActions(JavaScriptObject callback);
+
+	void onChangePassword(String oldPassword, String newPassword,
+			JavaScriptObject callback);
 }

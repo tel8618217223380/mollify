@@ -49,6 +49,6 @@ public interface MainView {
 
 	void setData(List<JavaScriptObject> allItems, JsObj data);
 
-	void onOpenAdminUtil();
+	void onOpenAdminUtil(String url);
 
 }

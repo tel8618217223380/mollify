@@ -18,11 +18,69 @@
 			}
 			
 			this.changePassword = function() {
-				console.log("change password");
+				var $dlg = false;
+				var $old = false;
+				var $new1 = false;
+				var $new2 = false;
+				var errorTextMissing = mollify.ui.texts.get('mainviewChangePasswordErrorValueMissing');
+				var errorConfirm = mollify.ui.texts.get('mainviewChangePasswordErrorConfirm');
+				
+				mollify.ui.views.dialogs.custom({
+					title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
+					content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
+					buttons: [
+						{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
+						{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+					],
+					"on-button": function(btn, d) {
+						if (btn.id === 'yes') {
+							$dlg.find(".control-group").removeClass("error");
+							$dlg.find(".help-inline").text("");
+							
+							// check
+							var old = $old.find("input").val();
+							var new1 = $new1.find("input").val();
+							var new2 = $new2.find("input").val();
+							
+							if (!old) {
+								$old.addClass("error");
+								$old.find(".help-inline").text(errorTextMissing);
+							}
+							if (!new1) {
+								$new1.addClass("error");
+								$new1.find(".help-inline").text(errorTextMissing);
+							}
+							if (!new2) {
+								$new2.addClass("error");
+								$new2.find(".help-inline").text(errorTextMissing);
+							}
+							if (new1 && new2 && new1 != new2) {
+								$new1.addClass("error");
+								$new2.addClass("error");
+								$new1.find(".help-inline").text(errorConfirm);
+								$new2.find(".help-inline").text(errorConfirm);
+							}
+							if (!old || !new1 || !new2 || new1 != new2) return;
+						}
+						d.close();
+						if (btn.id === 'yes') that.listener.onChangePassword(old, new1, function() {
+							mollify.ui.views.dialogs.notification(mollify.ui.texts.get('mainviewChangePasswordSuccess'));
+						});
+					},
+					"on-show": function(h, $d) {
+						$dlg = $d;
+						//mollify.ui.process($dlg, ["localize"]);
+						$old = $("#mollify-mainview-changepassword-old");
+						$new1 = $("#mollify-mainview-changepassword-new1");
+						$new2 = $("#mollify-mainview-changepassword-new2");
+						
+						$old.find("input").focus();
+					}
+				});
 			}
 
-			this.openAdminUtil = function() {
-				console.log("open admin util");
+			this.openAdminUtil = function(url) {
+				mollify.ui.window.open(url);
 			}
 			
 			this.getDataRequest = function(folder) {
@@ -117,13 +175,6 @@
 			
 			this.onResize = function() {
 				$("#mollify-folderview").height($(window).height()-$("#mollify-mainview-header").height());
-			};
-			
-			this.sessionActions = function() {
-				//TODO get session actions
-				return [
-					{'title-key': 'logout', callback: function() { } }
-				];
 			};
 			
 			this.showAllRoots = function() {
