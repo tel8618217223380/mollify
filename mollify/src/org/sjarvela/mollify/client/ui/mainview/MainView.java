@@ -43,16 +43,12 @@ public interface MainView {
 
 	void clear();
 
-	// void refresh();
-
-	//ViewType getViewType();
+	void onChangePassword();
 
 	void setFolder(List<JsFolder> folderHierarchy, boolean canWrite);
 
 	void setData(List<JavaScriptObject> allItems, JsObj data);
 
-	/*void selectAll();
-
-	void selectNone();*/
+	void onOpenAdminUtil();
 
 }

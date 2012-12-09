@@ -17,6 +17,14 @@
 					that.rootsById[p.roots[i].id] = p.roots[i];
 			}
 			
+			this.changePassword = function() {
+				console.log("change password");
+			}
+
+			this.openAdminUtil = function() {
+				console.log("open admin util");
+			}
+			
 			this.getDataRequest = function(folder) {
 				return that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {};
 			}
@@ -33,7 +41,24 @@
 				// TODO expose file urls
 		
 				mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mollify-mainview-user");
-				if (mollify.session.authenticated) mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.sessionActions()});
+				if (mollify.session.authenticated) {
+					mollify.ui.controls.dropdown({
+						element: $('#mollify-username-dropdown'),
+						items: false,
+						onShow: function(drp, items) {
+							if (items) return;
+							
+							that.listener.getSessionActions(function(a) {
+								if (!a) {
+									drp.hide();
+									return;
+								}
+								drp.items(a);
+							});
+						}
+					});
+					//mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.listener.sessionActions()});
+				}
 				mollify.dom.template("mollify-tmpl-main-root-list", that.roots).appendTo("#mollify-mainview-rootlist");
 				$(".mollify-mainview-rootlist-item").click(function() {
 					var root = $(this).tmplItem().data;
@@ -77,7 +102,7 @@
 			};
 			
 			this.unload = function() {
-				
+				mollify.ui.hideActivePopup();
 			};
 			
 			this.onRadioChanged = function(groupId, valueId, i) {
