@@ -889,14 +889,25 @@ $.extend(true, mollify, {
 			};
 			
 			this.info = function(spec) {
-				var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
+				that.custom({
+					title: spec.title,
+					content: $("#mollify-tmpl-dialog-info").tmpl({message: spec.message}),
+					buttons: [
+						{ id: "ok", "title-key": "ok" }
+					],
+					"on-button": function(btn, d) {
+						d.close();
+						if (spec.callback) spec.callback();
+					}
+				});
+				/*var dlg = $("#mollify-tmpl-dialog-info").tmpl($.extend(spec, dialogDefaults)).dialog({
 					modal: true,
 					resizable: false,
 					height: 'auto',
 					minHeight: 50
 				});
 				mollify.ui.handlers.localize(dlg);
-				dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });
+				dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });*/
 			};
 			
 			this.error = function(spec) {
