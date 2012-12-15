@@ -692,7 +692,6 @@
 					element : function() {
 						return $tip;
 					},
-					close: this.hide,
 					getContent: function() {
 						return $tip.find('.popover-content');	
 					},
@@ -702,6 +701,7 @@
 						$c.html(bubbleHtml(c));
 					}
 				};
+				api.close = api.hide;
 				e.popover({
 					title: o.title ? o.title : false,
 					html: true,
@@ -1313,18 +1313,22 @@ $.extend(true, mollify, {
 			
 			this.loadComments = function(item, cb) {
 				mollify.service.get("comment/"+item.id, function(comments) {
-					var userId = mollify.session['user_id'];
-					var isAdmin = mollify.session.admin;
-					
-					for (var i=0,j=comments.length; i<j; i++) {
-						comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
-						comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
-						comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
-					}
-					cb(item, comments);
+					cb(item, that.processComments(comments));
 				}, function(code, error) {
 					alert(error);
 				});
+			};
+			
+			this.processComments = function(comments) {
+				var userId = mollify.session['user_id'];
+				var isAdmin = mollify.session.admin;
+				
+				for (var i=0,j=comments.length; i<j; i++) {
+					comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
+					comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
+					comments[i].remove = isAdmin || (userId == comments[i]['user_id']);
+				}
+				return comments;
 			};
 			
 			this.onAddComment = function(item, comment, cb) {
@@ -1339,7 +1343,7 @@ $.extend(true, mollify, {
 			this.onRemoveComment = function($list, item, id) {		
 				mollify.service.del("comment/"+item.id+"/"+id, function(result) {
 					that.updateCommentCount(item, result.length);
-					that.updateComments($list, item, result);
+					that.updateComments($list, item, that.processComments(result));
 				},	function(code, error) {
 					alert(error);
 				});
@@ -1347,8 +1351,13 @@ $.extend(true, mollify, {
 			
 			this.updateCommentCount = function(item, count) {
 				var e = document.getElementById("item-comment-count-"+item.id);
-				e.innerHTML = count;
-				e.setAttribute('class', 'filelist-item-comment-count');
+				if (count < 1) {
+					e.innerHTML = '';
+					e.setAttribute('class', 'filelist-item-comment-count-none');
+				} else {
+					e.innerHTML = count;
+					e.setAttribute('class', 'filelist-item-comment-count');
+				}
 			};
 			
 			this.updateComments = function($list, item, comments) {
