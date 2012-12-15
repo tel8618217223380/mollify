@@ -136,7 +136,10 @@ a.link {
 }*/
 
 .mollify-notification {
-	background-color: rgba(0,0,0,0.5)
+	background-color: rgba(0,0,0,0.5);
+	position: absolute;
+	top: 80px;
+	right: 5px;
 }
 
 .mollify-notification-content {

@@ -121,7 +121,7 @@ function createMenuItems(views, pathPrefix) {
 }
 
 function onSession(session) {
-	if (!session["authentication_required"] || !session["authenticated"] || session["default_permission"] != 'A') {
+	if (!session["authenticated"] || session["default_permission"] != 'A') {
 		onUnauthorized();
 		return;
 	}
