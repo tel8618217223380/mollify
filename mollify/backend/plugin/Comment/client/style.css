@@ -100,7 +100,7 @@
   position: relative;
   margin: 8px 0px;
   padding: 8px 8px 24px 8px;
-  background-color: #f4f4f4;
+  border-top: 1px solid #ccc;
 }
 
 .comment-content > blockquote {
@@ -202,10 +202,10 @@
 }
 
 #comments-dialog-add-text {
-	float: left;
-	width: 350px;
-	height: 40px;
-	border: 1px solid #f5f5f5;
+	/*float: left;
+	width: 350px;*/
+	/*height: 40px;
+	border: 1px solid #f5f5f5;*/
 }
 
 #comments-dialog-add {

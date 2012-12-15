@@ -17,7 +17,7 @@
 					that.rootsById[p.roots[i].id] = p.roots[i];
 			}
 			
-			this.changePassword = function() {
+			this.changePassword = function() {	
 				var $dlg = false;
 				var $old = false;
 				var $new1 = false;
@@ -64,12 +64,11 @@
 						}
 						d.close();
 						if (btn.id === 'yes') that.listener.onChangePassword(old, new1, function() {
-							mollify.ui.views.dialogs.notification(mollify.ui.texts.get('mainviewChangePasswordSuccess'));
+							mollify.ui.views.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
 						});
 					},
 					"on-show": function(h, $d) {
 						$dlg = $d;
-						//mollify.ui.process($dlg, ["localize"]);
 						$old = $("#mollify-mainview-changepassword-old");
 						$new1 = $("#mollify-mainview-changepassword-new1");
 						$new2 = $("#mollify-mainview-changepassword-new2");
@@ -427,7 +426,10 @@
 					content: html,
 					manualout: true,
 					onshow: function($t) {
-						mollify.ui.activePopup({ id: popupId, hide: function() { e.popover('destroy'); } });
+						var api = { id: popupId, hide: function() { e.popover('destroy'); } };
+						api.close = api.hide;
+						
+						mollify.ui.activePopup(api);
 						
 						var closeButton = $('<button type="button" class="close">×</button>').click(function(){
 							e.popover('destroy');
@@ -442,7 +444,7 @@
 								return;
 							}
 							
-							that.renderItemContext(popupId, $t, $content, item, a);
+							that.renderItemContext(popupId, api, $content, item, a);
 						});
 					},
 					onhide: function($t) {
@@ -560,7 +562,7 @@
 					var onSelectDetails = function(id) {
 						$(".mollify-itemcontext-details-selector").removeClass("active");
 						$("#mollify-itemcontext-details-selector-"+id).addClass("active");
-						pluginData[id].details["on-render"]($content.empty(), cache[id]);
+						pluginData[id].details["on-render"](tip, $content.empty(), cache[id]);
 					};
 					var firstPlugin = false;
 					var cache = {};
