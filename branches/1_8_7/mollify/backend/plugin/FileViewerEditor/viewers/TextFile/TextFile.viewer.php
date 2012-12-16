@@ -48,6 +48,7 @@
 			fclose($stream);
 
 			$html .= ']]></script><script type="text/javascript">SyntaxHighlighter.all()</script>';
+			$this->env->events()->onEvent(FileEvent::view($item));
 			
 			return "<html><head><title>".$item->name()."</title>".$head."</head><body>".$html."</body></html>";
 		}

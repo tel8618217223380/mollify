@@ -108,28 +108,34 @@
 		}
 		
 		public function authenticate($userId, $pw) {
-			$password = md5($pw);
-			
-			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings("email_login", TRUE), time());
-			if (!$user) {
-				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
-				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
-				throw new ServiceException("AUTHENTICATION_FAILED");
-			}
-			
-			$auth = $user["auth"];
-			if ($auth == NULL) $auth = $this->getDefaultAuthenticationMethod();
-			
-			if (strcasecmp("PW", $auth) != 0) {
-				// handle other authentications
-				if (strcasecmp("LDAP", $auth) == 0) {
-					$this->authenticateLDAP($user, $pw);
+			$users = $this->env->configuration()->findUsers($userId, $this->env->settings("email_login", TRUE), time());			
+			$authenticatedUser = NULL;
+			foreach ($users as $u) {
+				$auth = $u["auth"];
+				if ($auth == NULL) $auth = $this->getDefaultAuthenticationMethod();
+				
+				if (strcasecmp("PW", $auth) == 0) {
+					if (strcasecmp(md5($pw), $u["password"]) == 0) {
+						$authenticatedUser = $u;
+						break;
+					}
+				} else if (strcasecmp("LDAP", $auth) == 0) {
+					if ($this->authenticateLDAP($u, $pw)) {
+						$authenticatedUser = $u;
+						break;							
+					}
 				} else {
 					throw new ServiceException("INVALID_CONFIGURATION", "Unsupported authentication type ".$auth);
 				}
 			}
-			$this->doAuth($user, $auth);
-			return $user;
+
+			if ($authenticatedUser == NULL) {
+				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
+				throw new ServiceException("AUTHENTICATION_FAILED");
+			}
+
+			$this->doAuth($authenticatedUser, $auth);
+			return $authenticatedUser;
 		}
 		
 		public function getDefaultAuthenticationMethod() {
@@ -151,12 +157,14 @@
 			if (!$conn)
 				throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to LDAP server");
 			
+			$auth = TRUE;
 			$bind = @ldap_bind($conn, $connString, $pw);
 			if (!$bind) {
 				Logging::logDebug("LDAP error: ".ldap_error($conn));
-				throw new ServiceException("AUTHENTICATION_FAILED");
+				$auth = FALSE;
 			}
 			ldap_close($conn);
+			return $auth;
 		}
 
 		public function doAuth($user, $auth = NULL) {
