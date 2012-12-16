@@ -975,7 +975,8 @@ $.extend(true, mollify, {
 			};
 			
 			this.notification = function(spec) {
-				var $trg = (spec && spec.target) ? $("#"+spec.target) : $("body");
+				var $trg = (spec && spec.target) ? $("#"+spec.target) : $("#mollify-notification-container");
+				if ($trg.length == 0) $trg = $("body");
 				var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dialogDefaults)).hide().appendTo($trg).fadeIn(300);
 				setTimeout(function() {
 					notification.fadeOut(300);
@@ -1122,7 +1123,7 @@ $.extend(true, mollify, {
 			}
 			
 			this.render = function(id) {
-				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("login-view.html"), that, ['localize', 'bubble']);
+				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("loginview.html"), that, ['localize', 'bubble']);
 			}
 			
 			this.onLoad = function() {
@@ -1131,66 +1132,63 @@ $.extend(true, mollify, {
 			
 				if (mollify.hasFeature('lost_password')) $("#login-lost-password").show();
 				if (mollify.hasFeature('registration')) {
-					$("#login-register").click(function() {
+					$("#mollify-login-register").click(function() {
 						mollify.ui.window.open(mollify.service.pluginUrl("registration"));
 					});
-					$("#login-register").show();
+					$("#mollify-login-register").show();
 				}
 				
-				var $data = $("#login-data");
+				var $data = $("#mollify-login-data");
 				mollify.ui.handlers.center($data);
 				//mollify.ui.handlers.bubble($data, that);
-				$("#login-name, #login-password").bind('keypress', function(e) {
+				$("#mollify-login-name, #mollify-login-password").bind('keypress', function(e) {
 					if ((e.keyCode || e.which) == 13) that.onLogin();
 				});
-				$("#login-button").click(that.onLogin);
-				$("#login-name").focus();
-				
-				//		mollify.views.dialogs.info({message:'tt'});
-				//		return;
+				$("#mollify-login-button").click(that.onLogin);
+				$("#mollify-login-name").focus();
 			}
 			
 			this.onResize = function() {
 				var h = $(window).height();
-				$("#login-main").height(h);
+				$("#mollify-login-main").height(h);
 				
-				$data = $("#login-data");
+				$data = $("#mollify-login-data");
 				$data.css('margin-top', (h / 2) - ($data.height() / 2));
 			}
 			
 			this.onRenderBubble = function(id, bubble) {
-				if (id === 'login-forgot-password') {
-					$("#login-forgot-button").click(function() {				
-						var email = $("#login-forgot-email").val();
+				if (id === 'mollify-login-forgot-password') {
+					$("#mollify-login-forgot-button").click(function() {				
+						var email = $("#mollify-login-forgot-email").val();
 						if (!email) return;
 						
 						bubble.hide();
-						that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
+						that.wait = mollify.ui.views.dialogs.wait({target: "mollify-login-main"});
 						that.listener.onResetPassword(email);
 					});
 				}
 			}
 			
 			this.onShowBubble = function(id, bubble) {
-				if (id === 'login-forgot-password') {
-					$("#login-forgot-email").val("").focus();
+				if (id === 'mollify-login-forgot-password') {
+					$("#mollify-login-forgot-email").val("").focus();
 				}
 			}
 			
 			this.onLogin = function() {
-				var username = $("#login-name").val();
-				var password = $("#login-password").val();
-				var remember = $("#login-remember-cb").is(':checked');
+				var username = $("#mollify-login-name").val();
+				var password = $("#mollify-login-password").val();
+				var remember = $("#mollify-login-remember-cb").is(':checked');
 				
 				if (!username || username.length < 1) {
-					$("#login-name").focus();
+					$("#mollify-login-name").focus();
 					return;
 				}
 				if (!password || password.length < 1) {
-					$("#login-password").focus();
+					$("#mollify-login-password").focus();
 					return;
 				}
-				that.wait = mollify.ui.views.dialogs.wait({target: "login-main"});
+				that.wait = mollify.ui.views.dialogs.wait({target: "mollify-login-main"});
 				that.listener.onLogin(username, password, remember);
 			}
 			
@@ -1198,7 +1196,6 @@ $.extend(true, mollify, {
 				that.wait.close();
 				
 				mollify.ui.views.dialogs.notification({
-					target: "login-main",
 					message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
 				});
 			}
@@ -1207,7 +1204,6 @@ $.extend(true, mollify, {
 				that.wait.close();
 				
 				mollify.ui.views.dialogs.notification({
-					target: "login-main",
 					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
 				});
 			}
