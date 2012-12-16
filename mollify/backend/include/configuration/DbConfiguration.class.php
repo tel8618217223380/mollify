@@ -56,27 +56,15 @@
 		
 		public function checkProtocolVersion($version) {}
 	
-		public function findUser($username, $password, $allowEmail = FALSE, $expiration = FALSE) {
+		public function findUsers($userId, $allowEmail = FALSE, $expiration = FALSE) {
 			$expirationCriteria = $expiration ? " AND (expiration is null or expiration > ".$this->formatTimestampInternal($expiration).")" : "";
 			
 			if ($allowEmail) {
-				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s') AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE (name='%s' or email='%s')".$expirationCriteria, $this->db->string($userId), $this->db->string($userId)));
 			} else {
-				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE name='%s' AND ((password='%s' AND (auth='PW' or auth is null)) or auth != 'PW')".$expirationCriteria, $this->db->string($username), $this->db->string($password)));
+				$result = $this->db->query(sprintf("SELECT id, name, email, password, auth FROM ".$this->db->table("user")." WHERE name='%s'".$expirationCriteria, $this->db->string($userId)));
 			}
-			$matches = $result->count();
-			
-			if ($matches === 0) {
-				Logging::logError("No user found with name [".$username."], or password was invalid");
-				return NULL;
-			}
-			
-			if ($matches > 1) {
-				Logging::logError("Duplicate user found with name [".$username."] and password");
-				return FALSE;
-			}
-			
-			return $result->firstRow();
+			return $result->rows();
 		}
 
 		public function getUserByName($username, $expiration = FALSE) {
