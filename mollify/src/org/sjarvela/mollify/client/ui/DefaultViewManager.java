@@ -97,6 +97,8 @@ public class DefaultViewManager implements ViewManager {
 	// }
 
 	public void empty() {
+		if (!contentPanel.isAttached())
+			return;
 		contentPanel.clear();
 		contentPanel.getElement().setInnerHTML("");
 	}

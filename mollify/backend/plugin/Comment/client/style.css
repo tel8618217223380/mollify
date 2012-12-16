@@ -183,7 +183,7 @@
 
 #new-comment-container {
 	float: left;
-	width: 100%;
+	/*width: 100%;*/
 }
 
 #new-comment {
@@ -197,8 +197,8 @@
 }
 
 #new-comment-text {
-	float: left;
-	margin: 4px 12px 4px 4px;
+	/*float: left;*/
+	/*margin: 4px 12px 4px 4px;*/
 }
 
 #comments-dialog-add-text {
@@ -209,6 +209,6 @@
 }
 
 #comments-dialog-add {
-	float: right;
-	margin: 4px 8px 4px 4px;
+	/*float: right;
+	margin: 4px 8px 4px 4px;*/
 }
