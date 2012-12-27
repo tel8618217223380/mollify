@@ -117,24 +117,29 @@
 	display: block;
 }
 
-.comment-info {
-	font-family: "Arial";
-	float: right;
-}
-
 .comment-header {
   position: absolute;
   top: -1px;
-  left: -1px;
+  left: 1px;
   padding: 3px 7px;
   font-size: 10px;
   background-color: #eff2f5;
   border: 1px solid #ddd;
   color: #9da0a4;
-  -webkit-border-radius: 4px 0 4px 0;
-     -moz-border-radius: 4px 0 4px 0;
-          border-radius: 4px 0 4px 0;
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
    font-family: "Arial";
+}
+
+.comment-icon {
+	float: left;	
+}
+
+.comment-info {
+	font-family: "Arial";
+	float: left;
+	margin-top: 2px;
 }
 
 .comment-tools {
@@ -160,7 +165,7 @@
 
 .comment-text {
 	clear: left;
-	padding-top: 4px;
+	padding-top: 22px;
 	font-size: 12px;
 	font-family: "Arial";
 }

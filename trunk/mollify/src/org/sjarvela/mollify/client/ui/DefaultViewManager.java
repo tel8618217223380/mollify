@@ -83,9 +83,9 @@ public class DefaultViewManager implements ViewManager {
 		return contentPanel;
 	}
 
-	public Panel getHiddenPanel() {
-		return hiddenPanel;
-	}
+//	public Panel getHiddenPanel() {
+//		return hiddenPanel;
+//	}
 
 	// public void openView(Widget view) {
 	// empty();
@@ -97,10 +97,10 @@ public class DefaultViewManager implements ViewManager {
 	// }
 
 	public void empty() {
-		if (!contentPanel.isAttached())
-			return;
-		contentPanel.clear();
-		contentPanel.getElement().setInnerHTML("");
+//		if (!contentPanel.isAttached())
+//			return;
+//		contentPanel.clear();
+//		contentPanel.getElement().setInnerHTML("");
 	}
 
 	private Panel createHiddenPanel() {
@@ -142,12 +142,13 @@ public class DefaultViewManager implements ViewManager {
 	}
 
 	public void showPlainError(String error) {
-		empty();
-		contentPanel.add(new HTML(error));
+//		empty();
+		Document.get().getBody().setInnerHTML(error);
+//		contentPanel.add(new HTML(error));
 	}
 
 	public void showErrorInMainView(String title, ServiceError error) {
-		empty();
+//		empty();
 
 		StringBuilder errorHtml = new StringBuilder();
 		errorHtml
@@ -169,7 +170,8 @@ public class DefaultViewManager implements ViewManager {
 		}
 		errorHtml.append("</span>");
 
-		contentPanel.add(new HTML(errorHtml.toString()));
+		Document.get().getBody().setInnerHTML(errorHtml.toString());
+//		contentPanel.add(new HTML(errorHtml.toString()));
 	}
 
 	// @Override

@@ -280,7 +280,7 @@
 			return (t.ui._activePopup && t.ui._activePopup.id == id);
 		},
 		removeActivePopup : function(id) {
-			if (!t.ui.isActivePopup(id)) return;
+			if (!id || !t.ui.isActivePopup(id)) return;
 			t.ui._activePopup = false;
 		},
 		
@@ -1347,6 +1347,8 @@ $.extend(true, mollify, {
 			
 			this.updateCommentCount = function(item, count) {
 				var e = document.getElementById("item-comment-count-"+item.id);
+				if (!e) return;
+				
 				if (count < 1) {
 					e.innerHTML = '';
 					e.setAttribute('class', 'filelist-item-comment-count-none');
