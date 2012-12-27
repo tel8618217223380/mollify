@@ -16,7 +16,10 @@
 
 <script id="comment-template" type="text/x-jquery-tmpl"> 
 	<div id="comment-${id}" class="comment-content">
-		<div class="comment-icon"><i class="icon-comment-alt"></i></div>
+		<div class="comment-header">
+			<div class="comment-icon"><i class="icon-comment-alt"></i></div>
+			<span class="comment-info">${username} ${time}</span>
+		</div>
 		{{if remove}}
 		<div class="comment-tools">
 			<a class="link comment-remove-action" href="#"><i class="icon-remove"></i></a>
@@ -24,7 +27,7 @@
 		{{/if}}
 		<blockquote>
 			<p class="comment-text">{{html comment}}</p>
-			<small class="comment-info">${username} ${time}</small>
+			<!--small class="comment-info">${username} ${time}</small-->
 		</blockquote>
 	</div>
 </script>

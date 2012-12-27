@@ -879,6 +879,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	background-color: #ffffff;
 }
 
+#mollify-itemcontext-details-selectors {
+	margin-bottom: 0;
+}
+
 #mollify-itemcontext-details-content {
 	height: 240px;
 	border-left: 1px solid #DDD;

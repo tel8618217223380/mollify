@@ -194,7 +194,7 @@
 			};
 		
 			this.onFolderSelected = function(f) {
-				mollify.ui._hideActivePopup();
+				mollify.ui.hideActivePopup();
 				that.listener.onSubFolderSelected(f);
 			};
 			
@@ -365,7 +365,10 @@
 			
 			this.showActionMenu = function(item, c) {
 				c.addClass("open");
-				var popup = mollify.ui.controls.popupmenu({ element: c, onHide: function() { c.removeClass("open"); that.itemWidget.removeHover(); }});
+				var popup = mollify.ui.controls.popupmenu({ element: c, onHide: function() {
+					c.removeClass("open");
+					that.itemWidget.removeHover();
+				}});
 				
 				that.getItemActions(item, function(a) {
 					if (!a) {

@@ -40,6 +40,6 @@ public interface ViewManager {
 
 	RootPanel getRootPanel();
 
-	Panel getHiddenPanel();
+//	Panel getHiddenPanel();
 
 }
