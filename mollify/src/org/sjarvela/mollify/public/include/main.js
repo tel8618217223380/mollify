@@ -562,21 +562,34 @@
 				if (pluginData) {
 					var $selectors = $("#mollify-itemcontext-details-selectors");
 					var $content = $("#mollify-itemcontext-details-content");
+					var contents = {};
 					var onSelectDetails = function(id) {
 						$(".mollify-itemcontext-details-selector").removeClass("active");
 						$("#mollify-itemcontext-details-selector-"+id).addClass("active");
-						pluginData[id].details["on-render"](tip, $content.empty(), cache[id]);
+						$content.find(".mollify-itemcontext-plugin-content").hide();
+						
+						var $c = contents[id] ? contents[id] : false;
+						if (!$c) {
+							$c = $('<div class="mollify-itemcontext-plugin-content"></div>');
+							pluginData[id].details["on-render"](tip, $c);
+							contents[id] = $c;
+							$content.append($c);
+						}
+												
+						$c.show();
 					};
 					var firstPlugin = false;
-					var cache = {};
 					for (var id in pluginData) {
 						var data = pluginData[id];
 						if (!data.details) continue;
 						
 						if (!firstPlugin) firstPlugin = id;
-						cache[id] = {};
+
 						var title = data.details.title ? data.details.title : (data.details["title-key"] ? mollify.ui.texts.get(data.details["title-key"]) : id);
-						var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {id: id, title:title, data: data}).appendTo($selectors).click(function() { onSelectDetails(id); });
+						var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {id: id, title:title, data: data}).appendTo($selectors).click(function() {
+							var s = $(this).tmplItem().data;
+							onSelectDetails(s.id);
+						});
 					}
 					/*$e.find(".mollify-itemcontext-details-selector").hover(function() {
 						$(this).addClass("hover");

@@ -33,15 +33,8 @@
 		<path refid="gwt-dev.classpath" />
 		<pathelement location="${src.dir}" />
 		<pathelement location="${build.dir}" />
-		<pathelement location="${lib.dir}/aopalliance.jar" />
-		<pathelement location="${lib.dir}/gin.jar" />
-		<pathelement location="${lib.dir}/guice.jar" />
-		<pathelement location="${lib.dir}/guice-assistedinject.jar" />
-		<pathelement location="${lib.dir}/javax.inject.jar" />
 		<pathelement location="${lib.dir}/gwt-log-2.6.2.jar" />
 		<pathelement location="${lib.dir}/junit-4.6.jar" />
-		<pathelement location="${lib.dir}/swfupload-gwt-1.1.jar" />
-		<pathelement location="${lib.dir}/gwt-dnd-r1015.jar" />
 	</path>
 
 	<path id="test.src.path" path="${test.src.dir}" />
@@ -230,11 +223,11 @@
 			<fileset dir="${build.dir}/${public.module.name}" />
 		</copy>
 		
-		<java failonerror="true" fork="true" jar="${lib.dir}/yuicompressor-2.4.7.jar">
+		<!--java failonerror="true" fork="true" jar="${lib.dir}/yuicompressor-2.4.7.jar">
 			<arg value="${target.dir}/mollify/client/init.js" />
 			<arg value="-o" />
 			<arg value="${target.dir}/mollify/client/init.js" />
-		</java>
+		</java-->
 		
 		<zip destfile="${deploy.dir}/${deploy.package.name}.zip" basedir="${target.dir}" />
 

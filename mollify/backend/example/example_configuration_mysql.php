@@ -10,15 +10,15 @@
 	 */
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
-	
-	$CONFIGURATION_TYPE = 'mysql';
-	
-	$DB_HOST = "localhost";		/* optional, default is "localhost" */
-	$DB_DATABASE = "mollify";	/* optional, default is "mollify" */
-	$DB_USER = "mollify";
-	$DB_PASSWORD = "mollify";
 
 	$SETTINGS = array(
+		"db" => array(
+			"type" => "mysql",
+			"database" => "mollify",
+			"user" => "mollify",
+			"password" => "mollify",
+			"charset" => "utf8"
+		),
 		"timezone" => "Europe/Helsinki"	// change this to match your timezone
 	);
 

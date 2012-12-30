@@ -1220,6 +1220,83 @@ $.extend(true, mollify, {
 });
 
 /**
+/* Item details plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		ItemDetailsPlugin: function(conf, sp) {
+			var that = this;
+			that.specs = {};
+			that.typeConfs = false;
+			
+			this.initialize = function(core) {
+				that.core = core;
+				
+				if (sp) {
+					for (var i=0; i<sp.length;i++)
+						that.addDetailsSpec(sp[i]);
+				}
+				if (conf) {
+					that.typeConfs = {};
+					
+					for (var t in conf) {
+						var parts = t.split(",");
+						var c = conf[t];
+						for (var i=0; i < parts.length; i++) {
+							var p = parts[i].trim();
+							if (p.length > 0)
+								that.typeConfs[p] = c;
+						}
+					}
+				}
+			};
+			
+			this.addDetailsSpec = function(s) {
+				if (!s || !s.key) return;
+				that.specs[s.key] = s;
+			}
+			
+			this.getApplicableSpec = function(item) {
+				var ext = item.is_file ? item.extension.toLowerCase().trim() : "";
+				if (ext.length == 0 || !that.typeConfs[ext]) {
+					ext = item.is_file ? "[file]" : "[folder]";
+					if (!that.typeConfs[ext])
+						return that.typeConfs["*"];
+				}
+				return that.typeConfs[ext];
+			}
+			
+			this.renderItemContextDetails = function(el, item, $content) {
+				$content.addClass("loading");
+				mollify.templates.load("itemdetails-content", mollify.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html")), function() {
+					$content.removeClass("loading");
+					that.renderItemDetails(el, item, {element: $content.empty()});
+				});
+			};
+			
+			this.renderItemDetails = function(el, item, o) {
+				o.element.html("foo");
+			};
+			
+			return {
+				id: "plugin-itemdetails",
+				initialize: that.initialize,
+				itemContextData : function(item, data) {
+					if (!that.typeConfs || !that.getApplicableSpec(item)) return false;
+					
+					return {
+						details: {
+							"title-key": "pluginItemDetailsContextTitle",
+							"on-render": function(el, $content, cache) { that.renderItemContextDetails(el, item, $content); }
+						}
+					};
+				}
+			};
+		}
+	}
+});
+
+/**
 /* Comment plugin
 /**/
 $.extend(true, mollify, {
@@ -1263,18 +1340,13 @@ $.extend(true, mollify, {
 				return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 			};
 			
-			this.renderItemContextDetails = function(el, item, $content, cache) {
+			this.renderItemContextDetails = function(el, item, $content) {
 				$content.addClass("loading");
 				mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 					$content.removeClass("loading");
-					if (!cache.comments) {	
-						that.loadComments(item, function(item, comments) {
-							cache.comments = comments;
-							that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
-						});
-					} else {
-						that.renderItemContextComments(el, item, cache.comments, {element: $content.empty(), contentTemplate: 'comments-template'});	
-					}
+					that.loadComments(item, function(item, comments) {
+						that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
+					});
 				});
 			};
 			
@@ -1359,24 +1431,6 @@ $.extend(true, mollify, {
 			};
 			
 			this.updateComments = function($list, item, comments) {
-				/*if (comments.length == 0) {
-					$("#comments-list").html('<span class="message">'+mollify.ui.texts.get("commentsDialogNoComments")+'</span>');
-					return;
-				}
-				
-				mollify.dom.template("comment-template", comments).appendTo($("#comments-list").empty());
-				mollify.ui.handlers.localize(o.element);
-				
-				$(".comment-content").hover(
-					function () { $(this).addClass("hover"); }, 
-					function () { $(this).removeClass("hover"); }
-				);
-				$(".comment-remove-action").click(function(e) {
-					e.preventDefault();
-					var comment = $(this).tmplItem().data
-					that.onRemoveComment(item, comment.id);
-				});*/
-
 				$list.removeClass("loading");
 				
 				if (comments.length == 0) {
@@ -1410,7 +1464,7 @@ $.extend(true, mollify, {
 						]
 					};
 				}
-			}
+			};
 		}
 	}
 });
