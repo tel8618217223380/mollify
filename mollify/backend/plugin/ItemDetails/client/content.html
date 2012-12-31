@@ -1,11 +1,12 @@
-<div id="mollify-file-item-details-content">
-</div>
-
-<script id="item-details-template" type="text/x-jquery-tmpl"> 
-	<div id='mollify-file-item-details-row-${key}' class='mollify-file-item-details-row'>
-		<div class='mollify-file-item-details-row-label'>${title}</div>
-		<div class='mollify-file-item-details-row-value-container'>
-			<div class='mollify-file-item-details-row-value'>{{html value}}</div>
+<script id="itemdetails-template" type="text/x-jquery-tmpl">
+	<div id="mollify-itemdetails-content">
+		{{each rows}}
+		<div id='mollify-itemdetails-row-${key}' class='mollify-file-item-details-row'>
+			<div class='mollify-itemdetails-row-label'>${$value.title}</div>
+			<div class='mollify-itemdetails-row-value-container'>
+				<div class='mollify-itemdetails-row-value'>{{html $value.value}}</div>
+			</div>
 		</div>
+		{{/each}}
 	</div>
 </script>

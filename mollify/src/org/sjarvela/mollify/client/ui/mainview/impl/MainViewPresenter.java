@@ -187,10 +187,10 @@ public class MainViewPresenter implements MainViewListener,
 
 	@Override
 	public void getItemDetails(final JsFilesystemItem item,
-			final JavaScriptObject callback) {
+			final JavaScriptObject requestData, final JavaScriptObject callback) {
 		fileSystemService.getItemDetails(
 				item,
-				null,
+				requestData,
 				createItemDetailsListener(item,
 						new ResultCallback<ItemDetails>() {
 							@Override

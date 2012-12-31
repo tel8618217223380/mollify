@@ -17,7 +17,7 @@
 			foreach($this->getSettings() as $p)
 				$this->initProvider($p);
 
-			$this->env->filesystem()->registerItemContextPlugin("itemdetails", $this);
+			$this->env->filesystem()->registerItemContextPlugin("plugin-itemdetails", $this);
 		}
 		
 		private function initProvider($p) {
