@@ -170,11 +170,24 @@
 			return t.service.pluginUrl(id)+"client/"+p;
 		};
 		
-		this.getItemContextData = function(item, d) {
+		this.getItemContextRequestData = function(item) {
+			var requestData = {};
+			for (var id in pl.list) {
+				var plugin = pl.list[id];
+				if (!plugin.itemContextRequestData) continue;
+				var data = plugin.itemContextRequestData(item);
+				if (!data) continue;
+				requestData[id] = data;
+			}
+			return requestData;
+		};
+		
+		this.getItemContextPlugins = function(item, d) {
 			var data = {};
 			for (var id in pl.list) {
 				var plugin = pl.list[id];
-				var pluginData = plugin.itemContextData(item, d);
+				if (!plugin.itemContextHandler) continue;
+				var pluginData = plugin.itemContextHandler(item, d);
 				if (pluginData) data[id] = pluginData;
 			}
 			return data;
@@ -1266,28 +1279,81 @@ $.extend(true, mollify, {
 				return that.typeConfs[ext];
 			}
 			
-			this.renderItemContextDetails = function(el, item, $content) {
+			this.renderItemContextDetails = function(el, item, $content, data) {
 				$content.addClass("loading");
 				mollify.templates.load("itemdetails-content", mollify.noncachedUrl(mollify.plugins.url("ItemDetails", "content.html")), function() {
 					$content.removeClass("loading");
-					that.renderItemDetails(el, item, {element: $content.empty()});
+					that.renderItemDetails(el, item, {element: $content.empty(), data: data});
 				});
 			};
 			
 			this.renderItemDetails = function(el, item, o) {
-				o.element.html("foo");
+				var s = that.getApplicableSpec(item);
+				var data = [];
+				for (var k in s) {
+					var rowSpec = s[k];
+					var rowData = o.data[k];
+					if (!rowData) continue;
+					
+					data.push({key:k, title:that.getTitle(k, rowSpec), value: that.formatData(k, rowData)});
+				}
+				$("#itemdetails-template").tmpl({rows:data}).appendTo(o.element);
+			};
+			
+			this.getTitle = function(dataKey, rowSpec) {
+				if (rowSpec.title) return rowSpec.title;
+				if (rowSpec["title-key"]) return mollify.ui.texts.get(rowSpec["title-key"]);
+		
+				if (dataKey == 'name') return mollify.ui.texts.get('fileItemContextDataName');
+				if (dataKey == 'size') return mollify.ui.texts.get('fileItemContextDataSize');
+				if (dataKey == 'path') return mollify.ui.texts.get('fileItemContextDataPath');
+				if (dataKey == 'extension') return mollify.ui.texts.get('fileItemContextDataExtension');
+				if (dataKey == 'last-modified') return mollify.ui.texts.get('fileItemContextDataLastModified');
+				if (dataKey == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSize');
+				
+				if (that.specs[dataKey]) {
+					var spec = that.specs[dataKey];
+					if (spec.title) return spec.title;
+					if (spec["title-key"]) return mollify.ui.texts.get(spec["title-key"]);
+				}
+				return dataKey;
+			};
+			
+			this.formatData = function(key, data) {
+				if (key == 'size') return mollify.ui.texts.formatSize(data);
+				if (key == 'last-modified') return mollify.ui.texts.formatInternalTime(data);
+				if (key == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSizePixels', [data]);
+				
+				if (that.specs[key]) {
+					var spec = that.specs[key];
+					if (spec.formatter) return spec.formatter(data);
+				}
+		
+				return data;
 			};
 			
 			return {
 				id: "plugin-itemdetails",
 				initialize: that.initialize,
-				itemContextData : function(item, data) {
-					if (!that.typeConfs || !that.getApplicableSpec(item)) return false;
+				itemContextRequestData : function(item) {
+					if (!that.typeConfs) return false;
+					var spec = that.getApplicableSpec(item);
+					if (!spec) return false;
+					
+					var data = [];
+					for (var k in spec)
+						data.push(k);
+					return data;
+				},
+				itemContextHandler : function(item, data) {
+					if (!data || !that.typeConfs) return false;
+					var spec = that.getApplicableSpec(item);
+					if (!spec) return false;
 					
 					return {
 						details: {
 							"title-key": "pluginItemDetailsContextTitle",
-							"on-render": function(el, $content, cache) { that.renderItemContextDetails(el, item, $content); }
+							"on-render": function(el, $content, data) { that.renderItemContextDetails(el, item, $content, data); }
 						}
 					};
 				}
@@ -1340,13 +1406,17 @@ $.extend(true, mollify, {
 				return "<div id='item-comment-count-"+item.id+"' class='filelist-item-comment-count'>"+counts[item.id]+"</div>";
 			};
 			
-			this.renderItemContextDetails = function(el, item, $content) {
+			this.renderItemContextDetails = function(el, item, $content, data) {
 				$content.addClass("loading");
 				mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 					$content.removeClass("loading");
-					that.loadComments(item, function(item, comments) {
-						that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
-					});
+					if (data.count == 0) {
+						that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
+					} else {
+						that.loadComments(item, function(item, comments) {
+							that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
+						});
+					}
 				});
 			};
 			
@@ -1453,11 +1523,11 @@ $.extend(true, mollify, {
 			return {
 				id: "plugin-comment",
 				initialize: that.initialize,
-				itemContextData : function(item, data) {
+				itemContextHandler : function(item, data) {
 					return {
 						details: {
 							"title-key": "pluginCommentContextTitle",
-							"on-render": function(el, $content, cache) { that.renderItemContextDetails(el, item, $content, cache); }
+							"on-render": function(el, $content, data) { that.renderItemContextDetails(el, item, $content, data); }
 						},
 						actions: [
 							{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }

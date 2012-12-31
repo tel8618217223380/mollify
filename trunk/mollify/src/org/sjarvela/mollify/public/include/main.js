@@ -391,14 +391,14 @@
 				});
 			};
 			
-			this.addPluginActions = function(actions, pluginData) {
+			this.addPluginActions = function(actions, plugins) {
 				var list = actions;
-				if (pluginData) {
-					for (var id in pluginData) {
-						var pd = pluginData[id];
-						if (pd.actions) {
+				if (plugins) {
+					for (var id in plugins) {
+						var p = plugins[id];
+						if (p.actions) {
 							list.push({title:"-"});
-							$.merge(list, pd.actions);
+							$.merge(list, p.actions);
 						}
 					}
 				}
@@ -441,7 +441,7 @@
 						var $el = $("#mollify-itemcontext-"+item.id);
 						var $content = $el.find(".mollify-itemcontext-content");
 						
-						that.listener.getItemDetails(item, function(a) {
+						that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
 							if (!a) {
 								$t.hide();
 								return;
@@ -510,8 +510,8 @@
 				//TODO permissions to edit descriptions
 				var descriptionEditable = showDescription && mollify.session.admin;
 				
-				var pluginData = mollify.plugins.getItemContextData(item, details);
-				var actions = that.addPluginActions(d[1], pluginData);
+				var plugins = mollify.plugins.getItemContextPlugins(item, details);
+				var actions = that.addPluginActions(d[1], plugins);
 				var primaryActions = that.getPrimaryActions(actions);
 				
 				/*if (primaryActionIndex >= 0) {
@@ -524,7 +524,7 @@
 					}
 					if (i > 0) secondaryActions.splice(0,i);
 				}*/
-				var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: pluginData};
+				var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: plugins};
 				
 				$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
 				$e.click(function(e){
@@ -559,7 +559,7 @@
 					//$("#mollify-itemcontext-primary-actions").hide();
 				}
 				
-				if (pluginData) {
+				if (plugins) {
 					var $selectors = $("#mollify-itemcontext-details-selectors");
 					var $content = $("#mollify-itemcontext-details-content");
 					var contents = {};
@@ -571,7 +571,7 @@
 						var $c = contents[id] ? contents[id] : false;
 						if (!$c) {
 							$c = $('<div class="mollify-itemcontext-plugin-content"></div>');
-							pluginData[id].details["on-render"](tip, $c);
+							plugins[id].details["on-render"](tip, $c, details.plugins[id]);
 							contents[id] = $c;
 							$content.append($c);
 						}
@@ -579,14 +579,14 @@
 						$c.show();
 					};
 					var firstPlugin = false;
-					for (var id in pluginData) {
-						var data = pluginData[id];
-						if (!data.details) continue;
+					for (var id in plugins) {
+						var plugin = plugins[id];
+						if (!plugin.details) continue;
 						
 						if (!firstPlugin) firstPlugin = id;
 
-						var title = data.details.title ? data.details.title : (data.details["title-key"] ? mollify.ui.texts.get(data.details["title-key"]) : id);
-						var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {id: id, title:title, data: data}).appendTo($selectors).click(function() {
+						var title = plugin.details.title ? plugin.details.title : (plugin.details["title-key"] ? mollify.ui.texts.get(plugin.details["title-key"]) : id);
+						var selector = mollify.dom.template("mollify-tmpl-main-itemcontext-details-selector", {id: id, title:title, data: plugin}).appendTo($selectors).click(function() {
 							var s = $(this).tmplItem().data;
 							onSelectDetails(s.id);
 						});
