@@ -1270,7 +1270,7 @@ $.extend(true, mollify, {
 			}
 			
 			this.getApplicableSpec = function(item) {
-				var ext = item.is_file ? item.extension.toLowerCase().trim() : "";
+				var ext = (item.is_file && item.extension) ? item.extension.toLowerCase().trim() : "";
 				if (ext.length == 0 || !that.typeConfs[ext]) {
 					ext = item.is_file ? "[file]" : "[folder]";
 					if (!that.typeConfs[ext])
