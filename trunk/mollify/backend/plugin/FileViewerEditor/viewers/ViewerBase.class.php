@@ -27,7 +27,7 @@
 			return $this->env->request();
 		}
 
-		protected function getDataUrl($item, $p, $fullUrl = FALSE) {
+		protected function getDataUrl($item, $p, $fullUrl = TRUE) {
 			return $this->env->getViewServiceUrl($item, array("data", $p), $fullUrl);
 		}
 				

@@ -187,7 +187,7 @@
 			for (var id in pl.list) {
 				var plugin = pl.list[id];
 				if (!plugin.itemContextHandler) continue;
-				var pluginData = plugin.itemContextHandler(item, d);
+				var pluginData = plugin.itemContextHandler(item, d, d.plugins[id]);
 				if (pluginData) data[id] = pluginData;
 			}
 			return data;
@@ -1345,7 +1345,7 @@ $.extend(true, mollify, {
 						data.push(k);
 					return data;
 				},
-				itemContextHandler : function(item, data) {
+				itemContextHandler : function(item, details, data) {
 					if (!data || !that.typeConfs) return false;
 					var spec = that.getApplicableSpec(item);
 					if (!spec) return false;
@@ -1353,7 +1353,9 @@ $.extend(true, mollify, {
 					return {
 						details: {
 							"title-key": "pluginItemDetailsContextTitle",
-							"on-render": function(el, $content, data) { that.renderItemContextDetails(el, item, $content, data); }
+							"on-render": function(el, $content) {
+								that.renderItemContextDetails(el, item, $content, data);
+							}
 						}
 					};
 				}
@@ -1361,6 +1363,140 @@ $.extend(true, mollify, {
 		}
 	}
 });
+
+/**
+/* File viewer editor plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		FileViewerEditorPlugin: function() {
+			var that = this;
+			
+			this.initialize = function(core) {
+				that.core = core;
+			};
+				
+			this.onView = function(item, all, spec) {
+				var loaded = {};
+				var list = [{
+					embedded: spec.embedded,
+					full: spec.full,
+					item: item
+				}];
+				var init = list[0];
+				var visible = false;
+				init.init = true;
+				
+				var $lb;
+				var $lbc;
+				var resize = function() {
+					$lbc.css({
+						"max-width": ($(window).width()-100)+"px",
+						"max-height": ($(window).height()-100)+"px"
+					});
+					$lb.lightbox('center');
+				};
+				$(window).resize(resize);
+				var load = function(itm) {
+					var id = itm.item.id;
+					if (loaded[id]) return;
+					$.ajax({
+						type: 'GET',
+						url: itm.embedded
+					}).done(function(data) {
+						loaded[id] = true;
+						
+						var $ic = $("#mollify-fileviewereditor-viewer-item-"+id).find(".mollify-fileviewereditor-viewer-item-content");
+						$ic.removeClass("loading").html(data.result.html);
+						if (data.result.size) {
+							var sp = data.result.size.split(';');
+							$("#"+data.result["resized-element-id"]).css({
+								"width": sp[0]+"px",
+								"height": sp[1]+"px"
+							});
+						}
+						
+						// if img, wait until it is loaded
+						var $img = $ic.find('img:first');
+						if ($img.length > 0) {
+							$img.one('load', function() {
+								var w = $img.width();
+								if (!data.result.size && w > 0)
+									$img.css({
+										"width": w+"px",
+										"height": $img.height()+"px"
+									});
+								resize();
+							});
+						} else {
+							resize();
+						}
+						
+						if (!visible) {
+							$lb.lightbox('show');
+							visible = true;
+						}
+					});
+				};
+				
+				var $v = mollify.dom.template("mollify-tmpl-fileviewereditor-popup", {
+					items : list
+				}, {
+					content: function(i) {
+						return i.content;
+					}
+				}).appendTo($("body"));
+				
+				$lb = $v.lightbox({backdrop: true, resizeToFit: false, show: false});
+				$lb.find("button.close").click(function(){
+					$lb.lightbox('hide');
+					$v.remove();
+				});
+				$lbc = $lb.find(".carousel-inner");
+				
+				$c = $v.find(".carousel").carousel({interval: false}).on('slid', function() {
+					alert("slid");
+					var $active = $v.find(".mollify-fileviewereditor-viewer-item.active");
+					load($active.tmplItem().data);
+				});
+				$c.find(".carousel-control").click(function() {
+					if ($(this).hasClass("left")) $c.carousel('prev');
+					else $c.carousel('next');
+				});
+				load(init);
+			};
+						
+			return {
+				id: "plugin-fileviewereditor",
+				initialize: that.initialize,
+				itemContextHandler : function(item, details, data) {
+					if (!data) return false;
+					
+					var previewerAvailable = !!data.preview;
+					var viewerAvailable = !!data.view;
+					var editorAvailable = false;	//TODO
+					
+					var result = {};
+					if (previewerAvailable) {
+						//result.details = {
+							
+						//};
+					}
+					//TODO preview
+					if (viewerAvailable) {
+						result.actions = [
+							{ id: 'pluginFileViewerEditorView', title: 'pluginFileViewerEditorView', type:"primary", callback: function() {
+								that.onView(item, [], data.view);
+							}}
+						];
+					}
+					return result;
+				}
+			};
+		}
+	}
+});
+
 
 /**
 /* Comment plugin
@@ -1515,7 +1651,7 @@ $.extend(true, mollify, {
 				);
 				$list.find(".comment-remove-action").click(function(e) {
 					e.preventDefault();
-					var comment = $(this).tmplItem().data
+					var comment = $(this).tmplItem().data;
 					that.onRemoveComment($list, item, comment.id);
 				});
 			};

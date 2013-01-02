@@ -191,8 +191,14 @@
 	</div>
 	{{/if}}
 	<div id="mollify-itemcontext-actions" class="btn-toolbar">
+		{{if primaryActions}}
+		{{each primaryActions}}
 		<div id="mollify-itemcontext-primary-actions" class="btn-group">
+			<button class="mollify-itemcontext-primary-actions-button btn btn-primary">${$item.title($value)}</button>
 		</div>
+		{{/each}}
+		{{/if}}
+		
 		<div class="btn-group">
 			<li id="mollify-itemcontext-secondary-actions">
 				<button class="btn dropdown-toggle localized" text-key="secondaryActions">&nbsp;<b class="caret"></b></button>
@@ -207,16 +213,38 @@
 	</div>
 </script>
 
-<script id="mollify-tmpl-main-itemcontext-primaryaction" type="text/x-jquery-tmpl">
-	<button id="mollify-itemcontext-primary-actions-button" class="btn btn-primary">${$item.title()}</button>
-</script>
-
 <script id="mollify-tmpl-main-itemcontext-details-section" type="text/x-jquery-tmpl">
 	<div id="mollify-itemcontext-details-${id}" class="mollify-itemcontext-details">
-		foo
 	</div>
 </script>
 
 <script id="mollify-tmpl-main-itemcontext-details-selector" type="text/x-jquery-tmpl">
 	<li id="mollify-itemcontext-details-selector-${id}" class="mollify-itemcontext-details-selector"><a href="javascript: void(0);">${title}</a></li>
+</script>
+
+<script id="mollify-tmpl-fileviewereditor-popup" type="text/x-jquery-tmpl">
+	<div class="lightbox hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class='lightbox-header'>
+			<button type="button" class="close" aria-hidden="true">&times;</button>
+		</div>
+		<div class='lightbox-content'>
+			<div class="carousel slide">
+			  <div class="carousel-inner">
+			  	{{each items}}
+			    	<div id="mollify-fileviewereditor-viewer-item-${$value.item.id}" class="mollify-fileviewereditor-viewer-item item {{if $value.init}}active{{/if}}">
+			    		<div class="mollify-fileviewereditor-viewer-item-content loading">
+			    		</div>
+			    		<!--div class="carousel-caption">
+			    			<h4>${$value.item.name}</h4>
+			    		</div-->
+			    	</div>
+			    {{/each}}
+			  </div>
+			  {{if ($item.data.items.length > 1)}}
+			  <a class="carousel-control left" href="javascript: void(0);">&lsaquo;</a>
+			  <a class="carousel-control right" href="javascript: void(0);">&rsaquo;</a>
+			  {{/if}}
+			</div>
+		</div>
+	</div>
 </script>

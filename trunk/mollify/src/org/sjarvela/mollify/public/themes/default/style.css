@@ -983,3 +983,13 @@ li.dropdown-item {
 .mollify-folderselector-folder.root > .mollify-folderselector-folder-name {
 	font-weight: bold;
 }
+
+.mollify-fileviewereditor-viewer-item {
+	
+}
+
+.mollify-fileviewereditor-viewer-item-content {
+	overflow: auto;
+	min-width: 100px;
+	min-height: 100px;
+}

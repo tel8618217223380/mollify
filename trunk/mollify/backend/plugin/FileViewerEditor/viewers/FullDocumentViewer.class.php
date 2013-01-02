@@ -35,7 +35,7 @@
 			 
 			$this->response()->success(array(
 				"html" => $html,
-				"resized_element_id" => "viewer-frame",
+				"resized-element-id" => "viewer-frame",
 				"size" => $size[0].";".$size[1]
 			));
 		}
