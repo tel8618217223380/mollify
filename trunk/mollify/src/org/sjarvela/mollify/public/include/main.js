@@ -295,8 +295,10 @@
 				var p = $("#mollify-folder-hierarchy");
 				
 				mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items).appendTo(p);
-				//$("#mollify-folder-hierarchy-root").click(that.listener.onHomeSelected);
+				
 				var rootItems = [{'title-key':"foo", callback: function(){}}];
+				//TODO root items
+				
 				mollify.ui.controls.dropdown({
 					element: $("#mollify-folder-hierarchy-item-root"),
 					items: rootItems,
@@ -305,7 +307,8 @@
 				});
 				$(".mollify-folder-hierarchy-item").click(function() {
 					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
-					that.listener.onFolderSelected(index, h[index]);
+					var folder = h[index];
+					that.listener.onFolderSelected(index+1, folder);
 				});
 			};
 			
@@ -379,14 +382,14 @@
 			};
 			
 			this.getItemActions = function(item, cb) {
-				that.listener.getItemDetails(item, function(a) {
+				that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
 					if (!a) {
 						cb([]);
 						return;
 					}
 					var coreActions = a[1];
-					var pluginData = mollify.plugins.getItemContextData(item, a[0]);
-					cb(that.addPluginActions(a[1], pluginData));
+					var plugins = mollify.plugins.getItemContextPlugins(item, a[0]);
+					cb(that.addPluginActions(a[1], plugins));
 				});
 			};
 			
