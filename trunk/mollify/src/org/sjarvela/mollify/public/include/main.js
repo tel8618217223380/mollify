@@ -438,7 +438,7 @@
 				var last = -1;
 				for (var i=actions.length-1,j=0; i>=j; i--) {
 					var a = actions[i];
-					if ((a.type != 'separator' && a.title != '-')) {
+					if (a.type != 'separator' && a.title != '-') {
 						last = i;
 						break;
 					}
@@ -448,12 +448,21 @@
 				var first = -1;
 				for (var i=0; i<=last; i++) {
 					var a = actions[i];
-					if ((a.type != 'separator' && a.title != '-')) {
+					if (a.type != 'separator' && a.title != '-') {
 						first = i;
 						break;
 					}
 				}
-				return actions.splice(first, (last-first)+1);
+				actions = actions.splice(first, (last-first)+1);
+				var prevSeparator = false;
+				for (var i=actions.length-1,j=0; i>=j; i--) {
+					var a = actions[i];
+					var separator = (a.type == 'separator' || a.title == '-');
+					if (separator && prevSeparator) actions.splice(i, 1);
+					prevSeparator = separator;
+				}
+				
+				return actions;
 			};
 			
 			this.openItemContext = function(item, e) {
