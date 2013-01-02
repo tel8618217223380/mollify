@@ -76,9 +76,12 @@
 	<div id="mollify-folder-tools" class="btn-toolbar"></div>
 	<ul id="mollify-folder-hierarchy" class="breadcrumb">
 		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
-		<!--span class="folder-hierarchy-separator">&nbsp;&gt;&nbsp;</span><span id="folder-hierarchy-item-${id}" class="folder-hierarchy-item">${name}</span-->
 	</ul>
 	<div id="mollify-folder-name" class="mollify-folderview-title page-header"><h2>${folder.name}</h2></div>
+</script>
+
+<script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
+	<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
 </script>
 
 <script id="mollify-tmpl-main-foldertools-action" type="text/x-jquery-tmpl">
@@ -131,10 +134,6 @@
 
 <script id="mollify-tmpl-main-rootfolders" type="text/x-jquery-tmpl">
 	<span class="mollify-folderview-title localized" text-key="mainViewRootsTitle"></span>
-</script>
-
-<script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
-	<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
 </script>
 
 <script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">
