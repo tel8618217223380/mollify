@@ -290,21 +290,26 @@
 			};
 						
 			this.setupHierarchy = function(h) {
-				var items = h;//$.merge([{id: 'root', name: ''}], h);
+				var items = h;
+				var p = $("#mollify-folder-hierarchy").append(mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items));
 				
-				var p = $("#mollify-folder-hierarchy");
-				
-				mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items).appendTo(p);
-				
-				var rootItems = [{'title-key':"foo", callback: function(){}}];
-				//TODO root items
-				
+				var rootItems = [];
+				for(var i=0,j=that.roots.length; i<j;i++) {
+					var root = that.roots[i];
+					rootItems.push({
+						title: root.name,
+						callback: function(r) {
+							return function() { that.listener.onFolderSelected(1, r); };
+						}(root)
+					});
+				}
 				mollify.ui.controls.dropdown({
 					element: $("#mollify-folder-hierarchy-item-root"),
 					items: rootItems,
 					hideDelay: 0,
 					style: 'submenu'
 				});
+				
 				$(".mollify-folder-hierarchy-item").click(function() {
 					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
 					var folder = h[index];
