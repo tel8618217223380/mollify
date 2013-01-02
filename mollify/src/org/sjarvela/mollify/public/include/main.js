@@ -394,7 +394,7 @@
 					}
 					var coreActions = a[1];
 					var plugins = mollify.plugins.getItemContextPlugins(item, a[0]);
-					cb(that.addPluginActions(a[1], plugins));
+					cb(that.cleanupActions(that.addPluginActions(a[1], plugins)));
 				});
 			};
 			
@@ -404,7 +404,7 @@
 					for (var id in plugins) {
 						var p = plugins[id];
 						if (p.actions) {
-							list.push({title:"-"});
+							list.push({title:"-",type:'separator'});
 							$.merge(list, p.actions);
 						}
 					}
@@ -421,7 +421,41 @@
 				}
 				return result;
 			};
+
+			this.getSecondaryActions = function(actions) {
+				if (!actions) return [];
+				var result = [];
+				for (var i=0,j=actions.length; i<j; i++) {
+					var a = actions[i];
+					if (a.id == 'download' || a.type == 'primary') continue;
+					result.push(a);
+				}
+				return that.cleanupActions(result);
+			};
+			
+			this.cleanupActions = function(actions) {
+				if (!actions) return [];				
+				var last = -1;
+				for (var i=actions.length-1,j=0; i>=j; i--) {
+					var a = actions[i];
+					if ((a.type != 'separator' && a.title != '-')) {
+						last = i;
+						break;
+					}
+				}
+				if (last < 0) return [];
 				
+				var first = -1;
+				for (var i=0; i<=last; i++) {
+					var a = actions[i];
+					if ((a.type != 'separator' && a.title != '-')) {
+						first = i;
+						break;
+					}
+				}
+				return actions.splice(first, (last-first)+1);
+			};
+			
 			this.openItemContext = function(item, e) {
 				var popupId = "mainview-itemcontext-"+item.id;
 				if (mollify.ui.isActivePopup(popupId)) {
@@ -461,56 +495,9 @@
 					},
 					onhide: function($t) {
 						mollify.ui.removeActivePopup(popupId);
-						//e.popover('destroy');
 					}
 				});
 				e.popover('show');
-				/*that.itemContext = e.qtip({
-					content: html,
-					position: {
-						my: that.isListView() ? 'top left' : 'top center',
-						at: that.isListView() ? 'bottom left' : 'bottom center',
-					},
-					hide: {
-						delay: 1000,
-						fixed: true,
-						event: ''//'mouseleave'
-					},
-					style: {
-						widget: false,
-						tip: {
-							corner: true,
-							width: 20,
-							height: 20
-						},
-						classes: 'ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped mollify-itemcontext-popup mollify-popup'
-					},
-					events: {
-						render: function(e, api) {
-		
-						},
-						visible: function(e, api) {
-							var $t = $(this);
-							var $el = $("#mollify-itemcontext-"+item.id);
-							var $content = $el.find(".mollify-itemcontext-content");
-							
-							that.listener.getItemDetails(item, function(a) {
-								if (!a) {
-									api.hide();
-									return;
-								}
-								
-								that.renderItemContext(api, $content, item, a);
-							});
-						},
-						hide: function(e, api) {
-							that.itemContext = false;
-							api.destroy();
-						}
-					}
-				}).qtip('api');
-				
-				that.itemContext.show();*/
 			};
 			
 			this.renderItemContext = function(popupId, tip, $e, item, d) {
@@ -522,6 +509,7 @@
 				var plugins = mollify.plugins.getItemContextPlugins(item, details);
 				var actions = that.addPluginActions(d[1], plugins);
 				var primaryActions = that.getPrimaryActions(actions);
+				var secondaryActions = that.getSecondaryActions(actions);
 				
 				/*if (primaryActionIndex >= 0) {
 					primaryAction = secondaryActions[primaryActionIndex];
@@ -609,7 +597,7 @@
 				var actions = mollify.ui.controls.dropdown({
 					element: $e.find("#mollify-itemcontext-secondary-actions"),
 					parentPopupId: popupId,
-					items: actions,
+					items: secondaryActions,
 					hideDelay: 0,
 					style: 'submenu',
 					onItem: function() {
