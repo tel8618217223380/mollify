@@ -164,13 +164,13 @@
 			return $this->plugin->env()->request();
 		}
 		
-		public function getViewServiceUrl($item, $p, $fullUrl = FALSE) {
+		public function getViewServiceUrl($item, $p, $fullUrl = TRUE) {
 			$path = array($this->getUrlId($item->id()));
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("view", $path, $fullUrl);
 		}
 
-		public function getEditServiceUrl($item, $p, $fullUrl = FALSE) {
+		public function getEditServiceUrl($item, $p, $fullUrl = TRUE) {
 			$path = array($this->getUrlId($item->id()));
 			if ($p != NULL) $path = array_merge($path, $p);
 			return $this->getServiceUrl("edit", $path, $fullUrl);

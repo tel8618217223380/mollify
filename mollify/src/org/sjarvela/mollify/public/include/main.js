@@ -305,8 +305,7 @@
 				});
 				$(".mollify-folder-hierarchy-item").click(function() {
 					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
-					if (index == 0) return false;
-					that.listener.onFolderSelected(index, h[index-1]);
+					that.listener.onFolderSelected(index, h[index]);
 				});
 			};
 			
@@ -408,8 +407,10 @@
 			this.getPrimaryActions = function(actions) {
 				if (!actions) return [];
 				var result = [];
-				for (var i=0,j=actions.length; i<j; i++)
-					if (actions[i].id == 'download') result.push(actions[i]);
+				for (var i=0,j=actions.length; i<j; i++) {
+					var a = actions[i];
+					if (a.id == 'download' || a.type == 'primary') result.push(a);
+				}
 				return result;
 			};
 				
@@ -524,9 +525,20 @@
 					}
 					if (i > 0) secondaryActions.splice(0,i);
 				}*/
-				var o = {item:item, details:d[0], description: (showDescription ? details.description : false), session: mollify.session, plugins: plugins};
+				var o = {
+					item:item,
+					details:d[0],
+					description: (showDescription ? details.description : false),
+					session: mollify.session,
+					plugins: plugins,
+					primaryActions : primaryActions
+				};
 				
-				$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {}));
+				$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {
+					title: function(o) {
+						return o.title ? o.title : mollify.ui.texts.get(o['title-key']);
+					}
+				}));
 				$e.click(function(e){
 					// prevent from closing the popup when clicking the popup itself
 					e.preventDefault();
@@ -541,22 +553,13 @@
 				}
 				
 				if (primaryActions) {
-					var $c = $("#mollify-itemcontext-primary-actions");
-					
-					var opt = {
-						title: function() {
-							return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
-						}
-					};
-					for (var i=0; i<primaryActions.length;i++) {
+					$pae = $e.find(".mollify-itemcontext-primary-actions-button");
+					$pae.click(function(e) {
+						var i = $pae.index($(this));
 						var action = primaryActions[i];
-						mollify.dom.template("mollify-tmpl-main-itemcontext-primaryaction", action, opt).appendTo($c).click(function() {
-							tip.hide();
-							action.callback();
-						});
-					}
-				} else {
-					//$("#mollify-itemcontext-primary-actions").hide();
+						tip.hide();
+						action.callback();
+					});
 				}
 				
 				if (plugins) {
@@ -571,7 +574,7 @@
 						var $c = contents[id] ? contents[id] : false;
 						if (!$c) {
 							$c = $('<div class="mollify-itemcontext-plugin-content"></div>');
-							plugins[id].details["on-render"](tip, $c, details.plugins[id]);
+							plugins[id].details["on-render"](tip, $c);
 							contents[id] = $c;
 							$content.append($c);
 						}
@@ -591,11 +594,7 @@
 							onSelectDetails(s.id);
 						});
 					}
-					/*$e.find(".mollify-itemcontext-details-selector").hover(function() {
-						$(this).addClass("hover");
-					}, function() {
-						$(this).removeClass("hover");
-					});*/
+
 					if (firstPlugin) onSelectDetails(firstPlugin);
 				}
 				
