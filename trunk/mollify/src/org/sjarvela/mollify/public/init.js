@@ -1583,7 +1583,7 @@ $.extend(true, mollify, {
 
 					if (viewerAvailable) {
 						result.actions = [
-							{ id: 'pluginFileViewerEditorView', title: 'pluginFileViewerEditorView', type:"primary", callback: function() {
+							{ id: 'pluginFileViewerEditorView', "title-key": 'pluginFileViewerEditorView', type:"primary", callback: function() {
 								that.onView(item, [], data.view);
 							}}
 						];

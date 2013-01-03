@@ -285,7 +285,7 @@ public class MainViewPresenter implements MainViewListener,
 		}
 
 		actions.add(createAction("session-logout",
-				Texts.mainViewLogoutButtonTitle.name(),
+				Texts.mainViewLogoutTitle.name(),
 				JsUtil.createJsCallback(new Callback() {
 					@Override
 					public void onCallback() {
