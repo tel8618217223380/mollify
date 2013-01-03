@@ -103,7 +103,7 @@ public enum Texts implements ResourceId {
 
 	mainViewEditPermissionsTitle,
 
-	mainViewLogoutButtonTitle,
+	mainViewLogoutTitle,
 
 	mainViewChangePasswordTitle,
 
