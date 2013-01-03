@@ -1341,10 +1341,10 @@ $.extend(true, mollify, {
 			
 			this.getGroupRows = function(g, s, d) {
 				if (that.formatters[g])
-					return that.formatters[g].getGroupRows(s, d[g]);
-				if (g == 'exif') return that.getExifRows(s, d[g]);
+					return that.formatters[g].getGroupRows(s[g], d[g]);
+				if (g == 'exif') return that.getExifRows(s[g], d[g]);
 				
-				// file rows
+				// file group rows
 				var rows = [];
 				for (var k in s) {
 					if (k == 'exif' || that.formatters[k]) continue;
@@ -1354,25 +1354,14 @@ $.extend(true, mollify, {
 					if (!rowData) continue;
 					
 					rows.push({
-						title: that.getRowTitle(k, s[k]),
-						value: that.formatData(k, rowData)
+						title: that.getFileRowTitle(k, s[k]),
+						value: that.formatFileData(k, rowData)
 					});
 				}
 				return rows;
 			};
 			
-			this.getExifRows = function(s, d) {
-				var rows = [];
-				for (var k in d) {
-					var v = that.formatExifValue(s, k, d[k]);
-					if (!v) continue;
-					
-					rows.push({title: k, value: v});
-				}
-				return rows;
-			};
-			
-			this.getRowTitle = function(dataKey, rowSpec) {
+			this.getFileRowTitle = function(dataKey, rowSpec) {
 				if (rowSpec.title) return rowSpec.title;
 				if (rowSpec["title-key"]) return mollify.ui.texts.get(rowSpec["title-key"]);
 		
@@ -1382,7 +1371,6 @@ $.extend(true, mollify, {
 				if (dataKey == 'extension') return mollify.ui.texts.get('fileItemContextDataExtension');
 				if (dataKey == 'last-modified') return mollify.ui.texts.get('fileItemContextDataLastModified');
 				if (dataKey == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSize');
-				//if (dataKey == 'exif') return mollify.ui.texts.get('fileItemDetailsExif');
 				
 				/*if (that.specs[dataKey]) {
 					var spec = that.specs[dataKey];
@@ -1392,11 +1380,10 @@ $.extend(true, mollify, {
 				return dataKey;
 			};
 			
-			this.formatData = function(key, data) {
+			this.formatFileData = function(key, data) {
 				if (key == 'size') return mollify.ui.texts.formatSize(data);
 				if (key == 'last-modified') return mollify.ui.texts.formatInternalTime(data);
 				if (key == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSizePixels', [data]);
-				//if (key == 'exif') return that.formatExif(data);
 				
 				if (that.specs[key]) {
 					var spec = that.specs[key];
@@ -1406,20 +1393,26 @@ $.extend(true, mollify, {
 				return data;
 			};
 			
-			/*this.formatExif = function(d) {
-				var html = "<div id='item-details-exif'><table id='item-details-exif-values'>";
-				for (var s in d) {
+			this.getExifRows = function(spec, data) {
+				var rows = [];
+				for (var section in data) {				
+					var html = '';
 					var first = true;
-					for (var k in d[s]) {
-						var v = that.formatExifValue(s, k, d[s][k]);
+					var count = 0;
+					for (var key in data[section]) {
+						var v = that.formatExifValue(section, key, data[section][key]);
 						if (!v) continue;
 						
-						html += '<tr id="exif-row-'+s+'-'+k+'" class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-section">'+(first?s:'')+'</td><td class="exif-key">'+k+'</td><td class="exif-value">'+v+'</td></tr>';
+						html += '<tr id="exif-row-'+section+'-'+key+'" class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-key">'+key+'</td><td class="exif-value">'+v+'</td></tr>';
 						first = false;
+						count++;
 					}
+					
+					if (count > 0)
+						rows.push({title: section, value: '<table class="exif-section-'+section+'">'+html+"</table>"});
 				}
-				return html + "</table></div>";
-			};*/
+				return rows;
+			};
 			
 			this.formatExifValue = function(section, key, value) {
 				if (section == 'FILE' && key == 'SectionsFound') return false;
