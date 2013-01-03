@@ -1,11 +1,16 @@
 <script id="itemdetails-template" type="text/x-jquery-tmpl">
 	<div id="mollify-itemdetails-content">
-		{{each rows}}
-		<div id='mollify-itemdetails-row-${key}' class='mollify-file-item-details-row'>
-			<div class='mollify-itemdetails-row-label'>${$value.title}</div>
-			<div class='mollify-itemdetails-row-value-container'>
-				<div class='mollify-itemdetails-row-value'>{{html $value.value}}</div>
-			</div>
+		{{each groups}}
+		<div id="mollify-itemdetails-group-${key}">
+			{{if $value.title}}<h4>${$value.title}</h4>{{/if}}
+			<dl class="dl-horizontal">
+			{{each rows}}
+				<dt class='mollify-itemdetails-row-label'>${$value.title}</dt>
+				<dd class='mollify-itemdetails-row-value-container'>
+					<div class='mollify-itemdetails-row-value'>{{html $value.value}}</div>
+				</dd>
+			{{/each}}		
+			</dl>
 		</div>
 		{{/each}}
 	</div>

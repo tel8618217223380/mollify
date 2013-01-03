@@ -11,7 +11,7 @@
 	 */
 
 	class Thumbnail {
-		function generate($item, $maxWidth = 200, $maxHeight = 200) {
+		function generate($item, $maxWidth = 400, $maxHeight = 400) {
 			$img = null;
 			$ext = $item->extension();
 

@@ -1239,16 +1239,16 @@ $.extend(true, mollify, {
 	plugin : {
 		ItemDetailsPlugin: function(conf, sp) {
 			var that = this;
-			that.specs = {};
+			that.formatters = {};
 			that.typeConfs = false;
 			
 			this.initialize = function(core) {
 				that.core = core;
 				
-				if (sp) {
+				/*if (sp) {
 					for (var i=0; i<sp.length;i++)
 						that.addDetailsSpec(sp[i]);
-				}
+				}*/
 				if (conf) {
 					that.typeConfs = {};
 					
@@ -1264,10 +1264,10 @@ $.extend(true, mollify, {
 				}
 			};
 			
-			this.addDetailsSpec = function(s) {
+			/*this.addDetailsSpec = function(s) {
 				if (!s || !s.key) return;
 				that.specs[s.key] = s;
-			}
+			}*/
 			
 			this.getApplicableSpec = function(item) {
 				var ext = (item.is_file && item.extension) ? item.extension.toLowerCase().trim() : "";
@@ -1289,18 +1289,90 @@ $.extend(true, mollify, {
 			
 			this.renderItemDetails = function(el, item, o) {
 				var s = that.getApplicableSpec(item);
-				var data = [];
+				var groups = that.getGroups(s, o.data);
+				
+				var result = [];
+				for (var i=0,j=groups.length; i<j; i++) {
+					var g = groups[i];
+					result.push({
+						key: g,
+						title: that.getGroupTitle(g),
+						rows: that.getGroupRows(g, s, o.data)
+					});
+				}
+				
+				/*var data = [];
 				for (var k in s) {
 					var rowSpec = s[k];
 					var rowData = o.data[k];
 					if (!rowData) continue;
 					
 					data.push({key:k, title:that.getTitle(k, rowSpec), value: that.formatData(k, rowData)});
-				}
-				$("#itemdetails-template").tmpl({rows:data}).appendTo(o.element);
+				}*/
+				$("#itemdetails-template").tmpl({groups: result}).appendTo(o.element);
 			};
 			
-			this.getTitle = function(dataKey, rowSpec) {
+			this.getGroups = function(s, d) {
+				var groups = [];
+				for (var k in s) {
+					var spec = s[k];
+					var data = d[k];
+					if (!data) continue;
+					
+					var g = 'file';
+					if (k == 'exif' || that.formatters[k]) g = k;
+					
+					if (groups.indexOf(g) < 0)
+						groups.push(g);
+				}
+				return groups;
+			};
+			
+			this.getGroupTitle = function(g) {				
+				if (that.formatters[g]) {
+					var f = that.formatters[g];
+					if (f.groupTitle) return spec.groupTitle;
+					if (f["group-title-key"]) return mollify.ui.texts.get(f["group-title-key"]);
+				}
+				if (g == 'file') return mollify.ui.texts.get('fileItemDetailsGroupFile');
+				if (g == 'exif') return mollify.ui.texts.get('fileItemDetailsGroupExif');
+				return '';
+			};
+			
+			this.getGroupRows = function(g, s, d) {
+				if (that.formatters[g])
+					return that.formatters[g].getGroupRows(s, d[g]);
+				if (g == 'exif') return that.getExifRows(s, d[g]);
+				
+				// file rows
+				var rows = [];
+				for (var k in s) {
+					if (k == 'exif' || that.formatters[k]) continue;
+					var spec = s[k];
+
+					var rowData = d[k];
+					if (!rowData) continue;
+					
+					rows.push({
+						title: that.getRowTitle(k, s[k]),
+						value: that.formatData(k, rowData)
+					});
+				}
+				return rows;
+			};
+			
+			this.getExifRows = function(s, d) {
+				var rows = [];
+				for (var k in d) {
+					var v = that.formatExifValue(s, k, d[k]);
+					if (!v) continue;
+					
+					rows.push({title: k, value: v});
+				}
+				return rows;
+			};
+			
+			this.getRowTitle = function(dataKey, rowSpec) {
 				if (rowSpec.title) return rowSpec.title;
 				if (rowSpec["title-key"]) return mollify.ui.texts.get(rowSpec["title-key"]);
 		
@@ -1310,12 +1382,13 @@ $.extend(true, mollify, {
 				if (dataKey == 'extension') return mollify.ui.texts.get('fileItemContextDataExtension');
 				if (dataKey == 'last-modified') return mollify.ui.texts.get('fileItemContextDataLastModified');
 				if (dataKey == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSize');
+				//if (dataKey == 'exif') return mollify.ui.texts.get('fileItemDetailsExif');
 				
-				if (that.specs[dataKey]) {
+				/*if (that.specs[dataKey]) {
 					var spec = that.specs[dataKey];
 					if (spec.title) return spec.title;
 					if (spec["title-key"]) return mollify.ui.texts.get(spec["title-key"]);
-				}
+				}*/
 				return dataKey;
 			};
 			
@@ -1323,6 +1396,7 @@ $.extend(true, mollify, {
 				if (key == 'size') return mollify.ui.texts.formatSize(data);
 				if (key == 'last-modified') return mollify.ui.texts.formatInternalTime(data);
 				if (key == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSizePixels', [data]);
+				//if (key == 'exif') return that.formatExif(data);
 				
 				if (that.specs[key]) {
 					var spec = that.specs[key];
@@ -1332,6 +1406,27 @@ $.extend(true, mollify, {
 				return data;
 			};
 			
+			/*this.formatExif = function(d) {
+				var html = "<div id='item-details-exif'><table id='item-details-exif-values'>";
+				for (var s in d) {
+					var first = true;
+					for (var k in d[s]) {
+						var v = that.formatExifValue(s, k, d[s][k]);
+						if (!v) continue;
+						
+						html += '<tr id="exif-row-'+s+'-'+k+'" class="'+(first?'exif-row-section-first':'exif-row')+'"><td class="exif-section">'+(first?s:'')+'</td><td class="exif-key">'+k+'</td><td class="exif-value">'+v+'</td></tr>';
+						first = false;
+					}
+				}
+				return html + "</table></div>";
+			};*/
+			
+			this.formatExifValue = function(section, key, value) {
+				if (section == 'FILE' && key == 'SectionsFound') return false;
+				//TODO format values?
+				return value;
+			};
+
 			return {
 				id: "plugin-itemdetails",
 				initialize: that.initialize,
@@ -1478,11 +1573,21 @@ $.extend(true, mollify, {
 					
 					var result = {};
 					if (previewerAvailable) {
-						//result.details = {
-							
-						//};
+						result.details = {
+							"title-key": "pluginFileViewerEditorPreview",
+							"on-render": function(el, $content) {
+								$content.empty().addClass("loading");
+								
+								$.ajax({
+									type: 'GET',
+									url: data.preview
+								}).done(function(r) {
+									$content.removeClass("loading").html(r.result.html);
+								});
+							}
+						};
 					}
-					//TODO preview
+
 					if (viewerAvailable) {
 						result.actions = [
 							{ id: 'pluginFileViewerEditorView', title: 'pluginFileViewerEditorView', type:"primary", callback: function() {
@@ -1663,7 +1768,7 @@ $.extend(true, mollify, {
 					return {
 						details: {
 							"title-key": "pluginCommentContextTitle",
-							"on-render": function(el, $content, data) { that.renderItemContextDetails(el, item, $content, data); }
+							"on-render": function(el, $content) { that.renderItemContextDetails(el, item, $content, data); }
 						},
 						actions: [
 							{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }

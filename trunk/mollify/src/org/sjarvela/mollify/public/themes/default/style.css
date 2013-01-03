@@ -867,12 +867,12 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-itemcontext-popover {
-	width: 500px;
+	min-width: 500px;
 }
 
 #mollify-itemcontext-details {
 	position: relative;
-	height: 300px;
+	min-height: 300px;
 }
 
 #mollify-itemcontext-details-content, .mollify-itemcontext-details-selector.active {
@@ -982,6 +982,10 @@ li.dropdown-item {
 
 .mollify-folderselector-folder.root > .mollify-folderselector-folder-name {
 	font-weight: bold;
+}
+
+#mollify-itemdetails-content {
+	font-family: "Arial";
 }
 
 .mollify-fileviewereditor-viewer-item {

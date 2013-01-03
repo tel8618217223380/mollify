@@ -520,16 +520,6 @@
 				var primaryActions = that.getPrimaryActions(actions);
 				var secondaryActions = that.getSecondaryActions(actions);
 				
-				/*if (primaryActionIndex >= 0) {
-					primaryAction = secondaryActions[primaryActionIndex];
-					secondaryActions.splice(primaryActionIndex,1);
-					var i=0;
-					while(true) {
-						if (secondaryActions.length == i || secondaryActions[i].type == 'action') break;
-						i++;
-					}
-					if (i > 0) secondaryActions.splice(0,i);
-				}*/
 				var o = {
 					item:item,
 					details:d[0],
