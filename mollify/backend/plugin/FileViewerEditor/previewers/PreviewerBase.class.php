@@ -30,7 +30,7 @@
 		}
 		
 		public function getUrl($item) {
-			return $this->env->getServiceUrl("preview", array($item->id(), "info"));
+			return $this->env->getServiceUrl("preview", array($item->id(), "info"), TRUE);
 		}
 				
 		public function getContentUrl($item) {
