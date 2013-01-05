@@ -18,7 +18,7 @@
 		}
 		
 		public function init($c) {
-			$c->registerDataRequestPlugin(array("core-file-modified", "core-item-description"), $this);
+			$c->registerDataRequestPlugin(array("core-file-modified", "core-item-description", "core-parent-description"), $this);
 		}
 				
 		public function getRequestData($parent, $items, $result, $key, $requestData) {
@@ -30,6 +30,8 @@
 				}
 			} else if (strcmp("core-item-description", $key) === 0) {
 				$result = $this->env->configuration()->findItemsWithDescription($parent);
+			} else if (strcmp("core-parent-description", $key) === 0) {
+				$result = $this->env->configuration()->getItemDescription($parent);
 			} 
 			
 			return $result;
