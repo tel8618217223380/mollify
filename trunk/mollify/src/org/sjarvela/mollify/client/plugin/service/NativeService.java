@@ -16,6 +16,7 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dev.json.JsonBoolean;
 
 public class NativeService {
 	private final ExternalService externalService;
@@ -39,19 +40,19 @@ public class NativeService {
 				var u = service.@org.sjarvela.mollify.client.plugin.service.NativeService::getUrl(Ljava/lang/String;)(s);
 				return u;
 			},
-		
+
 			get : function(path, success, fail) {
 				service.@org.sjarvela.mollify.client.plugin.service.NativeService::get(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 			},
-	
+
 			put : function(path, data, success, fail) {
 				service.@org.sjarvela.mollify.client.plugin.service.NativeService::put(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, data, success, fail);
 			},
-	
+
 			post : function(path, data, success, fail) {
 				service.@org.sjarvela.mollify.client.plugin.service.NativeService::post(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, data, success, fail);
 			},
-	
+
 			del : function(path, success, fail) {
 				service.@org.sjarvela.mollify.client.plugin.service.NativeService::del(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(path, success, fail);
 			}
@@ -68,7 +69,7 @@ public class NativeService {
 
 	protected void get(String path, final JavaScriptObject success,
 			final JavaScriptObject fail) {
-		externalService.get(path, new ResultListener<JavaScriptObject>() {
+		externalService.get(path, new ResultListener<Object>() {
 			@Override
 			public void onFail(ServiceError error) {
 				invokeFail(fail, error.getError().getCode(), error.getError()
@@ -76,15 +77,18 @@ public class NativeService {
 			}
 
 			@Override
-			public void onSuccess(JavaScriptObject result) {
-				invokeSuccess(success, result);
+			public void onSuccess(Object result) {
+				JavaScriptObject r = null;
+				if (result instanceof JavaScriptObject)
+					r = (JavaScriptObject) result;
+				invokeSuccess(success, r);
 			}
 		});
 	}
 
 	protected void del(String path, final JavaScriptObject success,
 			final JavaScriptObject fail) {
-		externalService.del(path, new ResultListener<JavaScriptObject>() {
+		externalService.del(path, new ResultListener<Object>() {
 			@Override
 			public void onFail(ServiceError error) {
 				invokeFail(fail, error.getError().getCode(), error.getError()
@@ -92,8 +96,11 @@ public class NativeService {
 			}
 
 			@Override
-			public void onSuccess(JavaScriptObject result) {
-				invokeSuccess(success, result);
+			public void onSuccess(Object result) {
+				JavaScriptObject r = null;
+				if (result instanceof JavaScriptObject)
+					r = (JavaScriptObject) result;
+				invokeSuccess(success, r);
 			}
 		});
 	}
@@ -103,19 +110,21 @@ public class NativeService {
 		String jsonData = JsUtil.asJsonString(data == null ? JavaScriptObject
 				.createObject() : data);
 
-		externalService.post(path, jsonData,
-				new ResultListener<JavaScriptObject>() {
-					@Override
-					public void onFail(ServiceError error) {
-						invokeFail(fail, error.getError().getCode(), error
-								.getError().getError());
-					}
+		externalService.post(path, jsonData, new ResultListener<Object>() {
+			@Override
+			public void onFail(ServiceError error) {
+				invokeFail(fail, error.getError().getCode(), error.getError()
+						.getError());
+			}
 
-					@Override
-					public void onSuccess(JavaScriptObject result) {
-						invokeSuccess(success, result);
-					}
-				});
+			@Override
+			public void onSuccess(Object result) {
+				JavaScriptObject r = null;
+				if (result instanceof JavaScriptObject)
+					r = (JavaScriptObject) result;
+				invokeSuccess(success, r);
+			}
+		});
 	}
 
 	protected void put(String path, JavaScriptObject data,
@@ -123,19 +132,21 @@ public class NativeService {
 		String jsonData = JsUtil.asJsonString(data == null ? JavaScriptObject
 				.createObject() : data);
 
-		externalService.put(path, jsonData,
-				new ResultListener<JavaScriptObject>() {
-					@Override
-					public void onFail(ServiceError error) {
-						invokeFail(fail, error.getError().getCode(), error
-								.getError().getError());
-					}
+		externalService.put(path, jsonData, new ResultListener<Object>() {
+			@Override
+			public void onFail(ServiceError error) {
+				invokeFail(fail, error.getError().getCode(), error.getError()
+						.getError());
+			}
 
-					@Override
-					public void onSuccess(JavaScriptObject result) {
-						invokeSuccess(success, result);
-					}
-				});
+			@Override
+			public void onSuccess(Object result) {
+				JavaScriptObject r = null;
+				if (result instanceof JavaScriptObject)
+					r = (JavaScriptObject) result;
+				invokeSuccess(success, r);
+			}
+		});
 	}
 
 	protected native void invokeSuccess(JavaScriptObject cb,

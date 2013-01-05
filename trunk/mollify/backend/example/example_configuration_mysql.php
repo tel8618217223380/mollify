@@ -19,7 +19,19 @@
 			"password" => "mollify",
 			"charset" => "utf8"
 		),
-		"timezone" => "Europe/Helsinki"	// change this to match your timezone
+		"timezone" => "Europe/Helsinki",	// change this to match your timezone
+		
+		"plugins" => array(
+			"FileViewerEditor" => array(
+				"viewers" => array(
+					"Image" => array("gif", "png", "jpg")
+				),
+				"previewers" => array(
+					"Image" => array("gif", "png", "jpg")
+				)
+			),
+			"ItemDetails" => array()
+		)
 	);
 
 ?>
