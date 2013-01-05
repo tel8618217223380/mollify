@@ -511,9 +511,9 @@
 			
 			this.renderItemContext = function(popupId, tip, $e, item, d) {
 				var details = d[0];
-				var showDescription = mollify.session.features.descriptions && !!details.description;
 				//TODO permissions to edit descriptions
-				var descriptionEditable = showDescription && mollify.session.admin;
+				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
+				var showDescription = descriptionEditable || !!details.description;
 				
 				var plugins = mollify.plugins.getItemContextPlugins(item, details);
 				var actions = that.addPluginActions(d[1], plugins);
@@ -523,7 +523,8 @@
 				var o = {
 					item:item,
 					details:d[0],
-					description: (showDescription ? details.description : false),
+					showDescription: showDescription,
+					description: details.description || '',
 					session: mollify.session,
 					plugins: plugins,
 					primaryActions : primaryActions
@@ -542,7 +543,7 @@
 				mollify.ui.process($e, ["localize"]);
 				
 				if (descriptionEditable) {
-					mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), onedit: function(desc) {
+					mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), hint: mollify.ui.texts.get('itemcontext-description-hint'), onedit: function(desc) {
 						that.onDescription(item, desc);
 					}});
 				}

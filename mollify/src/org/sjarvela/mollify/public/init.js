@@ -790,7 +790,13 @@
 				var ctrl = {
 					value: function(v) {
 						originalValue = v;
-						$label.html(originalValue);
+						if (originalValue || !o.hint) {
+							$label.removeClass("hint");
+							$label.html(originalValue);
+						} else {
+							$label.addClass("hint");
+							$label.html(o.hint);
+						}
 						$editor.val(originalValue);	
 					}
 				};

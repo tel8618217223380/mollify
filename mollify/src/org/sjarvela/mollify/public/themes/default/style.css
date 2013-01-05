@@ -870,6 +870,29 @@ li#mollify-folder-hierarchy-item-root > a {
 	min-width: 500px;
 }
 
+#mollify-itemcontext-description {
+	float: left;
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+.editable-label > label {
+	min-height: 20px;
+	border: 1px solid rgba(0,0,0,0);
+	padding: 4px;
+}
+
+.editable-label > label, .editable-label > input {
+	width: 100%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.editable-label.hover > label {
+	border: 1px solid #efefef;
+}
+
 #mollify-itemcontext-details {
 	position: relative;
 	min-height: 300px;

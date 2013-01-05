@@ -10,12 +10,24 @@
 	 */
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
-	
-	$CONFIGURATION_TYPE = 'sqlite';
-	$DB_FILE = 'db.file';
 
 	$SETTINGS = array(
-		"timezone" => "Europe/Helsinki"	// change this to match your timezone
+		"db" => array(
+			"type" => "sqlite",
+			"file" => "db.file"
+		),
+		"timezone" => "Europe/Helsinki",	// change this to match your timezone
+		
+		"plugins" => array(
+			"FileViewerEditor" => array(
+				"viewers" => array(
+					"Image" => array("gif", "png", "jpg")
+				),
+				"previewers" => array(
+					"Image" => array("gif", "png", "jpg")
+				)
+			),
+			"ItemDetails" => array()
+		)
 	);
-
 ?>

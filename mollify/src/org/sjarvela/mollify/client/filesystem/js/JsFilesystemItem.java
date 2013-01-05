@@ -27,6 +27,6 @@ public class JsFilesystemItem extends JavaScriptObject {
 	}-*/;
 
 	public final native boolean isFile() /*-{
-		return this.is_file;
+		return !!this.is_file;
 	}-*/;
 }

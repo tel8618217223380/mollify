@@ -26,9 +26,27 @@
 		<script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
 		<script type="text/javascript">
 			ZeroClipboard.setMoviePath('client/include/ZeroClipboard.swf');
+			
 			mollify.init({
-				"service-path": "backend/",
-			});
+				"list-view-columns": {
+					"name": { width: 250 },
+					"size": {},
+					"file-modified": { width: 150 }
+				}}, [
+					new mollify.plugin.ItemDetailsPlugin({
+	                    "jpg,tiff": {
+	                            "last-modified" : {},
+	                            "size": {},
+	                            "exif": {},
+	                    },
+						"*": {
+							"last-modified" : {},
+							"size": {}
+	                    }
+	                }),
+                    new mollify.plugin.FileViewerEditorPlugin()
+				]
+			);
 		</script>
 		<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
 	</head>
