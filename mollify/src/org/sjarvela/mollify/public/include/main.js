@@ -83,7 +83,7 @@
 			}
 			
 			this.getDataRequest = function(folder) {
-				return that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {};
+				return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
 			}
 			
 			this.render = function(id) {
@@ -367,6 +367,18 @@
 			this.data = function(p) {
 				that.p = p;
 				$("#mollify-folderview-items").removeClass("loading");
+				
+				if (p.data && p.data['core-parent-description']) {
+					$("#mollify-folder-description").text(p.data['core-parent-description']);
+				}
+				
+				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
+				if (descriptionEditable) {
+					mollify.ui.controls.editableLabel({element: $("#mollify-folder-description"), hint: mollify.ui.texts.get('mainview-description-hint'), onedit: function(desc) {
+						that.onDescription(that._currentFolder, desc);
+					}});
+				}
+				
 				that.itemWidget.content(p.items, p.data);
 			};
 			
