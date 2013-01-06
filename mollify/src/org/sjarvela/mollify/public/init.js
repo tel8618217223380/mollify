@@ -2263,9 +2263,6 @@ mollify.MollifyHTML5DragAndDrop = function() {
 					t.dragObj = l.onDragStart($(this), e);
 					if (t.dragObj) $(this).addClass("dragged");
 				}
-			}).bind('dragover', function(e) {
-				if (e.preventDefault) e.preventDefault();
-				e.originalEvent.dataTransfer.dropEffect = 'move';
 			}).bind('dragend', function(e) {
 				if (l.onDragEnd) l.onDragEnd($(this), e);
 				$(this).removeClass("dragged");
@@ -2288,6 +2285,9 @@ mollify.MollifyHTML5DragAndDrop = function() {
 				if (l.canDrop($t, e, t.dragObj)) {
 					$t.addClass("dragover");
 				}
+			}).bind('dragover', function(e) {
+				if (e.preventDefault) e.preventDefault();
+				e.originalEvent.dataTransfer.dropEffect = 'move';
 			}).bind('dragleave', function(e) {
 				console.log("dragleave");
 				$(this).removeClass("dragover");
