@@ -14,6 +14,10 @@ public interface MainViewListener {
 
 	void onFolderSelected(int level, JsFolder f);
 
+	void onCopy(JsFolder f, JavaScriptObject items);
+
+	void onMove(JsFolder f, JavaScriptObject items);
+
 	void onRefresh();
 
 	void onCreateFolder(String name);

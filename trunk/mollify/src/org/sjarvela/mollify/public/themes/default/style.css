@@ -564,6 +564,7 @@ a.mollify-login-link {
 	padding-top: 15px;
 	float: left;
 	clear: both;
+	width: 100%;
 }
 
 #mollify-folder-tools {
@@ -584,6 +585,10 @@ a.mollify-login-link {
 
 #mollify-folder-name {
 	clear: both;
+}
+
+#mollify-folder-name > h2 {
+	margin: 6px 0 0 0;
 }
 
 #mollify-folder-hierarchy {
@@ -636,6 +641,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	/*margin-right: 2px;
 	float: left;
 	cursor: pointer;*/
+}
+
+.mollify-folder-hierarchy-item > a.dragover {
+	color: red;
 }
 
 #mollify-folder-hierarchy-items {
@@ -874,6 +883,19 @@ li#mollify-folder-hierarchy-item-root > a {
 	float: left;
 	width: 100%;
 	margin-bottom: 12px;
+}
+
+#mollify-folder-description {
+	float: left;
+	clear: both;
+	width: 100%;
+	padding-left: 4px;
+	color:#cfcfcf;
+}
+
+#mollify-folder-description.hint {
+	font-style: italic;
+	color:#dfdfdf;
 }
 
 .editable-label > label {

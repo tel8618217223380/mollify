@@ -148,6 +148,25 @@ public class MainViewPresenter implements MainViewListener,
 	}
 
 	@Override
+	public void onCopy(JsFolder f, JavaScriptObject items) {
+		fileSystemActionHandler.onAction(getItems(items),
+				FileSystemAction.copy, f);
+	}
+
+	@Override
+	public void onMove(JsFolder f, JavaScriptObject items) {
+		fileSystemActionHandler.onAction(getItems(items),
+				FileSystemAction.move, f);
+	}
+
+	private List<JsFilesystemItem> getItems(JavaScriptObject items) {
+		// TODO check if array
+		List<JsFilesystemItem> result = new ArrayList();
+		result.add((JsFilesystemItem) items.cast());
+		return result;
+	}
+
+	@Override
 	public void onRefresh() {
 		this.reload();
 	}
