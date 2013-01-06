@@ -408,6 +408,14 @@ a.mollify-login-link {
 	clear:both;
 }
 
+#mollify-mainview-addfile-retrieve {
+	padding-top: 16px;
+}
+
+#mollify-mainview-addfile-retrieve-url-input {
+	width: 248px;
+}
+
 /*#mainview-content-container {
 	background-color: #ffffff;
 }*/
@@ -633,6 +641,11 @@ a.mollify-login-link {
 	border: none;
 }
 
+.mollify-folderview-title.root-list {
+	float: left;
+	padding-bottom: 8px;
+}
+
 li#mollify-folder-hierarchy-item-root > a {
 	display: inline-block;
 	width: 15px;
@@ -693,8 +706,6 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: red;
 }
 
-..mollify-filelist-item
-
 .mollify-filelist-item.hover {
 	background-color: #f6f6f6;
 }
@@ -707,7 +718,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	float: left;
 	width: 16px;
 	height: 16px;
-	margin: 3px 8px 0 4px;
+	margin: 1px 8px 0 4px;
 }
 
 .mollify-filelist-item-icon {
@@ -893,7 +904,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	color:#cfcfcf;
 }
 
-#mollify-folder-description.hint {
+#mollify-folder-description.hint, #mollify-itemcontext-description.hint {
 	font-style: italic;
 	color:#dfdfdf;
 }
@@ -949,6 +960,11 @@ li.dropdown-item {
 /*.submenu {
     z-index: 10000000 !important;
 }*/
+
+#mollify-mainview-createfolder-title {
+	float: left;
+	padding-bottom: 8px;	
+}
 
 .mollify-uploader-add {
 	position: relative;

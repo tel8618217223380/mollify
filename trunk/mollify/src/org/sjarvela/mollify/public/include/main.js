@@ -216,7 +216,7 @@
 			};
 			
 			this.canDragAndDrop = function(to, item) {
-				if (to.id == to.root_id || to.is_file) return false;
+				if (to.is_file) return false;
 				if (item.id == to.id) return false;
 				return true;
 			};

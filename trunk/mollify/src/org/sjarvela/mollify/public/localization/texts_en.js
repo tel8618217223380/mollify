@@ -41,8 +41,8 @@ mainViewRootsTitle: "Root folders",
 mainviewCreateFolderTitle : "Create new folder:",
 mainviewCreateFolderName : "Folder name",
 
-uploaderWidgetTitle: "Upload new file(s)",
-mainviewRetrieveFileTitle: "Retrieve file from URL",
+uploaderWidgetTitle: "Upload new file(s) by clicking or dragging files here:",
+mainviewRetrieveFileTitle: "Retrieve file from URL:",
 mainviewRetrieveUrlTitle: "File URL",
 
 fileListColumnTitleName: "Name",
