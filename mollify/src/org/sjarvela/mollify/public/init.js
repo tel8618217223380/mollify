@@ -791,10 +791,10 @@
 					value: function(v) {
 						originalValue = v;
 						if (originalValue || !o.hint) {
-							$label.removeClass("hint");
+							$e.removeClass("hint");
 							$label.html(originalValue);
 						} else {
-							$label.addClass("hint");
+							$e.addClass("hint");
 							$label.html(o.hint);
 						}
 						$editor.val(originalValue);	
@@ -2261,20 +2261,20 @@ mollify.MollifyHTML5DragAndDrop = function() {
 				t.dragObj = false;
 				if (l.onDragStart) {
 					t.dragObj = l.onDragStart($(this), e);
-					if (t.dragObj) $t.addClass("dragged");
+					if (t.dragObj) $(this).addClass("dragged");
 				}
 			}).bind('dragover', function(e) {
 				if (e.preventDefault) e.preventDefault();
 				e.originalEvent.dataTransfer.dropEffect = 'move';
 			}).bind('dragend', function(e) {
 				if (l.onDragEnd) l.onDragEnd($(this), e);
-				$t.removeClass("dragged");
+				$(this).removeClass("dragged");
 			});
 		},
 		enableDrop : function($e, l) {
 			$e.addClass("droppable").bind('drop', function(e) {
 				if (e.stopPropagation) e.stopPropagation();
-				if (!l.canDrop || !l.onDrop) return;
+				if (!l.canDrop || !l.onDrop || !t.dragObj) return;
 				var $t = $(this);
 				if (l.canDrop($t, e, t.dragObj)) {
 					l.onDrop($t, e, t.dragObj);
@@ -2282,12 +2282,14 @@ mollify.MollifyHTML5DragAndDrop = function() {
 				}
 				t.dragObj = false;
 			}).bind('dragenter', function(e) {
-				if (!l.canDrop) return;
+				if (!l.canDrop || !t.dragObj) return;
+				console.log("dragenter");
 				var $t = $(this);
 				if (l.canDrop($t, e, t.dragObj)) {
 					$t.addClass("dragover");
 				}
 			}).bind('dragleave', function(e) {
+				console.log("dragleave");
 				$(this).removeClass("dragover");
 			});
 		}

@@ -117,10 +117,27 @@
 					//mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.listener.sessionActions()});
 				}
 				mollify.dom.template("mollify-tmpl-main-root-list", that.roots).appendTo("#mollify-mainview-rootlist");
-				$(".mollify-mainview-rootlist-item").click(function() {
+				var $ri = $("#mollify-mainview-rootlist").find(".mollify-mainview-rootlist-item").click(function() {
 					var root = $(this).tmplItem().data;
 					that.listener.onFolderSelected(1, root);
 				});
+				
+				if (mollify.ui.draganddrop) {
+					mollify.ui.draganddrop.enableDrop($ri.find("a"), {
+						canDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = $e.tmplItem().data;
+							return that.canDragAndDrop(me, item);
+						},
+						onDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return;
+							var item = obj.payload;
+							var me = $e.tmplItem().data;							
+							that.onDragAndDrop(me, item);
+						}
+					});
+				}
 				
 				that.controls["mollify-mainview-viewstyle-options"].set(that.viewStyle);
 				that.initList();
@@ -196,6 +213,20 @@
 			this.onFolderSelected = function(f) {
 				mollify.ui.hideActivePopup();
 				that.listener.onSubFolderSelected(f);
+			};
+			
+			this.canDragAndDrop = function(to, item) {
+				if (to.id == to.root_id || to.is_file) return false;
+				if (item.id == to.id) return false;
+				return true;
+			};
+			
+			this.onDragAndDrop = function(to, item) {
+				var copy = (to.root_id != item.root_id);
+				alert((copy ? "copy " : "move ") +item.name+" to "+to.name);
+				
+				if (copy) that.listener.onCopy(to, item);
+				else that.listener.onMove(to, item);
 			};
 			
 			this.folder = function(p) {
@@ -310,11 +341,29 @@
 					style: 'submenu'
 				});
 				
-				$(".mollify-folder-hierarchy-item").click(function() {
-					var index = p.find(".mollify-folder-hierarchy-item").index($(this));
-					var folder = h[index];
+				var $hi = $(".mollify-folder-hierarchy-item").click(function() {
+					var folder = $(this).tmplItem().data;
+					var index = h.indexOf(folder);
 					that.listener.onFolderSelected(index+1, folder);
 				});
+				
+				if (mollify.ui.draganddrop) {
+					mollify.ui.draganddrop.enableDrop($hi.find("a"), {
+						canDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = $e.parent().tmplItem().data;
+							return that.canDragAndDrop(me, item);
+
+						},
+						onDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return;
+							var item = obj.payload;
+							var me = $e.parent().tmplItem().data;
+							that.onDragAndDrop(me, item);
+						}
+					});
+				}
 			};
 			
 			this.isListView = function() { return that.viewStyle == 0; };
@@ -328,11 +377,8 @@
 				
 				that.itemWidget.init({
 					onFolderSelected : that.listener.onSubFolderSelected,
-					canDrop : function(to, item) {
-						if (to.id == to.root_id || to.is_file) return false;
-						if (item.id == to.id) return false;
-						return true;
-					},
+					canDrop : that.canDragAndDrop,
+					onDrop : that.onDragAndDrop,
 					onClick: function(item, t, e) {
 						//console.log(t);
 						if (that.isListView() && t != 'icon') {
@@ -368,16 +414,20 @@
 				that.p = p;
 				$("#mollify-folderview-items").removeClass("loading");
 				
-				if (p.data && p.data['core-parent-description']) {
+				var descriptionExists = p.data && p.data['core-parent-description'];
+				if (descriptionExists)
 					$("#mollify-folder-description").text(p.data['core-parent-description']);
-				}
 				
-				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
+				var $dsc = $("#mollify-folder-description");
+				var descriptionEditable = that._currentFolder && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.admin;
 				if (descriptionEditable) {
-					mollify.ui.controls.editableLabel({element: $("#mollify-folder-description"), hint: mollify.ui.texts.get('mainview-description-hint'), onedit: function(desc) {
+					mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainview-description-hint'), onedit: function(desc) {
 						that.onDescription(that._currentFolder, desc);
 					}});
+				} else {
+					if (!descriptionExists) $dsc.hide();
 				}
+				$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 				
 				that.itemWidget.content(p.items, p.data);
 			};
@@ -881,6 +931,7 @@
 							onDragStart : function($e, e) {
 								var item = $e.tmplItem().data;
 								if (Modernizr.draganddrop) t.p.onNativeDrag($e.tmplItem().data, e);
+								if (item.id == item.root_id) return false;
 								return {type:'filesystemitem', payload: item};
 							}
 						});
@@ -895,7 +946,7 @@
 								if (!obj || obj.type != 'filesystemitem') return;
 								var item = obj.payload;
 								var me = $e.tmplItem().data;
-								alert("dropped "+item.name+" on "+me.name);
+								if (t.p.onDrop) t.p.onDrop(me, item);
 							}
 						});
 					}
