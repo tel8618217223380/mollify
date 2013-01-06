@@ -476,7 +476,15 @@ a.mollify-login-link {
 	z-index: 95;
 }
 
-#mollify-mainview-rootlist {
+#mollify-mainview-navlist-container {
+	margin-top: 8px;
+}
+
+.navlist-sep {
+	margin-top: 8px;	
+}
+
+/*#mollify-mainview-rootlist {
 	top: 67px;
   width: 128px;
   margin: 20px 0 0;
@@ -521,7 +529,7 @@ a.mollify-login-link {
   -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
      -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
           box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-}
+}*/
 
 .icon-chevron-right {
 	float: right;

@@ -37,7 +37,7 @@ mainViewSearch: "Search",
 mainViewChangePasswordTitle: "Change password...",
 mainViewAdministrationTitle: "Administration...",
 mainViewLogoutTitle: "Logout",
-mainViewRootsTitle: "Root folders",
+mainViewRootsTitle: "Published folders",
 mainviewCreateFolderTitle : "Create new folder:",
 mainviewCreateFolderName : "Folder name",
 

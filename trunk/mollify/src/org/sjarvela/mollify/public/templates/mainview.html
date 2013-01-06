@@ -15,12 +15,19 @@
 <div id="mollify-notification-container" class="mollify-mainview-notification-container"></div>
 <div id="mollify-mainview-main" class="container">
 	<div id="mollify-mainview-content" class="row">
-		<div class="span2" class="well">
-			<ul id="mollify-mainview-rootlist" class="nav nav-list affix">
+		<div id="mollify-mainview-navlist-container" class="well span2">
+			<ul id="mollify-mainview-rootlist" class="nav nav-list">
+				<li class="nav-header localized" text-key="mainViewRootsTitle"></li>
+	        </ul>
+			<ul id="mollify-mainview-favourites" class="nav nav-list navlist-sep">
+				<li class="nav-header localized" text-key="mainViewFavouritesTitle"></li>
+	        </ul>
+			<ul id="mollify-mainview-dropbox" class="nav nav-list navlist-sep">
+				<li class="nav-header localized" text-key="mainViewDropboxTitle"></li>
 	        </ul>
 		</div>
 		
-		<div id="mollify-folderview" class="span10">
+		<div id="mollify-folderview" class="span9">
 			<div id="mollify-folderview-header">
 			</div>
 			
@@ -69,7 +76,7 @@
 </script>
 
 <script id="mollify-tmpl-main-root-list" type="text/x-jquery-tmpl">
-	<li id="mollify-mainview-rootlist-item-${id}" class="mollify-mainview-rootlist-item" ><a href="javascript: void(0);"><i class="icon-chevron-right"></i> ${name}</a></li>
+	<li id="mollify-mainview-rootlist-item-${id}" class="mollify-mainview-rootlist-item" ><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${name}</a></li>
 </script>
 
 <script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
