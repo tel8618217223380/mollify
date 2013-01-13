@@ -1541,10 +1541,13 @@ $.extend(true, mollify, {
 					}
 				}).appendTo($("body"));
 				
-				$lb = $v.lightbox({backdrop: true, resizeToFit: false, show: false});
+				var onHide = function() {
+					$v.remove();
+				};
+				
+				$lb = $v.lightbox({backdrop: true, resizeToFit: false, show: false, onHide: onHide});
 				$lb.find("button.close").click(function(){
 					$lb.lightbox('hide');
-					$v.remove();
 				});
 				$lbc = $lb.find(".carousel-inner");
 				
@@ -2254,18 +2257,43 @@ function SharePlugin() {
 mollify.MollifyHTML5DragAndDrop = function() {
 	var t = this;
 	t.dragObj = false;
+	t.dragEl = false;
+	t.dragListener = false;
+	
+	var endDrag = function() {
+		if (t.dragEl) {
+			t.dragEl.removeClass("dragged");
+			if (t.dragListener && t.dragListener.onDragEnd) t.dragListener.onDragEnd(t.dragEl, e);
+			t.dragEl = false;
+		}
+		t.dragObj = false;
+		t.dragListener = false;
+	};
+	
+	$("body").bind('dragover', function(e) {
+		if (e.preventDefault) e.preventDefault();	
+		e.originalEvent.dataTransfer.dropEffect = "none";
+		return false;
+	});
 	
 	return {
 		enableDrag : function($e, l) {
 			$e.attr("draggable","true").bind('dragstart', function(e) {
 				t.dragObj = false;
+				e.originalEvent.dataTransfer.effectAllowed = "none";
 				if (l.onDragStart) {
 					t.dragObj = l.onDragStart($(this), e);
-					if (t.dragObj) $(this).addClass("dragged");
+					if (t.dragObj) {
+						t.dragEl = $(this);
+						t.dragListener = l;
+						t.dragEl.addClass("dragged");
+						e.originalEvent.dataTransfer.effectAllowed = "copyMove";
+						return;
+					}
 				}
-			}).bind('dragend', function(e) {
-				if (l.onDragEnd) l.onDragEnd($(this), e);
-				$(this).removeClass("dragged");
+				return false;
+			}).bind('dragend', function(e) {	
+				endDrag();
 			});
 		},
 		enableDrop : function($e, l) {
@@ -2277,19 +2305,27 @@ mollify.MollifyHTML5DragAndDrop = function() {
 					l.onDrop($t, e, t.dragObj);
 					$t.removeClass("dragover");
 				}
-				t.dragObj = false;
+				endDrag();
 			}).bind('dragenter', function(e) {
-				if (!l.canDrop || !t.dragObj) return;
-				console.log("dragenter");
-				var $t = $(this);
-				if (l.canDrop($t, e, t.dragObj)) {
+				if (!l.canDrop || !t.dragObj) return false;
+				if (l.canDrop($(this), e, t.dragObj)) {
 					$t.addClass("dragover");
 				}
 			}).bind('dragover', function(e) {
 				if (e.preventDefault) e.preventDefault();
-				e.originalEvent.dataTransfer.dropEffect = 'move';
+				
+				var fx = "none";
+				if (l.canDrop && l.dropType && t.dragObj) {
+					var $t = $(this);
+					if (l.canDrop($t, e, t.dragObj)) {
+						var tp = l.dropType($t, e, t.dragObj);
+						if (tp) fx = tp;
+					}
+				}
+				
+				e.originalEvent.dataTransfer.dropEffect = fx;
+				return false;
 			}).bind('dragleave', function(e) {
-				console.log("dragleave");
 				$(this).removeClass("dragover");
 			});
 		}

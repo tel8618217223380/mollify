@@ -2161,6 +2161,8 @@
 			$.support.transition && this.$element.hasClass('fade') ?
 				this.hideWithTransition() :
 				this.hideLightbox();
+			
+			if(that.options.onHide) that.options.onHide();
 		},
 		enforceFocus: function ()
 		{
