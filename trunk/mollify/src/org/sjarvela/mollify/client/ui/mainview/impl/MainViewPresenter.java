@@ -21,6 +21,7 @@ import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
+import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
@@ -157,6 +158,25 @@ public class MainViewPresenter implements MainViewListener,
 	public void onMove(JsFolder f, JavaScriptObject items) {
 		fileSystemActionHandler.onAction(getItems(items),
 				FileSystemAction.move, f);
+	}
+
+	@Override
+	public void onSearch(final String text, final JavaScriptObject cb) {
+		view.showProgress();
+
+		fileSystemService.search(model.getCurrentFolder(), text,
+				new ResultListener<SearchResult>() {
+					@Override
+					public void onSuccess(SearchResult result) {
+						view.hideProgress();
+						call(cb, result);
+					}
+
+					@Override
+					public void onFail(ServiceError error) {
+						dialogManager.showError(error);
+					}
+				});
 	}
 
 	private List<JsFilesystemItem> getItems(JavaScriptObject items) {

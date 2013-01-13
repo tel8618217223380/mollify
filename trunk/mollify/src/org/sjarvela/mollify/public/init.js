@@ -2308,7 +2308,8 @@ mollify.MollifyHTML5DragAndDrop = function() {
 				endDrag();
 			}).bind('dragenter', function(e) {
 				if (!l.canDrop || !t.dragObj) return false;
-				if (l.canDrop($(this), e, t.dragObj)) {
+				var $t = $(this);
+				if (l.canDrop($t, e, t.dragObj)) {
 					$t.addClass("dragover");
 				}
 			}).bind('dragover', function(e) {

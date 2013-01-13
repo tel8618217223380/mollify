@@ -17,6 +17,8 @@ public interface MainViewListener {
 	void onCopy(JsFolder f, JavaScriptObject items);
 
 	void onMove(JsFolder f, JavaScriptObject items);
+	
+	void onSearch(String search, JavaScriptObject cb);
 
 	void onRefresh();
 
