@@ -130,6 +130,12 @@
 							var me = $e.tmplItem().data;
 							return that.canDragAndDrop(me, item);
 						},
+						dropType : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = $e.tmplItem().data;
+							return that.dropType(me, item);
+						},
 						onDrop : function($e, e, obj) {
 							if (!obj || obj.type != 'filesystemitem') return;
 							var item = obj.payload;
@@ -214,15 +220,21 @@
 				mollify.ui.hideActivePopup();
 				that.listener.onSubFolderSelected(f);
 			};
-			
+
+			this.dropType = function(to, item) {
+				var copy = (to.root_id != item.root_id);
+				return copy ? "copy" : "move";
+			};
+						
 			this.canDragAndDrop = function(to, item) {
 				if (to.is_file) return false;
 				if (item.id == to.id) return false;
+				if (item.parent_id == to.id) return false;
 				return true;
 			};
 			
 			this.onDragAndDrop = function(to, item) {
-				var copy = (to.root_id != item.root_id);
+				var copy = (that.dropType(to, item) == 'copy');
 				alert((copy ? "copy " : "move ") +item.name+" to "+to.name);
 				
 				if (copy) that.listener.onCopy(to, item);
@@ -354,7 +366,12 @@
 							var item = obj.payload;
 							var me = $e.parent().tmplItem().data;
 							return that.canDragAndDrop(me, item);
-
+						},
+						dropType : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = $e.tmplItem().data;
+							return that.dropType(me, item);
 						},
 						onDrop : function($e, e, obj) {
 							if (!obj || obj.type != 'filesystemitem') return;
@@ -378,6 +395,7 @@
 				that.itemWidget.init({
 					onFolderSelected : that.listener.onSubFolderSelected,
 					canDrop : that.canDragAndDrop,
+					dropType : that.dropType,
 					onDrop : that.onDragAndDrop,
 					onClick: function(item, t, e) {
 						//console.log(t);
@@ -937,10 +955,16 @@
 						});
 						mollify.ui.draganddrop.enableDrop(t.$i.find(".mollify-filelist-item.item-folder"), {
 							canDrop : function($e, e, obj) {
-								if (!obj || obj.type != 'filesystemitem') return false;
+								if (!t.p.canDrop || !obj || obj.type != 'filesystemitem') return false;
 								var item = obj.payload;
 								var me = $e.tmplItem().data;
-								return t.p.canDrop ? t.p.canDrop(me, item) : false;
+								return t.p.canDrop(me, item);
+							},
+							dropType : function($e, e, obj) {
+								if (!t.p.dropType || !obj || obj.type != 'filesystemitem') return false;
+								var item = obj.payload;
+								var me = $e.tmplItem().data;
+								return t.p.dropType(me, item);
 							},
 							onDrop : function($e, e, obj) {
 								if (!obj || obj.type != 'filesystemitem') return;
