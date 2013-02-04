@@ -60,19 +60,6 @@ Configuration:
 
 Using Google Viewer requires that files can be accessed from internet (as the Google service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
 
-=== Zoho ===
-
-Provides file viewer for Word documents, Excel spreadsheets, PowerPoint documents and many more. See full list at [http://viewer.zoho.com/home.do Zoho page].
-
-*NOTE!* Zoho viewer uses web service provided by ZOHO Corp. Visit http://viewer.zoho.com/home.do for terms of use or other information about the service.]
-
-Configuration:
-{{{
-"Zoho" => array("doc", "docx", "xls", "xlsx", "ppt", "pptx", "pps", "odt", "ods", "odp", "sxw", "sxc", "sxi", "wpd", "pdf", "rtf", "txt", "html", "csv", "tsv")
-}}}
-
-Using Zoho Viewer requires that files can be accessed from internet (as the Zoho service needs to download the file). When Mollify is used in a closed network (ie. intranet), this viewer cannot be used.
-
 === Quicktime ===
 
 Provides video viewer for mov and mp4 video files.
