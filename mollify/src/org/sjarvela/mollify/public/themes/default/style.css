@@ -1,6 +1,10 @@
 /* @override http://localhost:8888/mollify/test/dev/client/themes/default/style.css */
 
 @import url(plugins.css);
+@import url(bootstrap.css);
+@import url(bootstrap-responsive.css);
+@import url(font-awesome.css);
+@import url(bootstrap-lightbox.css);
 
 /*@font-face {
   font-family: 'MollifyPlainText';
@@ -697,7 +701,6 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-item {
-	height: 22px;
 	cursor: pointer;
 	font-size: 13px;
 	-moz-user-select: none;
@@ -789,6 +792,12 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-filelist-col-file-modified {
 	color: #949494;
+}
+
+.mollify-filelist-contextph {
+	float: left;
+	width: 100%;
+	background-color: #ffffff;
 }
 
 .mollify-filelist-quickmenu {
@@ -887,11 +896,30 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: url(images/mimetypes64/folder.png) no-repeat 5px 10px;
 }
 
-.mollify-itemcontext-popup {
+/*.mollify-itemcontext-popup {
 	min-width: 500px;
-}
+}*/
 
 .mollify-itemcontext {
+	position: relative;
+	float: left;
+	display: block;
+	max-width:none;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+}
+
+@media (max-width: 480px) {
+	.mollify-itemcontext {
+
+	}
+}
+
+.mollify-itemcontext-content.loading {
+	min-height: 200px;
 }
 
 .mollify-itemcontext-popover {
@@ -1063,6 +1091,14 @@ li.dropdown-item {
 
 .mollify-fileviewereditor-viewer-item-content {
 	overflow: auto;
-	min-width: 100px;
-	min-height: 100px;
+	min-width: 300px;
+	min-height: 200px;
+}
+
+.mollify-fileviewereditor-viewer-item .carousel-caption {
+	display: none;
+}
+
+.mollify-fileviewereditor-viewer-item:hover .carousel-caption {
+	display: block;
 }

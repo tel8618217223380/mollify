@@ -199,8 +199,7 @@
 				that.listener.onSearch(s, function(r) {
 					$("#mollify-mainview-search-input").val("");
 					$(".mollify-mainview-rootlist-item").removeClass("active");
-					var $h = $("#mollify-folderview-header").empty();					
-					console.log(JSON.stringify(r));
+					var $h = $("#mollify-folderview-header").empty();
 					
 					mollify.dom.template("mollify-tmpl-main-searchresults", {matches: r.count, text: s}).appendTo($h);
 					var items = [];
@@ -575,14 +574,46 @@
 				return actions;
 			};
 			
-			this.openItemContext = function(item, e) {
-				var popupId = "mainview-itemcontext-"+item.id;
+			this.openItemContext = function(item, $e) {
+				/*var popupId = "mainview-itemcontext-"+item.id;
 				if (mollify.ui.isActivePopup(popupId)) {
 					return;
-				}
+				}*/
 				
-				var html = $("<div/>").append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})).html();
-				e.popover({
+				var openedId = false;
+				if (that._activeItemContext) {
+					var openedId = that._activeItemContext.item.id;
+					that._activeItemContext.close();
+					that._activeItemContext = false;
+				}
+				if (item.id == openedId) return;
+				
+				var close = function() {
+					$e.slideUp(500, function() {
+						$e.empty();
+					});
+				};
+				that._activeItemContext = {
+					item : item,
+					close : close	
+				};
+				$e.hide().empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {}));
+				$e.slideDown(500, function() {
+					var $el = $("#mollify-itemcontext-"+item.id);
+					$el.mouseover(function() {
+						return false;
+					});
+					var $content = $el.find(".mollify-itemcontext-content");
+					that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
+						if (!a) {
+							$t.hide();
+							return;
+						}
+						
+						that.renderItemContext(that._activeItemContext, $content, item, a);
+					});
+				});
+				/*e.popover({
 					title: item.name,
 					html: true,
 					placement: 'bottom',
@@ -616,10 +647,10 @@
 						mollify.ui.removeActivePopup(popupId);
 					}
 				});
-				e.popover('show');
+				e.popover('show');*/
 			};
 			
-			this.renderItemContext = function(popupId, tip, $e, item, d) {
+			this.renderItemContext = function(tip, $e, item, d) {
 				var details = d[0];
 				//TODO permissions to edit descriptions
 				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
@@ -663,7 +694,7 @@
 					$pae.click(function(e) {
 						var i = $pae.index($(this));
 						var action = primaryActions[i];
-						tip.hide();
+						tip.close();
 						action.callback();
 					});
 				}
@@ -706,7 +737,6 @@
 				
 				var actions = mollify.ui.controls.dropdown({
 					element: $e.find("#mollify-itemcontext-secondary-actions"),
-					parentPopupId: popupId,
 					items: secondaryActions,
 					hideDelay: 0,
 					style: 'submenu',
@@ -1040,7 +1070,7 @@
 				};
 					
 				this.getItemContextElement = function(item) {
-					return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-col-name");
+					return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-contextph");
 				};
 				
 				this.removeHover = function() {

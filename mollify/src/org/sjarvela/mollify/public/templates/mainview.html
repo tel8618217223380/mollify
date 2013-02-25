@@ -173,6 +173,7 @@
 		{{each(c,col) $item.cols}}
 			<div class="mollify-filelist-col mollify-filelist-col-${col.id}" style="${$item.itemColStyle($data, col)}">{{html $item.col($data, col)}}</div>
 		{{/each}}
+		<div class="mollify-filelist-contextph"></div>
 	</div>
 </script>
 
@@ -189,8 +190,11 @@
 </script>
 
 <script id="mollify-tmpl-main-itemcontext" type="text/x-jquery-tmpl">
-	<div id="mollify-itemcontext-${id}" class="mollify-itemcontext">
-		<div class="mollify-itemcontext-content loading">
+	<div id="mollify-itemcontext-${id}" class="mollify-itemcontext popover bottom">
+		<div class="arrow"></div>
+		<div class="popover-content">
+			<p class="mollify-itemcontext-content loading">
+			</p>
 		</div>
 	</div>
 </script>
@@ -245,9 +249,17 @@
 			    	<div id="mollify-fileviewereditor-viewer-item-${$value.item.id}" class="mollify-fileviewereditor-viewer-item item {{if $value.init}}active{{/if}}">
 			    		<div class="mollify-fileviewereditor-viewer-item-content loading">
 			    		</div>
-			    		<!--div class="carousel-caption">
+			    		<div class="carousel-caption">
 			    			<h4>${$value.item.name}</h4>
-			    		</div-->
+			    			<div class="mollify-fileviewereditor-viewer-tools">
+			    				{{if $value.full}}
+			    				<a href="javascript: void(0);" class="mollify-fileviewereditor-viewer-item-viewinnewwindow localized" text-key="fileViewerEditorViewInNewWindowTitle"></a>
+			    				{{/if}}
+			    				{{if $value.edit}}
+			    				<a href="javascript: void(0);" class="mollify-fileviewereditor-viewer-item-edit localized" text-key="fileViewerEditorViewEditTitle"></a>
+			    				{{/if}}
+			    			</div>
+			    		</div>
 			    	</div>
 			    {{/each}}
 			  </div>
