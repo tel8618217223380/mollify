@@ -1469,17 +1469,36 @@ $.extend(true, mollify, {
 			this.initialize = function(core) {
 				that.core = core;
 			};
+			
+			this.onEdit = function(item, spec) {
+				alert("edit "+item.name);
+				mollify.ui.views.dialogs.custom({
+					title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
+					content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
+					buttons: [
+						{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
+						{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+					],
+					"on-button": function(btn, d) {
+
+					},
+					"on-show": function(h, $d) {
+					}
+				});
+			};
 				
 			this.onView = function(item, all, spec) {
 				var loaded = {};
 				var list = [{
-					embedded: spec.embedded,
-					full: spec.full,
+					embedded: spec.view.embedded,
+					full: spec.view.full,
+					edit: !!spec.edit,
 					item: item
 				}];
 				var init = list[0];
 				var visible = false;
 				init.init = true;
+				var activeItem = false;
 				
 				var $lb;
 				var $lbc;
@@ -1493,6 +1512,8 @@ $.extend(true, mollify, {
 				$(window).resize(resize);
 				var load = function(itm) {
 					var id = itm.item.id;
+					activeItem = itm;
+					
 					if (loaded[id]) return;
 					$.ajax({
 						type: 'GET',
@@ -1546,6 +1567,8 @@ $.extend(true, mollify, {
 				};
 				
 				$lb = $v.lightbox({backdrop: true, resizeToFit: false, show: false, onHide: onHide});
+				mollify.ui.process($lb, ["localize"]);
+				
 				$lb.find("button.close").click(function(){
 					$lb.lightbox('hide');
 				});
@@ -1560,6 +1583,15 @@ $.extend(true, mollify, {
 					if ($(this).hasClass("left")) $c.carousel('prev');
 					else $c.carousel('next');
 				});
+				var $tools = $c.find(".mollify-fileviewereditor-viewer-tools");
+				$tools.find(".mollify-fileviewereditor-viewer-item-viewinnewwindow").click(function(){
+					$lb.lightbox('hide');
+					mollify.ui.window.open(activeItem.full);
+				});
+				$tools.find(".mollify-fileviewereditor-viewer-item-edit").click(function(){
+					$lb.lightbox('hide');
+					alert("edit "+activeItem.item.name);
+				});
 				load(init);
 			};
 						
@@ -1571,9 +1603,12 @@ $.extend(true, mollify, {
 					
 					var previewerAvailable = !!data.preview;
 					var viewerAvailable = !!data.view;
-					var editorAvailable = false;	//TODO
+					var editorAvailable = !!data.edit;
 					
-					var result = {};
+					var result = {
+						details : false,
+						actions: []
+					};
 					if (previewerAvailable) {
 						result.details = {
 							"title-key": "pluginFileViewerEditorPreview",
@@ -1591,11 +1626,18 @@ $.extend(true, mollify, {
 					}
 
 					if (viewerAvailable) {
-						result.actions = [
+						result.actions.push(
 							{ id: 'pluginFileViewerEditorView', "title-key": 'pluginFileViewerEditorView', type:"primary", callback: function() {
-								that.onView(item, [], data.view);
+								that.onView(item, [], data);
 							}}
-						];
+						);
+					}
+					if (editorAvailable) {
+						result.actions.push(
+							{ id: 'pluginFileViewerEditorView', "title-key": 'pluginFileViewerEditorEdit', type:"primary", callback: function() {
+								that.onEdit(item, data.edit);
+							}}
+						);
 					}
 					return result;
 				}
