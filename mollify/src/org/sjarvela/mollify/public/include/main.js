@@ -575,10 +575,10 @@
 			};
 			
 			this.openItemContext = function(item, $e) {
-				/*var popupId = "mainview-itemcontext-"+item.id;
+				var popupId = "mainview-itemcontext-"+item.id;
 				if (mollify.ui.isActivePopup(popupId)) {
 					return;
-				}*/
+				}
 				
 				var openedId = false;
 				if (that._activeItemContext) {
@@ -588,7 +588,7 @@
 				}
 				if (item.id == openedId) return;
 				
-				var close = function() {
+				/*var close = function() {
 					$e.slideUp(500, function() {
 						$e.empty();
 					});
@@ -612,45 +612,42 @@
 						
 						that.renderItemContext(that._activeItemContext, $content, item, a);
 					});
-				});
-				/*e.popover({
+				});*/
+				var html = mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})[0].outerHTML;
+				$e.popover({
 					title: item.name,
 					html: true,
 					placement: 'bottom',
 					trigger: 'manual',
 					template: '<div class="popover mollify-itemcontext-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
 					content: html,
-					manualout: true,
-					onshow: function($t) {
-						var api = { id: popupId, hide: function() { e.popover('destroy'); } };
-						api.close = api.hide;
+					manualout: true
+				}).bind("shown", function(e) {
+					var api = { id: popupId, hide: function() { $e.popover('destroy'); } };
+					api.close = api.hide;					
+					mollify.ui.activePopup(api);
+
+					//$t.find('.popover-title').append(closeButton);
+					var $el = $("#mollify-itemcontext-"+item.id);
+					$el.closest(".popover").find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
+					var $content = $el.find(".mollify-itemcontext-content");
+					
+					that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
+						if (!a) {
+							$t.hide();
+							return;
+						}
 						
-						mollify.ui.activePopup(api);
-						
-						var closeButton = $('<button type="button" class="close">×</button>').click(function(){
-							e.popover('destroy');
-						});
-						$t.find('.popover-title').append(closeButton);
-						var $el = $("#mollify-itemcontext-"+item.id);
-						var $content = $el.find(".mollify-itemcontext-content");
-						
-						that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
-							if (!a) {
-								$t.hide();
-								return;
-							}
-							
-							that.renderItemContext(popupId, api, $content, item, a);
-						});
-					},
-					onhide: function($t) {
-						mollify.ui.removeActivePopup(popupId);
-					}
+						that.renderItemContext(api, $content, item, a);
+					});
+				}).bind("hidden", function() {
+					$e.unbind("shown").unbind("hidden");
+					mollify.ui.removeActivePopup(popupId);
 				});
-				e.popover('show');*/
+				$e.popover('show');
 			};
 			
-			this.renderItemContext = function(tip, $e, item, d) {
+			this.renderItemContext = function(cApi, $e, item, d) {
 				var details = d[0];
 				//TODO permissions to edit descriptions
 				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
@@ -694,7 +691,7 @@
 					$pae.click(function(e) {
 						var i = $pae.index($(this));
 						var action = primaryActions[i];
-						tip.close();
+						cApi.close();
 						action.callback();
 					});
 				}
@@ -711,7 +708,7 @@
 						var $c = contents[id] ? contents[id] : false;
 						if (!$c) {
 							$c = $('<div class="mollify-itemcontext-plugin-content"></div>');
-							plugins[id].details["on-render"](tip, $c);
+							plugins[id].details["on-render"](cApi, $c);
 							contents[id] = $c;
 							$content.append($c);
 						}
@@ -741,7 +738,7 @@
 					hideDelay: 0,
 					style: 'submenu',
 					onItem: function() {
-						tip.hide();
+						cApi.hide();
 					},
 					onBlur: function(dd) {
 						dd.hide();
@@ -838,8 +835,12 @@
 					});
 				};
 				
-				this.getItemContextElement = function(item) {
+				/*this.getItemContextElement = function(item) {
 					return t.$l.find("#mollify-iconview-item-"+item.id);
+				};*/
+				
+				this.getItemContextElement = function(item) {
+					return t.$l.find("#mollify-iconview-item-"+item.id+" .mollify-iconview-contextph");
 				};
 				
 				this.removeHover = function() {
