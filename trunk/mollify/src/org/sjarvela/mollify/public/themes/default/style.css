@@ -794,10 +794,14 @@ li#mollify-folder-hierarchy-item-root > a {
 	color: #949494;
 }
 
-.mollify-filelist-contextph {
+.mollify-filelist-contextph, .mollify-iconview-contextph {
 	float: left;
 	width: 100%;
 	background-color: #ffffff;
+}
+
+.mollify-iconview-contextph {
+	min-width: 500px;	
 }
 
 .mollify-filelist-quickmenu {
