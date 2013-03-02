@@ -800,10 +800,6 @@ li#mollify-folder-hierarchy-item-root > a {
 	background-color: #ffffff;
 }
 
-.mollify-iconview-contextph {
-	min-width: 500px;	
-}
-
 .mollify-filelist-quickmenu {
 	display: inline-block;
 	width: 13px;
@@ -904,7 +900,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	min-width: 500px;
 }*/
 
-.mollify-itemcontext {
+/*.mollify-itemcontext {
 	position: relative;
 	float: left;
 	display: block;
@@ -912,15 +908,15 @@ li#mollify-folder-hierarchy-item-root > a {
 	margin-bottom: 10px;
 	width: 100%;
 	box-sizing:border-box;
-	-moz-box-sizing:border-box; /* Firefox */
-	-webkit-box-sizing:border-box; /* Safari */
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
 }
 
 @media (max-width: 480px) {
 	.mollify-itemcontext {
 
 	}
-}
+}*/
 
 .mollify-itemcontext-content.loading {
 	min-height: 200px;

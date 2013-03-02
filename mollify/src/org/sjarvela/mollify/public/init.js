@@ -653,7 +653,7 @@
 
 			dynamicBubble: function(o) {
 				//e, c, h
-				var e = o.element;
+				var $e = o.element;
 				//var handler = o.handler;
 				
 				var bubbleHtml = function(c) {
@@ -696,11 +696,11 @@
 				var $tip = false;
 				var api = {
 					show: function() {
-						e.popover('show');
+						$e.popover('show');
 					},
 					hide: function(dontDestroy) {
 						if (dontDestroy) $tip.hide();
-						else e.popover('destroy');
+						else $e.popover('destroy');
 					},
 					element : function() {
 						return $tip;
@@ -715,35 +715,27 @@
 					}
 				};
 				api.close = api.hide;
-				e.popover({
+				var $el = $('<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>');
+				
+				$e.popover({
 					title: o.title ? o.title : false,
 					html: true,
 					placement: 'bottom',
 					trigger: 'manual',
-					template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>',
-					content: html,
-					manualout: true,
-					onshow: function($t) {
-						$tip = $t;
-						$tip.click(function(e){
-							//return false;
-						});
-						t.ui.activePopup(api);
-						if (o.title) {
-							var closeButton = $('<button type="button" class="close">×</button>').click(function(){
-								e.popover('destroy');
-							});
-							$t.find('.popover-title').append(closeButton);
-						}
-						mollify.ui.handlers.localize($tip);
-						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
-					},
-					onhide: function($t) {
-						t.ui._activePopup = false;
-						//e.popover('destroy');
-					}
+					template: $el,
+					content: html
+				}).bind("shown", function(e) {
+					$tip = $el;
+					t.ui.activePopup(api);
+					if (o.title)
+						$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
+					mollify.ui.handlers.localize($tip);
+					if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
+				}).bind("hidden", function() {
+					$e.unbind("shown").unbind("hidden");
+					mollify.ui.removeActivePopup(api.id);
 				});
-				e.popover('show');
+				$e.popover('show');
 				
 				return api;
 			},
