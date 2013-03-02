@@ -620,8 +620,7 @@
 					placement: 'bottom',
 					trigger: 'manual',
 					template: '<div class="popover mollify-itemcontext-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
-					content: html,
-					manualout: true
+					content: html
 				}).bind("shown", function(e) {
 					var api = { id: popupId, hide: function() { $e.popover('destroy'); } };
 					api.close = api.hide;					
@@ -840,7 +839,7 @@
 				};*/
 				
 				this.getItemContextElement = function(item) {
-					return t.$l.find("#mollify-iconview-item-"+item.id+" .mollify-iconview-contextph");
+					return t.$l.find("#mollify-iconview-item-"+item.id);
 				};
 				
 				this.removeHover = function() {
@@ -1071,7 +1070,7 @@
 				};
 					
 				this.getItemContextElement = function(item) {
-					return t.$i.find("#mollify-filelist-item-"+item.id+" .mollify-filelist-contextph");
+					return t.$i.find("#mollify-filelist-item-"+item.id);
 				};
 				
 				this.removeHover = function() {

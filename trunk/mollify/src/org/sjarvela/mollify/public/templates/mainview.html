@@ -173,7 +173,6 @@
 		{{each(c,col) $item.cols}}
 			<div class="mollify-filelist-col mollify-filelist-col-${col.id}" style="${$item.itemColStyle($data, col)}">{{html $item.col($data, col)}}</div>
 		{{/each}}
-		<div class="mollify-filelist-contextph"></div>
 	</div>
 </script>
 
@@ -186,7 +185,6 @@
 	<div id="mollify-iconview-item-${id}" class="mollify-iconview-item ${$item.typeClass($data)}">
 		<div class="mollify-iconview-item-icon"></div>
 		<div class="mollify-iconview-item-label">${name}</div>
-		<div class="mollify-iconview-contextph"></div>
 	</div>
 </script>
 
