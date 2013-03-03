@@ -319,6 +319,7 @@ a.mollify-login-link {
 
 .mollify-bubble-popover {
 	width: auto;
+	max-width: none;
 }
 
 .mollify-bubble-popover .popover-inner, .mollify-bubble-popover .popover-content {
@@ -1000,6 +1001,10 @@ li.dropdown-item {
 #mollify-mainview-createfolder-title {
 	float: left;
 	padding-bottom: 8px;	
+}
+
+#mollify-mainview-createfolder-name {
+	margin: 0;
 }
 
 .mollify-uploader-add {

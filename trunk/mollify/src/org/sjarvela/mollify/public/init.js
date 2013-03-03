@@ -438,8 +438,8 @@
 				$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown({
 					onshow: function($p) {
 						if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
-						//if (!a.parentPopupId)
-						popupId = t.ui.activePopup(api);
+						if (!a.parentPopupId)
+							popupId = t.ui.activePopup(api);
 						if (!popupItems) $mnu.addClass("loading");
 						if (a.onShow) a.onShow(api, popupItems);
 					},
@@ -593,8 +593,8 @@
 					}
 				};
 				api.close = api.hide;
-				var $el = $('<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner">' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"><p></p></div></div></div>');
-				
+				var $el = $('<div class="popover mollify-bubble-popover"><div class="arrow"></div>' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"></div></div>');
+
 				$e.popover({
 					title: o.title ? o.title : false,
 					html: true,
