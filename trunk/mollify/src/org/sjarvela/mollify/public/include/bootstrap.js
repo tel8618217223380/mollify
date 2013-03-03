@@ -660,7 +660,8 @@
   * ========================= */
 
   var toggle = '[data-toggle=dropdown]'
-    , Dropdown = function (element) {
+    , Dropdown = function (element, options) {	//mollify
+	    element.options = options	//mollify
         var $el = $(element).on('click.dropdown.data-api', this.toggle)
         $('html').on('click.dropdown.data-api', function () {
           $el.parent().removeClass('open')
@@ -686,6 +687,9 @@
 
       if (!isActive) {
         $parent.toggleClass('open')
+        if (this.options && this.options.onshow) this.options.onshow($parent)	//mollify
+      } else {
+	    if (this.options && this.options.onhide) this.options.onhide()	//mollify
       }
 
       $this.focus()
@@ -768,7 +772,8 @@
     return this.each(function () {
       var $this = $(this)
         , data = $this.data('dropdown')
-      if (!data) $this.data('dropdown', (data = new Dropdown(this)))
+        , options = $.extend({}, $this.data(), typeof option == 'object' && option)	//mollify
+      if (!data) $this.data('dropdown', (data = new Dropdown(this, options)))	//mollify
       if (typeof option == 'string') data[option].call($this)
     })
   }
@@ -946,7 +951,7 @@
       }
 
     , removeBackdrop: function () {
-        this.$backdrop.remove()
+        if (this.$backdrop) this.$backdrop.remove()
         this.$backdrop = null
       }
 

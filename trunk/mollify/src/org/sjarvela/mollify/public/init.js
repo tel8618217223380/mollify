@@ -507,79 +507,10 @@
 				};
 				popupId = t.ui.activePopup(api);
 				return api;
-				/*var createItems = function(itemList) {
-					return $("<div/>").append(mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList}, {
-						isSeparator : function(i) {
-							return i.title == '-';
-						},
-						getTitle : function(i) {
-							if (i.title) return i.title;
-							if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-							return "";
-						}
-					})).html();
-				};
-				var initItems = function(l, api) {
-					var $items = api.elements.content.find(".mollify-popupmenu-item");
-					$items.click(function() {
-						var item = l[$(this).index()];
-						api.hide();
-						if (a.onItem) a.onItem(api, item);
-						item.callback();
-					});
-				};
-				var html = a.items ? createItems(a.items) : '<div class="loading"></div>';
-				var cls = 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped';
-				if (a.style) cls = cls + " " + a.style;
-				
-				var tip = $e.qtip({
-					content: html,
-					position: {
-						my: a.positionMy || 'top left',
-						at: a.positionAt || 'bottom left',
-						container: a.container || $('#mainview-content')
-					},
-					hide: {
-						target: a.hideTarget || false,
-						delay: a.hideDelay || 200,
-						fixed: a.hideFixed || true,
-						event: a.hideEvent || 'mouseleave'
-					},
-					style: {
-						tip: false,
-						classes: cls
-					},
-					events: {
-						render: function(e, api) {
-							initItems(a.items, api);
-						},
-						show: function(e, api) {
-							if (a.onShow) a.onShow(api);
-						},
-						hide: function(e, api) {
-							if (a.onHide) a.onHide(api);
-							api.destroy();
-						},
-						blur: function(e, api) {
-							if (a.onBlur) a.onBlur(api);
-						}
-					}
-				}).qtip('api');
-				tip.show();
-				
-				return {
-					hide: function() {
-						tip.hide();
-					},
-					items: function(items) {
-						tip.set('content.text', createItems(items));
-						initItems(items, tip);
-					}
-				};*/
 			},
 			
 			bubble: function(o) {
-				var e = o.element;
+				var $e = o.element;
 				var actionId = e.attr('id');
 				if (!actionId) return;
 				
@@ -588,38 +519,7 @@
 
 				var html = content.html();
 				content.remove();
-				
-				/*e.qtip({
-					content: html,
-					position: {
-						my: 'top center',
-						at: 'bottom center'
-					},
-					show: 'click',
-					hide: {
-						delay: 200,
-						fixed: true,
-						event: 'click mouseleave'
-					},
-					style: {
-						tip: true,
-						classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-					},
-					events: {
-						render: function(e, api) {
-							if (!h || !h.onRenderBubble) return;
-							h.onRenderBubble(actionId, api);
-						},
-						visible: function(e, api) {
-							if (!h || !h.onShowBubble) return;
-							h.onShowBubble(actionId, api);
-						},
-						hide: function(e, api) {
-							//api.destroy();
-						}
-					}
-				});
-				return {};*/
+
 				var $tip = false;
 				var rendered = false;
 				var api = {
@@ -628,14 +528,15 @@
 					},
 					close: this.hide
 				};
-				e.popover({
+				var $el = $('<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>');
+				$e.popover({
 					title: false,
 					html: true,
 					placement: 'bottom',
 					trigger: 'click',
-					template: '<div class="popover mollify-bubble-popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>',
+					template: $el,
 					content: html,
-					onshow: function($t) {
+					/*onshow: function($t) {
 						$tip = $t;
 						t.ui.activePopup(api);
 						if (!rendered) {
@@ -647,14 +548,23 @@
 					onhide: function($t) {
 						t.ui._activePopup = false;
 						//e.popover('destroy');
+					}*/
+				}).bind("shown", function(e) {
+					$tip = $el;
+					t.ui.activePopup(api);
+					if (!rendered) {
+						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
+						rendered = true;
 					}
+					if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
+				}).bind("hidden", function() {
+					//$e.unbind("shown").unbind("hidden");
+					mollify.ui.removeActivePopup(api.id);
 				});
 			},
 
 			dynamicBubble: function(o) {
-				//e, c, h
 				var $e = o.element;
-				//var handler = o.handler;
 				
 				var bubbleHtml = function(c) {
 					if (!c) return "";
@@ -662,37 +572,6 @@
 					return $("<div/>").append(c).html();
 				};
 				var html = o.content ? bubbleHtml(o.content) : '<div class="loading"></div>';
-				
-				/*var tip = e.qtip({
-					content: html,
-					position: {
-						my: 'top center',
-						at: 'bottom center'
-					},
-					hide: {
-						delay: 1000,
-						fixed: true,
-						event: 'mouseleave'
-					},
-					style: {
-						tip: true,
-						classes: 'mollify-popup ui-tooltip-light ui-tooltip-shadow ui-tooltip-rounded ui-tooltip-tipped'
-					},
-					events: {
-						render: function(e, api) {
-							if (!h || !h.onRenderBubble) return;
-							h.onRenderBubble(api);
-						},
-						visible: function(e, api) {
-							if (!h || !h.onShowBubble) return;
-							h.onShowBubble(api);
-						},
-						hide: function(e, api) {
-							api.destroy();
-						}
-					}
-				}).qtip('api');
-				tip.show();*/
 				var $tip = false;
 				var api = {
 					show: function() {
@@ -709,7 +588,6 @@
 						return $tip.find('.popover-content');	
 					},
 					content: function(c) {
-						//var $t = e.popover('tip');
 						var $c = $tip.find('.popover-content');
 						$c.html(bubbleHtml(c));
 					}
@@ -723,7 +601,8 @@
 					placement: 'bottom',
 					trigger: 'manual',
 					template: $el,
-					content: html
+					content: html,
+					container: $e.parent()
 				}).bind("shown", function(e) {
 					$tip = $el;
 					t.ui.activePopup(api);
