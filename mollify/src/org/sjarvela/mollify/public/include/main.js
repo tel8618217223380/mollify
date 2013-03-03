@@ -588,31 +588,6 @@
 				}
 				if (item.id == openedId) return;
 				
-				/*var close = function() {
-					$e.slideUp(500, function() {
-						$e.empty();
-					});
-				};
-				that._activeItemContext = {
-					item : item,
-					close : close	
-				};
-				$e.hide().empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext", item, {}));
-				$e.slideDown(500, function() {
-					var $el = $("#mollify-itemcontext-"+item.id);
-					$el.mouseover(function() {
-						return false;
-					});
-					var $content = $el.find(".mollify-itemcontext-content");
-					that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
-						if (!a) {
-							$t.hide();
-							return;
-						}
-						
-						that.renderItemContext(that._activeItemContext, $content, item, a);
-					});
-				});*/
 				var html = mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})[0].outerHTML;
 				$e.popover({
 					title: item.name,
@@ -629,12 +604,12 @@
 
 					var $el = $("#mollify-itemcontext-"+item.id);
 					var $pop = $el.closest(".popover");
+					var maxRight = $c.outerWidth();
 					var popLeft = $pop.position().left;
+					var popW = $pop.outerWidth();
 					if (popLeft < 0)						
 						popLeft = 0;
-					var popW = $pop.outerWidth();
-					var maxRight = $c.outerWidth();
-					if ((popLeft + popW) > maxRight)
+					else if ((popLeft + popW) > maxRight)
 						popLeft = maxRight - popW;
 					$pop.css("left", popLeft + "px");
 					var arrowPos = Math.max(0, ($e.position().left + ($e.outerWidth() / 2) - popLeft));
@@ -650,9 +625,8 @@
 						}
 						
 						that.renderItemContext(api, $content, item, a);
+						$c.scrollTop($e.position().top);
 					});
-					
-					$c.scrollTop($e.offset().top);	//TODO
 				}).bind("hidden", function() {
 					$e.unbind("shown").unbind("hidden");
 					mollify.ui.removeActivePopup(popupId);
@@ -750,6 +724,7 @@
 					items: secondaryActions,
 					hideDelay: 0,
 					style: 'submenu',
+					parentPopupId: cApi.id,
 					onItem: function() {
 						cApi.hide();
 					},
