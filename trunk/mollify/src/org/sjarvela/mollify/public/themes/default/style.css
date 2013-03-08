@@ -302,6 +302,10 @@ input.login-field.text-field {
 	margin-right: 15px;
 }
 
+#mollify-login-remember > span {
+	white-space: nowrap;
+}
+
 #mollify-login-links {
 	margin-right: 15px;
 }

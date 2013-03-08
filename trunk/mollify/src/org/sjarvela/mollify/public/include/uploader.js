@@ -4,6 +4,12 @@
 			var t = this;
 			this.env = env;
 			
+			// prevent default file drag&drop		
+			$(document).bind('drop dragover', function (e) {
+			    e.preventDefault();
+			    return false;
+			});
+			
 			this.open = function(folder) {
 				var $d = mollify.dom.template("mollify-tmpl-uploader-dlg");
 				mollify.ui.views.dialogs.custom({
@@ -31,7 +37,7 @@
 				}).fileupload({
 					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 					dataType: 'json',
-					dropZone: $d.find(".mollify-uploader"),
+					dropZone: $d.find(".mollify-uploader").bind("dragover", function(e) { e.stopPropagation(); }),
 				    drop: function (e, data) {
 				        alert('Dropped: ' + data.files.length);
 				    },
@@ -47,6 +53,7 @@
 			
 			this._initDropZoneEffects = function($e) {
 				$e.bind('dragover', function (e) {
+					e.stopPropagation();
 				    var dropZone = $e,
 				        timeout = window.dropZoneTimeout;
 				    if (!timeout) {
@@ -70,11 +77,12 @@
 				var $d = mollify.dom.template("mollify-tmpl-uploader-widget");
 				$e.append($d);
 				mollify.ui.handlers.localize($e);
+				var $dropZone = $("#mollify-uploader-widget");
 				
 				var $input = $d.find("input").fileupload({
 					url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 					dataType: 'json',
-					dropZone: $("#mollify-uploader-widget"),
+					dropZone: $dropZone,
 				    /*add: function (e, data) {
 				    	$input.attr("disabled", "disabled");
 				        //alert('Dropped: ' + data.files.length);
@@ -104,7 +112,7 @@
 					}
 				});
 				
-				t._initDropZoneEffects($("#mollify-uploader-widget"));
+				t._initDropZoneEffects($dropZone);
 			};
 			
 			return {

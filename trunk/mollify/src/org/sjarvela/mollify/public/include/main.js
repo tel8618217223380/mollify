@@ -625,7 +625,7 @@
 						}
 						
 						that.renderItemContext(api, $content, item, a);
-						$c.scrollTop($e.position().top);
+						$e[0].scrollIntoView();
 					});
 				}).bind("hidden", function() {
 					$e.unbind("shown").unbind("hidden");

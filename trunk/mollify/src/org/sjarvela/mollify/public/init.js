@@ -120,9 +120,9 @@
 		t.plugins.initialize(t.env);
 			
 		t.templates.load("dialogs.html");
-		
-		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader(t.env);
+			
 		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
+		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.plugin.MollifyUploader(t.env);
 		
 		$("body").click(function(e) {
 			// hide popups when clicked outside
@@ -333,13 +333,18 @@
 
 			localize : function(p, h) {
 				p.find(".localized").each(function() {
-					var key = $(this).attr('title-key');
-					if (key)
-						$(this).attr("title", t.env.texts().get(key));
+					var $t = $(this);
+					var key = $t.attr('title-key');
+					if (key) {
+						$t.attr("title", t.env.texts().get(key));
+						$t.removeAttr('title-key');
+					}
 					
-					key = $(this).attr('text-key');
-					if (key)
-						$(this).prepend("<span>"+t.env.texts().get(key)+"</span>");
+					key = $t.attr('text-key');
+					if (key) {
+						$t.prepend(t.env.texts().get(key));
+						$t.removeAttr('text-key');
+					}
 				});
 				p.find("input.hintbox").each(function() {
 					var $this = $(this);
@@ -511,7 +516,7 @@
 			
 			bubble: function(o) {
 				var $e = o.element;
-				var actionId = e.attr('id');
+				var actionId = $e.attr('id');
 				if (!actionId) return;
 				
 				var content = $("#" + actionId + '-bubble');
@@ -2184,7 +2189,7 @@ mollify.MollifyHTML5DragAndDrop = function() {
 	};
 	
 	$("body").bind('dragover', function(e) {
-		if (e.preventDefault) e.preventDefault();	
+		if (e.preventDefault) e.preventDefault();
 		e.originalEvent.dataTransfer.dropEffect = "none";
 		return false;
 	});
