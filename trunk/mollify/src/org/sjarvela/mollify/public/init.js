@@ -1347,18 +1347,29 @@ $.extend(true, mollify, {
 			};
 			
 			this.onEdit = function(item, spec) {
-				alert("edit "+item.name);
 				mollify.ui.views.dialogs.custom({
-					title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
-					content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
+					title: mollify.ui.texts.get('fileViewerEditorViewEditDialogTitle'),
+					content: '<div class="fileviewereditor-editor-content"></div>',
 					buttons: [
-						{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
+						{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
 						{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
 					],
 					"on-button": function(btn, d) {
-
+						if (btn.id == 'no') {
+							d.close();
+							return;
+						}
+						document.getElementById('editor-frame').contentWindow.onEditorSave(function() {
+							d.close();
+						}, function(c, er) {
+							d.close();
+							alert("error "+c+" " + er);							
+						});
 					},
 					"on-show": function(h, $d) {
+						var $content = $d.find(".fileviewereditor-editor-content");
+						var $frm = $('<iframe id="editor-frame" width=\"100%\" height:\"100%\" style=\"width:100%;height:100%;border: none;overflow: none;\" />').attr('src', spec.embedded);
+						$content.removeClass("loading").append($frm);
 					}
 				});
 			};
