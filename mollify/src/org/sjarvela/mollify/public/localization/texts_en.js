@@ -23,6 +23,7 @@ yes: "Yes",
 no: "No",
 dialogCancelButton: "Cancel",
 dialogCancel: "Cancel",
+dialogSave: "Save",
 
 loginDialogTitle: "Login",
 loginDialogUsername: "Username",
@@ -93,6 +94,7 @@ pluginItemDetailsContextTitle: "Details",
 
 pluginFileViewerEditorPreview: "Preview",
 pluginFileViewerEditorView: "View",
+fileViewerEditorViewEditDialogTitle: "Edit",
 
 pluginCommentContextTitle: "Comments"
 
