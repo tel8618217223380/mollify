@@ -880,6 +880,12 @@ $.extend(true, mollify, {
 			};
 			
 			this.custom = function(spec) {
+				var center = function($d) {
+				    $d.css("margin-left", -$d.outerWidth()/2);
+				    $d.css("margin-top", -$d.outerHeight()/2);
+				    $d.css("top", "50%");
+				    $d.css("left", "50%");
+				};
 				var s = spec;
 				if (s['title-key']) s.title = mollify.ui.texts.get(s['title-key']);
 				
@@ -910,6 +916,9 @@ $.extend(true, mollify, {
 				var h = {
 					close: function() {
 						$dlg.modal('hide');
+					},
+					center: function() {
+						center($dlg);
 					}
 				};
 				$dlg.find(".btn").click(function(e) {
@@ -918,6 +927,37 @@ $.extend(true, mollify, {
 					var btn = data.buttons[$(this).index()];
 					if (spec["on-button"]) spec["on-button"](btn, h);
 				});
+				if (spec.resizable) {
+					var $header = $dlg.find(".modal-header");
+					var $body = $dlg.find(".modal-body");
+					var $footer = $dlg.find(".modal-footer");
+					var magicNr = 30;//$body.css("padding-top") + $body.css("padding-bottom");	//TODO??
+					
+					$body.css({
+						"max-height": "none",
+						"max-width": "none"
+					});
+					
+					var onResize = function() {
+						center($dlg);
+				    	var h = $dlg.innerHeight() - $header.outerHeight() - $footer.outerHeight() - magicNr;
+				      	$body.css("height", h);
+					}
+					
+					$dlg.css({
+						"max-height": "none",
+						"max-width": "none",
+						"min-height": $dlg.outerHeight()+"px",
+						"min-width": $dlg.outerWidth()+"px"
+					}).on("resize", onResize).resizable();
+					if (spec.initSize) {
+						$dlg.css({
+							"width": spec.initSize[0]+"px",
+							"height": spec.initSize[1]+"px"
+						});
+					}
+					onResize();
+				}
 				if (spec["on-show"]) spec["on-show"](h, $dlg);
 				return h;
 			};
@@ -1348,6 +1388,8 @@ $.extend(true, mollify, {
 			
 			this.onEdit = function(item, spec) {
 				mollify.ui.views.dialogs.custom({
+					resizable: true,
+					initSize: [600, 400],
 					title: mollify.ui.texts.get('fileViewerEditorViewEditDialogTitle'),
 					content: '<div class="fileviewereditor-editor-content"></div>',
 					buttons: [
@@ -1361,15 +1403,17 @@ $.extend(true, mollify, {
 						}
 						document.getElementById('editor-frame').contentWindow.onEditorSave(function() {
 							d.close();
+							//TODO dispatch changed event
 						}, function(c, er) {
 							d.close();
 							alert("error "+c+" " + er);							
 						});
 					},
-					"on-show": function(h, $d) {
+					"on-show": function(h, $d) {						
 						var $content = $d.find(".fileviewereditor-editor-content");
 						var $frm = $('<iframe id="editor-frame" width=\"100%\" height:\"100%\" style=\"width:100%;height:100%;border: none;overflow: none;\" />').attr('src', spec.embedded);
 						$content.removeClass("loading").append($frm);
+						h.center();
 					}
 				});
 			};

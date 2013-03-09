@@ -1111,3 +1111,10 @@ li.dropdown-item {
 .mollify-fileviewereditor-viewer-item:hover .carousel-caption {
 	display: block;
 }
+
+.modal .ui-resizable-s {
+  bottom: 0;
+}
+.modal .ui-resizable-e {
+  right: 0;
+}
