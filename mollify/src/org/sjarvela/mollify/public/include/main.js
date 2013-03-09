@@ -207,6 +207,8 @@
 						items.push(r.matches[id].item);
 					}
 					
+					that.viewType = 'search';
+					that.initList();
 					that.updateItems(items, {});
 				});
 			};
@@ -356,6 +358,10 @@
 				mollify.ui.process($h, ['localize']);
 				
 				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite ? that._currentFolder : false);
+				if (that.viewType != null) {
+					that.viewType = null;
+					that.initList();
+				}
 			};
 						
 			this.setupHierarchy = function(h) {
@@ -413,7 +419,9 @@
 			
 			this.initList = function() {
 				if (that.isListView()) {
-					that.itemWidget = new mollify.view.main.FileList('mollify-folderview-items', 'main', mollify.settings["list-view-columns"]);
+					var cols = mollify.settings["list-view-columns"];
+					if (that.viewType) cols = mollify.settings["list-view-columns-"+that.viewType];
+					that.itemWidget = new mollify.view.main.FileList('mollify-folderview-items', 'main', cols);
 				} else {
 					that.itemWidget = new mollify.view.main.IconView('mollify-folderview-items', 'main', that.viewStyle == 1 ? 'iconview-small' : 'iconview-large');
 				}
@@ -853,7 +861,9 @@
 				for (var colId in columns) {
 					var col = mollify.ui.filelist.columns[colId];
 					if (!col) continue;
-					t.cols.push(col);
+					
+					var colSpec = $.extend({}, col, columns[colId]);
+					t.cols.push(colSpec);
 				};
 				
 				this.init = function(p) {

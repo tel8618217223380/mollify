@@ -6,6 +6,11 @@
 			"name": { width: 250 },
 			"size": {},
 			"file-modified": { width: 150 }
+		},
+		"list-view-columns-search": {
+			"name": { width: 250 },
+			"path": { width: 150 },
+			"size": {}
 		}
 	};
 	var t = this;
@@ -48,6 +53,16 @@
 			},
 			"content": function(item, data) {
 				return item.name;
+			}
+		});
+		t.ui.filelist.addColumn({
+			"id": "path",
+			"title-key": "fileListColumnTitlePath",
+			"sort": function(i1, i2, sort, data) {
+				return i1.path.toLowerCase().localeCompare(i2.path.toLowerCase()) * sort;
+			},
+			"content": function(item, data) {
+				return item.path;
 			}
 		});
 		t.ui.filelist.addColumn({
@@ -304,9 +319,7 @@
 		filelist : {
 			columns : [],
 			addColumn : function(c) {
-				t.ui.filelist.columns.push(c);
-				if (t.settings["list-view-columns"][c.id])
-					t.ui.filelist.columns[c.id] = $.extend({}, c, t.settings["list-view-columns"][c.id]);
+				t.ui.filelist.columns[c.id] = c;
 			}
 		},
 		

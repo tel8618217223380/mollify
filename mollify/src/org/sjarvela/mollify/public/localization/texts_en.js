@@ -47,6 +47,7 @@ mainviewRetrieveFileTitle: "Retrieve file from URL:",
 mainviewRetrieveUrlTitle: "File URL",
 
 fileListColumnTitleName: "Name",
+fileListColumnTitlePath: "Path",
 fileListColumnTitleSize: "Size",
 fileListColumnTitleLastModified: "Last modified",
 
