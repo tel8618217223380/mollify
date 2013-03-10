@@ -138,14 +138,14 @@ public class MainViewPresenter implements MainViewListener,
 		view.showAllRoots();
 	}
 
-	@Override
-	public void onSubFolderSelected(JsFolder f) {
-		changeToFolderOnCurrentLevel(f);
-	}
+	// @Override
+	// public void onSubFolderSelected(JsFolder f) {
+	// changeToFolderOnCurrentLevel(f);
+	// }
 
 	@Override
-	public void onFolderSelected(int level, JsFolder f) {
-		changeToFolder(level, f);
+	public void onFolderSelected(JsFolder f) {
+		changeToFolder(f);
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class MainViewPresenter implements MainViewListener,
 	public void onSearch(final String text, final JavaScriptObject cb) {
 		view.showProgress();
 
-		fileSystemService.search(model.getCurrentFolder(), text,
+		fileSystemService.search(null, text,
 				new ResultListener<SearchResult>() {
 					@Override
 					public void onSuccess(SearchResult result) {
@@ -415,29 +415,28 @@ public class MainViewPresenter implements MainViewListener,
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToRootFolder(root, createFolderChangeListener(true));
+				model.changeToFolder(root, createFolderChangeListener(true));
 			}
 		});
 	}
 
-	public void changeToFolderOnCurrentLevel(final JsFolder folder) {
-		view.showProgress();
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute() {
-				model.changeToSubfolder(folder,
-						createFolderChangeListener(true));
-			}
-		});
-	}
+	// public void changeToFolderOnCurrentLevel(final JsFolder folder) {
+	// view.showProgress();
+	// Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+	// @Override
+	// public void execute() {
+	// model.changeToSubfolder(folder,
+	// createFolderChangeListener(true));
+	// }
+	// });
+	// }
 
-	public void changeToFolder(final int level, final JsFolder folder) {
+	public void changeToFolder(final JsFolder folder) {
 		view.showProgress();
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute() {
-				model.changeToFolder(level, folder,
-						createFolderChangeListener(true));
+				model.changeToFolder(folder, createFolderChangeListener(true));
 			}
 		});
 	}
@@ -466,7 +465,7 @@ public class MainViewPresenter implements MainViewListener,
 		// allItems.add(0, Folder.Parent);
 
 		if (folderChange)
-			view.setFolder(model.getFolderModel().getFolderList(), model
+			view.setFolder(model.getFolderHierarchy(), model
 					.getFolderPermission().canWrite());
 		view.setData(model.getAllItems(), model.getData());
 		// view.showAddButton(model.getFolderPermission().canWrite());

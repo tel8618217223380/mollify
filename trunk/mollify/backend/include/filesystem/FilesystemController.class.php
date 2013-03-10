@@ -239,7 +239,8 @@
 
 		public function hierarchy($folder) {
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "hierarchy");
-			return $folder->hierarchy();
+			$h =  $folder->hierarchy();
+			return $h;
 		}
 		
 		private function isItemVisible($item) {

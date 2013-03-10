@@ -40,9 +40,9 @@ public class NativeMainView extends NativeView implements MainView {
 			onMove : function(t, i) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onMove(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(t, i);
 			},
-			onSubFolderSelected : function(f) {
-				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onSubFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
-			},
+			//			onSubFolderSelected : function(f) {
+			//				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onSubFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
+			//			},
 			onSearch : function(s, cb) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onSearch(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(s, cb);
 			},
@@ -52,8 +52,8 @@ public class NativeMainView extends NativeView implements MainView {
 			onCreateFolder : function(n) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onCreateFolder(Ljava/lang/String;)(n);
 			},
-			onFolderSelected : function(l, f) {
-				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onFolderSelected(ILorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(l, f);
+			onFolderSelected : function(f) {
+				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
 			},
 			getItemDetails : function(i, d, cb) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getItemDetails(Lorg/sjarvela/mollify/client/filesystem/js/JsFilesystemItem;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(i, d, cb);

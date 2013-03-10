@@ -128,25 +128,28 @@
 		}
 		
 		public function hierarchy($item) {
-			$p = $item->parent();
 			$result = array();
-			if ($p != NULL) {
-				$path = $this->localPath($p);
+			
+			$root = $item->root();
+			$result[] = $root;
 
-				$root = $item->root();
-				$rootPath = $root->internalPath();
+			$to = $item->isFile() ? $item->parent() : $item;
+			
+			$toPath = $this->localPath($to);
+			$rootPath = $root->internalPath();
+						
+			$parts = preg_split("/\//", substr($toPath, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
+			$current = $rootPath;
+			
+			foreach($parts as $part) {
+				$current .= $part.DIRECTORY_SEPARATOR;
 				
-				$parts = preg_split("/\//", substr($path, strlen($rootPath)), -1, PREG_SPLIT_NO_EMPTY);
-				$current = $rootPath;
-				$result[] = $root;
-				
-				foreach($parts as $p) {
-					$public = $this->publicPath(self::folderPath($current));
-					$result[] = new Folder($this->itemId($public), $this->rootId(), $public, $this->filesystemInfo->env()->convertCharset($p), $this);				
-					$current .= $p.DIRECTORY_SEPARATOR;
-				}
-				if (!$item->isFile()) $result[] = $item;
+				$public = $this->publicPath(self::folderPath($current));
+				$itemId = $this->itemId($public);
+
+				$result[] = new Folder($itemId, $this->rootId(), $public, $this->filesystemInfo->env()->convertCharset($part), $this);
 			}
+			
 			return $result;
 		}
 		

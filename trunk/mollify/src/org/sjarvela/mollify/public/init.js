@@ -58,11 +58,13 @@
 		t.ui.filelist.addColumn({
 			"id": "path",
 			"title-key": "fileListColumnTitlePath",
-			"sort": function(i1, i2, sort, data) {
-				return i1.path.toLowerCase().localeCompare(i2.path.toLowerCase()) * sort;
+			"sort": function(i1, i2, sort, data, ctx) {
+				var p1 = ctx.rootsById[i1.root_id].name + i1.path;
+				var p2 = ctx.rootsById[i2.root_id].name + i2.path;
+				return p1.toLowerCase().localeCompare(p2.toLowerCase()) * sort;
 			},
-			"content": function(item, data) {
-				return item.path;
+			"content": function(item, data, ctx) {
+				return '<span class="item-path-root">'+ctx.rootsById[item.root_id].name + '</span>: <span class="item-path-val">' + item.path + '</span>';
 			}
 		});
 		t.ui.filelist.addColumn({

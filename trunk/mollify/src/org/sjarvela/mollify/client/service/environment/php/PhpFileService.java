@@ -97,7 +97,7 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 	}
 
 	@Override
-	public void getFolderInfoWithHierarchy(String id,
+	public void getFolderInfoWithHierarchy(String id, JavaScriptObject data,
 			final ResultListener<JsFolderHierarchyInfo> listener) {
 		if (LogConfiguration.loggingIsEnabled())
 			logger.log(Level.INFO, "Get folder items: " + id);
@@ -119,7 +119,12 @@ public class PhpFileService extends ServiceBase implements FileSystemService {
 
 		request()
 				.url(serviceUrl().fileItemId(id).action(FileAction.info)
-						.param("h", "1")).listener(listener).get();
+						.param("h", "1")).listener(listener)
+				.data(new JSONBuilder().object("data", data).toString()).post();
+
+		// request()
+		// .url(serviceUrl().fileItemId(id).action(FileAction.info)
+		// .param("h", "1")).listener(listener).get();
 	}
 
 	public void getItemDetails(JsFilesystemItem item, JavaScriptObject dataObj,
