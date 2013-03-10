@@ -84,9 +84,9 @@ public class FileSystemServiceAdapter implements FileSystemService {
 	}
 
 	@Override
-	public void getFolderInfoWithHierarchy(String id,
+	public void getFolderInfoWithHierarchy(String id, JavaScriptObject data,
 			ResultListener<JsFolderHierarchyInfo> listener) {
-		service.getFolderInfoWithHierarchy(id,
+		service.getFolderInfoWithHierarchy(id, data,
 				resultListenerFactory.createListener(listener));
 	}
 

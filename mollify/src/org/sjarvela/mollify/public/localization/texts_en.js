@@ -42,6 +42,10 @@ mainViewRootsTitle: "Published folders",
 mainviewCreateFolderTitle : "Create new folder:",
 mainviewCreateFolderName : "Folder name",
 
+mainViewSearchResultsTitle : "Found {0} results",
+mainViewSearchResultsDesc : "Searching \"{0}\"",
+mainViewSearchResultTooltipMatches : "Matches: ",
+
 uploaderWidgetTitle: "Upload new file(s) by clicking or dragging files here:",
 mainviewRetrieveFileTitle: "Retrieve file from URL:",
 mainviewRetrieveUrlTitle: "File URL",
@@ -59,6 +63,8 @@ fileActionMoveTitle: "Move",
 fileActionDeleteTitle: "Delete",
 
 secondaryActions: "Actions",
+
+itemcontextDescriptionHint: "Enter description here",
 
 fileItemDetailsGroupFile: "File",
 fileItemContextDataName: "Name",

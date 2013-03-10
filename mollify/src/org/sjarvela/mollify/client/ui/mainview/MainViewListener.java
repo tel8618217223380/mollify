@@ -10,14 +10,14 @@ public interface MainViewListener {
 
 	void onHomeSelected();
 
-	void onSubFolderSelected(JsFolder f);
+	// void onSubFolderSelected(JsFolder f);
 
-	void onFolderSelected(int level, JsFolder f);
+	void onFolderSelected(JsFolder f);
 
 	void onCopy(JsFolder f, JavaScriptObject items);
 
 	void onMove(JsFolder f, JavaScriptObject items);
-	
+
 	void onSearch(String search, JavaScriptObject cb);
 
 	void onRefresh();

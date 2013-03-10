@@ -33,7 +33,7 @@ public interface FileSystemService {
 	void getFolderInfo(JsFolder parent, JavaScriptObject data,
 			ResultListener<JsFolderInfo> listener);
 
-	void getFolderInfoWithHierarchy(String id,
+	void getFolderInfoWithHierarchy(String id, JavaScriptObject data,
 			ResultListener<JsFolderHierarchyInfo> listener);
 
 	void rename(JsFilesystemItem item, String newName,

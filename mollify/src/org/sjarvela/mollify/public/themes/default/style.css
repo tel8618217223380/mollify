@@ -650,6 +650,10 @@ a.mollify-login-link {
 	right: 0;
 }
 
+#mollify-searchresults-desc {
+	margin-left: 12px;
+}
+
 #mollify-folder-name, .mollify-folderview-title {
 	font-weight: bold;
 	font-size: 18px;
@@ -795,6 +799,11 @@ li#mollify-folder-hierarchy-item-root > a {
 	width: 200px;
 }
 
+.mollify-filelist-col-path {
+	color:#a6a6a6;
+	text-overflow: ellipsis;
+}
+
 .mollify-filelist-col-file-modified {
 	color: #949494;
 }
@@ -929,6 +938,7 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-itemcontext-popover {
 	min-width: 500px;
+	margin-bottom: 16px;
 }
 
 #mollify-itemcontext-description {
