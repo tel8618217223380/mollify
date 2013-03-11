@@ -1536,7 +1536,7 @@ $.extend(true, mollify, {
 				});
 				$tools.find(".mollify-fileviewereditor-viewer-item-edit").click(function(){
 					$lb.lightbox('hide');
-					alert("edit "+activeItem.item.name);
+					that.onEdit(item, spec.edit);	//TODO activeItem
 				});
 				load(init);
 			};
