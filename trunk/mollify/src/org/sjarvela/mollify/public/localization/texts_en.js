@@ -101,7 +101,10 @@ pluginItemDetailsContextTitle: "Details",
 
 pluginFileViewerEditorPreview: "Preview",
 pluginFileViewerEditorView: "View",
+pluginFileViewerEditorEdit: "Edit",
+fileViewerEditorViewInNewWindowTitle: "Open in New Window",
 fileViewerEditorViewEditDialogTitle: "Edit",
+fileViewerEditorViewEditTitle: "Edit",
 
 pluginCommentContextTitle: "Comments"
 
