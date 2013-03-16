@@ -288,9 +288,17 @@
 					that.hideProgress();
 					that.listener.onRefresh();
 				}, function(code, error) {
-					//301 resource not found
 					that.hideProgress();
-					alert(code + error);
+					//301 resource not found
+					if (code == 301) {
+						mollify.ui.views.dialogs.error({
+							message: mollify.ui.texts.get('mainviewRetrieveFileResourceNotFound', [url])
+						});
+					} else {
+						mollify.ui.views.dialogs.error({
+							message: code + " " + error
+						});
+					}
 				});
 			};
 
@@ -370,12 +378,16 @@
 							 		if (!mollify.hasFeature('retrieve_url')) {
 								 		$("#mollify-mainview-addfile-retrieve").remove();
 							 		}
-							 		$("#mollify-mainview-addfile-retrieve-button").click(function() {
+							 		var onRetrieve = function() {
 								 		var val = $("#mollify-mainview-addfile-retrieve-url-input").val();
 								 		if (!val || val.length < 1 || val.substring(0,4).toLowerCase().localeCompare('http') != 0) return false;
 								 		b.close();
 								 		that.onRetrieveUrl(val);
-							 		})
+							 		};
+							 		$("#mollify-mainview-addfile-retrieve-url-input").bind('keypress', function(e) {
+										if ((e.keyCode || e.which) == 13) onRetrieve();
+									});
+							 		$("#mollify-mainview-addfile-retrieve-button").click(onRetrieve);
 								}
 							}});
 							return false;
