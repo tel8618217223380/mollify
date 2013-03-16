@@ -1116,6 +1116,8 @@ li.dropdown-item {
 
 .mollify-fileviewereditor-viewer-item .carousel-caption {
 	display: none;
+	position: absolute;
+	bottom: 0;
 }
 
 .mollify-fileviewereditor-viewer-item:hover .carousel-caption {

@@ -8,6 +8,8 @@
 	 * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
 	 * this entire header must remain intact.
 	 */
+	 
+	 // TODO split this class into separate UserDao, FolderDao etc
 
 	class ConfigurationDao {
 		protected $db;
@@ -197,7 +199,7 @@
 		}
 
 		public function updateUserGroup($id, $name, $description) {
-			return $this->updateUser($id, $name, NULL, NULL, NULL, $description);
+			return $this->updateUser($id, $name, NULL, NULL, NULL, NULL, $description);
 		}
 		
 		public function removeUserGroup($id) {

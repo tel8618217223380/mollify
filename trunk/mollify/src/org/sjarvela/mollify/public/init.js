@@ -1448,11 +1448,22 @@ $.extend(true, mollify, {
 				
 				var $lb;
 				var $lbc;
+				var $i = false;
+				var maxW;
+				var maxH;
 				var resize = function() {
+					maxW = ($(window).width()-100);
+					maxH = ($(window).height()-100);
 					$lbc.css({
-						"max-width": ($(window).width()-100)+"px",
-						"max-height": ($(window).height()-100)+"px"
+						"max-width": maxW+"px",
+						"max-height": maxH+"px"
 					});
+					if ($i) {
+						$i.css({
+							"max-width": maxW+"px",
+							"max-height": maxH+"px"
+						});
+					}
 					$lb.lightbox('center');
 				};
 				$(window).resize(resize);
@@ -1467,7 +1478,8 @@ $.extend(true, mollify, {
 					}).done(function(data) {
 						loaded[id] = true;
 						
-						var $ic = $("#mollify-fileviewereditor-viewer-item-"+id).find(".mollify-fileviewereditor-viewer-item-content");
+						$i = $("#mollify-fileviewereditor-viewer-item-"+id);
+						var $ic = $i.find(".mollify-fileviewereditor-viewer-item-content");
 						$ic.removeClass("loading").html(data.result.html);
 						if (data.result.size) {
 							var sp = data.result.size.split(';');

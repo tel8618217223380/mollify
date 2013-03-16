@@ -279,6 +279,20 @@
 				mollify.ui.hideActivePopup();
 				that.listener.onFolderSelected(f);
 			};
+			
+			this.onRetrieveUrl = function(url) {
+				if (!that._currentFolder) return;
+				
+				that.showProgress();
+				mollify.service.post("filesystem/"+that._currentFolder.id+"/retrieve", {url:url}, function(r) {
+					that.hideProgress();
+					that.listener.onRefresh();
+				}, function(code, error) {
+					//301 resource not found
+					that.hideProgress();
+					alert(code + error);
+				});
+			};
 
 			this.dropType = function(to, item) {
 				var copy = (to.root_id != item.root_id);
@@ -356,6 +370,12 @@
 							 		if (!mollify.hasFeature('retrieve_url')) {
 								 		$("#mollify-mainview-addfile-retrieve").remove();
 							 		}
+							 		$("#mollify-mainview-addfile-retrieve-button").click(function() {
+								 		var val = $("#mollify-mainview-addfile-retrieve-url-input").val();
+								 		if (!val || val.length < 1 || val.substring(0,4).toLowerCase().localeCompare('http') != 0) return false;
+								 		b.close();
+								 		that.onRetrieveUrl(val);
+							 		})
 								}
 							}});
 							return false;
