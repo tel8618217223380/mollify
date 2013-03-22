@@ -639,6 +639,88 @@
 				return api;
 			},
 			
+			table: function(id, o) {
+				var $e = $("#"+id);
+				if ($e.length == 0 || !o.columns) return false;
+				
+				$e.addClass("table");
+
+				var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
+				for (var i=0,j=o.columns.length; i<j; i++) {
+					$h.append("<th>"+o.columns[i].title+"</th>");
+				}
+
+				var $l = $("<tbody></tbody>").appendTo($e);
+				var addItem = function(item) {
+					var $row = $("<tr></tr>").appendTo($l);
+					for (var i=0,j=o.columns.length; i<j; i++) {
+						var $cell = $("<td></td>").appendTo($row);
+						var v = item[o.columns[i].id];
+						
+						if (o.columns[i].renderer) o.columns[i].renderer(item, v, $cell);
+						else $cell.html(v);
+					}
+				};
+				
+				var api = {
+					add : function(item) {
+						if (!item) return;
+						
+						if (isArray(item)) {
+							for (var i=0,j=item.length; i<j; i++) addItem(item[i]);
+						} else {
+							addItem(item);
+						}	
+					}
+				};
+				return api;
+			},
+			
+			select: function(e, o) {				
+				var $e = (typeof(e) === "string") ? $("#"+e) : e;
+				if (!$e || $e.length == 0) return false;
+
+				var addItem = function(item) {
+					var $row = $("<option></option>").appendTo($e);
+					if (o.renderer) o.renderer(item, $row);
+					else $row.html(o.title ? item[o.title] : item);
+					$row[0].data = item;
+				};
+				
+				var api = {
+					add : function(item) {
+						if (!item) return;
+						
+						if (isArray(item)) {
+							for (var i=0,j=item.length; i<j; i++) addItem(item[i]);
+						} else {
+							addItem(item);
+						}	
+					},
+					select : function(item) {
+						var $c = $e.find("option");
+						if (typeof(item) === 'number') {
+							if ($c.length >= item) return;
+							$($c[item]).attr("selected", "true");
+							return;	
+						}
+						for (var i=0,j=$c.length; i<j; i++) {
+							if ($c[i].data == item) {
+								$($c[i]).attr("selected", "true");
+								return;
+							}
+						}
+					},
+					selected : function() {
+						var s = $e.find('option:selected');
+						if (!s || s.length == 0) return false;
+						return s[0].data;
+					}
+				};
+				if (o.values) api.add(o.values);
+				return api;
+			},
+			
 			radio: function(e, h) {
 				var rid = e.addClass("btn-group").attr('id');
 				var items = e.find("button");
@@ -936,7 +1018,7 @@ $.extend(true, mollify, {
 						center($dlg);
 					}
 				};
-				$dlg.find(".btn").click(function(e) {
+				$dlg.find(".modal-footer .btn").click(function(e) {
 					e.preventDefault();
 					var data = $(this).tmplItem().data;
 					var btn = data.buttons[$(this).index()];
@@ -1781,6 +1863,158 @@ $.extend(true, mollify, {
 		}
 	}
 });
+
+/**
+/* Permissions plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		PermissionsPlugin: function() {
+			var that = this;
+			
+			this.initialize = function(core) {
+				that.core = core;
+				
+				//mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
+				//mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
+			};
+			
+			this.renderItemContextDetails = function(el, item, $content, data) {
+				$content.addClass("loading");
+				mollify.templates.load("comments-content", mollify.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
+					$content.removeClass("loading");
+					if (data.count == 0) {
+						that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
+					} else {
+						that.loadComments(item, function(item, comments) {
+							that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
+						});
+					}
+				});
+			};
+			
+			that.onOpenPermissions = function(item) {
+mollify.ui.views.dialogs.custom({
+					resizable: true,
+					initSize: [600, 400],
+					title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle'),
+					content: mollify.dom.template("mollify-tmpl-permission-editor", {item: item}),
+					buttons: [
+						{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+						{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+					],
+					"on-button": function(btn, d) {
+						if (btn.id == 'no') {
+							d.close();
+							return;
+						}
+						//TODO save
+					},
+					"on-show": function(h, $d) {
+						var processUserData = function(l) {
+							var userData = {
+								users : [],
+								usersById : {},
+								groups : [],
+								groupsById : {}
+							};
+							for (var i=0,j=l.length; i<j; i++) {
+								var u = l[i];
+								if (u["is_group"] == "0") {
+									userData.users.push(u);
+									userData.usersById[u.id] = u;
+								} else {
+									userData.groups.push(u);
+									userData.groupsById[u.id] = u;
+								}
+							}
+							return userData;
+						};
+						var $content = $d.find("#mollify-pluginpermissions-editor-content");
+						$("#mollify-pluginpermissions-editor-change-item").click(function(e) {
+							e.preventDefault();
+							return false;
+						});
+
+						h.center();
+						
+						mollify.service.get("filesystem/"+item.id+"/permissions?u=1", function(r) {
+							$content.removeClass("loading");
+							that.initEditor(item, r.permissions, processUserData(r.users));
+						}, function(code, error) {
+							$d.close();
+							mollify.ui.views.dialogs.error({
+								message: code + " " + error
+							});
+						});
+					}
+				});
+			};
+			
+			this.initEditor = function(item, permissions, userData) {
+				var permissionOptions = [
+					{ title: "TODORead/write", value: "rw"},
+					{ title: "TODORead only", value: "ro"},
+					{ title: "TODONone", value: "n"}
+				];
+				var permissionsByKey = {};
+				for (var i=0,j=permissionOptions.length; i<j; i++) { var p = permissionOptions[i]; permissionsByKey[p.value] = p; }
+				
+				var $list = mollify.ui.controls.table("mollify-pluginpermissions-editor-permission-list", {
+					columns: [
+						{ id: "user_id", title: "TODO User", renderer: function(i, v, $c){ $c.html(userData.usersById[v].name); } },
+						{ id: "permission", title: "TODO Permission", renderer: function(i, v, $c){
+							var $s = mollify.ui.controls.select($("<select></select>").appendTo($c), {
+								values: permissionOptions,
+								title : "title"
+							});
+							$s.select(permissionsByKey[v]);
+							$c[0].ctrl = $s;
+						}}
+					]
+				});
+				$list.add(permissions);
+				var $newUser = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-user", {
+					title : "name"
+				});
+				$newUser.add(userData.users);
+				
+				var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
+					title : "title"
+				});
+				$newPermission.add(permissionOptions);
+				
+				$("#mollify-pluginpermissions-editor-new-add").click(function() {
+					var selectedUser = $newUser.selected();
+					if (!selectedUser) return;
+					var selectedPermission = $newPermission.selected();
+					if (!selectedPermission) return;
+					
+					$list.add({"user_id": selectedUser.id, permission: selectedPermission.value });
+				});
+			};
+						
+			return {
+				id: "plugin-permissions",
+				initialize: that.initialize,
+				itemContextHandler : function(item, data) {
+					if (!mollify.session.admin) return false;
+					
+					return {
+						details: {
+							"title-key": "pluginPermissionsContextTitle",
+							"on-render": function(el, $content) { $content.html("todo"); }
+						},
+						actions: [
+							{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.onOpenPermissions(item); } }
+						]
+					};
+				}
+			};
+		}
+	}
+});
+
 
 /*function ItemDetailsPlugin(conf, sp) {
 	var that = this;

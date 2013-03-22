@@ -104,8 +104,8 @@
 			return $result->firstRow();
 		}
 		
-		public function getAllUsers() {
-			return $this->db->query("SELECT id, name, email, auth, permission_mode, expiration, is_group FROM ".$this->db->table("user")." where is_group = 0 ORDER BY id ASC")->rows();
+		public function getAllUsers($groups = FALSE) {
+			return $this->db->query("SELECT id, name, email, auth, permission_mode, expiration, is_group FROM ".$this->db->table("user")." where ".($groups ? "1=1" : "is_group = 0")." ORDER BY id ASC")->rows();
 		}
 
 		public function getUser($id, $expiration = FALSE) {
