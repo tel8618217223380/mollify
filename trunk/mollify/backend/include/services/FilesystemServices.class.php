@@ -167,7 +167,13 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$this->response()->success($this->env->filesystem()->allPermissions($item));
+					$this->env->authentication()->assertAdmin();
+					
+					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
+					$result = array("permissions" => $this->env->filesystem()->allPermissions($item));
+					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
+					
+					$this->response()->success($result);
 					break;
 				default:
 					throw $this->invalidRequestException();
@@ -260,7 +266,13 @@
 					$this->response()->success($this->env->filesystem()->details($item));
 					break;
 				case 'permissions':
-					$this->response()->success($this->env->filesystem()->allPermissions($item));
+					$this->env->authentication()->assertAdmin();
+					
+					$users = ($this->env->request()->hasParam("u") and strcmp($this->env->request()->param("u"), "1") == 0);
+					$result = array("permissions" => $this->env->filesystem()->allPermissions($item));
+					if ($users) $result["users"] = $this->env->configuration()->getAllUsers(TRUE);
+					
+					$this->response()->success($result);
 					break;
 				default:
 					throw $this->invalidRequestException();

@@ -39,10 +39,12 @@
 		}
 		
 		private function getIp() {
-			$headers = apache_request_headers();
-			
-			if (array_key_exists('X-Forwarded-For', $headers))
-				return $headers['X-Forwarded-For'].' via '.$_SERVER["REMOTE_ADDR"];
+			if (function_exists("apache_request_headers")) {
+				$headers = apache_request_headers();
+				
+				if (array_key_exists('X-Forwarded-For', $headers))
+					return $headers['X-Forwarded-For'].' via '.$_SERVER["REMOTE_ADDR"];
+			}
 			
 			return $_SERVER["REMOTE_ADDR"];
 		}

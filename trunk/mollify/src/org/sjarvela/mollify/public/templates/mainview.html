@@ -266,3 +266,24 @@
 		</div>
 	</div>
 </script>
+
+<script id="mollify-tmpl-permission-editor" type="text/x-jquery-tmpl">
+	<div id="mollify-pluginpermissions-editor-content" class="loading">
+		{{if item}}
+		<div id="mollify-pluginpermissions-editor-item">
+			<span class="name">${item.name}</span>
+			<button id="mollify-pluginpermissions-editor-change-item" class="btn btn-primary">TODO change</button>
+		</div>
+		{{/if}}
+		<table id="mollify-pluginpermissions-editor-permission-list" class="table">
+		</table>
+		<div id="mollify-pluginpermissions-editor-new">
+			<span class="title">New</span>
+			<select id="mollify-pluginpermissions-editor-new-user">
+			</select>
+			<select id="mollify-pluginpermissions-editor-new-permission">
+			</select>
+			<button id="mollify-pluginpermissions-editor-new-add" class="btn btn-success"><i class="icon-plus"></i></button>
+		</div>
+	</div>
+</script>
