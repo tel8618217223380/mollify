@@ -108,6 +108,15 @@ fileViewerEditorViewInNewWindowTitle: "Open in New Window",
 fileViewerEditorViewEditDialogTitle: "Edit",
 fileViewerEditorViewEditTitle: "Edit",
 
-pluginCommentContextTitle: "Comments"
+pluginCommentContextTitle: "Comments",
 
+pluginPermissionsAction: "Permissions...",
+pluginPermissionsContextTitle: "Permissions",
+pluginPermissionsEditDialogTitle: "Permissions",
+pluginPermissionsValueRW: "Read/Write",
+pluginPermissionsValueRO: "Read Only",
+pluginPermissionsValueN: "None",
+pluginPermissionsEditColUser: "User",
+pluginPermissionsEditColPermission: "Permission",
+pluginPermissionsEditRemove: "Remove"
 })})();

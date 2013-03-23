@@ -74,6 +74,10 @@ body {
 	font-family: 'proxima-nova', 'MollifyPlainText', "Lucida Grande", "Trebuchet MS", Lucida, Verdana, sans-serif;
 }
 
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	margin: 0;
+}
+
 /*a.button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -293,7 +297,7 @@ input.login-field.text-field {
 }*/
 
 #mollify-login-name {
-	margin-top: 100px;
+	margin: 100px 0 10px 0;
 }
 
 #mollify-login-remember {
