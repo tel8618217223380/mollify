@@ -2058,8 +2058,19 @@ $.extend(true, mollify, {
 						userVal.permission = permissionVal;
 						$list.update(userVal);
 					} else {
-						//var i = permissionData["removed"].indexOf(
-						//TODO check deleted
+						// if previously deleted, move it to modified
+						for (var i=0,j=permissionData["removed"].length; i<j; i++) {
+							var d = permissionData["removed"][i];
+							if (d["user_id"] == user.id) {
+								permissionData["removed"].remove(i);
+								permissionData["modified"].push(d);
+								d.permission = permissionVal;
+								$list.add(d);
+								return;
+							}
+						}
+
+						// not modified or deleted => create new
 						var p = {"user_id": user.id, "item_id": item.id, permission: permissionVal, isnew: true };
 						permissionData["new"].push(p);
 						$list.add(p);
@@ -2745,6 +2756,14 @@ if (!Array.prototype.indexOf) {
          }
          return -1;
     }
+}
+
+if (!Array.prototype.remove) { 
+	Array.prototype.remove = function(from, to) {
+	  var rest = this.slice((to || from) + 1 || this.length);
+	  this.length = from < 0 ? this.length + from : from;
+	  return this.push.apply(this, rest);
+	};
 }
 
 function strpos(haystack, needle, offset) {
