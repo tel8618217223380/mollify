@@ -647,22 +647,61 @@
 
 				var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
 				for (var i=0,j=o.columns.length; i<j; i++) {
-					$h.append("<th>"+o.columns[i].title+"</th>");
+					var col = o.columns[i];
+					$h.append("<th>"+(col.title ? col.title : "")+"</th>");
 				}
 
 				var $l = $("<tbody></tbody>").appendTo($e);
+				
+				var setCellValue = function($cell, col, item) {
+					var v = item[col.id];		
+					if (col.renderer) col.renderer(item, v, $cell);
+					else $cell.html(v);
+				};
 				var addItem = function(item) {
 					var $row = $("<tr></tr>").appendTo($l);
+					$row[0].data = item;
+					if (o.onRow) o.onRow($row, item);
+					
 					for (var i=0,j=o.columns.length; i<j; i++) {
 						var $cell = $("<td></td>").appendTo($row);
-						var v = item[o.columns[i].id];
-						
-						if (o.columns[i].renderer) o.columns[i].renderer(item, v, $cell);
-						else $cell.html(v);
+						setCellValue($cell, o.columns[i], item);
 					}
 				};
 				
+				var findRow = function(item) {
+					var found = false;
+					$l.find("tr").each(function() {
+						var $row = $(this);
+						var rowItem = $row[0].data;
+						if (item == rowItem) {
+							found = $row;
+							return false;
+						}
+					});
+					return found;
+				};
+				var updateRow = function($row) {
+					$row.find("td").each(function() {
+						var $cell = $(this);
+						var index = $cell.index();
+						setCellValue($cell, o.columns[index], $row[0].data);
+					});
+				};
+				
 				var api = {
+					findByKey : function(k) {
+						if (!o.key) return false;
+						var found = false;
+						$l.find("tr").each(function() {
+							var item = $(this)[0].data;
+							if (item[o.key] == k) {
+								found = item;
+								return false;
+							}
+						});
+						return found;
+					},
 					add : function(item) {
 						if (!item) return;
 						
@@ -671,6 +710,18 @@
 						} else {
 							addItem(item);
 						}	
+					},
+					update : function(item) {
+						if (!item) return;
+						var $row = findRow(item);
+						if (!$row) return;
+						updateRow($row);
+					},
+					remove : function(item) {
+						if (!item) return;
+						var $row = findRow(item);
+						if (!$row) return;
+						$row.remove();
 					}
 				};
 				return api;
@@ -682,10 +733,28 @@
 
 				var addItem = function(item) {
 					var $row = $("<option></option>").appendTo($e);
-					if (o.renderer) o.renderer(item, $row);
-					else $row.html(o.title ? item[o.title] : item);
+					if (item == o.none) {
+						$row.html(item.title);
+					} else {
+						if (o.renderer) o.renderer(item, $row);
+						else $row.html(o.title ? item[o.title] : item);
+					}
 					$row[0].data = item;
 				};
+				
+				var getSelected = function() {
+					var s = $e.find('option:selected');
+					if (!s || s.length == 0) return false;
+					var item = s[0].data;
+					if (item == o.none) return false;
+					return item;
+				}
+				
+				if (o.onChange) {
+					$e.change(function() {
+						o.onChange(getSelected());
+					});
+				}
 				
 				var api = {
 					add : function(item) {
@@ -699,24 +768,26 @@
 					},
 					select : function(item) {
 						var $c = $e.find("option");
+						
 						if (typeof(item) === 'number') {
 							if ($c.length >= item) return;
 							$($c[item]).attr("selected", "true");
 							return;	
 						}
+						
+						var find = item;
+						if (o.none && !find) find = o.none;
+						
 						for (var i=0,j=$c.length; i<j; i++) {
-							if ($c[i].data == item) {
+							if ($c[i].data == find) {
 								$($c[i]).attr("selected", "true");
 								return;
 							}
 						}
 					},
-					selected : function() {
-						var s = $e.find('option:selected');
-						if (!s || s.length == 0) return false;
-						return s[0].data;
-					}
+					selected : getSelected
 				};
+				if (o.none) api.add(o.none);
 				if (o.values) api.add(o.values);
 				return api;
 			},
@@ -1894,7 +1965,14 @@ $.extend(true, mollify, {
 			};
 			
 			that.onOpenPermissions = function(item) {
-mollify.ui.views.dialogs.custom({
+				var permissionData = {
+					"new": [],
+					"modified": [],
+					"removed": [],	
+				};
+				var $content = false;
+				
+				mollify.ui.views.dialogs.custom({
 					resizable: true,
 					initSize: [600, 400],
 					title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle'),
@@ -1908,15 +1986,25 @@ mollify.ui.views.dialogs.custom({
 							d.close();
 							return;
 						}
-						//TODO save
+						if (permissionData["new"].length == 0 && permissionData["modified"].length == 0 && permissionData["removed"].length == 0)
+							return;
+						
+						$content.addClass("loading");
+						mollify.service.put("filesystem/permissions", permissionData, function(r) {
+							d.close();
+						}, function(code, error) {
+							d.close();
+							mollify.ui.views.dialogs.error({
+								message: code + " " + error
+							});
+						});
 					},
 					"on-show": function(h, $d) {
 						var processUserData = function(l) {
 							var userData = {
 								users : [],
-								usersById : {},
 								groups : [],
-								groupsById : {}
+								usersById : {},
 							};
 							for (var i=0,j=l.length; i<j; i++) {
 								var u = l[i];
@@ -1925,12 +2013,12 @@ mollify.ui.views.dialogs.custom({
 									userData.usersById[u.id] = u;
 								} else {
 									userData.groups.push(u);
-									userData.groupsById[u.id] = u;
+									userData.usersById[u.id] = u;
 								}
 							}
 							return userData;
 						};
-						var $content = $d.find("#mollify-pluginpermissions-editor-content");
+						$content = $d.find("#mollify-pluginpermissions-editor-content");
 						$("#mollify-pluginpermissions-editor-change-item").click(function(e) {
 							e.preventDefault();
 							return false;
@@ -1940,7 +2028,7 @@ mollify.ui.views.dialogs.custom({
 						
 						mollify.service.get("filesystem/"+item.id+"/permissions?u=1", function(r) {
 							$content.removeClass("loading");
-							that.initEditor(item, r.permissions, processUserData(r.users));
+							that.initEditor(item, r.permissions, processUserData(r.users), permissionData);
 						}, function(code, error) {
 							$d.close();
 							mollify.ui.views.dialogs.error({
@@ -1951,38 +2039,85 @@ mollify.ui.views.dialogs.custom({
 				});
 			};
 			
-			this.initEditor = function(item, permissions, userData) {
+			this.initEditor = function(item, permissions, userData, permissionData) {
 				var permissionOptions = [
-					{ title: "TODORead/write", value: "rw"},
-					{ title: "TODORead only", value: "ro"},
-					{ title: "TODONone", value: "n"}
+					{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
+					{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
+					{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
 				];
-				var permissionsByKey = {};
-				for (var i=0,j=permissionOptions.length; i<j; i++) { var p = permissionOptions[i]; permissionsByKey[p.value] = p; }
+				var permissionOptionsByKey = {};
+				for (var i=0,j=permissionOptions.length; i<j; i++) { var p = permissionOptions[i]; permissionOptionsByKey[p.value] = p; }
 				
-				var $list = mollify.ui.controls.table("mollify-pluginpermissions-editor-permission-list", {
+				var $list;
+				
+				var onAddOrUpdate = function(user, permissionVal) {
+					var userVal = $list.findByKey(user.id);
+					if (userVal) {
+						if (!userVal.isnew) permissionData["modified"].push(userVal);
+						userVal.permission = permissionVal;
+						$list.update(userVal);
+					} else {
+						//var i = permissionData["removed"].indexOf(
+						//TODO check deleted
+						var p = {"user_id": user.id, "item_id": item.id, permission: permissionVal, isnew: true };
+						permissionData["new"].push(p);
+						$list.add(p);
+					}					
+				};
+				var onRemove = function(permission) {
+					if (!permission.isnew) permissionData["removed"].push(permission);
+				};
+				var onEdit = function(permission) {
+					if (!permission.isnew) permissionData["modified"].push(permission);
+				};
+				
+				$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-permission-list", {
+					key: "user_id",
+					onRow: function($r, i) { var isGroup = (userData.usersById[i["user_id"]]["is_group"] != "0"); if (isGroup) $r.addClass("group"); },
 					columns: [
-						{ id: "user_id", title: "TODO User", renderer: function(i, v, $c){ $c.html(userData.usersById[v].name); } },
-						{ id: "permission", title: "TODO Permission", renderer: function(i, v, $c){
-							var $s = mollify.ui.controls.select($("<select></select>").appendTo($c), {
-								values: permissionOptions,
-								title : "title"
-							});
-							$s.select(permissionsByKey[v]);
-							$c[0].ctrl = $s;
-						}}
+						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
+						{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
+							if (!$c[0].ctrl) {
+								var $s = mollify.ui.controls.select($("<select></select>").appendTo($c.addClass("permission")), {
+									values: permissionOptions,
+									title : "title",
+									onChange: function(v) {
+										i.permission = v.value;
+										onEdit(i);
+									}
+								});
+								$c[0].ctrl = $s;
+							}
+							$c[0].ctrl.select(permissionOptionsByKey[v]);
+						}},
+						{ id: "remove", title: "", renderer: function(i, v, $c){ $c.append(mollify.dom.template("mollify-tmpl-permission-editor-listremove")); }}
 					]
 				});
+				$("#mollify-pluginpermissions-editor-permission-list a.remove-link").live("click", function() {
+					var permission = $(this).parent().parent()[0].data;
+					onRemove(permission);
+					$list.remove(permission);
+				});
+				
 				$list.add(permissions);
 				var $newUser = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-user", {
+					none: {title:""},
 					title : "name"
 				});
 				$newUser.add(userData.users);
+				$newUser.add(userData.groups);
 				
 				var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
+					none: {title:""},
 					title : "title"
 				});
 				$newPermission.add(permissionOptions);
+				
+				var resetNew = function() {
+					$newUser.select(false);
+					$newPermission.select(false);
+				};
+				resetNew();
 				
 				$("#mollify-pluginpermissions-editor-new-add").click(function() {
 					var selectedUser = $newUser.selected();
@@ -1990,7 +2125,8 @@ mollify.ui.views.dialogs.custom({
 					var selectedPermission = $newPermission.selected();
 					if (!selectedPermission) return;
 					
-					$list.add({"user_id": selectedUser.id, permission: selectedPermission.value });
+					onAddOrUpdate(selectedUser, selectedPermission.value);
+					resetNew();
 				});
 			};
 						
