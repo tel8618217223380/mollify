@@ -118,5 +118,8 @@ pluginPermissionsValueRO: "Read Only",
 pluginPermissionsValueN: "None",
 pluginPermissionsEditColUser: "User",
 pluginPermissionsEditColPermission: "Permission",
-pluginPermissionsEditRemove: "Remove"
+pluginPermissionsEditRemove: "Remove",
+pluginPermissionsEditNewTitle: "Add or Update Permission",
+pluginPermissionsEditNoUser: "Select user",
+pluginPermissionsEditNoPermission: "Select permission"
 })})();
