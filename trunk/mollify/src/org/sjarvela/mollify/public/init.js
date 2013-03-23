@@ -2050,6 +2050,7 @@ $.extend(true, mollify, {
 				
 				var $list;
 				
+				var isGroup = function(id) { return (userData.usersById[id]["is_group"] != "0"); };
 				var onAddOrUpdate = function(user, permissionVal) {
 					var userVal = $list.findByKey(user.id);
 					if (userVal) {
@@ -2073,7 +2074,7 @@ $.extend(true, mollify, {
 				
 				$list = mollify.ui.controls.table("mollify-pluginpermissions-editor-permission-list", {
 					key: "user_id",
-					onRow: function($r, i) { var isGroup = (userData.usersById[i["user_id"]]["is_group"] != "0"); if (isGroup) $r.addClass("group"); },
+					onRow: function($r, i) { if (isGroup(i["user_id"])) $r.addClass("group"); },
 					columns: [
 						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
 						{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
@@ -2101,14 +2102,15 @@ $.extend(true, mollify, {
 				
 				$list.add(permissions);
 				var $newUser = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-user", {
-					none: {title:""},
-					title : "name"
+					none: {title: mollify.ui.texts.get('pluginPermissionsEditNoUser')},
+					title : "name",
+					onCreate : function($o, i) { if (isGroup(i.id)) $o.addClass("group"); }
 				});
 				$newUser.add(userData.users);
 				$newUser.add(userData.groups);
 				
 				var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
-					none: {title:""},
+					none: {title: mollify.ui.texts.get('pluginPermissionsEditNoPermission')},
 					title : "title"
 				});
 				$newPermission.add(permissionOptions);
