@@ -112,6 +112,7 @@ pluginCommentContextTitle: "Comments",
 
 pluginPermissionsAction: "Permissions...",
 pluginPermissionsContextTitle: "Permissions",
+pluginPermissionsContextEditAction: "Edit...",
 pluginPermissionsEditDialogTitle: "Permissions",
 pluginPermissionsValueRW: "Read/Write",
 pluginPermissionsValueRO: "Read Only",

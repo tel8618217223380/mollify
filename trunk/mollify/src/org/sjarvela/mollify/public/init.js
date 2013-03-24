@@ -1924,10 +1924,7 @@ $.extend(true, mollify, {
 						details: {
 							"title-key": "pluginCommentContextTitle",
 							"on-render": function(el, $content) { that.renderItemContextDetails(el, item, $content, data); }
-						},
-						actions: [
-							{ id: 'pluginCommentFoo', title: 'foo', callback: function() { alert("foo"); } }
-						]
+						}
 					};
 				}
 			};
@@ -1945,7 +1942,14 @@ $.extend(true, mollify, {
 			
 			this.initialize = function(core) {
 				that.core = core;
-				
+				that.permissionOptions = [
+					{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
+					{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
+					{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
+				];
+				that.permissionOptionsByKey = {};
+				for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
+			
 				//mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
 				//mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 			};
@@ -2000,24 +2004,6 @@ $.extend(true, mollify, {
 						});
 					},
 					"on-show": function(h, $d) {
-						var processUserData = function(l) {
-							var userData = {
-								users : [],
-								groups : [],
-								usersById : {},
-							};
-							for (var i=0,j=l.length; i<j; i++) {
-								var u = l[i];
-								if (u["is_group"] == "0") {
-									userData.users.push(u);
-									userData.usersById[u.id] = u;
-								} else {
-									userData.groups.push(u);
-									userData.usersById[u.id] = u;
-								}
-							}
-							return userData;
-						};
 						$content = $d.find("#mollify-pluginpermissions-editor-content");
 						$("#mollify-pluginpermissions-editor-change-item").click(function(e) {
 							e.preventDefault();
@@ -2026,28 +2012,47 @@ $.extend(true, mollify, {
 
 						h.center();
 						
-						mollify.service.get("filesystem/"+item.id+"/permissions?u=1", function(r) {
+						that.loadPermissions(item, function(permissions, userData) {
 							$content.removeClass("loading");
-							that.initEditor(item, r.permissions, processUserData(r.users), permissionData);
-						}, function(code, error) {
+							that.initEditor(item, permissions, userData, permissionData);
+						}, function(c, e) {
 							$d.close();
 							mollify.ui.views.dialogs.error({
-								message: code + " " + error
+								message: c + " " + e
 							});
 						});
 					}
 				});
 			};
 			
+			this.processUserData = function(l) {
+				var userData = {
+					users : [],
+					groups : [],
+					usersById : {},
+				};
+				for (var i=0,j=l.length; i<j; i++) {
+					var u = l[i];
+					if (u["is_group"] == "0") {
+						userData.users.push(u);
+						userData.usersById[u.id] = u;
+					} else {
+						userData.groups.push(u);
+						userData.usersById[u.id] = u;
+					}
+				}
+				return userData;
+			};
+			
+			this.loadPermissions = function(item, cb, err) {
+				mollify.service.get("filesystem/"+item.id+"/permissions?u=1", function(r) {
+					cb(r.permissions, that.processUserData(r.users));
+				}, function(code, error) {
+					err(code, error);
+				});
+			};
+			
 			this.initEditor = function(item, permissions, userData, permissionData) {
-				var permissionOptions = [
-					{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-					{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
-					{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
-				];
-				var permissionOptionsByKey = {};
-				for (var i=0,j=permissionOptions.length; i<j; i++) { var p = permissionOptions[i]; permissionOptionsByKey[p.value] = p; }
-				
 				var $list;
 				
 				var isGroup = function(id) { return (userData.usersById[id]["is_group"] != "0"); };
@@ -2091,7 +2096,7 @@ $.extend(true, mollify, {
 						{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
 							if (!$c[0].ctrl) {
 								var $s = mollify.ui.controls.select($("<select></select>").appendTo($c.addClass("permission")), {
-									values: permissionOptions,
+									values: that.permissionOptions,
 									title : "title",
 									onChange: function(v) {
 										i.permission = v.value;
@@ -2100,7 +2105,7 @@ $.extend(true, mollify, {
 								});
 								$c[0].ctrl = $s;
 							}
-							$c[0].ctrl.select(permissionOptionsByKey[v]);
+							$c[0].ctrl.select(that.permissionOptionsByKey[v]);
 						}},
 						{ id: "remove", title: "", renderer: function(i, v, $c){ $c.append(mollify.dom.template("mollify-tmpl-permission-editor-listremove")); }}
 					]
@@ -2121,10 +2126,10 @@ $.extend(true, mollify, {
 				$newUser.add(userData.groups);
 				
 				var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
+					values: that.permissionOptions,
 					none: {title: mollify.ui.texts.get('pluginPermissionsEditNoPermission')},
 					title : "title"
 				});
-				$newPermission.add(permissionOptions);
 				
 				var resetNew = function() {
 					$newUser.select(false);
@@ -2142,6 +2147,35 @@ $.extend(true, mollify, {
 					resetNew();
 				});
 			};
+			
+			this.renderItemContextDetails = function(el, item, $content) {
+				mollify.dom.template("mollify-tmpl-permission-context").appendTo($content);
+				mollify.ui.process($content, ["localize"]);
+				
+				that.loadPermissions(item, function(permissions, userData) {
+					$("#mollify-pluginpermissions-context-content").removeClass("loading");
+					
+					$list = mollify.ui.controls.table("mollify-pluginpermissions-context-permission-list", {
+						key: "user_id",
+						columns: [
+							{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
+							{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
+								$c.html(that.permissionOptionsByKey[v].title);
+							}},
+						]
+					});
+					$list.add(permissions);
+					$("#mollify-pluginpermissions-context-edit").click(function(){
+						el.close();
+						that.onOpenPermissions(item);
+					});
+				}, function(c, e) {
+					el.close();
+					mollify.ui.views.dialogs.error({
+						message: c + " " + e
+					});
+				});
+			};
 						
 			return {
 				id: "plugin-permissions",
@@ -2152,7 +2186,9 @@ $.extend(true, mollify, {
 					return {
 						details: {
 							"title-key": "pluginPermissionsContextTitle",
-							"on-render": function(el, $content) { $content.html("todo"); }
+							"on-render": function(el, $content) {
+								that.renderItemContextDetails(el, item, $content);
+							}
 						},
 						actions: [
 							{ id: 'pluginPermissions', 'title-key': 'pluginPermissionsAction', callback: function() { that.onOpenPermissions(item); } }
