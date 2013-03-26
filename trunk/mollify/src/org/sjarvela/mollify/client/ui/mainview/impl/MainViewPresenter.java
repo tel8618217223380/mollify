@@ -41,7 +41,6 @@ import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
-import org.sjarvela.mollify.client.ui.mainview.MainView.Action;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
@@ -375,12 +374,6 @@ public class MainViewPresenter implements MainViewListener,
 		if (writable)
 			actions.add(createAction(item, FileSystemAction.delete,
 					Texts.fileActionDeleteTitle.name()));
-
-		if (item.isFile() || !root) {
-			actions.add(createSeparator());
-			actions.add(createAction(item, Action.addToDropbox,
-					Texts.mainViewSelectActionAddToDropbox.name()));
-		}
 		return actions;
 	}
 
@@ -397,17 +390,11 @@ public class MainViewPresenter implements MainViewListener,
 				if (action instanceof FileSystemAction)
 					fileSystemActionHandler.onAction(item,
 							(FileSystemAction) action);
-				else
-					onItemAction(item, (Action) action);
 			}
 		});
 		return new JsObjBuilder().string("type", "action")
 				.string("group", "core").string("id", action.name())
 				.string("title-key", titleKey).obj("callback", cb).create();
-	}
-
-	protected void onItemAction(JsFilesystemItem item, Action action) {
-		dialogManager.showInfo(item.getName(), action.name());
 	}
 
 	public void changeToRootFolder(final JsFolder root) {
