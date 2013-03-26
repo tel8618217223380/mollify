@@ -12,7 +12,6 @@ package org.sjarvela.mollify.client.ui.mainview;
 
 import java.util.List;
 
-import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
@@ -20,14 +19,6 @@ import org.sjarvela.mollify.client.js.JsObj;
 import com.google.gwt.core.client.JavaScriptObject;
 
 public interface MainView {
-
-	public enum Action implements ResourceId {
-		addFile, addDirectory, refresh, logout, changePassword, admin, editItemPermissions, selectMode, selectAll, selectNone, copyMultiple, moveMultiple, deleteMultiple, addToDropbox, retrieveUrl;
-	};
-
-	public enum ViewType {
-		list, gridSmall, gridLarge
-	};
 
 	void init(List<JsRootFolder> rootFolders, MainViewListener mainViewListener);
 

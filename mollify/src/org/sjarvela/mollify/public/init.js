@@ -208,7 +208,17 @@
 				if (pluginData) data[id] = pluginData;
 			}
 			return data;
-		}
+		};
+		
+		this.getMainViewPlugins = function() {
+			var plugins = [];
+			for (var id in pl.list) {
+				var plugin = pl.list[id];
+				if (!plugin.onMainViewRender) continue;
+				plugins.push(plugin);
+			}
+			return plugins;
+		};
 	};
 	
 	this.hasFeature = function(id) {
@@ -2200,6 +2210,126 @@ $.extend(true, mollify, {
 	}
 });
 
+/**
+/* Dropbox plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		DropboxPlugin: function() {
+			var that = this;
+			that.w = 0;
+			that.$dbE = false;
+			that.items = [];
+			
+			this.initialize = function(core) {
+				that.core = core;
+			};
+			
+			this.onMainViewRender = function($container) {
+				mollify.dom.template("mollify-tmpl-mainview-dropbox").appendTo($container);
+				$("#mollify-dropbox-handle").click(function() {
+					that.openDropbox();
+				});
+				
+				that.$dbE = $("#mollify-dropbox");
+				that.w = $("#mollify-dropbox-content").outerWidth();
+				
+				var onResize = function() {
+					var y = $("#mollify-mainview-header").height();
+					that.$dbE.css("top", y+"px").height($(window).height()-y);
+				};
+				$(window).resize(onResize);
+				onResize();
+				
+				if (mollify.ui.draganddrop) {
+					mollify.ui.draganddrop.enableDrop($("#mollify-dropbox-list"), {
+						canDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							return (that.items.indexOf(item) < 0);
+						},
+						dropType : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							return "copy";
+						},
+						onDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return;
+							var item = obj.payload;
+							that.onAddItem(item);
+						}
+					});
+				}
+				
+				var actions = [
+					{type:"separator"}
+				];
+				
+				var ab = mollify.ui.controls.dropdown({
+					element: $("#mollify-dropbox-actions"),
+					container: $("body"),
+					items: actions,
+					hideDelay: 0,
+					onItem: function() {
+						
+					},
+					onBlur: function(dd) {
+						
+					}
+				});
+				that.openDropbox(false);
+			};
+			
+			this.openDropbox = function(o) {
+				var open = that.$dbE.hasClass("opened");
+				if (def(o)) {
+					if (o == open) return;
+				} else {
+					o = !open;
+				}
+				
+				if (!o) that.$dbE.removeClass("opened").addClass("closed").animate({"width": "0"}, 300);
+				else that.$dbE.addClass("opened").removeClass("closed").animate({"width": that.w+""}, 300);
+			};
+			
+			this.onAddItem = function(item) {
+				if (that.items.indexOf(item) >= 0) return;
+				that.items.push(item);
+				that.refreshList();
+			};
+			
+			this.refreshList = function() {
+				$("#mollify-dropbox-list").empty().append(mollify.dom.template("mollify-tmpl-mainview-dropbox-item", that.items));
+				$("#mollify-dropbox-list .mollify-dropbox-list-item").each(function() {
+					var $i = $(this);
+					var item = $i.tmplItem().data;
+					$i.tooltip({
+						placement: "bottom",
+						title: item.path,
+						trigger: "hover"
+					});
+		        });
+				$("#mollify-dropbox-list .mollify-dropbox-list-item > a.item-remove").click(function() {
+					var $t = $(this);
+					that.items.remove($t.tmplItem().data);
+					that.refreshList();
+				});
+			};
+						
+			return {
+				id: "plugin-dropbox",
+				initialize: that.initialize,
+				onMainViewRender: that.onMainViewRender,
+				itemContextHandler : function(item, data) {
+					return {
+						actions: [
+							{ id: 'pluginDropbox', 'title-key': 'pluginDropboxAddTo', callback: function() { that.onAddItem(item); that.openDropbox(true); } }
+						]
+					};
+				}
+			};
+		}
+	}
+});
 
 /*function ItemDetailsPlugin(conf, sp) {
 	var that = this;
@@ -2796,9 +2926,11 @@ if (!Array.prototype.indexOf) {
 
 if (!Array.prototype.remove) { 
 	Array.prototype.remove = function(from, to) {
-	  var rest = this.slice((to || from) + 1 || this.length);
-	  this.length = from < 0 ? this.length + from : from;
-	  return this.push.apply(this, rest);
+		if (typeof(to) == 'undefined' && typeof(from) == 'object')
+			from = this.indexOf(from);
+		var rest = this.slice((to || from) + 1 || this.length);
+		this.length = from < 0 ? this.length + from : from;
+		return this.push.apply(this, rest);
 	};
 }
 

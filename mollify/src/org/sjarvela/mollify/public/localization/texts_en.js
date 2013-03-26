@@ -122,5 +122,7 @@ pluginPermissionsEditColPermission: "Permission",
 pluginPermissionsEditRemove: "Remove",
 pluginPermissionsEditNewTitle: "Add or Update Permission",
 pluginPermissionsEditNoUser: "Select user",
-pluginPermissionsEditNoPermission: "Select permission"
+pluginPermissionsEditNoPermission: "Select permission",
+
+pluginDropboxAddTo: "Add to Dropbox"
 })})();

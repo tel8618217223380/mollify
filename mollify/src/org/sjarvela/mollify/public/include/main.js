@@ -181,6 +181,10 @@
 					});
 				}
 				
+				$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
+					p.onMainViewRender($("#mollify"));
+				});
+				
 				that.listener.onViewLoaded();
 			}
 			
@@ -309,6 +313,7 @@
 						
 			this.canDragAndDrop = function(to, item) {
 				if (to.is_file) return false;
+				//if (item.id == item.root_id) return false;
 				if (item.id == to.id) return false;
 				if (item.parent_id == to.id) return false;
 				return true;
@@ -316,7 +321,7 @@
 			
 			this.onDragAndDrop = function(to, item) {
 				var copy = (that.dropType(to, item) == 'copy');
-				alert((copy ? "copy " : "move ") +item.name+" to "+to.name);
+				console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
 				
 				if (copy) that.listener.onCopy(to, item);
 				else that.listener.onMove(to, item);
@@ -1087,7 +1092,7 @@
 							onDragStart : function($e, e) {
 								var item = $e.tmplItem().data;
 								if (Modernizr.draganddrop) t.p.onNativeDrag($e.tmplItem().data, e);
-								if (item.id == item.root_id) return false;
+								//if (item.id == item.root_id) return false;
 								return {type:'filesystemitem', payload: item};
 							}
 						});

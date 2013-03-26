@@ -303,3 +303,35 @@
 <script id="mollify-tmpl-permission-editor-listremove" type="text/x-jquery-tmpl">
 	<a class='remove-link'><i class='icon-trash'></i></a>
 </script>
+
+<script id="mollify-tmpl-mainview-dropbox" type="text/x-jquery-tmpl">
+	<div id="mollify-dropbox" class="closed">
+		<div id="mollify-dropbox-handle">
+			<div id="mollify-dropbox-handle-icon-open" class="mollify-dropbox-handle-icon">
+				<i class="icon-caret-left"></i>
+			</div>
+			<div id="mollify-dropbox-handle-icon-close" class="mollify-dropbox-handle-icon">
+				<i class="icon-caret-right"></i>
+			</div>
+		</div>
+		<div id="mollify-dropbox-container">
+			<div id="mollify-dropbox-content">
+				<div id="mollify-dropbox-list" class="well">
+				</div>
+				<div class="btn-group">
+					<li id="mollify-dropbox-actions">
+						<button class="btn dropdown-toggle"><i class="icon-cog"></i>&nbsp;<b class="caret"></b></button>
+					</li>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-mainview-dropbox-item" type="text/x-jquery-tmpl">
+	<div class="mollify-dropbox-list-item {{if is_file}}file{{else}}folder{{/if}}">
+		<div class="item-icon"></div>
+		<div class="item-label">${name}</div>
+		<a class="item-remove" href="javascript: void(0);"><i class="icon-trash"></i></a>
+	</div>
+</script>
