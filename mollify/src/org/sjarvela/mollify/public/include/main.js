@@ -9,12 +9,9 @@
 			this.viewStyle = 0;
 			
 			this.init = function(p) {
-				that.roots = p.roots;
-				that.listener = p.listener;
+				that.listener = p.listener;				
 				
-				that.rootsById = {};
-				for (var i=0,j=p.roots.length; i<j; i++)
-					that.rootsById[p.roots[i].id] = p.roots[i];
+				that.itemContext = new mollify.ui.itemContext({ getItemDetails : that.listener.getItemDetails, onDescription: that.onDescription });
 			}
 			
 			this.changePassword = function() {	
@@ -126,7 +123,7 @@
 				});
 				$("#mollify-mainview-search > button").click(onSearch);
 				
-				mollify.dom.template("mollify-tmpl-main-root-list", that.roots).appendTo("#mollify-mainview-rootlist");
+				mollify.dom.template("mollify-tmpl-main-root-list", mollify.session.folders).appendTo("#mollify-mainview-rootlist");
 				var $ri = $("#mollify-mainview-rootlist").find(".mollify-mainview-rootlist-item").click(function() {
 					var root = $(this).tmplItem().data;
 					that.onFolderSelected(root);
@@ -264,7 +261,7 @@
 			
 			this.showAllRoots = function() {
 				that.folder();
-				that.data({ items: that.roots });
+				that.data({ items: mollify.session.folders });
 			};
 		
 			this.showNoRoots = function() {
@@ -437,8 +434,8 @@
 				var p = $("#mollify-folder-hierarchy").append(mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items));
 				
 				var rootItems = [];
-				for(var i=0,j=that.roots.length; i<j;i++) {
-					var root = that.roots[i];
+				for(var i=0,j=mollify.session.folders.length; i<j;i++) {
+					var root = mollify.session.folders[i];
 					rootItems.push({
 						title: root.name,
 						callback: function(r) {
@@ -527,12 +524,6 @@
 		                var url = mollify.service.url("filesystem/"+item.id);
 		                e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', item.name, url].join(':'));
 		            },
-		            getContext: function() {
-			            return {
-				            roots: that.roots,
-				            rootsById: that.rootsById
-			            }
-		            },
 		            onContentRendered : function(items, data) {
 			            if (!that.isListView() || that.viewType != 'search') return;
 			            that.initSearchResultTooltip(items);
@@ -589,78 +580,15 @@
 					}
 					var coreActions = a[1];
 					var plugins = mollify.plugins.getItemContextPlugins(item, a[0]);
-					cb(that.cleanupActions(that.addPluginActions(a[1], plugins)));
+					cb(mollify.helpers.cleanupActions(mollify.helpers.addPluginActions(a[1], plugins)));
 				});
 			};
 			
-			this.addPluginActions = function(actions, plugins) {
-				var list = actions;
-				if (plugins) {
-					for (var id in plugins) {
-						var p = plugins[id];
-						if (p.actions) {
-							list.push({title:"-",type:'separator'});
-							$.merge(list, p.actions);
-						}
-					}
-				}
-				return list;
-			};
-		
-			this.getPrimaryActions = function(actions) {
-				if (!actions) return [];
-				var result = [];
-				for (var i=0,j=actions.length; i<j; i++) {
-					var a = actions[i];
-					if (a.id == 'download' || a.type == 'primary') result.push(a);
-				}
-				return result;
-			};
-
-			this.getSecondaryActions = function(actions) {
-				if (!actions) return [];
-				var result = [];
-				for (var i=0,j=actions.length; i<j; i++) {
-					var a = actions[i];
-					if (a.id == 'download' || a.type == 'primary') continue;
-					result.push(a);
-				}
-				return that.cleanupActions(result);
-			};
-			
-			this.cleanupActions = function(actions) {
-				if (!actions) return [];				
-				var last = -1;
-				for (var i=actions.length-1,j=0; i>=j; i--) {
-					var a = actions[i];
-					if (a.type != 'separator' && a.title != '-') {
-						last = i;
-						break;
-					}
-				}
-				if (last < 0) return [];
-				
-				var first = -1;
-				for (var i=0; i<=last; i++) {
-					var a = actions[i];
-					if (a.type != 'separator' && a.title != '-') {
-						first = i;
-						break;
-					}
-				}
-				actions = actions.splice(first, (last-first)+1);
-				var prevSeparator = false;
-				for (var i=actions.length-1,j=0; i>=j; i--) {
-					var a = actions[i];
-					var separator = (a.type == 'separator' || a.title == '-');
-					if (separator && prevSeparator) actions.splice(i, 1);
-					prevSeparator = separator;
-				}
-				
-				return actions;
-			};
-			
 			this.openItemContext = function(item, $e, $c) {
+				that.itemContext.open(item, $e, $c);	
+			};
+			
+			/*this.openItemContext = function(item, $e, $c) {
 				var popupId = "mainview-itemcontext-"+item.id;
 				if (mollify.ui.isActivePopup(popupId)) {
 					return;
@@ -818,7 +746,7 @@
 						dd.hide();
 					}
 				});
-			};
+			};*/
 			
 			this.onDescription = function(item, desc) {
 				//TODO validate
@@ -1023,7 +951,7 @@
 				this.sortItems = function() {
 					var s = t.sortCol.sort;
 					t.items.sort(function(a, b) {
-						return s(a, b, t.sortOrderAsc ? 1 : -1, t.data, t.p.getContext());
+						return s(a, b, t.sortOrderAsc ? 1 : -1, t.data);
 					});
 				};
 				
@@ -1055,7 +983,7 @@
 							return c;
 						},
 						col: function(item, col) {
-							return col.content(item, t.data, t.p.getContext());
+							return col.content(item, t.data);
 						},
 						itemColStyle: function(item, col) {
 							var style="min-width:"+t.minColWidth+"px";
