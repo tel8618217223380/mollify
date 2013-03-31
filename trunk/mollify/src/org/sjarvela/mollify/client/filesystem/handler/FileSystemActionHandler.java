@@ -23,6 +23,6 @@ public interface FileSystemActionHandler {
 	void onAction(List<JsFilesystemItem> items, FileSystemAction action,
 			JsFolder folder);
 
-	void addListener(FileSystemActionListener fileSystemActionListener);
+//	void addListener(FileSystemActionListener fileSystemActionListener);
 
 }
