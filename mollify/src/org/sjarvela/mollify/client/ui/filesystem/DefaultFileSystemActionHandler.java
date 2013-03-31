@@ -10,7 +10,6 @@
 
 package org.sjarvela.mollify.client.ui.filesystem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sjarvela.mollify.client.event.EventDispatcher;
@@ -18,7 +17,6 @@ import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.FileSystemEvent;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
-import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionListener;
 import org.sjarvela.mollify.client.filesystem.js.JsFile;
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
@@ -41,7 +39,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	private final TextProvider textProvider;
 	private final SessionInfo session;
 
-	private final List<FileSystemActionListener> listeners = new ArrayList();
+	// private final List<FileSystemActionListener> listeners = new ArrayList();
 
 	public DefaultFileSystemActionHandler(EventDispatcher eventDispatcher,
 			TextProvider textProvider, ViewManager viewManager,
@@ -445,7 +443,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			public void onSuccess(Object result) {
 				eventDispatcher.onEvent(FileSystemEvent.createEvent(item,
 						action));
-				onFileSystemEvent(action);
+				// onFileSystemEvent(action);
 			}
 		};
 	}
@@ -460,18 +458,18 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			public void onSuccess(Object result) {
 				eventDispatcher.onEvent(FileSystemEvent.createEvent(items,
 						action));
-				onFileSystemEvent(action);
+				// onFileSystemEvent(action);
 			}
 		};
 	}
 
-	protected void onFileSystemEvent(FileSystemAction action) {
-		for (FileSystemActionListener listener : listeners)
-			listener.onFileSystemAction(action);
-	}
+	// protected void onFileSystemEvent(FileSystemAction action) {
+	// for (FileSystemActionListener listener : listeners)
+	// listener.onFileSystemAction(action);
+	// }
 
-	@Override
-	public void addListener(FileSystemActionListener listener) {
-		listeners.add(listener);
-	}
+	// @Override
+	// public void addListener(FileSystemActionListener listener) {
+	// listeners.add(listener);
+	// }
 }

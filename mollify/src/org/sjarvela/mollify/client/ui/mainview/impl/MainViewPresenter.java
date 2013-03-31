@@ -147,17 +147,17 @@ public class MainViewPresenter implements MainViewListener,
 		changeToFolder(f);
 	}
 
-	@Override
-	public void onCopy(JsFolder f, JavaScriptObject items) {
-		fileSystemActionHandler.onAction(getItems(items),
-				FileSystemAction.copy, f);
-	}
-
-	@Override
-	public void onMove(JsFolder f, JavaScriptObject items) {
-		fileSystemActionHandler.onAction(getItems(items),
-				FileSystemAction.move, f);
-	}
+//	@Override
+//	public void onCopy(JsFolder f, JavaScriptObject items) {
+//		fileSystemActionHandler.onAction(getItems(items),
+//				FileSystemAction.copy, f);
+//	}
+//
+//	@Override
+//	public void onMove(JsFolder f, JavaScriptObject items) {
+//		fileSystemActionHandler.onAction(getItems(items),
+//				FileSystemAction.move, f);
+//	}
 
 	@Override
 	public void onSearch(final String text, final JavaScriptObject cb) {
@@ -223,31 +223,31 @@ public class MainViewPresenter implements MainViewListener,
 				});
 	}
 
-	@Override
-	public void getItemDetails(final JsFilesystemItem item,
-			final JavaScriptObject requestData, final JavaScriptObject callback) {
-		fileSystemService.getItemDetails(
-				item,
-				requestData,
-				createItemDetailsListener(item,
-						new ResultCallback<ItemDetails>() {
-							@Override
-							public void onCallback(ItemDetails details) {
-								boolean root = !item.isFile()
-										&& ((JsFolder) item.cast()).isRoot();
-								boolean writable = !root
-										&& details.getFilePermission()
-												.canWrite();
-								List<JsObj> itemActions = getItemActions(item,
-										writable, root);
-								JsArray<JsObj> actions = JsUtil.asJsArray(
-										itemActions, JsObj.class);
-								call2(callback, details, actions);
-								// call2(callback, details, JsUtil.asJsArray(
-								// itemActions, JsObj.class));
-							}
-						}));
-	}
+	// @Override
+	// public void getItemDetails(final JsFilesystemItem item,
+	// final JavaScriptObject requestData, final JavaScriptObject callback) {
+	// fileSystemService.getItemDetails(
+	// item,
+	// requestData,
+	// createItemDetailsListener(item,
+	// new ResultCallback<ItemDetails>() {
+	// @Override
+	// public void onCallback(ItemDetails details) {
+	// boolean root = !item.isFile()
+	// && ((JsFolder) item.cast()).isRoot();
+	// boolean writable = !root
+	// && details.getFilePermission()
+	// .canWrite();
+	// List<JsObj> itemActions = getItemActions(item,
+	// writable, root);
+	// JsArray<JsObj> actions = JsUtil.asJsArray(
+	// itemActions, JsObj.class);
+	// call2(callback, details, actions);
+	// // call2(callback, details, JsUtil.asJsArray(
+	// // itemActions, JsObj.class));
+	// }
+	// }));
+	// }
 
 	@Override
 	public void getSessionActions(JavaScriptObject callback) {
@@ -349,33 +349,34 @@ public class MainViewPresenter implements MainViewListener,
 				.string("title-key", titleKey).obj("callback", cb).create();
 	}
 
-	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
-			boolean root) {
-		List<JsObj> actions = new ArrayList();
-
-		if (item.isFile() || !root)
-			actions.add(createAction(item, FileSystemAction.download,
-					Texts.fileActionDownloadTitle.name()));
-
-		actions.add(createSeparator());
-
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.rename,
-					Texts.fileActionRenameTitle.name()));
-		if (!root)
-			actions.add(createAction(item, FileSystemAction.copy,
-					Texts.fileActionCopyTitle.name()));
-		if (item.isFile())
-			actions.add(createAction(item, FileSystemAction.copyHere,
-					Texts.fileActionCopyHereTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.move,
-					Texts.fileActionMoveTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.delete,
-					Texts.fileActionDeleteTitle.name()));
-		return actions;
-	}
+	// private List<JsObj> getItemActions(JsFilesystemItem item, boolean
+	// writable,
+	// boolean root) {
+	// List<JsObj> actions = new ArrayList();
+	//
+	// if (item.isFile() || !root)
+	// actions.add(createAction(item, FileSystemAction.download,
+	// Texts.fileActionDownloadTitle.name()));
+	//
+	// actions.add(createSeparator());
+	//
+	// if (writable)
+	// actions.add(createAction(item, FileSystemAction.rename,
+	// Texts.fileActionRenameTitle.name()));
+	// if (!root)
+	// actions.add(createAction(item, FileSystemAction.copy,
+	// Texts.fileActionCopyTitle.name()));
+	// if (item.isFile())
+	// actions.add(createAction(item, FileSystemAction.copyHere,
+	// Texts.fileActionCopyHereTitle.name()));
+	// if (writable)
+	// actions.add(createAction(item, FileSystemAction.move,
+	// Texts.fileActionMoveTitle.name()));
+	// if (writable)
+	// actions.add(createAction(item, FileSystemAction.delete,
+	// Texts.fileActionDeleteTitle.name()));
+	// return actions;
+	// }
 
 	private JsObj createSeparator() {
 		return new JsObjBuilder().string("type", "separator")

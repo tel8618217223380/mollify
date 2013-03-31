@@ -1,6 +1,5 @@
 package org.sjarvela.mollify.client.ui.mainview;
 
-import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -13,10 +12,10 @@ public interface MainViewListener {
 	// void onSubFolderSelected(JsFolder f);
 
 	void onFolderSelected(JsFolder f);
-
-	void onCopy(JsFolder f, JavaScriptObject items);
-
-	void onMove(JsFolder f, JavaScriptObject items);
+//
+//	void onCopy(JsFolder f, JavaScriptObject items);
+//
+//	void onMove(JsFolder f, JavaScriptObject items);
 
 	void onSearch(String search, JavaScriptObject cb);
 
@@ -24,8 +23,8 @@ public interface MainViewListener {
 
 	void onCreateFolder(String name);
 
-	void getItemDetails(JsFilesystemItem item, JavaScriptObject requestData,
-			JavaScriptObject callback);
+	// void getItemDetails(JsFilesystemItem item, JavaScriptObject requestData,
+	// JavaScriptObject callback);
 
 	void getSessionActions(JavaScriptObject callback);
 

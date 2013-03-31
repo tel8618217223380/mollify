@@ -34,12 +34,12 @@ public class NativeMainView extends NativeView implements MainView {
 			onHomeSelected : function(f) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onHomeSelected()();
 			},
-			onCopy : function(t, i) {
-				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onCopy(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(t, i);
-			},
-			onMove : function(t, i) {
-				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onMove(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(t, i);
-			},
+//			onCopy : function(t, i) {
+//				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onCopy(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(t, i);
+//			},
+//			onMove : function(t, i) {
+//				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onMove(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(t, i);
+//			},
 			//			onSubFolderSelected : function(f) {
 			//				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onSubFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
 			//			},
@@ -54,9 +54,6 @@ public class NativeMainView extends NativeView implements MainView {
 			},
 			onFolderSelected : function(f) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::onFolderSelected(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(f);
-			},
-			getItemDetails : function(i, d, cb) {
-				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getItemDetails(Lorg/sjarvela/mollify/client/filesystem/js/JsFilesystemItem;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)(i, d, cb);
 			},
 			getSessionActions : function(cb) {
 				listener.@org.sjarvela.mollify.client.ui.mainview.MainViewListener::getSessionActions(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);

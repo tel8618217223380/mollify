@@ -320,8 +320,8 @@
 				var copy = (that.dropType(to, item) == 'copy');
 				console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
 				
-				if (copy) that.listener.onCopy(to, item);
-				else that.listener.onMove(to, item);
+				if (copy) mollify.filesystem.copy(to, item);
+				else mollify.filesystem.move(to, item);
 			};
 			
 			this.folder = function(p) {
@@ -573,7 +573,7 @@
 			};
 			
 			this.getItemActions = function(item, cb) {
-				that.listener.getItemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
+				mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
 					if (!a) {
 						cb([]);
 						return;

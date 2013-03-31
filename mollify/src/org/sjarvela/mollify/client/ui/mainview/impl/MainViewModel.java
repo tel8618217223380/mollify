@@ -210,6 +210,7 @@ public class MainViewModel {
 		// onUpdateData(result);
 		// }
 		// }));
+		currentFolder = folder;
 		JavaScriptObject dataRequest = dataRequestProvider != null ? dataRequestProvider
 				.getDataRequest(folder) : null;
 		fileServices.getFolderInfoWithHierarchy(

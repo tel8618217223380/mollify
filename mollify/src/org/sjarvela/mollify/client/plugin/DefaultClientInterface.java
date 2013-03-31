@@ -291,6 +291,29 @@ public class DefaultClientInterface implements ClientInterface {
 		if (cb)
 			cb(r);
 	}-*/;
+	
+	public void onCopy(JsFolder f, JavaScriptObject items) {
+		actionHandler.onAction(getItems(items),
+				FileSystemAction.copy, f);
+	}
+
+	public void onMove(JsFolder f, JavaScriptObject items) {
+		actionHandler.onAction(getItems(items),
+				FileSystemAction.move, f);
+	}
+	
+	private List<JsFilesystemItem> getItems(JavaScriptObject items) {
+		if (isArray(items)) return JsUtil.asList((JsArray)items.cast(), JsFilesystemItem.class);
+		
+		
+		List<JsFilesystemItem> result = new ArrayList();
+		result.add((JsFilesystemItem) items.cast());
+		return result;
+	}
+
+	private native boolean isArray(JavaScriptObject o) /*-{
+		return $wnd.isArray(o);
+	}-*/;
 
 	private native JavaScriptObject createNativeInterface(
 			DefaultClientInterface e, String pluginBaseUrl,
@@ -313,6 +336,12 @@ public class DefaultClientInterface implements ClientInterface {
 				},
 				folders : function(p, cb) {
 					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::getFolders(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(p, cb);
+				},
+				copy : function(f, items, cb) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onCopy(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(f, items);
+				},
+				move : function(f, items, cb) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onMove(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(f, items);
 				}
 			};
 		}
