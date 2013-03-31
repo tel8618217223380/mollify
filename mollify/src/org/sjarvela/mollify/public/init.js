@@ -217,6 +217,19 @@
 			return data;
 		};
 		
+		this.getItemCollectionPlugins = function(items) {
+			var data = {};
+			if (!items || !isArray(items) || items.length < 1) return data;
+			
+			for (var id in pl.list) {
+				var plugin = pl.list[id];
+				if (!plugin.itemCollectionHandler) continue;
+				var pluginData = plugin.itemCollectionHandler(items);
+				if (pluginData) data[id] = pluginData;
+			}
+			return data;
+		};
+		
 		this.getMainViewPlugins = function() {
 			var plugins = [];
 			for (var id in pl.list) {
@@ -428,6 +441,7 @@
 				}
 				if (item.id == openedId) return;
 				
+				var $cont = $t || $e.parent();				
 				var html = mollify.dom.template("mollify-tmpl-main-itemcontext", item, {})[0].outerHTML;
 				$e.popover({
 					title: item.name,
@@ -436,7 +450,7 @@
 					trigger: 'manual',
 					template: '<div class="popover mollify-itemcontext-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>',
 					content: html,
-					container: $t || $e.parent()
+					container: $cont
 				}).bind("shown", function(e) {
 					var api = { id: popupId, hide: function() { $e.popover('destroy'); } };
 					api.close = api.hide;					
@@ -445,14 +459,16 @@
 					var $el = $("#mollify-itemcontext-"+item.id);
 					var $pop = $el.closest(".popover");
 					var maxRight = $c.outerWidth();
-					var popLeft = $pop.position().left;
+					var popLeft = $pop.offset().left - $cont.offset().left;
 					var popW = $pop.outerWidth();
 					if (popLeft < 0)						
 						popLeft = 0;
 					else if ((popLeft + popW) > maxRight)
-						popLeft = maxRight - popW;
+						popLeft = maxRight - popW - 10;
 					$pop.css("left", popLeft + "px");
-					var arrowPos = Math.max(0, ($e.position().left + ($e.outerWidth() / 2) - popLeft));
+					
+					var arrowPos = ($e.offset().left - $cont.offset().left) + ($e.outerWidth() / 2);
+					var arrowPos = Math.max(0, (arrowPos - popLeft));
 					$pop.find(".arrow").css("left", arrowPos + "px");
 					
 					$pop.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
@@ -2570,7 +2586,7 @@ $.extend(true, mollify, {
 					var $i = $(this);
 					var item = $i.tmplItem().data;
 					$i.tooltip('hide');
-					that.itemContext.open(item, $i, that.$dbE, $("#mollify"));
+					that.itemContext.open(item, $i, $("#mollify"), $("#mollify"));
 					return false;
 				}).each(function() {
 					var $i = $(this);
@@ -2604,6 +2620,34 @@ $.extend(true, mollify, {
 		}
 	}
 });
+
+/**
+/* Item collection plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		ItemCollectionPlugin: function() {
+			var that = this;
+			
+			this.initialize = function(core) {
+				that.core = core;
+			};
+									
+			return {
+				id: "plugin-itemcollection",
+				initialize: that.initialize,
+				itemCollectionHandler : function(items) {
+					return {
+						actions: [
+							{ id: 'pluginItemCollection', 'title-key': 'copyMultiple', callback: function() { } }
+						]
+					};
+				}
+			};
+		}
+	}
+});
+
 
 /*function ItemDetailsPlugin(conf, sp) {
 	var that = this;
