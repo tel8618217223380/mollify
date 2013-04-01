@@ -53,11 +53,12 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 		this.session = session;
 	}
 
-	public void onAction(JsFilesystemItem item, FileSystemAction action) {
+	public void onAction(JsFilesystemItem item, FileSystemAction action,
+			Object param) {
 		if (item.isFile())
-			onFileAction((JsFile) item.cast(), action);
+			onFileAction((JsFile) item.cast(), action, param);
 		else
-			onFolderAction((JsFolder) item.cast(), action);
+			onFolderAction((JsFolder) item.cast(), action, param);
 	}
 
 	public void onAction(final List<JsFilesystemItem> items,
@@ -202,7 +203,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 		return true;
 	}
 
-	private void onFileAction(final JsFile file, FileSystemAction action) {
+	private void onFileAction(final JsFile file, FileSystemAction action,
+			Object param) {
 		if (action.equals(FileSystemAction.download)) {
 			viewManager.openDownloadUrl(fileSystemService.getDownloadUrl(file,
 					session.getSessionId()));
@@ -210,6 +212,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl((JsFilesystemItem) file.cast()));
 		} else if (action.equals(FileSystemAction.rename)) {
+			if (param != null) {
+				rename((JsFilesystemItem) file.cast(), (String) param);
+				return;
+			}
+
 			dialogManager.showInputDialog(
 					textProvider.getText(Texts.renameDialogTitleFile),
 					textProvider.getText(Texts.renameDialogNewName,
@@ -230,6 +237,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					});
 		} else {
 			if (action.equals(FileSystemAction.copy)) {
+				if (param != null) {
+					copyFile(file, (JsFolder) param);
+					return;
+				}
+				
 				dialogManager.openFolderSelector(
 						textProvider.getText(Texts.copyFileDialogTitle),
 						textProvider.getText(Texts.copyFileMessage,
@@ -248,6 +260,15 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 							}
 						});
 			} else if (FileSystemAction.copyHere.equals(action)) {
+				if (param != null) {
+					fileSystemService.copyWithName(
+							file,
+							(String) param,
+							createListener((JsFilesystemItem) file.cast(),
+									FileSystemAction.copy));
+					return;
+				}
+
 				dialogManager.showInputDialog(
 						textProvider.getText(Texts.copyHereDialogTitle),
 						textProvider.getText(Texts.copyHereDialogMessage,
@@ -272,6 +293,11 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 							}
 						});
 			} else if (action.equals(FileSystemAction.move)) {
+				if (param != null) {
+					moveFile(file, (JsFolder) param);
+					return;
+				}
+				
 				dialogManager.openFolderSelector(
 						textProvider.getText(Texts.moveFileDialogTitle),
 						textProvider.getText(Texts.moveFileMessage,
@@ -307,7 +333,8 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 		}
 	}
 
-	private void onFolderAction(final JsFolder folder, FileSystemAction action) {
+	private void onFolderAction(final JsFolder folder, FileSystemAction action,
+			Object param) {
 		if (action.equals(FileSystemAction.download_as_zip)) {
 			viewManager.openDownloadUrl(fileSystemService
 					.getDownloadAsZipUrl((JsFilesystemItem) folder.cast()));

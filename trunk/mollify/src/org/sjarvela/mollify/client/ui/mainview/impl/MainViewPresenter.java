@@ -16,10 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.event.EventDispatcher;
-import org.sjarvela.mollify.client.filesystem.FileSystemAction;
 import org.sjarvela.mollify.client.filesystem.ItemDetails;
 import org.sjarvela.mollify.client.filesystem.SearchResult;
 import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandler;
@@ -147,17 +145,17 @@ public class MainViewPresenter implements MainViewListener,
 		changeToFolder(f);
 	}
 
-//	@Override
-//	public void onCopy(JsFolder f, JavaScriptObject items) {
-//		fileSystemActionHandler.onAction(getItems(items),
-//				FileSystemAction.copy, f);
-//	}
-//
-//	@Override
-//	public void onMove(JsFolder f, JavaScriptObject items) {
-//		fileSystemActionHandler.onAction(getItems(items),
-//				FileSystemAction.move, f);
-//	}
+	// @Override
+	// public void onCopy(JsFolder f, JavaScriptObject items) {
+	// fileSystemActionHandler.onAction(getItems(items),
+	// FileSystemAction.copy, f);
+	// }
+	//
+	// @Override
+	// public void onMove(JsFolder f, JavaScriptObject items) {
+	// fileSystemActionHandler.onAction(getItems(items),
+	// FileSystemAction.move, f);
+	// }
 
 	@Override
 	public void onSearch(final String text, final JavaScriptObject cb) {
@@ -383,20 +381,20 @@ public class MainViewPresenter implements MainViewListener,
 				.string("title", "-").create();
 	}
 
-	private JsObj createAction(final JsFilesystemItem item,
-			final ResourceId action, String titleKey) {
-		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
-			@Override
-			public void onCallback() {
-				if (action instanceof FileSystemAction)
-					fileSystemActionHandler.onAction(item,
-							(FileSystemAction) action);
-			}
-		});
-		return new JsObjBuilder().string("type", "action")
-				.string("group", "core").string("id", action.name())
-				.string("title-key", titleKey).obj("callback", cb).create();
-	}
+	// private JsObj createAction(final JsFilesystemItem item,
+	// final ResourceId action, String titleKey) {
+	// JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
+	// @Override
+	// public void onCallback() {
+	// if (action instanceof FileSystemAction)
+	// fileSystemActionHandler.onAction(item,
+	// (FileSystemAction) action);
+	// }
+	// });
+	// return new JsObjBuilder().string("type", "action")
+	// .string("group", "core").string("id", action.name())
+	// .string("title-key", titleKey).obj("callback", cb).create();
+	// }
 
 	public void changeToRootFolder(final JsFolder root) {
 		view.showProgress();
