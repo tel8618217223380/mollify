@@ -19,6 +19,7 @@
 	this.settings = {};
 
 	this.init = function(s, p) {
+		t.plugins.register(new mollify.plugin.Core());
 		if (p) {
 			for (var i=0, j=p.length; i < j; i++)
 				t.plugins.register(p[i]);
@@ -322,8 +323,8 @@
 	};
 	
 	this.helpers = {
-		addPluginActions : function(actions, plugins) {
-			var list = actions;
+		getPluginActions : function(plugins) {
+			var list = [];
 			if (plugins) {
 				for (var id in plugins) {
 					var p = plugins[id];
@@ -474,13 +475,13 @@
 					$pop.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 					var $content = $el.find(".mollify-itemcontext-content");
 					
-					mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item), function(a) {
-						if (!a) {
+					mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item), function(d) {
+						if (!d) {
 							$t.hide();
 							return;
 						}
 						
-						ict.renderItemContext(api, $content, item, a);
+						ict.renderItemContext(api, $content, item, d);
 						$e[0].scrollIntoView();
 					});
 				}).bind("hidden", function() {
@@ -490,20 +491,20 @@
 				$e.popover('show');
 			};
 			
-			this.renderItemContext = function(cApi, $e, item, d) {
-				var details = d[0];
+			this.renderItemContext = function(cApi, $e, item, details) {
+				//var details = d[0];
 				//TODO permissions to edit descriptions
 				var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
 				var showDescription = descriptionEditable || !!details.description;
 				
 				var plugins = mollify.plugins.getItemContextPlugins(item, details);
-				var actions = mollify.helpers.addPluginActions(d[1], plugins);
+				var actions = mollify.helpers.getPluginActions(plugins);
 				var primaryActions = mollify.helpers.getPrimaryActions(actions);
 				var secondaryActions = mollify.helpers.getSecondaryActions(actions);
 				
 				var o = {
 					item:item,
-					details:d[0],
+					details:details,
 					showDescription: showDescription,
 					description: details.description || '',
 					session: mollify.session,
@@ -2620,6 +2621,48 @@ $.extend(true, mollify, {
 		}
 	}
 });
+
+/**
+/* Core plugin
+/**/
+$.extend(true, mollify, {
+	plugin : {
+		Core: function() {
+			var that = this;
+			
+			this.initialize = function(core) {
+				that.core = core;
+			};
+									
+			return {
+				id: "plugin-core",
+				initialize: that.initialize,
+				itemContextHandler : function(item, data) {
+//								boolean root = !item.isFile()
+//										&& ((JsFolder) item.cast()).isRoot();
+//								boolean writable = !root
+//										&& details.getFilePermission()
+//												.canWrite();
+					return {
+						actions: [
+							{ id: 'coreCopyItem', 'title-key': 'copyItem', callback: function() { mollify.filesystem.copy(item); } },
+							{ id: 'coreDeleteItem', 'title-key': 'deleteItem', callback: function() { mollify.filesystem.del(item); } }
+						]
+					};
+				},
+				itemCollectionHandler : function(items) {
+					return {
+						actions: [
+							{ id: 'coreCopyMultiple', 'title-key': 'copyMultiple', callback: function() { } },
+							{ id: 'coreMoveMultiple', 'title-key': 'moveMultiple', callback: function() { } }
+						]
+					};
+				}
+			};
+		}
+	}
+});
+
 
 /**
 /* Item collection plugin

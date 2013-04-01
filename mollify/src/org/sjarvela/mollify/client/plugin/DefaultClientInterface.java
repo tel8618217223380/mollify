@@ -30,7 +30,6 @@ import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
 import org.sjarvela.mollify.client.js.JsObj;
 import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.localization.Texts;
 import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.FileSystemService;
@@ -191,49 +190,49 @@ public class DefaultClientInterface implements ClientInterface {
 						new ResultCallback<ItemDetails>() {
 							@Override
 							public void onCallback(ItemDetails details) {
-								boolean root = !item.isFile()
-										&& ((JsFolder) item.cast()).isRoot();
-								boolean writable = !root
-										&& details.getFilePermission()
-												.canWrite();
-								List<JsObj> itemActions = getItemActions(item,
-										writable, root);
-								JsArray<JsObj> actions = JsUtil.asJsArray(
-										itemActions, JsObj.class);
-								call2(callback, details, actions);
+//								boolean root = !item.isFile()
+//										&& ((JsFolder) item.cast()).isRoot();
+//								boolean writable = !root
+//										&& details.getFilePermission()
+//												.canWrite();
+//								List<JsObj> itemActions = getItemActions(item,
+//										writable, root);
+//								JsArray<JsObj> actions = JsUtil.asJsArray(
+//										itemActions, JsObj.class);
+								call(callback, details);
 								// call2(callback, details, JsUtil.asJsArray(
 								// itemActions, JsObj.class));
 							}
 						}));
 	}
 
-	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
-			boolean root) {
-		List<JsObj> actions = new ArrayList();
-
-		if (item.isFile() || !root)
-			actions.add(createAction(item, FileSystemAction.download,
-					Texts.fileActionDownloadTitle.name()));
-
-		actions.add(createSeparator());
-
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.rename,
-					Texts.fileActionRenameTitle.name()));
-		if (!root)
-			actions.add(createAction(item, FileSystemAction.copy,
-					Texts.fileActionCopyTitle.name()));
-		if (item.isFile())
-			actions.add(createAction(item, FileSystemAction.copyHere,
-					Texts.fileActionCopyHereTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.move,
-					Texts.fileActionMoveTitle.name()));
-		if (writable)
-			actions.add(createAction(item, FileSystemAction.delete,
-					Texts.fileActionDeleteTitle.name()));
-		return actions;
-	}
+//	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
+//			boolean root) {
+//		List<JsObj> actions = new ArrayList();
+//
+//		// if (item.isFile() || !root)
+//		// actions.add(createAction(item, FileSystemAction.download,
+//		// Texts.fileActionDownloadTitle.name()));
+//		//
+//		// actions.add(createSeparator());
+//		//
+//		// if (writable)
+//		// actions.add(createAction(item, FileSystemAction.rename,
+//		// Texts.fileActionRenameTitle.name()));
+//		// if (!root)
+//		// actions.add(createAction(item, FileSystemAction.copy,
+//		// Texts.fileActionCopyTitle.name()));
+//		// if (item.isFile())
+//		// actions.add(createAction(item, FileSystemAction.copyHere,
+//		// Texts.fileActionCopyHereTitle.name()));
+//		// if (writable)
+//		// actions.add(createAction(item, FileSystemAction.move,
+//		// Texts.fileActionMoveTitle.name()));
+//		// if (writable)
+//		// actions.add(createAction(item, FileSystemAction.delete,
+//		// Texts.fileActionDeleteTitle.name()));
+//		return actions;
+//	}
 
 	private JsObj createSeparator() {
 		return new JsObjBuilder().string("type", "separator")
@@ -246,7 +245,8 @@ public class DefaultClientInterface implements ClientInterface {
 			@Override
 			public void onCallback() {
 				if (action instanceof FileSystemAction)
-					actionHandler.onAction(item, (FileSystemAction) action);
+					actionHandler.onAction(item, (FileSystemAction) action,
+							null);
 			}
 		});
 		return new JsObjBuilder().string("type", "action")
@@ -291,21 +291,40 @@ public class DefaultClientInterface implements ClientInterface {
 		if (cb)
 			cb(r);
 	}-*/;
-	
-	public void onCopy(JsFolder f, JavaScriptObject items) {
-		actionHandler.onAction(getItems(items),
-				FileSystemAction.copy, f);
+
+	public void onCopy(JavaScriptObject items, JsFolder to) {
+		if (isArray(items))
+			actionHandler.onAction(getItems(items), FileSystemAction.copy, to);
+		else
+			actionHandler.onAction((JsFilesystemItem) items.cast(),
+					FileSystemAction.copy, to);
 	}
 
-	public void onMove(JsFolder f, JavaScriptObject items) {
-		actionHandler.onAction(getItems(items),
-				FileSystemAction.move, f);
+	public void onMove(JavaScriptObject items, JsFolder to) {
+		if (isArray(items))
+			actionHandler.onAction(getItems(items), FileSystemAction.move, to);
+		else
+			actionHandler.onAction((JsFilesystemItem) items.cast(),
+					FileSystemAction.move, to);
+	}
+
+	public void onRename(JsFilesystemItem item, String name) {
+		actionHandler.onAction(item, FileSystemAction.rename, name);
+	}
+
+	public void onDelete(JavaScriptObject items) {
+		if (isArray(items))
+			actionHandler.onAction(getItems(items), FileSystemAction.delete, null);
+		else
+			actionHandler.onAction((JsFilesystemItem) items.cast(),
+					FileSystemAction.delete, null);
 	}
 	
 	private List<JsFilesystemItem> getItems(JavaScriptObject items) {
-		if (isArray(items)) return JsUtil.asList((JsArray)items.cast(), JsFilesystemItem.class);
-		
-		
+		if (isArray(items))
+			return JsUtil
+					.asList((JsArray) items.cast(), JsFilesystemItem.class);
+
 		List<JsFilesystemItem> result = new ArrayList();
 		result.add((JsFilesystemItem) items.cast());
 		return result;
@@ -337,11 +356,28 @@ public class DefaultClientInterface implements ClientInterface {
 				folders : function(p, cb) {
 					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::getFolders(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(p, cb);
 				},
-				copy : function(f, items, cb) {
-					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onCopy(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(f, items);
+				copy : function(items, to) {
+					//var args = Array.prototype.slice.call(arguments);
+					//var to = null;
+					//var items = null;
+					//if (args.length < 1)
+					//	return;
+					//else if (args.length == 1)
+					//	items = args[0];
+					//else {
+					//	items = args.slice(0, args.length - 1);
+					//	to = args.slice(args.length - 1);
+					//}
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onCopy(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(items, to);
 				},
-				move : function(f, items, cb) {
-					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onMove(Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;Lcom/google/gwt/core/client/JavaScriptObject;)(f, items);
+				move : function(items, to) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onMove(Lcom/google/gwt/core/client/JavaScriptObject;Lorg/sjarvela/mollify/client/filesystem/js/JsFolder;)(items, to);
+				},
+				rename : function(item, name) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onRename(Lorg/sjarvela/mollify/client/filesystem/js/JsFilesystemItem;Ljava/lang/String;)(item, name);
+				},
+				del : function(items) {
+					e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::onDelete(Lcom/google/gwt/core/client/JavaScriptObject;)(items);
 				}
 			};
 		}
