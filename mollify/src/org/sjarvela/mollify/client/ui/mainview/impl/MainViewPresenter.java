@@ -36,7 +36,6 @@ import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.session.SessionManager;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.mainview.MainView;
 import org.sjarvela.mollify.client.ui.mainview.MainViewListener;
@@ -66,7 +65,7 @@ public class MainViewPresenter implements MainViewListener,
 	// private final PasswordDialogFactory passwordDialogFactory;
 	// private final FileUploadDialogFactory fileUploadDialogFactory;
 	// private final CreateFolderDialogFactory createFolderDialogFactory;
-	private final ViewManager viewManager;
+	// private final ViewManager viewManager;
 	// TODO private final DropBox dropBox;
 	private final EventDispatcher eventDispatcher;
 
@@ -74,15 +73,14 @@ public class MainViewPresenter implements MainViewListener,
 
 	// private final boolean exposeFileUrls;
 
-	public MainViewPresenter(ViewManager viewManager,
-			DialogManager dialogManager, SessionManager sessionManager,
-			MainViewModel model, MainView view,
+	public MainViewPresenter(DialogManager dialogManager,
+			SessionManager sessionManager, MainViewModel model, MainView view,
 			ConfigurationService configurationService,
 			FileSystemService fileSystemService, TextProvider textProvider,
 			FileSystemActionHandler fileSystemActionHandler,
 			SessionService sessionService, EventDispatcher eventDispatcher) {
 		this.dialogManager = dialogManager;
-		this.viewManager = viewManager;
+		// this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 		this.configurationService = configurationService;
 		this.fileSystemService = fileSystemService;

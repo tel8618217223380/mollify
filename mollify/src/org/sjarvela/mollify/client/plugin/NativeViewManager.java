@@ -1,18 +1,16 @@
 package org.sjarvela.mollify.client.plugin;
 
 import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 public class NativeViewManager {
-	private final ViewManager viewManager;
+	// private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 
-	public NativeViewManager(ViewManager viewManager,
-			DialogManager dialogManager) {
-		this.viewManager = viewManager;
+	public NativeViewManager(DialogManager dialogManager) {
+		// this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 	}
 
@@ -21,7 +19,7 @@ public class NativeViewManager {
 	}
 
 	public void registerHandlers(JavaScriptObject handlers) {
-		viewManager.setViewHandlers(handlers);
+		// viewManager.setViewHandlers(handlers);
 		JsObj h = handlers.cast();
 		dialogManager.setHandler(h.getObject("dialogs"));
 	}

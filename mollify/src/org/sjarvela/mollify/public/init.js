@@ -28,12 +28,12 @@
 		t.settings = $.extend({}, defaults, s);
 	}
 	
-	this.setup = function(core, cb) {
+	this.setup = function(core) {
 		t.hiddenInd = 0;
-		t.env = core;
-		t.ui.texts = t.env.texts();
-		t.service = t.env.service();
-		t.session = {};
+		t.core = core;	//TODO remove this when GWT is gone
+		t.ui.texts = core.texts();
+		t.service = core.service();
+		t.session = false;
 		t.filesystem = core.filesystem();
 		
 		core.addEventHandler(function(e) {
@@ -44,9 +44,11 @@
 				if (t.session.authenticated)
 					for (var i=0,j=mollify.session.folders.length; i<j; i++)
 						mollify.filesystem.rootsById[mollify.session.folders[i].id] = mollify.session.folders[i];
+				t._start();
 			} else if (e.type == 'SESSION_END') {
 				t.session = false;
 				mollify.filesystem.rootsById = {};
+				t._start();
 			}
 		});
 
@@ -133,16 +135,16 @@
 			}
 		});
 		
-		t.ui.views = {
+		t.ui.dialogs = new mollify.view.DialogHandler(t.filesystem);
+		
+		/*t.ui.views = {
 			login : new mollify.view.LoginView(),
 			mainview : new mollify.view.MainView(),
 			
 			dialogs : new mollify.view.DialogHandler(t.filesystem)
-		}
-		t.env.views().registerHandlers(t.ui.views);
-		
-		t.plugins.initialize(t.env);
-			
+		}*/
+		core.views().registerHandlers({ dialogs : new mollify.view.DialogHandler(t.filesystem) });
+		t.plugins.initialize(core);
 		t.templates.load("dialogs.html");
 			
 		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
@@ -162,8 +164,21 @@
 		//$.datepicker.setDefaults({
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});
-		if (cb) cb();
-	}
+		mollify.service.get("session/info/3", function(s) {
+			core.session.set(s);
+		}, function(c, e) {
+			alert(c);	//TODO
+		});
+	};
+	
+	this._start = function() {
+		var $c = $("#mollify");
+		if (!mollify.session.authenticated) {
+			new mollify.view.LoginView().init($c);
+		} else {
+			new mollify.view.MainView().init($c);
+		}
+	};
 	
 	this.plugins = new function() {
 		var pl = this;
@@ -622,19 +637,19 @@
 					var $t = $(this);
 					var key = $t.attr('title-key');
 					if (key) {
-						$t.attr("title", t.env.texts().get(key));
+						$t.attr("title", mollify.ui.texts.get(key));
 						$t.removeAttr('title-key');
 					}
 					
 					key = $t.attr('text-key');
 					if (key) {
-						$t.prepend(t.env.texts().get(key));
+						$t.prepend(mollify.ui.texts.get(key));
 						$t.removeAttr('text-key');
 					}
 				});
 				p.find("input.hintbox").each(function() {
 					var $this = $(this);
-					var hint = t.env.texts().get($this.attr('hint-key'));
+					var hint = mollify.ui.texts.get($this.attr('hint-key'));
 					$this.attr("placeholder", hint).removeAttr("hint-key");
 				});//.placeholder();
 			},
@@ -697,7 +712,7 @@
 				var createItems = function(itemList) {
 					var i = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
 						isSeparator : function(i) {
-							return i.title == '-';
+							return (i.type == 'separator' || i.title == '-');
 						},
 						getTitle : function(i) {
 							if (i.title) return i.title;
@@ -1496,12 +1511,8 @@ $.extend(true, mollify, {
 		LoginView : function() {
 			var that = this;
 			
-			this.init = function(listener) {
-				that.listener = listener;
-			}
-			
-			this.render = function(id) {
-				mollify.dom.loadContentInto($('#'+id), mollify.templates.url("loginview.html"), that, ['localize', 'bubble']);
+			this.init = function($c) {
+				mollify.dom.loadContentInto($c, mollify.templates.url("loginview.html"), that, ['localize', 'bubble']);
 			}
 			
 			this.onLoad = function() {
@@ -1541,8 +1552,8 @@ $.extend(true, mollify, {
 						if (!email) return;
 						
 						bubble.hide();
-						that.wait = mollify.ui.views.dialogs.wait({target: "mollify-login-main"});
-						that.listener.onResetPassword(email);
+						that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
+						//TODO that.listener.onResetPassword(email);
 					});
 				}
 			}
@@ -1566,14 +1577,18 @@ $.extend(true, mollify, {
 					$("#mollify-login-password").focus();
 					return;
 				}
-				that.wait = mollify.ui.views.dialogs.wait({target: "mollify-login-main"});
-				that.listener.onLogin(username, password, remember);
+				that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
+				mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: Base64.encode(password), remember: remember}, function(s) {
+					mollify.core.session.set(s);
+				}, function(c, e) {
+					that.showLoginError();
+				});
 			}
 			
 			this.showLoginError = function() {
 				that.wait.close();
 				
-				mollify.ui.views.dialogs.notification({
+				mollify.ui.dialogs.notification({
 					message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
 				});
 			}
@@ -1581,7 +1596,7 @@ $.extend(true, mollify, {
 			this.onResetPasswordSuccess = function() {
 				that.wait.close();
 				
-				mollify.ui.views.dialogs.notification({
+				mollify.ui.dialogs.notification({
 					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
 				});
 			}
@@ -1589,7 +1604,7 @@ $.extend(true, mollify, {
 			this.onResetPasswordFailed = function() {
 				that.wait.close();
 				
-				mollify.ui.views.dialogs.info({
+				mollify.ui.dialogs.info({
 					message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
 				});
 			}
@@ -1830,7 +1845,7 @@ $.extend(true, mollify, {
 			};
 			
 			this.onEdit = function(item, spec) {
-				mollify.ui.views.dialogs.custom({
+				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 400],
 					title: mollify.ui.texts.get('fileViewerEditorViewEditDialogTitle'),
@@ -2251,7 +2266,7 @@ $.extend(true, mollify, {
 				};
 				var $content = false;
 				
-				mollify.ui.views.dialogs.custom({
+				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 400],
 					title: mollify.ui.texts.get('pluginPermissionsEditDialogTitle'),
@@ -2273,7 +2288,7 @@ $.extend(true, mollify, {
 							d.close();
 						}, function(code, error) {
 							d.close();
-							mollify.ui.views.dialogs.error({
+							mollify.ui.dialogs.error({
 								message: code + " " + error
 							});
 						});
@@ -2292,7 +2307,7 @@ $.extend(true, mollify, {
 							that.initEditor(item, permissions, userData, permissionData);
 						}, function(c, e) {
 							$d.close();
-							mollify.ui.views.dialogs.error({
+							mollify.ui.dialogs.error({
 								message: c + " " + e
 							});
 						});
@@ -2446,7 +2461,7 @@ $.extend(true, mollify, {
 					});
 				}, function(c, e) {
 					el.close();
-					mollify.ui.views.dialogs.error({
+					mollify.ui.dialogs.error({
 						message: c + " " + e
 					});
 				});
@@ -2488,7 +2503,7 @@ $.extend(true, mollify, {
 			
 			this.initialize = function(core) {
 				that.core = core;
-				that.itemContext = new mollify.ui.itemContext({ getItemDetails : function(item, data, cb) { cb([{},[]]); }, onDescription: null });
+				that.itemContext = new mollify.ui.itemContext({ onDescription: null });
 			};
 			
 			this.onMainViewRender = function($container) {
@@ -2638,23 +2653,37 @@ $.extend(true, mollify, {
 				id: "plugin-core",
 				initialize: that.initialize,
 				itemContextHandler : function(item, data) {
+					var root = item.id == item.root_id;
+					var writable = !root && data.permission == "RW";
 //								boolean root = !item.isFile()
 //										&& ((JsFolder) item.cast()).isRoot();
 //								boolean writable = !root
 //										&& details.getFilePermission()
 //												.canWrite();
+					var actions = [];
+					
+					if (item.is_file ) {
+						actions.push({ 'title-key': 'downloadItem', callback: function() { mollify.filesystem.del(item); } });
+						actions.push({ title: '-' });
+					}
+					
+					actions.push({ 'title-key': 'copyItem', callback: function() { mollify.filesystem.copy(item);}});
+					
+					if (writable) {
+						actions.push({ 'title-key': 'copyHereItem', callback: function() { mollify.filesystem.copyHere(item); } });
+						actions.push({ 'title-key': 'moveItem', callback: function() { mollify.filesystem.move(item); } });
+						actions.push({ 'title-key': 'renameItem', callback: function() { mollify.filesystem.rename(item); } });
+						actions.push({ 'title-key': 'deleteItem', callback: function() { mollify.filesystem.del(item); } });
+					}
 					return {
-						actions: [
-							{ id: 'coreCopyItem', 'title-key': 'copyItem', callback: function() { mollify.filesystem.copy(item); } },
-							{ id: 'coreDeleteItem', 'title-key': 'deleteItem', callback: function() { mollify.filesystem.del(item); } }
-						]
+						actions: actions
 					};
 				},
 				itemCollectionHandler : function(items) {
 					return {
 						actions: [
-							{ id: 'coreCopyMultiple', 'title-key': 'copyMultiple', callback: function() { } },
-							{ id: 'coreMoveMultiple', 'title-key': 'moveMultiple', callback: function() { } }
+							{ 'title-key': 'copyMultiple', callback: function() { } },
+							{ 'title-key': 'moveMultiple', callback: function() { } }
 						]
 					};
 				}
@@ -3306,4 +3335,147 @@ function strpos(haystack, needle, offset) {
     // +   improved by: Brett Zamir (http://brett-zamir.me)
     var i = (haystack + '').indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
+}
+
+/**
+*
+*  Base64 encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+ 
+var Base64 = {
+ 
+	// private property
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+ 
+	// public method for encoding
+	encode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = Base64._utf8_encode(input);
+ 
+		while (i < input.length) {
+ 
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+ 
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+ 
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+ 
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+ 
+		}
+ 
+		return output;
+	},
+ 
+	// public method for decoding
+	decode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+ 
+		while (i < input.length) {
+ 
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+ 
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+ 
+			output = output + String.fromCharCode(chr1);
+ 
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+ 
+		}
+ 
+		output = Base64._utf8_decode(output);
+ 
+		return output;
+ 
+	},
+ 
+	// private method for UTF-8 encoding
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+ 
+			var c = string.charCodeAt(n);
+ 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+ 
+		}
+ 
+		return utftext;
+	},
+ 
+	// private method for UTF-8 decoding
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+ 
+			c = utftext.charCodeAt(i);
+ 
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+ 
+		}
+ 
+		return string;
+	}
+ 
 }

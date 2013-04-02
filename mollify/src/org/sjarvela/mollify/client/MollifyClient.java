@@ -10,9 +10,6 @@
 
 package org.sjarvela.mollify.client;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
 import org.sjarvela.mollify.client.filesystem.FileSystemItemProvider;
@@ -21,49 +18,39 @@ import org.sjarvela.mollify.client.localization.DefaultTextProvider;
 import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.plugin.ClientInterface;
 import org.sjarvela.mollify.client.plugin.DefaultClientInterface;
-import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
-import org.sjarvela.mollify.client.service.SessionService;
 import org.sjarvela.mollify.client.service.SystemServiceProvider;
 import org.sjarvela.mollify.client.service.UrlResolver;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.environment.php.PhpServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.DefaultResponseInterceptor;
 import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
-import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.ClientSettings;
 import org.sjarvela.mollify.client.session.DefaultFileSystemItemProvider;
 import org.sjarvela.mollify.client.session.DefaultSessionManager;
-import org.sjarvela.mollify.client.session.SessionInfo;
-import org.sjarvela.mollify.client.session.SessionListener;
 import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SettingsProvider;
-import org.sjarvela.mollify.client.ui.DefaultViewManager;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DefaultDialogManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.filesystem.DefaultFileSystemActionHandlerFactory;
-import org.sjarvela.mollify.client.ui.login.LoginViewHandler;
-import org.sjarvela.mollify.client.ui.mainview.MainViewFactory;
-import org.sjarvela.mollify.client.ui.mainview.impl.DefaultMainViewFactory;
 
 import com.google.gwt.core.client.GWT;
 
 public class MollifyClient implements Client {
-	private static Logger logger = Logger.getLogger(MollifyClient.class
-			.getName());
+	// private static Logger logger = Logger.getLogger(MollifyClient.class
+	// .getName());
 	static final String META_PROPERTY = "mollify:property";
 
 	public static final String PROTOCOL_VERSION = "3";
-	private static final String PARAM_SHOW_LOGIN = "show-login";
+	// private static final String PARAM_SHOW_LOGIN = "show-login";
+	//
+	// private static boolean pluginsInitialized = false;
 
-	private static boolean pluginsInitialized = false;
-
-	private final ViewManager viewManager;
+	// private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final SessionManager sessionManager;
-	private final MainViewFactory mainViewFactory;
-	private final SessionService service;
+	// private final MainViewFactory mainViewFactory;
+	// private final SessionService service;
 	private final ClientSettings settings;
 	private final ClientInterface client;
 	private final ServiceProvider serviceProvider;
@@ -71,7 +58,7 @@ public class MollifyClient implements Client {
 
 	public MollifyClient() {
 		this.textProvider = new DefaultTextProvider();
-		this.viewManager = new DefaultViewManager();
+		// this.viewManager = new DefaultViewManager();
 		this.dialogManager = new DefaultDialogManager(textProvider);
 		this.settings = new ClientSettings(new SettingsProvider(META_PROPERTY));
 
@@ -84,37 +71,35 @@ public class MollifyClient implements Client {
 
 		FileSystemItemProvider fileSystemItemProvider = new DefaultFileSystemItemProvider(
 				sessionManager, env);
-		this.serviceProvider = new SystemServiceProvider(env, viewManager,
-				sessionManager);
+		this.serviceProvider = new SystemServiceProvider(env, sessionManager);
 		FileSystemActionHandlerFactory fileSystemActionHandlerFactory = new DefaultFileSystemActionHandlerFactory(
-				eventDispatcher, textProvider, viewManager, dialogManager, env,
+				eventDispatcher, textProvider, dialogManager, env,
 				fileSystemItemProvider, sessionManager);
-		this.mainViewFactory = new DefaultMainViewFactory(eventDispatcher,
-				textProvider, viewManager, dialogManager, serviceProvider,
-				sessionManager, fileSystemItemProvider,
-				fileSystemActionHandlerFactory);
+		// this.mainViewFactory = new DefaultMainViewFactory(eventDispatcher,
+		// textProvider, viewManager, dialogManager, serviceProvider,
+		// sessionManager, fileSystemItemProvider,
+		// fileSystemActionHandlerFactory);
 		this.client = new DefaultClientInterface(eventDispatcher,
-				responseInterceptor, sessionManager, serviceProvider,
-				dialogManager, textProvider, viewManager,
+				sessionManager, serviceProvider, dialogManager, textProvider,
 				fileSystemActionHandlerFactory, fileSystemItemProvider);
-		this.service = serviceProvider.getSessionService();
-
-		sessionManager.addSessionListener(new SessionListener() {
-			@Override
-			public void onSessionStarted(SessionInfo session) {
-				logger.log(Level.FINE, "Session started, authenticated: "
-						+ session.isAuthenticated());
-				if (!session.isAuthenticated())
-					openLogin(session);
-				else
-					openMainView();
-			}
-
-			@Override
-			public void onSessionEnded() {
-				start();
-			}
-		});
+		// this.service = serviceProvider.getSessionService();
+		//
+		// sessionManager.addSessionListener(new SessionListener() {
+		// @Override
+		// public void onSessionStarted(SessionInfo session) {
+		// logger.log(Level.FINE, "Session started, authenticated: "
+		// + session.isAuthenticated());
+		// if (!session.isAuthenticated())
+		// openLogin(session);
+		// else
+		// openMainView();
+		// }
+		//
+		// @Override
+		// public void onSessionEnded() {
+		// start();
+		// }
+		// });
 	}
 
 	private UrlResolver createUrlResolver() {
@@ -122,55 +107,57 @@ public class MollifyClient implements Client {
 	}
 
 	public void start() {
-		logger.log(Level.INFO, "Starting Mollify, protocol version "
-				+ PROTOCOL_VERSION);
-		logger.log(Level.INFO,
-				"Host page location: " + GWT.getHostPageBaseURL());
-		logger.log(Level.INFO, "Module name: " + GWT.getModuleName());
-		logger.log(Level.INFO, "Module location: " + GWT.getModuleBaseURL());
+		client.setup();
 
-		if (settings.getBool("guest-mode", false)) {
-			logger.log(Level.INFO, "Guest mode enabled");
-			serviceProvider.setSessionId("guest");
-		}
+		// logger.log(Level.INFO, "Starting Mollify, protocol version "
+		// + PROTOCOL_VERSION);
+		// logger.log(Level.INFO,
+		// "Host page location: " + GWT.getHostPageBaseURL());
+		// logger.log(Level.INFO, "Module name: " + GWT.getModuleName());
+		// logger.log(Level.INFO, "Module location: " + GWT.getModuleBaseURL());
+		//
+		// if (settings.getBool("guest-mode", false)) {
+		// logger.log(Level.INFO, "Guest mode enabled");
+		// serviceProvider.setSessionId("guest");
+		// }
 
-		service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
-				new ResultListener<SessionInfo>() {
-					public void onFail(ServiceError error) {
-						viewManager.showErrorInMainView(error.getError()
-								.getError(), error);
-					}
-
-					public void onSuccess(final SessionInfo session) {
-						logger.log(Level.FINE,
-								"Session info received, plugins initialized "
-										+ pluginsInitialized);
-
-						if (!pluginsInitialized) {
-							client.setup(session, new Callback() {
-								@Override
-								public void onCallback() {
-									pluginsInitialized = true;
-									sessionManager.setSession(session);
-								}
-							});
-						} else {
-							sessionManager.setSession(session);
-						}
-					}
-				});
+		// service.getSessionInfo(MollifyClient.PROTOCOL_VERSION,
+		// new ResultListener<SessionInfo>() {
+		// public void onFail(ServiceError error) {
+		// viewManager.showErrorInMainView(error.getError()
+		// .getError(), error);
+		// }
+		//
+		// public void onSuccess(final SessionInfo session) {
+		// logger.log(Level.FINE,
+		// "Session info received, plugins initialized "
+		// + pluginsInitialized);
+		//
+		// if (!pluginsInitialized) {
+		// client.setup(session, new Callback() {
+		// @Override
+		// public void onCallback() {
+		// pluginsInitialized = true;
+		// sessionManager.setSession(session);
+		// }
+		// });
+		// } else {
+		// sessionManager.setSession(session);
+		// }
+		// }
+		// });
 	}
 
-	private void openMainView() {
-		mainViewFactory.openMainView();
-	}
-
-	private void openLogin(SessionInfo session) {
-		viewManager.empty();
-		if (!settings.getBool(PARAM_SHOW_LOGIN, true))
-			return;
-
-		new LoginViewHandler(viewManager, dialogManager, service,
-				sessionManager);
-	}
+	// private void openMainView() {
+	// mainViewFactory.openMainView();
+	// }
+	//
+	// private void openLogin(SessionInfo session) {
+	// viewManager.empty();
+	// if (!settings.getBool(PARAM_SHOW_LOGIN, true))
+	// return;
+	//
+	// new LoginViewHandler(viewManager, dialogManager, service,
+	// sessionManager);
+	// }
 }

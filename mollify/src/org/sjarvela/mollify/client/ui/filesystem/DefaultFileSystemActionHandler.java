@@ -27,30 +27,30 @@ import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
 import org.sjarvela.mollify.client.ui.ConfirmationListener;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.ui.dialog.InputListener;
 
 public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 	private final EventDispatcher eventDispatcher;
-	private final ViewManager viewManager;
+	// private final ViewManager viewManager;
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
 	private final TextProvider textProvider;
-	private final SessionInfo session;
+
+	// private final SessionInfo session;
 
 	// private final List<FileSystemActionListener> listeners = new ArrayList();
 
 	public DefaultFileSystemActionHandler(EventDispatcher eventDispatcher,
-			TextProvider textProvider, ViewManager viewManager,
-			DialogManager dialogManager, FileSystemService fileSystemService,
+			TextProvider textProvider, DialogManager dialogManager,
+			FileSystemService fileSystemService,
 			FileSystemItemProvider fileSystemItemProvider, SessionInfo session) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
-		this.viewManager = viewManager;
+		// this.viewManager = viewManager;
 		this.dialogManager = dialogManager;
 		this.fileSystemService = fileSystemService;
-		this.session = session;
+		// this.session = session;
 	}
 
 	public void onAction(JsFilesystemItem item, FileSystemAction action,
@@ -142,20 +142,20 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 			fileSystemService
 					.move(items, folder, createListener(items, action));
-		} else if (action.equals(FileSystemAction.download_as_zip)) {
-			fileSystemService.getDownloadAsZipUrl(items,
-					new ResultListener<String>() {
-						@Override
-						public void onFail(ServiceError error) {
-							dialogManager.showError(error);
-						}
-
-						@Override
-						public void onSuccess(String url) {
-							viewManager.openDownloadUrl(url);
-						}
-					});
-		}
+		} // else if (action.equals(FileSystemAction.download_as_zip)) {
+		// fileSystemService.getDownloadAsZipUrl(items,
+		// new ResultListener<String>() {
+		// @Override
+		// public void onFail(ServiceError error) {
+		// dialogManager.showError(error);
+		// }
+		//
+		// @Override
+		// public void onSuccess(String url) {
+		// viewManager.openDownloadUrl(url);
+		// }
+		// });
+		// }
 	}
 
 	private boolean canCopyTo(List<JsFilesystemItem> items, JsFolder target) {
@@ -205,13 +205,13 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 	private void onFileAction(final JsFile file, FileSystemAction action,
 			Object param) {
-		if (action.equals(FileSystemAction.download)) {
-			viewManager.openDownloadUrl(fileSystemService.getDownloadUrl(file,
-					session.getSessionId()));
-		} else if (action.equals(FileSystemAction.download_as_zip)) {
-			viewManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl((JsFilesystemItem) file.cast()));
-		} else if (action.equals(FileSystemAction.rename)) {
+		// if (action.equals(FileSystemAction.download)) {
+		// // viewManager.openDownloadUrl(fileSystemService.getDownloadUrl(file,
+		// // session.getSessionId()));
+		// } else if (action.equals(FileSystemAction.download_as_zip)) {
+		// viewManager.openDownloadUrl(fileSystemService
+		// .getDownloadAsZipUrl((JsFilesystemItem) file.cast()));
+		if (action.equals(FileSystemAction.rename)) {
 			if (param != null) {
 				rename((JsFilesystemItem) file.cast(), (String) param);
 				return;
@@ -241,7 +241,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					copyFile(file, (JsFolder) param);
 					return;
 				}
-				
+
 				dialogManager.openFolderSelector(
 						textProvider.getText(Texts.copyFileDialogTitle),
 						textProvider.getText(Texts.copyFileMessage,
@@ -297,7 +297,7 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 					moveFile(file, (JsFolder) param);
 					return;
 				}
-				
+
 				dialogManager.openFolderSelector(
 						textProvider.getText(Texts.moveFileDialogTitle),
 						textProvider.getText(Texts.moveFileMessage,
@@ -335,10 +335,10 @@ public class DefaultFileSystemActionHandler implements FileSystemActionHandler {
 
 	private void onFolderAction(final JsFolder folder, FileSystemAction action,
 			Object param) {
-		if (action.equals(FileSystemAction.download_as_zip)) {
-			viewManager.openDownloadUrl(fileSystemService
-					.getDownloadAsZipUrl((JsFilesystemItem) folder.cast()));
-		} else if (action.equals(FileSystemAction.rename)) {
+		// if (action.equals(FileSystemAction.download_as_zip)) {
+		// viewManager.openDownloadUrl(fileSystemService
+		// .getDownloadAsZipUrl((JsFilesystemItem) folder.cast()));
+		if (action.equals(FileSystemAction.rename)) {
 			dialogManager.showInputDialog(
 					textProvider.getText(Texts.renameDialogTitleDirectory),
 					textProvider.getText(Texts.renameDialogNewName,

@@ -14,18 +14,17 @@ import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.service.request.listener.ResultListenerFactory;
 import org.sjarvela.mollify.client.session.SessionManager;
-import org.sjarvela.mollify.client.ui.ViewManager;
 
 public class SystemServiceProvider implements ServiceProvider,
 		ResultListenerFactory {
 	private final ServiceEnvironment env;
-	private final ViewManager viewManager;
+	// private final ViewManager viewManager;
 	private final SessionManager sessionManager;
 
 	public SystemServiceProvider(ServiceEnvironment env,
-			ViewManager viewManager, SessionManager sessionManager) {
+			SessionManager sessionManager) {
 		this.env = env;
-		this.viewManager = viewManager;
+		// this.viewManager = viewManager;
 		this.sessionManager = sessionManager;
 	}
 
@@ -86,16 +85,16 @@ public class SystemServiceProvider implements ServiceProvider,
 				sessionManager.endSession();
 			return true;
 		}
-		if (error.getType().equals(ServiceErrorType.INVALID_CONFIGURATION)) {
-			viewManager.showErrorInMainView("Configuration Error", error);
-			return true;
-		}
-		if (error.getType().equals(ServiceErrorType.RESOURCE_NOT_FOUND)
-				|| error.getType().equals(ServiceErrorType.INVALID_RESPONSE)
-				|| error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
-			viewManager.showErrorInMainView("Protocol error", error);
-			return true;
-		}
+		// if (error.getType().equals(ServiceErrorType.INVALID_CONFIGURATION)) {
+		// viewManager.showErrorInMainView("Configuration Error", error);
+		// return true;
+		// }
+		// if (error.getType().equals(ServiceErrorType.RESOURCE_NOT_FOUND)
+		// || error.getType().equals(ServiceErrorType.INVALID_RESPONSE)
+		// || error.getType().equals(ServiceErrorType.DATA_TYPE_MISMATCH)) {
+		// viewManager.showErrorInMainView("Protocol error", error);
+		// return true;
+		// }
 		return false;
 	}
 

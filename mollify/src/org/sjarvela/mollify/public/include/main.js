@@ -5,13 +5,12 @@
 	view : {
 		MainView : function () {
 			var that = this;
-			this.currentFolder = false;
-			this.viewStyle = 0;
+			this._currentFolder = false;
+			this._viewStyle = 0;
 			
-			this.init = function(p) {
-				that.listener = p.listener;				
-				
-				that.itemContext = new mollify.ui.itemContext({ getItemDetails : that.listener.getItemDetails, onDescription: that.onDescription });
+			this.init = function($c) {			
+				that.itemContext = new mollify.ui.itemContext({ onDescription: that.onDescription });
+				mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize', 'radio']);
 			}
 			
 			this.changePassword = function() {	
@@ -81,10 +80,6 @@
 			
 			this.getDataRequest = function(folder) {
 				return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
-			}
-			
-			this.render = function(id) {
-				mollify.dom.loadContentInto($("#"+id), mollify.templates.url("mainview.html"), that, ['localize', 'radio']);
 			}
 			
 			this.onLoad = function() {
@@ -578,9 +573,7 @@
 						cb([]);
 						return;
 					}
-					//var coreActions = a[1];
-					var plugins = mollify.plugins.getItemContextPlugins(item, d);
-					cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(plugins)));
+					cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, d))));
 				});
 			};
 						
