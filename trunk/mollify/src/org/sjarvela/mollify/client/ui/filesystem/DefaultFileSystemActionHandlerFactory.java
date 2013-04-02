@@ -18,7 +18,6 @@ import org.sjarvela.mollify.client.localization.TextProvider;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.environment.ServiceEnvironment;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 
 public class DefaultFileSystemActionHandlerFactory implements
@@ -27,7 +26,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 	private final DialogManager dialogManager;
 	private final FileSystemService fileSystemService;
 	private final FileSystemItemProvider fileSystemItemProvider;
-	private final ViewManager windowManager;
+	// private final ViewManager windowManager;
 	// private final ItemSelectorFactory itemSelectorFactory;
 	// private final RenameDialogFactory renameDialogFactory;
 	private final SessionProvider sessionProvider;
@@ -38,13 +37,12 @@ public class DefaultFileSystemActionHandlerFactory implements
 
 	public DefaultFileSystemActionHandlerFactory(
 			EventDispatcher eventDispatcher, TextProvider textProvider,
-			ViewManager windowManager, DialogManager dialogManager,
-			ServiceEnvironment env,
+			DialogManager dialogManager, ServiceEnvironment env,
 			FileSystemItemProvider fileSystemItemProvider,
 			SessionProvider sessionProvider) {
 		this.eventDispatcher = eventDispatcher;
 		this.textProvider = textProvider;
-		this.windowManager = windowManager;
+		// this.windowManager = windowManager;
 		this.dialogManager = dialogManager;
 		// this.itemSelectorFactory = itemSelectorFactory;
 		// this.renameDialogFactory = renameDialogFactory;
@@ -57,7 +55,7 @@ public class DefaultFileSystemActionHandlerFactory implements
 
 	public FileSystemActionHandler create() {
 		return new DefaultFileSystemActionHandler(eventDispatcher,
-				textProvider, windowManager, dialogManager, fileSystemService,
+				textProvider, dialogManager, fileSystemService,
 				fileSystemItemProvider, sessionProvider.getSession());
 	}
 

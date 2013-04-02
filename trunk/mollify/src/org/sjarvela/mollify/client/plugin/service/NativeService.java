@@ -16,7 +16,6 @@ import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.util.JsUtil;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dev.json.JsonBoolean;
 
 public class NativeService {
 	private final ExternalService externalService;

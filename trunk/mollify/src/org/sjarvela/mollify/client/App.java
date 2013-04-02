@@ -18,8 +18,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
 
 public class App implements EntryPoint {
 	private static Logger logger = Logger.getLogger(App.class.getName());
@@ -36,7 +34,7 @@ public class App implements EntryPoint {
 	}
 
 	private void onLoad() {
-		showInitMessage();
+		// showInitMessage();
 
 		GWT.runAsync(new RunAsyncCallback() {
 			@Override
@@ -48,7 +46,7 @@ public class App implements EntryPoint {
 			public void onFailure(Throwable reason) {
 				logger.log(Level.SEVERE, "Error initializing application",
 						reason);
-				showError(reason);
+				// showError(reason);
 			}
 		});
 	}
@@ -59,27 +57,27 @@ public class App implements EntryPoint {
 			client.start();
 		} catch (RuntimeException e) {
 			logger.log(Level.SEVERE, "Error initializing application", e);
-
-			RootPanel panel = RootPanel.get(App.CONTENT_PANEL_ID);
-			panel.clear();
-			panel.getElement().setInnerHTML(
-					"Unexpected error: " + e.getMessage());
+			//
+			// RootPanel panel = RootPanel.get(App.CONTENT_PANEL_ID);
+			// panel.clear();
+			// panel.getElement().setInnerHTML(
+			// "Unexpected error: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	private void showInitMessage() {
-		RootPanel rootPanel = RootPanel.get(CONTENT_PANEL_ID);
-		if (rootPanel == null)
-			throw new RuntimeException("No placeholder found for Mollify");
-		rootPanel.clear();
-		rootPanel.add(new HTML("<div class='mollify-loading'></div>"));
-	}
+	// private void showInitMessage() {
+	// RootPanel rootPanel = RootPanel.get(CONTENT_PANEL_ID);
+	// if (rootPanel == null)
+	// throw new RuntimeException("No placeholder found for Mollify");
+	// rootPanel.clear();
+	// rootPanel.add(new HTML("<div class='mollify-loading'></div>"));
+	// }
 
-	private void showError(Throwable reason) {
-		RootPanel rootPanel = RootPanel.get(CONTENT_PANEL_ID);
-		rootPanel.clear();
-		rootPanel.add(new HTML("Failed to initialize Mollify: "
-				+ reason.getMessage()));
-	}
+	// private void showError(Throwable reason) {
+	// RootPanel rootPanel = RootPanel.get(CONTENT_PANEL_ID);
+	// rootPanel.clear();
+	// rootPanel.add(new HTML("Failed to initialize Mollify: "
+	// + reason.getMessage()));
+	// }
 }

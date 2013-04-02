@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.sjarvela.mollify.client.Callback;
-import org.sjarvela.mollify.client.ResourceId;
 import org.sjarvela.mollify.client.ResultCallback;
 import org.sjarvela.mollify.client.event.DefaultEventDispatcher;
 import org.sjarvela.mollify.client.event.EventDispatcher;
@@ -27,19 +25,15 @@ import org.sjarvela.mollify.client.filesystem.handler.FileSystemActionHandlerFac
 import org.sjarvela.mollify.client.filesystem.js.JsFilesystemItem;
 import org.sjarvela.mollify.client.filesystem.js.JsFolder;
 import org.sjarvela.mollify.client.filesystem.js.JsRootFolder;
-import org.sjarvela.mollify.client.js.JsObj;
-import org.sjarvela.mollify.client.js.JsObjBuilder;
 import org.sjarvela.mollify.client.localization.TextProvider;
-import org.sjarvela.mollify.client.plugin.response.NativeResponseProcessor;
 import org.sjarvela.mollify.client.plugin.service.NativeService;
 import org.sjarvela.mollify.client.service.FileSystemService;
 import org.sjarvela.mollify.client.service.ServiceError;
 import org.sjarvela.mollify.client.service.ServiceProvider;
-import org.sjarvela.mollify.client.service.request.ResponseInterceptor;
 import org.sjarvela.mollify.client.service.request.listener.ResultListener;
 import org.sjarvela.mollify.client.session.SessionInfo;
+import org.sjarvela.mollify.client.session.SessionManager;
 import org.sjarvela.mollify.client.session.SessionProvider;
-import org.sjarvela.mollify.client.ui.ViewManager;
 import org.sjarvela.mollify.client.ui.dialog.DialogManager;
 import org.sjarvela.mollify.client.util.JsUtil;
 
@@ -51,7 +45,7 @@ public class DefaultClientInterface implements ClientInterface {
 			.getLogger(DefaultClientInterface.class.getName());
 
 	private final EventDispatcher eventDispatcher;
-	private final ResponseInterceptor responseInterceptor;
+	// private final ResponseInterceptor responseInterceptor;
 	// private final ItemContextHandler itemContextHandler;
 	private final SessionProvider sessionProvider;
 	private final ServiceProvider serviceProvider;
@@ -69,14 +63,12 @@ public class DefaultClientInterface implements ClientInterface {
 
 	// TODO move this entire class into external js
 	public DefaultClientInterface(EventDispatcher eventDispatcher,
-			ResponseInterceptor responseInterceptor,
 			SessionProvider sessionProvider, ServiceProvider serviceProvider,
 			DialogManager dialogManager, TextProvider textProvider,
-			ViewManager viewManager,
 			FileSystemActionHandlerFactory actionHandlerFactory,
 			FileSystemItemProvider filesystemItemProvider) {
 		this.eventDispatcher = eventDispatcher;
-		this.responseInterceptor = responseInterceptor;
+		// this.responseInterceptor = responseInterceptor;
 		// this.itemContextHandler = itemContextProvider;
 		this.sessionProvider = sessionProvider;
 		this.serviceProvider = serviceProvider;
@@ -88,13 +80,12 @@ public class DefaultClientInterface implements ClientInterface {
 		// this.fileListInterface = new FileListExt(textProvider);
 		this.actionHandler = actionHandlerFactory.create();
 
-		this.nativeViewManager = new NativeViewManager(viewManager,
-				dialogManager);
+		this.nativeViewManager = new NativeViewManager(dialogManager);
 	}
 
 	@Override
-	public void setup(final SessionInfo session, final Callback onReady) {
-		initApp(asJs(session.getPluginBaseUrl()), onReady);
+	public void setup() {
+		initApp(asJs());
 	}
 
 	// private Map<String, String> getExternalPluginScripts(SessionInfo session)
@@ -118,17 +109,15 @@ public class DefaultClientInterface implements ClientInterface {
 	// return result;
 	// }
 
-	private native void initApp(JavaScriptObject i, Callback cb) /*-{
+	private native void initApp(JavaScriptObject i) /*-{
 		if (!$wnd.mollify)
 			return;
-		$wnd.mollify.setup(i, function() {
-			cb.@org.sjarvela.mollify.client.Callback::onCallback()();
-		});
+		$wnd.mollify.setup(i);
 	}-*/;
 
-	public void addResponseProcessor(JavaScriptObject rp) {
-		responseInterceptor.addProcessor(new NativeResponseProcessor(rp));
-	}
+	// public void addResponseProcessor(JavaScriptObject rp) {
+	// responseInterceptor.addProcessor(new NativeResponseProcessor(rp));
+	// }
 
 	public void addEventHandler(JavaScriptObject eh) {
 		// TODO use proper interface here instead of casting
@@ -139,9 +128,14 @@ public class DefaultClientInterface implements ClientInterface {
 		return new NativeSession(sessionProvider.getSession()).asJs();
 	}
 
-	private JavaScriptObject asJs(String pluginBaseUrl) {
-		return createNativeInterface(this, pluginBaseUrl, getTextProvider(),
-				getService(), getViewManager(), getLogger());
+	protected void setSession(JavaScriptObject s) {
+		SessionInfo i = s.cast();
+		((SessionManager) sessionProvider).setSession(i);
+	}
+
+	private JavaScriptObject asJs() {
+		return createNativeInterface(this, "", getTextProvider(), getService(),
+				getViewManager(), getLogger());
 	}
 
 	protected JavaScriptObject getService() {
@@ -190,15 +184,16 @@ public class DefaultClientInterface implements ClientInterface {
 						new ResultCallback<ItemDetails>() {
 							@Override
 							public void onCallback(ItemDetails details) {
-//								boolean root = !item.isFile()
-//										&& ((JsFolder) item.cast()).isRoot();
-//								boolean writable = !root
-//										&& details.getFilePermission()
-//												.canWrite();
-//								List<JsObj> itemActions = getItemActions(item,
-//										writable, root);
-//								JsArray<JsObj> actions = JsUtil.asJsArray(
-//										itemActions, JsObj.class);
+								// boolean root = !item.isFile()
+								// && ((JsFolder) item.cast()).isRoot();
+								// boolean writable = !root
+								// && details.getFilePermission()
+								// .canWrite();
+								// List<JsObj> itemActions =
+								// getItemActions(item,
+								// writable, root);
+								// JsArray<JsObj> actions = JsUtil.asJsArray(
+								// itemActions, JsObj.class);
 								call(callback, details);
 								// call2(callback, details, JsUtil.asJsArray(
 								// itemActions, JsObj.class));
@@ -206,53 +201,54 @@ public class DefaultClientInterface implements ClientInterface {
 						}));
 	}
 
-//	private List<JsObj> getItemActions(JsFilesystemItem item, boolean writable,
-//			boolean root) {
-//		List<JsObj> actions = new ArrayList();
-//
-//		// if (item.isFile() || !root)
-//		// actions.add(createAction(item, FileSystemAction.download,
-//		// Texts.fileActionDownloadTitle.name()));
-//		//
-//		// actions.add(createSeparator());
-//		//
-//		// if (writable)
-//		// actions.add(createAction(item, FileSystemAction.rename,
-//		// Texts.fileActionRenameTitle.name()));
-//		// if (!root)
-//		// actions.add(createAction(item, FileSystemAction.copy,
-//		// Texts.fileActionCopyTitle.name()));
-//		// if (item.isFile())
-//		// actions.add(createAction(item, FileSystemAction.copyHere,
-//		// Texts.fileActionCopyHereTitle.name()));
-//		// if (writable)
-//		// actions.add(createAction(item, FileSystemAction.move,
-//		// Texts.fileActionMoveTitle.name()));
-//		// if (writable)
-//		// actions.add(createAction(item, FileSystemAction.delete,
-//		// Texts.fileActionDeleteTitle.name()));
-//		return actions;
-//	}
+	// private List<JsObj> getItemActions(JsFilesystemItem item, boolean
+	// writable,
+	// boolean root) {
+	// List<JsObj> actions = new ArrayList();
+	//
+	// // if (item.isFile() || !root)
+	// // actions.add(createAction(item, FileSystemAction.download,
+	// // Texts.fileActionDownloadTitle.name()));
+	// //
+	// // actions.add(createSeparator());
+	// //
+	// // if (writable)
+	// // actions.add(createAction(item, FileSystemAction.rename,
+	// // Texts.fileActionRenameTitle.name()));
+	// // if (!root)
+	// // actions.add(createAction(item, FileSystemAction.copy,
+	// // Texts.fileActionCopyTitle.name()));
+	// // if (item.isFile())
+	// // actions.add(createAction(item, FileSystemAction.copyHere,
+	// // Texts.fileActionCopyHereTitle.name()));
+	// // if (writable)
+	// // actions.add(createAction(item, FileSystemAction.move,
+	// // Texts.fileActionMoveTitle.name()));
+	// // if (writable)
+	// // actions.add(createAction(item, FileSystemAction.delete,
+	// // Texts.fileActionDeleteTitle.name()));
+	// return actions;
+	// }
 
-	private JsObj createSeparator() {
-		return new JsObjBuilder().string("type", "separator")
-				.string("title", "-").create();
-	}
+	// private JsObj createSeparator() {
+	// return new JsObjBuilder().string("type", "separator")
+	// .string("title", "-").create();
+	// }
 
-	private JsObj createAction(final JsFilesystemItem item,
-			final ResourceId action, String titleKey) {
-		JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
-			@Override
-			public void onCallback() {
-				if (action instanceof FileSystemAction)
-					actionHandler.onAction(item, (FileSystemAction) action,
-							null);
-			}
-		});
-		return new JsObjBuilder().string("type", "action")
-				.string("group", "core").string("id", action.name())
-				.string("title-key", titleKey).obj("callback", cb).create();
-	}
+	// private JsObj createAction(final JsFilesystemItem item,
+	// final ResourceId action, String titleKey) {
+	// JavaScriptObject cb = JsUtil.createJsCallback(new Callback() {
+	// @Override
+	// public void onCallback() {
+	// if (action instanceof FileSystemAction)
+	// actionHandler.onAction(item, (FileSystemAction) action,
+	// null);
+	// }
+	// });
+	// return new JsObjBuilder().string("type", "action")
+	// .string("group", "core").string("id", action.name())
+	// .string("title-key", titleKey).obj("callback", cb).create();
+	// }
 
 	private ResultListener<ItemDetails> createItemDetailsListener(
 			final JsFilesystemItem item,
@@ -314,12 +310,13 @@ public class DefaultClientInterface implements ClientInterface {
 
 	public void onDelete(JavaScriptObject items) {
 		if (isArray(items))
-			actionHandler.onAction(getItems(items), FileSystemAction.delete, null);
+			actionHandler.onAction(getItems(items), FileSystemAction.delete,
+					null);
 		else
 			actionHandler.onAction((JsFilesystemItem) items.cast(),
 					FileSystemAction.delete, null);
 	}
-	
+
 	private List<JsFilesystemItem> getItems(JavaScriptObject items) {
 		if (isArray(items))
 			return JsUtil
@@ -340,9 +337,9 @@ public class DefaultClientInterface implements ClientInterface {
 			JavaScriptObject viewManager, JavaScriptObject logger) /*-{
 		var env = {};
 
-		env.addResponseProcessor = function(cb) {
-			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
-		}
+		//		env.addResponseProcessor = function(cb) {
+		//			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addResponseProcessor(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
+		//		}
 
 		env.addEventHandler = function(cb) {
 			e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::addEventHandler(Lcom/google/gwt/core/client/JavaScriptObject;)(cb);
@@ -385,6 +382,9 @@ public class DefaultClientInterface implements ClientInterface {
 		env.session = {
 			get : function() {
 				return e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::getSession()();
+			},
+			set : function(s) {
+				e.@org.sjarvela.mollify.client.plugin.DefaultClientInterface::setSession(Lcom/google/gwt/core/client/JavaScriptObject;)(s);
 			}
 		}
 

@@ -34,12 +34,11 @@ public class PhpServiceEnvironment implements ServiceEnvironment {
 	private PhpExternalService externalService;
 
 	public void initialize(UrlResolver urlResolver, ClientSettings settings,
-			ResponseProcessor responseProcessor) {
+			ResponseProcessor rp) {
 		service = new PhpService(urlResolver,
 				settings.getString(PARAM_SERVICE_PATH), settings.getInt(
 						PARAM_TIMEOUT, DEFAULT_REQUEST_TIMEOUT),
-				settings.getBool(SERVER_LIMITED_HTTP_METHODS, false),
-				responseProcessor);
+				settings.getBool(SERVER_LIMITED_HTTP_METHODS, false), rp);
 		sessionService = new PhpSessionService(service);
 		fileSystemService = new PhpFileService(service);
 		uploadHandler = new PhpFileUploadService(service);
