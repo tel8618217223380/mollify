@@ -184,10 +184,10 @@
 			}
 			
 			this.onEvent = function(e) {
-				if (e.type.substring(0, 11) != 'FILESYSTEM_') return;
-				var files = e.payload;
+				if (!e.type.startsWith('filesystem/')) return;
+				//var files = e.payload.items;
 				//TODO check if affects this view
-				that.listener.refresh();
+				that.refresh();
 			};
 			
 			this.unload = function() {
@@ -195,7 +195,7 @@
 			};
 			
 			this.onSearch = function(s) {
-				that.listener.onSearch(s, function(r) {
+				mollify.service.post("filesystem/search", {text:s}, function(r) {
 					$("#mollify-mainview-search-input").val("");
 					$(".mollify-mainview-rootlist-item").removeClass("active");
 					var $h = $("#mollify-folderview-header").empty();
@@ -215,6 +215,8 @@
 					that.searchResults = r;
 					that.initList();
 					that.updateItems(items, {});
+				}, function(c, e) {
+					alert("err");
 				});
 			};
 			
@@ -338,7 +340,7 @@
 			
 			this.folder = function(p) {
 				//that._currentFolder = p ? p.hierarchy[p.hierarchy.length-1] : false;
-				that._canWrite = p ? p.canWrite : false;
+				that._canWrite = p ? (p.permission == 'RW') : false;
 				var currentRoot = p ? p.hierarchy[0] : false;
 				
 				$(".mollify-mainview-rootlist-item").removeClass("active");
@@ -355,7 +357,7 @@
 						}
 					};
 					$t = $("#mollify-folder-tools");
-					if (p.canWrite) {
+					if (that._canWrite) {
 						mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function() {
 							 mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
 							 	onRenderBubble: function(b) {
@@ -365,7 +367,7 @@
 								 		if (!name) return;
 								 		
 								 		b.hide();
-								 		that.listener.onCreateFolder(name);
+								 		mollify.filesystem.createFolder(that._currentFolder, name);
 							 		});
 							 		$i.focus();
 								}
