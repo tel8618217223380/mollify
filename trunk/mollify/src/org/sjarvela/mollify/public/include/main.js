@@ -79,6 +79,7 @@
 			}
 			
 			this.getDataRequest = function(folder) {
+				if (!folder) return null;
 				return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
 			}
 			
@@ -179,7 +180,7 @@
 				
 				if (mollify.filesystem.roots.length == 0) that.showNoRoots();
 				else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
-				else that.showAllRoots();
+				else that.changeToFolder(null);
 			}
 			
 			this.onEvent = function(e) {
@@ -255,13 +256,9 @@
 			this.onResize = function() {
 				$("#mollify-folderview").height($(window).height()-$("#mollify-mainview-header").height());
 			};
-			
-			this.showAllRoots = function() {
-				that.folder();
-				that.data({ items: mollify.session.folders });
-			};
 		
 			this.showNoRoots = function() {
+				//TODO
 				console.log("showNoRoots");
 			};
 				
@@ -280,6 +277,11 @@
 			
 			this.refresh = function() {
 				mollify.ui.hideActivePopup();
+				if (!that._currentFolder) {
+					that.folder();
+					that.data({items: mollify.filesystem.roots});
+					return;
+				};
 				that.showProgress();
 				
 				mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder), function(r) {
@@ -323,11 +325,7 @@
 			};
 						
 			this.canDragAndDrop = function(to, item) {
-				if (to.is_file) return false;
-				//if (item.id == item.root_id) return false;
-				if (item.id == to.id) return false;
-				if (item.parent_id == to.id) return false;
-				return true;
+				return that.dropType(to, item) == "copy" ? mollify.filesystem.canCopyTo(item, to) : mollify.filesystem.canMoveTo(item, to);
 			};
 			
 			this.onDragAndDrop = function(to, item) {
@@ -453,7 +451,7 @@
 					rootItems.push({
 						title: root.name,
 						callback: function(r) {
-							return function() { that.onFolderSelected(r); };
+							return function() { that.changeToFolder(r); };
 						}(root)
 					});
 				}
@@ -467,7 +465,7 @@
 				var $hi = $(".mollify-folder-hierarchy-item").click(function() {
 					var folder = $(this).tmplItem().data;
 					var index = h.indexOf(folder);
-					that.onFolderSelected(folder);
+					that.changeToFolder(folder);
 				});
 				
 				if (mollify.ui.draganddrop) {
@@ -526,7 +524,7 @@
 					},
 					onDblClick: function(item) {
 						if (item.is_file) return;
-						that.onFolderSelected(item);
+						that.changeToFolder(item);
 					},
 					onRightClick: function(item, t, e) {
 						that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
