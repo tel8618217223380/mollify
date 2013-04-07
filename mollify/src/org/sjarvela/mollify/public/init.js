@@ -294,14 +294,14 @@
 		
 		this._copy = function(i, to, cb, err) {
 			mollify.service.post("filesystem/"+i.id+"/copy/", {folder:to.id}, function(r) {
-				mollify.events.dispatch({type:'FILESYSTEM_COPY', payload: { items: [ i ], to: to }});
+				mollify.events.dispatch({type:'filesystem/copy', payload: { items: [ i ], to: to }});
 				if (cb) cb(r);
 			}, err);
 		};
 		
 		this._copyMany = function(i, to, cb, err) {
 			mollify.service.post("filesystem/items/", {action: 'copy', items: i, to: to}, function(r) {
-				mollify.events.dispatch({type:'FILESYSTEM_COPY', payload: { items: i, to: to }});
+				mollify.events.dispatch({type:'filesystem/copy', payload: { items: i, to: to }});
 				if (cb) cb(r);
 			}, err);
 		};
@@ -340,24 +340,37 @@
 		
 		this._move = function(i, to, cb, err) {
 			mollify.service.post("filesystem/"+i.id+"/move/", {id:to.id}, function(r) {
-				mollify.events.dispatch({type:'FILESYSTEM_MOVE', payload: { items: [ i ], to: to }});
+				mollify.events.dispatch({type:'filesystem/move', payload: { items: [ i ], to: to }});
 				if (cb) cb(r);
 			}, err);
 		};
 
 		this._moveMany = function(i, to, cb, err) {
 			mollify.service.post("filesystem/items/", {action: 'move', items: i, to: to}, function(r) {
-				mollify.events.dispatch({type:'FILESYSTEM_MOVE', payload: { items: i, to: to }});
+				mollify.events.dispatch({type:'filesystem/move', payload: { items: i, to: to }});
 				if (cb) cb(r);
 			}, err);
 		};
 		
 		this.rename = function(item, name, cb, err) {
-			
+			mollify.service.put("filesystem/"+item.id+"/name/", {name: name}, function(r) {
+				mollify.events.dispatch({type:'filesystem/rename', payload: { items: [i], name: name }});
+				if (cb) cb(r);
+			}, err);
 		};
 		
 		this.remove = function(items, cb, err) {
-			
+			mollify.service.del("filesystem/"+item.id, function(r) {
+				mollify.events.dispatch({type:'filesystem/delete', payload: { items: [i] }});
+				if (cb) cb(r);
+			}, err);
+		};
+		
+		this.createFolder = function(folder, name, cb, err) {
+			mollify.service.post("filesystem/"+folder.id+"/folders/", {name: name}, function(r) {
+				mollify.events.dispatch({type:'filesystem/createfolder', payload: { items: [folder], name: name }});
+				if (cb) cb(r);
+			}, err);
 		};
 	};
 	
