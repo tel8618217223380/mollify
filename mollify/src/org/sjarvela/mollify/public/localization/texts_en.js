@@ -95,9 +95,9 @@ moveFileDialogAction: "Move",
 moveDirectoryDialogAction: "Move",
 
 deleteFileConfirmationDialogTitle: "Delete File",
-deleteDirectoryConfirmationDialogTitle: "Delete Folder",
+deleteFolderConfirmationDialogTitle: "Delete Folder",
 confirmFileDeleteMessage: "Are you sure you want to delete \"{0}\"?",
-confirmDirectoryDeleteMessage: "Are you sure you want to delete \"{0}\" and all its files and subfolders?",
+confirmFolderDeleteMessage: "Are you sure you want to delete \"{0}\" and all its files and subfolders?",
 
 pluginItemDetailsContextTitle: "Details",
 

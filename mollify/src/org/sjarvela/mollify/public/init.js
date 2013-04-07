@@ -354,14 +354,14 @@
 		
 		this.rename = function(item, name, cb, err) {
 			mollify.service.put("filesystem/"+item.id+"/name/", {name: name}, function(r) {
-				mollify.events.dispatch({type:'filesystem/rename', payload: { items: [i], name: name }});
+				mollify.events.dispatch({type:'filesystem/rename', payload: { items: [item], name: name }});
 				if (cb) cb(r);
 			}, err);
 		};
 		
-		this.remove = function(items, cb, err) {
+		this.del = function(item, cb, err) {
 			mollify.service.del("filesystem/"+item.id, function(r) {
-				mollify.events.dispatch({type:'filesystem/delete', payload: { items: [i] }});
+				mollify.events.dispatch({type:'filesystem/delete', payload: { items: [item] }});
 				if (cb) cb(r);
 			}, err);
 		};
@@ -2867,7 +2867,11 @@ $.extend(true, mollify, {
 						actions.push({ 'title-key': 'copyHereItem', callback: function() { mollify.filesystem.copyHere(item); } });
 						actions.push({ 'title-key': 'moveItem', callback: function() { mollify.filesystem.move(item); } });
 						actions.push({ 'title-key': 'renameItem', callback: function() { mollify.filesystem.rename(item); } });
-						actions.push({ 'title-key': 'deleteItem', callback: function() { mollify.filesystem.del(item); } });
+						actions.push({ 'title-key': 'deleteItem', callback: function() { mollify.ui.dialogs.confirmation({
+							title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
+							message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
+							callback: function() { mollify.filesystem.del(item); }
+						});}});
 					}
 					return {
 						actions: actions
