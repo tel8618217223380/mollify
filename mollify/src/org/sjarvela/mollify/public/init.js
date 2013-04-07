@@ -184,7 +184,7 @@
 			et._handlers.push(h);
 		};
 		
-		this.dispatchEvent = function(e) {
+		this.dispatch = function(e) {
 			$.each(et._handlers, function(i, h) {
 				h(e);
 			});
@@ -206,7 +206,7 @@
 		};
 		
 		this.itemDetails = function(item, data, cb, err) {
-			mollify.service.post("filesystem/"+f.id+"/details/", { data : data }, cb, err);
+			mollify.service.post("filesystem/"+item.id+"/details/", { data : data }, cb, err);
 		};
 		
 		this.folderInfo = function(f, hierarchy, data, cb, err) {
@@ -214,15 +214,142 @@
 		};
 		
 		this.folders = function(parent, cb, err) {
-			mollify.service.get("filesystem/"+f.id+"/folders/", cb, err);
+			if (parent == null) {
+				cb(ft.roots);
+				return;
+			}
+			mollify.service.get("filesystem/"+parent.id+"/folders/", cb, err);
 		};
 		
-		this.copy = function(items, to, cb, err) {
+		this.copy = function(i, to, cb, err) {
+			if (isArray(i)) {
+				if (!to) {
+					mollify.ui.dialogs.folderSelector({
+						title: mollify.ui.texts.get('copyMultipleFileDialogTitle'),
+						message: mollify.ui.texts.get('copyMultipleFileMessage', [i.length]),
+						actionTitle: mollify.ui.texts.get('copyFileDialogAction'),
+						handler: {
+							onSelect: function(f) { ft._copyMany(i, f, cb, err); },
+							canSelect: function(f) { return ft.canCopyTo(i, f); }
+						}
+					});
+				} else
+					ft._copyMany(i, to, cb, err);
+
+				return;	
+			};
 			
+			if (!to) {
+				mollify.ui.dialogs.folderSelector({
+					title: mollify.ui.texts.get('copyFileDialogTitle'),
+					message: mollify.ui.texts.get('copyFileMessage', [i.name]),
+					actionTitle: mollify.ui.texts.get('copyFileDialogAction'),
+					handler: {
+						onSelect: function(f) { ft._copy(i, f, cb, err); },
+						canSelect: function(f) { return ft.canCopyTo(i, f); }
+					}
+				});
+			} else
+				ft._copy(i, to, cb, err);
 		};
 		
-		this.move = function(items, to, cb, err) {
+		this.canCopyTo = function(item, to) {
+			if (isArray(item)) {
+				for(var i=0,j=item.length;i<j;i++)
+					if (!ft.canCopyTo(item[i], to)) return false;
+				return true;
+			};
 			
+			// cannot copy into file
+			if (to.is_file) return false;
+
+			// cannot copy into itself
+			if (item.id == to.id) return false;
+			
+			// cannot copy into same location
+			if (item.parent_id == to.id) return false;
+			return true;
+		};
+		
+		this.canMoveTo = function(item, to) {
+			if (isArray(item)) {
+				for(var i=0,j=item.length;i<j;i++)
+					if (!ft.canMoveTo(item[i], to)) return false;
+				return true;
+			};
+			
+			// cannot move into file
+			if (to.is_file) return false;
+
+			// cannot move folder into its own subfolder
+			if (!to.is_file && item.root_id == to.root_id && to.path.startsWith(item.path)) return false;
+
+			// cannot move into itself
+			if (item.id == to.id) return false;
+			
+			// cannot move into same location
+			if (item.parent_id == to.id) return false;
+			return true;
+		};
+		
+		this._copy = function(i, to, cb, err) {
+			mollify.service.post("filesystem/"+i.id+"/copy/", {folder:to.id}, function(r) {
+				mollify.events.dispatch({type:'FILESYSTEM_COPY', payload: { items: [ i ], to: to }});
+				if (cb) cb(r);
+			}, err);
+		};
+		
+		this._copyMany = function(i, to, cb, err) {
+			mollify.service.post("filesystem/items/", {action: 'copy', items: i, to: to}, function(r) {
+				mollify.events.dispatch({type:'FILESYSTEM_COPY', payload: { items: i, to: to }});
+				if (cb) cb(r);
+			}, err);
+		};
+		
+		this.move = function(i, to, cb, err) {
+			if (isArray(i)) {
+				if (!to) {
+					mollify.ui.dialogs.folderSelector({
+						title: mollify.ui.texts.get('moveMultipleFileDialogTitle'),
+						message: mollify.ui.texts.get('moveMultipleFileMessage', [i.length]),
+						actionTitle: mollify.ui.texts.get('moveFileDialogAction'),
+						handler: {
+							onSelect: function(f) { ft._moveMany(i, f, cb, err); },
+							canSelect: function(f) { return ft.canMoveTo(i, f); }
+						}
+					});
+				} else
+					ft._moveMany(i, to, cb, err);
+
+				return;	
+			};
+			
+			if (!to) {
+				mollify.ui.dialogs.folderSelector({
+					title: mollify.ui.texts.get('moveFileDialogTitle'),
+					message: mollify.ui.texts.get('moveFileMessage', [i.name]),
+					actionTitle: mollify.ui.texts.get('moveFileDialogAction'),
+					handler: {
+						onSelect: function(f) { ft._move(i, f, cb, err); },
+						canSelect: function(f) { return ft.canMoveTo(i, f); }
+					}
+				});
+			} else
+				ft._move(i, to, cb, err);
+		};
+		
+		this._move = function(i, to, cb, err) {
+			mollify.service.post("filesystem/"+i.id+"/move/", {id:to.id}, function(r) {
+				mollify.events.dispatch({type:'FILESYSTEM_MOVE', payload: { items: [ i ], to: to }});
+				if (cb) cb(r);
+			}, err);
+		};
+
+		this._moveMany = function(i, to, cb, err) {
+			mollify.service.post("filesystem/items/", {action: 'move', items: i, to: to}, function(r) {
+				mollify.events.dispatch({type:'FILESYSTEM_MOVE', payload: { items: i, to: to }});
+				if (cb) cb(r);
+			}, err);
 		};
 		
 		this.rename = function(item, name, cb, err) {
@@ -2717,7 +2844,7 @@ $.extend(true, mollify, {
 					var actions = [];
 					
 					if (item.is_file ) {
-						actions.push({ 'title-key': 'downloadItem', callback: function() { mollify.filesystem.del(item); } });
+						actions.push({ 'title-key': 'downloadItem', callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
 						actions.push({ title: '-' });
 					}
 					
@@ -3352,6 +3479,13 @@ function isArray(o) {
 if(typeof String.prototype.trim !== 'function') {
 	String.prototype.trim = function() {
 		return this.replace(/^\s+|\s+$/g, ''); 
+	}
+}
+
+if(typeof String.prototype.startsWith !== 'function') {
+	String.prototype.startsWith = function(s) {
+		if (!s || s.length == 0) return false;
+		return this.substring(0, s.length) == s; 
 	}
 }
 
