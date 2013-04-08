@@ -17,6 +17,7 @@
 	t.time = new Date().getTime();
 	
 	this.settings = {};
+	this._hiddenInd = 0;
 
 	this.init = function(s, p) {
 		t.plugins.register(new mollify.plugin.Core());
@@ -27,7 +28,6 @@
 		
 		t.settings = $.extend({}, defaults, s);
 
-		t.hiddenInd = 0;
 		//t.core = core;	//TODO remove this when GWT is gone
 		//t.ui.texts = core.texts();
 		//t.service = core.service();
@@ -159,10 +159,14 @@
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});
 		mollify.service.get("session/info/3", function(s) {
-			mollify.events.dispatch("session/start", s);
+			mollify.setSession(s);
 		}, function(c, e) {
 			alert(c);	//TODO
 		});
+	};
+	
+	this.setSession = function(s) {
+		mollify.events.dispatch("session/start", s);
 	};
 	
 	this._start = function() {
@@ -206,10 +210,10 @@
 		var st = this;
 				
 		this.pluginUrl = function(p) {
-			return st._getUrl('plugin/'+p+'/');
+			return st.url('plugin/'+p+'/');
 		};
 		
-		this._getUrl = function(u) {
+		this.url = function(u) {
 			if (u.startsWith('http')) return u;
 			return t.settings["service-path"]+u;	
 		};
@@ -225,8 +229,9 @@
 		this._do = function(type, url, data, s, err) {
 			$.ajax({
 				type: type,
-				url: st._getUrl("r.php/"+url),
-				data: data,
+				url: st.url("r.php/"+url),
+				processData: false,
+				data: data ? JSON.stringify(data) : null,
 				contentType: 'application/json',
 				dataType: 'json',
 				success: function(r, st, xhr) {
@@ -561,7 +566,7 @@
 				if (cb) cb();
 				return;
 			}
-			var id = 'mollify-tmp-'+(t.hiddenInd++);
+			var id = 'mollify-tmp-'+(t._hiddenInd++);
 			$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(t.urlWithParam(url, "_="+mollify.time), function() {
 				t.dom.hiddenLoaded.push(contentId);
 				if (cb) cb();
@@ -670,6 +675,14 @@
 				var t = tt._dict[id];
 				if (!t) return "!"+tt._locale+":"+id;	
 				return t;
+			};
+			
+			this.formatSize = function(size) {
+				return "TODO"+size;	
+			};
+			
+			this.formatInternalTime = function(t) {
+				return "TODO"+t;	
 			};
 		},
 		
@@ -1845,7 +1858,7 @@ $.extend(true, mollify, {
 				}
 				that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
 				mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: Base64.encode(password), remember: remember}, function(s) {
-					mollify.core.session.set(s);
+					mollify.setSession(s);
 				}, function(c, e) {
 					that.showLoginError();
 				});
