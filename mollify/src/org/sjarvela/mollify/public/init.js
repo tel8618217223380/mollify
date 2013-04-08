@@ -26,29 +26,27 @@
 		}
 		
 		t.settings = $.extend({}, defaults, s);
-	}
-	
-	this.setup = function(core) {
+
 		t.hiddenInd = 0;
-		t.core = core;	//TODO remove this when GWT is gone
-		t.ui.texts = core.texts();
-		t.service = core.service();
+		//t.core = core;	//TODO remove this when GWT is gone
+		//t.ui.texts = core.texts();
+		//t.service = core.service();
 		t.session = false;
 		//t.filesystem = core.filesystem();
 		
-		core.addEventHandler(function(e) {
-			if (e.type == 'SESSION_START') {
-				t.session = core.session.get();
+		t.events.addEventHandler(function(e) {
+			if (e.type == 'session/start') {
+				t.session = e.payload;
 				mollify.filesystem.init(mollify.session.folders);
 				t._start();
-			} else if (e.type == 'SESSION_END') {
+			} else if (e.type == 'session/end') {
 				t.session = false;
 				mollify.filesystem.init([]);
 				t._start();
 			}
 		});
 
-		if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
+		//if (t.texts.locale) $("#mollify").addClass("lang-"+t.texts.locale);
 		
 		t.ui.filelist.addColumn({
 			"id": "name",
@@ -139,8 +137,8 @@
 			
 			dialogs : new mollify.view.DialogHandler(t.filesystem)
 		}*/
-		core.views().registerHandlers({ dialogs : t.ui.dialogs });
-		t.plugins.initialize(core);
+		//core.views().registerHandlers({ dialogs : t.ui.dialogs });
+		t.plugins.initialize();
 		t.templates.load("dialogs.html");
 			
 		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
@@ -161,7 +159,7 @@
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
 		//});
 		mollify.service.get("session/info/3", function(s) {
-			core.session.set(s);
+			mollify.events.dispatch("session/start", s);
 		}, function(c, e) {
 			alert(c);	//TODO
 		});
@@ -169,12 +167,24 @@
 	
 	this._start = function() {
 		var $c = $("#mollify");
-		if (!mollify.session.authenticated) {
+		if (!mollify.session || !mollify.session.authenticated) {
 			new mollify.view.LoginView().init($c);
 		} else {
 			new mollify.view.MainView().init($c);
 		}
 	};
+	
+	/*this.sessionManager = new function() {
+		var smt = this;
+		
+		this.set = function(s) {
+			
+		};
+		
+		this.get = function() {
+			
+		};
+	};*/
 	
 	this.events = new function() {
 		var et = this;
@@ -184,9 +194,51 @@
 			et._handlers.push(h);
 		};
 		
-		this.dispatch = function(e) {
+		this.dispatch = function(type, payload) {
+			var e = { type: type, payload: payload };
 			$.each(et._handlers, function(i, h) {
 				h(e);
+			});
+		};
+	};
+	
+	this.service = new function() {
+		var st = this;
+				
+		this.pluginUrl = function(p) {
+			return st._getUrl('plugin/'+p+'/');
+		};
+		
+		this._getUrl = function(u) {
+			if (u.startsWith('http')) return u;
+			return t.settings["service-path"]+u;	
+		};
+		
+		this.get = function(url, s, err) {
+			st._do("GET", url, null, s, err);
+		};
+
+		this.post = function(url, data, s, err) {
+			st._do("POST", url, data, s, err);
+		};
+				
+		this._do = function(type, url, data, s, err) {
+			$.ajax({
+				type: type,
+				url: st._getUrl("r.php/"+url),
+				data: data,
+				contentType: 'application/json',
+				dataType: 'json',
+				success: function(r, st, xhr) {
+					if (!r) {
+						if (err) err(0, "todo");
+						return;
+					}
+					if (s) s(r.result);
+				},
+				error: function(xhr, st, error) {
+					if (err) err(st, error);
+				}
 			});
 		};
 	};
@@ -301,7 +353,7 @@
 		
 		this._copyMany = function(i, to, cb, err) {
 			mollify.service.post("filesystem/items/", {action: 'copy', items: i, to: to}, function(r) {
-				mollify.events.dispatch({type:'filesystem/copy', payload: { items: i, to: to }});
+				mollify.events.dispatch('filesystem/copy', { items: i, to: to });
 				if (cb) cb(r);
 			}, err);
 		};
@@ -340,35 +392,35 @@
 		
 		this._move = function(i, to, cb, err) {
 			mollify.service.post("filesystem/"+i.id+"/move/", {id:to.id}, function(r) {
-				mollify.events.dispatch({type:'filesystem/move', payload: { items: [ i ], to: to }});
+				mollify.events.dispatch('filesystem/move', { items: [ i ], to: to });
 				if (cb) cb(r);
 			}, err);
 		};
 
 		this._moveMany = function(i, to, cb, err) {
 			mollify.service.post("filesystem/items/", {action: 'move', items: i, to: to}, function(r) {
-				mollify.events.dispatch({type:'filesystem/move', payload: { items: i, to: to }});
+				mollify.events.dispatch('filesystem/move', { items: i, to: to });
 				if (cb) cb(r);
 			}, err);
 		};
 		
 		this.rename = function(item, name, cb, err) {
 			mollify.service.put("filesystem/"+item.id+"/name/", {name: name}, function(r) {
-				mollify.events.dispatch({type:'filesystem/rename', payload: { items: [item], name: name }});
+				mollify.events.dispatch('filesystem/rename', { items: [item], name: name });
 				if (cb) cb(r);
 			}, err);
 		};
 		
 		this.del = function(item, cb, err) {
 			mollify.service.del("filesystem/"+item.id, function(r) {
-				mollify.events.dispatch({type:'filesystem/delete', payload: { items: [item] }});
+				mollify.events.dispatch('filesystem/delete', { items: [item] });
 				if (cb) cb(r);
 			}, err);
 		};
 		
 		this.createFolder = function(folder, name, cb, err) {
 			mollify.service.post("filesystem/"+folder.id+"/folders/", {name: name}, function(r) {
-				mollify.events.dispatch({type:'filesystem/createfolder', payload: { items: [folder], name: name }});
+				mollify.events.dispatch('filesystem/createfolder', { items: [folder], name: name });
 				if (cb) cb(r);
 			}, err);
 		};
@@ -385,9 +437,11 @@
 			pl.list[id] = p;
 		};
 		
-		this.initialize = function(core) {
-			for (var id in pl.list)
-				pl.list[id].initialize(core);
+		this.initialize = function() {
+			for (var id in pl.list) {
+				var p = pl.list[id];
+				if (p.initialize) p.initialize();
+			}
 		};
 		
 		this.get = function(id) {
@@ -453,10 +507,6 @@
 	
 	this.hasFeature = function(id) {
 		return t.session.features && t.session.features[id];
-	};
-
-	this.locale = function() {
-		return t.texts.locale;
 	};
 			
 	this.urlWithParam = function(url, param) {
@@ -601,6 +651,28 @@
 	};
 	
 	this.ui = {
+		texts : new function() {
+			var tt = this;
+			this.locale = null;
+			this._dict = {};
+			
+			this.add = function(locale, t) {
+				if (!locale || !t) return;
+				
+				if (!tt.locale) tt.locale = locale;
+				else if (locale != tt.locale) return;
+				
+				for (var id in t) tt._dict[id] = t[id];
+			};
+			
+			this.get = function(id) {
+				if (!id) return "";
+				var t = tt._dict[id];
+				if (!t) return "!"+tt._locale+":"+id;	
+				return t;
+			};
+		},
+		
 		hideActivePopup : function() {
 			if (t.ui._activePopup) t.ui._activePopup.hide();
 			t.ui._activePopup = false;
@@ -1404,7 +1476,7 @@
 		return time.format('yymmddHHMMss', time);
 	}
 	
-	this.texts = new function() {
+	/*this.texts = new function() {
 		var tt = this;
 		this.locale = '';
 		this.values = null;
@@ -1420,8 +1492,8 @@
 				tt.values[v] = values[v];
 			}
 		}
-	}
-}
+	}*/
+};
 
 /**
 /* Dialogs
@@ -1816,9 +1888,7 @@ $.extend(true, mollify, {
 			that.formatters = {};
 			that.typeConfs = false;
 			
-			this.initialize = function(core) {
-				that.core = core;
-				
+			this.initialize = function() {	
 				/*if (sp) {
 					for (var i=0; i<sp.length;i++)
 						that.addDetailsSpec(sp[i]);
@@ -2034,8 +2104,7 @@ $.extend(true, mollify, {
 		FileViewerEditorPlugin: function() {
 			var that = this;
 			
-			this.initialize = function(core) {
-				that.core = core;
+			this.initialize = function() {
 			};
 			
 			this.onEdit = function(item, spec) {
@@ -2250,9 +2319,7 @@ $.extend(true, mollify, {
 		CommentPlugin: function() {
 			var that = this;
 			
-			this.initialize = function(core) {
-				that.core = core;
-				
+			this.initialize = function() {		
 				mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
 				mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 				
@@ -2424,8 +2491,7 @@ $.extend(true, mollify, {
 		PermissionsPlugin: function() {
 			var that = this;
 			
-			this.initialize = function(core) {
-				that.core = core;
+			this.initialize = function() {
 				that.permissionOptions = [
 					{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
 					{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
@@ -2695,8 +2761,7 @@ $.extend(true, mollify, {
 			that.$dbE = false;
 			that.items = [];
 			
-			this.initialize = function(core) {
-				that.core = core;
+			this.initialize = function() {
 				that.itemContext = new mollify.ui.itemContext({ onDescription: null });
 			};
 			
@@ -2838,14 +2903,9 @@ $.extend(true, mollify, {
 	plugin : {
 		Core: function() {
 			var that = this;
-			
-			this.initialize = function(core) {
-				that.core = core;
-			};
 									
 			return {
 				id: "plugin-core",
-				initialize: that.initialize,
 				itemContextHandler : function(item, data) {
 					var root = item.id == item.root_id;
 					var writable = !root && data.permission == "RW";
@@ -2899,8 +2959,7 @@ $.extend(true, mollify, {
 		ItemCollectionPlugin: function() {
 			var that = this;
 			
-			this.initialize = function(core) {
-				that.core = core;
+			this.initialize = function() {
 			};
 									
 			return {

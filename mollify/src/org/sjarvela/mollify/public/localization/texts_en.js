@@ -1,4 +1,4 @@
-(function(){ mollify.texts.set('en', {
+(function(){ mollify.ui.texts.add('en', {
 
 decimalSeparator: ".",
 groupingSeparator: ",",
