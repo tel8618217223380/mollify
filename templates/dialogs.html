@@ -1,0 +1,73 @@
+<script id="mollify-tmpl-dialog-info" type="text/x-jquery-tmpl">
+	<p>${message}</p>
+</script>
+
+<script id="mollify-tmpl-dialog-error" type="text/x-jquery-tmpl">
+	<p>${message}</p>
+</script>
+
+<script id="mollify-tmpl-notification" type="text/x-jquery-tmpl"> 
+	<div class="mollify-notification">
+		<div class="mollify-notification-content">${message}</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-wait" type="text/x-jquery-tmpl"> 
+	<div class="mollify-wait"></div>
+</script>
+
+<script id="mollify-tmpl-dialog-custom" type="text/x-jquery-tmpl">
+	<div class="modal">
+		<div class="modal-header">
+			<h3>${title}</h3>
+		</div>
+
+		<div class="modal-body">{{html $item.getContent()}}</div>
+		<div class="modal-footer">
+			{{each buttons}}
+			<a id="mollify-custom-dialog-button-${id}" class="btn">${$item.getButtonTitle($value)}</a>
+			{{/each}}
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-dialog-input" type="text/x-jquery-tmpl">
+	<div class="mollify-inputdialog">
+		<div class="mollify-inputdialog-message">{{html $item.data.message}}</div>
+		<input class="mollify-inputdialog-input">
+	</div>
+</script>
+
+<script id="mollify-tmpl-dialog-folderselector" type="text/x-jquery-tmpl">
+	<div class="mollify-folderselector">
+		<div class="mollify-folderselector-message">{{html $item.data.message}}</div>
+		<div class="mollify-folderselector-tree well well-large">
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-dialog-folderselector-folder" type="text/x-jquery-tmpl">
+	<div class="mollify-folderselector-folder ${$item.cls}">
+		<div class="mollify-folderselector-folder-indentation">
+			{{each $item.levels}}
+			<div class="mollify-folderselector-folder-indentation-step"></div>
+			{{/each}}
+		</div>
+		<div class="mollify-folderselector-folder-indicator"><i class="icon-caret-right"></i></div>
+		<div class="mollify-folderselector-folder-name">
+		${name}
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-popupmenu" type="text/x-jquery-tmpl">
+	<ul class="dropdown-menu">
+	{{each items}}
+		{{if $item.isSeparator($value)}}
+		<li class="dropdown-item divider"/>
+		{{else}}
+		<li class="dropdown-item"><a href="#">${$item.getTitle($value)}</a></li>
+		{{/if}}
+	{{/each}}
+	</ul>
+</script>
