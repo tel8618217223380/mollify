@@ -102,7 +102,7 @@
 						$this.fileupload('send', data);
 					});
 					return false;
-    			},
+				},
 				progressall: function (e, data) {
 					if (!l.progress) return;
 					
