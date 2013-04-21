@@ -1,5 +1,8 @@
+VERSION=2.0
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
+VERSIONF=$(shell echo ${VERSION} | sed 's/\./_/g')
+REVISION=$(shell svnversion | sed -e 's/:.*//')
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 
@@ -9,7 +12,7 @@ HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\
 
 build:
 	@echo "\n${HR}"
-	@echo "Building Mollify..."
+	@echo "Building Mollify ver ${VERSION} rev ${REVISION}..."
 	@echo "${HR}\n"
 	rm -rf out
 	mkdir -p out/mollify/js
@@ -36,6 +39,7 @@ build:
 	#remove unnecessary/excluded resources
 	find out/mollify -name '.svn' | xargs rm -rf
 	rm out/mollify/backend/configuration.php
+	rm -rf out/mollify/include/Version.info.php
 	rm -rf out/mollify/backend/dav
 	rm -rf out/mollify/backend/db.*
 	rm -rf out/mollify/backend/admin/settings.js
@@ -49,10 +53,12 @@ build:
 	rm -rf out/mollify/backend/FileViewerEditor/viewers/FlexPaper
 	rm -rf out/mollify/backend/FileViewerEditor/viewers/CKEditor
 	
+	echo '<?php $$VERSION = "${VERSION}"; $$REVISION = ${REVISION}; ?>' > out/mollify/backend/include/Version.info.php
+	
 	cp out/mollify/backend/example/example_index.html out/mollify/index.html
 	@echo "Backend...       ${CHECK} Done"
 	
-	zip -r out/mollify.zip out/mollify
+	zip -r out/mollify_${VERSION}.zip out/mollify
 	
 	@echo "\n${HR}"
 
