@@ -6,6 +6,10 @@
 		var that = this;
 		this._currentFolder = false;
 		this._viewStyle = 0;
+		this._formatters = {
+			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, mollify.ui.texts.get('decimalSeparator'))),
+			timestamp : new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat')),
+		};
 		
 		this._filelist = {
 			columns : [],
@@ -56,7 +60,7 @@
 				return (s1-s2) * sort;
 			},
 			"content": function(item, data) {
-				return item.is_file ? mollify.ui.texts.formatSize(item.size) : '';
+				return item.is_file ? that._formatters.byteSize.format(item.size) : '';
 			}
 		});
 		this._filelist.addColumn({
@@ -73,7 +77,7 @@
 			},
 			"content": function(item, data) {
 				if (!item.id || !item.is_file || !data || !data["core-file-modified"] || !data["core-file-modified"][item.id]) return "";
-				return mollify.ui.texts.formatInternalTime(data["core-file-modified"][item.id]);
+				return that._formatters.timestamp.format(mollify.helpers.parseInternalTime(data["core-file-modified"][item.id]));
 			}
 		});
 		this._filelist.addColumn({
@@ -192,8 +196,8 @@
 			if (mollify.session.authenticated) {
 				mollify.ui.controls.dropdown({
 					element: $('#mollify-username-dropdown'),
-					items: false,
-					onShow: function(drp, items) {
+					items: that.getSessionActions()
+					/*onShow: function(drp, items) {
 						if (items) return;
 						
 						that.listener.getSessionActions(function(a) {
@@ -203,7 +207,7 @@
 							}
 							drp.items(a);
 						});
-					}
+					}*/
 				});
 				//mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.listener.sessionActions()});
 			}
@@ -281,6 +285,20 @@
 			else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
 			else that.changeToFolder(null);
 		}
+		
+		this.getSessionActions = function() {
+			return [
+				{"title-key" : "mainViewLogoutTitle", callback: that.onLogout}
+			];	
+		};
+		
+		this.onLogout = function() {
+			mollify.service.post("session/logout", {}, function(s) {
+				mollify.App.setSession(s);
+			}, function(c, e) {
+				alert(c);	//TODO
+			});
+		};
 		
 		this.onEvent = function(e) {
 			if (!e.type.startsWith('filesystem/')) return;
