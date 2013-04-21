@@ -25,7 +25,7 @@
 		var t = tt._dict[id];
 		if (!t) return "!"+tt.locale+":"+id;
 		if (p) {
-			if (!isArray(p)) p = [p];
+			if (!window.isArray(p)) p = [p];
 			for (var i=0,j=p.length; i<j; i++)
 				t = t.replace("{" + i + "}", p[i]);
 		}
@@ -70,7 +70,7 @@
 		},
 		Number : function(precision, ds) {
 			this.format = function(n) {
-				if (!def(n) || typeof(n) !== 'number') return "";
+				if (!window.def(n) || typeof(n) !== 'number') return "";
 				
 				var s = Math.pow(10, precision);
 				var v = Math.floor(n * s) / s;
@@ -504,7 +504,7 @@
 			var rendered = false;
 			var api = {
 				hide: function() {
-					e.popover('hide');
+					$e.popover('hide');
 				},
 				close: this.hide
 			};
@@ -665,7 +665,7 @@
 				add : function(item) {
 					if (!item) return;
 					
-					if (isArray(item)) {
+					if (window.isArray(item)) {
 						for (var i=0,j=item.length; i<j; i++) addItem(item[i]);
 					} else {
 						addItem(item);
@@ -720,7 +720,7 @@
 				add : function(item) {
 					if (!item) return;
 					
-					if (isArray(item)) {
+					if (window.isArray(item)) {
 						for (var i=0,j=item.length; i<j; i++) addItem(item[i]);
 					} else {
 						addItem(item);
@@ -847,7 +847,7 @@
 	};
 			
 	dh.info = function(spec) {
-		that.custom({
+		dh.custom({
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-info").tmpl({message: spec.message}),
 			buttons: [
@@ -869,7 +869,7 @@
 	};
 	
 	dh.error = function(spec) {
-		that.custom({
+		dh.custom({
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-error").tmpl({message: spec.message}),
 			buttons: [
@@ -899,7 +899,7 @@
 	
 	dh.input = function(spec) {
 		var $input = false;
-		that.custom({
+		dh.custom({
 			title: spec.title,
 			content: $("#mollify-tmpl-dialog-input").tmpl({message: spec.message}),
 			buttons: [
@@ -1035,7 +1035,7 @@
 			if (loaded[parent ? parent.id : "root"]) return;
 			
 			$selector.addClass("loading");
-			fs.folders(parent, function(l) {
+			mollify.filesystem.folders(parent, function(l) {
 				$selector.removeClass("loading");
 				loaded[parent ? parent.id : "root"] = true;
 				
@@ -1068,7 +1068,7 @@
 			});
 		};
 		
-		that.custom({
+		dh.custom({
 			title: spec.title,
 			content: content,
 			buttons: [
@@ -1113,7 +1113,7 @@
 		t.dragEl = false;
 		t.dragListener = false;
 		
-		var endDrag = function() {
+		var endDrag = function(e) {
 			if (t.dragEl) {
 				t.dragEl.removeClass("dragged");
 				if (t.dragListener && t.dragListener.onDragEnd) t.dragListener.onDragEnd(t.dragEl, e);
@@ -1146,7 +1146,7 @@
 					}
 					return false;
 				}).bind('dragend', function(e) {	
-					endDrag();
+					endDrag(e);
 				});
 			},
 			enableDrop : function($e, l) {
@@ -1158,7 +1158,7 @@
 						l.onDrop($t, e, t.dragObj);
 						$t.removeClass("dragover");
 					}
-					endDrag();
+					endDrag(e);
 				}).bind('dragenter', function(e) {
 					if (!l.canDrop || !t.dragObj) return false;
 					var $t = $(this);

@@ -72,7 +72,7 @@
 				return;
 			}
 			that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
-			mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: Base64.encode(password), remember: remember}, function(s) {
+			mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: window.Base64.encode(password), remember: remember}, function(s) {
 				mollify.App.setSession(s);
 			}, function(c, e) {
 				that.showLoginError();
