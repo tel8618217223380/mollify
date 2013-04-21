@@ -59,7 +59,9 @@
 		that.formatters = {};
 		that.typeConfs = false;
 		
-		this.initialize = function() {	
+		this.initialize = function() {
+			that.fileSizeFormatter = new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, mollify.ui.texts.get('decimalSeparator')));
+			that.timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			/*if (sp) {
 				for (var i=0; i<sp.length;i++)
 					that.addDetailsSpec(sp[i]);
@@ -196,8 +198,8 @@
 		};
 		
 		this.formatFileData = function(key, data) {
-			if (key == 'size') return mollify.ui.texts.formatSize(data);
-			if (key == 'last-modified') return mollify.ui.texts.formatInternalTime(data);
+			if (key == 'size') return that.fileSizeFormatter.format(data);
+			if (key == 'last-modified') return that.timestampFormatter.format(mollify.helpers.parseInternalTime(data));
 			if (key == 'image-size') return mollify.ui.texts.get('fileItemContextDataImageSizePixels', [data]);
 			
 			if (that.specs[key]) {
