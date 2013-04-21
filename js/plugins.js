@@ -146,7 +146,7 @@
 		this.getGroupTitle = function(g) {				
 			if (that.formatters[g]) {
 				var f = that.formatters[g];
-				if (f.groupTitle) return spec.groupTitle;
+				if (f.groupTitle) return f.groupTitle;
 				if (f["group-title-key"]) return mollify.ui.texts.get(f["group-title-key"]);
 			}
 			if (g == 'file') return mollify.ui.texts.get('fileItemDetailsGroupFile');
@@ -424,7 +424,7 @@
 			});
 			$lbc = $lb.find(".carousel-inner");
 			
-			$c = $v.find(".carousel").carousel({interval: false}).on('slid', function() {
+			var $c = $v.find(".carousel").carousel({interval: false}).on('slid', function() {
 				alert("slid");
 				var $active = $v.find(".mollify-fileviewereditor-viewer-item.active");
 				load($active.tmplItem().data);
@@ -885,7 +885,7 @@
 			that.loadPermissions(item, function(permissions, userData) {
 				$("#mollify-pluginpermissions-context-content").removeClass("loading");
 				
-				$list = mollify.ui.controls.table("mollify-pluginpermissions-context-permission-list", {
+				var $list = mollify.ui.controls.table("mollify-pluginpermissions-context-permission-list", {
 					key: "user_id",
 					columns: [
 						{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
@@ -1013,7 +1013,7 @@
 		
 		this.openDropbox = function(o) {
 			var open = that.$dbE.hasClass("opened");
-			if (def(o)) {
+			if (window.def(o)) {
 				if (o == open) return;
 			} else {
 				o = !open;
@@ -1059,7 +1059,9 @@
 		return {
 			id: "plugin-dropbox",
 			initialize: that.initialize,
-			onMainViewRender: that.onMainViewRender,
+			mainViewHandler : {
+				onMainViewRender: that.onMainViewRender
+			},
 			itemContextHandler : function(item, data) {
 				return {
 					actions: [

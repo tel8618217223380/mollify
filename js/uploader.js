@@ -7,8 +7,8 @@
 		
 		// prevent default file drag&drop		
 		$(document).bind('drop dragover', function (e) {
-		    e.preventDefault();
-		    return false;
+			e.preventDefault();
+			return false;
 		});
 		
 		this.open = function(folder) {
@@ -39,15 +39,15 @@
 				url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 				dataType: 'json',
 				dropZone: $d.find(".mollify-uploader").bind("dragover", function(e) { e.stopPropagation(); }),
-			    drop: function (e, data) {
-			        alert('Dropped: ' + data.files.length);
-			    },
+				drop: function (e, data) {
+					alert('Dropped: ' + data.files.length);	//TODO
+				},
 				progressall: function (e, data) {
 					var progress = parseInt(data.loaded / data.total * 100, 10);
-					console.log(progress);
-			    },
+					console.log(progress);	//TODO
+				},
 				done: function(e, data) {
-					
+	
 				}
 			});	
 		};
@@ -55,22 +55,23 @@
 		this._initDropZoneEffects = function($e) {
 			$e.bind('dragover', function (e) {
 				e.stopPropagation();
-			    var dropZone = $e,
-			        timeout = window.dropZoneTimeout;
-			    if (!timeout) {
-			        dropZone.addClass('in');
-			    } else {
-			        clearTimeout(timeout);
-			    }
-			    if (e.target === dropZone[0]) {
-			        dropZone.addClass('hover');
-			    } else {
-			        dropZone.removeClass('hover');
-			    }
-			    window.dropZoneTimeout = setTimeout(function () {
-			        window.dropZoneTimeout = null;
-			        dropZone.removeClass('in hover');
-			    }, 100);
+				var dropZone = $e
+				var timeout = window.dropZoneTimeout;
+				
+				if (!timeout)
+					dropZone.addClass('in');
+				else
+					clearTimeout(timeout);
+
+				if (e.target === dropZone[0])
+					dropZone.addClass('hover');
+				else
+					dropZone.removeClass('hover');
+
+				window.dropZoneTimeout = setTimeout(function () {
+					window.dropZoneTimeout = null;
+					dropZone.removeClass('in hover');
+				}, 100);
 			});
 		};
 		
@@ -84,30 +85,30 @@
 				url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 				dataType: 'json',
 				dropZone: $dropZone,
-			    /*add: function (e, data) {
-			    	$input.attr("disabled", "disabled");
-			        //alert('Dropped: ' + data.files.length);
-			        uploadData.push(data);
-			        totalFiles = totalFiles + data.files.length;
-			        console.log(totalFiles);
-			    },*/
-			    /*send: function(e, data) {
-			    	//if (data.files.length == 0) return false;
-				    //if (l.start) l.start(data.files);
-			    },*/
-			    submit: function (e, data) {
-				    var $this = $(this);
-				    if (l.start) l.start(data.files, function() {
-					    $this.fileupload('send', data);
-				    });
-    				return false;
+				/*add: function (e, data) {
+					$input.attr("disabled", "disabled");
+					//alert('Dropped: ' + data.files.length);
+					uploadData.push(data);
+					totalFiles = totalFiles + data.files.length;
+					console.log(totalFiles);
+				},*/
+				/*send: function(e, data) {
+					//if (data.files.length == 0) return false;
+					//if (l.start) l.start(data.files);
+				},*/
+				submit: function (e, data) {
+					var $this = $(this);
+					if (l.start) l.start(data.files, function() {
+						$this.fileupload('send', data);
+					});
+					return false;
     			},
 				progressall: function (e, data) {
 					if (!l.progress) return;
 					
 					var progress = parseInt(data.loaded / data.total * 100, 10);
 					l.progress(progress);
-			    },
+				},
 				done: function(e, data) {
 					if (l.finished) l.finished();
 				}
@@ -135,19 +136,19 @@
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
-				    submit: function (e, data) {
-					    var $this = $(this);
-					    if (h.start) h.start(data.files, function() {
-						    $this.fileupload('send', data);
-					    });
-        				return false;
-        			},
+					submit: function (e, data) {
+						var $this = $(this);
+						if (h.start) h.start(data.files, function() {
+							$this.fileupload('send', data);
+						});
+						return false;
+					},
 					progressall: function (e, data) {
 						if (!h.progress) return;
 						
 						var progress = parseInt(data.loaded / data.total * 100, 10);
 						h.progress(progress);
-				    },
+					},
 					done: function(e, data) {
 						if (h.finished) h.finished();
 					}
