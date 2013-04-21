@@ -14,7 +14,7 @@ sizeInKilobytes: "{0} kB",
 sizeInMegabytes: "{0} MB",
 sizeInGigabytes: "{0} GB",
 
-shortDateTimeFormat: "M/d/yyyy h:mm:ss a",
+shortDateTimeFormat: "M/d/yyyy h:mm:ss tt",
 shortDateFormat: "M/d/yyyy",
 timeFormat: "h:mm:ss a",
 

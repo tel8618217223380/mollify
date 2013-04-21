@@ -23,40 +23,64 @@
 	tt.get = function(id, p) {
 		if (!id) return "";
 		var t = tt._dict[id];
-		if (!t) return "!"+tt._locale+":"+id;
+		if (!t) return "!"+tt.locale+":"+id;
 		if (p) {
 			if (!isArray(p)) p = [p];
 			for (var i=0,j=p.length; i<j; i++)
-				t = t.replace(new RegExp("/{" + i + "/}", "g"), p[i]);
+				t = t.replace("{" + i + "}", p[i]);
 		}
 		return t;
 	};
 	
-	tt.formatSize = function(bytes) {
-		var format = function(s) {
-			return ""+s;	//TODO	
-		};
+	/* FORMATTERS */
+	
+	t.ui.formatters = {
+		ByteSize : function(nf) {			
+			this.format = function(bytes) {		
+				if (bytes < 1024)
+					return (bytes == 1 ? t.ui.texts.get('sizeOneByte') : t.ui.texts.get('sizeInBytes', nf.format(bytes)));
 		
-		if (bytes < 1024)
-			return (bytes == 1 ? tt.get('sizeOneByte') : tt.get('sizeInBytes', bytes));
-
-		if (bytes < (1024 * 1024)) {
-			var kilobytes = bytes / 1024;
-			return (kilobytes == 1 ? tt.get('sizeOneKilobyte') : tt.get('sizeInKilobytes', format(kilobytes)));
+				if (bytes < (1024 * 1024)) {
+					var kilobytes = bytes / 1024;
+					return (kilobytes == 1 ? t.ui.texts.get('sizeOneKilobyte') : t.ui.texts.get('sizeInKilobytes', nf.format(kilobytes)));
+				}
+		
+				if (bytes < (1024 * 1024 * 1024)) {
+					var megabytes = bytes / (1024 * 1024);
+					return t.ui.texts.get('sizeInMegabytes', nf.format(megabytes));
+				}
+		
+				var gigabytes = bytes / (1024 * 1024 * 1024);
+				return t.ui.texts.get('sizeInGigabytes', nf.format(gigabytes));
+			};
+		},
+		Timestamp : function(fmt) {
+			this.format = function(ts) {
+				/*var s = fmt;
+				s = s.replace('yyyy', ts.getFullYear());
+				s = s.replace('M', ts.getMonth()+1);
+				s = s.replace('d', ts.getDay());
+				s = s.replace('h', ts.getHours());
+				s = s.replace('hh', ts.getHours());
+				s = s.replace('mm', ts.getMinutes());
+				s = s.replace('ss', ts.getSeconds());
+				s = s.replace('a', (ts.getHours() < 12 ? "AM" : "PM"));*/
+				return ts.toString(fmt);
+			};
+		},
+		Number : function(precision, ds) {
+			this.format = function(n) {
+				if (!def(n) || typeof(n) !== 'number') return "";
+				
+				var s = Math.pow(10, precision);
+				var v = Math.floor(n * s) / s;
+				var sv = v.toString();
+				if (ds) sv = sv.replace(".", ds);
+				return sv;
+			};
 		}
-
-		if (bytes < (1024 * 1024 * 1024)) {
-			var megabytes = bytes / (1024 * 1024);
-			return tt.get('sizeInMegabytes', format(megabytes));
-		}
-
-		var gigabytes = bytes / (1024 * 1024 * 1024);
-		return tt.get('sizeInGigabytes', format(gigabytes));
 	};
 	
-	tt.formatInternalTime = function(t) {
-		return "TODO"+t;	
-	};
 
 	
 	/* UI */
