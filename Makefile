@@ -12,32 +12,47 @@ build:
 	@echo "Building Mollify..."
 	@echo "${HR}\n"
 	rm -rf out
-	mkdir -p out/js
-	mkdir -p out/css
+	mkdir -p out/mollify/js
+	mkdir -p out/mollify/css
 	
 	@./node_modules/.bin/jshint js/*.js --config js/.jshintrc
 	@echo "Running JSHint on javascript...             ${CHECK} Done"
-	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js js/plugins.js > out/js/mollify.src.js
-	@./node_modules/.bin/uglifyjs -nc out/js/mollify.src.js > out/js/mollify.min.js
+	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js js/plugins.js > out/mollify/js/mollify.src.js
+	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.src.js > out/mollify/js/mollify.min.js
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
-	./node_modules/.bin/recess --compress css/style.css > out/css/mollify.min.css
-	./node_modules/.bin/recess --compress css/bootstrap.css > out/css/bootstrap.css
-	./node_modules/.bin/recess --compress css/bootstrap-responsive.css > out/css/bootstrap-responsive.css
-	./node_modules/.bin/recess --compress css/font-awesome.css > out/css/font-awesome.css
-	./node_modules/.bin/recess --compress css/bootstrap-lightbox.css > out/css/bootstrap-lightbox.css
+	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.min.css
+	./node_modules/.bin/recess --compress css/bootstrap.css > out/mollify/css/bootstrap.css
+	./node_modules/.bin/recess --compress css/bootstrap-responsive.css > out/mollify/css/bootstrap-responsive.css
+	./node_modules/.bin/recess --compress css/font-awesome.css > out/mollify/css/font-awesome.css
+	./node_modules/.bin/recess --compress css/bootstrap-lightbox.css > out/mollify/css/bootstrap-lightbox.css
 	
-	cp -R css/font out/css
-	cp -R css/images out/css
+	cp -R css/font out/mollify/css
+	cp -R css/images out/mollify/css
 	
 	@echo "Compressing CSS...       ${CHECK} Done"
 	
-	cp -R mollify/backend out
-	#@find out -type d -name '.svn' -print -exec rm -rf {} \;
-	find out -name '.svn' | xargs rm -rf
-	rm out/backend/configuration.php
+	cp -R mollify/backend out/mollify/
+	#remove unnecessary/excluded resources
+	find out/mollify -name '.svn' | xargs rm -rf
+	rm out/mollify/backend/configuration.php
+	rm -rf out/mollify/backend/dav
+	rm -rf out/mollify/backend/db.*
+	rm -rf out/mollify/backend/admin/settings.js
+	rm -rf out/mollify/backend/admin/custom/*
+	rm -rf out/mollify/backend/plugin/S3
+	rm -rf out/mollify/backend/plugin/Plupload
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/FlowPlayer
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/JPlayer
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/TextFile
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/Zoho
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/FlexPaper
+	rm -rf out/mollify/backend/FileViewerEditor/viewers/CKEditor
 	
-	cp out/backend/example/example_index.html out/index.html
+	cp out/mollify/backend/example/example_index.html out/mollify/index.html
+	@echo "Backend...       ${CHECK} Done"
+	
+	zip -r out/mollify.zip out/mollify
 	
 	@echo "\n${HR}"
 
@@ -53,43 +68,8 @@ test:
 	#kill -9 `cat js/tests/pid.txt`
 	#rm js/tests/pid.txt
 
-#
-# CLEANS THE ROOT DIRECTORY OF PRIOR BUILDS
-#
-
 clean:
-	rm -r out
-
-#
-# BUILD SIMPLE BOOTSTRAP DIRECTORY
-# recess & uglifyjs are required
-#
-
-mollify: mollify-css mollify-js
-
-
-#
-# JS COMPILE
-#
-mollify-js: out/js/*.js
-
-mollify/js/*.js: js/*.js
-	mkdir -p out/js
-	cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js js/plugins.js > out/js/mollify.src.js
-	./node_modules/.bin/uglifyjs -nc out/js/mollify.src.js > out/js/mollify.min.js
-
-#
-# CSS COMPLILE
-#
-
-mollify-css: out/css/*.css
-
-mollify/css/*.css: less/*.less
-	mkdir -p out/css
-	./node_modules/.bin/recess --compile ${BOOTSTRAP_LESS} > out/css/mollify.css
-	./node_modules/.bin/recess --compress ${BOOTSTRAP_LESS} > out/css/mollify.min.css
-	#./node_modules/.bin/recess --compile ${BOOTSTRAP_RESPONSIVE_LESS} > out/css/bootstrap-responsive.css
-	#./node_modules/.bin/recess --compress ${BOOTSTRAP_RESPONSIVE_LESS} > bootstrap/css/bootstrap-responsive.min.css
+	rm -rf out
 
 #
 # WATCH LESS FILES
@@ -100,4 +80,4 @@ watch:
 	watchr -e "watch('less/.*\.less') { system 'make' }"
 
 
-.PHONY: watch mollify-css mollify-js
+.PHONY: watch
