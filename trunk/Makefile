@@ -27,12 +27,17 @@ build:
 	./node_modules/.bin/recess --compress css/font-awesome.css > out/css/font-awesome.css
 	./node_modules/.bin/recess --compress css/bootstrap-lightbox.css > out/css/bootstrap-lightbox.css
 	
-	copy -R css/font out/css
-	copy -R css/images out/css
+	cp -R css/font out/css
+	cp -R css/images out/css
 	
 	@echo "Compressing CSS...       ${CHECK} Done"
 	
-	copy -R mollify/backend out
+	cp -R mollify/backend out
+	#@find out -type d -name '.svn' -print -exec rm -rf {} \;
+	find out -name '.svn' | xargs rm -rf
+	rm out/backend/configuration.php
+	
+	cp out/backend/example/example_index.html out/index.html
 	
 	@echo "\n${HR}"
 
