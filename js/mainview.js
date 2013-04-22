@@ -512,7 +512,7 @@
 										that.refresh();
 									}
 								});
-								if (!mollify.hasFeature('retrieve_url')) {
+								if (!mollify.features.hasFeature('retrieve_url')) {
 									$("#mollify-mainview-addfile-retrieve").remove();
 								}
 								var onRetrieve = function() {

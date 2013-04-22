@@ -42,7 +42,7 @@ build:
 	
 	@echo "Compressing CSS...       ${CHECK} Done"
 	
-	cp -R mollify/backend out/mollify/
+	cp -R backend out/mollify/
 	#remove unnecessary/excluded resources
 	find out/mollify -name '.svn' | xargs rm -rf
 	rm out/mollify/backend/configuration.php
