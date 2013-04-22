@@ -16,15 +16,22 @@ build:
 	@echo "${HR}\n"
 	rm -rf out
 	mkdir -p out/mollify/js
+	mkdir -p out/mollify/js/lib
 	mkdir -p out/mollify/css
 	
 	@./node_modules/.bin/jshint js/*.js --config js/.jshintrc
 	@echo "Running JSHint on javascript...             ${CHECK} Done"
-	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js js/plugins.js > out/mollify/js/mollify.src.js
-	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.src.js > out/mollify/js/mollify.min.js
+	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js > out/mollify/js/mollify.js
+	@cat js/lib/jquery.min.js js/lib/jquery.tmpl.min.js js/lib/jquery-ui.min.js js/lib/bootstrap.js js/lib/bootstrap-lightbox.js js/lib/modernizr.js js/lib/date.js js/lib/jquery-html5-uploader.js js/lib/jquery-singledoubleclick.js js/lib/ZeroClipboard.js > out/mollify/js/libs.tmp.js
+	@cat out/mollify/js/libs.tmp.js out/mollify/js/mollify.js > out/mollify/js/mollify.full.tmp.js
+	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.js > out/mollify/js/mollify.min.js
+	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.full.tmp.js > out/mollify/js/mollify.full.min.js
+	rm -rf out/mollify/js/mollify.full.tmp.js
+	rm -rf out/mollify/js/libs.tmp.js
+	@cp js/lib/*.js js/lib/*.swf out/mollify/js/lib
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
-	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.min.css
+	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.css
 	./node_modules/.bin/recess --compress css/bootstrap.css > out/mollify/css/bootstrap.css
 	./node_modules/.bin/recess --compress css/bootstrap-responsive.css > out/mollify/css/bootstrap-responsive.css
 	./node_modules/.bin/recess --compress css/font-awesome.css > out/mollify/css/font-awesome.css
