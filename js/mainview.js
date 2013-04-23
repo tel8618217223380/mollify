@@ -974,12 +974,12 @@
 				$(this).removeClass("hover");
 			}).bind("contextmenu",function(e){
 				e.preventDefault();
-				t.onItemClick($(this), $(e.srcElement), false);
+				t.onItemClick($(this), $(e.toElement), false);
 				return false;
 			}).single_double_click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				t.onItemClick($(this), $(e.srcElement), true);
+				t.onItemClick($(this), $(e.toElement), true);
 				return false;
 			},function() {
 				t.p.onDblClick($(this).tmplItem().data);
