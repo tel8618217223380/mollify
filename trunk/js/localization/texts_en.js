@@ -59,9 +59,6 @@ fileListColumnTitleLastModified: "Last modified",
 
 fileActionDownloadTitle: "Download",
 fileActionRenameTitle: "Rename...",
-fileActionCopyTitle: "Copy...",
-fileActionCopyHereTitle: "Copy Here...",
-fileActionMoveTitle: "Move",
 fileActionDeleteTitle: "Delete",
 
 secondaryActions: "Actions",
@@ -69,6 +66,11 @@ secondaryActions: "Actions",
 itemcontextDescriptionHint: "Enter description here",
 
 actionDownloadItem: "Download",
+actionCopyItem: "Copy...",
+actionMoveItem: "Move...",
+actionCopyItemHere: "Copy here...",
+actionDeleteItem: "Delete",
+actionRenameItem: "Rename...",
 
 fileItemDetailsGroupFile: "File",
 fileItemContextDataName: "Name",
@@ -83,6 +85,9 @@ fileItemContextDataImageSizePixels: "{0} pixels",
 copyHereDialogTitle: "Copy Here",
 copyHereDialogMessage: "Enter the name for the copy:",
 copyFileDialogAction: "Copy",
+
+copyMultipleFileDialogTitle: "Copy",
+copyMultipleFileMessage: "Select folder where {0} files are copied into:",
 
 renameDialogTitleFile: "Rename File",
 renameDialogTitleDirectory: "Rename Folder",

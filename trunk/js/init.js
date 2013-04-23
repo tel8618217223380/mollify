@@ -143,6 +143,10 @@ var mollifyDefaults = {
 		return mollify.settings["service-path"]+u;	
 	};
 	
+	st.serviceUrl = function(u) {
+		return st.url("r.php/"+u);	
+	};
+	
 	st.get = function(url, s, err) {
 		st._do("GET", url, null, s, err);
 	};
@@ -187,6 +191,11 @@ var mollifyDefaults = {
 		}
 	};
 	
+	mfs.getDownloadUrl = function(item) {
+		if (!item.is_file) return false;
+		return mollify.service.serviceUrl("filesystem/"+item.id);
+	};
+	
 	mfs.itemDetails = function(item, data, cb, err) {
 		mollify.service.post("filesystem/"+item.id+"/details/", { data : data }, cb, err);
 	};
@@ -204,7 +213,9 @@ var mollifyDefaults = {
 	};
 	
 	mfs.copy = function(i, to, cb, err) {
-		if (window.isArray(i)) {
+		if (!i) return;
+		
+		if (window.isArray(i) && i.length > 1) {
 			if (!to) {
 				mollify.ui.dialogs.folderSelector({
 					title: mollify.ui.texts.get('copyMultipleFileDialogTitle'),
@@ -220,6 +231,8 @@ var mollifyDefaults = {
 
 			return;	
 		}
+		
+		if (window.isArray(i)) i = i[0];
 		
 		if (!to) {
 			mollify.ui.dialogs.folderSelector({
@@ -289,7 +302,9 @@ var mollifyDefaults = {
 	};
 	
 	mfs.move = function(i, to, cb, err) {
-		if (window.isArray(i)) {
+		if (!i) return;
+		
+		if (window.isArray(i) && i.length > 1) {
 			if (!to) {
 				mollify.ui.dialogs.folderSelector({
 					title: mollify.ui.texts.get('moveMultipleFileDialogTitle'),
@@ -305,6 +320,8 @@ var mollifyDefaults = {
 
 			return;	
 		}
+		
+		if (window.isArray(i)) i = i[0];
 		
 		if (!to) {
 			mollify.ui.dialogs.folderSelector({

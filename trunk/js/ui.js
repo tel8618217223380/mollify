@@ -36,7 +36,15 @@
 	
 	t.ui.formatters = {
 		ByteSize : function(nf) {			
-			this.format = function(bytes) {		
+			this.format = function(b) {
+				if (!window.def(b)) return "";
+				
+				var bytes = b;
+				if (typeof(b) === "string") {
+					bytes = parseInt(bytes);
+					if (isNaN(bytes)) return "";
+				} else if (typeof(b) !== "number") return "";
+				
 				if (bytes < 1024)
 					return (bytes == 1 ? t.ui.texts.get('sizeOneByte') : t.ui.texts.get('sizeInBytes', nf.format(bytes)));
 		
@@ -56,15 +64,6 @@
 		},
 		Timestamp : function(fmt) {
 			this.format = function(ts) {
-				/*var s = fmt;
-				s = s.replace('yyyy', ts.getFullYear());
-				s = s.replace('M', ts.getMonth()+1);
-				s = s.replace('d', ts.getDay());
-				s = s.replace('h', ts.getHours());
-				s = s.replace('hh', ts.getHours());
-				s = s.replace('mm', ts.getMinutes());
-				s = s.replace('ss', ts.getSeconds());
-				s = s.replace('a', (ts.getHours() < 12 ? "AM" : "PM"));*/
 				return ts.toString(fmt);
 			};
 		},
@@ -110,6 +109,10 @@
 	t.ui.removeActivePopup = function(id) {
 		if (!id || !t.ui.isActivePopup(id)) return;
 		t.ui._activePopup = false;
+	};
+	
+	t.ui.download = function(url) {
+		window.open(url);	//TODO frame?	
 	};
 		
 	t.ui.itemContext = function(o) {
@@ -482,7 +485,6 @@
 				items: function(items) {
 					$mnu.empty().removeClass("loading").append(createItems(items));
 					initItems(items);
-					items
 				}
 			};
 			popupId = t.ui.activePopup(api);

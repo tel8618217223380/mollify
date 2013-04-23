@@ -24,10 +24,10 @@
 					actions.push({ title: '-' });
 				}
 				
-				actions.push({ 'title-key': 'actionCopyItem', callback: function() { mollify.filesystem.copy(item);}});
+				actions.push({ 'title-key': 'actionCopyItem', callback: function() { mollify.filesystem.copy(item); }});
 				
 				if (writable) {
-					actions.push({ 'title-key': 'actionCopyHereItem', callback: function() { mollify.filesystem.copyHere(item); } });
+					actions.push({ 'title-key': 'actionCopyItemHere', callback: function() { mollify.filesystem.copyHere(item); } });
 					actions.push({ 'title-key': 'actionMoveItem', callback: function() { mollify.filesystem.move(item); } });
 					actions.push({ 'title-key': 'actionRenameItem', callback: function() { mollify.filesystem.rename(item); } });
 					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { mollify.ui.dialogs.confirmation({
@@ -43,8 +43,8 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
-						{ 'title-key': 'actionCopyMultiple', callback: function() { } },
-						{ 'title-key': 'actionMoveMultiple', callback: function() { } }
+						{ 'title-key': 'actionCopyMultiple', callback: function() { mollify.filesystem.copy(items); } },
+						{ 'title-key': 'actionMoveMultiple', callback: function() { mollify.filesystem.move(items); } }
 					]
 				};
 			}
@@ -985,9 +985,7 @@
 				container: $("body"),
 				hideDelay: 0,
 				dynamic: true,
-				onShow: function(drp, items) {
-					if (items) return;
-					
+				onShow: function(drp, items) {			
 					that.getActions(function(a) {
 						if (!a) {
 							drp.hide();
