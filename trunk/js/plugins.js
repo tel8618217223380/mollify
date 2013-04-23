@@ -43,8 +43,8 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
-						{ 'title-key': 'copyMultiple', callback: function() { } },
-						{ 'title-key': 'moveMultiple', callback: function() { } }
+						{ 'title-key': 'actionCopyMultiple', callback: function() { } },
+						{ 'title-key': 'actionMoveMultiple', callback: function() { } }
 					]
 				};
 			}
@@ -282,7 +282,6 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
-						{ id: 'pluginItemCollection', 'title-key': 'copyMultiple', callback: function() { } }
 					]
 				};
 			}
@@ -1013,7 +1012,7 @@
 				return;
 			}
 			var plugins = mollify.plugins.getItemCollectionPlugins(that.items);
-			cb(mollify.helpers.cleanupActions(mollify.helpers.addPluginActions([], plugins)));
+			cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(plugins)));
 		};
 		
 		this.openDropbox = function(o) {
