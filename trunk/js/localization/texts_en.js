@@ -68,6 +68,8 @@ secondaryActions: "Actions",
 
 itemcontextDescriptionHint: "Enter description here",
 
+actionDownloadItem: "Download",
+
 fileItemDetailsGroupFile: "File",
 fileItemContextDataName: "Name",
 fileItemContextDataPath: "Path",

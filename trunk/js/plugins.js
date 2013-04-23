@@ -20,17 +20,17 @@
 				var actions = [];
 				
 				if (item.is_file ) {
-					actions.push({ 'title-key': 'downloadItem', callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
+					actions.push({ 'title-key': 'actionDownloadItem', callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
 					actions.push({ title: '-' });
 				}
 				
-				actions.push({ 'title-key': 'copyItem', callback: function() { mollify.filesystem.copy(item);}});
+				actions.push({ 'title-key': 'actionCopyItem', callback: function() { mollify.filesystem.copy(item);}});
 				
 				if (writable) {
-					actions.push({ 'title-key': 'copyHereItem', callback: function() { mollify.filesystem.copyHere(item); } });
-					actions.push({ 'title-key': 'moveItem', callback: function() { mollify.filesystem.move(item); } });
-					actions.push({ 'title-key': 'renameItem', callback: function() { mollify.filesystem.rename(item); } });
-					actions.push({ 'title-key': 'deleteItem', callback: function() { mollify.ui.dialogs.confirmation({
+					actions.push({ 'title-key': 'actionCopyHereItem', callback: function() { mollify.filesystem.copyHere(item); } });
+					actions.push({ 'title-key': 'actionMoveItem', callback: function() { mollify.filesystem.move(item); } });
+					actions.push({ 'title-key': 'actionRenameItem', callback: function() { mollify.filesystem.rename(item); } });
+					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { mollify.ui.dialogs.confirmation({
 						title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
 						message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
 						callback: function() { mollify.filesystem.del(item); }
@@ -267,6 +267,9 @@
 		};
 	}
 	
+	/**
+	*	Item collection plugin
+	**/
 	mollify.plugin.ItemCollectionPlugin = function() {
 		var that = this;
 		
@@ -842,7 +845,7 @@
 					{ id: "remove", title: "", renderer: function(i, v, $c){ $c.append(mollify.dom.template("mollify-tmpl-permission-editor-listremove")); }}
 				]
 			});
-			$("#mollify-pluginpermissions-editor-permission-list a.remove-link").live("click", function() {
+			$("#mollify-pluginpermissions-editor-permission-list").delegate("a.remove-link", "click", function() {
 				var permission = $(this).parent().parent()[0].data;
 				onRemove(permission);
 				$list.remove(permission);
