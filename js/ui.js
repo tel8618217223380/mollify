@@ -178,10 +178,11 @@
 						return;
 					}
 					
-					d.ctx = {
+					var ctx = {
+						details: d,
 						folder : spec.folder
 					};
-					ict.renderItemContext(api, $content, item, d);
+					ict.renderItemContext(api, $content, item, ctx);
 					$e[0].scrollIntoView();
 				});
 			}).bind("hidden", function() {
@@ -191,22 +192,22 @@
 			$e.popover('show');
 		};
 		
-		ict.renderItemContext = function(cApi, $e, item, details) {
+		ict.renderItemContext = function(cApi, $e, item, ctx) {
 			//var details = d[0];
 			//TODO permissions to edit descriptions
 			var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
 			var showDescription = descriptionEditable || !!details.description;
 			
-			var plugins = mollify.plugins.getItemContextPlugins(item, details);
+			var plugins = mollify.plugins.getItemContextPlugins(item, ctx);
 			var actions = mollify.helpers.getPluginActions(plugins);
 			var primaryActions = mollify.helpers.getPrimaryActions(actions);
 			var secondaryActions = mollify.helpers.getSecondaryActions(actions);
 			
 			var o = {
 				item:item,
-				details:details,
+				details:ctx.details,
 				showDescription: showDescription,
-				description: details.description || '',
+				description: ctx.details.description || '',
 				session: mollify.session,
 				plugins: plugins,
 				primaryActions : primaryActions
