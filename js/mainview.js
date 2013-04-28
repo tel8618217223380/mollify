@@ -643,7 +643,12 @@
 					}
 					var showContext = (!that.isListView() || t=='name');
 					if (showContext) {
-						that.itemContext.open(item, that.itemWidget.getItemContextElement(item), that.itemWidget.getContainerElement());
+						that.itemContext.open({
+							item: item,
+							element: that.itemWidget.getItemContextElement(item),
+							viewport: that.itemWidget.getContainerElement(),
+							folder: that._currentFolder
+						});
 					}
 				},
 				onDblClick: function(item) {

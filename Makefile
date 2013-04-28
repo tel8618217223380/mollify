@@ -17,11 +17,13 @@ build:
 	rm -rf out
 	mkdir -p out/mollify/js
 	mkdir -p out/mollify/js/lib
+	mkdir -p out/mollify/js/localization
 	mkdir -p out/mollify/css
+	mkdir -p out/mollify/templates
 	
 	@./node_modules/.bin/jshint js/*.js --config js/.jshintrc
 	@echo "Running JSHint on javascript...             ${CHECK} Done"
-	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js > out/mollify/js/mollify.js
+	@cat js/init.js js/ui.js js/mainview.js js/loginview.js js/uploader.js js/plugins.js > out/mollify/js/mollify.js
 	@cat js/lib/jquery.min.js js/lib/jquery.tmpl.min.js js/lib/jquery-ui.min.js js/lib/bootstrap.js js/lib/bootstrap-lightbox.js js/lib/modernizr.js js/lib/date.js js/lib/jquery-html5-uploader.js js/lib/jquery-singledoubleclick.js js/lib/ZeroClipboard.js > out/mollify/js/libs.tmp.js
 	@cat out/mollify/js/libs.tmp.js out/mollify/js/mollify.js > out/mollify/js/mollify.full.tmp.js
 	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.js > out/mollify/js/mollify.min.js
@@ -29,6 +31,8 @@ build:
 	rm -rf out/mollify/js/mollify.full.tmp.js
 	rm -rf out/mollify/js/libs.tmp.js
 	@cp js/lib/*.js js/lib/*.swf out/mollify/js/lib
+	@cp js/localization/*.js out/mollify/js/localization
+	@cp templates/*.html out/mollify/templates
 	@echo "Compiling and minifying javascript...       ${CHECK} Done"
 	
 	./node_modules/.bin/recess --compress css/style.css > out/mollify/css/mollify.css

@@ -12,22 +12,35 @@
 
 	class ArchiverServices extends ServicesBase {
 		protected function isValidPath($method, $path) {
-			return count($path) == 2;
+			return count($path) > 0;
 		}
 		
 		public function isAuthenticationRequired() {
 			return TRUE;
 		}
 		
+		//GET zipped
+		
 		public function processPost() {
-			$itemId = $this->path[0];
-			$action = $this->path[1];
-			if ($action !== 'extract' and $action !== 'compress') throw $this->invalidRequestException();
+			$action = $this->path[0];
 			
-			if ($action === 'extract') $this->onExtract($itemId);
-			else $this->onCompress($itemId);
+			if (!in_array($action, array("extract", "compress", "pack"))) throw $this->invalidRequestException();
+			
+			if ($action === 'extract') $this->onExtract($this->path[1]);
+			else if ($action === 'extract') $this->onCompress($this->path[1]);
+			else $this->onPack();
+		}
+		
+		private function onPack() {
+			$itemIds = $this->data['items'];
+			if (count($itemIds) < 1) throw $this->invalidRequestException();
+		
+			$items = array();
+			foreach($itemIds as $id)
+				$items[] = $this->item($id);
 
-			$this->response()->success(array());
+			$archiveId = $this->archiveManager()->storeArchive($items);
+			$this->response()->success(array("id" => $archiveId));
 		}
 		
 		private function onExtract($itemId) {
@@ -51,6 +64,7 @@
 			mkdir($target);
 			
 			$this->archiveManager()->extract($archive->internalPath(), $target);
+			$this->response()->success(array());
 		}
 
 		private function onCompress($itemId) {
@@ -74,6 +88,7 @@
 			}
 			
 			$this->archiveManager()->compress($folder, $target);
+			$this->response()->success(array());
 		}
 		
 		private function archiveManager() {

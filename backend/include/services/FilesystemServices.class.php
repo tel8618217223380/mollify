@@ -92,8 +92,8 @@
 			if (!isset($data['action']) or !isset($data['items']) or count($data['items']) < 1) throw $this->invalidRequestException();
 
 			$items = array();
-			foreach($data['items'] as $id)
-				$items[] = $this->item($id);
+			foreach($data['items'] as $i)
+				$items[] = $this->item($i["id"]);
 			
 			switch($data['action']) {
 				case 'copy':
@@ -110,7 +110,7 @@
 					$this->env->filesystem()->deleteItems($items);
 					$this->response()->success(TRUE);
 					return;
-				case 'zip':
+				/*case 'zip':
 					$itemIds = $data['items'];
 					if (count($itemIds) < 1) throw $this->invalidRequestException();
 				
@@ -120,7 +120,7 @@
 
 					$zipId = $this->env->filesystem()->storeZip($items);
 					$this->response()->success(array("id" => $zipId));
-					return;
+					return;*/
 				default:
 					throw $this->invalidRequestException();
 			}

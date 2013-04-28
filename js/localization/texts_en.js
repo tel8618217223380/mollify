@@ -67,9 +67,12 @@ itemcontextDescriptionHint: "Enter description here",
 
 actionDownloadItem: "Download",
 actionCopyItem: "Copy...",
+actionCopyMultiple: "Copy...",
 actionMoveItem: "Move...",
+actionMoveMultiple: "Move...",
 actionCopyItemHere: "Copy here...",
 actionDeleteItem: "Delete",
+actionDeleteMultiple: "Delete ",
 actionRenameItem: "Rename...",
 
 fileItemDetailsGroupFile: "File",
@@ -86,11 +89,14 @@ copyHereDialogTitle: "Copy Here",
 copyHereDialogMessage: "Enter the name for the copy:",
 copyFileDialogAction: "Copy",
 
+copyFileDialogTitle: "Copy",
+copyFileMessage: "Select folder where \"{0}\" is copied into:",
+
 copyMultipleFileDialogTitle: "Copy",
 copyMultipleFileMessage: "Select folder where {0} files are copied into:",
 
 renameDialogTitleFile: "Rename File",
-renameDialogTitleDirectory: "Rename Folder",
+renameDialogTitleFolder: "Rename Folder",
 renameDialogNewName: "Enter new name:",
 renameDialogRenameButton: "Rename",
 
@@ -131,5 +137,8 @@ pluginPermissionsEditNewTitle: "Add or Update Permission",
 pluginPermissionsEditNoUser: "Select user",
 pluginPermissionsEditNoPermission: "Select permission",
 
-pluginDropboxAddTo: "Add to Dropbox"
+pluginDropboxAddTo: "Add to Dropbox",
+
+pluginArchiverCompress: "Compress",
+pluginArchiverDownloadCompressed: "Download compressed",
 })})();

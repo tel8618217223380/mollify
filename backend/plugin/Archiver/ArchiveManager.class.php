@@ -17,6 +17,37 @@
 			$this->env = $env;
 		}
 		
+		public function storeArchive($items) {
+			$id = uniqid();
+			$zip = $this->createArchive($items);
+			$this->env->session()->param("archive_".$id, $zip->filename());
+			return $id;
+		}
+		
+		private function createArchive($items) {
+			if (is_array($items)) {
+				$this->env->filesystem()->assertRights($items, Authentication::RIGHTS_READ, "add to package");
+				
+				$zip = $this->zipper();
+				foreach($items as $item) {
+					$item->addToZip($zip);
+					$this->env->events()->onEvent(FileEvent::download($item));
+				}
+				$zip->finish();
+			} else {
+				$item = $items;
+				$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, "add to package");
+
+				$zip = $this->zipper();
+				$item->addToZip($zip);
+				$zip->finish();
+				
+				$this->env->events()->onEvent(FileEvent::download($item));
+			}
+			
+			return $zip;
+		}
+		
 		public function extract($archive, $to) {
 			$zip = new ZipArchive;
 			if ($zip->open($archive) !== TRUE)
