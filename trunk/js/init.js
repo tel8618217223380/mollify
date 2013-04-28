@@ -502,26 +502,28 @@ var mollifyDefaults = {
 		return requestData;
 	};
 	
-	pl.getItemContextPlugins = function(item, d) {
+	pl.getItemContextPlugins = function(item, ctx) {
 		var data = {};
+		if (!ctx) return data;
+		var d = ctx.details;
 		if (!d || !d.plugins) return data;
 		for (var id in pl._list) {
 			var plugin = pl._list[id];
 			if (!plugin.itemContextHandler) continue;
-			var pluginData = plugin.itemContextHandler(item, d, d.plugins[id]);
+			var pluginData = plugin.itemContextHandler(item, ctx, d.plugins[id]);
 			if (pluginData) data[id] = pluginData;
 		}
 		return data;
 	};
 	
-	pl.getItemCollectionPlugins = function(items) {
+	pl.getItemCollectionPlugins = function(items, ctx) {
 		var data = {};
 		if (!items || !window.isArray(items) || items.length < 1) return data;
 		
 		for (var id in pl._list) {
 			var plugin = pl._list[id];
 			if (!plugin.itemCollectionHandler) continue;
-			var pluginData = plugin.itemCollectionHandler(items);
+			var pluginData = plugin.itemCollectionHandler(items, ctx);
 			if (pluginData) data[id] = pluginData;
 		}
 		return data;

@@ -9,9 +9,9 @@
 								
 		return {
 			id: "plugin-core",
-			itemContextHandler : function(item, data) {
+			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && data.permission == "RW";
+				var writable = !root && ctx.details.permission == "RW";
 //								boolean root = !item.isFile()
 //										&& ((JsFolder) item.cast()).isRoot();
 //								boolean writable = !root
@@ -251,7 +251,7 @@
 					data.push(k);
 				return data;
 			},
-			itemContextHandler : function(item, details, data) {
+			itemContextHandler : function(item, ctx, data) {
 				if (!data || !that.typeConfs) return false;
 				var spec = that.getApplicableSpec(item);
 				if (!spec) return false;
@@ -301,7 +301,7 @@
 		return {
 			id: "plugin-archiver",
 			initialize: that.initialize,
-			itemContextHandler : function(item, details, data) {
+			itemContextHandler : function(item, ctx, data) {
 				return {
 					actions: [
 						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item) } },
@@ -309,10 +309,10 @@
 					]
 				};
 			},
-			itemCollectionHandler : function(items) {
+			itemCollectionHandler : function(items, ctx) {
 				return {
 					actions: [
-						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(items) } },
+						{"title-key":"pluginArchiverCompressMany", callback: function() { that.onCompress(items) } },
 						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(items) } }
 					]
 				};
@@ -484,7 +484,7 @@
 		return {
 			id: "plugin-fileviewereditor",
 			initialize: that.initialize,
-			itemContextHandler : function(item, details, data) {
+			itemContextHandler : function(item, ctx, data) {
 				if (!data) return false;
 				
 				var previewerAvailable = !!data.preview;
@@ -536,7 +536,8 @@
 	mollify.plugin.CommentPlugin = function() {
 		var that = this;
 		
-		this.initialize = function() {		
+		this.initialize = function() {
+			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
 			mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 		};
@@ -607,7 +608,7 @@
 			var isAdmin = mollify.session.admin;
 			
 			for (var i=0,j=comments.length; i<j; i++) {
-				comments[i].time = mollify.ui.texts.formatInternalTime(comments[i].time);
+				comments[i].time = that._timestampFormatter.format(mollify.helpers.parseInternalTime(comments[i].time));
 				comments[i].comment = comments[i].comment.replace(new RegExp('\n', 'g'), '<br/>');
 				comments[i].remove = isAdmin || (userId == comments[i].user_id);
 			}
@@ -690,7 +691,7 @@
 					}];
 				}
 			},
-			itemContextHandler : function(item, data) {
+			itemContextHandler : function(item, ctx, data) {
 				return {
 					details: {
 						"title-key": "pluginCommentContextTitle",
@@ -946,7 +947,7 @@
 		return {
 			id: "plugin-permissions",
 			initialize: that.initialize,
-			itemContextHandler : function(item, data) {
+			itemContextHandler : function(item, ctx, data) {
 				if (!mollify.session.admin) return false;
 				
 				return {
@@ -1027,7 +1028,7 @@
 					});
 				},
 				onItem: function() {
-					
+					that.emptyDropbox();
 				},
 				onBlur: function(dd) {
 					
@@ -1042,7 +1043,11 @@
 				return;
 			}
 			var plugins = mollify.plugins.getItemCollectionPlugins(that.items);
-			cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(plugins)));
+			
+			var actions = mollify.helpers.getPluginActions(plugins);
+			actions.push({title:"-"});
+			actions.push({"title-key":"dropboxEmpty"});
+			cb(mollify.helpers.cleanupActions(actions));
 		};
 		
 		this.openDropbox = function(o) {
@@ -1055,6 +1060,11 @@
 			
 			if (!o) that.$dbE.removeClass("opened").addClass("closed").animate({"width": "0"}, 300);
 			else that.$dbE.addClass("opened").removeClass("closed").animate({"width": that.w+""}, 300);
+		};
+		
+		this.emptyDropbox = function() {
+			that.items = [];
+			that.refreshList();
 		};
 		
 		this.onAddItem = function(item) {
@@ -1101,7 +1111,7 @@
 			mainViewHandler : {
 				onMainViewRender: that.onMainViewRender
 			},
-			itemContextHandler : function(item, data) {
+			itemContextHandler : function(item, ctx, data) {
 				return {
 					actions: [
 						{ id: 'pluginDropbox', 'title-key': 'pluginDropboxAddTo', callback: function() { that.onAddItem(item); that.openDropbox(true); } }
