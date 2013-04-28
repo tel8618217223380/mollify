@@ -44,7 +44,8 @@
 				return {
 					actions: [
 						{ 'title-key': 'actionCopyMultiple', callback: function() { mollify.filesystem.copy(items); } },
-						{ 'title-key': 'actionMoveMultiple', callback: function() { mollify.filesystem.move(items); } }
+						{ 'title-key': 'actionMoveMultiple', callback: function() { mollify.filesystem.move(items); } },
+						{ 'title-key': 'actionDeleteMultiple', callback: function() { mollify.filesystem.del(items); } }
 					]
 				};
 			}
@@ -282,6 +283,37 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
+					]
+				};
+			}
+		};
+	}
+	
+	/**
+	*	Archiver plugin
+	**/
+	mollify.plugin.ArchiverPlugin = function() {
+		var that = this;
+		
+		this.initialize = function() {
+		};
+								
+		return {
+			id: "plugin-archiver",
+			initialize: that.initialize,
+			itemContextHandler : function(item, details, data) {
+				return {
+					actions: [
+						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item) } },
+						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(item) } }
+					]
+				};
+			},
+			itemCollectionHandler : function(items) {
+				return {
+					actions: [
+						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(items) } },
+						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(items) } }
 					]
 				};
 			}
@@ -1039,7 +1071,12 @@
 				var $i = $(this);
 				var item = $i.tmplItem().data;
 				$i.tooltip('hide');
-				that.itemContext.open(item, $i, $("#mollify"), $("#mollify"));
+				that.itemContext.open({
+					item: item,
+					element: $i,
+					container: $("#mollify"),
+					viewport: $("#mollify")
+				});
 				return false;
 			}).each(function() {
 				var $i = $(this);

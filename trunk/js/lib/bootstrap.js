@@ -665,6 +665,7 @@
         var $el = $(element).on('click.dropdown.data-api', this.toggle)
         $('html').on('click.dropdown.data-api', function () {
           $el.parent().removeClass('open')
+          if (element.options && element.options.onhide) element.options.onhide()	//mollify
         })
       }
 

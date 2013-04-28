@@ -41,7 +41,7 @@
 				
 				var bytes = b;
 				if (typeof(b) === "string") {
-					bytes = parseInt(bytes);
+					bytes = parseInt(bytes, 10);
 					if (isNaN(bytes)) return "";
 				} else if (typeof(b) !== "number") return "";
 				
@@ -119,7 +119,13 @@
 		var ict = {};
 		ict._activeItemContext = false;
 		
-		ict.open = function(item, $e, $c, $t) {
+		ict.open = function(spec) {
+			var item = spec.item;
+			var $e = spec.element;
+			var $c = spec.viewport;
+			var $t = spec.container;
+			var folder = spec.folder;
+			
 			var popupId = "mainview-itemcontext-"+item.id;
 			if (mollify.ui.isActivePopup(popupId)) {
 				return;
@@ -172,6 +178,9 @@
 						return;
 					}
 					
+					d.ctx = {
+						folder : spec.folder
+					};
 					ict.renderItemContext(api, $content, item, d);
 					$e[0].scrollIntoView();
 				});
@@ -424,10 +433,7 @@
 				},
 				onhide: function() {
 					hidePopup();
-					if (a.dynamic) {
-						popupItems = false;
-						$mnu.remove();
-					}
+					if (a.dynamic) popupItems = false;
 				}
 			});
 			initItems(a.items);
