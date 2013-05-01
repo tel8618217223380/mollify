@@ -19,12 +19,12 @@
 			$this->compressor = $compressor;
 		}
 		
-		public function storeArchive($items) {
+		/*public function storeArchive($items) {
 			$id = uniqid();
 			$zip = $this->createArchive($items);
 			$this->env->session()->param("archive_".$id, $zip->filename());
 			return $id;
-		}
+		}*/
 		
 		private function createArchive($items) {
 			$c = $this->getCompressor();
@@ -56,13 +56,13 @@
 			$zip->close();
 		}
 		
-		public function compress($items, $to) {
+		public function compress($items, $to = NULL) {
 			$a = $this->createArchive($items);
-			//$zip = $this->zipper();
-			//$folder->addToZip($zip);
-			//$zip->finish();
 			
-			rename($a->filename(), $to);
+			if ($to != NULL)
+				rename($a->filename(), $to);
+			else
+				return $a->filename();
 		}
 
 		private function getCompressor() {

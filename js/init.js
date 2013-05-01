@@ -132,20 +132,20 @@ var mollifyDefaults = {
 		st._limitedHttpMethods = !!limitedHttpMethods;
 	};
 				
-	st.pluginUrl = function(p, full) {
+	/*st.pluginUrl = function(p) {
 		var u = 'plugin/'+p+'/';
-		if (!full) return u;
+		//if (!full) return u;
 		return st.url(u);
-	};
+	};*/
 	
 	st.url = function(u) {
 		if (u.startsWith('http')) return u;
-		return mollify.settings["service-path"]+u;	
+		return mollify.settings["service-path"]+"r.php/"+u;	
 	};
 	
-	st.serviceUrl = function(u) {
+	/*st.serviceUrl = function(u) {
 		return st.url("r.php/"+u);	
-	};
+	};*/
 	
 	st.get = function(url, s, err) {
 		st._do("GET", url, null, s, err);
@@ -159,7 +159,7 @@ var mollifyDefaults = {
 		st._do("PUT", url, data, s, err);
 	};
 	
-	st.del = function(url,s, err) {
+	st.del = function(url, s, err) {
 		st._do("DELETE", url, null, s, err);
 	};
 			
@@ -169,7 +169,7 @@ var mollifyDefaults = {
 		
 		$.ajax({
 			type: t,
-			url: st.url("r.php/"+url),
+			url: st.url(url),
 			processData: false,
 			data: data ? JSON.stringify(data) : null,
 			contentType: 'application/json',
@@ -480,7 +480,7 @@ var mollifyDefaults = {
 	};
 	
 	pl.url = function(id, p) {
-		return mollify.service.pluginUrl(id, true)+"client/"+p;
+		return mollify.settings["service-path"]+"plugin/"+id+"/client/"+p;
 	};
 	
 	pl.getItemContextRequestData = function(item) {
