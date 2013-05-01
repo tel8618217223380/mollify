@@ -12,14 +12,14 @@
 	
 	@include_once('zip.lib.php');
 	
-	class MollifyZipRaw implements MollifyZip {
+	class MollifyZipRaw implements MollifyCompressor {
 		private $env;
 		private $name;
 		private $zip;
 		
 		function __construct($env) {
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
+			$this->name = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
 			$this->zip = new zipfile();
 		}
 		

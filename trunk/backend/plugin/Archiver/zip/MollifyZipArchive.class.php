@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	class MollifyZipArchive implements MollifyZip {
+	class MollifyZipArchive implements MollifyCompressor {
 		private $env;
 		private $name;
 		private $zip;
@@ -20,7 +20,7 @@
 				throw new ServiceException("INVALID_CONFIGURATION", "ZipArchive lib not installed");
 				
 			$this->env = $env;
-			$this->name = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
+			$this->name = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.uniqid('Mollify', true).'zip';
 			$this->zip = new ZipArchive();
 			if ($this->zip->open($this->name, ZIPARCHIVE::CREATE) !== TRUE)
 				throw new ServiceException("REQUEST_FAILED", "Could not create zip ".$this->name);

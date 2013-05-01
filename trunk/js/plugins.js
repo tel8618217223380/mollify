@@ -297,22 +297,62 @@
 		
 		this.initialize = function() {
 		};
+		
+		this.onCompress = function(i, f) {
+			if (!i) return;
+			
+			var defaultName = '';
+			var item = false;
+			var items = [];
+			if (!window.isArray(i)) {
+				item = i;
+				items.push(item);
+			} else if (i.length == 1) {
+				item = i[0];
+				items = i;
+			}
+			
+			if (item) defaultName = item.name + ".zip";
+			
+			mollify.ui.dialogs.input({
+				title: mollify.ui.texts.get('pluginArchiverCompressDialogTitle'),
+				message: mollify.ui.texts.get('pluginArchiverCompressDialogMessage'),
+				defaultValue: defaultName,
+				yesTitle: mollify.ui.texts.get('pluginArchiverCompressDialogAction'),
+				noTitle: mollify.ui.texts.get('dialogCancel'),
+				handler: {
+					isAcceptable: function(n) { return (!!n && n.length > 0 && (!item || n != item.name)); },
+					onInput: function(n) { that._onCompress(items, f, n); }
+				}
+			});	
+		};
+		
+		this._onCompress = function(items, folder, name) {
+			mollify.service.post("archiver/compress", {items : items, folder: folder, name:name}, function(r) {
+				mollify.events.dispatch('archiver/compress', { items: items, folder: folder, name: name });
+				mollify.events.dispatch('filesystem/update', { folder: folder });
+			});
+		};
 								
 		return {
 			id: "plugin-archiver",
 			initialize: that.initialize,
 			itemContextHandler : function(item, ctx, data) {
+				var root = (item.id == item.root_id);
+				if (root) return false;
+				
+				var actions = [
+					{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(item) } }
+				];
+				if (ctx.folder)	actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
 				return {
-					actions: [
-						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item) } },
-						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(item) } }
-					]
+					actions: actions
 				};
 			},
 			itemCollectionHandler : function(items, ctx) {
 				return {
 					actions: [
-						{"title-key":"pluginArchiverCompressMany", callback: function() { that.onCompress(items) } },
+						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(items) } },
 						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(items) } }
 					]
 				};

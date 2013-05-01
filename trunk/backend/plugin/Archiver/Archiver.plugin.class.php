@@ -14,13 +14,15 @@
 	
 	class Archiver extends PluginBase {
 		public function setup() {
-			$this->addService("archive", "ArchiverServices");
+			$this->addService("archiver", "ArchiverServices");
 			$this->env->filesystem()->registerItemContextPlugin("plugin-archiver", $this);
-			$this->archiveManager = new ArchiveManager($this->env);
+			
+			$compressor = $this->getSetting("compressor", NULL);
+			$this->archiveManager = new ArchiveManager($this->env, $compressor);
 		}
 		
 		public function getItemContextData($item, $details, $key, $data) {
-			if ($item->isFile()) {
+			/*if ($item->isFile()) {
 				$ext = $item->extension();
 				// TODO tar etc
 
@@ -33,16 +35,16 @@
 				return array(
 					"action_compress" => "archive/".$item->id()."/compress"
 				);
-			}
+			}*/
 		}
 		
 		public function getArchiveManager() {
 			return $this->archiveManager;
 		}
 		
-		public function getClientPlugin() {
+		/*public function getClientPlugin() {
 			return "client/plugin.js";
-		}
+		}*/
 		
 		public function __toString() {
 			return "ArchiverPlugin";
