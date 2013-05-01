@@ -327,11 +327,33 @@
 			});	
 		};
 		
+		this.onDownloadCompressed = function(items) {
+			//TODO show progress
+			mollify.service.post("archiver/download", {items : items}, function(r) {
+				//TODO remove progress
+				mollify.ui.download(mollify.service.url('archiver/download/'+r.id, true));
+			});
+		};
+		
 		this._onCompress = function(items, folder, name) {
 			mollify.service.post("archiver/compress", {items : items, folder: folder, name:name}, function(r) {
 				mollify.events.dispatch('archiver/compress', { items: items, folder: folder, name: name });
 				mollify.events.dispatch('filesystem/update', { folder: folder });
 			});
+		};
+		
+		this._onExtract = function(a, folder) {
+			mollify.service.post("archiver/extract", {item : a, folder: folder}, function(r) {
+				mollify.events.dispatch('archiver/extract', { item: a, folder: folder });
+				mollify.events.dispatch('filesystem/update', { folder: folder });
+			});
+		};
+		
+		this._isArchive = function(item) {
+			if (!item.is_file) return false;
+			
+			var ext = item.extension.toLowerCase();
+			return ext == 'zip';	//TODO	
 		};
 								
 		return {
@@ -340,9 +362,16 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
+				if (that._isArchive(item)) {
+					return {
+						actions: [
+							{"title-key":"pluginArchiverExtract", callback: function() { that._onExtract(item) } }
+						]
+					};
+				}
 				
 				var actions = [
-					{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(item) } }
+					{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed([item]); } }
 				];
 				if (ctx.folder)	actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
 				return {

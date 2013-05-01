@@ -19,20 +19,38 @@
 			return TRUE;
 		}
 		
-		//GET zipped
+		public function processGet() {
+			$action = $this->path[0];
+			if (!in_array($action, array("download"))) throw $this->invalidRequestException();
+			if (count($this->path) != 2) throw $this->invalidRequestException();
+			
+			$id = $this->path[1];
+			$a = $this->env->session()->param("archive_".$id);
+			if (!$a) throw $this->invalidRequestException();
+			
+			$handle = @fopen($a, "rb");
+			if (!$handle)
+				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$a);
+			$this->env->response()->download("download.zip", 'zip', FALSE, $handle);
+			$handle->close();
+			unlink($a);
+		}
 		
 		public function processPost() {
 			$action = $this->path[0];
 			
-			if (!in_array($action, array("extract", "compress", "pack"))) throw $this->invalidRequestException();
+			if (!in_array($action, array("extract", "compress", "download"))) throw $this->invalidRequestException();
 			
 			if ($action === 'extract') $this->onExtract();
 			else if ($action === 'compress') $this->onCompress();
+			else if ($action === 'download') $this->onDownloadCompressed();
 			else $this->onPack();
 		}
 		
 		private function onCompress() {
 			$data = $this->request->data;
+			if (!array_key_exists("items", $data)) throw $this->invalidRequestException();
+			
 			$items = $data['items'];
 			if (count($items) < 1 || !array_key_exists("folder", $data) || !array_key_exists("name", $data) || strlen($data["name"]) == 0) throw $this->invalidRequestException();
 		
@@ -61,19 +79,41 @@
 				$parent->fileWithName($name)->delete();
 			}
 
-			$archiveId = $this->archiveManager()->compress($items, $target);
+			$this->archiveManager()->compress($items, $target);
 			$this->response()->success(array());
+		}
+		
+		private function onDownloadCompressed() {
+			$data = $this->request->data;
+			if (!array_key_exists("items", $data)) throw $this->invalidRequestException();
+			if (!is_array($data['items']) || count($data['items']) < 1) throw $this->invalidRequestException();
+			
+			$items = array();
+			foreach($data['items'] as $i)
+				$items[] = $this->item($i);
+			if (count($items) == 0) throw $this->invalidRequestException();
+			
+			$this->env->filesystem()->assertRights($items, Authentication::RIGHTS_READ, "download compressed");
+			
+			$a = $this->archiveManager()->compress($items);
+			$id = uniqid();
+			$this->env->session()->param("archive_".$id, $a);
+				
+			$this->response()->success(array("id" => $id));
 		}
 		
 		private function onExtract() {
 			$data = $this->request->data;
-			$itemId = $data["item_id"];
+			if (!array_key_exists("item", $data)) throw $this->invalidRequestException();
 			
 			$overwrite = isset($data['overwrite']) ? $data['overwrite'] : FALSE;
-			$archive = $this->item($itemId);
+			$archive = $this->item($data["item"]);
 			$this->env->filesystem()->assertRights($archive, Authentication::RIGHTS_READ, "extract");
 			
-			$parent = $archive->parent();
+			$parent = NULL;
+			if (isset($data["folder"])) $this->item($data["folder"]);
+			else $parent = $archive->parent();
+			
 			$this->env->filesystem()->assertRights($parent, Authentication::RIGHTS_WRITE, "extract");
 			
 			$name = str_replace(".", "_", basename($archive->internalPath()));
