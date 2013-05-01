@@ -75,7 +75,9 @@
 		
 		function processDelete() { throw new ServiceException("INVALID_REQUEST", "Unimplemented method 'delete'"); }
 		
-		protected function item($id) {
+		protected function item($i) {
+			$id = $i;
+			if  (is_array($i) && array_key_exists("id", $i)) $id = $i['id'];
 			return $this->env->filesystem()->item($id);
 		}
 		

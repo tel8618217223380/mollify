@@ -719,7 +719,11 @@
 					cb([]);
 					return;
 				}
-				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, d))));
+				var ctx = {
+					details: d,
+					folder: that._currentFolder
+				};
+				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, ctx))));
 			});
 		};
 					

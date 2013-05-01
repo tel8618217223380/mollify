@@ -69,16 +69,7 @@ var mollifyDefaults = {
 			$("html").attr("lang", mollify.ui.texts.locale);
 			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
 		}
-				
-		//t.ui.dialogs = new mollify.view.DialogHandler();
-		
-		/*t.ui.views = {
-			login : new mollify.view.LoginView(),
-			mainview : new mollify.view.MainView(),
-			
-			dialogs : new mollify.view.DialogHandler(t.filesystem)
-		}*/
-		//core.views().registerHandlers({ dialogs : t.ui.dialogs });
+
 		mollify.plugins.initialize();
 		mollify.templates.load("dialogs.html");
 			
@@ -141,8 +132,10 @@ var mollifyDefaults = {
 		st._limitedHttpMethods = !!limitedHttpMethods;
 	};
 				
-	st.pluginUrl = function(p) {
-		return st.url('plugin/'+p+'/');
+	st.pluginUrl = function(p, full) {
+		var u = 'plugin/'+p+'/';
+		if (!full) return u;
+		return st.url(u);
 	};
 	
 	st.url = function(u) {
@@ -487,7 +480,7 @@ var mollifyDefaults = {
 	};
 	
 	pl.url = function(id, p) {
-		return mollify.service.pluginUrl(id)+"client/"+p;
+		return mollify.service.pluginUrl(id, true)+"client/"+p;
 	};
 	
 	pl.getItemContextRequestData = function(item) {

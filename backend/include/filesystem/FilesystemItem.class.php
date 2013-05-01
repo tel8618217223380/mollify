@@ -97,8 +97,8 @@
 			return $this->filesystem->delete($this);
 		}
 
-		public function addToZip($zip) {
-			return $this->filesystem->addToZip($this, $zip);
+		public function addTo($c) {
+			return $this->filesystem->addTo($this, $c);
 		}
 		
 		public function isRoot() {

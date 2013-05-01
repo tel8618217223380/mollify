@@ -344,19 +344,19 @@
 			file_put_contents($this->localPath($item), $content);
 		}
 
-		public function addToZip($item, $zip) {
+		public function addTo($item, $c) {
 			if ($item->isFile()) {
-				$zip->add($item->name(), $this->localPath($item), $item->size());
+				$c->add($item->name(), $this->localPath($item), $item->size());
 			} else {
-				if ($zip->acceptFolders()) {
-					$zip->add($item->name(), $this->localPath($item));
+				if ($c->acceptFolders()) {
+					$c->add($item->name(), $this->localPath($item));
 				} else {
 					$offset = strlen($this->localPath($item)) - strlen($item->name()) - 1;
 					$files = $this->allFilesRecursively($this->localPath($item));	//TODO rights!
 					
 					foreach($files as $file) {
 						$st = stat($file);
-						$zip->add(substr($file, $offset), $file, $st['size']);
+						$c->add(substr($file, $offset), $file, $st['size']);
 					}
 				}
 			}

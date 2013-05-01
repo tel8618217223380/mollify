@@ -12,9 +12,11 @@
 
 	class ArchiveManager {
 		private $env;
+		private $compressor;
 		
-		function __construct($env) {
+		function __construct($env, $compressor) {
 			$this->env = $env;
+			$this->compressor = $compressor;
 		}
 		
 		public function storeArchive($items) {
@@ -25,27 +27,24 @@
 		}
 		
 		private function createArchive($items) {
+			$c = $this->getCompressor();
+			
 			if (is_array($items)) {
 				$this->env->filesystem()->assertRights($items, Authentication::RIGHTS_READ, "add to package");
 				
-				$zip = $this->zipper();
 				foreach($items as $item) {
-					$item->addToZip($zip);
+					$item->addTo($c);
 					$this->env->events()->onEvent(FileEvent::download($item));
 				}
-				$zip->finish();
 			} else {
 				$item = $items;
 				$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, "add to package");
-
-				$zip = $this->zipper();
-				$item->addToZip($zip);
-				$zip->finish();
-				
+				$item->addTo($c);
 				$this->env->events()->onEvent(FileEvent::download($item));
 			}
 			
-			return $zip;
+			$c->finish();
+			return $c;
 		}
 		
 		public function extract($archive, $to) {
@@ -57,30 +56,30 @@
 			$zip->close();
 		}
 		
-		public function compress($folder, $to) {
-			$zip = $this->zipper();
-			$folder->addToZip($zip);
-			$zip->finish();
+		public function compress($items, $to) {
+			$a = $this->createArchive($items);
+			//$zip = $this->zipper();
+			//$folder->addToZip($zip);
+			//$zip->finish();
 			
-			rename($zip->filename(), $to);
+			rename($a->filename(), $to);
 		}
 
-		private function zipper() {
-			require_once('include/filesystem/zip/MollifyZip.class.php');
-			$zipper = $this->env->settings()->setting("zipper", TRUE);
+		private function getCompressor() {
+			require_once('MollifyCompressor.class.php');
 			
-			if (strcasecmp($zipper, "ziparchive") === 0) {
-				require_once('include/filesystem/zip/MollifyZipArchive.class.php');
+			if ($this->compressor == NULL || strcasecmp($this->compressor, "ziparchive") === 0) {
+				require_once('zip/MollifyZipArchive.class.php');
 				return new MollifyZipArchive($this->env);
-			} else if (strcasecmp($zipper, "native") === 0) {
-				require_once('include/filesystem/zip/MollifyZipNative.class.php');
+			} else if (strcasecmp($this->compressor, "native") === 0) {
+				require_once('zip/MollifyZipNative.class.php');
 				return new MollifyZipNative($this->env);
-			} else if (strcasecmp($zipper, "raw") === 0) {
-				require_once('include/filesystem/zip/MollifyZipRaw.class.php');
+			} else if (strcasecmp($this->compressor, "raw") === 0) {
+				require_once('zip/MollifyZipRaw.class.php');
 				return new MollifyZipRaw($this->env);
 			}
 			
-			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported zipper configured: ".$zipper);
+			throw new ServiceException("INVALID_CONFIGURATION", "Unsupported compressor configured: ".$this->compressor);
 		}
 		
 		public function __toString() {

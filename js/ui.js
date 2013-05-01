@@ -193,7 +193,6 @@
 		};
 		
 		ict.renderItemContext = function(cApi, $e, item, ctx) {
-			//var details = d[0];
 			//TODO permissions to edit descriptions
 			var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
 			var showDescription = descriptionEditable || !!details.description;

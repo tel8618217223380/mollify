@@ -37,6 +37,10 @@
 		
 		static function toString($a) {
 			if (is_array($a)) return self::array2str($a);
+			if (is_object($a)) {
+				if (method_exists($a, '__toString')) return ''.$a;
+				return get_class($a);
+			}
 			return $a;
 		}
 		
@@ -50,9 +54,7 @@
 				
 				if (!$first) $r .= ", ";
 				
-				$val = $v;
-				if (is_array($v)) $val = self::array2str($v);
-				
+				$val = self::toString($v);
 				$r .= $k.':'.$val;
 				$first = FALSE;
 			}

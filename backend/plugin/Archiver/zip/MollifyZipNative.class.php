@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 	
-	class MollifyZipNative implements MollifyZip {
+	class MollifyZipNative implements MollifyCompressor {
 		private static $availableCommands = NULL;
 		
 		private static function availableCommands() {

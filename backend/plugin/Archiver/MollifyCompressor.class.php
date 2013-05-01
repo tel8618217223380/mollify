@@ -10,7 +10,7 @@
 	 * this entire header must remain intact.
 	 */
 
-	interface MollifyZip {
+	interface MollifyCompressor {
 		function acceptFolders();
 		
 		function add($name, $path, $size = 0);

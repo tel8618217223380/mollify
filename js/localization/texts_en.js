@@ -112,6 +112,8 @@ deleteFolderConfirmationDialogTitle: "Delete Folder",
 confirmFileDeleteMessage: "Are you sure you want to delete \"{0}\"?",
 confirmFolderDeleteMessage: "Are you sure you want to delete \"{0}\" and all its files and subfolders?",
 
+dropboxEmpty: "Clear",
+
 pluginItemDetailsContextTitle: "Details",
 
 pluginFileViewerEditorPreview: "Preview",
@@ -139,6 +141,9 @@ pluginPermissionsEditNoPermission: "Select permission",
 
 pluginDropboxAddTo: "Add to Dropbox",
 
-pluginArchiverCompress: "Compress",
+pluginArchiverCompress: "Compress...",
 pluginArchiverDownloadCompressed: "Download compressed",
+pluginArchiverCompressDialogTitle: "Compress",
+pluginArchiverCompressDialogMessage: "Enter the name for the compressed package:",
+pluginArchiverCompressDialogAction: "Compress"
 })})();
