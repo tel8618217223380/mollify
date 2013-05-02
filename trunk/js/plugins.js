@@ -20,7 +20,7 @@
 				var actions = [];
 				
 				if (item.is_file ) {
-					actions.push({ 'title-key': 'actionDownloadItem', callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
+					actions.push({ 'title-key': 'actionDownloadItem', type:"primary", group:"download", callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
 					actions.push({ title: '-' });
 				}
 				
@@ -371,7 +371,7 @@
 				}
 				
 				var actions = [
-					{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed([item]); } }
+					{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed([item]); } }
 				];
 				if (ctx.folder)	actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
 				return {
@@ -382,7 +382,7 @@
 				return {
 					actions: [
 						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(items) } },
-						{"title-key":"pluginArchiverDownloadCompressed", callback: function() { that.onDownloadCompressed(items) } }
+						{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed(items) } }
 					]
 				};
 			}

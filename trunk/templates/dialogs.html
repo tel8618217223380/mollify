@@ -62,12 +62,19 @@
 
 <script id="mollify-tmpl-popupmenu" type="text/x-jquery-tmpl">
 	<ul class="dropdown-menu">
-	{{each items}}
-		{{if $item.isSeparator($value)}}
-		<li class="dropdown-item divider"/>
-		{{else}}
-		<li class="dropdown-item"><a href="#">${$item.getTitle($value)}</a></li>
-		{{/if}}
-	{{/each}}
+	{{tmpl(items) "#mollify-tmpl-popupmenu-item"}}
 	</ul>
+</script>
+
+<script id="mollify-tmpl-popupmenu-item" type="text/x-jquery-tmpl">
+	{{if $item.data.type == 'separator' || $item.data.title == '-'}}
+	<li class="dropdown-item divider"/>
+	{{else $item.data.type == 'submenu'}}
+		<li class="dropdown-submenu">
+			<a tabindex="-1" href="#">...</a>
+			{{tmpl($item.data) "#mollify-tmpl-popupmenu"}}
+		</li>
+	{{else}}
+	<li class="dropdown-item"><a href="#">${$item.data.title}</a></li>
+	{{/if}}
 </script>
