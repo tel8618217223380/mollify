@@ -131,21 +131,11 @@ var mollifyDefaults = {
 	st.init = function(limitedHttpMethods) {
 		st._limitedHttpMethods = !!limitedHttpMethods;
 	};
-				
-	/*st.pluginUrl = function(p) {
-		var u = 'plugin/'+p+'/';
-		//if (!full) return u;
-		return st.url(u);
-	};*/
 	
 	st.url = function(u) {
 		if (u.startsWith('http')) return u;
 		return mollify.settings["service-path"]+"r.php/"+u;	
 	};
-	
-	/*st.serviceUrl = function(u) {
-		return st.url("r.php/"+u);	
-	};*/
 	
 	st.get = function(url, s, err) {
 		st._do("GET", url, null, s, err);
@@ -394,7 +384,7 @@ var mollifyDefaults = {
 	};
 	
 	mfs.rename = function(item, name, cb, err) {
-		if (!name || name.length == 0) {
+		if (!name || name.length === 0) {
 			mollify.ui.dialogs.input({
 				title: mollify.ui.texts.get(item.is_file ? 'renameDialogTitleFile' : 'renameDialogTitleFolder'),
 				message: mollify.ui.texts.get('renameDialogNewName'),
@@ -608,6 +598,7 @@ var mollifyDefaults = {
 	mollify.helpers = {
 		getPluginActions : function(plugins) {
 			var list = [];
+			
 			if (plugins) {
 				for (var id in plugins) {
 					var p = plugins[id];
@@ -617,15 +608,33 @@ var mollifyDefaults = {
 					}
 				}
 			}
+			var downloadActions = [];
+			var firstDownload = -1;
+			for (var i=0,j=list.length; i<j; i++) {
+				var a = list[i];
+				if (a.group == 'download') {
+					if (firstDownload < 0) firstDownload = i;
+					downloadActions.push(a);
+				}
+			}
+			if (downloadActions.length > 1) {
+				for (var i=1,j=downloadActions.length; i<j; i++) list.remove(downloadActions[i]); 
+				list[firstDownload] = {
+					type: "submenu",
+					items: downloadActions,
+					primary: downloadActions[0]
+				};
+			}
 			return list;
 		},
 	
 		getPrimaryActions : function(actions) {
 			if (!actions) return [];
 			var result = [];
+			var downloadActions = [];
 			for (var i=0,j=actions.length; i<j; i++) {
 				var a = actions[i];
-				if (a.id == 'download' || a.type == 'primary') result.push(a);
+				if (a.type == 'primary') result.push(a);
 			}
 			return result;
 		},
@@ -635,7 +644,7 @@ var mollifyDefaults = {
 			var result = [];
 			for (var i=0,j=actions.length; i<j; i++) {
 				var a = actions[i];
-				if (a.id == 'download' || a.type == 'primary') continue;
+				if (a.id == 'download' || a.type == 'primary') continue;				
 				result.push(a);
 			}
 			return mollify.helpers.cleanupActions(result);

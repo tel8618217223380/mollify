@@ -726,13 +726,6 @@
 				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, ctx))));
 			});
 		};
-					
-		this.onDescription = function(item, desc) {
-			//TODO validate
-			mollify.service.put("filesystem/"+item.id+"/description/", {description: desc}, function(result) {},function(code, error) {
-				alert(error);
-			});
-		};
 	};
 	
 	var UploadProgress = function($e) {

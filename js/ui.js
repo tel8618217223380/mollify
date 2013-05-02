@@ -193,9 +193,8 @@
 		};
 		
 		ict.renderItemContext = function(cApi, $e, item, ctx) {
-			//TODO permissions to edit descriptions
-			var descriptionEditable = mollify.session.features.descriptions && mollify.session.admin;
-			var showDescription = descriptionEditable || !!details.description;
+			var descriptionEditable = mollify.features.hasFeature("descriptions") && mollify.session.admin;
+			var showDescription = descriptionEditable || !!ctx.details.description;
 			
 			var plugins = mollify.plugins.getItemContextPlugins(item, ctx);
 			var actions = mollify.helpers.getPluginActions(plugins);
@@ -224,10 +223,8 @@
 			});
 			mollify.ui.process($e, ["localize"]);
 			
-			if (descriptionEditable && o.onDescription) {
-				mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), hint: mollify.ui.texts.get('itemcontextDescriptionHint'), onedit: function(desc) {
-					o.onDescription(item, desc);
-				}});
+			if (descriptionEditable) {
+				mollify.ui.controls.editableLabel({element: $("#mollify-itemcontext-description"), hint: mollify.ui.texts.get('itemcontextDescriptionHint'), onedit: function(desc) { mollify.service.put("filesystem/"+item.id+"/description/", {description: desc}); }});
 			}
 			
 			if (primaryActions) {
@@ -377,7 +374,44 @@
 	};
 	
 	/* CONTROLS */
-		
+	
+	var processPopupActions = function(l) {
+		$.each(l, function(i, item){
+			if (item.type == 'submenu') {
+				processPopupActions(item.items);
+				return;
+			}
+			if (item.title) return;
+			if (item["title-key"]) item.title = mollify.ui.texts.get(item['title-key']);
+		});
+	};
+	var createPopupItems = function(itemList) {
+		var list = itemList||[];
+		processPopupActions(list);
+		return mollify.dom.template("mollify-tmpl-popupmenu", {items:list});
+	};
+	var initPopupItems = function($p, l, onItem) {
+		$p.find(".dropdown-item").click(function() {
+			var $e = $(this);
+			var $top = $p.find(".dropdown-menu");
+			var path = [];
+			while (true) {
+				if (!$e.hasClass("dropdown-menu"))
+					path.push($e.index());
+				$e = $e.parent();
+				if ($e[0] == $top[0]) break;
+			}
+			var item = false;
+			var parent = l;
+			$.each(path.reverse(), function(i, ind) {
+				item = parent[ind];
+				if (item.type == 'submenu') parent = item.items;
+			});
+			if (onItem) onItem(item);
+			if (item.callback) item.callback();
+		});
+	};
+			
 	t.ui.controls = {
 		dropdown : function(a) {
 			var $e = $(a.element);
@@ -391,39 +425,23 @@
 				$mnu.parent().removeClass("open");
 				t.ui.removeActivePopup(popupId);
 			};
-			var createItems = function(itemList) {
-				var i = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
-					isSeparator : function(i) {
-						return (i.type == 'separator' || i.title == '-');
-					},
-					getTitle : function(i) {
-						if (i.title) return i.title;
-						if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-						return "";
-					}
-				});
-				return i;
+			var onItem = function(i) {
+				hidePopup();
+				if (a.onItem) a.onItem(i);
 			};
-			var initItems = function(l) {
-				var $items = $e.find(".dropdown-item");
-				$items.click(function() {
-					var item = l[$(this).index()];
-					if (a.onItem) a.onItem(item);
-					if (item.callback) item.callback();
-				});
-			};
+
 			var api = {
 				hide: hidePopup,
 				items: function(items) {
 					$mnu.remove();
-					$mnu = createItems(items);
+					$mnu = createPopupItems(items);
 					$e.removeClass("loading").append($mnu);
-					initItems(items);
+					initPopupItems($e, items, onItem);
 					popupItems = items;
 				}
 			};
 			if (a.parentPopupId) api.parentPopupId = a.parentPopupId;
-			$e.append(createItems(a.items)).find(".dropdown-toggle").dropdown({
+			$e.append(createPopupItems(a.items)).find(".dropdown-toggle").dropdown({t:{
 				onshow: function($p) {
 					if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
 					if (!a.parentPopupId)
@@ -435,8 +453,8 @@
 					hidePopup();
 					if (a.dynamic) popupItems = false;
 				}
-			});
-			initItems(a.items);
+			}});
+			initPopupItems($e, a.items, onItem);
 			/*$e.hover(function() {
 				$(this).addClass("hover");
 			}, function() {
@@ -458,41 +476,37 @@
 				$mnu.remove();
 				t.ui.removeActivePopup(popupId);
 			};
-			var createItems = function(itemList) {
-				var items = mollify.dom.template("mollify-tmpl-popupmenu", {items:itemList||{}}, {
-					isSeparator : function(i) {
-						return i.title == '-';
-					},
-					getTitle : function(i) {
-						if (i.title) return i.title;
-						if (i['title-key']) return mollify.ui.texts.get(i['title-key']);
-						return "";
-					}
-				}).css("display", "block");
-				return items;
+			var onItem = function(i) {
+				hidePopup();
+				if (a.onItem) a.onItem(i);
 			};
-			var initItems = function(l) {
+			/*var initItems = function(l) {
 				var $items = $mnu.find(".dropdown-item");
 				$items.click(function() {
 					hidePopup();
-					var item = l[$(this).index()];
+					var t = $(this);
+					var p = t.parent();
+					var ti = t.tmplItem();
+					var tp = p.tmplItem();
+					var item = ti.data;//l[$(this).index()];var item = l[$(this).index()];
 					if (a.onItem) a.onItem(item);
 					if (item.callback) item.callback();
 				});
-			};
+			};*/
 			
 			if (!a.items) $mnu.addClass("loading");
-			$mnu.append(createItems(a.items));
+			$mnu.append(createPopupItems(a.items).css("display", "block"));
 			if (a.style) $mnu.addClass(a.style);
 			$("#mollify").append($mnu);//.on('click', hidePopup);
 			
 			var api = {
 				hide: hidePopup,
 				items: function(items) {
-					$mnu.empty().removeClass("loading").append(createItems(items));
-					initItems(items);
+					$mnu.empty().removeClass("loading").append(createPopupItems(items).css("display", "block"));
+					initPopupItems($mnu, items, onItem);
 				}
 			};
+			if (a.items) initPopupItems($mnu, a.items, onItem);
 			popupId = t.ui.activePopup(api);
 			return api;
 		},
