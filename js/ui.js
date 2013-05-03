@@ -2,7 +2,7 @@
 
 	"use strict"; // jshint ;_;
 	
-	var t = mollify;
+	//var t = mollify;
 	
 	/* TEXTS */
 	mollify.ui.texts = {};
@@ -34,7 +34,7 @@
 	
 	/* FORMATTERS */
 	
-	t.ui.formatters = {
+	mollify.ui.formatters = {
 		ByteSize : function(nf) {			
 			this.format = function(b) {
 				if (!window.def(b)) return "";
@@ -46,20 +46,20 @@
 				} else if (typeof(b) !== "number") return "";
 				
 				if (bytes < 1024)
-					return (bytes == 1 ? t.ui.texts.get('sizeOneByte') : t.ui.texts.get('sizeInBytes', nf.format(bytes)));
+					return (bytes == 1 ? mollify.ui.texts.get('sizeOneByte') : mollify.ui.texts.get('sizeInBytes', nf.format(bytes)));
 		
 				if (bytes < (1024 * 1024)) {
 					var kilobytes = bytes / 1024;
-					return (kilobytes == 1 ? t.ui.texts.get('sizeOneKilobyte') : t.ui.texts.get('sizeInKilobytes', nf.format(kilobytes)));
+					return (kilobytes == 1 ? mollify.ui.texts.get('sizeOneKilobyte') : mollify.ui.texts.get('sizeInKilobytes', nf.format(kilobytes)));
 				}
 		
 				if (bytes < (1024 * 1024 * 1024)) {
 					var megabytes = bytes / (1024 * 1024);
-					return t.ui.texts.get('sizeInMegabytes', nf.format(megabytes));
+					return mollify.ui.texts.get('sizeInMegabytes', nf.format(megabytes));
 				}
 		
 				var gigabytes = bytes / (1024 * 1024 * 1024);
-				return t.ui.texts.get('sizeInGigabytes', nf.format(gigabytes));
+				return mollify.ui.texts.get('sizeInGigabytes', nf.format(gigabytes));
 			};
 		},
 		Timestamp : function(fmt) {
@@ -83,39 +83,60 @@
 
 	
 	/* UI */
+	mollify.ui.uploader = false;
+	mollify.ui.draganddrop = false;
+	mollify.ui._activePopup = false;
 	
-	t.ui._activePopup = false;
-	
-	t.ui.hideActivePopup = function() {
-		if (t.ui._activePopup) t.ui._activePopup.hide();
-		t.ui._activePopup = false;
-	};
-	
-	t.ui.activePopup = function(p) {
-		if (p===undefined) return t.ui._activePopup;
-		if (t.ui._activePopup) {
-			if (p.parentPopupId && t.ui._activePopup.id == p.parentPopupId) return;
-			t.ui._activePopup.hide();
+	mollify.ui.initialize = function() {
+		if (mollify.ui.texts.locale) {
+			$("html").attr("lang", mollify.ui.texts.locale);
+			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
 		}
-		t.ui._activePopup = p;
-		if (!t.ui._activePopup.id) t.ui._activePopup.id = new Date().getTime();
-		return t.ui._activePopup.id;
+		$(window).click(function(e) {
+			// hide popups when clicked outside
+			if (mollify.ui._activePopup) {
+				if (e && e.srcElement && mollify.ui._activePopup.element) {
+					var popupElement = mollify.ui._activePopup.element();
+					if (popupElement.has($(e.srcElement)).length > 0) return;
+				}
+				mollify.ui.hideActivePopup();
+			}
+		});
+		mollify.templates.load("dialogs.html");
+		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (window.Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
+		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.MollifyHTML5Uploader();
 	};
 	
-	t.ui.isActivePopup = function(id) {
-		return (t.ui._activePopup && t.ui._activePopup.id == id);
+	mollify.ui.hideActivePopup = function() {
+		if (mollify.ui._activePopup) mollify.ui._activePopup.hide();
+		mollify.ui._activePopup = false;
 	};
 	
-	t.ui.removeActivePopup = function(id) {
-		if (!id || !t.ui.isActivePopup(id)) return;
-		t.ui._activePopup = false;
+	mollify.ui.activePopup = function(p) {
+		if (p===undefined) return mollify.ui._activePopup;
+		if (mollify.ui._activePopup) {
+			if (p.parentPopupId && mollify.ui._activePopup.id == p.parentPopupId) return;
+			mollify.ui._activePopup.hide();
+		}
+		mollify.ui._activePopup = p;
+		if (!mollify.ui._activePopup.id) mollify.ui._activePopup.id = new Date().getTime();
+		return mollify.ui._activePopup.id;
 	};
 	
-	t.ui.download = function(url) {
+	mollify.ui.isActivePopup = function(id) {
+		return (mollify.ui._activePopup && mollify.ui._activePopup.id == id);
+	};
+	
+	mollify.ui.removeActivePopup = function(id) {
+		if (!id || !mollify.ui.isActivePopup(id)) return;
+		mollify.ui._activePopup = false;
+	};
+	
+	mollify.ui.download = function(url) {
 		window.open(url);	//TODO frame?	
 	};
 		
-	t.ui.itemContext = function(o) {
+	mollify.ui.itemContext = function(o) {
 		var ict = {};
 		ict._activeItemContext = false;
 		
@@ -296,19 +317,19 @@
 	
 	/**/
 		
-	t.ui.assign = function(h, id, c) {
+	mollify.ui.assign = function(h, id, c) {
 		if (!h || !id || !c) return;
 		if (!h.controls) h.controls = {};
 		h.controls[id] = c;
 	};
 		
-	t.ui.process = function($e, ids, handler) {
+	mollify.ui.process = function($e, ids, handler) {
 		$.each(ids, function(i, k) {
-			if (t.ui.handlers[k]) t.ui.handlers[k]($e, handler);
+			if (mollify.ui.handlers[k]) mollify.ui.handlers[k]($e, handler);
 		});
 	};
 				
-	t.ui.handlers = {
+	mollify.ui.handlers = {
 		localize : function(p, h) {
 			p.find(".localized").each(function() {
 				var $t = $(this);
@@ -367,7 +388,7 @@
 		}
 	};
 		
-	t.ui.window = {
+	mollify.ui.window = {
 		open : function(url) {
 			window.open(url);
 		}
@@ -412,7 +433,7 @@
 		});
 	};
 			
-	t.ui.controls = {
+	mollify.ui.controls = {
 		dropdown : function(a) {
 			var $e = $(a.element);
 			var $mnu = false;
@@ -423,7 +444,7 @@
 				if (!$mnu) return;
 				if (a.onHide) a.onHide();
 				$mnu.parent().removeClass("open");
-				t.ui.removeActivePopup(popupId);
+				mollify.ui.removeActivePopup(popupId);
 			};
 			var onItem = function(i) {
 				hidePopup();
@@ -445,7 +466,7 @@
 				onshow: function($p) {
 					if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
 					if (!a.parentPopupId)
-						popupId = t.ui.activePopup(api);
+						popupId = mollify.ui.activePopup(api);
 					if (!popupItems) $mnu.addClass("loading");
 					if (a.onShow) a.onShow(api, popupItems);
 				},
@@ -474,7 +495,7 @@
 			var hidePopup = function() {
 				if (a.onHide) a.onHide();
 				$mnu.remove();
-				t.ui.removeActivePopup(popupId);
+				mollify.ui.removeActivePopup(popupId);
 			};
 			var onItem = function(i) {
 				hidePopup();
@@ -507,7 +528,7 @@
 				}
 			};
 			if (a.items) initPopupItems($mnu, a.items, onItem);
-			popupId = t.ui.activePopup(api);
+			popupId = mollify.ui.activePopup(api);
 			return api;
 		},
 		
@@ -553,7 +574,7 @@
 				}*/
 			}).bind("shown", function(e) {
 				$tip = $el;
-				t.ui.activePopup(api);
+				mollify.ui.activePopup(api);
 				if (!rendered) {
 					if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
 					rendered = true;
@@ -607,7 +628,7 @@
 				container: $e.parent()
 			}).bind("shown", function(e) {
 				$tip = $el;
-				t.ui.activePopup(api);
+				mollify.ui.activePopup(api);
 				if (o.title)
 					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 				mollify.ui.handlers.localize($tip);
