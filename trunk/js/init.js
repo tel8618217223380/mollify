@@ -150,7 +150,14 @@ var mollifyDefaults = {
 				if (s) s(r.result);
 			},
 			error: function(xhr, st, error) {
-				if (err) err(st, error);
+				var code = 999;	//unknown
+				var error = {};
+				var defaultErrorHandler = true;
+				if (xhr.responseText) error = JSON.parse(xhr.responseText);
+				if (error && window.def(error.code)) code = error.code;
+				
+				if (err) defaultErrorHandler = !!err(code, error);
+				if (defaultErrorHandler) mollify.ui.dialogs.showError(code, error);
 			},
 			beforeSend: function (xhr) {
 				if (st._limitedHttpMethods)
