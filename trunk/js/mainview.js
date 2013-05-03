@@ -377,7 +377,8 @@
 		};
 		
 		this.onResize = function() {
-			$("#mollify-folderview").height($(window).height()-$("#mollify-mainview-header").height());
+			var wh = $(window).height();
+			$("#mollify-folderview").height(wh-$("#mollify-mainview-header").height());
 		};
 	
 		this.showNoRoots = function() {

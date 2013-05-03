@@ -21,10 +21,7 @@ var mollifyDefaults = {
 	var mollify = {
 		App : {},
 		view : {},
-		ui : {
-			uploader : false,
-			draganddrop : false
-		},
+		ui : {},
 		events : {},
 		service : {},
 		filesystem : {},
@@ -65,27 +62,8 @@ var mollifyDefaults = {
 			}
 		});
 
-		if (mollify.ui.texts.locale) {
-			$("html").attr("lang", mollify.ui.texts.locale);
-			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
-		}
-
+		mollify.ui.initialize();
 		mollify.plugins.initialize();
-		mollify.templates.load("dialogs.html");
-			
-		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (window.Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
-		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.MollifyHTML5Uploader();
-		
-		$("body").click(function(e) {
-			// hide popups when clicked outside
-			if (mollify.ui._activePopup) {
-				if (e && e.srcElement && mollify.ui._activePopup.element) {
-					var popupElement = mollify.ui._activePopup.element();
-					if (popupElement.has($(e.srcElement)).length > 0) return;
-				}
-				mollify.ui.hideActivePopup();
-			}
-		});
 
 		//$.datepicker.setDefaults({
 		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
@@ -93,7 +71,7 @@ var mollifyDefaults = {
 		mollify.service.get("session/info/3", function(s) {
 			mollify.App.setSession(s);
 		}, function(c, e) {
-			alert(c);	//TODO
+			$("#mollify").html("Failed to initialize Mollify");
 		});
 	};
 	

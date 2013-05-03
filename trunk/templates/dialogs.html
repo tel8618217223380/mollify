@@ -71,7 +71,7 @@
 	<li class="dropdown-item divider"/>
 	{{else $item.data.type == 'submenu'}}
 		<li class="dropdown-submenu">
-			<a tabindex="-1" href="#">...</a>
+			<a tabindex="-1" href="#">${$item.data.primary.title}</a>
 			{{tmpl($item.data) "#mollify-tmpl-popupmenu"}}
 		</li>
 	{{else}}
