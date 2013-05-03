@@ -32,6 +32,10 @@
 		return t;
 	};
 	
+	tt.has = function(id) {
+		return !!tt._dict[id];	
+	};
+	
 	/* FORMATTERS */
 	
 	mollify.ui.formatters = {
@@ -909,6 +913,15 @@
 		});
 		mollify.ui.handlers.localize(dlg);
 		dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });*/
+	};
+	
+	dh.showError = function(code, error) {
+		var msg = 'errorDialogMessage_'+code;
+		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
+		mollify.ui.dialogs.error({
+			title: mollify.ui.texts.get('errorDialogTitle'),
+			message: mollify.ui.texts.get(msg)
+		});
 	};
 	
 	dh.error = function(spec) {

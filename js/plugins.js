@@ -353,7 +353,7 @@
 			if (!item.is_file) return false;
 			
 			var ext = item.extension.toLowerCase();
-			return ext == 'zip';	//TODO	
+			return ext == 'zip';	//TODO get supported extensions from backend
 		};
 								
 		return {
