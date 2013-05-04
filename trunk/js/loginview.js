@@ -16,13 +16,12 @@
 			if (mollify.features.hasFeature('lost_password')) $("#login-lost-password").show();
 			if (mollify.features.hasFeature('registration')) {
 				$("#mollify-login-register").click(function() {
-					mollify.ui.window.open(mollify.service.pluginUrl("registration"));
+					mollify.ui.window.open(mollify.plugins.url("Registration"));
 				});
 				$("#mollify-login-register").show();
 			}
 			
-			var $data = $("#mollify-login-data");
-			mollify.ui.handlers.center($data);
+			mollify.ui.process($("#mollify-login-data"), ["center"]);
 			//mollify.ui.handlers.bubble($data, that);
 			$("#mollify-login-name, #mollify-login-password").bind('keypress', function(e) {
 				if ((e.keyCode || e.which) == 13) that.onLogin();
@@ -77,6 +76,10 @@
 			}, function(c, e) {
 				that.showLoginError();
 			});
+		}
+		
+		that.onResetPassword = function(email) {
+			
 		}
 		
 		that.showLoginError = function() {

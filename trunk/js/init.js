@@ -474,7 +474,9 @@ var mollifyDefaults = {
 	};
 	
 	pl.url = function(id, p) {
-		return mollify.settings["service-path"]+"plugin/"+id+"/client/"+p;
+		var url = mollify.settings["service-path"]+"plugin/"+id;
+		if (!p) return url;
+		return url +"/client/"+p;
 	};
 	
 	pl.getItemContextRequestData = function(item) {

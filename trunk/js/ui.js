@@ -480,14 +480,6 @@
 				}
 			}});
 			initPopupItems($e, a.items, onItem);
-			/*$e.hover(function() {
-				$(this).addClass("hover");
-			}, function() {
-				$(this).removeClass("hover");
-			});*/
-			/*$('<div class="mollify-dropdown-handle"></div>').click(function(){
-				mollify.ui.controls.popupmenu(a);
-			}).appendTo($e);*/
 		},
 		
 		popupmenu : function(a) {
@@ -505,19 +497,6 @@
 				hidePopup();
 				if (a.onItem) a.onItem(i);
 			};
-			/*var initItems = function(l) {
-				var $items = $mnu.find(".dropdown-item");
-				$items.click(function() {
-					hidePopup();
-					var t = $(this);
-					var p = t.parent();
-					var ti = t.tmplItem();
-					var tp = p.tmplItem();
-					var item = ti.data;//l[$(this).index()];var item = l[$(this).index()];
-					if (a.onItem) a.onItem(item);
-					if (item.callback) item.callback();
-				});
-			};*/
 			
 			if (!a.items) $mnu.addClass("loading");
 			$mnu.append(createPopupItems(a.items).css("display", "block"));
@@ -560,22 +539,9 @@
 				title: false,
 				html: true,
 				placement: 'bottom',
-				trigger: 'click',
+				trigger: 'manual',
 				template: $el,
 				content: html
-				/*onshow: function($t) {
-					$tip = $t;
-					t.ui.activePopup(api);
-					if (!rendered) {
-						if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
-						rendered = true;
-					}
-					if (o.handler && o.handler.onShowBubble) o.handler.onShowBubble(actionId, api);
-				},
-				onhide: function($t) {
-					t.ui._activePopup = false;
-					//e.popover('destroy');
-				}*/
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
@@ -587,6 +553,11 @@
 			}).bind("hidden", function() {
 				//$e.unbind("shown").unbind("hidden");
 				mollify.ui.removeActivePopup(api.id);
+			});
+			$e.click(function(e){
+				e.preventDefault();
+				$e.popover('show');
+				return false;
 			});
 		},
 
