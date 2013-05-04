@@ -88,13 +88,19 @@ var mollifyDefaults = {
 		}
 	};
 	
-	mollify.getItemDownloadUrl = function(item) {
+	mollify.getItemDownloadInfo = function(item) {
 		if (!item) return false;
-		
+
 		if (item.is_file)
-			return mollify.filesystem.getDownloadUrl(item);
+			return {
+				name: item.name,
+				url: mollify.filesystem.getDownloadUrl(item)
+			};
 		else
-			if (mollify.plugins.exists("plugin-archiver")) return mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(item);
+			if (mollify.plugins.exists("plugin-archiver")) return {
+				name: item.name + ".zip",	//TODO get extension from plugin
+				url: mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(item)
+			};
 
 		return false;
 	}

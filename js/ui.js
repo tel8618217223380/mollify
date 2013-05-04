@@ -1188,8 +1188,8 @@
 		var api = {
 			enableDragToDesktop: function(item, e) {
 				if (!item) return;
-				var url = mollify.getItemDownloadUrl(item);
-				if (url) e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', item.name, url].join(':'));
+				var info = mollify.getItemDownloadInfo(item);
+				if (info) e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', info.name, info.url].join(':'));
 			},
 				
 			enableDrag : function($e, l) {
