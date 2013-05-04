@@ -1185,7 +1185,13 @@
 			return false;
 		});
 		
-		return {
+		var api = {
+			enableDragToDesktop: function(item, e) {
+				if (!item) return;
+				var url = mollify.getItemDownloadUrl(item);
+				if (url) e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', item.name, url].join(':'));
+			},
+				
 			enableDrag : function($e, l) {
 				$e.attr("draggable","true").bind('dragstart', function(e) {
 					t.dragObj = false;
@@ -1193,6 +1199,9 @@
 					if (l.onDragStart) {
 						t.dragObj = l.onDragStart($(this), e);
 						if (t.dragObj) {
+							if (t.dragObj.type == 'filesystemitem') {
+								api.enableDragToDesktop(t.dragObj.payload, e);
+							}
 							t.dragEl = $(this);
 							t.dragListener = l;
 							t.dragEl.addClass("dragged");
@@ -1240,10 +1249,15 @@
 				});
 			}
 		};
+		return api;
 	};
 
 	mollify.MollifyJQueryDragAndDrop = function() {
 		return {
+			enableDragToDesktop: function (item, e) {
+				//not supported
+			},
+			
 			enableDrag : function($e, l) {
 				$e.draggable({
 					revert: "invalid",

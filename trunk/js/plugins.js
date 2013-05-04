@@ -359,6 +359,7 @@
 		return {
 			id: "plugin-archiver",
 			initialize: that.initialize,
+			getDownloadCompressedUrl : function(item) { return mollify.service.url("archiver/download?item="+item.id, true); },
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
@@ -1144,7 +1145,8 @@
 		
 		this.refreshList = function() {
 			$("#mollify-dropbox-list").empty().append(mollify.dom.template("mollify-tmpl-mainview-dropbox-item", that.items));
-			$("#mollify-dropbox-list .mollify-dropbox-list-item").click(function(e) {
+			var $items = $("#mollify-dropbox-list .mollify-dropbox-list-item");
+			$items.click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				var $i = $(this);
@@ -1167,6 +1169,14 @@
 					trigger: "hover"
 				});
 			});
+			if (mollify.ui.draganddrop) {
+				mollify.ui.draganddrop.enableDrag($items, {
+					onDragStart : function($e, e) {
+						var item = $e.tmplItem().data;
+						return {type:'filesystemitem', payload: item};
+					}
+				});
+			}
 			$("#mollify-dropbox-list .mollify-dropbox-list-item > a.item-remove").click(function() {
 				var $t = $(this);
 				that.items.remove($t.tmplItem().data);
