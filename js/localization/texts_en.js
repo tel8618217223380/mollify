@@ -38,6 +38,8 @@ loginDialogResetPassword: "Forgot password?",
 loginDialogRegister: "Register",
 loginDialogLoginButton: "Log in",
 loginDialogLoginFailedMessage: "Login failed, user name or password was incorrect.",
+resetPasswordPopupMessage: "Enter your email address:",
+resetPasswordPopupButton: "Reset",
 
 mainViewSearch: "Search",
 mainViewChangePasswordTitle: "Change password...",

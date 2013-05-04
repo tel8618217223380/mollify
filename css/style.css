@@ -325,6 +325,11 @@ a.mollify-login-link {
 	color: #aaaaaa;
 }
 
+#mollify-login-forgot-button {
+	margin-top: 8px;
+	float: right;
+}
+
 #mollify-login-register {
 	margin-left: 20px;
 }
