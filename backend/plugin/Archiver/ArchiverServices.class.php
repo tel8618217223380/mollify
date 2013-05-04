@@ -22,16 +22,26 @@
 		public function processGet() {
 			$action = $this->path[0];
 			if (!in_array($action, array("download"))) throw $this->invalidRequestException();
-			if (count($this->path) != 2) throw $this->invalidRequestException();
+			if (count($this->path) > 2) throw $this->invalidRequestException();
 			
-			$id = $this->path[1];
-			$a = $this->env->session()->param("archive_".$id);
-			if (!$a) throw $this->invalidRequestException();
-			
+			if (count($this->path) == 1) {
+				If (!$this->request->hasParam("item")) throw $this->invalidRequestException();
+				$itemId = $this->request->param("item");
+				$item = $this->item($itemId);
+				$this->env->filesystem()->assertRights($item, Authentication::RIGHTS_READ, "compress");
+				$a = $this->archiveManager()->compress($item);
+				$name = $item->name().".zip";
+			} else {
+				$id = $this->path[1];
+				$a = $this->env->session()->param("archive_".$id);
+				if (!$a) throw $this->invalidRequestException();
+				$name = "download.zip";
+			}
+
 			$handle = @fopen($a, "rb");
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$a);
-			$this->env->response()->download("download.zip", 'zip', FALSE, $handle);
+			$this->env->response()->download($name, 'zip', FALSE, $handle);
 			$handle->close();
 			unlink($a);
 		}

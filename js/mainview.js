@@ -659,13 +659,6 @@
 				onRightClick: function(item, t, e) {
 					that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
 				},
-				onNativeDrag: function (item, e) {
-					if (!item.is_file) return;
-					console.log("drag "+item.id);
-
-					var url = mollify.service.url("filesystem/"+item.id);
-					e.originalEvent.dataTransfer.setData('DownloadURL',['application/octet-stream', item.name, url].join(':'));
-				},
 				onContentRendered : function(items, data) {
 					if (!that.isListView() || that.viewType != 'search') return;
 					that.initSearchResultTooltip(items);
@@ -992,8 +985,6 @@
 				mollify.ui.draganddrop.enableDrag($items, {
 					onDragStart : function($e, e) {
 						var item = $e.tmplItem().data;
-						if (window.Modernizr.draganddrop) t.p.onNativeDrag($e.tmplItem().data, e);
-						//if (item.id == item.root_id) return false;
 						return {type:'filesystemitem', payload: item};
 					}
 				});

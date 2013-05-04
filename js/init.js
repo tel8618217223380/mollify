@@ -39,6 +39,9 @@ var mollifyDefaults = {
 	/* APP */
 
 	mollify.App.init = function(s, p) {
+		mollify.App.pageUrl = window.location.href;
+		mollify.App.pageUrl = mollify.App.pageUrl.substring(0, mollify.App.pageUrl.lastIndexOf('/')+1);
+		
 		mollify.plugins.register(new mollify.plugin.Core());
 		if (p) {
 			for (var i=0, j=p.length; i < j; i++)
@@ -65,9 +68,6 @@ var mollifyDefaults = {
 		mollify.ui.initialize();
 		mollify.plugins.initialize();
 
-		//$.datepicker.setDefaults({
-		//	dateFormat: e.texts().get('shortDateFormat').replace(/yyyy/g, 'yy')
-		//});
 		mollify.service.get("session/info/3", function(s) {
 			mollify.App.setSession(s);
 		}, function(c, e) {
@@ -87,6 +87,17 @@ var mollifyDefaults = {
 			new mollify.view.MainView().init($c);
 		}
 	};
+	
+	mollify.getItemDownloadUrl = function(item) {
+		if (!item) return false;
+		
+		if (item.is_file)
+			return mollify.filesystem.getDownloadUrl(item);
+		else
+			if (mollify.plugins.exists("plugin-archiver")) return mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(item);
+
+		return false;
+	}
 	
 	/* EVENTS */
 	var et = mollify.events;
@@ -110,9 +121,11 @@ var mollifyDefaults = {
 		st._limitedHttpMethods = !!limitedHttpMethods;
 	};
 	
-	st.url = function(u) {
+	st.url = function(u, full) {
 		if (u.startsWith('http')) return u;
-		return mollify.settings["service-path"]+"r.php/"+u;	
+		var url = mollify.settings["service-path"]+"r.php/"+u;
+		if (!full) return url;
+		return mollify.App.pageUrl + url;
 	};
 	
 	st.get = function(url, s, err) {
@@ -153,7 +166,7 @@ var mollifyDefaults = {
 				var code = 999;	//unknown
 				var error = {};
 				var defaultErrorHandler = true;
-				if (xhr.responseText) error = JSON.parse(xhr.responseText);
+				if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
 				if (error && window.def(error.code)) code = error.code;
 				
 				if (err) defaultErrorHandler = !!err(code, error);
@@ -183,7 +196,7 @@ var mollifyDefaults = {
 	
 	mfs.getDownloadUrl = function(item) {
 		if (!item.is_file) return false;
-		return mollify.service.serviceUrl("filesystem/"+item.id);
+		return mollify.service.url("filesystem/"+item.id, true);
 	};
 	
 	mfs.itemDetails = function(item, data, cb, err) {
