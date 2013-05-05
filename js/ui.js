@@ -466,7 +466,7 @@
 				}
 			};
 			if (a.parentPopupId) api.parentPopupId = a.parentPopupId;
-			$e.append(createPopupItems(a.items)).find(".dropdown-toggle").dropdown({t:{
+			$e.append(createPopupItems(a.items)).find(".dropdown-toggle").dropdown({
 				onshow: function($p) {
 					if (!$mnu) $mnu = $($p.find(".dropdown-menu")[0]);
 					if (!a.parentPopupId)
@@ -478,7 +478,7 @@
 					hidePopup();
 					if (a.dynamic) popupItems = false;
 				}
-			}});
+			});
 			initPopupItems($e, a.items, onItem);
 		},
 		
@@ -544,7 +544,7 @@
 				content: html
 			}).bind("shown", function(e) {
 				$tip = $el;
-				mollify.ui.activePopup(api);
+				popupId = mollify.ui.activePopup(api);
 				if (!rendered) {
 					if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
 					rendered = true;

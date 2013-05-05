@@ -54,6 +54,7 @@ var mollifyDefaults = {
 		mollify.events.addEventHandler(function(e) {
 			if (e.type == 'session/start') {
 				mollify.session = e.payload;
+				mollify.session.id = mollify.session.session_id;
 				mollify.session.admin = (mollify.session.default_permission == 'A');		
 				
 				mollify.filesystem.init(mollify.session.folders);
@@ -179,6 +180,8 @@ var mollifyDefaults = {
 				if (defaultErrorHandler) mollify.ui.dialogs.showError(code, error);
 			},
 			beforeSend: function (xhr) {
+				if (mollify.session && mollify.session.id)
+					xhr.setRequestHeader("mollify-session-id", mollify.session.id);
 				if (st._limitedHttpMethods)
 					xhr.setRequestHeader("mollify-http-method", type);
 			}
