@@ -201,19 +201,7 @@
 				mollify.ui.controls.dropdown({
 					element: $('#mollify-username-dropdown'),
 					items: that.getSessionActions()
-					/*onShow: function(drp, items) {
-						if (items) return;
-						
-						that.listener.getSessionActions(function(a) {
-							if (!a) {
-								drp.hide();
-								return;
-							}
-							drp.items(a);
-						});
-					}*/
 				});
-				//mollify.ui.controls.dropdown({element: $('#mollify-username-dropdown'), items: that.listener.sessionActions()});
 			}
 			var onSearch = function() {
 				var val = $("#mollify-mainview-search-input").val();
@@ -412,13 +400,10 @@
 				that.hideProgress();
 				that.folder(r);
 				that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
-			}, function(c, e) {
+			}, function() {
 				that.hideProgress();
-				alert("err");
+				return true;
 			});
-			
-			//that.listener.onFolderSelected(f);
-			//TODO get items and 
 		};
 		
 		this.onRetrieveUrl = function(url) {
@@ -435,11 +420,7 @@
 					mollify.ui.views.dialogs.error({
 						message: mollify.ui.texts.get('mainviewRetrieveFileResourceNotFound', [url])
 					});
-				} else {
-					mollify.ui.views.dialogs.error({
-						message: code + " " + error
-					});
-				}
+				} else return true;
 			});
 		};
 

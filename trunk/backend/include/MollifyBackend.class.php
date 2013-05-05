@@ -23,7 +23,7 @@
 		
 		function __construct($settings, $db, $responseHandler) {
 			$this->settings = $settings;
-			$this->session = new Session($settings);
+			$this->session = new Session(TRUE);
 			$this->configuration = new ConfigurationDao($db);
 			$this->environment = new ServiceEnvironment($db, $this->session, $responseHandler, $this->configuration, $settings);
 			$this->setup();
