@@ -4,9 +4,7 @@
 			<div id="mollify-mainview-logo"></div>
 			<div id="mollify-mainview-header-tools" class="nav-collapse collapse">
 				<ul id="mollify-mainview-user" class="nav pull-right"></ul>
-				<div id="mollify-mainview-search" class="input-append pull-right">
-					<input id="mollify-mainview-search-input" class="hintbox" type="text" hint-key="mainViewSearch">
-					<button class="btn" type="button"><i class="icon-search"></i></button>
+				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right">					
 				</div>
 			</div>
 		</div>
@@ -16,35 +14,10 @@
 <div id="mollify-mainview-main" class="container">
 	<div id="mollify-mainview-content" class="row">
 		<div id="mollify-mainview-navlist-container" class="well span2">
-			<ul id="mollify-mainview-rootlist" class="nav nav-list">
-				<li class="nav-header localized" text-key="mainViewRootsTitle"></li>
-	        </ul>
-	        <div id="mollify-mainview-additional-navs">
-			<!--ul id="mollify-mainview-favourites" class="nav nav-list navlist-sep">
-				<li class="nav-header localized" text-key="mainViewFavouritesTitle"></li>
-	        </ul-->
-	        </div>
 		</div>
 		
-		<div id="mollify-folderview" class="span9">
-			<div id="mollify-folderview-header">
-			</div>
-			
-			<div id="mollify-folderview-items">
-			</div>
-			
-			<div id="mollify-mainview-progress" style="display: none">
-				<div class="progress progress-striped active">
-					<div class="bar" style="width: 0%;"></div>
-				</div>
-			</div>
-			<div id="mollify-mainview-content-footer">
-				<div id="mollify-mainview-viewstyle-options" class="mollify-radio">
-					<button id="mollify-mainview-viewstyle-list" class="btn mainview-viewstyle-option"><i class="icon-list-ul"></i></a>
-					<button id="mollify-mainview-viewstyle-small-icons" class="btn mainview-viewstyle-option"><i class="icon-th"></i></a>
-					<button id="mollify-mainview-viewstyle-large-icons" class="btn mainview-viewstyle-option"><i class="icon-th-large"></i></a>
-				</div>
-			</div>
+		<!-- mollify-folderview -->
+		<div id="mollify-mainview-viewcontent" class="span9">
 		</div>
 	</div>
 </div>
@@ -74,24 +47,63 @@
 	</div>
 </script>
 
-<script id="mollify-tmpl-main-root-list" type="text/x-jquery-tmpl">
-	<li id="mollify-mainview-rootlist-item-${id}" class="mollify-mainview-rootlist-item" ><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${name}</a></li>
+<script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">
+	<ul class="mollify-mainview-navbar nav nav-list">
+		<li class="nav-header localized">${title}</li>
+		{{each items}}
+			<li class="mollify-mainview-navbar-item"><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${title}</a></li>
+		{{/each}}
+    </ul>
 </script>
 
-<script id="mollify-tmpl-main-folder" type="text/x-jquery-tmpl">
-	<div id="mollify-folder-tools" class="btn-toolbar"></div>
+<script id="mollify-tmpl-fileview" type="text/x-jquery-tmpl">
+	<div id="mollify-folderview">
+		<div id="mollify-folderview-header">
+		</div>
+		
+		<div id="mollify-folderview-items">
+		</div>
+		
+		<div id="mollify-mainview-progress" style="display: none">
+			<div class="progress progress-striped active">
+				<div class="bar" style="width: 0%;"></div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="mollify-tmpl-fileview-tools" type="text/x-jquery-tmpl">
+	<div id="mollify-fileview-style-options" class="mollify-radio">
+		<button id="mollify-fileview-style-list" class="btn btn-inverse btn-flat fileview-style-option"><i class="icon-list-ul"></i></a>
+		<button id="mollify-fileview-style-small-icons" class="btn btn-inverse btn-flat fileview-style-option"><i class="icon-th"></i></a>
+		<button id="mollify-fileview-style-large-icons" class="btn btn-inverse btn-flat fileview-style-option"><i class="icon-th-large"></i></a>
+	</div>
+	<div id="mollify-fileview-search" class="input-append">
+		<input id="mollify-fileview-search-input" class="hintbox" type="text" hint-key="mainViewSearch">
+		<button class="btn" type="button"><i class="icon-search"></i></button>
+	</div>
+</script>
+
+<script id="mollify-tmpl-fileview-header" type="text/x-jquery-tmpl">
+	<!--div id="mollify-folder-tools" class="btn-toolbar"></div>
 	<ul id="mollify-folder-hierarchy" class="breadcrumb">
 		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
-	</ul>
-	<div id="mollify-folder-name" class="mollify-folderview-title page-header"><h2>${folder.name}</h2></div>
+	</ul-->
+	<div id="mollify-fileview-folder-tools"></div>
+	<div id="mollify-folder-name" class="mollify-folderview-title page-header"><h2>${folder.name}</h2><div id="mollify-fileview-folder-actions"></div></div>
 	<div id="mollify-folder-description"></div>
 </script>
 
-<script id="mollify-tmpl-main-folder-hierarchy" type="text/x-jquery-tmpl">
-	<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
+<script id="mollify-tmpl-fileview-folder-hierarchy" type="text/x-jquery-tmpl">
+	<ul id="mollify-fileview-folder-hierarchy" class="breadcrumb">
+		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
+		{{each items}}
+		<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
+		{{/each}}
+	</ul>
 </script>
 
-<script id="mollify-tmpl-main-foldertools-action" type="text/x-jquery-tmpl">
+<script id="mollify-tmpl-fileview-foldertools-action" type="text/x-jquery-tmpl">
 	<div class="btn-group">
 	{{if dropdown}}
 		<li>

@@ -4,6 +4,157 @@
 	
 	mollify.view.MainView = function() {
 		var that = this;
+		this._views = [ new mollify.view.MainViewFileView() ];
+		that._currentView = false;
+		
+		this.init = function($c) {			
+			$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
+				if (!p.mainViewHandler) return;
+				var view = p.mainViewHandler();
+				this._views.push(view);
+			});
+			
+			that.itemContext = new mollify.ui.itemContext({ onDescription: that.onDescription });
+			mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize']);			
+		}
+		
+		this.onLoad = function() {
+			$(window).resize(that.onResize);
+			that.onResize();
+
+			// TODO main views into components: mainview_filelist, mainview_admin etc
+	
+			mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mollify-mainview-user");
+			if (mollify.session.authenticated) {
+				mollify.ui.controls.dropdown({
+					element: $('#mollify-username-dropdown'),
+					items: that.getSessionActions()
+				});
+			}
+			
+			$.each(that._views, function(i, v) { v.init(); });
+			
+			if (that._views.length > 0)
+				that.activateView(that._views[0]);
+		}
+		
+		this.activateView = function(v) {
+			if (that._currentView) that._currentView.onDeactivate();
+			that._currentView = v;
+			
+			$("#mollify-mainview-navbar").empty();
+			v.onActivate({
+				content: $("#mollify-mainview-viewcontent").empty(),
+				tools: $("#mollify-mainview-viewtools").empty(),
+				addNavBar: that.addNavBar
+			});
+		};
+		
+		this.addNavBar = function(nb) {
+			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
+			var $items = $nb.find(".mollify-mainview-navbar-item");
+			$items.click(function() {
+				var item = nb.items[$items.index(this)];
+				if (item.callback) item.callback();
+			});
+			if (nb.onRender) nb.onRender($items, function($e) { return nb.items[$items.index($e)].obj; });
+			return {
+				setActive : function(o) {
+					$items.removeClass("active");
+					$.each($items, function(i, itm) {
+						var obj = nb.items[i].obj;
+						if (obj && obj.id == o.id) {
+							$(itm).addClass("active");
+							return true;
+						}
+					});
+				}
+			};
+		};
+		
+		this.onResize = function() {
+			if (that._currentView) that._currentView.onResize();
+		};
+		
+		this.getSessionActions = function() {
+			//TODO change password, open admin util etc
+			return [
+				{"title-key" : "mainViewLogoutTitle", callback: that.onLogout}
+			];
+		}
+		
+		this.openAdminUtil = function(url) {
+			mollify.ui.window.open(url);
+		}
+		
+		this.changePassword = function() {	
+			var $dlg = false;
+			var $old = false;
+			var $new1 = false;
+			var $new2 = false;
+			var errorTextMissing = mollify.ui.texts.get('mainviewChangePasswordErrorValueMissing');
+			var errorConfirm = mollify.ui.texts.get('mainviewChangePasswordErrorConfirm');
+			
+			mollify.ui.views.dialogs.custom({
+				title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
+				content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
+				buttons: [
+					{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
+					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+				],
+				"on-button": function(btn, d) {
+					var old = false;
+					var new1 = false;
+					var new2 = false;
+					
+					if (btn.id === 'yes') {
+						$dlg.find(".control-group").removeClass("error");
+						$dlg.find(".help-inline").text("");
+						
+						// check
+						old = $old.find("input").val();
+						new1 = $new1.find("input").val();
+						new2 = $new2.find("input").val();
+						
+						if (!old) {
+							$old.addClass("error");
+							$old.find(".help-inline").text(errorTextMissing);
+						}
+						if (!new1) {
+							$new1.addClass("error");
+							$new1.find(".help-inline").text(errorTextMissing);
+						}
+						if (!new2) {
+							$new2.addClass("error");
+							$new2.find(".help-inline").text(errorTextMissing);
+						}
+						if (new1 && new2 && new1 != new2) {
+							$new1.addClass("error");
+							$new2.addClass("error");
+							$new1.find(".help-inline").text(errorConfirm);
+							$new2.find(".help-inline").text(errorConfirm);
+						}
+						if (!old || !new1 || !new2 || new1 != new2) return;
+					}
+					d.close();
+					if (btn.id === 'yes') that.listener.onChangePassword(old, new1, function() {
+						mollify.ui.views.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
+					});
+				},
+				"on-show": function(h, $d) {
+					$dlg = $d;
+					$old = $("#mollify-mainview-changepassword-old");
+					$new1 = $("#mollify-mainview-changepassword-new1");
+					$new2 = $("#mollify-mainview-changepassword-new2");
+					
+					$old.find("input").focus();
+				}
+			});
+		}
+	}
+	
+	mollify.view.MainViewFileView = function() {
+		var that = this;
 		this._currentFolder = false;
 		this._viewStyle = 0;
 		this._formatters = {
@@ -100,152 +251,66 @@
 			}
 		});
 		
-		this.init = function($c) {			
-			that.itemContext = new mollify.ui.itemContext({ onDescription: that.onDescription });
-			mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize', 'radio']);
+		this.init = function() {
+			mollify.events.addEventHandler(that.onEvent);
 			
-			//TODO plugin mainviewhandler.filelistColumns
-			$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
-				if (!p.mainViewHandler.filelistColumns) return;
-				var cols = p.mainViewHandler.filelistColumns();
+			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
+				if (!p.fileViewHandler.filelistColumns) return;
+				var cols = p.fileViewHandler.filelistColumns();
 				if (!cols) return;
 				
 				for (var j=0;j<cols.length;j++)
 					that._filelist.addColumn(cols[j]);
 			});
-		}
-		
-		this.changePassword = function() {	
-			var $dlg = false;
-			var $old = false;
-			var $new1 = false;
-			var $new2 = false;
-			var errorTextMissing = mollify.ui.texts.get('mainviewChangePasswordErrorValueMissing');
-			var errorConfirm = mollify.ui.texts.get('mainviewChangePasswordErrorConfirm');
 			
-			mollify.ui.views.dialogs.custom({
-				title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
-				content: $("#mollify-tmpl-main-changepassword").tmpl({message: mollify.ui.texts.get('mainviewChangePasswordMessage')}),
-				buttons: [
-					{ id: "yes", "title": mollify.ui.texts.get('mainviewChangePasswordAction') },
-					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
-				],
-				"on-button": function(btn, d) {
-					var old = false;
-					var new1 = false;
-					var new2 = false;
-					
-					if (btn.id === 'yes') {
-						$dlg.find(".control-group").removeClass("error");
-						$dlg.find(".help-inline").text("");
-						
-						// check
-						old = $old.find("input").val();
-						new1 = $new1.find("input").val();
-						new2 = $new2.find("input").val();
-						
-						if (!old) {
-							$old.addClass("error");
-							$old.find(".help-inline").text(errorTextMissing);
-						}
-						if (!new1) {
-							$new1.addClass("error");
-							$new1.find(".help-inline").text(errorTextMissing);
-						}
-						if (!new2) {
-							$new2.addClass("error");
-							$new2.find(".help-inline").text(errorTextMissing);
-						}
-						if (new1 && new2 && new1 != new2) {
-							$new1.addClass("error");
-							$new2.addClass("error");
-							$new1.find(".help-inline").text(errorConfirm);
-							$new2.find(".help-inline").text(errorConfirm);
-						}
-						if (!old || !new1 || !new2 || new1 != new2) return;
-					}
-					d.close();
-					if (btn.id === 'yes') that.listener.onChangePassword(old, new1, function() {
-						mollify.ui.views.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
-					});
-				},
-				"on-show": function(h, $d) {
-					$dlg = $d;
-					$old = $("#mollify-mainview-changepassword-old");
-					$new1 = $("#mollify-mainview-changepassword-new1");
-					$new2 = $("#mollify-mainview-changepassword-new2");
-					
-					$old.find("input").focus();
-				}
-			});
-		}
-
-		this.openAdminUtil = function(url) {
-			mollify.ui.window.open(url);
+			that.itemContext = new mollify.ui.itemContext();
 		}
 		
-		this.getDataRequest = function(folder) {
-			if (!folder) return null;
-			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
+		this.onResize = function() {
+			$("#mollify-folderview").height($("#mollify-mainview-content").height());
 		}
 		
-		this.onLoad = function() {
-			$(window).resize(that.onResize);
-			that.onResize();
-	
+		this.onActivate = function(h) {
+			mollify.dom.template("mollify-tmpl-fileview").appendTo(h.content);
 			// TODO default view mode
 			// TODO expose file urls
-	
-			mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mollify-mainview-user");
-			if (mollify.session.authenticated) {
-				mollify.ui.controls.dropdown({
-					element: $('#mollify-username-dropdown'),
-					items: that.getSessionActions()
-				});
-			}
-			var onSearch = function() {
-				var val = $("#mollify-mainview-search-input").val();
-				if (!val || val.length === 0) return;
-				that.onSearch(val);
-			};
-			$("#mollify-mainview-search-input").keyup(function(e){
-				if (e.which == 13) onSearch();
+			
+			//TODO via handle
+			
+			var navBarItems = [];
+			$.each(mollify.session.folders, function(i, f) {
+				navBarItems.push({title:f.name, obj: f, callback:function(){ that.changeToFolder(f); }})
 			});
-			$("#mollify-mainview-search > button").click(onSearch);
-			
-			mollify.dom.template("mollify-tmpl-main-root-list", mollify.session.folders).appendTo("#mollify-mainview-rootlist");
-			var $ri = $("#mollify-mainview-rootlist").find(".mollify-mainview-rootlist-item").click(function() {
-				var root = $(this).tmplItem().data;
-				that.changeToFolder(root);
+			that.rootNav = h.addNavBar({
+				title: mollify.ui.texts.get("mainViewRootsTitle"),
+				items: navBarItems,
+				onRender: mollify.ui.draganddrop ? function($items, objs) {
+					mollify.ui.draganddrop.enableDrop($items, {
+						canDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = objs($e);
+							return that.canDragAndDrop(me, item);
+						},
+						dropType : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							var item = obj.payload;
+							var me = objs($e);
+							return that.dropType(me, item);
+						},
+						onDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return;
+							var item = obj.payload;
+							var me = objs($e);							
+							that.onDragAndDrop(me, item);
+						}
+					});
+				} : false
 			});
 			
-			if (mollify.ui.draganddrop) {
-				mollify.ui.draganddrop.enableDrop($ri.find("a"), {
-					canDrop : function($e, e, obj) {
-						if (!obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
-						var me = $e.tmplItem().data;
-						return that.canDragAndDrop(me, item);
-					},
-					dropType : function($e, e, obj) {
-						if (!obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
-						var me = $e.tmplItem().data;
-						return that.dropType(me, item);
-					},
-					onDrop : function($e, e, obj) {
-						if (!obj || obj.type != 'filesystemitem') return;
-						var item = obj.payload;
-						var me = $e.tmplItem().data;							
-						that.onDragAndDrop(me, item);
-					}
-				});
-			}
-			
-			that.controls["mollify-mainview-viewstyle-options"].set(that._viewStyle);
+			that.initViewTools(h.tools);
 			that.initList();
 			
-			mollify.events.addEventHandler(that.onEvent);
 			that.uploadProgress = new UploadProgress($("#mollify-mainview-progress"));
 			
 			if (mollify.ui.uploader && mollify.ui.uploader.initMainViewUploader) {
@@ -268,27 +333,47 @@
 				});
 			}
 			
-			$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
-				if (p.mainViewHandler.onMainViewRender)
-					p.mainViewHandler.onMainViewRender($("#mollify"));
+			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
+				if (p.fileViewHandler.onFileViewRender)
+					p.fileViewHandler.onFileViewRender($("#mollify"));
 			});
 			
 			if (mollify.filesystem.roots.length === 0) that.showNoRoots();
 			else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
 			else that.changeToFolder(null);
+			
+			that.onResize();
 		}
 		
-		this.getSessionActions = function() {
-			return [
-				{"title-key" : "mainViewLogoutTitle", callback: that.onLogout}
-			];	
+		this.onDeactivate = function() {
+			mollify.ui.hideActivePopup();
 		};
+		
+		this.initViewTools = function($t) {
+			mollify.dom.template("mollify-tmpl-fileview-tools").appendTo($t);
+			
+			mollify.ui.process($t, ["radio"], that);
+			that.controls["mollify-fileview-style-options"].set(that._viewStyle);
+			
+			var onSearch = function() {
+				var val = $("#mollify-fileview-search-input").val();
+				if (!val || val.length === 0) return;
+				that.onSearch(val);
+			};
+			$("#mollify-fileview-search-input").keyup(function(e){
+				if (e.which == 13) onSearch();
+			});
+			$("#mollify-fileview-search > button").click(onSearch);
+		}
+				
+		this.getDataRequest = function(folder) {
+			if (!folder) return null;
+			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
+		}
 		
 		this.onLogout = function() {
 			mollify.service.post("session/logout", {}, function(s) {
 				mollify.App.setSession(s);
-			}, function(c, e) {
-				alert(c);	//TODO
 			});
 		};
 		
@@ -299,14 +384,10 @@
 			that.refresh();
 		};
 		
-		this.unload = function() {
-			mollify.ui.hideActivePopup();
-		};
-		
 		this.onSearch = function(s) {
 			mollify.service.post("filesystem/search", {text:s}, function(r) {
-				$("#mollify-mainview-search-input").val("");
-				$(".mollify-mainview-rootlist-item").removeClass("active");
+				$("#mollify-fileview-search-input").val("");
+				$(".mollify-fileview-rootlist-item").removeClass("active");
 				var $h = $("#mollify-folderview-header").empty();
 				
 				mollify.dom.template("mollify-tmpl-main-searchresults").appendTo($h);
@@ -324,8 +405,6 @@
 				that.searchResults = r;
 				that.initList();
 				that.updateItems(items, {});
-			}, function(c, e) {
-				alert("err");
 			});
 		};
 		
@@ -355,18 +434,13 @@
 		};
 		
 		this.onRadioChanged = function(groupId, valueId, i) {
-			if (groupId == "mollify-mainview-viewstyle-options") that.onViewStyleChanged(valueId, i);
+			if (groupId == "mollify-fileview-style-options") that.onViewStyleChanged(valueId, i);
 		};
 		
 		this.onViewStyleChanged = function(id, i) {
 			that._viewStyle = i;
 			that.initList();
 			that.data(that.p);
-		};
-		
-		this.onResize = function() {
-			var wh = $(window).height();
-			$("#mollify-folderview").height(wh-$("#mollify-mainview-header").height());
 		};
 	
 		this.showNoRoots = function() {
@@ -446,22 +520,30 @@
 			that._canWrite = p ? (p.permission == 'RW') : false;
 			var currentRoot = p ? p.hierarchy[0] : false;
 			
-			$(".mollify-mainview-rootlist-item").removeClass("active");
-			if (currentRoot) $("#mollify-mainview-rootlist-item-"+currentRoot.id).addClass("active");
+			//TODO -> mainview API
+			//$(".mollify-mainview-rootlist-item").removeClass("active");
+			//if (currentRoot) $("#mollify-mainview-rootlist-item-"+currentRoot.id).addClass("active");
+			if (currentRoot) that.rootNav.setActive(currentRoot);
 			
 			var $h = $("#mollify-folderview-header").empty();
-			if (p) {					
-				mollify.dom.template("mollify-tmpl-main-folder", {canWrite: p.canWrite, folder: that._currentFolder}).appendTo($h);
-				that.setupHierarchy(p.hierarchy);
+			var $tb = $("#mollify-fileview-folder-tools").empty();
+			if (p) {
+				//HEADER
+				mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: p.canWrite, folder: that._currentFolder}).appendTo($h);
+				
+				//TOOLBAR
+				//mollify.dom.template("mollify-tmpl-main-foldertools").appendTo($tb);
+				
+				var $t = $("#mollify-fileview-folder-tools");
 				
 				var opt = {
 					title: function() {
 						return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
 					}
 				};
-				var $t = $("#mollify-folder-tools");
+				
 				if (that._canWrite) {
-					mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function() {
+					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function() {
 						mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
 							onRenderBubble: function(b) {
 								var $i = $("#mollify-mainview-createfolder-name-input");
@@ -477,7 +559,7 @@
 						}});
 						return false;
 					});
-					if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(function() {
+					if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(function() {
 						mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
 							onRenderBubble: function(b) {
 								mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, {
@@ -512,7 +594,7 @@
 						return false;
 					});
 					
-					var actionsElement = mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($t);
+					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($("#mollify-fileview-folder-actions"));
 					mollify.ui.controls.dropdown({
 						element: actionsElement.find("li"),
 						items: false,
@@ -531,11 +613,15 @@
 						}
 					});
 				}
-				mollify.dom.template("mollify-tmpl-main-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($t).click(that.refresh);
+				mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($t).click(that.refresh);
+				
+				that.setupHierarchy(p.hierarchy, $t);
+				
 				$("#mollify-folderview-items").addClass("loading");
 			} else {
 				mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
 			}
+			
 			$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 			
@@ -544,11 +630,12 @@
 				that.viewType = null;
 				that.initList();
 			}
+			that.onResize();
 		};
 					
-		this.setupHierarchy = function(h) {
+		this.setupHierarchy = function(h, $t) {
 			var items = h;
-			var p = $("#mollify-folder-hierarchy").append(mollify.dom.template("mollify-tmpl-main-folder-hierarchy", items));
+			var p = $t.append(mollify.dom.template("mollify-tmpl-fileview-folder-hierarchy", {items: items}));
 			
 			var rootItems = [];
 			var rootCb = function(r) {
