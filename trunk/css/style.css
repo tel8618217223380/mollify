@@ -695,10 +695,15 @@ a.mollify-login-link {
 #mollify-fileview-folder-actions .btn {
 	color: #e2e2e2;
 	background: none;
+	margin-right: 0;
+}
+
+#mollify-fileview-folder-actions .btn-group + .btn-group {
+	margin-left: 0;
 }
 
 #mollify-fileview-folder-actions .btn b.caret {
-	border-top-color: #c0c0c0;
+	border-top-color: #e2e2e2;
 }
 
 #mollify-fileview-folder-actions .btn:hover {

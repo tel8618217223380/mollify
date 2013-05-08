@@ -516,23 +516,15 @@
 		};
 		
 		this.folder = function(p) {
-			//that._currentFolder = p ? p.hierarchy[p.hierarchy.length-1] : false;
 			that._canWrite = p ? (p.permission == 'RW') : false;
 			var currentRoot = p ? p.hierarchy[0] : false;
-			
-			//TODO -> mainview API
-			//$(".mollify-mainview-rootlist-item").removeClass("active");
-			//if (currentRoot) $("#mollify-mainview-rootlist-item-"+currentRoot.id).addClass("active");
-			if (currentRoot) that.rootNav.setActive(currentRoot);
+			that.rootNav.setActive(currentRoot);
 			
 			var $h = $("#mollify-folderview-header").empty();
 			var $tb = $("#mollify-fileview-folder-tools").empty();
 			if (p) {
 				//HEADER
 				mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: p.canWrite, folder: that._currentFolder}).appendTo($h);
-				
-				//TOOLBAR
-				//mollify.dom.template("mollify-tmpl-main-foldertools").appendTo($tb);
 				
 				var $t = $("#mollify-fileview-folder-tools");
 				
@@ -594,7 +586,9 @@
 						return false;
 					});
 					
-					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($("#mollify-fileview-folder-actions"));
+					// FOLDER
+					var $fa = $("#mollify-fileview-folder-actions");
+					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
 					mollify.ui.controls.dropdown({
 						element: actionsElement.find("li"),
 						items: false,
@@ -613,7 +607,7 @@
 						}
 					});
 				}
-				mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($t).click(that.refresh);
+				mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
 				
 				that.setupHierarchy(p.hierarchy, $t);
 				
