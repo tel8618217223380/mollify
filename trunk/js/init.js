@@ -530,7 +530,17 @@ var mollifyDefaults = {
 		}
 		return plugins;
 	};
-	
+
+	pl.getFileViewPlugins = function() {
+		var plugins = [];
+		for (var id in pl._list) {
+			var plugin = pl._list[id];
+			if (!plugin.fileViewHandler) continue;
+			plugins.push(plugin);
+		}
+		return plugins;
+	};
+		
 	/* FEATURES */
 	
 	var ft = mollify.features;

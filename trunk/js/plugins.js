@@ -739,7 +739,7 @@
 		return {
 			id: "plugin-comment",
 			initialize: that.initialize,
-			mainViewHandler : {
+			fileViewHandler : {
 				filelistColumns : function() {
 					return [{
 						"id": "comment-count",
@@ -1187,8 +1187,8 @@
 		return {
 			id: "plugin-dropbox",
 			initialize: that.initialize,
-			mainViewHandler : {
-				onMainViewRender: that.onMainViewRender
+			fileViewHandler : {
+				onViewRender: that.onMainViewRender
 			},
 			itemContextHandler : function(item, ctx, data) {
 				return {
