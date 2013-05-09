@@ -99,9 +99,9 @@
 		$(window).click(function(e) {
 			// hide popups when clicked outside
 			if (mollify.ui._activePopup) {
-				if (e && e.srcElement && mollify.ui._activePopup.element) {
+				if (e && e.toElement && mollify.ui._activePopup.element) {
 					var popupElement = mollify.ui._activePopup.element();
-					if (popupElement.has($(e.srcElement)).length > 0) return;
+					if (popupElement.has($(e.toElement)).length > 0) return;
 				}
 				mollify.ui.hideActivePopup();
 			}
@@ -109,6 +109,9 @@
 		mollify.templates.load("dialogs.html");
 		if (!mollify.ui.draganddrop) mollify.ui.draganddrop = (window.Modernizr.draganddrop) ? new mollify.MollifyHTML5DragAndDrop() : new mollify.MollifyJQueryDragAndDrop();
 		if (!mollify.ui.uploader) mollify.ui.uploader = new mollify.MollifyHTML5Uploader();
+		if (!mollify.ui.clipboard) new mollify.ZeroClipboard(function(cb) {
+			mollify.ui.clipboard = cb;
+		});
 	};
 	
 	mollify.ui.hideActivePopup = function() {
@@ -545,6 +548,10 @@
 			}).bind("shown", function(e) {
 				$tip = $el;
 				popupId = mollify.ui.activePopup(api);
+				$tip.click(function(e) {
+					e.preventDefault();
+					return false;
+				});
 				if (!rendered) {
 					if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
 					rendered = true;
@@ -604,6 +611,10 @@
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
+				$tip.click(function(e) {
+					e.preventDefault();
+					return false;
+				});
 				if (o.title)
 					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 				mollify.ui.handlers.localize($tip);
@@ -793,6 +804,48 @@
 					select($(items[ind]));
 				}
 			};
+		},
+		
+		datepicker: function(o) {
+			if (!o || !o.element) return false;
+			if (!$.fn.datetimepicker.dates['mollify']) {
+			    $.fn.datetimepicker.dates['mollify'] = {
+					days: mollify.ui.texts.get('days'),
+					daysShort: mollify.ui.texts.get('daysShort'),
+					daysMin: mollify.ui.texts.get('daysMin'),
+					months: mollify.ui.texts.get('months'),
+					monthsShort: mollify.ui.texts.get('monthsShort'),
+			        today: mollify.ui.texts.get('today'),
+			        weekStart: mollify.ui.texts.get('weekStart')
+			    };
+			}
+			var val = o.value || null;
+			var fmt = o.format || mollify.ui.texts.get('shortDateTimeFormat');
+			fmt = fmt.replace(/\b[h]\b/, "hh");
+			fmt = fmt.replace(/\b[M]\b/, "MM");
+			fmt = fmt.replace(/\b[d]\b/, "dd");
+			fmt = fmt.replace("tt", "PP");
+			var $dp = $(o.element).datetimepicker({
+				format: fmt,
+				language: "mollify",
+				pickTime: o.time || true,
+				pickSeconds: (fmt.indexOf('s') >= 0)
+			}).on("changeDate", function(ev) {
+				val = ev.date;
+			});
+			
+			var picker = $dp.data('datetimepicker');
+			if (val) picker.setDate(val);
+			
+			return {
+				get: function() {
+					return val;
+				},
+				set: function(d) {
+					val = d;
+					picker.setDate(d);
+				}
+			}
 		},
 		
 		editableLabel: function(o) {
@@ -1242,6 +1295,61 @@
 			}
 		};
 	};
-
-
+	
+	mollify.ZeroClipboard = function(cb) {
+		if (!cb || !window.ZeroClipboard) return false;
+		
+		var $testclip = $('<div id="zeroclipboard-test" style="width=0px; height=0px;"></div>').appendTo($("body"));
+		var testclip = new ZeroClipboard.Client();
+		testclip.glue($testclip[0]);
+		
+		testclip.addEventListener('load', function(client) {
+			var that = this;
+			
+			this.getClip = function($e, l, nocreate) {
+				var clip = $.data($e, "mollify-zeroclipboard");
+				if (!clip) {
+					if (nocreate) return false;
+					clip = new ZeroClipboard.Client();
+					that.clip.setHandCursor(true);
+					that.clip.setCSSEffects(false);
+					that.clip.addEventListener('onMouseOver', l.onClipMouseOver);
+					that.clip.addEventListener('onMouseOut', l.onClipMouseOut);
+					that.clip.addEventListener('onComplete', l.onClipClick);
+					$.data($e, "mollify-zeroclipboard", clip);
+				}
+				return clip;
+			};
+			//console.log("Clipboard support detected");
+			testclip.hide();
+			
+			var api = {
+				set : function($e, l, text) {
+					var clip = that.getClip($e, l);
+					clip.setText(text);
+					if (that.clip.div) {
+						that.clip.reposition(e$[0]);
+					} else {
+						that.clip.glue(e$[0]);
+					}
+					clip.show();
+				},
+				remove : function($e) {
+					var clip = that.getClip($e, l, true);
+					if (!clip) return;
+					clip.hide();
+				}
+			};
+			cb(api);
+			
+			/*that.clip = new ZeroClipboard.Client();
+			that.clip.setHandCursor(true);
+			that.clip.setCSSEffects(false);
+			that.clip.addEventListener('onMouseOver', function() { that.onClipMouse(true); });
+			that.clip.addEventListener('onMouseOut', function() { that.onClipMouse(false); });
+			that.clip.addEventListener('onComplete', that.onClipClick);
+			
+			if (that.shares.length > 0) $(".share-link-copy-container").removeClass("hidden");*/
+		});
+	};
 }(window.jQuery, window.mollify);

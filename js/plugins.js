@@ -419,7 +419,7 @@
 						//TODO dispatch changed event
 					}, function(c, er) {
 						d.close();
-						alert("error "+c+" " + er);							
+						return true;
 					});
 				},
 				"on-show": function(h, $d) {						
@@ -531,7 +531,6 @@
 			$lbc = $lb.find(".carousel-inner");
 			
 			var $c = $v.find(".carousel").carousel({interval: false}).on('slid', function() {
-				alert("slid");
 				var $active = $v.find(".mollify-fileviewereditor-viewer-item.active");
 				load($active.tmplItem().data);
 			});
@@ -609,7 +608,7 @@
 		this.initialize = function() {
 			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
-			mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
+			//mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 		};
 		
 		this.getListCellContent = function(item, data) {
@@ -668,8 +667,6 @@
 		this.loadComments = function(item, cb) {
 			mollify.service.get("comment/"+item.id, function(comments) {
 				cb(item, that.processComments(comments));
-			}, function(code, error) {
-				alert(error);
 			});
 		};
 		
@@ -689,8 +686,6 @@
 			mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
 				that.updateCommentCount(item, result.count);
 				if (cb) cb();
-			},	function(code, error) {
-				alert(error);
 			});
 		};
 		
@@ -698,8 +693,6 @@
 			mollify.service.del("comment/"+item.id+"/"+id, function(result) {
 				that.updateCommentCount(item, result.length);
 				that.updateComments($list, item, that.processComments(result));
-			},	function(code, error) {
-				alert(error);
 			});
 		};
 		
@@ -786,9 +779,6 @@
 			];
 			that.permissionOptionsByKey = {};
 			for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
-		
-			//mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
-			//mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 		};
 		
 		this.renderItemContextDetails = function(el, item, $content, data) {
@@ -835,9 +825,7 @@
 						d.close();
 					}, function(code, error) {
 						d.close();
-						mollify.ui.dialogs.error({
-							message: code + " " + error
-						});
+						return true;
 					});
 				},
 				"on-show": function(h, $d) {
@@ -854,9 +842,6 @@
 						that.initEditor(item, permissions, userData, permissionData);
 					}, function(c, e) {
 						$d.close();
-						mollify.ui.dialogs.error({
-							message: c + " " + e
-						});
 					});
 				}
 			});
@@ -886,6 +871,7 @@
 				cb(r.permissions, that.processUserData(r.users));
 			}, function(code, error) {
 				err(code, error);
+				return true;
 			});
 		};
 		
@@ -1008,9 +994,7 @@
 				});
 			}, function(c, e) {
 				el.close();
-				mollify.ui.dialogs.error({
-					message: c + " " + e
-				});
+				return true;
 			});
 		};
 					
@@ -1200,4 +1184,266 @@
 		};
 	}
 
+	/**
+	*	Share plugin
+	**/
+	mollify.plugin.SharePlugin = function() {
+		var that = this;
+		
+		this.initialize = function() {
+			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
+			mollify.dom.importCss(mollify.plugins.url("Share", "style.css"));
+		};
+		
+		this.renderItemContextDetails = function(el, item, $content, data) {
+			$content.addClass("loading");
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+				$content.removeClass("loading");
+				mollify.dom.template("mollify-tmpl-shares", {item: item}).appendTo($content);
+				that.loadShares(item, function(item, shares) {
+					that.initContent(item, shares, $content);
+				});
+			});
+		};
+		
+		this.loadShares = function(item, cb) {
+			mollify.service.get("share/items/"+item.id, function(result) {
+				that.refreshShares(result);
+				cb(item, result);
+			});
+		};
+		
+		this.refreshShares = function(shares) {
+			that.shares = shares;
+			that.shareIds = [];
+			
+			for (var i=0, j=that.shares.length; i<j; i++)
+				that.shareIds.push(shares[i].id);			
+		};
+		
+		this.getShare = function(id) {
+			return that.shares[that.shareIds.indexOf(id)];
+		}
+		
+		this.initContent = function(item, shares, $c) {
+			var title = item.shareTitle ? item.shareTitle : mollify.ui.texts.get(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle');
+			$("#share-item-title").html(title);
+			$("#share-item-name").html(item.name);
+			$("#share-dialog-content").removeClass("loading");
+			$("#share-new").click(function() { that.onAddShare(item); } );
+			
+			that.updateShareList(item);
+		};
+		
+		this.updateShareList = function(item) {
+			$("#share-items").empty();
+			
+			if (that.shares.length == 0) {
+				$("#share-items").html('<div class="no-share-items">'+mollify.ui.texts.get("shareDialogNoShares")+'</div>');
+				return;
+			}
+			
+			var opt = {
+				name : function() {
+					if (!this.data.name || this.data.name.length == 0)
+						return '<text key="shareDialogUnnamedShareTitle" />';
+					return this.data.name;
+				},
+				itemClass : function() {
+					var c = "item-share";
+					if (!this.data.active)
+						c = c + " item-share-inactive";
+					if (!this.data.name || this.data.name.length == 0)
+						c = c + " item-share-unnamed";
+					return c;
+				},
+				link : function() {
+					return mollify.service.url("public/"+this.data.id);
+				}
+			};
+			
+			mollify.dom.template("share-template", that.shares, opt).appendTo("#share-items");
+			mollify.ui.process($("#share-list"), ["localize"]);
+	
+			/*$(".item-share").hover(
+				function() {
+					$(".item-share").removeClass("item-share-hover");
+					
+					var el = $(this);
+					var id = el.attr('id').substring(6);
+					el.addClass("item-share-hover");
+					that.hoverId = id;
+					
+					initClipboard(id);
+				},
+				function() {
+				}
+			);
+			
+			var idFunction = function(i, f) {
+				var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
+				var id = p.id.substring(6);
+				f(item, id);
+			};
+			$(".share-link-toggle-title").click(function() {
+				var id = $(this).parent()[0].id.substring(6);
+				if (!that.getShare(id).active) return;
+				
+				var linkContainer = $(this).next();
+				var open = linkContainer.hasClass("open");
+				if (!open) $(".share-link-content").removeClass("open");
+				linkContainer.toggleClass("open");
+				return false;
+			}).hover(
+				function() { $(this).addClass("hover"); },
+				function() { $(this).removeClass("hover"); }
+			);
+			
+			$(".share-edit").click(function(e) {
+				idFunction(this, that.onEditShare);
+				return false;
+			});
+			$(".share-remove").click(function(e) {
+				idFunction(this, that.removeShare);
+				return false;
+			});*/
+		}
+
+		this.openContextContent = function(toolbarId, contentTemplateId) {
+			//$("#share-items").addClass("minimized");
+			//$("#share-context").removeClass("minimized");
+			//$(".share-context-toolbar-option").hide();
+			//$("#"+toolbarId).show();
+			var $c = $("#share-context").empty();
+			mollify.dom.template(contentTemplateId).appendTo($c);
+			mollify.ui.process($c, ["localize"]);
+			mollify.ui.controls.datepicker({
+				element: $("#share-validity-expirationdate-value"),
+				format: mollify.ui.texts.get('shortDateTimeFormat'),
+				time: true
+			})
+			$("#share-context-container").animate({
+				"top" : "20px"
+			}, 500);
+		}
+		
+		this.closeAddEdit = function() {
+			$("#share-context-container").animate({
+				"top" : "300px"
+			}, 500);
+		}
+		
+		this.onAddShare = function(item) {
+			that.openContextContent('add-share-title', 'share-context-addedit-template');
+			$("#share-general-name").val('');
+			$('#share-general-active').attr('checked', true);
+	
+			$("#share-addedit-btn-ok").click(function() {
+				var name = $("#share-general-name").val();
+				var active = $("#share-general-active").is(":checked");
+				var expiration = null;//mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
+				
+				$("#share-items").empty().append('<div class="loading"/>');
+				that.closeAddEdit();
+				that.addShare(item, name || '', expiration, active);
+			});
+			
+			$("#share-addedit-btn-cancel").click(function() {
+				that.closeAddEdit();
+			});
+		};
+		
+		this.onEditShare = function(item, id) {
+			that.openContextContent('edit-share-title', 'share-context-addedit-template');
+			
+			var share = that.getShare(id);
+			
+			$("#share-general-name").val(share.name);
+			$("#share-general-active").attr("checked", share.active);
+			
+			$("#share-addedit-btn-ok").click(function() {
+				var name = $("#share-general-name").val();
+				var active = $("#share-general-active").is(":checked");
+				var expiration = false;//mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
+				
+				$("#share-items").empty().append('<div class="loading"/>')
+				that.closeAddEdit();
+				that.editShare(item, share.id, name || '', expiration, active);
+			});
+			
+			$("#share-addedit-btn-cancel").click(function() {
+				that.closeAddEdit();
+			});
+		}
+		
+		this.onOpenShares = function(item) {
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+				mollify.ui.dialogs.custom({
+					resizable: true,
+					initSize: [600, 470],
+					title: mollify.ui.texts.get('shareDialogTitle'),
+					content: mollify.dom.template("mollify-tmpl-shares", {item: item}),
+					buttons: [
+						{ id: "no", "title": mollify.ui.texts.get('dialogClose') }
+					],
+					"on-button": function(btn, d) {
+						d.close();
+						that.d = false;
+					},
+					"on-show": function(h, $d) {
+						that.d = h;
+						that.loadShares(item, function(i, shares) { that.initContent(item, shares, $d); });
+					}
+				});
+			});
+		};
+		
+		this.addShare = function(item, name, expiration, active) {
+			mollify.service.post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }, function(result) {
+				that.refreshShares(item, result);
+				that.updateShareList(item);
+			},	function(c, e) {
+				that.d.close();
+				return true;
+			});
+		}
+	
+		this.editShare = function(item, id, name, expiration, active) {
+			mollify.service.put("share/"+id, { id: id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }, function(result) {
+				var share = that.getShare(id);
+				share.name = name;
+				share.active = active;
+				share.expiration = expiration;
+				that.updateShareList(item);
+			},	function(code, error) {
+				that.d.close();
+				return true;
+			});
+		}
+		
+		this.removeShare = function(item, id) {
+			mollify.service.del("share/"+id, function(result) {
+				var i = that.shareIds.indexOf(id);
+				that.shareIds.splice(i, 1);
+				that.shares.splice(i, 1);
+				that.updateShareList(item);
+			},	function(code, error) {
+				that.d.close();
+				return true;
+			});
+		}
+										
+		return {
+			id: "plugin-share",
+			initialize: that.initialize,
+
+			itemContextHandler : function(item, ctx, data) {
+				return {
+					actions: [
+						{ id: 'pluginShare', 'title-key': 'itemContextShareMenuTitle', callback: function() { that.onOpenShares(item); } }
+					]
+				};
+			}
+		};
+	}
 }(window.jQuery, window.mollify);

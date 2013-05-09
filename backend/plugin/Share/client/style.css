@@ -1,20 +1,35 @@
-/* @override 
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1325446193706
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328362003072
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328362689420
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363570532
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328363779849
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328364360214
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328385345613
-	http://localhost:8888/mollify/test/dev/backend/plugin/Share/client/style.css?_=1328385734242
-*/
-
-#share-dialog-content.loading {
-	width: 400px;
-	height: 350px;
-	background: url(wait.gif) no-repeat 50% 50%;
+#share-list {
+	position: relative;
+	height: 250px;
+	overflow: hidden;
+	margin: 0;
 }
 
+#share-items {
+	overflow: auto;
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+#share-new {
+	height: 20px;
+	position: absolute;
+	bottom: 20px;
+}
+
+#share-context-container {
+	height: 250px;
+	position: absolute;
+	overflow: auto;
+	top: 300px;
+	width: 530px;
+	background-color: #f5f5f5;
+}
+
+#share-context {
+}
+
+/*
 #details-share {
 	float: right;
 	color: #6488cd;
@@ -28,8 +43,6 @@
 }
 
 #share-item-title {
-	font-weight: bold;
-	font-size: 13px;
 	margin-bottom: 4px;
 	width: 400px;
 }
@@ -37,9 +50,7 @@
 #share-list {
 	position: relative;
 	height: 250px;
-	width: 400px;
 	margin: 8px;
-	border: 3px solid #b1b1b1;
 	padding: 2px;
 	overflow: hidden;
 }
@@ -96,7 +107,6 @@
 
 .share-inactive-title {
 	float: left;
-	font-style: italic;
 	margin-top: 5px;
 	margin-left: 8px;
 }
@@ -174,7 +184,6 @@
 .context-group {
 	width: 100%;
 	font-weight: bold;
-	font-size: 11px;
 	clear: both;
 	margin-top: 10px;
 	margin-bottom: 7px;
@@ -203,7 +212,8 @@
 
 #context-buttons {
 	clear: both;
-	padding-top: 30px;
+	padding-top: 10px;
+	float: right;
 }
 
 #share-items {
@@ -280,8 +290,6 @@
 }
 
 #add-share-btn {
-	font-weight: bold;
-	font-size: 12px;
 	padding-top: 9px;
 	padding-left: 35px;
 	color: #515151;
@@ -312,4 +320,4 @@
 #share-item {
 	font-weight: bold;
 	margin: 8px;
-}
+}*/
