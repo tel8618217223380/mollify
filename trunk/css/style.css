@@ -3,6 +3,7 @@
 @import url(bootstrap-responsive.css);
 @import url(font-awesome.css);
 @import url(bootstrap-lightbox.css);
+@import url(bootstrap-datetimepicker.min.css);
 
 /*@font-face {
   font-family: 'MollifyPlainText';
