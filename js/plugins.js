@@ -1236,7 +1236,7 @@
 		};
 		
 		this.getShareLink = function(share) {
-			return mollify.service.url("public/"+share.id)
+			return mollify.service.url("public/"+share.id, true);
 		};
 		
 		this.updateShareList = function(item) {
