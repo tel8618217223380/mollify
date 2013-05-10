@@ -55,7 +55,7 @@
 		$backend->processRequest($request);
 	} catch (ServiceException $e) {
 		Logging::logException($e);
-		$responseHandler->error($e->type(), $e->details());
+		$responseHandler->error($e->type(), $e->details(), $e->data());
 	} catch (Exception $e) {
 		Logging::logException($e);
 		$responseHandler->unknownServerError($e->getMessage());
