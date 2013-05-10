@@ -23,12 +23,12 @@
 		private $ip;
 		private $raw;
 		
-		public function __construct($limitedHttpMethods, $raw = FALSE) {
+		public function __construct($raw = FALSE) {
 			$this->method = strtolower($_SERVER['REQUEST_METHOD']);
 			$this->uri = $this->getUri();
 			$this->ip = $this->getIp();
 			$this->raw = $raw;
-			if ($limitedHttpMethods and isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
+			if (isset($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']))
 				$this->method = strtolower($_SERVER['HTTP_MOLLIFY_HTTP_METHOD']);
 			
 			$p = stripos($this->uri, "?");
@@ -58,15 +58,13 @@
 					break;
 				case self::METHOD_POST:
 				case self::METHOD_PUT:
+				case self::METHOD_DELETE:
 					$this->params = $_REQUEST;
 					if (!$this->raw and (!isset($this->params['format']) or $this->params['format'] != 'binary')) {
 						$data = file_get_contents("php://input");
 						if ($data and strlen($data) > 0)
 							$this->data = json_decode($data, TRUE);
 					}
-					break;
-				case self::METHOD_DELETE:
-					$this->params = $_REQUEST;
 					break;
 				default:
 					throw new Exception("Unsupported method: ".$this->method);

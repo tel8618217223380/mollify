@@ -1424,7 +1424,21 @@
 				return true;
 			});
 		}
-										
+		
+		this.isActionDenialAcceptable = function(action, item, denialData) {
+			return mollify.session.admin || !data.other;
+		}
+		
+		this.getActionAcceptMessages = function(action, item, denialData) {
+			return {
+				"item_shared": "TODO accept?"
+			};
+		}
+		
+		this.getActionDeniedMessages = function(action, item, denialData) {
+			return ["todo cannot"];
+		}
+		
 		return {
 			id: "plugin-share",
 			initialize: that.initialize,
@@ -1435,6 +1449,14 @@
 						{ id: 'pluginShare', 'title-key': 'itemContextShareMenuTitle', callback: function() { that.onOpenShares(item); } }
 					]
 				};
+			},
+			
+			actionValidationHandler : function() {
+				return {
+					isAcceptable : that.isActionDenialAcceptable,
+					getAcceptMessages : that.getActionAcceptMessages,
+					getDeniedMessages : that.getActionDeniedMessages
+				}
 			}
 		};
 	}

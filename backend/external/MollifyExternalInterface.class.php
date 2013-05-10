@@ -50,7 +50,7 @@
 			$this->configuration = $factory->createConfiguration($configurationId, $this->settings);
 
 			$env = new ServiceEnvironment($this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
-			$env->initialize(new Request(FALSE, TRUE));
+			$env->initialize(new Request(TRUE));
 			$this->authentication = $env->authentication();
 		}
 

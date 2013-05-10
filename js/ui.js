@@ -84,8 +84,6 @@
 		}
 	};
 	
-
-	
 	/* UI */
 	mollify.ui.uploader = false;
 	mollify.ui.draganddrop = false;
@@ -940,6 +938,40 @@
 		mollify.ui.handlers.localize(dlg);
 		dlg.find("#mollify-info-dialog-close-button").click(function() { dlg.dialog('destroy'); dlg.remove(); });*/
 	};
+	
+	dh.showActionDeniedMessage = function(title, reasons) {
+		//TODO template
+		var msg = '<p>'+title+'</p><p><ul>';
+		for (var i=0,j=reasons.length;i<j;i++) {
+			msg = msg + "<li>" + reasons[i] + "</li>";
+		}
+		msg = msg + "</ul></p>";
+		mollify.ui.dialogs.error({
+			title: mollify.ui.texts.get('errorDialogTitle'),
+			message: msg
+		});
+	}
+	
+	dh.confirmActionAccept = function(title, reasons, confirmCb) {
+		//TODO template
+		var msg = '<p>'+title+'</p><p><ul>';
+		for (var i=0,j=reasons.length;i<j;i++) {
+			msg = msg + "<li>" + reasons[i] + "</li>";
+		}
+		msg = msg + "</ul></p>";
+		dh.custom({
+			title: mollify.ui.texts.get('errorDialogTitle'),
+			content: msg,
+			buttons: [
+				{ id: "yes", "title-key": "yes" },
+				{ id: "no", "title-key": "no" }
+			],
+			"on-button": function(btn, d) {
+				d.close();
+				if (confirmCb && btn.id === 'yes') confirmCb();
+			}
+		});
+	}
 	
 	dh.showError = function(code, error) {
 		var msg = 'errorDialogMessage_'+code;

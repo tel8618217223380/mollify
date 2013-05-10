@@ -51,8 +51,7 @@
 	try {
 		$settings = new Settings($SETTINGS);
 		$backend = new MollifyBackend($settings, getDB($settings), $responseHandler);
-		$request = new Request(isSetting($SETTINGS, 'enable_limited_http_methods'));
-		$backend->processRequest($request);
+		$backend->processRequest(new Request());
 	} catch (ServiceException $e) {
 		Logging::logException($e);
 		$responseHandler->error($e->type(), $e->details(), $e->data());
