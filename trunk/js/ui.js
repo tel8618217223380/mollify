@@ -1298,58 +1298,51 @@
 	
 	mollify.ZeroClipboard = function(cb) {
 		if (!cb || !window.ZeroClipboard) return false;
+		window.ZeroClipboard.setDefaults({
+			moviePath: 'js/lib/ZeroClipboard.swf',
+			hoverClass: 'hover'
+		});
 		
 		var $testclip = $('<div id="zeroclipboard-test" style="width=0px; height=0px;"></div>').appendTo($("body"));
-		var testclip = new ZeroClipboard.Client();
-		testclip.glue($testclip[0]);
-		
-		testclip.addEventListener('load', function(client) {
-			var that = this;
-			
-			this.getClip = function($e, l, nocreate) {
-				var clip = $.data($e, "mollify-zeroclipboard");
-				if (!clip) {
-					if (nocreate) return false;
-					clip = new ZeroClipboard.Client();
-					that.clip.setHandCursor(true);
-					that.clip.setCSSEffects(false);
-					that.clip.addEventListener('onMouseOver', l.onClipMouseOver);
-					that.clip.addEventListener('onMouseOut', l.onClipMouseOut);
-					that.clip.addEventListener('onComplete', l.onClipClick);
-					$.data($e, "mollify-zeroclipboard", clip);
-				}
-				return clip;
-			};
-			//console.log("Clipboard support detected");
-			testclip.hide();
-			
+		var clip = new ZeroClipboard($testclip[0]);
+		clip.on('load', function(client) {
 			var api = {
-				set : function($e, l, text) {
-					var clip = that.getClip($e, l);
-					clip.setText(text);
-					if (that.clip.div) {
-						that.clip.reposition(e$[0]);
-					} else {
-						that.clip.glue(e$[0]);
+				enableCopy : function($e, text, l) {
+					var clip = $e.data("mollify-zeroclipboard");
+					if (!clip) {
+						clip = new window.ZeroClipboard($e);
+						$e.data("mollify-zeroclipboard", clip);
+						if (l) $e.data("mollify-zeroclipboard-listener", l);
 					}
-					clip.show();
-				},
-				remove : function($e) {
-					var clip = that.getClip($e, l, true);
-					if (!clip) return;
-					clip.hide();
+					if (text) $e.data("mollify-zeroclipboard-text", text);
 				}
 			};
 			cb(api);
-			
-			/*that.clip = new ZeroClipboard.Client();
-			that.clip.setHandCursor(true);
-			that.clip.setCSSEffects(false);
-			that.clip.addEventListener('onMouseOver', function() { that.onClipMouse(true); });
-			that.clip.addEventListener('onMouseOut', function() { that.onClipMouse(false); });
-			that.clip.addEventListener('onComplete', that.onClipClick);
-			
-			if (that.shares.length > 0) $(".share-link-copy-container").removeClass("hidden");*/
+		});
+		clip.on('dataRequested', function() {
+			var $t = $(this);
+			var l = $t.data("mollify-zeroclipboard-listener");
+			var copied = false;
+			if (l && l.onGetText)
+				copied = l.onGetText($t);
+			if (!copied)
+				copied = $t.data("mollify-zeroclipboard-text");
+			if (copied) clip.setText(copied);
+		});
+		clip.on('mouseover', function() {
+			var $t = $(this);
+			var l = $t.data("mollify-zeroclipboard-listener");
+			if (l && l.onMouseOver) l.onMouseOver($t);
+		});
+		clip.on('mouseout', function() {
+			var $t = $(this);
+			var l = $t.data("mollify-zeroclipboard-listener");
+			if (l && l.onMouseOut) l.onMouseOut($t);
+		});
+		clip.on('complete', function(client, args) {
+			var $t = $(this);
+			var l = $t.data("mollify-zeroclipboard-listener");
+			if (l && l.onCopy) l.onCopy($t, args.text);
 		});
 	};
 }(window.jQuery, window.mollify);

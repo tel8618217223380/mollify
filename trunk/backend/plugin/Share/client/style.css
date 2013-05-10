@@ -1,20 +1,57 @@
 #share-list {
 	position: relative;
 	height: 250px;
-	overflow: hidden;
 	margin: 0;
+	overflow: hidden;
+}
+
+share-items-container {
+	overflow: auto;
+	height: 250px;
 }
 
 #share-items {
-	overflow: auto;
 	width: 100%;
-	margin-bottom: 30px;
+	min-height: 220px;
+}
+
+.item-share {
+	width: 530px;
+	border-bottom: 1px dotted #adadad;
+	float: left;
+}
+
+.share-info {
+	width: 100%;
+	float: left;
+	margin: 8px 0 0 8px;
+}
+
+.share-icon, .share-name {
+	float: left;
+}
+
+.share-name {
+	margin: 0 0 0 8px;
+}
+
+.share-link-content {
+	float: left;
+	display: none;
+	margin: 0 8px 8px 8px;
+}
+
+.share-link input {
+	width: 400px;
+}
+
+.share-actions {
+	float: left;
+	margin-bottom: 8px;
 }
 
 #share-new {
 	height: 20px;
-	position: absolute;
-	bottom: 20px;
 }
 
 #share-context-container {
@@ -24,6 +61,10 @@
 	top: 300px;
 	width: 530px;
 	background-color: #f5f5f5;
+}
+
+.share-link-instructions {
+	margin: 0 0 4px 8px;
 }
 
 #share-context {

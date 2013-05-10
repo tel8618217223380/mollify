@@ -1235,6 +1235,10 @@
 			that.updateShareList(item);
 		};
 		
+		this.getShareLink = function(share) {
+			return mollify.service.url("public/"+share.id)
+		};
+		
 		this.updateShareList = function(item) {
 			$("#share-items").empty();
 			
@@ -1252,19 +1256,39 @@
 				itemClass : function() {
 					var c = "item-share";
 					if (!this.data.active)
-						c = c + " item-share-inactive";
+						c = c + " inactive";
 					if (!this.data.name || this.data.name.length == 0)
-						c = c + " item-share-unnamed";
+						c = c + " unnamed";
 					return c;
 				},
 				link : function() {
-					return mollify.service.url("public/"+this.data.id);
+					return that.getShareLink(this.data);
 				}
 			};
 			
 			mollify.dom.template("share-template", that.shares, opt).appendTo("#share-items");
 			mollify.ui.process($("#share-list"), ["localize"]);
+			if (!mollify.ui.clipboard) $(".share-link-copy").hide();
+			else {
+				$.each($(".share-link-copy"), function(i, e) {
+					var share = $(e).tmplItem().data;
+					mollify.ui.clipboard.enableCopy($(e), that.getShareLink(share));
+				});
+			}
 	
+			$(".share-link-toggle").click(function() {
+				//var id = $(this).parent()[0].id.substring(6);
+				var share = $(this).tmplItem().data;
+				if (!share.active) return;
+				
+				//var linkContainer = $(this).next();
+				//var open = linkContainer.hasClass("open");
+				//if (!open) $(".share-link-content").removeClass("open");
+				//linkContainer.toggleClass("open");
+				var $c = $(this).parent().parent().siblings(".share-link-content");
+				$c.slideToggle();
+				return false;
+			});
 			/*$(".item-share").hover(
 				function() {
 					$(".item-share").removeClass("item-share-hover");

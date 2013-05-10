@@ -13,8 +13,10 @@
 		<tr height="98%">
 			<td align='left' style='vertical-align: top'>
 				<div id="share-list" class="well">
-					<div id="share-items"><div class="loading"></div></div>
-					<a id="share-new" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;<span class="localized" text-key="shareDialogShareAddTitle"></span></a>
+					<div id="share-items-container">
+						<div id="share-items"><div class="loading"></div></div>
+						<a id="share-new" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;<span class="localized" text-key="shareDialogShareAddTitle"></span></a>
+					</div>
 					<div id="share-context-container">
 						<div id="share-context"></div>
 					</div>
@@ -33,22 +35,28 @@
 <script id="share-template" type="text/x-jquery-tmpl">
 	<div id="share-${id}" class="${$item.itemClass()}">
 		<div class="share-info">
+			<div class="share-icon">
+				<i class="icon-share"></i>
+			</div>
 			<div class="share-name">{{html $item.name()}}</div>
 		</div>
-		<div class="share-actions">
+		<!--div class="share-actions">
 			<div class="share-edit localized" title-key="shareDialogShareEditTitle"></div>
 			<div class="share-remove localized" title-key="shareDialogShareRemoveTitle"></div>
-		</div>
-		<div class="share-link-copy-container hidden" style="position:relative">
+		</div-->
+		<!--div class="share-link-copy-container hidden">
 			<div id="share-copy-${id}" class="share-link-copy localized" text-key="shareDialogShareLinkCopyToClipboard"></div>
-		</div>
+		</div-->
 		{{if active}}
-		<div class="share-link-toggle-title localized" text-key="shareDialogItemLinkTitle"></div>
+		<ul class="share-actions nav nav-pills">
+			<li><a class="share-link-toggle localized" text-key="shareDialogItemLinkTitle" href="javascript: void(0);"></a></li>
+			<li><a class="share-link-copy localized" text-key="shareDialogShareLinkCopyToClipboard" href="javascript: void(0);"></a></li>
+			<li><a class="share-edit localized" text-key="shareDialogShareEditTitle" href="javascript: void(0);"></a></li>
+			<li><a class="share-remove localized" text-key="shareDialogShareRemoveTitle" href="javascript: void(0);"></a></li>
+		</ul>
 		<div class="share-link-content">
-			<div class="share-link-container">
-				<div class="share-link-instructions localized" text-key="shareDialogShareLinkInstructions"></div>
-				<div class="share-link"><input type="text" readonly="yes" value="${$item.link()}"></input></div>
-			</div>
+			<div class="share-link-instructions localized" text-key="shareDialogShareLinkInstructions"></div>
+			<div class="share-link"><input type="text" readonly="yes" title="${$item.link()}" value="${$item.link()}"></input></div>
 		</div>
 		{{else}}
 		<div class="share-inactive-title localized" text-key="shareDialogItemInactiveLinkTitle"></div>
