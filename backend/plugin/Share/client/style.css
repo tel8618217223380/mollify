@@ -1,18 +1,19 @@
 #share-list {
 	position: relative;
-	height: 250px;
+	height: 254px;
 	margin: 0;
 	overflow: hidden;
 }
 
-share-items-container {
-	overflow: auto;
-	height: 250px;
+#share-items-container {
+	overflow-x: hidden;
+	overflow-y: auto;
+	height: 100%;
 }
 
 #share-items {
 	width: 100%;
-	min-height: 220px;
+	min-height: 212px;
 }
 
 .item-share {
@@ -50,8 +51,21 @@ share-items-container {
 	margin-bottom: 8px;
 }
 
+ul.share-actions a.share-link-copy:hover {
+	color: #0088cc;
+	background-color: transparent;
+	cursor: default;
+}
+
+ul.share-actions a.hover {
+	color: #333333;
+	background-color: #eeeeee;
+	cursor: pointer;
+}
+
 #share-new {
 	height: 20px;
+	margin: 8px 0 0 0;
 }
 
 #share-context-container {

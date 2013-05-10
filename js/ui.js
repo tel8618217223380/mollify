@@ -1300,7 +1300,8 @@
 		if (!cb || !window.ZeroClipboard) return false;
 		window.ZeroClipboard.setDefaults({
 			moviePath: 'js/lib/ZeroClipboard.swf',
-			hoverClass: 'hover'
+			hoverClass: 'hover',
+			activeClass: 'active'
 		});
 		
 		var $testclip = $('<div id="zeroclipboard-test" style="width=0px; height=0px;"></div>').appendTo($("body"));
@@ -1332,7 +1333,7 @@
 		clip.on('mouseover', function() {
 			var $t = $(this);
 			var l = $t.data("mollify-zeroclipboard-listener");
-			if (l && l.onMouseOver) l.onMouseOver($t);
+			if (l && l.onMouseOver) l.onMouseOver($t, clip);
 		});
 		clip.on('mouseout', function() {
 			var $t = $(this);

@@ -3,7 +3,6 @@
 		<tr height="1%">
 			<td>
 				<div id="share-header">
-					<div id="share-item-title"></div>
 					<div id="share-item-path"></div>
 					<div id="share-item-name"></div>
 				</div>
@@ -40,13 +39,6 @@
 			</div>
 			<div class="share-name">{{html $item.name()}}</div>
 		</div>
-		<!--div class="share-actions">
-			<div class="share-edit localized" title-key="shareDialogShareEditTitle"></div>
-			<div class="share-remove localized" title-key="shareDialogShareRemoveTitle"></div>
-		</div-->
-		<!--div class="share-link-copy-container hidden">
-			<div id="share-copy-${id}" class="share-link-copy localized" text-key="shareDialogShareLinkCopyToClipboard"></div>
-		</div-->
 		{{if active}}
 		<ul class="share-actions nav nav-pills">
 			<li><a class="share-link-toggle localized" text-key="shareDialogItemLinkTitle" href="javascript: void(0);"></a></li>

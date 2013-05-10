@@ -1268,11 +1268,16 @@
 			
 			mollify.dom.template("share-template", that.shares, opt).appendTo("#share-items");
 			mollify.ui.process($("#share-list"), ["localize"]);
-			if (!mollify.ui.clipboard) $(".share-link-copy").hide();
-			else {
+			if (!mollify.ui.clipboard) {
+				$(".share-link-copy").hide();
+			} else {
+				var h = {
+					onMouseOver: function($e, clip) { clip.setHandCursor(true); $e.addClass("hover"); },
+					onMouseOut: function($e) { $e.removeClass("hover"); }
+				}
 				$.each($(".share-link-copy"), function(i, e) {
 					var share = $(e).tmplItem().data;
-					mollify.ui.clipboard.enableCopy($(e), that.getShareLink(share));
+					mollify.ui.clipboard.enableCopy($(e), that.getShareLink(share), h);
 				});
 			}
 	
@@ -1287,6 +1292,7 @@
 				//linkContainer.toggleClass("open");
 				var $c = $(this).parent().parent().siblings(".share-link-content");
 				$c.slideToggle();
+				$(this).parent().toggleClass("active");
 				return false;
 			});
 			/*$(".item-share").hover(
@@ -1405,7 +1411,7 @@
 				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 470],
-					title: mollify.ui.texts.get('shareDialogTitle'),
+					title: item.shareTitle ? item.shareTitle : mollify.ui.texts.get(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle'),
 					content: mollify.dom.template("mollify-tmpl-shares", {item: item}),
 					buttons: [
 						{ id: "no", "title": mollify.ui.texts.get('dialogClose') }
