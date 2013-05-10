@@ -243,14 +243,20 @@
 
 	class ServiceException extends Exception {
 		private $type;
+		private $data;
 		
-		public function __construct($type, $details = "") {
+		public function __construct($type, $details = "", $data = NULL) {
 			parent::__construct($details);
 			$this->type = $type;
+			$this->data = $data;
 		}
 		
 		function type() {
 			return $this->type;
+		}
+
+		function data() {
+			return $this->data;
 		}
 		
 		function details() {

@@ -40,6 +40,21 @@
 			return $res;
 		}
 		
+		public function getShareUsers($i) {
+			$db = $this->env->db();
+			if (is_array($i)) {
+				$itemIds = array();
+				foreach($i as $item)
+					$itemIds[] = $item->id();
+				$itemId = sprintf("item_id in (%s)", $this->db->arrayString($itemIds));
+			} else {
+				$itemId = "item_id = ".$db->string($i->id(), TRUE);
+			}
+			
+			$db = $this->env->db();
+			return $db->query("select distinct user_id from ".$db->table("share")." where ".$itemId)->rows();
+		}
+		
 		public function addShare($id, $item, $name, $userId, $expirationTime, $time, $active = TRUE) {
 			$db = $this->env->db();
 			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0")));

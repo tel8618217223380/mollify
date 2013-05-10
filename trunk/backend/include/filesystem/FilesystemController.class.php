@@ -20,6 +20,7 @@
 		private $permissionCache = array();
 		private $folderCache = array();
 		private $contextPlugins = array();
+		private $actionValidators = array();
 		private $dataRequestPlugins = array();
 		private $searchers = array();
 		private $filesystems = array();
@@ -63,6 +64,10 @@
 			$this->contextPlugins[$key] = $plugin;
 		}
 
+		public function registerActionValidator($key, $validator) {
+			$this->actionValidators[$key] = $validator;
+		}
+		
 		public function registerDataRequestPlugin($keys, $plugin) {
 			foreach($keys as $key)
 				$this->dataRequestPlugins[$key] = $plugin;
@@ -74,6 +79,19 @@
 		
 		public function registerSearcher($searcher) {
 			$this->searchers[] = $searcher;
+		}
+		
+		public function validateAction($action, $target) {
+			$list = array();
+			foreach($this->actionValidators as $key => $v) {
+				$ret = $v->validateAction($action, $target);
+				if ($ret) $list[$key] = $ret;
+			}
+			if (count($list) > 0) throw new ServiceException("REQUEST_DENIED", "Action not allowed: ".$action, array(
+				"action" => $action,
+				"target" => $target,
+				"items" => $list
+			));
 		}
 		
 		public function getRootFolders($all = FALSE) {
@@ -420,7 +438,8 @@
 			
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
 			$this->assertRights($item, Authentication::RIGHTS_WRITE, "delete");
-			
+			$this->validateAction(FileEvent::DELETE, $item);
+						
 			$item->delete();
 			
 			if ($this->env->features()->isFeatureEnabled("descriptions"))
@@ -434,6 +453,7 @@
 		
 		public function deleteItems($items) {
 			Logging::logDebug('deleting '.count($items).' items');
+			$this->validateAction(FileEvent::DELETE, $items);
 			$this->assertRights($items, Authentication::RIGHTS_WRITE, "delete");
 			
 			foreach($items as $item)

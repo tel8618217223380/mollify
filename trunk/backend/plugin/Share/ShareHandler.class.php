@@ -27,10 +27,27 @@
 			);
 		}
 		
+		public function validateAction($action, $target) {
+			if (FileEvent::DELETE != $action || !$target) return;
+			
+			$users = $this->getShareUsers($target);
+			$count = count($users);
+			if ($count > 0) {
+				$other = $count - (in_array($this->env->session()->userId(), $users) ? 1 : 0);
+				return array(
+					array("reason" => "item_shared", "other_users" => ($other > 0))
+				);
+			}
+		}
+		
 		public function getShares($item) {
 			return $this->dao()->getShares($item, $this->env->session()->userId());
 		}
 
+		public function getShareUsers($i) {
+			return $this->dao()->getShareUsers($i);
+		}
+		
 		public function addShare($item, $name, $expirationTs, $active) {
 			$created = $this->env->configuration()->formatTimestampInternal(time());
 			$this->dao()->addShare($this->GUID(), $item, $name, $this->env->session()->userId(), $expirationTs, $created, $active);

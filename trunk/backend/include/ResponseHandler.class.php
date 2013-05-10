@@ -19,6 +19,7 @@
 			"FEATURE_NOT_SUPPORTED" => array(106, "Feature not supported", 403),
 			"AUTHENTICATION_FAILED" => array(107, "Authentication failed", 403),
 			"REQUEST_FAILED" => array(108, "Request failed", 403),
+			"REQUEST_DENIED" => array(109, "Request denied", 403),
 		
 			"INVALID_PATH" => array(201, "Invalid path", 403), 
 			"FILE_DOES_NOT_EXIST" => array(202, "File does not exist", 403),
@@ -74,9 +75,9 @@
 			$this->notifyResponse();
 		}
 		
-		public function error($type, $details) {
+		public function error($type, $details, $data = NULL) {
 			$error = $this->getError($type);
-			$this->output->sendResponse(new Response($error[2], "json", $this->getErrorResponse($error, $details)));
+			$this->output->sendResponse(new Response($error[2], "json", $this->getErrorResponse($error, $details, $data)));
 			$this->notifyResponse();
 		}
 		
@@ -109,12 +110,12 @@
 			}			
 		}
 		
-		private function getErrorResponse($err, $details) {
+		private function getErrorResponse($err, $details, $data = NULL) {
 			if (Logging::isDebug()) {
-				Logging::logDebug("RESPONSE error ".Util::toString($err)." ".$details);
-				return array("code" => $err[0], "error" => $err[1], "details" => $details, "trace" => Logging::getTrace());
+				Logging::logDebug("RESPONSE error ".Util::toString($err)." ".Util::toString($details)." ".Util::toString($data));
+				return array("code" => $err[0], "error" => $err[1], "details" => $details, "data" => $data, "trace" => Logging::getTrace());
 			}
-			return array("code" => $err[0], "error" => $err[1], "details" => $details);
+			return array("code" => $err[0], "error" => $err[1], "details" => $details, "data" => $data);
 		}
 
 		public function __toString() {

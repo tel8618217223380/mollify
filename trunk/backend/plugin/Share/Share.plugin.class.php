@@ -31,6 +31,7 @@
 			$this->env->events()->register("filesystem/", $this->handler);
 
 			$this->env->filesystem()->registerItemContextPlugin("plugin-share", $this->handler);
+			$this->env->filesystem()->registerActionValidator("plugin-share", $this->handler);
 		}
 				
 		public function getHandler() {
