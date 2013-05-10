@@ -1248,11 +1248,6 @@
 			}
 			
 			var opt = {
-				name : function() {
-					if (!this.data.name || this.data.name.length == 0)
-						return '<text key="shareDialogUnnamedShareTitle" />';
-					return this.data.name;
-				},
 				itemClass : function() {
 					var c = "item-share";
 					if (!this.data.active)
@@ -1282,70 +1277,39 @@
 			}
 	
 			$(".share-link-toggle").click(function() {
-				//var id = $(this).parent()[0].id.substring(6);
 				var share = $(this).tmplItem().data;
 				if (!share.active) return;
+
+				var $link = $(this).parent();				
+				var $c = $link.parent().siblings(".share-link-content");
+				var $share = $c.parent();
+
+				$(".share-link-content").not($c).hide();
+				$(".item-share").not($share).removeClass("active");
 				
-				//var linkContainer = $(this).next();
-				//var open = linkContainer.hasClass("open");
-				//if (!open) $(".share-link-content").removeClass("open");
-				//linkContainer.toggleClass("open");
-				var $c = $(this).parent().parent().siblings(".share-link-content");
+				$share.toggleClass("active");
 				$c.slideToggle();
-				$(this).parent().toggleClass("active");
 				return false;
 			});
-			/*$(".item-share").hover(
-				function() {
-					$(".item-share").removeClass("item-share-hover");
-					
-					var el = $(this);
-					var id = el.attr('id').substring(6);
-					el.addClass("item-share-hover");
-					that.hoverId = id;
-					
-					initClipboard(id);
+			$(".item-share").hover(function() {
+					$(".item-share").removeClass("hover");
+					$(this).addClass("hover");
 				},
 				function() {
-				}
-			);
-			
-			var idFunction = function(i, f) {
-				var p = $(i).hasClass('item-share') ? i : $(i).parentsUntil(".item-share").parent()[0];
-				var id = p.id.substring(6);
-				f(item, id);
-			};
-			$(".share-link-toggle-title").click(function() {
-				var id = $(this).parent()[0].id.substring(6);
-				if (!that.getShare(id).active) return;
-				
-				var linkContainer = $(this).next();
-				var open = linkContainer.hasClass("open");
-				if (!open) $(".share-link-content").removeClass("open");
-				linkContainer.toggleClass("open");
-				return false;
-			}).hover(
-				function() { $(this).addClass("hover"); },
-				function() { $(this).removeClass("hover"); }
-			);
-			
+			});
 			$(".share-edit").click(function(e) {
-				idFunction(this, that.onEditShare);
-				return false;
+				var share = $(this).tmplItem().data;
+				that.onEditShare(item, share);
 			});
 			$(".share-remove").click(function(e) {
-				idFunction(this, that.removeShare);
-				return false;
-			});*/
+				var share = $(this).tmplItem().data;
+				that.removeShare(item, share);
+			});
 		}
 
-		this.openContextContent = function(toolbarId, contentTemplateId) {
-			//$("#share-items").addClass("minimized");
-			//$("#share-context").removeClass("minimized");
-			//$(".share-context-toolbar-option").hide();
-			//$("#"+toolbarId).show();
+		this.openContextContent = function(toolbarId, contentTemplateId, tmplData) {
 			var $c = $("#share-context").empty();
-			mollify.dom.template(contentTemplateId).appendTo($c);
+			mollify.dom.template(contentTemplateId, tmplData).appendTo($c);
 			mollify.ui.process($c, ["localize"]);
 			mollify.ui.controls.datepicker({
 				element: $("#share-validity-expirationdate-value"),
@@ -1353,7 +1317,7 @@
 				time: true
 			})
 			$("#share-context-container").animate({
-				"top" : "20px"
+				"top" : "18px"
 			}, 500);
 		}
 		
@@ -1371,7 +1335,7 @@
 			$("#share-addedit-btn-ok").click(function() {
 				var name = $("#share-general-name").val();
 				var active = $("#share-general-active").is(":checked");
-				var expiration = null;//mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
+				var expiration = $("#share-validity-expirationdate-value").data("mollify-datepicker").get();
 				
 				$("#share-items").empty().append('<div class="loading"/>');
 				that.closeAddEdit();
@@ -1383,10 +1347,8 @@
 			});
 		};
 		
-		this.onEditShare = function(item, id) {
-			that.openContextContent('edit-share-title', 'share-context-addedit-template');
-			
-			var share = that.getShare(id);
+		this.onEditShare = function(item, share) {
+			that.openContextContent('edit-share-title', 'share-context-addedit-template', { edit: true });
 			
 			$("#share-general-name").val(share.name);
 			$("#share-general-active").attr("checked", share.active);
@@ -1394,7 +1356,7 @@
 			$("#share-addedit-btn-ok").click(function() {
 				var name = $("#share-general-name").val();
 				var active = $("#share-general-active").is(":checked");
-				var expiration = false;//mollify.parseDate(that.t('shortDateFormat'), $("#share-validity-expirationdate-value").val(), $("#share-validity-expirationtime-value").val());
+				var expiration = $("#share-validity-expirationdate-value").data("mollify-datepicker").get();
 				
 				$("#share-items").empty().append('<div class="loading"/>')
 				that.closeAddEdit();
@@ -1430,7 +1392,7 @@
 		
 		this.addShare = function(item, name, expiration, active) {
 			mollify.service.post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }, function(result) {
-				that.refreshShares(item, result);
+				that.refreshShares(result);
 				that.updateShareList(item);
 			},	function(c, e) {
 				that.d.close();
@@ -1451,9 +1413,9 @@
 			});
 		}
 		
-		this.removeShare = function(item, id) {
-			mollify.service.del("share/"+id, function(result) {
-				var i = that.shareIds.indexOf(id);
+		this.removeShare = function(item, share) {
+			mollify.service.del("share/"+share.id, function(result) {
+				var i = that.shareIds.indexOf(share.id);
 				that.shareIds.splice(i, 1);
 				that.shares.splice(i, 1);
 				that.updateShareList(item);

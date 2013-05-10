@@ -1,34 +1,18 @@
 <script id="mollify-tmpl-shares" type="text/x-jquery-tmpl">
-	<table cellspacing=0 cellpadding=0 style="width:100%; height:100%">
-		<tr height="1%">
-			<td>
-				<div id="share-header">
-					<div id="share-item-path"></div>
-					<div id="share-item-name"></div>
-				</div>
-			</td>
-		</tr>
-		
-		<tr height="98%">
-			<td align='left' style='vertical-align: top'>
-				<div id="share-list" class="well">
-					<div id="share-items-container">
-						<div id="share-items"><div class="loading"></div></div>
-						<a id="share-new" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;<span class="localized" text-key="shareDialogShareAddTitle"></span></a>
-					</div>
-					<div id="share-context-container">
-						<div id="share-context"></div>
-					</div>
-				</div>
-			</td>
-		</tr>
-	
-		<tr height="1%">
-			<td>
-				<div id="share-detail"></div>
-			</td>
-		</tr>
-	</table>
+	<div id="share-header">
+		<div id="share-item-path"></div>
+		<div id="share-item-name"></div>
+	</div>
+
+	<div id="share-list" class="well">
+		<div id="share-items-container">
+			<div id="share-items"><div class="loading"></div></div>
+			<a id="share-new" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;<span class="localized" text-key="shareDialogShareAddTitle"></span></a>
+		</div>
+		<div id="share-context-container">
+			<div id="share-context"></div>
+		</div>
+	</div>
 </script>
 
 <script id="share-template" type="text/x-jquery-tmpl">
@@ -37,14 +21,14 @@
 			<div class="share-icon">
 				<i class="icon-share"></i>
 			</div>
-			<div class="share-name">{{html $item.name()}}</div>
+			<div class="share-name">{{html name || '<span class="localized" text-key="shareDialogUnnamedShareTitle"></span>'}}</div>
 		</div>
 		{{if active}}
 		<ul class="share-actions nav nav-pills">
-			<li><a class="share-link-toggle localized" text-key="shareDialogItemLinkTitle" href="javascript: void(0);"></a></li>
-			<li><a class="share-link-copy localized" text-key="shareDialogShareLinkCopyToClipboard" href="javascript: void(0);"></a></li>
-			<li><a class="share-edit localized" text-key="shareDialogShareEditTitle" href="javascript: void(0);"></a></li>
-			<li><a class="share-remove localized" text-key="shareDialogShareRemoveTitle" href="javascript: void(0);"></a></li>
+			<li class="share-link-toggle-item"><a class="share-link-toggle" href="javascript: void(0);"><i class="icon-external-link"></i>&nbsp;<span class="localized" text-key="shareDialogItemLinkTitle"></span></a></li>
+			<li><a class="share-link-copy" href="javascript: void(0);"><i class="icon-copy"></i>&nbsp;<span class="localized" text-key="shareDialogShareLinkCopyToClipboard"></span></a></li>
+			<li><a class="share-edit share-tool" href="javascript: void(0);"><i class="icon-edit"></i>&nbsp;<span class="localized" text-key="shareDialogShareEditButton"></span></a></li>
+			<li><a class="share-remove share-tool" href="javascript: void(0);"><i class="icon-trash"></i>&nbsp;<span class="localized" text-key="shareDialogShareRemoveButton"></span></a></li>
 		</ul>
 		<div class="share-link-content">
 			<div class="share-link-instructions localized" text-key="shareDialogShareLinkInstructions"></div>
@@ -52,13 +36,17 @@
 		</div>
 		{{else}}
 		<div class="share-inactive-title localized" text-key="shareDialogItemInactiveLinkTitle"></div>
+		<ul class="share-actions nav nav-pills">
+			<li><a class="share-edit share-tool" href="javascript: void(0);"><i class="icon-edit"></i>&nbsp;<span class="localized" text-key="shareDialogShareEditButton"></span></a></li>
+			<li><a class="share-remove share-tool" href="javascript: void(0);"><i class="icon-trash"></i>&nbsp;<span class="localized" text-key="shareDialogShareRemoveButton"></span></a></li>
+		</ul>
 		{{/if}}
 	</div>
 </script>
 
 <script id="share-context-addedit-template" type="text/x-jquery-tmpl">
 	<form class="form-horizontal">
-		<legend class="localized" text-key="shareDialogShareGeneralTitle"></legend>
+		<legend class="primary localized" text-key="{{if $item.data.edit}}shareDialogShareEditTitle{{else}}shareDialogShareCreateNewTitle{{/if}}"></legend>
 		<div class="control-group">
 			<label class="control-label localized" for="share-general-name" text-key="shareDialogShareNameTitle"></label>
 			<div class="controls">

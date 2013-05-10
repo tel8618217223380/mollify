@@ -837,7 +837,7 @@
 			var picker = $dp.data('datetimepicker');
 			if (val) picker.setDate(val);
 			
-			return {
+			var api = {
 				get: function() {
 					return val;
 				},
@@ -845,7 +845,9 @@
 					val = d;
 					picker.setDate(d);
 				}
-			}
+			};
+			$dp.data("mollify-datepicker", api);
+			return api;
 		},
 		
 		editableLabel: function(o) {
