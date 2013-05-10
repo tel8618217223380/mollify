@@ -147,13 +147,14 @@ var mollifyDefaults = {
 		st._do("PUT", url, data, s, err);
 	};
 	
-	st.del = function(url, s, err) {
-		st._do("DELETE", url, null, s, err);
+	st.del = function(url, data, s, err) {
+		st._do("DELETE", url, data, s, err);
 	};
 			
 	st._do = function(type, url, data, s, err) {
 		var t = type;
-		if (st._limitedHttpMethods && (t == 'PUT' || t == 'DELETE')) t = 'POST';
+		var diffMethod = (st._limitedHttpMethods && (t == 'PUT' || t == 'DELETE'));
+		if (diffMethod) t = 'POST';
 		
 		$.ajax({
 			type: t,
@@ -172,6 +173,7 @@ var mollifyDefaults = {
 			error: function(xhr, st, error) {
 				var code = 999;	//unknown
 				var error = {};
+				var data = false;
 				var defaultErrorHandler = true;
 				if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
 				if (error && window.def(error.code)) code = error.code;
@@ -182,7 +184,7 @@ var mollifyDefaults = {
 			beforeSend: function (xhr) {
 				if (mollify.session && mollify.session.id)
 					xhr.setRequestHeader("mollify-session-id", mollify.session.id);
-				if (st._limitedHttpMethods)
+				if (st._limitedHttpMethods || diffMethod)
 					xhr.setRequestHeader("mollify-http-method", type);
 			}
 		});
@@ -415,6 +417,42 @@ var mollifyDefaults = {
 		}, err);
 	};
 	
+	mfs._handleDenied = function(action, i, data, msgTitle, acceptCb) {
+		var allAcceptable = true;
+		var handlers = [];
+		for(var k in data.items) {
+			var plugin = mollify.plugins.get(k);
+			if (!plugin || !plugin.actionValidationHandler) return false;
+			
+			var handler = plugin.actionValidationHandler();
+			handlers.push(handler);
+			var acceptable = handler.isAcceptable(action, i, data.items[k], data);
+			if (!acceptable) allAcceptable = false;
+		}
+		
+		if (allAcceptable) {
+			var acceptMessages = [];
+			var acceptKeys = [];
+			for(var ind=0,j=handlers.length; ind<j; ind++) {
+				var hm = handlers[ind].getAcceptMessages(action, i, data.items[k], data);
+				for(var ak in hm) {
+					acceptKeys.push(ak);
+					acceptMessages.push(hm[ak]);
+				}
+			}
+			// retry with accept keys
+			mollify.ui.dialogs.confirmActionAccept(msgTitle, acceptMessages, function() {
+				acceptCb(acceptKeys);
+			});
+		} else {
+			var deniedMessages = [];
+			for(var ind=0,j=handlers.length; ind<j; ind++)
+				deniedMessages = deniedMessages.concat(handlers[ind].getDeniedMessages(action, i, data.items[k], data));
+			mollify.ui.dialogs.showActionDeniedMessage(msgTitle, deniedMessages);
+		}
+		return true;
+	}
+	
 	mfs.del = function(i, cb, err) {
 		if (!i) return;
 		
@@ -424,11 +462,17 @@ var mollifyDefaults = {
 		}
 		
 		if (window.isArray(i)) i = i[0];
-		mfs._del(i, cb, err);
+		mfs._del(i, cb, function(c, e) {
+			// request denied
+			if (c == 109 && e.data && e.data.items) {
+				return !mfs._handleDenied("delete", i, e.data, "TODO Could not delete item", function(acceptKeys) { mfs._del(i, cb, err, acceptKeys); });
+			}
+			if (err) return err(c, e);
+		});
 	};
 	
-	mfs._del = function(item, cb, err) {
-		mollify.service.del("filesystem/"+item.id, function(r) {
+	mfs._del = function(item, cb, err, acceptKeys) {
+		mollify.service.del("filesystem/"+item.id, acceptKeys ? { acceptKeys : acceptKeys } : null, function(r) {
 			mollify.events.dispatch('filesystem/delete', { items: [item] });
 			if (cb) cb(r);
 		}, err);

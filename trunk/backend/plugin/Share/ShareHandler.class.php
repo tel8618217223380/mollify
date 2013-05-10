@@ -27,16 +27,17 @@
 			);
 		}
 		
-		public function validateAction($action, $target) {
+		public function validateAction($action, $target, $acceptKeys) {
 			if (FileEvent::DELETE != $action || !$target) return;
 			
 			$users = $this->getShareUsers($target);
 			$count = count($users);
 			if ($count > 0) {
 				$other = $count - (in_array($this->env->session()->userId(), $users) ? 1 : 0);
-				return array(
-					array("reason" => "item_shared", "other_users" => ($other > 0))
-				);
+				if (!in_array("item_shared", $acceptKeys))
+					return array(
+						array("reason" => "item_shared", "other_users" => ($other > 0))
+					);
 			}
 		}
 		

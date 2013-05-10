@@ -83,8 +83,10 @@
 		
 		public function validateAction($action, $target) {
 			$list = array();
+			$acceptKeys = $this->env->request()->hasData("acceptKeys") ? $this->env->request()->data("acceptKeys") : array();
+			
 			foreach($this->actionValidators as $key => $v) {
-				$ret = $v->validateAction($action, $target);
+				$ret = $v->validateAction($action, $target, $acceptKeys);
 				if ($ret) $list[$key] = $ret;
 			}
 			if (count($list) > 0) throw new ServiceException("REQUEST_DENIED", "Action not allowed: ".$action, array(
