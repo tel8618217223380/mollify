@@ -42,7 +42,7 @@ share-items-container {
 }
 
 .share-link input {
-	width: 400px;
+	width: 480px;
 }
 
 .share-actions {
@@ -64,7 +64,8 @@ share-items-container {
 }
 
 .share-link-instructions {
-	margin: 0 0 4px 8px;
+	color: #c1c1c1;
+	margin: 0 0 4px 4px;
 }
 
 #share-context {
