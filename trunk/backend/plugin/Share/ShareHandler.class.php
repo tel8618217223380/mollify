@@ -22,9 +22,23 @@
 		}
 				
 		public function getItemContextData($item, $details, $key, $data) {
+			$users = $this->getShareUsers($item);
+			$count = count($users);
+			$own = FALSE;
+			$others = FALSE;
+			if ($count > 0) {
+				$own = in_array($this->env->session()->userId(), $users);
+				$others = ($count - ($own  ? 1 : 0) > 0);
+			}
+			
 			return array(
-				"count" => $this->dao()->getShareCount($item, $this->env->session()->userId())
+				"count" => $own ? $this->dao()->getShareCount($item, $this->env->session()->userId()) : 0,
+				"other_users" => $others
 			);
+		}
+		
+		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
+			return $this->dao()->getShareUsersForChildren($parent, $this->env->session()->userId());
 		}
 		
 		public function validateAction($action, $target, $acceptKeys) {
@@ -33,10 +47,11 @@
 			$users = $this->getShareUsers($target);
 			$count = count($users);
 			if ($count > 0) {
-				$other = $count - (in_array($this->env->session()->userId(), $users) ? 1 : 0);
+				$own = in_array($this->env->session()->userId(), $users);
+				$others = ($count - ($own  ? 1 : 0) > 0);
 				if (!in_array("item_shared", $acceptKeys))
 					return array(
-						array("reason" => "item_shared", "other_users" => ($other > 0))
+						array("reason" => "item_shared", "own" => $own, "other_users" => $others)
 					);
 			}
 		}

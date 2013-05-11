@@ -608,7 +608,6 @@
 		this.initialize = function() {
 			that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			mollify.dom.importCss(mollify.plugins.url("Comment", "style.css"));
-			//mollify.dom.importScript(mollify.plugins.url("Comment", "texts_" + mollify.ui.texts.locale + ".js"));
 		};
 		
 		this.getListCellContent = function(item, data) {
@@ -738,14 +737,6 @@
 						"id": "comment-count",
 						"request-id": "plugin-comment-count",
 						"title-key": "",
-						"sort": function(i1, i2, sort, data) {
-							if (!i1.is_file && !i2.is_file) return 0;
-							if (!data || !data["core-file-modified"]) return 0;
-							
-							var ts1 = data["core-file-modified"][i1.id] ? data["core-file-modified"][i1.id] * 1 : 0;
-							var ts2 = data["core-file-modified"][i2.id] ? data["core-file-modified"][i2.id] * 1 : 0;
-							return ((ts1 > ts2) ? 1 : -1) * sort;
-						},
 						"content": that.getListCellContent,
 						"request": function(parent) { return {}; },
 						"on-click": function(item) {
@@ -1426,7 +1417,7 @@
 		}
 		
 		this.isActionDenialAcceptable = function(action, item, denialData) {
-			return mollify.session.admin || !data.other;
+			return mollify.session.admin || !data.other_users;
 		}
 		
 		this.getActionAcceptMessages = function(action, item, denialData) {
@@ -1439,10 +1430,32 @@
 			return ["todo cannot"];
 		}
 		
+		this.getListCellContent = function(item, data) {
+			if (!item.id || item.id.length === 0 || !data || !data["plugin-share-data"]) return "";
+			var data = data["plugin-share-data"];
+			
+			if (!data[item.id]) return "";
+			return "<div id='item-share-data-"+item.id+"' class='filelist-item-share-data'>"+"<i class='icon-external-link'></i>"+"</div>";
+		};
+		
 		return {
 			id: "plugin-share",
 			initialize: that.initialize,
 
+			fileViewHandler : {
+				filelistColumns : function() {
+					return [{
+						"id": "share-data",
+						"request-id": "plugin-share-data",
+						"title-key": "",
+						"content": that.getListCellContent,
+						"request": function(parent) { return {}; },
+						"on-click": function(item) {
+							that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+						}
+					}];
+				}
+			},
 			itemContextHandler : function(item, ctx, data) {
 				return {
 					actions: [

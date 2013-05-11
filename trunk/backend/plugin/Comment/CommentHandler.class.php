@@ -55,12 +55,7 @@
 		}
 						
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
-			$counts = $this->getDao()->getCommentCountForChildren($parent);
-			$result = array();
-			foreach($counts as $id=>$c) {
-				$result[$this->env->filesystem()->item($id)->id()] = $c;
-			} 
-			return $result;
+			return $this->getDao()->getCommentCountForChildren($parent);
 		}
 		
 		private function getDao() {

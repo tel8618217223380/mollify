@@ -295,13 +295,19 @@
 			return $row[$f];
 		}
 		
-		public function valueMap($keyCol, $valueCol = NULL) {
+		public function valueMap($keyCol, $valueCol = NULL, $valueCol2 = NULL) {
+			$col2 = $valueCol2 != NULL;
 			$list = array();
 			while ($row = mysqli_fetch_assoc($this->result)) {
 				if ($valueCol == NULL)
 					$list[$row[$keyCol]] = $row;
-				else
-					$list[$row[$keyCol]] = $row[$valueCol];
+				else {
+					if ($valueCol2) {
+						$list[$row[$keyCol]] = array($valueCol => $row[$valueCol], $valueCol2 => $row[$valueCol2]);
+					} else {
+						$list[$row[$keyCol]] = $row[$valueCol];
+					}
+				}
 			}
 			mysqli_free_result($this->result);
 			return $list;
