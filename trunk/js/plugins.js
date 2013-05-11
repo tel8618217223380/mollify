@@ -1431,11 +1431,14 @@
 		}
 		
 		this.getListCellContent = function(item, data) {
-			if (!item.id || item.id.length === 0 || !data || !data["plugin-share-data"]) return "";
-			var data = data["plugin-share-data"];
+			if (!item.id || item.id.length === 0 || !data || !data["plugin-share-info"]) return "";
+			var data = data["plugin-share-info"];
 			
-			if (!data[item.id]) return "";
-			return "<div id='item-share-data-"+item.id+"' class='filelist-item-share-data'>"+"<i class='icon-external-link'></i>"+"</div>";
+			var itemData = data[item.id];
+			if (!itemData) return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info empty'></div>";
+			if (itemData.own > 0)
+				return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info'><i class='icon-external-link'></i>&nbsp;"+itemData.own+"</div>";
+			return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info others'><i class='icon-external-link'></i></div>";
 		};
 		
 		return {
@@ -1445,13 +1448,13 @@
 			fileViewHandler : {
 				filelistColumns : function() {
 					return [{
-						"id": "share-data",
-						"request-id": "plugin-share-data",
+						"id": "share-info",
+						"request-id": "plugin-share-info",
 						"title-key": "",
 						"content": that.getListCellContent,
 						"request": function(parent) { return {}; },
 						"on-click": function(item) {
-							that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+							//that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
 						}
 					}];
 				}
