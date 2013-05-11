@@ -1,9 +1,11 @@
 <script id="mollify-tmpl-shares" type="text/x-jquery-tmpl">
+	{{if !bubble}}
 	<div id="share-header">
 		<div id="share-item-path"></div>
 		<div id="share-item-name"></div>
 	</div>
-
+	{{/if}}
+	
 	<div id="share-list" class="well">
 		<div id="share-items-container">
 			<div id="share-items"><div class="loading"></div></div>

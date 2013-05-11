@@ -83,6 +83,12 @@
 			];
 		}
 		
+		this.onLogout = function() {
+			mollify.service.post("session/logout", {}, function(s) {
+				mollify.App.setSession(s);
+			});
+		};
+		
 		this.openAdminUtil = function(url) {
 			mollify.ui.window.open(url);
 		}
@@ -370,12 +376,6 @@
 			if (!folder) return null;
 			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
 		}
-		
-		this.onLogout = function() {
-			mollify.service.post("session/logout", {}, function(s) {
-				mollify.App.setSession(s);
-			});
-		};
 		
 		this.onEvent = function(e) {
 			if (!e.type.startsWith('filesystem/')) return;
@@ -700,7 +700,7 @@
 					if (that.isListView() && t != 'icon') {
 						var col = that._filelist.columns[t];
 						if (col["on-click"]) {
-							col["on-click"](item);
+							col["on-click"](item, that.p.data);
 							return;
 						}
 					}

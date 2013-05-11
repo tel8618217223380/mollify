@@ -11,7 +11,7 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && ctx.details.permission == "RW";
+				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
 //								boolean root = !item.isFile()
 //										&& ((JsFolder) item.cast()).isRoot();
 //								boolean writable = !root
@@ -1365,7 +1365,7 @@
 					resizable: true,
 					initSize: [600, 470],
 					title: item.shareTitle ? item.shareTitle : mollify.ui.texts.get(item.is_file ? 'shareDialogShareFileTitle' : 'shareDialogShareFolderTitle'),
-					content: mollify.dom.template("mollify-tmpl-shares", {item: item}),
+					content: mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: false}),
 					buttons: [
 						{ id: "no", "title": mollify.ui.texts.get('dialogClose') }
 					],
@@ -1416,29 +1416,37 @@
 			});
 		}
 		
-		this.isActionDenialAcceptable = function(action, item, denialData) {
-			return mollify.session.admin || !data.other_users;
-		}
-		
-		this.getActionAcceptMessages = function(action, item, denialData) {
-			return {
-				"item_shared": "TODO accept?"
-			};
-		}
-		
-		this.getActionDeniedMessages = function(action, item, denialData) {
-			return ["todo cannot"];
+		this.getActionValidationMessages = function(action, item, validationData) {
+			var messages = {};
+			$.each(validationData, function(i, itm) {
+				if (itm.reason == 'item_shared') messages.item_shared = {
+					message: mollify.ui.texts.get("pluginShareActionValidationDeleteShared", item.name),
+					acceptable: true
+				}
+				else if (itm.reason == 'item_shared_others') messages.item_shared_others = {
+					message: mollify.ui.texts.get("pluginShareActionValidationDeleteSharedOthers", item.name),
+					acceptable: mollify.session.admin
+				}
+			});
+			return messages;
 		}
 		
 		this.getListCellContent = function(item, data) {
 			if (!item.id || item.id.length === 0 || !data || !data["plugin-share-info"]) return "";
-			var data = data["plugin-share-info"];
-			
-			var itemData = data[item.id];
+			var itemData = data["plugin-share-info"][item.id];
 			if (!itemData) return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info empty'></div>";
 			if (itemData.own > 0)
 				return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info'><i class='icon-external-link'></i>&nbsp;"+itemData.own+"</div>";
-			return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info others'><i class='icon-external-link'></i></div>";
+			return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info others' title='"+mollify.ui.texts.get("pluginShareFilelistColOtherShared")+"'><i class='icon-external-link'></i></div>";
+		};
+		
+		this.showShareBubble = function(item, cell) {
+			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("body")});
+			
+			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
+				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
+				that.loadShares(item, function(i, shares) { that.initContent(item, shares, that.d.element()); });
+			});
 		};
 		
 		return {
@@ -1453,8 +1461,13 @@
 						"title-key": "",
 						"content": that.getListCellContent,
 						"request": function(parent) { return {}; },
-						"on-click": function(item) {
-							//that.showCommentsBubble(item, $("#item-comment-count-"+item.id));
+						"on-click": function(item, data) {
+							if (!item.id || item.id.length === 0 || !data || !data["plugin-share-info"]) return;
+							var itemData = data["plugin-share-info"][item.id];
+							if (!itemData) return;
+							
+							if (itemData.own > 0)
+								that.showShareBubble(item, $("#item-share-info-"+item.id));
 						}
 					}];
 				}
@@ -1469,9 +1482,7 @@
 			
 			actionValidationHandler : function() {
 				return {
-					isAcceptable : that.isActionDenialAcceptable,
-					getAcceptMessages : that.getActionAcceptMessages,
-					getDeniedMessages : that.getActionDeniedMessages
+					getValidationMessages : that.getActionValidationMessages
 				}
 			}
 		};

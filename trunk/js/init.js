@@ -417,8 +417,7 @@ var mollifyDefaults = {
 		}, err);
 	};
 	
-	mfs._handleDenied = function(action, i, data, msgTitle, acceptCb) {
-		var allAcceptable = true;
+	mfs._handleDenied = function(action, i, data, msgTitleDenied, msgTitleAccept, acceptCb) {
 		var handlers = [];
 		for(var k in data.items) {
 			var plugin = mollify.plugins.get(k);
@@ -426,29 +425,28 @@ var mollifyDefaults = {
 			
 			var handler = plugin.actionValidationHandler();
 			handlers.push(handler);
-			var acceptable = handler.isAcceptable(action, i, data.items[k], data);
-			if (!acceptable) allAcceptable = false;
 		}
-		
-		if (allAcceptable) {
-			var acceptMessages = [];
-			var acceptKeys = [];
-			for(var ind=0,j=handlers.length; ind<j; ind++) {
-				var hm = handlers[ind].getAcceptMessages(action, i, data.items[k], data);
-				for(var ak in hm) {
-					acceptKeys.push(ak);
-					acceptMessages.push(hm[ak]);
-				}
+
+		var validationMessages = [];
+		var nonAcceptable = [];
+		var acceptKeys = [];
+		var allAcceptable = true;
+		for(var ind=0,j=handlers.length; ind<j; ind++) {
+			var hm = handlers[ind].getValidationMessages(action, i, data.items[k], data);
+			for(var ak in hm) {
+				acceptKeys.push(ak);
+				var message = hm[ak].message;
+				validationMessages.push(message);
+				if (!hm[ak].acceptable) nonAcceptable.push(message);
 			}
+		}		
+		if (nonAcceptable.length === 0) {
 			// retry with accept keys
-			mollify.ui.dialogs.confirmActionAccept(msgTitle, acceptMessages, function() {
+			mollify.ui.dialogs.confirmActionAccept(msgTitleAccept, validationMessages, function() {
 				acceptCb(acceptKeys);
 			});
 		} else {
-			var deniedMessages = [];
-			for(var ind=0,j=handlers.length; ind<j; ind++)
-				deniedMessages = deniedMessages.concat(handlers[ind].getDeniedMessages(action, i, data.items[k], data));
-			mollify.ui.dialogs.showActionDeniedMessage(msgTitle, deniedMessages);
+			mollify.ui.dialogs.showActionDeniedMessage(msgTitleDenied, nonAcceptable);
 		}
 		return true;
 	}
@@ -464,9 +462,8 @@ var mollifyDefaults = {
 		if (window.isArray(i)) i = i[0];
 		mfs._del(i, cb, function(c, e) {
 			// request denied
-			if (c == 109 && e.data && e.data.items) {
-				return !mfs._handleDenied("delete", i, e.data, "TODO Could not delete item", function(acceptKeys) { mfs._del(i, cb, err, acceptKeys); });
-			}
+			if (c == 109 && e.data && e.data.items)
+				return !mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDelete", i.name), mollify.ui.texts.get("actionAcceptDelete", i.name), function(acceptKeys) { mfs._del(i, cb, err, acceptKeys); });
 			if (err) return err(c, e);
 		});
 	};
