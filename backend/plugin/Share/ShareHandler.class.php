@@ -46,13 +46,19 @@
 			
 			$users = $this->getShareUsers($target);
 			$count = count($users);
+			$list = array();
+			
 			if ($count > 0) {
 				$own = in_array($this->env->session()->userId(), $users);
 				$others = ($count - ($own  ? 1 : 0) > 0);
-				if (!in_array("item_shared", $acceptKeys))
-					return array(
-						array("reason" => "item_shared", "own" => $own, "other_users" => $others)
-					);
+				if ($own && !in_array("item_shared", $acceptKeys)) {
+					$list[] = array("reason" => "item_shared");
+				}
+				if ($others && (!$this->env->authentication()->isAdmin() || !in_array("item_shared_others", $acceptKeys))) {
+					$list[] = array("reason" => "item_shared_others");
+				}
+				
+				return $list;
 			}
 		}
 		

@@ -605,7 +605,7 @@
 				trigger: 'manual',
 				template: $el,
 				content: html,
-				container: $e.parent()
+				container: o.container || $e.parent()
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
