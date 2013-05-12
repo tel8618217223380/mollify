@@ -12,7 +12,7 @@
 
 	require_once("install/MollifyInstallProcessor.class.php");
 	require_once("include/ServiceEnvironment.class.php");
-	require_once("include/mysql/DatabaseUtil.class.php");
+	require_once("db/mysql/DatabaseUtil.class.php");
 	require_once("install/mysql/MySQLInstallUtil.class.php");
 	
 	class MySQLInstaller {
@@ -113,7 +113,7 @@
 		}
 
 		public function currentVersion() {
-			return MySQLConfiguration::VERSION;
+			return "2_0";
 		}
 		
 		public function db() {

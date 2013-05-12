@@ -19,6 +19,18 @@
 		
 		private $db = NULL;
 		
+		public static function createFromConf($conf) {
+			if (!isset($conf["str"]) || !isset($conf["user"]) or !isset($conf["password"])) throw new ServiceException("INVALID_CONFIGURATION", "No PDO database information defined");
+
+			if (isset($conf["table_prefix"])) $tablePrefix = $conf["table_prefix"];
+			else $tablePrefix = "";
+			
+			$db = new PDODatabase($conf["str"], $conf["user"], $conf["password"], $tablePrefix);
+			$db->connect();
+			if (isset($conf["charset"])) $db->setCharset($conf["charset"]);
+			return $db;
+		}
+		
 		public function __construct($str, $user, $pw, $tablePrefix) {
 			Logging::logDebug("PDO: ".$str);
 			$this->str = $str;

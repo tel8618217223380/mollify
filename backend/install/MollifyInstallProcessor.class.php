@@ -46,21 +46,28 @@
 			require_once("install/InstallerSession.class.php");
 			require_once("include/event/EventHandler.class.php");
 			require_once("InstallerAuthentication.class.php");
-			require_once("include/ConfigurationFactory.class.php");
+			require_once("include/configuration/ConfigurationDao.class.php");
 			require_once("plugin/PluginController.class.php");
-			$configurationFactory = new ConfigurationFactory();
+			//$configurationFactory = new ConfigurationFactory();
 			
 			$this->settings = new Settings($this->settingsVar);
 			$this->session = new InstallerSession(FALSE);
 			$this->authentication = new InstallerAuthentication($this);
 			$this->plugins = new PluginController($this);
-			$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
+			$this->configuration = new ConfigurationDao($this->getDB($this->settings));
+			//$this->configuration = $configurationFactory->createConfiguration($this->type, $this->settings);
 			$this->configuration->initialize($this);
-			$this->features = new Features($this->configuration, $this->settings);
+			$this->features = new Features($this->settings);
 			$this->cookies = new Cookie($this->settings);
 			
 			$this->plugins->setup();
 			$this->session->initialize($this, NULL);
+		}
+		
+		private function getDB($settings) {
+			require_once("db/DBConnectionFactory.class.php");
+			$f = new DBConnectionFactory();
+			return $f->createConnection($settings);
 		}
 		
 		public function registerFilesystem($id, $fs) {}
@@ -68,6 +75,8 @@
 		public function registerDataRequestPlugin($p) {}
 
 		public function registerItemContextPlugin($p) {}
+		
+		public function registerActionValidator($p) {}
 		
 		public function onError($e) {
 			Logging::logException($e);
