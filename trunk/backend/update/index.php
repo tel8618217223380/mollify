@@ -18,10 +18,10 @@
 
 	if (!file_exists("configuration.php")) die();
 	require("configuration.php");
-	global $SETTINGS, $CONFIGURATION_TYPE;
+	global $CONFIGURATION;
 
 	try {
-		$installer = createUpdater($CONFIGURATION_TYPE, $SETTINGS);
+		$installer = createUpdater($CONFIGURATION);
 	} catch (Exception $e) {
 		showError($e);
 		die();
@@ -33,11 +33,11 @@
 		showError($e);
 	}
 		
-	function createUpdater($type, $settings) {
-		if (!isset($type) or !isValidConfigurationType($type)) die();
+	function createUpdater($settings) {
+		if (!isset($settings) or !isset($settings["db"]) or !isset($settings["db"]["type"]) or !isValidConfigurationType($settings["db"]["type"])) die();
 		
 		require_once("update/UpdateController.class.php");
-		switch (strtolower($type)) {
+		switch (strtolower($settings["db"]["type"])) {
 			case 'pdo':
 				require_once("update/pdo/PDOUpdater.class.php");
 				return new UpdateController(new PDOUpdater($settings));

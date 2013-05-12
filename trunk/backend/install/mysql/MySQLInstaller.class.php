@@ -25,25 +25,9 @@
 			$this->processor = new MollifyInstallProcessor($type, "mysql", $settings);
 			
 			$this->configured = isset($settings["db"]["user"], $settings["db"]["password"]);
-			$this->db = MySQLIDatabase::createFromConf($settings["db"]);//$this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET, $DB_ENGINE);
+			$this->db = MySQLIDatabase::createFromConf($settings["db"]);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
-
-		/*private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine) {
-			if (!isset($host)) $host = "localhost";
-			if (!isset($database)) $database = "mollify";
-			if (!isset($tablePrefix)) $tablePrefix = "";
-			if (!isset($port)) $port = NULL;
-			if (!isset($socket)) $socket = NULL;
-			else {
-				$host = NULL;
-				$port = NULL;
-			}
-			if (!isset($engine)) $engine = "innodb";
-			
-			require_once("db/mysql/MySQLIDatabase.class.php");
-			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine);
-		}*/
 		
 		public function processor() {
 			return $this->processor;
