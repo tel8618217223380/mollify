@@ -19,6 +19,24 @@
 		
 		private $db = NULL;
 		
+		public static function createFromConf($conf) {
+			if (!isset($conf["user"]) or !isset($conf["password"])) throw new ServiceException("INVALID_CONFIGURATION", "No PostgreSQL db information defined");
+			
+			if (isset($conf["host"])) $host = $conf["host"];
+			else $host = "localhost";
+			
+			if (isset($conf["database"])) $database = $conf["database"];
+			else $database = "mollify";
+
+			if (isset($conf["table_prefix"])) $tablePrefix = $conf["table_prefix"];
+			else $tablePrefix = "";
+			
+			$db = new PostgresqlDatabase($host, $conf["user"], $conf["password"], $database, $tablePrefix);
+			$db->connect();
+			//if (isset($conf["charset"])) $db->setCharset($conf["charset"]);
+			return $db;
+		}
+		
 		public function __construct($host, $user, $pw, $database, $tablePrefix) {
 			Logging::logDebug("Postgresql DB: ".$user."@".$host.":".$database."(".$tablePrefix.")");
 			$this->host = $host;

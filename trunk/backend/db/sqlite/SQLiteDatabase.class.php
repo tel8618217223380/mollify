@@ -14,6 +14,15 @@
 		private $file;		
 		private $db = NULL;
 		
+		public static function createFromConf($conf) {
+			if (!isset($conf["file"])) throw new ServiceException("INVALID_CONFIGURATION", "No SQLite database file defined");
+			
+			$file = $conf["file"];
+			$db = new MollifySQLiteDatabase($file);
+			$db->connect();
+			return $db;
+		}
+		
 		public function __construct($file) {
 			Logging::logDebug("SQLite DB: ".$file);
 			$this->file = $file;
@@ -39,6 +48,7 @@
 			$db = sqlite_open($this->file, 0666, $error);
 			if (!$db) throw new ServiceException("INVALID_CONFIGURATION", "Could not connect to database (file=".$this->file."), error: ".$error);
 			$this->db = $db;
+			$this->registerRegex();
 		}
 		
 		public function registerRegex() {

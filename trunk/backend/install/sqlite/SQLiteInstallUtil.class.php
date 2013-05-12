@@ -22,11 +22,11 @@
 		}
 		
 		public function execCreateTables() {
-			$this->db->execSqlFile("include/sqlite/sql/create_tables.sql");
+			$this->db->execSqlFile("db/sqlite/sql/install/create_tables.sql");
 		}
 		
 		public function execInsertParams() {
-			$this->db->execSqlFile("include/sqlite/sql/params.sql");
+			$this->db->execSqlFile("db/sqlite/sql/install/params.sql");
 		}
 		
 		public function createAdminUser($name, $pw) {
@@ -35,7 +35,7 @@
 		}
 		
 		public function updateVersionStep($from, $to) {
-			$file = "include/sqlite/sql/".$from."-".$to.".sql";
+			$file = "db/sqlite/sql/update/".$from."-".$to.".sql";
 			$this->db->execSqlFile($file);
 		}
 

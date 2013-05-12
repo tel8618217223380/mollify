@@ -12,7 +12,7 @@
 
 	require_once("install/MollifyInstallProcessor.class.php");
 	require_once("include/ServiceEnvironment.class.php");
-	require_once("include/mysql/DatabaseUtil.class.php");
+	require_once("db/sqlite/DatabaseUtil.class.php");
 	require_once("install/sqlite/SQLiteInstallUtil.class.php");
 	
 	class SQLiteInstaller {
@@ -23,9 +23,8 @@
 		public function __construct($settings, $type = "install") {
 			$this->processor = new MollifyInstallProcessor($type, "sqlite", $settings);
 			
-			global $DB_FILE;
-			$this->configured = isset($DB_FILE);
-			$this->db = $this->createDB($DB_FILE);
+			$this->configured = isset($settings["db"]["file"]);
+			$this->db = $this->createDB($settings["db"]["file"]);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 		
@@ -38,7 +37,7 @@
 		}
 
 		private function createDB($file) {			
-			require_once("include/sqlite/SQLiteDatabase.class.php");
+			require_once("db/sqlite/SQLiteDatabase.class.php");
 			return new MollifySQLiteDatabase($file);
 		}
 		
@@ -156,7 +155,7 @@
 				$this->db->connect(FALSE);
 			} catch (ServiceException $e) {
 				if ($e->type() === 'INVALID_CONFIGURATION') {
-					$this->setError("Could not connect to database", '<code>'.$e->details().'</code>');
+					$this->onError("Could not connect to database", '<code>'.$e->details().'</code>');
 					$this->showPage("configuration");
 					die();
 				}

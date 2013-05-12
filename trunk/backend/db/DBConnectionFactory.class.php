@@ -18,19 +18,18 @@
 			if (!isset($db["type"])) throw new ServiceException("INVALID_CONFIGURATION", "No database type defined");
 			$type = $db["type"];
 			
-			//TODO refactor to DB connection (and extract configuration stuff into separate class)
 			if (strcasecmp($type, 'pdo') == 0) {
 				require_once("db/pdo/PDODatabase.class.php");
-				return new PDOConfiguration($db, $settings);
+				return PDODatabase::createFromConf($db);
 			} else if (strcasecmp($type, 'mysql') == 0) {
 				require_once("db/mysql/MySQLIDatabase.class.php");
 				return MySQLIDatabase::createFromConf($db);
 			} else if (strcasecmp($type, 'postgresql') == 0) {
-				require_once("db/PostgresqlDatabase.class.php");
-				return new PostgresqlConfiguration($db, $settings);
+				require_once("db/postgresql/PostgresqlDatabase.class.php");
+				return PostgresqlDatabase::createFromConf($db);
 			} else if (strcasecmp($type, 'sqlite') == 0) {
-				require_once("db/SQLiteDatabase.class.php");
-				return new SQLiteConfiguration($db, $settings);
+				require_once("db/sqlite/SQLiteDatabase.class.php");
+				return MollifySQLiteDatabase::createFromConf($db);
 			} else {
 				throw new ServiceException("INVALID_CONFIGURATION", "Unsupported database type: [".$type."]");
 			}
