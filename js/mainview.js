@@ -454,8 +454,8 @@
 		};
 	
 		this.showNoRoots = function() {
-			//TODO
-			console.log("showNoRoots");
+			that.folder();
+			that.data({items: mollify.filesystem.roots});
 		};
 			
 		this.showProgress = function() {

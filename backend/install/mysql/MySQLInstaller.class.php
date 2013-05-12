@@ -14,6 +14,7 @@
 	require_once("include/ServiceEnvironment.class.php");
 	require_once("db/mysql/DatabaseUtil.class.php");
 	require_once("install/mysql/MySQLInstallUtil.class.php");
+	require_once("db/mysql/MySQLIDatabase.class.php");
 	
 	class MySQLInstaller {
 		protected $processor;
@@ -23,13 +24,12 @@
 		public function __construct($settings, $type = "install") {
 			$this->processor = new MollifyInstallProcessor($type, "mysql", $settings);
 			
-			global $DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_SOCKET, $DB_PORT, $DB_ENGINE;
-			$this->configured = isset($DB_USER, $DB_PASSWORD);
-			$this->db = $this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET, $DB_ENGINE);
+			$this->configured = isset($settings["db"]["user"], $settings["db"]["password"]);
+			$this->db = MySQLIDatabase::createFromConf($settings["db"]);//$this->createDB($DB_HOST, $DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_TABLE_PREFIX, $DB_PORT, $DB_SOCKET, $DB_ENGINE);
 			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 
-		private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine) {
+		/*private function createDB($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine) {
 			if (!isset($host)) $host = "localhost";
 			if (!isset($database)) $database = "mollify";
 			if (!isset($tablePrefix)) $tablePrefix = "";
@@ -41,9 +41,9 @@
 			}
 			if (!isset($engine)) $engine = "innodb";
 			
-			require_once("include/mysql/MySQLIDatabase.class.php");
+			require_once("db/mysql/MySQLIDatabase.class.php");
 			return new MySQLIDatabase($host, $user, $password, $database, $tablePrefix, $port, $socket, $engine);
-		}
+		}*/
 		
 		public function processor() {
 			return $this->processor;
