@@ -276,6 +276,7 @@
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
+			$details["parent_permission"] = $this->permission($item->parent());
 			$details["plugins"] = array();
 
 			foreach($this->contextPlugins as $k=>$p) {

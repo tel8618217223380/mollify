@@ -787,7 +787,8 @@
 				}
 				var ctx = {
 					details: d,
-					folder: that._currentFolder
+					folder: that._currentFolder,
+					folder_permission: d.parent_permission
 				};
 				cb(mollify.helpers.cleanupActions(mollify.helpers.getPluginActions(mollify.plugins.getItemContextPlugins(item, ctx))));
 			});

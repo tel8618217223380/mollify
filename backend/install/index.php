@@ -22,13 +22,13 @@
 		$installer = new DefaultInstaller("instructions_configuration_create");
 	} else {
 		@include("configuration.php");
-		global $SETTINGS;
-		if (!isset($SETTINGS) or !isset($SETTINGS["db"]) or !isset($SETTINGS["db"]["type"]) or !isValidConfigurationType($SETTINGS["db"]["type"]))
+		global $CONFIGURATION;
+		if (!isset($CONFIGURATION) or !isset($CONFIGURATION["db"]) or !isset($CONFIGURATION["db"]["type"]) or !isValidConfigurationType($CONFIGURATION["db"]["type"]))
 			$installer = new DefaultInstaller("instructions_configuration_type");
 	}
 	
 	if (!$installer)
-		$installer = createInstaller($SETTINGS, $SETTINGS["db"]["type"]);
+		$installer = createInstaller($CONFIGURATION, $CONFIGURATION["db"]["type"]);
 
 	try {
 		$installer->process();

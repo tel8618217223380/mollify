@@ -41,15 +41,15 @@
 	
 	require_once("configuration.php");
 	
-	global $SETTINGS, $VERSION;
-	Logging::initialize($SETTINGS, $VERSION);
+	global $CONFIGURATION, $VERSION;
+	Logging::initialize($CONFIGURATION, $VERSION);
 
 	require_once("include/MollifyBackend.class.php");
 	require_once("include/Settings.class.php");
 		
-	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($SETTINGS, 'mime_types', array()), isSetting($SETTINGS, 'support_output_buffer')));
+	$responseHandler = new ResponseHandler(new OutputHandler(getSetting($CONFIGURATION, 'mime_types', array()), isSetting($CONFIGURATION, 'support_output_buffer')));
 	try {
-		$settings = new Settings($SETTINGS);
+		$settings = new Settings($CONFIGURATION);
 		$backend = new MollifyBackend($settings, getDB($settings), $responseHandler);
 		$backend->processRequest(new Request());
 	} catch (ServiceException $e) {

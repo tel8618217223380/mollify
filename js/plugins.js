@@ -12,22 +12,19 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
 				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
-//								boolean root = !item.isFile()
-//										&& ((JsFolder) item.cast()).isRoot();
-//								boolean writable = !root
-//										&& details.getFilePermission()
-//												.canWrite();
-				var actions = [];
-				
+				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
+
+				var actions = [];				
 				if (item.is_file ) {
 					actions.push({ 'title-key': 'actionDownloadItem', type:"primary", group:"download", callback: function() { mollify.ui.download(mollify.filesystem.getDownloadUrl(item)); } });
 					actions.push({ title: '-' });
 				}
 				
 				actions.push({ 'title-key': 'actionCopyItem', callback: function() { mollify.filesystem.copy(item); }});
-				
-				if (writable) {
+				if (parentWritable)
 					actions.push({ 'title-key': 'actionCopyItemHere', callback: function() { mollify.filesystem.copyHere(item); } });
+				
+				if (writable) {	
 					actions.push({ 'title-key': 'actionMoveItem', callback: function() { mollify.filesystem.move(item); } });
 					actions.push({ 'title-key': 'actionRenameItem', callback: function() { mollify.filesystem.rename(item); } });
 					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { mollify.ui.dialogs.confirmation({
@@ -363,6 +360,10 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
+				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
+				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
+				var folderWritable = !root && ctx.folder_permission.toUpperCase() == "RW";
+
 				if (that._isArchive(item)) {
 					return {
 						actions: [
@@ -374,7 +375,7 @@
 				var actions = [
 					{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed([item]); } }
 				];
-				if (ctx.folder)	actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
+				if (ctx.folder && folderWritable) actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
 				return {
 					actions: actions
 				};
