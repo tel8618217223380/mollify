@@ -1303,7 +1303,9 @@
 					e.originalEvent.dataTransfer.dropEffect = fx;
 					return false;
 				}).bind('dragleave', function(e) {
-					$(this).removeClass("dragover");
+					var $t = $(this);
+					$t.removeClass("dragover");
+					t.dragTarget = false;
 				});
 			}
 		};

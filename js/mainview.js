@@ -846,18 +846,10 @@
 				}
 			}).appendTo(t.$l.empty());
 			
-			t.$l.find(".mollify-iconview-item").hover(function() {
+			var $items = t.$l.find(".mollify-iconview-item").hover(function() {
 				$(this).addClass("hover");
 			}, function() {
 				$(this).removeClass("hover");
-			}).draggable({
-				revert: "invalid",
-				distance: 10,
-				addClasses: false,
-				zIndex: 2700
-			}).droppable({
-				hoverClass: "drophover",
-				accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
 			}).bind("contextmenu",function(e){
 				e.preventDefault();
 				var $t = $(this);
@@ -874,6 +866,44 @@
 				'user-select':'none',
 				'-ms-user-select':'none'
 			});
+			/*.draggable({
+				revert: "invalid",
+				distance: 10,
+				addClasses: false,
+				zIndex: 2700
+			}).droppable({
+				hoverClass: "drophover",
+				accept: function(i) { return t.p.canDrop ? t.p.canDrop($(this).tmplItem().data, $(i).tmplItem().data) : false; }
+			})*/
+			
+			if (mollify.ui.draganddrop) {
+				mollify.ui.draganddrop.enableDrag($items, {
+					onDragStart : function($e, e) {
+						var item = $e.tmplItem().data;
+						return {type:'filesystemitem', payload: item};
+					}
+				});
+				mollify.ui.draganddrop.enableDrop(t.$l.find(".mollify-iconview-item.item-folder"), {
+					canDrop : function($e, e, obj) {
+						if (!t.p.canDrop || !obj || obj.type != 'filesystemitem') return false;
+						var item = obj.payload;
+						var me = $e.tmplItem().data;
+						return t.p.canDrop(me, item);
+					},
+					dropType : function($e, e, obj) {
+						if (!t.p.dropType || !obj || obj.type != 'filesystemitem') return false;
+						var item = obj.payload;
+						var me = $e.tmplItem().data;
+						return t.p.dropType(me, item);
+					},
+					onDrop : function($e, e, obj) {
+						if (!obj || obj.type != 'filesystemitem') return;
+						var item = obj.payload;
+						var me = $e.tmplItem().data;
+						if (t.p.onDrop) t.p.onDrop(me, item);
+					}
+				});
+			}
 			
 			t.p.onContentRendered(items, data);
 		};

@@ -760,7 +760,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	opacity: 0.4;
 }
 
-.mollify-filelist-item.dragover, .mollify-folder-hierarchy-item > a.dragover, .mollify-mainview-navbar-item.dragover {
+.mollify-filelist-item.dragover, .mollify-folder-hierarchy-item > a.dragover, .mollify-mainview-navbar-item.dragover, .mollify-iconview-item.dragover {
 	background: #ded9f7;
 }
 
@@ -919,6 +919,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: url(images/mimetypes128/empty.png) no-repeat 24px 7px;
 	margin-left: 13px;
 	margin-top: 14px;
+	pointer-events: none;
 }
 
 .mollify-iconview.iconview-small .mollify-iconview-item-icon {
@@ -934,6 +935,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	text-align: center;
 	padding-top: 6px;
 	overflow: hidden;
+	pointer-events: none;
 }
 
 .mollify-iconview-item.item-folder .mollify-iconview-item-icon {
