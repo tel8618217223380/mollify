@@ -206,7 +206,8 @@
 					
 					var ctx = {
 						details: d,
-						folder : spec.folder
+						folder : spec.folder,
+						folder_permission: spec.folder_permission
 					};
 					ict.renderItemContext(api, $content, item, ctx);
 					$e[0].scrollIntoView();
