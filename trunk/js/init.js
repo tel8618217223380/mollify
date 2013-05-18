@@ -181,7 +181,7 @@ var mollifyDefaults = {
 				}
 				if (s) s(r.result);
 			},
-			error: function(xhr, st, e) {
+			error: function(xhr, status, e) {
 				var code = 999;	//unknown
 				var error = {};
 				var data = false;
