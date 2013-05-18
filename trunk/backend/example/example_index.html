@@ -32,29 +32,29 @@
 		
 		<script type="text/javascript" language="javascript" src="js/localization/texts_en.js"></script>
 		<script type="text/javascript">
-			ZeroClipboard.setMoviePath('js/lib/ZeroClipboard.swf');
-			
-			mollify.App.init({
-				"list-view-columns": {
-					"name": { width: 250 },
-					"size": {},
-					"file-modified": { width: 150 }
-				}}, [
-					new mollify.plugin.ItemDetailsPlugin({
-	                    "jpg,tiff": {
-	                            "last-modified" : {},
-	                            "size": {},
-	                            "exif": {},
-	                    },
-						"*": {
-							"last-modified" : {},
-							"size": {}
-	                    }
-	                }),
-                    new mollify.plugin.FileViewerEditorPlugin(),
-					new mollify.plugin.CommentPlugin()
-				]
-			);
+			$(document).ready(function(){	
+				mollify.App.init({
+					"list-view-columns": {
+						"name": { width: 250 },
+						"size": {},
+						"file-modified": { width: 150 }
+					}}, [
+						new mollify.plugin.ItemDetailsPlugin({
+		                    "jpg,tiff": {
+		                            "last-modified" : {},
+		                            "size": {},
+		                            "exif": {},
+		                    },
+							"*": {
+								"last-modified" : {},
+								"size": {}
+		                    }
+		                }),
+	                    new mollify.plugin.FileViewerEditorPlugin(),
+						new mollify.plugin.CommentPlugin()
+					]
+				);
+			});
 		</script>
 	</head>
 

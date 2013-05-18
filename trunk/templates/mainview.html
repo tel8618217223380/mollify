@@ -215,9 +215,17 @@
 	<div id="mollify-itemcontext-actions" class="btn-toolbar">
 		{{if primaryActions}}
 		{{each primaryActions}}
-		<div id="mollify-itemcontext-primary-actions" class="btn-group">
-			<button class="mollify-itemcontext-primary-actions-button btn btn-primary">${$item.title($value)}</button>
+		{{if type == 'submenu'}}
+		<div class="btn-group">
+			<li class="mollify-itemcontext-primary-action-button">
+				<button class="btn btn-primary dropdown-toggle">${$item.title($value)}&nbsp;<b class="caret"></b></button>
+			</li>
 		</div>
+		{{else}}
+		<div class="btn-group">
+			<button class="mollify-itemcontext-primary-action-button btn btn-primary">${$item.title($value)}</button>
+		</div>
+		{{/if}}
 		{{/each}}
 		{{/if}}
 		

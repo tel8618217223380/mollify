@@ -240,7 +240,9 @@
 			
 			$e.removeClass("loading").empty().append(mollify.dom.template("mollify-tmpl-main-itemcontext-content", o, {
 				title: function(o) {
-					return o.title ? o.title : mollify.ui.texts.get(o['title-key']);
+					var a = o;
+					if (a.type == 'submenu') a = a.primary;
+					return a.title ? a.title : mollify.ui.texts.get(a['title-key']);
 				}
 			}));
 			$e.click(function(e){
@@ -255,10 +257,29 @@
 			}
 			
 			if (primaryActions) {
-				var $pae = $e.find(".mollify-itemcontext-primary-actions-button");
+				var $pae = $e.find(".mollify-itemcontext-primary-action-button");
+				$pae.each(function(i, $b){
+					var a = primaryActions[i];
+					if (a.type == 'submenu') {
+						mollify.ui.controls.dropdown({
+							element: $b,
+							items: a.items,
+							hideDelay: 0,
+							style: 'submenu',
+							parentPopupId: cApi.id,
+							onItem: function() {
+								cApi.hide();
+							},
+							onBlur: function(dd) {
+								dd.hide();
+							}
+						});
+					}
+				});
 				$pae.click(function(e) {
 					var i = $pae.index($(this));
 					var action = primaryActions[i];
+					if (action.type == 'submenu') return;
 					cApi.close();
 					action.callback();
 				});
@@ -546,7 +567,7 @@
 				content: html
 			}).bind("shown", function(e) {
 				$tip = $el;
-				popupId = mollify.ui.activePopup(api);
+				mollify.ui.activePopup(api);
 				$tip.click(function(e) {
 					e.preventDefault();
 					return false;
@@ -807,16 +828,16 @@
 		
 		datepicker: function(o) {
 			if (!o || !o.element) return false;
-			if (!$.fn.datetimepicker.dates['mollify']) {
-			    $.fn.datetimepicker.dates['mollify'] = {
+			if (!$.fn.datetimepicker.dates.mollify) {
+				$.fn.datetimepicker.dates.mollify = {
 					days: mollify.ui.texts.get('days'),
 					daysShort: mollify.ui.texts.get('daysShort'),
 					daysMin: mollify.ui.texts.get('daysMin'),
 					months: mollify.ui.texts.get('months'),
 					monthsShort: mollify.ui.texts.get('monthsShort'),
-			        today: mollify.ui.texts.get('today'),
-			        weekStart: mollify.ui.texts.get('weekStart')
-			    };
+					today: mollify.ui.texts.get('today'),
+					weekStart: mollify.ui.texts.get('weekStart')
+				};
 			}
 			var val = o.value || null;
 			var fmt = o.format || mollify.ui.texts.get('shortDateTimeFormat');
@@ -1342,7 +1363,7 @@
 		});
 		
 		var $testclip = $('<div id="zeroclipboard-test" style="width=0px; height=0px;"></div>').appendTo($("body"));
-		var clip = new ZeroClipboard($testclip[0]);
+		var clip = new window.ZeroClipboard($testclip[0]);
 		clip.on('load', function(client) {
 			var api = {
 				enableCopy : function($e, text, l) {
