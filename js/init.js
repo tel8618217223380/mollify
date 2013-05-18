@@ -150,6 +150,17 @@ var mollifyDefaults = {
 	st.del = function(url, data, s, err) {
 		st._do("DELETE", url, data, s, err);
 	};
+	
+	st._onError = function(code, error, errCb) {
+		if (code == 100) {
+			mollify.events.dispatch('session/end');
+			return;
+		}
+		
+		var defaultErrorHandler = true;
+		if (errCb) defaultErrorHandler = !!errCb(code, error);
+		if (defaultErrorHandler) mollify.ui.dialogs.showError(code, error);
+	}
 			
 	st._do = function(type, url, data, s, err) {
 		var t = type;
@@ -165,21 +176,20 @@ var mollifyDefaults = {
 			dataType: 'json',
 			success: function(r, st, xhr) {
 				if (!r) {
-					if (err) err(0, "todo");
+					st._onError(999, {}, err);
 					return;
 				}
 				if (s) s(r.result);
 			},
-			error: function(xhr, st, error) {
+			error: function(xhr, st, e) {
 				var code = 999;	//unknown
 				var error = {};
 				var data = false;
-				var defaultErrorHandler = true;
+
 				if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
 				if (error && window.def(error.code)) code = error.code;
 				
-				if (err) defaultErrorHandler = !!err(code, error);
-				if (defaultErrorHandler) mollify.ui.dialogs.showError(code, error);
+				st._onError(code, error, err);
 			},
 			beforeSend: function (xhr) {
 				if (mollify.session && mollify.session.id)
@@ -678,10 +688,12 @@ var mollifyDefaults = {
 				}
 			}
 			if (downloadActions.length > 1) {
-				for (var i=1,j=downloadActions.length; i<j; i++) list.remove(downloadActions[i]); 
+				for (var i2=1,j2=downloadActions.length; i2<j2; i2++) list.remove(downloadActions[i2]); 
 				list[firstDownload] = {
 					type: "submenu",
 					items: downloadActions,
+					title: downloadActions[0].title,
+					group: downloadActions[0].group,
 					primary: downloadActions[0]
 				};
 			}
@@ -691,11 +703,13 @@ var mollifyDefaults = {
 		getPrimaryActions : function(actions) {
 			if (!actions) return [];
 			var result = [];
-			var downloadActions = [];
-			for (var i=0,j=actions.length; i<j; i++) {
-				var a = actions[i];
-				if (a.type == 'primary') result.push(a);
+			var p = function(list) {
+				for (var i=0,j=list.length; i<j; i++) {
+					var a = list[i];
+					if (a.type == 'primary' || a.group == 'download') result.push(a);
+				}
 			}
+			p(actions);
 			return result;
 		},
 

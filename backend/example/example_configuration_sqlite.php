@@ -11,7 +11,7 @@
 	
 	/* For configuration instructions, see ReadMe.txt or wiki page at http://code.google.com/p/mollify/wiki/Installation */
 
-	$SETTINGS = array(
+	$CONFIGURATION = array(
 		"db" => array(
 			"type" => "sqlite",
 			"file" => "db.file"

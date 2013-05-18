@@ -544,6 +544,7 @@
 				mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);
 				
 				var $t = $("#mollify-fileview-folder-tools");
+				var $fa = $("#mollify-fileview-folder-actions");
 				
 				var opt = {
 					title: function() {
@@ -604,7 +605,6 @@
 					});
 					
 					// FOLDER
-					var $fa = $("#mollify-fileview-folder-actions");
 					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
 					mollify.ui.controls.dropdown({
 						element: actionsElement.find("li"),

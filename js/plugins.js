@@ -1234,7 +1234,7 @@
 		this.updateShareList = function(item) {
 			$("#share-items").empty();
 			
-			if (that.shares.length == 0) {
+			if (that.shares.length === 0) {
 				$("#share-items").html('<div class="no-share-items">'+mollify.ui.texts.get("shareDialogNoShares")+'</div>');
 				return;
 			}
@@ -1244,7 +1244,7 @@
 					var c = "item-share";
 					if (!this.data.active)
 						c = c + " inactive";
-					if (!this.data.name || this.data.name.length == 0)
+					if (!this.data.name || this.data.name.length === 0)
 						c = c + " unnamed";
 					return c;
 				},
