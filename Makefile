@@ -40,6 +40,7 @@ build:
 	./node_modules/.bin/recess --compress css/bootstrap-responsive.css > out/mollify/css/bootstrap-responsive.css
 	./node_modules/.bin/recess --compress css/font-awesome.css > out/mollify/css/font-awesome.css
 	./node_modules/.bin/recess --compress css/bootstrap-lightbox.css > out/mollify/css/bootstrap-lightbox.css
+	./node_modules/.bin/recess --compress css/bootstrap-datetimepicker.min.css > out/mollify/css/bootstrap-datetimepicker.min.css
 	
 	cp -R css/font out/mollify/css
 	cp -R css/images out/mollify/css
