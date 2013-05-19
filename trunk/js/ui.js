@@ -568,10 +568,10 @@
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
-				$tip.click(function(e) {
+				/*$tip.click(function(e) {
 					e.preventDefault();
 					return false;
-				});
+				});*/
 				if (!rendered) {
 					if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(actionId, api);
 					rendered = true;
@@ -631,10 +631,10 @@
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
-				$tip.click(function(e) {
+				/*$tip.click(function(e) {
 					e.preventDefault();
 					return false;
-				});
+				});*/
 				if (o.title)
 					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 				mollify.ui.handlers.localize($tip);
