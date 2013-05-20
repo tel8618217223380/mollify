@@ -16,7 +16,6 @@
 		<div id="mollify-mainview-navlist-container" class="well span2">
 		</div>
 		
-		<!-- mollify-folderview -->
 		<div id="mollify-mainview-viewcontent" class="span9">
 		</div>
 	</div>
@@ -85,10 +84,6 @@
 </script>
 
 <script id="mollify-tmpl-fileview-header" type="text/x-jquery-tmpl">
-	<!--div id="mollify-folder-tools" class="btn-toolbar"></div>
-	<ul id="mollify-folder-hierarchy" class="breadcrumb">
-		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
-	</ul-->
 	<div id="mollify-fileview-folder-tools"></div>
 	<div id="mollify-folder-name" class="mollify-folderview-title page-header"><h2>${folder.name}</h2><div id="mollify-fileview-folder-actions"></div></div>
 	<div id="mollify-folder-description"></div>
@@ -292,7 +287,6 @@
 		{{if item}}
 		<div id="mollify-pluginpermissions-editor-item">
 			<span class="name">${item.name}</span>
-			<!--button id="mollify-pluginpermissions-editor-change-item" class="btn btn-primary">TODO change</button-->
 		</div>
 		{{/if}}
 		<table id="mollify-pluginpermissions-editor-permission-list" class="table">

@@ -69,9 +69,9 @@ var mollifyDefaults = {
 		mollify.ui.initialize();
 		mollify.plugins.initialize();
 
-		mollify.service.get("session/info/3", function(s) {
+		$.when(mollify.service.get("session/info/3")).done(function(s) {
 			mollify.App.setSession(s);
-		}, function(c, e) {
+		}).fail(function(e) {
 			$("#mollify").html("Failed to initialize Mollify");
 		});
 	};
@@ -136,68 +136,101 @@ var mollifyDefaults = {
 	};
 	
 	st.get = function(url, s, err) {
-		st._do("GET", url, null, s, err);
+		return st._do("GET", url, null);
 	};
 
-	st.post = function(url, data, s, err) {
-		st._do("POST", url, data, s, err);
+	st.post = function(url, data) {
+		return st._do("POST", url, data);
 	};
 	
-	st.put = function(url, data, s, err) {
-		st._do("PUT", url, data, s, err);
+	st.put = function(url, data) {
+		return st._do("PUT", url, data);
 	};
 	
-	st.del = function(url, data, s, err) {
-		st._do("DELETE", url, data, s, err);
+	st.del = function(url, data) {
+		return st._do("DELETE", url, data);
 	};
 	
-	st._onError = function(code, error, errCb) {
-		if (code == 100) {
+	st._onError = function(error, dfd) {
+		if (error.code == 100) {
 			mollify.events.dispatch('session/end');
 			return;
 		}
 		
-		var defaultErrorHandler = true;
-		if (errCb) defaultErrorHandler = !!errCb(code, error);
-		if (defaultErrorHandler) mollify.ui.dialogs.showError(code, error);
+		var failContext = {
+			handled: true
+		}
+		//var defaultErrorHandler = true;
+		//if (errCb) defaultErrorHandler = !!errCb({code: code, error: error});
+		dfd.rejectWith(failContext, [error]);
+		if (!failContext.handled) mollify.ui.dialogs.showError(error);
 	}
 			
-	st._do = function(type, url, data, s, err) {
+	st._do = function(type, url, data) {
+		//return $.Deferred(function( dfd ) {
 		var t = type;
 		var diffMethod = (st._limitedHttpMethods && (t == 'PUT' || t == 'DELETE'));
 		if (diffMethod) t = 'POST';
 		
-		$.ajax({
+		return $.ajax({
 			type: t,
 			url: st.url(url),
 			processData: false,
 			data: data ? JSON.stringify(data) : null,
 			contentType: 'application/json',
 			dataType: 'json',
-			success: function(r, st, xhr) {
+			/*success: function(r, st, xhr) {
 				if (!r) {
-					st._onError(999, {}, err);
+					st._onError({ code: 999 }, dfd);
 					return;
 				}
-				if (s) s(r.result);
+				//if (s) s(r.result);
+				dfd.resolve(r.result);
 			},
 			error: function(xhr, status, e) {
-				var code = 999;	//unknown
-				var error = {};
+				//var code = 999;	//unknown
+				var error = false;
 				var data = false;
 
 				if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
-				if (error && window.def(error.code)) code = error.code;
+				if (!error) error = { code: 999 };	//unknown
+				//if (error && window.def(error.code)) code = error.code;
 				
-				st._onError(code, error, err);
-			},
+				st._onError(error, dfd);
+			},*/
 			beforeSend: function (xhr) {
 				if (mollify.session && mollify.session.id)
 					xhr.setRequestHeader("mollify-session-id", mollify.session.id);
 				if (st._limitedHttpMethods || diffMethod)
 					xhr.setRequestHeader("mollify-http-method", type);
 			}
-		});
+		}).pipe(function(r) {
+			if (!r) {
+				//st._onError({ code: 999 }, dfd);
+				return $.Deferred().reject({ code: 999 });
+			}
+			return r;
+		}, function(xhr) {
+			var error = false;
+			var data = false;
+
+			if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
+			if (!error) error = { code: 999 };	//unknown
+			if (error.code == 100) {
+				mollify.events.dispatch('session/end');
+				return false;
+			}
+			
+			var failContext = {
+				handled: true
+			}
+			//var defaultErrorHandler = true;
+			//if (errCb) defaultErrorHandler = !!errCb({code: code, error: error});
+			//dfd.rejectWith(failContext, [error]);
+			return error;
+			//TODO if (!failContext.handled) mollify.ui.dialogs.showError(error);
+		}).promise();
+		//}).promise();
 	};
 	
 	/* FILESYSTEM */
@@ -403,6 +436,7 @@ var mollifyDefaults = {
 	};
 	
 	mfs.rename = function(item, name, cb, err) {
+		
 		if (!name || name.length === 0) {
 			mollify.ui.dialogs.input({
 				title: mollify.ui.texts.get(item.is_file ? 'renameDialogTitleFile' : 'renameDialogTitleFolder'),
@@ -418,13 +452,18 @@ var mollifyDefaults = {
 		} else {
 			mfs._rename(item, name, cb, err);
 		}
+		return df.promise();
 	};
 	
 	mfs._rename = function(item, name, cb, err) {
-		mollify.service.put("filesystem/"+item.id+"/name/", {name: name}, function(r) {
-			mollify.events.dispatch('filesystem/rename', { items: [item], name: name });
-			if (cb) cb(r);
-		}, err);
+		return $.Deferred(function(dfd) {
+			mollify.service.put("filesystem/"+item.id+"/name/", {name: name}, function(r) {
+				mollify.events.dispatch('filesystem/rename', { items: [item], name: name });
+				if (cb) cb(r);
+			}, function(error, code) {
+				
+			});
+		}).promise();
 	};
 	
 	mfs._handleDenied = function(action, i, data, msgTitleDenied, msgTitleAccept, acceptCb) {

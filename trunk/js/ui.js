@@ -995,8 +995,8 @@
 		});
 	}
 	
-	dh.showError = function(code, error) {
-		var msg = 'errorDialogMessage_'+code;
+	dh.showError = function(error) {
+		var msg = 'errorDialogMessage_'+error.code;
 		if (!mollify.ui.texts.has(msg)) msg = 'errorDialogUnknownError';
 		mollify.ui.dialogs.error({
 			title: mollify.ui.texts.get('errorDialogTitle'),
