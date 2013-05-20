@@ -20,13 +20,13 @@
 					actions.push({ title: '-' });
 				}
 				
-				actions.push({ 'title-key': 'actionCopyItem', callback: function() { mollify.filesystem.copy(item); }});
+				actions.push({ 'title-key': 'actionCopyItem', callback: function() { return mollify.filesystem.copy(item); }});
 				if (parentWritable)
-					actions.push({ 'title-key': 'actionCopyItemHere', callback: function() { mollify.filesystem.copyHere(item); } });
+					actions.push({ 'title-key': 'actionCopyItemHere', callback: function() { return mollify.filesystem.copyHere(item); } });
 				
 				if (writable) {	
-					actions.push({ 'title-key': 'actionMoveItem', callback: function() { mollify.filesystem.move(item); } });
-					actions.push({ 'title-key': 'actionRenameItem', callback: function() { mollify.filesystem.rename(item); } });
+					actions.push({ 'title-key': 'actionMoveItem', callback: function() { return mollify.filesystem.move(item); } });
+					actions.push({ 'title-key': 'actionRenameItem', callback: function() { return mollify.filesystem.rename(item); } });
 					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { mollify.ui.dialogs.confirmation({
 						title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
 						message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
@@ -40,9 +40,9 @@
 			itemCollectionHandler : function(items) {
 				return {
 					actions: [
-						{ 'title-key': 'actionCopyMultiple', callback: function() { mollify.filesystem.copy(items); } },
-						{ 'title-key': 'actionMoveMultiple', callback: function() { mollify.filesystem.move(items); } },
-						{ 'title-key': 'actionDeleteMultiple', callback: function() { mollify.filesystem.del(items); } }
+						{ 'title-key': 'actionCopyMultiple', callback: function() { return mollify.filesystem.copy(items); } },
+						{ 'title-key': 'actionMoveMultiple', callback: function() { return mollify.filesystem.move(items); } },
+						{ 'title-key': 'actionDeleteMultiple', callback: function() { return mollify.filesystem.del(items); } }
 					]
 				};
 			}
@@ -273,14 +273,36 @@
 		
 		this.initialize = function() {
 		};
-								
+		
+		this.onStore = function(items) {
+			mollify.ui.dialogs.input({
+				title: mollify.ui.texts.get('pluginItemCollectionStoreDialogTitle'),
+				message: mollify.ui.texts.get('pluginItemCollectionStoreDialogMessage'),
+				defaultValue: "",
+				yesTitle: mollify.ui.texts.get('pluginItemCollectionStoreDialogAction'),
+				noTitle: mollify.ui.texts.get('dialogCancel'),
+				handler: {
+					isAcceptable: function(n) { return (!!n && n.length > 0); },
+					onInput: function(n) { that._onStore(items, n); }
+				}
+			});	
+		};
+		
+		this._onStore = function(items, name) {
+			mollify.service.post("itemcollection/store", {items : items, name:name}, function(r) {
+				//TODO show message
+			});
+		};
+
 		return {
 			id: "plugin-itemcollection",
 			initialize: that.initialize,
 			itemCollectionHandler : function(items) {
 				return {
-					actions: [
-					]
+					actions: [{
+						"title-key": "pluginItemCollectionStore",
+						callback: function() { that.onStore(items); }
+					}]
 				};
 			}
 		};
@@ -1024,7 +1046,7 @@
 			that.itemContext = new mollify.ui.itemContext({ onDescription: null });
 		};
 		
-		this.onMainViewRender = function($container) {
+		this.onFileViewRender = function($container) {
 			mollify.dom.template("mollify-tmpl-mainview-dropbox").appendTo($container);
 			$("#mollify-dropbox-handle").click(function() {
 				that.openDropbox();
@@ -1164,7 +1186,7 @@
 			id: "plugin-dropbox",
 			initialize: that.initialize,
 			fileViewHandler : {
-				onViewRender: that.onMainViewRender
+				onFileViewRender: that.onFileViewRender
 			},
 			itemContextHandler : function(item, ctx, data) {
 				return {
