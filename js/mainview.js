@@ -86,7 +86,7 @@
 		}
 		
 		this.onLogout = function() {
-			mollify.service.post("session/logout", {}, function(s) {
+			mollify.service.post("session/logout").done(function(s) {
 				mollify.App.setSession(s);
 			});
 		}
@@ -160,13 +160,14 @@
 		}
 		
 		this.doChangePassword = function(oldPw, newPw, successCb) {
-			mollify.service.put("configuration/users/current/password/", {old:window.Base64.encode(oldPw), "new": window.Base64.encode(newPw) }, function(r) {
+			mollify.service.put("configuration/users/current/password/", {old:window.Base64.encode(oldPw), "new": window.Base64.encode(newPw) }).done(function(r) {
 				successCb();
 				mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
-			}, function(c, e) {
-				if (c == 107) {
+			}).fail(function(e) {
+				this.handled = true;
+				if (e.code == 107) {
 					mollify.ui.dialogs.error({message:mollify.ui.texts.get('mainviewChangePasswordError')});
-				} else return true;
+				} else this.handled = false;
 			});
 		}
 	}
@@ -396,7 +397,7 @@
 		};
 		
 		this.onSearch = function(s) {
-			mollify.service.post("filesystem/search", {text:s}, function(r) {
+			mollify.service.post("filesystem/search", {text:s}).done(function(r) {
 				$("#mollify-fileview-search-input").val("");
 				$(".mollify-fileview-rootlist-item").removeClass("active");
 				var $h = $("#mollify-folderview-header").empty();
@@ -482,14 +483,13 @@
 			}
 			that.showProgress();
 			
-			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder), function(r) {
+			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(function(r) {
 				that._currentFolderInfo = r;
 				that.hideProgress();
 				that.folder(r);
 				that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
-			}, function() {
+			}).fail(function() {
 				that.hideProgress();
-				return true;
 			});
 		};
 		
@@ -502,17 +502,18 @@
 			if (!that._currentFolder) return;
 			
 			that.showProgress();
-			mollify.service.post("filesystem/"+that._currentFolder.id+"/retrieve", {url:url}, function(r) {
+			mollify.service.post("filesystem/"+that._currentFolder.id+"/retrieve", {url:url}).done(function(r) {
 				that.hideProgress();
 				that.refresh();
-			}, function(code, error) {
+			}).fail(function(error) {
 				that.hideProgress();
 				//301 resource not found
-				if (code == 301) {
+				if (error.code == 301) {
+					this.handled = true;
 					mollify.ui.views.dialogs.error({
 						message: mollify.ui.texts.get('mainviewRetrieveFileResourceNotFound', [url])
 					});
-				} else return true;
+				};
 			});
 		};
 

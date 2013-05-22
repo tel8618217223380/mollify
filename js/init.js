@@ -69,7 +69,7 @@ var mollifyDefaults = {
 		mollify.ui.initialize();
 		mollify.plugins.initialize();
 
-		$.when(mollify.service.get("session/info/3")).done(function(s) {
+		mollify.service.get("session/info/3").done(function(s) {
 			mollify.App.setSession(s);
 		}).fail(function(e) {
 			$("#mollify").html("Failed to initialize Mollify");
@@ -209,7 +209,7 @@ var mollifyDefaults = {
 				//st._onError({ code: 999 }, dfd);
 				return $.Deferred().reject({ code: 999 });
 			}
-			return r;
+			return r.result;
 		}, function(xhr) {
 			var error = false;
 			var data = false;
@@ -253,20 +253,19 @@ var mollifyDefaults = {
 		return mollify.service.url("filesystem/"+item.id, true);
 	};
 	
-	mfs.itemDetails = function(item, data, cb, err) {
-		mollify.service.post("filesystem/"+item.id+"/details/", { data : data }, cb, err);
+	mfs.itemDetails = function(item, data) {
+		return mollify.service.post("filesystem/"+item.id+"/details/", { data : data });
 	};
 	
-	mfs.folderInfo = function(f, hierarchy, data, cb, err) {
-		mollify.service.post("filesystem/"+f.id+"/info/" + (hierarchy ? "?h=1" : ""), { data : data }, cb, err);
+	mfs.folderInfo = function(f, hierarchy, data) {
+		return mollify.service.post("filesystem/"+f.id+"/info/" + (hierarchy ? "?h=1" : ""), { data : data });
 	};
 	
-	mfs.folders = function(parent, cb, err) {
+	mfs.folders = function(parent) {
 		if (parent == null) {
-			cb(mfs.roots);
-			return;
+			return mfs.roots;
 		}
-		mollify.service.get("filesystem/"+parent.id+"/folders/", cb, err);
+		return mollify.service.get("filesystem/"+parent.id+"/folders/");
 	};
 	
 	mfs.copy = function(i, to, cb, err) {
@@ -436,7 +435,7 @@ var mollifyDefaults = {
 	};
 	
 	mfs.rename = function(item, name, cb, err) {
-		
+		var df = $.Deferred();
 		if (!name || name.length === 0) {
 			mollify.ui.dialogs.input({
 				title: mollify.ui.texts.get(item.is_file ? 'renameDialogTitleFile' : 'renameDialogTitleFolder'),
@@ -446,11 +445,11 @@ var mollifyDefaults = {
 				noTitle: mollify.ui.texts.get('dialogCancel'),
 				handler: {
 					isAcceptable: function(n) { return !!n && n.length > 0 && n != item.name; },
-					onInput: function(n) { mfs._rename(item, n, cb, err); }
+					onInput: function(n) { $.when(mfs._rename(item, n)).then(df.resolve, df.reject); }
 				}
 			});
 		} else {
-			mfs._rename(item, name, cb, err);
+			$.when(mfs._rename(item, name)).then(df.resolve, df.reject);
 		}
 		return df.promise();
 	};
