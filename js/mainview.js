@@ -788,7 +788,7 @@
 		};
 		
 		this.getItemActions = function(item, cb) {
-			mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item), function(d) {
+			mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item)).done(function(d) {
 				if (!d) {
 					cb([]);
 					return;

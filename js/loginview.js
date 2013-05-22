@@ -46,7 +46,7 @@
 					
 					bubble.hide();
 					that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
-					//TODO that.listener.onResetPassword(email);
+					that.onResetPassword(email);
 				});
 			}
 		}
@@ -71,15 +71,15 @@
 				return;
 			}
 			that.wait = mollify.ui.dialogs.wait({target: "mollify-login-main"});
-			mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: window.Base64.encode(password), remember: remember}, function(s) {
+			mollify.service.post("session/authenticate", {protocol_version: 3, username: username, password: window.Base64.encode(password), remember: remember}).done(function(s) {
 				mollify.App.setSession(s);
-			}, function(c, e) {
+			}).fail(function(e) {
 				that.showLoginError();
 			});
 		}
 		
 		that.onResetPassword = function(email) {
-			
+			//TODO
 		}
 		
 		that.showLoginError = function() {
