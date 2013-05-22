@@ -455,8 +455,8 @@
 				item = parent[ind];
 				if (item.type == 'submenu') parent = item.items;
 			});
-			if (onItem) onItem(item);
-			if (item.callback) item.callback();
+			if (onItem) onItem(item, item.callback ? item.callback() : null);
+			else if (item.callback) item.callback();
 		});
 	};
 			
@@ -473,9 +473,9 @@
 				$mnu.parent().removeClass("open");
 				mollify.ui.removeActivePopup(popupId);
 			};
-			var onItem = function(i) {
+			var onItem = function(i, cbr) {
 				hidePopup();
-				if (a.onItem) a.onItem(i);
+				if (a.onItem) a.onItem(i, cbr);
 			};
 
 			var api = {
@@ -516,9 +516,9 @@
 				$mnu.remove();
 				mollify.ui.removeActivePopup(popupId);
 			};
-			var onItem = function(i) {
+			var onItem = function(i, cbr) {
 				hidePopup();
-				if (a.onItem) a.onItem(i);
+				if (a.onItem) a.onItem(i, cbr);
 			};
 			
 			if (!a.items) $mnu.addClass("loading");

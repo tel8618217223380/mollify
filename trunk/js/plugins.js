@@ -27,11 +27,12 @@
 				if (writable) {	
 					actions.push({ 'title-key': 'actionMoveItem', callback: function() { return mollify.filesystem.move(item); } });
 					actions.push({ 'title-key': 'actionRenameItem', callback: function() { return mollify.filesystem.rename(item); } });
-					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { mollify.ui.dialogs.confirmation({
+					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
 						title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
 						message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
-						callback: function() { mollify.filesystem.del(item); }
-					});}});
+						callback: function() { $.when(mollify.filesystem.del(item)).then(df.resolve, df.reject); }
+					});
+					return df.promise(); }});
 				}
 				return {
 					actions: actions
@@ -1095,8 +1096,8 @@
 						drp.items(a);
 					});
 				},
-				onItem: function() {
-					that.emptyDropbox();
+				onItem: function(i, cbr) {
+					if (cbr) cbr.done(that.emptyDropbox);
 				},
 				onBlur: function(dd) {
 					
