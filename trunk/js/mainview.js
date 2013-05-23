@@ -669,8 +669,7 @@
 			
 			var $hi = $(".mollify-folder-hierarchy-item").click(function() {
 				var folder = $(this).tmplItem().data;
-				var index = h.indexOf(folder);
-				that.changeToFolder(folder);
+				that.changeToFolder([folder]);
 			});
 			
 			if (mollify.ui.draganddrop) {
@@ -757,7 +756,7 @@
 			var $dsc = $("#mollify-folder-description");
 			var descriptionEditable = that._currentFolder && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.admin;
 			if (descriptionEditable) {
-				mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainview-description-hint'), onedit: function(desc) {
+				mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainviewDescriptionHint'), onedit: function(desc) {
 					that.onDescription(that._currentFolder, desc);
 				}});
 			} else {

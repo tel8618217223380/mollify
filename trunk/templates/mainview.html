@@ -92,10 +92,12 @@
 <script id="mollify-tmpl-fileview-folder-hierarchy" type="text/x-jquery-tmpl">
 	<ul id="mollify-fileview-folder-hierarchy" class="breadcrumb">
 		<li id="mollify-folder-hierarchy-item-root"><a href="javascript: void(0);" class="dropdown-toggle"></a> <span class="divider">/</span></li>
-		{{each items}}
-		<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
-		{{/each}}
+		{{tmpl(items) "#mollify-tmpl-fileview-folder-hierarchy-item"}}
 	</ul>
+</script>
+
+<script id="mollify-tmpl-fileview-folder-hierarchy-item" type="text/x-jquery-tmpl">
+	<li id="mollify-folder-hierarchy-item-${id}" class="mollify-folder-hierarchy-item"><a href="javascript: void(0);">${name}</a> <span class="divider">/</span></li>
 </script>
 
 <script id="mollify-tmpl-fileview-foldertools-action" type="text/x-jquery-tmpl">

@@ -150,21 +150,6 @@ var mollifyDefaults = {
 	st.del = function(url, data) {
 		return st._do("DELETE", url, data);
 	};
-	
-	/*st._onError = function(error, dfd) {
-		if (error.code == 100) {
-			mollify.events.dispatch('session/end');
-			return;
-		}
-		
-		var failContext = {
-			handled: true
-		}
-		//var defaultErrorHandler = true;
-		//if (errCb) defaultErrorHandler = !!errCb({code: code, error: error});
-		dfd.rejectWith(failContext, [error]);
-		if (!failContext.handled) mollify.ui.dialogs.showError(error);
-	}*/
 			
 	st._do = function(type, url, data) {
 		var t = type;
@@ -199,17 +184,17 @@ var mollifyDefaults = {
 				mollify.events.dispatch('session/end');
 			}
 			
-			
 			var failContext = {
 				handled: false
 			}
 			var df = $.Deferred();
+			// push default handler to end of callback list
 			setTimeout(function(){
-				df.fail(function(error){
-					if (!failContext.handled) mollify.ui.dialogs.showError(error);
+				df.fail(function(err){
+					if (!failContext.handled) mollify.ui.dialogs.showError(err);
 				});
 			}, 0);
-			return df.rejectWith(failContext, error);
+			return df.rejectWith(failContext, [error]);
 		}).promise();
 	};
 	
