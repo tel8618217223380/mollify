@@ -1451,6 +1451,9 @@
 				return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info'><i class='icon-external-link'></i>&nbsp;"+itemData.own+"</div>";
 			return "<div id='item-share-info-"+item.id+"' class='filelist-item-share-info others' title='"+mollify.ui.texts.get("pluginShareFilelistColOtherShared")+"'><i class='icon-external-link'></i></div>";
 		};
+
+		this._updateListCellContent = function(item, data) {
+		};
 		
 		this.showShareBubble = function(item, cell) {
 			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("body")});
