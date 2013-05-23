@@ -21,8 +21,8 @@
 		<!-- If you don't want to use full package, you can load them separately -->
 		<!--script type="text/javascript" language="javascript" src="js/lib/jquery.min.js"></script>
 		<script type="text/javascript" language="javascript" src="js/lib/jquery.tmpl.min.js"></script>
-		<script type="text/javascript" language="javascript" src="js/lib/jquery-ui.min.js"></script>
-		<script type="text/javascript" language="javascript" src="js/lib/jquery-html5-uploader.js"></script>
+		<script type="text/javascript" language="javascript" src="js/lib/jquery-ui.js"></script>
+		<script type="text/javascript" language="javascript" src="js/lib/jquery-file-uploader.js"></script>
 		<script type="text/javascript" language="javascript" src="js/lib/jquery-singledoubleclick.js"></script>
 		<script type="text/javascript" language="javascript" src="js/lib/bootstrap.js"></script>
 		<script type="text/javascript" language="javascript" src="js/lib/bootstrap-lightbox.js"></script>
@@ -40,18 +40,18 @@
 						"file-modified": { width: 150 }
 					}}, [
 						new mollify.plugin.ItemDetailsPlugin({
-		                    "jpg,tiff": {
-		                            "last-modified" : {},
-		                            "size": {},
-		                            "exif": {},
-		                    },
+							"jpg,tiff": {
+								"last-modified" : {},
+								"size": {},
+								"exif": {},
+							},
 							"*": {
 								"last-modified" : {},
 								"size": {}
-		                    }
-		                }),
-	                    new mollify.plugin.FileViewerEditorPlugin(),
-						new mollify.plugin.CommentPlugin()
+							}
+						}),
+						new mollify.plugin.FileViewerEditorPlugin(),
+						new mollify.plugin.DropboxPlugin()
 					]
 				);
 			});
