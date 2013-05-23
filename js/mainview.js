@@ -52,14 +52,18 @@
 		
 		this.addNavBar = function(nb) {
 			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
-			var $items = $nb.find(".mollify-mainview-navbar-item");
-			$items.click(function() {
-				var item = nb.items[$items.index(this)];
-				if (item.callback) item.callback();
-			});
-			if (nb.onRender) nb.onRender($items, function($e) { return nb.items[$items.index($e)].obj; });
+			var initItems = function(items) {
+				var $items = $nb.find(".mollify-mainview-navbar-item");
+				$items.click(function() {
+					var item = items[$items.index(this)];
+					if (item.callback) item.callback();
+				});
+				if (nb.onRender) nb.onRender($items, function($e) { return items[$items.index($e)].obj; });
+			};
+			initItems(nb.items);
 			return {
 				setActive : function(o) {
+					var $items = $nb.find(".mollify-mainview-navbar-item");
 					$items.removeClass("active");
 					$.each($items, function(i, itm) {
 						var obj = nb.items[i].obj;
@@ -68,6 +72,11 @@
 							return true;
 						}
 					});
+				},
+				update : function(items) {
+					$nb.find(".mollify-mainview-navbar-item").remove();
+					mollify.dom.template("mollify-tmpl-main-navbar-item", items).appendTo($nb);
+					initItems(items);
 				}
 			};
 		}
@@ -353,7 +362,7 @@
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
 				if (p.fileViewHandler.onFileViewRender)
-					p.fileViewHandler.onFileViewRender($("#mollify"));
+					p.fileViewHandler.onFileViewRender($("#mollify"), h);
 			});
 			
 			if (mollify.filesystem.roots.length === 0) that.showNoRoots();

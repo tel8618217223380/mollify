@@ -290,9 +290,28 @@
 		};
 		
 		this._onStore = function(items, name) {
-			return mollify.service.post("itemcollection/store", {items : items, name:name}).done(function(r) {
+			return mollify.service.post("itemcollections", {items : items, name:name}).done(function(r) {
 				//TODO show message
 			});
+		};
+		
+		this._showCollection = function(ic) {
+			//TODO	
+		};
+		
+		this._onFileViewRender = function($e, h) {
+			var collectionsNav = h.addNavBar({
+				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
+				items: [],
+				onRender: false
+			});
+			mollify.service.get("itemcollections").done(function(list) {
+				var navBarItems = [];
+				$.each(list, function(i, ic) {
+					navBarItems.push({title:ic.name, obj: f, callback:function(){ that._showCollection(ic); }})
+				});
+				collectionsNav.update(navBarItems);
+			})
 		};
 
 		return {
@@ -305,6 +324,9 @@
 						callback: function() { return that.onStore(items); }
 					}]
 				};
+			},
+			fileViewHandler : {
+				onFileViewRender: that._onFileViewRender
 			}
 		};
 	}
