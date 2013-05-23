@@ -49,10 +49,12 @@
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">
 	<ul class="mollify-mainview-navbar nav nav-list">
 		<li class="nav-header localized">${title}</li>
-		{{each items}}
-			<li class="mollify-mainview-navbar-item"><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${title}</a></li>
-		{{/each}}
+		{{tmpl(items) "#mollify-tmpl-main-navbar-item"}}
     </ul>
+</script>
+
+<script id="mollify-tmpl-main-navbar-item" type="text/x-jquery-tmpl">
+	<li class="mollify-mainview-navbar-item"><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${title}</a></li>
 </script>
 
 <script id="mollify-tmpl-fileview" type="text/x-jquery-tmpl">
