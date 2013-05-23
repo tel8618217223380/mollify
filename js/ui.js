@@ -198,7 +198,7 @@
 				$pop.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 				var $content = $el.find(".mollify-itemcontext-content");
 				
-				mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item), function(d) {
+				mollify.filesystem.itemDetails(item, mollify.plugins.getItemContextRequestData(item)).done(function(d) {
 					if (!d) {
 						$t.hide();
 						return;
