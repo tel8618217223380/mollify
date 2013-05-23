@@ -57,6 +57,7 @@ mainViewLogoutTitle: "Logout",
 mainViewRootsTitle: "Published folders",
 mainviewCreateFolderTitle : "Create new folder:",
 mainviewCreateFolderName : "Folder name",
+mainviewDescriptionHint: "Enter description here",
 
 mainviewChangePasswordTitle: "Change password",
 mainviewChangePasswordOld: "Old password",
