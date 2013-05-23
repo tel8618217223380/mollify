@@ -151,7 +151,7 @@ var mollifyDefaults = {
 		return st._do("DELETE", url, data);
 	};
 	
-	st._onError = function(error, dfd) {
+	/*st._onError = function(error, dfd) {
 		if (error.code == 100) {
 			mollify.events.dispatch('session/end');
 			return;
@@ -164,10 +164,9 @@ var mollifyDefaults = {
 		//if (errCb) defaultErrorHandler = !!errCb({code: code, error: error});
 		dfd.rejectWith(failContext, [error]);
 		if (!failContext.handled) mollify.ui.dialogs.showError(error);
-	}
+	}*/
 			
 	st._do = function(type, url, data) {
-		//return $.Deferred(function( dfd ) {
 		var t = type;
 		var diffMethod = (st._limitedHttpMethods && (t == 'PUT' || t == 'DELETE'));
 		if (diffMethod) t = 'POST';
@@ -179,26 +178,7 @@ var mollifyDefaults = {
 			data: data ? JSON.stringify(data) : null,
 			contentType: 'application/json',
 			dataType: 'json',
-			/*success: function(r, st, xhr) {
-				if (!r) {
-					st._onError({ code: 999 }, dfd);
-					return;
-				}
-				//if (s) s(r.result);
-				dfd.resolve(r.result);
-			},
-			error: function(xhr, status, e) {
-				//var code = 999;	//unknown
-				var error = false;
-				var data = false;
-
-				if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
-				if (!error) error = { code: 999 };	//unknown
-				//if (error && window.def(error.code)) code = error.code;
-				
-				st._onError(error, dfd);
-			},*/
-			beforeSend: function (xhr) {
+			beforeSend: function(xhr) {
 				if (mollify.session && mollify.session.id)
 					xhr.setRequestHeader("mollify-session-id", mollify.session.id);
 				if (st._limitedHttpMethods || diffMethod)
@@ -206,7 +186,6 @@ var mollifyDefaults = {
 			}
 		}).pipe(function(r) {
 			if (!r) {
-				//st._onError({ code: 999 }, dfd);
 				return $.Deferred().reject({ code: 999 });
 			}
 			return r.result;
@@ -218,19 +197,20 @@ var mollifyDefaults = {
 			if (!error) error = { code: 999 };	//unknown
 			if (error.code == 100) {
 				mollify.events.dispatch('session/end');
-				return false;
 			}
 			
+			
 			var failContext = {
-				handled: true
+				handled: false
 			}
-			//var defaultErrorHandler = true;
-			//if (errCb) defaultErrorHandler = !!errCb({code: code, error: error});
-			//dfd.rejectWith(failContext, [error]);
-			return error;
-			//TODO if (!failContext.handled) mollify.ui.dialogs.showError(error);
+			var df = $.Deferred();
+			setTimeout(function(){
+				df.fail(function(error){
+					if (!failContext.handled) mollify.ui.dialogs.showError(error);
+				});
+			}, 0);
+			return df.rejectWith(failContext, error);
 		}).promise();
-		//}).promise();
 	};
 	
 	/* FILESYSTEM */
