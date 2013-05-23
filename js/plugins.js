@@ -343,7 +343,7 @@
 				noTitle: mollify.ui.texts.get('dialogCancel'),
 				handler: {
 					isAcceptable: function(n) { return (!!n && n.length > 0 && (!item || n != item.name)); },
-					onInput: function(n) { $.when(that._onCompress(items, f, n).then(df.resolve, df.reject); }
+					onInput: function(n) { $.when(that._onCompress(items, f, n)).then(df.resolve, df.reject); }
 				}
 			});
 			return df.promise();
@@ -1095,6 +1095,7 @@
 				},
 				onItem: function(i, cbr) {
 					if (cbr) cbr.done(that.emptyDropbox);
+					else that.emptyDropbox();
 				},
 				onBlur: function(dd) {
 					
@@ -1415,7 +1416,7 @@
 				share.active = active;
 				share.expiration = expiration;
 				that.updateShareList(item);
-			}.fail(that.d.close);
+			}).fail(that.d.close);
 		}
 		
 		this.removeShare = function(item, share) {
