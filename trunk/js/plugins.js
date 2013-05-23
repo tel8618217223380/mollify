@@ -290,7 +290,7 @@
 		};
 		
 		this._onStore = function(items, name) {
-			mollify.service.post("itemcollection/store", {items : items, name:name}, function(r) {
+			return mollify.service.post("itemcollection/store", {items : items, name:name}).done(function(r) {
 				//TODO show message
 			});
 		};
@@ -302,7 +302,7 @@
 				return {
 					actions: [{
 						"title-key": "pluginItemCollectionStore",
-						callback: function() { that.onStore(items); }
+						callback: function() { return that.onStore(items); }
 					}]
 				};
 			}
@@ -334,6 +334,7 @@
 			
 			if (item) defaultName = item.name + ".zip";
 			
+			var df = $.Deferred();
 			mollify.ui.dialogs.input({
 				title: mollify.ui.texts.get('pluginArchiverCompressDialogTitle'),
 				message: mollify.ui.texts.get('pluginArchiverCompressDialogMessage'),
@@ -342,28 +343,29 @@
 				noTitle: mollify.ui.texts.get('dialogCancel'),
 				handler: {
 					isAcceptable: function(n) { return (!!n && n.length > 0 && (!item || n != item.name)); },
-					onInput: function(n) { that._onCompress(items, f, n); }
+					onInput: function(n) { $.when(that._onCompress(items, f, n).then(df.resolve, df.reject); }
 				}
-			});	
+			});
+			return df.promise();
 		};
 		
 		this.onDownloadCompressed = function(items) {
 			//TODO show progress
-			mollify.service.post("archiver/download", {items : items}, function(r) {
+			return mollify.service.post("archiver/download", {items : items}).done(function(r) {
 				//TODO remove progress
 				mollify.ui.download(mollify.service.url('archiver/download/'+r.id, true));
 			});
 		};
 		
 		this._onCompress = function(items, folder, name) {
-			mollify.service.post("archiver/compress", {items : items, folder: folder, name:name}, function(r) {
+			return mollify.service.post("archiver/compress", {items : items, folder: folder, name:name}).done(function(r) {
 				mollify.events.dispatch('archiver/compress', { items: items, folder: folder, name: name });
 				mollify.events.dispatch('filesystem/update', { folder: folder });
 			});
 		};
 		
 		this._onExtract = function(a, folder) {
-			mollify.service.post("archiver/extract", {item : a, folder: folder}, function(r) {
+			return mollify.service.post("archiver/extract", {item : a, folder: folder}).done(function(r) {
 				mollify.events.dispatch('archiver/extract', { item: a, folder: folder });
 				mollify.events.dispatch('filesystem/update', { folder: folder });
 			});
@@ -390,7 +392,7 @@
 				if (that._isArchive(item)) {
 					return {
 						actions: [
-							{"title-key":"pluginArchiverExtract", callback: function() { that._onExtract(item) } }
+							{"title-key":"pluginArchiverExtract", callback: function() { return that._onExtract(item) } }
 						]
 					};
 				}
@@ -398,7 +400,7 @@
 				var actions = [
 					{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed([item]); } }
 				];
-				if (ctx.folder && folderWritable) actions.push({"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(item, ctx.folder); } });
+				if (ctx.folder && folderWritable) actions.push({"title-key":"pluginArchiverCompress", callback: function() { return that.onCompress(item, ctx.folder); } });
 				return {
 					actions: actions
 				};
@@ -406,8 +408,8 @@
 			itemCollectionHandler : function(items, ctx) {
 				return {
 					actions: [
-						{"title-key":"pluginArchiverCompress", callback: function() { that.onCompress(items) } },
-						{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { that.onDownloadCompressed(items) } }
+						{"title-key":"pluginArchiverCompress", callback: function() { return that.onCompress(items) } },
+						{"title-key":"pluginArchiverDownloadCompressed", type:"primary", group:"download", callback: function() { return that.onDownloadCompressed(items) } }
 					]
 				};
 			}
@@ -688,7 +690,7 @@
 		};
 		
 		this.loadComments = function(item, cb) {
-			mollify.service.get("comment/"+item.id, function(comments) {
+			mollify.service.get("comment/"+item.id).done(function(comments) {
 				cb(item, that.processComments(comments));
 			});
 		};
@@ -706,14 +708,14 @@
 		};
 		
 		this.onAddComment = function(item, comment, cb) {
-			mollify.service.post("comment/"+item.id, { comment: comment }, function(result) {
+			mollify.service.post("comment/"+item.id, { comment: comment }).done(function(result) {
 				that.updateCommentCount(item, result.count);
 				if (cb) cb();
 			});
 		};
 		
 		this.onRemoveComment = function($list, item, id) {		
-			mollify.service.del("comment/"+item.id+"/"+id, function(result) {
+			mollify.service.del("comment/"+item.id+"/"+id).done(function(result) {
 				that.updateCommentCount(item, result.length);
 				that.updateComments($list, item, that.processComments(result));
 			});
@@ -796,19 +798,19 @@
 			for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
 		};
 		
-		this.renderItemContextDetails = function(el, item, $content, data) {
+		/*this.renderItemContextDetails = function(el, item, $content, data) {
 			$content.addClass("loading");
 			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 				$content.removeClass("loading");
 				if (data.count === 0) {
 					that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
 				} else {
-					that.loadComments(item, function(item, comments) {
+					that.loadPermissions(item, function(permissions, userData) {
 						that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
 					});
 				}
 			});
-		};
+		};*/
 		
 		that.onOpenPermissions = function(item) {
 			var permissionData = {
@@ -836,11 +838,10 @@
 						return;
 					
 					$content.addClass("loading");
-					mollify.service.put("filesystem/permissions", permissionData, function(r) {
+					mollify.service.put("filesystem/permissions", permissionData).done(function(r) {
 						d.close();
-					}, function(code, error) {
+					}).fail(function(error) {
 						d.close();
-						return true;
 					});
 				},
 				"on-show": function(h, $d) {
@@ -855,8 +856,8 @@
 					that.loadPermissions(item, function(permissions, userData) {
 						$content.removeClass("loading");
 						that.initEditor(item, permissions, userData, permissionData);
-					}, function(c, e) {
-						$d.close();
+					}).fail(function(e) {
+						h.close();
 					});
 				}
 			});
@@ -881,12 +882,9 @@
 			return userData;
 		};
 		
-		this.loadPermissions = function(item, cb, err) {
-			mollify.service.get("filesystem/"+item.id+"/permissions?u=1", function(r) {
+		this.loadPermissions = function(item, cb) {
+			return mollify.service.get("filesystem/"+item.id+"/permissions?u=1").done(function(r) {
 				cb(r.permissions, that.processUserData(r.users));
-			}, function(code, error) {
-				err(code, error);
-				return true;
 			});
 		};
 		
@@ -1007,9 +1005,8 @@
 					el.close();
 					that.onOpenPermissions(item);
 				});
-			}, function(c, e) {
+			}).fail(function(e) {
 				el.close();
-				return true;
 			});
 		};
 					
@@ -1215,16 +1212,15 @@
 			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				$content.removeClass("loading");
 				mollify.dom.template("mollify-tmpl-shares", {item: item}).appendTo($content);
-				that.loadShares(item, function(item, shares) {
+				that.loadShares(item).done(function(shares) {
 					that.initContent(item, shares, $content);
 				});
 			});
 		};
 		
-		this.loadShares = function(item, cb) {
-			mollify.service.get("share/items/"+item.id, function(result) {
+		this.loadShares = function(item) {
+			return mollify.service.get("share/items/"+item.id).done(function(result) {
 				that.refreshShares(result);
-				cb(item, result);
 			});
 		};
 		
@@ -1399,45 +1395,36 @@
 					},
 					"on-show": function(h, $d) {
 						that.d = h;
-						that.loadShares(item, function(i, shares) { that.initContent(item, shares, $d); });
+						that.loadShares(item).done(function(shares) { that.initContent(item, shares, $d); });
 					}
 				});
 			});
 		};
 		
 		this.addShare = function(item, name, expiration, active) {
-			mollify.service.post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }, function(result) {
+			return mollify.service.post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
 				that.refreshShares(result);
 				that.updateShareList(item);
-			},	function(c, e) {
-				that.d.close();
-				return true;
-			});
+			}).fail(that.d.close);
 		}
 	
 		this.editShare = function(item, id, name, expiration, active) {
-			mollify.service.put("share/"+id, { id: id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }, function(result) {
+			return mollify.service.put("share/"+id, { id: id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
 				var share = that.getShare(id);
 				share.name = name;
 				share.active = active;
 				share.expiration = expiration;
 				that.updateShareList(item);
-			},	function(code, error) {
-				that.d.close();
-				return true;
-			});
+			}.fail(that.d.close);
 		}
 		
 		this.removeShare = function(item, share) {
-			mollify.service.del("share/"+share.id, function(result) {
+			return mollify.service.del("share/"+share.id).done(function(result) {
 				var i = that.shareIds.indexOf(share.id);
 				that.shareIds.splice(i, 1);
 				that.shares.splice(i, 1);
 				that.updateShareList(item);
-			},	function(code, error) {
-				that.d.close();
-				return true;
-			});
+			}).fail(that.d.close);
 		}
 		
 		this.getActionValidationMessages = function(action, item, validationData) {
@@ -1469,7 +1456,7 @@
 			
 			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
-				that.loadShares(item, function(i, shares) { that.initContent(item, shares, that.d.element()); });
+				that.loadShares(item).done(function(shares) { that.initContent(item, shares, that.d.element()); });
 			});
 		};
 		
