@@ -84,6 +84,7 @@
 		public function validateAction($action, $target) {
 			$list = array();
 			$acceptKeys = $this->env->request()->hasData("acceptKeys") ? $this->env->request()->data("acceptKeys") : array();
+			if ($acceptKeys == NULL) $acceptKeys = array();
 			
 			foreach($this->actionValidators as $key => $v) {
 				$ret = $v->validateAction($action, $target, $acceptKeys);
