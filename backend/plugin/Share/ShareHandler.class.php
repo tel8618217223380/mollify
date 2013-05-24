@@ -15,11 +15,17 @@
 	class ShareHandler {
 		private $env;
 		private $settings;
+		private $customShareHandlers;
 		
 		public function __construct($env, $settings) {
 			$this->env = $env;
 			$this->settings = $settings;
+			$this->customShareHandlers = array();
 		}
+
+		public function registerHandler($type, $h) {
+                        $this->customShareHandlers[$type] = $h;
+                }
 				
 		public function getItemContextData($item, $details, $key, $data) {
 			$users = $this->getShareUsers($item);
@@ -88,13 +94,29 @@
 			if (!$share) $this->showInvalidSharePage();
 			
 			$this->env->filesystem()->allowFilesystems = TRUE;
-			$item = $this->env->filesystem()->item($share["item_id"]);
+
+			$itemId = $share["item_id"];
+			if (strpos($itemId, "_") > 0) {
+                                $parts = explode("_", $itemId);
+                                $this->processCustomGet($parts[0], $parts[1], $share);
+                                return;
+                        }
+			$item = $this->env->filesystem()->item($itemId);
 			if (!$item) throw new ServiceException("INVALID_REQUEST");
 
 			if ($item->isFile()) $this->processDownload($item);
 			else $this->processUploadPage($id, $item);
 		}
 		
+                private function processCustomGet($type, $id, $share) {
+                        if(!array_key_exists($type, $this->customShareHandlers)) {
+                                Logging::logError("No custom share handler found: ".$type);
+                                die();
+                        }
+                        $handler = $this->customShareHandlers[$type];
+                        $handler->processGetShare($id, $share);
+                }
+
 		private function showInvalidSharePage() {
 			include("pages/InvalidShare.php");
 			die();

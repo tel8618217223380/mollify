@@ -89,6 +89,11 @@
 			else
 				return $db->update(sprintf("DELETE FROM ".$db->table("share")." WHERE item_id in (select id from ".$db->table("item_id")." where path like '%s%%')", str_replace("'", "\'", $db->string($item->location()))));
 		}
+
+                public function deleteSharesForItem($itemId) {
+                        $db = $this->env->configuration()->db();
+                        return $db->update("DELETE FROM ".$db->table("share")." WHERE item_id = ".$db->string($itemId, TRUE));
+                }
 						
 		public function __toString() {
 			return "ShareDao";

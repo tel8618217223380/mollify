@@ -308,7 +308,7 @@
 			mollify.service.get("itemcollections").done(function(list) {
 				var navBarItems = [];
 				$.each(list, function(i, ic) {
-					navBarItems.push({title:ic.name, obj: f, callback:function(){ that._showCollection(ic); }})
+					navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
 				});
 				collectionsNav.update(navBarItems);
 			})
