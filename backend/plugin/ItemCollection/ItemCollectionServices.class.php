@@ -57,7 +57,7 @@
 			if (strlen($name) == 0 or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
 			
 			$this->handler()->addUserItemCollection($name, $items);
-			$this->response()->success(array());
+			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 		}
 		
 		private function handler() {
