@@ -233,7 +233,7 @@ var mollifyDefaults = {
 		return mollify.service.get("filesystem/"+parent.id+"/folders/");
 	};
 	
-	mfs.copy = function(i, to, cb, err) {
+	mfs.copy = function(i, to) {
 		if (!i) return;
 		
 		if (window.isArray(i) && i.length > 1) {
@@ -270,7 +270,7 @@ var mollifyDefaults = {
 			});
 			return df.promise();
 		} else
-			return mfs._copy(i, to, cb, err);
+			return mfs._copy(i, to);
 	};
 	
 	mfs.copyHere = function(item, name) {
@@ -334,7 +334,7 @@ var mollifyDefaults = {
 		return true;
 	};
 
-	mfs._copyHere = function(i, name, cb, err) {
+	mfs._copyHere = function(i, name) {
 		return mollify.service.post("filesystem/"+i.id+"/copy/", {name:name}).done(function(r) {
 			mollify.events.dispatch('filesystem/copy', { items: [ i ], name: name });
 		});
@@ -462,42 +462,41 @@ var mollifyDefaults = {
 		return true;
 	}
 	
-	mfs.del = function(i, cb, err) {
+	mfs.del = function(i) {
 		if (!i) return;
 		
 		if (window.isArray(i) && i.length > 1) {
-			mfs._delMany(i, cb, err);
-			return;	
+			return mfs._delMany(i);	
 		}
 		
 		if (window.isArray(i)) i = i[0];
-		mfs._del(i, cb, function(c, e) {
+		return mfs._del(i).fail(function(e) {
+			//TODO proxy deferred
+
 			// request denied
-			if (c == 109 && e.data && e.data.items)
-				return !mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDelete", i.name), mollify.ui.texts.get("actionAcceptDelete", i.name), function(acceptKeys) { mfs._del(i, cb, err, acceptKeys); });
-			if (err) return err(c, e);
+			if (e.code == 109 && e.data && e.data.items) {
+			this.handled = true;
+				mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDelete", i.name), mollify.ui.texts.get("actionAcceptDelete", i.name), function(acceptKeys) { mfs._del(i, acceptKeys); });
+			}
 		});
 	};
 	
-	mfs._del = function(item, cb, err, acceptKeys) {
-		mollify.service.del("filesystem/"+item.id, acceptKeys ? { acceptKeys : acceptKeys } : null, function(r) {
+	mfs._del = function(item, acceptKeys) {
+		return mollify.service.del("filesystem/"+item.id, acceptKeys ? { acceptKeys : acceptKeys } : null).done(function(r) {
 			mollify.events.dispatch('filesystem/delete', { items: [item] });
-			if (cb) cb(r);
-		}, err);
+		});
 	};
 	
-	mfs._delMany = function(i, cb, err) {
-		mollify.service.post("filesystem/items/", {action: 'delete', items: i}, function(r) {
+	mfs._delMany = function(i) {
+		return mollify.service.post("filesystem/items/", {action: 'delete', items: i}).done(function(r) {
 			mollify.events.dispatch('filesystem/delete', { items: i });
-			if (cb) cb(r);
-		}, err);
+		});
 	};
 	
-	mfs.createFolder = function(folder, name, cb, err) {
-		mollify.service.post("filesystem/"+folder.id+"/folders/", {name: name}, function(r) {
+	mfs.createFolder = function(folder, name) {
+		return mollify.service.post("filesystem/"+folder.id+"/folders/", {name: name}).done(function(r) {
 			mollify.events.dispatch('filesystem/createfolder', { items: [folder], name: name });
-			if (cb) cb(r);
-		}, err);
+		});
 	};
 
 	/* PLUGINS */
