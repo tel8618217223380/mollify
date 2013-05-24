@@ -290,28 +290,32 @@
 		};
 		
 		this._onStore = function(items, name) {
-			return mollify.service.post("itemcollections", {items : items, name:name}).done(function(r) {
+			return mollify.service.post("itemcollections", {items : items, name:name}).done(function(list) {
 				//TODO show message
+				that._collectionsNav.update(list);
 			});
 		};
 		
 		this._showCollection = function(ic) {
-			//TODO	
+			//TODO
+			that._collectionsNav.setActive(currentRoot);
 		};
+
+		this._updateNavBar = function(list) {
+			var navBarItems = [];
+			$.each(list, function(i, ic) {
+				navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
+			});
+			that._collectionsNav.update(navBarItems);
+		}
 		
 		this._onFileViewRender = function($e, h) {
-			var collectionsNav = h.addNavBar({
+			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
 				items: [],
 				onRender: false
 			});
-			mollify.service.get("itemcollections").done(function(list) {
-				var navBarItems = [];
-				$.each(list, function(i, ic) {
-					navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
-				});
-				collectionsNav.update(navBarItems);
-			})
+			mollify.service.get("itemcollections").done(that._updateNavBar);
 		};
 
 		return {
