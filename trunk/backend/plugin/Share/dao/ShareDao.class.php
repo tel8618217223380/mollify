@@ -46,7 +46,7 @@
 				$itemIds = array();
 				foreach($i as $item)
 					$itemIds[] = $item->id();
-				$itemId = sprintf("item_id in (%s)", $this->db->arrayString($itemIds));
+				$itemId = sprintf("item_id in (%s)", $db->arrayString($itemIds, TRUE));
 			} else {
 				$itemId = "item_id = ".$db->string($i->id(), TRUE);
 			}

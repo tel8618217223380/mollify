@@ -466,7 +466,16 @@ var mollifyDefaults = {
 		if (!i) return;
 		
 		if (window.isArray(i) && i.length > 1) {
-			return mfs._delMany(i);	
+			return mfs._delMany(i).fail(function(e) {
+				//TODO proxy deferred
+
+				// request denied
+				if (e.code == 109 && e.data && e.data.items) {
+					this.handled = true;
+					//TODO message with item name
+					mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDeleteMany"), mollify.ui.texts.get("actionAcceptDelete"), function(acceptKeys) { mfs._delMany(i, acceptKeys); });
+				}
+			});
 		}
 		
 		if (window.isArray(i)) i = i[0];
@@ -475,7 +484,7 @@ var mollifyDefaults = {
 
 			// request denied
 			if (e.code == 109 && e.data && e.data.items) {
-			this.handled = true;
+				this.handled = true;
 				mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDelete", i.name), mollify.ui.texts.get("actionAcceptDelete", i.name), function(acceptKeys) { mfs._del(i, acceptKeys); });
 			}
 		});
