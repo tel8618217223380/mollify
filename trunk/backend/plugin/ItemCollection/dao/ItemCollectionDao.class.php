@@ -18,7 +18,7 @@
 		}
 
 		public function getItemCollection($id) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id order by ici.item_index asc")->rows();
 			if (count($list) == 0) return FALSE;
 			
@@ -30,7 +30,7 @@
 		}
 		
 		public function getUserItemCollections($userId) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by ic.created asc, ici.item_index asc")->rows();
 			
 			$res = array();
@@ -53,7 +53,7 @@
 		}
 		
 		public function addUserItemCollection($userId, $name, $items, $time) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			$db->startTransaction();
 			$db->update(sprintf("INSERT INTO ".$db->table("itemcollection")." (name, user_id, created) VALUES (%s, %s, %s)", $db->string($name, TRUE), $db->string($userId, TRUE), $db->string($time)));
 			$cid = $db->lastId();
@@ -69,7 +69,7 @@
 		}
 
 		public function deleteUserItemCollection($id, $userId) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE)." and id = ".$db->string($id, TRUE))->rows();
 			if (count($list) == 0) return FALSE;
@@ -82,7 +82,7 @@
 		}
 		
 		public function deleteUserItemCollections($userId) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			
 			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE))->values("id");
 			if (count($list) == 0) return $list;
@@ -95,7 +95,7 @@
 		}
 
 		public function deleteCollectionItems($item) {
-			$db = $this->env->configuration()->db();
+			$db = $this->env->db();
 			return $db->update("DELETE FROM ".$db->table("itemcollection_item")." WHERE item_id = ".$db->string($item->id(), TRUE));
 		}
 		
