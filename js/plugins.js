@@ -292,7 +292,7 @@
 		this._onStore = function(items, name) {
 			return mollify.service.post("itemcollections", {items : items, name:name}).done(function(list) {
 				//TODO show message
-				that._collectionsNav.update(list);
+				that._updateNavBar(list);
 			});
 		};
 		
