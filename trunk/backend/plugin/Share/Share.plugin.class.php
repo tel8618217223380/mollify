@@ -35,13 +35,13 @@
 			$this->env->filesystem()->registerActionValidator("plugin-share", $this->handler);
 		}
 
-                public function registerHandler($type, $handler) {
-                        $this->handler->registerHandler($type, $handler);
-                }
+		public function registerHandler($type, $handler) {
+			$this->handler->registerHandler($type, $handler);
+		}
 
-                public function deleteSharesForItem($itemId) {
-                        $this->handler->deleteSharesForItem($itemId);
-                }
+		public function deleteSharesForItem($itemId) {
+			$this->handler->deleteSharesForItem($itemId);
+		}
 				
 		public function getHandler() {
 			return $this->handler;

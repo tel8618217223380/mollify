@@ -24,8 +24,8 @@
 		}
 
 		public function registerHandler($type, $h) {
-                        $this->customShareHandlers[$type] = $h;
-                }
+			$this->customShareHandlers[$type] = $h;
+		}
 				
 		public function getItemContextData($item, $details, $key, $data) {
 			$users = $this->getShareUsers($item);
@@ -97,10 +97,10 @@
 
 			$itemId = $share["item_id"];
 			if (strpos($itemId, "_") > 0) {
-                                $parts = explode("_", $itemId);
-                                $this->processCustomGet($parts[0], $parts[1], $share);
-                                return;
-                        }
+				$parts = explode("_", $itemId);
+				$this->processCustomGet($parts[0], $parts[1], $share);
+				return;
+			}
 			$item = $this->env->filesystem()->item($itemId);
 			if (!$item) throw new ServiceException("INVALID_REQUEST");
 
@@ -108,14 +108,14 @@
 			else $this->processUploadPage($id, $item);
 		}
 		
-                private function processCustomGet($type, $id, $share) {
-                        if(!array_key_exists($type, $this->customShareHandlers)) {
-                                Logging::logError("No custom share handler found: ".$type);
-                                die();
-                        }
-                        $handler = $this->customShareHandlers[$type];
-                        $handler->processGetShare($id, $share);
-                }
+		private function processCustomGet($type, $id, $share) {
+			if(!array_key_exists($type, $this->customShareHandlers)) {
+				Logging::logError("No custom share handler found: ".$type);
+				die();
+			}
+			$handler = $this->customShareHandlers[$type];
+			$handler->processGetShare($id, $share);
+		}
 
 		private function showInvalidSharePage() {
 			include("pages/InvalidShare.php");
@@ -181,7 +181,7 @@
 		}
 				
 		public function __toString() {
-			return "CommentHandler";
+			return "ShareHandler";
 		}
 	}
 ?>
