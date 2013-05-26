@@ -298,10 +298,11 @@
 		
 		this._showCollection = function(ic) {
 			//TODO
-			that._collectionsNav.setActive(currentRoot);
+			that._collectionsNav.setActive(ic);
 		};
 
 		this._updateNavBar = function(list) {
+			that._list = list;
 			var navBarItems = [];
 			$.each(list, function(i, ic) {
 				navBarItems.push({title:ic.name, obj: ic, callback:function(){ that._showCollection(ic); }})
@@ -312,8 +313,17 @@
 		this._onFileViewRender = function($e, h) {
 			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
+				classes: "ic-navbar-item",
 				items: [],
-				onRender: false
+				dropdown: {
+					items: function(obj) {
+						var items = [
+							{"title-key":"pluginItemCollectionsNavRemove", callback: that._onRemoveNavItem}
+						];
+						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: that._onShareNavItem});
+						return items;
+					}
+				}
 			});
 			mollify.service.get("itemcollections").done(that._updateNavBar);
 		};
