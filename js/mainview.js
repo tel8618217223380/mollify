@@ -54,14 +54,34 @@
 			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
 			var initItems = function(items) {
 				var $items = $nb.find(".mollify-mainview-navbar-item");
+				if (nb.classes) $items.addClass(nb.classes);
+				if (nb.dropdown) {
+					$items.each(function(i, e) {
+						var item = items[$items.index(this)];
+						var $tr = $('<li class="mollify-mainview-navbar-dropdown"><a href="#" class="dropdown-toggle"><i class="icon-cog"></i></a></li>').appendTo($(e));
+						var dropdownItems = [];
+						if (typeof(nb.dropdown.items) != 'function') dropdownItems = nb.dropdown.items;
+						mollify.ui.controls.dropdown({
+							element: $tr,
+							items: dropdownItems,
+							onShow: function(api, menuItems) {
+								if (menuItems.length > 0) return;
+								if (typeof(nb.dropdown.items) == 'function') {
+									api.items(nb.dropdown.items(item.obj));
+								}
+							}
+						});
+					});
+				}
 				$items.click(function() {
 					var item = items[$items.index(this)];
 					if (item.callback) item.callback();
 				});
-				if (nb.onRender) nb.onRender($items, function($e) { return items[$items.index($e)].obj; });
+				if (nb.onRender) nb.onRender($nb, $items, function($e) { return items[$items.index($e)].obj; });
 			};
 			initItems(nb.items);
 			return {
+				element: $nb,
 				setActive : function(o) {
 					var $items = $nb.find(".mollify-mainview-navbar-item");
 					$items.removeClass("active");
@@ -311,7 +331,7 @@
 			that.rootNav = h.addNavBar({
 				title: mollify.ui.texts.get("mainViewRootsTitle"),
 				items: navBarItems,
-				onRender: mollify.ui.draganddrop ? function($items, objs) {
+				onRender: mollify.ui.draganddrop ? function($nb, $items, objs) {
 					mollify.ui.draganddrop.enableDrop($items, {
 						canDrop : function($e, e, obj) {
 							if (!obj || obj.type != 'filesystemitem') return false;

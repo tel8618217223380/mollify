@@ -209,4 +209,6 @@ shareDialogShareValidityTitle: 'Validity',
 shareDialogShareExpirationTitle: 'Expires at',
 shareDialogSave: 'Save',
 shareDialogCancel: 'Cancel',
+
+pluginItemCollectionsNavTitle: "Stored"
 })})();

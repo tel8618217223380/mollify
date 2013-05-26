@@ -1267,3 +1267,19 @@ li#mollify-folder-hierarchy-item-root > a {
 	display: block;
 	float: left;
 }
+
+.mollify-mainview-navbar-item {
+	position: relative;
+}
+
+.mollify-mainview-navbar-item .mollify-mainview-navbar-dropdown {
+	position: absolute;
+	right: 0;
+	top: 4px;
+	cursor: pointer;
+	visibility: hidden;
+}
+
+.mollify-mainview-navbar-item:hover .mollify-mainview-navbar-dropdown {
+	visibility: visible;
+}
