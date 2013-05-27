@@ -309,6 +309,15 @@
 			});
 			that._collectionsNav.update(navBarItems);
 		}
+
+		this._onRemoveNavItem = function(ic) {
+			alert("remove "+ic.name);
+		};
+
+		this._onShareNavItem = function(ic) {
+			if (!mollify.plugins.exists("plugin-share")) return;
+			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.name, "name": ic.name });
+		};
 		
 		this._onFileViewRender = function($e, h) {
 			that._collectionsNav = h.addNavBar({
@@ -318,9 +327,9 @@
 				dropdown: {
 					items: function(obj) {
 						var items = [
-							{"title-key":"pluginItemCollectionsNavRemove", callback: that._onRemoveNavItem}
+							{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that._onRemoveNavItem(obj); }}
 						];
-						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: that._onShareNavItem});
+						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(obj); }});
 						return items;
 					}
 				}
@@ -1465,16 +1474,18 @@
 		}
 		
 		this.getActionValidationMessages = function(action, items, validationData) {
-			var messages = {};
+			var messages = [];
 			$.each(items, function(i, itm) {
-				if (itm.reason == 'item_shared') messages[itm.acceptKey] = {
-					message: mollify.ui.texts.get("pluginShareActionValidationDeleteShared", itm.item.name),
-					acceptable: itm.acceptable
-				}
-				else if (itm.reason == 'item_shared_others') messages[itm.acceptKey] = {
-					message: mollify.ui.texts.get("pluginShareActionValidationDeleteSharedOthers", itm.item.name),
-					acceptable: itm.acceptable
-				}
+				var msg;
+				if (itm.reason == 'item_shared') msg = mollify.ui.texts.get("pluginShareActionValidationDeleteShared", itm.item.name);
+				else if (itm.reason == 'item_shared_others') msg = mollify.ui.texts.get("pluginShareActionValidationDeleteSharedOthers", itm.item.name);
+				else return;
+
+				messages.push({
+					message: msg,
+					acceptable: itm.acceptable,
+					acceptKey: itm.acceptKey
+				});
 			});
 			return messages;
 		}
@@ -1535,7 +1546,9 @@
 				return {
 					getValidationMessages : that.getActionValidationMessages
 				}
-			}
+			},
+
+			openShares : that.onOpenShares
 		};
 	}
 }(window.jQuery, window.mollify);

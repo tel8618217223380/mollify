@@ -30,9 +30,9 @@
 			return $db->query($query)->firstRow();
 		}
 
-		public function getShares($item, $userId) {
+		public function getShares($itemId, $userId) {
 			$db = $this->env->db();
-			$list = $db->query("select id, name, expiration, active from ".$db->table("share")." where item_id = ".$db->string($item->id(), TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
+			$list = $db->query("select id, name, expiration, active from ".$db->table("share")." where item_id = ".$db->string($itemId, TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();
 			
 			$res = array();
 			foreach($list as $s)
