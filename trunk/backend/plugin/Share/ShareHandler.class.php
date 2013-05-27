@@ -29,7 +29,6 @@
 				
 		public function getItemContextData($item, $details, $key, $data) {
 			$list = $this->getShareUsers($item);
-			Logging::logDebug(Util::array2str($list));
 			$users = Util::arrayCol($list, "user_id");
 			$count = count($users);
 			$own = FALSE;
@@ -53,7 +52,6 @@
 			if (FileEvent::DELETE != $action || !$target) return;
 			
 			$shareList = $this->getShareUsers($target);
-			Logging::logDebug(Util::array2str($shareList));
 			$usersByItemId = array();
 			$itemId = "";
 			foreach($shareList as $r) {
@@ -63,7 +61,6 @@
 				}
 				$usersByItemId[$itemId][] = $r["user_id"];
 			}
-			Logging::logDebug(Util::array2str($usersByItemId));
 			$list = array();
 			
 			foreach($usersByItemId as $itemId => $users) {
@@ -83,7 +80,6 @@
 					$list[] = array("item" => $itemId, "reason" => "item_shared_others", "acceptable" => $this->env->authentication()->isAdmin(), "acceptKey" => $sharedOthersKey);
 				}
 			}
-			Logging::logDebug(Util::array2str($list));
 			return $list;
 		}
 		
