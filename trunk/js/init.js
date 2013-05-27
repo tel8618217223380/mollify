@@ -462,7 +462,6 @@ var mollifyDefaults = {
 			for(var ak in hm) {
 				acceptKeys.push(ak);
 				var message = hm[ak].message;
-				//if (itemNamePrefix) message = 'foo: ' + message;
 				validationMessages.push(message);
 				if (!hm[ak].acceptable) nonAcceptable.push(message);
 			}
@@ -488,7 +487,7 @@ var mollifyDefaults = {
 				// request denied
 				if (e.code == 109 && e.data && e.data.items) {
 					this.handled = true;
-					mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDeleteMany"), mollify.ui.texts.get("actionAcceptDeleteMany"), true).done(function(acceptKeys) { mfs._delMany(i, acceptKeys).done(df.resolve).fail(df.reject); }).fail(function(){df.reject(e);});
+					mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDeleteMany"), mollify.ui.texts.get("actionAcceptDeleteMany", i.length)).done(function(acceptKeys) { mfs._delMany(i, acceptKeys).done(df.resolve).fail(df.reject); }).fail(function(){df.reject(e);});
 				} else df.reject(e);
 			});
 			return df.promise();
