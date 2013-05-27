@@ -52,13 +52,13 @@
 			if (count($this->path) == 1) $id = $this->path[0];
 			
 			$data = $this->request->data;
-			if (!isset($data["name"]) or !isset($data["items"])) throw $this->invalidRequestException("No data");
+			if ((!$id and !isset($data["name"])) or !isset($data["items"])) throw $this->invalidRequestException("No data");
 			
-			$name = $data["name"];
 			$items = $data["items"];
-			if ((!$id && strlen($name) == 0) or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
+			if ((!$id and strlen($name) == 0) or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
 			
 			if (!$id) {
+				$name = $data["name"];
 				$this->handler()->addUserItemCollection($name, $items);
 				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 			} else {

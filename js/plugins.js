@@ -298,8 +298,8 @@
 			});
 		};
 		
-		this.onAddItems = function(items, ic) {
-			return mollify.service.post("itemcollections/"+ic.id, {items : items});
+		this.onAddItems = function(ic, items) {
+			return mollify.service.post("itemcollections/"+ic.id, {items : isArray(items) ? items: [ items ]});
 		};
 		
 		this._showCollection = function(ic) {
