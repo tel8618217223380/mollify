@@ -458,12 +458,12 @@ var mollifyDefaults = {
 		var acceptKeys = [];
 		var allAcceptable = true;
 		for(var ind=0,j=handlers.length; ind<j; ind++) {
-			var hm = handlers[ind].getValidationMessages(action, data.items[k], data);
-			for(var ak in hm) {
-				acceptKeys.push(ak);
-				var message = hm[ak].message;
-				validationMessages.push(message);
-				if (!hm[ak].acceptable) nonAcceptable.push(message);
+			var msg = handlers[ind].getValidationMessages(action, data.items[k], data);
+			for(var mi = 0, mj= msg.length; mi<mj; mi++) {
+				var m = msg[mi];
+				acceptKeys.push(m.acceptKey);
+				validationMessages.push(m.message);
+				if (!m.acceptable) nonAcceptable.push(m.message);
 			}
 		}		
 		if (nonAcceptable.length === 0) {

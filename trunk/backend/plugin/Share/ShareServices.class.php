@@ -22,8 +22,10 @@
 		public function processGet() {
 			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
 			
-			$item = $this->item($this->path[1]);
-			$this->response()->success($this->handler()->getShares($item));
+			$itemId = $this->path[1];
+			if (strpos($this->path[1], "_") < 0) $this->item($itemId);
+
+			$this->response()->success($this->handler()->getShares($itemId));
 		}
 
 		public function processDelete() {
