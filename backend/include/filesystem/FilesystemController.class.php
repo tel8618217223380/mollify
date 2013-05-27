@@ -92,9 +92,19 @@
 			}
 			if (count($list) > 0) throw new ServiceException("REQUEST_DENIED", "Action not allowed: ".$action, array(
 				"action" => $action,
-				"target" => $target,
+				"target" => $this->getItemData($target),
 				"items" => $list
 			));
+		}
+
+		private function getItemData($i) {
+			$data = array();
+			if (!is_array($i)) {
+				$data[] = $i->data();
+			} else {
+				foreach($i as $item) $data[] = $item->data();
+			}
+			return $data;
 		}
 		
 		public function getRootFolders($all = FALSE) {

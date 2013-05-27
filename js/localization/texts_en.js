@@ -104,7 +104,7 @@ actionRenameItem: "Rename...",
 actionDeniedDelete: "Item \"{0}\" cannot be deleted because:",
 actionDeniedDeleteMany: "One or more items cannot be deleted because:",
 actionAcceptDelete: "Are you sure you want to delete \"{0}\":",
-actionAcceptDeleteMany: "Are you sure you want to delete following items:",
+actionAcceptDeleteMany: "Are you sure you want to delete {0} items:",
 
 fileItemDetailsGroupFile: "File",
 fileItemContextDataName: "Name",
