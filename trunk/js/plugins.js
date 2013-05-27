@@ -276,6 +276,7 @@
 		};
 		
 		this.onStore = function(items) {
+			var df = $.Deferred();
 			mollify.ui.dialogs.input({
 				title: mollify.ui.texts.get('pluginItemCollectionStoreDialogTitle'),
 				message: mollify.ui.texts.get('pluginItemCollectionStoreDialogMessage'),
@@ -284,9 +285,10 @@
 				noTitle: mollify.ui.texts.get('dialogCancel'),
 				handler: {
 					isAcceptable: function(n) { return (!!n && n.length > 0); },
-					onInput: function(n) { that._onStore(items, n); }
+					onInput: function(n) { $.when(that._onStore(items, n)).then(df.resolve, df.reject); }
 				}
-			});	
+			});
+			return df.promise();
 		};
 		
 		this._onStore = function(items, name) {
@@ -294,6 +296,10 @@
 				//TODO show message
 				that._updateNavBar(list);
 			});
+		};
+		
+		this.onAddItems = function(items, ic) {
+			return mollify.service.post("itemcollections/"+ic.id, {items : items});
 		};
 		
 		this._showCollection = function(ic) {
@@ -332,7 +338,25 @@
 						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(obj); }});
 						return items;
 					}
-				}
+				},
+				onRender: mollify.ui.draganddrop ? function($nb, $items, objs) {
+					mollify.ui.draganddrop.enableDrop($items, {
+						canDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							return true;
+						},
+						dropType : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return false;
+							return "copy";
+						},
+						onDrop : function($e, e, obj) {
+							if (!obj || obj.type != 'filesystemitem') return;
+							var item = obj.payload;
+							var ic = objs($e);							
+							that.onAddItems(ic, item);
+						}
+					});
+				} : false
 			});
 			mollify.service.get("itemcollections").done(that._updateNavBar);
 		};

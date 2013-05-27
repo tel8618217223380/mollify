@@ -58,13 +58,28 @@
 			$db->update(sprintf("INSERT INTO ".$db->table("itemcollection")." (name, user_id, created) VALUES (%s, %s, %s)", $db->string($name, TRUE), $db->string($userId, TRUE), $db->string($time)));
 			$cid = $db->lastId();
 			
-			$itemIds = array();
-			$ind = 0;
+			$this->addCollectionItemRows($db, $cid, $items);
+			$db->commit();
+		}
+		
+		private function addCollectionItemRows($db, $cid, $items) {
+			$itemIds = $db->query("select item_id from ".$db->table("itemcollection_item")." where collection_id = ".$db->string($cid, TRUE))->values("item_id");
+			$ind = count($itemIds);
+		
 			foreach($items as $i) {
 				if (in_array($i["id"], $itemIds)) continue;
 				$db->update(sprintf("INSERT INTO ".$db->table("itemcollection_item")." (collection_id, item_id, item_index) VALUES (%s, %s, %s)", $db->string($cid, TRUE), $db->string($i["id"], TRUE), $db->string($ind++)));
 				$itemIds[] = $i["id"];
 			}
+		}
+		
+		public function addCollectionItems($id, $userId, $items) {
+			$db = $this->env->db();
+			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE)." and id = ".$db->string($id, TRUE))->rows();
+			if (count($list) == 0) return FALSE;
+			
+			$db->startTransaction();
+			$this->addCollectionItemRows($db, $id, $items);
 			$db->commit();
 		}
 

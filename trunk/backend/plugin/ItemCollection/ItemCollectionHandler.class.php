@@ -83,6 +83,10 @@
 			$this->dao()->addUserItemCollection($this->env->session()->userId(), $name, $items, $created);
 		}
 		
+		public function addCollectionItems($id, $items) {
+			$this->dao()->addCollectionItems($id, $this->env->session()->userId(), $items);
+		}
+		
 		public function deleteUserItemCollection($id) {
 			$this->dao()->deleteUserItemCollection($id, $this->env->session()->userId());
 			if ($this->env->plugins()->hasPlugin("Share")) $this->env->plugins()->getPlugin("Share")->deleteSharesForItem("ic_".$id);

@@ -22,6 +22,7 @@
 		private $contextPlugins = array();
 		private $actionValidators = array();
 		private $dataRequestPlugins = array();
+		private $itemListingProviders = array();
 		private $searchers = array();
 		private $filesystems = array();
 		private $idProvider;
@@ -71,6 +72,10 @@
 		public function registerDataRequestPlugin($keys, $plugin) {
 			foreach($keys as $key)
 				$this->dataRequestPlugins[$key] = $plugin;
+		}
+		
+		public function registerItemListingProvider($key, $provider) {
+			$this->itemListingProviders[$key] = $provider;
 		}
 		
 		public function getDataRequestPlugins() {
@@ -270,7 +275,7 @@
 
 		public function hierarchy($folder) {
 			$this->assertRights($folder, Authentication::RIGHTS_READ, "hierarchy");
-			$h =  $folder->hierarchy();
+			$h = $folder->hierarchy();
 			return $h;
 		}
 		

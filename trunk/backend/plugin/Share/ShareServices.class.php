@@ -37,9 +37,9 @@
 		}
 				
 		public function processPost() {
-			if (count($this->path) != 0) throw $this->invalidRequestException();
-			$data = $this->request->data;
+			if (count($this->path) > 0) throw $this->invalidRequestException();
 			
+			$data = $this->request->data;			
 			if (!isset($data["item"]) or !isset($data["name"])) throw $this->invalidRequestException("No data");
 					
 			$itemId = $data["item"];
