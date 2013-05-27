@@ -47,17 +47,24 @@
 		}
 				
 		public function processPost() {
-			if (count($this->path) != 0) throw $this->invalidRequestException();
+			if (count($this->path) > 1) throw $this->invalidRequestException();
+			$id = FALSE;
+			if (count($this->path) == 1) $id = $this->path[0];
 			
 			$data = $this->request->data;
-			
 			if (!isset($data["name"]) or !isset($data["items"])) throw $this->invalidRequestException("No data");
+			
 			$name = $data["name"];
 			$items = $data["items"];
-			if (strlen($name) == 0 or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
+			if ((!$id && strlen($name) == 0) or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
 			
-			$this->handler()->addUserItemCollection($name, $items);
-			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
+			if (!$id) {
+				$this->handler()->addUserItemCollection($name, $items);
+				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
+			} else {
+				$this->handler()->addCollectionItems($id, $items);
+				$this->response()->success(array());
+			}
 		}
 		
 		private function handler() {

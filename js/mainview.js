@@ -4,7 +4,8 @@
 	
 	mollify.view.MainView = function() {
 		var that = this;
-		this._views = [ new mollify.view.MainViewFileView() ];
+		this._mainFileView = new mollify.view.MainViewFileView();
+		this._views = [ this._mainFileView ];
 		that._currentView = false;
 		
 		this.init = function($c) {			
@@ -46,7 +47,8 @@
 			v.onActivate({
 				content: $("#mollify-mainview-viewcontent").empty(),
 				tools: $("#mollify-mainview-viewtools").empty(),
-				addNavBar: that.addNavBar
+				addNavBar: that.addNavBar,
+				fileview: that._mainFileView
 			});
 		}
 		
