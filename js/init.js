@@ -180,12 +180,13 @@ var mollifyDefaults = {
 
 			if (xhr.responseText && xhr.responseText.startsWith('{')) error = JSON.parse(xhr.responseText);
 			if (!error) error = { code: 999 };	//unknown
-			if (error.code == 100) {
-				mollify.events.dispatch('session/end');
-			}
 			
 			var failContext = {
 				handled: false
+			}
+			if (error.code == 100) {
+				mollify.events.dispatch('session/end');
+				failContext.handled = true;
 			}
 			var df = $.Deferred();
 			// push default handler to end of callback list

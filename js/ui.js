@@ -457,6 +457,7 @@
 			});
 			if (onItem) onItem(item, item.callback ? item.callback() : null);
 			else if (item.callback) item.callback();
+			return false;
 		});
 	};
 			

@@ -69,9 +69,9 @@
 			return $db->query("select item_id, sum(case when user_id = ".$db->string($currentUser, TRUE)." then 1 else 0 end) as own, sum(case when user_id <> ".$db->string($currentUser, TRUE)." then 1 else 0 end) as other from ".$db->table("share")." where item_id in (".$itemFilter.") group by item_id")->valueMap("item_id", "own", "other");
 		}
 		
-		public function addShare($id, $item, $name, $userId, $expirationTime, $time, $active = TRUE) {
+		public function addShare($id, $itemId, $name, $userId, $expirationTime, $time, $active = TRUE) {
 			$db = $this->env->db();
-			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($item->id(), TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0")));
+			$db->update(sprintf("INSERT INTO ".$db->table("share")." (id, name, item_id, user_id, expiration, created, active) VALUES (%s, %s, %s, %s, %s, %s, %s)", $db->string($id, TRUE), $db->string($name, TRUE), $db->string($itemId, TRUE), $db->string($userId, TRUE), $db->string($expirationTime), $db->string($time), ($active ? "1" : "0")));
 		}
 		
 		public function editShare($id, $name, $expirationTime, $active) {
