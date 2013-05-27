@@ -43,7 +43,7 @@
 			
 			$id = $this->path[0];
 			$this->handler()->deleteUserItemCollection($id);
-			$this->response()->success(array());
+			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 		}
 				
 		public function processPost() {

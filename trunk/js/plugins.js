@@ -311,12 +311,12 @@
 		}
 
 		this._onRemoveNavItem = function(ic) {
-			alert("remove "+ic.name);
+			return mollify.service.del("itemcollections/"+ic.id).done(that._updateNavBar);
 		};
 
 		this._onShareNavItem = function(ic) {
 			if (!mollify.plugins.exists("plugin-share")) return;
-			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.name, "name": ic.name });
+			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.name, "name": ic.name, shareTitle: mollify.ui.texts.get("pluginItemCollectionShareTitle") });
 		};
 		
 		this._onFileViewRender = function($e, h) {
@@ -1448,7 +1448,7 @@
 		};
 		
 		this.addShare = function(item, name, expiration, active) {
-			return mollify.service.post("share/items/"+item.id, { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
+			return mollify.service.post("share/", { item: item.id, name: name, expiration: mollify.helpers.formatInternalTime(expiration), active: active }).done(function(result) {
 				that.refreshShares(result);
 				that.updateShareList(item);
 			}).fail(that.d.close);

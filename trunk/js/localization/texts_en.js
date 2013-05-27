@@ -212,5 +212,10 @@ shareDialogShareExpirationTitle: 'Expires at',
 shareDialogSave: 'Save',
 shareDialogCancel: 'Cancel',
 
-pluginItemCollectionsNavTitle: "Stored"
+pluginItemCollectionsNavTitle: "Stored",
+pluginItemCollectionStore: "Store...",
+pluginItemCollectionStoreDialogTitle: "Store Item Collection",
+pluginItemCollectionStoreDialogMessage: "Enter name for the collection:",
+pluginItemCollectionStoreDialogAction: "Store",
+pluginItemCollectionShareTitle: "Share Stored Collection",
 })})();

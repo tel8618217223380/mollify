@@ -104,6 +104,10 @@
 			$this->dao()->deleteShare($id);
 		}
 		
+		public function deleteSharesForItem($itemId) {
+			$this->dao()->deleteSharesForItem($itemId);
+		}
+		
 		public function processShareGet($id) {
 			$share = $this->dao()->getShare($id, $this->env->configuration()->formatTimestampInternal(time()));
 			if (!$share) $this->showInvalidSharePage();

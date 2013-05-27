@@ -23,7 +23,7 @@
 			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
 			
 			$itemId = $this->path[1];
-			if (strpos($this->path[1], "_") < 0) $this->item($itemId);
+			if (strpos($itemId, "_") < 0) $this->item($itemId);
 
 			$this->response()->success($this->handler()->getShares($itemId));
 		}
@@ -37,16 +37,18 @@
 		}
 				
 		public function processPost() {
-			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
-			
-			$item = $this->item($this->path[1]);
+			if (count($this->path) != 0) throw $this->invalidRequestException();
 			$data = $this->request->data;
 			
-			if (!isset($data["name"])) throw $this->invalidRequestException("No data");			
+			if (!isset($data["item"]) or !isset($data["name"])) throw $this->invalidRequestException("No data");
+					
+			$itemId = $data["item"];
+			if (strpos($itemId, "_") < 0) $this->item($itemId);
+			
 			if ($data["expiration"] and !is_int($data["expiration"])) throw $this->invalidRequestException("Invalid datatype: expiration");
 			
-			$this->handler()->addShare($item, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE);
-			$this->response()->success($this->handler()->getShares($item));
+			$this->handler()->addShare($itemId, $data["name"], $data["expiration"], isset($data["active"]) ? $data["active"] : TRUE);
+			$this->response()->success($this->handler()->getShares($itemId));
 		}
 		
 		public function processPut() {
