@@ -431,12 +431,26 @@ var mollifyDefaults = {
 	mfs._handleDenied = function(action, i, data, msgTitleDenied, msgTitleAccept) {
 		var df = $.Deferred();
 		var handlers = [];
+		var findItem = function(id) {
+			if (!isArray(data.target)) return data.target;
+
+			for(var i=0,j=data.target.length;i<j;i++) {
+				if (data.target[i].id == id) return data.target[i];
+			}
+			return null;
+		};
 		for(var k in data.items) {
 			var plugin = mollify.plugins.get(k);
 			if (!plugin || !plugin.actionValidationHandler) return false;
 			
 			var handler = plugin.actionValidationHandler();
 			handlers.push(handler);
+
+			var items = data.items[k];
+			for(var i=0,j=items.length;i<j;i++) {
+				var item = items[i];
+				item.item = findItem(item.item);
+			}
 		}
 
 		var validationMessages = [];
@@ -444,10 +458,11 @@ var mollifyDefaults = {
 		var acceptKeys = [];
 		var allAcceptable = true;
 		for(var ind=0,j=handlers.length; ind<j; ind++) {
-			var hm = handlers[ind].getValidationMessages(action, i, data.items[k], data);
+			var hm = handlers[ind].getValidationMessages(action, data.items[k], data);
 			for(var ak in hm) {
 				acceptKeys.push(ak);
 				var message = hm[ak].message;
+				//if (itemNamePrefix) message = 'foo: ' + message;
 				validationMessages.push(message);
 				if (!hm[ak].acceptable) nonAcceptable.push(message);
 			}
@@ -456,8 +471,7 @@ var mollifyDefaults = {
 			// retry with accept keys
 			mollify.ui.dialogs.confirmActionAccept(msgTitleAccept, validationMessages, function() {
 				df.resolve(acceptKeys);
-			});
-			//TODO cancel => fail
+			}, df.reject);
 		} else {
 			mollify.ui.dialogs.showActionDeniedMessage(msgTitleDenied, nonAcceptable);
 			df.reject();
@@ -471,13 +485,10 @@ var mollifyDefaults = {
 		var df = $.Deferred();
 		if (window.isArray(i) && i.length > 1) {
 			mfs._delMany(i).done(df.resolve).fail(function(e) {
-				//TODO proxy deferred
-
 				// request denied
 				if (e.code == 109 && e.data && e.data.items) {
 					this.handled = true;
-					//TODO message with item name
-					mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDeleteMany"), mollify.ui.texts.get("actionAcceptDelete")).done(function(acceptKeys) { mfs._delMany(i, acceptKeys).done(df.resolve).fail(df.reject); }).fail(function(){df.reject(e);});
+					mfs._handleDenied("delete", i, e.data, mollify.ui.texts.get("actionDeniedDeleteMany"), mollify.ui.texts.get("actionAcceptDeleteMany"), true).done(function(acceptKeys) { mfs._delMany(i, acceptKeys).done(df.resolve).fail(df.reject); }).fail(function(){df.reject(e);});
 				} else df.reject(e);
 			});
 			return df.promise();
@@ -485,8 +496,6 @@ var mollifyDefaults = {
 		
 		if (window.isArray(i)) i = i[0];
 		mfs._del(i).done(df.resolve).fail(function(e) {
-			//TODO proxy deferred
-
 			// request denied
 			if (e.code == 109 && e.data && e.data.items) {
 				this.handled = true;
