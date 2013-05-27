@@ -974,7 +974,7 @@
 		});
 	}
 	
-	dh.confirmActionAccept = function(title, reasons, confirmCb) {
+	dh.confirmActionAccept = function(title, reasons, confirmCb, cancelCb) {
 		//TODO template
 		var msg = '<p>'+title+'</p><p><ul>';
 		for (var i=0,j=reasons.length;i<j;i++) {
@@ -990,7 +990,8 @@
 			],
 			"on-button": function(btn, d) {
 				d.close();
-				if (confirmCb && btn.id === 'yes') confirmCb();
+				if (btn.id === 'yes') if (confirmCb) confirmCb();
+				else if (cancelCb) cancelCb();
 			}
 		});
 	}

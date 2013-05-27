@@ -46,13 +46,15 @@
 				$itemIds = array();
 				foreach($i as $item)
 					$itemIds[] = $item->id();
-				$itemId = sprintf("item_id in (%s)", $db->arrayString($itemIds, TRUE));
+				$itemIds = sprintf("item_id in (%s)", $db->arrayString($itemIds, TRUE));
+				
+//				return $db->query("select distinct user_id from ".$db->table("share")." where ".$itemIds)->values("user_id")." group by item_id";
 			} else {
-				$itemId = "item_id = ".$db->string($i->id(), TRUE);
+				$itemIds = "item_id = ".$db->string($i->id(), TRUE);
 			}
-			
-			$db = $this->env->db();
-			return $db->query("select distinct user_id from ".$db->table("share")." where ".$itemId)->values("user_id");
+
+			return $db->query("select distinct item_id, user_id from ".$db->table("share")." where ".$itemIds." group by item_id")->rows();
+//			return $db->query("select distinct user_id from ".$db->table("share")." where ".$itemId)->values("user_id");
 		}
 		
 		public function getShareUsersForChildren($p, $currentUser) {

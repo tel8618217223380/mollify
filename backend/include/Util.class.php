@@ -86,5 +86,12 @@
 				$text = str_replace('%'.$k.'%', $v, $text);
 			return $text;
 		}
+
+		static function arrayCol($array, $col) {
+			$list = array();
+			foreach($array as $r)
+				$list[] = $r[$col];
+			return $list;
+		}
 	}
 ?>

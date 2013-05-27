@@ -1464,16 +1464,16 @@
 			}).fail(that.d.close);
 		}
 		
-		this.getActionValidationMessages = function(action, item, validationData) {
+		this.getActionValidationMessages = function(action, items, validationData) {
 			var messages = {};
-			$.each(validationData, function(i, itm) {
-				if (itm.reason == 'item_shared') messages.item_shared = {
-					message: mollify.ui.texts.get("pluginShareActionValidationDeleteShared", item.name),
-					acceptable: true
+			$.each(items, function(i, itm) {
+				if (itm.reason == 'item_shared') messages[itm.acceptKey] = {
+					message: mollify.ui.texts.get("pluginShareActionValidationDeleteShared", itm.item.name),
+					acceptable: itm.acceptable
 				}
-				else if (itm.reason == 'item_shared_others') messages.item_shared_others = {
-					message: mollify.ui.texts.get("pluginShareActionValidationDeleteSharedOthers", item.name),
-					acceptable: mollify.session.admin
+				else if (itm.reason == 'item_shared_others') messages[itm.acceptKey] = {
+					message: mollify.ui.texts.get("pluginShareActionValidationDeleteSharedOthers", itm.item.name),
+					acceptable: itm.acceptable
 				}
 			});
 			return messages;

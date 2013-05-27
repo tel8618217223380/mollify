@@ -28,7 +28,9 @@
 		}
 				
 		public function getItemContextData($item, $details, $key, $data) {
-			$users = $this->getShareUsers($item);
+			$list = $this->getShareUsers($item);
+			Logging::logDebug(Util::array2str($list));
+			$users = Util::arrayCol($list, "user_id");
 			$count = count($users);
 			$own = FALSE;
 			$others = FALSE;
@@ -50,22 +52,39 @@
 		public function validateAction($action, $target, $acceptKeys) {
 			if (FileEvent::DELETE != $action || !$target) return;
 			
-			$users = $this->getShareUsers($target);
-			$count = count($users);
+			$shareList = $this->getShareUsers($target);
+			Logging::logDebug(Util::array2str($shareList));
+			$usersByItemId = array();
+			$itemId = "";
+			foreach($shareList as $r) {
+				if (strcmp($r["item_id"], $itemId) != 0) {
+					$itemId = $r["item_id"];
+					$usersByItemId[$itemId] = array();
+				}
+				$usersByItemId[$itemId][] = $r["user_id"];
+			}
+			Logging::logDebug(Util::array2str($usersByItemId));
 			$list = array();
 			
-			if ($count > 0) {
+			foreach($usersByItemId as $itemId => $users) {
+				$count = count($users);
+				if ($count == 0) continue;
+
 				$own = in_array($this->env->session()->userId(), $users);
-				$others = ($count - ($own  ? 1 : 0) > 0);
-				if ($own && !in_array("item_shared", $acceptKeys)) {
-					$list[] = array("reason" => "item_shared");
-				}
-				if ($others && (!$this->env->authentication()->isAdmin() || !in_array("item_shared_others", $acceptKeys))) {
-					$list[] = array("reason" => "item_shared_others");
-				}
+				$others = ($count - ($own ? 1 : 0) > 0);
 				
-				return $list;
+				$sharedOwnKey = "item_shared-".$itemId;
+				$sharedOthersKey = "item_shared_others-".$itemId;
+
+				if ($own && !in_array($sharedOwnKey, $acceptKeys)) {
+					$list[] = array("item" => $itemId, "reason" => "item_shared", "acceptable" => TRUE, "acceptKey" => $sharedOwnKey);
+				}
+				if ($others && (!$this->env->authentication()->isAdmin() || !in_array($sharedOthersKey, $acceptKeys))) {
+					$list[] = array("item" => $itemId, "reason" => "item_shared_others", "acceptable" => $this->env->authentication()->isAdmin(), "acceptKey" => $sharedOthersKey);
+				}
 			}
+			Logging::logDebug(Util::array2str($list));
+			return $list;
 		}
 		
 		public function getShares($item) {
