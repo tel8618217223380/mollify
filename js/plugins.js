@@ -303,7 +303,20 @@
 		};
 		
 		this._showCollection = function(ic) {
-			mollify.ui.dialogs.tableView();
+			mollify.ui.dialogs.tableView({
+				buttons:[{id:"close", title:"todo"}],
+				onButton: function(btn, h) { h.close(); },
+				table: {
+					columns: [
+						{id:"name", title:"foo"},
+						{id:"extension", title:"bar"}
+					]
+				},
+				onRender: function(d, $c, table) {
+					table.add(ic.items);
+					$c.removeClass("loading");
+				}
+			});
 		};
 
 		this._updateNavBar = function(list) {
