@@ -302,15 +302,31 @@
 			return mollify.service.post("itemcollections/"+ic.id, {items : isArray(items) ? items: [ items ]});
 		};
 		
+		this._removeCollectionItem = function(ic, items) {
+			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : isArray(items) ? items: [ items ]});
+		};
+		
 		this._showCollection = function(ic) {
 			mollify.ui.dialogs.tableView({
-				buttons:[{id:"close", title:"todo"}],
+				title: mollify.ui.texts.get('pluginItemCollectionsEditDialogTitle', ic.name),
+				buttons:[{id:"close", title:mollify.ui.texts.get('dialogClose')}],
 				onButton: function(btn, h) { h.close(); },
 				table: {
 					columns: [
-						{id:"name", title:"foo"},
-						{id:"extension", title:"bar"}
+						{ id: "icon", title:"", renderer: function(i, v, $c) {
+							$c.html(i.is_file ? '<i class="icon-file"></i>' : '<i class="icon-folder-close-alt"></i>');
+						} },
+						{ id: "name", title:"foo" },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					]
+				},
+				onTableRowAction: function(table, id, item) {
+					if (id == "remove") {
+						that._removeCollectionItem(ic, item).done(function() {
+							table.remove(item);
+							//TODO update collection in navbar
+						});
+					}
 				},
 				onRender: function(d, $c, table) {
 					table.add(ic.items);
@@ -879,20 +895,6 @@
 			for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
 		};
 		
-		/*this.renderItemContextDetails = function(el, item, $content, data) {
-			$content.addClass("loading");
-			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
-				$content.removeClass("loading");
-				if (data.count === 0) {
-					that.renderItemContextComments(el, item, [], {element: $content.empty(), contentTemplate: 'comments-template'});
-				} else {
-					that.loadPermissions(item, function(permissions, userData) {
-						that.renderItemContextComments(el, item, comments, {element: $content.empty(), contentTemplate: 'comments-template'});
-					});
-				}
-			});
-		};*/
-		
 		that.onOpenPermissions = function(item) {
 			var permissionData = {
 				"new": [],
@@ -1020,14 +1022,15 @@
 						}
 						$c[0].ctrl.select(that.permissionOptionsByKey[v]);
 					}},
-					{ id: "remove", title: "", renderer: function(i, v, $c){ $c.append(mollify.dom.template("mollify-tmpl-permission-editor-listremove")); }}
-				]
+					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
+				],
+				onRowAction: function(id, permission) { onRemove(permission); $list.remove(permission); }
 			});
-			$("#mollify-pluginpermissions-editor-permission-list").delegate("a.remove-link", "click", function() {
+			/*$("#mollify-pluginpermissions-editor-permission-list").delegate("a.remove-link", "click", function() {
 				var permission = $(this).parent().parent()[0].data;
 				onRemove(permission);
 				$list.remove(permission);
-			});
+			});*/
 			
 			$list.add(permissions);
 			var $newUser = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-user", {

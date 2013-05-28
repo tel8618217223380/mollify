@@ -83,6 +83,18 @@
 			$db->commit();
 		}
 
+		public function removeCollectionItems($id, $userId, $items) {
+			$db = $this->env->db();
+			$list = $db->query("select id from ".$db->table("itemcollection")." where user_id = ".$db->string($userId, TRUE)." and id = ".$db->string($id, TRUE))->rows();
+			if (count($list) == 0) return FALSE;
+			
+			$list = array();
+			foreach($items as $item) {
+				$list[] = $item["id"];
+			}
+			$db->update("DELETE FROM ".$db->table("itemcollection_item")." WHERE collection_id = ".$db->string($id, TRUE)." and item_id in (".$db->arrayString($list, TRUE).")");
+		}
+		
 		public function deleteUserItemCollection($id, $userId) {
 			$db = $this->env->db();
 			

@@ -218,4 +218,5 @@ pluginItemCollectionStoreDialogTitle: "Store Item Collection",
 pluginItemCollectionStoreDialogMessage: "Enter name for the collection:",
 pluginItemCollectionStoreDialogAction: "Store",
 pluginItemCollectionShareTitle: "Share Stored Collection",
+pluginItemCollectionsEditDialogTitle: "Edit Collection: {0}"
 })})();
