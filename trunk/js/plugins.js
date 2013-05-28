@@ -303,8 +303,7 @@
 		};
 		
 		this._showCollection = function(ic) {
-			//TODO
-			that._collectionsNav.setActive(ic);
+			mollify.ui.dialogs.tableView();
 		};
 
 		this._updateNavBar = function(list) {
@@ -907,11 +906,7 @@
 						return;
 					
 					$content.addClass("loading");
-					mollify.service.put("filesystem/permissions", permissionData).done(function(r) {
-						d.close();
-					}).fail(function(error) {
-						d.close();
-					});
+					mollify.service.put("filesystem/permissions", permissionData).done(d.close).fail(d.close);
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-pluginpermissions-editor-content");

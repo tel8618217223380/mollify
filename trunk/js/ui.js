@@ -1241,6 +1241,27 @@
 				load(null, null);
 			}
 		});
+
+		dh.tableView = function(o) {
+			mollify.ui.dialogs.custom({
+				resizable: true,
+				initSize: [600, 400],
+				title: o.title,
+				content: mollify.dom.template("mollify-tmpl-tableview"),
+				buttons: o.buttons,
+				"on-button": function(btn, d) {
+					o.onButton(btn, d);
+				},
+				"on-show": function(h, $d) {
+					$content = $d.find("#mollify-tableview-content");
+
+					h.center();
+					var table = false;	//TODO
+
+					o.onRender(h, $content, table);
+				}
+			});
+		};
 	};
 	
 	/* DRAG&DROP */
