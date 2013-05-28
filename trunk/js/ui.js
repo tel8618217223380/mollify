@@ -664,9 +664,18 @@
 			var $l = $("<tbody></tbody>").appendTo($e);
 			
 			var setCellValue = function($cell, col, item) {
-				var v = item[col.id];		
-				if (col.renderer) col.renderer(item, v, $cell);
-				else $cell.html(v);
+				var v = item[col.id];
+				if (col.type == 'action') {
+					var html = col.content || col.title;
+					var $action = $("<a class='mollify-tableaction-"+col.id+"'></a>").html(html).appendTo($cell);
+					$action.click(function(){
+						//TODO delegate click handler
+						if (o.onRowAction) o.onRowAction(col.id, item);
+					});
+				} else {
+					if (col.renderer) col.renderer(item, v, $cell);
+					else $cell.html(v);
+				}
 			};
 			var addItem = function(item) {
 				var $row = $("<tr></tr>").appendTo($l);
@@ -1259,7 +1268,10 @@
 				h.center();
 				var table = mollify.ui.controls.table("mollify-tableview-list", {
 					key: "item_id",
-					columns: o.table.columns
+					columns: o.table.columns,
+					onRowAction: function(id, obj) {
+						if (o.onTableRowAction) o.onTableRowAction(table, id, obj);
+					}
 				});
 
 				o.onRender(h, $content, table);

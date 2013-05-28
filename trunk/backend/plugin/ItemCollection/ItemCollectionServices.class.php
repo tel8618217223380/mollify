@@ -39,9 +39,20 @@
 		}
 
 		public function processDelete() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
+			if (count($this->path) > 2) throw $this->invalidRequestException();
 			
 			$id = $this->path[0];
+			if (count($this->path) == 2) {
+				if (strcmp("items", $this->path[1]) != 0) throw $this->invalidRequestException();
+				
+				$data = $this->request->data;
+				if (!isset($data["items"])) throw $this->invalidRequestException("No data");
+				$items = $data["items"];
+				
+				$this->handler()->removeCollectionItems($id, $items);
+				$this->response()->success(array());
+				return;
+			}
 			$this->handler()->deleteUserItemCollection($id);
 			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 		}
