@@ -307,31 +307,32 @@
 		};
 		
 		this._showCollection = function(ic) {
-			mollify.ui.dialogs.tableView({
-				title: mollify.ui.texts.get('pluginItemCollectionsEditDialogTitle', ic.name),
-				buttons:[{id:"close", title:mollify.ui.texts.get('dialogClose')}],
-				onButton: function(btn, h) { h.close(); },
-				table: {
-					columns: [
-						{ id: "icon", title:"", renderer: function(i, v, $c) {
-							$c.html(i.is_file ? '<i class="icon-file"></i>' : '<i class="icon-folder-close-alt"></i>');
-						} },
-						{ id: "name", title:"foo" },
-						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
-					]
-				},
-				onTableRowAction: function(table, id, item) {
-					if (id == "remove") {
-						that._removeCollectionItem(ic, item).done(function() {
-							table.remove(item);
-							//TODO update collection in navbar
-						});
+			mollify.service.get("itemcollections/"+ic.id).done(function(loaded){
+				mollify.ui.dialogs.tableView({
+					title: mollify.ui.texts.get('pluginItemCollectionsEditDialogTitle', ic.name),
+					buttons:[{id:"close", title:mollify.ui.texts.get('dialogClose')}],
+					onButton: function(btn, h) { h.close(); },
+					table: {
+						columns: [
+							{ id: "icon", title:"", renderer: function(i, v, $c) {
+								$c.html(i.is_file ? '<i class="icon-file"></i>' : '<i class="icon-folder-close-alt"></i>');
+							} },
+							{ id: "name", title:"foo" },
+							{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+						]
+					},
+					onTableRowAction: function(table, id, item) {
+						if (id == "remove") {
+							that._removeCollectionItem(ic, item).done(function() {
+								table.remove(item);
+							});
+						}
+					},
+					onRender: function(d, $c, table) {
+						table.add(loaded.items);
+						$c.removeClass("loading");
 					}
-				},
-				onRender: function(d, $c, table) {
-					table.add(ic.items);
-					$c.removeClass("loading");
-				}
+				});
 			});
 		};
 

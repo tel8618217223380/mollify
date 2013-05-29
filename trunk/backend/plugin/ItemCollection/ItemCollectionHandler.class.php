@@ -73,6 +73,10 @@
 			}
 			die();
 		}
+
+		public function getUserItemCollection($id) {
+			return $this->dao()->getItemCollection($id, $this->env->session()->userId());
+		}
 		
 		public function getUserItemCollections() {
 			return $this->dao()->getUserItemCollections($this->env->session()->userId());

@@ -17,9 +17,12 @@
 			$this->env = $env;
 		}
 
-		public function getItemCollection($id) {
+		public function getItemCollection($id, $userId = NULL) {
 			$db = $this->env->db();
-			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id order by ici.item_index asc")->rows();
+			$userCriteria = "";
+			if ($userId != NULL) $userCriteria = "and user_id=".$db->string($userId, TRUE);
+
+			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.id = ".$db->string($id, TRUE)." and ici.collection_id = ic.id ".$userCriteria." order by ici.item_index asc")->rows();
 			if (count($list) == 0) return FALSE;
 			
 			$items = array();

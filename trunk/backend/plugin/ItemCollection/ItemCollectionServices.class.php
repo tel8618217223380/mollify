@@ -20,21 +20,31 @@
 		}
 		
 		public function processGet() {
-			if (count($this->path) != 0) throw $this->invalidRequestException();
-			$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
+			if (count($this->path) > 1) throw $this->invalidRequestException();
+			
+			if (count($this->path) == 1)
+				$this->response()->success($this->convertCollection($this->handler()->getUserItemCollection($this->path[0])));
+			else
+				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 		}
 		
 		private function convert($collections) {
 			$result = array();
 			foreach($collections as $c)
-				$result[] = array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["items"]));
+				$result[] = $this->convertCollection($c);
 			return $result;
+		}
+
+		private function convertCollection($c) {
+			return array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["items"]));
 		}
 
 		private function convertItems($items) {
 			$result = array();
+
 			foreach($items as $i)
 				$result[] = $i->data();
+
 			return $result;
 		}
 
