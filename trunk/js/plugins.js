@@ -307,25 +307,42 @@
 		};
 		
 		this._showCollection = function(ic) {
+			//that.editCollection(ic);
+			that._fileView.changeToFolder({
+				custom: true,
+				items: ic.items,
+				onRenderHeader: function(f, $h, $tb) {
+					$h.append("foo");
+				}
+			});
+		};
+
+		this.editCollection = function(ic) {
 			mollify.service.get("itemcollections/"+ic.id).done(function(loaded){
 				mollify.ui.dialogs.tableView({
 					title: mollify.ui.texts.get('pluginItemCollectionsEditDialogTitle', ic.name),
-					buttons:[{id:"close", title:mollify.ui.texts.get('dialogClose')}],
-					onButton: function(btn, h) { h.close(); },
+					buttons:[{id:"close", title:mollify.ui.texts.get('dialogClose')},{id:"remove", title:mollify.ui.texts.get("pluginItemCollectionsEditDialogRemove"), type:"secondary", cls:"btn-danger secondary"}],
+					onButton: function(btn, h) {
+						h.close();
+						if (btn.id == 'remove') that.removeCollection(ic);
+					},
 					table: {
 						columns: [
 							{ id: "icon", title:"", renderer: function(i, v, $c) {
 								$c.html(i.is_file ? '<i class="icon-file"></i>' : '<i class="icon-folder-close-alt"></i>');
 							} },
-							{ id: "name", title:"foo" },
+							{ id: "name", title: mollify.ui.texts.get('fileListColumnTitleName') },
 							{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 						]
 					},
-					onTableRowAction: function(table, id, item) {
+					onTableRowAction: function(d, table, id, item) {
 						if (id == "remove") {
 							that._removeCollectionItem(ic, item).done(function() {
 								table.remove(item);
 							});
+						} else if (id == "share") {
+							d.close();
+							that._onShareNavItem(ic);
 						}
 					},
 					onRender: function(d, $c, table) {
@@ -345,7 +362,7 @@
 			that._collectionsNav.update(navBarItems);
 		}
 
-		this._onRemoveNavItem = function(ic) {
+		this.removeCollection = function(ic) {
 			return mollify.service.del("itemcollections/"+ic.id).done(that._updateNavBar);
 		};
 
@@ -355,6 +372,7 @@
 		};
 		
 		this._onFileViewRender = function($e, h) {
+			that._fileView = h.fileview;
 			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
 				classes: "ic-navbar-item",
@@ -362,7 +380,8 @@
 				dropdown: {
 					items: function(obj) {
 						var items = [
-							{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that._onRemoveNavItem(obj); }}
+							{"title-key":"pluginItemCollectionsNavEdit", callback: function() { that.editCollection(obj); }},
+							{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that.removeCollection(obj); }}
 						];
 						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(obj); }});
 						return items;
@@ -1009,20 +1028,10 @@
 				onRow: function($r, i) { if (isGroup(i.user_id)) $r.addClass("group"); },
 				columns: [
 					{ id: "user_id", title: mollify.ui.texts.get('pluginPermissionsEditColUser'), renderer: function(i, v, $c){ $c.html(userData.usersById[v].name).addClass("user"); } },
-					{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), renderer: function(i, v, $c){
-						if (!$c[0].ctrl) {
-							var $s = mollify.ui.controls.select($("<select></select>").appendTo($c.addClass("permission")), {
-								values: that.permissionOptions,
-								title : "title",
-								onChange: function(v) {
-									i.permission = v.value;
-									onEdit(i);
-								}
-							});
-							$c[0].ctrl = $s;
-						}
-						$c[0].ctrl.select(that.permissionOptionsByKey[v]);
-					}},
+					{ id: "permission", title: mollify.ui.texts.get('pluginPermissionsEditColPermission'), type: "select", options: that.permissionOptions, valueMapper: function(item, k) { return that.permissionOptionsByKey[k]; }, onChange: function(item, p) {
+						item.permission = p.value;
+						onEdit(item);
+					}, cellClass: "permission" },
 					{ id: "remove", title: "", type:"action", content: mollify.dom.template("mollify-tmpl-permission-editor-listremove").html() }
 				],
 				onRowAction: function(id, permission) { onRemove(permission); $list.remove(permission); }

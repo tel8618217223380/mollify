@@ -511,7 +511,12 @@
 				that.folder();
 				that.data({items: mollify.filesystem.roots});
 				return;
+			} else if (that._currentFolder.custom) {
+				that.folder();
+				that.data({items: that._currentFolder.items});
+				return;
 			}
+
 			that.showProgress();
 			
 			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(function(r) {
@@ -566,11 +571,17 @@
 		};
 		
 		this.folder = function(p) {
-			var currentRoot = p ? p.hierarchy[0] : false;
-			that.rootNav.setActive(currentRoot);
-			
 			var $h = $("#mollify-folderview-header").empty();
 			var $tb = $("#mollify-fileview-folder-tools").empty();
+						
+			if (that._currentFolder.custom) {
+				if (that._currentFolder.onRenderHeader) that._currentFolder.onRenderHeader(that._currentFolder, $h, $tb);
+				return;
+			}
+
+			var currentRoot = p ? p.hierarchy[0] : false;
+			that.rootNav.setActive(currentRoot);			
+
 			if (p) {
 				//HEADER
 				mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);

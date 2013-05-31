@@ -665,6 +665,7 @@
 			
 			var setCellValue = function($cell, col, item) {
 				var v = item[col.id];
+				if (col.cellClass) $cell.addClass(col.cellClass);
 				if (col.type == 'action') {
 					var html = col.content || col.title;
 					var $action = $("<a class='mollify-tableaction-"+col.id+"'></a>").html(html).appendTo($cell);
@@ -672,6 +673,18 @@
 						//TODO delegate click handler
 						if (o.onRowAction) o.onRowAction(col.id, item);
 					});
+				} else if (col.type == "select") {
+					var $s = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
+						values: col.options,
+						title : "title",
+						onChange: function(v) {
+							if (col.onChange) col.onChange(item, v);
+						}
+					});
+					$cell[0].ctrl = $s;
+					var sv = v;
+					if (col.valueMapper) sv = col.valueMapper(item, v);
+					$s.select(sv);
 				} else {
 					if (col.renderer) col.renderer(item, v, $cell);
 					else $cell.html(v);
@@ -1270,7 +1283,7 @@
 					key: "item_id",
 					columns: o.table.columns,
 					onRowAction: function(id, obj) {
-						if (o.onTableRowAction) o.onTableRowAction(table, id, obj);
+						if (o.onTableRowAction) o.onTableRowAction(h, table, id, obj);
 					}
 				});
 

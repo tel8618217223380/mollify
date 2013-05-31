@@ -168,6 +168,10 @@ a.link {
 	height: 100px;
 }
 
+.mollify-custom-dialog-button.secondary {
+	float: left;
+}
+
 /*.ui-widget-overlay {
 	background-color: rgba(252, 252, 252, .9);
 }

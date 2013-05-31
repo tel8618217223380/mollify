@@ -76,10 +76,12 @@
 			if ((!$id and !isset($data["name"])) or !isset($data["items"])) throw $this->invalidRequestException("No data");
 			
 			$items = $data["items"];
-			if ((!$id and strlen($name) == 0) or !is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
+			if (!is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
 			
 			if (!$id) {
 				$name = $data["name"];
+				if (strlen($name) == 0) throw $this->invalidRequestException("Missing data");
+
 				$this->handler()->addUserItemCollection($name, $items);
 				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 			} else {
