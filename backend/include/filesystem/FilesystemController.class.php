@@ -665,7 +665,7 @@
 
 			$targetItem = $folder->createFile($name);
 			if (Logging::isDebug()) Logging::logDebug("Upload from $src ($name) to ".$targetItem->id());
-			$targetItem->write($stream);
+			$targetItem->write($stream, FALSE);
 			
 			$this->env->events()->onEvent(FileEvent::upload($targetItem));
 		}
