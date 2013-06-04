@@ -54,7 +54,8 @@
 		
 		this.addNavBar = function(nb) {
 			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
-			var initItems = function(items) {
+			var items = nb.items;
+			var initItems = function() {
 				var $items = $nb.find(".mollify-mainview-navbar-item");
 				if (nb.classes) $items.addClass(nb.classes);
 				if (nb.dropdown) {
@@ -81,24 +82,26 @@
 				});
 				if (nb.onRender) nb.onRender($nb, $items, function($e) { return items[$items.index($e)].obj; });
 			};
-			initItems(nb.items);
+			initItems();
 			return {
 				element: $nb,
 				setActive : function(o) {
 					var $items = $nb.find(".mollify-mainview-navbar-item");
 					$items.removeClass("active");
+					if (!o) return;
 					$.each($items, function(i, itm) {
-						var obj = nb.items[i].obj;
+						var obj = items[i].obj;
 						if (obj && obj.id == o.id) {
 							$(itm).addClass("active");
 							return true;
 						}
 					});
 				},
-				update : function(items) {
+				update : function(l) {
+					items = l;
 					$nb.find(".mollify-mainview-navbar-item").remove();
 					mollify.dom.template("mollify-tmpl-main-navbar-item", items).appendTo($nb);
-					initItems(items);
+					initItems();
 				}
 			};
 		}
@@ -505,8 +508,12 @@
 		};
 	
 		this.changeToFolder = function(f) {
+			if (that._currentFolder && that._currentFolder.type && that._customFolderTypes[that._currentFolder.type]) {
+				that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
+			}
 			that._currentFolder = f;
 			that._currentFolderInfo = false;
+			that.rootNav.setActive(false);
 			that.refresh();
 		}
 		

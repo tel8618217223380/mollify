@@ -312,6 +312,11 @@
 				name: ic.name,
 				ic: ic
 			});
+			that._collectionsNav.setActive(ic);
+		};
+
+		this.onFolderDeselect = function(f) {
+			that._collectionsNav.setActive(false);
 		};
 
 		this.getFolderInfo = function(f) {
