@@ -1195,7 +1195,7 @@
 			if (loaded[parent ? parent.id : "root"]) return;
 			
 			$selector.addClass("loading");
-			mollify.filesystem.folders(parent, function(l) {
+			mollify.filesystem.folders(parent).done(function(l) {
 				$selector.removeClass("loading");
 				loaded[parent ? parent.id : "root"] = true;
 				

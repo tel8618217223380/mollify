@@ -229,7 +229,9 @@ var mollifyDefaults = {
 	
 	mfs.folders = function(parent) {
 		if (parent == null) {
-			return mfs.roots;
+			var df = $.Deferred();
+			df.resolve(mfs.roots);
+			return df.promise();
 		}
 		return mollify.service.get("filesystem/"+parent.id+"/folders/");
 	};
@@ -245,8 +247,8 @@ var mollifyDefaults = {
 					message: mollify.ui.texts.get('copyMultipleFileMessage', [i.length]),
 					actionTitle: mollify.ui.texts.get('copyFileDialogAction'),
 					handler: {
-						onSelect: function(f) { $.when(ft._copyMany(i, f)).then(df.resolve, df.reject); },
-						canSelect: function(f) { return ft.canCopyTo(i, f); }
+						onSelect: function(f) { $.when(mfs._copyMany(i, f)).then(df.resolve, df.reject); },
+						canSelect: function(f) { return mfs.canCopyTo(i, f); }
 					}
 				});
 				return df.promise();
@@ -265,8 +267,8 @@ var mollifyDefaults = {
 				message: mollify.ui.texts.get('copyFileMessage', [i.name]),
 				actionTitle: mollify.ui.texts.get('copyFileDialogAction'),
 				handler: {
-					onSelect: function(f) { $.when(ft._copy(i, f)).then(df.resolve, df.reject); },
-					canSelect: function(f) { return ft.canCopyTo(i, f); }
+					onSelect: function(f) { $.when(mfs._copy(i, f)).then(df.resolve, df.reject); },
+					canSelect: function(f) { return mfs.canCopyTo(i, f); }
 				}
 			});
 			return df.promise();
@@ -388,10 +390,10 @@ var mollifyDefaults = {
 				}
 			});
 		} else
-			return mfs._move(i, to, cb, err);
+			return mfs._move(i, to);
 	};
 	
-	mfs._move = function(i, to, cb, err) {
+	mfs._move = function(i, to) {
 		return mollify.service.post("filesystem/"+i.id+"/move/", {id:to.id}).done(function(r) {
 			mollify.events.dispatch('filesystem/move', { items: [ i ], to: to });
 		});
@@ -403,7 +405,7 @@ var mollifyDefaults = {
 		});
 	};
 	
-	mfs.rename = function(item, name, cb, err) {
+	mfs.rename = function(item, name) {
 		if (!name || name.length === 0) {
 			var df = $.Deferred();
 			mollify.ui.dialogs.input({
@@ -423,7 +425,7 @@ var mollifyDefaults = {
 		}
 	};
 	
-	mfs._rename = function(item, name, cb, err) {
+	mfs._rename = function(item, name) {
 		return mollify.service.put("filesystem/"+item.id+"/name/", {name: name}).done(function(r) {
 			mollify.events.dispatch('filesystem/rename', { items: [item], name: name });
 		});

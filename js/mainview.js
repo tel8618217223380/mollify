@@ -731,7 +731,7 @@
 			
 			var $hi = $(".mollify-folder-hierarchy-item").click(function() {
 				var folder = $(this).tmplItem().data;
-				that.changeToFolder([folder]);
+				that.changeToFolder(folder);
 			});
 			
 			if (mollify.ui.draganddrop) {
