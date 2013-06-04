@@ -816,10 +816,10 @@
 				$("#mollify-folder-description").text(p.data['core-parent-description']);
 			
 			var $dsc = $("#mollify-folder-description");
-			var descriptionEditable = that._currentFolder && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.admin;
+			var descriptionEditable = that._currentFolder && !that._currentFolder.type && $dsc.length > 0 && mollify.session.features.descriptions && mollify.session.admin;
 			if (descriptionEditable) {
 				mollify.ui.controls.editableLabel({element: $dsc, hint: mollify.ui.texts.get('mainviewDescriptionHint'), onedit: function(desc) {
-					that.onDescription(that._currentFolder, desc);
+					mollify.service.put("filesystem/"+that._currentFolder.id+"/description/", {description: desc});
 				}});
 			} else {
 				if (!descriptionExists) $dsc.hide();
