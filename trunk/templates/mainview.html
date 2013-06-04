@@ -2,6 +2,7 @@
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<div id="mollify-mainview-logo"></div>
+			<div id="mollify-mainview-menu"></div>
 			<div id="mollify-mainview-header-tools" class="nav-collapse collapse">
 				<ul id="mollify-mainview-user" class="nav pull-right"></ul>
 				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right">					
@@ -44,6 +45,14 @@
 			<span class="help-inline"></span>
 		</div>
 	</div>
+</script>
+
+<script id="mollify-tmpl-main-menubar" type="text/x-jquery-tmpl">
+	<ul class="mollify-mainview-menubar nav">
+		{{each items}}
+		<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
+		{{/each}}
+	</ul>
 </script>
 
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">

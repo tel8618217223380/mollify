@@ -381,6 +381,10 @@ a.mollify-login-link {
 	margin-left: 48px;
 }
 
+#mollify-mainview-menu {
+	float: left;
+}
+
 #mollify-mainview-header-tools {
 	float: right;
 	margin-top: 20px;
