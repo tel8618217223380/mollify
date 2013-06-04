@@ -307,13 +307,34 @@
 		};
 		
 		this._showCollection = function(ic) {
-			//that.editCollection(ic);
 			that._fileView.changeToFolder({
-				custom: true,
-				items: ic.items,
-				onRenderHeader: function(f, $h, $tb) {
-					$h.append("foo");
+				type: "ic",
+				name: ic.name,
+				ic: ic
+			});
+		};
+
+		this.getFolderInfo = function(f) {
+			var df = $.Deferred();
+			df.resolve({items: f.ic.items});	//TODO get data for items in the collection "service.post(filesystem/info, {items: items})
+			return df.promise();
+		};
+
+		this.onRenderFolderView = function(f, $h, $tb) {
+			mollify.dom.template("mollify-tmpl-fileview-header", {folder: f}).appendTo($h);
+			$("#mollify-folder-description").remove();
+
+			var opt = {
+				title: function() {
+					return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
 				}
+			};
+			var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($("#mollify-fileview-folder-actions"));
+			mollify.ui.controls.dropdown({
+				element: actionsElement.find("li"),
+				items: that._getItemActions(f.ic),
+				hideDelay: 0,
+				style: 'submenu'
 			});
 		};
 
@@ -370,22 +391,26 @@
 			if (!mollify.plugins.exists("plugin-share")) return;
 			mollify.plugins.get("plugin-share").openShares({ id: "ic_" + ic.name, "name": ic.name, shareTitle: mollify.ui.texts.get("pluginItemCollectionShareTitle") });
 		};
+
+		this._getItemActions = function(ic) {
+			var items = [
+				{"title-key":"pluginItemCollectionsNavEdit", callback: function() { that.editCollection(ic); }},
+				{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that.removeCollection(ic); }}
+			];
+			if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(ic); }});
+			return items;
+		}
 		
 		this._onFileViewRender = function($e, h) {
 			that._fileView = h.fileview;
+			that._fileView.addCustomFolderType("ic", that);
+
 			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
 				classes: "ic-navbar-item",
 				items: [],
 				dropdown: {
-					items: function(obj) {
-						var items = [
-							{"title-key":"pluginItemCollectionsNavEdit", callback: function() { that.editCollection(obj); }},
-							{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that.removeCollection(obj); }}
-						];
-						if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(obj); }});
-						return items;
-					}
+					items: that._getItemActions
 				},
 				onRender: mollify.ui.draganddrop ? function($nb, $items, objs) {
 					mollify.ui.draganddrop.enableDrop($items, {
