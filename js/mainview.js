@@ -208,6 +208,7 @@
 		this._currentFolder = false;
 		this._currentFolderInfo = false;
 		this._viewStyle = 0;
+		this._customFolderTypes = {};
 		this._formatters = {
 			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, mollify.ui.texts.get('decimalSeparator'))),
 			timestamp : new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'))
@@ -315,6 +316,10 @@
 			});
 			
 			that.itemContext = new mollify.ui.itemContext();
+		}
+
+		this.addCustomFolderType = function(id, h) {
+			this._customFolderTypes[id] = h;
 		}
 		
 		this.onResize = function() {
@@ -507,17 +512,23 @@
 		
 		this.refresh = function() {
 			mollify.ui.hideActivePopup();
+			that.showProgress();
+
 			if (!that._currentFolder) {
 				that.folder();
 				that.data({items: mollify.filesystem.roots});
 				return;
-			} else if (that._currentFolder.custom) {
-				that.folder();
-				that.data({items: that._currentFolder.items});
+			} else if (that._currentFolder.type) {
+				if (that._customFolderTypes[that._currentFolder.type]) {
+					that._customFolderTypes[that._currentFolder.type].getFolderInfo(that._currentFolder).done(function(r) {
+						that.folder();
+						that.data(r);
+					}).fail(function() {
+						that.hideProgress();
+					});
+				}
 				return;
 			}
-
-			that.showProgress();
 			
 			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(function(r) {
 				that._currentFolderInfo = r;
@@ -574,112 +585,114 @@
 			var $h = $("#mollify-folderview-header").empty();
 			var $tb = $("#mollify-fileview-folder-tools").empty();
 						
-			if (that._currentFolder.custom) {
-				if (that._currentFolder.onRenderHeader) that._currentFolder.onRenderHeader(that._currentFolder, $h, $tb);
-				return;
-			}
-
-			var currentRoot = p ? p.hierarchy[0] : false;
-			that.rootNav.setActive(currentRoot);			
-
-			if (p) {
-				//HEADER
-				mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);
-				
-				var $t = $("#mollify-fileview-folder-tools");
-				var $fa = $("#mollify-fileview-folder-actions");
-				
-				var opt = {
-					title: function() {
-						return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
-					}
-				};
-				
-				if (that._canWrite()) {
-					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function() {
-						mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
-							onRenderBubble: function(b) {
-								var $i = $("#mollify-mainview-createfolder-name-input");
-								$("#mollify-mainview-createfolder-button").click(function(){
-									var name = $i.val();
-									if (!name) return;
-
-									b.hide();
-									mollify.filesystem.createFolder(that._currentFolder, name);
-								});
-								$i.focus();
-							}
-						}});
-						return false;
-					});
-					if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(function() {
-						mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
-							onRenderBubble: function(b) {
-								mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, {
-									start: function(files, ready) {
-										b.hide(true);
-										that.uploadProgress.show(ready);
-									},
-									progress: function(pr) {
-										that.uploadProgress.set(pr);
-									},
-									finished: function() {
-										b.hide();
-										that.uploadProgress.hide();
-										that.refresh();
-									}
-								});
-								if (!mollify.features.hasFeature('retrieve_url')) {
-									$("#mollify-mainview-addfile-retrieve").remove();
-								}
-								var onRetrieve = function() {
-									var val = $("#mollify-mainview-addfile-retrieve-url-input").val();
-									if (!val || val.length < 1 || val.substring(0,4).toLowerCase().localeCompare('http') !== 0) return false;
-									b.close();
-									that.onRetrieveUrl(val);
-								};
-								$("#mollify-mainview-addfile-retrieve-url-input").bind('keypress', function(e) {
-									if ((e.keyCode || e.which) == 13) onRetrieve();
-								});
-								$("#mollify-mainview-addfile-retrieve-button").click(onRetrieve);
-							}
-						}});
-						return false;
-					});
-					
-					// FOLDER
-					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
-					mollify.ui.controls.dropdown({
-						element: actionsElement.find("li"),
-						items: false,
-						hideDelay: 0,
-						style: 'submenu',
-						onShow: function(drp, items) {
-							if (items) return;
-							
-							that.getItemActions(that._currentFolder, function(a) {
-								if (!a) {
-									drp.hide();
-									return;
-								}
-								drp.items(a);
-							});
-						}
-					});
+			if (that._currentFolder && that._currentFolder.type) {
+				if (that._customFolderTypes[that._currentFolder.type]) {
+					that._customFolderTypes[that._currentFolder.type].onRenderFolderView(that._currentFolder, $h, $tb);
 				}
-				mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
-				
-				that.setupHierarchy(p.hierarchy, $t);
-				
-				$("#mollify-folderview-items").addClass("loading");
 			} else {
-				mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
+				var currentRoot = p ? p.hierarchy[0] : false;
+				that.rootNav.setActive(currentRoot);			
+
+				if (p) {
+					//HEADER
+					mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);
+				
+					var $t = $("#mollify-fileview-folder-tools");
+					var $fa = $("#mollify-fileview-folder-actions");
+				
+					var opt = {
+						title: function() {
+							return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
+						}
+					};
+				
+					if (that._canWrite()) {
+						mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-folder-close' }, opt).appendTo($t).click(function() {
+							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-createfolder-bubble"), handler: {
+								onRenderBubble: function(b) {
+									var $i = $("#mollify-mainview-createfolder-name-input");
+									$("#mollify-mainview-createfolder-button").click(function(){
+										var name = $i.val();
+										if (!name) return;
+
+										b.hide();
+										mollify.filesystem.createFolder(that._currentFolder, name);
+									});
+									$i.focus();
+								}
+							}});
+							return false;
+						});
+						if (mollify.ui.uploader) mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-download-alt' }, opt).appendTo($t).click(function() {
+							mollify.ui.controls.dynamicBubble({element: $(this), content: mollify.dom.template("mollify-tmpl-main-addfile-bubble"), handler: {
+								onRenderBubble: function(b) {
+									mollify.ui.uploader.initUploadWidget($("#mollify-mainview-addfile-upload"), that._currentFolder, {
+										start: function(files, ready) {
+											b.hide(true);
+											that.uploadProgress.show(ready);
+										},
+										progress: function(pr) {
+											that.uploadProgress.set(pr);
+										},
+										finished: function() {
+											b.hide();
+											that.uploadProgress.hide();
+											that.refresh();
+										}
+									});
+									if (!mollify.features.hasFeature('retrieve_url')) {
+										$("#mollify-mainview-addfile-retrieve").remove();
+									}
+									var onRetrieve = function() {
+										var val = $("#mollify-mainview-addfile-retrieve-url-input").val();
+										if (!val || val.length < 1 || val.substring(0,4).toLowerCase().localeCompare('http') !== 0) return false;
+										b.close();
+										that.onRetrieveUrl(val);
+									};
+									$("#mollify-mainview-addfile-retrieve-url-input").bind('keypress', function(e) {
+										if ((e.keyCode || e.which) == 13) onRetrieve();
+									});
+									$("#mollify-mainview-addfile-retrieve-button").click(onRetrieve);
+								}
+							}});
+							return false;
+						});
+					
+						// FOLDER
+						var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
+						mollify.ui.controls.dropdown({
+							element: actionsElement.find("li"),
+							items: false,
+							hideDelay: 0,
+							style: 'submenu',
+							onShow: function(drp, items) {
+								if (items) return;
+							
+								that.getItemActions(that._currentFolder, function(a) {
+									if (!a) {
+										drp.hide();
+										return;
+									}
+									drp.items(a);
+								});
+							}
+						});
+					}
+					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
+				
+					that.setupHierarchy(p.hierarchy, $t);
+				
+					$("#mollify-folderview-items").addClass("loading");
+				} else {
+					mollify.dom.template("mollify-tmpl-main-rootfolders").appendTo($h);
+				}
+
+				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
 			}
 			
 			$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
-			
-			if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
+
 			if (that.viewType != null) {
 				that.viewType = null;
 				that.initList();
