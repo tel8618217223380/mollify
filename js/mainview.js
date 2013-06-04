@@ -4,18 +4,23 @@
 	
 	mollify.view.MainView = function() {
 		var that = this;
-		this._mainFileView = new mollify.view.MainViewFileView();
-		this._views = [ this._mainFileView ];
+		this._mainFileView = false;
+		this._mainConfigView = false;
+		this._views = [];
 		that._currentView = false;
 		
-		this.init = function($c) {			
+		this.init = function($c) {
+			this._mainFileView = new mollify.view.MainViewFileView();
+			this._mainConfigView = new mollify.view.MainViewConfigView();
+			this._views = [ this._mainFileView, this._mainConfigView ];
+
 			$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
 				if (!p.mainViewHandler) return;
 				var view = p.mainViewHandler();
 				this._views.push(view);
 			});
 			
-			that.itemContext = new mollify.ui.itemContext({ onDescription: that.onDescription });
+			that.itemContext = new mollify.ui.itemContext();
 			mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize']);			
 		}
 		
@@ -23,8 +28,6 @@
 			$(window).resize(that.onResize);
 			that.onResize();
 
-			// TODO main views into components: mainview_filelist, mainview_admin etc
-	
 			mollify.dom.template("mollify-tmpl-main-username", mollify.session).appendTo("#mollify-mainview-user");
 			if (mollify.session.authenticated) {
 				mollify.ui.controls.dropdown({
@@ -33,14 +36,28 @@
 				});
 			}
 			
-			$.each(that._views, function(i, v) { v.init(); });
+			var menuitems = [];
+			$.each(that._views, function(i, v) {
+				v.init();
+				menuitems.push({ title: v.title });
+			});
 			
 			if (that._views.length > 0)
 				that.activateView(that._views[0]);
+			
+			var $mb = mollify.dom.template("mollify-tmpl-main-menubar", { items: menuitems }).appendTo($("#mollify-mainview-menu"));
+			var $mbitems = $mb.find(".mollify-mainview-menubar-item");
+			$mbitems.click(function() {
+				var i = $mbitems.index($(this));
+				that.activateView(that._views[i]);
+			});
 		}
 		
-		this.activateView = function(v) {
-			if (that._currentView) that._currentView.onDeactivate();
+		this.activateView = function(v) {			
+			mollify.ui.hideActivePopup();
+			if (that._currentView && that._currentView.onDeactivate) that._currentView.onDeactivate();
+			$("#mollify-mainview-navlist-container").empty();
+
 			that._currentView = v;
 			
 			$("#mollify-mainview-navbar").empty();
@@ -307,6 +324,7 @@
 		});
 		
 		this.init = function() {
+			that.title = "TODO files";
 			mollify.events.addEventHandler(that.onEvent);
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
@@ -403,7 +421,6 @@
 		}
 		
 		this.onDeactivate = function() {
-			mollify.ui.hideActivePopup();
 		};
 		
 		this.initViewTools = function($t) {
