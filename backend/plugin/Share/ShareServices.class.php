@@ -20,7 +20,21 @@
 		}
 		
 		public function processGet() {
-			if (count($this->path) != 2 or strcmp($this->path[0], 'items') != 0) throw $this->invalidRequestException();
+			if (count($this->path) > 2 or (strcmp($this->path[0], 'items') != 0 and strcmp($this->path[0], 'all') != 0)) throw $this->invalidRequestException();
+
+			if (strcmp($this->path[0], 'all') == 0) {
+				$shares = $this->handler()->getUserShares();
+				$items = array();
+				foreach($shares as $uk => $u) {
+					foreach($u as $ik => $i) {
+						if (in_array($ik, $items)) continue;
+						$item = $this->item($ik);
+						$items[$ik] = $item->data();
+					}
+				}
+				$this->response()->success(array("shares" => $shares, "items" => $items));
+				return;
+			}
 			
 			$itemId = $this->path[1];
 			if (strpos($itemId, "_") < 0) $this->item($itemId);
@@ -29,11 +43,19 @@
 		}
 
 		public function processDelete() {
-			if (count($this->path) != 1) throw $this->invalidRequestException();
+			if (count($this->path) > 2) throw $this->invalidRequestException();
 			
-			$id = $this->path[0];
-			$this->handler()->deleteShare($id);
-			$this->response()->success(array());
+			if ($this->path[0] == "items") {
+				if (count($this->path) != 2) throw $this->invalidRequestException();
+				$id = $this->path[1];
+				$this->handler()->deleteSharesForItem($id);
+				$this->response()->success(array());
+			} else {
+				if (count($this->path) != 1) throw $this->invalidRequestException();
+				$id = $this->path[0];
+				$this->handler()->deleteShare($id);
+				$this->response()->success(array());
+			}
 		}
 				
 		public function processPost() {

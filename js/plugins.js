@@ -353,6 +353,7 @@
 						if (btn.id == 'remove') that.removeCollection(ic);
 					},
 					table: {
+						key: "item_id",
 						columns: [
 							{ id: "icon", title:"", renderer: function(i, v, $c) {
 								$c.html(i.is_file ? '<i class="icon-file"></i>' : '<i class="icon-folder-close-alt"></i>');
@@ -366,13 +367,10 @@
 							that._removeCollectionItem(ic, item).done(function() {
 								table.remove(item);
 							});
-						} else if (id == "share") {
-							d.close();
-							that._onShareNavItem(ic);
 						}
 					},
 					onRender: function(d, $c, table) {
-						table.add(loaded.items);
+						table.set(loaded.items);
 						$c.removeClass("loading");
 					}
 				});
@@ -1340,6 +1338,7 @@
 		};
 		
 		this.loadShares = function(item) {
+			if (!item) return mollify.service.get("share/all/");
 			return mollify.service.get("share/items/"+item.id).done(function(result) {
 				that.refreshShares(result);
 			});
@@ -1547,6 +1546,10 @@
 				that.updateShareList(item);
 			}).fail(that.d.close);
 		}
+
+		this.removeAllItemShares = function(item) {
+			return mollify.service.del("share/items/"+item.id);
+		}
 		
 		this.getActionValidationMessages = function(action, items, validationData) {
 			var messages = [];
@@ -1585,11 +1588,58 @@
 				that.loadShares(item).done(function(shares) { that.initContent(item, shares, that.d.element()); });
 			});
 		};
+
+		this.onActivateConfigView = function($c) {
+			var shares = false;
+			var items = false;
+			var listView = false;
+
+			var updateShares = function() {
+				$c.addClass("loading");
+				that.loadShares().done(function(l) {
+					$c.removeClass("loading");
+					shares = l.shares[mollify.session.user_id];
+					items = l.items;
+					listView.table.set(items);
+				});
+			}
+
+			listView = new mollify.view.ConfigListView($c, {
+				table: {
+					key: "id",
+					columns: [
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-file"></i>' },
+						{ id: "name", title: mollify.ui.texts.get('fileListColumnTitleName') },
+						{ id: "count", title: mollify.ui.texts.get('pluginShareConfigViewCountTitle'), valueMapper: function(item) {
+							return shares[item.id].length;
+						} },
+						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					]
+				},
+				onTableRowAction: function(table, id, item) {
+					if (id == "edit") {
+						that.onOpenShares(item);
+					} else if (id == "remove") {
+						that.removeAllItemShares(item).done(updateShares);
+					}
+				}
+			});
+			updateShares();
+		}
 		
 		return {
 			id: "plugin-share",
 			initialize: that.initialize,
 
+			configViewHandler : {
+				views : function() {
+					return [{
+						title: mollify.ui.texts.get("pluginShareConfigViewNavTitle"),
+						onActivate: that.onActivateConfigView
+					}];
+				}
+			},
 			fileViewHandler : {
 				filelistColumns : function() {
 					return [{
