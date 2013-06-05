@@ -30,6 +30,30 @@
 			return $db->query($query)->firstRow();
 		}
 
+		public function getUserShares($userId) {
+			$db = $this->env->db();
+			$list = $db->query("select id, user_id, item_id, name, expiration, active from ".$db->table("share")." where user_id = ".$db->string($userId, TRUE)." order by item_id asc, created asc")->rows();
+			
+			$res = array();
+			$itemId = FALSE;
+			$userId = FALSE;
+			foreach($list as $s) {
+				Logging::logDebug(Util::array2str($s));
+				if ($s["user_id"] != $userId) {
+					$res[$s["user_id"]] = array();
+				}
+				$userId = $s["user_id"];
+
+				if ($s["item_id"] != $itemId) {
+					$res[$userId][$s["item_id"]] = array();
+				}
+				$itemId = $s["item_id"];
+
+				$res[$userId][$itemId][] = array("id" => $s["id"], "name" => $s["name"], "expiration" => $s["expiration"],"active" => ($s["active"] == 1));
+			}
+			return $res;
+		}
+
 		public function getShares($itemId, $userId) {
 			$db = $this->env->db();
 			$list = $db->query("select id, name, expiration, active from ".$db->table("share")." where item_id = ".$db->string($itemId, TRUE)." and user_id = ".$db->string($userId, TRUE)." order by created asc")->rows();

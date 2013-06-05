@@ -324,7 +324,8 @@
 		});
 		
 		this.init = function() {
-			that.title = "TODO files";
+			that.title = mollify.ui.texts.get('mainviewMenuTitle');
+
 			mollify.events.addEventHandler(that.onEvent);
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {

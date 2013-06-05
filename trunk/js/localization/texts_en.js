@@ -50,6 +50,7 @@ loginDialogLoginFailedMessage: "Login failed, user name or password was incorrec
 resetPasswordPopupMessage: "Enter your email address:",
 resetPasswordPopupButton: "Reset",
 
+mainviewMenuTitle: "Files",
 mainViewSearch: "Search",
 mainViewChangePasswordTitle: "Change password...",
 mainViewAdministrationTitle: "Administration...",
@@ -211,6 +212,8 @@ shareDialogShareValidityTitle: 'Validity',
 shareDialogShareExpirationTitle: 'Expires at',
 shareDialogSave: 'Save',
 shareDialogCancel: 'Cancel',
+pluginShareConfigViewNavTitle: "Shares",
+pluginShareConfigViewCountTitle: "Count",
 
 pluginItemCollectionsNavTitle: "Stored",
 pluginItemCollectionStore: "Store...",
@@ -221,5 +224,8 @@ pluginItemCollectionShareTitle: "Share Stored Collection",
 pluginItemCollectionsEditDialogTitle: "Edit Collection: {0}",
 pluginItemCollectionsEditDialogRemove: "Remove",
 pluginItemCollectionsNavRemove: "Remove...",
-pluginItemCollectionsNavShare: "Share..."
+pluginItemCollectionsNavShare: "Share...",
+
+configviewMenuTitle: "Configuration",
+configViewUserNavTitle: "User"
 })})();

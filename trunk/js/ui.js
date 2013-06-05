@@ -650,7 +650,7 @@
 		},
 		
 		table: function(id, o) {
-			var $e = $("#"+id);
+			var $e = (typeof(id) == 'string') ? $("#"+id) : $(id);
 			if ($e.length === 0 || !o.columns) return false;
 			
 			$e.addClass("table");
@@ -685,8 +685,11 @@
 					var sv = v;
 					if (col.valueMapper) sv = col.valueMapper(item, v);
 					$s.select(sv);
+				} else if (col.type == 'static') {
+					$cell.html(col.content || '');
 				} else {
 					if (col.renderer) col.renderer(item, v, $cell);
+					else if (col.valueMapper) $cell.html(col.valueMapper(item, v));
 					else $cell.html(v);
 				}
 			};
@@ -733,6 +736,10 @@
 						}
 					});
 					return found;
+				},
+				set : function(items) {
+					$l.empty();
+					$.each(items, function(i, item) { addItem(item); });
 				},
 				add : function(item) {
 					if (!item) return;
@@ -1280,7 +1287,7 @@
 
 				h.center();
 				var table = mollify.ui.controls.table("mollify-tableview-list", {
-					key: "item_id",
+					key: o.table.key,
 					columns: o.table.columns,
 					onRowAction: function(id, obj) {
 						if (o.onTableRowAction) o.onTableRowAction(h, table, id, obj);

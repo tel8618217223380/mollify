@@ -617,6 +617,16 @@ var mollifyDefaults = {
 		}
 		return plugins;
 	};
+
+	pl.getConfigViewPlugins = function() {
+		var plugins = [];
+		for (var id in pl._list) {
+			var plugin = pl._list[id];
+			if (!plugin.configViewHandler) continue;
+			plugins.push(plugin);
+		}
+		return plugins;
+	};
 		
 	/* FEATURES */
 	

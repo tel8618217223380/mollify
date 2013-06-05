@@ -82,6 +82,10 @@
 			}
 			return $list;
 		}
+
+		public function getUserShares() {
+			return $this->dao()->getUserShares($this->env->session()->userId());
+		}
 		
 		public function getShares($itemId) {
 			return $this->dao()->getShares($itemId, $this->env->session()->userId());
