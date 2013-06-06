@@ -18,15 +18,14 @@
 	
 	class MySQLInstaller {
 		protected $processor;
+		private $settings;
 		private $configured;
 		protected $db;
 
 		public function __construct($settings, $type = "install") {
-			$this->processor = new MollifyInstallProcessor($type, "mysql", $settings);
-			
+			$this->settings = $settings;
+			$this->processor = new MollifyInstallProcessor($type, "mysql", $settings);		
 			$this->configured = isset($settings["db"]["user"], $settings["db"]["password"]);
-			$this->db = MySQLIDatabase::createFromConf($settings["db"]);
-			$this->dbUtil = new DatabaseUtil($this->db);
 		}
 		
 		public function processor() {
@@ -47,7 +46,7 @@
 		}
 
 		public function isInstalled() {
-			if (!$this->isConfigured())
+			if (!$this->isConfigured() or !$this->db)
 				return FALSE;
 			
 			try {
@@ -127,11 +126,28 @@
 		public function data($name = NULL) {
 			return $this->processor->data($name);
 		}
+		
+		public function init() {
+			$this->db = MySQLIDatabase::createFromConf($this->settings["db"]);
+			$this->db->connect(FALSE);
+			$this->dbUtil = new DatabaseUtil($this->db);
+		}
 
 		public function process() {
 			$this->checkSystem();
+			
+			if (!$this->isConfigured())
+				$this->processor->showPage("configuration");
+			
+			try {
+				$this->init();
+			} catch(ServiceException $e) {
+				$this->processor->setError("Could not connect to database", '<code>'.$e->details().'</code>');
+				$this->processor->showPage("configuration");
+				die();
+			}
+			
 			$this->checkInstalled();
-			$this->checkConfiguration();
 
 			$phase = $this->processor->phase();
 			if ($phase == NULL) $phase = 'db';
@@ -159,22 +175,6 @@
 			if (!$this->processor->authentication()->isAdmin()) die("Mollify Installer requires administrator user");
 			
 			$this->processor->showPage("installed");
-		}
-		
-		private function checkConfiguration() {
-			if (!$this->isConfigured())
-				$this->processor->showPage("configuration");
-
-			try {
-				$this->db->connect(FALSE);
-			} catch (ServiceException $e) {
-				if ($e->type() === 'INVALID_CONFIGURATION') {
-					$this->processor->setError("Could not connect to database", '<code>'.$e->details().'</code>');
-					$this->processor->showPage("configuration");
-					die();
-				}
-				throw $e;
-			}
 		}
 		
 		private function onPhase($phase) {

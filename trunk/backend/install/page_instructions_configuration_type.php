@@ -11,7 +11,7 @@
 	 */
 	 
 	include("installation_page.php");
-	global $SETTINGS;
+	global $CONFIGURATION;
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -21,19 +21,19 @@
 	
 	<body id="install-instructions-type">
 		<?php pageBody("Installation", "Welcome to Mollify Installer"); ?>
-		<?php if (isset($SETTINGS["db"]) && isset($SETTINGS["db"]["type"])) { ?>
+		<?php if (isset($CONFIGURATION["db"]) && isset($CONFIGURATION["db"]["type"])) { ?>
 		<div class="error">
 			<div class="title">	
 				Database configuration is not valid.
 			</div>
 			<div class="details">
-				Database type "<code><?php echo($SETTINGS["db"]["type"]); ?></code>" is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
+				Database type "<code><?php echo($CONFIGURATION["db"]["type"]); ?></code>" is invalid. For more information, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">installation instructions</a>.
 			</div>
 		</div>
 		<?php } ?>
 		
 		<div class="content">
-			<?php if (!isset($SETTINGS) || !isset($SETTINGS["db"]) || !isset($SETTINGS["db"]["type"])) { ?>
+			<?php if (!isset($CONFIGURATION) || !isset($CONFIGURATION["db"]) || !isset($CONFIGURATION["db"]["type"])) { ?>
 			<p>
 				To continue with Mollify installation, you have to setup the configuration.
 			</p>
@@ -43,7 +43,7 @@
 				Edit the configuration file <code>configuration.php</code> by adding the database type, for example:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$SETTINGS = array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION = array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;db&quot; => array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; => &quot;<span class="value">[DATABASE TYPE HERE]</span>&quot;<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
