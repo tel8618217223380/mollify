@@ -53,7 +53,7 @@
 	}
 	
 	function isValidConfigurationType($type) {
-		return in_array(strtolower($type), array("pdo", "mysql","sqlite"));
+		return in_array(strtolower($type), array("pdo", "mysql", "sqlite"));
 	}
 	
 	function showError($e) {

@@ -46,6 +46,8 @@
 			return new SQLiteInstallUtil($this->db);
 		}
 		
+		public function init() {}
+		
 		public function isConfigured() {
 			return $this->configured;
 		}
@@ -88,7 +90,7 @@
 		}
 
 		public function currentVersion() {
-			return SQLiteConfiguration::VERSION;
+			return "2_0";
 		}
 		
 		public function db() {

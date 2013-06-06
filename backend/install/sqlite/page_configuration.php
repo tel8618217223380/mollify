@@ -38,7 +38,7 @@
 				An example configuration:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$SETTINGS = array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION = array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;db&quot; => array(<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; => &quot;sqlite&quot;,<br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;file&quot; => &quot;<span class="value">[SQLITE FILE PATH HERE]</span>&quot;<br/>

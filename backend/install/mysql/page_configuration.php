@@ -20,7 +20,7 @@
 	
 	<body id="page-mysql-configuration">
 		<?php pageBody("Installation", "MySQL Database Configuration"); ?>
-		<?php if ($installer->action() === 'continue') { ?>
+		<?php if ($installer->action() === 'continue' and !$installer->hasError()) { ?>
 		<div class="error">
 			<div class="title">	
 				No database configuration found.
@@ -39,8 +39,8 @@
 					<li>Database name (optional, by default "mollify")</li>
 					<li>User</li>
 					<li>Password</li>
-					<li>Port (optional)</li>
-					<li>Socket (optional, use ONLY with localhost DB)</li>
+					<li>Port (for remote MySQL servers, optional)</li>
+					<li>Socket (for local MySQL servers, optional)</li>
 					<li>Table prefix (optional)</li>
 				</ul>
 				
@@ -50,14 +50,16 @@
 				An example configuration:
 				<div class="example code">
 					&lt;?php<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION_TYPE = &quot;<span class="value">mysql</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_HOST = &quot;<span class="value">localhost</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_DATABASE = &quot;<span class="value">mollify</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_USER = &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PASSWORD = &quot;<span class="value">[MYSQL_PASSWORD]</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_PORT = &quot;<span class="value">3306</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_SOCKET = &quot;<span class="value">/tmp/mysql5.sock</span>&quot;;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;$DB_TABLE_PREFIX = &quot;<span class="value">mollify_</span>&quot;;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;$CONFIGURATION = array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;db&quot; => array(<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; => &quot;mysql&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;host&quot; => &quot;<span class="value">localhost</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;database&quot; => &quot;<span class="value">mollify</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;user&quot; => &quot;<span class="value">[MYSQL_USERNAME]</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;password&quot; => &quot;<span class="value">MYSQL_PASSWORD</span>&quot;,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;table_prefix&quot; => &quot;<span class="value">mollify_</span>&quot;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;);<br/>
 					?&gt;
 				</div>
 			</p>

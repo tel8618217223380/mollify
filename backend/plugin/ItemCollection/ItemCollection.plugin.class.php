@@ -29,7 +29,6 @@
 			$this->addService("itemcollections", "ItemCollectionServices");
 			
 			$this->handler = new ItemCollectionHandler($this->env, $this->getSettings());
-			$this->env->filesystem()->registerItemListingProvider("ic", $this->handler);
 			$this->env->events()->register("filesystem/", $this->handler);
 			$this->env->events()->register("user/", $this->handler);
 		}

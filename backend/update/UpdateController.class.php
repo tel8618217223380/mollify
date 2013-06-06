@@ -18,6 +18,7 @@
 		}
 		
 		public function process() {
+			$this->installer->init();
 			if (!$this->installer->isInstalled()) die();
 
 			$this->installer->processor()->createEnvironment();
