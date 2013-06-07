@@ -2,14 +2,24 @@
 
 	"use strict"; // jshint ;_;
 
-	mollify.view.config.admin.EventLogging = function() {
-		var that = this;
-		this.title = mollify.ui.texts.get("pluginEventLoggingAdminNavTitle");
+	mollify.view.config.admin.EventLogging = {
+		AllEventsView : function() {
+			var that = this;
 
-		this.onActivate = function($c) {
-			$c.html("event logging");
+			this.init = function() {
+				that.title = mollify.ui.texts.get("pluginEventLoggingAdminNavTitle");
+			}
+
+			this.onActivate = function($c) {
+				$c.html("event logging");
+			}
 		}
 	}
 
-	mollify.admin.plugins.push(new mollify.view.config.admin.EventLogging());
+	mollify.admin.plugins.EventLogging = {
+		hasTexts : true,
+		views: [
+			new mollify.view.config.admin.EventLogging.AllEventsView()
+		]
+	};
 }(window.jQuery, window.mollify);
