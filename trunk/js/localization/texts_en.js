@@ -227,5 +227,10 @@ pluginItemCollectionsNavRemove: "Remove...",
 pluginItemCollectionsNavShare: "Share...",
 
 configviewMenuTitle: "Configuration",
-configViewUserNavTitle: "User"
+configViewUserNavTitle: "User",
+
+configUserAccountNavTitle: "Account",
+configUserAccountUsernameTitle: "User",
+configUserAccountPasswordTitle: "Password",
+configUserAccountPasswordAction: "Change"
 })})();
