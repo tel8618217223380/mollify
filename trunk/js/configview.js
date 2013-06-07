@@ -5,10 +5,12 @@
 	mollify.view.MainViewConfigView = function() {
 		var that = this;
 		this._views = [];
+		this._adminViews = [];
+		this._adminViewsLoaded = false;
 
 		this.init = function(mv) {
 			that.title = mollify.ui.texts.get('configviewMenuTitle');
-			that._views.push(new mollify.view.config.UserAccountView(mv));
+			that._views.push(new mollify.view.config.user.AccountView(mv));
 
 			$.each(mollify.plugins.getConfigViewPlugins(), function(i, p) {
 				if (!p.configViewHandler.views) return;
@@ -35,7 +37,54 @@
 					title: mollify.ui.texts.get("configViewUserNavTitle"),
 					items: navBarItems
 				});
+			});
 
+			if (mollify.session.admin) {
+				if (this._adminViewsLoaded) {
+					that._initAdminViews(h);
+				} else {
+					that._adminViews.push(new mollify.view.config.admin.UsersView());
+
+					var plugins = [];
+					for (var k in mollify.session.plugins) {
+						if (!mollify.session.plugins[k] || !mollify.session.plugins[k].admin) continue;
+						plugins.push(k);
+					};
+					mollify.admin = {
+						plugins : []
+					};
+					that._loadAdminPlugins(plugins).then(function(){
+						$.each(mollify.admin.plugins, function(i, v) {
+							that._adminViews.push(v);
+						});
+						that._initAdminViews(h);
+					});
+					this._adminViewsLoaded = true;
+				}
+			}
+		}
+
+		this._loadAdminPlugins = function(ids) {
+			if (ids.length == 0) return $.Deferred().resolve([]);
+
+			var l = [];
+			for (var i=0,j=ids.length;i<j;i++) {
+				l.push($.getScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
+			}
+			return $.when.apply($, l);
+		}
+
+		this._initAdminViews = function(h) {
+			if (!mollify.session.admin || that._adminViews.length == 0) return;
+
+			var navBarItems = [];
+			$.each(that._adminViews, function(i, v) {
+				navBarItems.push({title:v.title, obj: v, callback:function(){ that._activateView(v); }})
+			});
+
+			that._adminNav = h.addNavBar({
+				title: mollify.ui.texts.get("configViewAdminNavTitle"),
+				items: navBarItems
 			});
 		}
 
@@ -65,9 +114,12 @@
 		};
 	}
 
-	mollify.view.config = {};
+	mollify.view.config = {
+		user: {},
+		admin: {}
+	};
 
-	mollify.view.config.UserAccountView = function(mv) {
+	mollify.view.config.user.AccountView = function(mv) {
 		var that = this;
 		this.title = mollify.ui.texts.get("configUserAccountNavTitle");
 
@@ -75,6 +127,15 @@
 			mollify.dom.template("mollify-tmpl-config-useraccountview", mollify.session).appendTo($c);
 			mollify.ui.process($c, ["localize"]);
 			$("#user-account-change-password-btn").click(mv.changePassword);
+		}
+	}
+
+	mollify.view.config.admin.UsersView = function() {
+		var that = this;
+		this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
+
+		this.onActivate = function($c) {
+			$c.html("users");
 		}
 	}
 }(window.jQuery, window.mollify);
