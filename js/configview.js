@@ -6,8 +6,20 @@
 		var that = this;
 		this._views = [];
 
-		this.init = function() {
+		this.init = function(mv) {
 			that.title = mollify.ui.texts.get('configviewMenuTitle');
+			that._views.push(new mollify.view.config.UserAccountView(mv));
+
+			$.each(mollify.plugins.getConfigViewPlugins(), function(i, p) {
+				if (!p.configViewHandler.views) return;
+
+				var views = p.configViewHandler.views();
+				if (!views) return;
+				
+				$.each(views, function(i, v) {
+					that._views.push(v);
+				});
+			});
 		}
 
 		this.onActivate = function(h) {
@@ -15,16 +27,8 @@
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
 
 				var navBarItems = [];
-				$.each(mollify.plugins.getConfigViewPlugins(), function(i, p) {
-					if (!p.configViewHandler.views) return;
-
-					var views = p.configViewHandler.views();
-					if (!views) return;
-					
-					$.each(views, function(i, v) {
-						that._views.push(v);
-						navBarItems.push({title:v.title, obj: v, callback:function(){ that._activateView(v); }})
-					});
+				$.each(that._views, function(i, v) {
+					navBarItems.push({title:v.title, obj: v, callback:function(){ that._activateView(v); }})
 				});
 
 				that._userNav = h.addNavBar({
@@ -59,5 +63,18 @@
 		return {
 			table: table
 		};
+	}
+
+	mollify.view.config = {};
+
+	mollify.view.config.UserAccountView = function(mv) {
+		var that = this;
+		this.title = mollify.ui.texts.get("configUserAccountNavTitle");
+
+		this.onActivate = function($c) {
+			mollify.dom.template("mollify-tmpl-config-useraccountview", mollify.session).appendTo($c);
+			mollify.ui.process($c, ["localize"]);
+			$("#user-account-change-password-btn").click(mv.changePassword);
+		}
 	}
 }(window.jQuery, window.mollify);

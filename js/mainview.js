@@ -10,14 +10,14 @@
 		that._currentView = false;
 		
 		this.init = function($c) {
-			this._mainFileView = new mollify.view.MainViewFileView();
-			this._mainConfigView = new mollify.view.MainViewConfigView();
-			this._views = [ this._mainFileView, this._mainConfigView ];
+			that._mainFileView = new mollify.view.MainViewFileView();
+			that._mainConfigView = new mollify.view.MainViewConfigView();
+			that._views = [ this._mainFileView, this._mainConfigView ];
 
 			$.each(mollify.plugins.getMainViewPlugins(), function(i, p) {
 				if (!p.mainViewHandler) return;
 				var view = p.mainViewHandler();
-				this._views.push(view);
+				that._views.push(view);
 			});
 			
 			that.itemContext = new mollify.ui.itemContext();
@@ -38,7 +38,7 @@
 			
 			var menuitems = [];
 			$.each(that._views, function(i, v) {
-				v.init();
+				v.init(that);
 				menuitems.push({ title: v.title });
 			});
 			
@@ -65,6 +65,7 @@
 				content: $("#mollify-mainview-viewcontent").empty(),
 				tools: $("#mollify-mainview-viewtools").empty(),
 				addNavBar: that.addNavBar,
+				mainview: that,
 				fileview: that._mainFileView
 			});
 		}
@@ -108,9 +109,12 @@
 					if (!o) return;
 					$.each($items, function(i, itm) {
 						var obj = items[i].obj;
-						if (obj && obj.id == o.id) {
+						if (!obj) return;
+
+						var match = window.def(o.id) ? o.id == obj.id : o == obj;
+						if (match) {
 							$(itm).addClass("active");
-							return true;
+							return false;
 						}
 					});
 				},
@@ -153,6 +157,18 @@
 			var $new2 = false;
 			var errorTextMissing = mollify.ui.texts.get('mainviewChangePasswordErrorValueMissing');
 			var errorConfirm = mollify.ui.texts.get('mainviewChangePasswordErrorConfirm');
+
+			var doChangePassword = function(oldPw, newPw, successCb) {
+				mollify.service.put("configuration/users/current/password/", {old:window.Base64.encode(oldPw), "new": window.Base64.encode(newPw) }).done(function(r) {
+					successCb();
+					mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
+				}).fail(function(e) {
+					this.handled = true;
+					if (e.code == 107) {
+						mollify.ui.dialogs.error({message:mollify.ui.texts.get('mainviewChangePasswordError')});
+					} else this.handled = false;
+				});
+			}
 			
 			mollify.ui.dialogs.custom({
 				title: mollify.ui.texts.get('mainviewChangePasswordTitle'),
@@ -196,7 +212,7 @@
 						if (!old || !new1 || !new2 || new1 != new2) return;
 					}
 
-					if (btn.id === 'yes') that.doChangePassword(old, new1, d.close);
+					if (btn.id === 'yes') doChangePassword(old, new1, d.close);
 					else d.close();
 				},
 				"on-show": function(h, $d) {
@@ -207,18 +223,6 @@
 					
 					$old.find("input").focus();
 				}
-			});
-		}
-		
-		this.doChangePassword = function(oldPw, newPw, successCb) {
-			mollify.service.put("configuration/users/current/password/", {old:window.Base64.encode(oldPw), "new": window.Base64.encode(newPw) }).done(function(r) {
-				successCb();
-				mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordSuccess')});
-			}).fail(function(e) {
-				this.handled = true;
-				if (e.code == 107) {
-					mollify.ui.dialogs.error({message:mollify.ui.texts.get('mainviewChangePasswordError')});
-				} else this.handled = false;
 			});
 		}
 	}
