@@ -120,13 +120,7 @@
 	mollify.view.ConfigListView = function($e, o) {
 		mollify.dom.template("mollify-tmpl-configlistview").appendTo($e);
 		var $table = $e.find(".mollify-configview-table");
-		var table = mollify.ui.controls.table($table, {
-			key: o.table.key,
-			columns: o.table.columns,
-			onRowAction: function(id, obj) {
-				if (o.onTableRowAction) o.onTableRowAction(table, id, obj);
-			}
-		});
+		var table = mollify.ui.controls.table($table, o.table);
 
 		return {
 			table: table
@@ -175,9 +169,14 @@
 				});
 			}
 			listView = new mollify.view.ConfigListView($c, {
+				actions: [
+					{ id: "action-add", title:"foo", callback: function() { alert("foo"); }},
+					{ id: "action-remove", title:"bar", callback: function() { alert("bar"); }}
+				],
 				table: {
 					key: "id",
 					columns: [
+						{ type:"select" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
 						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
@@ -186,14 +185,15 @@
 						} },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
-					]
-				},
-				onTableRowAction: function(table, id, item) {
-					if (id == "edit") {
-						//that.onOpenShares(item);
-					} else if (id == "remove") {
-						//that.removeAllItemShares(item).done(updateShares);
-					}
+					],
+					onRowAction: function(id, item) {
+						if (id == "edit") {
+							//that.onOpenShares(item);
+						} else if (id == "remove") {
+							//that.removeAllItemShares(item).done(updateShares);
+						}
+					},
+					onSelectionChanged: function() { alert(listView.table.getSelected().length); }
 				}
 			});
 			updateUsers();

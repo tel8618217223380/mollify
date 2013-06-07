@@ -663,10 +663,22 @@
 
 			var $l = $("<tbody></tbody>").appendTo($e);
 			
+			var getSelectedRows = function() {
+				var sel = [];
+				$e.find(".mollify-tableselect:checked").each(function(i, e){
+					var item = $(e).parent().parent()[0].data;
+					sel.push(item);
+				});
+				return sel;
+			};
+			$e.delegate(".mollify-tableselect", "click", function() { if (o.onSelectionChanged) o.onSelectionChanged(); });
+			
 			var setCellValue = function($cell, col, item) {
 				var v = item[col.id];
 				if (col.cellClass) $cell.addClass(col.cellClass);
-				if (col.type == 'action') {
+				if (col.type == 'select') {
+					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
+				} else if (col.type == 'action') {
 					var html = col.content || col.title;
 					var $action = $("<a class='mollify-tableaction-"+col.id+"'></a>").html(html).appendTo($cell);
 					$action.click(function(){
@@ -736,6 +748,9 @@
 						}
 					});
 					return found;
+				},
+				getSelected : function() {
+					return getSelectedRows();
 				},
 				set : function(items) {
 					$l.empty();
