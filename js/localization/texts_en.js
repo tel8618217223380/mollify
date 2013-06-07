@@ -232,5 +232,9 @@ configViewUserNavTitle: "User",
 configUserAccountNavTitle: "Account",
 configUserAccountUsernameTitle: "User",
 configUserAccountPasswordTitle: "Password",
-configUserAccountPasswordAction: "Change"
+configUserAccountPasswordAction: "Change",
+
+configViewAdminNavTitle: "Admin",
+configAdminUsersNavTitle: "Users",
+configAdminUsersPermissionModeAdmin: "Administrator",
 })})();

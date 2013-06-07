@@ -53,10 +53,7 @@
 					mollify.admin = {
 						plugins : []
 					};
-					that._loadAdminPlugins(plugins).then(function(){
-						$.each(mollify.admin.plugins, function(i, v) {
-							that._adminViews.push(v);
-						});
+					that._loadAdminPlugins(plugins).done(function(){
 						that._initAdminViews(h);
 					});
 					this._adminViewsLoaded = true;
@@ -65,13 +62,34 @@
 		}
 
 		this._loadAdminPlugins = function(ids) {
-			if (ids.length == 0) return $.Deferred().resolve([]);
+			var df = $.Deferred();
+			if (ids.length == 0) return df.resolve();
 
 			var l = [];
 			for (var i=0,j=ids.length;i<j;i++) {
 				l.push($.getScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
 			}
-			return $.when.apply($, l);
+			
+			$.when.apply($, l).done(function() {
+				var o = [];
+
+				for (var pk in mollify.admin.plugins) {
+					var p = mollify.admin.plugins[pk];
+					if (!p || !p.views) continue;
+
+					if (p.hasTexts) o.push($.getScript("backend/plugin/"+pk+"/admin/texts_"+mollify.ui.texts.locale+".js"));
+					$.each(p.views, function(i, v) {
+						that._adminViews.push(v);
+					});
+				};
+
+				$.when.apply($, o).done(function() {
+					$.each(that._adminViews, function(i, v) {
+						if (v.init) v.init();
+					})
+				}).done(df.resolve);
+			});
+			return df;
 		}
 
 		this._initAdminViews = function(h) {
@@ -88,8 +106,9 @@
 			});
 		}
 
-		this._activateView = function(v) {
-			that._userNav.setActive(v);
+		this._activateView = function(v, admin) {
+			if (admin) that._adminNav.setActive(v);
+			else that._userNav.setActive(v);
 
 			$("#mollify-configview-header").html(v.title);
 			v.onActivate($("#mollify-configview-content").empty());
@@ -134,8 +153,50 @@
 		var that = this;
 		this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
 
+		that.permissionOptions = [
+			{ title: mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'), value: "a"},
+			{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
+			{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
+			{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
+		];
+		that.permissionOptionsByKey = {};
+		for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
+
 		this.onActivate = function($c) {
-			$c.html("users");
+			var users = false;
+			var listView = false;
+
+			var updateUsers = function() {
+				$c.addClass("loading");
+				mollify.service.get("configuration/users/").done(function(l) {
+					$c.removeClass("loading");
+					users = l;
+					listView.table.set(users);
+				});
+			}
+			listView = new mollify.view.ConfigListView($c, {
+				table: {
+					key: "id",
+					columns: [
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
+							var pkl = pk.toLowerCase();
+							return that.permissionOptionsByKey[pkl] ? that.permissionOptionsByKey[pkl].title : pk;
+						} },
+						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					]
+				},
+				onTableRowAction: function(table, id, item) {
+					if (id == "edit") {
+						//that.onOpenShares(item);
+					} else if (id == "remove") {
+						//that.removeAllItemShares(item).done(updateShares);
+					}
+				}
+			});
+			updateUsers();
 		}
 	}
 }(window.jQuery, window.mollify);

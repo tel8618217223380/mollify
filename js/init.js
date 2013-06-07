@@ -662,7 +662,7 @@ var mollifyDefaults = {
 	md._hiddenLoaded = [];
 		
 	md.importScript = function(url) {
-		$.getScript(url);
+		return $.getScript(url);
 	};
 		
 	md.importCss = function(url) {
