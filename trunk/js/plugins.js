@@ -939,8 +939,7 @@
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
 			];
-			that.permissionOptionsByKey = {};
-			for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
+			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
 		};
 		
 		that.onOpenPermissions = function(item) {
