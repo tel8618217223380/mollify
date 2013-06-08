@@ -888,8 +888,10 @@
 			};
 		},
 		
-		datepicker: function(o) {
-			if (!o || !o.element) return false;
+		datepicker: function(e, o) {
+			if (!e) return false;
+			if (!o) o = {};
+			var $e = (typeof(e) === "string") ? $("#"+e) : e;
 			if (!$.fn.datetimepicker.dates.mollify) {
 				$.fn.datetimepicker.dates.mollify = {
 					days: mollify.ui.texts.get('days'),
@@ -907,7 +909,7 @@
 			fmt = fmt.replace(/\b[M]\b/, "MM");
 			fmt = fmt.replace(/\b[d]\b/, "dd");
 			fmt = fmt.replace("tt", "PP");
-			var $dp = $(o.element).datetimepicker({
+			var $dp = $e.datetimepicker({
 				format: fmt,
 				language: "mollify",
 				pickTime: o.time || true,
