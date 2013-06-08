@@ -982,9 +982,7 @@
 					that.loadPermissions(item, function(permissions, userData) {
 						$content.removeClass("loading");
 						that.initEditor(item, permissions, userData, permissionData);
-					}).fail(function(e) {
-						h.close();
-					});
+					}).fail(h.close);
 				}
 			});
 		};
@@ -1441,8 +1439,7 @@
 			var $c = $("#share-context").empty();
 			mollify.dom.template(contentTemplateId, tmplData).appendTo($c);
 			mollify.ui.process($c, ["localize"]);
-			mollify.ui.controls.datepicker({
-				element: $("#share-validity-expirationdate-value"),
+			mollify.ui.controls.datepicker("share-validity-expirationdate-value", {
 				format: mollify.ui.texts.get('shortDateTimeFormat'),
 				time: true
 			})

@@ -41,3 +41,61 @@
 		</form>
 	</div>
 </script>
+
+<script id="mollify-tmpl-config-admin-userdialog" type="text/x-jquery-tmpl">
+	<div id="mollify-config-admin-userdialog-content">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogUsernameTitle"></label>
+				<div class="controls">
+					<input type="text" id="usernameField">
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogEmailTitle"></label>
+				<div class="controls">
+					<input type="text" id="emailField">
+				</div>
+			</div>
+			
+			{{if !user}}
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogPasswordTitle"></label>
+				<div class="controls">
+					<input type="password" id="passwordField">
+					<button id="generatePasswordBtn" class="btn localized" text-key="configAdminUserDialogGeneratePassword"></button>
+				</div>
+			</div>
+			{{/if}}
+			
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogPermissionModeTitle"></label>
+				<div class="controls">
+					<select id="permissionModeField">
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogAuthenticationTitle"></label>
+				<div class="controls">
+					<select id="authenticationField">
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label localized" text-key="configAdminUserDialogExpirationTitle"></label>
+				<div class="controls">
+					<div id="expirationField" class="input-append">
+					    <input id="expirationFieldInput" type="text"></input>
+					    <span class="add-on">
+					      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+					    </span>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>

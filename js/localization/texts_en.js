@@ -237,4 +237,11 @@ configUserAccountPasswordAction: "Change",
 configViewAdminNavTitle: "Admin",
 configAdminUsersNavTitle: "Users",
 configAdminUsersPermissionModeAdmin: "Administrator",
+
+configAdminUsersUserDialogEditTitle: "Edit User",
+configAdminUsersUserDialogAddTitle: "Add New User",
+configAdminUserDialogUsernameTitle: "Username",
+configAdminUserDialogPasswordTitle: "Password",
+configAdminUserDialogGeneratePassword: "Generate",
+configAdminUserDialogPermissionModeTitle: "Default permission"
 })})();

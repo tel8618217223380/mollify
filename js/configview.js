@@ -43,6 +43,7 @@
 				if (this._adminViewsLoaded) {
 					that._initAdminViews(h);
 				} else {
+					this._adminViewsLoaded = true;
 					that._adminViews.push(new mollify.view.config.admin.UsersView());
 
 					var plugins = [];
@@ -56,7 +57,6 @@
 					that._loadAdminPlugins(plugins).done(function(){
 						that._initAdminViews(h);
 					});
-					this._adminViewsLoaded = true;
 				}
 			}
 		}
@@ -72,6 +72,8 @@
 			
 			$.when.apply($, l).done(function() {
 				var o = [];
+				
+				o.push(mollify.service.get("configuration/options").done(function(opt) { that._options = opt; }));
 
 				for (var pk in mollify.admin.plugins) {
 					var p = mollify.admin.plugins[pk];
@@ -85,7 +87,7 @@
 
 				$.when.apply($, o).done(function() {
 					$.each(that._adminViews, function(i, v) {
-						if (v.init) v.init();
+						if (v.init) v.init(that._options);
 					})
 				}).done(df.resolve);
 			});
@@ -158,16 +160,24 @@
 
 	mollify.view.config.admin.UsersView = function() {
 		var that = this;
-		this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
-
-		that.permissionOptions = [
-			{ title: mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'), value: "a"},
-			{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-			{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
-			{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
-		];
-		that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
-
+		
+		this.init = function(opt) {
+			this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
+	
+			that.permissionOptions = [
+				{ title: mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'), value: "a"},
+				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
+				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
+				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
+			];
+			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
+	
+			that.authenticationOptions = [];
+			$.each(opt.authentication_methods, function(i, am) { that.authenticationOptions.push({ title: am, value: am }); });
+			that.authenticationOptionsByKey = mollify.helpers.mapByKey(that.authenticationOptions, "value");
+			that.defaultAuthMethod = opt.authentication_methods[0];
+		}
+		
 		this.onActivate = function($c) {
 			var users = false;
 			var listView = false;
@@ -186,7 +196,7 @@
 			};
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
-					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { alert("foo"); }},
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", callback: function() { alert("bar"); }}
 				],
 				table: {
@@ -202,9 +212,9 @@
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
-					onRowAction: function(id, item) {
+					onRowAction: function(id, u) {
 						if (id == "edit") {
-							//that.onOpenShares(item);
+							that.onAddEditUser(u, updateUsers);
 						} else if (id == "remove") {
 							//that.removeAllItemShares(item).done(updateShares);
 						}
@@ -214,6 +224,95 @@
 			});
 			updateUsers();
 			updateActions();
+		}
+		
+		this._generatePassword = function() {
+			var length = 8;
+			var password = '';
+			
+		    for (i = 0; i < length; i++) {
+		    	while (true) {
+			        c = (parseInt(Math.random() * 1000) % 94) + 33;
+			        if (that._isValidPasswordChar(c)) break;
+				}
+		        password += String.fromCharCode(c);
+		    }
+		    return password;
+		}
+		
+		this._isValidPasswordChar = function(c) {
+		    if (c >= 33 && c <= 47) return false;
+		    if (c >= 58 && c <= 64) return false;
+		    if (c >= 91 && c <= 96) return false;
+		    if (c >= 123 && c <=126) return false;
+		    return true;
+		}
+		
+		this.onAddEditUser = function(u, cb) {
+			var $content = false;
+			var $name = false;
+			var $email = false;
+			var $password = false;
+			var $permission = false;
+			var $authentication = false;
+			var $expiration = false;
+			
+			mollify.ui.dialogs.custom({
+				resizable: true,
+				initSize: [600, 400],
+				title: mollify.ui.texts.get(u ? 'configAdminUsersUserDialogEditTitle' : 'configAdminUsersUserDialogAddTitle'),
+				content: mollify.dom.template("mollify-tmpl-config-admin-userdialog", {user: u}),
+				buttons: [
+					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+				],
+				"on-button": function(btn, d) {
+					if (btn.id == 'no') {
+						d.close();
+						return;
+					}
+					var username = $username.val();
+					var password = $password.val();
+					var permissionMode = $permission.selected();
+					var expiration = $expiration.get();
+					
+					if (!username || username.length == 0 || !password || password.length == 0) return;
+					
+					var user = { username: username, password: password, permissionMode : permissionMode };
+					mollify.service.post("configuration/users", user).done(d.close).done(cb).fail(d.close);
+				},
+				"on-show": function(h, $d) {
+					$content = $d.find("#mollify-config-admin-userdialog-content");
+					$name = $d.find("#usernameField");
+					$email = $d.find("#usernameField");
+					$password = $d.find("#passwordField");
+					$("#generatePasswordBtn").click(function(){ $password.val(that._generatePassword()); return false; });
+					$permission = mollify.ui.controls.select("permissionModeField", {
+						values: that.permissionOptions,
+						title : "title"
+					});
+					$authentication = mollify.ui.controls.select("authenticationField", {
+						values: that.authenticationOptions,
+						none: {title: mollify.ui.texts.get('configAdminUsersUserDialogAuthDefault') + " (" + that.authenticationOptionsByKey[that.defaultAuthMethod].title + ")"},
+						title : "title"
+					});
+					$expiration = mollify.ui.controls.datepicker("expirationField", {
+						format: mollify.ui.texts.get('shortDateTimeFormat'),
+						time: true
+					});
+					
+					if (u) {
+						$name.val(u.name);
+						$email.val(u.email || "");
+						$permission.select(that.permissionOptionsByKey[u.permission_mode]);
+					} else {
+						$permission.select(that.permissionOptionsByKey["n"]);	
+					}
+					$name.focus();
+
+					h.center();
+				}
+			});
 		}
 	}
 }(window.jQuery, window.mollify);
