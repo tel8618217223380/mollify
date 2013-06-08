@@ -655,14 +655,6 @@
 			
 			$e.addClass("table");
 
-			var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
-			for (var i=0,j=o.columns.length; i<j; i++) {
-				var col = o.columns[i];
-				$h.append("<th>"+(col.title ? col.title : "")+"</th>");
-			}
-
-			var $l = $("<tbody></tbody>").appendTo($e);
-			
 			var getSelectedRows = function() {
 				var sel = [];
 				$e.find(".mollify-tableselect:checked").each(function(i, e){
@@ -671,7 +663,31 @@
 				});
 				return sel;
 			};
-			$e.delegate(".mollify-tableselect", "click", function() { if (o.onSelectionChanged) o.onSelectionChanged(); });
+			var updateSelectHeader = function() {
+				var all = (getSelectedRows().length == $l.children().length);
+				if (all)
+					$e.find(".mollify-tableselect-header").prop("checked", true);
+				else
+					$e.find(".mollify-tableselect-header").prop("checked", false);
+			};
+			var selectAll = function(s) {
+				$e.find(".mollify-tableselect").prop("checked", s);
+			};
+			var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
+			for (var i=0,j=o.columns.length; i<j; i++) {
+				var col = o.columns[i];
+				if (col.type == 'select') {
+					$('<input class="mollify-tableselect-header" type="checkbox"></input>').appendTo($h).click(function() {
+						var all = (getSelectedRows().length == $l.children().length);
+						selectAll(!all);
+					});
+				} else {
+					$h.append("<th>"+(col.title ? col.title : "")+"</th>");
+				}
+			}
+
+			var $l = $("<tbody></tbody>").appendTo($e);
+			$e.delegate(".mollify-tableselect", "click", function() { updateSelectHeader(); if (o.onSelectionChanged) o.onSelectionChanged(); });
 			
 			var setCellValue = function($cell, col, item) {
 				var v = item[col.id];

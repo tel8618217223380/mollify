@@ -818,6 +818,12 @@ var mollifyDefaults = {
 		formatInternalTime : function(time) {
 			if (!time) return null;
 			return time.format('yymmddHHMMss', time);
+		},
+		
+		mapByKey : function(list, key) {
+			var byKey = {};
+			for (var i=0,j=list.length; i<j; i++) { var r = list[i]; byKey[r[key]] = r; }
+			return byKey;
 		}
 	};
 
