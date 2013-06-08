@@ -186,8 +186,8 @@
 			};
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
-					{ id: "action-add", title:"foo", callback: function() { alert("foo"); }},
-					{ id: "action-remove", title:"bar", callback: function() { alert("bar"); }}
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { alert("foo"); }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", callback: function() { alert("bar"); }}
 				],
 				table: {
 					key: "id",

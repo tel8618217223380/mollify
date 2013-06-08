@@ -19,7 +19,7 @@
 </script>
 
 <script id="mollify-tmpl-configlistview-action" type="text/x-jquery-tmpl">
-	<a id="mollify-configlistview-action-${id}" class="mollify-configlistview-action btn ${cls}">${title}</a>
+	<a id="mollify-configlistview-action-${id}" class="mollify-configlistview-action btn ${cls}">{{if content}}{{html content}}{{/if}}{{if title}}${title}{{/if}}</a>
 </script>
 
 <script id="mollify-tmpl-config-useraccountview" type="text/x-jquery-tmpl">

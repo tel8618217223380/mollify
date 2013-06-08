@@ -680,6 +680,7 @@
 					$('<input class="mollify-tableselect-header" type="checkbox"></input>').appendTo($h).click(function() {
 						var all = (getSelectedRows().length == $l.children().length);
 						selectAll(!all);
+						if (o.onSelectionChanged) o.onSelectionChanged();
 					});
 				} else {
 					$h.append("<th>"+(col.title ? col.title : "")+"</th>");
