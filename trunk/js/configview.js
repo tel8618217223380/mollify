@@ -118,12 +118,25 @@
 	}
 
 	mollify.view.ConfigListView = function($e, o) {
-		mollify.dom.template("mollify-tmpl-configlistview").appendTo($e);
+		mollify.dom.template("mollify-tmpl-configlistview", {actions: o.actions || false}).appendTo($e);
 		var $table = $e.find(".mollify-configview-table");
 		var table = mollify.ui.controls.table($table, o.table);
+		if (o.actions) {
+			$e.find(".mollify-configview-actions > .mollify-configlistview-action").click(function() {
+				if ($(this).hasClass("disabled")) return;
+				var action = $(this).tmplItem().data;				
+				if (action.callback) action.callback();
+			});
+		}
 
 		return {
-			table: table
+			table: table,
+			enableAction: function(id, e) {
+				if (e)
+					$e.find("#mollify-configlistview-action-"+id).removeClass("disabled");
+				else
+					$e.find("#mollify-configlistview-action-"+id).addClass("disabled");
+			}
 		};
 	}
 
@@ -153,8 +166,7 @@
 			{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
 			{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
 		];
-		that.permissionOptionsByKey = {};
-		for (var i=0,j=that.permissionOptions.length; i<j; i++) { var p = that.permissionOptions[i]; that.permissionOptionsByKey[p.value] = p; }
+		that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
 
 		this.onActivate = function($c) {
 			var users = false;
@@ -168,6 +180,10 @@
 					listView.table.set(users);
 				});
 			}
+			var updateActions = function() {
+				var sel = (listView.table.getSelected().length > 0);
+				listView.enableAction("action-remove", sel);
+			};
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", title:"foo", callback: function() { alert("foo"); }},
@@ -193,10 +209,11 @@
 							//that.removeAllItemShares(item).done(updateShares);
 						}
 					},
-					onSelectionChanged: function() { alert(listView.table.getSelected().length); }
+					onSelectionChanged: updateActions
 				}
 			});
 			updateUsers();
+			updateActions();
 		}
 	}
 }(window.jQuery, window.mollify);

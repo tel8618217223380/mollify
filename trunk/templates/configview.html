@@ -9,9 +9,17 @@
 
 <script id="mollify-tmpl-configlistview" type="text/x-jquery-tmpl">
 	<div class="mollify-configlistview">
-		<div class="mollify-configview-actions"></div>
+		{{if actions}}
+		<div class="mollify-configview-actions">
+			{{tmpl(actions) "#mollify-tmpl-configlistview-action"}}
+		</div>
+		{{/if}}
 		<div class="mollify-configview-table"></div>
 	</div>
+</script>
+
+<script id="mollify-tmpl-configlistview-action" type="text/x-jquery-tmpl">
+	<a id="mollify-configlistview-action-${id}" class="mollify-configlistview-action btn ${cls}">${title}</a>
 </script>
 
 <script id="mollify-tmpl-config-useraccountview" type="text/x-jquery-tmpl">
