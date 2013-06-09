@@ -46,6 +46,10 @@
 			$this->id = $id;
 			$this->info = $info;
 		}
+		
+		public function id() {
+			return $this->id;
+		}
 				
 		public function details() {
 			$d = 'user id='.$this->id;

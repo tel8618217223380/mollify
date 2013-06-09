@@ -135,17 +135,24 @@
 			return TRUE;
 		}
 		
-		public function removeUser($userId) {
+		public function removeUser($userId, $transaction = FALSE) {
 			$id = $this->db->string($userId);
 
-			$this->db->startTransaction();
+			if (!$transaction) $this->db->startTransaction();
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_folder")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("user_group")." WHERE user_id='%s'", $id));
 			$this->db->update(sprintf("DELETE FROM ".$this->db->table("item_permission")." WHERE user_id='%s'", $id));
 			$affected = $this->db->update(sprintf("DELETE FROM ".$this->db->table("user")." WHERE id='%s'", $id));
 			if ($affected === 0)
 				throw new ServiceException("INVALID_REQUEST", "Invalid delete user request, user ".$id." not found");
-			$this->db->commit();					
+			if (!$transaction) $this->db->commit();					
+			return TRUE;
+		}
+		
+		public function removeUsers($ids) {
+			$this->db->startTransaction();
+			foreach($ids as $id) $this->removeUser($id, TRUE);
+			$this->db->commit();
 			return TRUE;
 		}
 
