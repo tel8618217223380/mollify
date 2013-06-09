@@ -805,10 +805,19 @@
 			var addItem = function(item) {
 				var $row = $("<option></option>").appendTo($e);
 				if (item == o.none) {
-					$row.html(item.title);
+					$row.html(item);
 				} else {
 					if (o.renderer) o.renderer(item, $row);
-					else $row.html(o.title ? item[o.title] : item);
+					else {
+						var c;
+						if (typeof(item) === "string" || !o.title) {
+							c = item;
+							if (o.valueMapper) c = o.valueMapper(item);
+						} else {
+							c = item[o.title];
+						}
+						$row.html(c);
+					}
 				}
 				$row[0].data = item;
 			};
@@ -842,7 +851,8 @@
 					
 					if (typeof(item) === 'number') {
 						if ($c.length >= item) return;
-						$($c[item]).attr("selected", "true");
+	//					$c.prop("selected", false);
+						$($c[item]).prop("selected", true);
 						return;	
 					}
 					
@@ -851,7 +861,8 @@
 					
 					for (var i=0,j=$c.length; i<j; i++) {
 						if ($c[i].data == find) {
-							$($c[i]).attr("selected", "true");
+//							$c.prop("selected", false);
+							$($c[i]).prop("selected", true);
 							return;
 						}
 					}

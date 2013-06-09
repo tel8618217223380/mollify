@@ -164,18 +164,17 @@
 		this.init = function(opt) {
 			this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
 	
-			that.permissionOptions = [
-				{ title: mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'), value: "a"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
-			];
-			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
+			that._permissionOptions = ["a", "rw", "ro", "no"];
+			that._permissionTexts = {
+				"a" : mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'),
+				"rw" : mollify.ui.texts.get('pluginPermissionsValueRW'),
+				"ro" : mollify.ui.texts.get('pluginPermissionsValueRO'),
+				"no" : mollify.ui.texts.get('pluginPermissionsValueNO')
+			};
 	
-			that.authenticationOptions = [];
-			$.each(opt.authentication_methods, function(i, am) { that.authenticationOptions.push({ title: am, value: am }); });
-			that.authenticationOptionsByKey = mollify.helpers.mapByKey(that.authenticationOptions, "value");
-			that.defaultAuthMethod = opt.authentication_methods[0];
+			that._authenticationOptions = opt.authentication_methods;
+			that._authFormatter = function(am) { return am; /* TODO */ }
+			that._defaultAuthMethod = opt.authentication_methods[0];
 		}
 		
 		this.onActivate = function($c) {
@@ -207,7 +206,7 @@
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
 						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
 							var pkl = pk.toLowerCase();
-							return that.permissionOptionsByKey[pkl] ? that.permissionOptionsByKey[pkl].title : pk;
+							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
 						} },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
@@ -216,7 +215,7 @@
 						if (id == "edit") {
 							that.onAddEditUser(u, updateUsers);
 						} else if (id == "remove") {
-							//that.removeAllItemShares(item).done(updateShares);
+							mollify.service.del("configuration/users/"+u.id).done(updateUsers);
 						}
 					},
 					onSelectionChanged: updateActions
@@ -229,8 +228,9 @@
 		this._generatePassword = function() {
 			var length = 8;
 			var password = '';
+			var c;
 			
-		    for (i = 0; i < length; i++) {
+		    for (var i = 0; i < length; i++) {
 		    	while (true) {
 			        c = (parseInt(Math.random() * 1000) % 94) + 33;
 			        if (that._isValidPasswordChar(c)) break;
@@ -271,30 +271,40 @@
 						d.close();
 						return;
 					}
-					var username = $username.val();
-					var password = $password.val();
+					var username = $name.val();
 					var permissionMode = $permission.selected();
-					var expiration = $expiration.get();
+					var expiration = mollify.helpers.formatInternalTime($expiration.get());
+					var auth = $authentication.selected();
+					if (!username || username.length == 0) return;
 					
-					if (!username || username.length == 0 || !password || password.length == 0) return;
+					var user = { name: username, permission_mode : permissionMode, expiration: expiration, auth: auth };
 					
-					var user = { username: username, password: password, permissionMode : permissionMode };
-					mollify.service.post("configuration/users", user).done(d.close).done(cb).fail(d.close);
+					if (u) {	
+						mollify.service.put("configuration/users/"+u.id, user).done(d.close).done(cb);
+					} else {
+						var password = $password.val();
+						if (!password || password.length == 0) return;
+						
+						user.password = window.Base64.encode(password);
+						mollify.service.post("configuration/users", user).done(d.close).done(cb);
+					}
 				},
 				"on-show": function(h, $d) {
 					$content = $d.find("#mollify-config-admin-userdialog-content");
 					$name = $d.find("#usernameField");
-					$email = $d.find("#usernameField");
+					$email = $d.find("#emailField");
 					$password = $d.find("#passwordField");
 					$("#generatePasswordBtn").click(function(){ $password.val(that._generatePassword()); return false; });
 					$permission = mollify.ui.controls.select("permissionModeField", {
-						values: that.permissionOptions,
-						title : "title"
+						values: that._permissionOptions,
+						valueMapper : function(p) {
+							return that._permissionTexts[p];
+						}
 					});
 					$authentication = mollify.ui.controls.select("authenticationField", {
-						values: that.authenticationOptions,
-						none: {title: mollify.ui.texts.get('configAdminUsersUserDialogAuthDefault') + " (" + that.authenticationOptionsByKey[that.defaultAuthMethod].title + ")"},
-						title : "title"
+						values: that._authenticationOptions,
+						none: mollify.ui.texts.get('configAdminUsersUserDialogAuthDefault', that._defaultAuthMethod),
+						valueMapper: that._authFormatter
 					});
 					$expiration = mollify.ui.controls.datepicker("expirationField", {
 						format: mollify.ui.texts.get('shortDateTimeFormat'),
@@ -304,9 +314,10 @@
 					if (u) {
 						$name.val(u.name);
 						$email.val(u.email || "");
-						$permission.select(that.permissionOptionsByKey[u.permission_mode]);
+						$permission.select(u.permission_mode.toLowerCase());
+						$authentication.select(u.auth ? u.auth.toLowerCase() : null);
 					} else {
-						$permission.select(that.permissionOptionsByKey["n"]);	
+						$permission.select("no");	
 					}
 					$name.focus();
 

@@ -157,7 +157,7 @@
 					$expiration = $user['expiration'];
 				
 				$id = $this->env->configuration()->addUser($user['name'], base64_decode($user['password']), isset($user['email']) ? $user['email'] : NULL, $user['permission_mode'], $expiration, $auth);
-				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], $user['email']));
+				$this->env->events()->onEvent(UserEvent::userAdded($id, $user['name'], isset($user['email']) ? $user['email'] : NULL));
 				$this->response()->success(TRUE);
 				return;
 			}
