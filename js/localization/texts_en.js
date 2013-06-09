@@ -238,6 +238,8 @@ configViewAdminNavTitle: "Admin",
 configAdminUsersNavTitle: "Users",
 configAdminUsersPermissionModeAdmin: "Administrator",
 
+configAdminUsersNameTitle: "Username",
+configAdminUsersPermissionTitle: "Default permission",
 configAdminUsersUserDialogEditTitle: "Edit User",
 configAdminUsersUserDialogAddTitle: "Add New User",
 configAdminUserDialogUsernameTitle: "Username",

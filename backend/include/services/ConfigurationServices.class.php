@@ -244,8 +244,23 @@
 		}
 
 		private function processDeleteUsers() {
-			if (count($this->path) < 2) throw $this->invalidRequestException();
+			if (count($this->path) < 1) throw $this->invalidRequestException();
 
+			// configuration/users
+			if (count($this->path) == 1) {
+				$data = $this->request->data;
+				if (!isset($data['ids'])) throw $this->invalidRequestException();
+				$ids = $data['ids'];
+				if (!$ids or !is_array($ids) or count($ids) == 0) throw $this->invalidRequestException();
+				
+				$this->env->configuration()->removeUsers($ids);
+				foreach($ids as $id)
+					$this->env->events()->onEvent(UserEvent::userRemoved($id));
+				$this->response()->success(TRUE);
+				
+				return;	
+			}
+			
 			$userId = $this->path[1];
 			if (count($this->path) == 2) {
 				$this->env->configuration()->removeUser($userId);

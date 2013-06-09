@@ -123,22 +123,39 @@
 		mollify.dom.template("mollify-tmpl-configlistview", {actions: o.actions || false}).appendTo($e);
 		var $table = $e.find(".mollify-configview-table");
 		var table = mollify.ui.controls.table($table, o.table);
+		var enableAction = function(id, e) {
+			if (e)
+				$e.find("#mollify-configlistview-action-"+id).removeClass("disabled");
+			else
+				$e.find("#mollify-configlistview-action-"+id).addClass("disabled");
+		};
 		if (o.actions) {
+			table.onSelectionChanged(function() {
+				var sel = table.getSelected();
+				var any = sel.length > 0;
+				var one = sel.length == 1;
+				var many = sel.length > 1;
+				$.each(o.actions, function(i, a) {
+					if (!a.depends) return;
+					if (a.depends == "table-selection") enableAction(a.id, any);
+					else if (a.depends == "table-selection-one") enableAction(a.id, one);
+					else if (a.depends == "table-selection-many") enableAction(a.id, many);
+				});
+			});
 			$e.find(".mollify-configview-actions > .mollify-configlistview-action").click(function() {
 				if ($(this).hasClass("disabled")) return;
-				var action = $(this).tmplItem().data;				
-				if (action.callback) action.callback();
+				var action = $(this).tmplItem().data;
+				if (!action.callback) return;
+				
+				var p = undefined;
+				if (action.depends && action.depends.startsWith("table-selection")) p = table.getSelected();
+				action.callback(p);
 			});
 		}
 
 		return {
 			table: table,
-			enableAction: function(id, e) {
-				if (e)
-					$e.find("#mollify-configlistview-action-"+id).removeClass("disabled");
-				else
-					$e.find("#mollify-configlistview-action-"+id).addClass("disabled");
-			}
+			enableAction: enableAction
 		};
 	}
 
@@ -188,15 +205,11 @@
 					users = l;
 					listView.table.set(users);
 				});
-			}
-			var updateActions = function() {
-				var sel = (listView.table.getSelected().length > 0);
-				listView.enableAction("action-remove", sel);
 			};
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", callback: function() { alert("bar"); }}
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeUsers(sel).done(updateUsers); }}
 				],
 				table: {
 					key: "id",
@@ -217,12 +230,10 @@
 						} else if (id == "remove") {
 							mollify.service.del("configuration/users/"+u.id).done(updateUsers);
 						}
-					},
-					onSelectionChanged: updateActions
+					}
 				}
 			});
 			updateUsers();
-			updateActions();
 		}
 		
 		this._generatePassword = function() {
@@ -246,6 +257,10 @@
 		    if (c >= 91 && c <= 96) return false;
 		    if (c >= 123 && c <=126) return false;
 		    return true;
+		}
+		
+		this._removeUsers = function(users) {
+			return mollify.service.del("configuration/users", {ids: mollify.helpers.extractValue(users, "id")});
 		}
 		
 		this.onAddEditUser = function(u, cb) {
