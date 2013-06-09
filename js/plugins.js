@@ -937,7 +937,7 @@
 			that.permissionOptions = [
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
-				{ title: mollify.ui.texts.get('pluginPermissionsValueN'), value: "n"}
+				{ title: mollify.ui.texts.get('pluginPermissionsValueNO'), value: "no"}
 			];
 			that.permissionOptionsByKey = mollify.helpers.mapByKey(that.permissionOptions, "value");
 		};
