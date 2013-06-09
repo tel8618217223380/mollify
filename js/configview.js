@@ -213,6 +213,8 @@
 				],
 				table: {
 					key: "id",
+					narrow: true,
+					hilight: true,
 					columns: [
 						{ type:"select" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
@@ -230,6 +232,9 @@
 						} else if (id == "remove") {
 							mollify.service.del("configuration/users/"+u.id).done(updateUsers);
 						}
+					},
+					onHilight: function(u) {
+						console.log(u);
 					}
 				}
 			});
