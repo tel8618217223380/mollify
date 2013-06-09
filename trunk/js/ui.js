@@ -656,6 +656,7 @@
 			var selectionChangedCb = $.Callbacks();
 			if (o.onSelectionChanged) selectionChangedCb.add(o.onSelectionChanged);
 			$e.addClass("table");
+			if (o.narrow) $e.addClass("table-condensed");
 
 			var getSelectedRows = function() {
 				var sel = [];
@@ -672,6 +673,7 @@
 				else
 					$e.find(".mollify-tableselect-header").prop("checked", false);
 			};
+			selectionChangedCb.add(updateSelectHeader);
 			var selectAll = function(s) {
 				$e.find(".mollify-tableselect").prop("checked", s);
 			};
@@ -690,7 +692,26 @@
 			}
 
 			var $l = $("<tbody></tbody>").appendTo($e);
-			$e.delegate(".mollify-tableselect", "click", function() { updateSelectHeader(); selectionChangedCb.fire(); });
+			$e.delegate(".mollify-tableselect", "click", selectionChangedCb.fire);
+			if (o.hilight) {
+				$e.delegate("tr", "click", function() {
+					var $t = $(this);
+					var item = $t[0].data;
+					if (!item) return;
+					if ($t.hasClass("info")) {
+						$t.removeClass("info");
+						$t.find(".mollify-tableselect").prop("checked", false);
+						item = null;
+					} else {
+						$e.find("tr").removeClass("info");
+						selectAll(false);
+						$t.find(".mollify-tableselect").prop("checked", true);
+						$t.addClass("info");
+					}
+					selectionChangedCb.fire();
+					if (o.onHilight) o.onHilight(item);
+				});
+			}
 			
 			var setCellValue = function($cell, col, item) {
 				var v = item[col.id];
