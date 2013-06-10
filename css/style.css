@@ -1291,3 +1291,12 @@ li#mollify-folder-hierarchy-item-root > a {
 .mollify-mainview-navbar-item:hover .mollify-mainview-navbar-dropdown {
 	visibility: visible;
 }
+
+.mollify-slidepanel-container {
+	height: 0px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+}

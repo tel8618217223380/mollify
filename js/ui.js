@@ -1027,6 +1027,25 @@
 			});
 			
 			return ctrl;
+		},
+		
+		slidePanel : function($e, o) {
+			if (!$e) return;
+			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e.css("position", "relative"));
+			var $content = $p.find(".mollify-slidepanel-content");
+			
+			var api = {
+				show: function($c, h) {
+					$content.empty().append($c);
+					$p.animate({
+						"height" : h+"px"
+					}, 500);
+				},
+				hide: function() {
+					$p.animate("height", "0px");
+				}
+			};
+			return api;
 		}
 	};
 	
