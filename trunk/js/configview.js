@@ -206,6 +206,7 @@
 					listView.table.set(users);
 				});
 			};
+			var details = mollify.ui.controls.slidePanel($c);
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
@@ -234,7 +235,10 @@
 						}
 					},
 					onHilight: function(u) {
-						console.log(u);
+						if (u)
+							details.show($("<span>test</span>"), 500);
+						else
+							details.hide();
 					}
 				}
 			});
