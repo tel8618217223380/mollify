@@ -241,14 +241,70 @@
 						}
 					},
 					onHilight: function(u) {
-						if (u)
-							details.show($("<span>test</span>"), 500);
-						else
+						if (u) {
+							that._showUserDetails(u, details.getContentElement().empty());
+							details.show(false, 400);
+						} else
 							details.hide();
 					}
 				}
 			});
 			updateUsers();
+		}
+
+		this._showUserDetails = function(u, $e) {
+			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
+			var foldersView = false;
+			var groupsView = false;
+
+			var updateGroups = function() {};
+			var updateFolders = function() {};
+
+			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
+				actions: [
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {  }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
+				],
+				table: {
+					key: "id",
+					narrow: true,
+					columns: [
+						{ type:"select" },
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					],
+					onRowAction: function(id, f) {
+						if (id == "remove") {
+							mollify.service.del("configuration/users/"+u.id+"/folders/", {id: f.id}).done(updateGroups);
+						}
+					}
+				}
+			})
+
+			groupsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-groups"), {
+				actions: [
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {  }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
+				],
+				table: {
+					key: "id",
+					narrow: true,
+					columns: [
+						{ type:"select" },
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					],
+					onRowAction: function(id, g) {
+						if (id == "remove") {
+							mollify.service.del("configuration/users/"+u.id+"/groups/", {id:g.id}).done(updateGroups);
+						}
+					}
+				}
+			})
 		}
 		
 		this._generatePassword = function() {
