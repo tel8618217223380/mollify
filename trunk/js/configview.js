@@ -24,6 +24,10 @@
 			});
 		}
 
+		this.onResize = function() {
+			$("#mollify-configview").height($("#mollify-mainview-content").height());
+		}
+
 		this.onActivate = function(h) {
 			mollify.templates.load("configview", mollify.templates.url("configview.html"), function() {
 				mollify.dom.template("mollify-tmpl-configview").appendTo(h.content);
@@ -37,28 +41,30 @@
 					title: mollify.ui.texts.get("configViewUserNavTitle"),
 					items: navBarItems
 				});
-			});
 
-			if (mollify.session.admin) {
-				if (this._adminViewsLoaded) {
-					that._initAdminViews(h);
-				} else {
-					this._adminViewsLoaded = true;
-					that._adminViews.push(new mollify.view.config.admin.UsersView());
+				that.onResize();
 
-					var plugins = [];
-					for (var k in mollify.session.plugins) {
-						if (!mollify.session.plugins[k] || !mollify.session.plugins[k].admin) continue;
-						plugins.push(k);
-					};
-					mollify.admin = {
-						plugins : []
-					};
-					that._loadAdminPlugins(plugins).done(function(){
+				if (mollify.session.admin) {
+					if (that._adminViewsLoaded) {
 						that._initAdminViews(h);
-					});
+					} else {
+						that._adminViewsLoaded = true;
+						that._adminViews.push(new mollify.view.config.admin.UsersView());
+
+						var plugins = [];
+						for (var k in mollify.session.plugins) {
+							if (!mollify.session.plugins[k] || !mollify.session.plugins[k].admin) continue;
+							plugins.push(k);
+						};
+						mollify.admin = {
+							plugins : []
+						};
+						that._loadAdminPlugins(plugins).done(function(){
+							that._initAdminViews(h);
+						});
+					}
 				}
-			}
+			});
 		}
 
 		this._loadAdminPlugins = function(ids) {
@@ -206,7 +212,7 @@
 					listView.table.set(users);
 				});
 			};
-			var details = mollify.ui.controls.slidePanel($c);
+			var details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
