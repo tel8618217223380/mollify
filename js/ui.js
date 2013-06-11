@@ -1035,8 +1035,9 @@
 			var $content = $p.find(".mollify-slidepanel-content");
 			
 			var api = {
+				getContentElement : function() { return $content; },
 				show: function($c, h) {
-					$content.empty().append($c);
+					if ($c) $content.empty().append($c);
 					$p.animate({
 						"height" : h+"px"
 					}, 500);
