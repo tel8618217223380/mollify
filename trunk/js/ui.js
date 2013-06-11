@@ -667,7 +667,8 @@
 				return sel;
 			};
 			var updateSelectHeader = function() {
-				var all = (getSelectedRows().length == $l.children().length);
+				var count = $l.children().length;
+				var all = (count > 0 && getSelectedRows().length == count);
 				if (all)
 					$e.find(".mollify-tableselect-header").prop("checked", true);
 				else
