@@ -250,5 +250,15 @@ configAdminUserDialogGeneratePassword: "Generate",
 configAdminUserDialogPermissionModeTitle: "Default permission",
 configAdminUserDialogAuthenticationTitle: "Authentication",
 configAdminUsersUserDialogAuthDefault: "Default ({0})",
-configAdminUserDialogExpirationTitle: "Expiration"
+configAdminUserDialogExpirationTitle: "Expiration",
+configAdminUsersFolderNameTitle: "Folder name",
+configAdminUsersGroupNameTitle: "Group name",
+
+configAdminFoldersNavTitle: "Folders",
+configAdminFoldersNameTitle: "Folder name",
+configAdminFoldersPathTitle: "Path",
+configAdminFoldersFolderDialogEditTitle: "Edit Folder",
+configAdminFoldersFolderDialogAddTitle: "Add New Folder",
+configAdminFolderDialogNameTitle: "Folder name",
+configAdminFolderDialogPathTitle: "Server filesystem path"
 })})();

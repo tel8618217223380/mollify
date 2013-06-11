@@ -49,6 +49,9 @@
 						that._initAdminViews(h);
 					} else {
 						that._adminViewsLoaded = true;
+						
+						// default admin views
+						that._adminViews.push(new mollify.view.config.admin.FoldersView());
 						that._adminViews.push(new mollify.view.config.admin.UsersView());
 
 						var plugins = [];
@@ -170,6 +173,7 @@
 		admin: {}
 	};
 
+	/* Account */
 	mollify.view.config.user.AccountView = function(mv) {
 		var that = this;
 		this.title = mollify.ui.texts.get("configUserAccountNavTitle");
@@ -181,6 +185,7 @@
 		}
 	}
 
+	/* Users */
 	mollify.view.config.admin.UsersView = function() {
 		var that = this;
 		
@@ -254,11 +259,29 @@
 
 		this._showUserDetails = function(u, $e) {
 			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
+			var $groups = $e.find(".mollify-config-admin-userdetails-groups");
+			var $folders = $e.find(".mollify-config-admin-userdetails-folders");
 			var foldersView = false;
 			var groupsView = false;
-
-			var updateGroups = function() {};
-			var updateFolders = function() {};
+			var folders = false;
+			var groups = false;
+			
+			var updateGroups = function() {
+				$groups.addClass("loading");
+				mollify.service.get("configuration/users/"+u.id+"/groups/").done(function(l) {
+					$groups.removeClass("loading");
+					groups = l;
+					groupsView.table.set(groups);
+				});
+			};
+			var updateFolders = function() {
+				$folders.addClass("loading");
+				mollify.service.get("configuration/users/"+u.id+"/folders/").done(function(l) {
+					$folders.removeClass("loading");
+					folders = l;
+					foldersView.table.set(folders);
+				});
+			};
 
 			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
 				actions: [
@@ -272,7 +295,7 @@
 						{ type:"select" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle') },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, f) {
@@ -281,7 +304,7 @@
 						}
 					}
 				}
-			})
+			});
 
 			groupsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-groups"), {
 				actions: [
@@ -295,7 +318,7 @@
 						{ type:"select" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersGroupNameTitle') },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, g) {
@@ -304,7 +327,10 @@
 						}
 					}
 				}
-			})
+			});
+			
+			updateGroups();
+			updateFolders();
 		}
 		
 		this._generatePassword = function() {
@@ -412,4 +438,121 @@
 			});
 		}
 	}
+
+	/* Folders */
+	mollify.view.config.admin.FoldersView = function() {
+		var that = this;
+		
+		this.init = function(opt) {
+			this.title = mollify.ui.texts.get("configAdminFoldersNavTitle");
+		}
+		
+		this.onActivate = function($c) {
+			var folders = false;
+			var listView = false;
+
+			var updateFolders = function() {
+				$c.addClass("loading");
+				mollify.service.get("configuration/folders/").done(function(l) {
+					$c.removeClass("loading");
+					folders = l;
+					listView.table.set(folders);
+				});
+			};
+
+			listView = new mollify.view.ConfigListView($c, {
+				actions: [
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditFolder(false, updateFolders); }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeFolders(sel).done(updateFolders); }}
+				],
+				table: {
+					key: "id",
+					narrow: true,
+					columns: [
+						{ type:"select" },
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "name", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
+						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
+						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					],
+					onRowAction: function(id, f) {
+						if (id == "edit") {
+							that.onAddEditFolder(f, updateFolders);
+						} else if (id == "remove") {
+							mollify.service.del("configuration/folders/"+f.id).done(updateFolders);
+						}
+					}
+				}
+			});
+			updateFolders();
+		}
+		
+		this._removeFolders = function(f) {
+			return mollify.service.del("configuration/folders", {ids: mollify.helpers.extractValue(f, "id")});
+		}
+		
+		this.onAddEditFolder = function(f, cb) {
+			var $content = false;
+			var $name = false;
+			var $path = false;
+			
+			mollify.ui.dialogs.custom({
+				resizable: true,
+				initSize: [500, 300],
+				title: mollify.ui.texts.get(f ? 'configAdminFoldersFolderDialogEditTitle' : 'configAdminFoldersFolderDialogAddTitle'),
+				content: mollify.dom.template("mollify-tmpl-config-admin-folderdialog", {folder: f}),
+				buttons: [
+					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+				],
+				"on-button": function(btn, d) {
+					if (btn.id == 'no') {
+						d.close();
+						return;
+					}
+					$content.find(".control-group").removeClass("error");
+					var name = $name.val();
+					var path = $path.val();
+					if (!name) $name.closest(".control-group").addClass("error");
+					if (!path) $path.closest(".control-group").addClass("error");
+					if (!name || !path) return;
+					
+					var folder = {name: name, path: path};
+					var onFail = function(e){
+						if (e.code == 105) {
+							this.handled = true;
+							
+							mollify.ui.dialogs.confirmation({title:mollify.ui.texts.get('configAdminFoldersFolderDialogAddTitle'), message: "TODO Does not exist, create folder?", callback: function() {
+								folder.create = true;
+								if (!f)
+									mollify.service.post("configuration/folders", folder).done(d.close).done(cb);
+								else
+									mollify.service.put("configuration/folders/"+f.id, folder).done(d.close).done(cb);
+							}});
+						}
+					};
+					if (f) {	
+						mollify.service.put("configuration/folders/"+f.id, folder).done(d.close).done(cb).fail(onFail);
+					} else {
+						mollify.service.post("configuration/folders", folder).done(d.close).done(cb).fail(onFail);
+					}
+				},
+				"on-show": function(h, $d) {
+					$content = $d.find("#mollify-config-admin-folderdialog-content");
+					$name = $d.find("#nameField");
+					$path = $d.find("#pathField");
+					
+					if (f) {
+						$name.val(f.name);
+						$path.val(f.path);
+					}
+					$name.focus();
+
+					h.center();
+				}
+			});
+		}
+	}
+
 }(window.jQuery, window.mollify);

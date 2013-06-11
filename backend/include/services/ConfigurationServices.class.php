@@ -370,7 +370,7 @@
 			if (count($this->path) == 1) {
 				$folder = $this->request->data;
 				if (!isset($folder['name']) or !isset($folder['path'])) throw $this->invalidRequestException();
-				$createNonExisting = (isset($folder['create']) and strcasecmp("true", $folder['create']) == 0);
+				$createNonExisting = (isset($folder['create']) and ($folder['create'] == "1" or strcasecmp("true", $folder['create']) == 0));
 				
 				if (!$createNonExisting) {
 					$this->env->filesystem()->assertFilesystem($folder);
