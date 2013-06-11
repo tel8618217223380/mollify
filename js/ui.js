@@ -1042,7 +1042,7 @@
 					}, 500);
 				},
 				hide: function() {
-					$p.animate("height", "0px");
+					$p.animate({"height": "0px"}, 500);
 				}
 			};
 			return api;
