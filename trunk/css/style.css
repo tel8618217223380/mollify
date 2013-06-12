@@ -1300,3 +1300,16 @@ li#mollify-folder-hierarchy-item-root > a {
 	right: 0;
 	overflow: hidden;
 }
+
+.mollify-configview-table {
+	cursor: default;
+}
+
+.mollify-configview-table.hilight {
+	cursor: pointer;
+}
+
+.mollify-config-admin-userdetails-section {
+	float: left;
+	width: 50%;
+}

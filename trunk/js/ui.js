@@ -657,6 +657,7 @@
 			if (o.onSelectionChanged) selectionChangedCb.add(o.onSelectionChanged);
 			$e.addClass("table");
 			if (o.narrow) $e.addClass("table-condensed");
+			if (o.hilight) $e.addClass("hilight");
 
 			var getSelectedRows = function() {
 				var sel = [];
@@ -682,8 +683,9 @@
 			for (var i=0,j=o.columns.length; i<j; i++) {
 				var col = o.columns[i];
 				if (col.type == 'select') {
-					$('<input class="mollify-tableselect-header" type="checkbox"></input>').appendTo($h).click(function() {
-						var all = (getSelectedRows().length == $l.children().length);
+					$('<input class="mollify-tableselect-header" type="checkbox"></input>').appendTo($h).click(function(e) {
+						var count = $l.children().length;
+						var all = (count > 0 && getSelectedRows().length == count);
 						selectAll(!all);
 						selectionChangedCb.fire();
 					});
@@ -693,9 +695,11 @@
 			}
 
 			var $l = $("<tbody></tbody>").appendTo($e);
-			$e.delegate(".mollify-tableselect", "click", selectionChangedCb.fire);
+			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); });
 			if (o.hilight) {
-				$e.delegate("tr", "click", function() {
+				$e.delegate("tr", "click", function(e) {
+					if (e.target && $(e.target).hasClass("mollify-tableselect")) return;
+
 					var $t = $(this);
 					var item = $t[0].data;
 					if (!item) return;
