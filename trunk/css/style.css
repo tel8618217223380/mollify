@@ -1301,12 +1301,24 @@ li#mollify-folder-hierarchy-item-root > a {
 	overflow: hidden;
 }
 
+.mollify-configlistview-action {
+	margin-right: 4px;
+}
+
 .mollify-configview-table {
 	cursor: default;
 }
 
 .mollify-configview-table.hilight {
 	cursor: pointer;
+}
+
+input.mollify-tableselect-header {
+	margin-left: 4px;
+}
+
+input.mollify-tableselect {
+	margin-top: 0px;
 }
 
 .mollify-config-admin-userdetails-section {
