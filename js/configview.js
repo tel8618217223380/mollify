@@ -208,8 +208,10 @@
 		this.onActivate = function($c) {
 			var users = false;
 			var listView = false;
+			var details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
 
 			var updateUsers = function() {
+				details.hide();
 				$c.addClass("loading");
 				mollify.service.get("configuration/users/").done(function(l) {
 					$c.removeClass("loading");
@@ -217,11 +219,12 @@
 					listView.table.set(users);
 				});
 			};
-			var details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+			
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeUsers(sel).done(updateUsers); }}
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeUsers(sel).done(updateUsers); }},
+					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateUsers }
 				],
 				table: {
 					key: "id",
@@ -295,7 +298,12 @@
 						{ type:"select" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), valueMapper: function(f, v) {
+							var n = f.name;
+							if (n && n.length > 0) return n;
+							return mollify.ui.texts.get('configAdminUsersFolderDefaultName', f.default_name);
+						} },
+						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, f) {
@@ -463,14 +471,15 @@
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditFolder(false, updateFolders); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeFolders(sel).done(updateFolders); }}
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeFolders(sel).done(updateFolders); }},
+					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateFolders }
 				],
 				table: {
 					key: "id",
 					narrow: true,
 					columns: [
 						{ type:"select" },
-						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
