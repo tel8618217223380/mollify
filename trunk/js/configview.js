@@ -227,6 +227,7 @@
 					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateUsers }
 				],
 				table: {
+					id: "config-admin-users",
 					key: "id",
 					narrow: true,
 					hilight: true,
@@ -292,6 +293,7 @@
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
 				],
 				table: {
+					id: "config-admin-userfolders",
 					key: "id",
 					narrow: true,
 					columns: [
@@ -320,6 +322,7 @@
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
 				],
 				table: {
+					id: "config-admin-usergroups",
 					key: "id",
 					narrow: true,
 					columns: [
@@ -475,6 +478,7 @@
 					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateFolders }
 				],
 				table: {
+					id: "config-admin-folders",
 					key: "id",
 					narrow: true,
 					columns: [
