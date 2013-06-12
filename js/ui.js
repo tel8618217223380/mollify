@@ -1054,7 +1054,8 @@
 				},
 				hide: function() {
 					$p.animate({"height": "0px"}, 500);
-				}
+				},
+				remove: function() { $p.remove(); }
 			};
 			return api;
 		}

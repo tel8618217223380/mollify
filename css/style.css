@@ -1299,6 +1299,12 @@ li#mollify-folder-hierarchy-item-root > a {
 	left: 0;
 	right: 0;
 	overflow: hidden;
+	padding: 8px 8px 0 8px;
+	background-color: #f5f5f5;
+	border: 1px solid #e3e3e3;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 .mollify-configlistview-action {

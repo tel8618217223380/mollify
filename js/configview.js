@@ -118,14 +118,18 @@
 		}
 
 		this._activateView = function(v, admin) {
+			if (that._activeView && that._activeView.onDeactivate) that._activeView.onDeactivate();
 			if (admin) that._adminNav.setActive(v);
 			else that._userNav.setActive(v);
 
+			that._activeView = v;
 			$("#mollify-configview-header").html(v.title);
 			v.onActivate($("#mollify-configview-content").empty());
 		}
 
-		this.onDeactivate = function() {}
+		this.onDeactivate = function() {
+			if (that._activeView && that._activeView.onDeactivate) that._activeView.onDeactivate();
+		}
 	}
 
 	mollify.view.ConfigListView = function($e, o) {
@@ -208,10 +212,10 @@
 		this.onActivate = function($c) {
 			var users = false;
 			var listView = false;
-			var details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
+			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
 
 			var updateUsers = function() {
-				details.hide();
+				that._details.hide();
 				$c.addClass("loading");
 				mollify.service.get("configuration/users/").done(function(l) {
 					$c.removeClass("loading");
@@ -251,15 +255,19 @@
 					},
 					onHilight: function(u) {
 						if (u) {
-							that._showUserDetails(u, details.getContentElement().empty());
-							details.show(false, 400);
+							that._showUserDetails(u, that._details.getContentElement().empty());
+							that._details.show(false, 400);
 						} else
-							details.hide();
+							that._details.hide();
 					}
 				}
 			});
 			updateUsers();
 		}
+		
+		this.onDeactivate = function() {
+			that._details.remove();
+		};
 
 		this._showUserDetails = function(u, $e) {
 			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
