@@ -830,6 +830,12 @@ var mollifyDefaults = {
 			var l = [];
 			for (var i=0,j=list.length; i<j; i++) { var r = list[i]; l.push(r[key]); }
 			return l;
+		},
+
+		filter : function(list, f) {
+			var result = [];
+			$.each(list, function(i, it) { if (f(it)) result.push(it); });
+			return result;
 		}
 	};
 

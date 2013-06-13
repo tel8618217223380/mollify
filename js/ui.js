@@ -1146,10 +1146,12 @@
 				{ id: "cancel", "title-key": "dialogCancel" }
 			],
 			"on-button": function(btn, d) {
+				if (btn.id == "ok") {
+					var sel = table.getSelected();
+					if (!sel || sel.length == 0) return;
+				}
 				d.close();
-				var sel = table.getSelected();
-				if (!sel) return;
-				if (spec.onSelect) spec.onSelect(sel);
+				if (btn.id == "ok" && spec.onSelect) spec.onSelect(sel);
 			},
 			"on-show": function(h, $dlg) {
 				var $table = $($dlg.find(".mollify-selectdialog-table")[0]);
