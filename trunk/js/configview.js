@@ -279,7 +279,7 @@
 			that._details.remove();
 		};
 
-		this._showUserDetails = function(u, $e, allFolders, allGroups) {
+		this._showUserDetails = function(u, $e, allGroups, allFolders) {
 			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
 			var $groups = $e.find(".mollify-config-admin-userdetails-groups");
 			var $folders = $e.find(".mollify-config-admin-userdetails-folders");
@@ -304,20 +304,29 @@
 					foldersView.table.set(folders);
 				});
 			};
+			var onAddUserFolders = function() {
+				var currentIds = mollify.helpers.extractValue(folders, "id");
+				var selectable = mollify.helpers.filter(allFolders, function(f) { return currentIds.indexOf(f.id) < 0; });
+				if (selectable.length === 0) return;
+
+				mollify.ui.dialogs.select({
+					title: mollify.ui.texts.get('configAdminUserAddFolderTitle'),
+					message: mollify.ui.texts.get('configAdminUserAddFolderMessage'),
+					key: "id",
+					columns: [
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle') },
+						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') }
+					],
+					list: selectable,
+					onSelect: function(sel) { mollify.service.post("configuration/user/"+u.id+"/folders/", {ids: mollify.helpers.extractValue(sel, "id")}).done(updateFolders); }
+				});
+			}
 
 			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
 				actions: [
-					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {
-						mollify.ui.dialogs.select({
-							key: "id",
-							columns: [
-								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
-								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') }
-							],
-							list: allFolders,
-							onSelect: function(sel) {}
-						});
-					}},
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddUserFolders },
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
 				],
 				table: {
