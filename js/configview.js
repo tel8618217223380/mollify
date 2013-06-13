@@ -255,21 +255,31 @@
 					},
 					onHilight: function(u) {
 						if (u) {
-							that._showUserDetails(u, that._details.getContentElement().empty());
+							that._showUserDetails(u, that._details.getContentElement().empty(), that._allGroups, that._allFolders);
 							that._details.show(false, 400);
-						} else
+						} else {
 							that._details.hide();
+						}
 					}
 				}
 			});
 			updateUsers();
+
+			$c.addClass("loading");
+			var gp = mollify.service.get("configuration/usergroups").done(function(g) {
+				that._allGroups = g;
+			});
+			var fp = mollify.service.get("configuration/folders").done(function(f) {
+				that._allFolders = f;
+			});
+			$.when(gp, fp).done(function(){$c.removeClass("loading");});
 		}
 		
 		this.onDeactivate = function() {
 			that._details.remove();
 		};
 
-		this._showUserDetails = function(u, $e) {
+		this._showUserDetails = function(u, $e, allFolders, allGroups) {
 			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
 			var $groups = $e.find(".mollify-config-admin-userdetails-groups");
 			var $folders = $e.find(".mollify-config-admin-userdetails-folders");
@@ -297,7 +307,17 @@
 
 			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
 				actions: [
-					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {  }},
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {
+						mollify.ui.dialogs.select({
+							key: "id",
+							columns: [
+								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
+								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') }
+							],
+							list: allFolders,
+							onSelect: function(sel) {}
+						});
+					}},
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
 				],
 				table: {

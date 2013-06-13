@@ -1136,6 +1136,32 @@
 		});
 	};
 	
+	dh.select = function(spec) {
+		var table = false;
+		dh.custom({
+			title: spec.title,
+			content: $("#mollify-tmpl-dialog-select").tmpl({message: spec.message}),
+			buttons: [
+				{ id: "ok", "title-key": "ok" },
+				{ id: "cancel", "title-key": "dialogCancel" }
+			],
+			"on-button": function(btn, d) {
+				d.close();
+				var sel = table.getSelected();
+				if (!sel) return;
+				if (spec.onSelect) spec.onSelect(sel);
+			},
+			"on-show": function(h, $dlg) {
+				var $table = $($dlg.find(".mollify-selectdialog-table")[0]);
+				table = mollify.ui.controls.table($table, {
+					key: spec.key,
+					columns: [{ type:"select" }].concat(spec.columns)
+				});
+				table.set(spec.list);
+			}
+		});
+	};
+
 	dh.error = function(spec) {
 		dh.custom({
 			title: spec.title,
