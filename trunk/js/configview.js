@@ -315,14 +315,26 @@
 					title: mollify.ui.texts.get('configAdminUserAddFolderTitle'),
 					message: mollify.ui.texts.get('configAdminUserAddFolderMessage'),
 					key: "id",
+					initSize: [600, 400],
 					columns: [
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle') },
+						{ id: "user_name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), type:"input" },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderDefaultNameTitle') },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') }
 					],
 					list: selectable,
-					onSelect: function(sel) { mollify.service.post("configuration/user/"+u.id+"/folders/", {ids: mollify.helpers.extractValue(sel, "id")}).done(updateFolders); }
+					onSelect: function(sel, o) {
+						var folders = [];
+						$.each(sel, function(i, f) {
+							var folder = {id: f.id};
+							var name = o[f.id] ? o[f.id].user_name : false;
+							if (name && f.name != name)
+									folder.name = name;
+							folders.push(folder);
+						});
+						mollify.service.post("configuration/users/"+u.id+"/folders/", folders).done(updateFolders);
+					}
 				});
 			}
 

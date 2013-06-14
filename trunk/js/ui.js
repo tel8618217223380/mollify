@@ -660,6 +660,18 @@
 			if (o.narrow) $e.addClass("table-condensed");
 			if (o.hilight) $e.addClass("hilight");
 
+			var findRow = function(item) {
+				var found = false;
+				$l.find("tr").each(function() {
+					var $row = $(this);
+					var rowItem = $row[0].data;
+					if (item == rowItem) {
+						found = $row;
+						return false;
+					}
+				});
+				return found;
+			};
 			var getSelectedRows = function() {
 				var sel = [];
 				$e.find(".mollify-tableselect:checked").each(function(i, e){
@@ -667,6 +679,11 @@
 					sel.push(item);
 				});
 				return sel;
+			};
+			var setRowSelected = function(item, sel) {
+				var $row = findRow(item);
+				$row.find(".mollify-tableselect").prop("checked", sel);
+				selectionChangedCb.fire();
 			};
 			var updateSelectHeader = function() {
 				var count = $l.children().length;
@@ -724,6 +741,7 @@
 			}
 			
 			var setCellValue = function($cell, col, item) {
+				$cell[0].colId = col.id;
 				var v = item[col.id];
 				if (col.cellClass) $cell.addClass(col.cellClass);
 				if (col.type == 'select') {
@@ -735,11 +753,24 @@
 						//TODO delegate click handler
 						if (o.onRowAction) o.onRowAction(col.id, item);
 					});
+				} else if (col.type == "input") {
+					var $s = $('<input type="text"></input>').appendTo($cell).change(function() {
+						var v = $s.val();
+						$cell[0].ctrlVal = v;
+						if (o.selectOnEdit) setRowSelected(item, true);
+						if (col.onChange) col.onChange(item, v);
+					});
+					$cell[0].ctrl = $s;
+					var sv = v;
+					if (col.valueMapper) sv = col.valueMapper(item, v);
+					$s.val(sv);
 				} else if (col.type == "select") {
 					var $s = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
 						values: col.options,
 						title : "title",
 						onChange: function(v) {
+							$cell[0].ctrlVal = v;
+							if (o.selectOnEdit) setRowSelected(item, true);
 							if (col.onChange) col.onChange(item, v);
 						}
 					});
@@ -764,19 +795,6 @@
 					var $cell = $("<td></td>").appendTo($row);
 					setCellValue($cell, o.columns[i], item);
 				}
-			};
-			
-			var findRow = function(item) {
-				var found = false;
-				$l.find("tr").each(function() {
-					var $row = $(this);
-					var rowItem = $row[0].data;
-					if (item == rowItem) {
-						found = $row;
-						return false;
-					}
-				});
-				return found;
 			};
 			var updateRow = function($row) {
 				$row.find("td").each(function() {
@@ -804,6 +822,21 @@
 				},
 				getSelected : function() {
 					return getSelectedRows();
+				},
+				getValues : function() {
+					var values = {};
+					$l.find("td").each(function() {
+						var $cell = $(this);
+						var ctrlVal = $cell[0].ctrlVal;
+						if (!ctrlVal) return;
+						
+						var $row = $cell.parent();
+						var item = $row[0].data;
+						var key = item[o.key];
+						if (!values[key]) values[key] = {};
+						values[key][$cell[0].colId] = ctrlVal;
+					});
+					return values;	
 				},
 				set : function(items) {
 					$l.empty();
@@ -1140,6 +1173,7 @@
 		var table = false;
 		dh.custom({
 			title: spec.title,
+			initSize: spec.initSize,
 			content: $("#mollify-tmpl-dialog-select").tmpl({message: spec.message}),
 			buttons: [
 				{ id: "ok", "title-key": "ok" },
@@ -1151,12 +1185,15 @@
 					if (!sel || sel.length == 0) return;
 				}
 				d.close();
-				if (btn.id == "ok" && spec.onSelect) spec.onSelect(sel);
+				if (btn.id == "ok" && spec.onSelect) {
+					spec.onSelect(sel, table.getValues());
+				}
 			},
 			"on-show": function(h, $dlg) {
 				var $table = $($dlg.find(".mollify-selectdialog-table")[0]);
 				table = mollify.ui.controls.table($table, {
 					key: spec.key,
+					selectOnEdit: true,
 					columns: [{ type:"select" }].concat(spec.columns)
 				});
 				table.set(spec.list);
