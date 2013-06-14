@@ -133,7 +133,7 @@
 	}
 
 	mollify.view.ConfigListView = function($e, o) {
-		mollify.dom.template("mollify-tmpl-configlistview", {actions: o.actions || false}).appendTo($e);
+		mollify.dom.template("mollify-tmpl-configlistview", {title: o.title, actions: o.actions || false}).appendTo($e);
 		var $table = $e.find(".mollify-configview-table");
 		var table = mollify.ui.controls.table($table, o.table);
 		var enableAction = function(id, e) {
@@ -243,6 +243,7 @@
 							var pkl = pk.toLowerCase();
 							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
 						} },
+						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle') },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
@@ -281,6 +282,7 @@
 
 		this._showUserDetails = function(u, $e, allGroups, allFolders) {
 			mollify.dom.template("mollify-tmpl-config-admin-userdetails", {user: u}).appendTo($e);
+			mollify.ui.process($e, ["localize"]);
 			var $groups = $e.find(".mollify-config-admin-userdetails-groups");
 			var $folders = $e.find(".mollify-config-admin-userdetails-folders");
 			var foldersView = false;
@@ -325,6 +327,7 @@
 			}
 
 			foldersView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-folders"), {
+				title: mollify.ui.texts.get('configAdminUsersFoldersTitle'),
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddUserFolders },
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
@@ -354,6 +357,7 @@
 			});
 
 			groupsView = new mollify.view.ConfigListView($e.find(".mollify-config-admin-userdetails-groups"), {
+				title: mollify.ui.texts.get('configAdminUsersGroupsTitle'),
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() {  }},
 					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
