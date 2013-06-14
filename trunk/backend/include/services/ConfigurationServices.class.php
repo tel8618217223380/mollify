@@ -171,11 +171,20 @@
 						return;
 					case 'folders':
 						$folder = $this->request->data;
-						if (!isset($folder['id'])) throw $this->invalidRequestException();
+						if (!isset($folder['id']) and !isset($folder['ids'])) throw $this->invalidRequestException("No folder data");
 						
-						$this->env->configuration()->addUserFolder($userId, $folder['id'], isset($folder['name']) ? $folder['name'] : NULL);
-						$this->response()->success(TRUE);
-						return;
+						if (isset($folder['ids'])) {
+							$ids = $folder["ids"];
+							if (!is_array($ids) or count($ids) == 0) throw $this->invalidRequestException("Invalid folder data");
+							foreach($ids as $id)
+								$this->env->configuration()->addUserFolder($userId, $id, NULL);
+							$this->response()->success(TRUE);
+							return;
+						} else {						
+							$this->env->configuration()->addUserFolder($userId, $folder['id'], isset($folder['name']) ? $folder['name'] : NULL);
+							$this->response()->success(TRUE);
+							return;
+						}
 				}
 			}
 			throw $this->invalidRequestException();
@@ -207,11 +216,11 @@
 				return;
 			}
 			
-			// users/xx/password
 			if (count($this->path) == 3) {
 				$userId = $this->path[1];
 				
 				switch ($this->path[2]) {
+					// users/xx/password
 					case 'password':
 						$pw = $this->request->data;
 						if (!isset($pw['new'])) throw $this->invalidRequestException();

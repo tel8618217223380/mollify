@@ -1307,12 +1307,24 @@ li#mollify-folder-hierarchy-item-root > a {
 	border-radius: 4px;
 }
 
+.mollify-configlistview-title {
+	float: left;
+	font-size: 18px;
+	line-height: 32px;
+	margin-right: 8px;
+}
+
+.mollify-configlistview-actions {
+	float: left;	
+}
+
 .mollify-configlistview-action {
 	margin-right: 4px;
 }
 
 .mollify-configview-table {
 	cursor: default;
+	float: left;
 }
 
 .mollify-configview-table.hilight {
