@@ -140,6 +140,7 @@
 		private function processPostUsers() {
 			if (!$this->request->hasData()) throw $this->invalidRequestException();
 			
+			// user
 			if (count($this->path) == 1) {
 				$user = $this->request->data;
 				if (!isset($user['name']) or !isset($user['password']) or !isset($user['permission_mode'])) throw $this->invalidRequestException();
@@ -165,19 +166,20 @@
 				$userId = $this->path[1];
 				
 				switch ($this->path[2]) {
+					// user/xx/groups
 					case 'groups':
 						$groups = $this->request->data;
 						$this->response()->success($this->env->configuration()->addUsersGroups($userId, $groups));
 						return;
+						
+					// user/xx/folders
 					case 'folders':
 						$folder = $this->request->data;
-						if (!isset($folder['id']) and !isset($folder['ids'])) throw $this->invalidRequestException("No folder data");
+						if (!is_array($folder) and !isset($folder['id'])) throw $this->invalidRequestException("No folder data");
 						
-						if (isset($folder['ids'])) {
-							$ids = $folder["ids"];
-							if (!is_array($ids) or count($ids) == 0) throw $this->invalidRequestException("Invalid folder data");
-							foreach($ids as $id)
-								$this->env->configuration()->addUserFolder($userId, $id, NULL);
+						if (is_array($folder)) {
+							foreach($folder as $f)
+								$this->env->configuration()->addUserFolder($userId, $f['id'], isset($f['name']) ? $f['name'] : NULL);
 							$this->response()->success(TRUE);
 							return;
 						} else {						
