@@ -866,13 +866,14 @@
 					$row.remove();
 				},
 				refresh: function() {
-					if (!o.remote || !o.restPath) return;
-					var queryParams = { count: o.paging || false, start: dataInfo ? dataInfo.start : 0 };
-					mollify.service.post(o.restPath, queryParams).done(function(r) {
+					if (!o.remote || !o.remote.path) return;
+					var queryParams = { count: o.remote.paging || false, start: dataInfo ? dataInfo.start : 0 };
+					var pr = mollify.service.post(o.remote.path, queryParams).done(function(r) {
 						if (o.paging) dataInfo = r.info;
 						else dataInfo = false;
 						api.set(r.data);	
 					});
+					if (o.remote.onLoad) o.remote.onLoad(pr);
 				}
 			};
 			return api;
