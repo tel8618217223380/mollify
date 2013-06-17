@@ -508,7 +508,7 @@
 		var that = this;
 		
 		this.init = function(opt) {
-			this.title = mollify.ui.texts.get("configAdminFoldersNavTitle");
+			that.title = mollify.ui.texts.get("configAdminFoldersNavTitle");
 		}
 		
 		this.onActivate = function($c) {
