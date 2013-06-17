@@ -13,15 +13,6 @@
 			this.onActivate = function($c) {
 				var listView = false;
 	
-				/*var updateEvents = function() {
-					$c.addClass("loading");
-					mollify.service.get("configuration/folders/").done(function(l) {
-						$c.removeClass("loading");
-						folders = l;
-						listView.table.set(folders);
-					});
-				};*/
-	
 				listView = new mollify.view.ConfigListView($c, {
 					actions: [
 						{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {  }},
@@ -31,9 +22,11 @@
 						id: "config-admin-folders",
 						key: "id",
 						narrow: true,
-						remote: true,
-						restPath: "eventlog/query",
-						paging: 100,
+						remote: {
+							path : "eventlog/query",
+							paging: 100,
+							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
+						},
 						columns: [
 							{ type:"select" },
 							{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
