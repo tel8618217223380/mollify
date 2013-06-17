@@ -659,7 +659,8 @@
 			$e.addClass("table");
 			if (o.narrow) $e.addClass("table-condensed");
 			if (o.hilight) $e.addClass("hilight");
-
+			var dataInfo = false;
+			
 			var findRow = function(item) {
 				var found = false;
 				$l.find("tr").each(function() {
@@ -863,6 +864,15 @@
 					var $row = findRow(item);
 					if (!$row) return;
 					$row.remove();
+				},
+				refresh: function() {
+					if (!o.remote || !o.restPath) return;
+					var queryParams = { count: o.paging || false, start: dataInfo ? dataInfo.start : 0 };
+					mollify.service.post(o.restPath, queryParams).done(function(r) {
+						if (o.paging) dataInfo = r.info;
+						else dataInfo = false;
+						api.set(r.data);	
+					});
 				}
 			};
 			return api;
