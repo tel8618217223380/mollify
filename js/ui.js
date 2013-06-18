@@ -735,6 +735,7 @@
 				$e.find(".mollify-tableselect").prop("checked", s);
 			};
 			var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
+			var firstSortable = false;
 			for (var i=0,j=o.columns.length; i<j; i++) {
 				var $th;
 				var col = o.columns[i];
@@ -747,11 +748,38 @@
 					});
 				} else {
 					$th = $("<th>"+(col.title ? col.title : "")+"</th>");
+					$th[0].colId = col.id;
+					if (col.sortable) {
+						$th.append("<span class='mollify-tableheader-sort'></span>").addClass("sortable");
+						if (!firstSortable) firstSortable = col.id;
+					}
 				}
 
 				if (col.id) $th.addClass("col-"+col.id);
 				$th.appendTo($h);
-			}
+			}			
+			var sortKey = false;
+			if (firstSortable) sortKey = { id: firstSortable, asc: true };
+			if (o.defaultSort) sortKey = o.defaultSort;
+			var updateSort = function() {
+				$e.find("th.sortable > .mollify-tableheader-sort").empty();
+				if (!sortKey) return;
+				var $col = $("th.col-"+sortKey.id+" > .mollify-tableheader-sort");
+				$col.html("<i class='"+(sortKey.asc ? "icon-caret-up" : "icon-caret-down")+ "'></i>");
+			};
+			$e.delegate("th.sortable", "click", function(e) {
+				var $t = $(this);
+
+				var id = $t[0].colId;
+				if (sortKey && sortKey.id == id) {
+					sortKey.asc = !sortKey.asc;
+				} else {
+					sortKey = { id: id, asc: true };
+				}
+				updateSort();
+				api.refresh();
+			});
+			updateSort();
 
 			var $l = $("<tbody></tbody>").appendTo($e);
 			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); });
@@ -904,7 +932,7 @@
 				},
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;
-					var queryParams = { count: perPageMax, start: dataInfo ? dataInfo.start : 0 };
+					var queryParams = { count: perPageMax, start: dataInfo ? dataInfo.start : 0, sort: sortKey };
 					var pr = mollify.service.post(o.remote.path, queryParams).done(function(r) {
 						if (o.remote.paging) {
 							dataInfo = { start: r.start, count: r.count, total: r.total };

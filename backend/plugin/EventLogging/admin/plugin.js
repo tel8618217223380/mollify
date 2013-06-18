@@ -28,13 +28,14 @@
 							paging: { max: 50 },
 							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
 						},
+						defaultSort: { id: "time", asc: false },
 						columns: [
 							{ type:"select" },
 							{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
-							{ id: "id", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
-							{ id: "type", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
-							{ id: "user", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
-							{ id: "time", title: mollify.ui.texts.get('configAdminFoldersPathTitle'), formatter: that._timestampFormatter },
+							{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle'), sortable: true },
+							{ id: "type", title: mollify.ui.texts.get('pluginEventLoggingEventTypeTitle'), sortable: true },
+							{ id: "user", title: mollify.ui.texts.get('pluginEventLoggingUserTitle'), sortable: true },
+							{ id: "time", title: mollify.ui.texts.get('pluginEventLoggingTimeTitle'), formatter: that._timestampFormatter, sortable: true },
 							{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 						],
 						onRowAction: function(id, f) {

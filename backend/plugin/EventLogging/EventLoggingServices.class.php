@@ -56,7 +56,19 @@
 				$query .= " and type like '".str_replace("*", "%", $db->string($data['type']))."'";
 			}
 
-			$query .= ' order by time desc';
+			$query .= ' order by ';
+			if (isset($data["sort"]) and isset($data["sort"]["id"])) {
+				$sort = $data["sort"];
+				
+				if (in_array($sort["id"], array("id", "time", "type", "user"))) {
+					$query .= $sort["id"];
+				}
+				else throw $this->invalidRequestException();
+				
+				$query .= ' '.((isset($sort["asc"]) and $sort["asc"]) ? "asc" : "desc");				
+			} else {
+				$query .= ' time desc';
+			}
 			
 			$count = $db->query("select count(id) ".$query)->value(0);
 			$rows = isset($data["count"]) ? $data["count"] : 50;
