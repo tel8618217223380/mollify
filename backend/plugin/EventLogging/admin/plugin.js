@@ -71,11 +71,8 @@
 								{ id: "type", title: mollify.ui.texts.get('pluginEventLoggingEventTypeTitle'), sortable: true },
 								{ id: "user", title: mollify.ui.texts.get('pluginEventLoggingUserTitle'), sortable: true },
 								{ id: "time", title: mollify.ui.texts.get('pluginEventLoggingTimeTitle'), formatter: that._timestampFormatter, sortable: true },
-								{ id: "ip", title: mollify.ui.texts.get('pluginEventLoggingIPTitle'), sortable: true },
-								{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
-							],
-							onRowAction: function(id, f) {
-							}
+								{ id: "ip", title: mollify.ui.texts.get('pluginEventLoggingIPTitle'), sortable: true }
+							]
 						}
 					});
 					var $options = $c.find(".mollify-configlistview-options");
