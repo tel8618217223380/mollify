@@ -1332,6 +1332,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	float: left;
 }
 
+.mollify-configlistview-table th.sortable {
+	cursor: pointer;
+}
+
 .mollify-table-pager {
 	float: left;
 }

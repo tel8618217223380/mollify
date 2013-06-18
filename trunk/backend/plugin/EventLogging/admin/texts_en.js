@@ -2,5 +2,6 @@
 "pluginEventLoggingAdminNavTitle" : "Events",
 "pluginEventLoggingEventTypeTitle" : "Event",
 "pluginEventLoggingUserTitle" : "User",
-"pluginEventLoggingTimeTitle" : "Time"
+"pluginEventLoggingTimeTitle" : "Time",
+"pluginEventLoggingIPTitle" : "IP"
 })})();

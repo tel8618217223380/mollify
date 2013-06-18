@@ -933,6 +933,10 @@
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;
 					var queryParams = { count: perPageMax, start: dataInfo ? dataInfo.start : 0, sort: sortKey };
+					if (o.remote.queryParams) {
+						var p = o.remote.queryParams(dataInfo);
+						if (p) queryParams = $.extend(queryParams, p);
+					}
 					var pr = mollify.service.post(o.remote.path, queryParams).done(function(r) {
 						if (o.remote.paging) {
 							dataInfo = { start: r.start, count: r.count, total: r.total };

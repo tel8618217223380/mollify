@@ -60,7 +60,7 @@
 			if (isset($data["sort"]) and isset($data["sort"]["id"])) {
 				$sort = $data["sort"];
 				
-				if (in_array($sort["id"], array("id", "time", "type", "user"))) {
+				if (in_array($sort["id"], array("id", "time", "type", "user", "ip"))) {
 					$query .= $sort["id"];
 				}
 				else throw $this->invalidRequestException();

@@ -559,6 +559,10 @@ var mollifyDefaults = {
 		return url +"/client/"+p;
 	};
 	
+	pl.adminUrl = function(id, p) {
+		return pl.url(id)+"/admin/"+p;
+	};
+	
 	pl.getItemContextRequestData = function(item) {
 		var requestData = {};
 		for (var id in pl._list) {
