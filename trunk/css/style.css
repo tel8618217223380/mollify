@@ -1320,7 +1320,17 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-configlistview-actions {
-	float: left;	
+	float: left;
+	clear: both;
+}
+
+.mollify-configlistview-options {
+	float: left;
+	clear: both;
+}
+
+.mollify-configlistview-options .accordion {
+	margin-top: 10px;
 }
 
 .mollify-configlistview-action {
