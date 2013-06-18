@@ -1307,6 +1307,11 @@ li#mollify-folder-hierarchy-item-root > a {
 	border-radius: 4px;
 }
 
+.mollify-configlistview-header {
+	float: left;
+	clear: both;
+}
+
 .mollify-configlistview-title {
 	float: left;
 	font-size: 18px;
@@ -1322,8 +1327,12 @@ li#mollify-folder-hierarchy-item-root > a {
 	margin-right: 4px;
 }
 
-.mollify-configview-table {
+.mollify-configlistview-table {
 	cursor: default;
+	float: left;
+}
+
+.mollify-table-pager {
 	float: left;
 }
 

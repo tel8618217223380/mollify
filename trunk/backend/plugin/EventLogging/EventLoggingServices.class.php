@@ -63,7 +63,7 @@
 			$start = isset($data["start"]) ? $data["start"] : 0;
 			$result = $db->query("select id, time, user, ip, type, item, details ".$query." limit ".$rows." offset ".$start)->rows();
 			
-			return array("info" => array("start" => $start, "count" => count($result), "total" => $count), "data" => $result);
+			return array("start" => $start, "count" => count($result), "total" => $count, "data" => $result);
 		}
 
 		private function processTypeQuery($type, $events = FALSE) {

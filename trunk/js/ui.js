@@ -68,6 +68,7 @@
 		},
 		Timestamp : function(fmt) {
 			this.format = function(ts) {
+				if (typeof(ts) === 'string') ts = mollify.helpers.parseInternalTime(ts);
 				return ts.toString(fmt);
 			};
 		},
@@ -660,6 +661,24 @@
 			if (o.narrow) $e.addClass("table-condensed");
 			if (o.hilight) $e.addClass("hilight");
 			var dataInfo = false;
+			var $pagingControls = false;
+			var refreshPagingControls = function() {
+				var $p = $pagingControls.find("ul").empty();
+				var perPage = (o.remote.paging.max || 100);
+				var pages = dataInfo ? Math.ceil(dataInfo.total / perPage) : 0;
+				var current = dataInfo ? Math.floor(dataInfo.start / perPage) : 0;
+				
+				$p.append($('<li'+((current <= 1) ? ' class="disabled"' : '')+'><a href="javascript:void(0);">&laquo;</a></li>'));
+				for (var i=1; i<=pages; i++) {
+					$p.append($('<li'+((current == i) ? ' class="active"' : '')+'><a href="javascript:void(0);">'+i+'</a></li>'));
+				}
+				$p.append($('<li'+((current >= pages) ? ' class="disabled"' : '')+'><a href="javascript:void(0);">&raquo;</a></li>'));
+			};
+			if (o.remote && o.remote.paging) {
+				var $ctrl = o.remote.paging.controls || $("<div class='mollify-table-pager'></div>").insertAfter($e);
+				$pagingControls = $('<div class="pagination"><ul></ul></div>').appendTo($ctrl);
+				refreshPagingControls();
+			}
 			
 			var findRow = function(item) {
 				var found = false;
@@ -784,6 +803,7 @@
 				} else {
 					if (col.renderer) col.renderer(item, v, $cell);
 					else if (col.valueMapper) $cell.html(col.valueMapper(item, v));
+					else if (col.formatter) $cell.html(col.formatter.format(v));
 					else $cell.html(v);
 				}
 			};
@@ -867,10 +887,12 @@
 				},
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;
-					var queryParams = { count: o.remote.paging || false, start: dataInfo ? dataInfo.start : 0 };
+					var queryParams = { count: o.remote.paging ? o.remote.paging.max || 100 : 100, start: dataInfo ? dataInfo.start : 0 };
 					var pr = mollify.service.post(o.remote.path, queryParams).done(function(r) {
-						if (o.paging) dataInfo = r.info;
-						else dataInfo = false;
+						if (o.paging) {
+							dataInfo = { start: r.start, count: r.count, total: r.total };
+							refreshPagingControls();
+						} else dataInfo = false;
 						api.set(r.data);	
 					});
 					if (o.remote.onLoad) o.remote.onLoad(pr);

@@ -9,15 +9,18 @@
 
 <script id="mollify-tmpl-configlistview" type="text/x-jquery-tmpl">
 	<div class="mollify-configlistview">
-		{{if title}}
-		<div class="mollify-configlistview-title">${title}</div>
-		{{/if}}
-		{{if actions}}
-		<div class="mollify-configview-actions">
-			{{tmpl(actions) "#mollify-tmpl-configlistview-action"}}
+		<div class="mollify-configlistview-header">
+			{{if title}}
+			<div class="mollify-configlistview-title">${title}</div>
+			{{/if}}
+			{{if actions}}
+			<div class="mollify-configlistview-actions">
+				{{tmpl(actions) "#mollify-tmpl-configlistview-action"}}
+			</div>
+			{{/if}}
+			<div class="mollify-configlistview-pager"></div>
 		</div>
-		{{/if}}
-		<div class="mollify-configview-table"></div>
+		<div class="mollify-configlistview-table"></div>
 	</div>
 </script>
 
