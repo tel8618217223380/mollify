@@ -236,7 +236,7 @@
 					narrow: true,
 					hilight: true,
 					columns: [
-						{ type:"select" },
+						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
 						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
@@ -349,7 +349,7 @@
 					key: "id",
 					narrow: true,
 					columns: [
-						{ type:"select" },
+						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), valueMapper: function(f, v) {
@@ -379,7 +379,7 @@
 					key: "id",
 					narrow: true,
 					columns: [
-						{ type:"select" },
+						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersGroupNameTitle') },
@@ -535,7 +535,7 @@
 					key: "id",
 					narrow: true,
 					columns: [
-						{ type:"select" },
+						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
