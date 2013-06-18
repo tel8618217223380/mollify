@@ -805,7 +805,7 @@ var mollifyDefaults = {
 		},
 	
 		formatDateTime : function(time, fmt) {
-			return time.format(fmt);
+			return time.toString(fmt);
 		},
 		
 		parseInternalTime : function(time) {
@@ -821,7 +821,7 @@ var mollifyDefaults = {
 	
 		formatInternalTime : function(time) {
 			if (!time) return null;
-			return time.format('yymmddHHMMss', time);
+			return mollify.helpers.formatDateTime(time, 'yyyyMMddHHmmss');
 		},
 		
 		mapByKey : function(list, key) {

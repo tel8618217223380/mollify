@@ -1017,6 +1017,8 @@
 						}
 					}
 				},
+				get : getSelected,
+				set : this.select,
 				selected : getSelected
 			};
 			if (o.none) api.add(o.none);
