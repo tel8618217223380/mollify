@@ -739,7 +739,7 @@
 			for (var i=0,j=o.columns.length; i<j; i++) {
 				var $th;
 				var col = o.columns[i];
-				if (col.type == 'select') {
+				if (col.type == 'selectrow') {
 					$th = $('<input class="mollify-tableselect-header" type="checkbox"></input>').click(function(e) {
 						var count = $l.children().length;
 						var all = (count > 0 && getSelectedRows().length == count);
@@ -809,7 +809,7 @@
 				$cell[0].colId = col.id;
 				var v = item[col.id];
 				if (col.cellClass) $cell.addClass(col.cellClass);
-				if (col.type == 'select') {
+				if (col.type == 'selectrow') {
 					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
 				} else if (col.type == 'action') {
 					var html = col.content || col.title;
@@ -1276,7 +1276,7 @@
 				table = mollify.ui.controls.table($table, {
 					key: spec.key,
 					selectOnEdit: true,
-					columns: [{ type:"select" }].concat(spec.columns)
+					columns: [{ type:"selectrow" }].concat(spec.columns)
 				});
 				table.set(spec.list);
 			}

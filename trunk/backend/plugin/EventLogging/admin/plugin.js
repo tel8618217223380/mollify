@@ -10,17 +10,24 @@
 				that.title = mollify.ui.texts.get("pluginEventLoggingAdminNavTitle");
 				that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 				mollify.service.get("events/types/").done(function(t) {
-					//TODO get keys
-					that._types = t;
+					that._types = [];
+					that._typeTexts = t;
+					for (var k in t) {
+						if (t[k])
+							that._types.push(k);
+					}
 				});
 			}
 
 			this.onActivate = function($c) {
 				var listView = false;
-				
+				var $optionType = false;
+				var $optionStart = false;
+				var $optionEnd = false;
+							
 				var getQueryParams = function(i) {
-					var start = $("#eventlogging-start").data("mollify-datepicker").get();
-					var end = $("#eventlogging-end").data("mollify-datepicker").get();
+					var start = $optionStart.get();
+					var end = $optionEnd.get();
 					return { start_time: start, end_time: end };
 				}
 	
@@ -41,7 +48,7 @@
 						},
 						defaultSort: { id: "time", asc: false },
 						columns: [
-							{ type:"select" },
+							{ type:"selectrow" },
 							{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
 							{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle'), sortable: true },
 							{ id: "type", title: mollify.ui.texts.get('pluginEventLoggingEventTypeTitle'), sortable: true },
@@ -58,20 +65,21 @@
 				mollify.templates.load("eventlogging-content", mollify.helpers.noncachedUrl(mollify.plugins.adminUrl("EventLogging", "content.html")), function() {
 					mollify.dom.template("mollify-tmpl-eventlogging-options").appendTo($options);
 					mollify.ui.process($options, ["localize"]);
-					mollify.ui.controls.select("eventlogging-event-type", {
+					$optionType = mollify.ui.controls.select("eventlogging-event-type", {
 						values: that._types,
+						valueMapper: function(i, v) { return that._typeTexts[v]; },
 						none: "todo"
 					});
-					mollify.ui.controls.datepicker("eventlogging-start", {
+					$optionStart = mollify.ui.controls.datepicker("eventlogging-start", {
 						format: mollify.ui.texts.get('shortDateTimeFormat'),
 						time: true
 					});
-					mollify.ui.controls.datepicker("eventlogging-end", {
+					$optionEnd = mollify.ui.controls.datepicker("eventlogging-end", {
 						format: mollify.ui.texts.get('shortDateTimeFormat'),
 						time: true
 					});
+					listView.table.refresh();
 				});
-				listView.table.refresh();
 			}
 		}
 	}

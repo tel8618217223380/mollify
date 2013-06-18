@@ -1078,7 +1078,7 @@
 			
 			var $newPermission = mollify.ui.controls.select("mollify-pluginpermissions-editor-new-permission", {
 				values: that.permissionOptions,
-				none: {title: mollify.ui.texts.get('pluginPermissionsEditNoPermission')},
+				none: mollify.ui.texts.get('pluginPermissionsEditNoPermission'),
 				title : "title"
 			});
 			
