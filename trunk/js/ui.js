@@ -662,21 +662,38 @@
 			if (o.hilight) $e.addClass("hilight");
 			var dataInfo = false;
 			var $pagingControls = false;
+			var perPageMax = (o.remote && o.remote.paging ? o.remote.paging.max || 50 : 50);
 			var refreshPagingControls = function() {
 				var $p = $pagingControls.find("ul").empty();
-				var perPage = (o.remote.paging.max || 100);
-				var pages = dataInfo ? Math.ceil(dataInfo.total / perPage) : 0;
-				var current = dataInfo ? Math.floor(dataInfo.start / perPage) : 0;
+				var pages = dataInfo ? Math.ceil(dataInfo.total / perPageMax) : 0;
+				var current = dataInfo ? (Math.floor(dataInfo.start / perPageMax) + 1) : 0;
 				
-				$p.append($('<li'+((current <= 1) ? ' class="disabled"' : '')+'><a href="javascript:void(0);">&laquo;</a></li>'));
+				$p.append($('<li class="page-btn page-next'+((current <= 1) ? ' disabled' : '')+'"><a href="javascript:void(0);">&laquo;</a></li>'));
 				for (var i=1; i<=pages; i++) {
-					$p.append($('<li'+((current == i) ? ' class="active"' : '')+'><a href="javascript:void(0);">'+i+'</a></li>'));
+					$p.append($('<li class="page-btn page-nr'+((current == i) ? ' active' : '')+'"><a href="javascript:void(0);">'+i+'</a></li>'));
 				}
-				$p.append($('<li'+((current >= pages) ? ' class="disabled"' : '')+'><a href="javascript:void(0);">&raquo;</a></li>'));
+				$p.append($('<li class="page-btn page-prev'+((current >= pages) ? ' disabled' : '')+'"><a href="javascript:void(0);">&raquo;</a></li>'));
 			};
 			if (o.remote && o.remote.paging) {
 				var $ctrl = o.remote.paging.controls || $("<div class='mollify-table-pager'></div>").insertAfter($e);
 				$pagingControls = $('<div class="pagination"><ul></ul></div>').appendTo($ctrl);
+				$ctrl.delegate(".page-btn > a", "click", function(e) {
+					if (!dataInfo) return;
+					
+					var $t = $(this);
+					if ($t.hasClass("disabled")) return;
+					
+					var page = Math.floor(dataInfo.start / perPageMax) + 1;
+					var pages = Math.ceil(dataInfo.total / perPageMax);
+					if ($t.hasClass("page-next")) page++;
+					else if ($t.hasClass("page-prev")) page--;
+					else {
+						page = parseInt($t.text());
+					}
+					if (page < 1 || page > pages) return;
+					dataInfo.start = (page-1) * perPageMax;
+					api.refresh();
+				});
 				refreshPagingControls();
 			}
 			
@@ -887,13 +904,13 @@
 				},
 				refresh: function() {
 					if (!o.remote || !o.remote.path) return;
-					var queryParams = { count: o.remote.paging ? o.remote.paging.max || 100 : 100, start: dataInfo ? dataInfo.start : 0 };
+					var queryParams = { count: perPageMax, start: dataInfo ? dataInfo.start : 0 };
 					var pr = mollify.service.post(o.remote.path, queryParams).done(function(r) {
-						if (o.paging) {
+						if (o.remote.paging) {
 							dataInfo = { start: r.start, count: r.count, total: r.total };
 							refreshPagingControls();
 						} else dataInfo = false;
-						api.set(r.data);	
+						api.set(r.data);
 					});
 					if (o.remote.onLoad) o.remote.onLoad(pr);
 				}

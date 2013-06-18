@@ -25,7 +25,7 @@
 						narrow: true,
 						remote: {
 							path : "eventlog/query",
-							paging: { max: 100 },
+							paging: { max: 50 },
 							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
 						},
 						columns: [
