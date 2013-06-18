@@ -134,7 +134,7 @@
 
 	mollify.view.ConfigListView = function($e, o) {
 		mollify.dom.template("mollify-tmpl-configlistview", {title: o.title, actions: o.actions || false}).appendTo($e);
-		var $table = $e.find(".mollify-configview-table");
+		var $table = $e.find(".mollify-configlistview-table");
 		var table = mollify.ui.controls.table($table, o.table);
 		var enableAction = function(id, e) {
 			if (e)
@@ -155,7 +155,7 @@
 					else if (a.depends == "table-selection-many") enableAction(a.id, many);
 				});
 			});
-			$e.find(".mollify-configview-actions > .mollify-configlistview-action").click(function() {
+			$e.find(".mollify-configlistview-actions > .mollify-configlistview-action").click(function() {
 				if ($(this).hasClass("disabled")) return;
 				var action = $(this).tmplItem().data;
 				if (!action.callback) return;

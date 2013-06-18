@@ -8,6 +8,7 @@
 
 			this.init = function() {
 				that.title = mollify.ui.texts.get("pluginEventLoggingAdminNavTitle");
+				that._timestampFormatter = new mollify.ui.formatters.Timestamp(mollify.ui.texts.get('shortDateTimeFormat'));
 			}
 
 			this.onActivate = function($c) {
@@ -24,7 +25,7 @@
 						narrow: true,
 						remote: {
 							path : "eventlog/query",
-							paging: 100,
+							paging: { max: 100 },
 							onLoad: function(pr) { $c.addClass("loading"); pr.done(function() { $c.removeClass("loading"); }); }
 						},
 						columns: [
@@ -33,7 +34,7 @@
 							{ id: "id", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
 							{ id: "type", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
 							{ id: "user", title: mollify.ui.texts.get('configAdminFoldersNameTitle') },
-							{ id: "time", title: mollify.ui.texts.get('configAdminFoldersPathTitle') },
+							{ id: "time", title: mollify.ui.texts.get('configAdminFoldersPathTitle'), formatter: that._timestampFormatter },
 							{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 						],
 						onRowAction: function(id, f) {
