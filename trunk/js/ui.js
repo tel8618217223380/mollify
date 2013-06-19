@@ -668,11 +668,11 @@
 				var pages = dataInfo ? Math.ceil(dataInfo.total / perPageMax) : 0;
 				var current = dataInfo ? (Math.floor(dataInfo.start / perPageMax) + 1) : 0;
 				
-				$p.append($('<li class="page-btn page-next'+((current <= 1) ? ' disabled' : '')+'"><a href="javascript:void(0);">&laquo;</a></li>'));
+				$p.append($('<li class="page-btn page-prev'+((current <= 1) ? ' disabled' : '')+'"><a href="javascript:void(0);">&laquo;</a></li>'));
 				for (var i=1; i<=pages; i++) {
 					$p.append($('<li class="page-btn page-nr'+((current == i) ? ' active' : '')+'"><a href="javascript:void(0);">'+i+'</a></li>'));
 				}
-				$p.append($('<li class="page-btn page-prev'+((current >= pages) ? ' disabled' : '')+'"><a href="javascript:void(0);">&raquo;</a></li>'));
+				$p.append($('<li class="page-btn page-next'+((current >= pages) ? ' disabled' : '')+'"><a href="javascript:void(0);">&raquo;</a></li>'));
 			};
 			if (o.remote && o.remote.paging) {
 				var $ctrl = o.remote.paging.controls || $("<div class='mollify-table-pager'></div>").insertAfter($e);
@@ -681,12 +681,13 @@
 					if (!dataInfo) return;
 					
 					var $t = $(this);
-					if ($t.hasClass("disabled")) return;
+					var $p = $t.parent();
+					if ($p.hasClass("disabled")) return;
 					
 					var page = Math.floor(dataInfo.start / perPageMax) + 1;
 					var pages = Math.ceil(dataInfo.total / perPageMax);
-					if ($t.hasClass("page-next")) page++;
-					else if ($t.hasClass("page-prev")) page--;
+					if ($p.hasClass("page-next")) page++;
+					else if ($p.hasClass("page-prev")) page--;
 					else {
 						page = parseInt($t.text());
 					}

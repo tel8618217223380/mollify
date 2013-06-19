@@ -50,7 +50,6 @@
 		
 					listView = new mollify.view.ConfigListView($c, {
 						actions: [
-							{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {  }},
 							{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: function() { listView.table.refresh(); } }
 						],
 						table: {
