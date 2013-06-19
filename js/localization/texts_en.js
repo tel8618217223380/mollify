@@ -236,6 +236,7 @@ configUserAccountPasswordAction: "Change",
 
 configViewAdminNavTitle: "Admin",
 configAdminUsersNavTitle: "Users",
+configAdminGroupsNavTitle: "Groups",
 configAdminUsersPermissionModeAdmin: "Administrator",
 configAdminTableIdTitle: "Id",
 
