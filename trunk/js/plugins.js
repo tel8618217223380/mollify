@@ -299,11 +299,11 @@
 		};
 		
 		this.onAddItems = function(ic, items) {
-			return mollify.service.post("itemcollections/"+ic.id, {items : isArray(items) ? items: [ items ]});
+			return mollify.service.post("itemcollections/"+ic.id, {items : window.isArray(items) ? items: [ items ]});
 		};
 		
 		this._removeCollectionItem = function(ic, items) {
-			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : isArray(items) ? items: [ items ]});
+			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : window.isArray(items) ? items: [ items ]});
 		};
 		
 		this._showCollection = function(ic) {

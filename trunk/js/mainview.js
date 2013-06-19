@@ -589,7 +589,7 @@
 					mollify.ui.views.dialogs.error({
 						message: mollify.ui.texts.get('mainviewRetrieveFileResourceNotFound', [url])
 					});
-				};
+				}
 			});
 		};
 
