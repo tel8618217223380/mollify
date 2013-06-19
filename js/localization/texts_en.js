@@ -254,7 +254,7 @@ configAdminUsersUserDialogAuthDefault: "Default ({0})",
 configAdminUserDialogExpirationTitle: "Expiration",
 configAdminUsersFoldersTitle: "Folders",
 configAdminUsersGroupsTitle: "Groups",
-configAdminUsersFolderNameTitle: "Name",
+configAdminUsersFolderNameTitle: "User Folder Name",
 configAdminUsersFolderDefaultNameTitle: "Default name",
 configAdminUsersGroupNameTitle: "Group name",
 configAdminUserAddFolderTitle: "Add User Folder",
@@ -267,5 +267,6 @@ configAdminFoldersFolderDialogEditTitle: "Edit Folder",
 configAdminFoldersFolderDialogAddTitle: "Add New Folder",
 configAdminFolderDialogNameTitle: "Folder name",
 configAdminFolderDialogPathTitle: "Server filesystem path",
-configAdminUsersFolderDefaultName: "{0} (default)"
+configAdminUsersFolderDefaultName: "{0} (default)",
+configAdminFolderUsersTitle: "Folder Users"
 })})();

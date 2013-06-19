@@ -319,8 +319,8 @@
 					columns: [
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "user_name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), type:"input" },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersFolderDefaultNameTitle') },
+						{ id: "user_name", title: mollify.ui.texts.get('configAdminUsersFolderNameTitle'), type:"input" },
 						{ id: "path", title: mollify.ui.texts.get('configAdminFoldersPathTitle') }
 					],
 					list: selectable,
@@ -514,6 +514,7 @@
 		this.onActivate = function($c) {
 			var folders = false;
 			var listView = false;
+			that._details = mollify.ui.controls.slidePanel($("#mollify-mainview-viewcontent"));
 
 			var updateFolders = function() {
 				$c.addClass("loading");
@@ -534,6 +535,7 @@
 					id: "config-admin-folders",
 					key: "id",
 					narrow: true,
+					hilight: true,
 					columns: [
 						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
@@ -548,10 +550,96 @@
 						} else if (id == "remove") {
 							mollify.service.del("configuration/folders/"+f.id).done(updateFolders);
 						}
+					},
+					onHilight: function(f) {
+						if (f) {
+							that._showFolderDetails(f, that._details.getContentElement().empty(), that._allGroups, that._allUsers);
+							that._details.show(false, 400);
+						} else {
+							that._details.hide();
+						}
 					}
 				}
 			});
 			updateFolders();
+			
+			$c.addClass("loading");
+			var gp = mollify.service.get("configuration/usersgroups").done(function(r) {
+				that._allUsers = r.users;
+				that._allGroups = r.groups;
+				$c.removeClass("loading");
+			});
+		}
+		
+		this.onDeactivate = function() {
+			that._details.remove();
+		};
+		
+		this._showFolderDetails = function(f, $e, allUsers, allGroups) {
+			mollify.dom.template("mollify-tmpl-config-admin-folderdetails", {folder: f}).appendTo($e);
+			mollify.ui.process($e, ["localize"]);
+			var $usersAndGroups = $e.find(".mollify-config-admin-folderdetails-usersandgroups");
+			var usersAndGroupsView = false;
+			var usersAndGroups = false;
+			var allUsersAndGroups = allUsers.concat(allGroups);
+			
+			var updateUsersAndGroups = function() {
+				$usersAndGroups.addClass("loading");
+				mollify.service.get("configuration/folders/"+f.id+"/users/").done(function(l) {
+					$usersAndGroups.removeClass("loading");
+					usersAndGroups = l;
+					usersAndGroupsView.table.set(l);
+				});
+			};
+			var onAddUserGroup = function() {
+				var currentIds = mollify.helpers.extractValue(usersAndGroups, "id");
+				var selectable = mollify.helpers.filter(allUsersAndGroups, function(ug) { return currentIds.indexOf(ug.id) < 0; });
+				if (selectable.length === 0) return;
+
+				mollify.ui.dialogs.select({
+					title: mollify.ui.texts.get('configAdminFolderAddUserTitle'),
+					message: mollify.ui.texts.get('configAdminFolderAddUserMessage'),
+					key: "id",
+					initSize: [600, 400],
+					columns: [
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
+						{ id: "is_group", title: mollify.ui.texts.get('configAdminFolderUserTypeTitle') }
+					],
+					list: selectable,
+					onSelect: function(sel, o) {
+						mollify.service.post("configuration/folders/"+f.id+"/users/", mollify.helpers.extractValue(sel, "id")).done(updateFolders);
+					}
+				});
+			}
+
+			usersAndGroupsView = new mollify.view.ConfigListView($usersAndGroups, {
+				title: mollify.ui.texts.get('configAdminFolderUsersTitle'),
+				actions: [
+					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddUserGroup },
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
+				],
+				table: {
+					id: "config-admin-folderusers",
+					key: "id",
+					narrow: true,
+					columns: [
+						{ type:"selectrow" },
+						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
+						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+					],
+					onRowAction: function(id, f) {
+						if (id == "remove") {
+							//TODO mollify.service.del("configuration/users/"+u.id+"/folders/", {id: f.id}).done(updateGroups);
+						}
+					}
+				}
+			});
+			
+			updateUsersAndGroups();
 		}
 		
 		this._removeFolders = function(f) {

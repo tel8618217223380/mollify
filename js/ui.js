@@ -1166,6 +1166,7 @@
 				getContentElement : function() { return $content; },
 				show: function($c, h) {
 					if ($c) $content.empty().append($c);
+					$content.parent().scrollTop(0);
 					$p.animate({
 						"height" : h+"px"
 					}, 500);
