@@ -261,17 +261,17 @@ var mollifyDefaults = {
 		if (window.isArray(i)) i = i[0];
 		
 		if (!to) {
-			var df = $.Deferred();
+			var df2 = $.Deferred();
 			mollify.ui.dialogs.folderSelector({
 				title: mollify.ui.texts.get('copyFileDialogTitle'),
 				message: mollify.ui.texts.get('copyFileMessage', [i.name]),
 				actionTitle: mollify.ui.texts.get('copyFileDialogAction'),
 				handler: {
-					onSelect: function(f) { $.when(mfs._copy(i, f)).then(df.resolve, df.reject); },
+					onSelect: function(f) { $.when(mfs._copy(i, f)).then(df2.resolve, df2.reject); },
 					canSelect: function(f) { return mfs.canCopyTo(i, f); }
 				}
 			});
-			return df.promise();
+			return df2.promise();
 		} else
 			return mfs._copy(i, to);
 	};
@@ -370,25 +370,25 @@ var mollifyDefaults = {
 						canSelect: function(f) { return mfs.canMoveTo(i, f); }
 					}
 				});
+				return df.promise();
 			} else
 				return mfs._moveMany(i, to);
-
-			return;	
 		}
 		
 		if (window.isArray(i)) i = i[0];
 		
 		if (!to) {
-			var df = $.Deferred();
+			var df2 = $.Deferred();
 			mollify.ui.dialogs.folderSelector({
 				title: mollify.ui.texts.get('moveFileDialogTitle'),
 				message: mollify.ui.texts.get('moveFileMessage', [i.name]),
 				actionTitle: mollify.ui.texts.get('moveFileDialogAction'),
 				handler: {
-					onSelect: function(f) { $.when(mfs._move(i, f)).then(df.resolve, df.reject); },
+					onSelect: function(f) { $.when(mfs._move(i, f)).then(df2.resolve, df2.reject); },
 					canSelect: function(f) { return mfs.canMoveTo(i, f); }
 				}
 			});
+			return df2.promise();
 		} else
 			return mfs._move(i, to);
 	};
@@ -435,7 +435,7 @@ var mollifyDefaults = {
 		var df = $.Deferred();
 		var handlers = [];
 		var findItem = function(id) {
-			if (!isArray(data.target)) return data.target;
+			if (!window.isArray(data.target)) return data.target;
 
 			for(var i=0,j=data.target.length;i<j;i++) {
 				if (data.target[i].id == id) return data.target[i];
@@ -450,8 +450,8 @@ var mollifyDefaults = {
 			handlers.push(handler);
 
 			var items = data.items[k];
-			for(var i=0,j=items.length;i<j;i++) {
-				var item = items[i];
+			for(var m=0,l=items.length;m<l;m++) {
+				var item = items[m];
 				item.item = findItem(item.item);
 			}
 		}
@@ -463,10 +463,10 @@ var mollifyDefaults = {
 		for(var ind=0,j=handlers.length; ind<j; ind++) {
 			var msg = handlers[ind].getValidationMessages(action, data.items[k], data);
 			for(var mi = 0, mj= msg.length; mi<mj; mi++) {
-				var m = msg[mi];
-				acceptKeys.push(m.acceptKey);
-				validationMessages.push(m.message);
-				if (!m.acceptable) nonAcceptable.push(m.message);
+				var ms = msg[mi];
+				acceptKeys.push(ms.acceptKey);
+				validationMessages.push(ms.message);
+				if (!ms.acceptable) nonAcceptable.push(ms.message);
 			}
 		}		
 		if (nonAcceptable.length === 0) {

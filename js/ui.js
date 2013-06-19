@@ -689,7 +689,7 @@
 					if ($p.hasClass("page-next")) page++;
 					else if ($p.hasClass("page-prev")) page--;
 					else {
-						page = parseInt($t.text());
+						page = parseInt($t.text(), 10);
 					}
 					if (page < 1 || page > pages) return;
 					dataInfo.start = (page-1) * perPageMax;
@@ -737,16 +737,17 @@
 			};
 			var $h = $("<tr></tr>").appendTo($("<thead></thead>").appendTo($e));
 			var firstSortable = false;
+			var thClick = function(e) {
+				var count = $l.children().length;
+				var all = (count > 0 && getSelectedRows().length == count);
+				selectAll(!all);
+				selectionChangedCb.fire();
+			};
 			for (var i=0,j=o.columns.length; i<j; i++) {
 				var $th;
 				var col = o.columns[i];
 				if (col.type == 'selectrow') {
-					$th = $('<input class="mollify-tableselect-header" type="checkbox"></input>').click(function(e) {
-						var count = $l.children().length;
-						var all = (count > 0 && getSelectedRows().length == count);
-						selectAll(!all);
-						selectionChangedCb.fire();
-					});
+					$th = $('<input class="mollify-tableselect-header" type="checkbox"></input>').click(thClick);
 				} else {
 					$th = $("<th>"+(col.title ? col.title : "")+"</th>");
 					$th[0].colId = col.id;
@@ -831,7 +832,7 @@
 					if (col.valueMapper) sv = col.valueMapper(item, v);
 					$s.val(sv);
 				} else if (col.type == "select") {
-					var $s = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
+					var $sl = mollify.ui.controls.select($("<select></select>").appendTo($cell), {
 						values: col.options,
 						title : "title",
 						onChange: function(v) {
@@ -840,10 +841,10 @@
 							if (col.onChange) col.onChange(item, v);
 						}
 					});
-					$cell[0].ctrl = $s;
-					var sv = v;
-					if (col.valueMapper) sv = col.valueMapper(item, v);
-					$s.select(sv);
+					$cell[0].ctrl = $sl;
+					var sv2 = v;
+					if (col.valueMapper) sv2 = col.valueMapper(item, v);
+					$sl.select(sv2);
 				} else if (col.type == 'static') {
 					$cell.html(col.content || '');
 				} else {
@@ -1266,9 +1267,10 @@
 				{ id: "cancel", "title-key": "dialogCancel" }
 			],
 			"on-button": function(btn, d) {
+				var sel;
 				if (btn.id == "ok") {
-					var sel = table.getSelected();
-					if (!sel || sel.length == 0) return;
+					sel = table.getSelected();
+					if (!sel || sel.length === 0) return;
 				}
 				d.close();
 				if (btn.id == "ok" && spec.onSelect) {

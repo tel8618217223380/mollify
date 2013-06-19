@@ -269,5 +269,7 @@ configAdminFoldersFolderDialogAddTitle: "Add New Folder",
 configAdminFolderDialogNameTitle: "Folder name",
 configAdminFolderDialogPathTitle: "Server filesystem path",
 configAdminUsersFolderDefaultName: "{0} (default)",
-configAdminFolderUsersTitle: "Folder Users"
+configAdminFolderUsersTitle: "Folder Users",
+
+configAdminGroupsDescriptionTitle: "Description"
 })})();

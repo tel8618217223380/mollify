@@ -59,7 +59,7 @@
 						for (var k in mollify.session.plugins) {
 							if (!mollify.session.plugins[k] || !mollify.session.plugins[k].admin) continue;
 							plugins.push(k);
-						};
+						}
 						mollify.admin = {
 							plugins : []
 						};
@@ -73,7 +73,7 @@
 
 		this._loadAdminPlugins = function(ids) {
 			var df = $.Deferred();
-			if (ids.length == 0) return df.resolve();
+			if (ids.length === 0) return df.resolve();
 
 			var l = [];
 			for (var i=0,j=ids.length;i<j;i++) {
@@ -85,15 +85,16 @@
 				
 				o.push(mollify.service.get("configuration/options").done(function(opt) { that._options = opt; }));
 
+				var addView = function(i, v) {
+					that._adminViews.push(v);
+				};
 				for (var pk in mollify.admin.plugins) {
 					var p = mollify.admin.plugins[pk];
 					if (!p || !p.views) continue;
 
 					if (p.hasTexts) o.push($.getScript("backend/plugin/"+pk+"/admin/texts_"+mollify.ui.texts.locale+".js"));
-					$.each(p.views, function(i, v) {
-						that._adminViews.push(v);
-					});
-				};
+					$.each(p.views, addView);
+				}
 
 				$.when.apply($, o).done(function() {
 					$.each(that._adminViews, function(i, v) {
@@ -105,7 +106,7 @@
 		}
 
 		this._initAdminViews = function(h) {
-			if (!mollify.session.admin || that._adminViews.length == 0) return;
+			if (!mollify.session.admin || that._adminViews.length === 0) return;
 
 			var navBarItems = [];
 			$.each(that._adminViews, function(i, v) {
@@ -161,7 +162,7 @@
 				var action = $(this).tmplItem().data;
 				if (!action.callback) return;
 				
-				var p = undefined;
+				var p;
 				if (action.depends && action.depends.startsWith("table-selection")) p = table.getSelected();
 				action.callback(p);
 			});
@@ -403,22 +404,22 @@
 			var password = '';
 			var c;
 			
-		    for (var i = 0; i < length; i++) {
-		    	while (true) {
-			        c = (parseInt(Math.random() * 1000) % 94) + 33;
-			        if (that._isValidPasswordChar(c)) break;
+			for (var i = 0; i < length; i++) {
+				while (true) {
+					c = (parseInt(Math.random() * 1000, 10) % 94) + 33;
+					if (that._isValidPasswordChar(c)) break;
 				}
-		        password += String.fromCharCode(c);
-		    }
-		    return password;
+				password += String.fromCharCode(c);
+			}
+			return password;
 		}
 		
 		this._isValidPasswordChar = function(c) {
-		    if (c >= 33 && c <= 47) return false;
-		    if (c >= 58 && c <= 64) return false;
-		    if (c >= 91 && c <= 96) return false;
-		    if (c >= 123 && c <=126) return false;
-		    return true;
+			if (c >= 33 && c <= 47) return false;
+			if (c >= 58 && c <= 64) return false;
+			if (c >= 91 && c <= 96) return false;
+			if (c >= 123 && c <=126) return false;
+			return true;
 		}
 		
 		this._removeUsers = function(users) {
@@ -452,7 +453,7 @@
 					var permissionMode = $permission.selected();
 					var expiration = mollify.helpers.formatInternalTime($expiration.get());
 					var auth = $authentication.selected();
-					if (!username || username.length == 0) return;
+					if (!username || username.length === 0) return;
 					
 					var user = { name: username, permission_mode : permissionMode, expiration: expiration, auth: auth };
 					
@@ -460,7 +461,7 @@
 						mollify.service.put("configuration/users/"+u.id, user).done(d.close).done(cb);
 					} else {
 						var password = $password.val();
-						if (!password || password.length == 0) return;
+						if (!password || password.length === 0) return;
 						
 						user.password = window.Base64.encode(password);
 						mollify.service.post("configuration/users", user).done(d.close).done(cb);
@@ -542,11 +543,7 @@
 						{ type:"selectrow" },
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
-						{ id: "permission_mode", title: mollify.ui.texts.get('configAdminUsersPermissionTitle'), valueMapper: function(item, pk) {
-							var pkl = pk.toLowerCase();
-							return that._permissionTexts[pkl] ? that._permissionTexts[pkl] : pk;
-						} },
-						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle') },
+						{ id: "description", title: mollify.ui.texts.get('configAdminGroupsDescriptionTitle') },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
@@ -554,7 +551,7 @@
 						if (id == "edit") {
 							that.onAddEditGroups(g, updateGroups);
 						} else if (id == "remove") {
-							mollify.service.del("configuration/groups/"+g.id).done(updateGroups);
+							mollify.service.del("configuration/usergroups/"+g.id).done(updateGroups);
 						}
 					},
 					onHilight: function(u) {
@@ -889,7 +886,7 @@
 					],
 					list: selectable,
 					onSelect: function(sel, o) {
-						mollify.service.post("configuration/folders/"+f.id+"/users/", mollify.helpers.extractValue(sel, "id")).done(updateFolders);
+						mollify.service.post("configuration/folders/"+f.id+"/users/", mollify.helpers.extractValue(sel, "id")).done(updateUsersAndGroups);
 					}
 				});
 			}
