@@ -56,6 +56,7 @@
 							id: "config-admin-folders",
 							key: "id",
 							narrow: true,
+							hilight: true,
 							remote: {
 								path : "eventlog/query",
 								paging: { max: 50 },
