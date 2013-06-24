@@ -809,6 +809,8 @@ var mollifyDefaults = {
 		},
 		
 		parseInternalTime : function(time) {
+			if (!time || time == null) return null;
+			
 			var ts = new Date();
 			ts.setYear(time.substring(0,4));
 			ts.setMonth(time.substring(4,6) - 1);

@@ -784,7 +784,17 @@
 			updateSort();
 
 			var $l = $("<tbody></tbody>").appendTo($e);
-			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); });
+			$e.delegate(".mollify-tableselect", "change", function(e) { selectionChangedCb.fire(); return false; });
+			$e.delegate("a.mollify-tableaction", "click", function(e) {
+				var $cell = $(this).parent();
+				var $row = $cell.parent();
+				var colId = $cell[0].colId;
+				var item = $row[0].data;
+				
+				e.stopPropagation();
+				if (o.onRowAction) o.onRowAction(colId, item);
+				return false;
+			});
 			if (o.hilight) {
 				$e.delegate("tr", "click", function(e) {
 					if (e.target && $(e.target).hasClass("mollify-tableselect")) return;
@@ -815,11 +825,11 @@
 					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
 				} else if (col.type == 'action') {
 					var html = col.content || col.title;
-					var $action = $("<a class='mollify-tableaction-"+col.id+"'></a>").html(html).appendTo($cell);
-					$action.click(function(){
+					var $action = $("<a class='mollify-tableaction'></a>").html(html).appendTo($cell);
+					/*$action.click(function(e){
 						//TODO delegate click handler
-						if (o.onRowAction) o.onRowAction(col.id, item);
-					});
+
+					});*/
 				} else if (col.type == "input") {
 					var $s = $('<input type="text"></input>').appendTo($cell).change(function() {
 						var v = $s.val();

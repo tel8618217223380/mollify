@@ -494,6 +494,7 @@
 						$email.val(u.email || "");
 						$permission.select(u.permission_mode.toLowerCase());
 						$authentication.select(u.auth ? u.auth.toLowerCase() : null);
+						$expiration.set(mollify.helpers.parseInternalTime(u.expiration));
 					} else {
 						$permission.select("no");	
 					}
