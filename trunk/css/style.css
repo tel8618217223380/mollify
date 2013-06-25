@@ -1363,7 +1363,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	float: left;
 }
 
-.mollify-configview-table.hilight {
+.table.hilight {
 	cursor: pointer;
 }
 
@@ -1373,6 +1373,11 @@ input.mollify-tableselect-header {
 
 input.mollify-tableselect {
 	margin-top: 0px;
+	cursor: default;
+}
+
+a.mollify-tableaction {
+	cursor: pointer;
 }
 
 .mollify-config-admin-userdetails-section {
