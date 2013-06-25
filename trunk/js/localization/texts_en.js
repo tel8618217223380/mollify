@@ -260,6 +260,8 @@ configAdminUsersFolderDefaultNameTitle: "Default name",
 configAdminUsersGroupNameTitle: "Group name",
 configAdminUserAddFolderTitle: "Add User Folder",
 configAdminUserAddFolderMessage: "Select folder(s) to be added to the user:",
+configAdminUserAddGroupTitle: "Add User Group",
+configAdminUserAddGroupMessage: "Select group(s) to be added to the user:",
 
 configAdminFoldersNavTitle: "Folders",
 configAdminFoldersNameTitle: "Folder name",
