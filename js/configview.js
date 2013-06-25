@@ -450,12 +450,13 @@
 						return;
 					}
 					var username = $name.val();
+					var email = $email.val();
 					var permissionMode = $permission.selected();
 					var expiration = mollify.helpers.formatInternalTime($expiration.get());
 					var auth = $authentication.selected();
 					if (!username || username.length === 0) return;
 					
-					var user = { name: username, permission_mode : permissionMode, expiration: expiration, auth: auth };
+					var user = { name: username, email: email, permission_mode : permissionMode, expiration: expiration, auth: auth };
 					
 					if (u) {	
 						mollify.service.put("configuration/users/"+u.id, user).done(d.close).done(cb);
