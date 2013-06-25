@@ -279,9 +279,34 @@
 				$this->response()->success(TRUE);
 				return;
 			}
-			if (count($this->path) == 4 and $this->path[2] === 'folders') {
-				$folderId = $this->path[3];
-				$this->env->configuration()->removeUserFolder($userId, $folderId);
+			if (count($this->path) >= 3 and $this->path[2] === 'folders') {
+				$ids = array();
+				if (count($this->path) == 4) {
+					$ids[] = $this->path[3];
+				} else {
+					$data = $this->request->data;
+					if (!isset($data['ids'])) throw $this->invalidRequestException();
+					$ids = $data['ids'];
+					if (!$ids or !is_array($ids) or count($ids) == 0) throw $this->invalidRequestException();
+				}
+				foreach($ids as $id)
+					$this->env->configuration()->removeUserFolder($userId, $id);
+					//TODO event
+				$this->response()->success(TRUE);
+				return;
+			}
+			if (count($this->path) >= 3 and $this->path[2] === 'groups') {
+				$ids = array();
+				if (count($this->path) == 4) {
+					$ids[] = $this->path[3];
+				} else {
+					$data = $this->request->data;
+					if (!isset($data['ids'])) throw $this->invalidRequestException();
+					$ids = $data['ids'];
+					if (!$ids or !is_array($ids) or count($ids) == 0) throw $this->invalidRequestException();
+				}
+				$this->env->configuration()->removeUsersGroups($userId, $ids);
+				//TODO event
 				$this->response()->success(TRUE);
 				return;
 			}

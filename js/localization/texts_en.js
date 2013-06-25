@@ -273,5 +273,8 @@ configAdminFolderDialogPathTitle: "Server filesystem path",
 configAdminUsersFolderDefaultName: "{0} (default)",
 configAdminFolderUsersTitle: "Folder Users",
 
+configAdminGroupsDialogAddTitle: "Add Group",
+configAdminGroupsDialogEditTitle: "Edit Group",
+configAdminGroupDialogNameTitle: "Name",
 configAdminGroupsDescriptionTitle: "Description"
 })})();
