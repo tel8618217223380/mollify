@@ -176,6 +176,11 @@
 			$this->db->commit();
 			return TRUE;
 		}
+		
+		public function removeUsersGroups($userId, $groupIds) {
+			$this->db->update("DELETE FROM ".$this->db->table("user_group")." where group_id in (".$this->db->arrayString($groupIds).") and user_id=".$this->db->string($userId, TRUE));
+			return TRUE;
+		}
 
 		public function getGroupUsers($id) {
 			return $this->db->query("SELECT user.id as id, user.name as name, user.permission_mode, user.email as email FROM ".$this->db->table("user")." as user, ".$this->db->table("user_group")." as user_group where user_group.user_id = user.id and user_group.group_id = '".$this->db->string($id)."' ORDER BY user.id ASC")->rows();
