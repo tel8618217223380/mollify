@@ -27,7 +27,7 @@
 				listView = new mollify.view.ConfigListView($c, {
 					actions: [
 						{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddRegistration(updateList); }},
-						{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }},
+						{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { mollify.service.del("registration/list/", { ids: mollify.helpers.extractValue(sel, "id") }).done(updateList); }},
 						{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateList }
 					],
 					table: {

@@ -29,13 +29,27 @@
 		}
 
 		public function processDelete() {
-			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			if ($this->path[0] != 'list') throw $this->invalidRequestException();
 			$this->env->authentication()->assertAdmin();
-			
-			$id = $this->path[1];
-			$db = $this->env->db();
-			$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
-			$this->response()->success(array());
+
+			if (count($this->path) == 1) {
+				$data = $this->request->data;
+				if (!isset($data['ids'])) throw $this->invalidRequestException();
+				$ids = $data['ids'];
+				if (!$ids or !is_array($ids) or count($ids) == 0) throw $this->invalidRequestException();
+				
+				$db = $this->env->db();
+				$result = $db->update("delete from ".$db->table("pending_registrations")." where id in (".$db->arrayString($ids).")");
+				$this->response()->success(array());
+				return;
+			} else if (count($this->path) == 2) {
+				$id = $this->path[1];
+				$db = $this->env->db();
+				$result = $db->update("delete from ".$db->table("pending_registrations")." where id=".$db->string($id, TRUE));
+				$this->response()->success(array());
+				return;
+			}
+			throw $this->invalidRequestException();
 		}
 		
 		public function processPost() {
