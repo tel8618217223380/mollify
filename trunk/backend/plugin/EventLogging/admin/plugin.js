@@ -65,8 +65,7 @@
 							},
 							defaultSort: { id: "time", asc: false },
 							columns: [
-								{ type:"selectrow" },
-								{ id: "icon", title:"", type:"static", content: '<i class="icon-folder-close"></i>' },
+								{ type:"selectrow" },	//TODO icon based on event type
 								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle'), sortable: true },
 								{ id: "type", title: mollify.ui.texts.get('pluginEventLoggingEventTypeTitle'), sortable: true },
 								{ id: "user", title: mollify.ui.texts.get('pluginEventLoggingUserTitle'), sortable: true },
