@@ -876,10 +876,9 @@
 					key: "id",
 					initSize: [600, 400],
 					columns: [
-						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "icon", title:"", valueMapper: function(i, v) { if (i.is_group == 1) return "<i class='icon-user'></i><i class='icon-user'></i>"; return "<i class='icon-user'></i>"; } },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
-						{ id: "is_group", title: mollify.ui.texts.get('configAdminFolderUserTypeTitle') }
+						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') }
 					],
 					list: selectable,
 					onSelect: function(sel, o) {
@@ -900,7 +899,7 @@
 					narrow: true,
 					columns: [
 						{ type:"selectrow" },
-						{ id: "icon", title:"", type:"static", content: '<i class="icon-user"></i>' },
+						{ id: "icon", title:"", valueMapper: function(i, v) { if (i.is_group == 1) return "<i class='icon-user'></i><i class='icon-user'></i>"; return "<i class='icon-user'></i>"; } },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
