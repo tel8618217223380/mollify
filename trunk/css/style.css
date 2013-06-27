@@ -1380,7 +1380,11 @@ a.mollify-tableaction {
 	cursor: pointer;
 }
 
-.mollify-config-admin-userdetails-section {
+.mollify-config-admin-userdetails-section, .mollify-notificator-notificationdetails-section {
 	float: left;
 	width: 50%;
+}
+
+.mollify-notificator-notificationdetails-editmessage {
+	display: inline-block;
 }
