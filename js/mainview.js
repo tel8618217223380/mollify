@@ -132,8 +132,7 @@
 		}
 		
 		this.getSessionActions = function() {
-			var actions = [];			
-			if (mollify.session.admin) actions.push({"title-key" : "mainViewAdministrationTitle", callback: that.openAdminUtil});			
+			var actions = [];		
 			actions.push({"title-key" : "mainViewChangePasswordTitle", callback: that.changePassword});
 			actions.push({"title" : "-"});
 			actions.push({"title-key" : "mainViewLogoutTitle", callback: that.onLogout});
@@ -144,10 +143,6 @@
 			mollify.service.post("session/logout").done(function(s) {
 				mollify.App.setSession(s);
 			});
-		}
-		
-		this.openAdminUtil = function(url) {
-			mollify.ui.window.open(url || 'backend/admin');
 		}
 		
 		this.changePassword = function() {	
