@@ -120,6 +120,7 @@
 					mollify.ui.process($e, ["localize"]);
 					
 					var nd = false;
+					var $title = $e.find(".mollify-notificator-notificationdetails-messagetitle");
 					var $msg = $e.find(".mollify-notificator-notificationdetails-message");
 					var $events = $e.find(".mollify-notificator-notificationdetails-events");
 					var $usersgroups = $e.find(".mollify-notificator-notificationdetails-usersgroups");
@@ -132,6 +133,7 @@
 							$e.removeClass("loading");
 							nd = r;
 							
+							$title.text(nd.message_title);
 							$msg.text(nd.message);
 							eventsView.table.set(nd.events);
 							usersgroupsView.table.set(that._getUsers(nd.recipients));
@@ -160,7 +162,7 @@
 											folder.name = name;
 									folders.push(folder);
 								});
-								mollify.service.put("notificator/list/"+nd.id, {events: sel}).done(update);
+								mollify.service.put("notificator/list/"+nd.id, {events: currentEvents.concat(sel)}).done(update);
 							}
 						});
 					}
@@ -180,7 +182,7 @@
 							],
 							list: selectable,
 							onSelect: function(sel, o) {
-								mollify.service.put("notificator/list/"+nd.id, {recipients: mollify.helpers.extractValue(sel, "id")}).done(update);
+								mollify.service.put("notificator/list/"+nd.id, {recipients: nd.recipients.concat(mollify.helpers.extractValue(sel, "id"))}).done(update);
 							}
 						});
 					}

@@ -1385,6 +1385,11 @@ a.mollify-tableaction {
 	width: 50%;
 }
 
-.mollify-notificator-notificationdetails-editmessage {
-	display: inline-block;
+.mollify-notificator-notificationdetails-message-title, .mollify-notificator-notificationdetails-message-title > *, .mollify-notificator-notificationdetails-messagetitle, .mollify-notificator-notificationdetails-message {
+	float: left;
+}
+
+.mollify-notificator-notificationdetails-messagetitle, .mollify-notificator-notificationdetails-message {
+	width: 95%;
+	font-family: monospace;
 }
