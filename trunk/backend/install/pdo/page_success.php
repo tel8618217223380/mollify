@@ -22,7 +22,7 @@
 		<div class="content">
 			<h2>Mollify is successfully installed</h2>
 			<p>
-				You can now log into Mollify using the admin account created, and finish configuration with the <a href="../admin/">administration utility</a>.
+				You can now log into Mollify using the admin account created.
 			</p>
 			<p>
 				For additional configuration options or instructions, see <a href="http://code.google.com/p/mollify/wiki/Installation" target="_blank">Installation instructions</a>.
