@@ -383,6 +383,11 @@ a.mollify-login-link {
 
 #mollify-mainview-menu {
 	float: left;
+	margin-top: 15px;
+}
+
+.mollify-mainview-menu-item {
+	cursor: pointer;
 }
 
 #mollify-mainview-header-tools {

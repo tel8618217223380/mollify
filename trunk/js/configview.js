@@ -68,6 +68,8 @@
 						});
 					}
 				}
+				
+				that._activateView(that._views[0]);
 			});
 		}
 
