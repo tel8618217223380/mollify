@@ -110,7 +110,7 @@
 
 			var navBarItems = [];
 			$.each(that._adminViews, function(i, v) {
-				navBarItems.push({title:v.title, obj: v, callback:function(){ that._activateView(v); }})
+				navBarItems.push({title:v.title, obj: v, callback:function(){ that._activateView(v, true); }})
 			});
 
 			that._adminNav = h.addNavBar({
@@ -120,7 +120,11 @@
 		}
 
 		this._activateView = function(v, admin) {
-			if (that._activeView && that._activeView.onDeactivate) that._activeView.onDeactivate();
+			if (that._activeView) {
+				if (that._activeView.onDeactivate) that._activeView.onDeactivate();
+				that._adminNav.setActive(false);
+				that._userNav.setActive(false);
+			}
 			if (admin) that._adminNav.setActive(v);
 			else that._userNav.setActive(v);
 

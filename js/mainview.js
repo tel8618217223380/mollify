@@ -7,7 +7,7 @@
 		this._mainFileView = false;
 		this._mainConfigView = false;
 		this._views = [];
-		that._currentView = false;
+		this._currentView = false;
 		
 		this.init = function($c) {
 			that._mainFileView = new mollify.view.MainViewFileView();
@@ -42,15 +42,15 @@
 				menuitems.push({ title: v.title });
 			});
 			
-			if (that._views.length > 0)
-				that.activateView(that._views[0]);
-			
 			var $mb = mollify.dom.template("mollify-tmpl-main-menubar", { items: menuitems }).appendTo($("#mollify-mainview-menu"));
 			var $mbitems = $mb.find(".mollify-mainview-menubar-item");
 			$mbitems.click(function() {
 				var i = $mbitems.index($(this));
 				that.activateView(that._views[i]);
 			});
+			
+			if (that._views.length > 0)
+				that.activateView(that._views[0]);
 		}
 		
 		this.activateView = function(v) {			
@@ -68,6 +68,10 @@
 				mainview: that,
 				fileview: that._mainFileView
 			});
+			var $mnu = $("#mollify-mainview-menu");
+			var $items = $mnu.find(".mollify-mainview-menubar-item").removeClass("active");
+			var i = that._views.indexOf(v);
+			$($items.get(i)).addClass("active");
 		}
 		
 		this.addNavBar = function(nb) {
