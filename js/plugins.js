@@ -1616,13 +1616,13 @@
 						} },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
-					]
-				},
-				onTableRowAction: function(table, id, item) {
-					if (id == "edit") {
-						that.onOpenShares(item);
-					} else if (id == "remove") {
-						that.removeAllItemShares(item).done(updateShares);
+					],
+					onRowAction: function(id, item) {
+						if (id == "edit") {
+							that.onOpenShares(item);
+						} else if (id == "remove") {
+							that.removeAllItemShares(item).done(updateShares);
+						}
 					}
 				}
 			});
