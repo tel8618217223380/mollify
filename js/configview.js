@@ -897,7 +897,9 @@
 				title: mollify.ui.texts.get('configAdminFolderUsersTitle'),
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddUserGroup },
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { }}
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+						mollify.service.post("configuration/folders/"+f.id+"/remove_users/", mollify.helpers.extractValue(sel, "id")).done(updateUsersAndGroups);
+					}}
 				],
 				table: {
 					id: "config-admin-folderusers",
@@ -910,9 +912,9 @@
 						{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
-					onRowAction: function(id, f) {
+					onRowAction: function(id, u) {
 						if (id == "remove") {
-							//TODO mollify.service.del("configuration/users/"+u.id+"/folders/", {id: f.id}).done(updateGroups);
+							mollify.service.post("configuration/folders/"+f.id+"/remove_users/", [u.id]).done(updateUsersAndGroups);
 						}
 					}
 				}
