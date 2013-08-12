@@ -273,15 +273,18 @@
 			}
 			
 			$userId = $this->path[1];
+			// configuration/users/xx
 			if (count($this->path) == 2) {
 				$this->env->configuration()->removeUser($userId);
 				$this->env->events()->onEvent(UserEvent::userRemoved($userId));
 				$this->response()->success(TRUE);
 				return;
 			}
+			// configuration/users/xx/folders
 			if (count($this->path) >= 3 and $this->path[2] === 'folders') {
 				$ids = array();
 				if (count($this->path) == 4) {
+					// configuration/users/xx/folders/xx
 					$ids[] = $this->path[3];
 				} else {
 					$data = $this->request->data;
