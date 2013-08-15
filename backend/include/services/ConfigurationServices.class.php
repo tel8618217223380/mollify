@@ -317,14 +317,19 @@
 		}
 
 		private function processGetUserGroups() {
+			// configuration/groups/
 			if (count($this->path) == 1) {
 				$this->response()->success($this->env->configuration()->getAllUserGroups());
 				return;
 			}
+			
+			// configuration/groups/xx/
 			if (count($this->path) == 2) {
 				$this->response()->success($this->env->configuration()->getUserGroup($this->path[1]));
 				return;
 			}
+			
+			// configuration/groups/xx/users/
 			if (count($this->path) == 3) {
 				if ($this->path[2] != 'users') throw $this->invalidRequestException();
 				$this->response()->success($this->env->configuration()->getGroupUsers($this->path[1]));
