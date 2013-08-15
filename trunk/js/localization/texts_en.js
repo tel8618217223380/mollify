@@ -279,5 +279,11 @@ configAdminFolderUsersTitle: "Folder Users and Groups",
 configAdminGroupsDialogAddTitle: "Add Group",
 configAdminGroupsDialogEditTitle: "Edit Group",
 configAdminGroupDialogNameTitle: "Name",
-configAdminGroupsDescriptionTitle: "Description"
+configAdminGroupsDescriptionTitle: "Description",
+configAdminGroupsUsersTitle: "Group Users",
+configAdminGroupsFoldersTitle: "Group Folders",
+configAdminGroupAddFolderTitle: "Add Group Folder",
+configAdminGroupAddFolderMessage: "Select folder(s) to be added:",
+configAdminGroupAddUserTitle: "Add Group User",
+configAdminGroupAddUserMessage: "Select user(s) to be added:"
 })})();
