@@ -1,3 +1,12 @@
+/**
+ * init.js
+ *
+ * Copyright 2008- Samuli Järvelä
+ * Released under GPL License.
+ *
+ * License: http://www.mollify.org/license.php
+ */
+ 
 var mollifyDefaults = {
 	"template-url": "templates/",
 	"service-path": "backend/",
