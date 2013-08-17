@@ -368,7 +368,7 @@
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
 						{ id: "name", title: mollify.ui.texts.get('configAdminUsersGroupNameTitle') },
-						{ id: "description", title: mollify.ui.texts.get('configAdminGroupsDescriptionTitle') },
+						{ id: "description", title: mollify.ui.texts.get('configAdminGroupsDescriptionTitle') }
 					],
 					list: selectable,
 					onSelect: function(sel, o) {
@@ -662,7 +662,7 @@
 					columns: [
 						{ id: "icon", title:"", type:"static", content: '<i class="icon-folder"></i>' },
 						{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
-						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') },
+						{ id: "name", title: mollify.ui.texts.get('configAdminUsersNameTitle') }
 					],
 					list: selectable,
 					onSelect: function(sel, o) {
@@ -788,7 +788,7 @@
 						return;
 					}
 					var name = $name.val();
-					if (!name || name.length == 0) return;
+					if (!name || name.length === 0) return;
 					var desc = $description.val();
 					
 					var group = { name: name, description : desc };
