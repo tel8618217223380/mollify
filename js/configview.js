@@ -84,17 +84,14 @@
 
 		this._loadAdminPlugins = function(ids) {
 			var df = $.Deferred();
-			if (ids.length === 0) return df.resolve();
-
 			var l = [];
+			l.push(mollify.service.get("configuration/options").done(function(opt) { that._options = opt; }));			
 			for (var i=0,j=ids.length;i<j;i++) {
 				l.push($.getScript("backend/plugin/"+ids[i]+"/admin/plugin.js"));
 			}
 			
 			$.when.apply($, l).done(function() {
 				var o = [];
-				
-				o.push(mollify.service.get("configuration/options").done(function(opt) { that._options = opt; }));
 
 				var addView = function(i, v) {
 					that._adminViews.push(v);
@@ -108,10 +105,6 @@
 				}
 
 				$.when.apply($, o).done(df.resolve);
-//					$.each(that._adminViews, function(i, v) {
-//						if (v.init) v.init(that._options);
-//					})
-//				}).done(df.resolve);
 			});
 			return df;
 		}
