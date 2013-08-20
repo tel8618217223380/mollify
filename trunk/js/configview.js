@@ -107,17 +107,21 @@
 					$.each(p.views, addView);
 				}
 
-				$.when.apply($, o).done(function() {
-					$.each(that._adminViews, function(i, v) {
-						if (v.init) v.init(that._options);
-					})
-				}).done(df.resolve);
+				$.when.apply($, o).done(df.resolve);
+//					$.each(that._adminViews, function(i, v) {
+//						if (v.init) v.init(that._options);
+//					})
+//				}).done(df.resolve);
 			});
 			return df;
 		}
 
 		this._initAdminViews = function(h) {
 			if (!mollify.session.admin || that._adminViews.length === 0) return;
+
+			$.each(that._adminViews, function(i, v) {
+				if (v.init) v.init(that._options);
+			});
 
 			var navBarItems = [];
 			$.each(that._adminViews, function(i, v) {
