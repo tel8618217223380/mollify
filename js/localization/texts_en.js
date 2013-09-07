@@ -275,6 +275,7 @@ configAdminFolderDialogNameTitle: "Folder name",
 configAdminFolderDialogPathTitle: "Server filesystem path",
 configAdminUsersFolderDefaultName: "{0} (default)",
 configAdminFolderUsersTitle: "Folder Users and Groups",
+configAdminFoldersFolderDialogAddFolderDoesNotExist: "Folder does not exist, create folder?",
 
 configAdminGroupsDialogAddTitle: "Add Group",
 configAdminGroupsDialogEditTitle: "Edit Group",
