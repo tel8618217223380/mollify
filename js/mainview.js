@@ -1177,7 +1177,7 @@
 			}).single_double_click(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				t.onItemClick($(this), $(e.toElement), true);
+				t.onItemClick($(this), $(e.toElement || e.target), true);
 				return false;
 			},function() {
 				t.p.onDblClick($(this).tmplItem().data);
