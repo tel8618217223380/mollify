@@ -323,7 +323,7 @@
 			var onAddUserFolders = function() {
 				var currentIds = mollify.helpers.extractValue(folders, "id");
 				var selectable = mollify.helpers.filter(allFolders, function(f) { return currentIds.indexOf(f.id) < 0; });
-				if (selectable.length === 0) return;
+				//if (selectable.length === 0) return;
 
 				mollify.ui.dialogs.select({
 					title: mollify.ui.texts.get('configAdminUserAddFolderTitle'),
@@ -354,7 +354,7 @@
 			var onAddUserGroups = function() {
 				var currentIds = mollify.helpers.extractValue(groups, "id");
 				var selectable = mollify.helpers.filter(allGroups, function(f) { return currentIds.indexOf(f.id) < 0; });
-				if (selectable.length === 0) return;
+				//if (selectable.length === 0) return;
 
 				mollify.ui.dialogs.select({
 					title: mollify.ui.texts.get('configAdminUserAddGroupTitle'),
@@ -649,7 +649,7 @@
 			var onAddGroupUsers = function() {
 				var currentIds = mollify.helpers.extractValue(users, "id");
 				var selectable = mollify.helpers.filter(allUsers, function(f) { return currentIds.indexOf(f.id) < 0; });
-				if (selectable.length === 0) return;
+				//if (selectable.length === 0) return;
 
 				mollify.ui.dialogs.select({
 					title: mollify.ui.texts.get('configAdminGroupAddUserTitle'),
@@ -670,7 +670,7 @@
 			var onAddGroupFolders = function() {
 				var currentIds = mollify.helpers.extractValue(folders, "id");
 				var selectable = mollify.helpers.filter(allFolders, function(f) { return currentIds.indexOf(f.id) < 0; });
-				if (selectable.length === 0) return;
+				//if (selectable.length === 0) return;
 
 				mollify.ui.dialogs.select({
 					title: mollify.ui.texts.get('configAdminGroupAddFolderTitle'),
@@ -904,7 +904,7 @@
 			var onAddUserGroup = function() {
 				var currentIds = mollify.helpers.extractValue(usersAndGroups, "id");
 				var selectable = mollify.helpers.filter(allUsersAndGroups, function(ug) { return currentIds.indexOf(ug.id) < 0; });
-				if (selectable.length === 0) return;
+				//if (selectable.length === 0) return;
 
 				mollify.ui.dialogs.select({
 					title: mollify.ui.texts.get('configAdminFolderAddUserTitle'),
@@ -988,7 +988,7 @@
 						if (e.code == 105) {
 							this.handled = true;
 							
-							mollify.ui.dialogs.confirmation({title:mollify.ui.texts.get('configAdminFoldersFolderDialogAddTitle'), message: "TODO Does not exist, create folder?", callback: function() {
+							mollify.ui.dialogs.confirmation({title:mollify.ui.texts.get('configAdminFoldersFolderDialogAddTitle'), message: mollify.ui.texts.get('configAdminFoldersFolderDialogAddFolderDoesNotExist'), callback: function() {
 								folder.create = true;
 								if (!f)
 									mollify.service.post("configuration/folders", folder).done(d.close).done(cb);
