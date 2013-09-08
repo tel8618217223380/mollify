@@ -4,7 +4,7 @@
 
 To correct localization errors, do following steps:
 
-1) Open your copy of the localization file, Mollify localization files are located at "client/localization/texts_xx.js"
+1) Open your copy of the localization file, Mollify localization files are located at "js/localization/texts_xx.js"
 
 2) Find the incorrect value, and correct it. Save the file
 
@@ -21,24 +21,12 @@ If your language is not found, see next chapter on how to create a new localizat
 
 To localize into new language, do following steps:
 
-1) Copy English version "texts_en.js" into a new file with your locale identifier (from installation package, or from [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/public/localization/texts_en.js version control])
+1) Copy English version "texts_en.js" into a new file with your locale identifier (from installation package, or from [https://code.google.com/p/mollify/source/browse/trunk/js/localization/texts_en.js version control])
 
 2) Edit the file, and change the locale identifier in the first line
 
 3) Localize all the values in the file
 
-4) Edit the host page, and change the localization file import to match your new language
+4) Edit the index.html page, and change the localization file import to match your new language
 
 5) Send the localization file to me, and I will include it in the next version
-
-= How to upgrade old localizations into new version =
-
-All the texts in versions prior to 1.7.5 were in a slightly different format.
-
-If these old localizations needs to be updated, follow these steps:
-
-1) Create new localization file according to previous chapter
-
-2) Find old version from [http://code.google.com/p/mollify/source/browse/trunk/mollify/src/org/sjarvela/mollify/client/localization/]
-
-3) Copy values from old file (NOTE! be careful as new file has a different format, each title must be followed by ":", value must be surrounded by parenthesis "" and lines must be ended with comma)
