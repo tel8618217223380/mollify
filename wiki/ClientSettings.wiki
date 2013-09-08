@@ -7,6 +7,7 @@ Following settings are available in client (and their default values), used in i
 	$(document).ready(function() {
 		mollify.App.init({
 			"service-path": "backend/",	// service path
+			"limited-http-methods" : false,	// limited HTTP methods
 			"default-view-mode": "list",	// default view mode
 			"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
 			"list-view-columns": {
