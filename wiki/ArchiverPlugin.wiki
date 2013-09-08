@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Archiver plugin is built-in plugin that provides possibility to extract zip archives (later on also tar archives as well as other operations like creating archives).
+Archiver plugin is built-in plugin that provides possibility to extract zip archives (later on also tar archives etc) and compress files.
 
 = Configuration =
 
@@ -10,6 +10,13 @@ Archiver plugin does not have any parameters. Configure plugin by adding followi
 
 {{{
 	$PLUGINS = array(
-		"Archiver" => array()
+		"Archiver" => array(
+			"compressor" => "[COMPRESSOR]"
+		)
 	);
 }}}
+
+Value "COMPRESSOR" is the method used for compressing files, options are:
+  * `ziparchive` Default PHP zip library (this is used if setting is not defined)
+  * `native` Uses OS native tools to create the package (not available on all platforms)
+  * `raw` PHP implementation of zip packaging
