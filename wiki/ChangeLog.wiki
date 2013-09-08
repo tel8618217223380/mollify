@@ -1,9 +1,13 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.0.1 ===
+Released 2013/9/7
+  * Fixed issue 458
+
 === Version 2.0 ===
 Released 2013/9/7
-  * Rewritten UI
+  * Rewritten UI, now template based and fully customizable, built on Twitter Bootstrap framework
 
 === Version 1.8.9.3 ===
 Released 2012/11/24
