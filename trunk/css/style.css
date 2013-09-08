@@ -697,6 +697,11 @@ a.mollify-login-link {
 	border: none;
 }
 
+.mollify-folderview-title.root-list {
+	padding: 8px 0 8px 0;
+	display: block;
+}
+
 #mollify-folder-name > h2, #mollify-fileview-folder-actions {
 	display: inline-block;
 	vertical-align: middle;

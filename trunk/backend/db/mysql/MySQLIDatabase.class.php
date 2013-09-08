@@ -44,7 +44,10 @@
 				$socket = NULL;
 			}
 			
-			$db = new MySQLIDatabase($host, $conf["user"], $conf["password"], $database, $tablePrefix, $port, $socket);
+			if (isset($conf["engine"])) $conf["engine"];
+			else $engine = NULL;
+			
+			$db = new MySQLIDatabase($host, $conf["user"], $conf["password"], $database, $tablePrefix, $port, $socket, $engine);
 			$db->connect();
 			if (isset($conf["charset"])) $db->setCharset($conf["charset"]);
 			return $db;
@@ -175,7 +178,7 @@
 			if (!$sql) throw new ServiceException("INVALID_REQUEST", "Error reading sql file (".$file.")");
 
 			$sql = str_replace('{TABLE_PREFIX}', (isset($this->tablePrefix) and $this->tablePrefix != '') ? $this->tablePrefix : '', $sql);
-			$sql = str_replace('{ENGINE}', (isset($this->engine) and $this->engine != '') ? $this->engine : '', $sql);
+			$sql = str_replace('{ENGINE}', (isset($this->engine) and $this->engine != '') ? $this->engine : 'innodb', $sql);
 			$this->queries($sql);
 		}
 		
