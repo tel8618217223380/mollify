@@ -4,33 +4,29 @@ Following settings are available in client (and their default values), used in i
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",	// service path
-		"expose-file-links": false,	// expose file links
-		"show-login": true,		// show default login page
-		"default-view-mode": "list",	// default view mode
-		"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
-		"list-view-columns": {
-			...			// file list column setup
-		},
-		"plugins": [
-			...			// client plugins
-		]
+	$(document).ready(function() {
+		mollify.App.init({
+			"service-path": "backend/",	// service path
+			"default-view-mode": "list",	// default view mode
+			"icon-view-thumbnails": false,	// show icon thumbnails in icon view mode
+			"list-view-columns": {
+				...			// file list column setup
+			}},
+			[
+				...			// client plugins
+			]
+		);
 	});
 </script>
 }}}
 
 == Service path (`service-path`) ==
 
-Location of the backend script relative to the host file. See [http://code.google.com/p/mollify/wiki/Installation#4.1._Relocating_host_page_or_backend_interface_files installation] for more info.
+Location of the backend script relative to the index.html file.
 
 == Expose file links (`expose-file-links`) ==
 
 Expose file links creates invisible file download links into the page, which makes it possible to use download managers (like [http://www.downthemall.net/ DownThemAll!] for Firefox) to download many files simultaneously as well as pause or resume downloads.
-
-== Show default login page (`show-login`) ==
-
-To use custom login page, the default login page can be disabled with this setting.
 
 == Default view mode (`default-view-mode`) ==
 
@@ -46,7 +42,7 @@ The setting accepts following format:
 
 {{{
 <script type="text/javascript">
-	mollify.init({
+	mollify.App.init({
 		"list-view-columns": {
 			"column-1-id": { column-1-settings: "" },
 			"column-2-id": { column-2-settings: "" },
@@ -76,7 +72,7 @@ Example configuration (the default):
 
 {{{
 <script type="text/javascript">
-	mollify.init({
+	mollify.App.init({
 		"list-view-columns": {
 			"name": {title:"fileListColumnTitleName"},
 			"type": {title:"fileListColumnTitleType"},
