@@ -36,7 +36,7 @@ Change following line in the host page according to your language:
 {{{
 <head>
     ...
-    <script type="text/javascript" language="javascript" src="client/localization/texts_en.js"></script>
+    <script type="text/javascript" language="javascript" src="js/localization/texts_en.js"></script>
     ...
 </head>
 }}}
@@ -46,11 +46,3 @@ For example, change script into "`texts_fr.js`" for French. See client folder "l
 === How can I translate Mollify into new language, or make corrections to existing translations? ===
 
 See [HowToLocalize]
-
-=== What are those cache files in installation package? ===
-
-Although there are lots of files having "`cache`" in their name in the client folder, it doesn't mean they are result of some caching mechanism and therefore to be removed. On the contrary, they are the most important files in the package, the name simply indicates that they _can_ be cached by the web server if required.
-
-These files represent the actual application, and each of these `*.cache` files are compiled to be optimal in certain environment, for example specific browser and language. There are lots of these files, but the entry point javascript will load only the one optimal for the current browser, language etc.
-
-This is all taken care of the GWT compiler, more information how it works can be found from the GWT Developer Guide: http://code.google.com/webtoolkit/doc/latest/DevGuideCompilingAndDebugging.html (especially chapters "Understanding the GWT Compiler", "Application Files" and "Perfect Caching")
