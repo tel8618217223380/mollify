@@ -18,10 +18,10 @@ And following into client settings:
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
-		"plugins": [
-			new CommentPlugin()
+	mollify.App.init({
+		...
+		}, [
+			new mollify.plugin.CommentPlugin()
 		]
 	});
 }}}
@@ -34,16 +34,15 @@ Comments plugin provides comments count column with column id `comment-count`. F
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
+	mollify.App.init({
+		...
 		"list-view-columns": {
 			"name": {},
 			"comment-count": {},
 			"type": {},
 			"size": {}
-		}
-		"plugins": [
-			new CommentPlugin()
+		}, [
+			new mollify.plugin.CommentPlugin()
 		]
 	});
 }}}
