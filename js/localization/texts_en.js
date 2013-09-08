@@ -225,6 +225,7 @@ pluginItemCollectionsEditDialogTitle: "Edit Collection: {0}",
 pluginItemCollectionsEditDialogRemove: "Remove",
 pluginItemCollectionsNavRemove: "Remove...",
 pluginItemCollectionsNavShare: "Share...",
+pluginItemCollectionsNavEdit: "Edit...",
 
 configviewMenuTitle: "Configuration",
 configViewUserNavTitle: "User",
