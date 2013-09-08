@@ -6,12 +6,17 @@ Before installing Mollify, create configuration.php as in following example:
 
 {{{
 	<?php
-		$CONFIGURATION_TYPE = 'sqlite';
-		$DB_FILE = 'db.file';
+		$CONFIGURATION = array(
+			"db" => array(
+				"type" => "sqlite",
+				"file" => "db.file",
+			),
+			...
+		);
 	?>
 }}}
 
-Value $DB_FILE defines the location of the SQLite database file. Using absolute path is recommended.
+Value "file" defines the location of the SQLite database file. Using absolute path is recommended.
 
 = 2. Installation =
 
