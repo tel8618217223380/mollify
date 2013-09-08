@@ -3,7 +3,7 @@
 Following settings are available in backend (and their default values):
 
 {{{
-$SETTINGS = array(
+$CONFIGURATION = array(
 	"debug" => FALSE,						// debug mode
 	"debug_log" => NULL,
 	"timezone" => NULL,						// server timezone
@@ -14,8 +14,6 @@ $SETTINGS = array(
 	"enable_limited_http_methods" => FALSE,				// limited HTTP methods
 	"support_output_buffer" => FALSE,				// support for output buffer
 	"mime_types" => array(),					// MIME types
-	"enable_file_upload" => TRUE,					// enable file upload
-	"enable_file_upload_progress" => FALSE,				// enable file upload progress
 	"enable_folder_actions" => TRUE,				// enable folder actions
 	"enable_change_password" => TRUE,				// enable change password
 	"enable_descriptions" => FALSE,					// enable descriptions
@@ -69,16 +67,6 @@ Mime types are defined by the file extension, for example:
 		"mime_types" => array("avi" => "video/divx", "wav" => "audio/x-wav")
 	);
 }}}
-
-== Enable file upload (`enable_file_upload`) ==
-
-By default, file uploads are enabled, but setting this to FALSE you can disable file uploads.
-
-== Enable file upload progress (`enable_file_upload_progress`) ==
-
-Basic HTTP file uploader can support file upload progress, if server has installed APC (Alternative PHP Cache), see [HowToEnableUploadProgressDisplay wiki page] for more information. By default, file upload progress is disabled.
-
-*Note* Only for basic uploader
 
 == Enable folder actions (`enable_folder_actions`) ==
 
