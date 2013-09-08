@@ -25,10 +25,10 @@ And following into client settings:
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
-		"plugins": [
-			new SharePlugin()
+	mollify.App.init({
+		...
+		},[
+			new mollify.plugin.SharePlugin()
 		]
 	});
 }}}
@@ -43,7 +43,7 @@ When share plugin has been registered in both, client and server, there will be 
 
 By default, folder link will open basic HTML file uploader. With setting "uploader" the uploader can be changed.
 
-Plupload plugin (since version 1.0.6) supports public uploader. Configure it with following setting:
+In version 1.8, Plupload plugin (since version 1.0.6) supports public uploader. Configure it with following setting:
 
 {{{
 	$PLUGINS = array(
@@ -51,14 +51,4 @@ Plupload plugin (since version 1.0.6) supports public uploader. Configure it wit
 			"uploader" => "plugin/Plupload/public"
 		)
 	);
-}}}
-
-
-= Enabling Clipboard =
-
-In your mollify page, add a link to the script and initialize it using the following to allow copy on click functionality:
-
-{{{
-  <script type="text/javascript" language="javascript" src="client/include/ZeroClipboard.js"></script>
-  <script> ZeroClipboard.setMoviePath('client/include/ZeroClipboard.swf'); </script>
 }}}
