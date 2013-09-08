@@ -18,10 +18,10 @@ And following into client settings:
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
-		"plugins": [
-			new ItemDetailsPlugin({
+	mollify.App.init({
+		...
+		}, [
+			new mollify.plugin.ItemDetailsPlugin({
 				...
 			},
 			[...]
@@ -37,7 +37,7 @@ For configuration, see below.
 Details shown for files or folders can be configured by the type, with following format:
 
 {{{
-	new ItemDetailsPlugin({
+	new mollify.plugin.ItemDetailsPlugin({
 		[TYPE] : {
 			[DATA_KEY] : [CONFIGURATION],
 			...
@@ -70,9 +70,9 @@ Configuration can override following:
 For example:
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
-		"plugins": [
+	mollify.App.init({
+		...
+		}, [
 			new ItemDetailsPlugin({
 				"pdf": {
 					"size" : {}
