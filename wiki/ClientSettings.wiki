@@ -25,10 +25,6 @@ Following settings are available in client (and their default values), used in i
 
 Location of the backend script relative to the index.html file.
 
-== Expose file links (`expose-file-links`) ==
-
-Expose file links creates invisible file download links into the page, which makes it possible to use download managers (like [http://www.downthemall.net/ DownThemAll!] for Firefox) to download many files simultaneously as well as pause or resume downloads.
-
 == Default view mode (`default-view-mode`) ==
 
 View mode selected when Mollify is launched, options are "`list`" (default), "`small-icon`" and "`large-icon`".
