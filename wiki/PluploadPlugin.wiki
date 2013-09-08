@@ -1,6 +1,9 @@
 #summary Plupload uploader plugin
 
 = Introduction =
+
+*NOTE! Not available in version 2.0, which has integrated HTML5 uploader with similar features.*
+
 For licensing issues, Plupload plugin is released as a separate plugin. It can be downloaded from [http://code.google.com/p/mollify/downloads/list]
 
 = License =
