@@ -34,49 +34,24 @@
 
 = 4. Modifying Installation =
 
-== 4.1. Relocating host page or backend interface files ==
-
 	Host page can be located anywhere, the only thing that matters is that backend interface files (`*`.php) are located under the same directory or in its subdirectories.
 
-	If you wish to locate backend interface files (`*`.php) into a subdirectory, you must define this location in the host html file, with following format:
+	If you wish to locate backend interface files (`*`.php) into a different location, you must define this location in the index html file, with following format:
 
 {{{
 	<html>
 		<head>
 			...
-			<script type="text/javascript" language="javascript" src="client/init.js"></script>
 			<script type="text/javascript">
-				mollify.init({
-					"service-path": "[RELATIVE_PATH]",
-				});
+				$(document).ready(function() {
+					mollify.App.init({
+						"service-path": "[RELATIVE_PATH]",
+						...
+					});
 			</script>
 		</head>
 		...
 	</html>
 }}}
 
-	Replace `[RELATIVE_PATH]` with path to the backend interface files, relative to the host file. Note that path can only descend, you cannot go upwards in the folder hierarchy, and thus all leading dots and slashes are removed ("." and "/").
-
-	For example,
-	if you place host file in `http://your_host_name/mollify.html` and the backend interface files into `http://your_host_name/mollify/scripts/`, the setting should be as follows:
-
-{{{
-		<script type="text/javascript">
-			mollify.init({
-				"service-path": "mollify/scripts",
-			});
-		</script>
-}}}
-
-== 4.2. Relocating client application files ==
-
-	Client application files ("/mollify/client") can be located anywhere, only the javascript and theme css references in the host page
-	must be updated to match the new location. While the location and the name of the client folder can be changed,
-	do not alter its contents.
-
-== 4.3. Customizing Mollify host page, or integrating Mollify into existing web page ==
-
-	Host page structure can be freely modified, as long as following rules are met:
-	  * Page must declare charset as UTF-8 with following: `<meta http-equiv="content-type" content="text/html; charset=UTF-8">`
-	  * Javascript file "org.sjarvela.Mollify.nocache.js" must be linked
-	  * In the page, there must be a div with id "mollify". Client application is injected inside this element.
+	Replace `[RELATIVE_PATH]` with path to the backend interface files, relative to the index html file.
