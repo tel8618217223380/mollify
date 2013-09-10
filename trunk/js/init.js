@@ -115,6 +115,24 @@ var mollifyDefaults = {
 		return false;
 	}
 	
+	/* REQUEST */
+	
+	mollify.request = {
+		getParam: function(name) {
+			if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+				return decodeURIComponent(name[1]);
+		},
+		getParams: function() {
+			var params = {};
+			$.each(location.search.substring(1).split("&"), function(i, p) {
+				var pp = p.split("=");
+				if (!pp || pp.length < 2) return;
+				params[decodeURIComponent(pp[0])] = decodeURIComponent(pp[1]);
+			});
+			return params;
+		}
+	}
+	
 	/* EVENTS */
 	var et = mollify.events;
 	et._handlers = [];

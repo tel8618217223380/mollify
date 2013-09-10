@@ -427,11 +427,24 @@
 			});
 			
 			if (mollify.filesystem.roots.length === 0) that.showNoRoots();
-			else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
-			else that.changeToFolder(null);
+			else {
+				var params = mollify.request.getParams();
+				if (params.id) {
+					alert("id");
+				} else if (params.path) {
+					alert("path");
+				}
+				that._openInitialFolder();
+			}
 			
 			that.onResize();
 		}
+		
+		this._openInitialFolder = function() {
+			if (mollify.filesystem.roots.length === 0) that.showNoRoots();
+			else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
+			else that.changeToFolder(null);
+		};
 		
 		this.onDeactivate = function() {
 		};
