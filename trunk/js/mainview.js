@@ -591,6 +591,7 @@
 		};
 		
 		this._updateFolder = function(r) {
+			that._currentFolder = r.folder;
 			that._currentFolderInfo = r;
 			that.hideProgress();
 			that.folder(r);

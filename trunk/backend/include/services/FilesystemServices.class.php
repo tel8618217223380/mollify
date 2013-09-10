@@ -291,6 +291,7 @@
 				if ($i->isFile()) $files[] = $i->data();
 				else $folders[] = $i->data();
 			}
+			$result["folder"] = $item->data();
 			$result["files"] = $files;
 			$result["folders"] = $folders;
 			$result["permission"] = $this->env->filesystem()->permission($item);
@@ -428,11 +429,18 @@
 			$i = 0;
 			$current = NULL;
 			foreach($parts as $part) {
-				if ($i == 0) {
-					//$current = find root by name of $part
-				} else {
-					//$current = find folder by of $part from children of $current
+				$candidates = NULL;
+				if ($i == 0) $candidates = $this->env->filesystem()->getRootFolders();
+				else $candidates = $current->items();
+				$current = NULL;
+				
+				foreach($candidates as $c) {
+					if (strcmp($part, $c->name()) === 0) {
+						$current = $c;
+						break;
+					}
 				}
+
 				if ($current == NULL) {
 					// not found
 					$this->response()->success(FALSE);
@@ -440,7 +448,8 @@
 				}
 				$i++;
 			}
-			$this->response()->success(array());	//info from $current
+			$result = $this->getFolderInfo($current, TRUE, $data["data"]);
+			$this->response()->success($result);
 		}
 		
 		private function processGetUpload() {
