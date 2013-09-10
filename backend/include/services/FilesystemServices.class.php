@@ -21,7 +21,7 @@
 				$this->processGetUpload();
 				return;
 			}
-			
+						
 			if ($this->path[0] === 'zip' and count($this->path) == 2) {		
 				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				$id = $this->path[1];
@@ -51,6 +51,10 @@
 		}
 		
 		public function processPost() {
+			if ($this->path[0] === 'find') {
+				$this->processFind();
+				return;
+			}
 			if ($this->path[0] === 'items') {
 				$this->processMultiItemAction();
 				return;
@@ -411,6 +415,32 @@
 					throw $this->invalidRequestException();
 			}
 			$this->response()->success(TRUE);
+		}
+		
+		private function processFind() {
+			$data = $this->request->data;
+			if (!isset($data) || !isset($data["folder"])) throw $this->invalidRequestException();
+			
+			$folderData = $data["folder"];
+			if (!isset($folderData["path"])) throw $this->invalidRequestException();
+			$parts = explode("/", $folderData["path"]);
+			
+			$i = 0;
+			$current = NULL;
+			foreach($parts as $part) {
+				if ($i == 0) {
+					//$current = find root by name of $part
+				} else {
+					//$current = find folder by of $part from children of $current
+				}
+				if ($current == NULL) {
+					// not found
+					$this->response()->success(FALSE);
+					return;
+				}
+				$i++;
+			}
+			$this->response()->success(array());	//info from $current
 		}
 		
 		private function processGetUpload() {

@@ -253,7 +253,11 @@ var mollifyDefaults = {
 	mfs.folderInfo = function(f, hierarchy, data) {
 		return mollify.service.post("filesystem/"+f.id+"/info/" + (hierarchy ? "?h=1" : ""), { data : data });
 	};
-	
+
+	mfs.findFolder = function(d, data) {
+		return mollify.service.post("filesystem/find/", { folder: d, data : data });
+	};
+		
 	mfs.folders = function(parent) {
 		if (parent == null) {
 			var df = $.Deferred();

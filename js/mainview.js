@@ -430,11 +430,18 @@
 			else {
 				var params = mollify.request.getParams();
 				if (params.id) {
-					alert("id");
+					mollify.filesystem.folderInfo({id: params.id}, that.getDataRequest()).done(that._updateFolder).fail(function() {
+						//this.handled = true;	//TODO show better error
+						that.hideProgress();
+						that._openInitialFolder();
+					});
 				} else if (params.path) {
-					alert("path");
-				}
-				that._openInitialFolder();
+					mollify.filesystem.findFolder({path: params.path}, that.getDataRequest()).done(that._updateFolder).fail(function() {
+						//this.handled = true;	//TODO show better error
+						that.hideProgress();
+						that._openInitialFolder();
+					});
+				} else that._openInitialFolder();
 			}
 			
 			that.onResize();
@@ -487,8 +494,6 @@
 				mollify.dom.template("mollify-tmpl-main-searchresults").appendTo($h);
 				$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+r.count]));
 				$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [s]));
-				
-				//mollify.ui.process($h, ['localize']);
 				
 				var items = [];
 				for (var id in r.matches) {
@@ -580,14 +585,16 @@
 				return;
 			}
 			
-			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(function(r) {
-				that._currentFolderInfo = r;
-				that.hideProgress();
-				that.folder(r);
-				that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
-			}).fail(function() {
+			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(that._updateFolder).fail(function() {
 				that.hideProgress();
 			});
+		};
+		
+		this._updateFolder = function(r) {
+			that._currentFolderInfo = r;
+			that.hideProgress();
+			that.folder(r);
+			that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
 		};
 		
 		this._canWrite = function() {
