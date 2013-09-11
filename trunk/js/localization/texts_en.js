@@ -59,6 +59,7 @@ mainViewRootsTitle: "Published folders",
 mainviewCreateFolderTitle : "Create new folder:",
 mainviewCreateFolderName : "Folder name",
 mainviewDescriptionHint: "Enter description here",
+mainviewFolderNotFound: "Folder \"{0}\" was not found",
 
 mainviewChangePasswordTitle: "Change password",
 mainviewChangePasswordOld: "Old password",
