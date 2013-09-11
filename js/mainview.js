@@ -436,8 +436,11 @@
 						that._openInitialFolder();
 					});
 				} else if (params.path) {
-					mollify.filesystem.findFolder({path: params.path}, that.getDataRequest()).done(that._updateFolder).fail(function() {
-						//this.handled = true;	//TODO show better error
+					mollify.filesystem.findFolder({path: params.path}, that.getDataRequest()).done(that._updateFolder).fail(function(e) {
+						if (e.code == 203) {
+							mollify.ui.dialogs.error({ message: mollify.ui.texts.get('mainviewFolderNotFound', params.path) });
+							this.handled = true;
+						}
 						that.hideProgress();
 						that._openInitialFolder();
 					});

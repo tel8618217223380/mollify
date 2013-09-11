@@ -441,11 +441,8 @@
 					}
 				}
 
-				if ($current == NULL) {
-					// not found
-					$this->response()->success(FALSE);
-					return;
-				}
+				if ($current == NULL)
+					throw new ServiceException("DIR_DOES_NOT_EXIST");
 				$i++;
 			}
 			$result = $this->getFolderInfo($current, TRUE, $data["data"]);
