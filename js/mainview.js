@@ -476,9 +476,8 @@
 			$("#mollify-fileview-search > button").click(onSearch);
 		}
 				
-		this.getDataRequest = function(folder) {
-			if (!folder) return null;
-			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest(folder) : {});
+		this.getDataRequest = function() {
+			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest() : {});
 		}
 		
 		this.onEvent = function(e) {
@@ -588,7 +587,7 @@
 				return;
 			}
 			
-			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest(that._currentFolder)).done(that._updateFolder).fail(function() {
+			mollify.filesystem.folderInfo(that._currentFolder, true, that.getDataRequest()).done(that._updateFolder).fail(function() {
 				that.hideProgress();
 			});
 		};
@@ -1152,7 +1151,7 @@
 			$("#mollify-filelist-col-header-"+t.sortCol.id).addClass("sort-" + (t.sortOrderAsc ? "asc" : "desc"));
 		};
 		
-		this.getDataRequest = function(item) {
+		this.getDataRequest = function() {
 			var rq = {};
 			for (var i=0, j=t.cols.length; i<j; i++) {
 				var c = t.cols[i];
