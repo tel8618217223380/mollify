@@ -642,10 +642,9 @@
 			}).bind("shown", function(e) {
 				$tip = $el;
 				mollify.ui.activePopup(api);
-				/*$tip.click(function(e) {
-					e.preventDefault();
-					return false;
-				});*/
+				$tip.click(function(e) {
+					e.stopPropagation();
+				});
 				if (o.title)
 					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
 				mollify.ui.handlers.localize($tip);
