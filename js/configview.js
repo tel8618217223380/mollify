@@ -130,7 +130,7 @@
 		this._activateView = function(v, admin) {
 			if (that._activeView) {
 				if (that._activeView.onDeactivate) that._activeView.onDeactivate();
-				that._adminNav.setActive(false);
+				if (that._adminNav) that._adminNav.setActive(false);
 				that._userNav.setActive(false);
 			}
 			if (admin) that._adminNav.setActive(v);
