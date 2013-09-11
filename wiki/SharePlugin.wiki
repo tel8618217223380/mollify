@@ -39,6 +39,27 @@ And following into client settings:
 
 When share plugin has been registered in both, client and server, there will be a new option in file/folder popup "Share". This will open a list for all shares made for the file or folder, where you can also get the link for the share.
 
+= File list columns =
+
+Share plugin provides share count column with column id `share-info`. For example:
+
+{{{
+<script type="text/javascript">
+	mollify.App.init({
+		...
+		"list-view-columns": {
+			"name": {},
+			"type": {},
+			"size": {},
+			"share-info": {},
+		}, [
+			new mollify.plugin.CommentPlugin()
+		]
+	});
+}}}
+
+Column will show how many shares current user has, or if someone else has shared the item. Clicking the icon also opens the share editor.
+
 = Uploader setting =
 
 By default, folder link will open basic HTML file uploader. With setting "uploader" the uploader can be changed.
