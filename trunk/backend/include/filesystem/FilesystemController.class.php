@@ -228,7 +228,8 @@
 				$folderDef = $this->folderCache[$filesystemId];
 			} else {
 				$folderDef = $this->env->configuration()->getFolder($filesystemId);
-				if (!$folderDef or !$this->isFolderValid($folderDef)) throw new ServiceException("UNAUTHORIZED");
+				if (!$folderDef) throw new ServiceException("REQUEST_FAILED");
+				if (!$this->isFolderValid($folderDef)) throw new ServiceException("INSUFFICIENT_RIGHTS");
 				
 				$this->folderCache[$filesystemId] = $folderDef;
 			}
