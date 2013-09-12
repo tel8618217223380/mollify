@@ -22,12 +22,12 @@
 				return;
 			}
 						
-			if ($this->path[0] === 'zip' and count($this->path) == 2) {		
+			/*if ($this->path[0] === 'zip' and count($this->path) == 2) {		
 				$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 				$id = $this->path[1];
 				$this->env->filesystem()->downloadStoredZip($id, $mobile);
 				return;
-			}
+			}*/
 
 			$item = $this->item($this->path[0]);
 			if ($item->isFile())
@@ -159,10 +159,10 @@
 					
 					$this->env->filesystem()->view($item);
 					return;
-				case 'zip':
+				/*case 'zip':
 					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 					$this->env->filesystem()->downloadAsZip($item, $mobile);
-					return;
+					return;*/
 				case 'view':
 					$this->env->filesystem()->view($item);
 					die();
@@ -243,10 +243,10 @@
 			if (count($this->path) != 2) throw invalidRequestException();
 			
 			switch (strtolower($this->path[1])) {
-				case 'zip':
+				/*case 'zip':
 					$mobile = ($this->env->request()->hasParam("m") and strcmp($this->env->request()->param("m"), "1") == 0);
 					$this->env->filesystem()->downloadAsZip($item, $mobile);
-					return;
+					return;*/
 				case 'info':
 					$includeHierarchy = ($this->request->hasParam("h") and strcmp($this->request->param("h"), "1") == 0);
 					$this->response()->success($this->getFolderInfo($item, $includeHierarchy));
