@@ -675,7 +675,8 @@
 			$zip = $this->createZip($items);
 			$name = "items.zip";
 			if (!is_array($items)) $name = $items->name().".zip";
-			$this->env->response()->download($name, "zip", $mobile, $zip->stream());	
+			$this->env->response()->download($name, "zip", $mobile, $zip->stream());
+			unlink($zip->filename());
 		}
 		
 		public function storeZip($items) {
@@ -698,6 +699,7 @@
 			if (!$handle)
 				throw new ServiceException("REQUEST_FAILED", "Could not open zip for reading: ".$this->name);
 			$this->env->response()->download("items.zip", "zip", $mobile, $handle);
+			unlink($filename);
 		}
 		
 		private function createZip($items) {
