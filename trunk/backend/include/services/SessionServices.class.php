@@ -32,7 +32,7 @@
 			if ($this->path[0] === 'logout') {
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->end();
-				$this->response()->success(TRUE);
+				$this->response()->success($this->getSessionInfo(self::$PROTOCOL_VERSION));
 				return;
 			}
 			$this->env->authentication()->check();
@@ -44,7 +44,7 @@
 				$this->env->authentication()->logout();
 				$this->env->events()->onEvent(SessionEvent::logout($this->env->request()->ip()));
 				$this->env->session()->end();
-				$this->response()->success(TRUE);
+				$this->response()->success($this->getSessionInfo(self::$PROTOCOL_VERSION));
 				return;
 			}
 			
