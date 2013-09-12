@@ -61,6 +61,10 @@
 			});	
 		};
 		
+		this._getUploaderSettings = function() {
+			return mollify.settings["html5-uploader"] || {};	
+		};
+		
 		this._initDropZoneEffects = function($e) {
 			$e.bind('dragover', function (e) {
 				e.stopPropagation();
@@ -90,7 +94,7 @@
 			mollify.ui.handlers.localize($e);
 			var $dropZone = $("#mollify-uploader-widget");
 			
-			var $input = $d.find("input").fileupload({
+			var $input = $d.find("input").fileupload($.extend({
 				url: mollify.service.url("filesystem/"+folder.id+'/files/'),
 				dataType: 'json',
 				dropZone: $dropZone,
@@ -121,7 +125,7 @@
 				done: function(e, data) {
 					if (l.finished) l.finished();
 				}
-			});
+			}, t._getUploaderSettings()));
 			
 			t._initDropZoneEffects($dropZone);
 		};
@@ -141,7 +145,7 @@
 				var $p = h.container;
 				var $container = $('<div style="width: 0px; height: 0px"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
-				t.$mainViewInput = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload({
+				t.$mainViewInput = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
 					url: '',
 					dataType: 'json',
 					dropZone: h.dropElement,
@@ -161,7 +165,7 @@
 					done: function(e, data) {
 						if (h.finished) h.finished();
 					}
-				}).fileupload('disable');
+				}, t._getUploaderSettings())).fileupload('disable');
 				t._initDropZoneEffects(h.dropElement);
 			},
 			setMainViewUploadFolder : function(f) {
