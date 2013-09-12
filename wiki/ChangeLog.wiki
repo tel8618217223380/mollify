@@ -1,6 +1,12 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.0.2 ===
+Released 2013/9/12
+  * Fixed issue 459
+  * Few minor fixes
+  * Added ability to define direct link to a path, ie. URL param "path=root/sub1/sub2/"
+
 === Version 2.0.1 ===
 Released 2013/9/8
   * Fixed issue 458
@@ -9,7 +15,8 @@ Released 2013/9/8
 Released 2013/9/7
   * Rewritten UI, now template based and fully customizable, built on Twitter Bootstrap framework
 
-*NOTE!* Version 2.0 is released under GPLv2 license. For more info see [http://www.mollify.org/license.php]
+*NOTE!* Version 2.0 is released under GPLv2 license. For more info see [http://www.mollify.org/license.php].
+*NOTE!* Backend configuration syntax has changed, see example configuration or installation instructions.
 
 === Version 1.8.9.3 ===
 Released 2012/11/24
