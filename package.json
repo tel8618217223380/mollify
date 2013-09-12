@@ -1,19 +1,19 @@
 {
     "name": "mollify"
   , "description": "Mollify"
-  , "version": "2.0.0"
+  , "version": "2.0.2"
   , "keywords": ["mollify"]
   , "homepage": "http://www.mollify.org/"
   , "author": "Samuli Järvelä"
   , "scripts": { "test": "make test" }
   , "repository": {
       "type": "svn"
-    , "url": "https://github.com/twitter/bootstrap.git"
+    , "url": "https://mollify.googlecode.com/svn/trunk/"
   }
   , "licenses": [
     {
-        "type": "Eclipse Public License v 1.0 EPL"
-      , "url": "http://www.eclipse.org/legal/epl-v10.html"
+        "type": "GPLv2"
+      , "url": "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
     }
   ]
   , "devDependencies": {
