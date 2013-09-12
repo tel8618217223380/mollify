@@ -646,7 +646,7 @@
 					e.stopPropagation();
 				});
 				if (o.title)
-					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(api.close));
+					$tip.find(".popover-title").append($('<button type="button" class="close">×</button>').click(function() { api.close(); }));
 				mollify.ui.handlers.localize($tip);
 				if (o.handler && o.handler.onRenderBubble) o.handler.onRenderBubble(api);
 			}).bind("hidden", function() {
