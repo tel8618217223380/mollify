@@ -79,7 +79,7 @@
 		}
 
 		public function password() {
-			return $this->password;
+			return $this->pw;
 		}
 
 		public function database() {
