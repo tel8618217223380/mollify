@@ -27,7 +27,13 @@
 				foreach($shares as $uk => $u) {
 					foreach($u as $ik => $i) {
 						if (in_array($ik, $items)) continue;
-						$item = $this->item($ik);
+						$item = NULL;
+						try {
+							$item = $this->item($ik);
+						} catch (ServiceException $se) {
+							Logging::logError("Invalid share item: ".$ik);
+							continue;
+						}
 						$items[$ik] = $item->data();
 					}
 				}

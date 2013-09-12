@@ -228,8 +228,14 @@
 				$folderDef = $this->folderCache[$filesystemId];
 			} else {
 				$folderDef = $this->env->configuration()->getFolder($filesystemId);
-				if (!$folderDef) throw new ServiceException("REQUEST_FAILED");
-				if (!$this->isFolderValid($folderDef)) throw new ServiceException("INSUFFICIENT_RIGHTS");
+				if (!$folderDef) {
+					Logging::logDebug("Root folder does not exist: ".$location." (".$id.")");
+					throw new ServiceException("REQUEST_FAILED");
+				}
+				if (!$this->isFolderValid($folderDef)) {
+					Logging::logDebug("No permissions for root folder: ".$location." (".$id.")");
+					throw new ServiceException("INSUFFICIENT_RIGHTS");
+				}
 				
 				$this->folderCache[$filesystemId] = $folderDef;
 			}
