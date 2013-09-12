@@ -63,8 +63,8 @@ var mollifyDefaults = {
 		mollify.events.addEventHandler(function(e) {
 			if (e.type == 'session/start') {
 				mollify.session = e.payload;
-				mollify.session.id = mollify.session.session_id;
-				mollify.session.admin = (mollify.session.default_permission == 'A');		
+				mollify.session.id = mollify.session['session_id'];
+				mollify.session.admin = (mollify.session['default_permission'] == 'A');		
 				
 				mollify.filesystem.init(mollify.session.folders);
 				mollify.App._start();

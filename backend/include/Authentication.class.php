@@ -108,7 +108,7 @@
 		public function authenticate($userId, $pw) {
 			$password = md5($pw);
 			
-			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings("email_login", TRUE), time());
+			$user = $this->env->configuration()->findUser($userId, $password, $this->env->settings()->setting("email_login", TRUE), time());
 			if (!$user) {
 				syslog(LOG_NOTICE, "Failed Mollify login attempt from [".$this->env->request()->ip()."], user [".$userId."]");
 				$this->env->events()->onEvent(SessionEvent::failedLogin($userId, $this->env->request()->ip()));
