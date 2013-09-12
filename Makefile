@@ -70,7 +70,7 @@ build:
 	cp out/mollify/backend/example/example_index.html out/mollify/index.html
 	@echo "Backend...       ${CHECK} Done"
 	
-	zip -r out/mollify_${VERSION}.zip out/mollify
+	cd out; zip -r mollify_${VERSION}.zip mollify
 	
 	@echo "\n${HR}"
 
