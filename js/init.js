@@ -20,6 +20,9 @@ var mollifyDefaults = {
 		"name": { width: 250 },
 		"path": { width: 150 },
 		"size": {}
+	},
+	"html5-uploader": {
+		maxChunkSize: 0
 	}
 };
 
