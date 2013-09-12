@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.0.3 ===
+Released 2013/9/12
+  * Fixed error in release package
+  * Added possibility to define html5 uploader configuration
+
 === Version 2.0.2 ===
 Released 2013/9/12
   * Fixed issue 459
