@@ -37,7 +37,7 @@
 			$itemId = FALSE;
 			$userId = FALSE;
 			foreach($list as $s) {
-				Logging::logDebug(Util::array2str($s));
+				//Logging::logDebug(Util::array2str($s));
 				if ($s["user_id"] != $userId) {
 					$res[$s["user_id"]] = array();
 				}

@@ -166,7 +166,9 @@
 			        
 			        if (mysqli_error($this->db))
 			        	throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."): ".mysqli_error($this->db));
-			    } while (mysqli_next_result($this->db));
+			        if (!mysqli_more_results($this->db)) break;
+			        mysqli_next_result($this->db);
+			    } while (TRUE);
 			} catch (mysqli_sql_exception $e) {
 				if (Logging::isDebug()) Logging::logDebug("ERROR: ".$e);
 				throw new ServiceException("INVALID_CONFIGURATION", "Error executing queries (".(strlen($sql) > 40 ? substr($sql, 0, 40)."..." : $sql)."...): ".mysqli_error($this->db));

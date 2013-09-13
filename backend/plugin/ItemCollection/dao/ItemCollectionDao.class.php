@@ -33,7 +33,7 @@
 		
 		public function getUserItemCollections($userId) {
 			$db = $this->env->db();
-			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic,".$db->table("itemcollection_item")." ici where ic.user_id = ".$db->string($userId, TRUE)." and ici.collection_id = ic.id order by ic.created asc, ici.item_index asc")->rows();
+			$list = $db->query("select ic.id as id, ic.name as name, ici.item_id as item_id from ".$db->table("itemcollection")." ic left outer join ".$db->table("itemcollection_item")." ici on ici.collection_id = ic.id where ic.user_id = ".$db->string($userId, TRUE)." order by ic.created asc, ici.item_index asc")->rows();
 			
 			$res = array();
 			$id = FALSE;
@@ -47,10 +47,10 @@
 					$res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $this->items($items));
 					$items = array();
 				}
-				$items[] = $c["item_id"];
+				if ($c["item_id"] != NULL) $items[] = $c["item_id"];
 				$prev = $c;
 			}
-			if (count($items) > 0) $res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $this->items($items));
+			$res[] = array("id" => $prev["id"], "name" => $prev["name"], "items" => $this->items($items));
 			return $res;
 		}
 		
