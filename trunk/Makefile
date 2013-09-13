@@ -2,7 +2,7 @@ VERSION=2.0
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
 VERSIONF=$(shell echo ${VERSION} | sed 's/\./_/g')
-REVISION=$(shell svnversion | cut -s -d: -f2 | tr -d MS)
+REVISION=$(shell svnversion)# | cut -s -d: -f2 | tr -d MS)
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 
@@ -27,8 +27,7 @@ build:
 	@cat js/lib/jquery.min.js js/lib/jquery.tmpl.min.js js/lib/jquery-ui.js js/lib/bootstrap.js js/lib/bootstrap-datetimepicker.js js/lib/bootstrap-lightbox.js js/lib/modernizr.js js/lib/date.js js/lib/jquery-file-uploader.js js/lib/jquery-singledoubleclick.js js/lib/ZeroClipboard.js > out/mollify/js/libs.tmp.js
 	@cat out/mollify/js/libs.tmp.js out/mollify/js/mollify.js > out/mollify/js/mollify.full.tmp.js
 	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.js > out/mollify/js/mollify.min.js
-	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.full.tmp.js > out/mollify/js/mollify.full.min.js
-	rm -rf out/mollify/js/mollify.full.tmp.js
+	@./node_modules/.bin/uglifyjs -nc out/mollify/js/mollify.full.js > out/mollify/js/mollify.full.min.js
 	rm -rf out/mollify/js/libs.tmp.js
 	@cp js/lib/*.js js/lib/*.swf out/mollify/js/lib
 	@cp js/localization/*.js out/mollify/js/localization

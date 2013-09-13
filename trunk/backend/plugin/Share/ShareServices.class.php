@@ -24,20 +24,27 @@
 			if (strcmp($this->path[0], 'all') == 0) {
 				$shares = $this->handler()->getUserShares();
 				$items = array();
+				$invalid = array();
 				foreach($shares as $uk => $u) {
 					foreach($u as $ik => $i) {
-						if (in_array($ik, $items)) continue;
+						if (array_key_exists($ik, $items) || in_array($ik, $invalid)) continue;
 						$item = NULL;
 						try {
 							$item = $this->item($ik);
 						} catch (ServiceException $se) {
 							Logging::logError("Invalid share item: ".$ik);
+							$invalid[] = $ik;
+							continue;
+						}
+						if (!$item->exists()) {
+							Logging::logError("Invalid share item (item does not exist): ".$ik);
+							$invalid[] = $ik;
 							continue;
 						}
 						$items[$ik] = $item->data();
 					}
 				}
-				$this->response()->success(array("shares" => $shares, "items" => $items));
+				$this->response()->success(array("shares" => $shares, "items" => $items, "invalid" => $invalid));
 				return;
 			}
 			
