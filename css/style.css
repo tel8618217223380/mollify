@@ -83,6 +83,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	margin: 0;
 }
 
+.popover-title button.close {
+	line-height: 15px;
+}
+
 /*a.button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
