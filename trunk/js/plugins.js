@@ -1616,7 +1616,7 @@
 				});
 			};
 			var isValid = function(i) {
-				if (invalid.length == 0) return;
+				if (invalid.length == 0) return true;
 				return (invalid.indexOf(i.id) < 0);
 			};
 
