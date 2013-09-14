@@ -248,7 +248,7 @@ var mollifyDefaults = {
 		if (!item.is_file) return false;
 		var url = mollify.service.url("filesystem/"+item.id, true);
 		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-			url = url + "&m=1";
+			url = url + ((url.indexOf('?') >= 0) ? "&" : "?") + "m=1";
 		return url;
 	};
 	
