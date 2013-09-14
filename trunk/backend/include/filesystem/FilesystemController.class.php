@@ -239,6 +239,7 @@
 				
 				$this->folderCache[$filesystemId] = $folderDef;
 			}
+			if (strlen($path) == 0) return $this->filesystem($folderDef)->root();
 			
 			return $this->filesystem($folderDef)->createItem($id, $path, $nonexisting);
 		}
