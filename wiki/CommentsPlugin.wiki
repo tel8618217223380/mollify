@@ -9,8 +9,11 @@ Comments plugin is built-in plugin that provides possibility to comment any file
 Comments plugin does not have any parameters. Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
-	$PLUGINS = array(
-		"Comment" => array()
+	$CONFIGURATION = array(
+		...,
+		array(
+			"Comment" => array()
+		)
 	);
 }}}
 
