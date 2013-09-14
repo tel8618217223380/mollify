@@ -11,7 +11,7 @@ Comments plugin does not have any parameters. Configure plugin by adding followi
 {{{
 	$CONFIGURATION = array(
 		...,
-		array(
+		"plugins" => array(
 			"Comment" => array()
 		)
 	);
