@@ -833,7 +833,8 @@
 					var $sel = $('<input class="mollify-tableselect" type="checkbox"></input>').appendTo($cell);
 				} else if (col.type == 'action') {
 					var html = col.content || col.title;
-					var $action = $("<a class='mollify-tableaction'></a>").html(html).appendTo($cell);
+					if (col.valueMapper) html = col.valueMapper(item, v);
+					if (html) $("<a class='mollify-tableaction'></a>").html(html).appendTo($cell);
 					/*$action.click(function(e){
 						//TODO delegate click handler
 
