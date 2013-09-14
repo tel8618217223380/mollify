@@ -76,6 +76,19 @@
 			return $this->dataRequestPlugins;
 		}
 		
+		public function getRequestData($parent, $items, $data, $result) {
+			$requestDataResult = array();
+			if (!$data or !$items or count($items) < 1) return $requestDataResult;
+			
+			foreach($this->getDataRequestPlugins() as $key => $plugin) {
+				if (!array_key_exists($key, $data)) continue;
+				
+				$d = $plugin->getRequestData($parent, $items, $result, $key, $data[$key]);
+				if ($d !== NULL) $requestDataResult[$key] = $d;
+			}
+			return $requestDataResult;
+		}
+		
 		public function registerSearcher($searcher) {
 			$this->searchers[] = $searcher;
 		}
@@ -729,7 +742,7 @@
 			return $zip;
 		}*/
 		
-		public function search($parent, $text) {
+		public function search($parent, $text, $rqData) {
 			if ($parent == NULL) {
 				$m = array();
 				foreach($this->getRootFolders() as $id => $root) {
@@ -745,7 +758,13 @@
 					$data[$searcher->key()] = $searcher->preData($parent, $text);
 				$m = $this->searchRecursive($data, $parent, $text);
 			}
-			return array("count" => count($m), "matches" => $m);
+			$result = array("count" => count($m), "matches" => $m);
+			$items = array();
+			foreach($m as $id => $r) {
+				$items[] = $r["itm"];
+			}
+			$result["data"] = $this->env->filesystem()->getRequestData(NULL, $items, $rqData, $result);
+			return $result;
 		}
 		
 		private function searchRecursive($data, $parent, $text) {
@@ -761,7 +780,7 @@
 					if (in_array($id, $result)) {
 						$result[$id]["matches"] = array_merge($match, $result[$id]["matches"]);
 					} else {
-						$result[$id] = array("item" => $item->data(), "matches" => $match);
+						$result[$id] = array("itm" => $item, "item" => $item->data(), "matches" => $match);
 					}
 				}
 				if (!$item->isFile()) $result = array_merge($result, $this->searchRecursive($data, $item, $text));

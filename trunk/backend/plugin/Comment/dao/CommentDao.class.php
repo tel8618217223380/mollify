@@ -32,6 +32,14 @@
 			}
 			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where item_id in (".$itemFilter.") group by item_id")->valueMap("item_id", "count");
 		}
+
+		public function getCommentCountForItems($items) {
+			$ids = array();
+			foreach($items as $i)
+				$ids[] = $i->id();
+			$db = $this->env->db();
+			return $db->query("select item_id, count(`id`) as count from ".$db->table("comment")." where item_id in (".$db->arrayString($ids, TRUE).") group by item_id")->valueMap("item_id", "count");
+		}
 		
 		public function getComments($item) {
 			$db = $this->env->db();
