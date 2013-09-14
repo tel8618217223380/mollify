@@ -34,11 +34,19 @@
 						} catch (ServiceException $se) {
 							Logging::logError("Invalid share item: ".$ik);
 							$invalid[] = $ik;
+							$items[$ik] = array(
+								"id" => $ik,
+								"name" => "-"
+							);
 							continue;
 						}
 						if (!$item->exists()) {
 							Logging::logError("Invalid share item (item does not exist): ".$ik);
 							$invalid[] = $ik;
+							$items[$ik] = array(
+								"id" => $ik,
+								"name" => "-"
+							);
 							continue;
 						}
 						$items[$ik] = $item->data();

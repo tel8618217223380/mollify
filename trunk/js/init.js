@@ -246,7 +246,10 @@ var mollifyDefaults = {
 	
 	mfs.getDownloadUrl = function(item) {
 		if (!item.is_file) return false;
-		return mollify.service.url("filesystem/"+item.id, true);
+		var url = mollify.service.url("filesystem/"+item.id, true);
+		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+			url = url + "&m=1";
+		return url;
 	};
 	
 	mfs.itemDetails = function(item, data) {

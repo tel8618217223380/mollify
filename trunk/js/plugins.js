@@ -1602,6 +1602,7 @@
 		this.onActivateConfigView = function($c) {
 			var shares = false;
 			var items = false;
+			var invalid = [];
 			var listView = false;
 
 			var updateShares = function() {
@@ -1610,22 +1611,34 @@
 					$c.removeClass("loading");
 					shares = l.shares[mollify.session.user_id];
 					items = l.items;
+					invalid = l.invalid;
 					listView.table.set(items);
 				});
-			}
+			};
+			var isValid = function(i) {
+				if (invalid.length == 0) return;
+				return (invalid.indexOf(i.id) < 0);
+			};
 
 			listView = new mollify.view.ConfigListView($c, {
 				table: {
 					key: "id",
 					columns: [
-						{ id: "icon", title:"", type:"static", content: '<i class="icon-file"></i>' },
+						{ id: "icon", title:"", valueMapper: function(item) {
+							return isValid(item) ? '<i class="icon-file"></i>' : '<i class="icon-exclamation"></i>';
+						} },
 						{ id: "name", title: mollify.ui.texts.get('fileListColumnTitleName') },
 						{ id: "count", title: mollify.ui.texts.get('pluginShareConfigViewCountTitle'), valueMapper: function(item) {
 							return shares[item.id].length;
 						} },
-						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "edit", title: "", type: "action", valueMapper: function(item) {
+							return isValid(item) ? '<i class="icon-edit"></i>' : '';
+						} },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
+					onRow: function($r, item) {
+						if (!isValid(item)) $r.addClass("error");	
+					},
 					onRowAction: function(id, item) {
 						if (id == "edit") {
 							that.onOpenShares(item);
