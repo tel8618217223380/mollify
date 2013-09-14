@@ -7,5 +7,12 @@ pluginNotificationAdminAddNotificationMessage: "Enter the name for the new notif
 pluginNotificationAdminEditNotificationMessage: "Enter new name for the notification:",
 pluginNotificatorNotificationMessageTitle: "Message",
 pluginNotificatorNotificationEventsTitle: "Events that trigger notification",
-pluginNotificatorNotificationUsersTitle: "Users who receive notification"
+pluginNotificatorNotificationUsersTitle: "Users who receive notification",
+pluginNotificatorNotificationEditMessageDialogTitle: "Edit notification message",
+pluginNotificatorNotificationEditMessageTitle: "Title",
+pluginNotificatorNotificationEditMessageMsg: "Message",
+pluginNotificatorNotificationAddEventTitle: "Add event",
+pluginNotificatorNotificationAddEventMessage: "Select event(s) to be added as notification trigger:",
+pluginNotificatorNotificationAddUserTitle: "Add receiver",
+pluginNotificatorNotificationAddUserMessage: "Select user(s) to be added as notification receiver:"
 })})();

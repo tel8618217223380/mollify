@@ -261,7 +261,7 @@
 				mollify.ui.dialogs.custom({
 					resizable: true,
 					initSize: [600, 400],
-					title: mollify.ui.texts.get('pluginNotificatorNotificationEditMessageTitle'),
+					title: mollify.ui.texts.get('pluginNotificatorNotificationEditMessageDialogTitle'),
 					content: mollify.dom.template("mollify-tmpl-notificator-editmessage", {notification: n}),
 					buttons: [
 						{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },

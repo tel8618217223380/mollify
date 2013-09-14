@@ -315,6 +315,10 @@
 			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : window.isArray(items) ? items: [ items ]});
 		};
 		
+		this._getCollection = function(id) {
+			return mollify.service.get("itemcollections/"+id);
+		}
+		
 		this._showCollection = function(ic) {
 			that._fileView.changeToFolder({
 				type: "ic",
@@ -330,7 +334,9 @@
 
 		this.getFolderInfo = function(f) {
 			var df = $.Deferred();
-			df.resolve({items: f.ic.items});	//TODO get data for items in the collection "service.post(filesystem/info, {items: items})
+			that._getCollection(f.ic.id).done(function(ic){
+				df.resolve({items: ic.items});
+			});
 			return df.promise();
 		};
 
@@ -343,13 +349,15 @@
 					return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
 				}
 			};
-			var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($("#mollify-fileview-folder-actions"));
+			var $fa = $("#mollify-fileview-folder-actions");
+			var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
 			mollify.ui.controls.dropdown({
 				element: actionsElement.find("li"),
 				items: that._getItemActions(f.ic),
 				hideDelay: 0,
 				style: 'submenu'
 			});
+			mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that._fileView.refresh);
 		};
 
 		this.editCollection = function(ic) {

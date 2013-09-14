@@ -38,8 +38,9 @@
 			return array("id" => $c["id"], "name" => $c["name"], "items" => $this->convertItems($c["items"]));
 		}
 
-		private function convertItems($items) {
+		private function convertItems($items) {			
 			$result = array();
+			if (!$items or $items == NULL) return $result;
 
 			foreach($items as $i)
 				$result[] = $i->data();
