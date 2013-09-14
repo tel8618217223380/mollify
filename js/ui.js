@@ -609,6 +609,23 @@
 			};
 			var html = o.content ? bubbleHtml(o.content) : '<div class="loading"></div>';
 			var $tip = false;
+			var $cnt = o.container || $e.parent();
+			var $vp = o.viewport || $cnt;
+			var pos = function() {
+				var $pop = $el.closest(".popover");
+				var maxRight = $vp.outerWidth();
+				var popLeft = $pop.offset().left - $cnt.offset().left;
+				var popW = $pop.outerWidth();
+				if (popLeft < 0)
+					popLeft = 0;
+				else if ((popLeft + popW) > maxRight)
+					popLeft = maxRight - popW - 10;
+				$pop.css("left", popLeft + "px");
+				
+				var arrowPos = ($e.offset().left - $cnt.offset().left) + ($e.outerWidth() / 2);
+				arrowPos = Math.max(0, (arrowPos - popLeft));
+				$pop.find(".arrow").css("left", arrowPos + "px");
+			};
 			var api = {
 				show: function() {
 					$e.popover('show');
@@ -626,7 +643,9 @@
 				content: function(c) {
 					var $c = $tip.find('.popover-content');
 					$c.html(bubbleHtml(c));
-				}
+					pos();
+				},
+				position: pos
 			};
 			api.close = api.hide;
 			var $el = $('<div class="popover mollify-bubble-popover"><div class="arrow"></div>' + (o.title ? '<h3 class="popover-title"></h3>' : '') + '<div class="popover-content"></div></div>');
@@ -638,9 +657,10 @@
 				trigger: 'manual',
 				template: $el,
 				content: html,
-				container: o.container || $e.parent()
+				container: $cnt
 			}).bind("shown", function(e) {
 				$tip = $el;
+				
 				mollify.ui.activePopup(api);
 				$tip.click(function(e) {
 					e.stopPropagation();
