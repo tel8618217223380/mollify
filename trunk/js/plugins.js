@@ -827,7 +827,7 @@
 		};
 		
 		this.showCommentsBubble = function(item, e) {
-			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name});
+			var bubble = mollify.ui.controls.dynamicBubble({element:e, title: item.name, container: $("#mollify-filelist-main-items")});
 			
 			mollify.templates.load("comments-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Comment", "content.html")), function() {
 				bubble.content(mollify.dom.template("comments-template", item));
@@ -1591,11 +1591,11 @@
 		};
 		
 		this.showShareBubble = function(item, cell) {
-			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("body")});
+			that.d = mollify.ui.controls.dynamicBubble({element:cell, title: item.name, container: $("#mollify-filelist-main-items")});
 			
 			mollify.templates.load("shares-content", mollify.helpers.noncachedUrl(mollify.plugins.url("Share", "content.html")), function() {
 				that.d.content(mollify.dom.template("mollify-tmpl-shares", {item: item, bubble: true}));
-				that.loadShares(item).done(function(shares) { that.initContent(item, shares, that.d.element()); });
+				that.loadShares(item).done(function(shares) { that.initContent(item, shares, that.d.element()); that.d.position(); });
 			});
 		};
 
