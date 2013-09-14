@@ -63,7 +63,7 @@
 				$data = $this->request->data;
 				if (!isset($data['text'])) throw $this->invalidRequestException();
 				
-				$this->response()->success($this->env->filesystem()->search(NULL, $data['text']));
+				$this->response()->success($this->env->filesystem()->search(NULL, $data['text'], $data['rq_data']));
 				return;
 			}
 
@@ -283,7 +283,6 @@
 		}
 		
 		private function getFolderInfo($item, $includeHierarchy, $data = NULL) {
-			$requestDataResult = array();
 			$items = $this->env->filesystem()->items($item);
 			$files = array();
 			$folders = array();
@@ -295,16 +294,7 @@
 			$result["files"] = $files;
 			$result["folders"] = $folders;
 			$result["permission"] = $this->env->filesystem()->permission($item);
-			
-			if ($data != NULL) {
-				foreach($this->env->filesystem()->getDataRequestPlugins() as $key => $plugin) {
-					if (!array_key_exists($key, $data)) continue;
-					
-					$d = $plugin->getRequestData($item, $items, $result, $key, $data[$key]);
-					if ($d !== NULL) $requestDataResult[$key] = $d;
-				}
-			}
-			$result["data"] = $requestDataResult;
+			$result["data"] = $this->env->filesystem()->getRequestData($item, $items, $data, $result);
 			
 			if ($includeHierarchy) {
 				$h = array();

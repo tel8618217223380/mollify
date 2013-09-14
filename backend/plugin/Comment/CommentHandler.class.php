@@ -54,7 +54,11 @@
 		}
 						
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
-			return $this->getDao()->getCommentCountForChildren($parent);
+			if ($parent != NULL)
+				return $this->getDao()->getCommentCountForChildren($parent);
+			
+			//not under same parent, get comment count for each item separately
+			return $this->getDao()->getCommentCountForItems($items);
 		}
 		
 		private function getDao() {

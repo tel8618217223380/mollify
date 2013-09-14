@@ -488,7 +488,7 @@
 		};
 		
 		this.onSearch = function(s) {
-			mollify.service.post("filesystem/search", {text:s}).done(function(r) {
+			mollify.service.post("filesystem/search", {text:s, rq_data: that.getDataRequest()}).done(function(r) {
 				$("#mollify-fileview-search-input").val("");
 				$(".mollify-fileview-rootlist-item").removeClass("active");
 				var $h = $("#mollify-folderview-header").empty();

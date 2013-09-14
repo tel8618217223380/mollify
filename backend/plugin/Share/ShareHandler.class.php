@@ -44,7 +44,10 @@
 		}
 		
 		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
-			return $this->dao()->getShareUsersForChildren($parent, $this->env->session()->userId());
+			if ($parent != NULL)
+				return $this->dao()->getUserSharesForChildren($parent, $this->env->session()->userId());
+			//TODO each item
+			return $this->dao()->getUserSharesForItems($items, $this->env->session()->userId());
 		}
 		
 		public function validateAction($action, $target, $acceptKeys) {

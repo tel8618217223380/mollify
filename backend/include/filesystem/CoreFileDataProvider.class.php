@@ -28,9 +28,12 @@
 				
 				}
 			} else if (strcmp("core-item-description", $key) === 0) {
-				$result = $this->env->configuration()->findItemsWithDescription($parent);
+				if ($parent != NULL)
+					$result = $this->env->configuration()->findItemsWithDescription($parent);
+				//TODO get each item
 			} else if (strcmp("core-parent-description", $key) === 0) {
-				$result = $this->env->configuration()->getItemDescription($parent);
+				if ($parent != NULL)
+					$result = $this->env->configuration()->getItemDescription($parent);
 			} 
 			
 			return $result;
