@@ -530,7 +530,8 @@
 		}
 				
 		this.getDataRequest = function() {
-			return $.extend({'core-parent-description': {}}, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest() : {});
+			var rq = that._currentFolder && !that._currentFolder.type ? {'core-parent-description': {}} : {};
+			return $.extend(rq, that.itemWidget.getDataRequest ? that.itemWidget.getDataRequest() : {});
 		}
 		
 		this.onEvent = function(e) {
