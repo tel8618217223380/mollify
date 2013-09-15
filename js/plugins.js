@@ -431,7 +431,7 @@
 			});
 		};
 		
-		this._onFileViewRender = function($e, h) {
+		this._onFileViewActivate = function($e, h) {
 			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
 				classes: "ic-navbar-item",
@@ -473,8 +473,8 @@
 				};
 			},
 			fileViewHandler : {
-				onFileViewInit: that._onFileViewInit,
-				onFileViewRender: that._onFileViewRender
+				onInit: that._onFileViewInit,
+				onActivate: that._onFileViewActivate
 			}
 		};
 	}
@@ -1181,10 +1181,10 @@
 		that.items = [];
 		
 		this.initialize = function() {
-			that.itemContext = new mollify.ui.itemContext({ onDescription: null });
+			that.itemContext = new mollify.ui.itemContext();
 		};
 		
-		this.onFileViewRender = function($container) {
+		this.onFileViewActivate = function($container) {
 			mollify.dom.template("mollify-tmpl-mainview-dropbox").appendTo($container);
 			$("#mollify-dropbox-handle").click(function() {
 				that.openDropbox();
@@ -1242,6 +1242,10 @@
 				}
 			});
 			that.openDropbox(false);
+		};
+		
+		this.onFileViewDeactivate = function() {
+			$("#mollify-dropbox").remove();
 		};
 		
 		this.getActions = function(cb) {				
@@ -1325,7 +1329,8 @@
 			id: "plugin-dropbox",
 			initialize: that.initialize,
 			fileViewHandler : {
-				onFileViewRender: that.onFileViewRender
+				onActivate: that.onFileViewActivate,
+				onDeactivate: that.onFileViewDeactivate
 			},
 			itemContextHandler : function(item, ctx, data) {
 				return {

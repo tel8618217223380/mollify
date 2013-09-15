@@ -391,7 +391,7 @@
 			});
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
-				if (p.fileViewHandler.onFileViewInit) p.fileViewHandler.onFileViewInit(that);
+				if (p.fileViewHandler.onInit) p.fileViewHandler.onInit(that);
 				
 				if (!p.fileViewHandler.filelistColumns) return;
 				var cols = p.fileViewHandler.filelistColumns();
@@ -474,8 +474,8 @@
 			}
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
-				if (p.fileViewHandler.onFileViewRender)
-					p.fileViewHandler.onFileViewRender($("#mollify"), h);
+				if (p.fileViewHandler.onActivate)
+					p.fileViewHandler.onActivate($("#mollify"), h);
 			});
 			
 			if (mollify.filesystem.roots.length === 0) that.showNoRoots();
@@ -509,6 +509,10 @@
 		};
 		
 		this.onDeactivate = function() {
+			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
+				if (p.fileViewHandler.onDeactivate)
+					p.fileViewHandler.onDeactivate();
+			});
 		};
 		
 		this.initViewTools = function($t) {
