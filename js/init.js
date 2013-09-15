@@ -16,11 +16,6 @@ var mollifyDefaults = {
 		"size": {},
 		"file-modified": { width: 150 }
 	},
-	"list-view-columns-search": {
-		"name": { width: 250 },
-		"path": { width: 150 },
-		"size": {}
-	},
 	"html5-uploader": {
 		maxChunkSize: 0
 	}
