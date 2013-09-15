@@ -43,7 +43,7 @@
 			);
 		}
 		
-		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
+		public function getRequestData($parent, $items, $key, $dataRequest) {
 			if ($parent != NULL)
 				return $this->dao()->getUserSharesForChildren($parent, $this->env->session()->userId());
 			//TODO each item

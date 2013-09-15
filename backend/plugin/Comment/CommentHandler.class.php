@@ -53,7 +53,7 @@
 			$this->getDao()->removeComment($item, $commentId, $user);
 		}
 						
-		public function getRequestData($parent, $items, $result, $key, $dataRequest) {
+		public function getRequestData($parent, $items, $key, $dataRequest) {
 			if ($parent != NULL)
 				return $this->getDao()->getCommentCountForChildren($parent);
 			

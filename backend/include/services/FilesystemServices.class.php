@@ -294,7 +294,7 @@
 			$result["files"] = $files;
 			$result["folders"] = $folders;
 			$result["permission"] = $this->env->filesystem()->permission($item);
-			$result["data"] = $this->env->filesystem()->getRequestData($item, $items, $data, $result);
+			$result["data"] = $this->env->filesystem()->getRequestData($item, $items, $data);
 			
 			if ($includeHierarchy) {
 				$h = array();

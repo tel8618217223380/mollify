@@ -330,38 +330,7 @@
 		};
 
 		/* Custom folder view -> */
-		this.onFolderDeselect = function(f) {
-			that._collectionsNav.setActive(false);
-		};
 
-		this.getFolderInfo = function(f) {
-			var df = $.Deferred();
-			that._getCollection(f.ic.id, that._fileView.getDataRequest()).done(function(ic){
-				//TODO ic -> r
-				df.resolve({items: ic.items, data: ic.data});
-			});
-			return df.promise();
-		};
-
-		this.onRenderFolderView = function(f, fi, $h, $tb) {
-			mollify.dom.template("mollify-tmpl-fileview-header", {folder: f}).appendTo($h);
-			$("#mollify-folder-description").remove();
-
-			var opt = {
-				title: function() {
-					return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
-				}
-			};
-			var $fa = $("#mollify-fileview-folder-actions");
-			var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
-			mollify.ui.controls.dropdown({
-				element: actionsElement.find("li"),
-				items: that._getItemActions(f.ic),
-				hideDelay: 0,
-				style: 'submenu'
-			});
-			mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that._fileView.refresh);
-		};
 		/* ->| */
 		
 		this.editCollection = function(ic) {
@@ -427,7 +396,39 @@
 		
 		this._onFileViewInit = function(fv) {
 			that._fileView = fv;
-			that._fileView.addCustomFolderType("ic", that);
+			that._fileView.addCustomFolderType("ic", {
+				onFolderDeselect : function(f) {
+					that._collectionsNav.setActive(false);
+				},
+		
+				getFolderInfo : function(f) {
+					var df = $.Deferred();
+					mollify.service.post("itemcollections/"+f.ic.id+"/data", {rq_data: that._fileView.getDataRequest() }).done(function(r){
+						df.resolve({items: r.ic.items, data: r.data});
+					});
+					return df.promise();
+				},
+		
+				onRenderFolderView : function(f, fi, $h, $tb) {
+					mollify.dom.template("mollify-tmpl-fileview-header", {folder: f}).appendTo($h);
+					$("#mollify-folder-description").remove();
+		
+					var opt = {
+						title: function() {
+							return this.data.title ? this.data.title : mollify.ui.texts.get(this.data['title-key']);
+						}
+					};
+					var $fa = $("#mollify-fileview-folder-actions");
+					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
+					mollify.ui.controls.dropdown({
+						element: actionsElement.find("li"),
+						items: that._getItemActions(f.ic),
+						hideDelay: 0,
+						style: 'submenu'
+					});
+					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that._fileView.refresh);
+				}
+			});
 		};
 		
 		this._onFileViewRender = function($e, h) {
