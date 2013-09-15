@@ -328,6 +328,7 @@
 			that._collectionsNav.setActive(ic);
 		};
 
+		/* Custom folder view -> */
 		this.onFolderDeselect = function(f) {
 			that._collectionsNav.setActive(false);
 		};
@@ -340,7 +341,7 @@
 			return df.promise();
 		};
 
-		this.onRenderFolderView = function(f, $h, $tb) {
+		this.onRenderFolderView = function(f, fi, $h, $tb) {
 			mollify.dom.template("mollify-tmpl-fileview-header", {folder: f}).appendTo($h);
 			$("#mollify-folder-description").remove();
 
@@ -359,7 +360,8 @@
 			});
 			mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that._fileView.refresh);
 		};
-
+		/* ->| */
+		
 		this.editCollection = function(ic) {
 			mollify.service.get("itemcollections/"+ic.id).done(function(loaded){
 				mollify.ui.dialogs.tableView({
@@ -421,10 +423,12 @@
 			return items;
 		}
 		
-		this._onFileViewRender = function($e, h) {
-			that._fileView = h.fileview;
+		this._onFileViewInit = function(fv) {
+			that._fileView = fv;
 			that._fileView.addCustomFolderType("ic", that);
-
+		};
+		
+		this._onFileViewRender = function($e, h) {
 			that._collectionsNav = h.addNavBar({
 				title: mollify.ui.texts.get("pluginItemCollectionsNavTitle"),
 				classes: "ic-navbar-item",
@@ -466,6 +470,7 @@
 				};
 			},
 			fileViewHandler : {
+				onFileViewInit: that._onFileViewInit,
 				onFileViewRender: that._onFileViewRender
 			}
 		};
@@ -549,7 +554,7 @@
 				if (root) return false;
 				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
 				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
-				var folderWritable = !root && ctx.folder_permission.toUpperCase() == "RW";
+				var folderWritable = !root && ctx.folder_permission && ctx.folder_permission.toUpperCase() == "RW";
 
 				if (that._isArchive(item)) {
 					return {

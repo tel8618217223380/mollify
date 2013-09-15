@@ -335,12 +335,64 @@
 			}
 		});
 		
-		this.init = function() {
+		this.init = function(mainview) {
 			that.title = mollify.ui.texts.get('mainviewMenuTitle');
 
 			mollify.events.addEventHandler(that.onEvent);
 			
+			that.addCustomFolderType("search", {
+				getFolderInfo : function(f) {
+					var df = $.Deferred();
+					mollify.service.post("filesystem/search", {text:f.value, rq_data: that.getDataRequest()}).done(function(r) {
+                        var items = [];
+                        for (var id in r.matches) {
+                            items.push(r.matches[id].item);
+                        }
+						df.resolve({items: items, data: r.data, info: r});
+					});
+					return df.promise();
+				},
+		
+				onRenderFolderView : function(f, fi, $h, $tb) {
+					mollify.dom.template("mollify-tmpl-main-searchresults").appendTo($h);
+					$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+fi.count]));
+					$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [f.value]));
+					
+					// TODO add tools to template
+					var $fa = $("#mollify-fileview-folder-actions");
+					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, {}).appendTo($fa).click(that.refresh);
+				},
+				
+				onItemListRendered : function(f, fi, items) {
+					// tooltips
+					var matchList = function(l) {
+						var r = "";
+						var first = true;
+						$.each(l, function(i, li) {
+							if (!first) r = r + ", ";
+							r = r + li.type;
+							first = false;
+						});
+						return r;
+					};
+					var matchesTitle = mollify.ui.texts.get('mainViewSearchResultTooltipMatches');
+					$(".mollify-filelist-item").each(function() {
+						var $i = $(this);
+						var item = $i.tmplItem().data;
+						var title = mollify.filesystem.rootsById[item.root_id].name + '/' + item.path + ', ' + matchesTitle + matchList(fi.matches[item.id].matches);
+
+						$i.tooltip({
+							placement: "bottom",
+							title: title,
+							trigger: "hover"
+						});
+					});
+				}
+			});
+			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
+				if (p.fileViewHandler.onFileViewInit) p.fileViewHandler.onFileViewInit(that);
+				
 				if (!p.fileViewHandler.filelistColumns) return;
 				var cols = p.fileViewHandler.filelistColumns();
 				if (!cols) return;
@@ -468,7 +520,8 @@
 			var onSearch = function() {
 				var val = $("#mollify-fileview-search-input").val();
 				if (!val || val.length === 0) return;
-				that.onSearch(val);
+				$("#mollify-fileview-search-input").val("");
+				that.changeToFolder({ type: "search", value: val });
 			};
 			$("#mollify-fileview-search-input").keyup(function(e){
 				if (e.which == 13) onSearch();
@@ -486,54 +539,7 @@
 			//TODO check if affects this view
 			that.refresh();
 		};
-		
-		this.onSearch = function(s) {
-			mollify.service.post("filesystem/search", {text:s, rq_data: that.getDataRequest()}).done(function(r) {
-				$("#mollify-fileview-search-input").val("");
-				$(".mollify-fileview-rootlist-item").removeClass("active");
-				var $h = $("#mollify-folderview-header").empty();
 				
-				mollify.dom.template("mollify-tmpl-main-searchresults").appendTo($h);
-				$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+r.count]));
-				$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [s]));
-				
-				var items = [];
-				for (var id in r.matches) {
-					items.push(r.matches[id].item);
-				}
-				
-				that.viewType = 'search';
-				that.searchResults = r;
-				that.initList();
-				that.updateItems(items, {});
-			});
-		};
-		
-		this.initSearchResultTooltip = function(items) {
-			var prefix = mollify.ui.texts.get('mainViewSearchResultTooltipMatches');
-			$(".mollify-filelist-item").each(function() {
-				var $i = $(this);
-				var item = $i.tmplItem().data;
-
-				var matchList = function(l) {
-					var r = "";
-					var first = true;
-					$.each(l, function(i, li) {
-						if (!first) r = r + ", ";
-						r = r + li.type;
-						first = false;
-					});
-					return r;
-				}
-
-				$i.tooltip({
-					placement: "bottom",
-					title: prefix + matchList(that.searchResults.matches[item.id].matches),
-					trigger: "hover"
-				});
-			});
-		};
-		
 		this.onRadioChanged = function(groupId, valueId, i) {
 			if (groupId == "mollify-fileview-style-options") that.onViewStyleChanged(valueId, i);
 		};
@@ -559,7 +565,8 @@
 	
 		this.changeToFolder = function(f) {
 			if (that._currentFolder && that._currentFolder.type && that._customFolderTypes[that._currentFolder.type]) {
-				that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
+				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
+					that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
 			}
 			that._currentFolder = f;
 			that._currentFolderInfo = false;
@@ -578,6 +585,7 @@
 			} else if (that._currentFolder.type) {
 				if (that._customFolderTypes[that._currentFolder.type]) {
 					that._customFolderTypes[that._currentFolder.type].getFolderInfo(that._currentFolder).done(function(r) {
+						that._currentFolderInfo = r.info;
 						that.folder();
 						that.data(r);
 					}).fail(function() {
@@ -647,7 +655,7 @@
 						
 			if (that._currentFolder && that._currentFolder.type) {
 				if (that._customFolderTypes[that._currentFolder.type]) {
-					that._customFolderTypes[that._currentFolder.type].onRenderFolderView(that._currentFolder, $h, $tb);
+					that._customFolderTypes[that._currentFolder.type].onRenderFolderView(that._currentFolder, that._currentFolderInfo, $h, $tb);
 				}
 			} else {
 				var currentRoot = p ? p.hierarchy[0] : false;
@@ -753,10 +761,10 @@
 			$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
-			if (that.viewType != null) {
+			/*if (that.viewType != null) {
 				that.viewType = null;
 				that.initList();
-			}
+			}*/
 			that.onResize();
 		};
 					
@@ -816,7 +824,7 @@
 		this.initList = function() {
 			if (that.isListView()) {
 				var cols = mollify.settings["list-view-columns"];
-				if (that.viewType) cols = mollify.settings["list-view-columns-"+that.viewType];
+				//if (that.viewType) cols = mollify.settings["list-view-columns-"+that.viewType];
 				that.itemWidget = new FileList('mollify-folderview-items', 'main', this._filelist, cols);
 			} else {
 				that.itemWidget = new IconView('mollify-folderview-items', 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
@@ -854,8 +862,12 @@
 					that.showActionMenu(item, that.itemWidget.getItemContextElement(item));
 				},
 				onContentRendered : function(items, data) {
-					if (!that.isListView() || that.viewType != 'search') return;
-					that.initSearchResultTooltip(items);
+					if (that._currentFolder && that._currentFolder.type && that._customFolderTypes[that._currentFolder.type]) {
+						if (that._customFolderTypes[that._currentFolder.type].onItemListRendered)
+							that._customFolderTypes[that._currentFolder.type].onItemListRendered(that._currentFolder, that._currentFolderInfo, items);
+					}
+					//if (!that.isListView() || that.viewType != 'search') return;
+					//that.initSearchResultTooltip(items);
 				}
 			});
 		};
