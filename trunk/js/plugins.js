@@ -315,7 +315,8 @@
 			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : window.isArray(items) ? items: [ items ]});
 		};
 		
-		this._getCollection = function(id) {
+		this._getCollection = function(id, rq_data) {
+			//TODO post + data
 			return mollify.service.get("itemcollections/"+id);
 		}
 		
@@ -335,8 +336,9 @@
 
 		this.getFolderInfo = function(f) {
 			var df = $.Deferred();
-			that._getCollection(f.ic.id).done(function(ic){
-				df.resolve({items: ic.items});
+			that._getCollection(f.ic.id, that._fileView.getDataRequest()).done(function(ic){
+				//TODO ic -> r
+				df.resolve({items: ic.items, data: ic.data});
 			});
 			return df.promise();
 		};
