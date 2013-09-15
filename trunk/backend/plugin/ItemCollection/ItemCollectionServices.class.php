@@ -68,26 +68,44 @@
 		}
 				
 		public function processPost() {
-			if (count($this->path) > 1) throw $this->invalidRequestException();
+			if (count($this->path) > 2) throw $this->invalidRequestException();
 			$id = FALSE;
-			if (count($this->path) == 1) $id = $this->path[0];
-			
 			$data = $this->request->data;
-			if ((!$id and !isset($data["name"])) or !isset($data["items"])) throw $this->invalidRequestException("No data");
 			
-			$items = $data["items"];
-			if (!is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
-			
-			if (!$id) {
+			if (count($this->path) == 0) {
+				if (!isset($data["name"])) throw $this->invalidRequestException("No data");
+				
 				$name = $data["name"];
 				if (strlen($name) == 0) throw $this->invalidRequestException("Missing data");
 
 				$this->handler()->addUserItemCollection($name, $items);
 				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
-			} else {
-				$this->handler()->addCollectionItems($id, $items);
-				$this->response()->success(array());
+				return;				
 			}
+			
+			$id = $this->path[0];
+			
+			// itemcollection/xx/data
+			if (count($this->path) == 2) {
+				if ($this->path[1] != "data") throw $this->invalidRequestException();
+				$ic = $this->handler()->getUserItemCollection($id);
+				
+				$result = array(
+					"ic" => $this->convertCollection($ic),
+					"data" => $this->env->filesystem()->getRequestData(NULL, $ic["items"], $data["rq_data"])
+				);
+				$this->response()->success($result);
+				//TODO get data
+				return;
+			}
+
+			// itemcollection/xx/
+			if (!isset($data["items"])) throw $this->invalidRequestException("No data");			
+			$items = $data["items"];
+			if (!is_array($items) or count($items) == 0) throw $this->invalidRequestException("Missing data");
+			
+			$this->handler()->addCollectionItems($id, $items);
+			$this->response()->success(array());
 		}
 		
 		private function handler() {

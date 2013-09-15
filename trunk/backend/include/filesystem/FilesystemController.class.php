@@ -76,14 +76,14 @@
 			return $this->dataRequestPlugins;
 		}
 		
-		public function getRequestData($parent, $items, $data, $result) {
+		public function getRequestData($parent, $items, $data) {
 			$requestDataResult = array();
 			if (!$data or !$items or count($items) < 1) return $requestDataResult;
 			
 			foreach($this->getDataRequestPlugins() as $key => $plugin) {
 				if (!array_key_exists($key, $data)) continue;
 				
-				$d = $plugin->getRequestData($parent, $items, $result, $key, $data[$key]);
+				$d = $plugin->getRequestData($parent, $items, $key, $data[$key]);
 				if ($d !== NULL) $requestDataResult[$key] = $d;
 			}
 			return $requestDataResult;
@@ -763,7 +763,7 @@
 			foreach($m as $id => $r) {
 				$items[] = $r["itm"];
 			}
-			$result["data"] = $this->env->filesystem()->getRequestData(NULL, $items, $rqData, $result);
+			$result["data"] = $this->env->filesystem()->getRequestData(NULL, $items, $rqData);
 			return $result;
 		}
 		

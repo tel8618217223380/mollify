@@ -20,7 +20,7 @@
 			$c->registerDataRequestPlugin(array("core-file-modified", "core-item-description", "core-parent-description"), $this);
 		}
 				
-		public function getRequestData($parent, $items, $result, $key, $requestData) {
+		public function getRequestData($parent, $items, $key, $requestData) {
 			$result = array();
 			if (strcmp("core-file-modified", $key) === 0) {
 				foreach($items as $i) {
