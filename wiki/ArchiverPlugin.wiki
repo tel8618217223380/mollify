@@ -9,9 +9,12 @@ Archiver plugin is built-in plugin that provides possibility to extract zip arch
 Archiver plugin does not have any parameters. Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
-	$PLUGINS = array(
-		"Archiver" => array(
-			"compressor" => "[COMPRESSOR]"
+        $CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"Archiver" => array(
+				"compressor" => "[COMPRESSOR]"
+			)
 		)
 	);
 }}}
