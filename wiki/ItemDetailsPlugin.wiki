@@ -9,8 +9,12 @@ Item details plugin is built-in plugin that provides details section in the file
 Register plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
-	$PLUGINS = array(
-		"ItemDetails" => array()
+	$CONFIGURATION = array(
+		...
+		"plugins" => array(
+			...
+			"ItemDetails" => array()
+		)
 	);
 }}}
 
@@ -73,7 +77,7 @@ For example:
 	mollify.App.init({
 		...
 		}, [
-			new ItemDetailsPlugin({
+			new mollify.plugin.ItemDetailsPlugin({
 				"pdf": {
 					"size" : {}
 				},
