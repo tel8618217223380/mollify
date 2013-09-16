@@ -14,9 +14,12 @@ Logged events is optional, and limits the event types logged. If this setting is
 For example:
 
 {{{
-	$PLUGINS = array(
-		"EventLogging" => array(
-			"logged_events" => array("filesystem/", "session/")
+	$CONFIGURATION = array(
+		...,
+		"plugins" =>
+			"EventLogging" => array(
+				"logged_events" => array("filesystem/", "session/")
+			)
 		)
 	);
 }}}
