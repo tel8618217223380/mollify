@@ -154,7 +154,7 @@
 		
 		this.onLogout = function() {
 			mollify.service.post("session/logout").done(function(s) {
-				mollify.App.setSession(s);
+				mollify.events.dispatch('session/end');
 			});
 		}
 		
