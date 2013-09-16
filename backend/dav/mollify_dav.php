@@ -79,7 +79,7 @@
  		
 		function getChildren() {
 			$children = array();
-			foreach($this->roots as $id=>$root)
+			foreach($this->roots as $root)
 				$children[] = new Mollify_DAV_Folder($this->controller, $root);
 			return $children;
 		}

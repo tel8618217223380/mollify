@@ -125,9 +125,17 @@
 			foreach($this->getFolderDefs($all) as $folderDef) {
 				$root = $this->filesystem($folderDef, !$all)->root();
 				if (!$this->env->authentication()->hasReadRights($this->permission($root))) continue;
-				$list[$folderDef['id']] = $root;
+				$list[] = $root;
 			}
 			
+			return $list;
+		}
+
+		public function getRootFoldersByKey($all = FALSE) {
+			$list = array();			
+			foreach($this->getRootFolders($all) as $r) {
+				$list[$r->id()] = $r;
+			}			
 			return $list;
 		}
 		
