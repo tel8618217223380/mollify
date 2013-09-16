@@ -9,8 +9,11 @@ Item collection plugin is built-in plugin that provides possibility to store dro
 Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
-	$PLUGINS = array(
-		"ItemCollection" => array()
+        $CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"ItemCollection" => array()
+		)
 	);
 }}}
 
@@ -18,10 +21,11 @@ And following into client settings:
 
 {{{
 <script type="text/javascript">
-	mollify.init({
-		"service-path": "backend/",
-		"plugins": [
-			new ItemCollectionPlugin()
+	mollify.App.init({
+			...
+		}, [
+			...,
+			new mollify.plugin.ItemCollectionPlugin()
 		]
 	});
 }}}
