@@ -224,7 +224,7 @@ pluginItemCollectionStoreDialogAction: "Store",
 pluginItemCollectionShareTitle: "Share Stored Collection",
 pluginItemCollectionsEditDialogTitle: "Edit Collection: {0}",
 pluginItemCollectionsEditDialogRemove: "Remove",
-pluginItemCollectionsNavRemove: "Remove...",
+pluginItemCollectionsNavRemove: "Remove",
 pluginItemCollectionsNavShare: "Share...",
 pluginItemCollectionsNavEdit: "Edit...",
 

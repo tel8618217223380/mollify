@@ -485,7 +485,7 @@
 					mollify.filesystem.folderInfo({id: params.id}, that.getDataRequest()).done(that._updateFolder).fail(function() {
 						//this.handled = true;	//TODO show better error
 						that.hideProgress();
-						that._openInitialFolder();
+						that.openInitialFolder();
 					});
 				} else if (params.path) {
 					mollify.filesystem.findFolder({path: params.path}, that.getDataRequest()).done(that._updateFolder).fail(function(e) {
@@ -494,15 +494,15 @@
 							this.handled = true;
 						}
 						that.hideProgress();
-						that._openInitialFolder();
+						that.openInitialFolder();
 					});
-				} else that._openInitialFolder();
+				} else that.openInitialFolder();
 			}
 			
 			that.onResize();
 		}
 		
-		this._openInitialFolder = function() {
+		this.openInitialFolder = function() {
 			if (mollify.filesystem.roots.length === 0) that.showNoRoots();
 			else if (mollify.filesystem.roots.length == 1) that.changeToFolder(mollify.filesystem.roots[0]);
 			else that.changeToFolder(null);
