@@ -14,9 +14,12 @@ Uploader setting is optional. If this setting is defined, the given uploader is 
 Configure plugin by adding following into configuration.php (or merge into existing plugins array):
 
 {{{
-	$PLUGINS = array(
-		"Share" => array(
-			"uploader" => "PATH_TO_PUBLIC_UPLOADER"		// optional
+        $CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"Share" => array(
+				"uploader" => "PATH_TO_PUBLIC_UPLOADER"		// optional
+			)
 		)
 	);
 }}}
