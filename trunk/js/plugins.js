@@ -1170,9 +1170,14 @@
 		that.w = 0;
 		that.$dbE = false;
 		that.items = [];
+		that.itemsByKey = {};
 		
 		this.initialize = function() {
 			that.itemContext = new mollify.ui.itemContext();
+			mollify.events.addEventHandler(function(e) {
+				if (e.type == 'filesystem/delete') that.onRemoveItems(mollify.helpers.extractValue(e.payload.items, "id"));
+				//TODO else if (e.type == 'filesystem/rename') that.updateItems(mollify.helpers.extractValue(e.payload.items));
+			});
 		};
 		
 		this.onFileViewActivate = function($container) {
@@ -1266,13 +1271,35 @@
 		
 		this.emptyDropbox = function() {
 			that.items = [];
+			that.itemsByKey = {};
 			that.refreshList();
 		};
-		
+				
 		this.onAddItem = function(item) {
 			if (that.items.indexOf(item) >= 0) return;
 			that.items.push(item);
+			that.itemsByKey[item.id] = item;
 			that.refreshList();
+		};
+		
+		this.onRemoveItem = function(item) {
+			that.items.remove(item);
+			delete that.itemsByKey[item.id];
+			that.refreshList();
+		};
+
+		this.onRemoveItems = function(ids) {
+			var count = 0;
+			$.each(ids, function(i, id) {
+				var item = that.itemsByKey[id];
+				if (!item) return;
+				
+				that.items.remove(item);
+				delete that.itemsByKey[id];
+				count++;
+			});
+			if (count > 0)
+				that.refreshList();
 		};
 		
 		this.refreshList = function() {
@@ -1311,8 +1338,7 @@
 			}
 			$("#mollify-dropbox-list .mollify-dropbox-list-item > a.item-remove").click(function() {
 				var $t = $(this);
-				that.items.remove($t.tmplItem().data);
-				that.refreshList();
+				that.onRemoveItem($t.tmplItem().data);
 			});
 		};
 					

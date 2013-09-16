@@ -110,6 +110,7 @@
 					//if (l.start) l.start(data.files);
 				},*/
 				submit: function (e, data) {
+					e.stopPropagation();
 					var $this = $(this);
 					if (l.start) l.start(data.files, function() {
 						$this.fileupload('send', data);
