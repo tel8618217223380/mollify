@@ -493,20 +493,36 @@
 				items = i;
 			}
 			
-			if (item) defaultName = item.name + ".zip";
-			
 			var df = $.Deferred();
-			mollify.ui.dialogs.input({
-				title: mollify.ui.texts.get('pluginArchiverCompressDialogTitle'),
-				message: mollify.ui.texts.get('pluginArchiverCompressDialogMessage'),
-				defaultValue: defaultName,
-				yesTitle: mollify.ui.texts.get('pluginArchiverCompressDialogAction'),
-				noTitle: mollify.ui.texts.get('dialogCancel'),
-				handler: {
-					isAcceptable: function(n) { return (!!n && n.length > 0 && (!item || n != item.name)); },
-					onInput: function(n) { $.when(that._onCompress(items, f, n)).then(df.resolve, df.reject); }
-				}
-			});
+			var doCompress = function(folder) {
+				if (item) defaultName = item.name + ".zip";				
+	
+				mollify.ui.dialogs.input({
+					title: mollify.ui.texts.get('pluginArchiverCompressDialogTitle'),
+					message: mollify.ui.texts.get('pluginArchiverCompressDialogMessage'),
+					defaultValue: defaultName,
+					yesTitle: mollify.ui.texts.get('pluginArchiverCompressDialogAction'),
+					noTitle: mollify.ui.texts.get('dialogCancel'),
+					handler: {
+						isAcceptable: function(n) { return (!!n && n.length > 0 && (!item || n != item.name)); },
+						onInput: function(n) { $.when(that._onCompress(items, folder, n)).then(df.resolve, df.reject); }
+					}
+				});
+			};
+			if (!f) {
+				mollify.ui.dialogs.folderSelector({
+					title: mollify.ui.texts.get('pluginArchiverCompressDialogTitle'),
+					message: mollify.ui.texts.get('pluginArchiverCompressSelectFolderDialogMessage'),
+					actionTitle: mollify.ui.texts.get('ok'),
+					handler: {
+						onSelect: function(folder) { doCompress(folder); },
+						canSelect: function(folder) { return true; }
+					}
+				});
+			} else {
+				doCompress(f);
+			}
+			
 			return df.promise();
 		};
 		
@@ -519,7 +535,7 @@
 		};
 		
 		this._onCompress = function(items, folder, name) {
-			return mollify.service.post("archiver/compress", {items : items, folder: folder, name:name}).done(function(r) {
+			return mollify.service.post("archiver/compress", { 'items' : items, 'folder': folder, 'name': name}).done(function(r) {
 				mollify.events.dispatch('archiver/compress', { items: items, folder: folder, name: name });
 				mollify.events.dispatch('filesystem/update', { folder: folder });
 			});

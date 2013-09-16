@@ -185,6 +185,7 @@ pluginArchiverDownloadCompressed: "Download compressed",
 pluginArchiverCompressDialogTitle: "Compress",
 pluginArchiverCompressDialogMessage: "Enter the name for the compressed package:",
 pluginArchiverCompressDialogAction: "Compress",
+pluginArchiverCompressSelectFolderDialogMessage: "Select the folder where the package is created into:",
 
 itemContextShareTitle: 'Share',
 itemContextShareMenuTitle: 'Share…',
