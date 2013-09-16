@@ -465,7 +465,7 @@
 			if (count($this->path) != 2) throw $this->invalidRequestException();
 			$id = $this->path[1];
 			
-			$roots = $this->env->filesystem()->getRootFolders(TRUE);
+			$roots = $this->env->filesystem()->getRootFoldersByKey(TRUE);
 			if (!array_key_exists($id, $roots)) throw $this->invalidRequestException("Invalid root ".$id);
 			$folder = $roots[$id];
 			

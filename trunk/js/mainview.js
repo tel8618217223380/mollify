@@ -583,11 +583,7 @@
 			mollify.ui.hideActivePopup();
 			that.showProgress();
 
-			if (!that._currentFolder) {
-				that.folder();
-				that.data({items: mollify.filesystem.roots});
-				return;
-			} else if (that._currentFolder.type) {
+			if (that._currentFolder && that._currentFolder.type) {
 				if (that._customFolderTypes[that._currentFolder.type]) {
 					that._customFolderTypes[that._currentFolder.type].getFolderInfo(that._currentFolder).done(function(r) {
 						that._currentFolderInfo = r.info;
@@ -609,7 +605,7 @@
 			that._currentFolder = r.folder;
 			that._currentFolderInfo = r;
 			that.hideProgress();
-			that.folder(r);
+			that.folder();
 			that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
 		};
 		
@@ -648,13 +644,13 @@
 		
 		this.onDragAndDrop = function(to, item) {
 			var copy = (that.dropType(to, item) == 'copy');
-			console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
+			//console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
 			
 			if (copy) mollify.filesystem.copy(item, to);
 			else mollify.filesystem.move(item, to);
 		};
 		
-		this.folder = function(p) {
+		this.folder = function() {
 			var $h = $("#mollify-folderview-header").empty();
 			var $tb = $("#mollify-fileview-folder-tools").empty();
 						
@@ -663,10 +659,10 @@
 					that._customFolderTypes[that._currentFolder.type].onRenderFolderView(that._currentFolder, that._currentFolderInfo, $h, $tb);
 				}
 			} else {
-				var currentRoot = p ? p.hierarchy[0] : false;
+				var currentRoot = (that._currentFolderInfo && that._currentFolderInfo.hierarchy) ? that._currentFolderInfo.hierarchy[0] : false;
 				that.rootNav.setActive(currentRoot);			
 
-				if (p) {
+				if (that._currentFolder) {
 					//HEADER
 					mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);
 				
@@ -753,7 +749,7 @@
 					}
 					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
 				
-					that.setupHierarchy(p.hierarchy, $t);
+					that.setupHierarchy(that._currentFolderInfo.hierarchy, $t);
 				
 					$("#mollify-folderview-items").addClass("loading");
 				} else {
