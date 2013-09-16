@@ -7,9 +7,12 @@ Plugins are installed simply by downloading the plugin package and unzipping the
 Plugins are registered with a variable PLUGINS in configuration.php:
 
 {{{
-$PLUGINS = array(
-	[PLUGIN_NAME] => [SETTINGS],
-	...
+$CONFIGURATION = array(
+	...,
+	"plugins" => array(
+		[PLUGIN_NAME] => [SETTINGS],
+		...
+	)
 }}}
 
 Plugin name is the same as the folder name in the installation package. Settings are plugin specific options, or empty array.
@@ -17,9 +20,12 @@ Plugin name is the same as the folder name in the installation package. Settings
 For example:
 
 {{{
-$PLUGINS = array(
-	"PluginA" => array("some_options" => "foo"),
-	"PluginB" => array()
+$CONFIGURATION = array(
+	...,
+	"plugins" => array(
+		"PluginA" => array("some_options" => "foo"),
+		"PluginB" => array()
+	)
 }}}
 
 Whenever plugins are installed or updated, open the Mollify updater util to check if database update is required.
