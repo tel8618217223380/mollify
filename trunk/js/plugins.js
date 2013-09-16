@@ -314,12 +314,7 @@
 		this._removeCollectionItem = function(ic, items) {
 			return mollify.service.del("itemcollections/"+ic.id+"/items", {items : window.isArray(items) ? items: [ items ]});
 		};
-		
-		this._getCollection = function(id, rq_data) {
-			//TODO post + data
-			return mollify.service.get("itemcollections/"+id);
-		}
-		
+				
 		this._showCollection = function(ic) {
 			that._fileView.changeToFolder({
 				type: "ic",
@@ -328,10 +323,6 @@
 			});
 			that._collectionsNav.setActive(ic);
 		};
-
-		/* Custom folder view -> */
-
-		/* ->| */
 		
 		this.editCollection = function(ic) {
 			mollify.service.get("itemcollections/"+ic.id).done(function(loaded){
@@ -388,7 +379,7 @@
 		this._getItemActions = function(ic) {
 			var items = [
 				{"title-key":"pluginItemCollectionsNavEdit", callback: function() { that.editCollection(ic); }},
-				{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that.removeCollection(ic); }}
+				{"title-key":"pluginItemCollectionsNavRemove", callback: function() { that._fileView.openInitialFolder(); that.removeCollection(ic); }}
 			];
 			if (mollify.plugins.exists("plugin-share")) items.push({"title-key":"pluginItemCollectionsNavShare", callback: function() { that._onShareNavItem(ic); }});
 			return items;
