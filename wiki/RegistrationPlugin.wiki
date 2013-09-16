@@ -23,12 +23,15 @@ User folder is an option that creates user folders automatically after registrat
 For example:
 
 {{{
-	$PLUGINS = array(
-		"Registration" => array(
-			"permission" => "rw",
-			"folders" => array("1", "3"),
-			"user_folder" => array("path" => "/foo/users", "folder_name" => "User Folder", "add_to_users" 
+	$CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"Registration" => array(
+				"permission" => "rw",
+				"folders" => array("1", "3"),
+				"user_folder" => array("path" => "/foo/users", "folder_name" => "User Folder", "add_to_users" 
 => array("1", "2"))
+			)
 		)
 	);
 }}}
@@ -44,7 +47,8 @@ Registration plugin requires installation via Mollify update util.
 
 To enable mail notifications, add following settings:
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"enable_mail_notification" => TRUE,
 		"mail_notification_from" => "admin@your.host"
 	);
