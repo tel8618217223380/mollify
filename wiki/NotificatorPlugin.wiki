@@ -9,15 +9,19 @@ Notificator plugin is built-in plugin that provides mail notifications when cert
 Notificator plugin does not have any parameters. Configure plugin by adding following into configuration.php:
 
 {{{
-	$PLUGINS = array(
-		"Notificator" => array()
+	$CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"Notificator" => array()
+		)
 	);
 }}}
 
 Notificator requires mail notification enabled with setting:
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"enable_mail_notification" => TRUE
 	);
 }}}
@@ -25,7 +29,8 @@ Notificator requires mail notification enabled with setting:
 Additionally, you can set the email address where notifications are sent from:
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"mail_notification_from" => "admin@yourhost.com"
 	);
 }}}
