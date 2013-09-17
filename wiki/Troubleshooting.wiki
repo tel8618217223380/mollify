@@ -79,7 +79,8 @@ Mollify uses REST HTTP protocol for the requests, which means all HTTP methods (
 
 To fix this, Mollify can be set to operate on limited HTTP methods mode by adding following setting in configuration.php: 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"enable_limited_http_methods" => TRUE
 	);
 }}}
@@ -87,7 +88,8 @@ To fix this, Mollify can be set to operate on limited HTTP methods mode by addin
 and following client setting into the index.html (merge into your existing settings):
 {{{
 	<script type="text/javascript">
-		mollify.init({
+		mollify.App.init({
+			...,
 			"limited-http-methods": true,
 		});
 	</script>
