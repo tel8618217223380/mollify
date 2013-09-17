@@ -6,6 +6,8 @@ Mollify supports guest mode, ie page that displays content without logging in. A
 
 = Configuration =
 
+NOTE! Not yet available in version 2
+
 1. Open admin util and create a new user account for the guest mode
 
 2. Write down the user id in the user list
