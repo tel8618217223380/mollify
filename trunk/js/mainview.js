@@ -289,6 +289,7 @@
 		this._filelist.addColumn({
 			"id": "size",
 			"title-key": "fileListColumnTitleSize",
+			"min-width": 75,
 			"sort": function(i1, i2, sort, data) {
 				var s1 = (i1.is_file ? parseInt(i1.size, 10) : 0);
 				var s2 = (i2.is_file ? parseInt(i2.size, 10) : 0);
@@ -332,6 +333,26 @@
 				var desc = data["core-item-description"][item.id];
 				var stripped = desc.replace(/<\/?[^>]+(>|$)/g, '');
 				return '<div class="item-description-container" title="'+stripped+'">'+desc+'</div>';
+			}
+		});
+		this._filelist.addColumn({
+			"id": "go-into-folder",
+			"title": "",
+			"width": 25,
+			"sort": function(i1, i2, sort, data) {
+				return 0;
+			},
+			"content": function(item, data) {
+				if (item.is_file) return "";
+				return '<div class="go-into-folder"><i class="icon-level-down"></i></div>';
+			},
+			"on-render": function(list) {
+				list.$i.delegate(".go-into-folder", "click", function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					//TODO find item & change folder
+					return false;
+				});
 			}
 		});
 		
@@ -1062,7 +1083,7 @@
 		
 	var FileList = function(container, id, filelistSpec, columns) {
 		var t = this;
-		t.minColWidth = 75;
+		t.minColWidth = 25;
 		t.$c = $("#"+container);
 		t.listId = 'mollify-filelist-'+id;
 		t.cols = [];
@@ -1099,7 +1120,9 @@
 				var ind = $t.index();
 				var col = t.cols[ind];
 				
-				$t.css("min-width", t.minColWidth);
+				var minColWidth = col["min-width"] || t.minColWidth;
+				
+				$t.css("min-width", minColWidth);
 				if (col.width) $t.css("width", col.width);
 				
 				$t.find(".mollify-filelist-col-header-title").click(function() {
@@ -1109,9 +1132,10 @@
 				if (i != (t.cols.length-1)) {
 					$t.resizable({
 						handles: "e",
-						minWidth: t.minColWidth,
+						minWidth: minColWidth,
 						//autoHide: true,
 						start: function(e, ui) {
+							//TODO max?
 							var max = t.$c.width() - (t.cols.length * t.minColWidth);
 							$t.resizable("option", "maxWidth", max);
 						},
@@ -1190,7 +1214,7 @@
 					return col.content(item, t.data);
 				},
 				itemColStyle: function(item, col) {
-					var style="min-width:"+t.minColWidth+"px";
+					var style="min-width:"+(col["min-width"] || t.minColWidth)+"px";
 					if (col.width) style = style+";width:"+col.width+"px";
 					return style;
 				}
@@ -1198,7 +1222,7 @@
 			
 			for (var i=0,j=t.cols.length; i<j; i++) {
 				var col = t.cols[i];
-				if (col["on-render"]) col["on-render"]();
+				if (col["on-render"]) col["on-render"](t);
 			}
 			
 			var $items = t.$i.find(".mollify-filelist-item");

@@ -901,6 +901,14 @@ li#mollify-folder-hierarchy-item-root > a {
 	color: #000000;
 }
 
+.mollify-filelist-col-go-into-folder {
+	visibility: hidden;
+}
+
+.mollify-filelist-item.hover .mollify-filelist-col-go-into-folder {
+	visibility: visible;
+}
+
 .mollify-iconview {
 	float: left;
 }
