@@ -14,20 +14,13 @@ Modify script "backend/check.php" and enable the script as instructed in the fil
 2. Enable server side logging by adding following settings in configuration.php:
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"debug" => TRUE,
 		"debug_log" => "/mollify/debug.log", // CHANGE THIS
 	);
 }}}
-If you have other settings already, add this to the same list, for example:
-{{{
-	$SETTINGS = array(
-		"enable_file_upload" => TRUE,
-		"enable_zip_download" => TRUE,
-		"debug" => TRUE,
-		"debug_log" => "/mollify/debug.log", //CHANGE THIS
-	);
-}}}
+
 The debug log file must be located in a folder where PHP has read and write permissions.
 
 3. Recreate the error situation
@@ -41,28 +34,6 @@ NOTE! Debug log is emptied every time the url is opened.
 5. Copy the debug info and attach into error report
 
 NOTE! Once the logs are reported, remember to disable server side debug logging option as it generates lots of log entries.
-
-=== Client side debugging ===
-
-Sometimes server side debug log is not enough to solve problems, and then you need to install debug client that provides also client side debug information.
-
-1. Download debug client from http://code.google.com/p/mollify/downloads/list (select the debug client for the same version as installed)
-
-2. In Mollify installation directory create a new folder called "debug-client"
-
-3. Unzip the package into created folder
-
-4. Modify host page client script location to use the debug client
-{{{
-<script type="text/javascript" language="javascript" src="client/org.sjarvela.Mollify.nocache.js"></script>
-}}}
-into
-{{{
-<script type="text/javascript" language="javascript" src="debug-client/org.sjarvela.Mollify.nocache.js"></script>
-}}}
-
-Once the debug client is installed, you should see the debug window. Recreate the error, and copy all the logging information into the issue report
-
 
 ----
 
@@ -90,7 +61,8 @@ Mollify uses PHP date function to get file modification timestamp, but if PHP ti
 To add timezone, either edit PHP.ini and add setting "date.timezone", or add Mollify setting "timezone" in configuration.php. Possible values for both can be found from http://php.net/manual/en/timezones.php
 
 {{{
-	$SETTINGS = array(
+	$CONFIGURATION = array(
+		...,
 		"timezone" => "Europe/Helsinki"
 	);
 }}}
