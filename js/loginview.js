@@ -89,7 +89,20 @@
 		}
 		
 		that.onResetPassword = function(email) {
-			//TODO
+			mollify.service.post("lostpassword", {"email": email}).done(function(r) {
+				that.wait.close();
+				
+				mollify.ui.dialogs.notification({
+					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
+				});
+			}).fail(function(e) {
+				this.handled = true;
+				that.wait.close();
+				
+				mollify.ui.dialogs.info({
+					message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
+				});
+			});
 		}
 		
 		that.showLoginError = function() {
@@ -97,22 +110,6 @@
 			
 			mollify.ui.dialogs.notification({
 				message: mollify.ui.texts.get('loginDialogLoginFailedMessage')
-			});
-		}
-		
-		that.onResetPasswordSuccess = function() {
-			that.wait.close();
-			
-			mollify.ui.dialogs.notification({
-				message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
-			});
-		}
-		
-		that.onResetPasswordFailed = function() {
-			that.wait.close();
-			
-			mollify.ui.dialogs.info({
-				message: mollify.ui.texts.get('resetPasswordPopupResetFailed')
 			});
 		}
 	};

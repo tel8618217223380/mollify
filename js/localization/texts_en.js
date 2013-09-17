@@ -49,6 +49,8 @@ loginDialogLoginButton: "Log in",
 loginDialogLoginFailedMessage: "Login failed, user name or password was incorrect.",
 resetPasswordPopupMessage: "Enter your email address:",
 resetPasswordPopupButton: "Reset",
+resetPasswordPopupResetSuccess: "Your new password has been reset and sent to your email address.",
+resetPasswordPopupResetFailed: "Password reset failed",
 
 mainviewMenuTitle: "Files",
 mainViewSearch: "Search",
