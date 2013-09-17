@@ -18,18 +18,21 @@ Both list viewer/previewer plugins and file extensions they handle, in format of
 For example:
 
 {{{
-	$PLUGINS = array(
-		"FileViewerEditor" => array(
-			"viewers" => array(
-				"Image" => array("gif", "png", "jpg"),
-				"TextFile" => array("txt", "php", "html")
-			),
-			"previewers" => array(
-				"Image" => array("gif", "png", "jpg")
-			),
-			"editors" => array(
-				"TextFile" => array("txt")
-			),
+	$CONFIGURATION = array(
+		...,
+		"plugins" => array(
+			"FileViewerEditor" => array(
+				"viewers" => array(
+					"Image" => array("gif", "png", "jpg"),
+					"TextFile" => array("txt", "php", "html")
+				),
+				"previewers" => array(
+					"Image" => array("gif", "png", "jpg")
+				),
+				"editors" => array(
+					"TextFile" => array("txt")
+				)
+			)
 		)
 	);
 }}}
