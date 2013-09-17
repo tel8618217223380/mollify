@@ -940,6 +940,7 @@
 						"id": "comment-count",
 						"request-id": "plugin-comment-count",
 						"title-key": "",
+						"width" : 50,
 						"content": that.getListCellContent,
 						"request": function(parent) { return {}; },
 						"on-click": function(item) {
