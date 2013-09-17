@@ -1353,6 +1353,7 @@
 				});
 			}
 			$("#mollify-dropbox-list .mollify-dropbox-list-item > a.item-remove").click(function() {
+				mollify.ui.hideActivePopup();
 				var $t = $(this);
 				that.onRemoveItem($t.tmplItem().data);
 			});
