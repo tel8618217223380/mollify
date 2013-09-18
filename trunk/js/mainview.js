@@ -81,7 +81,11 @@
 			var $items = $mnu.find(".mollify-mainview-menubar-item").removeClass("active");
 			var i = that._views.indexOf(v);
 			$($items.get(i)).addClass("active");
-		}
+		};
+		
+		this.getActiveView = function() {
+			return that._currentView;
+		};
 		
 		this.addNavBar = function(nb) {
 			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
@@ -346,11 +350,11 @@
 				if (item.is_file) return "";
 				return '<div class="go-into-folder"><i class="icon-level-down"></i></div>';
 			},
-			"on-render": function(list) {
+			"on-init": function(list) {
 				list.$i.delegate(".go-into-folder", "click", function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					//TODO find item & change folder
+					var item = list.getItemForElement($(this));
+					if (!item || item.is_file) return;
+					that.changeToFolder(item);
 					return false;
 				});
 			}
@@ -1151,6 +1155,7 @@
 						distance: 30
 					});*/
 				}
+				if (col["on-init"]) col["on-init"](t);
 			});
 			t.items = [];
 			t.data = {};
@@ -1311,6 +1316,10 @@
 		this.getItemContextElement = function(item) {
 			var $i = t.$i.find("#mollify-filelist-item-"+item.id);
 			return $i.find(".mollify-filelist-col-name") || $i; 
+		};
+		
+		this.getItemForElement = function($el) {
+			return $el.tmplItem().data;
 		};
 		
 		this.getContainerElement = function() {
