@@ -22,26 +22,27 @@
 			if (Logging::isDebug())
 				Logging::logDebug("Sending mail to [".Util::array2str($to)."]: [".$message."]");
 			
-			if ($this->enabled) {
-				$f = ($from != NULL ? $from : $this->env->settings()->setting("mail_notification_from"));
-				
-				$validRecipients = $this->getValidRecipients($to);
-				if (count($validRecipients) === 0) {
-					Logging::logDebug("No valid recipient email addresses, no mail sent");
-					return;
-				}
-				
-				$toAddress = '';
-				$headers = 'From:'.$f;
-				
-				if (count($validRecipients) == 1) {
-					$toAddress = $this->getRecipientString($validRecipients[0]);
-				} else {
-					$headers .= PHP_EOL.$this->getBccHeaders($validRecipients);
-				}
-				
-				mail($toAddress, $subject, str_replace("\n", "\r\n", wordwrap($message)), $headers);
+			if (!$this->enabled) return;
+			$isHtml = (stripos($message, "<html>") !== FALSE);
+			$f = ($from != NULL ? $from : $this->env->settings()->setting("mail_notification_from"));
+			
+			$validRecipients = $this->getValidRecipients($to);
+			if (count($validRecipients) === 0) {
+				Logging::logDebug("No valid recipient email addresses, no mail sent");
+				return;
 			}
+			
+			$toAddress = '';
+			$headers = $isHtml ? ('MIME-Version: 1.0' . "\r\n" . 'Content-type: text/html; charset=utf-8' . "\r\n") : "";
+			$headers .= 'From:'.$f;
+			
+			if (count($validRecipients) == 1) {
+				$toAddress = $this->getRecipientString($validRecipients[0]);
+			} else {
+				$headers .= PHP_EOL.$this->getBccHeaders($validRecipients);
+			}
+			
+			mail($toAddress, $subject, $isHtml ? $message : str_replace("\n", "\r\n", wordwrap($message)), $headers);
 		}
 
 		private function getBccHeaders($recipients) {
