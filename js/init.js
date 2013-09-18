@@ -90,9 +90,11 @@ var mollifyDefaults = {
 	mollify.App._start = function() {
 		var $c = $("#mollify");
 		if (!mollify.session || !mollify.session.authenticated) {
+			mollify.App.mainview = false;
 			new mollify.view.LoginView().init($c);
 		} else {
-			new mollify.view.MainView().init($c);
+			mollify.App.mainview = new mollify.view.MainView();
+			mollify.App.mainview.init($c);
 		}
 	};
 	
