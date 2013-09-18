@@ -6,7 +6,7 @@
 	 #  Unzip Mollify installation package (for example with command "`unzip mollify_[VER].zip`")
 	 #  Copy extracted directory "mollify" into your web server root directory (or any other place of your choice)
 	 #  Open installer at address "http://your.host.name/mollify/backend/install/". Installer will guide you through the configuration, for more information see chapter 3.
-	 #  For database installation, open administration utility to configure users and published folders at "http://your.host.name/mollify/backend/admin/".
+	 #  Log in as admin and choose "Configuration" in app header to configure users and published folders
 
 = 2. Upgrading =
 
