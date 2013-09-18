@@ -1254,6 +1254,7 @@
 					
 				}
 			});
+			that._updateButton();
 			that.openDropbox(false);
 		};
 		
@@ -1297,12 +1298,14 @@
 			that.items.push(item);
 			that.itemsByKey[item.id] = item;
 			that.refreshList();
+			that._updateButton();
 		};
 		
 		this.onRemoveItem = function(item) {
 			that.items.remove(item);
 			delete that.itemsByKey[item.id];
 			that.refreshList();
+			that._updateButton();
 		};
 
 		this.onRemoveItems = function(ids) {
@@ -1315,8 +1318,10 @@
 				delete that.itemsByKey[id];
 				count++;
 			});
-			if (count > 0)
+			if (count > 0) {
 				that.refreshList();
+				that._updateButton();
+			}
 		};
 		
 		this.refreshList = function() {
@@ -1358,6 +1363,14 @@
 				var $t = $(this);
 				that.onRemoveItem($t.tmplItem().data);
 			});
+		};
+		
+		this._updateButton = function() {
+			var $btn = $("#mollify-dropbox-actions > button");
+			if (that.items.length > 0)
+				$btn.removeClass("disabled");
+			else
+				$btn.addClass("disabled");
 		};
 					
 		return {
