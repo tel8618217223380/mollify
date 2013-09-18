@@ -241,7 +241,13 @@
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeUsers(sel).done(updateUsers); }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+						mollify.ui.dialogs.confirmation({
+							title: mollify.ui.texts.get("configAdminUsersRemoveUsersConfirmationTitle"),
+							message: mollify.ui.texts.get("configAdminUsersRemoveUsersConfirmationMessage", [sel.length]),
+							callback: function() { that._removeUsers(sel).done(updateUsers); }
+						});
+					}},
 					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateUsers }
 				],
 				table: {
@@ -265,7 +271,11 @@
 						if (id == "edit") {
 							that.onAddEditUser(u, updateUsers);
 						} else if (id == "remove") {
-							mollify.service.del("configuration/users/"+u.id).done(updateUsers);
+							mollify.ui.dialogs.confirmation({
+								title: mollify.ui.texts.get("configAdminUsersRemoveUserConfirmationTitle"),
+								message: mollify.ui.texts.get("configAdminUsersRemoveUserConfirmationMessage", [u.name]),
+								callback: function() { mollify.service.del("configuration/users/"+u.id).done(updateUsers); }
+							});
 						}
 					},
 					onHilight: function(u) {
