@@ -44,7 +44,7 @@
 				$socket = NULL;
 			}
 			
-			if (isset($conf["engine"])) $conf["engine"];
+			if (isset($conf["engine"])) $engine = $conf["engine"];
 			else $engine = NULL;
 			
 			$db = new MySQLIDatabase($host, $conf["user"], $conf["password"], $database, $tablePrefix, $port, $socket, $engine);

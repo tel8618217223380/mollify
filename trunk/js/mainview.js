@@ -150,8 +150,10 @@
 		
 		this.getSessionActions = function() {
 			var actions = [];		
-			actions.push({"title-key" : "mainViewChangePasswordTitle", callback: that.changePassword});
-			actions.push({"title" : "-"});
+			if (mollify.features.hasFeature('change_password')) {
+				actions.push({"title-key" : "mainViewChangePasswordTitle", callback: that.changePassword});
+				actions.push({"title" : "-"});
+			}
 			actions.push({"title-key" : "mainViewLogoutTitle", callback: that.onLogout});
 			return actions;
 		}
