@@ -34,28 +34,17 @@
 				if ($settings->hasSetting("enable_".$f))
 					$enabled = $settings->setting("enable_".$f);
 				else
-					$enabled = TRUE;	//TODO event_logging = FALSE
-				
-				/*$configControlled = FALSE;
-				
-				if ($configControlled) {
-					$configSupported = in_array($f, $configurationFeatures);
-					
-					if (!$configSupported)
-						$enabled = FALSE;
-					else if ($settings->hasSetting("enable_".$f))
-						$enabled = $settings->setting("enable_".$f);
-					else
-						$enabled = $configuration->featureEnabledByDefault($f, FALSE);					
-				} else {
-					$enabled = $settings->setting("enable_".$f, TRUE);
-				}*/
+					$enabled = TRUE;
 				$this->features[$f] = $enabled;
 			}
 		}
 		
 		public function addFeature($name) {
 			$this->features[$name] = TRUE;
+		}
+
+		public function removeFeature($name) {
+			$this->features[$name] = FALSE;
 		}
 		
 		public function isFeatureEnabled($feature) {
