@@ -333,7 +333,7 @@
 			return TRUE;
 		}
 		
-		public function getDefaultPermission($userId = "") {
+		public function getDefaultPermission($userId) {
 			$mode = strtoupper($this->db->query(sprintf("SELECT permission_mode FROM ".$this->db->table("user")." WHERE id='%s'", $this->db->string($userId)))->value());
 			$this->env->authentication()->assertPermissionValue($mode);
 			return $mode;

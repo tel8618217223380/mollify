@@ -171,7 +171,7 @@
 		
 		public function getDefaultPermission() {
 			if (!$this->cachedDefaultPermission) {
-				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission();
+				if (!$this->isAuthenticated()) $this->cachedDefaultPermission = self::PERMISSION_VALUE_NO_RIGHTS;
 				else $this->cachedDefaultPermission = $this->env->configuration()->getDefaultPermission($this->env->session()->userId());
 			}
 			return $this->cachedDefaultPermission;
