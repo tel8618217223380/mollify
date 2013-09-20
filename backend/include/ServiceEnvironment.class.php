@@ -35,7 +35,7 @@
 		private $eventHandler;
 		private $filesystem;
 		private $request;
-		private $notificator = NULL;
+		private $mailer = NULL;
 		private $urlRetriever = NULL;
 		
 		public function __construct($db, $session, $responseHandler, $configuration, $settings) {
@@ -112,10 +112,10 @@
 			return $this->request;
 		}
 
-		public function notificator() {
-			if ($this->notificator == NULL)
-				$this->notificator = $this->createMailNotificator();
-			return $this->notificator;
+		public function mailer() {
+			if ($this->mailer == NULL)
+				$this->mailer = $this->createMailSender();
+			return $this->mailer;
 		}
 		
 		public function urlRetriever() {

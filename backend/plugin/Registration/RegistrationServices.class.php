@@ -216,7 +216,7 @@
 			$msg = Util::replaceParams($REGISTRATION_NOTIFICATION_MESSAGE, $values);
 			$recipient = array(array("name" => $name, "email" => $email));
 			
-			$this->env->notificator()->send($recipient, $subject, $msg);
+			$this->env->mailer()->send($recipient, $subject, $msg);
 		}
 				
 		public function __toString() {
