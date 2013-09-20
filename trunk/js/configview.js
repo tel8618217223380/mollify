@@ -237,7 +237,7 @@
 					listView.table.set(users);
 				});
 			};
-			
+						
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditUser(false, updateUsers); }},
@@ -265,11 +265,14 @@
 						} },
 						{ id: "email", title: mollify.ui.texts.get('configAdminUsersEmailTitle') },
 						{ id: "edit", title: "", type: "action", content: '<i class="icon-edit"></i>' },
+						{ id: "pw", title:"", type: "action", content:'<i class="icon-key"></i>' },
 						{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
 					],
 					onRowAction: function(id, u) {
 						if (id == "edit") {
 							that.onAddEditUser(u, updateUsers);
+						} else if (id == "pw") {
+							that.onChangePassword(u);
 						} else if (id == "remove") {
 							mollify.ui.dialogs.confirmation({
 								title: mollify.ui.texts.get("configAdminUsersRemoveUserConfirmationTitle"),
@@ -300,6 +303,44 @@
 			$.when(gp, fp).done(function(){$c.removeClass("loading");});
 		}
 		
+		this.onChangePassword = function(u, cb) {
+			var $content = false;
+			var $name = false;
+			var $password = false;
+			
+			mollify.ui.dialogs.custom({
+				resizable: true,
+				initSize: [600, 200],
+				title: mollify.ui.texts.get('configAdminUsersChangePasswordDialogTitle', u.name),
+				content: mollify.dom.template("mollify-tmpl-config-admin-userchangepassworddialog", {user: u}),
+				buttons: [
+					{ id: "yes", "title": mollify.ui.texts.get('dialogSave') },
+					{ id: "no", "title": mollify.ui.texts.get('dialogCancel') }
+				],
+				"on-button": function(btn, d) {
+					if (btn.id == 'no') {
+						d.close();
+						return;
+					}
+					
+					var password = $password.val();
+					if (!password || password.length === 0) return;
+					
+					mollify.service.put("configuration/users/"+u.id+"/password", {new: window.Base64.encode(password)}).done(d.close).done(cb);
+				},
+				"on-show": function(h, $d) {
+					$("#change-password-title").text(mollify.ui.texts.get('configAdminUsersChangePasswordTitle', u.name));
+					
+					$content = $d.find("#mollify-config-admin-userchangepassworddialog-content");
+					$password = $d.find("#passwordField");
+					$("#generatePasswordBtn").click(function(){ $password.val(that._generatePassword()); return false; });
+					
+					$password.focus();	
+					h.center();
+				}
+			});
+		};
+
 		this.onDeactivate = function() {
 			that._details.remove();
 		};
