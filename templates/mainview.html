@@ -11,7 +11,6 @@
 		</div>
 	</div>
 </div>
-<div id="mollify-notification-container" class="mollify-mainview-notification-container"></div>
 <div id="mollify-mainview-main" class="container">
 	<div id="mollify-mainview-content" class="row">
 		<div id="mollify-mainview-navlist-container" class="well span2">
@@ -23,7 +22,7 @@
 </div>
 
 <script id="mollify-tmpl-main-notification" type="text/x-jquery-tmpl">
-	<div class="mollify-mainview-notification alert">
+	<div class="mollify-mainview-notification alert {{if type}}alert-${type}{{/if}} {{if cls}}${cls}{{/if}}">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		${message}
 	</div>

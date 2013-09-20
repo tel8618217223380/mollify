@@ -81,19 +81,15 @@
 			var $mnu = $("#mollify-mainview-menu");
 			var $items = $mnu.find(".mollify-mainview-menubar-item").removeClass("active");
 			var i = that._views.indexOf(v);
-			$($items.get(i)).addClass("active");
-			
-				mollify.ui.dialogs.notification({
-					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
-				});
+			$($items.get(i)).addClass("active");			
 		};
 		
 		this.onNotification = function(spec) {
-			var $ntf = mollify.dom.template("mollify-tmpl-main-notification", spec).hide();
-			$("#mollify-mainview-content").append($ntf);
-			$ntf.fadeIn(300);
+			var $trg = (spec && spec.target) ? ((typeof spec.target === 'string') ? $("#"+spec.target) : spec.target) : $("#mollify-mainview-content");
+			var $ntf = mollify.dom.template("mollify-tmpl-main-notification", spec).hide().appendTo($trg).fadeIn(300);
 			setTimeout(function() {
 				$ntf.fadeOut(300);
+				setTimeout($ntf.remove, 300);
 				if (spec["on-finish"]) spec["on-finish"]();
 			}, spec.time | 3000);
 
@@ -196,7 +192,7 @@
 				}).fail(function(e) {
 					this.handled = true;
 					if (e.code == 107) {
-						mollify.ui.dialogs.error({message:mollify.ui.texts.get('mainviewChangePasswordError')});
+						mollify.ui.dialogs.notification({message:mollify.ui.texts.get('mainviewChangePasswordError'), type: 'error', cls: 'full', target: $dlg.find(".modal-footer")});
 					} else this.handled = false;
 				});
 			}

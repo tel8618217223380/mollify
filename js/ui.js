@@ -1019,9 +1019,9 @@
 			
 			var getSelected = function() {
 				var s = $e.find('option:selected');
-				if (!s || s.length === 0) return false;
+				if (!s || s.length === 0) return null;
 				var item = s[0].data;
-				if (item == o.none) return false;
+				if (item == o.none) return null;
 				return item;
 			}
 			
@@ -1397,7 +1397,7 @@
 	dh.notification = function(spec) {
 		if (mollify.ui.activeView && mollify.ui.activeView.onNotification && mollify.ui.activeView.onNotification(spec)) return;
 		
-		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("#mollify-notification-container");
+		var $trg = (spec && spec.target) ? ((typeof spec.target === 'string') ? $("#"+spec.target) : spec.target) : $("#mollify-notification-container");
 		if ($trg.length === 0) $trg = $("body");
 		var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dh._dialogDefaults)).hide().appendTo($trg).fadeIn(300);
 		setTimeout(function() {
