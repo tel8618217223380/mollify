@@ -1768,4 +1768,37 @@
 			openShares : that.onOpenShares
 		};
 	}
+	
+	/**
+	*	Send via email -plugin
+	**/
+	mollify.plugin.SendViaEmailPlugin = function() {
+		var that = this;
+		
+		return {
+			id: "plugin-sendviaemail",
+			initialize: that.initialize,
+
+			itemContextHandler : function(item, ctx, data) {
+				if (!item.is_file) return false;
+				return {
+					actions: [
+						{ 'title-key': 'actionSendViaEmailSingle', callback: function() { } }
+					]
+				};
+			},
+			itemCollectionHandler : function(items) {
+				var folder = false;
+				$.each(items, function(i, itm){ if (!itm.is_file) { folder = true; return false; } });				
+				if (folder) return false;
+				
+				return {
+					actions: [
+						{ 'title-key': 'actionSendViaEmailMultiple', callback: function() { } }
+					]
+				};
+			}
+		};
+	}
+
 }(window.jQuery, window.mollify);

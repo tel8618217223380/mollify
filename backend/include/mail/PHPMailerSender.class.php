@@ -71,8 +71,11 @@
 			$mail->Subject = $subject;
 			$mail->Body    = $message;
 			
-			if(!$mail->send())
+			if(!$mail->send()) {
 				Logging::logError('Message could not be sent: '.$mail->ErrorInfo);
+				return FALSE;
+			}
+			return TRUE;
 		}
 		
 		private function getValidRecipients($recipients) {
