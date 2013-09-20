@@ -38,18 +38,18 @@
 			
 			$mailer = new PHPMailer;
 			
-			$host = $this->settings()->getSetting("mail_smtp_host");
-			if ($host) {
+			$smtp = $this->settings()->getSetting("mail_smtp");
+			if ($smtp != NULL and isset($smtp["host"])) {
 				$mail->isSMTP();
-				$mail->Host = $host;
-				$username = $this->settings()->getSetting("mail_smtp_username");
-				$pw = $this->settings()->getSetting("mail_smtp_password");
+				$mail->Host = $smtp["host"];
 				
-				if ($username and $pw) {
+				if (isset($smtp["username"]) and isset($smtp["password"])) {
 					$mail->SMTPAuth = true;
-					$mail->Username = $username;
-					$mail->Password = $pw;
+					$mail->Username = $smtp["username"];
+					$mail->Password = $smtp["password"];
 				}
+				if (isset($smtp["secure"]))
+					$mail->SMTPSecure = $smtp["secure"];
 			}
 			
 			$mail->From = $f;

@@ -49,9 +49,7 @@
 			"guest_user_id" => FALSE,
 			"debug" => FALSE,
 			"debug_log" => NULL,
-			"mail_smtp_host" => FALSE,
-			"mail_smtp_username" => FALSE,
-			"mail_smtp_password" => FALSE
+			"mail_smtp" => NULL
 		);
 		
 		function __construct($settings) {
