@@ -581,7 +581,13 @@
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditGroup(false, updateGroups); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeGroups(sel).done(updateGroups); }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+						mollify.ui.dialogs.confirmation({
+							title: mollify.ui.texts.get("configAdminGroupsRemoveGroupsConfirmationTitle"),
+							message: mollify.ui.texts.get("configAdminGroupsRemoveGroupsConfirmationMessage", [sel.length]),
+							callback: function() { that._removeGroups(sel).done(updateGroups); }
+						});
+					}},
 					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateGroups }
 				],
 				table: {
@@ -601,7 +607,11 @@
 						if (id == "edit") {
 							that.onAddEditGroup(g, updateGroups);
 						} else if (id == "remove") {
-							mollify.service.del("configuration/usergroups/"+g.id).done(updateGroups);
+							mollify.ui.dialogs.confirmation({
+								title: mollify.ui.texts.get("configAdminGroupsRemoveGroupConfirmationTitle"),
+								message: mollify.ui.texts.get("configAdminGroupsRemoveGroupConfirmationMessage", [g.name]),
+								callback: function() { mollify.service.del("configuration/usergroups/"+g.id).done(updateGroups); }
+							});
 						}
 					},
 					onHilight: function(u) {
@@ -848,7 +858,13 @@
 			listView = new mollify.view.ConfigListView($c, {
 				actions: [
 					{ id: "action-add", content:'<i class="icon-plus"></i>', callback: function() { that.onAddEditFolder(false, updateFolders); }},
-					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) { that._removeFolders(sel).done(updateFolders); }},
+					{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+						mollify.ui.dialogs.confirmation({
+							title: mollify.ui.texts.get("configAdminFoldersRemoveFoldersConfirmationTitle"),
+							message: mollify.ui.texts.get("configAdminFoldersRemoveFoldersConfirmationMessage", [sel.length]),
+							callback: function() { that._removeFolders(sel).done(updateFolders); }
+						});
+					}},
 					{ id: "action-refresh", content:'<i class="icon-refresh"></i>', callback: updateFolders }
 				],
 				table: {
@@ -868,7 +884,11 @@
 						if (id == "edit") {
 							that.onAddEditFolder(f, updateFolders);
 						} else if (id == "remove") {
-							mollify.service.del("configuration/folders/"+f.id).done(updateFolders);
+							mollify.ui.dialogs.confirmation({
+								title: mollify.ui.texts.get("configAdminFoldersRemoveFolderConfirmationTitle"),
+								message: mollify.ui.texts.get("configAdminFoldersRemoveFolderConfirmationMessage", [f.name]),
+								callback: function() { mollify.service.del("configuration/folders/"+f.id).done(updateFolders); }
+							});
 						}
 					},
 					onHilight: function(f) {
