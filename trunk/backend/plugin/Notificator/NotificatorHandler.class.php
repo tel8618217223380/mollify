@@ -51,7 +51,7 @@
 			
 			if (Logging::isDebug())
 				Logging::logDebug("NOTIFICATOR: Sending notification ".$notification->id().":".$message);
-			$this->env->notificator()->send($notification->getRecipients(), $title, $message);
+			$this->env->mailer()->send($notification->getRecipients(), $title, $message);
 		}
 
 		private function getTitle($notification, $values) {			
