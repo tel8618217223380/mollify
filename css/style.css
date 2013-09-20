@@ -501,6 +501,10 @@ a.mollify-login-link {
 	width: 50%;
 }
 
+.mollify-mainview-notification.full {
+	width: 80%;	
+}
+
 #mollify-mainview-content {
 	position: absolute;
 	top: 72px;
