@@ -58,6 +58,14 @@ var mollifyDefaults = {
 		mollify.settings = $.extend({}, mollifyDefaults, s);
 		mollify.service.init(mollify.settings["limited-http-methods"]);
 		
+		var doStart = function() {
+			mollify.service.get("session/info/3").done(function(s) {
+				mollify.App.setSession(s);
+			}).fail(function(e) {
+				$("#mollify").html("Failed to initialize Mollify");
+			});
+		};
+		
 		mollify.events.addEventHandler(function(e) {
 			if (e.type == 'session/start') {
 				mollify.session = e.payload;
@@ -69,19 +77,15 @@ var mollifyDefaults = {
 			} else if (e.type == 'session/end') {
 				mollify.session = false;
 				mollify.filesystem.init([]);
-				mollify.App._start();
+				doStart();
 			}
 		});
 
 		mollify.ui.initialize();
 		mollify.plugins.initialize();
 
-		mollify.service.get("session/info/3").done(function(s) {
-			mollify.App.setSession(s);
-		}).fail(function(e) {
-			$("#mollify").html("Failed to initialize Mollify");
-		});
-	};
+		doStart();
+	};	
 	
 	mollify.App.setSession = function(s) {
 		mollify.events.dispatch("session/start", s);
