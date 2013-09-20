@@ -78,6 +78,9 @@
 				$name = $data["name"];
 				if (strlen($name) == 0) throw $this->invalidRequestException("Missing data");
 
+				if (!isset($data["items"])) throw $this->invalidRequestException("No data");
+				$items = $data["items"];
+				
 				$this->handler()->addUserItemCollection($name, $items);
 				$this->response()->success($this->convert($this->handler()->getUserItemCollections()));
 				return;				
