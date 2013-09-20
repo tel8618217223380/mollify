@@ -79,6 +79,16 @@
 			if  (is_array($i) && array_key_exists("id", $i)) $id = $i['id'];
 			return $this->env->filesystem()->item($id);
 		}
+
+		protected function items($a) {
+			if (!is_array($a)) return array($this->item($a));
+			
+			$result = array();
+			foreach($a as $i) {
+				$result[] = $this->item($i);
+			}
+			return $result;
+		}
 		
 		protected function invalidRequestException($details = NULL) {
 			return new ServiceException("INVALID_REQUEST", "Invalid ".get_class($this)." request: ".strtoupper($this->request->method())." ".$this->request->URI().($details != NULL ? (" ".$details): ""));

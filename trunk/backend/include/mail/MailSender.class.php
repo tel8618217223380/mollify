@@ -18,7 +18,10 @@
 			$this->enabled = $env->features()->isFeatureEnabled("mail_notification");
 		}
 		
-		public function send($to, $subject, $message, $from = NULL) {
+		public function send($to, $subject, $message, $from = NULL, $attachments = NULL) {
+			if ($attachments != NULL)
+				throw new ServiceException("INVALID_CONFIGURATION", "Default mailer does not support sending attachments");
+				
 			if (Logging::isDebug())
 				Logging::logDebug("Sending mail to [".Util::array2str($to)."]: [".$message."]");
 			
