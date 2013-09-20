@@ -100,6 +100,8 @@
 	mollify.ui._activePopup = false;
 	
 	mollify.ui.initialize = function() {
+		mollify.ui.activeView = false;
+		
 		if (mollify.ui.texts.locale) {
 			$("html").attr("lang", mollify.ui.texts.locale);
 			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
@@ -1393,6 +1395,8 @@
 	};
 	
 	dh.notification = function(spec) {
+		if (mollify.ui.activeView && mollify.ui.activeView.onNotification && mollify.ui.activeView.onNotification(spec)) return;
+		
 		var $trg = (spec && spec.target) ? $("#"+spec.target) : $("#mollify-notification-container");
 		if ($trg.length === 0) $trg = $("body");
 		var notification = mollify.dom.template("mollify-tmpl-notification", $.extend(spec, dh._dialogDefaults)).hide().appendTo($trg).fadeIn(300);
