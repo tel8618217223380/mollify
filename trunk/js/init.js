@@ -92,6 +92,8 @@ var mollifyDefaults = {
 	};
 	
 	mollify.App._start = function() {
+		mollify.ui.activeView = false;
+		
 		var $c = $("#mollify");
 		if (!mollify.session || !mollify.session.authenticated) {
 			mollify.App.mainview = false;

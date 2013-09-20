@@ -30,6 +30,7 @@
 			});
 			
 			that.itemContext = new mollify.ui.itemContext();
+			mollify.ui.activeView = that;
 			mollify.dom.loadContentInto($c, mollify.templates.url("mainview.html"), that, ['localize']);			
 		}
 		
@@ -81,6 +82,22 @@
 			var $items = $mnu.find(".mollify-mainview-menubar-item").removeClass("active");
 			var i = that._views.indexOf(v);
 			$($items.get(i)).addClass("active");
+			
+				mollify.ui.dialogs.notification({
+					message: mollify.ui.texts.get('resetPasswordPopupResetSuccess')
+				});
+		};
+		
+		this.onNotification = function(spec) {
+			var $ntf = mollify.dom.template("mollify-tmpl-main-notification", spec).hide();
+			$("#mollify-mainview-content").append($ntf);
+			$ntf.fadeIn(300);
+			setTimeout(function() {
+				$ntf.fadeOut(300);
+				if (spec["on-finish"]) spec["on-finish"]();
+			}, spec.time | 3000);
+
+			return true;
 		};
 		
 		this.getActiveView = function() {
