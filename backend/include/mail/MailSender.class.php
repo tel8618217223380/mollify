@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * MailNotificator.class.php
+	 * Mollify_MailSender.class.php
 	 *
 	 * Copyright 2008- Samuli Järvelä
 	 * Released under GPL License.
@@ -9,7 +9,7 @@
 	 * License: http://www.mollify.org/license.php
 	 */
 
-	class MailNotificator {
+	class Mollify_MailSender {
 		private $env;
 		private $enabled;
 		
@@ -71,7 +71,7 @@
 		}
 				
 		public function __toString() {
-			return "MailNotificator";
+			return "MailSender";
 		}
 	}
 ?>
