@@ -54,9 +54,9 @@
 			if ($settings->hasSetting('timezone')) date_default_timezone_set($settings->setting('timezone'));
 		}
 		
-		private function createMailNotificator() {
-			require_once($this->settings->setting("mail_notificator_class", TRUE));
-			return new MailNotificator($this);
+		private function createMailSender() {
+			require_once($this->settings->setting("mail_sender_class", TRUE));
+			return new Mollify_MailSender($this);
 		}
 		
 		private function createUrlRetriever() {

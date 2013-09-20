@@ -10,12 +10,12 @@
 	 */
 
 	require_once("configuration.php");
-	global $SETTINGS, $CONFIGURATION_TYPE;
-	if (!isset($CONFIGURATION_TYPE)) die("Mollify not configured");
+	global $CONFIGURATION;
+	if (!isset($CONFIGURATION)) die("Mollify not configured");
 	
 	function MollifyExternalInterface() {
-		global $SETTINGS, $CONFIGURATION_TYPE;
-		return new MollifyExternalInterface($SETTINGS, $CONFIGURATION_TYPE);
+		global $CONFIGURATION;
+		return new MollifyExternalInterface($CONFIGURATION);
 	}
 
 	class VoidResponseHandler {
@@ -28,7 +28,7 @@
 		private $authentication;
 		private $session;
 		
-		public function __construct($settingsVar, $configurationId) {
+		public function __construct($conf) {
 			require_once("include/Settings.class.php");
 			require_once("include/session/Session.class.php");
 			require_once("include/ServiceEnvironment.class.php");
@@ -40,13 +40,13 @@
 			require_once("include/Features.class.php");
 			require_once("include/Request.class.php");
 		
-			Logging::initialize($settingsVar);
+			Logging::initialize($conf);
 
-			$this->settings = new Settings($settingsVar);
+			$this->settings = new Settings($conf);
 			$this->session = new Session(TRUE);
 			
 			$factory = new ConfigurationFactory();
-			$this->configuration = $factory->createConfiguration($configurationId, $this->settings);
+			$this->configuration = $factory->createConfiguration($conf, $this->settings);
 
 			$env = new ServiceEnvironment($this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
 			$env->initialize(new Request(TRUE));

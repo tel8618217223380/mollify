@@ -35,7 +35,7 @@
 			"new_folder_permission_mask" => 0755,
 			"convert_filenames" => FALSE,
 			"support_output_buffer" => FALSE,
-			"mail_notificator_class" => "mail/MailNotificator.class.php",
+			"mail_sender_class" => "mail/MailSender.class.php",
 			"url_retriever_class" => "UrlRetriever.class.php",
 			"datetime_format" => "d.m.Y H:i:s",
 			"mime_types" => array(),
@@ -48,7 +48,10 @@
 			"enable_guest_mode" => FALSE,
 			"guest_user_id" => FALSE,
 			"debug" => FALSE,
-			"debug_log" => NULL
+			"debug_log" => NULL,
+			"mail_smtp_host" => FALSE,
+			"mail_smtp_username" => FALSE,
+			"mail_smtp_password" => FALSE
 		);
 		
 		function __construct($settings) {
