@@ -134,7 +134,7 @@
 		public function getRootFoldersByKey($all = FALSE) {
 			$list = array();			
 			foreach($this->getRootFolders($all) as $r) {
-				$list[$r->id()] = $r;
+				$list[$r->filesystem()->id()] = $r;
 			}			
 			return $list;
 		}
