@@ -322,6 +322,7 @@
 			"id": "file-modified",
 			"request-id": "core-file-modified",
 			"title-key": "fileListColumnTitleLastModified",
+			"width": 180,
 			"sort": function(i1, i2, sort, data) {
 				if (!i1.is_file && !i2.is_file) return 0;
 				if (!data || !data["core-file-modified"]) return 0;
