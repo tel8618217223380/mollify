@@ -814,6 +814,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: url(images/mimetypes/empty.png) no-repeat;
 }
 
+.mollify-filelist-item.item-type-pdf .mollify-filelist-item-icon {
+	background: url(images/mimetypes/pdf.png) no-repeat;
+}
+
 .mollify-filelist-col-header {
 	font-weight: bold;
 	color: #333333;
