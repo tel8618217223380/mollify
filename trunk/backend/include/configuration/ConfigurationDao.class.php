@@ -65,7 +65,12 @@
 				return FALSE;
 			}
 			
-			return $result->firstRow();
+			$user = $result->firstRow();
+			if ($user["auth"] == "") {
+				$this->db->update("UPDATE ".$this->db->table("user")." SET auth=NULL WHERE auth=''");
+				return FALSE;
+			}
+			return $user;
 		}
 
 		public function getUserByName($username, $expiration = FALSE) {
@@ -131,7 +136,7 @@
 		}
 	
 		public function updateUser($id, $name, $email, $permission, $expiration, $auth, $description = NULL) {
-			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', expiration=%s, auth=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration), $this->db->string($auth, TRUE), $this->db->string($description), $this->db->string($id)));			
+			$affected = $this->db->update(sprintf("UPDATE ".$this->db->table("user")." SET name='%s', email=%s, permission_mode='%s', expiration=%s, auth=%s, description='%s' WHERE id='%s'", $this->db->string($name), $this->db->string($email, TRUE), $this->db->string($permission), $this->db->string($expiration), $this->db->string($auth, TRUE), $this->db->string($description), $this->db->string($id)));
 			return TRUE;
 		}
 		

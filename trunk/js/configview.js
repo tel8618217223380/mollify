@@ -326,7 +326,7 @@
 					var password = $password.val();
 					if (!password || password.length === 0) return;
 					
-					mollify.service.put("configuration/users/"+u.id+"/password", {new: window.Base64.encode(password)}).done(d.close).done(cb);
+					mollify.service.put("configuration/users/"+u.id+"/password", {"new": window.Base64.encode(password)}).done(d.close).done(cb);
 				},
 				"on-show": function(h, $d) {
 					$("#change-password-title").text(mollify.ui.texts.get('configAdminUsersChangePasswordTitle', u.name));
