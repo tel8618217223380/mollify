@@ -66,7 +66,7 @@
 			}
 			
 			$user = $result->firstRow();
-			if ($user["auth"] == "") {
+			if ($user["auth"] == "" and $user["auth"] !== NULL) {
 				$this->db->update("UPDATE ".$this->db->table("user")." SET auth=NULL WHERE auth=''");
 				return FALSE;
 			}
