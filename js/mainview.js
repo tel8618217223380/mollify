@@ -451,7 +451,7 @@
 		}
 		
 		this.onResize = function() {
-			$("#mollify-folderview").height($("#mollify-mainview-content").height());
+			//$("#mollify-folderview").height($("#mollify-mainview-content").height());
 		}
 		
 		this.onActivate = function(h) {
@@ -801,7 +801,7 @@
 				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
 			}
 			
-			$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
+			//$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
 			/*if (that.viewType != null) {
@@ -936,7 +936,7 @@
 		};
 		
 		this.updateItems = function(items, data) {
-			$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
+			//$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 			that.itemWidget.content(items, data);
 		};
 		
