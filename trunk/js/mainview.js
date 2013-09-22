@@ -1139,7 +1139,8 @@
 			t.$h.find(".mollify-filelist-col-header").each(function(i) {
 				var $t = $(this);
 				var ind = $t.index();
-				var col = t.cols[ind];
+				if (ind == 0) return;
+				var col = t.cols[ind-1];
 				
 				var minColWidth = col["min-width"] || t.minColWidth;
 				

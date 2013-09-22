@@ -113,7 +113,11 @@ body {
 @media (max-width: 767px) {
 	#mollify-mainview-navlist-parent {
 		position: relative;
-		width: 92%;		
+		width: 92%;
+	}
+	
+	#mollify-mainview-viewcontent {
+		padding: 8px;
 	}
 }
  
@@ -405,6 +409,10 @@ a.mollify-login-link {
 
 .mollify-bubble-popover .popover-inner, .mollify-bubble-popover .popover-content {
 	float: left;	
+}
+
+#mollify-mainview-viewcontent {
+	float: left;
 }
 
 #mollify-mainview-main {
@@ -837,6 +845,7 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-item {
+	display: inline-block;
 	cursor: pointer;
 	font-size: 13px;
 	height: 22px;
@@ -874,12 +883,18 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-col-header {
+	display: inline-block;
 	font-weight: bold;
 	color: #333333;
 }
 
 #mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
 	float: left;
+}
+
+.mollify-filelist-header-cols {
+	display: inline-block;
+	overflow-x: hidden;
 }
 
 .mollify-filelist-col-header-title {
