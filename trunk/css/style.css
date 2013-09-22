@@ -54,66 +54,6 @@ html, body {
 
 body { }
 
-@media (min-width: 980px) {
-	body {
-		padding-top: 90px;
-	}
-	
-	#mollify-mainview-menu {
-		margin: 15px 0 0 8px;
-	}
-	
-	#mollify-mainview-viewtools {
-		margin: 15px 0 0 0;
-	}
-	
-	#mollify-mainview-user {
-		margin: 15px 0 0 0;
-	}
-}
-
-@media (max-width: 979px) {
-	body {
-		padding-top: 0;
-	}
-	
-	.navbar .btn-navbar {
-		margin: 25px 0 0 0;
-	}
-}
-
-#mollify-mainview-navlist-parent {
-	width: 16.92817679558011%;
-}
-	
-/* Large desktop */
-@media (min-width: 1200px) {
-	#mollify-mainview-navlist-parent {
-		width: 18.404255319148934%;
-	}
-}
- 
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px) {
-
-}
- 
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) {
-	#mollify-mainview-navlist-parent {
-		position: relative;
-		width: 92%;
-	}
-	
-	#mollify-mainview-viewcontent {
-		padding: 16px;
-		min-height: 600px;
-	}
-}
- 
-/* Landscape phones and down */
-@media (max-width: 480px) { }
-
 #mollify { }
 
 #mollify, a.button, input, .mollify-popupmenu, .mollify-popup, .mollify-itemcontext-popover {
@@ -668,10 +608,6 @@ li#mollify-folder-hierarchy-item-root > a {
 	visibility: hidden;
 }
 
-/*.mollify-filelist-item.drophover {
-	background: red;
-}*/
-
 .mollify-filelist-header-cols > .mollify-filelist-col-header {
 	color: #000000;
 }
@@ -1160,3 +1096,77 @@ a.mollify-tableaction {
 	width: 95%;
 	font-family: monospace;
 }
+
+@media (min-width: 980px) {
+	body {
+		padding-top: 90px;
+	}
+	
+	#mollify-mainview-menu {
+		margin: 15px 0 0 8px;
+	}
+	
+	#mollify-mainview-viewtools {
+		margin: 15px 0 0 0;
+	}
+	
+	#mollify-mainview-user {
+		margin: 15px 0 0 0;
+	}
+	
+	/*#mollify-folderview-header {
+		position: fixed;
+		top: 60px;
+		background-color: #ffffff;
+		padding-top: 30px;
+	}
+	
+	#mollify-folderview-items {
+		padding-top: 125px;
+	}*/
+}
+
+@media (max-width: 979px) {
+	body {
+		padding-top: 0;
+	}
+	
+	.navbar .btn-navbar {
+		margin: 25px 0 0 0;
+	}
+}
+
+#mollify-mainview-navlist-parent {
+	width: 16.92817679558011%;
+}
+	
+/* Large desktop */
+@media (min-width: 1200px) {
+	#mollify-mainview-navlist-parent {
+		width: 18.404255319148934%;
+	}
+}
+ 
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+	#mollify-mainview-navlist-parent {
+		position: relative;
+		width: 70%;
+	}
+}
+ 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+	#mollify-mainview-navlist-parent {
+		position: relative;
+		width: 92%;
+	}
+	
+	#mollify-mainview-viewcontent {
+		padding: 16px;
+		min-height: 600px;
+	}
+}
+ 
+/* Landscape phones and down */
+@media (max-width: 480px) { }
