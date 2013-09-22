@@ -1,22 +1,29 @@
 <div id="mollify-mainview-header" class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<div id="mollify-mainview-logo"></div>
-			<div id="mollify-mainview-menu"></div>
-			<div id="mollify-mainview-header-tools" class="nav-collapse collapse">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+      
+			<div id="mollify-mainview-logo" class="brand"></div>
+			
+			<div class="nav-collapse collapse navbar-responsive-collapse">
+				<ul id="mollify-mainview-menu" class="mollify-mainview-menubar nav pull-left"></ul>				
 				<ul id="mollify-mainview-user" class="nav pull-right"></ul>
-				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right">					
-				</div>
+				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right"></div>
 			</div>
 		</div>
 	</div>
 </div>
-<div id="mollify-mainview-main" class="container">
-	<div id="mollify-mainview-content" class="row">
-		<div id="mollify-mainview-navlist-container" class="well span2">
+<div id="mollify-mainview-main" class="container-fluid">
+	<div id="mollify-mainview-content" class="row-fluid">
+		<div id="mollify-mainview-navlist-container" class="span2">
+			<div id="mollify-mainview-navlist-parent" class="well"></div>
 		</div>
 		
-		<div id="mollify-mainview-viewcontent" class="span9">
+		<div id="mollify-mainview-viewcontent" class="span10">
 		</div>
 	</div>
 </div>
@@ -54,11 +61,7 @@
 </script>
 
 <script id="mollify-tmpl-main-menubar" type="text/x-jquery-tmpl">
-	<ul class="mollify-mainview-menubar nav">
-		{{each items}}
-		<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
-		{{/each}}
-	</ul>
+	<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
 </script>
 
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">

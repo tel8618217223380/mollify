@@ -52,8 +52,9 @@
 				menuitems.push({ title: v.title });
 			});
 			
-			var $mb = mollify.dom.template("mollify-tmpl-main-menubar", { items: menuitems }).appendTo($("#mollify-mainview-menu"));
-			var $mbitems = $mb.find(".mollify-mainview-menubar-item");
+			var $mb = $("#mollify-mainview-menu");
+			var $mbitems = mollify.dom.template("mollify-tmpl-main-menubar", menuitems).appendTo($mb);
+			//var $mbitems = $mb.find(".mollify-mainview-menubar-item");
 			$mbitems.click(function() {
 				var i = $mbitems.index($(this));
 				that.activateView(that._views[i]);
@@ -66,7 +67,7 @@
 		this.activateView = function(v) {			
 			mollify.ui.hideActivePopup();
 			if (that._currentView && that._currentView.onDeactivate) that._currentView.onDeactivate();
-			$("#mollify-mainview-navlist-container").empty();
+			$("#mollify-mainview-navlist-parent").empty();
 
 			that._currentView = v;
 			
@@ -101,7 +102,7 @@
 		};
 		
 		this.addNavBar = function(nb) {
-			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
+			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-parent"));
 			var items = nb.items;
 			var initItems = function() {
 				var $items = $nb.find(".mollify-mainview-navbar-item");
