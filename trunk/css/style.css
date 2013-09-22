@@ -61,12 +61,67 @@ html, body {
 }
 
 body {
-	width: 100%;
-	height: 100%;
+	/*width: 100%;
+	height: 100%;*/
 }
 
+@media (min-width: 980px) {
+	body {
+		padding-top: 90px;
+	}
+	
+	#mollify-mainview-menu {
+		margin: 15px 0 0 8px;
+	}
+	
+	#mollify-mainview-viewtools {
+		margin: 15px 0 0 0;
+	}
+	
+	#mollify-mainview-user {
+		margin: 15px 0 0 0;
+	}
+}
+
+@media (max-width: 979px) {
+	body {
+		padding-top: 0;
+	}
+	
+	.navbar .btn-navbar {
+		margin: 25px 0 0 0;
+	}
+}
+
+#mollify-mainview-navlist-parent {
+	width: 16.92817679558011%;
+}
+	
+/* Large desktop */
+@media (min-width: 1200px) {
+	#mollify-mainview-navlist-parent {
+		width: 18.404255319148934%;
+	}
+}
+ 
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+
+}
+ 
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+	#mollify-mainview-navlist-parent {
+		position: relative;
+		width: 92%;		
+	}
+}
+ 
+/* Landscape phones and down */
+@media (max-width: 480px) { ... }
+
 #mollify {
-	width: 100%;
+	/*width: 100%;*/
 }
 
 #mollify, a.button, input, .mollify-popupmenu, .mollify-popup, .mollify-itemcontext-popover {
@@ -353,11 +408,11 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-main {
-	position: absolute;
+	/*position: absolute;
 	top: 0px;
 	left: 0px;
 	right: 0px;
-	bottom: 0px;
+	bottom: 0px;*/
 	background-color: #fffff;
 }
 
@@ -372,12 +427,12 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-header {
-	float: left;
-	width: 100%;	
+	/*float: left;
+	width: 100%;*/
 }
 
 #mollify-mainview-logo {
-	float: left;
+	/*float: left;*/
 	width: 85px;
 	height: 62px;
 	background: url(images/mollify.png) no-repeat;
@@ -385,19 +440,8 @@ a.mollify-login-link {
 	padding: 0;
 }
 
-#mollify-mainview-menu {
-	float: left;
-	margin-top: 15px;
-}
-
 .mollify-mainview-menu-item {
 	cursor: pointer;
-}
-
-#mollify-mainview-header-tools {
-	float: right;
-	margin-top: 20px;
-	margin-right: 48px;
 }
 
 #mollify-mainview-user {
@@ -506,11 +550,11 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-content {
-	position: absolute;
+	/*position: absolute;
 	top: 72px;
 	left: 0;
 	right: 0;
-	bottom: 0px;
+	bottom: 0px;*/
 }
 
 #mollify-mainview-progress {
@@ -580,7 +624,7 @@ a.mollify-login-link {
           box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
 }*/
 
-.icon-chevron-right {
+/*.icon-chevron-right {
 	float: right;
 	margin-top: 2px;
 	margin-right: -6px;
@@ -594,7 +638,6 @@ a.mollify-login-link {
 }
 
 @media (max-width: 980px) {
-  /* When affixed, space properly */
   .mollify-mainview-navbar {
     margin-right: 0;
   }
@@ -617,7 +660,7 @@ a.mollify-login-link {
 
 @media (max-width: 480px) {
 	
-}
+}*/
 
 #mollify-folderview {
 	position: relative;
@@ -681,29 +724,34 @@ a.mollify-login-link {
 }*/
 
 #mollify-folderview-items {
-	position: absolute;
+	/*position: absolute;
 	top: 120px;
 	left: 8px;
 	right: 8px;
-	bottom: 0;
+	bottom: 0;*/
+	float: left;
 	overflow: hidden;
 	overflow-y: auto;
 }
 
 .mollify-filelist {
-	position: absolute;
+	float: left;
+	width: 100%;
+	overflow-x: hidden;
+	/*position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
-	right: 0;
+	right: 0;*/
 }
 
 .mollify-filelist-header {
 	border-bottom: 1px solid #ececec;
-	position: absolute;
+	height: 22px;
+	/*position: absolute;
 	top: 0;
 	left: 0;
-	right: 0;
+	right: 0;*/
 }
 
 #mollify-searchresults-desc {
@@ -769,7 +817,8 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-filelist-header, .mollify-filelist-item {
 	float: left;
-	width: 100%;
+	/*width: 100%;*/
+	overflow-x: hidden;
 }
 
 .mollify-filelist-header {
@@ -777,11 +826,12 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-items {
-	position: absolute;
+	float: left;
+	/*position: absolute;
 	top: 25px;
 	bottom: 0;
 	left: 0;
-	right: 0;
+	right: 0;*/
 	overflow: hidden;
 	overflow-y: auto;
 }
@@ -789,6 +839,7 @@ li#mollify-folder-hierarchy-item-root > a {
 .mollify-filelist-item {
 	cursor: pointer;
 	font-size: 13px;
+	height: 22px;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
