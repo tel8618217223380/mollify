@@ -12,12 +12,14 @@
 	class Authentication {
 		const PERMISSION_VALUE_ADMIN = "A";
 		const PERMISSION_VALUE_READWRITE = "RW";
+		const PERMISSION_VALUE_READWRITE_NODELETE = "WD";
 		const PERMISSION_VALUE_READONLY = "RO";
 		const PERMISSION_VALUE_NO_RIGHTS = 'NO';
 		
 		const RIGHTS_NONE = "NO";
 		const RIGHTS_READ = "R";
 		const RIGHTS_WRITE = "W";
+		const RIGHTS_DELETE = "D";
 		const RIGHTS_ADMIN = "A";
 	
 		protected $env;
@@ -31,7 +33,7 @@
 		public function initialize() {}
 		
 		public function assertPermissionValue($value) {
-			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
+			if ($value != self::PERMISSION_VALUE_ADMIN and $value != self::PERMISSION_VALUE_READWRITE and $value != self::PERMISSION_VALUE_READWRITE_NODELETE and $value != self::PERMISSION_VALUE_READONLY and $value != self::PERMISSION_VALUE_NO_RIGHTS)
 				throw new ServiceException("INVALID_CONFIGURATION", "Invalid permission mode [".$value."]");
 		}
 		
@@ -179,9 +181,12 @@
 		
 		public function assertRights($permissions, $required, $desc = "Unknown item/action") {
 			if ($this->isAdmin() or strcasecmp($required, self::RIGHTS_NONE) === 0) return;
-					
-			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
+
+			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE_NODELETE) === 0) {
 				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE) return;
+			}					
+			if (strcasecmp($permissions, self::PERMISSION_VALUE_READWRITE) === 0) {
+				if ($required === self::RIGHTS_READ or $required === self::RIGHTS_WRITE or $required === self::RIGHTS_DELETE) return;
 			}
 			if (strcasecmp($permissions, self::PERMISSION_VALUE_READONLY) === 0) {
 				if ($required === self::RIGHTS_READ) return;
@@ -191,10 +196,15 @@
 		}
 		
 		public function hasReadRights($permission) {
-			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
+			return strcasecmp($permission, self::PERMISSION_VALUE_ADMIN) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READWRITE_NODELETE) === 0 or strcasecmp($permission, self::PERMISSION_VALUE_READONLY) === 0;
 		}
 		
 		function hasModifyRights() {
+			$base = $this->getDefaultPermission();
+			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE || $base === self::PERMISSION_VALUE_READWRITE_NODELETE);
+		}
+
+		function hasDeleteRights() {
 			$base = $this->getDefaultPermission();
 			return ($base === self::PERMISSION_VALUE_ADMIN || $base === self::PERMISSION_VALUE_READWRITE);
 		}

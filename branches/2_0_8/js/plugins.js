@@ -20,7 +20,8 @@
 			id: "plugin-core",
 			itemContextHandler : function(item, ctx, data) {
 				var root = item.id == item.root_id;
-				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
+				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
+				var deletable = !root && ctx.details.permission.toUpperCase() == "RW";
 				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
 
 				var actions = [];				
@@ -36,7 +37,7 @@
 				if (writable) {	
 					actions.push({ 'title-key': 'actionMoveItem', callback: function() { return mollify.filesystem.move(item); } });
 					actions.push({ 'title-key': 'actionRenameItem', callback: function() { return mollify.filesystem.rename(item); } });
-					actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
+					if (deletable) actions.push({ 'title-key': 'actionDeleteItem', callback: function() { var df = $.Deferred(); mollify.ui.dialogs.confirmation({
 						title: item.is_file ? mollify.ui.texts.get("deleteFileConfirmationDialogTitle") : mollify.ui.texts.get("deleteFolderConfirmationDialogTitle"),
 						message: mollify.ui.texts.get(item.is_file ? "confirmFileDeleteMessage" : "confirmFolderDeleteMessage", [item.name]),
 						callback: function() { $.when(mollify.filesystem.del(item)).then(df.resolve, df.reject); }
@@ -562,9 +563,9 @@
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
-				var writable = !root && ctx.details.permission.toUpperCase() == "RW";
-				var parentWritable = !root && ctx.details.parent_permission.toUpperCase() == "RW";
-				var folderWritable = !root && ctx.folder_permission && ctx.folder_permission.toUpperCase() == "RW";
+				var writable = !root && (ctx.details.permission.toUpperCase() == "RW" || ctx.details.permission.toUpperCase() == "WD");
+				var parentWritable = !root && (ctx.details.parent_permission.toUpperCase() == "RW" || ctx.details.parent_permission.toUpperCase() == "WD");
+				var folderWritable = !root && ctx.folder_permission && (ctx.folder_permission.toUpperCase() == "RW" || ctx.folder_permission.toUpperCase() == "WD");
 
 				if (that._isArchive(item)) {
 					return {
@@ -969,6 +970,7 @@
 		this.initialize = function() {
 			that.permissionOptions = [
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRW'), value: "rw"},
+				{ title: mollify.ui.texts.get('pluginPermissionsValueWD'), value: "wd"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueRO'), value: "ro"},
 				{ title: mollify.ui.texts.get('pluginPermissionsValueNO'), value: "no"}
 			];
