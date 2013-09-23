@@ -327,6 +327,7 @@ a.mollify-login-link {
 	position: relative;
 	width: 100%;
 	float: left;
+	padding-bottom: 30px;
 }
 
 #mollify-folderview-header {
@@ -1157,14 +1158,24 @@ a.mollify-tableaction {
  
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
+	.navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+		margin: 0;
+	}
+	
 	#mollify-mainview-navlist-parent {
 		position: relative;
-		width: 92%;
+		width: 87%;
+		margin-right: 0;
 	}
 	
 	#mollify-mainview-viewcontent {
-		padding: 16px;
+		float: left;
+		padding: 8px 16px 0 16px;
 		min-height: 600px;
+	}
+	
+	#mollify-folderview-header {
+		padding-top: 0;
 	}
 }
  
