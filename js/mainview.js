@@ -652,6 +652,11 @@
 		
 		this._canWrite = function() {
 			if (!that._currentFolderInfo) return false;
+			return (that._currentFolderInfo.permission == 'RW' || that._currentFolderInfo.permission == 'WD');
+		}
+
+		this._canDelete = function() {
+			if (!that._currentFolderInfo) return false;
 			return (that._currentFolderInfo.permission == 'RW');
 		}
 		
@@ -705,7 +710,7 @@
 
 				if (that._currentFolder) {
 					//HEADER
-					mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), folder: that._currentFolder}).appendTo($h);
+					mollify.dom.template("mollify-tmpl-fileview-header", {canWrite: that._canWrite(), canDelete: that._canDelete(), folder: that._currentFolder}).appendTo($h);
 				
 					var $t = $("#mollify-fileview-folder-tools");
 					var $fa = $("#mollify-fileview-folder-actions");
