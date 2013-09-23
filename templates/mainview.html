@@ -1,26 +1,19 @@
 <div id="mollify-mainview-header" class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<button type="button" id="mollify-mainview-navcollapse" class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-      
-			<div id="mollify-mainview-logo" class="brand"></div>
-			
-			<div class="nav-collapse collapse navbar-responsive-collapse">
-				<ul id="mollify-mainview-menu" class="mollify-mainview-menubar nav pull-left"></ul>				
+			<div id="mollify-mainview-logo"></div>
+			<div id="mollify-mainview-menu"></div>
+			<div id="mollify-mainview-header-tools" class="nav-collapse collapse">
 				<ul id="mollify-mainview-user" class="nav pull-right"></ul>
-				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right"></div>
+				<div id="mollify-mainview-viewtools" class="navbar-form form-inline pull-right">					
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div id="mollify-mainview-main" class="container-fluid">
-	<div id="mollify-mainview-content" class="row-fluid">
-		<div id="mollify-mainview-navlist-container" class="span3">
-			<div id="mollify-mainview-navlist-parent" class="well affix"></div>
+<div id="mollify-mainview-main" class="container">
+	<div id="mollify-mainview-content" class="row">
+		<div id="mollify-mainview-navlist-container" class="well span2">
 		</div>
 		
 		<div id="mollify-mainview-viewcontent" class="span9">
@@ -61,7 +54,11 @@
 </script>
 
 <script id="mollify-tmpl-main-menubar" type="text/x-jquery-tmpl">
-	<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
+	<ul class="mollify-mainview-menubar nav">
+		{{each items}}
+		<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
+		{{/each}}
+	</ul>
 </script>
 
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">
@@ -180,9 +177,8 @@
 <script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">
 	<div id="${listId}" class="mollify-filelist">
 		<div id="${listId}-header" class="mollify-filelist-header">
-			<div id="${listId}-header-cols" class="mollify-filelist-header-cols">
-				<div class="mollify-filelist-col mollify-filelist-col-icon mollify-filelist-col-header"></div>
-			</div>
+			<div class="mollify-filelist-col mollify-filelist-col-icon mollify-filelist-col-header"></div>
+			<div id="${listId}-header-cols" class="mollify-filelist-header-cols"></div>
 		</div>
 		<div id="${listId}-items" class="mollify-filelist-items"></div>
 	</div>

@@ -144,7 +144,7 @@
 			},
 			initMainViewUploader : function(h) {
 				var $p = h.container;
-				var $container = $('<div style="width: 0px; height: 0px; overflow: hidden;"></div>').appendTo($p);
+				var $container = $('<div style="width: 0px; height: 0px"></div>').appendTo($p);
 				var $form = $('<form enctype="multipart/form-data"></form>').appendTo($container);
 				t.$mainViewInput = $('<input type="file" class="mollify-mainview-uploader-input" name="uploader-html5[]" multiple="multiple"></input>').appendTo($form).fileupload($.extend({
 					url: '',

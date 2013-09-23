@@ -46,8 +46,6 @@ var mollifyDefaults = {
 	/* APP */
 
 	mollify.App.init = function(s, p) {
-		Modernizr.testProp("touch");
-		
 		mollify.App.pageUrl = window.location.href;
 		mollify.App.pageUrl = mollify.App.pageUrl.substring(0, mollify.App.pageUrl.lastIndexOf('/')+1);
 		

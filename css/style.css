@@ -1,8 +1,16 @@
+/*@import url(plugins.css);*/
 @import url(bootstrap.css);
 @import url(bootstrap-responsive.css);
 @import url(font-awesome.css);
 @import url(bootstrap-lightbox.css);
 @import url(bootstrap-datetimepicker.min.css);
+
+/*@font-face {
+  font-family: 'MollifyPlainText';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Signika'), local('Signika-Regular'), url('Signika.woff') format('woff');
+}*/
 
 @font-face {
   font-family: 'MollifyPlainText';
@@ -52,9 +60,14 @@ html, body {
 	background-color: #ffffff;
 }
 
-body { }
+body {
+	width: 100%;
+	height: 100%;
+}
 
-#mollify { }
+#mollify {
+	width: 100%;
+}
 
 #mollify, a.button, input, .mollify-popupmenu, .mollify-popup, .mollify-itemcontext-popover {
 	font-size: 12px;
@@ -73,6 +86,71 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .popover-title button.close {
 	line-height: 15px;
 }
+
+/*a.button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+	cursor: pointer;
+}
+
+a.button-small {
+	font-size:12px;
+	font-weight:normal;
+	padding:6px 12px;
+}
+
+a.button-blue {
+	-moz-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	color:#ffffff;
+	text-shadow:1px 1px 0px #287ace;
+	background-color:#79bbff;
+	border:1px solid #469df5;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #4197ee) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #4197ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#4197ee');
+	background-color:#79bbff;
+}
+
+a.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+
+a.button-blue:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4197ee), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #4197ee 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4197ee', endColorstr='#79bbff');
+	background-color:#4197ee;
+}
+
+a.button:active {
+	position:relative;
+	top:1px;
+}
+
+a.link {
+	color: #1111ff;
+}*/
 
 .mollify-notification {
 	background-color: rgba(0,0,0,0.5);
@@ -97,6 +175,74 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .mollify-custom-dialog-button.secondary {
 	float: left;
 }
+
+/*.ui-widget-overlay {
+	background-color: rgba(252, 252, 252, .9);
+}
+
+.ui-dialog.ui-widget-content {
+	border: 4px solid #959FA9;
+	background: #EEE;
+	color: #333;
+	padding: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+	border: none;
+	background: rgba(82, 82, 82, 0.7);
+	color: white;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	-khtml-border-radius: 0;
+	border-radius: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+	padding: 0;
+}
+
+.mollify-dialog-content {
+	float:left;
+	padding: 8px;
+}
+
+.mollify-dialog-buttons {
+	float:left;
+	width: 100%;
+	height: 40px;
+	border-top: 1px #333333 solid;
+}
+
+.mollify-dialog-buttons .button {
+	float: right;
+	margin-bottom: 8px;
+	margin-right: 8px;
+}
+
+.mollify-dropdown-handle {
+	width: 15px;
+	height: 15px;
+	background: red;
+	cursor: pointer;
+	float: right;
+}
+
+.mollify-popupmenu-item {
+	cursor: pointer;
+	padding: 4px;
+}
+
+.mollify-popupmenu-item:hover {
+	background: #eeeeee;
+}
+
+.mollify-popupmenu-separator {
+	width: 100%;
+	border-top: 1px #000000 solid;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	height: 1px;
+}*/
 
 .mollify-popupmenu-separator:first-child, .mollify-popupmenu-separator:last-child {
 	display: none;
@@ -147,6 +293,22 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 	position: relative;
 }
 
+/*input.text-field {
+	border-radius: 3px;
+	border: 1px solid #DFDFDF;
+	background-color: #ffffff;
+	height: 18px;
+}
+
+input.login-field.text-field {
+	font-size: 18px;
+	width: 200px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: 100px;
+	text-align: center;
+}*/
+
 #mollify-login-name {
 	margin: 100px 0 10px 0;
 }
@@ -190,11 +352,12 @@ a.mollify-login-link {
 	float: left;	
 }
 
-#mollify-mainview-viewcontent {
-	float: left;
-}
-
 #mollify-mainview-main {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
 	background-color: #fffff;
 }
 
@@ -209,18 +372,32 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-header {
+	float: left;
+	width: 100%;	
 }
 
 #mollify-mainview-logo {
+	float: left;
 	width: 85px;
 	height: 62px;
 	background: url(images/mollify.png) no-repeat;
-	margin: 10px 0 0 10px;
-	padding: 0;
+	margin-top: 10px;
+	margin-left: 48px;
+}
+
+#mollify-mainview-menu {
+	float: left;
+	margin-top: 15px;
 }
 
 .mollify-mainview-menu-item {
 	cursor: pointer;
+}
+
+#mollify-mainview-header-tools {
+	float: right;
+	margin-top: 20px;
+	margin-right: 48px;
 }
 
 #mollify-mainview-user {
@@ -287,6 +464,34 @@ a.mollify-login-link {
 	width: 248px;
 }
 
+/*#mainview-content-container {
+	background-color: #ffffff;
+}*/
+
+/*#mainview-content {
+	-webkit-box-shadow: inset 0 8px 6px -6px black;
+	   -moz-box-shadow: inset 0 8px 6px -6px black;
+	        box-shadow: inset 0 8px 6px -6px black;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
+	background-color: #ffffff;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#mainview-content-area {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 30px;
+}*/
+
 .mollify-mainview-notification {
 	position: absolute;
 	top: 20px;
@@ -301,6 +506,11 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-content {
+	position: absolute;
+	top: 72px;
+	left: 0;
+	right: 0;
+	bottom: 0px;
 }
 
 #mollify-mainview-progress {
@@ -312,15 +522,97 @@ a.mollify-login-link {
 }
 
 #mollify-mainview-navlist-container {
-
-}
-
-#mollify-mainview-navlist-parent {
-	margin: 8px 0 0 8px;
+	margin-top: 8px;
 }
 
 .navlist-sep {
 	margin-top: 8px;	
+}
+
+/*#mollify-mainview-rootlist {
+	top: 67px;
+  width: 128px;
+  margin: 20px 0 0;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+#mollify-mainview-rootlist > li > a {
+  display: block;
+  *width: 190px;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+}
+#mollify-mainview-rootlist > li:first-child > a {
+   border-top-left-radius: 6px;
+   border-top-right-radius: 6px;
+   -moz-border-top-left-radius: 6px;
+   -moz-border-top-right-radius: 6px;
+   -webkit-border-top-left-radius: 6px;
+   -webkit-border-top-right-radius: 6px;
+}
+#mollify-mainview-rootlist > li:last-child > a {
+   border-bottom-left-radius: 6px;
+   border-bottom-right-radius: 6px;
+   -moz-border-bottom-left-radius: 6px;
+   -moz-border-bottom-right-radius: 6px;
+   -webkit-border-bottom-left-radius: 6px;
+   -webkit-border-bottom-right-radius: 6px;
+}
+#mollify-mainview-rootlist > .active > a {
+  position: relative;
+  z-index: 2;
+  padding: 9px 15px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}*/
+
+.icon-chevron-right {
+	float: right;
+	margin-top: 2px;
+	margin-right: -6px;
+	opacity: .25;
+}
+
+@media (min-width: 1200px) {
+	#mollify-folder-list {
+		width: 178px;
+	}
+}
+
+@media (max-width: 980px) {
+  /* When affixed, space properly */
+  .mollify-mainview-navbar {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 980px) {
+}
+
+@media (max-width: 767px) {
+  .mollify-mainview-navbar {
+    width: auto;
+    margin-bottom: 20px;
+  }
+  .mollify-mainview-navbar.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+	
 }
 
 #mollify-folderview {
@@ -380,21 +672,34 @@ a.mollify-login-link {
 	margin: 0 0 0 6px;
 }
 
+/*#mollify-folderview.roots #mollify-folderview-header {
+	height: 40px;
+}*/
+
 #mollify-folderview-items {
-	float: left;
+	position: absolute;
+	top: 120px;
+	left: 8px;
+	right: 8px;
+	bottom: 0;
 	overflow: hidden;
 	overflow-y: auto;
 }
 
 .mollify-filelist {
-	float: left;
-	width: 100%;
-	overflow-x: hidden;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 .mollify-filelist-header {
 	border-bottom: 1px solid #ececec;
-	height: 22px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
 }
 
 #mollify-searchresults-desc {
@@ -460,7 +765,7 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-filelist-header, .mollify-filelist-item {
 	float: left;
-	overflow: hidden;
+	width: 100%;
 }
 
 .mollify-filelist-header {
@@ -468,15 +773,18 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-items {
-	float: left;
-	overflow: auto;
+	position: absolute;
+	top: 25px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 .mollify-filelist-item {
-	display: inline-block;
 	cursor: pointer;
 	font-size: 13px;
-	height: 22px;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
@@ -511,18 +819,12 @@ li#mollify-folder-hierarchy-item-root > a {
 }
 
 .mollify-filelist-col-header {
-	display: inline-block;
 	font-weight: bold;
 	color: #333333;
 }
 
 #mollify-filelist-items, .mollify-filelist-header, .mollify-filelist-header-cols, .mollify-filelist-col-header {
 	float: left;
-}
-
-.mollify-filelist-header-cols {
-	display: block;
-	overflow: hidden;
 }
 
 .mollify-filelist-col-header-title {
@@ -608,6 +910,10 @@ li#mollify-folder-hierarchy-item-root > a {
 	visibility: hidden;
 }
 
+/*.mollify-filelist-item.drophover {
+	background: red;
+}*/
+
 .mollify-filelist-header-cols > .mollify-filelist-col-header {
 	color: #000000;
 }
@@ -616,7 +922,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	visibility: hidden;
 }
 
-.mollify-filelist-item.hover .mollify-filelist-col-go-into-folder, html.touch .mollify-filelist-col-go-into-folder {
+.mollify-filelist-item.hover .mollify-filelist-col-go-into-folder {
 	visibility: visible;
 }
 
@@ -687,6 +993,28 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: url(images/mimetypes64/folder.png) no-repeat 5px 10px;
 }
 
+/*.mollify-itemcontext-popup {
+	min-width: 500px;
+}*/
+
+/*.mollify-itemcontext {
+	position: relative;
+	float: left;
+	display: block;
+	max-width:none;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+
+@media (max-width: 480px) {
+	.mollify-itemcontext {
+
+	}
+}*/
+
 .mollify-itemcontext-content.loading {
 	min-height: 200px;
 }
@@ -753,6 +1081,14 @@ li#mollify-folder-hierarchy-item-root > a {
 	padding: 4px;
 	overflow-y: scroll;
 }
+
+/*#mollify-itemcontext-details-selectors {
+	height: 20px;
+}*/
+
+/*.submenu {
+    z-index: 10000000 !important;
+}*/
 
 #mollify-mainview-createfolder-title {
 	float: left;
@@ -1096,77 +1432,3 @@ a.mollify-tableaction {
 	width: 95%;
 	font-family: monospace;
 }
-
-@media (min-width: 980px) {
-	body {
-		padding-top: 90px;
-	}
-	
-	#mollify-mainview-menu {
-		margin: 15px 0 0 8px;
-	}
-	
-	#mollify-mainview-viewtools {
-		margin: 15px 0 0 0;
-	}
-	
-	#mollify-mainview-user {
-		margin: 15px 0 0 0;
-	}
-	
-	/*#mollify-folderview-header {
-		position: fixed;
-		top: 60px;
-		background-color: #ffffff;
-		padding-top: 30px;
-	}
-	
-	#mollify-folderview-items {
-		padding-top: 125px;
-	}*/
-}
-
-@media (max-width: 979px) {
-	body {
-		padding-top: 0;
-	}
-	
-	.navbar .btn-navbar {
-		margin: 25px 0 0 0;
-	}
-}
-
-#mollify-mainview-navlist-parent {
-	width: 16.92817679558011%;
-}
-	
-/* Large desktop */
-@media (min-width: 1200px) {
-	#mollify-mainview-navlist-parent {
-		width: 18.404255319148934%;
-	}
-}
- 
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px) {
-	#mollify-mainview-navlist-parent {
-		position: relative;
-		width: 70%;
-	}
-}
- 
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) {
-	#mollify-mainview-navlist-parent {
-		position: relative;
-		width: 92%;
-	}
-	
-	#mollify-mainview-viewcontent {
-		padding: 16px;
-		min-height: 600px;
-	}
-}
- 
-/* Landscape phones and down */
-@media (max-width: 480px) { }

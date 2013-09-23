@@ -52,9 +52,8 @@
 				menuitems.push({ title: v.title });
 			});
 			
-			var $mb = $("#mollify-mainview-menu");
-			var $mbitems = mollify.dom.template("mollify-tmpl-main-menubar", menuitems).appendTo($mb);
-			//var $mbitems = $mb.find(".mollify-mainview-menubar-item");
+			var $mb = mollify.dom.template("mollify-tmpl-main-menubar", { items: menuitems }).appendTo($("#mollify-mainview-menu"));
+			var $mbitems = $mb.find(".mollify-mainview-menubar-item");
 			$mbitems.click(function() {
 				var i = $mbitems.index($(this));
 				that.activateView(that._views[i]);
@@ -67,7 +66,7 @@
 		this.activateView = function(v) {			
 			mollify.ui.hideActivePopup();
 			if (that._currentView && that._currentView.onDeactivate) that._currentView.onDeactivate();
-			$("#mollify-mainview-navlist-parent").empty();
+			$("#mollify-mainview-navlist-container").empty();
 
 			that._currentView = v;
 			
@@ -102,7 +101,7 @@
 		};
 		
 		this.addNavBar = function(nb) {
-			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-parent"));
+			var $nb = mollify.dom.template("mollify-tmpl-main-navbar", nb).appendTo($("#mollify-mainview-navlist-container"));
 			var items = nb.items;
 			var initItems = function() {
 				var $items = $nb.find(".mollify-mainview-navbar-item");
@@ -451,7 +450,7 @@
 		}
 		
 		this.onResize = function() {
-			//$("#mollify-folderview").height($("#mollify-mainview-content").height());
+			$("#mollify-folderview").height($("#mollify-mainview-content").height());
 		}
 		
 		this.onActivate = function(h) {
@@ -801,7 +800,7 @@
 				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
 			}
 			
-			//$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
+			$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
 			/*if (that.viewType != null) {
@@ -936,7 +935,7 @@
 		};
 		
 		this.updateItems = function(items, data) {
-			//$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
+			$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 			that.itemWidget.content(items, data);
 		};
 		
@@ -1139,8 +1138,7 @@
 			t.$h.find(".mollify-filelist-col-header").each(function(i) {
 				var $t = $(this);
 				var ind = $t.index();
-				if (ind == 0) return;
-				var col = t.cols[ind-1];
+				var col = t.cols[ind];
 				
 				var minColWidth = col["min-width"] || t.minColWidth;
 				
