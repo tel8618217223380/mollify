@@ -34,7 +34,7 @@
 		}
 
 		this.onResize = function() {
-			$("#mollify-configview").height($("#mollify-mainview-content").height());
+			//$("#mollify-configview").height($("#mollify-mainview-content").height());
 		}
 
 		this.onActivate = function(h) {
@@ -210,10 +210,11 @@
 		this.init = function(opt) {
 			this.title = mollify.ui.texts.get("configAdminUsersNavTitle");
 	
-			that._permissionOptions = ["a", "rw", "ro", "no"];
+			that._permissionOptions = ["a", "rw", "wd", "ro", "no"];
 			that._permissionTexts = {
 				"a" : mollify.ui.texts.get('configAdminUsersPermissionModeAdmin'),
 				"rw" : mollify.ui.texts.get('pluginPermissionsValueRW'),
+				"wd" : mollify.ui.texts.get('pluginPermissionsValueWD'),
 				"ro" : mollify.ui.texts.get('pluginPermissionsValueRO'),
 				"no" : mollify.ui.texts.get('pluginPermissionsValueNO')
 			};

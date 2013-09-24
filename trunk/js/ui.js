@@ -222,7 +222,7 @@
 						folder_permission: spec.folder_permission
 					};
 					ict.renderItemContext(api, $content, item, ctx);
-					$e[0].scrollIntoView();
+					//$e[0].scrollIntoView();
 				});
 			}).bind("hidden", function() {
 				$e.unbind("shown").unbind("hidden");
@@ -1201,7 +1201,7 @@
 		
 		slidePanel : function($e, o) {
 			if (!$e) return;
-			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e.css("position", "relative"));
+			var $p = mollify.dom.template("mollify-tmpl-slidepanel").appendTo($e);//.css("position", "relative"));
 			var $content = $p.find(".mollify-slidepanel-content");
 			
 			var api = {
