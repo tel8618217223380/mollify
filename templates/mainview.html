@@ -37,8 +37,8 @@
 
 <script id="mollify-tmpl-main-username" type="text/x-jquery-tmpl">
 	{{if authenticated}}
-	<li id="mollify-username-dropdown">
-		<a href="#" class="dropdown-toggle">${username} <b class="caret"></b></a>
+	<li id="mollify-username-dropdown" class="dropdown">
+		<a href="#" class="dropdown-toggle">${username}&nbsp;<b class="caret"></b></a>
 	</li>
 	{{/if}}
 </script>
@@ -61,7 +61,7 @@
 </script>
 
 <script id="mollify-tmpl-main-menubar" type="text/x-jquery-tmpl">
-	<li class="mollify-mainview-menubar-item"><a href="javascript: void(0);">${title}</a></li>
+	<li class="mollify-mainview-menubar-item" {{if icon}}title="${title}"{{/if}}><a href="javascript: void(0);">{{if icon}}<i class="${icon}"></i>{{else}}${title}{{/if}}</a></li>
 </script>
 
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">
@@ -72,7 +72,7 @@
 </script>
 
 <script id="mollify-tmpl-main-navbar-item" type="text/x-jquery-tmpl">
-	<li class="mollify-mainview-navbar-item"><a href="javascript: void(0);"><!--i class="icon-chevron-right"></i-->${title}</a></li>
+	<li class="mollify-mainview-navbar-item"><a href="javascript: void(0);">${title}</a></li>
 </script>
 
 <script id="mollify-tmpl-fileview" type="text/x-jquery-tmpl">
@@ -121,19 +121,31 @@
 </script>
 
 <script id="mollify-tmpl-fileview-foldertools-action" type="text/x-jquery-tmpl">
-	<div class="btn-group">
-	{{if dropdown}}
-		<li>
-			<button class="btn btn-flat foldertool dropdown-toggle">
+	<div class="btn-group {{if ($item.data.style)}}${style}{{/if}}">
+	{{if ($item.data.dropdown && $item.data.action)}}
+		<button class="btn btn-flat">
+			{{if icon}}
+			<i class="${icon}"></i>
+			{{else}}
+			${$item.title()}
+			{{/if}}
+		</button>
+
+		<button class="btn btn-flat dropdown-toggle" data-toggle="dropdown">
+			<b class="caret"></b>
+		</button>
+	{{/if}}
+	{{if ($item.data.dropdown && !$item.data.action)}}
+		<a class="btn btn-flat dropdown-toggle" href="#">
 			{{if icon}}
 			<i class="${icon}"></i>
 			{{else}}
 			${$item.title()}
 			{{/if}}
 			&nbsp;<b class="caret"></b>
-			</button>
-		</li>
-	{{else}}
+		</a>
+	{{/if}}
+	{{if (!$item.data.dropdown)}}
 		<button class="btn btn-flat foldertool">
 			{{if icon}}
 			<i class="${icon}"></i>

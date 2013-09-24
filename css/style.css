@@ -37,13 +37,17 @@
   user-select: none;
 }
 
-.btn-flat {
+.btn-flat, .btn-group > .btn-flat + .dropdown-toggle {
     filter:progid:DXImageTransform.Microsoft.Gradient(enabled='false');
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
     background-image:none;
     border:0;
+}
+
+.btn-group.narrow > .btn {
+	padding: 4px 6px;
 }
 
 html, body {
@@ -217,6 +221,10 @@ a.mollify-login-link {
 	background: url(images/mollify.png) no-repeat;
 	margin: 10px 0 0 10px;
 	padding: 0;
+}
+
+.mollify-mainview-menubar-item {
+	font-size: 20px;
 }
 
 .mollify-mainview-menu-item {
