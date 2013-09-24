@@ -790,22 +790,27 @@
 							}
 						});
 					}
-					
-					// REFRESH					
-					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
-					
+										
 					// SELECT
 					var selectBtn = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-check', dropdown: true, style: "narrow", action: true }, opt).appendTo($fa).click(function() { alert("sel"); });
 					mollify.ui.controls.dropdown({
 						element: selectBtn,
-						items: [
-							{"title-key" : "mainViewFileViewSelectNone", callback: function() {} },
-							{"title-key" : "mainViewFileViewSelectAll", callback: function() {} },
-							{"title" : "-"}
-						],
+						items: false,
 						hideDelay: 0,
-						style: 'submenu'
+						style: 'submenu',
+						onShow: function(drp) {						
+							that._getSelectionActions(function(a) {
+								if (!a) {
+									drp.hide();
+									return;
+								}
+								drp.items(a);
+							});
+						}
 					});
+					
+					// REFRESH					
+					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that.refresh);
 				
 					that.setupHierarchy(that._currentFolderInfo.hierarchy, $t);
 				
@@ -820,11 +825,17 @@
 			//$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
-			/*if (that.viewType != null) {
-				that.viewType = null;
-				that.initList();
-			}*/
 			that.onResize();
+		};
+		
+		this._getSelectionActions = function(cb) {
+			var result = [
+				{"title-key" : "mainViewFileViewSelectNone", callback: function() {} },
+				{"title-key" : "mainViewFileViewSelectAll", callback: function() {} },
+				{"title" : "-"}
+			];
+			// TODO
+			cb(result);
 		};
 					
 		this.setupHierarchy = function(h, $t) {
