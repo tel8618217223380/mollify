@@ -311,7 +311,7 @@
 
 		public function details($item, $data = NULL) {
 			$this->assertRights($item, Authentication::RIGHTS_READ, "details");
-			
+	
 			$details = $item->details();
 			$details["description"] = $this->description($item);
 			$details["permission"] = $this->permission($item);
@@ -356,6 +356,7 @@
 		}
 		
 		public function permission($item) {
+			if (!$item) return Authentication::PERMISSION_VALUE_NO_RIGHTS;
 			if ($this->env->authentication()->isAdmin()) return Authentication::PERMISSION_VALUE_READWRITE;
 			
 			$permission = $this->getItemUserPermission($item);
