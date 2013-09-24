@@ -338,6 +338,11 @@ a.mollify-login-link {
 	padding-bottom: 30px;
 }
 
+#mollify-folderview-detachholder {
+	float: left;
+	display: none;
+}
+
 #mollify-folderview-header {
 	padding-top: 10px;
 	float: left;
@@ -1121,6 +1126,18 @@ a.mollify-tableaction {
 	
 	#mollify-mainview-user {
 		margin: 15px 0 0 0;
+	}
+	
+	#mollify-folderview.detached #mollify-folderview-header {
+		position: fixed;
+		background-color: #ffffff;
+		margin-top: -20px;
+		padding-top: 20px;
+	}
+		
+	#mollify-folderview.detached #mollify-folderview-detachholder {
+		width: 100%;
+		display: block;
 	}
 		
 	/*#mollify-folderview-header {
