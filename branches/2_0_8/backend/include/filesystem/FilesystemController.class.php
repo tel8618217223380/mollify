@@ -510,8 +510,8 @@
 			$new = $parent->createFolder($name);
 			$this->env->events()->onEvent(FileEvent::createFolder($new));
 			
-			if (!$this->env->authentication()->isAdmin() and !in_array("permission_inheritance", $this->env->configuration()->getSupportedFeatures()))
-				$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->session()->userId());
+			//if (!$this->env->authentication()->isAdmin())
+			//	$this->env->configuration()->addItemPermission($new->id(), Authentication::PERMISSION_VALUE_READWRITE, $this->env->session()->userId());
 		}
 
 		public function download($file, $mobile, $range = NULL) {
