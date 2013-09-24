@@ -479,7 +479,7 @@
 			Logging::logDebug('deleting ['.$item->id().']');
 			
 			if (!$item->isFile()) $this->env->features()->assertFeature("folder_actions");
-			$this->assertRights($item, Authentication::RIGHTS_WRITE, "delete");
+			$this->assertRights($item, Authentication::RIGHTS_DELETE, "delete");
 			$this->validateAction(FileEvent::DELETE, $item);
 						
 			$item->delete();
@@ -496,7 +496,7 @@
 		public function deleteItems($items) {
 			Logging::logDebug('deleting '.count($items).' items');
 			$this->validateAction(FileEvent::DELETE, $items);
-			$this->assertRights($items, Authentication::RIGHTS_WRITE, "delete");
+			$this->assertRights($items, Authentication::RIGHTS_DELETE, "delete");
 			
 			foreach($items as $item)
 				$this->delete($item);

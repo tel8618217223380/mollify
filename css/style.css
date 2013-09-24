@@ -998,10 +998,10 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-slidepanel-container {
 	height: 0px;
-	position: absolute;
+	position: fixed;
 	bottom: -8px;
-	left: 0;
-	right: 0;
+	left: 10px;
+	right: 10px;
 	margin-top: 8px;
 	overflow: hidden;
 	padding: 8px 8px 0 8px;
@@ -1114,7 +1114,7 @@ a.mollify-tableaction {
 	#mollify-mainview-user {
 		margin: 15px 0 0 0;
 	}
-	
+		
 	/*#mollify-folderview-header {
 		position: fixed;
 		top: 60px;
