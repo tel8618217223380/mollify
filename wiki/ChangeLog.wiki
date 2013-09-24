@@ -1,6 +1,11 @@
 #summary Mollify project change log
 #labels Phase-Deploy,Featured
 
+=== Version 2.0.9 ===
+Released 2013/9/24
+  * Added german translations
+  * Fixed request failures on permission issues when opening item tooltip or folder tools
+
 === Version 2.0.8 ===
 Released 2013/9/21
   * Fixed issue in deleting folders in admin view
