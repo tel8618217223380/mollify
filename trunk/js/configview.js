@@ -19,6 +19,8 @@
 
 		this.init = function(mv) {
 			that.title = mollify.ui.texts.get('configviewMenuTitle');
+			that.icon = "icon-cogs";
+			
 			that._views.push(new mollify.view.config.user.AccountView(mv));
 
 			$.each(mollify.plugins.getConfigViewPlugins(), function(i, p) {

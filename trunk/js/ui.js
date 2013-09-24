@@ -479,7 +479,7 @@
 			var $mnu = false;
 			var popupId = false;
 			var popupItems = a.items;
-			$e.addClass('dropdown');
+			//$e.addClass('dropdown');
 			var hidePopup = function() {
 				if (!$mnu) return;
 				if (a.onHide) a.onHide();
