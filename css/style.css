@@ -1139,6 +1139,10 @@ a.mollify-tableaction {
 		width: 100%;
 		display: block;
 	}
+	
+	#mollify-folderview.detached .no-detached {
+		display: none;
+	}
 		
 	/*#mollify-folderview-header {
 		position: fixed;
