@@ -260,6 +260,7 @@
 		this._currentFolder = false;
 		this._currentFolderInfo = false;
 		this._viewStyle = 0;
+		this._selected = [];
 		this._customFolderTypes = {};
 		this._formatters = {
 			byteSize : new mollify.ui.formatters.ByteSize(new mollify.ui.formatters.Number(2, mollify.ui.texts.get('decimalSeparator'))),
@@ -634,6 +635,7 @@
 				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
 					that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
 			}
+			that._selected = [];
 			that._currentFolder = f;
 			that._currentFolderInfo = false;
 			that.rootNav.setActive(false);
@@ -641,6 +643,7 @@
 		}
 		
 		this.refresh = function() {
+			//TODO check selected
 			mollify.ui.hideActivePopup();
 			that.showProgress();
 
@@ -712,7 +715,7 @@
 		};
 		
 		this.folder = function() {
-			var $h = $("#mollify-folderview-header").empty();
+			var $h = $("#mollify-folderview-header-content").empty();
 			var $tb = $("#mollify-fileview-folder-tools").empty();
 						
 			if (that._currentFolder && that._currentFolder.type) {
@@ -810,7 +813,7 @@
 					}
 										
 					// SELECT
-					var selectBtn = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-check', dropdown: true, style: "narrow", action: true }, opt).appendTo($fa).click(function() { alert("sel"); });
+					var selectBtn = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-check', dropdown: true, style: "narrow", action: true }, opt).appendTo($fa).click(that._onToggleSelect);
 					mollify.ui.controls.dropdown({
 						element: selectBtn,
 						items: false,
@@ -840,10 +843,9 @@
 				if (mollify.ui.uploader && mollify.ui.uploader.setMainViewUploadFolder) mollify.ui.uploader.setMainViewUploadFolder(that._canWrite() ? that._currentFolder : false);
 			}
 			
-			//$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
-			that._scrollOutThreshold = $("#mollify-folderview-header").outerHeight() + 60;
+			that._scrollOutThreshold = $("#mollify-folderview-header").outerHeight() + 40;
 			that._scrollInThreshold = that._scrollOutThreshold - 60;
 			$("#mollify-folderview-detachholder").css("height", (that._scrollInThreshold + 40)+"px");
 			$("#mollify-folderview").removeClass("detached");
@@ -851,13 +853,21 @@
 		};
 		
 		this._getSelectionActions = function(cb) {
+			var result = [];
+			if (that._selected.length > 0) {
+				var plugins = mollify.plugins.getItemCollectionPlugins(that.items);		
+				result = mollify.helpers.getPluginActions(plugins);
+			}
 			var result = [
 				{"title-key" : "mainViewFileViewSelectNone", callback: function() {} },
 				{"title-key" : "mainViewFileViewSelectAll", callback: function() {} },
 				{"title" : "-"}
 			];
-			// TODO
 			cb(result);
+		};
+		
+		this._onToggleSelect = function() {
+			that.itemWidget.toggleSelect();
 		};
 					
 		this.setupHierarchy = function(h, $t) {
@@ -916,10 +926,9 @@
 		this.initList = function() {
 			if (that.isListView()) {
 				var cols = mollify.settings["list-view-columns"];
-				//if (that.viewType) cols = mollify.settings["list-view-columns-"+that.viewType];
-				that.itemWidget = new FileList('mollify-folderview-items', 'main', this._filelist, cols);
+				that.itemWidget = new FileList('mollify-folderview-items', 'mollify-folderview-header-items', 'main', this._filelist, cols);
 			} else {
-				that.itemWidget = new IconView('mollify-folderview-items', 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
+				that.itemWidget = new IconView('mollify-folderview-items', 'mollify-folderview-header-items', 'main', that._viewStyle == 1 ? 'iconview-small' : 'iconview-large');
 			}
 			
 			that.itemWidget.init({
@@ -1046,7 +1055,7 @@
 		}
 	};
 	
-	var IconView = function(container, id, cls) {
+	var IconView = function(container, headerContainer, id, cls) {
 		var t = this;
 		t.$c = $("#"+container);
 		t.viewId = 'mollify-iconview-'+id;
@@ -1149,12 +1158,17 @@
 		this.removeHover = function() {
 			t.$l.find(".mollify-iconview-item.hover").removeClass('hover');
 		};
+		
+		this.toggleSelect = function() {
+			//TODO	
+		};
 	};
 		
-	var FileList = function(container, id, filelistSpec, columns) {
+	var FileList = function(container, headerContainer, id, filelistSpec, columns) {
 		var t = this;
 		t.minColWidth = 25;
 		t.$c = $("#"+container);
+		t.$hc = $("#"+headerContainer);
 		t.listId = 'mollify-filelist-'+id;
 		t.cols = [];
 		t.sortCol = false;
@@ -1171,6 +1185,7 @@
 		
 		this.init = function(p) {
 			t.p = p;
+			mollify.dom.template("mollify-tmpl-filelist-header", {listId: t.listId}).appendTo(t.$hc.empty());
 			mollify.dom.template("mollify-tmpl-filelist", {listId: t.listId}).appendTo(t.$c.empty());
 			t.$l = $("#"+t.listId);
 			t.$h = $("#"+t.listId+"-header-cols");
@@ -1188,8 +1203,8 @@
 			t.$h.find(".mollify-filelist-col-header").each(function(i) {
 				var $t = $(this);
 				var ind = $t.index();
-				if (ind == 0) return;
-				var col = t.cols[ind-1];
+				if (ind <= 1) return;
+				var col = t.cols[ind-2];
 				
 				var minColWidth = col["min-width"] || t.minColWidth;
 				
@@ -1373,11 +1388,16 @@
 		this.onItemClick = function($item, $el, left) {
 			var i = $item.find(".mollify-filelist-col").index($el.closest(".mollify-filelist-col"));
 			if (i<0) return;
-			var colId = (i === 0 ? "icon" : t.cols[i-1].id);
+			var itm = $item.tmplItem().data;
+			if (i === 0) {
+				t.p.onSelectUnselect(itm);
+				return;
+			}
+			var colId = (i === 1 ? "icon" : t.cols[i-2].id);
 			if (left)
-				t.p.onClick($item.tmplItem().data, colId, $item);
+				t.p.onClick(itm, colId, $item);
 			else
-				t.p.onRightClick($item.tmplItem().data, colId, $item);
+				t.p.onRightClick(itm, colId, $item);
 		};
 			
 		this.getItemContextElement = function(item) {
@@ -1395,6 +1415,11 @@
 		
 		this.removeHover = function() {
 			t.$i.find(".mollify-filelist-item.hover").removeClass('hover');
+		};
+		
+		this.toggleSelect = function() {
+			t.$l.toggleClass("select");
+			t.$h.toggleClass("select");
 		};
 	};
 }(window.jQuery, window.mollify);

@@ -400,6 +400,10 @@ a.mollify-login-link {
 	overflow-y: auto;
 }
 
+#mollify-folderview-header-items {
+	float: left;
+}
+
 .mollify-filelist {
 	float: left;
 	width: 100%;
@@ -516,6 +520,22 @@ li#mollify-folder-hierarchy-item-root > a {
 	margin: 1px 8px 0 4px;
 }
 
+.mollify-filelist-item-sel.selected {
+	display: none;
+}
+
+.mollify-filelist-item-sel.unselected {
+	display: block;
+}
+
+.mollify-filelist-item.selected .mollify-filelist-item-sel.selected {
+	display: block;
+}
+
+.mollify-filelist-item.selected .mollify-filelist-item-sel.unselected {
+	display: none;
+}
+
 .mollify-filelist-item-icon {
 	background: url(images/mimetypes/empty.png) no-repeat;
 }
@@ -574,6 +594,14 @@ li#mollify-folder-hierarchy-item-root > a {
 	overflow: hidden;
 	margin-right: 4px;
 	vertical-align: middle;
+}
+
+.mollify-filelist-col-sel {
+	width: 0px;
+}
+
+.mollify-filelist.select .mollify-filelist-col-sel, .mollify-filelist-header-cols.select .mollify-filelist-col-sel {
+	width: 25px;
 }
 
 .mollify-filelist-col-icon {
