@@ -80,6 +80,8 @@
 		<div id="mollify-folderview-detachholder"></div>
 		
 		<div id="mollify-folderview-header">
+			<div id="mollify-folderview-header-content"></div>
+			<div id="mollify-folderview-header-items"></div>
 		</div>
 		
 		<div id="mollify-folderview-items">
@@ -191,13 +193,17 @@
 	<div id="mollify-searchresults-desc"><span id="mollify-searchresults-desc-text"></span></div>
 </script>
 
+<script id="mollify-tmpl-filelist-header" type="text/x-jquery-tmpl">
+	<div id="${listId}-header" class="mollify-filelist-header">
+		<div id="${listId}-header-cols" class="mollify-filelist-header-cols">
+			<div class="mollify-filelist-col mollify-filelist-col-sel mollify-filelist-col-header"></div>
+			<div class="mollify-filelist-col mollify-filelist-col-icon mollify-filelist-col-header"></div>
+		</div>
+	</div>
+</script>
+
 <script id="mollify-tmpl-filelist" type="text/x-jquery-tmpl">
 	<div id="${listId}" class="mollify-filelist">
-		<div id="${listId}-header" class="mollify-filelist-header">
-			<div id="${listId}-header-cols" class="mollify-filelist-header-cols">
-				<div class="mollify-filelist-col mollify-filelist-col-icon mollify-filelist-col-header"></div>
-			</div>
-		</div>
 		<div id="${listId}-items" class="mollify-filelist-items"></div>
 	</div>
 </script>
@@ -211,6 +217,10 @@
 
 <script id="mollify-tmpl-filelist-item" type="text/x-jquery-tmpl">
 	<div id="mollify-filelist-item-${id}" class="mollify-filelist-item ${$item.typeClass($data)}" unselectable="on">
+		<div class="mollify-filelist-col mollify-filelist-col-sel">
+			<i class="mollify-filelist-item-sel unselected icon-check-empty"></i>
+			<i class="mollify-filelist-item-sel selected icon-check"></i>
+		</div>
 		<div class="mollify-filelist-col mollify-filelist-col-icon">
 			<div class="mollify-filelist-item-icon"></div>
 		</div>
