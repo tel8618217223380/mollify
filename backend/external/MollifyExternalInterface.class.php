@@ -33,7 +33,8 @@
 			require_once("include/session/Session.class.php");
 			require_once("include/ServiceEnvironment.class.php");
 			require_once("include/Util.class.php");
-			require_once("include/ConfigurationFactory.class.php");
+			require_once("db/DBConnectionFactory.class.php");
+			require_once("include/configuration/ConfigurationDao.class.php");
 			require_once("include/Logging.class.php");
 			require_once("include/Version.info.php");
 			require_once("include/Cookie.class.php");
@@ -45,10 +46,11 @@
 			$this->settings = new Settings($conf);
 			$this->session = new Session(TRUE);
 			
-			$factory = new ConfigurationFactory();
-			$this->configuration = $factory->createConfiguration($conf, $this->settings);
+			$f = new DBConnectionFactory();
+			$db = $f->createConnection($settings);
+			$this->configuration = new ConfigurationDao($db);
 
-			$env = new ServiceEnvironment($this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
+			$env = new ServiceEnvironment($db, $this->session, new VoidResponseHandler(), $this->configuration, $this->settings);
 			$env->initialize(new Request(TRUE));
 			$this->authentication = $env->authentication();
 		}
