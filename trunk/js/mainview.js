@@ -516,8 +516,8 @@
 				});
 			}
 			
-			that._scrollThreshold = 100000;
-			that._scrollOut = false;
+			that._scrollOutThreshold = 100000;
+			that._scrollInThreshold = 0;
 			$(window).bind('scroll', that._updateScroll);
 			
 			$.each(mollify.plugins.getFileViewPlugins(), function(i, p) {
@@ -550,13 +550,15 @@
 		}
 		
 		this._updateScroll = function() {
-			var s = $(window).scrollTop();
-			var isOut = s > that._scrollThreshold;
-			if (that._scrollOut == isOut) return;
+			var s = $(window).scrollTop();			
+			var $e = $("#mollify-folderview");
 			
-			if (isOut) $("#mollify-folderview").addClass("detached");
-			//else  $("#mollify-folderview").removeClass("detached");
-			that._scrollOut = isOut;
+			var isDetached = $e.hasClass("detached");
+			var toggle = (!isDetached && s > that._scrollOutThreshold) || (isDetached && s < that._scrollInThreshold);
+			if (!toggle) return;
+			
+			if (!isDetached) $("#mollify-folderview").addClass("detached");
+			else $("#mollify-folderview").removeClass("detached");
 		};
 		
 		this.openInitialFolder = function() {
@@ -841,9 +843,9 @@
 			//$("#mollify-folderview-items").css("top", $h.outerHeight()+"px");
 			mollify.ui.process($h, ['localize']);
 
-			that._scrollOut = false;
-			that._scrollThreshold = $("#mollify-folderview-header").outerHeight() + 60;
-			$("#mollify-folderview-detachholder").css("height", (that._scrollThreshold - 20)+"px");
+			that._scrollOutThreshold = $("#mollify-folderview-header").outerHeight() + 60;
+			that._scrollInThreshold = that._scrollOutThreshold - 60;
+			$("#mollify-folderview-detachholder").css("height", (that._scrollInThreshold + 40)+"px");
 			$("#mollify-folderview").removeClass("detached");
 			that.onResize();
 		};
