@@ -635,7 +635,7 @@
 				if (that._customFolderTypes[that._currentFolder.type].onFolderDeselect)
 					that._customFolderTypes[that._currentFolder.type].onFolderDeselect(that._currentFolder);
 			}
-			that._selected = [];
+			that._selectedItems = [];
 			that._currentFolder = f;
 			that._currentFolderInfo = false;
 			that.rootNav.setActive(false);
@@ -813,9 +813,9 @@
 					}
 										
 					// SELECT
-					var selectBtn = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-check', dropdown: true, style: "narrow", action: true }, opt).appendTo($fa).click(that._onToggleSelect);
+					that._selectModeBtn = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-check', dropdown: true, style: "narrow", action: true }, opt).appendTo($fa).click(that._onToggleSelect);
 					mollify.ui.controls.dropdown({
-						element: selectBtn,
+						element: that._selectModeBtn,
 						items: false,
 						hideDelay: 0,
 						style: 'submenu',
@@ -850,24 +850,38 @@
 			$("#mollify-folderview-detachholder").css("height", (that._scrollInThreshold + 40)+"px");
 			$("#mollify-folderview").removeClass("detached");
 			that.onResize();
+			that._updateSelect();
 		};
 		
 		this._getSelectionActions = function(cb) {
 			var result = [];
-			if (that._selected.length > 0) {
+			if (that._selectMode && that._selectedItems.length > 0) {
 				var plugins = mollify.plugins.getItemCollectionPlugins(that.items);		
 				result = mollify.helpers.getPluginActions(plugins);
+				if (result.length > 0)
+					result.unshift({"title" : "-"});
 			}
-			var result = [
-				{"title-key" : "mainViewFileViewSelectNone", callback: function() {} },
-				{"title-key" : "mainViewFileViewSelectAll", callback: function() {} },
-				{"title" : "-"}
-			];
+			result.unshift({"title-key" : "mainViewFileViewSelectNone", callback: function() { that._updateSelect([]); } });
+			result.unshift({"title-key" : "mainViewFileViewSelectAll", callback: function() { that._updateSelect(that.items); } });
 			cb(result);
 		};
 		
 		this._onToggleSelect = function() {
-			that.itemWidget.toggleSelect();
+			that._selectMode = !that._selectMode;
+			that._updateSelect();
+		};
+		
+		this._updateSelect = function(sel) {
+			if (sel !== undefined) {
+				that._selectedItems = sel;
+				that._selectMode = true;
+			}
+			if (that._selectMode)
+				that._selectModeBtn.addClass("active");
+			else
+				that._selectModeBtn.removeClass("active");
+			that.itemWidget.setSelectMode(that._selectMode);
+			that.itemWidget.setSelection(that._selectedItems);
 		};
 					
 		this.setupHierarchy = function(h, $t) {
@@ -969,6 +983,11 @@
 					}
 					//if (!that.isListView() || that.viewType != 'search') return;
 					//that.initSearchResultTooltip(items);
+				},
+				onSelectUnselect: function(item) {
+					if (that._selectedItems.indexOf(item) >= 0) that._selectedItems.remove(item);
+					else that._selectedItems.push(item);
+					that.itemWidget.setSelection(item);
 				}
 			});
 		};
@@ -1159,7 +1178,7 @@
 			t.$l.find(".mollify-iconview-item.hover").removeClass('hover');
 		};
 		
-		this.toggleSelect = function() {
+		this.setSelectMode = function(sm) {
 			//TODO	
 		};
 	};
@@ -1319,7 +1338,7 @@
 				$(this).removeClass("hover");
 			}).bind("contextmenu",function(e){
 				e.preventDefault();
-				t.onItemClick($(this), $(e.toElement), false);
+				t.onItemClick($(this), $(e.toElement || e.target), false);
 				return false;
 			}).single_double_click(function(e) {
 				e.preventDefault();
@@ -1417,9 +1436,21 @@
 			t.$i.find(".mollify-filelist-item.hover").removeClass('hover');
 		};
 		
-		this.toggleSelect = function() {
-			t.$l.toggleClass("select");
-			t.$h.toggleClass("select");
+		this.setSelectMode = function(sm) {
+			if (sm) {
+				t.$l.addClass("select");
+				t.$h.addClass("select");
+			} else {
+				t.$l.removeClass("select");
+				t.$h.removeClass("select");				
+			}
+		};
+		
+		this.setSelection = function(items) {
+			t.$i.find(".mollify-filelist-item.selected").removeClass("selected");
+			$.each(items, function(i, itm) {
+				t.$i.find("#mollify-filelist-item-"+itm.id).addClass("selected");
+			});
 		};
 	};
 }(window.jQuery, window.mollify);
