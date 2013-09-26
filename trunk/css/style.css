@@ -509,7 +509,7 @@ li#mollify-folder-hierarchy-item-root > a {
 	background: #ded9f7;
 }
 
-.mollify-filelist-item.hover {
+.mollify-filelist-item.hover, .mollify-filelist-item.selected {
 	background-color: #f6f6f6;
 }
 
@@ -598,6 +598,8 @@ li#mollify-folder-hierarchy-item-root > a {
 
 .mollify-filelist-col-sel {
 	width: 0px;
+	font-size: 16px;
+	padding: 2px 0 0 2px;
 }
 
 .mollify-filelist.select .mollify-filelist-col-sel, .mollify-filelist-header-cols.select .mollify-filelist-col-sel {

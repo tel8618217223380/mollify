@@ -95,6 +95,9 @@ secondaryActions: "Actions",
 
 itemcontextDescriptionHint: "Enter description here",
 
+mainViewFileViewSelectNone: "Select none",
+mainViewFileViewSelectAll: "Select all",
+
 actionDownloadItem: "Download",
 actionCopyItem: "Copy...",
 actionCopyMultiple: "Copy...",
