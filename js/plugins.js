@@ -1293,10 +1293,15 @@
 			that.refreshList();
 		};
 				
-		this.onAddItem = function(item) {
-			if (that.items.indexOf(item) >= 0) return;
-			that.items.push(item);
-			that.itemsByKey[item.id] = item;
+		this.onAddItem = function(i) {
+			var list = i;
+			if (!isArray(i))
+				list = [i];
+			$.each(list, function(ind, item) {
+				if (that.items.indexOf(item) >= 0) return;
+				that.items.push(item);
+				that.itemsByKey[item.id] = item;
+			});
 			that.refreshList();
 			that._updateButton();
 		};
@@ -1384,6 +1389,13 @@
 				return {
 					actions: [
 						{ id: 'pluginDropbox', 'title-key': 'pluginDropboxAddTo', callback: function() { that.onAddItem(item); that.openDropbox(true); } }
+					]
+				};
+			},
+			itemCollectionHandler : function(items) {
+				return {
+					actions: [
+						{ 'title-key': 'pluginDropboxAddTo', callback: function() { return that.onAddItem(items); } }
 					]
 				};
 			}

@@ -643,7 +643,6 @@
 		}
 		
 		this.refresh = function() {
-			//TODO check selected
 			mollify.ui.hideActivePopup();
 			that.showProgress();
 
@@ -668,9 +667,11 @@
 		this._updateFolder = function(r) {
 			that._currentFolder = r.folder;
 			that._currentFolderInfo = r;
+			that._currentFolderInfo.items = r.folders.slice(0).concat(r.files);
+			
 			that.hideProgress();
 			that.folder();
-			that.data({items: r.folders.slice(0).concat(r.files), data: r.data});
+			that.data({items: r.items, data: r.data});
 		};
 		
 		this._canWrite = function() {
@@ -856,14 +857,14 @@
 		this._getSelectionActions = function(cb) {
 			var result = [];
 			if (that._selectMode && that._selectedItems.length > 0) {
-				var plugins = mollify.plugins.getItemCollectionPlugins(that.items);		
+				var plugins = mollify.plugins.getItemCollectionPlugins(that._selectedItems);		
 				result = mollify.helpers.getPluginActions(plugins);
 				if (result.length > 0)
 					result.unshift({"title" : "-"});
 			}
 			result.unshift({"title-key" : "mainViewFileViewSelectNone", callback: function() { that._updateSelect([]); } });
-			result.unshift({"title-key" : "mainViewFileViewSelectAll", callback: function() { that._updateSelect(that.items); } });
-			cb(result);
+			result.unshift({"title-key" : "mainViewFileViewSelectAll", callback: function() { that._updateSelect(that._currentFolderInfo.items); } });
+			cb(mollify.helpers.cleanupActions(result));
 		};
 		
 		this._onToggleSelect = function() {
@@ -981,13 +982,11 @@
 						if (that._customFolderTypes[that._currentFolder.type].onItemListRendered)
 							that._customFolderTypes[that._currentFolder.type].onItemListRendered(that._currentFolder, that._currentFolderInfo, items);
 					}
-					//if (!that.isListView() || that.viewType != 'search') return;
-					//that.initSearchResultTooltip(items);
 				},
 				onSelectUnselect: function(item) {
 					if (that._selectedItems.indexOf(item) >= 0) that._selectedItems.remove(item);
 					else that._selectedItems.push(item);
-					that.itemWidget.setSelection(item);
+					that.itemWidget.setSelection(that._selectedItems);
 				}
 			});
 		};
@@ -1013,8 +1012,16 @@
 		};
 		
 		this.updateItems = function(items, data) {
+			that._items = items;
+			that._itemsById = mollify.helpers.mapByKey(items, "id");
+			if (that._selectedItems) {
+				var existing = [];
+				$.each(that._selectedItems, function(i, itm) { if (that._itemsById[itm.id]) existing.push(itm); });
+				that._selectedItems = existing;
+			}
 			//$("#mollify-folderview-items").css("top", $("#mollify-folderview-header").outerHeight()+"px");
 			that.itemWidget.content(items, data);
+			that.itemWidget.setSelection(that._selectedItems);
 		};
 		
 		this.showActionMenu = function(item, c) {
