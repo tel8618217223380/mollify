@@ -401,8 +401,7 @@
 				},
 		
 				onRenderFolderView : function(f, fi, $h, $tb) {
-					mollify.dom.template("mollify-tmpl-fileview-header", {folder: f}).appendTo($h);
-					$("#mollify-folder-description").remove();
+					mollify.dom.template("mollify-tmpl-fileview-header-custom", {folder: f}).appendTo($h);
 		
 					var opt = {
 						title: function() {
@@ -412,12 +411,12 @@
 					var $fa = $("#mollify-fileview-folder-actions");
 					var actionsElement = mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-cog', dropdown: true }, opt).appendTo($fa);
 					mollify.ui.controls.dropdown({
-						element: actionsElement.find("li"),
+						element: actionsElement,
 						items: that._getItemActions(f.ic),
 						hideDelay: 0,
 						style: 'submenu'
 					});
-					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, opt).appendTo($fa).click(that._fileView.refresh);
+					that._fileView.addCommonFileviewActions($fa);
 				}
 			});
 		};
@@ -1267,9 +1266,7 @@
 				cb([]);
 				return;
 			}
-			var plugins = mollify.plugins.getItemCollectionPlugins(that.items);
-			
-			var actions = mollify.helpers.getPluginActions(plugins);
+			var actions = mollify.helpers.getPluginActions(mollify.plugins.getItemCollectionPlugins(that.items, {src: "dropbox"}));
 			actions.push({title:"-"});
 			actions.push({"title-key":"dropboxEmpty"});
 			cb(mollify.helpers.cleanupActions(actions));
@@ -1392,7 +1389,8 @@
 					]
 				};
 			},
-			itemCollectionHandler : function(items) {
+			itemCollectionHandler : function(items, ctx) {
+				if (ctx && ctx.src == 'dropbox') return false;
 				return {
 					actions: [
 						{ 'title-key': 'pluginDropboxAddTo', callback: function() { return that.onAddItem(items); } }
