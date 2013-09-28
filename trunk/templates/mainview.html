@@ -61,7 +61,7 @@
 </script>
 
 <script id="mollify-tmpl-main-menubar" type="text/x-jquery-tmpl">
-	<li class="mollify-mainview-menubar-item" {{if icon}}title="${title}"{{/if}}><a href="javascript: void(0);">{{if icon}}<i class="${icon}"></i>{{else}}${title}{{/if}}</a></li>
+	<li class="mollify-mainview-menubar-item" title="${title}"><a href="javascript: void(0);">{{if icon}}<span class="mollify-mainview-menubar-item-icon"><i class="${icon}"></i></span>{{/if}}<span class="mollify-mainview-menubar-item-title">${title}</span></a></li>
 </script>
 
 <script id="mollify-tmpl-main-navbar" type="text/x-jquery-tmpl">
@@ -108,8 +108,11 @@
 </script>
 
 <script id="mollify-tmpl-fileview-header" type="text/x-jquery-tmpl">
-	<div id="mollify-fileview-folder-tools"></div>
-	<div id="mollify-folder-name" class="mollify-folderview-title page-header no-detached"><h2>${folder.name}</h2><div id="mollify-fileview-folder-actions"></div></div>
+	<div>
+		<div id="mollify-fileview-folder-tools"></div>
+		<div id="mollify-fileview-folder-actions"></div>
+	</div>
+	<div id="mollify-folder-name" class="mollify-folderview-title page-header no-detached"><h2>${folder.name}</h2></div>
 	<div id="mollify-folder-description" class="no-detached"></div>
 </script>
 
@@ -185,7 +188,8 @@
 </script>
 
 <script id="mollify-tmpl-main-rootfolders" type="text/x-jquery-tmpl">
-	<span class="mollify-folderview-title root-list localized" text-key="mainViewRootsTitle"></span>
+	<div class="mollify-folderview-title root-list"><h2 class="localized" text-key="mainViewRootsTitle"></h2></div>
+	<div id="mollify-fileview-folder-actions" class="root-list"></div>
 </script>
 
 <script id="mollify-tmpl-main-searchresults" type="text/x-jquery-tmpl">

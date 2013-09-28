@@ -223,8 +223,14 @@ a.mollify-login-link {
 	padding: 0;
 }
 
-.mollify-mainview-menubar-item {
+.mollify-mainview-menubar-item-icon {
 	font-size: 20px;
+	margin-right: 10px;
+}
+
+.mollify-mainview-menubar-item-title {
+	line-height: 15px;
+	vertical-align: text-bottom;
 }
 
 .mollify-mainview-menu-item {
@@ -350,6 +356,11 @@ a.mollify-login-link {
 	width: 100%;
 }
 
+#mollify-folderview-header-content {
+	float: left;
+	width: 100%;
+}
+
 #mollify-fileview-folder-tools {
 	display: inline-block;
 	margin: 4px 4px 0 0;
@@ -378,7 +389,7 @@ a.mollify-login-link {
 }
 
 #mollify-folder-name {
-	clear: both;
+	float: left;
 }
 
 #mollify-folder-name > h2 {
@@ -428,8 +439,8 @@ a.mollify-login-link {
 }
 
 .mollify-folderview-title.root-list {
-	padding: 8px 0 8px 0;
 	display: block;
+	float: left;
 }
 
 #mollify-folder-name > h2, #mollify-fileview-folder-actions {
@@ -439,6 +450,10 @@ a.mollify-login-link {
 
 #mollify-fileview-folder-actions {
 	margin: 6px 0 0 8px;
+}
+
+#mollify-fileview-folder-actions.root-list {
+	margin: 15px 0 0 15px;
 }
 
 #mollify-fileview-folder-actions .btn {
