@@ -999,6 +999,10 @@
 							that._customFolderTypes[that._currentFolder.type].onItemListRendered(that._currentFolder, that._currentFolderInfo, items);
 					}
 				},
+				getSelectedItems : function() {
+					if (!that._selectMode || that._selectedItems.length === 0) return false;
+					return that._selectedItems;
+				},
 				onSelectUnselect: function(item) {
 					if (that._selectedItems.indexOf(item) >= 0) that._selectedItems.remove(item);
 					else that._selectedItems.push(item);
@@ -1156,7 +1160,10 @@
 				mollify.ui.draganddrop.enableDrag($items, {
 					onDragStart : function($e, e) {
 						var item = $e.tmplItem().data;
-						return {type:'filesystemitem', payload: item};
+						var sel = t.p.getSelectedItems();
+						if (!sel) sel = item;
+						else if (sel.indexOf(item) < 0) sel.push(item);
+						return {type:'filesystemitem', payload: sel};
 					}
 				});
 				mollify.ui.draganddrop.enableDrop(t.$l.find(".mollify-iconview-item.item-folder"), {
@@ -1375,7 +1382,10 @@
 				mollify.ui.draganddrop.enableDrag($items, {
 					onDragStart : function($e, e) {
 						var item = $e.tmplItem().data;
-						return {type:'filesystemitem', payload: item};
+						var sel = t.p.getSelectedItems();
+						if (!sel) sel = item;
+						else if (sel.indexOf(item) < 0) sel.push(item);
+						return {type:'filesystemitem', payload: sel};
 					}
 				});
 				mollify.ui.draganddrop.enableDrop(t.$i.find(".mollify-filelist-item.item-folder"), {
@@ -1459,6 +1469,7 @@
 		};
 		
 		this.setSelectMode = function(sm) {
+			t.$i.find(".mollify-filelist-item.selected").removeClass("selected");
 			if (sm) {
 				t.$l.addClass("select");
 				t.$h.addClass("select");
