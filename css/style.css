@@ -452,7 +452,7 @@ a.mollify-login-link {
 	margin: 6px 0 0 8px;
 }
 
-#mollify-fileview-folder-actions.root-list {
+#mollify-fileview-folder-actions.root-list, .mollify-fileview-header-custom #mollify-fileview-folder-actions {
 	margin: 15px 0 0 15px;
 }
 
