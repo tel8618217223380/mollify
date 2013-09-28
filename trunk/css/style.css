@@ -447,12 +447,21 @@ a.mollify-login-link {
 	margin-right: 0;
 }
 
+#mollify-fileview-folder-actions .btn-group.active .btn-flat {
+	background-color: #dddddd;
+	color: #000000;
+}
+
 #mollify-fileview-folder-actions .btn-group + .btn-group {
 	margin-left: 0;
 }
 
 #mollify-fileview-folder-actions .btn b.caret {
 	border-top-color: #e2e2e2;
+}
+
+#mollify-fileview-folder-actions .btn-group.active .btn b.caret {
+	border-top-color: #000000;
 }
 
 #mollify-fileview-folder-actions .btn:hover {
