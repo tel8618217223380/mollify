@@ -700,21 +700,40 @@
 			});
 		};
 
-		this.dropType = function(to, item) {
-			var copy = (to.root_id != item.root_id);
+		this.dropType = function(to, i) {
+			var single = false;	
+			if (!isArray(i)) single = i;
+			else if (i.length == 0) single = i[0];
+			
+			var copy = (!single || to.root_id != single.root_id);
 			return copy ? "copy" : "move";
 		};
 					
-		this.canDragAndDrop = function(to, item) {
-			return that.dropType(to, item) == "copy" ? mollify.filesystem.canCopyTo(item, to) : mollify.filesystem.canMoveTo(item, to);
+		this.canDragAndDrop = function(to, itm) {
+			var single = false;	
+			if (!isArray(itm)) single = itm;
+			else if (itm.length == 0) single = itm[0];
+			
+			if (single)
+				return that.dropType(to, single) == "copy" ? mollify.filesystem.canCopyTo(single, to) : mollify.filesystem.canMoveTo(single, to);
+			
+			var can = true;
+			for(var i=0;i<itm.length; i++) {
+				var item = itm[i];
+				if (!(that.dropType(to, item) == "copy" ? mollify.filesystem.canCopyTo(item, to) : mollify.filesystem.canMoveTo(item, to))) {
+					can = false;
+					break;
+				}
+			}
+			return can;
 		};
 		
-		this.onDragAndDrop = function(to, item) {
-			var copy = (that.dropType(to, item) == 'copy');
+		this.onDragAndDrop = function(to, itm) {
+			var copy = (that.dropType(to, itm) == 'copy');
 			//console.log((copy ? "copy " : "move ") +item.name+" to "+to.name);
 			
-			if (copy) mollify.filesystem.copy(item, to);
-			else mollify.filesystem.move(item, to);
+			if (copy) mollify.filesystem.copy(itm, to);
+			else mollify.filesystem.move(itm, to);
 		};
 		
 		this.folder = function() {
@@ -932,21 +951,21 @@
 				mollify.ui.draganddrop.enableDrop($hi.find("a"), {
 					canDrop : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var itm = obj.payload;
 						var me = $e.parent().tmplItem().data;
-						return that.canDragAndDrop(me, item);
+						return that.canDragAndDrop(me, itm);
 					},
 					dropType : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var itm = obj.payload;
 						var me = $e.tmplItem().data;
-						return that.dropType(me, item);
+						return that.dropType(me, itm);
 					},
 					onDrop : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return;
-						var item = obj.payload;
+						var itm = obj.payload;
 						var me = $e.parent().tmplItem().data;
-						that.onDragAndDrop(me, item);
+						that.onDragAndDrop(me, itm);
 					}
 				});
 			}
@@ -1169,21 +1188,21 @@
 				mollify.ui.draganddrop.enableDrop(t.$l.find(".mollify-iconview-item.item-folder"), {
 					canDrop : function($e, e, obj) {
 						if (!t.p.canDrop || !obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						return t.p.canDrop(me, item);
+						return t.p.canDrop(me, i);
 					},
 					dropType : function($e, e, obj) {
 						if (!t.p.dropType || !obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						return t.p.dropType(me, item);
+						return t.p.dropType(me, i);
 					},
 					onDrop : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						if (t.p.onDrop) t.p.onDrop(me, item);
+						if (t.p.onDrop) t.p.onDrop(me, i);
 					}
 				});
 			}
@@ -1391,21 +1410,21 @@
 				mollify.ui.draganddrop.enableDrop(t.$i.find(".mollify-filelist-item.item-folder"), {
 					canDrop : function($e, e, obj) {
 						if (!t.p.canDrop || !obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						return t.p.canDrop(me, item);
+						return t.p.canDrop(me, i);
 					},
 					dropType : function($e, e, obj) {
 						if (!t.p.dropType || !obj || obj.type != 'filesystemitem') return false;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						return t.p.dropType(me, item);
+						return t.p.dropType(me, i);
 					},
 					onDrop : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return;
-						var item = obj.payload;
+						var i = obj.payload;
 						var me = $e.tmplItem().data;
-						if (t.p.onDrop) t.p.onDrop(me, item);
+						if (t.p.onDrop) t.p.onDrop(me, i);
 					}
 				});
 			}

@@ -1631,21 +1631,37 @@
 				$e.attr("draggable","true").bind('dragstart', function(e) {
 					t.dragObj = false;
 					e.originalEvent.dataTransfer.effectAllowed = "none";
-					if (l.onDragStart) {
-						t.dragObj = l.onDragStart($(this), e);
-						if (t.dragObj) {
-							if (t.dragObj.type == 'filesystemitem') {
-								api.enableDragToDesktop(t.dragObj.payload, e);
-							}
-							t.dragEl = $(this);
-							t.dragListener = l;
-							t.dragEl.addClass("dragged");
-							e.originalEvent.dataTransfer.effectAllowed = "copyMove";
-							return;
+					if (!l.onDragStart) return false;
+					
+					t.dragObj = l.onDragStart($(this), e);
+					if (!t.dragObj) return false;
+					
+					var dragImageType = t.dragObj.type;
+					
+					if (t.dragObj.type == 'filesystemitem') {
+						var pl = t.dragObj.payload;
+						if (!isArray(pl) || pl.length == 1) {
+							var item = isArray(pl) ? pl[0] : pl;
+							
+							if (!item.is_file) dragImageType = "filesystemitem-folder";
+							else dragImageType = "filesystemitem-file";
+						} else {
+							dragImageType = "filesystemitem-many";
 						}
+						api.enableDragToDesktop(pl, e);
 					}
-					return false;
-				}).bind('dragend', function(e) {	
+					t.dragEl = $(this);
+					t.dragListener = l;
+					t.dragEl.addClass("dragged");
+					e.originalEvent.dataTransfer.effectAllowed = "copyMove";
+
+					if (mollify.settings.dnd.dragimages[dragImageType]) {
+						var img = document.createElement("img");
+						img.src = mollify.settings.dnd.dragimages[dragImageType];
+						e.originalEvent.dataTransfer.setDragImage(img, 0, 0);
+					}
+					return;
+				}).bind('dragend', function(e) {
 					endDrag(e);
 				});
 			},
