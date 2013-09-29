@@ -388,10 +388,6 @@ a.mollify-login-link {
 	margin-bottom: 0px;
 }
 
-#mollify-folder-name {
-	float: left;
-}
-
 #mollify-folder-name > h2 {
 	margin: 6px 0 0 0;
 }
@@ -427,7 +423,9 @@ a.mollify-login-link {
 }
 
 #mollify-searchresults-desc {
+	float: left;
 	margin-left: 12px;
+	clear: both;
 }
 
 #mollify-folder-name, .mollify-folderview-title {
@@ -436,6 +434,7 @@ a.mollify-login-link {
 	margin: 0;
 	padding: 0px 0px 0px 8px;
 	border: none;
+	float: left;
 }
 
 .mollify-folderview-title.root-list {
