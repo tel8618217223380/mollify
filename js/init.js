@@ -135,7 +135,19 @@ var mollifyDefaults = {
 		}
 
 		return false;
-	}
+	};
+	
+	mollify.resourceUrl = function(u) {
+		if (!mollify.settings["resource-map"]) return u;
+		
+		var urlParts = mollify.helpers.breakUrl(u);
+		if (!urlParts) return u;
+		
+		var mapped = mollify.settings["resource-map"][urlParts.path];
+		if (!mapped) return u;		
+		
+		return mapped + urlParts.paramsString;
+	};
 	
 	/* REQUEST */
 	
@@ -145,13 +157,7 @@ var mollifyDefaults = {
 				return decodeURIComponent(name[1]);
 		},
 		getParams: function() {
-			var params = {};
-			$.each(location.search.substring(1).split("&"), function(i, p) {
-				var pp = p.split("=");
-				if (!pp || pp.length < 2) return;
-				params[decodeURIComponent(pp[0])] = decodeURIComponent(pp[1]);
-			});
-			return params;
+			return mollify.helpers.getUrlParams(location.search);
 		}
 	}
 	
@@ -701,7 +707,7 @@ var mollifyDefaults = {
 	
 	mt.url = function(name) {
 		var base = mollify.settings["template-url"] || 'templates/';
-		return mollify.helpers.noncachedUrl(base + name);
+		return mollify.resourceUrl(mollify.helpers.noncachedUrl(base + name));
 	};
 	
 	mt.load = function(name, url, cb) {
@@ -710,7 +716,7 @@ var mollifyDefaults = {
 			return;
 		}
 		
-		$.get(url ? url : mt.url(name), function(h) {
+		$.get(url ? mollify.resourceUrl(url) : mt.url(name), function(h) {
 			mt._loaded.push(name);
 			$("body").append(h);
 			if (cb) cb();
@@ -722,7 +728,7 @@ var mollifyDefaults = {
 	md._hiddenLoaded = [];
 		
 	md.importScript = function(url) {
-		return $.getScript(url);
+		return $.getScript(mollify.resourceUrl(url));
 	};
 		
 	md.importCss = function(url) {
@@ -730,7 +736,7 @@ var mollifyDefaults = {
 		link.attr({
 			type: 'text/css',
 			rel: 'stylesheet',
-			href: mollify.helpers.noncachedUrl(url)
+			href: mollify.resourceUrl(mollify.helpers.noncachedUrl(url))
 		});
 		$("head").append(link);
 	};
@@ -741,14 +747,14 @@ var mollifyDefaults = {
 			return;
 		}
 		var id = 'mollify-tmp-'+(mollify._hiddenInd++);
-		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.helpers.urlWithParam(url, "_="+mollify.time), function() {
+		$('<div id="'+id+'" style="display:none"/>').appendTo($("body")).load(mollify.resourceUrl(mollify.helpers.noncachedUrl(url)), function() {
 			md._hiddenLoaded.push(contentId);
 			if (cb) cb();
 		});
 	};
 					
 	md.loadContentInto = function($target, url, handler, process) {
-		$target.load(mollify.helpers.urlWithParam(url, "_="+mollify.time), function() {
+		$target.load(mollify.resourceUrl(mollify.helpers.noncachedUrl(url)), function() {
 			if (process) mollify.ui.process($target, process, handler);
 			if (typeof handler === 'function') handler();
 			else if (handler.onLoad) handler.onLoad($target);
@@ -850,6 +856,21 @@ var mollifyDefaults = {
 			}
 			
 			return actions;
+		},
+		
+		breakUrl : function(u) {
+			var parts = u.split("?");
+			return { path: parts[0], params: mollify.helpers.getUrlParams(u), paramsString: (parts.length > 1 ? ("?" + parts[1]) : "") };
+		},
+		
+		getUrlParams : function(u) {
+			var params = {};
+			$.each(u.substring(1).split("&"), function(i, p) {
+				var pp = p.split("=");
+				if (!pp || pp.length < 2) return;
+				params[decodeURIComponent(pp[0])] = decodeURIComponent(pp[1]);
+			});
+			return params;	
 		},
 		
 		urlWithParam : function(url, param) {
