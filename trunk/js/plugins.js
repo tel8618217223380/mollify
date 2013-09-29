@@ -557,7 +557,17 @@
 		return {
 			id: "plugin-archiver",
 			initialize: that.initialize,
-			getDownloadCompressedUrl : function(item) { return mollify.service.url("archiver/download?item="+item.id, true); },
+			getDownloadCompressedUrl : function(i) {
+				var single = false;
+		
+				if (!isArray(i)) single = i;
+				else if (i.length == 0) single = i[0];
+				
+				if (single)
+					return mollify.service.url("archiver/download?item="+single.id, true);
+
+				return false;	//TODO enable downloading array of items?
+			},
 			itemContextHandler : function(item, ctx, data) {
 				var root = (item.id == item.root_id);
 				if (root) return false;
@@ -1213,7 +1223,7 @@
 			onResize();
 			
 			if (mollify.ui.draganddrop) {
-				mollify.ui.draganddrop.enableDrop($("#mollify-dropbox-list"), {
+				var dnd = {
 					canDrop : function($e, e, obj) {
 						if (!obj || obj.type != 'filesystemitem') return false;
 						var item = obj.payload;
@@ -1228,7 +1238,9 @@
 						var item = obj.payload;
 						that.onAddItem(item);
 					}
-				});
+				};
+				mollify.ui.draganddrop.enableDrop($("#mollify-dropbox-list"), dnd);
+				mollify.ui.draganddrop.enableDrop($("#mollify-dropbox-handle"), dnd);
 			}
 			
 			var ab = mollify.ui.controls.dropdown({
@@ -1291,6 +1303,7 @@
 		};
 				
 		this.onAddItem = function(i) {
+			that.openDropbox(true);
 			var list = i;
 			if (!isArray(i))
 				list = [i];

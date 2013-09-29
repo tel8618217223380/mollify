@@ -18,6 +18,13 @@ var mollifyDefaults = {
 	},
 	"html5-uploader": {
 		maxChunkSize: 0
+	},
+	dnd : {
+		dragimages : {
+			"filesystemitem-file" : "css/images/mimetypes64/empty.png",
+			"filesystemitem-folder" : "css/images/mimetypes64/folder.png",
+			"filesystemitem-many" : "css/images/mimetypes64/application_x_cpio.png"
+		}
 	}
 };
 
@@ -106,19 +113,26 @@ var mollifyDefaults = {
 		}
 	};
 	
-	mollify.getItemDownloadInfo = function(item) {
-		if (!item) return false;
+	mollify.getItemDownloadInfo = function(i) {
+		if (!i) return false;
+		var single = false;
 
-		if (item.is_file)
+		if (!isArray(i)) single = i;
+		else if (i.length == 0) single = i[0];
+
+		if (single && single.is_file) {
 			return {
-				name: item.name,
-				url: mollify.filesystem.getDownloadUrl(item)
+				name: single.name,
+				url: mollify.filesystem.getDownloadUrl(single)
 			};
-		else
+		} else {
+			if (!single) return false;
+			
 			if (mollify.plugins.exists("plugin-archiver")) return {
-				name: item.name + ".zip",	//TODO get extension from plugin
-				url: mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(item)
+				name: name = single.name + ".zip",	//TODO get extension from plugin
+				url: mollify.plugins.get("plugin-archiver").getDownloadCompressedUrl(i)
 			};
+		}
 
 		return false;
 	}
