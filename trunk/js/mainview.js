@@ -398,13 +398,12 @@
 				},
 		
 				onRenderFolderView : function(f, fi, $h, $tb) {
-					mollify.dom.template("mollify-tmpl-main-searchresults").appendTo($h);
-					$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+fi.count]));
+					mollify.dom.template("mollify-tmpl-main-searchresults", { folder: f, info: fi }).appendTo($h);
+					$("#mollify-searchresults-title-text").text(mollify.ui.texts.get('mainViewSearchResultsTitle', [""+fi.info.count]));
 					$("#mollify-searchresults-desc-text").text(mollify.ui.texts.get('mainViewSearchResultsDesc', [f.value]));
 					
-					// TODO add tools to template
 					var $fa = $("#mollify-fileview-folder-actions");
-					mollify.dom.template("mollify-tmpl-fileview-foldertools-action", { icon: 'icon-refresh' }, {}).appendTo($fa).click(that.refresh);
+					that.addCommonFileviewActions($fa);
 				},
 				
 				onItemListRendered : function(f, fi, items) {
@@ -423,7 +422,7 @@
 					$(".mollify-filelist-item").each(function() {
 						var $i = $(this);
 						var item = $i.tmplItem().data;
-						var title = mollify.filesystem.rootsById[item.root_id].name + '/' + item.path + ', ' + matchesTitle + matchList(fi.matches[item.id].matches);
+						var title = mollify.filesystem.rootsById[item.root_id].name + '/' + item.path + ', ' + matchesTitle + matchList(fi.info.matches[item.id].matches);
 
 						$i.tooltip({
 							placement: "bottom",
