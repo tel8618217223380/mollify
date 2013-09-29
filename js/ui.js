@@ -106,6 +106,7 @@
 			$("html").attr("lang", mollify.ui.texts.locale);
 			$("#mollify").addClass("lang-"+mollify.ui.texts.locale);
 		}
+		
 		$(window).click(function(e) {
 			// hide popups when clicked outside
 			if (mollify.ui._activePopup) {
@@ -431,6 +432,12 @@
 		open : function(url) {
 			window.open(url);
 		}
+	};
+	
+	mollify.ui.preloadImages = function(a) {
+		$.each(a, function(){
+			$('<img/>')[0].src = this;
+		});
 	};
 	
 	/* CONTROLS */
@@ -1619,6 +1626,19 @@
 			e.originalEvent.dataTransfer.dropEffect = "none";
 			return false;
 		});
+
+		// preload drag images		
+		setTimeout(function(){
+			var dragImages = [];
+			for (var key in mollify.settings.dnd.dragimages) {
+				if (!mollify.settings.dnd.dragimages.hasOwnProperty(key)) continue;
+				var img = mollify.settings.dnd.dragimages[key];
+				if (!img) continue;
+				if (dragImages.indexOf(img) >= 0) continue;
+				dragImages.push(img);
+			}
+			if (dragImages) mollify.ui.preloadImages(dragImages);
+		}, 0);
 		
 		var api = {
 			enableDragToDesktop: function(item, e) {
