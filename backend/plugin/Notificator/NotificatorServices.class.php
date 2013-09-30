@@ -70,6 +70,10 @@
 				$this->response()->success($dao->editNotificationEvents($id, $data["events"]));
 				return;
 			}
+			if (isset($data["users"])) {
+				$this->response()->success($dao->editNotificationUsers($id, $data["users"]));
+				return;
+			}
 			if (isset($data["recipients"])) {
 				$this->response()->success($dao->editNotificationRecipients($id, $data["recipients"]));
 				return;
