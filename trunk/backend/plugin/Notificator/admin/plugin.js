@@ -132,8 +132,10 @@
 					var $title = $e.find(".mollify-notificator-notificationdetails-messagetitle");
 					var $msg = $e.find(".mollify-notificator-notificationdetails-message");
 					var $events = $e.find(".mollify-notificator-notificationdetails-events");
+					var $eventUsersgroups = $e.find(".mollify-notificator-notificationdetails-eventusersgroups");
 					var $usersgroups = $e.find(".mollify-notificator-notificationdetails-usersgroups");
 					var eventsView = false;
+					var eventUsersgroupsView = false;
 					var usersgroupsView = false;
 					
 					var update = function() {
@@ -145,6 +147,7 @@
 							$title.text(nd.message_title);
 							$msg.text(nd.message);
 							eventsView.table.set(nd.events);
+							eventUsersgroupsView.table.set(nd.users);
 							usersgroupsView.table.set(that._getUsers(nd.recipients));
 						});
 					};
@@ -201,7 +204,7 @@
 						actions: [
 							{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddEvents },
 							{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
-								//mollify.service.del("configuration/users/"+u.id+"/folders/", { ids: mollify.helpers.extractValue(sel, "id") }).done(updateFolders);
+								mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: mollify.helpers.extractValue(sel, "id") }).done(update);
 							}}
 						],
 						table: {
@@ -215,12 +218,39 @@
 							],
 							onRowAction: function(id, f) {
 								if (id == "remove") {
-									//mollify.service.del("configuration/users/"+u.id+"/folders/"+f.id).done(updateGroups);
+									mollify.service.del("notificator/list/"+nd.id+"/events/", { ids: [id] }).done(update);
 								}
 							}
 						}
 					});
-		
+
+					eventUsersgroupsView = new mollify.view.ConfigListView($eventUsersgroups, {
+						title: mollify.ui.texts.get('pluginNotificatorNotificationEventUsersTitle'),
+						actions: [
+							{ id: "action-add", content:'<i class="icon-plus"></i>', callback: onAddEventUsersgroups },
+							{ id: "action-remove", content:'<i class="icon-trash"></i>', cls:"btn-danger", depends: "table-selection", callback: function(sel) {
+								//mollify.service.del("configuration/users/"+u.id+"/groups/", { ids: mollify.helpers.extractValue(sel, "id") }).done(updateGroups);
+							}}
+						],
+						table: {
+							id: "plugin-notificator-notificationeventusers",
+							key: "id",
+							narrow: true,
+							columns: [
+								{ type:"selectrow" },
+								{ id: "icon", title:"", valueMapper: function(i, v) { if (i.is_group == 1) return "<i class='icon-user'></i><i class='icon-user'></i>"; return "<i class='icon-user'></i>"; } },
+								{ id: "id", title: mollify.ui.texts.get('configAdminTableIdTitle') },
+								{ id: "name", title: mollify.ui.texts.get('configAdminUserDialogUsernameTitle') },
+								{ id: "remove", title: "", type: "action", content: '<i class="icon-trash"></i>' }
+							],
+							onRowAction: function(id, g) {
+								if (id == "remove") {
+									//mollify.service.del("configuration/users/"+u.id+"/groups/"+g.id).done(updateGroups);
+								}
+							}
+						}
+					});
+							
 					usersgroupsView = new mollify.view.ConfigListView($usersgroups, {
 						title: mollify.ui.texts.get('pluginNotificatorNotificationUsersTitle'),
 						actions: [
