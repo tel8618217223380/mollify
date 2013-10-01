@@ -124,19 +124,19 @@
 
 		public function removeNotificationUsers($id, $ids) {
 			$db = $this->env->db();
-			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_user")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_user")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $db->arrayString($ids)));
 			return TRUE;
 		}
 
 		public function removeNotificationRecipients($id, $ids) {
 			$db = $this->env->db();
-			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $db->arrayString($ids)));
 			return TRUE;
 		}
 
 		public function removeNotificationEvents($id, $ids) {
 			$db = $this->env->db();
-			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s' and event_type in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s' and event_type in (%s)", $db->string($id), $db->arrayString($ids, TRUE)));
 			return TRUE;
 		}
 		
