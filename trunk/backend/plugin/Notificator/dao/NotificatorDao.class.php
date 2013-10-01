@@ -64,14 +64,14 @@
 		}
 
 		public function findNotifications($typeId, $userId) {
+			$db = $this->env->db();
+			
 			$userIds = array($userId);
 			if ($this->env->session()->hasUserGroups()) {
 				foreach($this->env->session()->userGroups() as $g)
 					$userIds[] = $g['id'];
 			}
-			$userQuery = sprintf("(uf.user_id in (%s))", $this->db->arrayString($userIds));
-
-			$db = $this->env->db();
+			$userQuery = sprintf("(uf.user_id in (%s))", $db->arrayString($userIds));
 			
 			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_user.id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
@@ -122,6 +122,24 @@
 			return TRUE;
 		}
 
+		public function removeNotificationUsers($id, $ids) {
+			$db = $this->env->db();
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_user")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			return TRUE;
+		}
+
+		public function removeNotificationRecipients($id, $ids) {
+			$db = $this->env->db();
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_recipient")." WHERE notification_id = '%s' and user_id in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			return TRUE;
+		}
+
+		public function removeNotificationEvents($id, $ids) {
+			$db = $this->env->db();
+			$db->update(sprintf("DELETE FROM ".$db->table("notificator_notification_event")." WHERE notification_id = '%s' and event_type in (%s)", $db->string($id), $this->db->arrayString($ids)));
+			return TRUE;
+		}
+		
 		public function editNotificationName($id, $name) {
 			$db = $this->env->db();
 			$affected = $db->update(sprintf("UPDATE ".$db->table("notificator_notification")." SET name = '%s' where id=%s", $db->string($name), $db->string($id)));

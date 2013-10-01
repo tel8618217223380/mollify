@@ -44,11 +44,34 @@
 		}
 
 		public function processDelete() {
-			if (count($this->path) != 2 or $this->path[0] != 'list') throw $this->invalidRequestException();
+			if (count($this->path) < 2 or count($this->path) > 3 or $this->path[0] != 'list') throw $this->invalidRequestException();
 			
 			$id = $this->path[1];
 			$dao = $this->getDao();
-			$this->response()->success($dao->removeNotification($id));
+			if (count($this->path) == 2) {
+				$this->response()->success($dao->removeNotification($id));
+				return;
+			}
+			
+			$key = $this->path[2];
+			$data = $this->request->data;
+			if (isset($data["ids"]) or !is_array($data["ids"])) throw $this->invalidRequestException("no ids");			
+			$ids = $data["ids"];
+			
+			if ($key == "users") {
+				$this->response()->success($dao->removeNotificationUsers($id, $ids));
+				return;
+			}
+			if ($key == "recipients") {
+				$this->response()->success($dao->removeNotificationRecipients($id, $ids));
+				return;
+			}
+			if ($key == "events") {
+				$this->response()->success($dao->removeNotificationEvents($id, $ids));
+				return;
+			}
+
+			throw $this->invalidRequestException();
 		}
 		
 		public function processPut() {
@@ -81,7 +104,7 @@
 						
 			throw $this->invalidRequestException();
 		}
-		
+				
 		private function getDao() {
 			require_once("dao/NotificatorDao.class.php");
 			return new NotificatorDao($this->env);
