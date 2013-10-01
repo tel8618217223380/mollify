@@ -71,13 +71,12 @@
 				foreach($this->env->session()->userGroups() as $g)
 					$userIds[] = $g['id'];
 			}
-			$userQuery = sprintf("(uf.user_id in (%s))", $db->arrayString($userIds));
 			
-			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_user.id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
+			$query = "select distinct ntf.id as id, ntf.name as name, ntf.message_title as message_title, ntf.message as message, evt.event_type as event_type, ntf_usr.user_id as ntf_usr_id, ntf_rcp_user.id as ntf_rcp_usr_id, ntf_rcp_user.is_group as ntf_rcp_usr_is_group, ntf_rcp_user.name as ntf_rcp_usr_name, ntf_rcp_user.email as ntf_rcp_usr_email ";
 			
 			$query .= "from ".$db->table("notificator_notification")." ntf left outer join ".$db->table("notificator_notification_event")." evt on evt.notification_id = ntf.id left outer join ".$db->table("notificator_notification_user")." ntf_usr on ntf_usr.notification_id = ntf.id left outer join ".$db->table("notificator_notification_recipient")." ntf_rcp on ntf_rcp.notification_id = ntf.id left outer join ".$db->table("user")." ntf_rcp_user on ntf_rcp_user.id = ntf_rcp.user_id";
 
-			$query .= " where (evt.event_type is null or evt.event_type = '$typeId') and (ntf_usr_id is null or ntf_usr_id in (".$this->db->arrayString($userIds).")) and ntf_rcp_user.id is not null";
+			$query .= " where (evt.event_type is null or evt.event_type = '$typeId') and (ntf_usr.user_id is null or ntf_usr.user_id in (".$db->arrayString($userIds).")) and ntf_rcp_user.id is not null";
 			$query .= " order by ntf.id asc";
 						
 			$rows = $db->query($query)->rows();
