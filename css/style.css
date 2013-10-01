@@ -1,3 +1,4 @@
+@import url(libs.css);
 @import url(bootstrap.css);
 @import url(bootstrap-responsive.css);
 @import url(font-awesome.css);
@@ -1131,6 +1132,11 @@ li#mollify-folder-hierarchy-item-root > a {
 	float: left;
 }
 
+.mollify-table tr.mollify-table-empty-hint td {
+	font-style: italic;
+	color: #949494;
+}
+
 .mollify-configlistview-table th.sortable {
 	cursor: pointer;
 }
@@ -1158,7 +1164,7 @@ a.mollify-tableaction {
 
 .mollify-config-admin-userdetails-section, .mollify-notificator-notificationdetails-section {
 	float: left;
-	width: 50%;
+	width: 45%;
 }
 
 .mollify-notificator-notificationdetails-message-title, .mollify-notificator-notificationdetails-message-title > *, .mollify-notificator-notificationdetails-messagetitle, .mollify-notificator-notificationdetails-message {
